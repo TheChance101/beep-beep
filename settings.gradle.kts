@@ -3,6 +3,15 @@ rootProject.name = "BeepBeep"
 include(":client_end_user:androidApp")
 include(":client_end_user:shared")
 
+include(":client_taxi_driver:androidApp")
+include(":client_taxi_driver:shared")
+
+include(":client_restaurant:androidApp")
+include(":client_restaurant:shared")
+
+include(":client_delivery:androidApp")
+include(":client_delivery:shared")
+
 pluginManagement {
     repositories {
         gradlePluginPortal()
