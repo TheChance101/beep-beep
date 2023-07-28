@@ -1,7 +1,7 @@
 rootProject.name = "BeepBeep"
 
-include(":androidApp")
-include(":shared")
+include(":client_end_user:androidApp")
+include(":client_end_user:shared")
 
 pluginManagement {
     repositories {
