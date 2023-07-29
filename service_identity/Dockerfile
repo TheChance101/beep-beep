@@ -2,7 +2,7 @@ FROM openjdk:11 as builder
 
 RUN ls
 
-COPY . .
+COPY ./service_identity .
 
 
 RUN cd service_identity/
