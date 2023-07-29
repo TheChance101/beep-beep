@@ -2,6 +2,10 @@ FROM openjdk:11 as builder
 
 COPY . .
 
+RUN ls
+
+RUN cd service_identity/
+
 RUN ./gradlew buildFatJar
 
 FROM openjdk:11
