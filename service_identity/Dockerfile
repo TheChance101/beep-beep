@@ -1,8 +1,9 @@
 FROM openjdk:11 as builder
 
+RUN ls
+
 COPY . .
 
-RUN ls
 
 RUN cd service_identity/
 
