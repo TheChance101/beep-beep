@@ -12,6 +12,11 @@ include(":client_restaurant:shared")
 include(":client_delivery:androidApp")
 include(":client_delivery:shared")
 
+include(":client_dashboard")
+include(":client_dashboard:desktop")
+include("client_dashboard:common")
+
+
 pluginManagement {
     repositories {
         gradlePluginPortal()
