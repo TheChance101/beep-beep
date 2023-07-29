@@ -1,0 +1,1 @@
+rootProject.name = "org.thechance.service_taxi"

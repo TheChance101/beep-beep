@@ -1,0 +1,1 @@
+rootProject.name = "org.thechance.api_gateway"
