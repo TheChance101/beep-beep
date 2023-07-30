@@ -17,9 +17,9 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(libs.compose.runtime)
-                implementation(libs.compose.foundation)
-                implementation(libs.compose.material)
+                api(libs.compose.runtime)
+                api(libs.compose.foundation)
+                api(libs.compose.material)
             }
         }
         val desktopMain by getting {
