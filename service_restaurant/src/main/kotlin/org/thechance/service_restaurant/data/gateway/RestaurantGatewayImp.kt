@@ -14,7 +14,7 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
         container.database.getCollection<RestaurantCollection>()
     }
 
-    override suspend fun getRestaurant(): List<Restaurant> {
+    override suspend fun getRestaurants(): List<Restaurant> {
         return restaurantCollection.find().toList().toEntity()
     }
 

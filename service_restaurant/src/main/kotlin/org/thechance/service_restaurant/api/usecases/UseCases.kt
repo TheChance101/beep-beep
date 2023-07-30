@@ -2,7 +2,7 @@ package org.thechance.service_restaurant.api.usecases
 
 import org.thechance.service_restaurant.entity.Restaurant
 
-interface GetRestaurantUseCase {
+interface GetRestaurantsUseCase {
     suspend operator fun invoke(): List<Restaurant>
 }
 

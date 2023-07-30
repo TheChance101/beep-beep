@@ -7,8 +7,6 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.service_restaurant.api.models.mappers.toDto
-import org.thechance.service_restaurant.api.usecases.CreateRestaurantUseCase
-import org.thechance.service_restaurant.api.usecases.GetRestaurantUseCase
 import org.thechance.service_restaurant.api.usecases.RestaurantCasesContainer
 
 fun Route.restaurantRoutes() {
@@ -18,7 +16,7 @@ fun Route.restaurantRoutes() {
     route("/restaurant") {
 
         get {
-            val restaurant = restaurant.getRestaurant().toDto()
+            val restaurant = restaurant.getRestaurants().toDto()
             call.respond(HttpStatusCode.OK, restaurant)
         }
 

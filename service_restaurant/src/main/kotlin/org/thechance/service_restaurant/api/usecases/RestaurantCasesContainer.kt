@@ -4,6 +4,6 @@ import org.koin.core.annotation.Single
 
 @Single
 data class RestaurantCasesContainer(
-    val getRestaurant: GetRestaurantUseCase,
+    val getRestaurants: GetRestaurantsUseCase,
     val addRestaurant: CreateRestaurantUseCase
 )
