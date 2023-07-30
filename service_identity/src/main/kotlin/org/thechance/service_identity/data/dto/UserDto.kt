@@ -7,7 +7,7 @@ import org.litote.kmongo.Id
 @Serializable
 data class UserDto(
     @BsonId
-    val id: Id<UserDto>,
+    val id: Id<UserDto>? = null,
     val fullName: String,
     val username: String,
     val isDeleted: Boolean = false
