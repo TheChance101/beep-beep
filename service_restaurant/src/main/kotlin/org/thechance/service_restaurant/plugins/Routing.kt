@@ -3,10 +3,12 @@ package org.thechance.service_restaurant.plugins
 import io.ktor.server.routing.*
 import io.ktor.server.application.*
 import org.thechance.serivce_identity.endpoints.testRoutes
+import org.thechance.service_restaurant.api.endpoints.restaurantRoutes
 
 fun Application.configureRouting(
 ) {
     routing {
         testRoutes()
+        restaurantRoutes()
     }
 }
