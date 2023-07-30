@@ -1,8 +1,10 @@
+@file:Suppress("DSL_SCOPE_VIOLATION")
+
 plugins {
-    kotlin("multiplatform")
-    kotlin("native.cocoapods")
-    id("com.android.library")
-    id("org.jetbrains.compose")
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.native.cocoapods)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.jetbrains.compose)
 }
 
 kotlin {
@@ -22,7 +24,8 @@ kotlin {
             baseName = "shared"
             isStatic = true
         }
-        extraSpecAttributes["resources"] = "['src/commonMain/resources/**', 'src/iosMain/resources/**']"
+        extraSpecAttributes["resources"] =
+            "['src/commonMain/resources/**', 'src/iosMain/resources/**']"
     }
 
     sourceSets {

@@ -1,9 +1,9 @@
-import org.jetbrains.compose.compose
+@file:Suppress("DSL_SCOPE_VIOLATION")
 
 plugins {
-    kotlin("multiplatform")
-    id("org.jetbrains.compose")
-    id("com.android.library")
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.jetbrains.compose)
 }
 
 group = "org.thechance"
