@@ -1,4 +1,4 @@
-package org.thechance.serivce_identity.endpoints
+package org.thechance.service_identity.endpoints
 
 import io.ktor.server.application.*
 import io.ktor.server.response.*
