@@ -17,7 +17,7 @@ kotlin {
         version = "1.0.0"
         summary = "Some description for the Shared Module"
         homepage = "Link to the Shared Module homepage"
-        ios.deploymentTarget = "14.1"
+        ios.deploymentTarget = libs.versions.ios.deploymentTarget.get()
         podfile = project.file("../iosApp/Podfile")
         framework {
             baseName = "shared"
@@ -71,6 +71,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
     kotlin {
-        jvmToolchain(11)
+        jvmToolchain(libs.versions.jvmToolchain.get().toInt())
     }
 }

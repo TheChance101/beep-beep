@@ -5,6 +5,8 @@ kotlin = "1.9.0"
 compileSdk = "33"
 minSdk = "24"
 targetSdk = "33"
+ios-deploymentTarget = "14.1"
+jvmToolchain = "11"
 
 androidx-core = "1.9.0"
 androidx-activity-compose = "1.6.1"
