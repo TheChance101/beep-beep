@@ -6,7 +6,6 @@ import org.koin.dsl.module
 import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.reactivestreams.KMongo
 
-
 @Module
 @ComponentScan("org.thechance.service_taxi")
 class AppModule
