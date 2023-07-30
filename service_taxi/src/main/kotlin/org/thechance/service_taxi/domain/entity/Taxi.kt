@@ -2,11 +2,11 @@ package org.thechance.service_taxi.domain.entity
 
 data class Taxi(
     val id: String,
-    val plateNumber: String, // index
-    val color: String,
-    val type: String,
-    val driverId: String,
-    val isDeleted: Boolean = false,
-    val isAvailable: Boolean = true,
-    val capacity: Int, // 1->normal etc..
+    val plateNumber: String? = null, // index
+    val color: String? = null,
+    val type: String? = null,
+    val driverId: String? = null,
+    val isDeleted: Boolean? = null,
+    val isAvailable: Boolean? = null,
+    val capacity: Int? = null, // 1->normal etc..
 )

@@ -3,7 +3,6 @@ package org.thechance.service_taxi.data
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.eq
-import org.litote.kmongo.setTo
 import org.thechance.service_taxi.domain.entity.Taxi
 import org.thechance.service_taxi.domain.gateway.TaxiGateway
 
@@ -16,8 +15,7 @@ class TaxiGatewayImpl(container: DataBaseContainer) : TaxiGateway {
     }
 
     override suspend fun getTaxiById(taxiId: String): Taxi? {
-        return collection.findOneById(TaxiCollection::id eq ObjectId(taxiId))
-            ?.takeIf { !it.isDeleted }?.toTaxi()
+        return collection.findOneById(ObjectId(taxiId))?.takeIf { it.isDeleted != true }?.toTaxi()
     }
 
     override suspend fun getAllTaxes(): List<Taxi> {
@@ -25,13 +23,19 @@ class TaxiGatewayImpl(container: DataBaseContainer) : TaxiGateway {
     }
 
     override suspend fun deleteTaxi(taxiId: String): Boolean {
-        return collection.updateOneById(taxiId, TaxiCollection::isDeleted setTo true)
-            .wasAcknowledged()
+        return collection.updateOneById(
+            id = ObjectId(taxiId),
+            update = TaxiCollection(isDeleted = true),
+            updateOnlyNotNullProperties = true
+        ).wasAcknowledged()
     }
 
     override suspend fun updateTaxi(taxiId: String, taxi: Taxi): Boolean {
-        return collection.updateOneById(taxiId, taxi, updateOnlyNotNullProperties = true)
-            .wasAcknowledged()
+        return collection.updateOneById(
+            ObjectId(taxiId),
+            taxi.toCollection(),
+            updateOnlyNotNullProperties = true
+        ).wasAcknowledged()
     }
 
 }

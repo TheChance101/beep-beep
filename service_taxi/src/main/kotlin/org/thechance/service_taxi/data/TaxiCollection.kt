@@ -13,14 +13,14 @@ data class TaxiCollection(
     @BsonId
     @Contextual
     val id: ObjectId = ObjectId(),
-    val plateNumber: String, // index
-    val color: String,
-    val type: String,
+    val plateNumber: String? = null, // index
+    val color: String? = null,
+    val type: String? = null,
     @Contextual
-    val driverId: ObjectId,
-    val isDeleted: Boolean = false,
-    val isAvailable: Boolean = true,
-    val capacity: Int, // 1->normal etc..
+    val driverId: ObjectId? = null,
+    val isDeleted: Boolean? = null,
+    val isAvailable: Boolean? = null,
+    val capacity: Int? = null, // 1->normal etc..
 )
 
 
@@ -31,9 +31,9 @@ fun TaxiCollection.toTaxi(): Taxi {
         plateNumber = plateNumber,
         color = color,
         type = type,
-        driverId = driverId.toHexString(),
-        isDeleted = isDeleted,
-        isAvailable = isAvailable,
+        driverId = driverId?.toHexString(),
+        isDeleted = isDeleted ?: false,
+        isAvailable = isAvailable ?: true,
         capacity = capacity
     )
 }
@@ -42,11 +42,11 @@ fun List<TaxiCollection>.toTaxes(): List<Taxi> = map(TaxiCollection::toTaxi)
 
 fun Taxi.toCollection(): TaxiCollection {
     return TaxiCollection(
-        id = ObjectId(id),
+        id = if (id.isBlank()) ObjectId() else ObjectId(id),
         plateNumber = plateNumber,
         color = color,
         type = type,
-        driverId = ObjectId(driverId),
+        driverId = if (driverId != null) ObjectId(driverId) else null,
         isDeleted = isDeleted,
         isAvailable = isAvailable,
         capacity = capacity
