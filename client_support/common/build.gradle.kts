@@ -17,14 +17,14 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(compose.runtime)
-                api(compose.foundation)
-                api(compose.material)
+                implementation(libs.compose.runtime)
+                implementation(libs.compose.foundation)
+                implementation(libs.compose.material)
             }
         }
         val desktopMain by getting {
             dependencies {
-                api(compose.preview)
+                api(libs.compose.preview)
             }
         }
     }

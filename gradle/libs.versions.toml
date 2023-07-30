@@ -19,6 +19,7 @@ compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.re
 compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "compose-version" }
 compose-material = { module = "org.jetbrains.compose.material:material", version.ref = "compose-version" }
 compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose-version" }
+compose-preview = { module = "org.jetbrains.compose.preview:preview", version.ref = "compose-version" }
 
 [plugins]
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
