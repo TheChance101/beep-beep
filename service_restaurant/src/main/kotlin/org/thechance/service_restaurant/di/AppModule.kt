@@ -11,9 +11,9 @@ class AppModule
 
 val BeepClient = module {
     single {
-        val mongosh = System.getenv("mongosh")
+        val cluster = System.getenv("cluster")
         val username = System.getenv("username")
         val password = System.getenv("password")
-        KMongo.createClient("mongodb+srv://$username:$password@$mongosh.xbnbeii.mongodb.net/")
+        KMongo.createClient("mongodb+srv://$username:$password@$cluster.mongodb.net/")
     }
 }

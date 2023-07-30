@@ -1,4 +1,4 @@
-package org.thechance.service_restaurant.datasource
+package org.thechance.service_restaurant.data
 
 import com.mongodb.reactivestreams.client.MongoClient
 import org.koin.core.annotation.Single

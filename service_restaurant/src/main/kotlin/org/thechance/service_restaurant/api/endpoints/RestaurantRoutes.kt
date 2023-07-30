@@ -6,29 +6,26 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import org.thechance.service_restaurant.api.models.mappers.toRestaurantDto
-import org.thechance.service_restaurant.datasource.RestaurantDataSource
-import org.thechance.service_restaurant.domain.repository.BeepRepository
-import org.thechance.service_restaurant.domain.usecase.CreateRestaurantUseCase
-import org.thechance.service_restaurant.domain.usecase.GetRestaurantUseCase
+import org.thechance.service_restaurant.api.models.mappers.toDto
+import org.thechance.service_restaurant.api.usecases.CreateRestaurantUseCase
+import org.thechance.service_restaurant.api.usecases.GetRestaurantUseCase
+import org.thechance.service_restaurant.api.usecases.RestaurantCasesContainer
 
 fun Route.restaurantRoutes() {
 
-    val getRestaurant: GetRestaurantUseCase by inject()
-    val createRestaurant: CreateRestaurantUseCase by inject()
-
+    val restaurant: RestaurantCasesContainer by inject()
 
     route("/restaurant") {
 
         get {
-            val restaurant = getRestaurant().toRestaurantDto()
+            val restaurant = restaurant.getRestaurant().toDto()
             call.respond(HttpStatusCode.OK, restaurant)
         }
 
         post {
             val params = call.receiveParameters()
             val name = params["name"]?.trim().orEmpty()
-            val result = createRestaurant(name = name)
+            val result = restaurant.addRestaurant(name = name)
             call.respond(HttpStatusCode.OK, result)
         }
     }
