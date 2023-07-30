@@ -10,5 +10,10 @@ import org.litote.kmongo.reactivestreams.KMongo
 class AppModule
 
 val BeepClient = module {
-    single { KMongo.createClient("mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.10.1") }
+    single {
+        val mongosh = System.getenv("mongosh")
+        val username = System.getenv("username")
+        val password = System.getenv("password")
+        KMongo.createClient("mongodb+srv://$username:$password@$mongosh.xbnbeii.mongodb.net/")
+    }
 }
