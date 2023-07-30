@@ -8,7 +8,7 @@ import org.thechance.service_taxi.domain.gateway.TaxiGateway
 
 @Single
 class TaxiGatewayImpl(container: DataBaseContainer) : TaxiGateway {
-    private val collection by lazy { container.db.getCollection<TaxiCollection>("taxi") }
+    private val collection by lazy { container.database.getCollection<TaxiCollection>("taxi") }
 
     override suspend fun addTaxi(taxi: Taxi): Boolean {
         return collection.insertOne(taxi.toCollection()).wasAcknowledged()

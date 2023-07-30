@@ -5,5 +5,5 @@ import org.litote.kmongo.coroutine.CoroutineClient
 
 @Single
 class DataBaseContainer(client: CoroutineClient) {
-    val db by lazy { client.getDatabase(System.getenv("DB_NAME")) }
+    val database by lazy { client.getDatabase(System.getenv("DB_NAME")) }
 }
