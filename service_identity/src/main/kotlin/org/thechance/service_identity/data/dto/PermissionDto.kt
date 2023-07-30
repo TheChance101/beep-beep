@@ -6,5 +6,14 @@ import org.litote.kmongo.Id
 @Serializable
 data class PermissionDto(
     val id: Id<PermissionDto>? = null,
-    val permissionName: String
+    val permissionType: Permission = Permission.CLIENT
 )
+
+enum class Permission {
+    CLIENT,
+    ADMIN,
+    DELIVERY,
+    TAXI_DRIVER,
+    RESTAURANT_OWNER,
+    SUPPORT
+}
