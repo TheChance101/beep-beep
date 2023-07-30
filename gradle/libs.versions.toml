@@ -15,6 +15,10 @@ compose-version = "1.4.3"
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
+compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose-version" }
+compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "compose-version" }
+compose-material = { module = "org.jetbrains.compose.material:material", version.ref = "compose-version" }
+compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose-version" }
 
 [plugins]
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
