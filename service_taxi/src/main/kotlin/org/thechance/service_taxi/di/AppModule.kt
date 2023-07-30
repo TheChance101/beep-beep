@@ -13,7 +13,10 @@ class AppModule
 
 val kmongoModule = module {
     single {
-        KMongo.createClient("mongodb+srv://mohammed1212alhams:mmhhoo123@cluster0.ol4oiit.mongodb.net/")
+        val cluster = System.getenv("cluster")
+        val username = System.getenv("username")
+        val password = System.getenv("password")
+        KMongo.createClient("mongodb+srv://$username:$password@$cluster.mongodb.net/")
             .coroutine
     }
 }
