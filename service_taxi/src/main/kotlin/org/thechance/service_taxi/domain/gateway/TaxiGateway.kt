@@ -1,8 +1,8 @@
-package org.thechance.service_taxi.domain.datasource
+package org.thechance.service_taxi.domain.gateway
 
 import org.thechance.service_taxi.domain.entity.Taxi
 
-interface TaxiDataSource {
+interface TaxiGateway {
     suspend fun addTaxi(taxi: Taxi): Boolean
     suspend fun getTaxiById(taxiId: String): Taxi?
     suspend fun getAllTaxes(): List<Taxi>

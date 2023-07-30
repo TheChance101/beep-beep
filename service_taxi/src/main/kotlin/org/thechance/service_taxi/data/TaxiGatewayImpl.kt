@@ -4,27 +4,29 @@ import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.eq
 import org.litote.kmongo.setTo
-import org.thechance.service_taxi.domain.datasource.TaxiDataSource
 import org.thechance.service_taxi.domain.entity.Taxi
+import org.thechance.service_taxi.domain.gateway.TaxiGateway
 
 @Single
-class TaxiDataSourceImpl(container: DataBaseContainer) : TaxiDataSource {
-    private val collection by lazy { container.db.getCollection<Taxi>("taxi") }
+class TaxiGatewayImpl(container: DataBaseContainer) : TaxiGateway {
+    private val collection by lazy { container.db.getCollection<TaxiCollection>("taxi") }
 
     override suspend fun addTaxi(taxi: Taxi): Boolean {
-        return collection.insertOne(taxi).wasAcknowledged()
+        return collection.insertOne(taxi.toCollection()).wasAcknowledged()
     }
 
     override suspend fun getTaxiById(taxiId: String): Taxi? {
-        return collection.findOneById(Taxi::id eq ObjectId(taxiId))?.takeIf { !it.deleted }
+        return collection.findOneById(TaxiCollection::id eq ObjectId(taxiId))
+            ?.takeIf { !it.isDeleted }?.toTaxi()
     }
 
     override suspend fun getAllTaxes(): List<Taxi> {
-        return collection.find(Taxi::deleted eq false).toList()
+        return collection.find(TaxiCollection::isDeleted eq false).toList().toTaxes()
     }
 
     override suspend fun deleteTaxi(taxiId: String): Boolean {
-        return collection.updateOneById(taxiId, Taxi::deleted setTo true).wasAcknowledged()
+        return collection.updateOneById(taxiId, TaxiCollection::isDeleted setTo true)
+            .wasAcknowledged()
     }
 
     override suspend fun updateTaxi(taxiId: String, taxi: Taxi): Boolean {
