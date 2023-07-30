@@ -1,8 +1,9 @@
-package org.thechance.service_identity.data.dto
+package org.thechance.service_identity.model
 
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.litote.kmongo.Id
+import org.thechance.service_identity.entity.Wallet
 
 @Serializable
 data class WalletDto(
@@ -11,3 +12,11 @@ data class WalletDto(
     val userId: Id<UserDto>,
     val walletBalance: Double
 )
+
+fun WalletDto.toWallet(): Wallet {
+    return Wallet(
+        id = id.toString(),
+        userId = userId.toString(),
+        walletBalance = walletBalance
+    )
+}
