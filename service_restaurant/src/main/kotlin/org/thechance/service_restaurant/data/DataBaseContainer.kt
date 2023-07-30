@@ -6,7 +6,7 @@ import org.litote.kmongo.coroutine.coroutine
 import org.thechance.service_restaurant.utils.DATABASE_NAME
 
 @Single
-class DataBase(client: MongoClient) {
+class DataBaseContainer(client: MongoClient) {
 
     val database = client.coroutine.getDatabase(DATABASE_NAME)
 
