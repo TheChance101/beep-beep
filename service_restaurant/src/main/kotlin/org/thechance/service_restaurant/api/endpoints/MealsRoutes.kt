@@ -38,7 +38,7 @@ fun Route.mealRoutes() {
         }
 
         post {
-            val meal = call.receive<MealDto>()
+            val meal = call.receive<MealCollection>()
             val isAdded = mealUseCasesContainer.addMealUseCase(meal.toEntity())
             if (isAdded)
                 call.respond(HttpStatusCode.Created, "Meal added Successfully")
