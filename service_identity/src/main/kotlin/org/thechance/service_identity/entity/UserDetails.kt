@@ -8,8 +8,8 @@ data class UserDetails(
     val password: String,
     val email: String,
     val wallet: Wallet,
-    val addresses: List<Address>,
-    val permissions: List<Permission>
+    val addresses: List<String>,
+    val permissions: List<String>
 ){
     fun toUserDetailsDto(): UserDetailsDto {
         return UserDetailsDto(
@@ -18,8 +18,8 @@ data class UserDetails(
             password = password,
             email = email,
             wallet = wallet.toWalletDto(),
-            addresses = addresses.map { it.toAddressDto() },
-            permissions = permissions.map { it.toPermissionDto() }
+            addresses = addresses,
+            permissions = permissions
         )
     }
 }
