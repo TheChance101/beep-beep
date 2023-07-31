@@ -5,17 +5,17 @@ import org.thechance.service_identity.domain.entity.Address
 
 @Serializable
 data class AddressDto(
-    val id: String? = null,
+    val id: String,
     val userId: String,
     val country: String,
     val city: String,
     val street: String? = null,
     val zipCode: Long? = null,
     val houseNumber: String? = null
-){
+) {
     fun toAddress(): Address {
         return Address(
-            id = id.toString(),
+            id = id,
             userId = userId,
             country = country,
             city = city,
