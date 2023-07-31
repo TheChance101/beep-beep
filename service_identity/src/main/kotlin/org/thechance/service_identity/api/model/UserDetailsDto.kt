@@ -1,6 +1,7 @@
 package org.thechance.service_identity.api.model
 
 import kotlinx.serialization.Serializable
+import org.thechance.service_identity.entity.UserDetails
 
 @Serializable
 data class UserDetailsDto(
@@ -11,4 +12,16 @@ data class UserDetailsDto(
     val wallet: WalletDto,
     val addresses: List<String>,
     val permissions: List<String>
-)
+){
+    fun toUserDetails():UserDetails{
+        return UserDetails(
+            id = id,
+            userId = userId,
+            password = password,
+            email = email,
+            wallet = wallet.toWallet(),
+            addresses = addresses,
+            permissions = permissions
+        )
+    }
+}
