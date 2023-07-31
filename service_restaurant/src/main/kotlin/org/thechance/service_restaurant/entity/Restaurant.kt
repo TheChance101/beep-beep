@@ -5,14 +5,14 @@ import org.thechance.service_restaurant.data.collection.RestaurantCollection
 import java.time.LocalTime
 
 data class Restaurant(
-    val id: String?,
-    val name: String,
-    val description: String,
-    val priceLevel: String,
-    val rate: Double,
-    val phone: String,
-    val openingTime: String,
-    val closingTime: String,
+    val id: String? = null,
+    val name: String? = null,
+    val description: String? = null,
+    val priceLevel: String? = null,
+    val rate: Double? = null,
+    val phone: String? = null,
+    val openingTime: String? = null,
+    val closingTime: String? = null,
 
 //    val address: ObjectId,
 //    val meals: List<ObjectId>,

@@ -16,14 +16,14 @@ data class RestaurantDto(
 ) {
     fun toEntity(): Restaurant {
         return Restaurant(
-            id = id ?: "",
-            name = name ?: "",
-            description = description ?: "",
-            priceLevel = priceLevel ?: "",
-            rate = rate ?: -1.0,
-            phone = phone ?: "",
-            openingTime = openingTime ?: "",
-            closingTime = closingTime ?: ""
+            id = id,
+            name = name,
+            description = description,
+            priceLevel = priceLevel,
+            rate = rate,
+            phone = phone,
+            openingTime = openingTime,
+            closingTime = closingTime
         )
     }
 }
