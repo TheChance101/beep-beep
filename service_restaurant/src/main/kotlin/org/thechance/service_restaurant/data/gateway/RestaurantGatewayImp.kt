@@ -68,7 +68,7 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
     override suspend fun deleteRestaurant(restaurantId: String): Boolean {
         return restaurantCollection.updateOneById(
             id = ObjectId(restaurantId),
-            update = Updates.set(RestaurantCollection::isDeleted.toString(), true),
+            update = Updates.set(RestaurantCollection::isDeleted.name, true),
         ).wasAcknowledged()
     }
 
