@@ -7,6 +7,7 @@ import org.thechance.service_restaurant.data.DataBaseContainer
 import org.thechance.service_restaurant.data.collection.MealCollection
 import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
+import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.entity.Meal
 import org.thechance.service_restaurant.usecase.gateway.MealGateway
 
@@ -17,8 +18,7 @@ class MealGatewayImp(private val container: DataBaseContainer) : MealGateway {
     override suspend fun addMeal(meal: Meal): Boolean = mealCollection.insertOne(meal.toCollection()).wasAcknowledged()
 
     override suspend fun getMeals(page: Int, limit: Int): List<Meal> =
-        mealCollection.find(MealCollection::isDeleted eq false).skip((page - 1) * limit).limit(limit).toList()
-            .toEntity()
+        mealCollection.find(MealCollection::isDeleted eq false).paginate(page, limit).toList().toEntity()
 
     override suspend fun getMealById(id: String) = mealCollection.findOneById(ObjectId(id))?.toEntity()
 
@@ -32,6 +32,5 @@ class MealGatewayImp(private val container: DataBaseContainer) : MealGateway {
     override suspend fun updateMeal(id: String, meal: Meal): Boolean =
         mealCollection.updateOneById(ObjectId(id), meal.toCollection(), updateOnlyNotNullProperties = true)
             .wasAcknowledged()
-
 
 }
