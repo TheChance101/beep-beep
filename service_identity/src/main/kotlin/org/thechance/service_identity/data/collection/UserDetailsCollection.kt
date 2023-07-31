@@ -8,6 +8,7 @@ import org.bson.types.ObjectId
 import org.litote.kmongo.Id
 import org.thechance.service_identity.entity.UserDetails
 
+@Serializable
 data class UserDetailsCollection(
     @SerialName("_id")
     @BsonId
@@ -22,9 +23,9 @@ data class UserDetailsCollection(
     @SerialName("wallet")
     val wallet: WalletCollection,
     @SerialName("addresses")
-    val addresses: List<ObjectId>,
+    val addresses: List<Id<AddressCollection>>,
     @SerialName("permissions")
-    val permissions: List<ObjectId>
+    val permissions: List<Id<PermissionCollection>>
 ) {
     fun toUserDetails(): UserDetails {
         return UserDetails(
@@ -33,8 +34,8 @@ data class UserDetailsCollection(
             password = password,
             email = email,
             wallet = wallet.toWallet(),
-            addresses = addresses.map { it.toHexString() },
-            permissions = permissions.map { it.toHexString() }
+            addresses = addresses.map { it.toString() },
+            permissions = permissions.map { it.toString() }
         )
     }
 }
