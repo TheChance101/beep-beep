@@ -1,10 +1,10 @@
 package org.thechance.service_taxi.domain.gateway
 
 import org.koin.core.annotation.Single
-import org.thechance.service_taxi.domain.usecase.DeleteTaxiByIdUseCase
+import org.thechance.service_taxi.domain.usecase.DeleteTaxiUseCase
 
 @Single
-class DeleteTaxiByIdUseCaseImpl(private val taxiGateway: TaxiGateway) : DeleteTaxiByIdUseCase {
+class DeleteTaxiUseCaseImpl(private val taxiGateway: TaxiGateway) : DeleteTaxiUseCase {
     override suspend fun invoke(taxiId: String): Boolean {
         return taxiGateway.deleteTaxi(taxiId)
     }

@@ -1,5 +1,5 @@
 package org.thechance.service_taxi.domain.usecase
 
-interface DeleteTaxiByIdUseCase {
+interface DeleteTaxiUseCase {
     suspend operator fun invoke(taxiId: String): Boolean
 }

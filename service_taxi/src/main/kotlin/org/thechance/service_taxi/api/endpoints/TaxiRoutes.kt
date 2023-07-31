@@ -56,7 +56,7 @@ fun Route.taxiRoutes() {
 
         delete {
             val taxiId = call.parameters["taxiId"]?.trim().orEmpty()
-            val result = taxiUseCasesContainer.deleteTaxiByIdUseCase(taxiId)
+            val result = taxiUseCasesContainer.deleteTaxiUseCase(taxiId)
             if (result) {
                 call.respond(HttpStatusCode.OK, "deleted")
             } else {
