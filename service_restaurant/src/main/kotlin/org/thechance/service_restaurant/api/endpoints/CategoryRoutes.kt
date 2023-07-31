@@ -13,36 +13,36 @@ import org.thechance.service_restaurant.entity.toDto
 
 fun Route.categoryRoutes() {
 
-    val useCase: CategoryUseCasesContainer by inject()
+    val categoryUseCases: CategoryUseCasesContainer by inject()
 
     route("/category") {
 
         get {
-            val categories = useCase.getCategories().toDto()
+            val categories = categoryUseCases.getCategories().toDto()
             call.respond(HttpStatusCode.OK, categories)
         }
 
         get("/{id}") {
             val categoryId = call.parameters["id"] ?: ""
-            val category = useCase.getCategoryDetails(categoryId).toDto()
+            val category = categoryUseCases.getCategoryDetails(categoryId).toDto()
             call.respond(HttpStatusCode.OK, category)
         }
 
         post {
             val category = call.receive<CategoryDto>()
-            val result = useCase.addCategory(category.toEntity())
+            val result = categoryUseCases.addCategory(category.toEntity())
             call.respond(HttpStatusCode.Created, result)
         }
 
         put {
             val category = call.receive<CategoryDto>()
-            val result = useCase.updateCategory(category.toEntity())
+            val result = categoryUseCases.updateCategory(category.toEntity())
             call.respond(HttpStatusCode.OK, result)
         }
 
         delete("/{id}") {
             val categoryId = call.parameters["id"] ?: ""
-            val result = useCase.deleteCategory(categoryId)
+            val result = categoryUseCases.deleteCategory(categoryId)
             call.respond(HttpStatusCode.OK, result)
         }
 
