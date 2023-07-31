@@ -1,7 +1,6 @@
 package org.thechance.service_restaurant.data.collection.mapper
 
 import org.bson.types.ObjectId
-import org.thechance.service_restaurant.api.models.MealDto
 import org.thechance.service_restaurant.data.collection.MealCollection
 import org.thechance.service_restaurant.entity.Meal
 
