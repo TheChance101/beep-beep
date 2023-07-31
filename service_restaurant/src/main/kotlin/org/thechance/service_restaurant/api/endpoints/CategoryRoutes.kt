@@ -31,7 +31,7 @@ fun Route.categoryRoutes() {
         post {
             val category = call.receive<CategoryDto>()
             val result = useCase.addCategory(category.toEntity())
-            call.respond(HttpStatusCode.OK, result)
+            call.respond(HttpStatusCode.Created, result)
         }
 
         put {
