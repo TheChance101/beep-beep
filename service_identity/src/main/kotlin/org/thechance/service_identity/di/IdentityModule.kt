@@ -12,8 +12,10 @@ import org.litote.kmongo.reactivestreams.KMongo
 class IdentityModule
 
 val kmongoModule = module {
-    val cluster = System.getenv("cluster")
-    val username = System.getenv("username")
-    val password = System.getenv("password")
-    single { KMongo.createClient("mongodb+srv://$username:$password@$cluster.mongodb.net/").coroutine }
+    single {
+        val cluster = System.getenv("cluster")
+        val username = System.getenv("username")
+        val password = System.getenv("password")
+        KMongo.createClient("mongodb+srv://$username:$password@$cluster.mongodb.net/")
+    }
 }

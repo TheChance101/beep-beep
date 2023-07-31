@@ -1,4 +1,4 @@
-package org.thechance.service_identity.entity
+package org.thechance.service_identity.domain.entity
 
 import org.thechance.service_identity.api.model.PermissionDto
 import org.thechance.service_identity.utils.PermissionType
