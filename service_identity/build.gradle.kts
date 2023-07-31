@@ -58,7 +58,7 @@ dependencies {
     ksp("io.insert-koin:koin-ksp-compiler:$koin_ksp_version")
 
     // Kmongo
-    implementation("org.litote.kmongo:kmongo:4.9.0")
-    implementation("org.litote.kmongo:kmongo-coroutine:4.9.0")
+    implementation("org.litote.kmongo:kmongo:$kmongo_version")
+    implementation("org.litote.kmongo:kmongo-coroutine:$kmongo_version")
 }
 
