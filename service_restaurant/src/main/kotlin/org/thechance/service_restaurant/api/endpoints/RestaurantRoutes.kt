@@ -30,7 +30,7 @@ fun Route.restaurantRoutes() {
         post {
             val restaurant = call.receive<RestaurantDto>()
             val result = useCase.addRestaurant(restaurant.toEntity())
-            call.respond(HttpStatusCode.OK, result)
+            call.respond(HttpStatusCode.Created, result)
         }
 
         put {
