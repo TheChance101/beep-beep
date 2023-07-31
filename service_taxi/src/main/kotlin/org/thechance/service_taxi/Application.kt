@@ -1,8 +1,8 @@
 package org.thechance.service_taxi
 
-import io.ktor.server.application.*
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
+import io.ktor.server.application.Application
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.netty.Netty
 import org.thechance.service_taxi.plugins.configureDependencyInjection
 import org.thechance.service_taxi.plugins.configureMonitoring
 import org.thechance.service_taxi.plugins.configureRouting

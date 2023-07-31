@@ -3,6 +3,9 @@ package org.thechance.service_taxi.data
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.eq
+import org.thechance.service_taxi.api.models.toCollection
+import org.thechance.service_taxi.api.models.toTaxes
+import org.thechance.service_taxi.api.models.toTaxi
 import org.thechance.service_taxi.domain.entity.Taxi
 import org.thechance.service_taxi.domain.gateway.TaxiGateway
 
