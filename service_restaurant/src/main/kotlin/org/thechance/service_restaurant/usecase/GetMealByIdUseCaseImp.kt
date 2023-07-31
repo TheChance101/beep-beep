@@ -8,6 +8,6 @@ import org.thechance.service_restaurant.usecase.gateway.MealGateway
 
 @Single
 class GetMealByIdUseCaseImp(private val mealGateway: MealGateway) : GetMealByIdUseCase {
-    override suspend fun invoke(id: String): Meal = mealGateway.getMealById(id) ?: throw BadRequestException(",,")
+    override suspend fun invoke(id: String): Meal = mealGateway.getMealById(id) ?: throw NotFoundException()
 
 }
