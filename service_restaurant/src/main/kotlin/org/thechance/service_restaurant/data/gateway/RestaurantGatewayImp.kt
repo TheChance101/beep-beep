@@ -7,7 +7,6 @@ import org.litote.kmongo.eq
 import org.thechance.service_restaurant.data.DataBaseContainer
 import org.thechance.service_restaurant.data.collection.CategoryCollection
 import org.thechance.service_restaurant.data.collection.RestaurantCollection
-import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.collection.toEntity
 import org.thechance.service_restaurant.entity.Category
 import org.thechance.service_restaurant.entity.Restaurant
