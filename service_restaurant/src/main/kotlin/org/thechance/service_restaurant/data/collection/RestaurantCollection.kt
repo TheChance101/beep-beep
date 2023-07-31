@@ -11,14 +11,13 @@ import java.time.LocalTime
 
 @Serializable
 data class RestaurantCollection(
-    val name: String,
-    val description: String,
-    val priceLevel: String,
-    val rate: Double,
-    val phone: String,
-
-    val openingTime: String,
-    val closingTime: String,
+    val name: String? = null,
+    val description: String? = null,
+    val priceLevel: String? = null,
+    val rate: Double? = null,
+    val phone: String? = null,
+    val openingTime: String? = null,
+    val closingTime: String? = null,
 ) {
     @BsonId
     @Contextual
