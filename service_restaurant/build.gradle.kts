@@ -4,14 +4,17 @@ import org.jetbrains.kotlin.com.intellij.openapi.vfs.StandardFileSystems.jar
 val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
-val exposed_version : String by project
-val h2_version : String by project
+val exposed_version: String by project
+val h2_version: String by project
+val kmongoVersion: String by project
+val koinKsp : String by project
 
 plugins {
     kotlin("jvm") version "1.8.10"
     id("io.ktor.plugin") version "2.2.4"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
     id("application")
+    id("com.google.devtools.ksp") version "1.8.10-1.0.9"
 }
 
 group = "org.thechance.service_restaurant"
@@ -37,6 +40,21 @@ dependencies {
     implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor_version")
+
+    //KMongo
+    implementation("org.litote.kmongo:kmongo:$kmongoVersion")
+    implementation("org.litote.kmongo:kmongo-coroutine-serialization:$kmongoVersion")
+    implementation("org.litote.kmongo:kmongo-id:$kmongoVersion")
+
+    //Koin
+    implementation("io.insert-koin:koin-ktor:3.4.1")
+    implementation("io.insert-koin:koin-core:3.4.2")
+
+    //Koin annotations
+    ksp("io.insert-koin:koin-ksp-compiler:$koinKsp")
+    implementation("io.insert-koin:koin-annotations:$koinKsp")
+    implementation("com.google.devtools.ksp:symbol-processing-api:1.8.10-1.0.9")
+
 
     implementation("io.ktor:ktor-server-call-logging-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-swagger:$ktor_version")
