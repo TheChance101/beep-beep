@@ -2,7 +2,10 @@ package org.thechance.service_restaurant.data.gateway
 
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
+import org.litote.kmongo.coroutine.updateOne
 import org.litote.kmongo.eq
+import org.litote.kmongo.set
+import org.litote.kmongo.setTo
 import org.thechance.service_restaurant.data.DataBaseContainer
 import org.thechance.service_restaurant.data.collection.MealCollection
 import org.thechance.service_restaurant.data.collection.mapper.toCollection
@@ -23,14 +26,13 @@ class MealGatewayImp(private val container: DataBaseContainer) : MealGateway {
     override suspend fun getMealById(id: String) = mealCollection.findOneById(ObjectId(id))?.toEntity()
 
     override suspend fun deleteMealById(id: String): Boolean =
-        mealCollection.updateOneById(
-            id = ObjectId(id),
-            update = MealCollection(isDeleted = true),
-            updateOnlyNotNullProperties = true
+        mealCollection.updateOne(
+            filter = MealCollection::id eq ObjectId(id),
+            update = set(MealCollection::isDeleted setTo true),
         ).wasAcknowledged()
 
-    override suspend fun updateMeal(id: String, meal: Meal): Boolean =
-        mealCollection.updateOneById(ObjectId(id), meal.toCollection(), updateOnlyNotNullProperties = true)
+    override suspend fun updateMeal(meal: Meal): Boolean =
+        mealCollection.updateOne(meal.toCollection(), updateOnlyNotNullProperties = true)
             .wasAcknowledged()
 
 }
