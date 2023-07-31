@@ -10,13 +10,12 @@ import org.thechance.service_restaurant.data.collection.RestaurantCollection
 import org.thechance.service_restaurant.data.collection.toEntity
 import org.thechance.service_restaurant.entity.Restaurant
 import org.thechance.service_restaurant.usecase.gateway.RestaurantGateway
+import org.thechance.service_restaurant.utils.isSuccessfullyUpdated
 
 @Single
 class RestaurantGatewayImp(private val container: DataBaseContainer) : RestaurantGateway {
 
-    private val restaurantCollection by lazy {
-        container.database.getCollection<RestaurantCollection>()
-    }
+    private val restaurantCollection by lazy { container.database.getCollection<RestaurantCollection>() }
 
     override suspend fun getRestaurants(): List<Restaurant> {
         return restaurantCollection.find(RestaurantCollection::isDeleted eq false).toList().toEntity()
@@ -31,46 +30,18 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
     }
 
     override suspend fun updateRestaurant(restaurant: Restaurant): Boolean {
-        val updates = mutableListOf<Bson>()
-        if (restaurant.name.isNotEmpty()) {
-            updates.add(Updates.set(RestaurantCollection::name.name, restaurant.name))
-        }
-        if (restaurant.description.isNotEmpty()) {
-            updates.add(Updates.set(RestaurantCollection::description.name, restaurant.description))
-        }
-
-        if (restaurant.priceLevel.isNotEmpty()) {
-            updates.add(Updates.set(RestaurantCollection::priceLevel.name, restaurant.priceLevel))
-        }
-
-        if (restaurant.rate != -1.0) {
-            updates.add(Updates.set(RestaurantCollection::rate.name, restaurant.rate))
-        }
-
-        if (restaurant.phone.isNotEmpty()) {
-            updates.add(Updates.set(RestaurantCollection::phone.name, restaurant.phone))
-        }
-
-        if (restaurant.openingTime.isNotEmpty()) {
-            updates.add(Updates.set(RestaurantCollection::openingTime.name, restaurant.openingTime))
-        }
-
-        if (restaurant.closingTime.isNotEmpty()) {
-            updates.add(Updates.set(RestaurantCollection::closingTime.name, restaurant.closingTime))
-        }
-
         return restaurantCollection.updateOneById(
             id = ObjectId(restaurant.id),
-            update = Updates.combine(updates),
-        ).wasAcknowledged()
+            update = restaurant.toCollection(),
+            updateOnlyNotNullProperties = true
+        ).isSuccessfullyUpdated()
     }
 
     override suspend fun deleteRestaurant(restaurantId: String): Boolean {
         return restaurantCollection.updateOneById(
             id = ObjectId(restaurantId),
             update = Updates.set(RestaurantCollection::isDeleted.name, true),
-        ).wasAcknowledged()
+        ).isSuccessfullyUpdated()
     }
-
 
 }
