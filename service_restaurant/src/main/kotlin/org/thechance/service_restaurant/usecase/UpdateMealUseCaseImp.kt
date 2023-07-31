@@ -7,6 +7,6 @@ import org.thechance.service_restaurant.usecase.gateway.MealGateway
 
 @Single
 class UpdateMealUseCaseImp(private val mealGateway: MealGateway) : UpdateMealUseCase {
-    override suspend fun invoke(id: String, meal: Meal): Boolean = mealGateway.updateMeal(id, meal)
+    override suspend fun invoke(meal: Meal): Boolean = mealGateway.updateMeal(meal)
 
 }

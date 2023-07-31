@@ -4,6 +4,6 @@ import org.thechance.service_restaurant.entity.Meal
 
 interface UpdateMealUseCase {
 
-    suspend operator fun invoke(id: String, meal: Meal) : Boolean
+    suspend operator fun invoke(meal: Meal) : Boolean
 
 }
