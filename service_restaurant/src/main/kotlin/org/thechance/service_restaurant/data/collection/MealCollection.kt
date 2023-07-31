@@ -6,14 +6,16 @@ import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
 
+
 @Serializable
 data class MealCollection(
+    val name: String? = null,
+    val description: String? = null,
+    val isDeleted: Boolean = false,
+    val price: Int? = null
+) {
     @BsonId
     @Contextual
     @SerialName("_id")
-    val id: ObjectId,
-    val name: String,
-    val description: String,
-    val price: Double,
-    val isDeleted: Boolean = false
-)
+    val id = ObjectId()
+}
