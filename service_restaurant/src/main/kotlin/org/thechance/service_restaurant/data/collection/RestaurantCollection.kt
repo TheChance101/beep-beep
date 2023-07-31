@@ -6,7 +6,6 @@ import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
 import org.thechance.service_restaurant.entity.Restaurant
-import java.time.LocalTime
 
 
 @Serializable
@@ -34,7 +33,8 @@ data class RestaurantCollection(
             rate = rate,
             phone = phone,
             openingTime = openingTime,
-            closingTime = closingTime
+            closingTime = closingTime,
+            isDeleted = isDeleted
         )
     }
 }

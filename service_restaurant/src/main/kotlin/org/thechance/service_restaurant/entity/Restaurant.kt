@@ -13,11 +13,12 @@ data class Restaurant(
     val phone: String? = null,
     val openingTime: String? = null,
     val closingTime: String? = null,
-
+    val isDeleted: Boolean = false
 //    val address: ObjectId,
 //    val meals: List<ObjectId>,
 //    val categories: List<ObjectId>,
 ) {
+
     fun toDto(): RestaurantDto {
         return RestaurantDto(
             id = id ?: "",
@@ -39,7 +40,7 @@ data class Restaurant(
             rate = rate,
             phone = phone,
             openingTime = openingTime,
-            closingTime = closingTime
+            closingTime = closingTime,
         )
     }
 }
