@@ -1,5 +1,7 @@
 package org.thechance.service_identity.entity
 
+import org.thechance.service_identity.api.model.UserDetailsDto
+
 data class UserDetails(
     val id: String,
     val userId: String,
@@ -8,4 +10,16 @@ data class UserDetails(
     val wallet: Wallet,
     val addresses: List<Address>,
     val permissions: List<Permission>
-)
+){
+    fun toUserDetailsDto(): UserDetailsDto {
+        return UserDetailsDto(
+            id = id,
+            userId = userId,
+            password = password,
+            email = email,
+            wallet = wallet.toWalletDto(),
+            addresses = addresses.map { it.toAddressDto() },
+            permissions = permissions.map { it.toPermissionDto() }
+        )
+    }
+}
