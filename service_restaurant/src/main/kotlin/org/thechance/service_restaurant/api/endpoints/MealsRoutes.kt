@@ -55,10 +55,9 @@ fun Route.mealRoutes() {
                 call.respond(HttpStatusCode.NotFound, "Not Found")
         }
 
-        put("/{id}") {
-            val id = call.parameters.extractString("id") ?: throw NotFoundException("ID not provided")
+        put {
             val meal = call.receive<MealDto>()
-            val isUpdated = mealUseCasesContainer.updateMealUseCase(id, meal.toEntity())
+            val isUpdated = mealUseCasesContainer.updateMealUseCase(meal.toEntity())
             if (isUpdated)
                 call.respond(HttpStatusCode.OK, "updated successfully")
             else
