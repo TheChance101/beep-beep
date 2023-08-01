@@ -6,17 +6,8 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import org.thechance.service_identity.domain.usecases.wallet.AddWalletUseCase
-import org.thechance.service_identity.domain.usecases.wallet.AddWalletUseCaseImpl
-import org.thechance.service_identity.domain.usecases.wallet.DeleteWalletUseCase
-import org.thechance.service_identity.domain.usecases.wallet.DeleteWalletUseCaseImpl
-import org.thechance.service_identity.domain.usecases.wallet.GetUserWalletUseCase
-import org.thechance.service_identity.domain.usecases.wallet.GetWalletUseCase
-import org.thechance.service_identity.domain.usecases.wallet.GetWalletUseCaseImpl
-import org.thechance.service_identity.domain.usecases.wallet.UpdateWalletUseCase
-import org.thechance.service_identity.domain.usecases.wallet.UpdateWalletUseCaseImpl
 import org.thechance.service_identity.domain.usecases.wallet.WalletUseCaseContainer
-import org.thechance.service_identity.entity.Wallet
+import org.thechance.service_identity.domain.entity.Wallet
 
 fun Route.walletRoute(){
 

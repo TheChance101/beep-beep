@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
 import org.litote.kmongo.Id
-import org.thechance.service_identity.entity.Wallet
+import org.thechance.service_identity.domain.entity.Wallet
 
 @Serializable
 data class WalletCollection(

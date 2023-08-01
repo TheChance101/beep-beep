@@ -1,5 +1,7 @@
+package org.thechance.service_identity.utils
 
-
-const val DATABASE_NAME = "beepBeep"
-
-const val WALLET_COLLECTION = "wallet"
+object Constants {
+    const val DATA_BASE_NAME = "beep_beep"
+    const val WALLET_COLLECTION = "wallet"
+    const val ADDRESS_COLLECTION_NAME = "address"
+}
