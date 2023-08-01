@@ -1,16 +1,22 @@
+package org.thechance.service_identity.api.endpoints
+
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
+import org.thechance.service_identity.domain.usecases.wallet.AddWalletUseCaseImpl
+import org.thechance.service_identity.domain.usecases.wallet.DeleteWalletUseCaseImpl
+import org.thechance.service_identity.domain.usecases.wallet.GetWalletUseCaseImpl
+import org.thechance.service_identity.domain.usecases.wallet.UpdateWalletUseCaseImpl
 import org.thechance.service_identity.entity.Wallet
 
 fun Route.walletRoute(){
 
     val addWallet : AddWalletUseCaseImpl by inject()
     val getWallet : GetWalletUseCaseImpl by inject()
-    val deleteWallet :DeleteWalletUseCaseImpl by inject()
+    val deleteWallet : DeleteWalletUseCaseImpl by inject()
     val updateWallet : UpdateWalletUseCaseImpl by inject()
     val getUserWallet : GetWalletUseCaseImpl by inject()
 
