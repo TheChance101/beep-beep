@@ -49,6 +49,13 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
             update = Updates.set(CategoryCollection::isDeleted.name, true),
         ).isSuccessfullyUpdated()
     }
+
+    override suspend fun addRestaurantsToCategory(categoryId: String, restaurantIds: List<String>): Boolean {
+        return categoryCollection.updateOneById(
+            ObjectId(categoryId),
+            update = Updates.addToSet(RestaurantCollection::categoriesIds.name, restaurantIds.map { ObjectId(it) })
+        ).isSuccessfullyUpdated()
+    }
     //endregion
 
     override suspend fun getRestaurants(): List<Restaurant> {

@@ -8,6 +8,7 @@ data class Category(
     val name: String? = null,
     val isDeleted: Boolean = false
 ) {
+    val restaurant = mutableListOf<Restaurant>()
     fun toDto(): CategoryDto {
         return CategoryDto(
             id = id,
