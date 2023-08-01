@@ -1,4 +1,4 @@
-package org.thechance.service_identity.entity
+package org.thechance.service_identity.domain.entity
 
 import org.thechance.service_identity.api.model.AddressDto
 
@@ -9,8 +9,9 @@ data class Address(
     val city: String,
     val street: String? = null,
     val zipCode: Long? = null,
-    val houseNumber: String? = null
-){
+    val houseNumber: String? = null,
+    val isDeleted: Boolean? = null
+) {
     fun toAddressDto(): AddressDto {
         return AddressDto(
             id = id,

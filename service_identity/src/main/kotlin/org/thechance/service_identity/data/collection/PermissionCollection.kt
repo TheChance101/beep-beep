@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
-import org.thechance.service_identity.entity.Permission
+import org.thechance.service_identity.domain.entity.Permission
 import org.thechance.service_identity.utils.PermissionType
 
 @Serializable
