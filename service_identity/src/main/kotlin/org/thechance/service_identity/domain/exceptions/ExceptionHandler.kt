@@ -2,9 +2,10 @@ package org.thechance.service_identity.domain.exceptions
 
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.response.*
 import org.thechance.service_identity.api.ServerResponse
 
-fun handleException(cause: Throwable, call: ApplicationCall) {
+suspend fun handleException(cause: Throwable, call: ApplicationCall) {
 
     val messageResponse = when (cause) {
         is IdNotFoundException -> {
@@ -19,5 +20,5 @@ fun handleException(cause: Throwable, call: ApplicationCall) {
             ServerResponse.error(cause.message.toString(), HttpStatusCode.InternalServerError.value)
         }
     }
-
+    call.respond(messageResponse)
 }
