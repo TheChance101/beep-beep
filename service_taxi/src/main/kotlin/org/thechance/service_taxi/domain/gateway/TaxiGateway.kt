@@ -7,5 +7,5 @@ interface TaxiGateway {
     suspend fun getTaxiById(taxiId: String): Taxi?
     suspend fun getAllTaxes(): List<Taxi>
     suspend fun deleteTaxi(taxiId: String): Boolean
-    suspend fun updateTaxi(taxiId: String, taxi: Taxi): Boolean
+    suspend fun updateTaxi(taxi: Taxi): Boolean
 }

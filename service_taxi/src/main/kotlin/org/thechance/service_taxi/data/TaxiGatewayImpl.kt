@@ -33,9 +33,9 @@ class TaxiGatewayImpl(container: DataBaseContainer) : TaxiGateway {
         ).wasAcknowledged()
     }
 
-    override suspend fun updateTaxi(taxiId: String, taxi: Taxi): Boolean {
+    override suspend fun updateTaxi(taxi: Taxi): Boolean {
         return collection.updateOneById(
-            ObjectId(taxiId),
+            ObjectId(taxi.id),
             taxi.toCollection(),
             updateOnlyNotNullProperties = true
         ).wasAcknowledged()

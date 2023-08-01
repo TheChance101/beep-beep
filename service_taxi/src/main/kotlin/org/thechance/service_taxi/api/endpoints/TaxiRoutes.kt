@@ -46,7 +46,8 @@ fun Route.taxiRoutes() {
         put("/{taxiId}") {
             val taxiId = call.parameters["taxiId"]?.trim().orEmpty()
             val taxi = call.receive<TaxiDto>()
-            val result = taxiUseCasesContainer.updateTaxiByIdUseCase(taxiId, taxi.toTaxi())
+            val result =
+                taxiUseCasesContainer.updateTaxiByIdUseCase(taxi.toTaxi().copy(id = taxiId))
             if (result) {
                 call.respond(HttpStatusCode.OK, "updated")
             } else {

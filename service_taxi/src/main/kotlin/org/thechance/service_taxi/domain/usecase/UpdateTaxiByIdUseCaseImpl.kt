@@ -7,7 +7,7 @@ import org.thechance.service_taxi.domain.gateway.TaxiGateway
 
 @Single
 class UpdateTaxiByIdUseCaseImpl(private val taxiGateway: TaxiGateway) : UpdateTaxiByIdUseCase {
-    override suspend fun invoke(taxiId: String, taxi: Taxi): Boolean {
-        return taxiGateway.updateTaxi(taxiId, taxi)
+    override suspend fun invoke(taxi: Taxi): Boolean {
+        return taxiGateway.updateTaxi(taxi)
     }
 }
