@@ -12,16 +12,29 @@ data class UserDetailsDto(
     val wallet: WalletDto? = null,
     val addresses: List<String>,
     val permissions: List<String>
-){
-    fun toUserDetails():UserDetails{
-        return UserDetails(
-            id = id,
-            userId = userId,
-            password = password,
-            email = email,
-            wallet = wallet.toWallet(),
-            addresses = addresses,
-            permissions = permissions
-        )
-    }
+)
+
+fun UserDetailsDto.toEntity(): UserDetails {
+    return UserDetails(
+        id = id,
+        userId = userId,
+        password = password,
+        email = email,
+        wallet = wallet?.toWallet(),
+        addresses = addresses,
+        permissions = permissions
+    )
+}
+
+
+fun UserDetails.toDto(): UserDetailsDto {
+    return UserDetailsDto(
+        id = id,
+        userId = userId,
+        password = password,
+        email = email,
+        wallet = wallet?.toWalletDto(),
+        addresses = addresses,
+        permissions = permissions
+    )
 }
