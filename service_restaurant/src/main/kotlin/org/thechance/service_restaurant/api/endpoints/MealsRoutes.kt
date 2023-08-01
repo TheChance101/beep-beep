@@ -10,11 +10,11 @@ import org.koin.ktor.ext.inject
 import org.thechance.service_restaurant.api.models.MealDto
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
-import org.thechance.service_restaurant.api.usecases.MealUseCasesContainer
 import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
 import org.thechance.service_restaurant.data.collection.MealCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
+import org.thechance.service_restaurant.usecase.meal.MealUseCasesContainer
 
 fun Route.mealRoutes() {
 
@@ -62,6 +62,30 @@ fun Route.mealRoutes() {
                 call.respond(HttpStatusCode.OK, "updated successfully")
             else
                 call.respond(HttpStatusCode.NotFound, "Failed to update meal")
+        }
+
+        post("/{mealId}/cuisine/{cuisineId}") {
+            val mealId = call.parameters.extractString("mealId") ?: throw NotFoundException("ID not provided")
+            val cuisineId = call.parameters.extractString("cuisineId") ?: throw NotFoundException("ID not provided")
+            val isAdded = mealUseCasesContainer.addCuisineToMealUseCase(mealId, cuisineId)
+            if (isAdded) call.respond(HttpStatusCode.OK, "Cuisine added Successfully")
+
+        }
+
+        delete("/{mealId}/cuisine/{cuisineId}") {
+            val mealId = call.parameters.extractString("mealId") ?: throw NotFoundException("ID not provided")
+            val cuisineId = call.parameters.extractString("cuisineId") ?: throw NotFoundException("ID not provided")
+            val isDeleted = mealUseCasesContainer.deleteCuisineFromMealUseCase(mealId, cuisineId)
+            if (isDeleted)
+                call.respond(HttpStatusCode.OK, "Cuisine deleted Successfully")
+            else
+                call.respond(HttpStatusCode.NotFound, "Not Found")
+        }
+
+        get("/{mealId}/cuisine") {
+            val mealId = call.parameters.extractString("mealId") ?: throw NotFoundException("ID not provided")
+            val cuisines = mealUseCasesContainer.getMealCuisinesUseCase(mealId)
+            call.respond(cuisines.toDto())
         }
 
     }
