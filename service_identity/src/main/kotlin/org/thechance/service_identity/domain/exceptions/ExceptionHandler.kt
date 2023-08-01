@@ -1,4 +1,4 @@
-package org.thechance.service_identity.utils
+package org.thechance.service_identity.domain.exceptions
 
 import io.ktor.http.*
 import io.ktor.server.application.*

@@ -1,4 +1,4 @@
-package org.thechance.service_identity.utils
+package org.thechance.service_identity.domain.exceptions
 
 class InvalidIdException():Exception()
 
