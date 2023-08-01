@@ -1,9 +1,9 @@
 import org.jetbrains.compose.compose
 plugins {
     kotlin("multiplatform")
-    id("org.jetbrains.compose")
+    kotlin("native.cocoapods")
     id("com.android.library")
-//    kotlin("native.cocoapods")
+    id("org.jetbrains.compose")
 }
 
 group = "com.beepbeep"
@@ -15,23 +15,23 @@ kotlin {
         jvmToolchain(11)
     }
 //    androidTarget()
-//
-//    iosX64()
-//    iosArm64()
-//    iosSimulatorArm64()
-//
-//    cocoapods {
-//        version = "1.0.0"
-//        summary = "Some description for the Shared Module"
-//        homepage = "Link to the Shared Module homepage"
-//        ios.deploymentTarget = libs.versions.ios.deploymentTarget.get()
-//        podfile = project.file("../iosApp/Podfile")
-//        framework {
-//            baseName = "shared"
-//            isStatic = true
-//        }
-//        extraSpecAttributes["resources"] = "['src/commonMain/resources/**', 'src/iosMain/resources/**']"
-//    }
+
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+
+    cocoapods {
+        version = "1.0.0"
+        summary = "Some description for the Shared Module"
+        homepage = "Link to the Shared Module homepage"
+        ios.deploymentTarget = "14.1"
+        podfile = project.file("../iosApp/Podfile")
+        framework {
+            baseName = "shared"
+            isStatic = true
+        }
+        extraSpecAttributes["resources"] = "['src/commonMain/resources/**', 'src/iosMain/resources/**']"
+    }
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -46,15 +46,15 @@ kotlin {
                 api("androidx.core:core-ktx:1.9.0")
             }
         }
-//        val iosX64Main by getting
-//        val iosArm64Main by getting
-//        val iosSimulatorArm64Main by getting
-//        val iosMain by creating {
-//            dependsOn(commonMain)
-//            iosX64Main.dependsOn(this)
-//            iosArm64Main.dependsOn(this)
-//            iosSimulatorArm64Main.dependsOn(this)
-//        }
+        val iosX64Main by getting
+        val iosArm64Main by getting
+        val iosSimulatorArm64Main by getting
+        val iosMain by creating {
+            dependsOn(commonMain)
+            iosX64Main.dependsOn(this)
+            iosArm64Main.dependsOn(this)
+            iosSimulatorArm64Main.dependsOn(this)
+        }
         val desktopMain by getting {
             dependencies {
                 api(compose.preview)

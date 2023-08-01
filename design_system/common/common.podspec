@@ -12,7 +12,7 @@ Pod::Spec.new do |spec|
                 
                 
     spec.pod_target_xcconfig = {
-        'KOTLIN_PROJECT_PATH' => ':design_system_2:common',
+        'KOTLIN_PROJECT_PATH' => ':design_system:common',
         'PRODUCT_MODULE_NAME' => 'shared',
     }
                 
