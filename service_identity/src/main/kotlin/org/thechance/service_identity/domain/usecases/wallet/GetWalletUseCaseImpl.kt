@@ -1,6 +1,7 @@
+package org.thechance.service_identity.domain.usecases.wallet
+
+import org.thechance.service_identity.data.geteway.WalletGateWayImpl
 import org.koin.core.annotation.Single
-import org.thechance.service_identity.domain.gateway.WalletGateWay
-import org.thechance.service_identity.domain.usecases.wallet.GetWalletUseCase
 import org.thechance.service_identity.entity.Wallet
 
 @Single

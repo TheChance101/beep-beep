@@ -1,8 +1,10 @@
-
+package org.thechance.service_identity.data.geteway
+import WALLET_COLLECTION
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.eq
 import org.litote.kmongo.id.toId
+import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.WalletCollection
 import org.thechance.service_identity.domain.gateway.WalletGateWay
 import org.thechance.service_identity.entity.Wallet
@@ -10,7 +12,9 @@ import org.thechance.service_identity.entity.Wallet
 @Single
 class WalletGateWayImpl(dataBase : DataBaseContainer) : WalletGateWay {
 
-    private val walletCollection by lazy { dataBase.database.getCollection<WalletCollection>(WALLET_COLLECTION) }
+    private val walletCollection by lazy { dataBase.database.getCollection<WalletCollection>(
+        WALLET_COLLECTION
+    ) }
 
     override  suspend fun getWalletById(id: String): Wallet {
      return   walletCollection.findOneById(ObjectId(id))?.toWallet() ?: throw Exception("Wallet not found")
