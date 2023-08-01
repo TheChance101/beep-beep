@@ -18,6 +18,8 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(project(":client_dashboard:common"))
+//                implementation(project(":design_system:common"))
+//                implementation(project(":design_system"))
                 implementation(compose.desktop.currentOs)
             }
         }

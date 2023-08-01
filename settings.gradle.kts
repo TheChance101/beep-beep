@@ -20,6 +20,14 @@ include(":client_support")
 include(":client_support:desktop")
 include("client_support:common")
 
+//include(":design_system")
+//include(":design_system:common")
+//include(":design_system:common:commonMain")
+
+include(":design_system_2")
+include(":design_system_2:shared")
+include(":design_system_2:androidApp")
+//include(":design_system_2:desktop")
 
 pluginManagement {
     repositories {
