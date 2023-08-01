@@ -1,12 +1,16 @@
 package org.thechance.service_identity.data.geteway
 
-import USER_COLLECTION
+import com.mongodb.client.model.Filters
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
+import org.litote.kmongo.eq
+import org.litote.kmongo.setValue
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.UserCollection
+import org.thechance.service_identity.domain.entity.User
 import org.thechance.service_identity.domain.gateway.UserGateWay
-import org.thechance.service_identity.entity.User
+import org.thechance.service_identity.utils.Constants.USER_COLLECTION
+import org.thechance.service_identity.utils.isDocumentModified
 
 @Single
 class UserGateWayImp(dataBaseContainer: DataBaseContainer): UserGateWay {
@@ -15,34 +19,42 @@ class UserGateWayImp(dataBaseContainer: DataBaseContainer): UserGateWay {
         USER_COLLECTION
     ) }
 
-    override suspend fun getUserById(id: String): User {
-        TODO("Not yet implemented")
-    }
+    override suspend fun getUserById(id: String): User? =
+        userCollection.findOne(
+            UserCollection::id eq ObjectId(id),
+            UserCollection::isDeleted eq false
+        )?.toUser()
 
-    override suspend fun getUsers(): List<User> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun createUser(user: User): Boolean {
-        return  userCollection.insertOne(user.toCollection()).wasAcknowledged()
-    }
-
-    override suspend fun updateUser(id: String, user: User): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun deleteUser(id: String): Boolean {
-        TODO("Not yet implemented")
-    }
+    override suspend fun getUsers(): List<User> =
+        userCollection.find(
+            UserCollection::isDeleted eq false
+        ).toList().toUser()
 
 
-    private fun User.toCollection(): UserCollection {
-        return UserCollection(
-            id = ObjectId(this.id),
-            fullName = this.fullName,
-            username = this.username,
-            isDeleted = this.isDeleted,
-        )
-    }
+    override suspend fun createUser(user: User): Boolean  =
+        userCollection.insertOne(user.toCollection()).wasAcknowledged()
 
+    override suspend fun updateUser(id: String, user: User): Boolean =
+        userCollection.updateOneById(ObjectId(id), user.toCollection()).isDocumentModified()
+
+    override suspend fun deleteUser(id: String): Boolean =
+        userCollection.updateOne(
+            filter = Filters.and(UserCollection::id eq ObjectId(id), UserCollection::isDeleted eq false),
+            update = setValue(UserCollection::isDeleted, true)
+        ).isDocumentModified()
+
+
+}
+
+private fun User.toCollection(): UserCollection {
+    return UserCollection(
+        id = ObjectId(this.id),
+        fullName = this.fullName,
+        username = this.username,
+        isDeleted = this.isDeleted,
+    )
+}
+
+fun List<UserCollection>.toUser(): List<User> {
+    return this.map { it.toUser() }
 }

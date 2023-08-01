@@ -1,11 +1,10 @@
 package org.thechance.service_identity.domain.gateway
 
-import org.thechance.service_identity.entity.User
-import org.thechance.service_identity.entity.Wallet
+import org.thechance.service_identity.domain.entity.User
 
 interface UserGateWay {
 
-    suspend fun getUserById(id: String): User
+    suspend fun getUserById(id: String): User?
 
     suspend fun getUsers(): List<User>
 
