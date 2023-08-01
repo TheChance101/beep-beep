@@ -1,4 +1,4 @@
-package org.thechance.service_restaurant.usecase
+package org.thechance.service_restaurant.usecase.restaurant
 
 import org.koin.core.annotation.Single
 import org.thechance.service_restaurant.api.usecases.CreateRestaurantUseCase
