@@ -6,14 +6,19 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
+import org.thechance.service_identity.domain.entity.User
 import org.thechance.service_identity.domain.usecases.user.CreateUserUseCase
-import org.thechance.service_identity.entity.User
 
 fun Route.userRoutes() {
 
     val createUserUseCase: CreateUserUseCase by inject()
 
     route("/user"){
+
+        get {
+
+        }
+
         post{
             try {
                 val user = call.receive<User>()
@@ -22,6 +27,10 @@ fun Route.userRoutes() {
             }catch (e: Exception){
                 call.respond(HttpStatusCode.BadRequest)
             }
+        }
+
+        put {
+
         }
     }
 
