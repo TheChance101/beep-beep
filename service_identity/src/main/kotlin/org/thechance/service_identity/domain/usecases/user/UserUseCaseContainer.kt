@@ -4,6 +4,7 @@ import org.koin.core.annotation.Single
 
 @Single
 data class UserUseCaseContainer (
+    val createUserUseCase: CreateUserUseCase,
     val getUserByIdUseCase: GetUserByIdUseCase,
     val getUsersUseCase: GetUsersUseCase,
     val deleteUserUseCase: DeleteUserUseCase,
