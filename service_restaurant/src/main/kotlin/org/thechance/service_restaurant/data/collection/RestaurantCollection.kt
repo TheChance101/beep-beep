@@ -21,7 +21,7 @@ data class RestaurantCollection(
     @BsonId
     @Contextual
     @SerialName("_id")
-    val id = ObjectId()
+    val id: ObjectId = ObjectId()
     val isDeleted: Boolean = false
 
     fun toEntity(): Restaurant {

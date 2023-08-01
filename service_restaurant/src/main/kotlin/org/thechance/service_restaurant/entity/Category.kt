@@ -6,7 +6,8 @@ import org.thechance.service_restaurant.data.collection.CategoryCollection
 data class Category(
     val id: String? = null,
     val name: String? = null,
-    val isDeleted: Boolean = false
+    val isDeleted: Boolean = false,
+    val restaurants: List<Restaurant>? = null
 ) {
     fun toDto(): CategoryDto {
         return CategoryDto(
