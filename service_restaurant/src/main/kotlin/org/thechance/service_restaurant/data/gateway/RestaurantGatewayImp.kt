@@ -1,9 +1,14 @@
 package org.thechance.service_restaurant.data.gateway
 
+import com.mongodb.client.model.Filters.and
 import com.mongodb.client.model.Updates
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
+import org.litote.kmongo.coroutine.aggregate
 import org.litote.kmongo.eq
+import org.litote.kmongo.lookup
+import org.litote.kmongo.match
+import org.litote.kmongo.project
 import org.thechance.service_restaurant.data.DataBaseContainer
 import org.thechance.service_restaurant.data.collection.CategoryCollection
 import org.thechance.service_restaurant.data.collection.RestaurantCollection
@@ -12,6 +17,7 @@ import org.thechance.service_restaurant.entity.Category
 import org.thechance.service_restaurant.entity.Restaurant
 import org.thechance.service_restaurant.usecase.gateway.RestaurantGateway
 import org.thechance.service_restaurant.utils.isSuccessfullyUpdated
+
 
 @Single
 class RestaurantGatewayImp(private val container: DataBaseContainer) : RestaurantGateway {
@@ -24,11 +30,28 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
 
     //region Category
     override suspend fun getCategories(): List<Category> {
-        return categoryCollection.find(CategoryCollection::isDeleted eq false).toList().toEntity()
+        return categoryCollection.aggregate<CategoryCollection>(
+            match(CategoryCollection::isDeleted eq false),
+            project(
+                CategoryCollection::name,
+                CategoryCollection::id
+            )
+        ).toList().toEntity()
     }
 
     override suspend fun getCategory(categoryId: String): Category? {
-        return categoryCollection.findOneById(ObjectId(categoryId))?.takeIf { !it.isDeleted }?.toEntity()
+        return categoryCollection.aggregate<CategoryCollection>(
+            match(
+                and(
+                    CategoryCollection::id eq ObjectId(categoryId),
+                    CategoryCollection::isDeleted eq false
+                )
+            ),
+            project(
+                CategoryCollection::name,
+                CategoryCollection::id
+            )
+        ).toList().firstOrNull()?.toEntity()
     }
 
     override suspend fun addCategory(category: Category): Boolean {
@@ -53,11 +76,27 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
     override suspend fun addRestaurantsToCategory(categoryId: String, restaurantIds: List<String>): Boolean {
         return categoryCollection.updateOneById(
             ObjectId(categoryId),
-            update = Updates.addToSet(RestaurantCollection::categoriesIds.name, restaurantIds.map { ObjectId(it) })
+            update = Updates.addEachToSet(CategoryCollection::restaurantIds.name, restaurantIds.map { ObjectId(it) })
         ).isSuccessfullyUpdated()
+    }
+
+    override suspend fun getRestaurantsInCategory(categoryId: String): List<Restaurant> {
+        return categoryCollection.aggregate<CategoryCollection>(
+            match(CategoryCollection::id eq ObjectId(categoryId)),
+            lookup(
+                from = "restaurantCollection",
+                localField = CategoryCollection::restaurantIds.name,
+                foreignField = "_id",
+                newAs = CategoryCollection::restaurants.name
+            ),
+            project(
+                CategoryCollection::restaurants
+            )
+        ).toList().firstOrNull()?.restaurants?.toEntity() ?: emptyList()
     }
     //endregion
 
+    //region Restaurant
     override suspend fun getRestaurants(): List<Restaurant> {
         return restaurantCollection.find(RestaurantCollection::isDeleted eq false).toList().toEntity()
     }
@@ -84,5 +123,5 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
             update = Updates.set(RestaurantCollection::isDeleted.name, true),
         ).isSuccessfullyUpdated()
     }
-
+    //endregion
 }
