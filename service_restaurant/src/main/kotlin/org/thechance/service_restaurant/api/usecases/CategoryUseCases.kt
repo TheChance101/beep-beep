@@ -12,7 +12,8 @@ data class CategoryUseCasesContainer(
     val addCategory: CreateCategoryUseCases,
     val updateCategory: UpdateCategoryUseCases,
     val deleteCategory: DeleteCategoryUseCases,
-    val addRestaurantToCategory: AddRestaurantToCategoryUseCases
+    val addRestaurantsToCategory: AddRestaurantsToCategoryUseCases,
+    val getRestaurantsInCategory: GetRestaurantsInCategoryUseCases
 )
 
 interface GetCategoriesUseCases {
@@ -35,6 +36,10 @@ interface DeleteCategoryUseCases {
     suspend operator fun invoke(categoryId: String): Boolean
 }
 
-interface AddRestaurantToCategoryUseCases {
+interface AddRestaurantsToCategoryUseCases {
     suspend operator fun invoke(categoryId: String, restaurantIds: List<String>): Boolean
+}
+
+interface GetRestaurantsInCategoryUseCases {
+    suspend operator fun invoke(categoryId: String): List<Restaurant>
 }

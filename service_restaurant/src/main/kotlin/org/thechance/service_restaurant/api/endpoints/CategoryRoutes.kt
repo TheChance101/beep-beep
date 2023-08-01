@@ -28,6 +28,12 @@ fun Route.categoryRoutes() {
             call.respond(HttpStatusCode.OK, category)
         }
 
+        get("/{id}/restaurants") {
+            val categoryId = call.parameters["id"] ?: ""
+            val category = categoryUseCases.getRestaurantsInCategory(categoryId).toDto()
+            call.respond(HttpStatusCode.OK, category)
+        }
+
         post {
             val category = call.receive<CategoryDto>()
             val result = categoryUseCases.addCategory(category.toEntity())
@@ -37,7 +43,7 @@ fun Route.categoryRoutes() {
         post("/{id}/addRestaurant") {
             val categoryId = call.parameters["id"] ?: ""
             val restaurantIds = call.receive<List<String>>()
-            val result = categoryUseCases.addRestaurantToCategory(categoryId, restaurantIds)
+            val result = categoryUseCases.addRestaurantsToCategory(categoryId, restaurantIds)
             call.respond(HttpStatusCode.OK, result)
         }
 

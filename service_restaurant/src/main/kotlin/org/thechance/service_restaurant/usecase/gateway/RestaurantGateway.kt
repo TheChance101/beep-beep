@@ -12,6 +12,8 @@ interface RestaurantGateway {
     suspend fun updateCategory(category: Category): Boolean
     suspend fun deleteCategory(categoryId: String): Boolean
     suspend fun addRestaurantsToCategory(categoryId: String, restaurantIds: List<String>): Boolean
+
+    suspend fun getRestaurantsInCategory(categoryId: String): List<Restaurant>
     //endregion
 
     //region restaurant

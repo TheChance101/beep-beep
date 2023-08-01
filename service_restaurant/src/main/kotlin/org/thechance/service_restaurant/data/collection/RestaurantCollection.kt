@@ -25,10 +25,9 @@ data class RestaurantCollection(
     val id: ObjectId = ObjectId()
     val isDeleted: Boolean = false
 
-
-    @SerialName("categories")
-    @Contextual
-    val categoriesIds: MutableList<Id<String>> = mutableListOf()
+//    val categoriesIds: MutableList<Id<String>> = mutableListOf()
+//
+//    val categories: MutableList<CategoryCollection> = mutableListOf()
 
     fun toEntity(): Restaurant {
         return Restaurant(
