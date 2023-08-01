@@ -14,7 +14,7 @@ import org.koin.ktor.ext.inject
 import org.thechance.service_taxi.api.models.TaxiDto
 import org.thechance.service_taxi.api.models.toDto
 import org.thechance.service_taxi.api.models.toTaxi
-import org.thechance.service_taxi.domain.usecase.TaxiUseCasesContainer
+import org.thechance.service_taxi.api.usecase.TaxiUseCasesContainer
 
 fun Route.taxiRoutes() {
     val taxiUseCasesContainer: TaxiUseCasesContainer by inject()
@@ -39,28 +39,28 @@ fun Route.taxiRoutes() {
             if (result) {
                 call.respond(HttpStatusCode.OK, "added")
             } else {
-                call.respond(HttpStatusCode.BadGateway, "taxi not added")
+                call.respond(HttpStatusCode.NotFound, "taxi not added")
             }
         }
 
-        put {
+        put("/{taxiId}") {
             val taxiId = call.parameters["taxiId"]?.trim().orEmpty()
             val taxi = call.receive<TaxiDto>()
             val result = taxiUseCasesContainer.updateTaxiByIdUseCase(taxiId, taxi.toTaxi())
             if (result) {
                 call.respond(HttpStatusCode.OK, "updated")
             } else {
-                call.respond(HttpStatusCode.BadGateway, "taxi not updated")
+                call.respond(HttpStatusCode.NotFound, "taxi not updated")
             }
         }
 
-        delete {
+        delete("/{taxiId}") {
             val taxiId = call.parameters["taxiId"]?.trim().orEmpty()
             val result = taxiUseCasesContainer.deleteTaxiUseCase(taxiId)
             if (result) {
                 call.respond(HttpStatusCode.OK, "deleted")
             } else {
-                call.respond(HttpStatusCode.BadGateway, "taxi not deleted")
+                call.respond(HttpStatusCode.NotFound, "taxi not deleted")
             }
         }
     }
