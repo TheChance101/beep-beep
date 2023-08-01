@@ -1,4 +1,4 @@
-package org.thechance.service_identity.domain.usecase.address
+package org.thechance.service_identity.domain.usecases.address
 
 import org.koin.core.annotation.Single
 import org.thechance.service_identity.domain.entity.Address

@@ -25,8 +25,10 @@ data class AddressCollection(
     @SerialName("zip_code")
     val zipCode: Long? = null,
     @SerialName("house_number")
-    val houseNumber: String? = null
-){
+    val houseNumber: String? = null,
+    @SerialName("is_deleted")
+    val isDeleted: Boolean = false
+) {
     fun toAddress(): Address {
         return Address(
             id = id.toHexString(),
@@ -35,7 +37,8 @@ data class AddressCollection(
             city = city,
             street = street,
             zipCode = zipCode,
-            houseNumber = houseNumber
+            houseNumber = houseNumber,
+            isDeleted = isDeleted
         )
     }
 }

@@ -1,7 +1,7 @@
 package org.thechance.service_identity.api.model
 
 import kotlinx.serialization.Serializable
-import org.thechance.service_identity.entity.UserDetails
+import org.thechance.service_identity.domain.entity.UserDetails
 
 @Serializable
 data class UserDetailsDto(
