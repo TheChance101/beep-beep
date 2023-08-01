@@ -20,21 +20,19 @@ fun Route.cuisineRoutes() {
 
     val cuisineUseCasesContainer: CuisineUseCasesContainer by inject()
 
-    route("cuisines") {
-        get("/{page}") {
-            val page = call.parameters.extractInt("page") ?: 1
-            val limit = call.parameters.extractInt("limit") ?: 10
-            val cuisines = cuisineUseCasesContainer.getCuisinesUseCase(page, limit)
-            call.respond(cuisines.toDto())
-        }
-    }
-
     route("cuisine") {
 
         post {
             val cuisine = call.receive<CuisineCollection>()
             val isAdded = cuisineUseCasesContainer.addCuisineUseCase(cuisine.toEntity())
             if (isAdded) call.respond(HttpStatusCode.Created, "Added Successfully")
+        }
+
+        get {
+            val page = call.parameters.extractInt("page") ?: 1
+            val limit = call.parameters.extractInt("limit") ?: 10
+            val cuisines = cuisineUseCasesContainer.getCuisinesUseCase(page, limit)
+            call.respond(cuisines.toDto())
         }
 
         get("/{id}") {
