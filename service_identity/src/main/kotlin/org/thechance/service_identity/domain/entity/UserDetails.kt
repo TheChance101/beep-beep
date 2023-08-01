@@ -5,9 +5,9 @@ import org.thechance.service_identity.api.model.UserDetailsDto
 data class UserDetails(
     val id: String,
     val userId: String,
-    val password: String,
-    val email: String,
-    val wallet: Wallet,
+    val password: String?,
+    val email: String?,
+    val wallet: Wallet?,
     val addresses: List<String>,
     val permissions: List<String>
 ){

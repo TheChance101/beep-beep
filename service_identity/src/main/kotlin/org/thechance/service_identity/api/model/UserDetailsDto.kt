@@ -7,9 +7,9 @@ import org.thechance.service_identity.domain.entity.UserDetails
 data class UserDetailsDto(
     val id: String,
     val userId: String,
-    val password: String,
-    val email: String,
-    val wallet: WalletDto,
+    val password: String? = null,
+    val email: String? = null,
+    val wallet: WalletDto? = null,
     val addresses: List<String>,
     val permissions: List<String>
 ){

@@ -11,21 +11,20 @@ import org.thechance.service_identity.domain.entity.UserDetails
 @Serializable
 data class UserDetailsCollection(
     @SerialName("_id")
-    @BsonId
     @Contextual
     val id: ObjectId = ObjectId(),
     @SerialName("user_id")
-    val userId: Id<UserCollection>,
+    val userId: String,
     @SerialName("password")
-    val password: String,
+    val password: String? = null,
     @SerialName("email")
-    val email: String,
+    val email: String? = null,
     @SerialName("wallet")
-    val wallet: WalletCollection,
+    val wallet: WalletCollection? = null,
     @SerialName("addresses")
-    val addresses: List<Id<AddressCollection>>,
+    val addresses: List<@Contextual ObjectId> = emptyList(),
     @SerialName("permissions")
-    val permissions: List<Id<PermissionCollection>>
+    val permissions: List<@Contextual ObjectId> = emptyList()
 ) {
     fun toUserDetails(): UserDetails {
         return UserDetails(
