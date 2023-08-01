@@ -1,10 +1,10 @@
 package org.thechance.service_identity.data.geteway
 
-import com.mongodb.client.model.Filters
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.eq
-import org.litote.kmongo.setValue
+import org.litote.kmongo.setTo
+import org.litote.kmongo.set
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.UserCollection
 import org.thechance.service_identity.domain.entity.User
@@ -32,21 +32,21 @@ class UserGateWayImp(dataBaseContainer: DataBaseContainer): UserGateWay {
 
 
     override suspend fun createUser(user: User): Boolean  =
-        userCollection.insertOne(user.toCollection()).wasAcknowledged()
+        userCollection.insertOne(user.toUserCollection()).wasAcknowledged()
 
     override suspend fun updateUser(id: String, user: User): Boolean =
-        userCollection.updateOneById(ObjectId(id), user.toCollection()).isDocumentModified()
+        userCollection.updateOneById(ObjectId(id), user.toUserCollection()).isDocumentModified()
 
     override suspend fun deleteUser(id: String): Boolean =
         userCollection.updateOne(
-            filter = Filters.and(UserCollection::id eq ObjectId(id), UserCollection::isDeleted eq false),
-            update = setValue(UserCollection::isDeleted, true)
-        ).isDocumentModified()
+            filter = UserCollection::id eq ObjectId(id),
+            update = set(UserCollection::isDeleted setTo  true)
+        ).wasAcknowledged()
 
 
 }
 
-private fun User.toCollection(): UserCollection {
+private fun User.toUserCollection(): UserCollection {
     return UserCollection(
         id = ObjectId(this.id),
         fullName = this.fullName,
