@@ -20,21 +20,19 @@ fun Route.mealRoutes() {
 
     val mealUseCasesContainer: MealUseCasesContainer by inject()
 
-    route("meals") {
-        get("/{page}") {
-            val page = call.parameters.extractInt("page") ?: 1
-            val limit = call.parameters.extractInt("limit") ?: 10
-            val meals = mealUseCasesContainer.getMealsUseCase(page, limit)
-            call.respond(meals.toDto())
-        }
-    }
-
     route("meal") {
 
         get("/{id}") {
             val id = call.parameters.extractString("id") ?: throw NotFoundException("ID not provided")
             val meal = mealUseCasesContainer.getMealByIdUseCase(id)
             call.respond(meal.toDto())
+        }
+
+        get {
+            val page = call.parameters.extractInt("page") ?: 1
+            val limit = call.parameters.extractInt("limit") ?: 10
+            val meals = mealUseCasesContainer.getMealsUseCase(page, limit)
+            call.respond(meals.toDto())
         }
 
         post {
