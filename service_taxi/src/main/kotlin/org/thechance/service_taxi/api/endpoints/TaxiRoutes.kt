@@ -14,7 +14,7 @@ import org.koin.ktor.ext.inject
 import org.thechance.service_taxi.api.models.TaxiDto
 import org.thechance.service_taxi.api.models.toDto
 import org.thechance.service_taxi.api.models.toTaxi
-import org.thechance.service_taxi.api.usecase.TaxiUseCasesContainer
+import org.thechance.service_taxi.api.usecase.taxi.TaxiUseCasesContainer
 
 fun Route.taxiRoutes() {
     val taxiUseCasesContainer: TaxiUseCasesContainer by inject()
