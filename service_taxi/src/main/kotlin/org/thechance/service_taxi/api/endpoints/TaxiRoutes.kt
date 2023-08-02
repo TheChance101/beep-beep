@@ -11,9 +11,9 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 import org.koin.ktor.ext.inject
-import org.thechance.service_taxi.api.models.TaxiDto
-import org.thechance.service_taxi.api.models.toDto
-import org.thechance.service_taxi.api.models.toTaxi
+import org.thechance.service_taxi.api.models.taxi.TaxiDto
+import org.thechance.service_taxi.api.models.taxi.toDto
+import org.thechance.service_taxi.api.models.taxi.toEntity
 import org.thechance.service_taxi.api.usecase.taxi.TaxiUseCasesContainer
 
 fun Route.taxiRoutes() {
@@ -37,7 +37,7 @@ fun Route.taxiRoutes() {
 
         post {
             val taxi = call.receive<TaxiDto>()
-            val result = taxiUseCasesContainer.addTaxiUseCase(taxi.toTaxi())
+            val result = taxiUseCasesContainer.addTaxiUseCase(taxi.toEntity())
             if (result) {
                 call.respond(HttpStatusCode.OK, "added")
             } else {
@@ -49,7 +49,7 @@ fun Route.taxiRoutes() {
             val taxiId = call.parameters["taxiId"]?.trim().orEmpty()
             val taxi = call.receive<TaxiDto>()
             val result =
-                taxiUseCasesContainer.updateTaxiByIdUseCase(taxi.toTaxi().copy(id = taxiId))
+                taxiUseCasesContainer.updateTaxiByIdUseCase(taxi.toEntity().copy(id = taxiId))
             if (result) {
                 call.respond(HttpStatusCode.OK, "updated")
             } else {

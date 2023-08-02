@@ -1,10 +1,10 @@
-package org.thechance.service_taxi.api.models
+package org.thechance.service_taxi.api.models.taxi
 
 import org.bson.types.ObjectId
-import org.thechance.service_taxi.data.TaxiCollection
+import org.thechance.service_taxi.data.collection.TaxiCollection
 import org.thechance.service_taxi.domain.entity.Taxi
 
-fun TaxiDto.toTaxi(): Taxi {
+fun TaxiDto.toEntity(): Taxi {
     return Taxi(
         id = if (id.isNullOrBlank()) ObjectId().toHexString() else ObjectId(id).toHexString(),
         plateNumber = plateNumber,
@@ -31,7 +31,7 @@ fun Taxi.toDto(): TaxiDto {
 fun List<Taxi>.toDto(): List<TaxiDto> = map(Taxi::toDto)
 
 
-fun TaxiCollection.toTaxi(): Taxi {
+fun TaxiCollection.toEntity(): Taxi {
     return Taxi(
         id = id.toHexString(),
         plateNumber = plateNumber,
@@ -44,7 +44,7 @@ fun TaxiCollection.toTaxi(): Taxi {
     )
 }
 
-fun List<TaxiCollection>.toTaxes(): List<Taxi> = map(TaxiCollection::toTaxi)
+fun List<TaxiCollection>.toEntity(): List<Taxi> = map(TaxiCollection::toEntity)
 
 fun Taxi.toCollection(): TaxiCollection {
     return TaxiCollection(
