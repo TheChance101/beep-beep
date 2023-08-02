@@ -7,7 +7,7 @@ data class UserDetails(
     val userId: String,
     val password: String?,
     val email: String?,
-    val wallet: Wallet?,
+    val walletId: String?,
     val addresses: List<String>,
     val permissions: List<String>
 )
@@ -18,7 +18,7 @@ fun UserDetails.toDto(): UserDetailsDto {
         userId = userId,
         password = password,
         email = email,
-        wallet = wallet?.toWalletDto(),
+        walletId = walletId,
         addresses = addresses,
         permissions = permissions
     )

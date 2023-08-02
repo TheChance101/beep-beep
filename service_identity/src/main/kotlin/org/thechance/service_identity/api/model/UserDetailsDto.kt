@@ -9,7 +9,7 @@ data class UserDetailsDto(
     val userId: String,
     val password: String? = null,
     val email: String? = null,
-    val wallet: WalletDto? = null,
+    val walletId: String? = null,
     val addresses: List<String>,
     val permissions: List<String>
 )
@@ -20,7 +20,7 @@ fun UserDetailsDto.toEntity(): UserDetails {
         userId = userId,
         password = password,
         email = email,
-        wallet = wallet?.toWallet(),
+        walletId = walletId,
         addresses = addresses,
         permissions = permissions
     )
@@ -33,7 +33,7 @@ fun UserDetails.toDto(): UserDetailsDto {
         userId = userId,
         password = password,
         email = email,
-        wallet = wallet?.toWalletDto(),
+        walletId = walletId,
         addresses = addresses,
         permissions = permissions
     )

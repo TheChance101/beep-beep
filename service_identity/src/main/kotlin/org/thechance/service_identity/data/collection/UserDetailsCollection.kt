@@ -4,9 +4,7 @@ import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bson.types.ObjectId
-import org.litote.kmongo.id.toId
 import org.thechance.service_identity.domain.entity.UserDetails
-import org.thechance.service_identity.domain.entity.Wallet
 
 @Serializable
 data class UserDetailsCollection(
@@ -20,7 +18,7 @@ data class UserDetailsCollection(
     @SerialName("email")
     val email: String? = null,
     @SerialName("wallet")
-    val wallet: WalletCollection? = null,
+    val walletId: String? = null,
     @SerialName("addresses")
     val addresses: List<@Contextual ObjectId> = emptyList(),
     @SerialName("permissions")
@@ -33,7 +31,7 @@ fun UserDetailsCollection.toEntity(): UserDetails {
         userId = userId,
         password = password,
         email = email,
-        wallet = wallet?.toWallet(),
+        walletId = walletId,
         addresses = addresses.map { it.toHexString() },
         permissions = permissions.map { it.toHexString() }
     )
@@ -49,17 +47,9 @@ fun UserDetails.toCollection(): UserDetailsCollection {
         userId = userId,
         password = password,
         email = email,
-        wallet = wallet?.toCollection(),
+        walletId = walletId,
         addresses = addresses.map { ObjectId(it) },
         permissions = permissions.map { ObjectId(it) }
-    )
-}
-
-fun Wallet.toCollection(): WalletCollection {
-    return WalletCollection(
-        id = ObjectId(id),
-        userId = ObjectId(userId).toId(),
-        walletBalance = walletBalance
     )
 }
 
