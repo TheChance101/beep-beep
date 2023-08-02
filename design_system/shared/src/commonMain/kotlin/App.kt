@@ -1,11 +1,15 @@
+package com.beepbeep.designSystem
+
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import com.beepbeep.designSystem.App
+
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun App() {
-    App()
-//    MaterialTheme {
+    MaterialTheme {
+        Text("test test test")
 //        var greetingText by remember { mutableStateOf("Hello, World!") }
 //        var showImage by remember { mutableStateOf(false) }
 //        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -22,7 +26,7 @@ fun App() {
 //                )
 //            }
 //        }
-//    }
+    }
 }
 
-expect fun getPlatformName(): String
+//expect fun getPlatformName(): String

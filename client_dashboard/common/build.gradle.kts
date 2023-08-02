@@ -20,7 +20,7 @@ kotlin {
                 api(libs.compose.runtime)
                 api(libs.compose.foundation)
                 api(libs.compose.material)
-                implementation(project(":design_system_2:shared"))
+                implementation(project(":design_system:shared"))
             }
         }
         val desktopMain by getting {
