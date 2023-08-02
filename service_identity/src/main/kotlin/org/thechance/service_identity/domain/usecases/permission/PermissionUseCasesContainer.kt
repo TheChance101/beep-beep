@@ -6,5 +6,6 @@ import org.koin.core.annotation.Single
 data class PermissionUseCasesContainer(
     val addPermission: CreatePermissionUseCase,
     val updatePermission: UpdatePermissionUseCase,
-    val deletePermission: DeletePermissionUseCase
+    val deletePermission: DeletePermissionUseCase,
+    val getPermission:GetPermissionUseCase
 )
