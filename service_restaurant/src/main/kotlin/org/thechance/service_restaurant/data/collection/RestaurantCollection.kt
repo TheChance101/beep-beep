@@ -17,12 +17,12 @@ data class RestaurantCollection(
     val phone: String? = null,
     val openingTime: String? = null,
     val closingTime: String? = null,
+    val isDeleted: Boolean = false
 ) {
     @BsonId
     @Contextual
     @SerialName("_id")
     val id: ObjectId = ObjectId()
-    val isDeleted: Boolean = false
 
     fun toEntity(): Restaurant {
         return Restaurant(

@@ -1,6 +1,7 @@
-package org.thechance.service_restaurant.api.usecases
+package org.thechance.service_restaurant.usecase.meal
 
 import org.koin.core.annotation.Single
+import org.thechance.service_restaurant.usecase.meal.*
 
 @Single
 data class MealUseCasesContainer(

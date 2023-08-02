@@ -1,24 +1,19 @@
 package org.thechance.service_restaurant.data.gateway
 
-import com.mongodb.client.model.Filters.and
 import com.mongodb.client.model.Updates
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
+import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
-import org.litote.kmongo.eq
-import org.litote.kmongo.lookup
-import org.litote.kmongo.match
-import org.litote.kmongo.project
 import org.thechance.service_restaurant.data.DataBaseContainer
 import org.thechance.service_restaurant.data.collection.CategoryCollection
+import org.thechance.service_restaurant.data.collection.CategoryRestaurantCollection
 import org.thechance.service_restaurant.data.collection.RestaurantCollection
 import org.thechance.service_restaurant.data.collection.toEntity
 import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.entity.Category
 import org.thechance.service_restaurant.entity.Restaurant
-import org.thechance.service_restaurant.usecase.gateway.RestaurantGateway
 import org.thechance.service_restaurant.utils.isSuccessfullyUpdated
-
 
 @Single
 class RestaurantGatewayImp(private val container: DataBaseContainer) : RestaurantGateway {
@@ -69,18 +64,17 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
     }
 
     override suspend fun getRestaurantsInCategory(categoryId: String): List<Restaurant> {
-        return categoryCollection.aggregate<CategoryCollection>(
-            match(CategoryCollection::id eq ObjectId(categoryId)),
-            lookup(
-                from = "restaurantCollection",
-                localField = CategoryCollection::restaurantIds.name,
-                foreignField = "_id",
-                newAs = CategoryCollection::restaurants.name
-            ),
-            project(
-                CategoryCollection::restaurants
+        return categoryCollection.aggregate<CategoryRestaurantCollection>(
+            pipeline = listOf(
+                match(CategoryCollection::id eq ObjectId(categoryId)),
+                lookup(
+                    from = "restaurantCollection",
+                    localField = CategoryCollection::restaurantIds.name,
+                    foreignField = "_id",
+                    newAs = CategoryRestaurantCollection::restaurants.name
+                )
             )
-        ).toList().firstOrNull()?.restaurants?.toEntity() ?: emptyList()
+        ).first()?.restaurants?.toEntity() ?: emptyList()
     }
     //endregion
 

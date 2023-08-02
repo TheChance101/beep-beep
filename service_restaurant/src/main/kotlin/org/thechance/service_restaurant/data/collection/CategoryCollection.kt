@@ -20,8 +20,6 @@ data class CategoryCollection(
     val id = ObjectId()
     val isDeleted: Boolean = false
 
-    val restaurants: MutableList<RestaurantCollection> = mutableListOf()
-
     fun toEntity(): Category {
         return Category(
             id = id.toString(),

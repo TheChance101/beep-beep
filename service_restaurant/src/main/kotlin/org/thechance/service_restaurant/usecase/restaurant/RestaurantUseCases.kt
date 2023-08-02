@@ -1,16 +1,6 @@
-package org.thechance.service_restaurant.api.usecases
+package org.thechance.service_restaurant.usecase.restaurant
 
-import org.koin.core.annotation.Single
 import org.thechance.service_restaurant.entity.Restaurant
-
-@Single
-data class RestaurantUseCasesContainer(
-    val getRestaurants: GetRestaurantsUseCase,
-    val getRestaurantDetails: GetRestaurantDetailsUseCase,
-    val addRestaurant: CreateRestaurantUseCase,
-    val updateRestaurant: UpdateRestaurantUseCase,
-    val deleteRestaurant: DeleteRestaurantUseCase
-)
 
 interface GetRestaurantsUseCase {
     suspend operator fun invoke(page: Int, limit: Int): List<Restaurant>
@@ -31,5 +21,3 @@ interface UpdateRestaurantUseCase {
 interface DeleteRestaurantUseCase {
     suspend operator fun invoke(restaurantId: String): Boolean
 }
-
-

@@ -10,7 +10,7 @@ import org.koin.ktor.ext.inject
 import org.thechance.service_restaurant.api.models.MealDto
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
-import org.thechance.service_restaurant.api.usecases.MealUseCasesContainer
+import org.thechance.service_restaurant.usecase.meal.MealUseCasesContainer
 import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
 import org.thechance.service_restaurant.data.collection.MealCollection

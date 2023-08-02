@@ -1,9 +1,8 @@
 package org.thechance.service_restaurant.usecase.restaurant
 
 import org.koin.core.annotation.Single
-import org.thechance.service_restaurant.api.usecases.UpdateRestaurantUseCase
+import org.thechance.service_restaurant.data.gateway.RestaurantGateway
 import org.thechance.service_restaurant.entity.Restaurant
-import org.thechance.service_restaurant.usecase.gateway.RestaurantGateway
 
 @Single
 class UpdateRestaurantUseCaseImp(private val restaurantGateway: RestaurantGateway) : UpdateRestaurantUseCase {
