@@ -7,6 +7,7 @@ val koin_version : String by project
 val koin_ktor : String by project
 val koin_ksp_version : String by project
 val kmongo_version : String by project
+val status_pages : String by project
 
 plugins {
 
@@ -60,5 +61,9 @@ dependencies {
     // Kmongo
     implementation("org.litote.kmongo:kmongo:$kmongo_version")
     implementation("org.litote.kmongo:kmongo-coroutine:$kmongo_version")
+
+    // Status pages error handler
+    implementation("io.ktor:ktor-server-status-pages-jvm:$status_pages")
+
 }
 
