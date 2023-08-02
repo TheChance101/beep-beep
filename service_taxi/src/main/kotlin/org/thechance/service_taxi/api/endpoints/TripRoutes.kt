@@ -42,7 +42,7 @@ fun Route.tripRoutes() {
         }
 
         get("/client/{clientId}") {
-            val id = call.parameters["driverId"]?.trim().orEmpty()
+            val id = call.parameters["clientId"]?.trim().orEmpty()
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 20
             val result = tripUseCasesContainer.getClientTripsHistory(id, page, limit)

@@ -45,7 +45,7 @@ class TripGatewayImpl(container: DataBaseContainer) : TripGateway {
         return tripCollection.find(
             and(
                 TripCollection::isDeleted ne true,
-                TripCollection::driverId eq ObjectId(clientId)
+                TripCollection::clientId eq ObjectId(clientId)
             )
         ).paginate(page, limit).toList().toEntity()
     }
