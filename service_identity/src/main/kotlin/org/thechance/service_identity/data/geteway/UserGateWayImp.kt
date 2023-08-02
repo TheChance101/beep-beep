@@ -10,7 +10,6 @@ import org.thechance.service_identity.data.collection.UserCollection
 import org.thechance.service_identity.domain.entity.User
 import org.thechance.service_identity.domain.gateway.UserGateWay
 import org.thechance.service_identity.utils.Constants.USER_COLLECTION
-import org.thechance.service_identity.utils.isDocumentModified
 
 @Single
 class UserGateWayImp(dataBaseContainer: DataBaseContainer): UserGateWay {
@@ -35,7 +34,7 @@ class UserGateWayImp(dataBaseContainer: DataBaseContainer): UserGateWay {
         userCollection.insertOne(user.toUserCollection()).wasAcknowledged()
 
     override suspend fun updateUser(id: String, user: User): Boolean =
-        userCollection.updateOneById(ObjectId(id), user.toUserCollection()).isDocumentModified()
+        userCollection.updateOneById(ObjectId(id), user.toUserCollection()).wasAcknowledged()
 
     override suspend fun deleteUser(id: String): Boolean =
         userCollection.updateOne(
@@ -43,18 +42,7 @@ class UserGateWayImp(dataBaseContainer: DataBaseContainer): UserGateWay {
             update = set(UserCollection::isDeleted setTo  true)
         ).wasAcknowledged()
 
-
-}
-
-private fun User.toUserCollection(): UserCollection {
-    return UserCollection(
-        id = ObjectId(this.id),
-        fullName = this.fullName,
-        username = this.username,
-        isDeleted = this.isDeleted,
-    )
-}
-
-fun List<UserCollection>.toUser(): List<User> {
-    return this.map { it.toUser() }
+    private fun List<UserCollection>.toUser(): List<User> {
+        return this.map { it.toUser() }
+    }
 }
