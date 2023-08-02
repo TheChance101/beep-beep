@@ -24,11 +24,11 @@ fun Route.walletRoute(){
                 val response = ServerResponse.success(result=wallet)
                 call.respond(response)
             }catch (e: Exception){
-//                val errorMessage = e.message ?: "Id Not Found"
-//                val errorResponse = ServerResponse.error(
-//                    errorMessage=errorMessage,
-//                    code= HttpStatusCode.NotFound.value)
-//                call.respond(HttpStatusCode.NotFound, errorResponse)
+                val errorMessage = e.message ?: "Id Not Found"
+                val errorResponse = ServerResponse.error(
+                    errorMessage=errorMessage,
+                    code= HttpStatusCode.NotFound.value)
+                call.respond(HttpStatusCode.NotFound, errorResponse)
             }
         }
         get("/user/{id}") {
