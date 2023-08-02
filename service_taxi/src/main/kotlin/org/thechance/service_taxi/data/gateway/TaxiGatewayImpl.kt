@@ -2,7 +2,7 @@ package org.thechance.service_taxi.data.gateway
 
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
-import org.litote.kmongo.eq
+import org.litote.kmongo.ne
 import org.thechance.service_taxi.api.models.taxi.toCollection
 import org.thechance.service_taxi.api.models.taxi.toEntity
 import org.thechance.service_taxi.data.DataBaseContainer
@@ -24,7 +24,7 @@ class TaxiGatewayImpl(container: DataBaseContainer) : TaxiGateway {
     }
 
     override suspend fun getAllTaxes(page: Int, limit: Int): List<Taxi> {
-        return collection.find(TaxiCollection::isDeleted eq false)
+        return collection.find(TaxiCollection::isDeleted ne true)
             .paginate(page, limit).toList().toEntity()
     }
 
