@@ -65,16 +65,13 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
 
     override suspend fun getRestaurantsInCategory(categoryId: String): List<Restaurant> {
         return categoryCollection.aggregate<CategoryRestaurantCollection>(
-            pipeline = listOf(
-                match(CategoryCollection::id eq ObjectId(categoryId)),
-                lookup(
-                    from = "restaurantCollection",
-                    localField = CategoryCollection::restaurantIds.name,
-                    foreignField = "_id",
-                    newAs = CategoryRestaurantCollection::restaurants.name
-                )
-            )
-        ).first()?.restaurants?.toEntity() ?: emptyList()
+            match(CategoryCollection::id eq ObjectId(categoryId)),
+            lookup(
+                from = "restaurantCollection",
+                resultProperty = CategoryRestaurantCollection::restaurants,
+                pipeline = listOf(match(RestaurantCollection::isDeleted eq false)).toTypedArray()
+            ),
+        ).toList().first().restaurants.toEntity()
     }
     //endregion
 
