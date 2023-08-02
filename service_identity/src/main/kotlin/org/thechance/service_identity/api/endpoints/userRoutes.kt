@@ -13,7 +13,12 @@ fun Route.userRoutes() {
 
     val userUseCaseContainer: UserUseCaseContainer by inject()
 
-    route("/user") {
+    route("/users") {
+
+        get {
+            val users = userUseCaseContainer.getUsersUseCase.invoke()
+            call.respond(HttpStatusCode.OK, users.map { it.toUserDto() })
+        }
 
         get("/{id}") {
             val id = call.parameters["id"] ?: ""
@@ -31,7 +36,7 @@ fun Route.userRoutes() {
             val id = call.parameters["id"] ?: ""
             val userDto = call.receive<UserDto>()
             val result = userUseCaseContainer.updateUserUseCase.invoke(id, userDto.toUser())
-            call.respond(HttpStatusCode.Created, result)
+            call.respond(HttpStatusCode.OK, result)
         }
 
         delete("/{id}") {
@@ -42,9 +47,6 @@ fun Route.userRoutes() {
         }
     }
 
-    get("/users") {
-        val users = userUseCaseContainer.getUsersUseCase.invoke()
-        call.respond(HttpStatusCode.OK, users.map { it.toUserDto() })
-    }
+
 
 }
