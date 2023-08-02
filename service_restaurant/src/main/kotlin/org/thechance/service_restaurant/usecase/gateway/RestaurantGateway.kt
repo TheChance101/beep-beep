@@ -1,9 +1,21 @@
 package org.thechance.service_restaurant.usecase.gateway
 
+import org.thechance.service_restaurant.entity.Address
 import org.thechance.service_restaurant.entity.Category
 import org.thechance.service_restaurant.entity.Restaurant
 
 interface RestaurantGateway {
+
+    //region Address
+    suspend fun getAddresses(): List<Address>
+    suspend fun getAddress(id: String): Address?
+    suspend fun addAddress(address: Address): Boolean
+    suspend fun updateAddress(address: Address): Boolean
+    suspend fun deleteAddress(id: String): Boolean
+
+    suspend fun addAddressesToRestaurant(restaurantId: String, addressesIds: List<String>): Boolean
+    suspend fun getAddressesInRestaurant(restaurantId: String): List<Address>
+    //endregion
 
     //region Category
     suspend fun getCategories(): List<Category>
