@@ -66,7 +66,11 @@ fun Route.walletRoute(){
                 val id = call.parameters["id"]!!
                 val wallet = call.receive<Wallet>()
                 val result = walletUseCaseContainer.updateWalletUseCase.invoke(id,wallet)
-                call.respond(result)
+                val response = ServerResponse.success(
+                    result=result,
+                    successMessage="Wallet Updated Successfully",
+                    code= HttpStatusCode.OK.value)
+                call.respond(response)
             }catch (e: Exception){
                 call.respond(HttpStatusCode.NotFound)
             }
