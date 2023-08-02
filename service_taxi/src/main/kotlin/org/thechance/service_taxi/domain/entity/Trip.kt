@@ -8,6 +8,7 @@ data class Trip(
     val to: String? = null,
     val rate: Double? = null,
     val price: Double? = null,
+    val isDeleted: Boolean? = null,
 )
 
 /*
