@@ -6,6 +6,7 @@ import org.litote.kmongo.eq
 import org.thechance.service_taxi.api.models.toCollection
 import org.thechance.service_taxi.api.models.toTaxes
 import org.thechance.service_taxi.api.models.toTaxi
+import org.thechance.service_taxi.data.utils.paginate
 import org.thechance.service_taxi.domain.entity.Taxi
 import org.thechance.service_taxi.domain.gateway.TaxiGateway
 
@@ -21,8 +22,9 @@ class TaxiGatewayImpl(container: DataBaseContainer) : TaxiGateway {
         return collection.findOneById(ObjectId(taxiId))?.takeIf { it.isDeleted != true }?.toTaxi()
     }
 
-    override suspend fun getAllTaxes(): List<Taxi> {
-        return collection.find(TaxiCollection::isDeleted eq false).toList().toTaxes()
+    override suspend fun getAllTaxes(page: Int, limit: Int): List<Taxi> {
+        return collection.find(TaxiCollection::isDeleted eq false)
+            .paginate(page, limit).toList().toTaxes()
     }
 
     override suspend fun deleteTaxi(taxiId: String): Boolean {
