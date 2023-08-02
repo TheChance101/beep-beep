@@ -9,5 +9,5 @@ class GetUserByIdUseCaseImp(
     private val gateWay: UserGateWay
 ): GetUserByIdUseCase {
     override suspend fun invoke(id: String): User =
-        gateWay.getUserById(id)!!
+        gateWay.getUserById(id) ?: throw Throwable("Invalid id")
 }

@@ -7,39 +7,37 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.service_identity.api.model.UserDto
-import org.thechance.service_identity.domain.entity.User
 import org.thechance.service_identity.domain.usecases.user.UserUseCaseContainer
 
 fun Route.userRoutes() {
 
     val userUseCaseContainer: UserUseCaseContainer by inject()
 
-    route("/user"){
+    route("/user") {
 
         get("/{id}") {
-            val id = call.parameters["id"]!!
-            call.respond(HttpStatusCode.OK, userUseCaseContainer.getUserByIdUseCase.invoke(id))
+            val id = call.parameters["id"] ?: ""
+            val user = userUseCaseContainer.getUserByIdUseCase.invoke(id).toUserDto()
+            call.respond(HttpStatusCode.OK, user)
         }
 
-        post{
-            try {
-                val user = call.receive<User>()
-                val result = userUseCaseContainer.createUserUseCase.invoke(user)
-                call.respond(result)
-            }catch (e: Exception){
-                call.respond(HttpStatusCode.BadRequest)
-            }
+        post {
+            val user = call.receive<UserDto>()
+            val result = userUseCaseContainer.createUserUseCase.invoke(user.toUser())
+            call.respond(HttpStatusCode.Created, result)
         }
 
         put("/{id}") {
-            val id = call.parameters["id"]!!
+            val id = call.parameters["id"] ?: ""
             val userDto = call.receive<UserDto>()
-            call.respond(HttpStatusCode.Created, userUseCaseContainer.updateUserUseCase.invoke(id, userDto.toUser()))
+            val result = userUseCaseContainer.updateUserUseCase.invoke(id, userDto.toUser())
+            call.respond(HttpStatusCode.Created, result)
         }
 
         delete("/{id}") {
-            val id = call.parameters["id"]!!
-            call.respond(HttpStatusCode.OK, userUseCaseContainer.deleteUserUseCase.invoke(id))
+            val id = call.parameters["id"] ?: ""
+            val result = userUseCaseContainer.deleteUserUseCase.invoke(id)
+            call.respond(HttpStatusCode.OK, result)
 
         }
     }
