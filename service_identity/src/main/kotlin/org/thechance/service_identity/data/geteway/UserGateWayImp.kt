@@ -58,8 +58,6 @@ class UserGateWayImp(dataBaseContainer: DataBaseContainer): UserGateWay {
         ).toList().toUser()
 
     override suspend fun createUser(user: User): Boolean {
-        val indexOptions = IndexOptions().unique(true)
-        userCollection.createIndex(Indexes.ascending("username"), indexOptions)
         return userCollection.insertOne(user.toUserCollection()).wasAcknowledged()
     }
 
