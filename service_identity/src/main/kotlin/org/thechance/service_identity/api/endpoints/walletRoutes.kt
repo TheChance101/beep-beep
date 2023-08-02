@@ -20,7 +20,6 @@ fun Route.walletRoute(){
             try {
                 val id = call.parameters["id"]!!
                 val wallet = walletUseCaseContainer.getWalletUseCase.invoke(id).toWalletDto()
-                call.respond(wallet)
                 val response = ServerResponse.success(result=wallet,code= HttpStatusCode.Created.value)
                 call.respond(response)
             }catch (e: Exception){
@@ -35,7 +34,8 @@ fun Route.walletRoute(){
             try {
                 val id = call.parameters["id"]!!
                 val wallet = walletUseCaseContainer.getUserWalletUseCase.invoke(id).toWalletDto()
-                call.respond(wallet)
+                val response = ServerResponse.success(result=wallet,code= HttpStatusCode.Created.value)
+                call.respond(response)
             }catch (e: Exception){
                 call.respond(HttpStatusCode.NotFound)
             }
