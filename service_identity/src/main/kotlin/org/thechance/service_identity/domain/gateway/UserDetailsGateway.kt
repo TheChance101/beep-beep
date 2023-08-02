@@ -10,10 +10,6 @@ interface UserDetailsGateway {
 
     suspend fun updateUserDetails(user: UserDetails)
 
-    suspend fun addAddressToUser(userId: String, addressId: String)
-
-    suspend fun removeAddressFromUser(userId: String, addressId: String)
-
     suspend fun addPermissionToUser(userId: String, permissionId: String)
 
     suspend fun removePermissionFromUser(userId: String, permissionId: String)
