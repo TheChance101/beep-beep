@@ -14,8 +14,4 @@ interface UserDetailsGateway {
 
     suspend fun removePermissionFromUser(userId: String, permissionId: String)
 
-    suspend fun addWalletToUser(userId: String, walletId: String)
-
-    suspend fun deleteUserWallet(walletId: String)
-
 }
