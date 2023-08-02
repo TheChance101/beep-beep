@@ -33,6 +33,10 @@ class AddressGatewayImp(dataBaseContainer: DataBaseContainer) : AddressGateway {
     }
 
     override suspend fun deleteAddress(id: String): Boolean {
+        userDetailsCollection.updateOne(
+            filter = UserDetailsCollection::addresses contains ObjectId(id),
+            update = pull(UserDetailsCollection::addresses, ObjectId(id))
+        )
         return addressCollection.updateOne(
             filter = Filters.and(AddressCollection::id eq ObjectId(id), AddressCollection::isDeleted eq false),
             update = setValue(AddressCollection::isDeleted, true)
