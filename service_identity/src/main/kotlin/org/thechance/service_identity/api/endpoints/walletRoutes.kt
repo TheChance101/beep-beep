@@ -6,6 +6,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
+import org.thechance.service_identity.api.model.WalletDto
 import org.thechance.service_identity.domain.usecases.wallet.WalletUseCaseContainer
 import org.thechance.service_identity.domain.entity.Wallet
 
@@ -35,8 +36,8 @@ fun Route.walletRoute(){
         }
         post{
             try {
-                val wallet = call.receive<Wallet>()
-                val result = walletUseCaseContainer.addWalletUseCase.invoke(wallet)
+                val wallet = call.receive<WalletDto>()
+                val result = walletUseCaseContainer.addWalletUseCase.invoke(wallet.toWallet())
                 call.respond(result)
             }catch (e: Exception){
                 call.respond(HttpStatusCode.BadRequest)
@@ -45,8 +46,8 @@ fun Route.walletRoute(){
         put("/{id}") {
             try {
                 val id = call.parameters["id"]!!
-                val wallet = call.receive<Wallet>()
-                val result = walletUseCaseContainer.updateWalletUseCase.invoke(id,wallet)
+                val wallet = call.receive<WalletDto>()
+                val result = walletUseCaseContainer.updateWalletUseCase.invoke(id,wallet.toWallet())
                 call.respond(result)
             }catch (e: Exception){
                 call.respond(HttpStatusCode.NotFound)
