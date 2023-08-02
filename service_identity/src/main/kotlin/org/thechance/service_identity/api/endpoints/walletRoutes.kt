@@ -2,6 +2,8 @@ package org.thechance.service_identity.api.endpoints
 
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.plugins.BadRequestException
+import io.ktor.server.plugins.NotFoundException
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -9,6 +11,7 @@ import org.koin.ktor.ext.inject
 import org.thechance.service_identity.api.ServerResponse
 import org.thechance.service_identity.domain.usecases.wallet.WalletUseCaseContainer
 import org.thechance.service_identity.domain.entity.Wallet
+import org.thechance.service_identity.utils.respondException
 
 fun Route.walletRoute(){
 
@@ -72,16 +75,20 @@ fun Route.walletRoute(){
                     code= HttpStatusCode.OK.value)
                 call.respond(response)
             }catch (e: Exception){
-                call.respond(HttpStatusCode.NotFound)
+                call.respondException(e)
             }
         }
         delete("/{id}") {
             try {
                 val id = call.parameters["id"]!!
                 val result = walletUseCaseContainer.deleteWalletUseCase.invoke(id)
-                call.respond(result)
+                val response = ServerResponse.success(
+                    result=result,
+                    successMessage="Wallet Deleted Successfully",
+                    code= HttpStatusCode.OK.value)
+                call.respond(response)
             }catch (e: Exception){
-                call.respond(HttpStatusCode.NotFound)
+                call.respondException(e)
             }
         }
     }
