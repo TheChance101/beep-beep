@@ -1,6 +1,6 @@
 package org.thechance.common
 
-import com.beepbeep.common.EmeraldApp
+import com.beepbeep.designSystem.EmeraldApp
 import androidx.compose.runtime.Composable
 
 @Composable

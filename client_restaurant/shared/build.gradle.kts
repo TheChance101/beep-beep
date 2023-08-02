@@ -56,7 +56,7 @@ kotlin {
 
 android {
     compileSdk = libs.versions.compileSdk.get().toInt()
-    namespace = "com.myapplication.common"
+    namespace = "com.beepbeep.designSystem.common"
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].res.srcDirs("src/androidMain/res")

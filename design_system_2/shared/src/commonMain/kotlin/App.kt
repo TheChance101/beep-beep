@@ -1,3 +1,5 @@
+package com.beepbeep.designSystem
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -39,4 +41,4 @@ fun EmeraldApp() {
     }
 }
 
-expect fun getPlatformName(): String
+//expect fun getPlatformName(): String

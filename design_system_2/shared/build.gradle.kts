@@ -7,6 +7,9 @@ plugins {
 }
 
 kotlin {
+    jvm("desktop") {
+        jvmToolchain(11)
+    }
     androidTarget()
 
     iosX64()
@@ -52,18 +55,17 @@ kotlin {
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
         }
-        
+
     }
 }
 
 android {
     compileSdk = libs.versions.compileSdk.get().toInt()
-    namespace = "com.myapplication.common"
+    namespace = "com.beepbeep.designSystem"
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].res.srcDirs("src/androidMain/res")
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")
-
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
@@ -72,6 +74,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    packagingOptions.pickFirsts += "compose-multiplatform.xml"
 
     kotlin {
         jvmToolchain(libs.versions.jvmToolchain.get().toInt())
