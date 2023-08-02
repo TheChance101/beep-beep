@@ -9,20 +9,21 @@ import org.thechance.service_restaurant.entity.Address
 
 @Serializable
 data class AddressCollection(
-    @BsonId
-    @Contextual
-    @SerialName("_id")
-    val id: ObjectId = ObjectId(),
     val lat: Long? = null,
     val lon: Long? = null,
     val isDeleted: Boolean = false,
 ) {
+    @BsonId
+    @Contextual
+    @SerialName("_id")
+    val id: ObjectId = ObjectId()
+
     fun toEntity(): Address {
         return Address(
             id = id.toString(),
             lat = lat,
             lon = lon,
-            isDeleted = isDeleted
+            isDeleted = isDeleted,
         )
     }
 }

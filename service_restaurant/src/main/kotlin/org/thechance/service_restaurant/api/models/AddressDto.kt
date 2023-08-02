@@ -5,7 +5,7 @@ import org.thechance.service_restaurant.entity.Address
 
 @Serializable
 data class AddressDto(
-    val id: String,
+    val id: String = "",
     val lat: Long? = null,
     val lon: Long? = null,
 ) {

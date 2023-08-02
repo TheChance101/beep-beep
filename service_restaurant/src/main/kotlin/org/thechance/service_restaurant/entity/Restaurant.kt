@@ -2,7 +2,6 @@ package org.thechance.service_restaurant.entity
 
 import org.thechance.service_restaurant.api.models.RestaurantDto
 import org.thechance.service_restaurant.data.collection.RestaurantCollection
-import java.time.LocalTime
 
 data class Restaurant(
     val id: String? = null,
@@ -13,8 +12,8 @@ data class Restaurant(
     val phone: String? = null,
     val openingTime: String? = null,
     val closingTime: String? = null,
-    val isDeleted: Boolean = false
-//    val address: ObjectId,
+    val isDeleted: Boolean = false,
+    val addresses: List<String>? = null,
 //    val meals: List<ObjectId>,
 ) {
 
@@ -27,7 +26,8 @@ data class Restaurant(
             rate = rate,
             phone = phone,
             openingTime = openingTime,
-            closingTime = closingTime
+            closingTime = closingTime,
+            addresses = addresses
         )
     }
 

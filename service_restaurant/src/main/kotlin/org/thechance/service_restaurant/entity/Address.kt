@@ -1,6 +1,5 @@
 package org.thechance.service_restaurant.entity
 
-import org.bson.types.ObjectId
 import org.thechance.service_restaurant.api.models.AddressDto
 import org.thechance.service_restaurant.data.collection.AddressCollection
 
@@ -14,16 +13,15 @@ data class Address(
         return AddressDto(
             id = id,
             lat = lat,
-            lon = lon
+            lon = lon,
         )
     }
 
     fun toCollection(): AddressCollection {
         return AddressCollection(
-            id = ObjectId(id),
             lat = lat,
             lon = lon,
-            isDeleted = isDeleted
+            isDeleted = isDeleted,
         )
     }
 }
