@@ -6,10 +6,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import org.thechance.service_identity.api.model.AddressDto
 import org.thechance.service_identity.api.model.PermissionDto
-import org.thechance.service_identity.domain.entity.Permission
-import org.thechance.service_identity.domain.entity.Wallet
 import org.thechance.service_identity.domain.usecases.permission.PermissionUseCasesContainer
 
 fun Route.permissionRoutes() {
@@ -53,6 +50,12 @@ fun Route.permissionRoutes() {
             } else {
                 call.respond(HttpStatusCode.InternalServerError)
             }
+        }
+        get("/{id}") {
+            val permissionId = call.parameters["id"] ?: throw IllegalArgumentException("Invalid permission ID")
+            val permission = permissionUseCasesContainer.getPermission.invoke(permissionId).toPermissionDto()
+            call.respond(HttpStatusCode.OK, permission)
+
         }
     }
 }
