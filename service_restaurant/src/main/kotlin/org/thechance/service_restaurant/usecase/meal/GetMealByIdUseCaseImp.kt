@@ -1,4 +1,4 @@
-package org.thechance.service_restaurant.usecase
+package org.thechance.service_restaurant.usecase.meal
 
 import io.ktor.server.plugins.*
 import org.koin.core.annotation.Single

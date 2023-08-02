@@ -37,16 +37,8 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
 
     override suspend fun getCategory(categoryId: String): Category? {
         return categoryCollection.aggregate<CategoryCollection>(
-            match(
-                and(
-                    CategoryCollection::id eq ObjectId(categoryId),
-                    CategoryCollection::isDeleted eq false
-                )
-            ),
-            project(
-                CategoryCollection::name,
-                CategoryCollection::id
-            )
+            match(and(CategoryCollection::id eq ObjectId(categoryId), CategoryCollection::isDeleted eq false)),
+            project(CategoryCollection::name, CategoryCollection::id)
         ).toList().firstOrNull()?.toEntity()
     }
 
@@ -93,8 +85,9 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
     //endregion
 
     //region Restaurant
-    override suspend fun getRestaurants(): List<Restaurant> {
-        return restaurantCollection.find(RestaurantCollection::isDeleted eq false).toList().toEntity()
+    override suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant> {
+        return restaurantCollection.find(RestaurantCollection::isDeleted eq false)
+            .paginate(page, limit).toList().toEntity()
     }
 
     override suspend fun getRestaurant(id: String): Restaurant? {

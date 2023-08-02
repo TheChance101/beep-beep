@@ -13,7 +13,7 @@ data class RestaurantUseCasesContainer(
 )
 
 interface GetRestaurantsUseCase {
-    suspend operator fun invoke(): List<Restaurant>
+    suspend operator fun invoke(page: Int, limit: Int): List<Restaurant>
 }
 
 interface GetRestaurantDetailsUseCase {
