@@ -54,7 +54,11 @@ fun Route.walletRoute(){
                     code= HttpStatusCode.Created.value)
                 call.respond(response)
             }catch (e: Exception){
-                call.respond(HttpStatusCode.BadRequest)
+                val errorMessage = e.message ?: "Error Creating Wallet"
+                val errorResponse = ServerResponse.error(
+                    errorMessage=errorMessage,
+                    code= HttpStatusCode.BadRequest.value)
+                call.respond(HttpStatusCode.BadRequest, errorResponse)
             }
         }
         put("/{id}") {
