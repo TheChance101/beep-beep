@@ -2,7 +2,10 @@ package org.thechance.service_identity.data.geteway
 
 import com.mongodb.client.model.Filters
 import org.bson.types.ObjectId
+import org.litote.kmongo.MongoOperator
+import org.litote.kmongo.eq
 import org.thechance.service_identity.data.DataBaseContainer
+import org.thechance.service_identity.data.collection.AddressCollection
 import org.thechance.service_identity.data.collection.PermissionCollection
 import org.thechance.service_identity.domain.entity.Permission
 import org.thechance.service_identity.domain.gateway.PermissionGateway
@@ -13,6 +16,10 @@ class PermissionGatewayImp(private val container: DataBaseContainer) : Permissio
         container.database.getCollection<PermissionCollection>(
             Constants.PERMISSION_COLLECTION_NAME
         )
+    }
+
+    override suspend fun getPermission(id: String): Permission? {
+        return permissionCollection.findOneById(ObjectId(id))?.toPermission() ?: throw Exception("Wallet not found")
     }
 
     override suspend fun addPermission(permission: Permission): Boolean {
