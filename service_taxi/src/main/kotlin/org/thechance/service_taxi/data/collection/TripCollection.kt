@@ -12,8 +12,8 @@ data class TripCollection(
     val driverId: ObjectId? = null,
     @Contextual
     val clientId: ObjectId? = null,
-    val from: String? = null,
-    val to: String? = null,
+    val from: Pair<Long, Long>? = null,
+    val to: Pair<Long, Long>? = null,
     val rate: Double? = null,
     val price: Double? = null,
     val isDeleted: Boolean? = null,
