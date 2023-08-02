@@ -5,6 +5,4 @@ object Constants {
     const val WALLET_COLLECTION = "wallet"
     const val ADDRESS_COLLECTION_NAME = "address"
     const val PERMISSION_COLLECTION_NAME = "permission"
-
-
 }
