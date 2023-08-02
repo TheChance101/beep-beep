@@ -48,7 +48,11 @@ fun Route.walletRoute(){
             try {
                 val wallet = call.receive<Wallet>()
                 val result = walletUseCaseContainer.addWalletUseCase.invoke(wallet)
-                call.respond(result)
+                val response = ServerResponse.success(
+                    result=result,
+                    successMessage="Wallet Created Successfully",
+                    code= HttpStatusCode.Created.value)
+                call.respond(response)
             }catch (e: Exception){
                 call.respond(HttpStatusCode.BadRequest)
             }
