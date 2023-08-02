@@ -3,7 +3,9 @@ package org.thechance.service_identity.data.geteway
 import io.ktor.server.plugins.*
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
-import org.litote.kmongo.*
+import org.litote.kmongo.eq
+import org.litote.kmongo.pull
+import org.litote.kmongo.push
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.UserDetailsCollection
 import org.thechance.service_identity.data.collection.toCollection
@@ -46,20 +48,6 @@ class UserDetailsGatewayImpl(dataBaseContainer: DataBaseContainer) : UserDetails
         userDetailsCollection.updateOne(
             filter = UserDetailsCollection::userId eq userId,
             update = pull(UserDetailsCollection::permissions, ObjectId(permissionId))
-        )
-    }
-
-    override suspend fun addWalletToUser(userId: String, walletId: String) {
-        userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::userId eq userId,
-            update = set(UserDetailsCollection::walletId setTo walletId)
-        )
-    }
-
-    override suspend fun deleteUserWallet(walletId: String) {
-        userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::walletId eq walletId,
-            update = unset(UserDetailsCollection::walletId)
         )
     }
 
