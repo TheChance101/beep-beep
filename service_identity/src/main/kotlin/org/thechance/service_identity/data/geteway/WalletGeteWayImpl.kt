@@ -52,7 +52,11 @@ class WalletGateWayImpl(dataBase : DataBaseContainer) : WalletGateWay {
     }
 
     override suspend fun deleteWallet(id: String): Boolean {
-     return   walletCollection.deleteOne(id).wasAcknowledged()
+        userDetailsCollection.updateOne(
+            filter = UserDetailsCollection::walletId eq id,
+            update = unset(UserDetailsCollection::walletId)
+        )
+        return walletCollection.deleteOne(id).wasAcknowledged()
     }
 
     private fun Wallet.toCollection(): WalletCollection {
