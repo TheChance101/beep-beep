@@ -5,7 +5,6 @@ import com.mongodb.client.model.Updates
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.coroutine.aggregate
-import org.litote.kmongo.coroutine.updateOne
 import org.litote.kmongo.eq
 import org.litote.kmongo.lookup
 import org.litote.kmongo.match
@@ -87,7 +86,7 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
             project(
                 RestaurantCollection::addresses
             )
-        ).toList().firstOrNull()?.addresses?.toEntity() ?: emptyList()
+        ).toList().firstOrNull()?.addresses?.filter { !it.isDeleted }?.toEntity() ?: emptyList()
     }
     //endregion
 
