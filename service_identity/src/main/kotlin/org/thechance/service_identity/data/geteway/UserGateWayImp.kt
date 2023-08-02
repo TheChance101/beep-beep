@@ -1,5 +1,7 @@
 package org.thechance.service_identity.data.geteway
 
+import com.mongodb.client.model.IndexOptions
+import com.mongodb.client.model.Indexes
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.eq
@@ -29,9 +31,11 @@ class UserGateWayImp(dataBaseContainer: DataBaseContainer): UserGateWay {
             UserCollection::isDeleted eq false
         ).toList().toUser()
 
-
-    override suspend fun createUser(user: User): Boolean  =
-        userCollection.insertOne(user.toUserCollection()).wasAcknowledged()
+    override suspend fun createUser(user: User): Boolean {
+        val indexOptions = IndexOptions().unique(true)
+        userCollection.createIndex(Indexes.ascending("username"), indexOptions)
+        return userCollection.insertOne(user.toUserCollection()).wasAcknowledged()
+    }
 
     override suspend fun updateUser(id: String, user: User): Boolean =
         userCollection.updateOneById(ObjectId(id), user.toUserCollection()).wasAcknowledged()
