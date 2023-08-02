@@ -4,13 +4,9 @@ import org.koin.core.annotation.Single
 
 @Single
 data class UserDetailsUseCaseContainer(
-    val removeAddressFromUser: RemoveAddressFromUserUseCase,
     val addPermissionToUser: AddPermissionToUserUseCase,
-    val addAddressToUser: AddAddressToUserUseCase,
     val createUserDetails: CreateUserDetailsUseCase,
     val removePermissionFromUser: RemovePermissionFromUserUseCase,
     val getUserDetails: GetUserDetailsUseCase,
     val updateUserDetails: UpdateUserDetailsUseCase,
-    val addWalletToUser: AddWalletToUserUseCase,
-    val deleteWalletFromUser: DeleteUserWalletUseCase
 )
