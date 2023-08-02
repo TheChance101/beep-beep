@@ -50,17 +50,6 @@ class AddressGatewayImp(dataBaseContainer: DataBaseContainer) : AddressGateway {
     }
 }
 
-fun Address.toAddressCollection(): AddressCollection {
-    return AddressCollection(
-        userId = ObjectId(this.userId).toId(),
-        country = this.country,
-        city = this.city,
-        street = this.street,
-        zipCode = this.zipCode,
-        houseNumber = this.houseNumber
-    )
-}
-
-fun List<AddressCollection>.toAddress(): List<Address> {
+private fun List<AddressCollection>.toAddress(): List<Address> {
     return this.map { it.toAddress() }
 }

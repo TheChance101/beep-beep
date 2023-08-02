@@ -1,5 +1,6 @@
 package org.thechance.service_restaurant.data.gateway
 
+import org.thechance.service_restaurant.entity.Cuisine
 import org.thechance.service_restaurant.entity.Meal
 
 interface MealGateway {
@@ -13,4 +14,11 @@ interface MealGateway {
     suspend fun deleteMealById(id: String): Boolean
 
     suspend fun updateMeal(meal: Meal): Boolean
+
+    suspend fun addCuisineToMeal(mealId: String, cuisineId: String): Boolean
+
+    suspend fun getMealCuisines(mealId: String): List<Cuisine>
+
+    suspend fun deleteCuisineFromMeal(mealId: String, cuisineId: String): Boolean
+
 }

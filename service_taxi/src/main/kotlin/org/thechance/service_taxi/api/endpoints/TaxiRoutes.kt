@@ -21,7 +21,9 @@ fun Route.taxiRoutes() {
 
     route("/taxi") {
         get {
-            val result = taxiUseCasesContainer.getAllTaxesUseCase()
+            val page = call.parameters["page"]?.toInt() ?: 1
+            val limit = call.parameters["limit"]?.toInt() ?: 20
+            val result = taxiUseCasesContainer.getAllTaxesUseCase(page, limit)
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
