@@ -13,10 +13,11 @@ import org.thechance.service_taxi.data.collection.TripCollection
 import org.thechance.service_taxi.data.utils.paginate
 import org.thechance.service_taxi.domain.entity.Trip
 import org.thechance.service_taxi.domain.gateway.TripGateway
+import org.thechance.service_taxi.utils.Constants
 
 @Single
 class TripGatewayImpl(container: DataBaseContainer) : TripGateway {
-    private val tripCollection by lazy { container.database.getCollection<TripCollection>("trip") }
+    private val tripCollection by lazy { container.database.getCollection<TripCollection>(Constants.TRIP_COLLECTION_NAME) }
 
     override suspend fun addTrip(trip: Trip): Boolean {
         return tripCollection.insertOne(trip.toCollection()).wasAcknowledged()

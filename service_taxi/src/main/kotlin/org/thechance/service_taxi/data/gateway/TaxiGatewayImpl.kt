@@ -10,10 +10,11 @@ import org.thechance.service_taxi.data.collection.TaxiCollection
 import org.thechance.service_taxi.data.utils.paginate
 import org.thechance.service_taxi.domain.entity.Taxi
 import org.thechance.service_taxi.domain.gateway.TaxiGateway
+import org.thechance.service_taxi.utils.Constants
 
 @Single
 class TaxiGatewayImpl(container: DataBaseContainer) : TaxiGateway {
-    private val collection by lazy { container.database.getCollection<TaxiCollection>("taxi") }
+    private val collection by lazy { container.database.getCollection<TaxiCollection>(Constants.TAXI_COLLECTION_NAME) }
 
     override suspend fun addTaxi(taxi: Taxi): Boolean {
         return collection.insertOne(taxi.toCollection()).wasAcknowledged()
