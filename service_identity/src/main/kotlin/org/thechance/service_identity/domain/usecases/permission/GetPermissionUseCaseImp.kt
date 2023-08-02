@@ -2,7 +2,7 @@ package org.thechance.service_identity.domain.usecases.permission
 
 import org.thechance.service_identity.domain.entity.Permission
 import org.thechance.service_identity.domain.gateway.PermissionGateway
-
+@Single
 class GetPermissionUseCaseImp(
     private val permissionGateway: PermissionGateway
 ) :

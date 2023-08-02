@@ -1,7 +1,7 @@
 package org.thechance.service_identity.domain.usecases.permission
 
 import org.thechance.service_identity.domain.gateway.PermissionGateway
-
+@Single
 class DeletePermissionUseCaseImp(private val permissionGateway: PermissionGateway) :
     DeletePermissionUseCase {
     override suspend fun invoke(permissionId: String): Boolean {
