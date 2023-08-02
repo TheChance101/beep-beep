@@ -17,7 +17,7 @@ data class CategoryUseCasesContainer(
 )
 
 interface GetCategoriesUseCases {
-    suspend operator fun invoke(): List<Category>
+    suspend operator fun invoke(page: Int, limit: Int): List<Category>
 }
 
 interface GetCategoryDetailsUseCase {

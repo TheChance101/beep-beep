@@ -11,7 +11,8 @@ import org.thechance.service_restaurant.entity.Category
 @Serializable
 @SerialName("categoryCollection")
 data class CategoryCollection(
-    val name: String? = null
+    val name: String? = null,
+    val restaurantIds: MutableList<@Contextual ObjectId> = mutableListOf()
 ) {
     @BsonId
     @Contextual
@@ -19,8 +20,7 @@ data class CategoryCollection(
     val id = ObjectId()
     val isDeleted: Boolean = false
 
-    val restaurantIds: MutableList<Id<String>> = mutableListOf()
-    val restaurants: MutableList<RestaurantCollection> = mutableListOf()
+//    val restaurants: MutableList<RestaurantCollection> = mutableListOf()
 
     fun toEntity(): Category {
         return Category(

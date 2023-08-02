@@ -13,6 +13,7 @@ import org.thechance.service_restaurant.data.DataBaseContainer
 import org.thechance.service_restaurant.data.collection.CategoryCollection
 import org.thechance.service_restaurant.data.collection.RestaurantCollection
 import org.thechance.service_restaurant.data.collection.toEntity
+import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.entity.Category
 import org.thechance.service_restaurant.entity.Restaurant
 import org.thechance.service_restaurant.usecase.gateway.RestaurantGateway
@@ -29,14 +30,9 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
     }
 
     //region Category
-    override suspend fun getCategories(): List<Category> {
-        return categoryCollection.aggregate<CategoryCollection>(
-            match(CategoryCollection::isDeleted eq false),
-            project(
-                CategoryCollection::name,
-                CategoryCollection::id
-            )
-        ).toList().toEntity()
+    override suspend fun getCategories(page: Int, limit: Int): List<Category> {
+        return categoryCollection.find(CategoryCollection::isDeleted eq false)
+            .paginate(page, limit).toList().toEntity()
     }
 
     override suspend fun getCategory(categoryId: String): Category? {

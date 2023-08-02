@@ -7,7 +7,8 @@ import org.thechance.service_restaurant.usecase.gateway.RestaurantGateway
 
 @Single
 class GetCategoriesUseCasesImp(private val restaurantGateway: RestaurantGateway) : GetCategoriesUseCases {
-    override suspend fun invoke(): List<Category> {
-        return restaurantGateway.getCategories()
+
+    override suspend fun invoke(page: Int, limit: Int): List<Category> {
+        return restaurantGateway.getCategories(page,limit)
     }
 }

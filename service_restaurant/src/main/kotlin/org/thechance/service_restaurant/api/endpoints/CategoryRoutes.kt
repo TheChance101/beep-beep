@@ -8,6 +8,7 @@ import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.service_restaurant.api.models.CategoryDto
 import org.thechance.service_restaurant.api.usecases.CategoryUseCasesContainer
+import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.entity.toDto
 
 
@@ -15,12 +16,16 @@ fun Route.categoryRoutes() {
 
     val categoryUseCases: CategoryUseCasesContainer by inject()
 
-    route("/category") {
-
+    route("/categories") {
         get {
-            val categories = categoryUseCases.getCategories().toDto()
+            val page = call.parameters.extractInt("page") ?: 1
+            val limit = call.parameters.extractInt("limit") ?: 10
+            val categories = categoryUseCases.getCategories(page, limit).toDto()
             call.respond(HttpStatusCode.OK, categories)
         }
+    }
+
+    route("/category") {
 
         get("/{id}") {
             val categoryId = call.parameters["id"] ?: ""
