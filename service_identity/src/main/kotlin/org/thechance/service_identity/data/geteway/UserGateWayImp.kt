@@ -45,7 +45,6 @@ class UserGateWayImp(dataBaseContainer: DataBaseContainer): UserGateWay {
         return indexInfo.isNotEmpty()
     }
 
-
     override suspend fun getUserById(id: String): User? =
         userCollection.findOne(
             UserCollection::id eq ObjectId(id),
@@ -62,7 +61,7 @@ class UserGateWayImp(dataBaseContainer: DataBaseContainer): UserGateWay {
     }
 
     override suspend fun updateUser(id: String, user: User): Boolean =
-        userCollection.updateOneById(ObjectId(id), user.toUserCollection()).wasAcknowledged()
+        userCollection.updateOneById(ObjectId(id), user.toUserCollection()).modifiedCount > 0
 
     override suspend fun deleteUser(id: String): Boolean =
         userCollection.updateOne(
