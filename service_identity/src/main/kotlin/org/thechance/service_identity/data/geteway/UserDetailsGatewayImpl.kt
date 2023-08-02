@@ -35,20 +35,6 @@ class UserDetailsGatewayImpl(dataBaseContainer: DataBaseContainer) : UserDetails
         )
     }
 
-    override suspend fun addAddressToUser(userId: String, addressId: String) {
-        userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::userId eq userId,
-            update = push(UserDetailsCollection::addresses, ObjectId(addressId))
-        )
-    }
-
-    override suspend fun removeAddressFromUser(userId: String, addressId: String) {
-        userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::userId eq userId,
-            update = pull(UserDetailsCollection::addresses, ObjectId(addressId))
-        )
-    }
-
     override suspend fun addPermissionToUser(userId: String, permissionId: String) {
         userDetailsCollection.updateOne(
             filter = UserDetailsCollection::userId eq userId,
