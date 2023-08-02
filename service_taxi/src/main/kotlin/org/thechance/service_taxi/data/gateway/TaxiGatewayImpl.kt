@@ -34,7 +34,7 @@ class TaxiGatewayImpl(container: DataBaseContainer) : TaxiGateway {
             id = ObjectId(taxiId),
             update = TaxiCollection(isDeleted = true),
             updateOnlyNotNullProperties = true
-        ).wasAcknowledged()
+        ).modifiedCount > 0
     }
 
     override suspend fun updateTaxi(taxi: Taxi): Boolean {
@@ -42,7 +42,7 @@ class TaxiGatewayImpl(container: DataBaseContainer) : TaxiGateway {
             ObjectId(taxi.id),
             taxi.toCollection(),
             updateOnlyNotNullProperties = true
-        ).wasAcknowledged()
+        ).modifiedCount > 0
     }
 
 }
