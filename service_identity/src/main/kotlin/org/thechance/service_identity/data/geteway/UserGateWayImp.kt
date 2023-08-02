@@ -2,6 +2,9 @@ package org.thechance.service_identity.data.geteway
 
 import com.mongodb.client.model.IndexOptions
 import com.mongodb.client.model.Indexes
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.eq
@@ -19,6 +22,29 @@ class UserGateWayImp(dataBaseContainer: DataBaseContainer): UserGateWay {
     private val userCollection by lazy { dataBaseContainer.database.getCollection<UserCollection>(
         USER_COLLECTION
     ) }
+
+    init {
+        CoroutineScope(Dispatchers.IO).launch {
+            createUniqueIndexIfNotExists()
+        }
+    }
+
+    private suspend fun createUniqueIndexIfNotExists() {
+        if (!isUniqueIndexCreated()) {
+            val indexOptions = IndexOptions().unique(true)
+            userCollection.createIndex(Indexes.ascending("username"), indexOptions)
+        }
+    }
+
+    private suspend fun isUniqueIndexCreated(): Boolean {
+        val indexName = "username_1"
+
+        val indexInfo = userCollection.listIndexes<Indexes>().toList()
+            .filter { it.equals(indexName) }
+
+        return indexInfo.isNotEmpty()
+    }
+
 
     override suspend fun getUserById(id: String): User? =
         userCollection.findOne(
