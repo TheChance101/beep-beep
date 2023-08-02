@@ -1,6 +1,5 @@
 package org.thechance.service_identity.data.geteway
 
-
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.eq
@@ -15,25 +14,19 @@ import org.thechance.service_identity.domain.gateway.WalletGateWay
 import org.thechance.service_identity.utils.Constants.WALLET_COLLECTION
 
 @Single
-class WalletGateWayImpl(dataBase : DataBaseContainer) : WalletGateWay {
+class WalletGateWayImpl(dataBase: DataBaseContainer) : WalletGateWay {
 
-    private val walletCollection by lazy {
-        dataBase.database.getCollection<WalletCollection>(
-            WALLET_COLLECTION
-        )
+    private val walletCollection by lazy { dataBase.database.getCollection<WalletCollection>(WALLET_COLLECTION) }
+
+    private val userDetailsCollection by lazy { dataBase.database.getCollection<UserDetailsCollection>("user_details") }
+
+    override suspend fun getWalletById(id: String): Wallet {
+        return walletCollection.findOneById(ObjectId(id))?.toWallet() ?: throw Exception("Wallet not found")
     }
 
-    private val userDetailsCollection by lazy {
-        dataBase.database.getCollection<UserDetailsCollection>("user_details")
-    }
-
-    override  suspend fun getWalletById(id: String): Wallet {
-     return   walletCollection.findOneById(ObjectId(id))?.toWallet() ?: throw Exception("Wallet not found")
-    }
-
-    override  suspend fun getWalletByUserId(userId: String): Wallet {
-      return walletCollection.findOne(WalletCollection::userId eq userId)?.toWallet()
-          ?: throw Exception("Wallet not found")
+    override suspend fun getWalletByUserId(userId: String): Wallet {
+        return walletCollection.findOne(WalletCollection::userId eq userId)?.toWallet()
+            ?: throw Exception("Wallet not found")
     }
 
     override suspend fun createWallet(wallet: Wallet): Boolean {
@@ -44,8 +37,8 @@ class WalletGateWayImpl(dataBase : DataBaseContainer) : WalletGateWay {
         return walletCollection.insertOne(wallet.toCollection()).wasAcknowledged()
     }
 
-    override suspend fun updateWallet(id: String,wallet: Wallet): Boolean{
-     return    walletCollection.updateOneById(
+    override suspend fun updateWallet(id: String, wallet: Wallet): Boolean {
+        return walletCollection.updateOneById(
             id = ObjectId(id),
             update = wallet.toCollection(),
         ).wasAcknowledged()
@@ -59,11 +52,4 @@ class WalletGateWayImpl(dataBase : DataBaseContainer) : WalletGateWay {
         return walletCollection.deleteOne(id).wasAcknowledged()
     }
 
-    private fun Wallet.toCollection(): WalletCollection {
-        return WalletCollection(
-            id = ObjectId(this.id),
-            userId = userId,
-            walletBalance = this.walletBalance,
-        )
-    }
 }
