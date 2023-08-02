@@ -22,7 +22,7 @@ include("client_support:common")
 
 include(":design_system")
 include(":design_system:shared")
-include(":design_system:androidApp")
+
 pluginManagement {
     repositories {
         gradlePluginPortal()

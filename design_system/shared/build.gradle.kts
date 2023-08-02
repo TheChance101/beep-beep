@@ -8,7 +8,7 @@ plugins {
 
 kotlin {
     jvm("desktop") {
-        jvmToolchain(11)
+        jvmToolchain(libs.versions.jvmToolchain.get().toInt())
     }
     androidTarget()
 
@@ -44,6 +44,7 @@ kotlin {
                 api(libs.androidx.activity.compose)
                 api(libs.androidx.appcompat)
                 api(libs.androidx.core.ktx)
+                api(libs.compose.preview)
             }
         }
         val iosX64Main by getting
@@ -55,7 +56,11 @@ kotlin {
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
         }
-
+        val desktopMain by getting {
+            dependencies {
+                api(libs.compose.preview)
+            }
+        }
     }
 }
 
@@ -74,7 +79,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    packagingOptions.pickFirsts += "compose-multiplatform.xml"
 
     kotlin {
         jvmToolchain(libs.versions.jvmToolchain.get().toInt())

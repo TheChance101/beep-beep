@@ -1,28 +1,8 @@
 import androidx.compose.runtime.Composable
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import com.beepbeep.designSystem.App
+import com.beepbeep.designSystem.DesignApp
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun App() {
-    App()
-//    MaterialTheme {
-//        var greetingText by remember { mutableStateOf("Hello, World!") }
-//        var showImage by remember { mutableStateOf(false) }
-//        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-//            Button(onClick = {
-//                greetingText = "Hello, ${getPlatformName()}"
-//                showImage = !showImage
-//            }) {
-//                Text(greetingText)
-//            }
-//            AnimatedVisibility(showImage) {
-//                Image(
-//                    painterResource("compose-multiplatform.xml"),
-//                    null
-//                )
-//            }
-//        }
-//    }
+    DesignApp()
 }
-
-expect fun getPlatformName(): String
