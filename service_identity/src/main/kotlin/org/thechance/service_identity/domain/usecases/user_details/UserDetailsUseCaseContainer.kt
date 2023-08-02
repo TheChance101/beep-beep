@@ -12,5 +12,5 @@ data class UserDetailsUseCaseContainer(
     val getUserDetails: GetUserDetailsUseCase,
     val updateUserDetails: UpdateUserDetailsUseCase,
     val addWalletToUser: AddWalletToUserUseCase,
-    val removeWalletFromUser: DeleteUserWalletUseCase
+    val deleteWalletFromUser: DeleteUserWalletUseCase
 )
