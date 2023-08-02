@@ -5,14 +5,17 @@ import com.mongodb.client.model.Updates
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.coroutine.aggregate
+import org.litote.kmongo.coroutine.updateOne
 import org.litote.kmongo.eq
 import org.litote.kmongo.lookup
 import org.litote.kmongo.match
 import org.litote.kmongo.project
 import org.thechance.service_restaurant.data.DataBaseContainer
+import org.thechance.service_restaurant.data.collection.AddressCollection
 import org.thechance.service_restaurant.data.collection.CategoryCollection
 import org.thechance.service_restaurant.data.collection.RestaurantCollection
 import org.thechance.service_restaurant.data.collection.toEntity
+import org.thechance.service_restaurant.entity.Address
 import org.thechance.service_restaurant.entity.Category
 import org.thechance.service_restaurant.entity.Restaurant
 import org.thechance.service_restaurant.usecase.gateway.RestaurantGateway
@@ -23,10 +26,69 @@ import org.thechance.service_restaurant.utils.isSuccessfullyUpdated
 class RestaurantGatewayImp(private val container: DataBaseContainer) : RestaurantGateway {
 
     private val restaurantCollection by lazy { container.database.getCollection<RestaurantCollection>() }
+    private val categoryCollection by lazy { container.database.getCollection<CategoryCollection>() }
+    private val addressCollection by lazy { container.database.getCollection<AddressCollection>() }
 
-    private val categoryCollection by lazy {
-        container.database.getCollection<CategoryCollection>()
+    //region Address
+    override suspend fun getAddresses(): List<Address> {
+        return addressCollection.find(AddressCollection::isDeleted eq false).toList().toEntity()
     }
+
+    override suspend fun getAddress(id: String): Address? {
+        return addressCollection.findOneById(ObjectId(id))?.takeIf { !it.isDeleted }?.toEntity()
+    }
+
+    override suspend fun addAddress(address: Address): Boolean {
+        return addressCollection.insertOne(address.toCollection()).wasAcknowledged()
+    }
+
+    override suspend fun updateAddress(address: Address): Boolean {
+        return addressCollection.updateOne(
+            address.toCollection(),
+            updateOnlyNotNullProperties = true
+        ).isSuccessfullyUpdated()
+    }
+
+    override suspend fun deleteAddress(id: String): Boolean {
+        return addressCollection.updateOneById(
+            id = ObjectId(id),
+            update = Updates.set(AddressCollection::isDeleted.name, true),
+        ).isSuccessfullyUpdated()
+    }
+
+    override suspend fun addAddressesToRestaurant(
+        restaurantId: String,
+        addressesIds: List<String>
+    ): Boolean {
+        return restaurantCollection.updateOneById(
+            ObjectId(restaurantId),
+            update = Updates.addEachToSet(
+                RestaurantCollection::addressIds.name,
+                addressesIds.map { ObjectId(it) }
+            )
+        ).isSuccessfullyUpdated()
+    }
+
+    override suspend fun getAddressesInRestaurant(restaurantId: String): List<Address> {
+        return restaurantCollection.aggregate<RestaurantCollection>(
+            match(
+                and(
+                    RestaurantCollection::id eq ObjectId(restaurantId),
+                    RestaurantCollection::isDeleted eq false
+                )
+            ),
+            lookup(
+                from = "addressCollection",
+                localField = RestaurantCollection::addressIds.name,
+                foreignField = "_id",
+                newAs = RestaurantCollection::addresses.name
+            ),
+            project(
+                RestaurantCollection::addresses
+            )
+        ).toList().firstOrNull()?.addresses?.toEntity() ?: emptyList()
+    }
+    //endregion
 
     //region Category
     override suspend fun getCategories(): List<Category> {
