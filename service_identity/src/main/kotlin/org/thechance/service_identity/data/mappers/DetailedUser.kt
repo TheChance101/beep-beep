@@ -3,7 +3,7 @@ package org.thechance.service_identity.data.mappers
 import org.thechance.service_identity.data.collection.DetailedUserCollection
 import org.thechance.service_identity.domain.entity.User
 
-fun DetailedUserCollection.toEntity(): User {
+fun DetailedUserCollection.toUserEntity(): User {
     return User(
         id = id.toHexString(),
         fullName = fullName,
@@ -17,6 +17,6 @@ fun DetailedUserCollection.toEntity(): User {
     )
 }
 
-fun List<DetailedUserCollection>.toEntity(): List<User> {
-    return map { it.toEntity() }
+fun List<DetailedUserCollection>.toUserEntity(): List<User> {
+    return map { it.toUserEntity() }
 }

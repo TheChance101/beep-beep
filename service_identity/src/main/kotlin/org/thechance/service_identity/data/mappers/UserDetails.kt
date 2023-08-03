@@ -4,7 +4,7 @@ import org.bson.types.ObjectId
 import org.thechance.service_identity.data.collection.UserDetailsCollection
 import org.thechance.service_identity.domain.entity.UserDetails
 
-fun UserDetailsCollection.toEntity(): UserDetails {
+fun UserDetailsCollection.toUserEntity(): UserDetails {
     return UserDetails(
         userId = userId.toHexString(),
         email = email,
@@ -14,8 +14,8 @@ fun UserDetailsCollection.toEntity(): UserDetails {
     )
 }
 
-fun List<UserDetailsCollection>.toEntity(): List<UserDetails> {
-    return map { it.toEntity() }
+fun List<UserDetailsCollection>.toUserEntity(): List<UserDetails> {
+    return map { it.toUserEntity() }
 }
 
 fun UserDetails.toCollection(): UserDetailsCollection {

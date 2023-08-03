@@ -10,4 +10,4 @@ fun PermissionCollection.toPermission(): Permission {
     )
 }
 
-fun List<PermissionCollection>.toEntity(): List<Permission> = map { it.toPermission() }
+fun List<PermissionCollection>.toUserEntity(): List<Permission> = map { it.toPermission() }
