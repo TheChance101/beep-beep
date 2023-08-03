@@ -16,13 +16,16 @@ data class WalletCollection(
     @SerialName("user_id")
     val userId: String,
     @SerialName("wallet_balance")
-    val walletBalance: Double
+    val walletBalance: Double,
+    @SerialName("is_deleted")
+    val isDeleted: Boolean = false
 ) {
     fun toWallet(): Wallet {
         return Wallet(
             id = id.toHexString(),
             userId = userId,
-            walletBalance = walletBalance
+            walletBalance = walletBalance,
+            isDeleted = isDeleted
         )
     }
 }
