@@ -12,8 +12,6 @@ import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
-import org.thechance.service_restaurant.data.collection.CuisineCollection
-import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.usecase.cuisine.CuisineUseCasesContainer
 
 fun Route.cuisineRoutes() {
@@ -23,7 +21,7 @@ fun Route.cuisineRoutes() {
     route("cuisine") {
 
         post {
-            val cuisine = call.receive<CuisineCollection>()
+            val cuisine = call.receive<CuisineDto>()
             val isAdded = cuisineUseCasesContainer.addCuisineUseCase(cuisine.toEntity())
             if (isAdded) call.respond(HttpStatusCode.Created, "Added Successfully")
         }
