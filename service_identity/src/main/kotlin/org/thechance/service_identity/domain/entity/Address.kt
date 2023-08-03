@@ -8,33 +8,24 @@ import org.thechance.service_identity.data.collection.AddressCollection
 data class Address(
     val id: String,
     val userId: String,
-    val country: String,
-    val city: String,
-    val street: String? = null,
-    val zipCode: Long? = null,
-    val houseNumber: String? = null,
+    val latitude: Double,
+    val longitude: Double,
     val isDeleted: Boolean? = null
 ) {
     fun toAddressDto(): AddressDto {
         return AddressDto(
             id = id,
             userId = userId,
-            country = country,
-            city = city,
-            street = street,
-            zipCode = zipCode,
-            houseNumber = houseNumber
+            latitude = latitude,
+            longitude = longitude
         )
     }
 
     fun toAddressCollection(): AddressCollection {
         return AddressCollection(
             userId = ObjectId(this.userId).toId(),
-            country = this.country,
-            city = this.city,
-            street = this.street,
-            zipCode = this.zipCode,
-            houseNumber = this.houseNumber
+            latitude = this.latitude,
+            longitude = this.longitude
         )
     }
 }

@@ -16,16 +16,10 @@ data class AddressCollection(
     val id: ObjectId = ObjectId(),
     @SerialName("user_id")
     val userId: Id<UserCollection>,
-    @SerialName("country")
-    val country: String,
-    @SerialName("city")
-    val city: String,
-    @SerialName("street")
-    val street: String? = null,
-    @SerialName("zip_code")
-    val zipCode: Long? = null,
-    @SerialName("house_number")
-    val houseNumber: String? = null,
+    @SerialName("latitude")
+    val latitude : Double,
+    @SerialName("longitude")
+    val longitude : Double,
     @SerialName("is_deleted")
     val isDeleted: Boolean = false
 ) {
@@ -33,11 +27,8 @@ data class AddressCollection(
         return Address(
             id = id.toHexString(),
             userId = userId.toString(),
-            country = country,
-            city = city,
-            street = street,
-            zipCode = zipCode,
-            houseNumber = houseNumber,
+            latitude = latitude,
+            longitude = longitude,
             isDeleted = isDeleted
         )
     }
