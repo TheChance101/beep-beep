@@ -49,21 +49,13 @@ data class DetailedUserDto(
 data class CreateUserRequest(
     val fullName: String,
     val username: String,
-    val password: String,
-    val email: String? = null,
-    val walletId: String? = null,
-    val addresses: List<String> = emptyList(),
-    val permissions: List<String> = emptyList()
+    val password: String
 ) {
     fun toUser(): User {
         return User(
             fullName = fullName,
             username = username,
-            password = password,
-            email = email,
-            walletId = walletId,
-            addresses = addresses,
-            permissions = permissions
+            password = password
         )
     }
 }
