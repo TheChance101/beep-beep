@@ -21,8 +21,10 @@ interface RestaurantGateway {
     suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant>
     suspend fun getRestaurant(id: String): Restaurant?
     suspend fun addRestaurant(restaurant: Restaurant): Boolean
+    suspend fun addCategoriesToRestaurant(restaurantId: String, categoryIds: List<String>): Boolean
     suspend fun updateRestaurant(restaurant: Restaurant): Boolean
     suspend fun deleteRestaurant(restaurantId: String): Boolean
+    suspend fun deleteCategoriesInRestaurant(restaurantId: String, categoryIds: List<String>): Boolean
     //endregion
 
 }

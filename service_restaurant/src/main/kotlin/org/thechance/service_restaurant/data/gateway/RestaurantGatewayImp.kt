@@ -11,6 +11,7 @@ import org.thechance.service_restaurant.data.collection.CategoryRestaurantCollec
 import org.thechance.service_restaurant.data.collection.RestaurantCollection
 import org.thechance.service_restaurant.data.collection.toEntity
 import org.thechance.service_restaurant.data.utils.paginate
+import org.thechance.service_restaurant.data.utils.toObjectIds
 import org.thechance.service_restaurant.entity.Category
 import org.thechance.service_restaurant.entity.Restaurant
 import org.thechance.service_restaurant.utils.isSuccessfullyUpdated
@@ -55,7 +56,7 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
     override suspend fun addRestaurantsToCategory(categoryId: String, restaurantIds: List<String>): Boolean {
         return categoryCollection.updateOneById(
             ObjectId(categoryId),
-            update = Updates.addEachToSet(CategoryCollection::restaurantIds.name, restaurantIds.map { ObjectId(it) })
+            update = Updates.addEachToSet(CategoryCollection::restaurantIds.name, restaurantIds.toObjectIds())
         ).isSuccessfullyUpdated()
     }
 
@@ -75,13 +76,17 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
     }
 
     override suspend fun deleteRestaurantsInCategory(categoryId: String, restaurantIds: List<String>): Boolean {
-        return categoryCollection.updateOneById(
-            ObjectId(categoryId),
-            pullAll(CategoryCollection::restaurantIds, restaurantIds.map { ObjectId(it) })
+        val resultDeleteFromRestaurant = restaurantCollection.updateMany(
+            RestaurantCollection::id `in` restaurantIds.toObjectIds(),
+            pull(RestaurantCollection::categoryIds, ObjectId(categoryId))
         ).isSuccessfullyUpdated()
+
+        val resultDeleteFromCategory = categoryCollection.updateOneById(
+            ObjectId(categoryId),
+            pullAll(CategoryCollection::restaurantIds, restaurantIds.toObjectIds())
+        ).isSuccessfullyUpdated()
+        return resultDeleteFromRestaurant and resultDeleteFromCategory
     }
-
-
     //endregion
 
     //region Restaurant
@@ -91,11 +96,20 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
     }
 
     override suspend fun getRestaurant(id: String): Restaurant? {
-        return restaurantCollection.findOneById(ObjectId(id))?.takeIf { !it.isDeleted }?.toEntity()
+        return restaurantCollection.aggregate<RestaurantCollection>(
+            match(and(RestaurantCollection::id eq ObjectId(id), RestaurantCollection::isDeleted eq false)),
+        ).toList().firstOrNull()?.toEntity()
     }
 
     override suspend fun addRestaurant(restaurant: Restaurant): Boolean {
         return restaurantCollection.insertOne(restaurant.toCollection()).wasAcknowledged()
+    }
+
+    override suspend fun addCategoriesToRestaurant(restaurantId: String, categoryIds: List<String>): Boolean {
+        return restaurantCollection.updateOneById(
+            ObjectId(restaurantId),
+            update = Updates.addEachToSet(RestaurantCollection::categoryIds.name, categoryIds.toObjectIds())
+        ).isSuccessfullyUpdated()
     }
 
     override suspend fun updateRestaurant(restaurant: Restaurant): Boolean {
@@ -111,6 +125,19 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
             id = ObjectId(restaurantId),
             update = Updates.set(RestaurantCollection::isDeleted.name, true),
         ).isSuccessfullyUpdated()
+    }
+
+    override suspend fun deleteCategoriesInRestaurant(restaurantId: String, categoryIds: List<String>): Boolean {
+        val resultDeleteFromCategory = categoryCollection.updateMany(
+            CategoryCollection::id `in` categoryIds.toObjectIds(),
+            pull(CategoryCollection::restaurantIds, ObjectId(restaurantId))
+        ).isSuccessfullyUpdated()
+
+        val resultDeleteFromRestaurant = restaurantCollection.updateOneById(
+            ObjectId(restaurantId),
+            pullAll(RestaurantCollection::categoryIds, categoryIds.toObjectIds())
+        ).isSuccessfullyUpdated()
+        return resultDeleteFromRestaurant and resultDeleteFromCategory
     }
     //endregion
 }

@@ -14,10 +14,19 @@ interface CreateRestaurantUseCase {
     suspend operator fun invoke(restaurant: Restaurant): Boolean
 }
 
+interface AddCategoryToRestaurantUseCase {
+    suspend operator fun invoke(restaurantId: String, categoryIds: List<String>): Boolean
+}
+
 interface UpdateRestaurantUseCase {
     suspend operator fun invoke(restaurant: Restaurant): Boolean
 }
 
 interface DeleteRestaurantUseCase {
     suspend operator fun invoke(restaurantId: String): Boolean
+}
+
+interface DeleteCategoriesInRestaurantUseCase {
+    suspend operator fun invoke(restaurantId: String, categoryIds: List<String>): Boolean
+
 }

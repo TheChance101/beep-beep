@@ -8,8 +8,10 @@ data class RestaurantUseCasesContainer(
     val getRestaurants: GetRestaurantsUseCase,
     val getRestaurantDetails: GetRestaurantDetailsUseCase,
     val addRestaurant: CreateRestaurantUseCase,
+    val addCategoryToRestaurant: AddCategoryToRestaurantUseCase,
     val updateRestaurant: UpdateRestaurantUseCase,
-    val deleteRestaurant: DeleteRestaurantUseCase
+    val deleteRestaurant: DeleteRestaurantUseCase,
+    val deleteCategoriesInRestaurant: DeleteCategoriesInRestaurantUseCase
 )
 
 
