@@ -44,14 +44,19 @@ class MealGatewayImp(private val container: DataBaseContainer) : MealGateway {
 
     override suspend fun getMealCuisines(mealId: String): List<Cuisine> {
         return mealCollection.aggregate<MealCuisinesCollection>(
-            match(MealCollection::id eq ObjectId(mealId)),
+            match(
+                and(
+                    MealCollection::id eq ObjectId(mealId),
+                    MealCollection::isDeleted ne true
+                )
+            ),
             lookup(
                 localField = MealCollection::cuisines.name,
                 from = "cuisine",
                 foreignField = "_id",
                 newAs = MealCuisinesCollection::meal_cuisines.name
             ),
-        ).toList().firstOrNull()?.meal_cuisines?.toEntity() ?: emptyList()
+        ).toList().firstOrNull()?.meal_cuisines?.filter { !it.isDeleted }?.toEntity() ?: emptyList()
     }
 
     override suspend fun deleteCuisineFromMeal(mealId: String, cuisineId: String): Boolean {

@@ -3,15 +3,30 @@ package org.thechance.service_restaurant.data.gateway
 import com.mongodb.client.model.Updates
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
-import org.litote.kmongo.*
+import org.litote.kmongo.addToSet
+import org.litote.kmongo.and
 import org.litote.kmongo.coroutine.aggregate
+import org.litote.kmongo.eq
+import org.litote.kmongo.id.WrappedObjectId
+import org.litote.kmongo.`in`
+import org.litote.kmongo.lookup
+import org.litote.kmongo.match
+import org.litote.kmongo.ne
+import org.litote.kmongo.pull
+import org.litote.kmongo.pullAll
 import org.thechance.service_restaurant.data.DataBaseContainer
+import org.thechance.service_restaurant.data.collection.AddressCollection
+import org.thechance.service_restaurant.data.collection.CategoryCollection
+import org.thechance.service_restaurant.data.collection.CategoryRestaurantCollection
+import org.thechance.service_restaurant.data.collection.RestaurantAddressesCollection
+import org.thechance.service_restaurant.data.collection.RestaurantCollection
 import org.thechance.service_restaurant.data.collection.*
 import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
 import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.data.utils.toObjectIds
+import org.thechance.service_restaurant.entity.Address
 import org.thechance.service_restaurant.entity.Category
 import org.thechance.service_restaurant.entity.Meal
 import org.thechance.service_restaurant.entity.Restaurant
@@ -20,6 +35,7 @@ import org.thechance.service_restaurant.entity.Restaurant
 class RestaurantGatewayImp(private val container: DataBaseContainer) : RestaurantGateway {
     private val restaurantCollection by lazy { container.database.getCollection<RestaurantCollection>() }
     private val categoryCollection by lazy { container.database.getCollection<CategoryCollection>() }
+    private val addressCollection by lazy { container.database.getCollection<AddressCollection>() }
 
     //region Restaurant
     override suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant> {
@@ -27,10 +43,11 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
             .paginate(page, limit).toList().toEntity()
     }
 
+    //need to change
     override suspend fun getRestaurant(id: String): Restaurant? {
         return restaurantCollection.aggregate<RestaurantCollection>(
             match(and(RestaurantCollection::id eq ObjectId(id), RestaurantCollection::isDeleted eq false)),
-        ).toList().firstOrNull()?.toEntity()
+        ).toList().firstOrNull()?.toEntity(getAddressesInRestaurant(id))
     }
 
     override suspend fun getCategoriesInRestaurant(restaurantId: String): List<Category> {
@@ -106,6 +123,54 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
             pullAll(RestaurantCollection::categoryIds, categoryIds.toObjectIds())
         ).isSuccessfullyUpdated()
         return resultDeleteFromRestaurant and resultDeleteFromCategory
+    }
+    //endregion
+
+    //region addresses
+    override suspend fun addAddressesToRestaurant(
+        restaurantId: String,
+        addressesIds: List<String>
+    ): Boolean {
+        val addresses = addressCollection.find(
+            and(
+                AddressCollection::id `in` addressesIds.map { ObjectId(it) },
+                AddressCollection::isDeleted ne true
+            )
+        ).toList()
+
+        return restaurantCollection.updateOneById(
+            ObjectId(restaurantId),
+            update = Updates.addEachToSet(
+                RestaurantCollection::addressIds.name,
+                addresses.map { it.id }
+            )
+        ).isSuccessfullyUpdated()
+    }
+
+    override suspend fun getAddressesInRestaurant(restaurantId: String): List<Address> {
+        return restaurantCollection.aggregate<RestaurantAddressesCollection>(
+            match(
+                and(
+                    RestaurantCollection::id eq ObjectId(restaurantId),
+                    RestaurantCollection::isDeleted ne true
+                )
+            ),
+            lookup(
+                from = "addressCollection",
+                resultProperty = RestaurantAddressesCollection::addresses,
+                pipeline = arrayOf(match(AddressCollection::isDeleted ne true))
+            )
+        ).toList().firstOrNull()?.addresses?.toEntity() ?: emptyList()
+    }
+
+    override suspend fun deleteAddressesInRestaurant(
+        restaurantId: String,
+        addressesIds: List<String>
+    ): Boolean {
+        return restaurantCollection.updateOneById(
+            ObjectId(restaurantId),
+            pullAll(RestaurantCollection::addressIds, addressesIds.map { WrappedObjectId(it) })
+        ).isSuccessfullyUpdated()
     }
     //endregion
 }

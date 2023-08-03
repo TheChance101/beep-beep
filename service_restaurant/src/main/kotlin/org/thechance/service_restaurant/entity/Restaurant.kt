@@ -10,6 +10,5 @@ data class Restaurant(
     val openingTime: String? = null,
     val closingTime: String? = null,
     val isDeleted: Boolean = false
-//    val address: ObjectId,
+    val addresses: List<Address>? = null,
 )
-

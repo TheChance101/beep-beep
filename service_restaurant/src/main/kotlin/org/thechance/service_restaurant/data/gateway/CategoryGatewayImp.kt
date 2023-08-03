@@ -7,7 +7,7 @@ import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
 import org.thechance.service_restaurant.data.DataBaseContainer
 import org.thechance.service_restaurant.data.collection.CategoryCollection
-import org.thechance.service_restaurant.data.collection.CategoryRestaurant
+import org.thechance.service_restaurant.data.collection.CategoryRestaurantCollection
 import org.thechance.service_restaurant.data.collection.RestaurantCollection
 import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
@@ -37,12 +37,12 @@ class CategoryGatewayImp(private val container: DataBaseContainer) : CategoryGat
     }
 
     override suspend fun getRestaurantsInCategory(categoryId: String): List<Restaurant> {
-        return categoryCollection.aggregate<CategoryRestaurant>(
+        return categoryCollection.aggregate<CategoryRestaurantCollection>(
             match(CategoryCollection::id eq ObjectId(categoryId)),
             lookup(
                 from = "restaurantCollection",
-                resultProperty = CategoryRestaurant::restaurants,
-                pipeline = listOf(match(RestaurantCollection::isDeleted eq false)).toTypedArray()
+                resultProperty = CategoryRestaurantCollection::restaurants,
+                pipeline = arrayOf(match(RestaurantCollection::isDeleted eq false))
             ),
         ).toList().first().restaurants.toEntity()
     }
