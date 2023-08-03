@@ -11,6 +11,7 @@ import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.*
+import org.thechance.service_identity.data.util.*
 import org.thechance.service_identity.domain.entity.Permission
 import org.thechance.service_identity.domain.entity.User
 import org.thechance.service_identity.domain.gateway.UserGateWay
@@ -26,7 +27,9 @@ class UserGateWayImp(dataBaseContainer: DataBaseContainer) : UserGateWay {
         )
     }
 
-    private val userDetailsCollection by lazy { dataBaseContainer.database.getCollection<UserDetailsCollection>("user_details") }
+    private val userDetailsCollection by lazy {
+        dataBaseContainer.database.getCollection<UserDetailsCollection>(USER_DETAILS_COLLECTION)
+    }
 
     init {
         CoroutineScope(Dispatchers.IO).launch {
@@ -54,10 +57,10 @@ class UserGateWayImp(dataBaseContainer: DataBaseContainer) : UserGateWay {
         return userCollection.aggregate<DetailedUserCollection>(
             match(UserCollection::id eq ObjectId(id)),
             lookup(
-                localField = "_id",
-                from = "user_details",
-                foreignField = "userId",
-                newAs = "details"
+                localField = USER_COLLECTION_LOCAL_PRIMARY_FIELD,
+                from = USER_DETAILS_COLLECTION,
+                foreignField = USER_DETAILS_LOCAL_FIELD,
+                newAs = DETAILED_USER_COLLECTION
             )
         ).toList().toEntity().firstOrNull()
     }
@@ -65,10 +68,10 @@ class UserGateWayImp(dataBaseContainer: DataBaseContainer) : UserGateWay {
     override suspend fun getDetailedUsers(): List<User> {
         return userCollection.aggregate<DetailedUserCollection>(
             lookup(
-                localField = "_id",
-                from = "user_details",
-                foreignField = "userId",
-                newAs = "details"
+                localField = USER_COLLECTION_LOCAL_PRIMARY_FIELD,
+                from = USER_DETAILS_COLLECTION,
+                foreignField = USER_DETAILS_LOCAL_FIELD,
+                newAs = DETAILED_USER_COLLECTION
             )
         ).toList().toEntity()
     }
@@ -124,8 +127,8 @@ class UserGateWayImp(dataBaseContainer: DataBaseContainer) : UserGateWay {
             match(UserDetailsCollection::userId eq ObjectId(userId)),
             lookup(
                 localField = UserDetailsCollection::permissions.name,
-                from = "permission",
-                foreignField = "_id",
+                from = PERMISSION_COLLECTION,
+                foreignField = USER_PERMISSION_FOREIGN_FIELD,
                 newAs = UserPermissionsCollection::userPermissions.name
             )
         ).first()?.userPermissions?.toEntity() ?: emptyList()
