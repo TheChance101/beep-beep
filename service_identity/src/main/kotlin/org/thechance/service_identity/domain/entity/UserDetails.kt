@@ -1,6 +1,5 @@
 package org.thechance.service_identity.domain.entity
 
-
 data class UserDetails(
     val userId: String,
     val email: String?,
