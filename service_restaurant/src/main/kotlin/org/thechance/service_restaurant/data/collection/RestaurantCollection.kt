@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
-import org.thechance.service_restaurant.entity.Restaurant
+import org.litote.kmongo.Id
 
 
 @Serializable
@@ -24,6 +24,7 @@ data class RestaurantCollection(
     val id: ObjectId = ObjectId()
     val isDeleted: Boolean = false
     val categoryIds: MutableList<@Contextual ObjectId> = mutableListOf()
+    val addressIds: List<@Contextual Id<AddressCollection>> = emptyList()
 }
 
 
