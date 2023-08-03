@@ -22,11 +22,11 @@ class WalletGateWayImpl(dataBase: DataBaseContainer) : WalletGateWay {
     private val userDetailsCollection by lazy { dataBase.database.getCollection<UserDetailsCollection>("user_details") }
 
     override suspend fun getWalletById(id: String): Wallet {
-        return walletCollection.findOneById(ObjectId(id))?.toWallet() ?: throw Exception("Wallet not found")
+        return walletCollection.findOneById(ObjectId(id))?.toEntity() ?: throw Exception("Wallet not found")
     }
 
     override suspend fun getWalletByUserId(userId: String): Wallet {
-        return walletCollection.findOne(WalletCollection::userId eq userId)?.toWallet()
+        return walletCollection.findOne(WalletCollection::userId eq userId)?.toEntity()
             ?: throw Exception("Wallet not found")
     }
 
