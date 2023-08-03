@@ -13,18 +13,5 @@ data class RestaurantDto(
     val phone: String? = null,
     val openingTime: String? = null,
     val closingTime: String? = null,
-) {
-    fun toEntity(): Restaurant {
-        return Restaurant(
-            id = id,
-            name = name,
-            description = description,
-            priceLevel = priceLevel,
-            rate = rate,
-            phone = phone,
-            openingTime = openingTime,
-            closingTime = closingTime
-        )
-    }
-}
+)
 
