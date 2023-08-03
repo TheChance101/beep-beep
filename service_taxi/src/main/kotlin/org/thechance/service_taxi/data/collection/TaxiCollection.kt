@@ -1,4 +1,4 @@
-package org.thechance.service_taxi.data
+package org.thechance.service_taxi.data.collection
 
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
