@@ -13,7 +13,7 @@ data class Restaurant(
     val openingTime: String? = null,
     val closingTime: String? = null,
     val isDeleted: Boolean = false,
-    val addresses: List<String>? = null,
+    val addresses: List<Address>? = null,
 //    val meals: List<ObjectId>,
 ) {
 
@@ -27,7 +27,7 @@ data class Restaurant(
             phone = phone,
             openingTime = openingTime,
             closingTime = closingTime,
-            addresses = addresses
+            addresses = addresses?.toDto()
         )
     }
 

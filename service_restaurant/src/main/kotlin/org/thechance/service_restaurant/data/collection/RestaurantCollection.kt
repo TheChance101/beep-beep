@@ -39,7 +39,7 @@ data class RestaurantCollection(
             openingTime = openingTime,
             closingTime = closingTime,
             isDeleted = isDeleted,
-            addresses = addressIds.map { it.toString() }
+            addresses = addresses.toEntity()
         )
     }
 }

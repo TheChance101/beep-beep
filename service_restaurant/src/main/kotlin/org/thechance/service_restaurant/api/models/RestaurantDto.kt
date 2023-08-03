@@ -13,7 +13,7 @@ data class RestaurantDto(
     val phone: String? = null,
     val openingTime: String? = null,
     val closingTime: String? = null,
-    val addresses: List<String>? = null,
+    val addresses: List<AddressDto>? = null,
 ) {
     fun toEntity(): Restaurant {
         return Restaurant(
@@ -25,7 +25,7 @@ data class RestaurantDto(
             phone = phone,
             openingTime = openingTime,
             closingTime = closingTime,
-            addresses = addresses
+            addresses = addresses?.map { it.toEntity() }
         )
     }
 }

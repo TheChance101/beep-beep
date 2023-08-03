@@ -6,6 +6,7 @@ import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.coroutine.aggregate
 import org.litote.kmongo.eq
+import org.litote.kmongo.`in`
 import org.litote.kmongo.lookup
 import org.litote.kmongo.match
 import org.litote.kmongo.ne
@@ -61,11 +62,20 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
         restaurantId: String,
         addressesIds: List<String>
     ): Boolean {
+        val addresses = addressCollection
+            .find(AddressCollection::id `in` addressesIds.map { ObjectId(it) }).toList()
+
         return restaurantCollection.updateOneById(
             ObjectId(restaurantId),
-            update = Updates.addEachToSet(
-                RestaurantCollection::addressIds.name,
-                addressesIds.map { ObjectId(it) }
+            update = Updates.combine(
+                Updates.addEachToSet(
+                    RestaurantCollection::addressIds.name,
+                    addressesIds.map { ObjectId(it) }
+                ),
+                Updates.addEachToSet(
+                    RestaurantCollection::addresses.name,
+                    addresses
+                )
             )
         ).isSuccessfullyUpdated()
     }
@@ -132,10 +142,15 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
         ).isSuccessfullyUpdated()
     }
 
-    override suspend fun addRestaurantsToCategory(categoryId: String, restaurantIds: List<String>): Boolean {
+    override suspend fun addRestaurantsToCategory(
+        categoryId: String,
+        restaurantIds: List<String>
+    ): Boolean {
         return categoryCollection.updateOneById(
             ObjectId(categoryId),
-            update = Updates.addEachToSet(CategoryCollection::restaurantIds.name, restaurantIds.map { ObjectId(it) })
+            update = Updates.addEachToSet(
+                CategoryCollection::restaurantIds.name,
+                restaurantIds.map { ObjectId(it) })
         ).isSuccessfullyUpdated()
     }
 
@@ -157,7 +172,8 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
 
     //region Restaurant
     override suspend fun getRestaurants(): List<Restaurant> {
-        return restaurantCollection.find(RestaurantCollection::isDeleted eq false).toList().toEntity()
+        return restaurantCollection.find(RestaurantCollection::isDeleted eq false).toList()
+            .toEntity()
     }
 
     override suspend fun getRestaurant(id: String): Restaurant? {
