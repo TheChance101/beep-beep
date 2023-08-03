@@ -7,7 +7,7 @@ import org.thechance.service_identity.domain.gateway.UserGateWay
 class DeleteUserUseCaseImp(
     private val gateWay: UserGateWay
 ): DeleteUserUseCase {
-    override suspend fun invoke(id: String): Boolean =
+    override suspend operator fun invoke(id: String): Boolean =
         gateWay.deleteUser(id)
 
 }

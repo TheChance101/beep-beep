@@ -8,6 +8,6 @@ import org.thechance.service_identity.domain.gateway.UserGateWay
 class GetUserByIdUseCaseImp(
     private val gateWay: UserGateWay
 ): GetUserByIdUseCase {
-    override suspend fun invoke(id: String): User =
+    override suspend operator fun invoke(id: String): User =
         gateWay.getUserById(id) ?: throw Throwable("Invalid id")
 }

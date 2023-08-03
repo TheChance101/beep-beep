@@ -14,17 +14,20 @@ data class UserCollection(
     @Contextual
     val id: ObjectId = ObjectId(),
     @SerialName("full_name")
-    val fullName: String,
+    val fullName: String?,
     @SerialName("user_name")
-    val username: String,
+    val username: String?,
+    @SerialName("password")
+    val password: String?,
     @SerialName("is_deleted")
-    val isDeleted: Boolean = false
+    val isDeleted: Boolean = false,
 ){
     fun toUser(): User {
         return User(
             id = id.toHexString(),
             fullName = fullName,
             username = username,
+            password = password,
             isDeleted = isDeleted
         )
     }

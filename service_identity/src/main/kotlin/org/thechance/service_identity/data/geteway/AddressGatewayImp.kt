@@ -3,11 +3,12 @@ package org.thechance.service_identity.data.geteway
 import com.mongodb.client.model.Filters
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
-import org.litote.kmongo.eq
+import org.litote.kmongo.*
 import org.litote.kmongo.id.toId
-import org.litote.kmongo.setValue
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.AddressCollection
+import org.thechance.service_identity.data.collection.UserDetailsCollection
+import org.thechance.service_identity.data.util.USER_DETAILS_COLLECTION
 import org.thechance.service_identity.domain.entity.Address
 import org.thechance.service_identity.domain.gateway.AddressGateway
 import org.thechance.service_identity.utils.Constants.ADDRESS_COLLECTION_NAME
@@ -20,11 +21,23 @@ class AddressGatewayImp(dataBaseContainer: DataBaseContainer) : AddressGateway {
         dataBaseContainer.database.getCollection<AddressCollection>(ADDRESS_COLLECTION_NAME)
     }
 
+    private val userDetailsCollection by lazy {
+        dataBaseContainer.database.getCollection<UserDetailsCollection>(USER_DETAILS_COLLECTION)
+    }
+
     override suspend fun addAddress(address: Address): Boolean {
+        userDetailsCollection.updateOne(
+            filter = UserDetailsCollection::userId eq ObjectId(address.userId),
+            update = push(UserDetailsCollection::addresses, ObjectId(address.id))
+        )
         return addressCollection.insertOne(address.toAddressCollection()).wasAcknowledged()
     }
 
     override suspend fun deleteAddress(id: String): Boolean {
+        userDetailsCollection.updateOne(
+            filter = UserDetailsCollection::addresses contains ObjectId(id),
+            update = pull(UserDetailsCollection::addresses, ObjectId(id))
+        )
         return addressCollection.updateOne(
             filter = Filters.and(AddressCollection::id eq ObjectId(id), AddressCollection::isDeleted eq false),
             update = setValue(AddressCollection::isDeleted, true)
