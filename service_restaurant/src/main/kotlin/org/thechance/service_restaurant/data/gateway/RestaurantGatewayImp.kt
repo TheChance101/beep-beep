@@ -8,6 +8,7 @@ import org.litote.kmongo.coroutine.aggregate
 import org.litote.kmongo.eq
 import org.litote.kmongo.lookup
 import org.litote.kmongo.match
+import org.litote.kmongo.ne
 import org.litote.kmongo.project
 import org.thechance.service_restaurant.data.DataBaseContainer
 import org.thechance.service_restaurant.data.collection.AddressCollection
@@ -74,19 +75,15 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
             match(
                 and(
                     RestaurantCollection::id eq ObjectId(restaurantId),
-                    RestaurantCollection::isDeleted eq false
+                    RestaurantCollection::isDeleted ne true
                 )
             ),
             lookup(
                 from = "addressCollection",
-                localField = RestaurantCollection::addressIds.name,
-                foreignField = "_id",
-                newAs = RestaurantCollection::addresses.name
-            ),
-            project(
-                RestaurantCollection::addresses
+                resultProperty = RestaurantCollection::addresses,
+                pipeline = arrayOf(match( AddressCollection::isDeleted ne true))
             )
-        ).toList().firstOrNull()?.addresses?.filter { !it.isDeleted }?.toEntity() ?: emptyList()
+        ).toList().firstOrNull()?.addresses?.toEntity() ?: emptyList()
     }
     //endregion
 
