@@ -17,12 +17,16 @@ import org.thechance.service_restaurant.entity.Address
 import org.thechance.service_restaurant.entity.Category
 import org.thechance.service_restaurant.entity.Meal
 import org.thechance.service_restaurant.entity.Restaurant
+import org.thechance.service_restaurant.utils.Constants.ADDRESS_COLLECTION
+import org.thechance.service_restaurant.utils.Constants.CATEGORY_COLLECTION
+import org.thechance.service_restaurant.utils.Constants.MEAL_COLLECTION
+import org.thechance.service_restaurant.utils.Constants.RESTAURANT_COLLECTION
 
 @Single
 class RestaurantGatewayImp(private val container: DataBaseContainer) : RestaurantGateway {
-    private val restaurantCollection by lazy { container.database.getCollection<RestaurantCollection>() }
-    private val categoryCollection by lazy { container.database.getCollection<CategoryCollection>() }
-    private val addressCollection by lazy { container.database.getCollection<AddressCollection>() }
+    private val restaurantCollection by lazy { container.database.getCollection<RestaurantCollection>(RESTAURANT_COLLECTION) }
+    private val categoryCollection by lazy { container.database.getCollection<CategoryCollection>(CATEGORY_COLLECTION) }
+    private val addressCollection by lazy { container.database.getCollection<AddressCollection>(ADDRESS_COLLECTION) }
 
     //region Restaurant
     override suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant> {
@@ -41,7 +45,7 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
         return restaurantCollection.aggregate<CategoryRestaurant>(
             match(RestaurantCollection::id eq ObjectId(restaurantId)),
             lookup(
-                from = "categoryCollection",
+                from = CATEGORY_COLLECTION,
                 resultProperty = CategoryRestaurant::categories,
                 pipeline = listOf(match(CategoryCollection::isDeleted eq false)).toTypedArray()
             ),
@@ -52,7 +56,7 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
        return restaurantCollection.aggregate<RestaurantMeal>(
            match(RestaurantCollection::id eq ObjectId(restaurantId)),
            lookup(
-               from = "meal",
+               from = MEAL_COLLECTION,
                resultProperty = RestaurantMeal::meals,
                pipeline = listOf(match(MealCollection::isDeleted eq false)).toTypedArray()
            ),
@@ -150,7 +154,7 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
                 )
             ),
             lookup(
-                from = "addressCollection",
+                from = ADDRESS_COLLECTION,
                 resultProperty = RestaurantAddressesCollection::addresses,
                 pipeline = arrayOf(match(AddressCollection::isDeleted ne true))
             )

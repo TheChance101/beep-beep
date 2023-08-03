@@ -10,10 +10,11 @@ import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
 import org.thechance.service_restaurant.entity.Address
+import org.thechance.service_restaurant.utils.Constants.ADDRESS_COLLECTION
 
 @Single
 class AddressGatewayImpl(private val container: DataBaseContainer) : AddressGateway {
-    private val addressCollection by lazy { container.database.getCollection<AddressCollection>() }
+    private val addressCollection by lazy { container.database.getCollection<AddressCollection>(ADDRESS_COLLECTION) }
 
     override suspend fun getAddresses(): List<Address> {
         return addressCollection.find(AddressCollection::isDeleted ne true).toList().toEntity()

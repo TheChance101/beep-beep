@@ -13,11 +13,13 @@ import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.entity.Cuisine
 import org.thechance.service_restaurant.entity.Meal
+import org.thechance.service_restaurant.utils.Constants.CUISINE_COLLECTION
+import org.thechance.service_restaurant.utils.Constants.MEAL_COLLECTION
 
 @Single
 class MealGatewayImp(private val container: DataBaseContainer) : MealGateway {
 
-    private val mealCollection by lazy { container.database.getCollection<MealCollection>("meal") }
+    private val mealCollection by lazy { container.database.getCollection<MealCollection>(MEAL_COLLECTION) }
 
     override suspend fun addMeal(meal: Meal): Boolean = mealCollection.insertOne(meal.toCollection()).wasAcknowledged()
 
@@ -52,7 +54,7 @@ class MealGatewayImp(private val container: DataBaseContainer) : MealGateway {
             ),
             lookup(
                 localField = MealCollection::cuisines.name,
-                from = "cuisine",
+                from = CUISINE_COLLECTION,
                 foreignField = "_id",
                 newAs = MealCuisinesCollection::meal_cuisines.name
             ),

@@ -16,12 +16,14 @@ import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.data.utils.toObjectIds
 import org.thechance.service_restaurant.entity.Category
 import org.thechance.service_restaurant.entity.Restaurant
+import org.thechance.service_restaurant.utils.Constants.CATEGORY_COLLECTION
+import org.thechance.service_restaurant.utils.Constants.RESTAURANT_COLLECTION
 
 @Single
 class CategoryGatewayImp(private val container: DataBaseContainer) : CategoryGateway {
 
-    private val categoryCollection by lazy { container.database.getCollection<CategoryCollection>() }
-    private val restaurantCollection by lazy { container.database.getCollection<RestaurantCollection>() }
+    private val categoryCollection by lazy { container.database.getCollection<CategoryCollection>(CATEGORY_COLLECTION) }
+    private val restaurantCollection by lazy { container.database.getCollection<RestaurantCollection>(RESTAURANT_COLLECTION) }
 
     //region Category
     override suspend fun getCategories(page: Int, limit: Int): List<Category> {
@@ -40,7 +42,7 @@ class CategoryGatewayImp(private val container: DataBaseContainer) : CategoryGat
         return categoryCollection.aggregate<CategoryRestaurant>(
             match(CategoryCollection::id eq ObjectId(categoryId)),
             lookup(
-                from = "restaurantCollection",
+                from = RESTAURANT_COLLECTION,
                 resultProperty = CategoryRestaurant::restaurants,
                 pipeline = arrayOf(match(RestaurantCollection::isDeleted eq false))
             ),

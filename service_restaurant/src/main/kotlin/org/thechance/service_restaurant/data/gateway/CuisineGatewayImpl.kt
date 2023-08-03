@@ -13,12 +13,13 @@ import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.entity.Cuisine
+import org.thechance.service_restaurant.utils.Constants.CUISINE_COLLECTION
 
 
 @Single
 class CuisineGatewayImpl(private val container: DataBaseContainer) : CuisineGateway {
 
-    private val cuisineCollection by lazy { container.database.getCollection<CuisineCollection>("cuisine") }
+    private val cuisineCollection by lazy { container.database.getCollection<CuisineCollection>(CUISINE_COLLECTION) }
 
     override suspend fun addCuisine(cuisine: Cuisine): Boolean {
         return cuisineCollection.insertOne(cuisine.toCollection()).wasAcknowledged()
