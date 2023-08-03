@@ -13,7 +13,7 @@ import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.*
 import org.thechance.service_identity.data.mappers.toDetailsCollection
 import org.thechance.service_identity.data.mappers.toEntity
-import org.thechance.service_identity.data.mappers.toUserCollection
+import org.thechance.service_identity.data.mappers.toCollection
 import org.thechance.service_identity.data.util.*
 import org.thechance.service_identity.domain.entity.Permission
 import org.thechance.service_identity.domain.entity.User
@@ -86,7 +86,7 @@ class UserGateWayImp(dataBaseContainer: DataBaseContainer) : UserGateWay {
 
 
     override suspend fun createUser(user: User): Boolean {
-        val userDocument = user.toUserCollection()
+        val userDocument = user.toCollection()
         userDetailsCollection.insertOne(user.toDetailsCollection(userDocument.id.toHexString()))
         return userCollection.insertOne(userDocument).wasAcknowledged()
     }
@@ -99,7 +99,7 @@ class UserGateWayImp(dataBaseContainer: DataBaseContainer) : UserGateWay {
         )
         return userCollection.updateOneById(
             ObjectId(id),
-            user.toUserCollection(),
+            user.toCollection(),
             updateOnlyNotNullProperties = true
         ).isDocumentModified()
     }

@@ -17,7 +17,7 @@ fun UserCollection.toEntity(): User {
     )
 }
 
-fun User.toUserDto(): UserDto {
+fun User.toDto(): UserDto {
     return UserDto(
         id = id,
         fullName = fullName,
@@ -26,7 +26,7 @@ fun User.toUserDto(): UserDto {
     )
 }
 
-fun User.toDetailedUserDto(): DetailedUserDto {
+fun User.toDetailedDto(): DetailedUserDto {
     return DetailedUserDto(
         id = id,
         fullName = fullName,
@@ -39,7 +39,7 @@ fun User.toDetailedUserDto(): DetailedUserDto {
     )
 }
 
-fun User.toUserCollection(): UserCollection {
+fun User.toCollection(): UserCollection {
     return UserCollection(
         fullName = this.fullName,
         username = this.username,

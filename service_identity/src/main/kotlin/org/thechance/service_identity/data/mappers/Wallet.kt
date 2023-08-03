@@ -13,7 +13,7 @@ fun WalletCollection.toEntity(): Wallet {
     )
 }
 
-fun Wallet.toWalletDto(): WalletDto {
+fun Wallet.toDto(): WalletDto {
     return WalletDto(
         id = id,
         userId = userId,

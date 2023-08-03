@@ -13,7 +13,7 @@ fun PermissionCollection.toEntity(): Permission {
 
 fun List<PermissionCollection>.toEntity(): List<Permission> = map { it.toEntity() }
 
-fun Permission.toPermissionDto(): PermissionDto {
+fun Permission.toDto(): PermissionDto {
     return PermissionDto(
         id = id,
         permissionType = permissionType
