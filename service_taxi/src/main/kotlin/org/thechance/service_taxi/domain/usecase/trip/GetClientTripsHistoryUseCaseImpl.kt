@@ -8,6 +8,6 @@ import org.thechance.service_taxi.domain.gateway.TripGateway
 @Single
 class GetClientTripsHistoryUseCaseImpl(private val tripGateway: TripGateway): GetClientTripsHistoryUseCase {
     override suspend fun invoke(clientId: String, page: Int, limit: Int): List<Trip> {
-        return tripGateway.getClientTrips(clientId, page, limit)
+        return tripGateway.getClientTripsHistory(clientId, page, limit)
     }
 }

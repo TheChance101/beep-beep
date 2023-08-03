@@ -23,7 +23,7 @@ class TripGatewayImpl(container: DataBaseContainer) : TripGateway {
         return tripCollection.insertOne(trip.toCollection()).wasAcknowledged()
     }
 
-    override suspend fun getTrip(tripId: String): Trip {
+    override suspend fun getTripById(tripId: String): Trip {
         return tripCollection.findOne(TripCollection::isDeleted ne true)?.toEntity()
             ?: throw Throwable()
     }
@@ -33,7 +33,7 @@ class TripGatewayImpl(container: DataBaseContainer) : TripGateway {
             .toEntity()
     }
 
-    override suspend fun getDriverTrips(driverId: String, page: Int, limit: Int): List<Trip> {
+    override suspend fun getDriverTripsHistory(driverId: String, page: Int, limit: Int): List<Trip> {
         return tripCollection.find(
             and(
                 TripCollection::isDeleted ne true,
@@ -42,7 +42,7 @@ class TripGatewayImpl(container: DataBaseContainer) : TripGateway {
         ).paginate(page, limit).toList().toEntity()
     }
 
-    override suspend fun getClientTrips(clientId: String, page: Int, limit: Int): List<Trip> {
+    override suspend fun getClientTripsHistory(clientId: String, page: Int, limit: Int): List<Trip> {
         return tripCollection.find(
             and(
                 TripCollection::isDeleted ne true,
