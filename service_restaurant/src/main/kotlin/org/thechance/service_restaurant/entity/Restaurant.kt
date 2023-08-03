@@ -14,7 +14,6 @@ data class Restaurant(
     val closingTime: String? = null,
     val isDeleted: Boolean = false,
     val addresses: List<Address>? = null,
-//    val meals: List<ObjectId>,
 ) {
 
     fun toDto(): RestaurantDto {
