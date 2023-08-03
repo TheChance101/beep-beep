@@ -8,7 +8,7 @@ import org.litote.kmongo.id.toId
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.AddressCollection
 import org.thechance.service_identity.data.collection.UserDetailsCollection
-import org.thechance.service_identity.data.mappers.toAddress
+import org.thechance.service_identity.data.mappers.toAddressEntity
 import org.thechance.service_identity.data.util.USER_DETAILS_COLLECTION
 import org.thechance.service_identity.domain.entity.Address
 import org.thechance.service_identity.domain.gateway.AddressGateway
@@ -53,7 +53,7 @@ class AddressGatewayImp(dataBaseContainer: DataBaseContainer) : AddressGateway {
         return addressCollection.findOne(
             AddressCollection::id eq ObjectId(id),
             AddressCollection::isDeleted eq false
-        )?.toAddress()
+        )?.toAddressEntity()
     }
 
     override suspend fun getUserAddresses(userId: String): List<Address> {
@@ -65,5 +65,5 @@ class AddressGatewayImp(dataBaseContainer: DataBaseContainer) : AddressGateway {
 }
 
 private fun List<AddressCollection>.toAddress(): List<Address> {
-    return this.map { it.toAddress() }
+    return this.map { it.toAddressEntity() }
 }
