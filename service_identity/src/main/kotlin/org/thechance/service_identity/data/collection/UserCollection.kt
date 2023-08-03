@@ -21,15 +21,5 @@ data class UserCollection(
     val password: String?,
     @SerialName("is_deleted")
     val isDeleted: Boolean = false,
-){
-    fun toUser(): User {
-        return User(
-            id = id.toHexString(),
-            fullName = fullName,
-            username = username,
-            password = password,
-            isDeleted = isDeleted
-        )
-    }
-}
+)
 
