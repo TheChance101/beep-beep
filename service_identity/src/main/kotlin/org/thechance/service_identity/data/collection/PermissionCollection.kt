@@ -15,12 +15,15 @@ data class PermissionCollection(
     @Contextual
     val id: ObjectId = ObjectId(),
     @SerialName("permission_type")
-    val permissionType: PermissionType = PermissionType.CLIENT
+    val permissionType: PermissionType = PermissionType.CLIENT,
+    @SerialName("is_deleted")
+    val isDeleted: Boolean = false
 ){
     fun toPermission(): Permission {
         return Permission(
             id = id.toHexString(),
-            permissionType = permissionType
+            permissionType = permissionType,
+            isDeleted= isDeleted
         )
     }
 }
