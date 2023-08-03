@@ -8,7 +8,7 @@ import org.litote.kmongo.id.toId
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.AddressCollection
 import org.thechance.service_identity.data.collection.UserDetailsCollection
-import org.thechance.service_identity.data.mappers.toAddressCollection
+import org.thechance.service_identity.data.mappers.toCollection
 import org.thechance.service_identity.data.mappers.toEntity
 import org.thechance.service_identity.data.util.USER_DETAILS_COLLECTION
 import org.thechance.service_identity.domain.entity.Address
@@ -32,7 +32,7 @@ class AddressGatewayImp(dataBaseContainer: DataBaseContainer) : AddressGateway {
             filter = UserDetailsCollection::userId eq ObjectId(address.userId),
             update = push(UserDetailsCollection::addresses, ObjectId(address.id))
         )
-        return addressCollection.insertOne(address.toAddressCollection()).wasAcknowledged()
+        return addressCollection.insertOne(address.toCollection()).wasAcknowledged()
     }
 
     override suspend fun deleteAddress(id: String): Boolean {
@@ -47,7 +47,7 @@ class AddressGatewayImp(dataBaseContainer: DataBaseContainer) : AddressGateway {
     }
 
     override suspend fun updateAddress(id: String, address: Address): Boolean {
-        return addressCollection.updateOneById(ObjectId(id), address.toAddressCollection()).isDocumentModified()
+        return addressCollection.updateOneById(ObjectId(id), address.toCollection()).isDocumentModified()
     }
 
     override suspend fun getAddress(id: String): Address? {

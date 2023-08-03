@@ -19,7 +19,7 @@ fun AddressCollection.toEntity(): Address {
     )
 }
 
-fun Address.toAddressDto(): AddressDto {
+fun Address.toDto(): AddressDto {
     return AddressDto(
         id = id,
         userId = userId,
@@ -31,7 +31,7 @@ fun Address.toAddressDto(): AddressDto {
     )
 }
 
-fun Address.toAddressCollection(): AddressCollection {
+fun Address.toCollection(): AddressCollection {
     return AddressCollection(
         userId = ObjectId(this.userId).toId(),
         country = this.country,
