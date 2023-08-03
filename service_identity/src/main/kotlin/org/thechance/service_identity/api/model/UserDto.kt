@@ -5,17 +5,15 @@ import org.thechance.service_identity.domain.entity.User
 
 @Serializable
 data class UserDto(
-    val id: String,
+    val id: String? = null,
     val fullName: String,
     val username: String,
-    val isDeleted: Boolean = false
 ) {
     fun toUser(): User {
         return User(
             id = id,
             fullName = fullName,
             username = username,
-            isDeleted = isDeleted
         )
     }
 }
