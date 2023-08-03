@@ -18,7 +18,7 @@ import org.thechance.service_identity.utils.Constants.USER_COLLECTION
 import org.thechance.service_identity.utils.isDocumentModified
 
 @Single
-class UserGateWayImp(dataBaseContainer: DataBaseContainer): UserGateWay {
+class UserGateWayImp(dataBaseContainer: DataBaseContainer) : UserGateWay {
 
     private val userCollection by lazy {
         dataBaseContainer.database.getCollection<UserCollection>(
@@ -120,15 +120,15 @@ class UserGateWayImp(dataBaseContainer: DataBaseContainer): UserGateWay {
     }
 
     override suspend fun getUserPermissions(userId: String): List<Permission> {
-        return userDetailsCollection.aggregate<PermissionCollection>(
+        return userDetailsCollection.aggregate<UserPermissionsCollection>(
             match(UserDetailsCollection::userId eq ObjectId(userId)),
             lookup(
-                localField = "permissions",
-                from = "permissions",
+                localField = UserDetailsCollection::permissions.name,
+                from = "permission",
                 foreignField = "_id",
-                newAs = "permissions"
+                newAs = UserPermissionsCollection::userPermissions.name
             )
-        ).toList().toEntity()
+        ).first()?.userPermissions?.toEntity() ?: emptyList()
     }
 
     private fun List<UserCollection>.toUser(): List<User> {
