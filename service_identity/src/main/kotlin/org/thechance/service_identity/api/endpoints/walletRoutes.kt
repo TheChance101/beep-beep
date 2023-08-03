@@ -7,6 +7,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.service_identity.api.model.WalletDto
+import org.thechance.service_identity.data.mappers.toDto
 import org.thechance.service_identity.domain.usecases.wallet.WalletUseCaseContainer
 import org.thechance.service_identity.domain.entity.Wallet
 
@@ -19,7 +20,7 @@ fun Route.walletRoute(){
         get("/{id}") {
             try {
                 val id = call.parameters["id"]!!
-                val wallet = walletUseCaseContainer.getWalletUseCase(id).toWalletDto()
+                val wallet = walletUseCaseContainer.getWalletUseCase(id).toDto()
                 call.respond(wallet)
             }catch (e: Exception){
                 call.respond(HttpStatusCode.NotFound)
@@ -28,7 +29,7 @@ fun Route.walletRoute(){
         get("/user/{id}") {
             try {
                 val id = call.parameters["id"]!!
-                val wallet = walletUseCaseContainer.getUserWalletUseCase(id).toWalletDto()
+                val wallet = walletUseCaseContainer.getUserWalletUseCase(id).toDto()
                 call.respond(wallet)
             }catch (e: Exception){
                 call.respond(HttpStatusCode.NotFound)
