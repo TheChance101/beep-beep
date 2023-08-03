@@ -17,13 +17,5 @@ data class WalletCollection(
     val userId: String,
     @SerialName("wallet_balance")
     val walletBalance: Double
-) {
-    fun toWallet(): Wallet {
-        return Wallet(
-            id = id.toHexString(),
-            userId = userId,
-            walletBalance = walletBalance
-        )
-    }
-}
+)
 
