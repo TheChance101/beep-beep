@@ -81,7 +81,7 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
             lookup(
                 from = "addressCollection",
                 resultProperty = RestaurantCollection::addresses,
-                pipeline = arrayOf(match( AddressCollection::isDeleted ne true))
+                pipeline = arrayOf(match(AddressCollection::isDeleted ne true))
             )
         ).toList().firstOrNull()?.addresses?.toEntity() ?: emptyList()
     }
