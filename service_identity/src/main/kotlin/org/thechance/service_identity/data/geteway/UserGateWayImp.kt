@@ -10,10 +10,8 @@ import org.koin.core.annotation.Single
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
 import org.thechance.service_identity.data.DataBaseContainer
-import org.thechance.service_identity.data.collection.DetailedUserCollection
-import org.thechance.service_identity.data.collection.UserCollection
-import org.thechance.service_identity.data.collection.UserDetailsCollection
-import org.thechance.service_identity.data.collection.toEntity
+import org.thechance.service_identity.data.collection.*
+import org.thechance.service_identity.domain.entity.Permission
 import org.thechance.service_identity.domain.entity.User
 import org.thechance.service_identity.domain.gateway.UserGateWay
 import org.thechance.service_identity.utils.Constants.USER_COLLECTION
@@ -119,6 +117,18 @@ class UserGateWayImp(dataBaseContainer: DataBaseContainer): UserGateWay {
             filter = UserDetailsCollection::userId eq ObjectId(userId),
             update = pull(UserDetailsCollection::permissions, ObjectId(permissionId))
         )
+    }
+
+    override suspend fun getUserPermissions(userId: String): List<Permission> {
+        return userDetailsCollection.aggregate<PermissionCollection>(
+            match(UserDetailsCollection::userId eq ObjectId(userId)),
+            lookup(
+                localField = "permissions",
+                from = "permissions",
+                foreignField = "_id",
+                newAs = "permissions"
+            )
+        ).toList().toEntity()
     }
 
     private fun List<UserCollection>.toUser(): List<User> {
