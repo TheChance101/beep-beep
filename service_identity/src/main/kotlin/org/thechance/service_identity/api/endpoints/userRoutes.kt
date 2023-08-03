@@ -29,7 +29,7 @@ fun Route.userRoutes() {
         }
 
         get("/detailed") {
-            val users = userUseCaseContainer.getDetailedUsersUseCase()
+            val users = userUseCaseContainer.getDetailedUsers()
             call.respond(HttpStatusCode.OK, users.map { it.toDetailedUserDto() })
         }
 
@@ -66,6 +66,12 @@ fun Route.userRoutes() {
                 ?: throw BadRequestException("Permission id is required")
             userUseCaseContainer.removePermissionFromUser(userId, permissionId)
             call.respond("Permission removed from user successfully")
+        }
+
+        get("/{userId}/permission") {
+            val userId = call.parameters["userId"] ?: throw BadRequestException("User id is required")
+            val permissions = userUseCaseContainer.getUserPermissions(userId)
+            call.respond(HttpStatusCode.OK, permissions.map { it.toPermissionDto() })
         }
 
     }
