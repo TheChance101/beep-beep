@@ -66,7 +66,6 @@ fun Route.restaurantRoutes() {
             call.respond(HttpStatusCode.Created, result)
         }
 
-
         put {
             val restaurant = call.receive<RestaurantDto>()
             val result = restaurantUseCases.updateRestaurant(restaurant.toEntity())

@@ -6,9 +6,7 @@ import org.koin.core.annotation.Single
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
 import org.thechance.service_restaurant.data.DataBaseContainer
-import org.thechance.service_restaurant.data.collection.CategoryCollection
-import org.thechance.service_restaurant.data.collection.CategoryRestaurant
-import org.thechance.service_restaurant.data.collection.RestaurantCollection
+import org.thechance.service_restaurant.data.collection.*
 import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
@@ -47,7 +45,14 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
     }
 
     override suspend fun getMealsInRestaurant(restaurantId: String): List<Meal> {
-        TODO("Not yet implemented")
+       return restaurantCollection.aggregate<RestaurantMeal>(
+           match(RestaurantCollection::id eq ObjectId(restaurantId)),
+           lookup(
+               from = "meal",
+               resultProperty = RestaurantMeal::meals,
+               pipeline = listOf(match(MealCollection::isDeleted eq false)).toTypedArray()
+           ),
+       ).toList().first().meals.toEntity()
     }
 
     override suspend fun addRestaurant(restaurant: Restaurant): Boolean {
