@@ -7,10 +7,11 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import org.thechance.service_identity.api.model.CreateUserRequest
-import org.thechance.service_identity.api.model.UpdateUserRequest
+import org.thechance.service_identity.api.model.request.CreateUserRequest
+import org.thechance.service_identity.api.model.request.UpdateUserRequest
 import org.thechance.service_identity.data.mappers.toDetailedDto
 import org.thechance.service_identity.data.mappers.toDto
+import org.thechance.service_identity.data.mappers.toEntity
 import org.thechance.service_identity.domain.usecases.user.UserUseCaseContainer
 
 fun Route.userRoutes() {
@@ -37,14 +38,14 @@ fun Route.userRoutes() {
 
         post {
             val user = call.receive<CreateUserRequest>()
-            val result = userUseCaseContainer.createUserUseCase(user.toUser())
+            val result = userUseCaseContainer.createUserUseCase(user.toEntity())
             call.respond(HttpStatusCode.Created, result)
         }
 
         put("/{id}") {
             val id = call.parameters["id"] ?: ""
             val userDto = call.receive<UpdateUserRequest>()
-            val result = userUseCaseContainer.updateUserUseCase(id, userDto.toUser())
+            val result = userUseCaseContainer.updateUserUseCase(id, userDto.toEntity())
             call.respond(HttpStatusCode.OK, result)
         }
 
