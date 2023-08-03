@@ -18,13 +18,13 @@ fun Route.userRoutes() {
     route("/users") {
 
         get {
-            val users = userUseCaseContainer.getUsersUseCase.invoke()
+            val users = userUseCaseContainer.getUsersUseCase()
             call.respond(HttpStatusCode.OK, users.map { it.toUserDto() })
         }
 
         get("/{id}") {
             val id = call.parameters["id"] ?: ""
-            val user = userUseCaseContainer.getUserByIdUseCase.invoke(id).toDetailedUserDto()
+            val user = userUseCaseContainer.getUserByIdUseCase(id).toDetailedUserDto()
             call.respond(HttpStatusCode.OK, user)
         }
 
@@ -35,20 +35,20 @@ fun Route.userRoutes() {
 
         post {
             val user = call.receive<CreateUserRequest>()
-            val result = userUseCaseContainer.createUserUseCase.invoke(user.toUser())
+            val result = userUseCaseContainer.createUserUseCase(user.toUser())
             call.respond(HttpStatusCode.Created, result)
         }
 
         put("/{id}") {
             val id = call.parameters["id"] ?: ""
             val userDto = call.receive<UpdateUserRequest>()
-            val result = userUseCaseContainer.updateUserUseCase.invoke(id, userDto.toUser())
+            val result = userUseCaseContainer.updateUserUseCase(id, userDto.toUser())
             call.respond(HttpStatusCode.OK, result)
         }
 
         delete("/{id}") {
             val id = call.parameters["id"] ?: ""
-            val result = userUseCaseContainer.deleteUserUseCase.invoke(id)
+            val result = userUseCaseContainer.deleteUserUseCase(id)
             call.respond(HttpStatusCode.OK, result)
         }
 

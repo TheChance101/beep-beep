@@ -8,7 +8,7 @@ import org.thechance.service_identity.domain.gateway.UserGateWay
 class UpdateUserUseCaseImp(
     private val gateWay: UserGateWay,
 ): UpdateUserUseCase {
-    override suspend fun invoke(id: String, user: User): Boolean =
+    override suspend operator fun invoke(id: String, user: User): Boolean =
         gateWay.updateUser(id, user)
 
 

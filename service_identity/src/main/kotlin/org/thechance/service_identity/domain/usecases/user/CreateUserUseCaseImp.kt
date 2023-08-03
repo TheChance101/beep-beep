@@ -9,7 +9,7 @@ class CreateUserUseCaseImp(
     private val userGateWay: UserGateWay,
 ): CreateUserUseCase {
 
-    override suspend fun invoke(user: User): Boolean =
+    override suspend operator fun invoke(user: User): Boolean =
         userGateWay.createUser(user)
 
 }

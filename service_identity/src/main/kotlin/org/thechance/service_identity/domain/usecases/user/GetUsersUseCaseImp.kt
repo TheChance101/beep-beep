@@ -8,7 +8,7 @@ import org.thechance.service_identity.domain.gateway.UserGateWay
 class GetUsersUseCaseImp(
     private val gateWay: UserGateWay
 ): GetUsersUseCase {
-    override suspend fun invoke(): List<User> =
+    override suspend operator fun invoke(): List<User> =
         gateWay.getUsers()
 
 
