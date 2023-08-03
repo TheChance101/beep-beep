@@ -8,6 +8,7 @@ import org.litote.kmongo.id.toId
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.AddressCollection
 import org.thechance.service_identity.data.collection.UserDetailsCollection
+import org.thechance.service_identity.data.util.USER_DETAILS_COLLECTION
 import org.thechance.service_identity.domain.entity.Address
 import org.thechance.service_identity.domain.gateway.AddressGateway
 import org.thechance.service_identity.utils.Constants.ADDRESS_COLLECTION_NAME
@@ -21,7 +22,7 @@ class AddressGatewayImp(dataBaseContainer: DataBaseContainer) : AddressGateway {
     }
 
     private val userDetailsCollection by lazy {
-        dataBaseContainer.database.getCollection<UserDetailsCollection>("user_details")
+        dataBaseContainer.database.getCollection<UserDetailsCollection>(USER_DETAILS_COLLECTION)
     }
 
     override suspend fun addAddress(address: Address): Boolean {
