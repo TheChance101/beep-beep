@@ -4,5 +4,5 @@ import org.thechance.service_identity.domain.entity.Wallet
 
 
 interface AddWalletUseCase {
-    suspend fun invoke(wallet: Wallet): Boolean
+    suspend operator fun invoke(wallet: Wallet): Boolean
 }
