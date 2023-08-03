@@ -10,7 +10,7 @@ import org.thechance.service_identity.utils.PermissionType
 data class Permission(
     val id: String,
     val permissionType: PermissionType,
-    val isDeleted: Boolean? = null
+    val isDeleted: Boolean = false
 ) {
     fun toPermissionDto(): PermissionDto {
         return PermissionDto(
