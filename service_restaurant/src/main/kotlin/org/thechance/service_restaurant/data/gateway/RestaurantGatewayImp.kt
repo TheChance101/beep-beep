@@ -40,11 +40,11 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
         return addressCollection.find(AddressCollection::isDeleted eq false).toList().toEntity()
     }
 
-    override suspend fun getAddress(id: String): Address? {
+    override suspend fun getAddressDetails(id: String): Address? {
         return addressCollection.findOneById(ObjectId(id))?.takeIf { !it.isDeleted }?.toEntity()
     }
 
-    override suspend fun addAddress(address: Address): Boolean {
+    override suspend fun createAddress(address: Address): Boolean {
         return addressCollection.insertOne(address.toCollection()).wasAcknowledged()
     }
 

@@ -10,6 +10,6 @@ class GetAddressDetailsUseCaseImpl(
     private val restaurantGateway: RestaurantGateway
 ): GetAddressDetailsUseCase {
     override suspend fun invoke(addressId: String): Address {
-        return restaurantGateway.getAddress(addressId) ?: throw Throwable()
+        return restaurantGateway.getAddressDetails(addressId) ?: throw Throwable()
     }
 }

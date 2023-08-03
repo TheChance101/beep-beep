@@ -8,8 +8,8 @@ interface RestaurantGateway {
 
     //region Address
     suspend fun getAddresses(): List<Address>
-    suspend fun getAddress(id: String): Address?
-    suspend fun addAddress(address: Address): Boolean
+    suspend fun getAddressDetails(id: String): Address?
+    suspend fun createAddress(address: Address): Boolean
     suspend fun updateAddress(address: Address): Boolean
     suspend fun deleteAddress(id: String): Boolean
 

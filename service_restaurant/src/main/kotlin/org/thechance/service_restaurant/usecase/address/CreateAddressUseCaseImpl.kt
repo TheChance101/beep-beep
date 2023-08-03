@@ -10,6 +10,6 @@ class CreateAddressUseCaseImpl(
     private val restaurantGateway: RestaurantGateway
 ) : CreateAddressUseCase {
     override suspend fun invoke(address: Address): Boolean {
-        return restaurantGateway.addAddress(address)
+        return restaurantGateway.createAddress(address)
     }
 }
