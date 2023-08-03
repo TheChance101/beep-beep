@@ -13,15 +13,15 @@ fun PermissionCollection.toEntity(): Permission {
 
 fun List<PermissionCollection>.toEntity(): List<Permission> = map { it.toEntity() }
 
-fun Permission.toDto(): PermissionDto {
-    return PermissionDto(
+fun PermissionDto.toEntity(): Permission {
+    return Permission(
         id = id,
         permissionType = permissionType
     )
 }
 
-fun PermissionDto.toEntity(): Permission {
-    return Permission(
+fun Permission.toDto(): PermissionDto {
+    return PermissionDto(
         id = id,
         permissionType = permissionType
     )

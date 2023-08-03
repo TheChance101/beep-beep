@@ -13,6 +13,14 @@ fun WalletCollection.toEntity(): Wallet {
     )
 }
 
+fun WalletDto.toEntity(): Wallet {
+    return Wallet(
+        id = id,
+        userId = userId,
+        walletBalance = walletBalance
+    )
+}
+
 fun Wallet.toDto(): WalletDto {
     return WalletDto(
         id = id,
@@ -26,13 +34,5 @@ fun Wallet.toCollection(): WalletCollection {
         id = ObjectId(this.id),
         userId = userId,
         walletBalance = this.walletBalance,
-    )
-}
-
-fun WalletDto.toEntity(): Wallet {
-    return Wallet(
-        id = id,
-        userId = userId,
-        walletBalance = walletBalance
     )
 }
