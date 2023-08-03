@@ -20,7 +20,7 @@ data class WalletCollection(
     @SerialName("is_deleted")
     val isDeleted: Boolean = false
 ) {
-    fun toWallet(): Wallet {
+    fun toEntity(): Wallet {
         return Wallet(
             id = id.toHexString(),
             userId = userId,
