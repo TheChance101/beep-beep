@@ -4,7 +4,6 @@ import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bson.types.ObjectId
-import org.thechance.service_identity.domain.entity.UserDetails
 
 @Serializable
 data class UserDetailsCollection(

@@ -14,7 +14,9 @@ data class PermissionCollection(
     @Contextual
     val id: ObjectId = ObjectId(),
     @SerialName("permission_type")
-    val permissionType: PermissionType = PermissionType.CLIENT
+    val permissionType: PermissionType = PermissionType.CLIENT,
+    @SerialName("is_deleted")
+    val isDeleted: Boolean = false
 )
 
 @Serializable

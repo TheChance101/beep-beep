@@ -10,16 +10,18 @@ import org.koin.core.annotation.Single
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
 import org.thechance.service_identity.data.DataBaseContainer
-import org.thechance.service_identity.data.collection.*
+import org.thechance.service_identity.data.collection.DetailedUserCollection
+import org.thechance.service_identity.data.collection.UserCollection
+import org.thechance.service_identity.data.collection.UserDetailsCollection
+import org.thechance.service_identity.data.collection.UserPermissionsCollection
+import org.thechance.service_identity.data.mappers.toCollection
 import org.thechance.service_identity.data.mappers.toDetailsCollection
 import org.thechance.service_identity.data.mappers.toEntity
-import org.thechance.service_identity.data.mappers.toCollection
 import org.thechance.service_identity.data.util.*
 import org.thechance.service_identity.domain.entity.Permission
 import org.thechance.service_identity.domain.entity.User
 import org.thechance.service_identity.domain.gateway.UserGateWay
 import org.thechance.service_identity.utils.Constants.USER_COLLECTION
-import org.thechance.service_identity.data.util.isUpdatedSuccessfully
 
 @Single
 class UserGateWayImp(dataBaseContainer: DataBaseContainer) : UserGateWay {

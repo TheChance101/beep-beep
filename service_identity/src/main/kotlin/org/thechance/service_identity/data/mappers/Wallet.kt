@@ -9,7 +9,8 @@ fun WalletCollection.toEntity(): Wallet {
     return Wallet(
         id = id.toHexString(),
         userId = userId,
-        walletBalance = walletBalance
+        walletBalance = walletBalance,
+        isDeleted = isDeleted,
     )
 }
 
@@ -17,7 +18,7 @@ fun WalletDto.toEntity(): Wallet {
     return Wallet(
         id = id,
         userId = userId,
-        walletBalance = walletBalance
+        walletBalance = walletBalance,
     )
 }
 

@@ -7,5 +7,5 @@ import org.thechance.service_identity.utils.PermissionType
 @Serializable
 data class PermissionDto(
     val id: String,
-    val permissionType: PermissionType
+    val permissionType: String
 )

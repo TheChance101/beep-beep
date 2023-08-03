@@ -7,6 +7,8 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.service_identity.api.model.PermissionDto
+import org.thechance.service_identity.data.mappers.toDto
+import org.thechance.service_identity.data.mappers.toEntity
 import org.thechance.service_identity.domain.usecases.permission.PermissionUseCasesContainer
 
 fun Route.permissionRoutes() {
@@ -15,7 +17,7 @@ fun Route.permissionRoutes() {
 
         post {
             val permission = call.receive<PermissionDto>()
-            val success = permissionUseCasesContainer.addPermission(permission.toPermission())
+            val success = permissionUseCasesContainer.addPermission(permission.toEntity())
             if (success) {
                 call.respond(HttpStatusCode.Created)
             } else {
@@ -45,7 +47,7 @@ fun Route.permissionRoutes() {
             }
             val success = permissionUseCasesContainer.updatePermission(
                 permissionId,
-                permission.toPermission()
+                permission.toEntity()
             )
             if (success) {
                 call.respond(HttpStatusCode.OK)
@@ -58,7 +60,7 @@ fun Route.permissionRoutes() {
             val permissionId = call.parameters["permissionId"]
                 ?: throw IllegalArgumentException("Invalid permission ID")
             val permission =
-                permissionUseCasesContainer.getPermission(permissionId).toPermissionDto()
+                permissionUseCasesContainer.getPermission(permissionId).toDto()
             call.respond(HttpStatusCode.OK, permission)
 
         }
