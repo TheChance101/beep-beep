@@ -4,5 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CategoryRestaurantCollection(
-    val restaurants: MutableList<RestaurantCollection> = mutableListOf()
+    val restaurants: MutableList<RestaurantCollection> = mutableListOf(),
+    val categories:  MutableList<CategoryCollection> = mutableListOf(),
 )

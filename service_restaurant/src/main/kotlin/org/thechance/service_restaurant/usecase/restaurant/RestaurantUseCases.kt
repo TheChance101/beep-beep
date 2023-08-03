@@ -1,5 +1,6 @@
 package org.thechance.service_restaurant.usecase.restaurant
 
+import org.thechance.service_restaurant.entity.Category
 import org.thechance.service_restaurant.entity.Restaurant
 
 interface GetRestaurantsUseCase {
@@ -10,6 +11,9 @@ interface GetRestaurantDetailsUseCase {
     suspend operator fun invoke(restaurantId: String): Restaurant
 }
 
+interface GetCategoriesInRestaurant{
+    suspend operator fun invoke(restaurantId: String): List<Category>
+}
 interface CreateRestaurantUseCase {
     suspend operator fun invoke(restaurant: Restaurant): Boolean
 }

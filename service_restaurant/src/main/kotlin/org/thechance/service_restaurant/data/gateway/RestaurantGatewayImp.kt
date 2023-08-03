@@ -105,6 +105,17 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
         ).toList().firstOrNull()?.toEntity()
     }
 
+    override suspend fun getCategoriesInRestaurant(restaurantId: String): List<Category> {
+        return restaurantCollection.aggregate<CategoryRestaurantCollection>(
+            match(RestaurantCollection::id eq ObjectId(restaurantId)),
+            lookup(
+                from = "categoryCollection",
+                resultProperty = CategoryRestaurantCollection::categories,
+                pipeline = listOf(match(CategoryCollection::isDeleted eq false)).toTypedArray()
+            ),
+        ).toList().first().categories.toEntity()
+    }
+
     override suspend fun addRestaurant(restaurant: Restaurant): Boolean {
         return restaurantCollection.insertOne(restaurant.toCollection()).wasAcknowledged()
     }
