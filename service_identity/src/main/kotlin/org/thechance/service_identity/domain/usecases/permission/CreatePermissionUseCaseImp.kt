@@ -8,11 +8,7 @@ import org.thechance.service_identity.domain.gateway.PermissionGateway
 class CreatePermissionUseCaseImp(private val permissionGateway: PermissionGateway) :
     CreatePermissionUseCase {
     override suspend fun invoke(permission: Permission): Boolean {
-        checkValidation(permission)
         return permissionGateway.addPermission(permission)
     }
 
-    private fun checkValidation(permission: Permission) {
-
-    }
 }
