@@ -1,13 +1,13 @@
 package org.thechance.service_restaurant.usecase.category
 
 import org.koin.core.annotation.Single
-import org.thechance.service_restaurant.data.gateway.RestaurantGateway
+import org.thechance.service_restaurant.data.gateway.CategoryGateway
 
 @Single
 class AddRestaurantsToCategoryUseCasesImp(
-    private val restaurantGateway: RestaurantGateway,
+    private val categoryGateway: CategoryGateway,
 ) : AddRestaurantsToCategoryUseCases {
     override suspend fun invoke(categoryId: String, restaurantIds: List<String>): Boolean {
-        return restaurantGateway.addRestaurantsToCategory(categoryId, restaurantIds)
+        return categoryGateway.addRestaurantsToCategory(categoryId, restaurantIds)
     }
 }
