@@ -26,3 +26,9 @@ data class PermissionCollection(
 }
 
 fun List<PermissionCollection>.toEntity(): List<Permission> = map { it.toPermission() }
+
+@Serializable
+data class UserPermissionsCollection(
+    @SerialName("permissions")
+    val userPermissions: List<PermissionCollection> = emptyList()
+)
