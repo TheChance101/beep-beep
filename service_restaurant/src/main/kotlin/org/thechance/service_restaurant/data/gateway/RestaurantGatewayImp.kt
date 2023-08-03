@@ -2,6 +2,8 @@ package org.thechance.service_restaurant.data.gateway
 
 import com.mongodb.client.model.Filters.and
 import com.mongodb.client.model.Updates
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toList
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.coroutine.aggregate
@@ -14,6 +16,7 @@ import org.litote.kmongo.project
 import org.thechance.service_restaurant.data.DataBaseContainer
 import org.thechance.service_restaurant.data.collection.AddressCollection
 import org.thechance.service_restaurant.data.collection.CategoryCollection
+import org.thechance.service_restaurant.data.collection.RestaurantAddressesCollection
 import org.thechance.service_restaurant.data.collection.RestaurantCollection
 import org.thechance.service_restaurant.data.collection.toEntity
 import org.thechance.service_restaurant.entity.Address
@@ -62,26 +65,24 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
         restaurantId: String,
         addressesIds: List<String>
     ): Boolean {
-        val addresses = addressCollection
-            .find(AddressCollection::id `in` addressesIds.map { ObjectId(it) }).toList()
+        val addresses = addressCollection.find(
+            and(
+                AddressCollection::id `in` addressesIds.map { ObjectId(it) },
+                AddressCollection::isDeleted ne true
+            )
+        ).toList()
 
         return restaurantCollection.updateOneById(
             ObjectId(restaurantId),
-            update = Updates.combine(
-                Updates.addEachToSet(
-                    RestaurantCollection::addressIds.name,
-                    addressesIds.map { ObjectId(it) }
-                ),
-                Updates.addEachToSet(
-                    RestaurantCollection::addresses.name,
-                    addresses
-                )
+            update = Updates.addEachToSet(
+                RestaurantCollection::addressIds.name,
+                addresses.map { it.id }
             )
         ).isSuccessfullyUpdated()
     }
 
     override suspend fun getAddressesInRestaurant(restaurantId: String): List<Address> {
-        return restaurantCollection.aggregate<RestaurantCollection>(
+        return restaurantCollection.aggregate<RestaurantAddressesCollection>(
             match(
                 and(
                     RestaurantCollection::id eq ObjectId(restaurantId),
@@ -90,7 +91,7 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
             ),
             lookup(
                 from = "addressCollection",
-                resultProperty = RestaurantCollection::addresses,
+                resultProperty = RestaurantAddressesCollection::addresses,
                 pipeline = arrayOf(match(AddressCollection::isDeleted ne true))
             )
         ).toList().firstOrNull()?.addresses?.toEntity() ?: emptyList()
@@ -166,18 +167,23 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
             project(
                 CategoryCollection::restaurants
             )
-        ).toList().firstOrNull()?.restaurants?.toEntity() ?: emptyList()
+        ).toList().firstOrNull()?.restaurants?.map {
+            it.toEntity(getAddressesInRestaurant(it.id.toHexString()))
+        } ?: emptyList()
     }
     //endregion
 
     //region Restaurant
     override suspend fun getRestaurants(): List<Restaurant> {
-        return restaurantCollection.find(RestaurantCollection::isDeleted eq false).toList()
-            .toEntity()
+        return restaurantCollection.find(RestaurantCollection::isDeleted eq false).toFlow().map {
+            it.toEntity(getAddressesInRestaurant(it.id.toHexString()))
+        }.toList()
     }
 
     override suspend fun getRestaurant(id: String): Restaurant? {
-        return restaurantCollection.findOneById(ObjectId(id))?.takeIf { !it.isDeleted }?.toEntity()
+        val addresses = getAddressesInRestaurant(id)
+        return restaurantCollection.findOneById(ObjectId(id))?.takeIf { !it.isDeleted }
+            ?.toEntity(addresses)
     }
 
     override suspend fun addRestaurant(restaurant: Restaurant): Boolean {

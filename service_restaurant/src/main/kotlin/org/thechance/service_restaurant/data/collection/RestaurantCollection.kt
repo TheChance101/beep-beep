@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
 import org.litote.kmongo.Id
+import org.thechance.service_restaurant.entity.Address
 import org.thechance.service_restaurant.entity.Restaurant
 
 
@@ -24,11 +25,9 @@ data class RestaurantCollection(
     @SerialName("_id")
     val id: ObjectId = ObjectId()
     val isDeleted: Boolean = false
-
     val addressIds: List<@Contextual Id<AddressCollection>> = emptyList()
-    val addresses: List<AddressCollection> = emptyList()
 
-    fun toEntity(): Restaurant {
+    fun toEntity(addresses: List<Address>): Restaurant {
         return Restaurant(
             id = id.toString(),
             name = name,
@@ -39,10 +38,8 @@ data class RestaurantCollection(
             openingTime = openingTime,
             closingTime = closingTime,
             isDeleted = isDeleted,
-            addresses = addresses.toEntity()
+            addresses = addresses
         )
     }
 }
-
-fun List<RestaurantCollection>.toEntity(): List<Restaurant> = map { it.toEntity() }
 
