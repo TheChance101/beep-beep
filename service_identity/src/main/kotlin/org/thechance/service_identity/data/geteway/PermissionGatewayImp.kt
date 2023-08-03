@@ -2,6 +2,7 @@ package org.thechance.service_identity.data.geteway
 
 import com.mongodb.client.model.Filters
 import org.bson.types.ObjectId
+import org.koin.core.annotation.Single
 import org.litote.kmongo.eq
 import org.litote.kmongo.setValue
 import org.thechance.service_identity.data.DataBaseContainer
@@ -11,6 +12,7 @@ import org.thechance.service_identity.domain.gateway.PermissionGateway
 import org.thechance.service_identity.utils.Constants
 import org.thechance.service_identity.utils.isDocumentModified
 
+@Single
 class PermissionGatewayImp(private val container: DataBaseContainer) : PermissionGateway {
     private val permissionCollection by lazy {
         container.database.getCollection<PermissionCollection>(

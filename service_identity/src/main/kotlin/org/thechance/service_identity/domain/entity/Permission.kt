@@ -15,7 +15,7 @@ data class Permission(
     fun toPermissionDto(): PermissionDto {
         return PermissionDto(
             id = id,
-            permissionType = permissionType
+            permissionType = permissionType.toString()
         )
     }
 

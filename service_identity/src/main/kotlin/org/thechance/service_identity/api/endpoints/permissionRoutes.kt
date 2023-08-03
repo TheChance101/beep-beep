@@ -29,7 +29,7 @@ fun Route.permissionRoutes() {
             )
             val success = permissionUseCasesContainer.deletePermission(permissionId)
             if (success) {
-                call.respond(HttpStatusCode.NoContent)
+                call.respond(HttpStatusCode.OK)
             } else {
                 call.respond(HttpStatusCode.InternalServerError)
             }
@@ -48,7 +48,7 @@ fun Route.permissionRoutes() {
                 permission.toPermission()
             )
             if (success) {
-                call.respond(HttpStatusCode.NoContent)
+                call.respond(HttpStatusCode.OK)
             } else {
                 call.respond(HttpStatusCode.InternalServerError)
             }
