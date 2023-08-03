@@ -9,7 +9,7 @@ import org.litote.kmongo.unset
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.UserDetailsCollection
 import org.thechance.service_identity.data.collection.WalletCollection
-import org.thechance.service_identity.data.mappers.toWallet
+import org.thechance.service_identity.data.mappers.toEntity
 import org.thechance.service_identity.domain.entity.Wallet
 import org.thechance.service_identity.domain.gateway.WalletGateWay
 import org.thechance.service_identity.utils.Constants.WALLET_COLLECTION
@@ -22,11 +22,11 @@ class WalletGateWayImpl(dataBase: DataBaseContainer) : WalletGateWay {
     private val userDetailsCollection by lazy { dataBase.database.getCollection<UserDetailsCollection>("user_details") }
 
     override suspend fun getWalletById(id: String): Wallet {
-        return walletCollection.findOneById(ObjectId(id))?.toWallet() ?: throw Exception("Wallet not found")
+        return walletCollection.findOneById(ObjectId(id))?.toEntity() ?: throw Exception("Wallet not found")
     }
 
     override suspend fun getWalletByUserId(userId: String): Wallet {
-        return walletCollection.findOne(WalletCollection::userId eq userId)?.toWallet()
+        return walletCollection.findOne(WalletCollection::userId eq userId)?.toEntity()
             ?: throw Exception("Wallet not found")
     }
 

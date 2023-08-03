@@ -11,8 +11,7 @@ import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.*
-import org.thechance.service_identity.data.mappers.toUserEntity
-import org.thechance.service_identity.data.mappers.toUser
+import org.thechance.service_identity.data.mappers.toEntity
 import org.thechance.service_identity.data.util.*
 import org.thechance.service_identity.domain.entity.Permission
 import org.thechance.service_identity.domain.entity.User
@@ -64,7 +63,7 @@ class UserGateWayImp(dataBaseContainer: DataBaseContainer) : UserGateWay {
                 foreignField = USER_DETAILS_LOCAL_FIELD,
                 newAs = DETAILED_USER_COLLECTION
             )
-        ).toList().toUserEntity().firstOrNull()
+        ).toList().toEntity().firstOrNull()
     }
 
     override suspend fun getDetailedUsers(): List<User> {
@@ -75,7 +74,7 @@ class UserGateWayImp(dataBaseContainer: DataBaseContainer) : UserGateWay {
                 foreignField = USER_DETAILS_LOCAL_FIELD,
                 newAs = DETAILED_USER_COLLECTION
             )
-        ).toList().toUserEntity()
+        ).toList().toEntity()
     }
 
     override suspend fun getUsers(): List<User> =
@@ -133,10 +132,10 @@ class UserGateWayImp(dataBaseContainer: DataBaseContainer) : UserGateWay {
                 foreignField = USER_PERMISSION_FOREIGN_FIELD,
                 newAs = UserPermissionsCollection::userPermissions.name
             )
-        ).first()?.userPermissions?.toUserEntity() ?: emptyList()
+        ).first()?.userPermissions?.toEntity() ?: emptyList()
     }
 
     private fun List<UserCollection>.toUser(): List<User> {
-        return this.map { it.toUser() }
+        return this.map { it.toEntity() }
     }
 }
