@@ -13,3 +13,16 @@ fun RestaurantDto.toEntity() = Restaurant(
     openingTime = openingTime,
     closingTime = closingTime
 )
+
+fun Restaurant.toDto()= RestaurantDto(
+        id = id ?: "",
+        name = name,
+        description = description,
+        priceLevel = priceLevel,
+        rate = rate,
+        phone = phone,
+        openingTime = openingTime,
+        closingTime = closingTime
+    )
+
+fun List<Restaurant>.toDto(): List<RestaurantDto> = map { it.toDto() }

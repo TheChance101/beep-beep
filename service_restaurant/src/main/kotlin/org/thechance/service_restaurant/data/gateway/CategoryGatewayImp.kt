@@ -9,7 +9,8 @@ import org.thechance.service_restaurant.data.DataBaseContainer
 import org.thechance.service_restaurant.data.collection.CategoryCollection
 import org.thechance.service_restaurant.data.collection.CategoryRestaurantCollection
 import org.thechance.service_restaurant.data.collection.RestaurantCollection
-import org.thechance.service_restaurant.data.collection.toEntity
+import org.thechance.service_restaurant.data.collection.mapper.toCollection
+import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
 import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.data.utils.toObjectIds

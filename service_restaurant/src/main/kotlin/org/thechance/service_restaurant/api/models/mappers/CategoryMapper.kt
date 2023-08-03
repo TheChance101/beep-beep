@@ -5,3 +5,7 @@ import org.thechance.service_restaurant.entity.Category
 
 
 fun CategoryDto.toEntity() = Category(id = id, name = name)
+
+fun Category.toDto() = CategoryDto(id = id, name = name)
+
+fun List<Category>.toDto(): List<CategoryDto> = map { it.toDto() }

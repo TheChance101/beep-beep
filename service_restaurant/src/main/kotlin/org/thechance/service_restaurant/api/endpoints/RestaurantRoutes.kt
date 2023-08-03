@@ -7,9 +7,10 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.service_restaurant.api.models.RestaurantDto
+import org.thechance.service_restaurant.api.models.mappers.toDto
+import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
-import org.thechance.service_restaurant.entity.toDto
 import org.thechance.service_restaurant.usecase.restaurant.RestaurantUseCasesContainer
 
 fun Route.restaurantRoutes() {
