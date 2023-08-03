@@ -46,7 +46,7 @@ data class DetailedUserDto(
 }
 
 @Serializable
-data class CreateUserDto(
+data class CreateUserRequest(
     val fullName: String,
     val username: String,
     val password: String,
@@ -69,7 +69,7 @@ data class CreateUserDto(
 }
 
 @Serializable
-data class UpdateUserDto(
+data class UpdateUserRequest(
     val id: String? = null,
     val fullName: String? = null,
     val username: String? = null,
