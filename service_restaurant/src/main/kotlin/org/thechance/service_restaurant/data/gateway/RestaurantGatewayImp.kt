@@ -21,9 +21,7 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
 
     private val restaurantCollection by lazy { container.database.getCollection<RestaurantCollection>() }
 
-    private val categoryCollection by lazy {
-        container.database.getCollection<CategoryCollection>()
-    }
+    private val categoryCollection by lazy { container.database.getCollection<CategoryCollection>() }
 
     //region Category
     override suspend fun getCategories(page: Int, limit: Int): List<Category> {
@@ -54,10 +52,16 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
     }
 
     override suspend fun addRestaurantsToCategory(categoryId: String, restaurantIds: List<String>): Boolean {
-        return categoryCollection.updateOneById(
+        val resultAddToRestaurant = restaurantCollection.updateMany(
+            RestaurantCollection::id `in` restaurantIds.toObjectIds(),
+            addToSet(RestaurantCollection::categoryIds, ObjectId(categoryId))
+        ).isSuccessfullyUpdated()
+
+        val resultAddToCategory = categoryCollection.updateOneById(
             ObjectId(categoryId),
             update = Updates.addEachToSet(CategoryCollection::restaurantIds.name, restaurantIds.toObjectIds())
         ).isSuccessfullyUpdated()
+        return resultAddToCategory and resultAddToRestaurant
     }
 
     override suspend fun updateCategory(category: Category): Boolean {
@@ -106,10 +110,17 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
     }
 
     override suspend fun addCategoriesToRestaurant(restaurantId: String, categoryIds: List<String>): Boolean {
-        return restaurantCollection.updateOneById(
+        val resultAddToCategory = categoryCollection.updateMany(
+            CategoryCollection::id `in` categoryIds.toObjectIds(),
+            addToSet(CategoryCollection::restaurantIds, ObjectId(restaurantId))
+        ).isSuccessfullyUpdated()
+
+        val resultAddToRestaurant = restaurantCollection.updateOneById(
             ObjectId(restaurantId),
             update = Updates.addEachToSet(RestaurantCollection::categoryIds.name, categoryIds.toObjectIds())
         ).isSuccessfullyUpdated()
+
+        return resultAddToCategory and resultAddToRestaurant
     }
 
     override suspend fun updateRestaurant(restaurant: Restaurant): Boolean {
