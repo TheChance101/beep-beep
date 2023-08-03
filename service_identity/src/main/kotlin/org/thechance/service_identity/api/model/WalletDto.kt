@@ -9,7 +9,7 @@ data class WalletDto(
     val userId: String,
     val walletBalance: Double
 ) {
-    fun toWallet(): Wallet {
+    fun toEntity(): Wallet {
         return Wallet(
             id = id,
             userId = userId,
