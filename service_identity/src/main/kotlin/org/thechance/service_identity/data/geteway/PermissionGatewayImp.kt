@@ -18,8 +18,8 @@ class PermissionGatewayImp(private val container: DataBaseContainer) : Permissio
         )
     }
 
-    override suspend fun getPermission(id: String): Permission? {
-        return permissionCollection.findOneById(ObjectId(id))?.toPermission()
+    override suspend fun getPermission(permissionId: String): Permission? {
+        return permissionCollection.findOneById(ObjectId(permissionId))?.toPermission()
             ?: throw Exception("Wallet not found")
     }
 
@@ -38,9 +38,9 @@ class PermissionGatewayImp(private val container: DataBaseContainer) : Permissio
         ).isDocumentModified()
     }
 
-    override suspend fun updatePermission(id: String, permission: Permission): Boolean {
+    override suspend fun updatePermission(permissionId: String, permission: Permission): Boolean {
         return permissionCollection.updateOneById(
-            id = ObjectId(id),
+            id = ObjectId(permissionId),
             update = permission.toPermissionCollection(),
         ).wasAcknowledged()
     }

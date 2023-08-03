@@ -12,6 +12,7 @@ import org.thechance.service_identity.domain.usecases.permission.PermissionUseCa
 fun Route.permissionRoutes() {
     val permissionUseCasesContainer: PermissionUseCasesContainer by inject()
     route("/permissions") {
+
         post {
             val permission = call.receive<PermissionDto>()
             val success = permissionUseCasesContainer.addPermission(permission.toPermission())
@@ -22,7 +23,7 @@ fun Route.permissionRoutes() {
             }
         }
 
-        delete("/permissions/{permissionId}") {
+        delete("/{permissionId}") {
             val permissionId = call.parameters["permissionId"] ?: return@delete call.respond(
                 HttpStatusCode.BadRequest
             )
@@ -33,6 +34,7 @@ fun Route.permissionRoutes() {
                 call.respond(HttpStatusCode.InternalServerError)
             }
         }
+
         put("/{permissionId}") {
             val permissionId = call.parameters["permissionId"] ?: return@put call.respond(
                 HttpStatusCode.BadRequest
@@ -51,9 +53,12 @@ fun Route.permissionRoutes() {
                 call.respond(HttpStatusCode.InternalServerError)
             }
         }
-        get("/{id}") {
-            val permissionId = call.parameters["id"] ?: throw IllegalArgumentException("Invalid permission ID")
-            val permission = permissionUseCasesContainer.getPermission(permissionId).toPermissionDto()
+
+        get("/{permissionId}") {
+            val permissionId = call.parameters["permissionId"]
+                ?: throw IllegalArgumentException("Invalid permission ID")
+            val permission =
+                permissionUseCasesContainer.getPermission(permissionId).toPermissionDto()
             call.respond(HttpStatusCode.OK, permission)
 
         }
