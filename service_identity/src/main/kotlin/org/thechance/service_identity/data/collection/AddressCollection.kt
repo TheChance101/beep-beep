@@ -15,7 +15,8 @@ data class AddressCollection(
     @Contextual
     val id: ObjectId = ObjectId(),
     @SerialName("user_id")
-    val userId: Id<UserCollection>,
+    @Contextual
+    val userId: ObjectId = ObjectId(),
     @SerialName("latitude")
     val latitude : Double,
     @SerialName("longitude")
@@ -26,7 +27,7 @@ data class AddressCollection(
     fun toAddress(): Address {
         return Address(
             id = id.toHexString(),
-            userId = userId.toString(),
+            userId = userId.toHexString(),
             latitude = latitude,
             longitude = longitude,
             isDeleted = isDeleted

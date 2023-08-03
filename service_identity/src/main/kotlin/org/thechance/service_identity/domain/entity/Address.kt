@@ -23,7 +23,7 @@ data class Address(
 
     fun toAddressCollection(): AddressCollection {
         return AddressCollection(
-            userId = ObjectId(this.userId).toId(),
+            userId = ObjectId(this.userId),
             latitude = this.latitude,
             longitude = this.longitude
         )
