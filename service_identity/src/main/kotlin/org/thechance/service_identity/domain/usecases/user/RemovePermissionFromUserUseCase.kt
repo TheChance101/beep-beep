@@ -1,4 +1,4 @@
-package org.thechance.service_identity.domain.usecases.user_details
+package org.thechance.service_identity.domain.usecases.user
 
 interface RemovePermissionFromUserUseCase {
 
