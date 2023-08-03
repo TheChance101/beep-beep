@@ -12,8 +12,6 @@ import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
-import org.thechance.service_restaurant.data.collection.MealCollection
-import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.usecase.meal.MealUseCasesContainer
 
 fun Route.mealRoutes() {
@@ -36,7 +34,7 @@ fun Route.mealRoutes() {
         }
 
         post {
-            val meal = call.receive<MealCollection>()
+            val meal = call.receive<MealDto>()
             val isAdded = mealUseCasesContainer.addMealUseCase(meal.toEntity())
             if (isAdded)
                 call.respond(HttpStatusCode.Created, "Meal added Successfully")
