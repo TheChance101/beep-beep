@@ -32,10 +32,10 @@ fun DetailedUserCollection.toEntity(): User {
         username = username,
         password = password,
         isDeleted = isDeleted,
-        email = details[0].email,
-        walletId = details[0].walletId,
-        addresses = details[0].addresses.map { it.toHexString() },
-        permissions = details[0].permissions.map { it.toHexString() }
+        email = details.first().email,
+        walletId = details.first().walletId,
+        addresses = details.first().addresses.map { it.toHexString() },
+        permissions = details.first().permissions.map { it.toHexString() }
     )
 }
 
