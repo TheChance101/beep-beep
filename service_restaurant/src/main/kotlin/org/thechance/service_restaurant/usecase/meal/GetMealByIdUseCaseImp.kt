@@ -1,8 +1,7 @@
-package org.thechance.service_restaurant.usecase
+package org.thechance.service_restaurant.usecase.meal
 
 import io.ktor.server.plugins.*
 import org.koin.core.annotation.Single
-import org.thechance.service_restaurant.api.usecases.GetMealByIdUseCase
 import org.thechance.service_restaurant.entity.Meal
 import org.thechance.service_restaurant.usecase.gateway.MealGateway
 

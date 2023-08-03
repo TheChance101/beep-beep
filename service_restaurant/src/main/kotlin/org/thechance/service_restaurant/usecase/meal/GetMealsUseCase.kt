@@ -1,4 +1,4 @@
-package org.thechance.service_restaurant.api.usecases
+package org.thechance.service_restaurant.usecase.meal
 
 import org.thechance.service_restaurant.entity.Meal
 interface GetMealsUseCase {
