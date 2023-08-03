@@ -19,7 +19,7 @@ import org.thechance.service_identity.domain.entity.Permission
 import org.thechance.service_identity.domain.entity.User
 import org.thechance.service_identity.domain.gateway.UserGateWay
 import org.thechance.service_identity.utils.Constants.USER_COLLECTION
-import org.thechance.service_identity.utils.isDocumentModified
+import org.thechance.service_identity.data.util.isUpdatedSuccessfully
 
 @Single
 class UserGateWayImp(dataBaseContainer: DataBaseContainer) : UserGateWay {
@@ -101,14 +101,14 @@ class UserGateWayImp(dataBaseContainer: DataBaseContainer) : UserGateWay {
             ObjectId(id),
             user.toCollection(),
             updateOnlyNotNullProperties = true
-        ).isDocumentModified()
+        ).isUpdatedSuccessfully()
     }
 
     override suspend fun deleteUser(id: String): Boolean {
         return userCollection.updateOne(
             filter = UserCollection::id eq ObjectId(id),
             update = set(UserCollection::isDeleted setTo true)
-        ).isDocumentModified()
+        ).isUpdatedSuccessfully()
     }
 
     override suspend fun addPermissionToUser(userId: String, permissionId: String) {

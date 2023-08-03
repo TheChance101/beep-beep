@@ -1,7 +1,7 @@
-package org.thechance.service_taxi.domain.usecase
+package org.thechance.service_taxi.domain.usecase.taxi
 
 import org.koin.core.annotation.Single
-import org.thechance.service_taxi.api.usecase.DeleteTaxiUseCase
+import org.thechance.service_taxi.api.usecase.taxi.DeleteTaxiUseCase
 import org.thechance.service_taxi.domain.gateway.TaxiGateway
 
 @Single

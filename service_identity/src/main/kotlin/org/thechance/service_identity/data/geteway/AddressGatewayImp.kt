@@ -14,7 +14,7 @@ import org.thechance.service_identity.data.util.USER_DETAILS_COLLECTION
 import org.thechance.service_identity.domain.entity.Address
 import org.thechance.service_identity.domain.gateway.AddressGateway
 import org.thechance.service_identity.utils.Constants.ADDRESS_COLLECTION_NAME
-import org.thechance.service_identity.utils.isDocumentModified
+import org.thechance.service_identity.data.util.isUpdatedSuccessfully
 
 @Single
 class AddressGatewayImp(dataBaseContainer: DataBaseContainer) : AddressGateway {
@@ -28,11 +28,12 @@ class AddressGatewayImp(dataBaseContainer: DataBaseContainer) : AddressGateway {
     }
 
     override suspend fun addAddress(address: Address): Boolean {
+        val newAddressCollection = address.toAddressCollection()
         userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::userId eq ObjectId(address.userId),
-            update = push(UserDetailsCollection::addresses, ObjectId(address.id))
+            filter = UserDetailsCollection::userId eq newAddressCollection.userId,
+            update = push(UserDetailsCollection::addresses, newAddressCollection.id)
         )
-        return addressCollection.insertOne(address.toCollection()).wasAcknowledged()
+        return addressCollection.insertOne(newAddressCollection).wasAcknowledged()
     }
 
     override suspend fun deleteAddress(id: String): Boolean {
@@ -43,11 +44,11 @@ class AddressGatewayImp(dataBaseContainer: DataBaseContainer) : AddressGateway {
         return addressCollection.updateOne(
             filter = Filters.and(AddressCollection::id eq ObjectId(id), AddressCollection::isDeleted eq false),
             update = setValue(AddressCollection::isDeleted, true)
-        ).isDocumentModified()
+        ).isUpdatedSuccessfully()
     }
 
     override suspend fun updateAddress(id: String, address: Address): Boolean {
-        return addressCollection.updateOneById(ObjectId(id), address.toCollection()).isDocumentModified()
+        return addressCollection.updateOneById(ObjectId(id), address.toAddressCollection()).isUpdatedSuccessfully()
     }
 
     override suspend fun getAddress(id: String): Address? {
@@ -59,7 +60,7 @@ class AddressGatewayImp(dataBaseContainer: DataBaseContainer) : AddressGateway {
 
     override suspend fun getUserAddresses(userId: String): List<Address> {
         return addressCollection.find(
-            AddressCollection::userId eq ObjectId(userId).toId(),
+            AddressCollection::userId eq ObjectId(userId),
             AddressCollection::isDeleted eq false
         ).toList().toAddress()
     }
