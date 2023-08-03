@@ -8,6 +8,7 @@ import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.service_identity.api.model.AddressDto
 import org.thechance.service_identity.data.mappers.toDto
+import org.thechance.service_identity.data.mappers.toEntity
 import org.thechance.service_identity.domain.usecases.address.AddressUseCaseContainer
 
 fun Route.addressRoutes() {
@@ -18,7 +19,7 @@ fun Route.addressRoutes() {
 
         post {
             val address = call.receive<AddressDto>()
-            call.respond(HttpStatusCode.Created, addressUseCaseContainer.createAddressUseCase(address.toAddress()))
+            call.respond(HttpStatusCode.Created, addressUseCaseContainer.createAddressUseCase(address.toEntity()))
         }
 
         get("/{id}") {
@@ -34,7 +35,7 @@ fun Route.addressRoutes() {
         put("/{id}") {
             val id = call.parameters["id"].orEmpty()
             val address = call.receive<AddressDto>()
-            call.respond(HttpStatusCode.Created, addressUseCaseContainer.updateAddressUseCase(id, address.toAddress()))
+            call.respond(HttpStatusCode.Created, addressUseCaseContainer.updateAddressUseCase(id, address.toEntity()))
         }
 
     }
