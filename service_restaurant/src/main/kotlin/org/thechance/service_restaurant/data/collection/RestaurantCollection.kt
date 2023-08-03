@@ -23,21 +23,7 @@ data class RestaurantCollection(
     @SerialName("_id")
     val id: ObjectId = ObjectId()
     val isDeleted: Boolean = false
-
-    fun toEntity(): Restaurant {
-        return Restaurant(
-            id = id.toString(),
-            name = name,
-            description = description,
-            priceLevel = priceLevel,
-            rate = rate,
-            phone = phone,
-            openingTime = openingTime,
-            closingTime = closingTime,
-            isDeleted = isDeleted
-        )
-    }
+    val categoryIds: MutableList<@Contextual ObjectId> = mutableListOf()
 }
 
-fun List<RestaurantCollection>.toEntity(): List<Restaurant> = map { it.toEntity() }
 

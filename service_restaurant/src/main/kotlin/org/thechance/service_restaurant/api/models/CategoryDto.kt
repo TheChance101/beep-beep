@@ -7,11 +7,4 @@ import org.thechance.service_restaurant.entity.Category
 data class CategoryDto(
     val id: String? = null,
     val name: String? = null
-) {
-    fun toEntity(): Category {
-        return Category(
-            id = id,
-            name = name
-        )
-    }
-}
+)

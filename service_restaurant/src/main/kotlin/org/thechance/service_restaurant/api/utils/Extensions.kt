@@ -9,3 +9,4 @@ fun Parameters.extractString(key: String): String? {
 fun Parameters.extractInt(key: String): Int? {
     return this[key]?.toIntOrNull()
 }
+

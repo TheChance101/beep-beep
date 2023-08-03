@@ -13,7 +13,6 @@ import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.entity.Cuisine
-import org.thechance.service_restaurant.usecase.gateway.CuisineGateway
 
 
 @Single

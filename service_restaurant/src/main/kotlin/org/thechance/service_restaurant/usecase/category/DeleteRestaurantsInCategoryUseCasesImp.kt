@@ -4,10 +4,10 @@ import org.koin.core.annotation.Single
 import org.thechance.service_restaurant.data.gateway.CategoryGateway
 
 @Single
-class AddRestaurantsToCategoryUseCasesImp(
-    private val categoryGateway: CategoryGateway,
-) : AddRestaurantsToCategoryUseCases {
+class DeleteRestaurantsInCategoryUseCasesImp(
+    private val  categoryGateway: CategoryGateway
+) : DeleteRestaurantsInCategoryUseCases {
     override suspend fun invoke(categoryId: String, restaurantIds: List<String>): Boolean {
-        return categoryGateway.addRestaurantsToCategory(categoryId, restaurantIds)
+        return categoryGateway.deleteRestaurantsInCategory(categoryId, restaurantIds)
     }
 }

@@ -55,6 +55,8 @@ dependencies {
     implementation("io.insert-koin:koin-annotations:$koinKsp")
     implementation("com.google.devtools.ksp:symbol-processing-api:1.8.10-1.0.9")
 
+    //validation
+    implementation("io.ktor:ktor-server-status-pages:$ktor_version")
 
     implementation("io.ktor:ktor-server-call-logging-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-swagger:$ktor_version")
