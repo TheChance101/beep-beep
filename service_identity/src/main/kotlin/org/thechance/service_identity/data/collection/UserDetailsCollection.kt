@@ -8,9 +8,7 @@ import org.thechance.service_identity.domain.entity.UserDetails
 
 @Serializable
 data class UserDetailsCollection(
-    @SerialName("_id")
     @Contextual
-    val id: ObjectId = ObjectId(),
     @SerialName("user_id")
     val userId: ObjectId,
     @SerialName("email")
@@ -25,9 +23,7 @@ data class UserDetailsCollection(
 
 fun UserDetailsCollection.toEntity(): UserDetails {
     return UserDetails(
-        id = id.toHexString(),
-        userId = userId,
-        password = password,
+        userId = userId.toHexString(),
         email = email,
         walletId = walletId,
         addresses = addresses.map { it.toHexString() },
@@ -41,9 +37,7 @@ fun List<UserDetailsCollection>.toEntity(): List<UserDetails> {
 
 fun UserDetails.toCollection(): UserDetailsCollection {
     return UserDetailsCollection(
-        id = ObjectId(id),
-        userId = userId,
-        password = password,
+        userId = ObjectId(userId),
         email = email,
         walletId = walletId,
         addresses = addresses.map { ObjectId(it) },
