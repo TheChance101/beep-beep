@@ -12,6 +12,7 @@ import org.thechance.service_identity.data.collection.WalletCollection
 import org.thechance.service_identity.domain.entity.Wallet
 import org.thechance.service_identity.domain.gateway.WalletGateWay
 import org.thechance.service_identity.utils.Constants.WALLET_COLLECTION
+import org.thechance.service_identity.utils.isDocumentModified
 
 @Single
 class WalletGateWayImpl(dataBase: DataBaseContainer) : WalletGateWay {
@@ -49,7 +50,8 @@ class WalletGateWayImpl(dataBase: DataBaseContainer) : WalletGateWay {
             filter = UserDetailsCollection::walletId eq id,
             update = unset(UserDetailsCollection::walletId)
         )
-        return walletCollection.deleteOne(id).wasAcknowledged()
+        return   walletCollection.updateOne(
+            filter = WalletCollection::id eq ObjectId(id),
+            update = set(WalletCollection::isDeleted setTo true)).isDocumentModified()
     }
-
 }
