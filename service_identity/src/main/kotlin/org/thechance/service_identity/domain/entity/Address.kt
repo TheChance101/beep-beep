@@ -1,7 +1,6 @@
 package org.thechance.service_identity.domain.entity
 
 import org.bson.types.ObjectId
-import org.litote.kmongo.id.toId
 import org.thechance.service_identity.api.model.AddressDto
 import org.thechance.service_identity.data.collection.AddressCollection
 
