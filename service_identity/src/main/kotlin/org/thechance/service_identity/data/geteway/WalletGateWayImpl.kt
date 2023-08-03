@@ -31,7 +31,7 @@ class WalletGateWayImpl(dataBase: DataBaseContainer) : WalletGateWay {
 
     override suspend fun createWallet(wallet: Wallet): Boolean {
         userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::userId eq wallet.userId,
+            filter = UserDetailsCollection::userId eq ObjectId(wallet.userId),
             update = set(UserDetailsCollection::walletId setTo wallet.id)
         )
         return walletCollection.insertOne(wallet.toCollection()).wasAcknowledged()

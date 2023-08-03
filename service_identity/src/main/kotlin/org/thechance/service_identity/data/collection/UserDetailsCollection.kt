@@ -12,9 +12,7 @@ data class UserDetailsCollection(
     @Contextual
     val id: ObjectId = ObjectId(),
     @SerialName("user_id")
-    val userId: String,
-    @SerialName("password")
-    val password: String? = null,
+    val userId: ObjectId,
     @SerialName("email")
     val email: String? = null,
     @SerialName("wallet")

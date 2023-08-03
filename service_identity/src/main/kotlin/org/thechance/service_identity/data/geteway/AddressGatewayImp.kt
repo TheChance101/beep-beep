@@ -26,7 +26,7 @@ class AddressGatewayImp(dataBaseContainer: DataBaseContainer) : AddressGateway {
 
     override suspend fun addAddress(address: Address): Boolean {
         userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::userId eq address.userId,
+            filter = UserDetailsCollection::userId eq ObjectId(address.userId),
             update = push(UserDetailsCollection::addresses, ObjectId(address.id))
         )
         return addressCollection.insertOne(address.toAddressCollection()).wasAcknowledged()
