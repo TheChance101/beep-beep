@@ -11,5 +11,6 @@ data class UserUseCaseContainer (
     val updateUserUseCase: UpdateUserUseCase,
     val addPermissionToUser: AddPermissionToUserUseCase,
     val removePermissionFromUser: RemovePermissionFromUserUseCase,
-    val getDetailedUsersUseCase: GetDetailedUsersUseCase
+    val getDetailedUsers: GetDetailedUsersUseCase,
+    val getUserPermissions: GetUserPermissionsUseCase
 )
