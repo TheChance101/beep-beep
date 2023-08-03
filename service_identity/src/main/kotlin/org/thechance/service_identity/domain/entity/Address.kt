@@ -1,25 +1,30 @@
-package org.thechance.service_identity.entity
+package org.thechance.service_identity.domain.entity
 
+import org.bson.types.ObjectId
 import org.thechance.service_identity.api.model.AddressDto
+import org.thechance.service_identity.data.collection.AddressCollection
 
 data class Address(
     val id: String,
     val userId: String,
-    val country: String,
-    val city: String,
-    val street: String? = null,
-    val zipCode: Long? = null,
-    val houseNumber: String? = null
-){
+    val latitude: Double,
+    val longitude: Double,
+    val isDeleted: Boolean? = null
+) {
     fun toAddressDto(): AddressDto {
         return AddressDto(
             id = id,
             userId = userId,
-            country = country,
-            city = city,
-            street = street,
-            zipCode = zipCode,
-            houseNumber = houseNumber
+            latitude = latitude,
+            longitude = longitude
+        )
+    }
+
+    fun toAddressCollection(): AddressCollection {
+        return AddressCollection(
+            userId = ObjectId(this.userId),
+            latitude = this.latitude,
+            longitude = this.longitude
         )
     }
 }

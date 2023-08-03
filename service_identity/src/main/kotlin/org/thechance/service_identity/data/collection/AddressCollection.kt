@@ -5,8 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
-import org.litote.kmongo.Id
-import org.thechance.service_identity.entity.Address
+import org.thechance.service_identity.domain.entity.Address
 
 @Serializable
 data class AddressCollection(
@@ -15,27 +14,22 @@ data class AddressCollection(
     @Contextual
     val id: ObjectId = ObjectId(),
     @SerialName("user_id")
-    val userId: Id<UserCollection>,
-    @SerialName("country")
-    val country: String,
-    @SerialName("city")
-    val city: String,
-    @SerialName("street")
-    val street: String? = null,
-    @SerialName("zip_code")
-    val zipCode: Long? = null,
-    @SerialName("house_number")
-    val houseNumber: String? = null
-){
+    @Contextual
+    val userId: ObjectId = ObjectId(),
+    @SerialName("latitude")
+    val latitude : Double,
+    @SerialName("longitude")
+    val longitude : Double,
+    @SerialName("is_deleted")
+    val isDeleted: Boolean = false
+) {
     fun toAddress(): Address {
         return Address(
             id = id.toHexString(),
-            userId = userId.toString(),
-            country = country,
-            city = city,
-            street = street,
-            zipCode = zipCode,
-            houseNumber = houseNumber
+            userId = userId.toHexString(),
+            latitude = latitude,
+            longitude = longitude,
+            isDeleted = isDeleted
         )
     }
 }

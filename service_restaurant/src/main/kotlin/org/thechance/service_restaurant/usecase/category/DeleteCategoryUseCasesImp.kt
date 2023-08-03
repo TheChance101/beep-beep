@@ -1,11 +1,17 @@
 package org.thechance.service_restaurant.usecase.category
 
 import org.koin.core.annotation.Single
-import org.thechance.service_restaurant.api.usecases.DeleteCategoryUseCases
-import org.thechance.service_restaurant.usecase.gateway.RestaurantGateway
+import org.thechance.service_restaurant.data.gateway.CategoryGateway
+import org.thechance.service_restaurant.utils.DeleteCategoryException
+import org.thechance.service_restaurant.data.gateway.RestaurantGateway
+
 @Single
-class DeleteCategoryUseCasesImp(private val restaurantGateway: RestaurantGateway) : DeleteCategoryUseCases {
+class DeleteCategoryUseCasesImp(
+    private val categoryGateway: CategoryGateway
+) : DeleteCategoryUseCases {
     override suspend fun invoke(categoryId: String): Boolean {
-        return restaurantGateway.deleteCategory(categoryId)
+        return if (categoryGateway.deleteCategory(categoryId)){
+            true
+        }else throw DeleteCategoryException
     }
 }

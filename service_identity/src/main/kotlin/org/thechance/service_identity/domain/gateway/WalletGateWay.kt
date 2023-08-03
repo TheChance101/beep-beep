@@ -1,6 +1,6 @@
 package org.thechance.service_identity.domain.gateway
 
-import org.thechance.service_identity.entity.Wallet
+import org.thechance.service_identity.domain.entity.Wallet
 
 interface WalletGateWay {
     suspend fun getWalletById(id: String): Wallet

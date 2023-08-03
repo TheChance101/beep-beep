@@ -4,6 +4,8 @@ import io.ktor.server.application.*
 import io.ktor.server.routing.*
 import org.thechance.service_restaurant.api.endpoints.addressRoutes
 import org.thechance.service_restaurant.api.endpoints.categoryRoutes
+import org.thechance.service_restaurant.api.endpoints.cuisineRoutes
+import org.thechance.service_restaurant.api.endpoints.mealRoutes
 import org.thechance.service_restaurant.api.endpoints.restaurantRoutes
 
 fun Application.configureRouting(
@@ -12,5 +14,7 @@ fun Application.configureRouting(
         restaurantRoutes()
         categoryRoutes()
         addressRoutes()
+        mealRoutes()
+        cuisineRoutes()
     }
 }

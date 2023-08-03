@@ -2,6 +2,7 @@ package org.thechance.service_restaurant.entity
 
 import org.thechance.service_restaurant.api.models.RestaurantDto
 import org.thechance.service_restaurant.data.collection.RestaurantCollection
+import java.time.LocalTime
 
 data class Restaurant(
     val id: String? = null,
@@ -14,33 +15,4 @@ data class Restaurant(
     val closingTime: String? = null,
     val isDeleted: Boolean = false,
     val addresses: List<Address>? = null,
-) {
-
-    fun toDto(): RestaurantDto {
-        return RestaurantDto(
-            id = id ?: "",
-            name = name,
-            description = description,
-            priceLevel = priceLevel,
-            rate = rate,
-            phone = phone,
-            openingTime = openingTime,
-            closingTime = closingTime,
-            addresses = addresses?.toDto()
-        )
-    }
-
-    fun toCollection(): RestaurantCollection {
-        return RestaurantCollection(
-            name = name,
-            description = description,
-            priceLevel = priceLevel,
-            rate = rate,
-            phone = phone,
-            openingTime = openingTime,
-            closingTime = closingTime,
-        )
-    }
-}
-
-fun List<Restaurant>.toDto(): List<RestaurantDto> = map { it.toDto() }
+)
