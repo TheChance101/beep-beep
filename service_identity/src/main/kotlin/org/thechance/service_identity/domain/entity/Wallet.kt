@@ -1,7 +1,6 @@
 package org.thechance.service_identity.domain.entity
 
 import org.bson.types.ObjectId
-import org.litote.kmongo.id.toId
 import org.thechance.service_identity.api.model.WalletDto
 import org.thechance.service_identity.data.collection.WalletCollection
 
@@ -21,7 +20,7 @@ data class Wallet(
     fun toCollection(): WalletCollection {
         return WalletCollection(
             id = ObjectId(this.id),
-            userId = ObjectId(this.userId).toId(),
+            userId = userId,
             walletBalance = this.walletBalance,
         )
     }

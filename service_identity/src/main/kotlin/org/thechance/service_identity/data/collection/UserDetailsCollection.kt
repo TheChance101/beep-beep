@@ -3,41 +3,48 @@ package org.thechance.service_identity.data.collection
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
-import org.litote.kmongo.Id
 import org.thechance.service_identity.domain.entity.UserDetails
 
 @Serializable
 data class UserDetailsCollection(
-    @SerialName("_id")
-    @BsonId
     @Contextual
-    val id: ObjectId = ObjectId(),
     @SerialName("user_id")
-    val userId: Id<UserCollection>,
-    @SerialName("password")
-    val password: String,
+    val userId: ObjectId,
     @SerialName("email")
-    val email: String,
+    val email: String? = null,
     @SerialName("wallet")
-    val wallet: WalletCollection,
+    val walletId: String? = null,
     @SerialName("addresses")
-    val addresses: List<Id<AddressCollection>>,
+    val addresses: List<@Contextual ObjectId> = emptyList(),
     @SerialName("permissions")
-    val permissions: List<Id<PermissionCollection>>
-) {
-    fun toUserDetails(): UserDetails {
-        return UserDetails(
-            id = id.toHexString(),
-            userId = userId.toString(),
-            password = password,
-            email = email,
-            wallet = wallet.toWallet(),
-            addresses = addresses.map { it.toString() },
-            permissions = permissions.map { it.toString() }
-        )
-    }
+    val permissions: List<@Contextual ObjectId> = emptyList()
+)
+
+fun UserDetailsCollection.toEntity(): UserDetails {
+    return UserDetails(
+        userId = userId.toHexString(),
+        email = email,
+        walletId = walletId,
+        addresses = addresses.map { it.toHexString() },
+        permissions = permissions.map { it.toHexString() }
+    )
 }
 
+fun List<UserDetailsCollection>.toEntity(): List<UserDetails> {
+    return map { it.toEntity() }
+}
 
+fun UserDetails.toCollection(): UserDetailsCollection {
+    return UserDetailsCollection(
+        userId = ObjectId(userId),
+        email = email,
+        walletId = walletId,
+        addresses = addresses.map { ObjectId(it) },
+        permissions = permissions.map { ObjectId(it) }
+    )
+}
+
+fun List<UserDetails>.toCollection(): List<UserDetailsCollection> {
+    return map { it.toCollection() }
+}

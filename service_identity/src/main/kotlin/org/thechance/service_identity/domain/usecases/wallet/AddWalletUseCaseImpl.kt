@@ -5,10 +5,10 @@ import org.thechance.service_identity.domain.entity.Wallet
 import org.thechance.service_identity.domain.gateway.WalletGateWay
 
 @Single
-class AddWalletUseCaseImpl (
-    private val walletGateWay: WalletGateWay
+class AddWalletUseCaseImpl(
+    private val walletGateWay: WalletGateWay,
 ) : AddWalletUseCase {
-    override suspend fun invoke(wallet: Wallet) : Boolean {
-      return  walletGateWay.createWallet(wallet)
+    override suspend fun invoke(wallet: Wallet): Boolean {
+        return walletGateWay.createWallet(wallet)
     }
 }

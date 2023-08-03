@@ -1,4 +1,4 @@
-package org.thechance.service_restaurant.usecase.gateway
+package org.thechance.service_restaurant.data.gateway
 
 import org.thechance.service_restaurant.entity.Cuisine
 import org.thechance.service_restaurant.entity.Meal
