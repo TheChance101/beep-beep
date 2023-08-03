@@ -27,6 +27,7 @@ interface RestaurantGateway {
     //region delete
     suspend fun deleteRestaurant(restaurantId: String): Boolean
     suspend fun deleteCategoriesInRestaurant(restaurantId: String, categoryIds: List<String>): Boolean
+    suspend fun deleteMealsInRestaurant(restaurantId: String, mealIds: List<String>): Boolean
     //endregion
 
     //region addresses

@@ -7,13 +7,7 @@ import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
 import org.litote.kmongo.id.WrappedObjectId
 import org.thechance.service_restaurant.data.DataBaseContainer
-import org.thechance.service_restaurant.data.collection.AddressCollection
-import org.thechance.service_restaurant.data.collection.CategoryCollection
-import org.thechance.service_restaurant.data.collection.CategoryRestaurant
-import org.thechance.service_restaurant.data.collection.MealCollection
-import org.thechance.service_restaurant.data.collection.RestaurantAddressesCollection
-import org.thechance.service_restaurant.data.collection.RestaurantCollection
-import org.thechance.service_restaurant.data.collection.RestaurantMeal
+import org.thechance.service_restaurant.data.collection.*
 import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
@@ -116,6 +110,13 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
             pullAll(RestaurantCollection::categoryIds, categoryIds.toObjectIds())
         ).isSuccessfullyUpdated()
         return resultDeleteFromRestaurant and resultDeleteFromCategory
+    }
+
+    override suspend fun deleteMealsInRestaurant(restaurantId: String, mealIds: List<String>): Boolean {
+       return restaurantCollection.updateOneById(
+            ObjectId(restaurantId),
+            pullAll(RestaurantCollection::mealIds, mealIds.toObjectIds())
+        ).isSuccessfullyUpdated()
     }
     //endregion
 

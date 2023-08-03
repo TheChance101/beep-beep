@@ -44,3 +44,7 @@ interface DeleteCategoriesInRestaurantUseCase {
     suspend operator fun invoke(restaurantId: String, categoryIds: List<String>): Boolean
 
 }
+
+interface DeleteMealsInRestaurantUseCase{
+    suspend operator fun invoke(restaurantId: String, mealIds: List<String>): Boolean
+}
