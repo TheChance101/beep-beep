@@ -28,3 +28,11 @@ fun Wallet.toCollection(): WalletCollection {
         walletBalance = this.walletBalance,
     )
 }
+
+fun WalletDto.toEntity(): Wallet {
+    return Wallet(
+        id = id,
+        userId = userId,
+        walletBalance = walletBalance
+    )
+}
