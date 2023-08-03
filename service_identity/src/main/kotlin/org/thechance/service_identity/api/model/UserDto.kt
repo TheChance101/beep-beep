@@ -62,7 +62,6 @@ data class CreateUserRequest(
 
 @Serializable
 data class UpdateUserRequest(
-    val id: String? = null,
     val fullName: String? = null,
     val username: String? = null,
     val password: String? = null,
@@ -70,7 +69,6 @@ data class UpdateUserRequest(
 ) {
     fun toUser(): User {
         return User(
-            id = id,
             fullName = fullName,
             username = username,
             password = password,
