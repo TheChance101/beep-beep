@@ -18,6 +18,17 @@ fun AddressCollection.toEntity(): Address {
         isDeleted = isDeleted
     )
 }
+fun AddressDto.toEntity(): Address {
+    return Address(
+        id = id,
+        userId = userId,
+        country = country,
+        city = city,
+        street = street,
+        zipCode = zipCode,
+        houseNumber = houseNumber
+    )
+}
 
 fun Address.toDto(): AddressDto {
     return AddressDto(

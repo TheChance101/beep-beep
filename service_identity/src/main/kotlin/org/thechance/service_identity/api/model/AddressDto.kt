@@ -12,16 +12,4 @@ data class AddressDto(
     val street: String? = null,
     val zipCode: Long? = null,
     val houseNumber: String? = null
-) {
-    fun toAddress(): Address {
-        return Address(
-            id = id,
-            userId = userId,
-            country = country,
-            city = city,
-            street = street,
-            zipCode = zipCode,
-            houseNumber = houseNumber
-        )
-    }
-}
+)
