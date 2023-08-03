@@ -7,7 +7,8 @@ import org.thechance.service_identity.data.collection.WalletCollection
 data class Wallet(
     val id: String,
     val userId: String,
-    val walletBalance: Double
+    val walletBalance: Double,
+    val isDeleted: Boolean = false
 ) {
     fun toDto(): WalletDto {
         return WalletDto(
@@ -22,6 +23,7 @@ data class Wallet(
             id = ObjectId(this.id),
             userId = userId,
             walletBalance = this.walletBalance,
+            isDeleted = this.isDeleted
         )
     }
 }
