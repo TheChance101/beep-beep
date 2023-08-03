@@ -13,6 +13,7 @@ data class AddressUseCasesContainer(
     val deleteAddress: DeleteAddressUseCase,
     val addAddressToRestaurant: AddAddressToRestaurantUseCase,
     val getAddressesInRestaurant: GetAddressesInRestaurantUseCase,
+    val deleteAddressesInRestaurant: DeleteAddressesInRestaurantUseCase,
 )
 
 interface GetAddressesUseCase {
@@ -41,4 +42,8 @@ interface AddAddressToRestaurantUseCase {
 
 interface GetAddressesInRestaurantUseCase {
     suspend operator fun invoke(restaurantId: String): List<Address>
+}
+
+interface DeleteAddressesInRestaurantUseCase {
+    suspend operator fun invoke(restaurantId: String, addressesIds: List<String>): Boolean
 }

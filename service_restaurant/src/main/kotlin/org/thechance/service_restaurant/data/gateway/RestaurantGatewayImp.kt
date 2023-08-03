@@ -8,11 +8,13 @@ import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.coroutine.aggregate
 import org.litote.kmongo.eq
+import org.litote.kmongo.id.WrappedObjectId
 import org.litote.kmongo.`in`
 import org.litote.kmongo.lookup
 import org.litote.kmongo.match
 import org.litote.kmongo.ne
 import org.litote.kmongo.project
+import org.litote.kmongo.pullAll
 import org.thechance.service_restaurant.data.DataBaseContainer
 import org.thechance.service_restaurant.data.collection.AddressCollection
 import org.thechance.service_restaurant.data.collection.CategoryCollection
@@ -95,6 +97,16 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
                 pipeline = arrayOf(match(AddressCollection::isDeleted ne true))
             )
         ).toList().firstOrNull()?.addresses?.toEntity() ?: emptyList()
+    }
+
+    override suspend fun deleteAddressesInRestaurant(
+        restaurantId: String,
+        addressesIds: List<String>
+    ): Boolean {
+        return restaurantCollection.updateOneById(
+            ObjectId(restaurantId),
+            pullAll(RestaurantCollection::addressIds, addressesIds.map { WrappedObjectId(it) })
+        ).isSuccessfullyUpdated()
     }
     //endregion
 

@@ -40,7 +40,7 @@ fun Route.restaurantRoutes() {
             call.respond(HttpStatusCode.Created, result)
         }
 
-        post("/{id}/addAddresses") {
+        post("/{id}/addresses") {
             val restaurantId = call.parameters["id"] ?: ""
             val addressesIds = call.receive<List<String>>()
             val result = addressUseCasesContainer.addAddressToRestaurant(restaurantId, addressesIds)
@@ -59,5 +59,11 @@ fun Route.restaurantRoutes() {
             call.respond(HttpStatusCode.OK, result)
         }
 
+        delete("/{id}/addresses") {
+            val restaurantId = call.parameters["id"] ?: ""
+            val addressesIds = call.receive<List<String>>()
+            val result = addressUseCasesContainer.deleteAddressesInRestaurant(restaurantId, addressesIds)
+            call.respond(HttpStatusCode.OK, result)
+        }
     }
 }
