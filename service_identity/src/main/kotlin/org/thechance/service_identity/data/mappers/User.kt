@@ -3,6 +3,8 @@ package org.thechance.service_identity.data.mappers
 import org.bson.types.ObjectId
 import org.thechance.service_identity.api.model.DetailedUserDto
 import org.thechance.service_identity.api.model.UserDto
+import org.thechance.service_identity.api.model.request.CreateUserRequest
+import org.thechance.service_identity.api.model.request.UpdateUserRequest
 import org.thechance.service_identity.data.collection.UserCollection
 import org.thechance.service_identity.data.collection.UserDetailsCollection
 import org.thechance.service_identity.domain.entity.User
@@ -64,5 +66,22 @@ fun User.toDetailsCollection(userId: String): UserDetailsCollection {
         walletId = walletId,
         addresses = addresses.map { ObjectId(it) },
         permissions = permissions.map { ObjectId(it) }
+    )
+}
+
+fun CreateUserRequest.toEntity(): User {
+    return User(
+        fullName = fullName,
+        username = username,
+        password = password
+    )
+}
+
+fun UpdateUserRequest.toEntity(): User {
+    return User(
+        fullName = fullName,
+        username = username,
+        password = password,
+        email = email
     )
 }
