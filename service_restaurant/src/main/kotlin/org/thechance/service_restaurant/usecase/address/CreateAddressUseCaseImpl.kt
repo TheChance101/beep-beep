@@ -1,15 +1,14 @@
 package org.thechance.service_restaurant.usecase.address
 
 import org.koin.core.annotation.Single
-import org.thechance.service_restaurant.api.usecases.CreateAddressUseCase
+import org.thechance.service_restaurant.data.gateway.AddressGateway
 import org.thechance.service_restaurant.entity.Address
-import org.thechance.service_restaurant.usecase.gateway.RestaurantGateway
 
 @Single
 class CreateAddressUseCaseImpl(
-    private val restaurantGateway: RestaurantGateway
+    private val addressGateway: AddressGateway
 ) : CreateAddressUseCase {
     override suspend fun invoke(address: Address): Boolean {
-        return restaurantGateway.createAddress(address)
+        return addressGateway.createAddress(address)
     }
 }

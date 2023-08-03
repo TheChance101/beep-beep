@@ -1,5 +1,6 @@
 package org.thechance.service_restaurant.data.gateway
 
+import org.thechance.service_restaurant.entity.Address
 import org.thechance.service_restaurant.entity.Category
 import org.thechance.service_restaurant.entity.Restaurant
 
@@ -16,4 +17,9 @@ interface RestaurantGateway {
     suspend fun deleteCategoriesInRestaurant(restaurantId: String, categoryIds: List<String>): Boolean
     //endregion
 
+    //region addresses
+    suspend fun addAddressesToRestaurant(restaurantId: String, addressesIds: List<String>): Boolean
+    suspend fun getAddressesInRestaurant(restaurantId: String): List<Address>
+    suspend fun deleteAddressesInRestaurant(restaurantId: String, addressesIds: List<String>): Boolean
+    //endregion
 }

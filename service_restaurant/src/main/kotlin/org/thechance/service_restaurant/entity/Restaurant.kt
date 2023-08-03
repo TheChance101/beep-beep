@@ -1,9 +1,5 @@
 package org.thechance.service_restaurant.entity
 
-import org.thechance.service_restaurant.api.models.RestaurantDto
-import org.thechance.service_restaurant.data.collection.RestaurantCollection
-import java.time.LocalTime
-
 data class Restaurant(
     val id: String? = null,
     val name: String? = null,

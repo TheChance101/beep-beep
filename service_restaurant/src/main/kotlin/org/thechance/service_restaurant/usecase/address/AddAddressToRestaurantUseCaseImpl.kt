@@ -1,8 +1,7 @@
 package org.thechance.service_restaurant.usecase.address
 
 import org.koin.core.annotation.Single
-import org.thechance.service_restaurant.api.usecases.AddAddressToRestaurantUseCase
-import org.thechance.service_restaurant.usecase.gateway.RestaurantGateway
+import org.thechance.service_restaurant.data.gateway.RestaurantGateway
 
 @Single
 class AddAddressToRestaurantUseCaseImpl(

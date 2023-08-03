@@ -1,17 +1,23 @@
 package org.thechance.service_restaurant.api.endpoints
 
-import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.request.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.call
+import io.ktor.server.request.receive
+import io.ktor.server.response.respond
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.delete
+import io.ktor.server.routing.get
+import io.ktor.server.routing.post
+import io.ktor.server.routing.put
+import io.ktor.server.routing.route
 import org.koin.ktor.ext.inject
 import org.thechance.service_restaurant.api.models.RestaurantDto
-import org.thechance.service_restaurant.api.usecases.AddressUseCasesContainer
+import org.thechance.service_restaurant.api.models.mappers.toDetailsDto
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
+import org.thechance.service_restaurant.usecase.address.AddressUseCasesContainer
 import org.thechance.service_restaurant.usecase.restaurant.RestaurantUseCasesContainer
 
 fun Route.restaurantRoutes() {
@@ -31,7 +37,7 @@ fun Route.restaurantRoutes() {
 
         get("/{id}") {
             val restaurantId = call.parameters["id"] ?: ""
-            val restaurant = restaurantUseCases.getRestaurantDetails(restaurantId).toDto()
+            val restaurant = restaurantUseCases.getRestaurantDetails(restaurantId).toDetailsDto()
             call.respond(HttpStatusCode.OK, restaurant)
         }
 

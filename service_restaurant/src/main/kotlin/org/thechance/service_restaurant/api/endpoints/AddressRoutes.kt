@@ -12,8 +12,8 @@ import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 import org.koin.ktor.ext.inject
 import org.thechance.service_restaurant.api.models.AddressDto
-import org.thechance.service_restaurant.api.usecases.AddressUseCasesContainer
-import org.thechance.service_restaurant.entity.toDto
+import org.thechance.service_restaurant.api.models.mappers.toDto
+import org.thechance.service_restaurant.usecase.address.AddressUseCasesContainer
 
 
 fun Route.addressRoutes() {

@@ -42,7 +42,7 @@ class CategoryGatewayImp(private val container: DataBaseContainer) : CategoryGat
             lookup(
                 from = "restaurantCollection",
                 resultProperty = CategoryRestaurantCollection::restaurants,
-                pipeline = listOf(match(RestaurantCollection::isDeleted eq false)).toTypedArray()
+                pipeline = arrayOf(match(RestaurantCollection::isDeleted eq false))
             ),
         ).toList().first().restaurants.toEntity()
     }

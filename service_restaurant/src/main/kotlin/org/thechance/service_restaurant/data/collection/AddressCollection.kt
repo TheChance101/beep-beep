@@ -5,7 +5,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
-import org.thechance.service_restaurant.entity.Address
 
 @Serializable
 data class AddressCollection(
@@ -17,15 +16,5 @@ data class AddressCollection(
     @Contextual
     @SerialName("_id")
     val id: ObjectId = ObjectId()
-
-    fun toEntity(): Address {
-        return Address(
-            id = id.toString(),
-            lat = lat,
-            lon = lon,
-            isDeleted = isDeleted,
-        )
-    }
 }
 
-fun List<AddressCollection>.toEntity(): List<Address> = map { it.toEntity() }
