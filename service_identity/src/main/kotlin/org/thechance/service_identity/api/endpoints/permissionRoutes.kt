@@ -53,7 +53,7 @@ fun Route.permissionRoutes() {
         }
         get("/{id}") {
             val permissionId = call.parameters["id"] ?: throw IllegalArgumentException("Invalid permission ID")
-            val permission = permissionUseCasesContainer.getPermission.invoke(permissionId).toPermissionDto()
+            val permission = permissionUseCasesContainer.getPermission(permissionId).toPermissionDto()
             call.respond(HttpStatusCode.OK, permission)
 
         }
