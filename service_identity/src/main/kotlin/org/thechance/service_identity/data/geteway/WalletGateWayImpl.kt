@@ -9,6 +9,7 @@ import org.litote.kmongo.unset
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.UserDetailsCollection
 import org.thechance.service_identity.data.collection.WalletCollection
+import org.thechance.service_identity.data.mappers.toWallet
 import org.thechance.service_identity.domain.entity.Wallet
 import org.thechance.service_identity.domain.gateway.WalletGateWay
 import org.thechance.service_identity.utils.Constants.WALLET_COLLECTION
