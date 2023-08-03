@@ -8,11 +8,4 @@ import org.thechance.service_identity.utils.PermissionType
 data class PermissionDto(
     val id: String,
     val permissionType: PermissionType
-) {
-    fun toPermission(): Permission {
-        return Permission(
-            id = id,
-            permissionType = permissionType
-        )
-    }
-}
+)

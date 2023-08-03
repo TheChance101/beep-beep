@@ -19,3 +19,10 @@ fun Permission.toDto(): PermissionDto {
         permissionType = permissionType
     )
 }
+
+fun PermissionDto.toEntity(): Permission {
+    return Permission(
+        id = id,
+        permissionType = permissionType
+    )
+}
