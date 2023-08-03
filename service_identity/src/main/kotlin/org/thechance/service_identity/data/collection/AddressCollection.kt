@@ -28,19 +28,6 @@ data class AddressCollection(
     val houseNumber: String? = null,
     @SerialName("is_deleted")
     val isDeleted: Boolean = false
-) {
-    fun toAddress(): Address {
-        return Address(
-            id = id.toHexString(),
-            userId = userId.toString(),
-            country = country,
-            city = city,
-            street = street,
-            zipCode = zipCode,
-            houseNumber = houseNumber,
-            isDeleted = isDeleted
-        )
-    }
-}
+)
 
 
