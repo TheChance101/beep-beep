@@ -37,8 +37,26 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
         ).toList().firstOrNull()?.toEntity()
     }
 
+    override suspend fun getRestaurantsInCategory(categoryId: String): List<Restaurant> {
+        return categoryCollection.aggregate<CategoryRestaurantCollection>(
+            match(CategoryCollection::id eq ObjectId(categoryId)),
+            lookup(
+                from = "restaurantCollection",
+                resultProperty = CategoryRestaurantCollection::restaurants,
+                pipeline = listOf(match(RestaurantCollection::isDeleted eq false)).toTypedArray()
+            ),
+        ).toList().first().restaurants.toEntity()
+    }
+
     override suspend fun addCategory(category: Category): Boolean {
         return categoryCollection.insertOne(category.toCollection()).wasAcknowledged()
+    }
+
+    override suspend fun addRestaurantsToCategory(categoryId: String, restaurantIds: List<String>): Boolean {
+        return categoryCollection.updateOneById(
+            ObjectId(categoryId),
+            update = Updates.addEachToSet(CategoryCollection::restaurantIds.name, restaurantIds.map { ObjectId(it) })
+        ).isSuccessfullyUpdated()
     }
 
     override suspend fun updateCategory(category: Category): Boolean {
@@ -56,23 +74,14 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
         ).isSuccessfullyUpdated()
     }
 
-    override suspend fun addRestaurantsToCategory(categoryId: String, restaurantIds: List<String>): Boolean {
+    override suspend fun deleteRestaurantsInCategory(categoryId: String, restaurantIds: List<String>): Boolean {
         return categoryCollection.updateOneById(
             ObjectId(categoryId),
-            update = Updates.addEachToSet(CategoryCollection::restaurantIds.name, restaurantIds.map { ObjectId(it) })
+            pullAll(CategoryCollection::restaurantIds, restaurantIds.map { ObjectId(it) })
         ).isSuccessfullyUpdated()
     }
 
-    override suspend fun getRestaurantsInCategory(categoryId: String): List<Restaurant> {
-        return categoryCollection.aggregate<CategoryRestaurantCollection>(
-            match(CategoryCollection::id eq ObjectId(categoryId)),
-            lookup(
-                from = "restaurantCollection",
-                resultProperty = CategoryRestaurantCollection::restaurants,
-                pipeline = listOf(match(RestaurantCollection::isDeleted eq false)).toTypedArray()
-            ),
-        ).toList().first().restaurants.toEntity()
-    }
+
     //endregion
 
     //region Restaurant

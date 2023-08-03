@@ -23,6 +23,10 @@ interface DeleteCategoryUseCases {
     suspend operator fun invoke(categoryId: String): Boolean
 }
 
+interface DeleteRestaurantsInCategoryUseCases {
+    suspend operator fun invoke(categoryId: String, restaurantIds: List<String>): Boolean
+}
+
 interface AddRestaurantsToCategoryUseCases {
     suspend operator fun invoke(categoryId: String, restaurantIds: List<String>): Boolean
 }

@@ -65,5 +65,12 @@ fun Route.categoryRoutes() {
             call.respond(HttpStatusCode.OK, result)
         }
 
+        delete("/{id}/restaurants") {
+            val categoryId = call.parameters.extractString("id") ?: ""
+            val restaurantIds = call.receive<List<String>>()
+            val result = categoryUseCases.deleteRestaurantsInCategory(categoryId, restaurantIds)
+            call.respond(HttpStatusCode.OK, result)
+        }
+
     }
 }
