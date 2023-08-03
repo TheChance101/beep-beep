@@ -40,6 +40,11 @@ fun Route.restaurantRoutes() {
             call.respond(HttpStatusCode.OK, category)
         }
 
+        get("/{id}/meals") {
+            val restaurantId = call.parameters.extractString("id") ?: ""
+            val meals = restaurantUseCases.getMealsInRestaurant(restaurantId).toDto()
+            call.respond(HttpStatusCode.OK, meals)
+        }
 
         post {
             val restaurant = call.receive<RestaurantDto>()
@@ -53,6 +58,14 @@ fun Route.restaurantRoutes() {
             val result = restaurantUseCases.addCategoryToRestaurant(restaurantId, categoryIds)
             call.respond(HttpStatusCode.Created, result)
         }
+
+        post("/{id}/addMeals") {
+            val restaurantId = call.parameters.extractString("id") ?: ""
+            val mealIds = call.receive<List<String>>()
+            val result = restaurantUseCases.addMealsToRestaurant(restaurantId, mealIds)
+            call.respond(HttpStatusCode.Created, result)
+        }
+
 
         put {
             val restaurant = call.receive<RestaurantDto>()

@@ -7,7 +7,7 @@ import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
 import org.thechance.service_restaurant.data.DataBaseContainer
 import org.thechance.service_restaurant.data.collection.CategoryCollection
-import org.thechance.service_restaurant.data.collection.CategoryRestaurantCollection
+import org.thechance.service_restaurant.data.collection.CategoryRestaurant
 import org.thechance.service_restaurant.data.collection.RestaurantCollection
 import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
@@ -15,6 +15,7 @@ import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
 import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.data.utils.toObjectIds
 import org.thechance.service_restaurant.entity.Category
+import org.thechance.service_restaurant.entity.Meal
 import org.thechance.service_restaurant.entity.Restaurant
 
 @Single
@@ -35,14 +36,18 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
     }
 
     override suspend fun getCategoriesInRestaurant(restaurantId: String): List<Category> {
-        return restaurantCollection.aggregate<CategoryRestaurantCollection>(
+        return restaurantCollection.aggregate<CategoryRestaurant>(
             match(RestaurantCollection::id eq ObjectId(restaurantId)),
             lookup(
                 from = "categoryCollection",
-                resultProperty = CategoryRestaurantCollection::categories,
+                resultProperty = CategoryRestaurant::categories,
                 pipeline = listOf(match(CategoryCollection::isDeleted eq false)).toTypedArray()
             ),
         ).toList().first().categories.toEntity()
+    }
+
+    override suspend fun getMealsInRestaurant(restaurantId: String): List<Meal> {
+        TODO("Not yet implemented")
     }
 
     override suspend fun addRestaurant(restaurant: Restaurant): Boolean {
@@ -61,6 +66,13 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
         ).isSuccessfullyUpdated()
 
         return resultAddToCategory and resultAddToRestaurant
+    }
+
+    override suspend fun addMealsToRestaurant(restaurantId: String, mealIds: List<String>): Boolean {
+        return restaurantCollection.updateOneById(
+            ObjectId(restaurantId),
+            update = Updates.addEachToSet(RestaurantCollection::mealIds.name, mealIds.toObjectIds())
+        ).isSuccessfullyUpdated()
     }
 
     override suspend fun updateRestaurant(restaurant: Restaurant): Boolean {

@@ -6,9 +6,13 @@ import org.koin.core.annotation.Single
 data class RestaurantUseCasesContainer(
     val getRestaurants: GetRestaurantsUseCase,
     val getRestaurantDetails: GetRestaurantDetailsUseCase,
-    val getCategoriesInRestaurant: GetCategoriesInRestaurantImp,
+    val getCategoriesInRestaurant: GetCategoriesInRestaurantUseCase,
+    val getMealsInRestaurant: GetMealsInRestaurantUseCase,
+
     val addRestaurant: CreateRestaurantUseCase,
     val addCategoryToRestaurant: AddCategoryToRestaurantUseCase,
+    val addMealsToRestaurant:AddMealsToRestaurantUseCase,
+
     val updateRestaurant: UpdateRestaurantUseCase,
     val deleteRestaurant: DeleteRestaurantUseCase,
     val deleteCategoriesInRestaurant: DeleteCategoriesInRestaurantUseCase

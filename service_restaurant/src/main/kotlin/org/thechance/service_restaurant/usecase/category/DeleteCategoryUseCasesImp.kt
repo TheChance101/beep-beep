@@ -3,7 +3,6 @@ package org.thechance.service_restaurant.usecase.category
 import org.koin.core.annotation.Single
 import org.thechance.service_restaurant.data.gateway.CategoryGateway
 import org.thechance.service_restaurant.utils.DeleteCategoryException
-import org.thechance.service_restaurant.data.gateway.RestaurantGateway
 
 @Single
 class DeleteCategoryUseCasesImp(
@@ -14,4 +13,5 @@ class DeleteCategoryUseCasesImp(
             true
         }else throw DeleteCategoryException
     }
+
 }

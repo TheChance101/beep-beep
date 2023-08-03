@@ -5,7 +5,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
-import org.thechance.service_restaurant.entity.Restaurant
 
 
 @Serializable
@@ -24,6 +23,8 @@ data class RestaurantCollection(
     val id: ObjectId = ObjectId()
     val isDeleted: Boolean = false
     val categoryIds: MutableList<@Contextual ObjectId> = mutableListOf()
+    val mealIds: MutableList<@Contextual ObjectId> = mutableListOf()
+
 }
 
 
