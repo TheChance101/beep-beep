@@ -32,23 +32,10 @@ fun Route.addressRoutes() {
             call.respond(HttpStatusCode.OK, address)
         }
 
-        get("/restaurant/{restaurantId}") {
-            val restaurantId = call.parameters["restaurantId"] ?: ""
-            val addressDto = addressUseCasesContainer.getAddressesInRestaurant(restaurantId).toDto()
-            call.respond(HttpStatusCode.OK, addressDto)
-        }
-
         post {
             val addressDto = call.receive<AddressDto>()
             val result = addressUseCasesContainer.createAddress(addressDto.toEntity())
             call.respond(HttpStatusCode.Created, result)
-        }
-
-        post("/restaurant/{restaurantId}") {
-            val restaurantId = call.parameters["restaurantId"] ?: ""
-            val addressesIds = call.receive<List<String>>()
-            val result = addressUseCasesContainer.addAddressToRestaurant(restaurantId, addressesIds)
-            call.respond(HttpStatusCode.OK, result)
         }
 
         put("/{id}") {
