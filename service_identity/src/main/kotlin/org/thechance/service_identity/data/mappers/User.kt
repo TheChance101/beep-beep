@@ -26,6 +26,15 @@ fun User.toDto(): UserDto {
     )
 }
 
+fun UserDto.toEntity(): User {
+    return User(
+        id = id,
+        fullName = fullName,
+        username = username,
+        password = password,
+    )
+}
+
 fun User.toDetailedDto(): DetailedUserDto {
     return DetailedUserDto(
         id = id,
