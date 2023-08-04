@@ -7,10 +7,4 @@ interface ManageCategoryUseCase {
 
     suspend fun getCategoryDetails(categoryId: String): Category
 
-    suspend fun createCategory(category: Category): Boolean
-
-    suspend fun updateCategory(category: Category): Boolean
-
-    suspend fun deleteCategory(categoryId: String): Boolean
-
 }

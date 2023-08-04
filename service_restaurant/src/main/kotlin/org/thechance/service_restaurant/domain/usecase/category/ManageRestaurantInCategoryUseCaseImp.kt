@@ -11,12 +11,4 @@ class ManageRestaurantInCategoryUseCaseImp(private val categoryGateway: Category
         return categoryGateway.getRestaurantsInCategory(categoryId)
     }
 
-    override suspend fun addRestaurantsToCategory(categoryId: String, restaurantIds: List<String>): Boolean {
-        return categoryGateway.addRestaurantsToCategory(categoryId, restaurantIds)
-    }
-
-    override suspend fun deleteRestaurantsInCategory(categoryId: String, restaurantIds: List<String>): Boolean {
-        return categoryGateway.deleteRestaurantsInCategory(categoryId, restaurantIds)
-    }
-
 }

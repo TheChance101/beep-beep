@@ -13,6 +13,7 @@ import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
+import org.thechance.service_restaurant.domain.usecase.RestaurantsManagementUseCase
 import org.thechance.service_restaurant.domain.usecase.restaurant.ManageRestaurantDetailsUseCase
 import org.thechance.service_restaurant.domain.usecase.restaurant.ManageRestaurantUseCase
 
@@ -20,6 +21,9 @@ fun Route.restaurantRoutes() {
 
     val manageRestaurant: ManageRestaurantUseCase by inject()
     val manageDetailsRestaurant: ManageRestaurantDetailsUseCase by inject()
+
+    val restaurantManagement: RestaurantsManagementUseCase by inject()
+
 
     route("/restaurants") {
         get {
@@ -52,7 +56,7 @@ fun Route.restaurantRoutes() {
 
         post {
             val restaurant = call.receive<RestaurantDto>()
-            val result = manageRestaurant.createRestaurant(restaurant.toEntity())
+            val result = restaurantManagement.createRestaurant(restaurant.toEntity())
             call.respond(HttpStatusCode.Created, result)
         }
 
@@ -72,7 +76,7 @@ fun Route.restaurantRoutes() {
 
         put {
             val restaurant = call.receive<RestaurantDto>()
-            val result = manageRestaurant.updateRestaurant(restaurant.toEntity())
+            val result = restaurantManagement.updateRestaurant(restaurant.toEntity())
             call.respond(HttpStatusCode.OK, result)
         }
 
@@ -85,7 +89,7 @@ fun Route.restaurantRoutes() {
 
         delete("/{id}") {
             val restaurantId = call.parameters["id"] ?: ""
-            val result = manageRestaurant.deleteRestaurant(restaurantId)
+            val result = restaurantManagement.deleteRestaurant(restaurantId)
             call.respond(HttpStatusCode.OK, result)
         }
 

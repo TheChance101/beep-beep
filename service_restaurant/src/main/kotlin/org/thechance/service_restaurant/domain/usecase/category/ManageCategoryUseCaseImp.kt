@@ -14,18 +14,4 @@ class ManageCategoryUseCaseImp(private val categoryGateway: CategoryGateway) : M
     override suspend fun getCategoryDetails(categoryId: String): Category {
         return categoryGateway.getCategory(categoryId) ?: throw Throwable()
     }
-
-    override suspend fun createCategory(category: Category): Boolean {
-        return categoryGateway.addCategory(category)
-    }
-
-    override suspend fun updateCategory(category: Category): Boolean {
-        return categoryGateway.updateCategory(category)
-    }
-
-    override suspend fun deleteCategory(categoryId: String): Boolean {
-        return if (categoryGateway.deleteCategory(categoryId)) {
-            true
-        } else throw DeleteCategoryException
-    }
 }

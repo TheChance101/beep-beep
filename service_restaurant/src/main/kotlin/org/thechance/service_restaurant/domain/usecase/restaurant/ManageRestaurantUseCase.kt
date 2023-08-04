@@ -9,10 +9,7 @@ interface ManageRestaurantUseCase {
     suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant>
     suspend fun getCategoriesInRestaurant(restaurantId: String): List<Category>
     suspend fun getCuisinesInRestaurant(restaurantId: String): List<Cuisine>
-    suspend fun createRestaurant(restaurant: Restaurant): Boolean
-    suspend fun updateRestaurant(restaurant: Restaurant): Boolean
-    suspend fun deleteRestaurant(restaurantId: String): Boolean
-    suspend fun addCategoryToRestaurant(restaurantId: String, categoryIds: List<String>): Boolean
     suspend fun deleteCategoriesInRestaurant(restaurantId: String, categoryIds: List<String>): Boolean
+    suspend fun addCategoryToRestaurant(restaurantId: String, categoryIds: List<String>): Boolean
 
 }

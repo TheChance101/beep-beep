@@ -27,3 +27,5 @@ class ManageMealUseCaseImp(private val mealGateway: MealGateway) : ManageMealUse
         return mealGateway.updateMeal(meal)
     }
 }
+
+
