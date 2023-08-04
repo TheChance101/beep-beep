@@ -1,5 +1,6 @@
 package org.thechance.service_restaurant.data.gateway
 
+import com.mongodb.client.model.Updates
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.*
@@ -13,9 +14,9 @@ import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
 import org.thechance.service_restaurant.data.utils.paginate
+import org.thechance.service_restaurant.data.utils.toObjectIds
 import org.thechance.service_restaurant.entity.Cuisine
 import org.thechance.service_restaurant.entity.Meal
-import org.thechance.service_restaurant.utils.Constants
 import org.thechance.service_restaurant.utils.Constants.CUISINE_COLLECTION
 
 @Single
@@ -41,11 +42,19 @@ class MealGatewayImp(private val container: DataBaseContainer) : MealGateway {
     override suspend fun addMeal(meal: Meal): Boolean =
         container.mealCollection.insertOne(meal.toCollection()).wasAcknowledged()
 
-    override suspend fun addCuisineToMeal(mealId: String, cuisineId: String): Boolean =
-        container.mealCollection.updateOne(
-            filter = MealCollection::id eq ObjectId(mealId),
-            update = push(MealCollection::cuisines, ObjectId(cuisineId))
-        ).wasAcknowledged()
+    override suspend fun addCuisinesToMeal(mealId: String, cuisineIds: List<String>): Boolean {
+        val resultAddToCuisine = container.cuisineCollection.updateMany(
+            CuisineCollection::id `in` cuisineIds.toObjectIds(),
+            addToSet(CuisineCollection::meals, ObjectId(mealId))
+        ).isSuccessfullyUpdated()
+
+        val resultAddToMeal = container.mealCollection.updateOneById(
+            ObjectId(mealId),
+            update = Updates.addEachToSet(MealCollection::cuisines.name, cuisineIds.toObjectIds())
+        ).isSuccessfullyUpdated()
+
+        return resultAddToCuisine and resultAddToMeal
+    }
 
     override suspend fun updateMeal(meal: Meal): Boolean =
         container.mealCollection.updateOne(meal.toCollection(), updateOnlyNotNullProperties = true)
@@ -56,6 +65,7 @@ class MealGatewayImp(private val container: DataBaseContainer) : MealGateway {
             filter = MealCollection::id eq ObjectId(id),
             update = set(MealCollection::isDeleted setTo true),
         ).wasAcknowledged()
+
     override suspend fun deleteCuisineFromMeal(mealId: String, cuisineId: String): Boolean {
         return container.mealCollection.updateOne(
             MealCollection::id eq ObjectId(mealId),

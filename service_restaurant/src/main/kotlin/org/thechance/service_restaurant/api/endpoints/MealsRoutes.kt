@@ -47,11 +47,10 @@ fun Route.mealRoutes() {
             if (isAdded) call.respond(HttpStatusCode.Created, "Meal added Successfully")
         }
 
-        //need to change to list of cuisines
-        post("/{mealId}/cuisine/{cuisineId}") {
+        post("/{mealId}/cuisine") {
             val mealId = call.parameters.extractString("mealId") ?: throw NotFoundException("ID not provided")
-            val cuisineId = call.parameters.extractString("cuisineId") ?: throw NotFoundException("ID not provided")
-            val isAdded = mealUseCasesContainer.addCuisineToMealUseCase(mealId, cuisineId)
+            val cuisineIds = call.receive<List<String>>()
+            val isAdded = mealUseCasesContainer.addCuisinesToMealUseCase(mealId, cuisineIds)
             if (isAdded) call.respond(HttpStatusCode.OK, "Cuisine added Successfully")
         }
 

@@ -9,7 +9,7 @@ data class MealUseCasesContainer(
     val getMealByIdUseCase: GetMealByIdUseCase,
     val getMealsUseCase: GetMealsUseCase,
     val updateMealUseCase: UpdateMealUseCase,
-    val addCuisineToMealUseCase: AddCuisineToMealUseCase,
+    val addCuisinesToMealUseCase: AddCuisinesToMealUseCase,
     val deleteCuisineFromMealUseCase: DeleteCuisineFromMealUseCase,
     val getMealCuisinesUseCase: GetMealCuisinesUseCase
 )
