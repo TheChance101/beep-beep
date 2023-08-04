@@ -4,9 +4,14 @@ import org.koin.core.annotation.Single
 
 @Single
 data class CuisineUseCasesContainer(
-    val addCuisineUseCase: AddCuisineUseCase,
-    val deleteCuisineUseCase: DeleteCuisineUseCase,
-    val getCuisinesUseCase: GetCuisinesUseCase,
     val getCuisineByIdUseCase: GetCuisineByIdUseCase,
-    val updateCuisineUseCase: UpdateCuisineUseCase
+    val getCuisinesUseCase: GetCuisinesUseCase,
+    val getMealsInCuisine: GetMealsInCuisineUseCase,
+
+    val addCuisineUseCase: AddCuisineUseCase,
+    val addMealsToCuisine: AddMealsToCuisineUseCase,
+
+    val updateCuisineUseCase: UpdateCuisineUseCase,
+    val deleteCuisineUseCase: DeleteCuisineUseCase,
+    val deleteMealsInCuisine: DeleteMealsIoCuisineUseCase,
 )

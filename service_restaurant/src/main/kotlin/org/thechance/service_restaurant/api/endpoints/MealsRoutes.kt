@@ -35,42 +35,43 @@ fun Route.mealRoutes() {
             call.respond(meal.toDto())
         }
 
+        get("/{mealId}/cuisine") {
+            val mealId = call.parameters.extractString("mealId") ?: throw NotFoundException("ID not provided")
+            val cuisines = mealUseCasesContainer.getMealCuisinesUseCase(mealId)
+            call.respond(cuisines.toDto())
+        }
+
         post {
             val meal = call.receive<MealDto>()
             val isAdded = mealUseCasesContainer.addMealUseCase(meal.toEntity())
-            call.respond(HttpStatusCode.Created, isAdded)
+            if (isAdded) call.respond(HttpStatusCode.Created, "Meal added Successfully")
         }
 
-        delete("/{id}") {
-            val id = call.parameters.extractString("id") ?: throw NotFoundException("ID not provided")
-            val isDeleted = mealUseCasesContainer.deleteMealUseCase(id)
-            call.respond(HttpStatusCode.OK, isDeleted)
+        //need to change to list of cuisines
+        post("/{mealId}/cuisine/{cuisineId}") {
+            val mealId = call.parameters.extractString("mealId") ?: throw NotFoundException("ID not provided")
+            val cuisineId = call.parameters.extractString("cuisineId") ?: throw NotFoundException("ID not provided")
+            val isAdded = mealUseCasesContainer.addCuisineToMealUseCase(mealId, cuisineId)
+            if (isAdded) call.respond(HttpStatusCode.OK, "Cuisine added Successfully")
         }
 
         put {
             val meal = call.receive<MealDto>()
             val isUpdated = mealUseCasesContainer.updateMealUseCase(meal.toEntity())
-            call.respond(HttpStatusCode.OK, isUpdated)
+            if (isUpdated) call.respond(HttpStatusCode.OK, "updated successfully")
         }
 
-        post("/{mealId}/cuisine/{cuisineId}") {
-            val mealId = call.parameters.extractString("mealId") ?: throw NotFoundException("ID not provided")
-            val cuisineId = call.parameters.extractString("cuisineId") ?: throw NotFoundException("ID not provided")
-            val isAdded = mealUseCasesContainer.addCuisineToMealUseCase(mealId, cuisineId)
-            call.respond(HttpStatusCode.OK, isAdded)
+        delete("/{id}") {
+            val id = call.parameters.extractString("id") ?: throw NotFoundException("ID not provided")
+            val isDeleted = mealUseCasesContainer.deleteMealUseCase(id)
+            if (isDeleted) call.respond(HttpStatusCode.OK, "Meal deleted Successfully")
         }
 
         delete("/{mealId}/cuisine/{cuisineId}") {
             val mealId = call.parameters.extractString("mealId") ?: throw NotFoundException("ID not provided")
             val cuisineId = call.parameters.extractString("cuisineId") ?: throw NotFoundException("ID not provided")
             val isDeleted = mealUseCasesContainer.deleteCuisineFromMealUseCase(mealId, cuisineId)
-            call.respond(HttpStatusCode.OK, isDeleted)
-        }
-
-        get("/{mealId}/cuisine") {
-            val mealId = call.parameters.extractString("mealId") ?: throw NotFoundException("ID not provided")
-            val cuisines = mealUseCasesContainer.getMealCuisinesUseCase(mealId)
-            call.respond(cuisines.toDto())
+            if (isDeleted) call.respond(HttpStatusCode.OK, "Cuisine deleted Successfully")
         }
 
     }

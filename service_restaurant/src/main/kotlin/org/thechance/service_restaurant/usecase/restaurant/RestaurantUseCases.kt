@@ -1,7 +1,7 @@
 package org.thechance.service_restaurant.usecase.restaurant
 
 import org.thechance.service_restaurant.entity.Category
-import org.thechance.service_restaurant.entity.Meal
+import org.thechance.service_restaurant.entity.Cuisine
 import org.thechance.service_restaurant.entity.Restaurant
 
 interface GetRestaurantsUseCase {
@@ -16,8 +16,8 @@ interface GetCategoriesInRestaurantUseCase {
     suspend operator fun invoke(restaurantId: String): List<Category>
 }
 
-interface GetMealsInRestaurantUseCase {
-    suspend operator fun invoke(restaurantId: String): List<Meal>
+interface GetCuisinesInRestaurantUseCase {
+    suspend operator fun invoke(restaurantId: String): List<Cuisine>
 }
 
 interface CreateRestaurantUseCase {
@@ -28,8 +28,8 @@ interface AddCategoryToRestaurantUseCase {
     suspend operator fun invoke(restaurantId: String, categoryIds: List<String>): Boolean
 }
 
-interface AddMealsToRestaurantUseCase {
-    suspend operator fun invoke(restaurantId: String, mealIds: List<String>): Boolean
+interface AddCuisinesToRestaurantUseCase {
+    suspend operator fun invoke(restaurantId: String, cuisineIds: List<String>): Boolean
 }
 
 interface UpdateRestaurantUseCase {
@@ -45,6 +45,6 @@ interface DeleteCategoriesInRestaurantUseCase {
 
 }
 
-interface DeleteMealsInRestaurantUseCase{
-    suspend operator fun invoke(restaurantId: String, mealIds: List<String>): Boolean
+interface DeleteCuisinesInRestaurantUseCase {
+    suspend operator fun invoke(restaurantId: String, cuisineIds: List<String>): Boolean
 }

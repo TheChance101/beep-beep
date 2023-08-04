@@ -25,8 +25,5 @@ data class RestaurantCollection(
     val isDeleted: Boolean = false
     val categoryIds: MutableList<@Contextual ObjectId> = mutableListOf()
     val addressIds: List<@Contextual Id<AddressCollection>> = emptyList()
-    val mealIds: MutableList<@Contextual ObjectId> = mutableListOf()
-
+    val cuisineIds: MutableList<@Contextual ObjectId> = mutableListOf()
 }
-
-

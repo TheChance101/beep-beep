@@ -49,10 +49,10 @@ fun Route.restaurantRoutes() {
             call.respond(HttpStatusCode.OK, category)
         }
 
-        get("/{id}/meals") {
+        get("/{id}/cuisines") {
             val restaurantId = call.parameters.extractString("id") ?: ""
-            val meals = restaurantUseCases.getMealsInRestaurant(restaurantId).toDto()
-            call.respond(HttpStatusCode.OK, meals)
+            val cuisines = restaurantUseCases.getCuisinesInRestaurant(restaurantId).toDto()
+            call.respond(HttpStatusCode.OK, cuisines)
         }
 
         post {
@@ -68,10 +68,10 @@ fun Route.restaurantRoutes() {
             call.respond(HttpStatusCode.Created, result)
         }
 
-        post("/{id}/meals") {
+        post("/{id}/Cuisines") {
             val restaurantId = call.parameters.extractString("id") ?: ""
             val mealIds = call.receive<List<String>>()
-            val result = restaurantUseCases.addMealsToRestaurant(restaurantId, mealIds)
+            val result = restaurantUseCases.addCuisinesToRestaurant(restaurantId, mealIds)
             call.respond(HttpStatusCode.Created, result)
         }
 
@@ -94,6 +94,7 @@ fun Route.restaurantRoutes() {
             call.respond(HttpStatusCode.OK, result)
         }
 
+        //need to fix
         delete("/{id}/categories") {
             val restaurantId = call.parameters.extractString("id") ?: ""
             val categoryIds = call.receive<List<String>>()
@@ -108,10 +109,10 @@ fun Route.restaurantRoutes() {
             call.respond(HttpStatusCode.OK, result)
         }
 
-        delete("/{id}/meals") {
+        delete("/{id}/Cuisines") {
             val restaurantId = call.parameters["id"] ?: ""
             val mealIds = call.receive<List<String>>()
-            val result = restaurantUseCases.deleteMealsInRestaurant(restaurantId, mealIds)
+            val result = restaurantUseCases.deleteCuisinesInRestaurant(restaurantId, mealIds)
             call.respond(HttpStatusCode.OK, result)
         }
     }

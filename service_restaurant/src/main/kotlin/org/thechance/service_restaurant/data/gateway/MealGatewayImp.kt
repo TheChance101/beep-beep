@@ -6,18 +6,19 @@ import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
 import org.litote.kmongo.coroutine.updateOne
 import org.thechance.service_restaurant.data.DataBaseContainer
+import org.thechance.service_restaurant.data.collection.CuisineCollection
 import org.thechance.service_restaurant.data.collection.MealCollection
-import org.thechance.service_restaurant.data.collection.MealCuisinesCollection
+import org.thechance.service_restaurant.data.collection.MealCuisines
 import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.entity.Cuisine
 import org.thechance.service_restaurant.entity.Meal
+import org.thechance.service_restaurant.utils.Constants
 import org.thechance.service_restaurant.utils.Constants.CUISINE_COLLECTION
 
 @Single
 class MealGatewayImp(private val container: DataBaseContainer) : MealGateway {
-
 
     override suspend fun addMeal(meal: Meal): Boolean =
         container.mealCollection.insertOne(meal.toCollection()).wasAcknowledged()
@@ -44,20 +45,15 @@ class MealGatewayImp(private val container: DataBaseContainer) : MealGateway {
         ).wasAcknowledged()
 
     override suspend fun getMealCuisines(mealId: String): List<Cuisine> {
-        return container.mealCollection.aggregate<MealCuisinesCollection>(
-            match(
-                and(
-                    MealCollection::id eq ObjectId(mealId),
-                    MealCollection::isDeleted ne true
-                )
-            ),
+        return container.mealCollection.aggregate<MealCuisines>(
+            match(MealCollection::id eq ObjectId(mealId)),
             lookup(
-                localField = MealCollection::cuisines.name,
                 from = CUISINE_COLLECTION,
+                localField = MealCollection::cuisines.name,
                 foreignField = "_id",
-                newAs = MealCuisinesCollection::meal_cuisines.name
-            ),
-        ).toList().firstOrNull()?.meal_cuisines?.filter { !it.isDeleted }?.toEntity() ?: emptyList()
+                newAs = MealCuisines::cuisines.name
+            )
+        ).toList().first().cuisines.filterNot { it.isDeleted }.toEntity()
     }
 
     override suspend fun deleteCuisineFromMeal(mealId: String, cuisineId: String): Boolean {

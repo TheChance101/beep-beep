@@ -1,10 +1,12 @@
 package org.thechance.service_restaurant.data.gateway
 
 import com.mongodb.client.model.Updates
+import com.mongodb.client.model.Variable
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
+import org.litote.kreflect.findProperty
 import org.thechance.service_restaurant.data.DataBaseContainer
 import org.thechance.service_restaurant.data.collection.CategoryCollection
 import org.thechance.service_restaurant.data.collection.CategoryRestaurant
@@ -16,6 +18,7 @@ import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.data.utils.toObjectIds
 import org.thechance.service_restaurant.entity.Category
 import org.thechance.service_restaurant.entity.Restaurant
+import org.thechance.service_restaurant.utils.Constants.CATEGORY_COLLECTION
 import org.thechance.service_restaurant.utils.Constants.RESTAURANT_COLLECTION
 
 @Single
@@ -39,10 +42,11 @@ class CategoryGatewayImp(private val container: DataBaseContainer) : CategoryGat
             match(CategoryCollection::id eq ObjectId(categoryId)),
             lookup(
                 from = RESTAURANT_COLLECTION,
-                resultProperty = CategoryRestaurant::restaurants,
-                pipeline = arrayOf(match(RestaurantCollection::isDeleted eq false))
-            ),
-        ).toList().first().restaurants.toEntity()
+                localField = CategoryCollection::restaurantIds.name,
+                foreignField = "_id",
+                newAs = CategoryRestaurant::restaurants.name
+            )
+        ).toList().first().restaurants.filterNot { it.isDeleted }.toEntity()
     }
 
     override suspend fun addCategory(category: Category): Boolean {
