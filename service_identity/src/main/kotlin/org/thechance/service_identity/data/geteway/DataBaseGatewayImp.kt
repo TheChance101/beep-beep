@@ -102,7 +102,7 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
         return walletCollection.findOneById(ObjectId(walletId))?.toEntity() ?: throw Exception("Wallet not found")
     }
 
-    override suspend fun addWallet(wallet: Wallet): Boolean {
+    override suspend fun createWallet(wallet: Wallet): Boolean {
         userDetailsCollection.updateOne(
             filter = UserDetailsCollection::userId eq ObjectId(wallet.userId),
             update = set(UserDetailsCollection::walletId setTo wallet.id)
