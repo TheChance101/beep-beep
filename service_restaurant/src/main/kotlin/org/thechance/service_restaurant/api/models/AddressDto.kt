@@ -1,7 +1,7 @@
 package org.thechance.service_restaurant.api.models
 
 import kotlinx.serialization.Serializable
-import org.thechance.service_restaurant.entity.Address
+import org.thechance.service_restaurant.domain.entity.Address
 
 @Serializable
 data class AddressDto(

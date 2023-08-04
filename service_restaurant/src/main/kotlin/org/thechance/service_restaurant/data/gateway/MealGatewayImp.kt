@@ -13,8 +13,9 @@ import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
 import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.data.utils.toObjectIds
-import org.thechance.service_restaurant.entity.Cuisine
-import org.thechance.service_restaurant.entity.Meal
+import org.thechance.service_restaurant.domain.entity.Cuisine
+import org.thechance.service_restaurant.domain.entity.Meal
+import org.thechance.service_restaurant.domain.gateway.MealGateway
 import org.thechance.service_restaurant.utils.Constants.CUISINE_COLLECTION
 
 @Single

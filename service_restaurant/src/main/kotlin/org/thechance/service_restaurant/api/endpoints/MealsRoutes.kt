@@ -12,7 +12,7 @@ import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
-import org.thechance.service_restaurant.usecase.meal.MealUseCasesContainer
+import org.thechance.service_restaurant.domain.usecase.meal.MealUseCasesContainer
 
 fun Route.mealRoutes() {
 

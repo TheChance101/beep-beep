@@ -8,7 +8,7 @@ import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.service_restaurant.api.models.AddressDto
 import org.thechance.service_restaurant.api.models.mappers.toDto
-import org.thechance.service_restaurant.usecase.address.AddressUseCasesContainer
+import org.thechance.service_restaurant.domain.usecase.address.AddressUseCasesContainer
 
 
 fun Route.addressRoutes() {

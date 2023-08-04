@@ -1,7 +1,7 @@
 package org.thechance.service_restaurant.api.models.mappers
 
 import org.thechance.service_restaurant.api.models.MealDto
-import org.thechance.service_restaurant.entity.Meal
+import org.thechance.service_restaurant.domain.entity.Meal
 
 fun Meal.toDto(): MealDto =
     MealDto(

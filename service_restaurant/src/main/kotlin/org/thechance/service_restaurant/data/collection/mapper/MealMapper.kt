@@ -2,7 +2,7 @@ package org.thechance.service_restaurant.data.collection.mapper
 
 import org.thechance.service_restaurant.data.collection.MealCollection
 import org.thechance.service_restaurant.data.collection.MealDetailsCollection
-import org.thechance.service_restaurant.entity.Meal
+import org.thechance.service_restaurant.domain.entity.Meal
 
 fun Meal.toCollection(): MealCollection =
     MealCollection(name = name, description = description, price = price, isDeleted = isDeleted)

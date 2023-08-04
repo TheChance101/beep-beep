@@ -1,12 +1,10 @@
 package org.thechance.service_restaurant.data.gateway
 
 import com.mongodb.client.model.Updates
-import com.mongodb.client.model.Variable
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
-import org.litote.kreflect.findProperty
 import org.thechance.service_restaurant.data.DataBaseContainer
 import org.thechance.service_restaurant.data.collection.CategoryCollection
 import org.thechance.service_restaurant.data.collection.CategoryRestaurant
@@ -16,9 +14,9 @@ import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
 import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.data.utils.toObjectIds
-import org.thechance.service_restaurant.entity.Category
-import org.thechance.service_restaurant.entity.Restaurant
-import org.thechance.service_restaurant.utils.Constants.CATEGORY_COLLECTION
+import org.thechance.service_restaurant.domain.entity.Category
+import org.thechance.service_restaurant.domain.entity.Restaurant
+import org.thechance.service_restaurant.domain.gateway.CategoryGateway
 import org.thechance.service_restaurant.utils.Constants.RESTAURANT_COLLECTION
 
 @Single

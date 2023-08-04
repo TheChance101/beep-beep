@@ -1,8 +1,8 @@
 package org.thechance.service_restaurant.data.collection.mapper
 
 import org.thechance.service_restaurant.data.collection.RestaurantCollection
-import org.thechance.service_restaurant.entity.Address
-import org.thechance.service_restaurant.entity.Restaurant
+import org.thechance.service_restaurant.domain.entity.Address
+import org.thechance.service_restaurant.domain.entity.Restaurant
 
 
 fun RestaurantCollection.toEntity() = Restaurant(

@@ -13,10 +13,11 @@ import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
 import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.data.utils.toObjectIds
-import org.thechance.service_restaurant.entity.Address
-import org.thechance.service_restaurant.entity.Category
-import org.thechance.service_restaurant.entity.Cuisine
-import org.thechance.service_restaurant.entity.Restaurant
+import org.thechance.service_restaurant.domain.entity.Address
+import org.thechance.service_restaurant.domain.entity.Category
+import org.thechance.service_restaurant.domain.entity.Cuisine
+import org.thechance.service_restaurant.domain.entity.Restaurant
+import org.thechance.service_restaurant.domain.gateway.RestaurantGateway
 import org.thechance.service_restaurant.utils.Constants.ADDRESS_COLLECTION
 import org.thechance.service_restaurant.utils.Constants.CATEGORY_COLLECTION
 import org.thechance.service_restaurant.utils.Constants.CUISINE_COLLECTION

@@ -1,7 +1,7 @@
 package org.thechance.service_restaurant.data.collection.mapper
 
 import org.thechance.service_restaurant.data.collection.CategoryCollection
-import org.thechance.service_restaurant.entity.Category
+import org.thechance.service_restaurant.domain.entity.Category
 
 fun CategoryCollection.toEntity() = Category(
     id = id.toString(),

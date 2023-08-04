@@ -1,7 +1,7 @@
 package org.thechance.service_restaurant.data.collection.mapper
 
 import org.thechance.service_restaurant.data.collection.CuisineCollection
-import org.thechance.service_restaurant.entity.Cuisine
+import org.thechance.service_restaurant.domain.entity.Cuisine
 
 fun Cuisine.toCollection(): CuisineCollection = CuisineCollection(name = name, isDeleted = isDeleted)
 

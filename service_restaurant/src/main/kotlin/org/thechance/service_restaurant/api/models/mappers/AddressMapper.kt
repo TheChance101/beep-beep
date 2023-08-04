@@ -1,7 +1,7 @@
 package org.thechance.service_restaurant.api.models.mappers
 
 import org.thechance.service_restaurant.api.models.AddressDto
-import org.thechance.service_restaurant.entity.Address
+import org.thechance.service_restaurant.domain.entity.Address
 
 fun Address.toDto(): AddressDto {
     return AddressDto(

@@ -9,7 +9,8 @@ import org.thechance.service_restaurant.data.collection.AddressCollection
 import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
-import org.thechance.service_restaurant.entity.Address
+import org.thechance.service_restaurant.domain.entity.Address
+import org.thechance.service_restaurant.domain.gateway.AddressGateway
 
 @Single
 class AddressGatewayImpl(private val container: DataBaseContainer) : AddressGateway {
