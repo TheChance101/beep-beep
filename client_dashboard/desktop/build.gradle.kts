@@ -19,7 +19,6 @@ kotlin {
             dependencies {
                 implementation(project(":client_dashboard:common"))
                 implementation(compose.desktop.currentOs)
-                implementation(project(":design_system:shared"))
             }
         }
         val jvmTest by getting
