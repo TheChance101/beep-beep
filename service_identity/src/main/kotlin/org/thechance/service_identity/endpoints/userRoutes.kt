@@ -13,21 +13,25 @@ import org.thechance.service_identity.data.mappers.toDetailedDto
 import org.thechance.service_identity.data.mappers.toDto
 import org.thechance.service_identity.data.mappers.toEntity
 import org.thechance.service_identity.domain.usecases.user.UserUseCaseContainer
+import org.thechance.service_identity.domain.usecases.useraccount.UserAccountUseCase
 
 fun Route.userRoutes() {
 
+
     val userUseCaseContainer: UserUseCaseContainer by inject()
+
+    val userAccountUseCase: UserAccountUseCase by inject()
 
     route("/users") {
 
         get {
-            val users = userUseCaseContainer.getUsersUseCase()
+            val users = userAccountUseCase.getUsers()
             call.respond(HttpStatusCode.OK, users.map { it.toDto() })
         }
 
         get("/{id}") {
             val id = call.parameters["id"] ?: ""
-            val user = userUseCaseContainer.getUserByIdUseCase(id).toDto()
+            val user = userAccountUseCase.getUser(id).toDto()
             call.respond(HttpStatusCode.OK, user)
         }
 
@@ -38,20 +42,20 @@ fun Route.userRoutes() {
 
         post {
             val user = call.receive<CreateUserRequest>()
-            val result = userUseCaseContainer.createUserUseCase(user.toEntity())
+            val result = userAccountUseCase.createUser(user.toEntity())
             call.respond(HttpStatusCode.Created, result)
         }
 
         put("/{id}") {
             val id = call.parameters["id"] ?: ""
             val userDto = call.receive<UpdateUserRequest>()
-            val result = userUseCaseContainer.updateUserUseCase(id, userDto.toEntity())
+            val result = userAccountUseCase.updateUser(id, userDto.toEntity())
             call.respond(HttpStatusCode.OK, result)
         }
 
         delete("/{id}") {
             val id = call.parameters["id"] ?: ""
-            val result = userUseCaseContainer.deleteUserUseCase(id)
+            val result = userAccountUseCase.deleteUser(id)
             call.respond(HttpStatusCode.OK, result)
         }
 

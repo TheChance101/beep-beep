@@ -2,6 +2,7 @@ package org.thechance.service_identity.domain.usecases.useraccount
 
 import org.koin.core.annotation.Single
 import org.thechance.service_identity.domain.entity.Address
+import org.thechance.service_identity.domain.entity.User
 import org.thechance.service_identity.domain.entity.Wallet
 import org.thechance.service_identity.domain.gateway.DataBaseGateway
 
@@ -27,6 +28,25 @@ class UserAccountUseCaseImp(
 
 
     // region user
+    override suspend fun createUser(user: User): Boolean {
+       return dataBaseGateway.createUser(user)
+    }
+
+    override suspend fun deleteUser(id: String): Boolean {
+       return dataBaseGateway.deleteUser(id)
+    }
+
+    override suspend fun updateUser(id: String, user: User): Boolean {
+        return dataBaseGateway.updateUser(id, user)
+    }
+
+    override suspend fun getUsers(): List<User> {
+        return dataBaseGateway.getUsers()
+    }
+
+    override suspend fun getUser(id: String): User {
+        return dataBaseGateway.getUserById(id) ?: throw Throwable("Invalid id")
+    }
 
     // endregion
 
