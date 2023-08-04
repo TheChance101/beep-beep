@@ -27,7 +27,7 @@ class CuisineGatewayImpl(private val container: DataBaseContainer) : CuisineGate
         container.cuisineCollection.find(MealCollection::isDeleted eq false).paginate(page, limit).toList().toEntity()
 
     override suspend fun getCuisineById(id: String): Cuisine? =
-        container.cuisineCollection.findOneById(ObjectId(id))?.toEntity()
+        container.cuisineCollection.findOneById(ObjectId(id))?.takeIf { !it.isDeleted }?.toEntity()
 
     override suspend fun getMealsInCuisine(cuisineId: String): List<Meal> {
         return container.cuisineCollection.aggregate<MealCuisines>(
@@ -59,9 +59,11 @@ class CuisineGatewayImpl(private val container: DataBaseContainer) : CuisineGate
     }
 
     override suspend fun updateCuisine(cuisine: Cuisine): Boolean {
-        return container.cuisineCollection.updateOne(
-            cuisine.toCollection(), updateOnlyNotNullProperties = true
-        ).wasAcknowledged()
+        return container.cuisineCollection.updateOneById(
+            ObjectId(cuisine.id),
+            cuisine.toCollection(),
+            updateOnlyNotNullProperties = true
+        ).isSuccessfullyUpdated()
     }
 
     override suspend fun deleteCuisine(id: String): Boolean =
