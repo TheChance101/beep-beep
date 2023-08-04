@@ -14,12 +14,11 @@ import org.thechance.service_identity.data.mappers.toEntity
 import org.thechance.service_identity.data.util.isUpdatedSuccessfully
 import org.thechance.service_identity.domain.entity.Wallet
 import org.thechance.service_identity.domain.gateway.WalletGateWay
-import org.thechance.service_identity.utils.Constants.WALLET_COLLECTION
 
 @Single
 class WalletGateWayImpl(dataBase: DataBaseContainer) : WalletGateWay {
 
-    private val walletCollection by lazy { dataBase.database.getCollection<WalletCollection>(WALLET_COLLECTION) }
+    private val walletCollection by lazy { dataBase.database.getCollection<WalletCollection>("WALLET_COLLECTION") }
 
     private val userDetailsCollection by lazy { dataBase.database.getCollection<UserDetailsCollection>("user_details") }
 

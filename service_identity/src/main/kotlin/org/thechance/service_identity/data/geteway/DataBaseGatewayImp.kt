@@ -4,6 +4,8 @@ import com.mongodb.client.model.Filters
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.eq
+import org.litote.kmongo.set
+import org.litote.kmongo.setTo
 import org.litote.kmongo.setValue
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.*
@@ -12,6 +14,7 @@ import org.thechance.service_identity.data.mappers.toEntity
 import org.thechance.service_identity.data.util.USER_DETAILS_COLLECTION
 import org.thechance.service_identity.data.util.isUpdatedSuccessfully
 import org.thechance.service_identity.domain.entity.Permission
+import org.thechance.service_identity.domain.entity.Wallet
 import org.thechance.service_identity.domain.gateway.*
 
 @Single
@@ -66,6 +69,8 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
         ).isUpdatedSuccessfully()
     }
 
+
+
     override suspend fun updatePermission(permissionId: String, permission: Permission): Boolean {
         return permissionCollection.updateOneById(
             id = ObjectId(permissionId),
@@ -92,6 +97,25 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
         private const val RESTAURANT_OWNER_PERMISSION = 5
         private const val SUPPORT_PERMISSION = 6
     }
+    // region: wallet
+    override suspend fun getWallet(walletId: String): Wallet {
+        return walletCollection.findOneById(ObjectId(walletId))?.toEntity() ?: throw Exception("Wallet not found")
+    }
 
+    override suspend fun addWallet(wallet: Wallet): Boolean {
+        userDetailsCollection.updateOne(
+            filter = UserDetailsCollection::userId eq ObjectId(wallet.userId),
+            update = set(UserDetailsCollection::walletId setTo wallet.id)
+        )
+        return walletCollection.insertOne(wallet.toCollection()).wasAcknowledged()
+    }
+
+    override suspend fun updateWallet(walletId: String, wallet: Wallet): Boolean {
+        return walletCollection.updateOneById(
+            id = ObjectId(walletId),
+            update = wallet.toCollection(),
+        ).wasAcknowledged()
+    }
+    // endregion: wallet
 
 }
