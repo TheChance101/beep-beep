@@ -2,10 +2,10 @@ package org.thechance.service_identity.domain.usecases.permission
 
 import org.koin.core.annotation.Single
 import org.thechance.service_identity.domain.entity.Permission
-import org.thechance.service_identity.domain.gateway.PermissionGateway
+import org.thechance.service_identity.domain.gateway.DataBaseGateway
 
 @Single
-class CreatePermissionUseCaseImp(private val permissionGateway: PermissionGateway) :
+class CreatePermissionUseCaseImp(private val permissionGateway: DataBaseGateway) :
     CreatePermissionUseCase {
     override suspend fun invoke(permission: Permission): Boolean {
         return permissionGateway.addPermission(permission)

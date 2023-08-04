@@ -7,6 +7,6 @@ import org.thechance.service_identity.domain.entity.Address
 data class AddressDto(
     val id: String = "",
     val userId: String,
-    val latitude : Double,
-    val longitude : Double,
+    val latitude: Double,
+    val longitude: Double,
 )
