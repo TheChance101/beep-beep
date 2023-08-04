@@ -45,6 +45,5 @@ fun Route.addressRoutes() {
             val result = addressUseCasesContainer.deleteAddress(addressId)
             call.respond(HttpStatusCode.OK, result)
         }
-
     }
 }

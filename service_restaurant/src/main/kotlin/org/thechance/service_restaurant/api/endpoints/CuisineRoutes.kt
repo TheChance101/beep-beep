@@ -50,7 +50,6 @@ fun Route.cuisineRoutes() {
             val isDeleted = cuisineUseCasesContainer.deleteCuisineUseCase(id)
             if (isDeleted) call.respond(HttpStatusCode.OK, "Deleted Successfully")
         }
-
     }
 
 }
