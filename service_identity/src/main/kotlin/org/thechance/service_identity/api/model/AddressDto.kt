@@ -9,13 +9,4 @@ data class AddressDto(
     val userId: String,
     val latitude : Double,
     val longitude : Double,
-) {
-    fun toAddress(): Address {
-        return Address(
-            id = id,
-            userId = userId,
-            latitude = latitude,
-            longitude = longitude
-        )
-    }
-}
+)

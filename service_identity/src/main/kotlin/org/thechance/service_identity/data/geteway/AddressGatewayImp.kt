@@ -7,11 +7,13 @@ import org.litote.kmongo.*
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.AddressCollection
 import org.thechance.service_identity.data.collection.UserDetailsCollection
+import org.thechance.service_identity.data.mappers.toCollection
+import org.thechance.service_identity.data.mappers.toEntity
 import org.thechance.service_identity.data.util.USER_DETAILS_COLLECTION
+import org.thechance.service_identity.data.util.isUpdatedSuccessfully
 import org.thechance.service_identity.domain.entity.Address
 import org.thechance.service_identity.domain.gateway.AddressGateway
 import org.thechance.service_identity.utils.Constants.ADDRESS_COLLECTION_NAME
-import org.thechance.service_identity.data.util.isUpdatedSuccessfully
 
 @Single
 class AddressGatewayImp(dataBaseContainer: DataBaseContainer) : AddressGateway {
@@ -25,7 +27,7 @@ class AddressGatewayImp(dataBaseContainer: DataBaseContainer) : AddressGateway {
     }
 
     override suspend fun addAddress(address: Address): Boolean {
-        val newAddressCollection = address.toAddressCollection()
+        val newAddressCollection = address.toCollection()
         userDetailsCollection.updateOne(
             filter = UserDetailsCollection::userId eq newAddressCollection.userId,
             update = push(UserDetailsCollection::addresses, newAddressCollection.id)
@@ -45,14 +47,14 @@ class AddressGatewayImp(dataBaseContainer: DataBaseContainer) : AddressGateway {
     }
 
     override suspend fun updateAddress(id: String, address: Address): Boolean {
-        return addressCollection.updateOneById(ObjectId(id), address.toAddressCollection()).isUpdatedSuccessfully()
+        return addressCollection.updateOneById(ObjectId(id), address.toCollection()).isUpdatedSuccessfully()
     }
 
     override suspend fun getAddress(id: String): Address? {
         return addressCollection.findOne(
             AddressCollection::id eq ObjectId(id),
             AddressCollection::isDeleted eq false
-        )?.toAddress()
+        )?.toEntity()
     }
 
     override suspend fun getUserAddresses(userId: String): List<Address> {
@@ -64,5 +66,6 @@ class AddressGatewayImp(dataBaseContainer: DataBaseContainer) : AddressGateway {
 }
 
 private fun List<AddressCollection>.toAddress(): List<Address> {
-    return this.map { it.toAddress() }
+    return this.map { it.toEntity() }
 }
+

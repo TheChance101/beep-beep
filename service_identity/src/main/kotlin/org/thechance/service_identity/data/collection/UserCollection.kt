@@ -5,7 +5,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
-import org.thechance.service_identity.domain.entity.User
 
 @Serializable
 data class UserCollection(
@@ -21,15 +20,5 @@ data class UserCollection(
     val password: String?,
     @SerialName("is_deleted")
     val isDeleted: Boolean = false,
-){
-    fun toUser(): User {
-        return User(
-            id = id.toHexString(),
-            fullName = fullName,
-            username = username,
-            password = password,
-            isDeleted = isDeleted
-        )
-    }
-}
+)
 

@@ -5,7 +5,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
-import org.thechance.service_identity.domain.entity.Address
 
 @Serializable
 data class AddressCollection(
@@ -22,16 +21,6 @@ data class AddressCollection(
     val longitude : Double,
     @SerialName("is_deleted")
     val isDeleted: Boolean = false
-) {
-    fun toAddress(): Address {
-        return Address(
-            id = id.toHexString(),
-            userId = userId.toHexString(),
-            latitude = latitude,
-            longitude = longitude,
-            isDeleted = isDeleted
-        )
-    }
-}
+)
 
 
