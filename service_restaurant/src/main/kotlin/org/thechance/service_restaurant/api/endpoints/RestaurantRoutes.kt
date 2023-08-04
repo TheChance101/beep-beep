@@ -68,7 +68,7 @@ fun Route.restaurantRoutes() {
             call.respond(HttpStatusCode.Created, result)
         }
 
-        post("/{id}/Cuisines") {
+        post("/{id}/cuisines") {
             val restaurantId = call.parameters.extractString("id") ?: ""
             val mealIds = call.receive<List<String>>()
             val result = restaurantUseCases.addCuisinesToRestaurant(restaurantId, mealIds)

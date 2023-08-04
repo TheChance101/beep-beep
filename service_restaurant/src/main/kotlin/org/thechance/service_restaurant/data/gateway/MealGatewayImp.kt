@@ -25,7 +25,9 @@ class MealGatewayImp(private val container: DataBaseContainer) : MealGateway {
 
     override suspend fun getMealById(id: String): Meal? {
         return container.mealCollection.aggregate<MealDetailsCollection>(
-            match(MealCollection::id eq ObjectId(id)),
+            match(
+                MealCollection::id eq ObjectId(id)
+            ),
             lookup(
                 from = CUISINE_COLLECTION,
                 localField = MealCollection::cuisines.name,
@@ -38,7 +40,12 @@ class MealGatewayImp(private val container: DataBaseContainer) : MealGateway {
 
     override suspend fun getMealCuisines(mealId: String): List<Cuisine> {
         return container.mealCollection.aggregate<MealCuisines>(
-            match(MealCollection::id eq ObjectId(mealId)),
+            match(
+                and(
+                    MealCollection::id eq ObjectId(mealId),
+                    MealCollection::isDeleted eq false
+                )
+            ),
             lookup(
                 from = CUISINE_COLLECTION,
                 localField = MealCollection::cuisines.name,
