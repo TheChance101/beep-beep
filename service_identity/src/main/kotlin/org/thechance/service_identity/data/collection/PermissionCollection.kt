@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
-import org.thechance.service_identity.utils.PermissionType
+import org.thechance.service_identity.utils.Constants
 
 @Serializable
 data class PermissionCollection(
@@ -13,8 +13,8 @@ data class PermissionCollection(
     @BsonId
     @Contextual
     val id: ObjectId = ObjectId(),
-    @SerialName("permission_type")
-    val permissionType: PermissionType = PermissionType.CLIENT,
+    @SerialName("permission")
+    val permission: Int = Constants.CLIENT_PERMISSION,
     @SerialName("is_deleted")
     val isDeleted: Boolean = false
 )
