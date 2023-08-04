@@ -12,7 +12,7 @@ interface DataBaseGateway {
 
     // region: wallet
     suspend fun getWallet(walletId: String): Wallet
-    suspend fun addWallet(wallet: Wallet): Boolean
+    suspend fun createWallet(wallet: Wallet): Boolean
     suspend fun updateWallet(walletId: String, wallet: Wallet): Boolean
 
     // endregion: wallet

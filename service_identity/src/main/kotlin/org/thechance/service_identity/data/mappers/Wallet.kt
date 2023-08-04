@@ -10,7 +10,6 @@ fun WalletCollection.toEntity(): Wallet {
         id = id.toHexString(),
         userId = userId,
         walletBalance = walletBalance,
-        isDeleted = isDeleted,
     )
 }
 
