@@ -20,29 +20,24 @@ import org.thechance.service_restaurant.entity.Restaurant
 import org.thechance.service_restaurant.utils.Constants.ADDRESS_COLLECTION
 import org.thechance.service_restaurant.utils.Constants.CATEGORY_COLLECTION
 import org.thechance.service_restaurant.utils.Constants.MEAL_COLLECTION
-import org.thechance.service_restaurant.utils.Constants.RESTAURANT_COLLECTION
 
 @Single
 class RestaurantGatewayImp(private val container: DataBaseContainer) : RestaurantGateway {
-    private val restaurantCollection by lazy { container.database.getCollection<RestaurantCollection>(RESTAURANT_COLLECTION) }
-    private val categoryCollection by lazy { container.database.getCollection<CategoryCollection>(CATEGORY_COLLECTION) }
-    private val addressCollection by lazy { container.database.getCollection<AddressCollection>(ADDRESS_COLLECTION) }
-
     //region Restaurant
     override suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant> {
-        return restaurantCollection.find(RestaurantCollection::isDeleted eq false)
+        return container.restaurantCollection.find(RestaurantCollection::isDeleted eq false)
             .paginate(page, limit).toList().toEntity()
     }
 
     //need to change
     override suspend fun getRestaurant(id: String): Restaurant? {
-        return restaurantCollection.aggregate<RestaurantCollection>(
+        return container.restaurantCollection.aggregate<RestaurantCollection>(
             match(and(RestaurantCollection::id eq ObjectId(id), RestaurantCollection::isDeleted eq false)),
         ).toList().firstOrNull()?.toEntity(getAddressesInRestaurant(id))
     }
 
     override suspend fun getCategoriesInRestaurant(restaurantId: String): List<Category> {
-        return restaurantCollection.aggregate<CategoryRestaurant>(
+        return container.restaurantCollection.aggregate<CategoryRestaurant>(
             match(RestaurantCollection::id eq ObjectId(restaurantId)),
             lookup(
                 from = CATEGORY_COLLECTION,
@@ -53,7 +48,7 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
     }
 
     override suspend fun getMealsInRestaurant(restaurantId: String): List<Meal> {
-       return restaurantCollection.aggregate<RestaurantMeal>(
+       return container.restaurantCollection.aggregate<RestaurantMeal>(
            match(RestaurantCollection::id eq ObjectId(restaurantId)),
            lookup(
                from = MEAL_COLLECTION,
@@ -64,16 +59,16 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
     }
 
     override suspend fun addRestaurant(restaurant: Restaurant): Boolean {
-        return restaurantCollection.insertOne(restaurant.toCollection()).wasAcknowledged()
+        return container.restaurantCollection.insertOne(restaurant.toCollection()).wasAcknowledged()
     }
 
     override suspend fun addCategoriesToRestaurant(restaurantId: String, categoryIds: List<String>): Boolean {
-        val resultAddToCategory = categoryCollection.updateMany(
+        val resultAddToCategory = container.categoryCollection.updateMany(
             CategoryCollection::id `in` categoryIds.toObjectIds(),
             addToSet(CategoryCollection::restaurantIds, ObjectId(restaurantId))
         ).isSuccessfullyUpdated()
 
-        val resultAddToRestaurant = restaurantCollection.updateOneById(
+        val resultAddToRestaurant = container.restaurantCollection.updateOneById(
             ObjectId(restaurantId),
             update = Updates.addEachToSet(RestaurantCollection::categoryIds.name, categoryIds.toObjectIds())
         ).isSuccessfullyUpdated()
@@ -82,14 +77,14 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
     }
 
     override suspend fun addMealsToRestaurant(restaurantId: String, mealIds: List<String>): Boolean {
-        return restaurantCollection.updateOneById(
+        return container.restaurantCollection.updateOneById(
             ObjectId(restaurantId),
             update = Updates.addEachToSet(RestaurantCollection::mealIds.name, mealIds.toObjectIds())
         ).isSuccessfullyUpdated()
     }
 
     override suspend fun updateRestaurant(restaurant: Restaurant): Boolean {
-        return restaurantCollection.updateOneById(
+        return container.restaurantCollection.updateOneById(
             id = ObjectId(restaurant.id),
             update = restaurant.toCollection(),
             updateOnlyNotNullProperties = true
@@ -97,19 +92,19 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
     }
 
     override suspend fun deleteRestaurant(restaurantId: String): Boolean {
-        return restaurantCollection.updateOneById(
+        return container.restaurantCollection.updateOneById(
             id = ObjectId(restaurantId),
             update = Updates.set(RestaurantCollection::isDeleted.name, true),
         ).isSuccessfullyUpdated()
     }
 
     override suspend fun deleteCategoriesInRestaurant(restaurantId: String, categoryIds: List<String>): Boolean {
-        val resultDeleteFromCategory = categoryCollection.updateMany(
+        val resultDeleteFromCategory = container.categoryCollection.updateMany(
             CategoryCollection::id `in` categoryIds.toObjectIds(),
             pull(CategoryCollection::restaurantIds, ObjectId(restaurantId))
         ).isSuccessfullyUpdated()
 
-        val resultDeleteFromRestaurant = restaurantCollection.updateOneById(
+        val resultDeleteFromRestaurant = container.restaurantCollection.updateOneById(
             ObjectId(restaurantId),
             pullAll(RestaurantCollection::categoryIds, categoryIds.toObjectIds())
         ).isSuccessfullyUpdated()
@@ -117,7 +112,7 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
     }
 
     override suspend fun deleteMealsInRestaurant(restaurantId: String, mealIds: List<String>): Boolean {
-       return restaurantCollection.updateOneById(
+       return container.restaurantCollection.updateOneById(
             ObjectId(restaurantId),
             pullAll(RestaurantCollection::mealIds, mealIds.toObjectIds())
         ).isSuccessfullyUpdated()
@@ -129,14 +124,14 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
         restaurantId: String,
         addressesIds: List<String>
     ): Boolean {
-        val addresses = addressCollection.find(
+        val addresses = container.addressCollection.find(
             and(
                 AddressCollection::id `in` addressesIds.map { ObjectId(it) },
                 AddressCollection::isDeleted ne true
             )
         ).toList()
 
-        return restaurantCollection.updateOneById(
+        return container.restaurantCollection.updateOneById(
             ObjectId(restaurantId),
             update = Updates.addEachToSet(
                 RestaurantCollection::addressIds.name,
@@ -146,7 +141,7 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
     }
 
     override suspend fun getAddressesInRestaurant(restaurantId: String): List<Address> {
-        return restaurantCollection.aggregate<RestaurantAddressesCollection>(
+        return container.restaurantCollection.aggregate<RestaurantAddressesCollection>(
             match(
                 and(
                     RestaurantCollection::id eq ObjectId(restaurantId),
@@ -165,7 +160,7 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
         restaurantId: String,
         addressesIds: List<String>
     ): Boolean {
-        return restaurantCollection.updateOneById(
+        return container.restaurantCollection.updateOneById(
             ObjectId(restaurantId),
             pullAll(RestaurantCollection::addressIds, addressesIds.map { WrappedObjectId(it) })
         ).isSuccessfullyUpdated()

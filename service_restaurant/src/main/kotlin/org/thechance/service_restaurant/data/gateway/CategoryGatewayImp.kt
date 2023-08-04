@@ -16,30 +16,26 @@ import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.data.utils.toObjectIds
 import org.thechance.service_restaurant.entity.Category
 import org.thechance.service_restaurant.entity.Restaurant
-import org.thechance.service_restaurant.utils.Constants.CATEGORY_COLLECTION
 import org.thechance.service_restaurant.utils.Constants.RESTAURANT_COLLECTION
 
 @Single
 class CategoryGatewayImp(private val container: DataBaseContainer) : CategoryGateway {
 
-    private val categoryCollection by lazy { container.database.getCollection<CategoryCollection>(CATEGORY_COLLECTION) }
-    private val restaurantCollection by lazy { container.database.getCollection<RestaurantCollection>(RESTAURANT_COLLECTION) }
-
     //region Category
     override suspend fun getCategories(page: Int, limit: Int): List<Category> {
-        return categoryCollection.find(CategoryCollection::isDeleted eq false)
+        return container.categoryCollection.find(CategoryCollection::isDeleted eq false)
             .paginate(page, limit).toList().toEntity()
     }
 
     override suspend fun getCategory(categoryId: String): Category? {
-        return categoryCollection.aggregate<CategoryCollection>(
+        return container.categoryCollection.aggregate<CategoryCollection>(
             match(and(CategoryCollection::id eq ObjectId(categoryId), CategoryCollection::isDeleted eq false)),
             project(CategoryCollection::name, CategoryCollection::id)
         ).toList().firstOrNull()?.toEntity()
     }
 
     override suspend fun getRestaurantsInCategory(categoryId: String): List<Restaurant> {
-        return categoryCollection.aggregate<CategoryRestaurant>(
+        return container.categoryCollection.aggregate<CategoryRestaurant>(
             match(CategoryCollection::id eq ObjectId(categoryId)),
             lookup(
                 from = RESTAURANT_COLLECTION,
@@ -50,16 +46,16 @@ class CategoryGatewayImp(private val container: DataBaseContainer) : CategoryGat
     }
 
     override suspend fun addCategory(category: Category): Boolean {
-        return categoryCollection.insertOne(category.toCollection()).wasAcknowledged()
+        return container.categoryCollection.insertOne(category.toCollection()).wasAcknowledged()
     }
 
     override suspend fun addRestaurantsToCategory(categoryId: String, restaurantIds: List<String>): Boolean {
-        val resultAddToRestaurant = restaurantCollection.updateMany(
+        val resultAddToRestaurant = container.restaurantCollection.updateMany(
             RestaurantCollection::id `in` restaurantIds.toObjectIds(),
             addToSet(RestaurantCollection::categoryIds, ObjectId(categoryId))
         ).isSuccessfullyUpdated()
 
-        val resultAddToCategory = categoryCollection.updateOneById(
+        val resultAddToCategory = container.categoryCollection.updateOneById(
             ObjectId(categoryId),
             update = Updates.addEachToSet(CategoryCollection::restaurantIds.name, restaurantIds.toObjectIds())
         ).isSuccessfullyUpdated()
@@ -67,7 +63,7 @@ class CategoryGatewayImp(private val container: DataBaseContainer) : CategoryGat
     }
 
     override suspend fun updateCategory(category: Category): Boolean {
-        return categoryCollection.updateOneById(
+        return container.categoryCollection.updateOneById(
             id = ObjectId(category.id),
             update = category.toCollection(),
             updateOnlyNotNullProperties = true
@@ -75,19 +71,19 @@ class CategoryGatewayImp(private val container: DataBaseContainer) : CategoryGat
     }
 
     override suspend fun deleteCategory(categoryId: String): Boolean {
-        return categoryCollection.updateOneById(
+        return container.categoryCollection.updateOneById(
             id = ObjectId(categoryId),
             update = Updates.set(CategoryCollection::isDeleted.name, true),
         ).isSuccessfullyUpdated()
     }
 
     override suspend fun deleteRestaurantsInCategory(categoryId: String, restaurantIds: List<String>): Boolean {
-        val resultDeleteFromRestaurant = restaurantCollection.updateMany(
+        val resultDeleteFromRestaurant = container.restaurantCollection.updateMany(
             RestaurantCollection::id `in` restaurantIds.toObjectIds(),
             pull(RestaurantCollection::categoryIds, ObjectId(categoryId))
         ).isSuccessfullyUpdated()
 
-        val resultDeleteFromCategory = categoryCollection.updateOneById(
+        val resultDeleteFromCategory = container.categoryCollection.updateOneById(
             ObjectId(categoryId),
             pullAll(CategoryCollection::restaurantIds, restaurantIds.toObjectIds())
         ).isSuccessfullyUpdated()

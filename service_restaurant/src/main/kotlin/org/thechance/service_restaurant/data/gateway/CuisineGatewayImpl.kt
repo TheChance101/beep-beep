@@ -19,26 +19,25 @@ import org.thechance.service_restaurant.utils.Constants.CUISINE_COLLECTION
 @Single
 class CuisineGatewayImpl(private val container: DataBaseContainer) : CuisineGateway {
 
-    private val cuisineCollection by lazy { container.database.getCollection<CuisineCollection>(CUISINE_COLLECTION) }
-
     override suspend fun addCuisine(cuisine: Cuisine): Boolean {
-        return cuisineCollection.insertOne(cuisine.toCollection()).wasAcknowledged()
+        return container.cuisineCollection.insertOne(cuisine.toCollection()).wasAcknowledged()
     }
 
     override suspend fun deleteCuisine(id: String): Boolean =
-        cuisineCollection.updateOne(
+        container.cuisineCollection.updateOne(
             filter = CuisineCollection::id eq ObjectId(id),
             update = set(CuisineCollection::isDeleted setTo true),
         ).wasAcknowledged()
 
 
     override suspend fun getCuisines(page: Int, limit: Int): List<Cuisine> =
-        cuisineCollection.find(MealCollection::isDeleted eq false).paginate(page, limit).toList().toEntity()
+        container.cuisineCollection.find(MealCollection::isDeleted eq false).paginate(page, limit).toList().toEntity()
 
-    override suspend fun getCuisineById(id: String): Cuisine? = cuisineCollection.findOneById(ObjectId(id))?.toEntity()
+    override suspend fun getCuisineById(id: String): Cuisine? =
+        container.cuisineCollection.findOneById(ObjectId(id))?.toEntity()
 
     override suspend fun updateCuisine(cuisine: Cuisine): Boolean {
-        return cuisineCollection.updateOne(
+        return container.cuisineCollection.updateOne(
             cuisine.toCollection(), updateOnlyNotNullProperties = true
         ).wasAcknowledged()
     }

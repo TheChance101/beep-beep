@@ -14,38 +14,37 @@ import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.entity.Cuisine
 import org.thechance.service_restaurant.entity.Meal
 import org.thechance.service_restaurant.utils.Constants.CUISINE_COLLECTION
-import org.thechance.service_restaurant.utils.Constants.MEAL_COLLECTION
 
 @Single
 class MealGatewayImp(private val container: DataBaseContainer) : MealGateway {
 
-    private val mealCollection by lazy { container.database.getCollection<MealCollection>(MEAL_COLLECTION) }
 
-    override suspend fun addMeal(meal: Meal): Boolean = mealCollection.insertOne(meal.toCollection()).wasAcknowledged()
+    override suspend fun addMeal(meal: Meal): Boolean =
+        container.mealCollection.insertOne(meal.toCollection()).wasAcknowledged()
 
     override suspend fun getMeals(page: Int, limit: Int): List<Meal> =
-        mealCollection.find(MealCollection::isDeleted eq false).paginate(page, limit).toList().toEntity()
+        container.mealCollection.find(MealCollection::isDeleted eq false).paginate(page, limit).toList().toEntity()
 
-    override suspend fun getMealById(id: String) = mealCollection.findOneById(ObjectId(id))?.toEntity()
+    override suspend fun getMealById(id: String) = container.mealCollection.findOneById(ObjectId(id))?.toEntity()
 
     override suspend fun deleteMealById(id: String): Boolean =
-        mealCollection.updateOne(
+        container.mealCollection.updateOne(
             filter = MealCollection::id eq ObjectId(id),
             update = set(MealCollection::isDeleted setTo true),
         ).wasAcknowledged()
 
     override suspend fun updateMeal(meal: Meal): Boolean =
-        mealCollection.updateOne(meal.toCollection(), updateOnlyNotNullProperties = true)
+        container.mealCollection.updateOne(meal.toCollection(), updateOnlyNotNullProperties = true)
             .wasAcknowledged()
 
     override suspend fun addCuisineToMeal(mealId: String, cuisineId: String): Boolean =
-        mealCollection.updateOne(
+        container.mealCollection.updateOne(
             filter = MealCollection::id eq ObjectId(mealId),
             update = push(MealCollection::cuisines, ObjectId(cuisineId))
         ).wasAcknowledged()
 
     override suspend fun getMealCuisines(mealId: String): List<Cuisine> {
-        return mealCollection.aggregate<MealCuisinesCollection>(
+        return container.mealCollection.aggregate<MealCuisinesCollection>(
             match(
                 and(
                     MealCollection::id eq ObjectId(mealId),
@@ -62,7 +61,7 @@ class MealGatewayImp(private val container: DataBaseContainer) : MealGateway {
     }
 
     override suspend fun deleteCuisineFromMeal(mealId: String, cuisineId: String): Boolean {
-        return mealCollection.updateOne(
+        return container.mealCollection.updateOne(
             MealCollection::id eq ObjectId(mealId),
             pull(MealCollection::cuisines, ObjectId(cuisineId)),
         ).wasAcknowledged()
