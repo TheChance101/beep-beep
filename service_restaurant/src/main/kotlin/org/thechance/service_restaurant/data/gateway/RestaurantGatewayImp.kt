@@ -18,9 +18,9 @@ import org.thechance.service_restaurant.domain.entity.Category
 import org.thechance.service_restaurant.domain.entity.Cuisine
 import org.thechance.service_restaurant.domain.entity.Restaurant
 import org.thechance.service_restaurant.domain.gateway.RestaurantGateway
-import org.thechance.service_restaurant.utils.Constants.ADDRESS_COLLECTION
-import org.thechance.service_restaurant.utils.Constants.CATEGORY_COLLECTION
-import org.thechance.service_restaurant.utils.Constants.CUISINE_COLLECTION
+import org.thechance.service_restaurant.data.Constants.ADDRESS_COLLECTION
+import org.thechance.service_restaurant.data.Constants.CATEGORY_COLLECTION
+import org.thechance.service_restaurant.data.Constants.CUISINE_COLLECTION
 
 @Single
 class RestaurantGatewayImp(private val container: DataBaseContainer) : RestaurantGateway {

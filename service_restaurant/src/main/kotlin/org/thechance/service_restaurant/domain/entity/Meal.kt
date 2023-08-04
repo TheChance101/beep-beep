@@ -6,6 +6,5 @@ data class Meal(
     val name: String? = null,
     val description: String? = null,
     val price: Int? = null,
-    val isDeleted: Boolean = false,
     val cuisines: List<Cuisine>? = null
 )

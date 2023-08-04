@@ -9,7 +9,6 @@ data class Restaurant(
     val phone: String? = null,
     val openingTime: String? = null,
     val closingTime: String? = null,
-    val isDeleted: Boolean = false,
     val addresses: List<Address>? = null,
     val cuisines: List<Cuisine>? = null
 )

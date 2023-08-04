@@ -6,19 +6,20 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
+import org.thechance.service_restaurant.api.models.AddressDto
 import org.thechance.service_restaurant.api.models.RestaurantDto
 import org.thechance.service_restaurant.api.models.mappers.toDetailsDto
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
-import org.thechance.service_restaurant.domain.usecase.address.AddressUseCasesContainer
+import org.thechance.service_restaurant.domain.usecase.restaurant.ManageRestaurantDetailsUseCase
 import org.thechance.service_restaurant.domain.usecase.restaurant.ManageRestaurantUseCase
 
 fun Route.restaurantRoutes() {
 
-    val addressUseCasesContainer: AddressUseCasesContainer by inject()
     val manageRestaurant: ManageRestaurantUseCase by inject()
+    val manageDetailsRestaurant: ManageRestaurantDetailsUseCase by inject()
 
     route("/restaurants") {
         get {
@@ -33,14 +34,8 @@ fun Route.restaurantRoutes() {
 
         get("/{id}") {
             val restaurantId = call.parameters["id"] ?: ""
-            val restaurant = manageRestaurant.getRestaurantDetails(restaurantId).toDetailsDto()
+            val restaurant = manageDetailsRestaurant.getRestaurantDetails(restaurantId).toDetailsDto()
             call.respond(HttpStatusCode.OK, restaurant)
-        }
-
-        get("/{id}/addresses") {
-            val restaurantId = call.parameters["id"] ?: ""
-            val addressDto = addressUseCasesContainer.getAddressesInRestaurant(restaurantId).toDto()
-            call.respond(HttpStatusCode.OK, addressDto)
         }
 
         get("/{id}/categories") {
@@ -68,23 +63,23 @@ fun Route.restaurantRoutes() {
             call.respond(HttpStatusCode.Created, result)
         }
 
-        post("/{id}/cuisines") {
-            val restaurantId = call.parameters.extractString("id") ?: ""
-            val mealIds = call.receive<List<String>>()
-            val result = manageRestaurant.addCuisinesToRestaurant(restaurantId, mealIds)
-            call.respond(HttpStatusCode.Created, result)
-        }
-
         post("/{id}/addresses") {
             val restaurantId = call.parameters["id"] ?: ""
-            val addressesIds = call.receive<List<String>>()
-            val result = addressUseCasesContainer.addAddressToRestaurant(restaurantId, addressesIds)
+            val addresses = call.receive<AddressDto>()
+            val result = manageDetailsRestaurant.addAddressToRestaurant(restaurantId, addresses.toEntity())
             call.respond(HttpStatusCode.OK, result)
         }
 
         put {
             val restaurant = call.receive<RestaurantDto>()
             val result = manageRestaurant.updateRestaurant(restaurant.toEntity())
+            call.respond(HttpStatusCode.OK, result)
+        }
+
+        put("/{id}/address") {
+            val restaurantId = call.parameters["id"] ?: ""
+            val address = call.receive<AddressDto>()
+            val result = manageDetailsRestaurant.updateAddressToRestaurant(restaurantId, address.toEntity())
             call.respond(HttpStatusCode.OK, result)
         }
 
@@ -104,15 +99,9 @@ fun Route.restaurantRoutes() {
         delete("/{id}/addresses") {
             val restaurantId = call.parameters["id"] ?: ""
             val addressesIds = call.receive<List<String>>()
-            val result = addressUseCasesContainer.deleteAddressesInRestaurant(restaurantId, addressesIds)
+            val result = manageDetailsRestaurant.deleteAddressToRestaurant(restaurantId, addressesIds)
             call.respond(HttpStatusCode.OK, result)
         }
 
-        delete("/{id}/Cuisines") {
-            val restaurantId = call.parameters["id"] ?: ""
-            val mealIds = call.receive<List<String>>()
-            val result = manageRestaurant.deleteCuisinesInRestaurant(restaurantId, mealIds)
-            call.respond(HttpStatusCode.OK, result)
-        }
     }
 }

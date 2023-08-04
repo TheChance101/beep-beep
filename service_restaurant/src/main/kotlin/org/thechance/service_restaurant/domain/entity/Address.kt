@@ -4,5 +4,4 @@ data class Address(
     val id: String,
     val lat: Long? = null,
     val lon: Long? = null,
-    val isDeleted: Boolean = false
 )

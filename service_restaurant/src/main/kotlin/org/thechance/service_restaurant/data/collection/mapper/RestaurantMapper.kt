@@ -14,7 +14,6 @@ fun RestaurantCollection.toEntity() = Restaurant(
     phone = phone,
     openingTime = openingTime,
     closingTime = closingTime,
-    isDeleted = isDeleted,
 )
 
 fun RestaurantCollection.toEntity(addresses: List<Address>) = Restaurant(
@@ -26,7 +25,6 @@ fun RestaurantCollection.toEntity(addresses: List<Address>) = Restaurant(
     phone = phone,
     openingTime = openingTime,
     closingTime = closingTime,
-    isDeleted = isDeleted,
     addresses = addresses
 )
 

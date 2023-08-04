@@ -5,7 +5,7 @@ import org.thechance.service_restaurant.data.collection.MealDetailsCollection
 import org.thechance.service_restaurant.domain.entity.Meal
 
 fun Meal.toCollection(): MealCollection =
-    MealCollection(name = name, description = description, price = price, isDeleted = isDeleted)
+    MealCollection(name = name, description = description, price = price)
 
 fun MealCollection.toEntity(): Meal =
     Meal(

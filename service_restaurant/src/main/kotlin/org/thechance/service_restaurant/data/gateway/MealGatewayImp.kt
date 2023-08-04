@@ -16,7 +16,7 @@ import org.thechance.service_restaurant.data.utils.toObjectIds
 import org.thechance.service_restaurant.domain.entity.Cuisine
 import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.gateway.MealGateway
-import org.thechance.service_restaurant.utils.Constants.CUISINE_COLLECTION
+import org.thechance.service_restaurant.data.Constants.CUISINE_COLLECTION
 
 @Single
 class MealGatewayImp(private val container: DataBaseContainer) : MealGateway {

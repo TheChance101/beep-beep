@@ -8,7 +8,6 @@ fun AddressCollection.toEntity(): Address {
         id = id.toString(),
         lat = lat,
         lon = lon,
-        isDeleted = isDeleted,
     )
 }
 
@@ -18,6 +17,5 @@ fun Address.toCollection(): AddressCollection {
     return AddressCollection(
         lat = lat,
         lon = lon,
-        isDeleted = isDeleted,
     )
 }

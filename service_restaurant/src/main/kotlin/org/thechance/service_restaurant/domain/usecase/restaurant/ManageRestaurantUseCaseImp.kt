@@ -12,14 +12,6 @@ class ManageRestaurantUseCaseImp(private val restaurantGateway: RestaurantGatewa
         return restaurantGateway.getRestaurants(page, limit)
     }
 
-    override suspend fun getRestaurantDetails(restaurantId: String): Restaurant {
-        return if (restaurantId.isNotEmpty()) {
-            restaurantGateway.getRestaurant(restaurantId) ?: throw Throwable()
-        } else {
-            throw Throwable()
-        }
-    }
-
     override suspend fun createRestaurant(restaurant: Restaurant): Boolean {
         return restaurantGateway.addRestaurant(restaurant)
     }
@@ -40,16 +32,8 @@ class ManageRestaurantUseCaseImp(private val restaurantGateway: RestaurantGatewa
         return restaurantGateway.addCategoriesToRestaurant(restaurantId, categoryIds)
     }
 
-    override suspend fun addCuisinesToRestaurant(restaurantId: String, cuisineIds: List<String>): Boolean {
-        return restaurantGateway.addCuisineToRestaurant(restaurantId, cuisineIds)
-    }
-
     override suspend fun deleteCategoriesInRestaurant(restaurantId: String, categoryIds: List<String>): Boolean {
         return restaurantGateway.deleteCategoriesInRestaurant(restaurantId, categoryIds)
-    }
-
-    override suspend fun deleteCuisinesInRestaurant(restaurantId: String, cuisineIds: List<String>): Boolean {
-        return restaurantGateway.deleteCuisinesInRestaurant(restaurantId, cuisineIds)
     }
 
     override suspend fun getCategoriesInRestaurant(restaurantId: String): List<Category> {

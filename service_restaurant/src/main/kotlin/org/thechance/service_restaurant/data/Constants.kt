@@ -1,4 +1,4 @@
-package org.thechance.service_restaurant.utils
+package org.thechance.service_restaurant.data
 
 
 
