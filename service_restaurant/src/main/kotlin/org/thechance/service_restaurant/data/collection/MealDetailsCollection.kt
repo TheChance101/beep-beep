@@ -6,9 +6,8 @@ import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
 
-
 @Serializable
-data class MealCollection(
+data class MealDetailsCollection(
     @BsonId
     @Contextual
     @SerialName("_id")
@@ -17,8 +16,5 @@ data class MealCollection(
     val description: String? = null,
     val isDeleted: Boolean = false,
     val price: Int? = null,
-    val cuisines: List<@Contextual ObjectId> = emptyList(),
+    val cuisines: List<CuisineCollection> = emptyList(),
 )
-
-
-

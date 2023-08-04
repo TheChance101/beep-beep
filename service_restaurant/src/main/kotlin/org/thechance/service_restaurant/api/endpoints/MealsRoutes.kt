@@ -30,13 +30,13 @@ fun Route.mealRoutes() {
     route("meal") {
 
         get("/{id}") {
-            val id = call.parameters.extractString("id") ?: throw NotFoundException("ID not provided")
+            val id = call.parameters.extractString("id") ?: ""
             val meal = mealUseCasesContainer.getMealByIdUseCase(id)
             call.respond(meal.toDto())
         }
 
         get("/{mealId}/cuisine") {
-            val mealId = call.parameters.extractString("mealId") ?: throw NotFoundException("ID not provided")
+            val mealId = call.parameters.extractString("mealId") ?: ""
             val cuisines = mealUseCasesContainer.getMealCuisinesUseCase(mealId)
             call.respond(cuisines.toDto())
         }
@@ -48,7 +48,7 @@ fun Route.mealRoutes() {
         }
 
         post("/{mealId}/cuisine") {
-            val mealId = call.parameters.extractString("mealId") ?: throw NotFoundException("ID not provided")
+            val mealId = call.parameters.extractString("mealId") ?: ""
             val cuisineIds = call.receive<List<String>>()
             val isAdded = mealUseCasesContainer.addCuisinesToMealUseCase(mealId, cuisineIds)
             if (isAdded) call.respond(HttpStatusCode.OK, "Cuisine added Successfully")
@@ -61,13 +61,13 @@ fun Route.mealRoutes() {
         }
 
         delete("/{id}") {
-            val id = call.parameters.extractString("id") ?: throw NotFoundException("ID not provided")
+            val id = call.parameters.extractString("id") ?: ""
             val isDeleted = mealUseCasesContainer.deleteMealUseCase(id)
             if (isDeleted) call.respond(HttpStatusCode.OK, "Meal deleted Successfully")
         }
 
         delete("/{mealId}/cuisine/{cuisineId}") {
-            val mealId = call.parameters.extractString("mealId") ?: throw NotFoundException("ID not provided")
+            val mealId = call.parameters.extractString("mealId") ?: ""
             val cuisineId = call.parameters.extractString("cuisineId") ?: throw NotFoundException("ID not provided")
             val isDeleted = mealUseCasesContainer.deleteCuisineFromMealUseCase(mealId, cuisineId)
             if (isDeleted) call.respond(HttpStatusCode.OK, "Cuisine deleted Successfully")

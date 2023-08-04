@@ -7,9 +7,7 @@ import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
 import org.litote.kmongo.coroutine.updateOne
 import org.thechance.service_restaurant.data.DataBaseContainer
-import org.thechance.service_restaurant.data.collection.CuisineCollection
-import org.thechance.service_restaurant.data.collection.MealCollection
-import org.thechance.service_restaurant.data.collection.MealCuisines
+import org.thechance.service_restaurant.data.collection.*
 import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
@@ -25,7 +23,18 @@ class MealGatewayImp(private val container: DataBaseContainer) : MealGateway {
     override suspend fun getMeals(page: Int, limit: Int): List<Meal> =
         container.mealCollection.find(MealCollection::isDeleted eq false).paginate(page, limit).toList().toEntity()
 
-    override suspend fun getMealById(id: String) = container.mealCollection.findOneById(ObjectId(id))?.toEntity()
+    override suspend fun getMealById(id: String): Meal? {
+        return container.mealCollection.aggregate<MealDetailsCollection>(
+            match(MealCollection::id eq ObjectId(id)),
+            lookup(
+                from = CUISINE_COLLECTION,
+                localField = MealCollection::cuisines.name,
+                foreignField = "_id",
+                newAs = MealDetailsCollection::cuisines.name
+            )
+
+        ).toList().firstOrNull()?.toEntity()
+    }
 
     override suspend fun getMealCuisines(mealId: String): List<Cuisine> {
         return container.mealCollection.aggregate<MealCuisines>(
