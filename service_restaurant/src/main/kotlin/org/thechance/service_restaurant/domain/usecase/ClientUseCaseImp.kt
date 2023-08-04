@@ -37,12 +37,8 @@ class ClientUseCaseImp(
         return restaurantGateway.getRestaurant(restaurantId) ?: throw Throwable()
     }
 
-    override suspend fun getCuisinesWithMeals(page: Int, limit: Int): List<Cuisine> {
-        return cuisineGateway.getCuisines(page, limit)
-    }
-
-    override suspend fun getMealsInCuisines(cuisineId: String): List<Cuisine> {
-        TODO("Not yet implemented")
+    override suspend fun getMealsInCuisines(cuisineId: String): List<Meal> {
+        return cuisineGateway.getMealsInCuisine(cuisineId)
     }
 
     override suspend fun getMealDetails(mealId: String): Meal {

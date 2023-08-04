@@ -15,14 +15,12 @@ fun Route.cuisineRoutes() {
 
     val client: ClientUseCase by inject()
 
-    route("cuisines") {
-        get {
-            val page = call.parameters.extractInt("page") ?: 1
-            val limit = call.parameters.extractInt("limit") ?: 10
-            val cuisines = client.getCuisinesWithMeals(page, limit)
-            call.respond(HttpStatusCode.OK, cuisines.toDto())
-        }
-    }
+//    get("cuisines") {
+//        val page = call.parameters.extractInt("page") ?: 1
+//        val limit = call.parameters.extractInt("limit") ?: 10
+//        val cuisines = client.getCuisinesWithMeals(page, limit)
+//        call.respond(HttpStatusCode.OK, cuisines.toDto())
+//    }
 
     route("cuisine") {
 

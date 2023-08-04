@@ -11,7 +11,6 @@ interface ClientUseCase {
     suspend fun getCategoriesInRestaurant(restaurantId: String): List<Category>
     suspend fun getRestaurantsInCategory(categoryId: String): List<Restaurant>
     suspend fun getRestaurantDetails(restaurantId: String): Restaurant
-    suspend fun getCuisinesWithMeals(page: Int, limit: Int): List<Cuisine>
-    suspend fun getMealsInCuisines(cuisineId: String): List<Cuisine>
+    suspend fun getMealsInCuisines(cuisineId: String): List<Meal>
     suspend fun getMealDetails(mealId: String): Meal
 }

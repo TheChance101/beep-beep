@@ -39,6 +39,7 @@ class CuisineGatewayImpl(private val container: DataBaseContainer) : CuisineGate
         ).toList().first().meals.filterNot { it.isDeleted }.toEntity()
     }
 
+
     override suspend fun addCuisine(cuisine: Cuisine): Boolean {
         return container.cuisineCollection.insertOne(cuisine.toCollection()).wasAcknowledged()
     }
