@@ -18,7 +18,7 @@ data class MealCollection(
     val isDeleted: Boolean = false,
     val price: Int? = null,
     @Contextual
-    val restaurantId:ObjectId = ObjectId(),
+    val restaurantId: ObjectId = ObjectId(),
     val cuisines: List<@Contextual ObjectId> = emptyList(),
 )
 

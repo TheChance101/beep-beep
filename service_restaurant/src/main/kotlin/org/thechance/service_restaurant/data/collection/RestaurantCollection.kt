@@ -27,4 +27,5 @@ data class RestaurantCollection(
     val categoryIds: MutableList<@Contextual ObjectId> = mutableListOf()
     val addressIds: List<@Contextual Id<AddressCollection>> = emptyList()
     val cuisineIds: MutableList<@Contextual ObjectId> = mutableListOf()
+    val mealIds: MutableList<@Contextual ObjectId> = mutableListOf()
 }

@@ -2,18 +2,13 @@ package org.thechance.service_restaurant.api.endpoints
 
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import org.thechance.service_restaurant.api.models.CategoryDto
 import org.thechance.service_restaurant.api.models.mappers.toDto
-import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
 import org.thechance.service_restaurant.domain.usecase.ClientUseCase
-import org.thechance.service_restaurant.domain.usecase.category.ManageCategoryUseCase
-import org.thechance.service_restaurant.domain.usecase.category.ManageRestaurantInCategoryUseCase
 
 
 fun Route.categoryRoutes() {
