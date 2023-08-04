@@ -1,9 +1,11 @@
 package org.thechance.service_restaurant.domain.usecase.meal
 
 import io.ktor.server.plugins.*
+import org.koin.core.annotation.Single
 import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.gateway.MealGateway
 
+@Single
 class ManageMealUseCaseImp(private val mealGateway: MealGateway) : ManageMealUseCase {
     override suspend fun addMeal(meal: Meal): Boolean {
         return mealGateway.addMeal(meal)
