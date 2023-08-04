@@ -10,6 +10,7 @@ import org.litote.kmongo.Id
 
 @Serializable
 data class RestaurantCollection(
+//    val ownerId: String? = null,
     val name: String? = null,
     val description: String? = null,
     val priceLevel: String? = null,

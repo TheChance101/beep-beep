@@ -150,7 +150,7 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
     }
 
     override suspend fun getAddressesInRestaurant(restaurantId: String): List<Address> {
-        return container.restaurantCollection.aggregate<RestaurantAddressesCollection>(
+        return container.restaurantCollection.aggregate<RestaurantAddresses>(
             match(
                 and(
                     RestaurantCollection::id eq ObjectId(restaurantId),
@@ -159,7 +159,7 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
             ),
             lookup(
                 from = ADDRESS_COLLECTION,
-                resultProperty = RestaurantAddressesCollection::addresses,
+                resultProperty = RestaurantAddresses::addresses,
                 pipeline = arrayOf(match(AddressCollection::isDeleted ne true))
             )
         ).toList().firstOrNull()?.addresses?.toEntity() ?: emptyList()
