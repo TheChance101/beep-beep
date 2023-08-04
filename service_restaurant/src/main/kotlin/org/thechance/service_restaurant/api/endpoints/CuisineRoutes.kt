@@ -3,34 +3,28 @@ package org.thechance.service_restaurant.api.endpoints
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
-import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import org.thechance.service_restaurant.api.models.CuisineDto
 import org.thechance.service_restaurant.api.models.mappers.toDto
-import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
+import org.thechance.service_restaurant.domain.usecase.ClientUseCase
 import org.thechance.service_restaurant.domain.usecase.RestaurantsManagementUseCase
 import org.thechance.service_restaurant.domain.usecase.cuisine.ManageCuisineUseCase
 import org.thechance.service_restaurant.domain.usecase.cuisine.UserGetCuisineUseCase
 
 fun Route.cuisineRoutes() {
 
-    val manageCuisine: ManageCuisineUseCase by inject()
-    val userGetCuisine: UserGetCuisineUseCase by inject()
+    val client: ClientUseCase by inject()
     val restaurantManagement: RestaurantsManagementUseCase by inject()
 
-
-    route("cuisines") {
-        get {
-            val page = call.parameters.extractInt("page") ?: 1
-            val limit = call.parameters.extractInt("limit") ?: 10
-            val cuisines = manageCuisine.getCuisines(page, limit)
-            call.respond(HttpStatusCode.OK, cuisines.toDto())
-        }
-    }
+//    get("cuisines") {
+//        val page = call.parameters.extractInt("page") ?: 1
+//        val limit = call.parameters.extractInt("limit") ?: 10
+//        val cuisines = client.getCuisinesWithMeals(page, limit)
+//        call.respond(HttpStatusCode.OK, cuisines.toDto())
+//    }
 
     route("cuisine") {
 
@@ -56,7 +50,7 @@ fun Route.cuisineRoutes() {
 
         get("/{id}/meals") {
             val id = call.parameters.extractString("id") ?: throw NotFoundException()
-            val meals = userGetCuisine.getMealsInCuisine(id).toDto()
+            val meals = client.getMealsInCuisines(id).toDto()
             call.respond(HttpStatusCode.OK, meals)
         }
 

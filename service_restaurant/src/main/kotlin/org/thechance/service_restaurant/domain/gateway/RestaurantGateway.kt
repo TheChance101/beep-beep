@@ -1,9 +1,6 @@
 package org.thechance.service_restaurant.domain.gateway
 
-import org.thechance.service_restaurant.domain.entity.Address
-import org.thechance.service_restaurant.domain.entity.Category
-import org.thechance.service_restaurant.domain.entity.Cuisine
-import org.thechance.service_restaurant.domain.entity.Restaurant
+import org.thechance.service_restaurant.domain.entity.*
 
 interface RestaurantGateway {
 
@@ -18,7 +15,8 @@ interface RestaurantGateway {
     //region Add
     suspend fun addRestaurant(restaurant: Restaurant): Boolean
     suspend fun addCategoriesToRestaurant(restaurantId: String, categoryIds: List<String>): Boolean
-    suspend fun addCuisineToRestaurant(restaurantId: String, cuisineIds:List<String>):Boolean
+    suspend fun addCuisineToRestaurant(restaurantId: String, cuisineIds: List<String>): Boolean
+    suspend fun addMealToRestaurant(restaurantId: String, mealId: String): Boolean
     //endregion
 
 
@@ -28,6 +26,7 @@ interface RestaurantGateway {
     suspend fun deleteRestaurant(restaurantId: String): Boolean
     suspend fun deleteCategoriesInRestaurant(restaurantId: String, categoryIds: List<String>): Boolean
     suspend fun deleteCuisinesInRestaurant(restaurantId: String, cuisineIds: List<String>): Boolean
+    suspend fun deleteMealInRestaurant(restaurantId: String, mealId: String): Boolean
     //endregion
 
     //region addresses

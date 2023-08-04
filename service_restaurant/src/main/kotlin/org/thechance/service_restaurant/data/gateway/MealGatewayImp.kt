@@ -6,8 +6,12 @@ import org.koin.core.annotation.Single
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
 import org.litote.kmongo.coroutine.updateOne
+import org.thechance.service_restaurant.data.Constants.CUISINE_COLLECTION
 import org.thechance.service_restaurant.data.DataBaseContainer
-import org.thechance.service_restaurant.data.collection.*
+import org.thechance.service_restaurant.data.collection.CuisineCollection
+import org.thechance.service_restaurant.data.collection.MealCollection
+import org.thechance.service_restaurant.data.collection.MealCuisines
+import org.thechance.service_restaurant.data.collection.MealDetailsCollection
 import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
@@ -16,7 +20,6 @@ import org.thechance.service_restaurant.data.utils.toObjectIds
 import org.thechance.service_restaurant.domain.entity.Cuisine
 import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.gateway.MealGateway
-import org.thechance.service_restaurant.data.Constants.CUISINE_COLLECTION
 
 @Single
 class MealGatewayImp(private val container: DataBaseContainer) : MealGateway {
@@ -56,8 +59,9 @@ class MealGatewayImp(private val container: DataBaseContainer) : MealGateway {
         ).toList().first().cuisines.filterNot { it.isDeleted }.toEntity()
     }
 
-    override suspend fun addMeal(meal: Meal): Boolean =
-        container.mealCollection.insertOne(meal.toCollection()).wasAcknowledged()
+    override suspend fun addMeal(meal: Meal): Boolean {
+        return container.mealCollection.insertOne(meal.toCollection()).wasAcknowledged()
+    }
 
     override suspend fun addCuisinesToMeal(mealId: String, cuisineIds: List<String>): Boolean {
         val resultAddToCuisine = container.cuisineCollection.updateMany(
