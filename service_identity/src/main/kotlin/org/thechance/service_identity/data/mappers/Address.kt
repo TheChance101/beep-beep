@@ -44,3 +44,7 @@ fun Address.toCollection(): AddressCollection {
 fun List<AddressCollection>.toEntity(): List<Address> {
     return this.map { it.toEntity() }
 }
+
+fun List<AddressCollection>.toAddress(): List<Address> {
+    return this.map { it.toEntity() }
+}
