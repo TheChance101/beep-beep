@@ -1,5 +1,6 @@
 package org.thechance.service_identity.domain.gateway
 
+import org.thechance.service_identity.domain.entity.Address
 import org.thechance.service_identity.domain.entity.Permission
 import org.thechance.service_identity.domain.entity.User
 import org.thechance.service_identity.domain.entity.Wallet
@@ -16,6 +17,20 @@ interface DataBaseGateway {
     suspend fun updateWallet(walletId: String, wallet: Wallet): Boolean
 
     // endregion: wallet
+
+    //region address
+
+    suspend fun addAddress(address: Address): Boolean
+
+    suspend fun deleteAddress(id: String): Boolean
+
+    suspend fun updateAddress(id: String, address: Address): Boolean
+
+    suspend fun getAddress(id: String): Address?
+
+    suspend fun getUserAddresses(userId: String): List<Address>
+
+    //endregion
 
     // region: user
     suspend fun getUserById(id: String): User?
