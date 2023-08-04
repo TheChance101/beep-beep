@@ -13,7 +13,8 @@ import org.thechance.service_identity.data.util.USER_DETAILS_COLLECTION
 import org.thechance.service_identity.data.util.isUpdatedSuccessfully
 import org.thechance.service_identity.domain.entity.Address
 import org.thechance.service_identity.domain.gateway.AddressGateway
-import org.thechance.service_identity.utils.Constants.ADDRESS_COLLECTION_NAME
+
+private const val ADDRESS_COLLECTION_NAME = "address"
 
 @Single
 class AddressGatewayImp(dataBaseContainer: DataBaseContainer) : AddressGateway {

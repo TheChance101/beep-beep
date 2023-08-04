@@ -9,8 +9,6 @@ import org.koin.ktor.ext.inject
 import org.thechance.service_identity.api.model.WalletDto
 import org.thechance.service_identity.data.mappers.toDto
 import org.thechance.service_identity.data.mappers.toEntity
-import org.thechance.service_identity.domain.usecases.wallet.WalletUseCaseContainer
-import org.thechance.service_identity.domain.entity.Wallet
 import org.thechance.service_identity.domain.usecases.useraccount.UserAccountUseCase
 
 fun Route.walletRoute() {
