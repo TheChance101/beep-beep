@@ -21,14 +21,14 @@ import org.thechance.service_identity.data.util.*
 import org.thechance.service_identity.domain.entity.Permission
 import org.thechance.service_identity.domain.entity.User
 import org.thechance.service_identity.domain.gateway.UserGateWay
-import org.thechance.service_identity.utils.Constants.USER_COLLECTION
 
 @Single
 class UserGateWayImp(dataBaseContainer: DataBaseContainer) : UserGateWay {
 
+    // region user
     private val userCollection by lazy {
         dataBaseContainer.database.getCollection<UserCollection>(
-            USER_COLLECTION
+            USER_DETAILS_COLLECTION
         )
     }
 
@@ -142,4 +142,7 @@ class UserGateWayImp(dataBaseContainer: DataBaseContainer) : UserGateWay {
     private fun List<UserCollection>.toUser(): List<User> {
         return this.map { it.toEntity() }
     }
+
+    // endregion
+
 }
