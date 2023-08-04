@@ -13,7 +13,6 @@ import org.litote.kmongo.coroutine.aggregate
 import org.litote.kmongo.*
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.*
-import org.thechance.service_identity.data.mappers.toAddress
 import org.thechance.service_identity.data.mappers.toCollection
 import org.thechance.service_identity.data.mappers.toDetailsCollection
 import org.thechance.service_identity.data.mappers.toEntity
@@ -91,7 +90,7 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
         return addressCollection.find(
             AddressCollection::userId eq ObjectId(userId),
             AddressCollection::isDeleted eq false
-        ).toList().toAddress()
+        ).toList().toEntity()
     }
 
     //endregion
@@ -242,7 +241,7 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
         return walletCollection.findOneById(ObjectId(walletId))?.toEntity() ?: throw Exception("Wallet not found")
     }
 
-    override suspend fun addWallet(wallet: Wallet): Boolean {
+    override suspend fun createWallet(wallet: Wallet): Boolean {
         userDetailsCollection.updateOne(
             filter = UserDetailsCollection::userId eq ObjectId(wallet.userId),
             update = set(UserDetailsCollection::walletId setTo wallet.id)

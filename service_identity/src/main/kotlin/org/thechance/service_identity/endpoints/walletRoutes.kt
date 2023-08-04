@@ -9,28 +9,18 @@ import org.koin.ktor.ext.inject
 import org.thechance.service_identity.api.model.WalletDto
 import org.thechance.service_identity.data.mappers.toDto
 import org.thechance.service_identity.data.mappers.toEntity
-import org.thechance.service_identity.domain.usecases.wallet.WalletUseCaseContainer
-import org.thechance.service_identity.domain.entity.Wallet
+import org.thechance.service_identity.domain.usecases.useraccount.UserAccountUseCase
 
 fun Route.walletRoute() {
 
-    val walletUseCaseContainer: WalletUseCaseContainer by inject()
+    val userAccountUseCase: UserAccountUseCase by inject()
 
 
     route("/wallet") {
         get("/{id}") {
             try {
                 val id = call.parameters["id"]!!
-                val wallet = walletUseCaseContainer.getWalletUseCase(id).toDto()
-                call.respond(wallet)
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.NotFound)
-            }
-        }
-        get("/user/{id}") {
-            try {
-                val id = call.parameters["id"]!!
-                val wallet = walletUseCaseContainer.getUserWalletUseCase(id).toDto()
+                val wallet = userAccountUseCase.getWallet(id).toDto()
                 call.respond(wallet)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.NotFound)
@@ -39,7 +29,7 @@ fun Route.walletRoute() {
         post {
             try {
                 val wallet = call.receive<WalletDto>()
-                val result = walletUseCaseContainer.addWalletUseCase(wallet.toEntity())
+                val result = userAccountUseCase.createWallet(wallet.toEntity())
                 call.respond(result)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.BadRequest)
@@ -49,21 +39,13 @@ fun Route.walletRoute() {
             try {
                 val id = call.parameters["id"]!!
                 val wallet = call.receive<WalletDto>()
-                val result = walletUseCaseContainer.updateWalletUseCase(id, wallet.toEntity())
+                val result = userAccountUseCase.updateWallet(id, wallet.toEntity())
                 call.respond(result)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.NotFound)
             }
         }
-        delete("/{id}") {
-            try {
-                val id = call.parameters["id"]!!
-                val result = walletUseCaseContainer.deleteWalletUseCase(id)
-                call.respond(result)
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.NotFound)
-            }
-        }
+
     }
 
 }
