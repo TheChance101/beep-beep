@@ -5,5 +5,5 @@ data class Address(
     val userId: String,
     val latitude: Double,
     val longitude: Double,
-    val isDeleted: Boolean? = null
+    val isDeleted: Boolean = false
 )

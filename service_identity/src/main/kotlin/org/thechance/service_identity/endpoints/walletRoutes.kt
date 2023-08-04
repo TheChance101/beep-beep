@@ -12,18 +12,18 @@ import org.thechance.service_identity.data.mappers.toEntity
 import org.thechance.service_identity.domain.usecases.wallet.WalletUseCaseContainer
 import org.thechance.service_identity.domain.entity.Wallet
 
-fun Route.walletRoute(){
+fun Route.walletRoute() {
 
-    val walletUseCaseContainer : WalletUseCaseContainer by inject()
+    val walletUseCaseContainer: WalletUseCaseContainer by inject()
 
 
-    route("/wallet"){
+    route("/wallet") {
         get("/{id}") {
             try {
                 val id = call.parameters["id"]!!
                 val wallet = walletUseCaseContainer.getWalletUseCase(id).toDto()
                 call.respond(wallet)
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 call.respond(HttpStatusCode.NotFound)
             }
         }
@@ -32,16 +32,16 @@ fun Route.walletRoute(){
                 val id = call.parameters["id"]!!
                 val wallet = walletUseCaseContainer.getUserWalletUseCase(id).toDto()
                 call.respond(wallet)
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 call.respond(HttpStatusCode.NotFound)
             }
         }
-        post{
+        post {
             try {
                 val wallet = call.receive<WalletDto>()
                 val result = walletUseCaseContainer.addWalletUseCase(wallet.toEntity())
                 call.respond(result)
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 call.respond(HttpStatusCode.BadRequest)
             }
         }
@@ -49,9 +49,9 @@ fun Route.walletRoute(){
             try {
                 val id = call.parameters["id"]!!
                 val wallet = call.receive<WalletDto>()
-                val result = walletUseCaseContainer.updateWalletUseCase(id,wallet.toEntity())
+                val result = walletUseCaseContainer.updateWalletUseCase(id, wallet.toEntity())
                 call.respond(result)
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 call.respond(HttpStatusCode.NotFound)
             }
         }
@@ -60,7 +60,7 @@ fun Route.walletRoute(){
                 val id = call.parameters["id"]!!
                 val result = walletUseCaseContainer.deleteWalletUseCase(id)
                 call.respond(result)
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 call.respond(HttpStatusCode.NotFound)
             }
         }
