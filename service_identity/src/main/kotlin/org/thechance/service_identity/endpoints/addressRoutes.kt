@@ -9,7 +9,6 @@ import org.koin.ktor.ext.inject
 import org.thechance.service_identity.api.model.AddressDto
 import org.thechance.service_identity.data.mappers.toDto
 import org.thechance.service_identity.data.mappers.toEntity
-import org.thechance.service_identity.domain.usecases.address.AddressUseCaseContainer
 
 fun Route.addressRoutes() {
 
