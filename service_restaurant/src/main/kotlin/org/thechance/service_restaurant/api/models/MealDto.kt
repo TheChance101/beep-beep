@@ -8,5 +8,5 @@ data class MealDto(
     val name: String? = null,
     val description: String? = null,
     val price: Int? = null,
-    val cuisines: List<String> = emptyList()
+    val cuisines: List<CuisineDto>? = null
 )

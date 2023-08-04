@@ -18,7 +18,28 @@ fun Route.cuisineRoutes() {
 
     val cuisineUseCasesContainer: CuisineUseCasesContainer by inject()
 
+    route("cuisines") {
+        get {
+            val page = call.parameters.extractInt("page") ?: 1
+            val limit = call.parameters.extractInt("limit") ?: 10
+            val cuisines = cuisineUseCasesContainer.getCuisinesUseCase(page, limit)
+            call.respond(HttpStatusCode.OK, cuisines.toDto())
+        }
+    }
+
     route("cuisine") {
+
+        get("/{id}") {
+            val id = call.parameters.extractString("id") ?: throw NotFoundException()
+            val cuisine = cuisineUseCasesContainer.getCuisineByIdUseCase(id)
+            call.respond(HttpStatusCode.OK, cuisine.toDto())
+        }
+
+        get("/{id}/meals") {
+            val id = call.parameters.extractString("id") ?: throw NotFoundException()
+            val meals = cuisineUseCasesContainer.getMealsInCuisine(id).toDto()
+            call.respond(HttpStatusCode.OK, meals)
+        }
 
         post {
             val cuisine = call.receive<CuisineDto>()
@@ -26,17 +47,11 @@ fun Route.cuisineRoutes() {
             if (isAdded) call.respond(HttpStatusCode.Created, "Added Successfully")
         }
 
-        get {
-            val page = call.parameters.extractInt("page") ?: 1
-            val limit = call.parameters.extractInt("limit") ?: 10
-            val cuisines = cuisineUseCasesContainer.getCuisinesUseCase(page, limit)
-            call.respond(cuisines.toDto())
-        }
-
-        get("/{id}") {
-            val id = call.parameters.extractString("id") ?: throw NotFoundException()
-            val cuisine = cuisineUseCasesContainer.getCuisineByIdUseCase(id)
-            call.respond(cuisine.toDto())
+        post("/{id}/meals") {
+            val cuisineId = call.parameters.extractString("id") ?: ""
+            val mealIds = call.receive<List<String>>()
+            val isAdded = cuisineUseCasesContainer.addMealsToCuisine(cuisineId, mealIds)
+            if (isAdded) call.respond(HttpStatusCode.Created, "Added Successfully")
         }
 
         put {
@@ -51,6 +66,12 @@ fun Route.cuisineRoutes() {
             if (isDeleted) call.respond(HttpStatusCode.OK, "Deleted Successfully")
         }
 
+        delete("/{id}/meals") {
+            val id = call.parameters.extractString("id") ?: throw NotFoundException()
+            val mealIds = call.receive<List<String>>()
+            val isDeleted = cuisineUseCasesContainer.deleteMealsInCuisine(id, mealIds)
+            if (isDeleted) call.respond(HttpStatusCode.OK, "Deleted Successfully")
+        }
     }
 
 }

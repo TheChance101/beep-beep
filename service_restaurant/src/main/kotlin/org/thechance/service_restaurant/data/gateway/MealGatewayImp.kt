@@ -1,66 +1,89 @@
 package org.thechance.service_restaurant.data.gateway
 
+import com.mongodb.client.model.Updates
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
 import org.litote.kmongo.coroutine.updateOne
 import org.thechance.service_restaurant.data.DataBaseContainer
-import org.thechance.service_restaurant.data.collection.MealCollection
-import org.thechance.service_restaurant.data.collection.MealCuisinesCollection
+import org.thechance.service_restaurant.data.collection.*
 import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
+import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
 import org.thechance.service_restaurant.data.utils.paginate
+import org.thechance.service_restaurant.data.utils.toObjectIds
 import org.thechance.service_restaurant.entity.Cuisine
 import org.thechance.service_restaurant.entity.Meal
+import org.thechance.service_restaurant.utils.Constants.CUISINE_COLLECTION
 
 @Single
 class MealGatewayImp(private val container: DataBaseContainer) : MealGateway {
 
-    private val mealCollection by lazy { container.database.getCollection<MealCollection>("meal") }
-
-    override suspend fun addMeal(meal: Meal): Boolean = mealCollection.insertOne(meal.toCollection()).wasAcknowledged()
-
     override suspend fun getMeals(page: Int, limit: Int): List<Meal> =
-        mealCollection.find(MealCollection::isDeleted eq false).paginate(page, limit).toList().toEntity()
+        container.mealCollection.find(MealCollection::isDeleted eq false).paginate(page, limit).toList().toEntity()
 
-    override suspend fun getMealById(id: String) = mealCollection.findOneById(ObjectId(id))?.toEntity()
+    override suspend fun getMealById(id: String): Meal? {
+        return container.mealCollection.aggregate<MealDetailsCollection>(
+            match(
+                MealCollection::id eq ObjectId(id)
+            ),
+            lookup(
+                from = CUISINE_COLLECTION,
+                localField = MealCollection::cuisines.name,
+                foreignField = "_id",
+                newAs = MealDetailsCollection::cuisines.name
+            )
+
+        ).toList().firstOrNull()?.toEntity()
+    }
+
+    override suspend fun getMealCuisines(mealId: String): List<Cuisine> {
+        return container.mealCollection.aggregate<MealCuisines>(
+            match(
+                and(
+                    MealCollection::id eq ObjectId(mealId),
+                    MealCollection::isDeleted eq false
+                )
+            ),
+            lookup(
+                from = CUISINE_COLLECTION,
+                localField = MealCollection::cuisines.name,
+                foreignField = "_id",
+                newAs = MealCuisines::cuisines.name
+            )
+        ).toList().first().cuisines.filterNot { it.isDeleted }.toEntity()
+    }
+
+    override suspend fun addMeal(meal: Meal): Boolean =
+        container.mealCollection.insertOne(meal.toCollection()).wasAcknowledged()
+
+    override suspend fun addCuisinesToMeal(mealId: String, cuisineIds: List<String>): Boolean {
+        val resultAddToCuisine = container.cuisineCollection.updateMany(
+            CuisineCollection::id `in` cuisineIds.toObjectIds(),
+            addToSet(CuisineCollection::meals, ObjectId(mealId))
+        ).isSuccessfullyUpdated()
+
+        val resultAddToMeal = container.mealCollection.updateOneById(
+            ObjectId(mealId),
+            update = Updates.addEachToSet(MealCollection::cuisines.name, cuisineIds.toObjectIds())
+        ).isSuccessfullyUpdated()
+
+        return resultAddToCuisine and resultAddToMeal
+    }
+
+    override suspend fun updateMeal(meal: Meal): Boolean =
+        container.mealCollection.updateOne(meal.toCollection(), updateOnlyNotNullProperties = true)
+            .isSuccessfullyUpdated()
 
     override suspend fun deleteMealById(id: String): Boolean =
-        mealCollection.updateOne(
+        container.mealCollection.updateOne(
             filter = MealCollection::id eq ObjectId(id),
             update = set(MealCollection::isDeleted setTo true),
         ).wasAcknowledged()
 
-    override suspend fun updateMeal(meal: Meal): Boolean =
-        mealCollection.updateOne(meal.toCollection(), updateOnlyNotNullProperties = true)
-            .wasAcknowledged()
-
-    override suspend fun addCuisineToMeal(mealId: String, cuisineId: String): Boolean =
-        mealCollection.updateOne(
-            filter = MealCollection::id eq ObjectId(mealId),
-            update = push(MealCollection::cuisines, ObjectId(cuisineId))
-        ).wasAcknowledged()
-
-    override suspend fun getMealCuisines(mealId: String): List<Cuisine> {
-        return mealCollection.aggregate<MealCuisinesCollection>(
-            match(
-                and(
-                    MealCollection::id eq ObjectId(mealId),
-                    MealCollection::isDeleted ne true
-                )
-            ),
-            lookup(
-                localField = MealCollection::cuisines.name,
-                from = "cuisine",
-                foreignField = "_id",
-                newAs = MealCuisinesCollection::meal_cuisines.name
-            ),
-        ).toList().firstOrNull()?.meal_cuisines?.filter { !it.isDeleted }?.toEntity() ?: emptyList()
-    }
-
     override suspend fun deleteCuisineFromMeal(mealId: String, cuisineId: String): Boolean {
-        return mealCollection.updateOne(
+        return container.mealCollection.updateOne(
             MealCollection::id eq ObjectId(mealId),
             pull(MealCollection::cuisines, ObjectId(cuisineId)),
         ).wasAcknowledged()

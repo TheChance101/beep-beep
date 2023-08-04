@@ -1,6 +1,7 @@
 package org.thechance.service_restaurant.data.collection.mapper
 
 import org.thechance.service_restaurant.data.collection.MealCollection
+import org.thechance.service_restaurant.data.collection.MealDetailsCollection
 import org.thechance.service_restaurant.entity.Meal
 
 fun Meal.toCollection(): MealCollection =
@@ -12,7 +13,16 @@ fun MealCollection.toEntity(): Meal =
         name = name,
         description = description,
         price = price,
-        cuisines = cuisines.map { it.toString() })
+    )
 
 fun List<MealCollection>.toEntity(): List<Meal> = this.map { it.toEntity() }
 
+fun MealDetailsCollection.toEntity(): Meal {
+    return Meal(
+        id = id.toString(),
+        name = name,
+        description = description,
+        price = price,
+        cuisines = cuisines.toEntity()
+    )
+}
