@@ -1,7 +1,7 @@
 package org.thechance.service_identity.data.mappers
 
 import org.bson.types.ObjectId
-import org.thechance.service_identity.api.model.AddressDto
+import org.thechance.service_identity.endpoints.model.AddressDto
 import org.thechance.service_identity.data.collection.AddressCollection
 import org.thechance.service_identity.domain.entity.Address
 
@@ -42,9 +42,5 @@ fun Address.toCollection(): AddressCollection {
 }
 
 fun List<AddressCollection>.toEntity(): List<Address> {
-    return this.map { it.toEntity() }
-}
-
-fun List<AddressCollection>.toAddress(): List<Address> {
     return this.map { it.toEntity() }
 }

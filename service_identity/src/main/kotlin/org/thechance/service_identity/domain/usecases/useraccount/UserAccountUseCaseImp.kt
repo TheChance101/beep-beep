@@ -3,8 +3,9 @@ package org.thechance.service_identity.domain.usecases.useraccount
 import org.koin.core.annotation.Single
 import org.thechance.service_identity.domain.entity.Address
 import org.thechance.service_identity.domain.entity.User
-import org.thechance.service_identity.domain.entity.Wallet
 import org.thechance.service_identity.domain.gateway.DataBaseGateway
+import org.thechance.service_identity.endpoints.validation.AddressNotFoundException
+import org.thechance.service_identity.endpoints.validation.InvalidIDException
 
 @Single
 class UserAccountUseCaseImp(
@@ -40,15 +41,17 @@ class UserAccountUseCaseImp(
     }
 
     override suspend fun deleteAddress(id: String): Boolean {
-        return dataBaseGateway.deleteAddress(id)
+        dataBaseGateway.deleteAddress(id).takeIf { it } ?: throw AddressNotFoundException
+        return true
     }
 
     override suspend fun updateAddress(id: String, address: Address): Boolean {
-        return dataBaseGateway.updateAddress(id, address)
+        dataBaseGateway.updateAddress(id, address).takeIf { it } ?: throw AddressNotFoundException
+        return true
     }
 
     override suspend fun getAddress(id: String): Address {
-        return dataBaseGateway.getAddress(id) ?: throw Throwable()
+        return dataBaseGateway.getAddress(id) ?: throw InvalidIDException
     }
 
     override suspend fun getUserAddresses(userId: String): List<Address> {
@@ -57,3 +60,4 @@ class UserAccountUseCaseImp(
 
     //endregion
 }
+
