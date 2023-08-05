@@ -19,9 +19,3 @@ val kmongoModule = module {
             .coroutine
     }
 }
-
-val mongoModule = module {
-    single{
-        KMongo.createClient().coroutine
-    }
-}
