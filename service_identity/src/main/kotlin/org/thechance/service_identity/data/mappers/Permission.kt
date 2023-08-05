@@ -7,7 +7,7 @@ import org.thechance.service_identity.domain.entity.Permission
 
 fun PermissionCollection.toEntity(): Permission {
     return Permission(
-        id = id.toHexString(),
+        id = id,
         permission = permission,
         isDeleted = isDeleted
     )
@@ -33,7 +33,7 @@ fun List<Permission>.toDto(): List<PermissionDto> = map { it.toDto() }
 
 fun Permission.toCollection(): PermissionCollection {
     return PermissionCollection(
-        id = ObjectId(this.id),
+        id = this.id,
         permission = this.permission
     )
 }
