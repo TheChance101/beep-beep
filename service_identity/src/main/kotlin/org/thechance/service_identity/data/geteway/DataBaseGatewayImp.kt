@@ -122,6 +122,11 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
         ).isUpdatedSuccessfully()
     }
 
+    override suspend fun getListOfPermission(permissionId: String): List<Permission> {
+        return permissionCollection.find(
+            PermissionCollection::id eq ObjectId(permissionId),
+            PermissionCollection::isDeleted eq false
+        ).toList().toEntity()    }
 
 
     override suspend fun updatePermission(permissionId: String, permission: Permission): Boolean {

@@ -2,6 +2,7 @@ package org.thechance.service_identity.api.endpoints
 
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.plugins.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -9,15 +10,15 @@ import org.koin.ktor.ext.inject
 import org.thechance.service_identity.api.model.PermissionDto
 import org.thechance.service_identity.data.mappers.toDto
 import org.thechance.service_identity.data.mappers.toEntity
-import org.thechance.service_identity.domain.usecases.permission.PermissionUseCasesContainer
+import org.thechance.service_identity.domain.usecases.permission.PermissionManagementUseCase
 
 fun Route.permissionRoutes() {
-    val permissionUseCasesContainer: PermissionUseCasesContainer by inject()
+    val permissionManagementUseCase: PermissionManagementUseCase by inject()
     route("/permissions") {
 
         post {
             val permission = call.receive<PermissionDto>()
-            val success = permissionUseCasesContainer.addPermission(permission.toEntity())
+            val success = permissionManagementUseCase.createPermission(permission.toEntity())
             if (success) {
                 call.respond(HttpStatusCode.Created)
             } else {
@@ -29,7 +30,7 @@ fun Route.permissionRoutes() {
             val permissionId = call.parameters["permissionId"] ?: return@delete call.respond(
                 HttpStatusCode.BadRequest
             )
-            val success = permissionUseCasesContainer.deletePermission(permissionId)
+            val success = permissionManagementUseCase.deletePermission(permissionId)
             if (success) {
                 call.respond(HttpStatusCode.OK)
             } else {
@@ -45,7 +46,7 @@ fun Route.permissionRoutes() {
             if (permission.id != permissionId) {
                 return@put call.respond(HttpStatusCode.BadRequest)
             }
-            val success = permissionUseCasesContainer.updatePermission(
+            val success = permissionManagementUseCase.updatePermission(
                 permissionId,
                 permission.toEntity()
             )
@@ -60,9 +61,14 @@ fun Route.permissionRoutes() {
             val permissionId = call.parameters["permissionId"]
                 ?: throw IllegalArgumentException("Invalid permission ID")
             val permission =
-                permissionUseCasesContainer.getPermission(permissionId).toDto()
+                permissionManagementUseCase.getPermission(permissionId).toDto()
             call.respond(HttpStatusCode.OK, permission)
 
+        }
+        get("/{permissionId}") {
+            val permissionId = call.parameters["permissionId"] ?: throw BadRequestException("permission id is required")
+            val permissions = permissionManagementUseCase.getListOfPermission(permissionId)
+            call.respond(HttpStatusCode.OK, permissions.map { it.toDto() })
         }
     }
 }
