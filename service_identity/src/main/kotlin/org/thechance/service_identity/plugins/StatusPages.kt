@@ -3,8 +3,10 @@ package org.thechance.service_identity.plugins
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
+import io.ktor.server.plugins.requestvalidation.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
+import org.thechance.service_identity.domain.entity.MissingParameterException
 import org.thechance.service_identity.domain.entity.UserAlreadyExistsException
 
 fun Application.configureStatusPages() {
@@ -14,11 +16,15 @@ fun Application.configureStatusPages() {
 }
 
 private fun StatusPagesConfig.handleStatusPagesExceptions() {
-    exception<MissingRequestParameterException> { call, cause ->
+    exception<MissingParameterException> { call, cause ->
         call.respond(
             HttpStatusCode.BadRequest,
             listOf(cause.message)
         )
+    }
+
+    exception<RequestValidationException> { call, cause ->
+        call.respond(HttpStatusCode.BadRequest, cause.reasons.joinToString())
     }
 
     exception<NotFoundException> { call, cause ->
