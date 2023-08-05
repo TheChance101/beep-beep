@@ -6,6 +6,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
+import org.thechance.service_restaurant.api.models.AddressDto
 import org.thechance.service_restaurant.api.models.RestaurantDto
 import org.thechance.service_restaurant.api.models.mappers.toDetailsDto
 import org.thechance.service_restaurant.api.models.mappers.toDto
@@ -14,11 +15,13 @@ import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
 import org.thechance.service_restaurant.domain.usecase.ClientUseCase
 import org.thechance.service_restaurant.domain.usecase.AdministratorUseCase
+import org.thechance.service_restaurant.domain.usecase.manageRestaurant.ManageRestaurantUseCase
 
 fun Route.restaurantRoutes() {
 
     val client: ClientUseCase by inject()
     val administrator: AdministratorUseCase by inject()
+    val manageRestaurant: ManageRestaurantUseCase by inject()
 
 
     route("/restaurants") {
@@ -56,6 +59,27 @@ fun Route.restaurantRoutes() {
             call.respond(HttpStatusCode.OK, result)
         }
 
+        post("/{id}/categories") {
+            val restaurantId = call.parameters.extractString("id") ?: ""
+            val categoryIds = call.receive<List<String>>()
+            val result = manageRestaurant.addCategoryToRestaurant(restaurantId, categoryIds)
+            call.respond(HttpStatusCode.Created, result)
+        }
+
+        put {
+            val restaurant = call.receive<RestaurantDto>()
+            val result = manageRestaurant.updateRestaurant(restaurant.toEntity())
+            call.respond(HttpStatusCode.OK, result)
+        }
+
+        delete("/{id}/categories") {
+            val restaurantId = call.parameters.extractString("id") ?: ""
+            val categoryIds = call.receive<List<String>>()
+            val result = manageRestaurant.deleteCategoriesInRestaurant(restaurantId, categoryIds)
+            call.respond(HttpStatusCode.OK, result)
+        }
+
+
 
 //        get("/{id}/cuisines") {
 //            val restaurantId = call.parameters.extractString("id") ?: ""
@@ -63,15 +87,7 @@ fun Route.restaurantRoutes() {
 //            call.respond(HttpStatusCode.OK, cuisines)
 //        }
 
-
-
-//        post("/{id}/categories") {
-//            val restaurantId = call.parameters.extractString("id") ?: ""
-//            val categoryIds = call.receive<List<String>>()
-//            val result = manageRestaurant.addCategoryToRestaurant(restaurantId, categoryIds)
-//            call.respond(HttpStatusCode.Created, result)
-//        }
-
+//
 //        post("/{id}/addresses") {
 //            val restaurantId = call.parameters["id"] ?: ""
 //            val addresses = call.receive<AddressDto>()
@@ -79,12 +95,7 @@ fun Route.restaurantRoutes() {
 //            call.respond(HttpStatusCode.OK, result)
 //        }
 
-//        put {
-//            val restaurant = call.receive<RestaurantDto>()
-//            val result = restaurantManagement.updateRestaurant(restaurant.toEntity())
-//            call.respond(HttpStatusCode.OK, result)
-//        }
-
+//
 //        put("/{id}/address") {
 //            val restaurantId = call.parameters["id"] ?: ""
 //            val address = call.receive<AddressDto>()
@@ -92,18 +103,10 @@ fun Route.restaurantRoutes() {
 //            call.respond(HttpStatusCode.OK, result)
 //        }
 
-
-//        delete("/{id}/categories") {
-//            val restaurantId = call.parameters.extractString("id") ?: ""
-//            val categoryIds = call.receive<List<String>>()
-//            val result = manageRestaurant.deleteCategoriesInRestaurant(restaurantId, categoryIds)
-//            call.respond(HttpStatusCode.OK, result)
-//        }
-//
 //        delete("/{id}/addresses") {
 //            val restaurantId = call.parameters["id"] ?: ""
 //            val addressesIds = call.receive<List<String>>()
-//            val result = manageDetailsRestaurant.deleteAddressToRestaurant(restaurantId, addressesIds)
+//            val result = manageRestaurant.deleteAddressToRestaurant(restaurantId, addressesIds)
 //            call.respond(HttpStatusCode.OK, result)
 //        }
 
