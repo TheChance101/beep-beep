@@ -1,10 +1,7 @@
 package org.thechance.service_restaurant.domain.usecase.manageRestaurant
 
 import org.koin.core.annotation.Single
-import org.thechance.service_restaurant.domain.entity.Category
-import org.thechance.service_restaurant.domain.entity.Cuisine
-import org.thechance.service_restaurant.domain.entity.Meal
-import org.thechance.service_restaurant.domain.entity.Restaurant
+import org.thechance.service_restaurant.domain.entity.*
 import org.thechance.service_restaurant.domain.gateway.CuisineGateway
 import org.thechance.service_restaurant.domain.gateway.MealGateway
 import org.thechance.service_restaurant.domain.gateway.RestaurantGateway
@@ -23,20 +20,20 @@ class ManageRestaurantUseCaseImp(
         return cuisineGateway.getCuisines(page, limit)
     }
 
-    override suspend fun addMealToRestaurant(meal: Meal): Boolean {
-        val cuisineIds = meal.cuisines?.mapNotNull { it.id }
-        restaurantGateway.addCuisineToRestaurant(meal.restaurantId!!, cuisineIds!!)
+    override suspend fun addMealToRestaurant(meal: MealDetails): Boolean {
+        val cuisineIds = meal.cuisines.map { it.id }
+        restaurantGateway.addCuisineToRestaurant(meal.restaurantId, cuisineIds)
         return mealGateway.addMeal(meal)
     }
 
     override suspend fun deleteMealFromRestaurant(mealId: String): Boolean {
         val meal = mealGateway.getMealById(mealId)
-        val cuisineIds = meal?.cuisines?.mapNotNull { it.id }
+        val cuisineIds = meal?.cuisines?.map { it.id }
         mealGateway.deleteMealById(mealId)
         return restaurantGateway.deleteCuisinesFromRestaurant(meal?.restaurantId!!, cuisineIds!!)
     }
 
-    override suspend fun updateMealToRestaurant(meal: Meal): Boolean {
+    override suspend fun updateMealToRestaurant(meal: MealDetails): Boolean {
         return mealGateway.updateMeal(meal)
     }
 

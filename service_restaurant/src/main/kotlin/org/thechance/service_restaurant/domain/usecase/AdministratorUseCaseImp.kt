@@ -47,10 +47,6 @@ class AdministratorUseCaseImp(
         return restaurantGateway.addRestaurant(restaurant)
     }
 
-    override suspend fun updateRestaurant(restaurant: Restaurant): Boolean {
-        return restaurantGateway.updateRestaurant(restaurant)
-    }
-
     override suspend fun deleteRestaurant(restaurantId: String): Boolean {
         return if (restaurantId.isNotEmpty()) {
             restaurantGateway.deleteRestaurant(restaurantId)

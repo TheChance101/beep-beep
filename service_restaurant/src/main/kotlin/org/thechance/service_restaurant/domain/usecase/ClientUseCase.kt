@@ -1,9 +1,6 @@
 package org.thechance.service_restaurant.domain.usecase
 
-import org.thechance.service_restaurant.domain.entity.Category
-import org.thechance.service_restaurant.domain.entity.Cuisine
-import org.thechance.service_restaurant.domain.entity.Meal
-import org.thechance.service_restaurant.domain.entity.Restaurant
+import org.thechance.service_restaurant.domain.entity.*
 
 interface ClientUseCase {
     suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant>
@@ -12,5 +9,5 @@ interface ClientUseCase {
     suspend fun getRestaurantsInCategory(categoryId: String): List<Restaurant>
     suspend fun getRestaurantDetails(restaurantId: String): Restaurant
     suspend fun getMealsInCuisines(cuisineId: String): List<Meal>
-    suspend fun getMealDetails(mealId: String): Meal
+    suspend fun getMealDetails(mealId: String): MealDetails
 }

@@ -8,8 +8,8 @@ import org.bson.types.ObjectId
 
 @Serializable
 data class AddressCollection(
-    val lat: Long? = null,
-    val lon: Long? = null,
+    val latitude: Double,
+    val longitude: Double,
     val isDeleted: Boolean = false,
 ) {
     @BsonId

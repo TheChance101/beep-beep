@@ -7,13 +7,13 @@ import org.thechance.service_restaurant.domain.entity.Restaurant
 fun RestaurantDto.toEntity() = Restaurant(
     id = id ?: "",
     ownerId = ownerId,
-    name = name,
-    description = description,
-    priceLevel = priceLevel,
-    rate = rate,
-    phone = phone,
-    openingTime = openingTime,
-    closingTime = closingTime
+    name = name ?: "",
+    description = description ?: "",
+    priceLevel = priceLevel ?: "",
+    rate = rate ?: -1.0,
+    phone = phone ?: "",
+    openingTime = openingTime ?: "",
+    closingTime = closingTime ?: ""
 )
 
 fun Restaurant.toDto() = RestaurantDto(

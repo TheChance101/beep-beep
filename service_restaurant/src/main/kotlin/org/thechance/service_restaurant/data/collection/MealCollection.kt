@@ -19,7 +19,7 @@ data class MealCollection(
     val price: Double,
     @Contextual
     val restaurantId: ObjectId = ObjectId(),
-    val cuisines: List<@Contextual ObjectId> = emptyList(),
+    val cuisines: List<@Contextual ObjectId>,
 )
 
 

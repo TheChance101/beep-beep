@@ -6,7 +6,9 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
+import org.thechance.service_restaurant.api.models.MealDetailsDto
 import org.thechance.service_restaurant.api.models.MealDto
+import org.thechance.service_restaurant.api.models.mappers.toDetailsDto
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.extractInt
@@ -16,18 +18,15 @@ import org.thechance.service_restaurant.domain.usecase.ClientUseCase
 import org.thechance.service_restaurant.domain.usecase.manageRestaurant.ManageRestaurantUseCase
 
 fun Route.mealRoutes() {
-
     val client: ClientUseCase by inject()
     val admin: AdministratorUseCase by inject()
     val manageRestaurant: ManageRestaurantUseCase by inject()
 
-    route("meals") {
-        get {
-            val page = call.parameters.extractInt("page") ?: 1
-            val limit = call.parameters.extractInt("limit") ?: 10
-            val meals = admin.getAllMeals(page, limit)
-            call.respond(meals.toDto())
-        }
+    get("meals") {
+        val page = call.parameters.extractInt("page") ?: 1
+        val limit = call.parameters.extractInt("limit") ?: 10
+        val meals = admin.getAllMeals(page, limit)
+        call.respond(meals.toDto())
     }
 
     route("meal") {
@@ -44,19 +43,16 @@ fun Route.mealRoutes() {
             if (isUpdated) call.respond(HttpStatusCode.OK, "updated successfully")
         }
 
+        post {
+            val meal = call.receive<MealDto>()
+            val result = manageRestaurant.addMealToRestaurant(meal.toEntity())
+            call.respond(HttpStatusCode.Created, result)
+        }
+
         delete("/{id}") {
             val id = call.parameters.extractString("id") ?: ""
             val isDeleted = manageRestaurant.deleteMealFromRestaurant(id)
             if (isDeleted) call.respond(HttpStatusCode.OK, "Meal deleted Successfully")
         }
-//
-//        delete("/{mealId}/cuisine/{cuisineId}") {
-//            val mealId = call.parameters.extractString("mealId") ?: ""
-//            val cuisineId = call.parameters.extractString("cuisineId") ?: throw NotFoundException("ID not provided")
-//            val isDeleted = manageCuisinesInMeal.deleteCuisineFromMeal(mealId, cuisineId)
-//            if (isDeleted) call.respond(HttpStatusCode.OK, "Cuisine deleted Successfully")
-//        }
-
     }
-
 }

@@ -5,20 +5,21 @@ import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
-import org.litote.kmongo.coroutine.updateOne
 import org.thechance.service_restaurant.data.Constants.CUISINE_COLLECTION
 import org.thechance.service_restaurant.data.DataBaseContainer
 import org.thechance.service_restaurant.data.collection.CuisineCollection
 import org.thechance.service_restaurant.data.collection.MealCollection
 import org.thechance.service_restaurant.data.collection.MealCuisines
-import org.thechance.service_restaurant.data.collection.MealDetailsCollection
+import org.thechance.service_restaurant.data.collection.MealWithCuisines
 import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
+import org.thechance.service_restaurant.data.utils.getNonEmptyFieldsMap
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
 import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.data.utils.toObjectIds
 import org.thechance.service_restaurant.domain.entity.Cuisine
 import org.thechance.service_restaurant.domain.entity.Meal
+import org.thechance.service_restaurant.domain.entity.MealDetails
 import org.thechance.service_restaurant.domain.gateway.MealGateway
 
 @Single
@@ -27,16 +28,14 @@ class MealGatewayImp(private val container: DataBaseContainer) : MealGateway {
     override suspend fun getMeals(page: Int, limit: Int): List<Meal> =
         container.mealCollection.find(MealCollection::isDeleted eq false).paginate(page, limit).toList().toEntity()
 
-    override suspend fun getMealById(id: String): Meal? {
-        return container.mealCollection.aggregate<MealDetailsCollection>(
-            match(
-                MealCollection::id eq ObjectId(id)
-            ),
+    override suspend fun getMealById(id: String): MealDetails? {
+        return container.mealCollection.aggregate<MealWithCuisines>(
+            match(MealCollection::id eq ObjectId(id)),
             lookup(
                 from = CUISINE_COLLECTION,
                 localField = MealCollection::cuisines.name,
                 foreignField = "_id",
-                newAs = MealDetailsCollection::cuisines.name
+                newAs = MealWithCuisines::cuisines.name
             )
 
         ).toList().firstOrNull()?.toEntity()
@@ -59,7 +58,7 @@ class MealGatewayImp(private val container: DataBaseContainer) : MealGateway {
         ).toList().first().cuisines.filterNot { it.isDeleted }.toEntity()
     }
 
-    override suspend fun addMeal(meal: Meal): Boolean {
+    override suspend fun addMeal(meal: MealDetails): Boolean {
         return container.mealCollection.insertOne(meal.toCollection()).wasAcknowledged()
     }
 
@@ -77,9 +76,18 @@ class MealGatewayImp(private val container: DataBaseContainer) : MealGateway {
         return resultAddToCuisine and resultAddToMeal
     }
 
-    override suspend fun updateMeal(meal: Meal): Boolean =
-        container.mealCollection.updateOne(meal.toCollection(), updateOnlyNotNullProperties = true)
-            .isSuccessfullyUpdated()
+    override suspend fun updateMeal(meal: MealDetails): Boolean {
+        val updateFields = getNonEmptyFieldsMap(meal.copy(id = "", restaurantId = "", cuisines = emptyList()))
+        if (meal.cuisines.isNotEmpty()) {
+            updateFields[MealDetails::cuisines.name] = meal.cuisines.map { ObjectId(it.id) }
+        }
+        return container.mealCollection.updateOneById(
+            ObjectId(meal.id),
+            updateFields,
+            updateOnlyNotNullProperties = true
+        ).isSuccessfullyUpdated()
+    }
+
 
     override suspend fun deleteMealById(id: String): Boolean =
         container.mealCollection.updateOne(

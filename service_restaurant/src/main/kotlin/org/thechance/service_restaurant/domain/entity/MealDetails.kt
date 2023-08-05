@@ -1,10 +1,10 @@
 package org.thechance.service_restaurant.domain.entity
 
-
-data class Meal(
+data class MealDetails(
     val id: String,
     val restaurantId: String,
     val name: String,
     val description: String,
     val price: Double,
+    val cuisines: List<Cuisine>
 )

@@ -6,8 +6,8 @@ import org.thechance.service_restaurant.domain.entity.Address
 fun AddressCollection.toEntity(): Address {
     return Address(
         id = id.toString(),
-        lat = lat,
-        lon = lon,
+        latitude = latitude,
+        longitude = longitude,
     )
 }
 
@@ -15,7 +15,7 @@ fun List<AddressCollection>.toEntity(): List<Address> = map { it.toEntity() }
 
 fun Address.toCollection(): AddressCollection {
     return AddressCollection(
-        lat = lat,
-        lon = lon,
+        latitude = latitude,
+        longitude = longitude,
     )
 }

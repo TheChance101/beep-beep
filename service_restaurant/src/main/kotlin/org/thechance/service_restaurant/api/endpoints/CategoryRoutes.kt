@@ -20,13 +20,11 @@ fun Route.categoryRoutes() {
     val client: ClientUseCase by inject()
     val administrator: AdministratorUseCase by inject()
 
-    route("/categories") {
-        get {
-            val page = call.parameters.extractInt("page") ?: 1
-            val limit = call.parameters.extractInt("limit") ?: 10
-            val categories = client.getCategories(page, limit).toDto()
-            call.respond(HttpStatusCode.OK, categories)
-        }
+    get("/categories") {
+        val page = call.parameters.extractInt("page") ?: 1
+        val limit = call.parameters.extractInt("limit") ?: 10
+        val categories = client.getCategories(page, limit).toDto()
+        call.respond(HttpStatusCode.OK, categories)
     }
 
     route("/category") {

@@ -1,18 +1,15 @@
 package org.thechance.service_restaurant.domain.usecase.manageRestaurant
 
-import org.thechance.service_restaurant.domain.entity.Category
-import org.thechance.service_restaurant.domain.entity.Cuisine
-import org.thechance.service_restaurant.domain.entity.Meal
-import org.thechance.service_restaurant.domain.entity.Restaurant
+import org.thechance.service_restaurant.domain.entity.*
 
 interface ManageRestaurantUseCase {
     suspend fun updateRestaurant(restaurant: Restaurant): Boolean
     suspend fun getCuisines(page: Int, limit: Int): List<Cuisine>
 
     //regionMeal
-    suspend fun addMealToRestaurant(meal: Meal): Boolean
+    suspend fun addMealToRestaurant(meal: MealDetails): Boolean
     suspend fun deleteMealFromRestaurant(mealId: String): Boolean
-    suspend fun updateMealToRestaurant(meal: Meal): Boolean
+    suspend fun updateMealToRestaurant(meal: MealDetails): Boolean
     //endregion
 
     //regionCategory

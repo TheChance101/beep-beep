@@ -45,3 +45,4 @@ fun Restaurant.toCollection() = RestaurantCollection(
     openingTime = openingTime,
     closingTime = closingTime,
 )
+

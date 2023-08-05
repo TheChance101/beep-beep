@@ -1,10 +1,7 @@
 package org.thechance.service_restaurant.domain.usecase
 
 import org.koin.core.annotation.Single
-import org.thechance.service_restaurant.domain.entity.Category
-import org.thechance.service_restaurant.domain.entity.Cuisine
-import org.thechance.service_restaurant.domain.entity.Meal
-import org.thechance.service_restaurant.domain.entity.Restaurant
+import org.thechance.service_restaurant.domain.entity.*
 import org.thechance.service_restaurant.domain.gateway.CategoryGateway
 import org.thechance.service_restaurant.domain.gateway.CuisineGateway
 import org.thechance.service_restaurant.domain.gateway.MealGateway
@@ -41,7 +38,7 @@ class ClientUseCaseImp(
         return cuisineGateway.getMealsInCuisine(cuisineId)
     }
 
-    override suspend fun getMealDetails(mealId: String): Meal {
+    override suspend fun getMealDetails(mealId: String): MealDetails {
         return mealGateway.getMealById(mealId) ?: throw Throwable()
     }
 }
