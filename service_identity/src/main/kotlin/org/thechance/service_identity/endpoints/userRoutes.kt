@@ -26,7 +26,7 @@ fun Route.userRoutes() {
         }
 
         get("/{id}") {
-            val id = call.parameters["id"] ?: throw InvalidIDException
+            val id = call.parameters["id"] ?: throw InvalidIDException()
             val user = userAccountUseCase.getUser(id).toDto()
             call.respond(HttpStatusCode.OK, user)
         }
@@ -38,14 +38,14 @@ fun Route.userRoutes() {
         }
 
         put("/{id}") {
-            val id = call.parameters["id"] ?: throw InvalidIDException
+            val id = call.parameters["id"] ?: throw InvalidIDException()
             val userDto = call.receive<UpdateUserRequest>()
             val result = userAccountUseCase.updateUser(id, userDto.toEntity())
             call.respond(HttpStatusCode.OK, result)
         }
 
         delete("/{id}") {
-            val id = call.parameters["id"] ?: throw InvalidIDException
+            val id = call.parameters["id"] ?: throw InvalidIDException()
             val result = userAccountUseCase.deleteUser(id)
             call.respond(HttpStatusCode.OK, result)
         }
