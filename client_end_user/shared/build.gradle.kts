@@ -35,6 +35,7 @@ kotlin {
                 implementation(libs.compose.foundation)
                 implementation(libs.compose.material)
                 implementation(libs.compose.components.resources)
+                implementation(project(":design_system:shared"))
             }
         }
         val androidMain by getting {

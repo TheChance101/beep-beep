@@ -14,7 +14,7 @@
     "ios": "14.1"
   },
   "pod_target_xcconfig": {
-    "KOTLIN_PROJECT_PATH": ":client_delivery:shared",
+    "KOTLIN_PROJECT_PATH": ":design_system:shared",
     "PRODUCT_MODULE_NAME": "shared"
   },
   "script_phases": [
@@ -26,7 +26,6 @@
     }
   ],
   "resources": [
-    "src/commonMain/resources/**",
-    "src/iosMain/resources/**"
+    "src/commonMain/resources/**"
   ]
 }
