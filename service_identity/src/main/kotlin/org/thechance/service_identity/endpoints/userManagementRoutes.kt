@@ -1,13 +1,13 @@
 package org.thechance.service_identity.endpoints
 
 import io.ktor.server.application.*
-import io.ktor.server.plugins.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.service_identity.data.mappers.toDto
+import org.thechance.service_identity.domain.entity.MissingParameterException
 import org.thechance.service_identity.domain.usecases.user_management.UserManagementUseCase
-import org.thechance.service_identity.endpoints.validation.INVALID_PERMISSION_ID_ERROR_CODE
+import org.thechance.service_identity.endpoints.validation.INVALID_REQUEST_PARAMETER
 
 fun Route.userManagementRoutes() {
 
@@ -36,7 +36,7 @@ fun Route.userManagementRoutes() {
         post("/{id}/permission") {
             val id = call.parameters["id"] ?: ""
             val permissionId = call.parameters["permission_id"]?.toInt()
-                ?: throw BadRequestException(INVALID_PERMISSION_ID_ERROR_CODE)
+                ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val result = userManagement.addPermissionToUser(id, permissionId)
             call.respond(result)
         }
@@ -44,7 +44,7 @@ fun Route.userManagementRoutes() {
         delete("/{id}/permission") {
             val id = call.parameters["id"] ?: ""
             val permissionId = call.parameters["permission_id"]?.toInt()
-                ?: throw BadRequestException(INVALID_PERMISSION_ID_ERROR_CODE)
+                ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val result = userManagement.removePermissionFromUser(id, permissionId)
             call.respond(result)
         }

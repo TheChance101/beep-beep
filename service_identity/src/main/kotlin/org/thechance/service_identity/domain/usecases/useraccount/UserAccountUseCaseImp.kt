@@ -4,8 +4,6 @@ import org.koin.core.annotation.Single
 import org.thechance.service_identity.domain.entity.Address
 import org.thechance.service_identity.domain.entity.User
 import org.thechance.service_identity.domain.gateway.DataBaseGateway
-import org.thechance.service_identity.endpoints.validation.AddressNotFoundException
-import org.thechance.service_identity.endpoints.validation.InvalidIDException
 
 @Single
 class UserAccountUseCaseImp(
@@ -14,11 +12,11 @@ class UserAccountUseCaseImp(
 
     // region user
     override suspend fun createUser(user: User): Boolean {
-       return dataBaseGateway.createUser(user)
+        return dataBaseGateway.createUser(user)
     }
 
     override suspend fun deleteUser(id: String): Boolean {
-       return dataBaseGateway.deleteUser(id)
+        return dataBaseGateway.deleteUser(id)
     }
 
     override suspend fun updateUser(id: String, user: User): Boolean {
@@ -30,7 +28,7 @@ class UserAccountUseCaseImp(
     }
 
     override suspend fun getUser(id: String): User {
-        return dataBaseGateway.getUserById(id) ?: throw Throwable("Invalid id")
+        return dataBaseGateway.getUserById(id)
     }
 
     // endregion
@@ -41,17 +39,15 @@ class UserAccountUseCaseImp(
     }
 
     override suspend fun deleteAddress(id: String): Boolean {
-        dataBaseGateway.deleteAddress(id).takeIf { it } ?: throw AddressNotFoundException()
-        return true
+        return dataBaseGateway.deleteAddress(id)
     }
 
     override suspend fun updateAddress(id: String, address: Address): Boolean {
-        dataBaseGateway.updateAddress(id, address).takeIf { it } ?: throw AddressNotFoundException()
-        return true
+        return dataBaseGateway.updateAddress(id, address)
     }
 
     override suspend fun getAddress(id: String): Address {
-        return dataBaseGateway.getAddress(id) ?: throw InvalidIDException()
+        return dataBaseGateway.getAddress(id)
     }
 
     override suspend fun getUserAddresses(userId: String): List<Address> {

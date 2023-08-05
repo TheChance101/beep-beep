@@ -6,12 +6,12 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import org.thechance.service_identity.endpoints.model.AddressDto
 import org.thechance.service_identity.data.mappers.toDto
 import org.thechance.service_identity.data.mappers.toEntity
+import org.thechance.service_identity.domain.entity.MissingParameterException
 import org.thechance.service_identity.domain.usecases.useraccount.UserAccountUseCase
-import org.thechance.service_identity.endpoints.validation.InvalidIDException
-import org.thechance.service_identity.endpoints.validation.InvalidUserIDException
+import org.thechance.service_identity.endpoints.model.AddressDto
+import org.thechance.service_identity.endpoints.validation.INVALID_REQUEST_PARAMETER
 
 fun Route.addressRoutes() {
 
@@ -25,17 +25,17 @@ fun Route.addressRoutes() {
         }
 
         get("/{id}") {
-            val id = call.parameters["id"] ?: throw InvalidIDException()
+            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             call.respond(HttpStatusCode.OK, userAccountUseCase.getAddress(id).toDto())
         }
 
         delete("/{id}") {
-            val id = call.parameters["id"] ?: throw InvalidIDException()
+            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             call.respond(HttpStatusCode.OK, userAccountUseCase.deleteAddress(id))
         }
 
         put("/{id}") {
-            val id = call.parameters["id"] ?: throw InvalidIDException()
+            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val address = call.receive<AddressDto>()
             call.respond(HttpStatusCode.Created, userAccountUseCase.updateAddress(id, address.toEntity()))
         }
@@ -43,7 +43,7 @@ fun Route.addressRoutes() {
     }
 
     get("/addresses/{userId}") {
-        val id = call.parameters["userId"] ?: throw InvalidUserIDException()
+        val id = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
         val userAddresses = userAccountUseCase.getUserAddresses(id)
         call.respond(HttpStatusCode.OK, userAddresses.map { it.toDto() })
     }

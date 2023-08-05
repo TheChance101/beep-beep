@@ -9,15 +9,15 @@ fun RequestValidationConfig.addressValidation() {
         val reasons = mutableListOf<String>()
 
         if (addressDto.userId.isEmpty()) {
-            reasons.add(ERROR_CODE_INVALID_USER_ID.toString())
+            reasons.add(INVALID_USER_ID)
         }
 
         if (!addressDto.userId.isHexStringValid()){
-            reasons.add(ERROR_CODE_INVALID_HEX_STRING_LENGTH.toString())
+            reasons.add(INVALID_HEX_STRING_LENGTH)
         }
 
         if (addressDto.latitude !in -90.0..90.0 || addressDto.longitude !in -180.0..180.0) {
-            reasons.add(ERROR_CODE_INVALID_ADDRESS_LOCATION.toString())
+            reasons.add(INVALID_ADDRESS_LOCATION)
         }
 
         if (reasons.isNotEmpty()) {
@@ -36,13 +36,13 @@ fun RequestValidationConfig.userValidation() {
         val validUserNameRegex = "[a-zA-Z0-9_]+".toRegex()
 
         if (user.username?.isBlank() == true) {
-            reasons.add(ERROR_CODE_INVALID_USERNAME.toString())
+            reasons.add(INVALID_USERNAME)
         }
         if (user.username?.matches(validUserNameRegex) != true) {
-            reasons.add(ERROR_CODE_INVALID_USERNAME.toString())
+            reasons.add(INVALID_USERNAME)
         }
         if(user.fullName?.isEmpty() == true) {
-            reasons.add(ERROR_CODE_INVALID_FULLNAME.toString())
+            reasons.add(INVALID_FULLNAME)
         }
 
         if (reasons.isNotEmpty()) {

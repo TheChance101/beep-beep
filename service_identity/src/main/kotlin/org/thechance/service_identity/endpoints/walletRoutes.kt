@@ -1,4 +1,4 @@
-package org.thechance.service_identity.api.endpoints
+package org.thechance.service_identity.endpoints
 
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -9,7 +9,9 @@ import org.koin.ktor.ext.inject
 import org.thechance.service_identity.api.model.WalletDto
 import org.thechance.service_identity.data.mappers.toDto
 import org.thechance.service_identity.data.mappers.toEntity
+import org.thechance.service_identity.domain.entity.MissingParameterException
 import org.thechance.service_identity.domain.usecases.useraccount.WalletManagementUseCase
+import org.thechance.service_identity.endpoints.validation.INVALID_REQUEST_PARAMETER
 
 fun Route.walletRoute() {
 
@@ -37,7 +39,7 @@ fun Route.walletRoute() {
         }
         put("/{id}") {
             try {
-                val id = call.parameters["id"]!!
+                val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
                 val wallet = call.receive<WalletDto>()
                 val result = walletManagement.updateWallet(id, wallet.toEntity())
                 call.respond(result)

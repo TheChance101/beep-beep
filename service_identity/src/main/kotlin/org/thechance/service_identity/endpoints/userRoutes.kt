@@ -10,8 +10,9 @@ import org.thechance.service_identity.api.model.request.CreateUserRequest
 import org.thechance.service_identity.api.model.request.UpdateUserRequest
 import org.thechance.service_identity.data.mappers.toDto
 import org.thechance.service_identity.data.mappers.toEntity
+import org.thechance.service_identity.domain.entity.MissingParameterException
 import org.thechance.service_identity.domain.usecases.useraccount.UserAccountUseCase
-import org.thechance.service_identity.endpoints.validation.InvalidIDException
+import org.thechance.service_identity.endpoints.validation.INVALID_REQUEST_PARAMETER
 
 fun Route.userRoutes() {
 
@@ -26,7 +27,7 @@ fun Route.userRoutes() {
         }
 
         get("/{id}") {
-            val id = call.parameters["id"] ?: throw InvalidIDException()
+            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val user = userAccountUseCase.getUser(id).toDto()
             call.respond(HttpStatusCode.OK, user)
         }
@@ -38,14 +39,14 @@ fun Route.userRoutes() {
         }
 
         put("/{id}") {
-            val id = call.parameters["id"] ?: throw InvalidIDException()
+            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val userDto = call.receive<UpdateUserRequest>()
             val result = userAccountUseCase.updateUser(id, userDto.toEntity())
             call.respond(HttpStatusCode.OK, result)
         }
 
         delete("/{id}") {
-            val id = call.parameters["id"] ?: throw InvalidIDException()
+            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val result = userAccountUseCase.deleteUser(id)
             call.respond(HttpStatusCode.OK, result)
         }

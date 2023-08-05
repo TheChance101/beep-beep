@@ -30,7 +30,7 @@ interface DataBaseGateway {
 
     suspend fun updateAddress(id: String, address: Address): Boolean
 
-    suspend fun getAddress(id: String): Address?
+    suspend fun getAddress(id: String): Address
 
     suspend fun getUserAddresses(userId: String): List<Address>
 

@@ -3,7 +3,6 @@ package org.thechance.service_identity.data.geteway
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.IndexOptions
 import com.mongodb.client.model.Indexes
-import io.ktor.server.plugins.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,13 +16,10 @@ import org.thechance.service_identity.data.mappers.toCollection
 import org.thechance.service_identity.data.mappers.toDetailsCollection
 import org.thechance.service_identity.data.mappers.toEntity
 import org.thechance.service_identity.data.util.*
-import org.thechance.service_identity.domain.entity.Address
-import org.thechance.service_identity.domain.entity.Permission
-import org.thechance.service_identity.domain.entity.User
-import org.thechance.service_identity.domain.entity.Wallet
+import org.thechance.service_identity.domain.entity.*
 import org.thechance.service_identity.domain.gateway.DataBaseGateway
-import org.thechance.service_identity.endpoints.validation.NOT_FOUND_ERROR_CODE
-import org.thechance.service_identity.endpoints.validation.UserAlreadyExistsException
+import org.thechance.service_identity.endpoints.validation.NOT_FOUND
+import org.thechance.service_identity.endpoints.validation.USER_ALREADY_EXISTS
 
 @Single
 class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway {
@@ -77,11 +73,11 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
         return addressCollection.updateOneById(ObjectId(id), address.toCollection()).isUpdatedSuccessfully()
     }
 
-    override suspend fun getAddress(id: String): Address? {
+    override suspend fun getAddress(id: String): Address {
         return addressCollection.findOne(
             AddressCollection::id eq ObjectId(id),
             AddressCollection::isDeleted eq false
-        )?.toEntity()
+        )?.toEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
     override suspend fun getUserAddresses(userId: String): List<Address> {
@@ -96,7 +92,7 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
     //region Permission
     override suspend fun getPermission(permissionId: String): Permission {
         return permissionCollection.findOneById(ObjectId(permissionId))?.toEntity()
-            ?: throw Exception("Wallet not found")
+            ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
     override suspend fun addPermission(permission: Permission): Boolean {
@@ -157,7 +153,7 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
                 foreignField = USER_DETAILS_LOCAL_FIELD,
                 newAs = DETAILED_USER_COLLECTION
             )
-        ).toList().toEntity().firstOrNull() ?: throw NotFoundException(NOT_FOUND_ERROR_CODE)
+        ).toList().toEntity().firstOrNull() ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
     override suspend fun getUsers(fullName: String, username: String): List<User> {
@@ -175,7 +171,7 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
             return userCollection.insertOne(userDocument).wasAcknowledged()
         } catch (exception: com.mongodb.MongoWriteException) {
             if (exception.code == 11000) {
-                throw UserAlreadyExistsException()
+                throw UserAlreadyExistsException(USER_ALREADY_EXISTS)
             }
             throw exception
         }
@@ -209,7 +205,8 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
 
     // region: wallet
     override suspend fun getWallet(walletId: String): Wallet {
-        return walletCollection.findOneById(ObjectId(walletId))?.toEntity() ?: throw Exception("Wallet not found")
+        return walletCollection.findOneById(ObjectId(walletId))?.toEntity()
+            ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
     override suspend fun createWallet(wallet: Wallet): Boolean {
