@@ -4,8 +4,7 @@ import org.thechance.service_restaurant.domain.entity.Category
 import org.thechance.service_restaurant.domain.entity.Cuisine
 import org.thechance.service_restaurant.domain.entity.Restaurant
 
-interface RestaurantsManagementUseCase {
-
+interface AdministratorUseCase {
     suspend fun updateCuisine(cuisine: Cuisine): Boolean
     suspend fun deleteCuisine(id: String): Boolean
     suspend fun addCuisine(cuisine: Cuisine): Boolean

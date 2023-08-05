@@ -3,21 +3,21 @@ package org.thechance.service_restaurant.api.endpoints
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
+import org.thechance.service_restaurant.api.models.CuisineDto
 import org.thechance.service_restaurant.api.models.mappers.toDto
-import org.thechance.service_restaurant.api.utils.extractInt
+import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.extractString
 import org.thechance.service_restaurant.domain.usecase.ClientUseCase
-import org.thechance.service_restaurant.domain.usecase.RestaurantsManagementUseCase
-import org.thechance.service_restaurant.domain.usecase.cuisine.ManageCuisineUseCase
-import org.thechance.service_restaurant.domain.usecase.cuisine.UserGetCuisineUseCase
+import org.thechance.service_restaurant.domain.usecase.AdministratorUseCase
 
 fun Route.cuisineRoutes() {
 
     val client: ClientUseCase by inject()
-    val restaurantManagement: RestaurantsManagementUseCase by inject()
+    val administrator: AdministratorUseCase by inject()
 
 //    get("cuisines") {
 //        val page = call.parameters.extractInt("page") ?: 1
@@ -56,19 +56,19 @@ fun Route.cuisineRoutes() {
 
         post {
             val cuisine = call.receive<CuisineDto>()
-            val isAdded = restaurantManagement.addCuisine(cuisine.toEntity())
+            val isAdded = administrator.addCuisine(cuisine.toEntity())
             if (isAdded) call.respond(HttpStatusCode.Created, "Added Successfully")
         }
 
         put {
             val cuisine = call.receive<CuisineDto>()
-            val isUpdated = restaurantManagement.updateCuisine(cuisine.toEntity())
+            val isUpdated = administrator.updateCuisine(cuisine.toEntity())
             if (isUpdated) call.respond(HttpStatusCode.OK, "Updated Successfully")
         }
 
         delete("/{id}") {
             val id = call.parameters.extractString("id") ?: throw NotFoundException()
-            val isDeleted = restaurantManagement.deleteCuisine(id)
+            val isDeleted = administrator.deleteCuisine(id)
             if (isDeleted) call.respond(HttpStatusCode.OK, "Deleted Successfully")
         }
 

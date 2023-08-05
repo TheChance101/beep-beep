@@ -9,11 +9,11 @@ import org.thechance.service_restaurant.domain.gateway.CuisineGateway
 import org.thechance.service_restaurant.domain.gateway.RestaurantGateway
 import org.thechance.service_restaurant.utils.DeleteCategoryException
 @Single
-class RestaurantsManagementUseCaseImp(
+class AdministratorUseCaseImp(
     private val restaurantGateway: RestaurantGateway,
     private val categoryGateway: CategoryGateway,
     private val cuisineGateway: CuisineGateway
-) : RestaurantsManagementUseCase {
+) : AdministratorUseCase {
 
     //region cuisine
     override suspend fun addCuisine(cuisine: Cuisine): Boolean {
