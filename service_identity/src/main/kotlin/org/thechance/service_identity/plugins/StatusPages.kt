@@ -24,7 +24,7 @@ private fun StatusPagesConfig.handleStatusPagesExceptions() {
     }
 
     exception<RequestValidationException> { call, cause ->
-        call.respond(HttpStatusCode.BadRequest, cause.reasons.joinToString())
+        call.respond(HttpStatusCode.BadRequest, cause.reasons.map { it.toInt() })
     }
 
     exception<NotFoundException> { call, cause ->
