@@ -1,5 +1,4 @@
 @file:Suppress("DSL_SCOPE_VIOLATION")
-
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.native.cocoapods)
@@ -29,12 +28,14 @@ kotlin {
     }
 
     sourceSets {
+
         val commonMain by getting {
             dependencies {
                 implementation(libs.compose.runtime)
                 implementation(libs.compose.foundation)
                 implementation(libs.compose.material)
                 implementation(libs.compose.components.resources)
+                implementation(project(":design_system:shared"))
             }
         }
         val androidMain by getting {

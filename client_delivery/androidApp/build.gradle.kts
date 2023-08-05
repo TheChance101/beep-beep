@@ -20,7 +20,7 @@ android {
     namespace = "org.thechance.beepbeep"
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-
+    packagingOptions.pickFirsts += "compose-multiplatform.xml"
     defaultConfig {
         applicationId = "org.thechance.beepbeep.delivery"
         minSdk = libs.versions.minSdk.get().toInt()
