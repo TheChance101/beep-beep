@@ -1,5 +1,6 @@
 package org.thechance.service_identity.data.geteway
 
+import com.mongodb.MongoWriteException
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.IndexOptions
 import com.mongodb.client.model.Indexes
@@ -169,11 +170,8 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
         try {
             userDetailsCollection.insertOne(user.toDetailsCollection(userDocument.id.toHexString()))
             return userCollection.insertOne(userDocument).wasAcknowledged()
-        } catch (exception: com.mongodb.MongoWriteException) {
-            if (exception.code == 11000) {
-                throw UserAlreadyExistsException(USER_ALREADY_EXISTS)
-            }
-            throw exception
+        } catch (exception: MongoWriteException) {
+            throw UserAlreadyExistsException(USER_ALREADY_EXISTS)
         }
     }
 
