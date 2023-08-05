@@ -11,22 +11,6 @@ class UserAccountUseCaseImp(
     private val dataBaseGateway: DataBaseGateway
 ) : UserAccountUseCase {
 
-    // region: wallet
-    override suspend fun getWallet(walletId: String): Wallet {
-        return dataBaseGateway.getWallet(walletId)
-    }
-
-    override suspend fun createWallet(wallet: Wallet): Boolean {
-        return dataBaseGateway.createWallet(wallet)
-    }
-
-    override suspend fun updateWallet(walletId: String, wallet: Wallet): Boolean {
-        return dataBaseGateway.updateWallet(walletId,wallet)
-    }
-    // endregion: wallet
-
-
-
     // region user
     override suspend fun createUser(user: User): Boolean {
        return dataBaseGateway.createUser(user)
