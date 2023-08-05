@@ -16,7 +16,6 @@ import org.thechance.service_restaurant.api.utils.extractString
 import org.thechance.service_restaurant.domain.usecase.ClientUseCase
 import org.thechance.service_restaurant.domain.usecase.AdministratorUseCase
 import org.thechance.service_restaurant.domain.usecase.manageRestaurant.ManageRestaurantUseCase
-import org.thechance.service_restaurant.domain.usecase.manageRestaurant.ManageRestaurantUseCase
 
 fun Route.restaurantRoutes() {
 
