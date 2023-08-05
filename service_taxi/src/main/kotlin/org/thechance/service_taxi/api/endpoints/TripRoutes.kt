@@ -29,7 +29,7 @@ fun Route.tripRoutes() {
 
         get("/{tripId}") {
             val id = call.parameters["tripId"]?.trim().orEmpty()
-            val result = tripManagement.getTrip(id)
+            val result = client.getTripById(id)
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 

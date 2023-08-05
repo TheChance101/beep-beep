@@ -16,7 +16,4 @@ class TripManagementsUseCaseImp(
         return tripGateway.getAllTrips(page, limit)//todo
     }
 
-    override suspend fun getTrip(tripId: String): Trip {
-        return tripGateway.getTripById(tripId)
-    }
 }
