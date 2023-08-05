@@ -41,17 +41,17 @@ class UserAccountUseCaseImp(
     }
 
     override suspend fun deleteAddress(id: String): Boolean {
-        dataBaseGateway.deleteAddress(id).takeIf { it } ?: throw AddressNotFoundException
+        dataBaseGateway.deleteAddress(id).takeIf { it } ?: throw AddressNotFoundException()
         return true
     }
 
     override suspend fun updateAddress(id: String, address: Address): Boolean {
-        dataBaseGateway.updateAddress(id, address).takeIf { it } ?: throw AddressNotFoundException
+        dataBaseGateway.updateAddress(id, address).takeIf { it } ?: throw AddressNotFoundException()
         return true
     }
 
     override suspend fun getAddress(id: String): Address {
-        return dataBaseGateway.getAddress(id) ?: throw InvalidIDException
+        return dataBaseGateway.getAddress(id) ?: throw InvalidIDException()
     }
 
     override suspend fun getUserAddresses(userId: String): List<Address> {

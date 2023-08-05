@@ -25,17 +25,17 @@ fun Route.addressRoutes() {
         }
 
         get("/{id}") {
-            val id = call.parameters["id"] ?: throw InvalidIDException
+            val id = call.parameters["id"] ?: throw InvalidIDException()
             call.respond(HttpStatusCode.OK, userAccountUseCase.getAddress(id).toDto())
         }
 
         delete("/{id}") {
-            val id = call.parameters["id"] ?: throw InvalidIDException
+            val id = call.parameters["id"] ?: throw InvalidIDException()
             call.respond(HttpStatusCode.OK, userAccountUseCase.deleteAddress(id))
         }
 
         put("/{id}") {
-            val id = call.parameters["id"] ?: throw InvalidIDException
+            val id = call.parameters["id"] ?: throw InvalidIDException()
             val address = call.receive<AddressDto>()
             call.respond(HttpStatusCode.Created, userAccountUseCase.updateAddress(id, address.toEntity()))
         }
@@ -43,7 +43,7 @@ fun Route.addressRoutes() {
     }
 
     get("/addresses/{userId}") {
-        val id = call.parameters["userId"] ?: throw InvalidUserIDException
+        val id = call.parameters["userId"] ?: throw InvalidUserIDException()
         val userAddresses = userAccountUseCase.getUserAddresses(id)
         call.respond(HttpStatusCode.OK, userAddresses.map { it.toDto() })
     }

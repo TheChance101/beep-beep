@@ -190,7 +190,7 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
             return userCollection.insertOne(userDocument).wasAcknowledged()
         }  catch (exception: com.mongodb.MongoWriteException) {
             if (exception.code == 11000) {
-                throw UserAlreadyExistsException
+                throw UserAlreadyExistsException()
             }
             throw exception
         }
