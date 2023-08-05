@@ -19,25 +19,25 @@ private fun StatusPagesConfig.handleStatusPagesExceptions() {
     exception<MissingParameterException> { call, cause ->
         call.respond(
             HttpStatusCode.BadRequest,
-            listOf(cause.message)
+            listOf(cause.message?.toInt())
         )
     }
 
     exception<RequestValidationException> { call, cause ->
-        call.respond(HttpStatusCode.BadRequest, cause.reasons.joinToString())
+        call.respond(HttpStatusCode.BadRequest, cause.reasons.map { it.toInt() })
     }
 
     exception<NotFoundException> { call, cause ->
         call.respond(
             HttpStatusCode.NotFound,
-            listOf(cause.message)
+            listOf(cause.message?.toInt())
         )
     }
 
     exception<UserAlreadyExistsException> { call, cause ->
         call.respond(
             HttpStatusCode.InternalServerError,
-            listOf(cause.message)
+            listOf(cause.message?.toInt())
         )
     }
 }
