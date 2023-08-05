@@ -3,6 +3,7 @@ package org.thechance.service_identity.data.geteway
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.IndexOptions
 import com.mongodb.client.model.Indexes
+import io.ktor.server.plugins.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,13 +17,12 @@ import org.thechance.service_identity.data.mappers.toCollection
 import org.thechance.service_identity.data.mappers.toDetailsCollection
 import org.thechance.service_identity.data.mappers.toEntity
 import org.thechance.service_identity.data.util.*
-import org.thechance.service_identity.data.util.USER_DETAILS_COLLECTION
-import org.thechance.service_identity.data.util.isUpdatedSuccessfully
 import org.thechance.service_identity.domain.entity.Address
 import org.thechance.service_identity.domain.entity.Permission
 import org.thechance.service_identity.domain.entity.User
 import org.thechance.service_identity.domain.entity.Wallet
-import org.thechance.service_identity.domain.gateway.*
+import org.thechance.service_identity.domain.gateway.DataBaseGateway
+import org.thechance.service_identity.endpoints.validation.NOT_FOUND_ERROR_CODE
 import org.thechance.service_identity.endpoints.validation.UserAlreadyExistsException
 
 @Single
@@ -93,12 +93,6 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
 
     //endregion
 
-
-    //region userDetails
-
-    //endregion
-
-
     //region Permission
     override suspend fun getPermission(permissionId: String): Permission {
         return permissionCollection.findOneById(ObjectId(permissionId))?.toEntity()
@@ -154,7 +148,7 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
         return indexInfo.isNotEmpty()
     }
 
-    override suspend fun getUserById(id: String): User? {
+    override suspend fun getUserById(id: String): User {
         return userCollection.aggregate<DetailedUserCollection>(
             match(UserCollection::id eq ObjectId(id)),
             lookup(
@@ -163,32 +157,23 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
                 foreignField = USER_DETAILS_LOCAL_FIELD,
                 newAs = DETAILED_USER_COLLECTION
             )
-        ).toList().toEntity().firstOrNull()
+        ).toList().toEntity().firstOrNull() ?: throw NotFoundException(NOT_FOUND_ERROR_CODE)
     }
 
-    override suspend fun getDetailedUsers(): List<User> {
-        return userCollection.aggregate<DetailedUserCollection>(
-            lookup(
-                localField = USER_COLLECTION_LOCAL_PRIMARY_FIELD,
-                from = USER_DETAILS_COLLECTION,
-                foreignField = USER_DETAILS_LOCAL_FIELD,
-                newAs = DETAILED_USER_COLLECTION
-            )
-        ).toList().toEntity()
-    }
-
-    override suspend fun getUsers(): List<User> =
-        userCollection.find(
-            UserCollection::isDeleted eq false
+    override suspend fun getUsers(fullName: String, username: String): List<User> {
+        return userCollection.find(
+            UserCollection::isDeleted eq false,
+            UserCollection::fullName regex fullName,
+            UserCollection::username regex username
         ).toList().toUser()
-
+    }
 
     override suspend fun createUser(user: User): Boolean {
         val userDocument = user.toCollection()
         try {
             userDetailsCollection.insertOne(user.toDetailsCollection(userDocument.id.toHexString()))
             return userCollection.insertOne(userDocument).wasAcknowledged()
-        }  catch (exception: com.mongodb.MongoWriteException) {
+        } catch (exception: com.mongodb.MongoWriteException) {
             if (exception.code == 11000) {
                 throw UserAlreadyExistsException
             }
@@ -214,32 +199,6 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
             filter = UserCollection::id eq ObjectId(id),
             update = set(UserCollection::isDeleted setTo true)
         ).isUpdatedSuccessfully()
-    }
-
-    override suspend fun addPermissionToUser(userId: String, permissionId: String) {
-        userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::userId eq ObjectId(userId),
-            update = push(UserDetailsCollection::permissions, ObjectId(permissionId))
-        )
-    }
-
-    override suspend fun removePermissionFromUser(userId: String, permissionId: String) {
-        userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::userId eq ObjectId(userId),
-            update = pull(UserDetailsCollection::permissions, ObjectId(permissionId))
-        )
-    }
-
-    override suspend fun getUserPermissions(userId: String): List<Permission> {
-        return userDetailsCollection.aggregate<UserPermissionsCollection>(
-            match(UserDetailsCollection::userId eq ObjectId(userId)),
-            lookup(
-                localField = UserDetailsCollection::permissions.name,
-                from = PERMISSION_COLLECTION,
-                foreignField = USER_PERMISSION_FOREIGN_FIELD,
-                newAs = UserPermissionsCollection::userPermissions.name
-            )
-        ).first()?.userPermissions?.toEntity() ?: emptyList()
     }
 
     private fun List<UserCollection>.toUser(): List<User> {
@@ -268,6 +227,36 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
         ).wasAcknowledged()
     }
     // endregion: wallet
+
+    // region: user permission management
+
+    override suspend fun addPermissionToUser(userId: String, permissionId: Int): Boolean {
+        return userDetailsCollection.updateOne(
+            filter = UserDetailsCollection::userId eq ObjectId(userId),
+            update = push(UserDetailsCollection::permissions, permissionId)
+        ).isUpdatedSuccessfully()
+    }
+
+    override suspend fun removePermissionFromUser(userId: String, permissionId: Int): Boolean {
+        return userDetailsCollection.updateOne(
+            filter = UserDetailsCollection::userId eq ObjectId(userId),
+            update = pull(UserDetailsCollection::permissions, permissionId)
+        ).isUpdatedSuccessfully()
+    }
+
+    override suspend fun getUserPermissions(userId: String): List<Permission> {
+        return userDetailsCollection.aggregate<UserPermissionsCollection>(
+            match(UserDetailsCollection::userId eq ObjectId(userId)),
+            lookup(
+                localField = UserDetailsCollection::permissions.name,
+                from = PERMISSION_COLLECTION,
+                foreignField = USER_PERMISSION_FOREIGN_FIELD,
+                newAs = UserPermissionsCollection::userPermissions.name
+            )
+        ).first()?.userPermissions?.toEntity() ?: emptyList()
+    }
+
+    // endregion: user permission management
 
     companion object {
         private const val WALLET_COLLECTION = "wallet"

@@ -1,11 +1,12 @@
 package org.thechance.service_identity.plugins
 
 import io.ktor.server.application.*
-import org.thechance.service_identity.api.endpoints.userRoutes
-import org.thechance.service_identity.api.endpoints.walletRoute
 import io.ktor.server.routing.*
+import org.thechance.service_identity.api.endpoints.walletRoute
 import org.thechance.service_identity.endpoints.addressRoutes
-import org.thechance.service_identity.api.endpoints.permissionRoutes
+import org.thechance.service_identity.endpoints.permissionRoutes
+import org.thechance.service_identity.endpoints.userManagementRoutes
+import org.thechance.service_identity.endpoints.userRoutes
 
 fun Application.configureRouting() {
     routing {
@@ -13,5 +14,6 @@ fun Application.configureRouting() {
         userRoutes()
         addressRoutes()
         permissionRoutes()
+        userManagementRoutes()
     }
 }

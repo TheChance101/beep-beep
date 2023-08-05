@@ -16,11 +16,17 @@ object InvalidUserNameException: IdentityException(code = ERROR_CODE_INVALID_USE
     private fun readResolve(): Any = InvalidUserNameException
 }
 
-object InvalidFullNameException: IdentityException(code = ERROR_CODE_INVALID_USERNAME) {
+object InvalidFullNameException : IdentityException(code = ERROR_CODE_INVALID_USERNAME) {
     private fun readResolve(): Any = InvalidFullNameException
 }
 
-object UserAlreadyExistsException: IdentityException(code = ERROR_USER_ALREADY_EXISTS) {
+object UserAlreadyExistsException : IdentityException(code = ERROR_USER_ALREADY_EXISTS) {
     private fun readResolve(): Any = UserAlreadyExistsException
 }
 // endregion
+
+// region user management
+
+//object InvalidPermissionIDException : IdentityException(code = ERROR_CODE_INVALID_PERMISSION_ID)
+
+// region user management

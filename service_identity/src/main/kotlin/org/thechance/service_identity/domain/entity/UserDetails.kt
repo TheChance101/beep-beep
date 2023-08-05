@@ -5,5 +5,5 @@ data class UserDetails(
     val email: String?,
     val walletId: String?,
     val addresses: List<String>,
-    val permissions: List<String>
+    val permissions: List<Int>
 )
