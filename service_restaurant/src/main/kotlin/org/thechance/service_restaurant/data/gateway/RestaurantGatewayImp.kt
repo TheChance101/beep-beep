@@ -138,13 +138,6 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
         ).isSuccessfullyUpdated()
     }
 
-    override suspend fun deleteMealInRestaurant(restaurantId: String, mealId: String): Boolean {
-        return container.restaurantCollection.updateOneById(
-            ObjectId(restaurantId),
-            pull(RestaurantCollection::mealIds, ObjectId(mealId))
-        ).isSuccessfullyUpdated()
-    }
-
     override suspend fun deleteCuisinesFromRestaurant(restaurantId: String, cuisineIds: List<String>): Boolean {
         val deletedCuisineIds = container.mealCollection.aggregate<MealCollection>(
             match(

@@ -1,8 +1,10 @@
-package org.thechance.service_restaurant.domain.entity
+package org.thechance.service_restaurant.api.models
 
-data class Restaurant(
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class RestaurantDetailsDto(
     val id: String,
-    val ownerId: String,
     val name: String,
     val description: String,
     val priceLevel: String,
@@ -10,6 +12,5 @@ data class Restaurant(
     val phone: String,
     val openingTime: String,
     val closingTime: String,
-    val addresses: List<Address> = emptyList(),
-    val cuisines: List<Cuisine> = emptyList()
+    val addresses: List<AddressDto> = emptyList(),
 )

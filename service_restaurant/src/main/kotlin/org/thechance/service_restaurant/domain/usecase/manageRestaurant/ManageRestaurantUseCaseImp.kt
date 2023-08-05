@@ -29,10 +29,11 @@ class ManageRestaurantUseCaseImp(
         return mealGateway.addMeal(meal)
     }
 
-    override suspend fun deleteMealFromRestaurant(restaurantId: String, mealId: String): Boolean {
-        restaurantGateway.deleteMealInRestaurant(restaurantId, mealId)
-        val cuisineIds = mealGateway.getMealCuisines(mealId).mapNotNull { it.id }
-        return restaurantGateway.deleteCuisinesFromRestaurant(restaurantId, cuisineIds)
+    override suspend fun deleteMealFromRestaurant(mealId: String): Boolean {
+        val meal = mealGateway.getMealById(mealId)
+        val cuisineIds = meal?.cuisines?.mapNotNull { it.id }
+        mealGateway.deleteMealById(mealId)
+        return restaurantGateway.deleteCuisinesFromRestaurant(meal?.restaurantId!!, cuisineIds!!)
     }
 
     override suspend fun updateMealToRestaurant(meal: Meal): Boolean {

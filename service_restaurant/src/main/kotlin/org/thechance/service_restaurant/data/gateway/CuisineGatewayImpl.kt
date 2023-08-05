@@ -44,19 +44,6 @@ class CuisineGatewayImpl(private val container: DataBaseContainer) : CuisineGate
         return container.cuisineCollection.insertOne(cuisine.toCollection()).wasAcknowledged()
     }
 
-    override suspend fun addMealsToCuisine(cuisineId: String, mealIds: List<String>): Boolean {
-        val resultAddToMeals = container.mealCollection.updateMany(
-            MealCollection::id `in` mealIds.toObjectIds(),
-            addToSet(MealCollection::cuisines, ObjectId(cuisineId))
-        ).isSuccessfullyUpdated()
-
-        val resultAddToCuisine = container.cuisineCollection.updateOneById(
-            ObjectId(cuisineId),
-            update = Updates.addEachToSet(CuisineCollection::meals.name, mealIds.toObjectIds())
-        ).isSuccessfullyUpdated()
-        return resultAddToMeals and resultAddToCuisine
-    }
-
     override suspend fun updateCuisine(cuisine: Cuisine): Boolean {
         return container.cuisineCollection.updateOneById(
             ObjectId(cuisine.id),
@@ -70,9 +57,5 @@ class CuisineGatewayImpl(private val container: DataBaseContainer) : CuisineGate
             filter = CuisineCollection::id eq ObjectId(id),
             update = set(CuisineCollection::isDeleted setTo true),
         ).wasAcknowledged()
-
-    override suspend fun deleteMealsInCuisine(cuisineId: String, mealIds: List<String>): Boolean {
-        TODO("Not yet implemented")
-    }
 
 }

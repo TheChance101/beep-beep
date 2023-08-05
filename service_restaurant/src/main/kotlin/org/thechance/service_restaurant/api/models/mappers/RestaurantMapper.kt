@@ -5,7 +5,8 @@ import org.thechance.service_restaurant.api.models.RestaurantDto
 import org.thechance.service_restaurant.domain.entity.Restaurant
 
 fun RestaurantDto.toEntity() = Restaurant(
-    id = id,
+    id = id ?: "",
+    ownerId = ownerId,
     name = name,
     description = description,
     priceLevel = priceLevel,
@@ -16,7 +17,8 @@ fun RestaurantDto.toEntity() = Restaurant(
 )
 
 fun Restaurant.toDto() = RestaurantDto(
-    id = id ?: "",
+    id = id,
+    ownerId = ownerId,
     name = name,
     description = description,
     priceLevel = priceLevel,
@@ -27,7 +29,7 @@ fun Restaurant.toDto() = RestaurantDto(
 )
 
 fun Restaurant.toDetailsDto() = RestaurantDetailsDto(
-    id = id ?: "",
+    id = id,
     name = name,
     description = description,
     priceLevel = priceLevel,
@@ -35,7 +37,7 @@ fun Restaurant.toDetailsDto() = RestaurantDetailsDto(
     phone = phone,
     openingTime = openingTime,
     closingTime = closingTime,
-    addresses = addresses?.toDto()
+    addresses = addresses.toDto()
 )
 
 fun List<Restaurant>.toDto(): List<RestaurantDto> = map { it.toDto() }

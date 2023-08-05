@@ -3,17 +3,24 @@ package org.thechance.service_restaurant.domain.usecase
 import org.koin.core.annotation.Single
 import org.thechance.service_restaurant.domain.entity.Category
 import org.thechance.service_restaurant.domain.entity.Cuisine
+import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.entity.Restaurant
 import org.thechance.service_restaurant.domain.gateway.CategoryGateway
 import org.thechance.service_restaurant.domain.gateway.CuisineGateway
+import org.thechance.service_restaurant.domain.gateway.MealGateway
 import org.thechance.service_restaurant.domain.gateway.RestaurantGateway
 import org.thechance.service_restaurant.utils.DeleteCategoryException
 @Single
 class AdministratorUseCaseImp(
     private val restaurantGateway: RestaurantGateway,
     private val categoryGateway: CategoryGateway,
-    private val cuisineGateway: CuisineGateway
+    private val cuisineGateway: CuisineGateway,
+    private val mealGateway: MealGateway
 ) : AdministratorUseCase {
+
+    override suspend fun getAllMeals(page: Int, limit: Int): List<Meal> {
+        return mealGateway.getMeals(page, limit)
+    }
 
     //region cuisine
     override suspend fun addCuisine(cuisine: Cuisine): Boolean {

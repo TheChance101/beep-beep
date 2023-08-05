@@ -52,12 +52,6 @@ fun Route.restaurantRoutes() {
             call.respond(HttpStatusCode.Created, result)
         }
 
-        delete("/{id}") {
-            val restaurantId = call.parameters["id"] ?: ""
-            val result = administrator.deleteRestaurant(restaurantId)
-            call.respond(HttpStatusCode.OK, result)
-        }
-
         post("/{id}/categories") {
             val restaurantId = call.parameters.extractString("id") ?: ""
             val categoryIds = call.receive<List<String>>()
@@ -78,7 +72,11 @@ fun Route.restaurantRoutes() {
             call.respond(HttpStatusCode.OK, result)
         }
 
-
+        delete("/{id}") {
+            val restaurantId = call.parameters["id"] ?: ""
+            val result = administrator.deleteRestaurant(restaurantId)
+            call.respond(HttpStatusCode.OK, result)
+        }
 
 //        get("/{id}/cuisines") {
 //            val restaurantId = call.parameters.extractString("id") ?: ""
@@ -108,12 +106,5 @@ fun Route.restaurantRoutes() {
 //            val result = manageRestaurant.deleteAddressToRestaurant(restaurantId, addressesIds)
 //            call.respond(HttpStatusCode.OK, result)
 //        }
-
-        delete("/{id}/meal") {
-            val restaurantId = call.parameters.extractString("id") ?: ""
-            val mealId = call.parameters["mealId"] ?: ""//call.receive<String>()
-            val result = manageRestaurant.deleteMealFromRestaurant(restaurantId, mealId)
-            call.respond(HttpStatusCode.OK, result)
-        }
     }
 }

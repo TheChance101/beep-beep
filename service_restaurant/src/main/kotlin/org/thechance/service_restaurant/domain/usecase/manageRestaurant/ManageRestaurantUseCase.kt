@@ -11,7 +11,7 @@ interface ManageRestaurantUseCase {
 
     //regionMeal
     suspend fun addMealToRestaurant(meal: Meal): Boolean
-    suspend fun deleteMealFromRestaurant(restaurantId: String, mealId: String): Boolean
+    suspend fun deleteMealFromRestaurant(mealId: String): Boolean
     suspend fun updateMealToRestaurant(meal: Meal): Boolean
     //endregion
 

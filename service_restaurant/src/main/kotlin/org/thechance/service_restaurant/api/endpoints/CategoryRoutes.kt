@@ -31,18 +31,11 @@ fun Route.categoryRoutes() {
 
     route("/category") {
 
-//        get("/{id}") {
-//            val categoryId = call.parameters.extractString("id") ?: ""
-//            val category = manageCategory.getCategoryDetails(categoryId).toDto()
-//            call.respond(HttpStatusCode.OK, category)
-//        }
-
         get("/{id}/restaurants") {
             val categoryId = call.parameters.extractString("id") ?: ""
             val category = client.getRestaurantsInCategory(categoryId).toDto()
             call.respond(HttpStatusCode.OK, category)
         }
-
 
         post {
             val category = call.receive<CategoryDto>()

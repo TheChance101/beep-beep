@@ -16,6 +16,7 @@ fun Meal.toCollection(): MealCollection =
 fun MealCollection.toEntity(): Meal =
     Meal(
         id = id.toString(),
+        restaurantId = restaurantId.toString(),
         name = name,
         description = description,
         price = price,
@@ -26,6 +27,7 @@ fun List<MealCollection>.toEntity(): List<Meal> = this.map { it.toEntity() }
 fun MealDetailsCollection.toEntity(): Meal {
     return Meal(
         id = id.toString(),
+        restaurantId = restaurantId.toString(),
         name = name,
         description = description,
         price = price,

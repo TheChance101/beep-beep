@@ -1,25 +1,34 @@
 package org.thechance.service_restaurant.api.endpoints
 
+import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
+import org.thechance.service_restaurant.api.models.MealDto
 import org.thechance.service_restaurant.api.models.mappers.toDto
+import org.thechance.service_restaurant.api.models.mappers.toEntity
+import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
+import org.thechance.service_restaurant.domain.usecase.AdministratorUseCase
 import org.thechance.service_restaurant.domain.usecase.ClientUseCase
+import org.thechance.service_restaurant.domain.usecase.manageRestaurant.ManageRestaurantUseCase
 
 fun Route.mealRoutes() {
 
     val client: ClientUseCase by inject()
+    val admin: AdministratorUseCase by inject()
+    val manageRestaurant: ManageRestaurantUseCase by inject()
 
-//    route("meals") {
-//        get {
-//            val page = call.parameters.extractInt("page") ?: 1
-//            val limit = call.parameters.extractInt("limit") ?: 10
-//            val meals = manageMeal.getMeals(page, limit)
-//            call.respond(meals.toDto())
-//        }
-//    }
+    route("meals") {
+        get {
+            val page = call.parameters.extractInt("page") ?: 1
+            val limit = call.parameters.extractInt("limit") ?: 10
+            val meals = admin.getAllMeals(page, limit)
+            call.respond(meals.toDto())
+        }
+    }
 
     route("meal") {
 
@@ -29,29 +38,17 @@ fun Route.mealRoutes() {
             call.respond(meal.toDto())
         }
 
-//        get("/{mealId}/cuisine") {
-//            val mealId = call.parameters.extractString("mealId") ?: ""
-//            val cuisines = manageCuisinesInMeal.getMealCuisines(mealId)
-//            call.respond(cuisines.toDto())
-//        }
+        put {
+            val meal = call.receive<MealDto>()
+            val isUpdated = manageRestaurant.updateMealToRestaurant(meal.toEntity())
+            if (isUpdated) call.respond(HttpStatusCode.OK, "updated successfully")
+        }
 
-//        post {
-//            val meal = call.receive<MealDto>()
-//            val isAdded = manageMeal.addMeal(meal.toEntity())
-//            if (isAdded) call.respond(HttpStatusCode.Created, "Meal added Successfully")
-//        }
-
-//        put {
-//            val meal = call.receive<MealDto>()
-//            val isUpdated = manageMeal.updateMeal(meal.toEntity())
-//            if (isUpdated) call.respond(HttpStatusCode.OK, "updated successfully")
-//        }
-
-//        delete("/{id}") {
-//            val id = call.parameters.extractString("id") ?: ""
-//            val isDeleted = manageMeal.deleteMeal(id)
-//            if (isDeleted) call.respond(HttpStatusCode.OK, "Meal deleted Successfully")
-//        }
+        delete("/{id}") {
+            val id = call.parameters.extractString("id") ?: ""
+            val isDeleted = manageRestaurant.deleteMealFromRestaurant(id)
+            if (isDeleted) call.respond(HttpStatusCode.OK, "Meal deleted Successfully")
+        }
 //
 //        delete("/{mealId}/cuisine/{cuisineId}") {
 //            val mealId = call.parameters.extractString("mealId") ?: ""

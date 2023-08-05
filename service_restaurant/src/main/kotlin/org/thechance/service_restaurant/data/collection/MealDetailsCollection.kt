@@ -12,9 +12,11 @@ data class MealDetailsCollection(
     @Contextual
     @SerialName("_id")
     val id: ObjectId = ObjectId(),
-    val name: String? = null,
-    val description: String? = null,
+    @Contextual
+    val restaurantId: ObjectId,
+    val name: String,
+    val description: String,
     val isDeleted: Boolean = false,
-    val price: Int? = null,
+    val price: Double,
     val cuisines: List<CuisineCollection> = emptyList(),
 )

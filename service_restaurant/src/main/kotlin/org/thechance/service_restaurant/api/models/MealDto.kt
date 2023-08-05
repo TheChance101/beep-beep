@@ -5,8 +5,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MealDto(
     val id: String? = null,
-    val name: String? = null,
-    val description: String? = null,
-    val price: Int? = null,
-    val cuisines: List<CuisineDto>? = null
+    val restaurantId: String,
+    val name: String,
+    val description: String,
+    val price: Double,
+    val cuisines: List<CuisineDto> = emptyList()
 )
