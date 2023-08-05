@@ -16,13 +16,13 @@ import org.thechance.service_restaurant.api.utils.extractString
 import org.thechance.service_restaurant.domain.usecase.ClientUseCase
 import org.thechance.service_restaurant.domain.usecase.AdministratorUseCase
 import org.thechance.service_restaurant.domain.usecase.manageRestaurant.ManageRestaurantUseCase
+import org.thechance.service_restaurant.domain.usecase.manageRestaurant.ManageRestaurantUseCase
 
 fun Route.restaurantRoutes() {
 
     val client: ClientUseCase by inject()
     val administrator: AdministratorUseCase by inject()
     val manageRestaurant: ManageRestaurantUseCase by inject()
-
 
     route("/restaurants") {
         get {
@@ -110,5 +110,11 @@ fun Route.restaurantRoutes() {
 //            call.respond(HttpStatusCode.OK, result)
 //        }
 
+        delete("/{id}/meal") {
+            val restaurantId = call.parameters.extractString("id") ?: ""
+            val mealId = call.parameters["mealId"] ?: ""//call.receive<String>()
+            val result = manageRestaurant.deleteMealFromRestaurant(restaurantId, mealId)
+            call.respond(HttpStatusCode.OK, result)
+        }
     }
 }

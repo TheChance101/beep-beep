@@ -29,8 +29,10 @@ class ManageRestaurantUseCaseImp(
         return mealGateway.addMeal(meal)
     }
 
-    override suspend fun deleteMealToRestaurant(restaurantId: String, meal: Meal) {
-        TODO("Not yet implemented")
+    override suspend fun deleteMealFromRestaurant(restaurantId: String, mealId: String): Boolean {
+        restaurantGateway.deleteMealInRestaurant(restaurantId, mealId)
+        val cuisineIds = mealGateway.getMealCuisines(mealId).mapNotNull { it.id }
+        return restaurantGateway.deleteCuisinesFromRestaurant(restaurantId, cuisineIds)
     }
 
     override suspend fun updateMealToRestaurant(meal: Meal): Boolean {
