@@ -37,9 +37,9 @@ interface DataBaseGateway {
     //endregion
 
     // region: user
-    suspend fun getUserById(id: String): User?
+    suspend fun getUserById(id: String): User
 
-    suspend fun getUsers(): List<User>
+    suspend fun getUsers(fullName: String = "", username: String = ""): List<User>
 
     suspend fun createUser(user: User): Boolean
 
@@ -47,14 +47,15 @@ interface DataBaseGateway {
 
     suspend fun deleteUser(id: String): Boolean
 
-    suspend fun addPermissionToUser(userId: String, permissionId: String)
+    // endregion: user
 
-    suspend fun removePermissionFromUser(userId: String, permissionId: String)
+    // region: user permission management
 
-    suspend fun getDetailedUsers(): List<User>
+    suspend fun addPermissionToUser(userId: String, permissionId: Int): Boolean
+
+    suspend fun removePermissionFromUser(userId: String, permissionId: Int): Boolean
 
     suspend fun getUserPermissions(userId: String): List<Permission>
 
-
-    // endregion: user
+    // endregion: user permission management
 }

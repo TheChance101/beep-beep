@@ -29,6 +29,7 @@ fun Permission.toDto(): PermissionDto {
     )
 }
 
+fun List<Permission>.toDto(): List<PermissionDto> = map { it.toDto() }
 
 fun Permission.toCollection(): PermissionCollection {
     return PermissionCollection(

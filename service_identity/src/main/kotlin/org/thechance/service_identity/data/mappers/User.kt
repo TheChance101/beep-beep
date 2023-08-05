@@ -1,13 +1,13 @@
 package org.thechance.service_identity.data.mappers
 
 import org.bson.types.ObjectId
-import org.thechance.service_identity.api.model.DetailedUserDto
 import org.thechance.service_identity.api.model.UserDto
 import org.thechance.service_identity.api.model.request.CreateUserRequest
 import org.thechance.service_identity.api.model.request.UpdateUserRequest
 import org.thechance.service_identity.data.collection.UserCollection
 import org.thechance.service_identity.data.collection.UserDetailsCollection
 import org.thechance.service_identity.domain.entity.User
+import org.thechance.service_identity.endpoints.model.DetailedUserDto
 
 fun UserCollection.toEntity(): User {
     return User(
@@ -35,6 +35,10 @@ fun User.toDto(): UserDto {
         username = username,
         password = password,
     )
+}
+
+fun List<User>.toDto(): List<UserDto> {
+    return map { it.toDto() }
 }
 
 fun User.toDetailedDto(): DetailedUserDto {
@@ -65,7 +69,7 @@ fun User.toDetailsCollection(userId: String): UserDetailsCollection {
         email = email,
         walletId = walletId,
         addresses = addresses.map { ObjectId(it) },
-        permissions = permissions.map { ObjectId(it) }
+        permissions = permissions.map { it }
     )
 }
 

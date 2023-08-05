@@ -10,7 +10,7 @@ fun UserDetailsCollection.toEntity(): UserDetails {
         email = email,
         walletId = walletId,
         addresses = addresses.map { it.toHexString() },
-        permissions = permissions.map { it.toHexString() }
+        permissions = permissions.map { it }
     )
 }
 
@@ -24,7 +24,7 @@ fun UserDetails.toCollection(): UserDetailsCollection {
         email = email,
         walletId = walletId,
         addresses = addresses.map { ObjectId(it) },
-        permissions = permissions.map { ObjectId(it) }
+        permissions = permissions.map { it }
     )
 }
 

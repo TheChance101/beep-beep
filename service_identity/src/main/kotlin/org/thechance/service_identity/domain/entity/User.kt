@@ -9,5 +9,5 @@ data class User(
     val email: String? = null,
     val walletId: String? = null,
     val addresses: List<String> = emptyList(),
-    val permissions: List<String> = emptyList()
+    val permissions: List<Int> = emptyList()
 )

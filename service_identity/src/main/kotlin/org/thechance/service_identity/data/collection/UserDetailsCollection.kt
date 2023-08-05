@@ -17,5 +17,5 @@ data class UserDetailsCollection(
     @SerialName("addresses")
     val addresses: List<@Contextual ObjectId> = emptyList(),
     @SerialName("permissions")
-    val permissions: List<@Contextual ObjectId> = emptyList()
+    val permissions: List<Int> = emptyList()
 )
