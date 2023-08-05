@@ -1,12 +1,16 @@
 package org.thechance.service_restaurant.data.gateway
 
+import com.mongodb.client.model.Accumulators
 import com.mongodb.client.model.Updates
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
-import org.litote.kmongo.coroutine.updateOne
 import org.litote.kmongo.id.WrappedObjectId
+import org.thechance.service_restaurant.data.Constants.ADDRESS_COLLECTION
+import org.thechance.service_restaurant.data.Constants.CATEGORY_COLLECTION
+import org.thechance.service_restaurant.data.Constants.CUISINE_COLLECTION
+import org.thechance.service_restaurant.data.Constants.RESTAURANT_COLLECTION
 import org.thechance.service_restaurant.data.DataBaseContainer
 import org.thechance.service_restaurant.data.collection.*
 import org.thechance.service_restaurant.data.collection.mapper.toCollection
@@ -14,11 +18,11 @@ import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
 import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.data.utils.toObjectIds
+import org.thechance.service_restaurant.domain.entity.Address
+import org.thechance.service_restaurant.domain.entity.Category
+import org.thechance.service_restaurant.domain.entity.Cuisine
+import org.thechance.service_restaurant.domain.entity.Restaurant
 import org.thechance.service_restaurant.domain.gateway.RestaurantGateway
-import org.thechance.service_restaurant.data.Constants.ADDRESS_COLLECTION
-import org.thechance.service_restaurant.data.Constants.CATEGORY_COLLECTION
-import org.thechance.service_restaurant.data.Constants.CUISINE_COLLECTION
-import org.thechance.service_restaurant.domain.entity.*
 
 @Single
 class RestaurantGatewayImp(private val container: DataBaseContainer) : RestaurantGateway {
@@ -139,6 +143,26 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
             ObjectId(restaurantId),
             pull(RestaurantCollection::mealIds, ObjectId(mealId))
         ).isSuccessfullyUpdated()
+    }
+
+    override suspend fun deleteCuisinesFromRestaurant(restaurantId: String, cuisineIds: List<String>): Boolean {
+        val deletedCuisineIds = container.mealCollection.aggregate<MealCollection>(
+            match(
+                and(
+                    MealCollection::restaurantId eq ObjectId(restaurantId),
+                    MealCollection::isDeleted eq false
+                )
+            ),
+            lookup(
+                from = RESTAURANT_COLLECTION,
+                localField = MealCollection::restaurantId.name,
+                foreignField = "_id",
+                newAs = MealCollection::cuisines.name
+            ),
+            unwind(MealCollection::cuisines.name),
+            group(MealCollection::cuisines, Accumulators.addToSet("_id", "\$_id")),
+        ).toList().flatMap { it.cuisines }.filter { it.toString() in cuisineIds }
+        return deleteCuisinesInRestaurant(restaurantId, deletedCuisineIds.map { it.toString() })
     }
     //endregion
 
