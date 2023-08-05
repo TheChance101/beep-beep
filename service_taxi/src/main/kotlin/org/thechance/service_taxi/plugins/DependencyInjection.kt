@@ -6,9 +6,10 @@ import org.koin.ksp.generated.module
 import org.koin.ktor.plugin.Koin
 import org.thechance.service_taxi.di.AppModule
 import org.thechance.service_taxi.di.kmongoModule
+import org.thechance.service_taxi.di.mongoModule
 
 fun Application.configureDependencyInjection() {
     install(Koin) {
-        modules(AppModule().module, kmongoModule)
+        modules(AppModule().module, mongoModule)
     }
 }

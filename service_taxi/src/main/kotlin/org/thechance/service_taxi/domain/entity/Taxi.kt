@@ -6,7 +6,6 @@ data class Taxi(
     val color: String? = null,
     val type: String? = null,
     val driverId: String? = null,
-    val isDeleted: Boolean? = null,
     val isAvailable: Boolean? = null,
     val capacity: Int? = null, // 1->normal etc..
 )

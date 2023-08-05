@@ -1,35 +1,32 @@
 package org.thechance.service_taxi.api.endpoints
 
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.call
-import io.ktor.server.request.receive
-import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.delete
-import io.ktor.server.routing.get
-import io.ktor.server.routing.post
-import io.ktor.server.routing.put
-import io.ktor.server.routing.route
+import io.ktor.http.*
+import io.ktor.server.application.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.service_taxi.api.models.taxi.TaxiDto
 import org.thechance.service_taxi.api.models.taxi.toDto
 import org.thechance.service_taxi.api.models.taxi.toEntity
-import org.thechance.service_taxi.api.usecase.taxi.TaxiUseCasesContainer
+import org.thechance.service_taxi.domain.usecase.ClientUseCase
+import org.thechance.service_taxi.domain.usecase.TaxiManagementsUseCase
 
 fun Route.taxiRoutes() {
-    val taxiUseCasesContainer: TaxiUseCasesContainer by inject()
+    val taxiManagement: TaxiManagementsUseCase by inject()
+    val client: ClientUseCase by inject()
 
     route("/taxi") {
         get {
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 20
-            val result = taxiUseCasesContainer.getAllTaxesUseCase(page, limit)
+            val result = taxiManagement.getAllTaxi(page, limit)
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
         get("/{taxiId}") {
             val id = call.parameters["taxiId"]?.trim().orEmpty()
-            val result = taxiUseCasesContainer.getTaxiByIdUseCase(id)
+            val result = client.getTaxi(id)
 
             result?.let { call.respond(HttpStatusCode.OK, result.toDto()) }
                 ?: call.respond(HttpStatusCode.NotFound, "taxi not found")
@@ -37,7 +34,7 @@ fun Route.taxiRoutes() {
 
         post {
             val taxi = call.receive<TaxiDto>()
-            val result = taxiUseCasesContainer.addTaxiUseCase(taxi.toEntity())
+            val result = taxiManagement.addTaxi(taxi.toEntity())
             if (result) {
                 call.respond(HttpStatusCode.OK, "added")
             } else {
@@ -49,7 +46,7 @@ fun Route.taxiRoutes() {
             val taxiId = call.parameters["taxiId"]?.trim().orEmpty()
             val taxi = call.receive<TaxiDto>()
             val result =
-                taxiUseCasesContainer.updateTaxiByIdUseCase(taxi.toEntity().copy(id = taxiId))
+                taxiManagement.updateTaxi(taxi.toEntity().copy(id = taxiId))
             if (result) {
                 call.respond(HttpStatusCode.OK, "updated")
             } else {
@@ -59,7 +56,7 @@ fun Route.taxiRoutes() {
 
         delete("/{taxiId}") {
             val taxiId = call.parameters["taxiId"]?.trim().orEmpty()
-            val result = taxiUseCasesContainer.deleteTaxiUseCase(taxiId)
+            val result = taxiManagement.deleteTaxi(taxiId)
             if (result) {
                 call.respond(HttpStatusCode.OK, "deleted")
             } else {

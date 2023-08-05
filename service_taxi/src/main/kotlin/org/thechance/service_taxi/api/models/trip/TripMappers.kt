@@ -39,7 +39,6 @@ fun TripCollection.toEntity(): Trip {
         to = to,
         rate = rate,
         price = price,
-        isDeleted = isDeleted
     )
 }
 
@@ -53,6 +52,5 @@ fun Trip.toCollection(): TripCollection {
         to = to,
         rate = rate,
         price = price,
-        isDeleted = isDeleted
     )
 }

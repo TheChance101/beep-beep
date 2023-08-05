@@ -38,7 +38,6 @@ fun TaxiCollection.toEntity(): Taxi {
         color = color,
         type = type,
         driverId = driverId?.toHexString(),
-        isDeleted = isDeleted ?: false,
         isAvailable = isAvailable ?: true,
         capacity = capacity
     )
@@ -53,7 +52,6 @@ fun Taxi.toCollection(): TaxiCollection {
         color = color,
         type = type,
         driverId = if (driverId != null) ObjectId(driverId) else null,
-        isDeleted = isDeleted,
         isAvailable = isAvailable,
         capacity = capacity
     )

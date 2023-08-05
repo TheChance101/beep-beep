@@ -8,5 +8,4 @@ data class Trip(
     val to: Pair<Long, Long>? = null,
     val rate: Double? = null,
     val price: Double? = null,
-    val isDeleted: Boolean? = null,
 )

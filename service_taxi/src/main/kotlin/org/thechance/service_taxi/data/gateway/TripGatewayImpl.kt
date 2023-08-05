@@ -13,28 +13,27 @@ import org.thechance.service_taxi.data.collection.TripCollection
 import org.thechance.service_taxi.data.utils.paginate
 import org.thechance.service_taxi.domain.entity.Trip
 import org.thechance.service_taxi.domain.gateway.TripGateway
-import org.thechance.service_taxi.utils.Constants
 
 @Single
-class TripGatewayImpl(container: DataBaseContainer) : TripGateway {
-    private val tripCollection by lazy { container.database.getCollection<TripCollection>(Constants.TRIP_COLLECTION_NAME) }
+class TripGatewayImpl(private val container: DataBaseContainer) : TripGateway {
+
 
     override suspend fun addTrip(trip: Trip): Boolean {
-        return tripCollection.insertOne(trip.toCollection()).wasAcknowledged()
+        return container.tripCollection.insertOne(trip.toCollection()).wasAcknowledged()
     }
 
     override suspend fun getTripById(tripId: String): Trip {
-        return tripCollection.findOne(TripCollection::isDeleted ne true)?.toEntity()
+        return container.tripCollection.findOne(TripCollection::isDeleted ne true)?.toEntity()
             ?: throw Throwable()
     }
 
     override suspend fun getAllTrips(page: Int, limit: Int): List<Trip> {
-        return tripCollection.find(TripCollection::isDeleted ne true).paginate(page, limit).toList()
+        return container.tripCollection.find(TripCollection::isDeleted ne true).paginate(page, limit).toList()
             .toEntity()
     }
 
     override suspend fun getDriverTripsHistory(driverId: String, page: Int, limit: Int): List<Trip> {
-        return tripCollection.find(
+        return container.tripCollection.find(
             and(
                 TripCollection::isDeleted ne true,
                 TripCollection::driverId eq ObjectId(driverId)
@@ -43,7 +42,7 @@ class TripGatewayImpl(container: DataBaseContainer) : TripGateway {
     }
 
     override suspend fun getClientTripsHistory(clientId: String, page: Int, limit: Int): List<Trip> {
-        return tripCollection.find(
+        return container.tripCollection.find(
             and(
                 TripCollection::isDeleted ne true,
                 TripCollection::clientId eq ObjectId(clientId)
@@ -52,14 +51,14 @@ class TripGatewayImpl(container: DataBaseContainer) : TripGateway {
     }
 
     override suspend fun deleteTrip(tripId: String): Boolean {
-        return tripCollection.updateOneById(
+        return container.tripCollection.updateOneById(
             id = ObjectId(tripId),
             update = Updates.set(TripCollection::isDeleted.name, true)
         ).modifiedCount > 0
     }
 
     override suspend fun updateTrip(trip: Trip): Boolean {
-        return tripCollection.updateOneById(
+        return container.tripCollection.updateOneById(
             id = ObjectId(trip.id),
             update = trip.toCollection(),
             updateOnlyNotNullProperties = true
