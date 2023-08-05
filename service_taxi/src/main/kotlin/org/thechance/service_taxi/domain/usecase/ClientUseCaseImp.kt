@@ -21,8 +21,4 @@ class ClientUseCaseImp(
     override suspend fun getTaxi(taxiId: String): Taxi? {
         return taxiGateway.getTaxiById(taxiId)
     }
-
-    override suspend fun rateTrip(tripId: String): Boolean {
-        TODO("Not yet implemented")
-    }
 }

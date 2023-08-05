@@ -9,7 +9,5 @@ interface ClientUseCase {
 
     suspend fun getTripById(tripId: String): Trip
 
-    suspend fun getTaxi(taxiId: String): Taxi?//for rating taxi
-
-     suspend fun rateTrip(tripId: String): Boolean //todo
+    suspend fun getTaxi(taxiId: String): Taxi?
 }
