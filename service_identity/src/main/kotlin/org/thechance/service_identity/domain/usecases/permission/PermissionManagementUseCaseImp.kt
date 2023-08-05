@@ -13,7 +13,7 @@ class PermissionManagementUseCaseImp(
     }
 
     override suspend fun deletePermission(permissionId: String): Boolean {
-        return dataBaseGateway.deletePermission(permissionId).takeIf { it }
+        return dataBaseGateway.deletePermission(permissionId)
     }
 
     override suspend fun getPermission(permissionId: String): Permission {
@@ -21,7 +21,7 @@ class PermissionManagementUseCaseImp(
     }
 
     override suspend fun updatePermission(permissionId: String, permission: Permission): Boolean {
-        return dataBaseGateway.updatePermission(permissionId, permission).takeIf { it }
+        return dataBaseGateway.updatePermission(permissionId, permission)
     }
 
     override suspend fun getListOfPermission(permissionId: String): List<Permission> {
