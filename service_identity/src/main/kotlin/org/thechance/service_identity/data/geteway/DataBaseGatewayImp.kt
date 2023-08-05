@@ -10,7 +10,6 @@ import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
-import org.litote.kmongo.*
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.*
 import org.thechance.service_identity.data.mappers.toCollection
@@ -24,11 +23,10 @@ import org.thechance.service_identity.domain.entity.Permission
 import org.thechance.service_identity.domain.entity.User
 import org.thechance.service_identity.domain.entity.Wallet
 import org.thechance.service_identity.domain.gateway.*
+import org.thechance.service_identity.endpoints.validation.UserAlreadyExistsException
 
 @Single
 class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway {
-
-
 
 
     private val addressCollection by lazy {
@@ -102,7 +100,7 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
 
 
     //region Permission
-    override suspend fun getPermission(permissionId: String): Permission? {
+    override suspend fun getPermission(permissionId: String): Permission {
         return permissionCollection.findOneById(ObjectId(permissionId))?.toEntity()
             ?: throw Exception("Wallet not found")
     }
@@ -126,7 +124,8 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
         return permissionCollection.find(
             PermissionCollection::id eq ObjectId(permissionId),
             PermissionCollection::isDeleted eq false
-        ).toList().toEntity()    }
+        ).toList().toEntity()
+    }
 
 
     override suspend fun updatePermission(permissionId: String, permission: Permission): Boolean {
@@ -154,6 +153,7 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
 
         return indexInfo.isNotEmpty()
     }
+
     override suspend fun getUserById(id: String): User? {
         return userCollection.aggregate<DetailedUserCollection>(
             match(UserCollection::id eq ObjectId(id)),
@@ -185,8 +185,15 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
 
     override suspend fun createUser(user: User): Boolean {
         val userDocument = user.toCollection()
-        userDetailsCollection.insertOne(user.toDetailsCollection(userDocument.id.toHexString()))
-        return userCollection.insertOne(userDocument).wasAcknowledged()
+        try {
+            userDetailsCollection.insertOne(user.toDetailsCollection(userDocument.id.toHexString()))
+            return userCollection.insertOne(userDocument).wasAcknowledged()
+        }  catch (exception: com.mongodb.MongoWriteException) {
+            if (exception.code == 11000) {
+                throw UserAlreadyExistsException
+            }
+            throw exception
+        }
     }
 
     override suspend fun updateUser(id: String, user: User): Boolean {

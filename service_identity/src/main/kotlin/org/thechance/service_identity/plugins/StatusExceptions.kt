@@ -5,9 +5,7 @@ import io.ktor.server.application.*
 import io.ktor.server.plugins.requestvalidation.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
-import org.thechance.service_identity.endpoints.validation.AddressNotFoundException
-import org.thechance.service_identity.endpoints.validation.InvalidHexStringLengthException
-import org.thechance.service_identity.endpoints.validation.InvalidIDException
+import org.thechance.service_identity.endpoints.validation.*
 
 fun Application.configureStatusExceptions() {
     install(StatusPages) {
@@ -29,6 +27,21 @@ fun Application.configureStatusExceptions() {
 
                 is AddressNotFoundException -> call.respond(
                     HttpStatusCode.BadRequest,
+                    listOf(cause.code)
+                )
+
+                is InvalidUserNameException -> call.respond(
+                    HttpStatusCode.BadRequest,
+                    listOf(cause.code)
+                )
+
+                is InvalidFullNameException -> call.respond(
+                    HttpStatusCode.BadRequest,
+                    listOf(cause.code)
+                )
+
+                is UserAlreadyExistsException -> call.respond(
+                    HttpStatusCode.InternalServerError,
                     listOf(cause.code)
                 )
             }

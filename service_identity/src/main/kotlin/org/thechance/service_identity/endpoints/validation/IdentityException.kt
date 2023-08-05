@@ -9,3 +9,18 @@ object InvalidUserIDException : IdentityException(code = ERROR_CODE_INVALID_USER
 object AddressNotFoundException : IdentityException(code = ERROR_CODE_NOT_FOUND)
 
 //endregion
+
+// region user
+
+object InvalidUserNameException: IdentityException(code = ERROR_CODE_INVALID_USERNAME) {
+    private fun readResolve(): Any = InvalidUserNameException
+}
+
+object InvalidFullNameException: IdentityException(code = ERROR_CODE_INVALID_USERNAME) {
+    private fun readResolve(): Any = InvalidFullNameException
+}
+
+object UserAlreadyExistsException: IdentityException(code = ERROR_USER_ALREADY_EXISTS) {
+    private fun readResolve(): Any = UserAlreadyExistsException
+}
+// endregion
