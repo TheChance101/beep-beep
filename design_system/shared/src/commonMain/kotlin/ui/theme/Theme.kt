@@ -1,6 +1,7 @@
 package com.beepbeep.designSystem.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -8,8 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.staticCompositionLocalOf
 
-private val LightColors = lightColorScheme(
+private val lightColors = lightColorScheme(
     primary = primaryLight,
     secondary = secondaryLight,
     onPrimary = contentPrimaryLight,
@@ -27,7 +29,7 @@ private val LightColors = lightColorScheme(
     errorContainer = warningContainerLight,
 )
 
-private val DarkColors = darkColorScheme(
+private val darkColors = darkColorScheme(
     primary = primaryDark,
     secondary = secondaryDark,
     onPrimary = contentPrimaryDark,
@@ -45,12 +47,10 @@ private val DarkColors = darkColorScheme(
     errorContainer = warningContainerDark,
 )
 
-private val localDimens = compositionLocalOf { Dimens() }
+private val LocalDimens = compositionLocalOf { Dimens() }
+internal val LocalColorScheme = staticCompositionLocalOf { lightColorScheme() }
 
-val dimens: Dimens
-    @Composable
-    @ReadOnlyComposable
-    get() = localDimens.current
+
 
 @Composable
 fun BeepBeepTheme(
@@ -58,12 +58,12 @@ fun BeepBeepTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = if (!darkTheme) {
-        LightColors
+        lightColors
     } else {
-        DarkColors
+        darkColors
     }
 
-    CompositionLocalProvider(localDimens provides Dimens()) {
+    CompositionLocalProvider(LocalDimens provides Dimens(), LocalColorScheme provides colorScheme) {
         MaterialTheme(
             colorScheme = colorScheme,
             shapes = shapes,
@@ -71,4 +71,26 @@ fun BeepBeepTheme(
             content = content
         )
     }
+}
+
+object BeepBeepTheme {
+    val colorScheme: ColorScheme
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalColorScheme.current
+
+//    val typography: Typography
+//        @Composable
+//        @ReadOnlyComposable
+//        get() = LocalTypography.current
+//
+//    val shapes: Shapes
+//        @Composable
+//        @ReadOnlyComposable
+//        get() = LocalShapes.current
+
+    val dimens: Dimens
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalDimens.current
 }
