@@ -11,6 +11,7 @@ import com.beepbeep.designSystem.fontResources
 
 @Composable
 fun Typography(): Typography {
+    val dimens=LocalDimens.current
 
  return   Typography(
     headlineLarge = TextStyle(

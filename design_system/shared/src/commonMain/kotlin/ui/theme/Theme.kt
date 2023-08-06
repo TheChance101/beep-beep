@@ -54,7 +54,7 @@ private val DarkColorScheme = darkColorScheme(
     errorContainer = warningContainerDark,
 )
 
-private val LocalDimens = compositionLocalOf { Dimens() }
+val LocalDimens = compositionLocalOf { Dimens() }
 private val LocalColorScheme = staticCompositionLocalOf { lightColorScheme() }
 private val LocalShapes = staticCompositionLocalOf { shapes }
 
