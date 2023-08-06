@@ -1,4 +1,4 @@
-package com.beepbeep.designSystem.ui
+package com.beepbeep.designSystem.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
@@ -22,9 +22,9 @@ private val DarkColors = darkColors(
 )
 
 @Composable
-fun AppTheme(
+fun BeepBeepTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable() () -> Unit
+    content: @Composable () -> Unit
 ) {
     val colors = if (!useDarkTheme) {
         LightColors
