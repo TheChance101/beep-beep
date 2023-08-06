@@ -91,37 +91,36 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
     //endregion
 
     //region Permission
-    override suspend fun getPermission(permissionId: String): Permission {
-        return permissionCollection.findOneById(ObjectId(permissionId))?.toEntity()
+    override suspend fun getPermission(permissionId: Int): Permission {
+        return permissionCollection.findOneById(permissionId)?.toEntity()
             ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
     override suspend fun addPermission(permission: Permission): Boolean {
         return permissionCollection.insertOne(permission.toCollection()).wasAcknowledged()
-
     }
 
-    override suspend fun deletePermission(permissionId: String): Boolean {
+    override suspend fun deletePermission(permissionId: Int): Boolean {
         return permissionCollection.updateOne(
             filter = Filters.and(
-                PermissionCollection::id eq ObjectId(permissionId),
+                PermissionCollection::id eq permissionId,
                 PermissionCollection::isDeleted eq false
             ),
             update = setValue(PermissionCollection::isDeleted, true)
         ).isUpdatedSuccessfully()
     }
 
-    override suspend fun getListOfPermission(permissionId: String): List<Permission> {
+    override suspend fun getListOfPermission(permissionId: Int): List<Permission> {
         return permissionCollection.find(
-            PermissionCollection::id eq ObjectId(permissionId),
+            PermissionCollection::id eq permissionId,
             PermissionCollection::isDeleted eq false
         ).toList().toEntity()
     }
 
 
-    override suspend fun updatePermission(permissionId: String, permission: Permission): Boolean {
+    override suspend fun updatePermission(permissionId: Int, permission: Permission): Boolean {
         return permissionCollection.updateOneById(
-            id = ObjectId(permissionId),
+            id = permissionId,
             update = permission.toCollection(),
         ).wasAcknowledged()
     }
