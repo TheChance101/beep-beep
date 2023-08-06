@@ -9,8 +9,7 @@ fun AddressCollection.toEntity(): Address {
     return Address(
         id = id.toHexString(),
         userId = userId.toHexString(),
-        latitude = latitude,
-        longitude = longitude,
+       location=location.toEntity(),
         isDeleted = isDeleted
     )
 }
@@ -19,8 +18,7 @@ fun AddressDto.toEntity(): Address {
     return Address(
         id = id,
         userId = userId,
-        latitude = latitude,
-        longitude = longitude
+       location = location.toEntity()
     )
 }
 
@@ -28,16 +26,14 @@ fun Address.toDto(): AddressDto {
     return AddressDto(
         id = id,
         userId = userId,
-        latitude = latitude,
-        longitude = longitude
+       location = location.toDto()
     )
 }
 
 fun Address.toCollection(): AddressCollection {
     return AddressCollection(
         userId = ObjectId(this.userId),
-        latitude = this.latitude,
-        longitude = this.longitude
+       location = this.location.toCollection()
     )
 }
 
