@@ -17,18 +17,18 @@ fun Typography(): Typography {
     headlineLarge = TextStyle(
         fontSize = dimens.fontSize24,
         lineHeight =dimens.lineHeight32,
-        fontFamily =FontFamily(fontResources("Borel-medium.ttf")),
+        fontFamily =FontFamily(fontResources("font/roboto-medium.ttf")),
         fontWeight = FontWeight.W600,
         color = contentPrimaryLight,
     ),
     headlineMedium = TextStyle(
         fontSize = dimens.fontSize20,
-        fontFamily =FontFamily(fontResources("roboto-medium.ttf")),
+        fontFamily =FontFamily(fontResources("font/roboto-medium.ttf")),
         fontWeight = FontWeight.W600,
         color = contentPrimaryLight,
     ),
     titleLarge = TextStyle(
-        fontFamily =FontFamily(fontResources("roboto-medium.ttf")),
+        fontFamily =FontFamily(fontResources("font/roboto-medium.ttf")),
         fontSize = dimens.fontSize16,
         lineHeight = dimens.lineHeight20,
         fontWeight = FontWeight.W600,
@@ -37,12 +37,12 @@ fun Typography(): Typography {
         ),
     titleMedium = TextStyle(
         fontSize = dimens.fontSize14,
-        fontFamily =FontFamily(fontResources("roboto-medium.ttf")),
+        fontFamily =FontFamily(fontResources("font/roboto-medium.ttf")),
         fontWeight = FontWeight.W600,
         color = contentPrimaryLight,
     ),
     bodyLarge = TextStyle(
-        fontFamily =FontFamily(fontResources("roboto-Regular.ttf")),
+        fontFamily =FontFamily(fontResources("font/roboto-Regular.ttf")),
         fontWeight = FontWeight.W400,
         fontSize =  dimens.fontSize16,
         color =contentPrimaryLight,
@@ -50,13 +50,13 @@ fun Typography(): Typography {
     bodyMedium = TextStyle(
         fontSize = dimens.fontSize14,
         lineHeight = dimens.lineHeight19,
-        fontFamily =FontFamily(fontResources("roboto-Regular.ttf",)),
+        fontFamily =FontFamily(fontResources("font/roboto-Regular.ttf",)),
         fontWeight = FontWeight.W400,
         color = contentPrimaryLight,
     ),
     labelMedium = TextStyle(
         fontSize =dimens.fontSize12,
-        fontFamily =FontFamily(fontResources("roboto-Regular.ttf")),
+        fontFamily =FontFamily(fontResources("font/roboto-Regular.ttf")),
         fontWeight = FontWeight.W400,
         color = contentPrimaryLight,
     ),
