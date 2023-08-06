@@ -22,6 +22,7 @@ compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", v
 compose-material = { module = "org.jetbrains.compose.material:material", version.ref = "compose-version" }
 compose-material3= { module = "org.jetbrains.compose.material3:material3", version.ref = "compose-version" }
 
+
 compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose-version" }
 compose-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose-version" }
 androidx-ui-text = { group = "androidx.compose.ui", name = "ui-text", version = "1.4.3" }
