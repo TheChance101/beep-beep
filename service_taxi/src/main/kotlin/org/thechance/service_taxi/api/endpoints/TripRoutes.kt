@@ -1,35 +1,40 @@
 package org.thechance.service_taxi.api.endpoints
 
-import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.request.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.call
+import io.ktor.server.request.receive
+import io.ktor.server.response.respond
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.delete
+import io.ktor.server.routing.get
+import io.ktor.server.routing.post
+import io.ktor.server.routing.put
+import io.ktor.server.routing.route
 import org.koin.ktor.ext.inject
 import org.thechance.service_taxi.api.models.trip.TripDto
 import org.thechance.service_taxi.api.models.trip.toDto
 import org.thechance.service_taxi.api.models.trip.toEntity
-import org.thechance.service_taxi.domain.usecase.ClientUseCase
-import org.thechance.service_taxi.domain.usecase.TaxiManagementsUseCase
-import org.thechance.service_taxi.domain.usecase.TripManagementsUseCase
+import org.thechance.service_taxi.domain.usecase.AdministratorUseCase
+import org.thechance.service_taxi.domain.usecase.CustomerUseCase
+import org.thechance.service_taxi.domain.usecase.DriverUseCase
 
 fun Route.tripRoutes() {
-    val tripManagement: TripManagementsUseCase by inject()
-    val taxiManagements: TaxiManagementsUseCase by inject()
-    val client: ClientUseCase by inject()
+    val driverUseCase: DriverUseCase by inject()
+    val administratorUseCase: AdministratorUseCase by inject()
+    val customerUseCase: CustomerUseCase by inject()
 
 
     route("/trip") {
         get {
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 20
-            val result = taxiManagements.getTrips(page, limit)
+            val result = administratorUseCase.getTrips(page, limit)
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
         get("/{tripId}") {
             val id = call.parameters["tripId"]?.trim().orEmpty()
-            val result = client.getTripById(id)
+            val result = customerUseCase.getTripById(id)
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
@@ -37,7 +42,7 @@ fun Route.tripRoutes() {
             val id = call.parameters["driverId"]?.trim().orEmpty()
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 20
-            val result = taxiManagements.getDriverTripsHistory(id, page, limit)
+            val result = driverUseCase.getTripsByDriverId(id, page, limit)
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
@@ -45,13 +50,13 @@ fun Route.tripRoutes() {
             val id = call.parameters["clientId"]?.trim().orEmpty()
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 20
-            val result = taxiManagements.getClientTripsHistory(id, page, limit)
+            val result = customerUseCase.getTripsByClientId(id, page, limit)
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
         post {
             val tripDto = call.receive<TripDto>()
-            val result = client.addTrip(tripDto.toEntity())
+            val result = customerUseCase.createTrip(tripDto.toEntity())
             if (result) {
                 call.respond(HttpStatusCode.Created, "added")
             } else {
@@ -59,20 +64,31 @@ fun Route.tripRoutes() {
             }
         }
 
-        put("/{tripId}") {
+        put("/{tripId}/rate") {
             val tripId = call.parameters["tripId"]?.trim().orEmpty()
-            val tripDto = call.receive<TripDto>()
-            val result = tripManagement.updateTripState(tripDto.toEntity().copy(id = tripId))
-            if (result) {
-                call.respond(HttpStatusCode.OK, "updated")
-            } else {
-                call.respond(HttpStatusCode.NotFound, "taxi not updated")
-            }
+            val rate = call.parameters["rate"]?.toDouble() ?: throw Throwable()
+            customerUseCase.rateTrip(tripId, rate)
+            call.respond(HttpStatusCode.OK, "updated")
+        }
+
+        put("/{tripId}/approve") {
+            val tripId = call.parameters["tripId"]?.trim().orEmpty()
+            val driverId = call.parameters["driverId"] ?: throw Throwable()
+            val taxiId = call.parameters["taxiId"] ?: throw Throwable()
+            driverUseCase.approveTrip(driverId, taxiId, tripId)
+            call.respond(HttpStatusCode.OK, "updated")
+        }
+
+        put("/{tripId}/finish") {
+            val tripId = call.parameters["tripId"]?.trim().orEmpty()
+            val driverId = call.parameters["driverId"] ?: throw Throwable()
+            driverUseCase.finishTrip(driverId, tripId)
+            call.respond(HttpStatusCode.OK, "updated")
         }
 
         delete("/{tripId}") {
             val tripId = call.parameters["tripId"]?.trim().orEmpty()
-            val result = taxiManagements.deleteTrip(tripId)
+            val result = administratorUseCase.deleteTrip(tripId)
             if (result) {
                 call.respond(HttpStatusCode.OK, "deleted")
             } else {
