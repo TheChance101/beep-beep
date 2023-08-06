@@ -19,6 +19,7 @@ data class RestaurantCollection(
     val phone: String,
     val openingTime: String,
     val closingTime: String,
+    val address: AddressCollection
 ) {
     @BsonId
     @Contextual
@@ -26,7 +27,6 @@ data class RestaurantCollection(
     val id: ObjectId = ObjectId()
     val isDeleted: Boolean = false
     val categoryIds: MutableList<@Contextual ObjectId> = mutableListOf()
-    val addressIds: List<@Contextual Id<AddressCollection>> = emptyList()
     val cuisineIds: MutableList<@Contextual ObjectId> = mutableListOf()
     val mealIds: MutableList<@Contextual ObjectId> = mutableListOf()
 }

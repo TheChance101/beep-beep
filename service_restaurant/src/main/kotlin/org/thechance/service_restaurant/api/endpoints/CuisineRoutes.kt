@@ -8,20 +8,19 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.service_restaurant.api.models.CuisineDto
-import org.thechance.service_restaurant.api.models.mappers.toDetailsDto
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
 import org.thechance.service_restaurant.domain.usecase.ClientUseCase
 import org.thechance.service_restaurant.domain.usecase.AdministratorUseCase
-import org.thechance.service_restaurant.domain.usecase.manageRestaurant.ManageRestaurantUseCase
+import org.thechance.service_restaurant.domain.usecase.ManageRestaurantUseCase
 
 fun Route.cuisineRoutes() {
 
     val client: ClientUseCase by inject()
     val administrator: AdministratorUseCase by inject()
-    val manageRestaurant:ManageRestaurantUseCase by inject ()
+    val manageRestaurant: ManageRestaurantUseCase by inject ()
 
     get("cuisines") {
         val page = call.parameters.extractInt("page") ?: 1

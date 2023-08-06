@@ -6,8 +6,6 @@ import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
-import org.litote.kmongo.id.WrappedObjectId
-import org.thechance.service_restaurant.data.Constants.ADDRESS_COLLECTION
 import org.thechance.service_restaurant.data.Constants.CATEGORY_COLLECTION
 import org.thechance.service_restaurant.data.Constants.CUISINE_COLLECTION
 import org.thechance.service_restaurant.data.Constants.RESTAURANT_COLLECTION
@@ -19,7 +17,6 @@ import org.thechance.service_restaurant.data.utils.getNonEmptyFieldsMap
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
 import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.data.utils.toObjectIds
-import org.thechance.service_restaurant.domain.entity.Address
 import org.thechance.service_restaurant.domain.entity.Category
 import org.thechance.service_restaurant.domain.entity.Cuisine
 import org.thechance.service_restaurant.domain.entity.Restaurant
@@ -42,7 +39,7 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
                     RestaurantCollection::isDeleted eq false
                 )
             ),
-        ).toList().firstOrNull()?.toEntity(getAddressesInRestaurant(id))
+        ).toList().firstOrNull()?.toEntity()
     }
 
     override suspend fun getCategoriesInRestaurant(restaurantId: String): List<Category> {
@@ -157,54 +154,6 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
             group(MealCollection::cuisines, Accumulators.addToSet("_id", "\$_id")),
         ).toList().flatMap { it.cuisines }.filter { it.toString() in cuisineIds }
         return deleteCuisinesInRestaurant(restaurantId, deletedCuisineIds.map { it.toString() })
-    }
-    //endregion
-
-    //region addresses
-    override suspend fun addAddressesToRestaurant(
-        restaurantId: String,
-        addressesIds: List<String>
-    ): Boolean {
-        val addresses = container.addressCollection.find(
-            and(
-                AddressCollection::id `in` addressesIds.map { ObjectId(it) },
-                AddressCollection::isDeleted ne true
-            )
-        ).toList()
-
-        return container.restaurantCollection.updateOneById(
-            ObjectId(restaurantId),
-            update = Updates.addEachToSet(
-                RestaurantCollection::addressIds.name,
-                addresses.map { it.id }
-            )
-        ).isSuccessfullyUpdated()
-    }
-
-    override suspend fun getAddressesInRestaurant(restaurantId: String): List<Address> {
-        return container.restaurantCollection.aggregate<RestaurantAddresses>(
-            match(
-                and(
-                    RestaurantCollection::id eq ObjectId(restaurantId),
-                    RestaurantCollection::isDeleted ne true
-                )
-            ),
-            lookup(
-                from = ADDRESS_COLLECTION,
-                resultProperty = RestaurantAddresses::addresses,
-                pipeline = arrayOf(match(AddressCollection::isDeleted ne true))
-            )
-        ).toList().firstOrNull()?.addresses?.toEntity() ?: emptyList()
-    }
-
-    override suspend fun deleteAddressesInRestaurant(
-        restaurantId: String,
-        addressesIds: List<String>
-    ): Boolean {
-        return container.restaurantCollection.updateOneById(
-            ObjectId(restaurantId),
-            pullAll(RestaurantCollection::addressIds, addressesIds.map { WrappedObjectId(it) })
-        ).isSuccessfullyUpdated()
     }
     //endregion
 }

@@ -6,16 +6,14 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import org.thechance.service_restaurant.api.models.MealDetailsDto
 import org.thechance.service_restaurant.api.models.MealDto
-import org.thechance.service_restaurant.api.models.mappers.toDetailsDto
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
 import org.thechance.service_restaurant.domain.usecase.AdministratorUseCase
 import org.thechance.service_restaurant.domain.usecase.ClientUseCase
-import org.thechance.service_restaurant.domain.usecase.manageRestaurant.ManageRestaurantUseCase
+import org.thechance.service_restaurant.domain.usecase.ManageRestaurantUseCase
 
 fun Route.mealRoutes() {
     val client: ClientUseCase by inject()

@@ -1,14 +1,11 @@
 package org.thechance.service_restaurant.api.endpoints
 
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import org.litote.kmongo.json
 import org.thechance.service_restaurant.api.models.RestaurantDto
 import org.thechance.service_restaurant.api.models.mappers.toDetailsDto
 import org.thechance.service_restaurant.api.models.mappers.toDto
@@ -17,7 +14,7 @@ import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
 import org.thechance.service_restaurant.domain.usecase.AdministratorUseCase
 import org.thechance.service_restaurant.domain.usecase.ClientUseCase
-import org.thechance.service_restaurant.domain.usecase.manageRestaurant.ManageRestaurantUseCase
+import org.thechance.service_restaurant.domain.usecase.ManageRestaurantUseCase
 
 fun Route.restaurantRoutes() {
 
@@ -77,27 +74,5 @@ fun Route.restaurantRoutes() {
             val result = administrator.deleteRestaurant(restaurantId)
             call.respond(HttpStatusCode.OK, result)
         }
-
-//        post("/{id}/addresses") {
-//            val restaurantId = call.parameters["id"] ?: ""
-//            val addresses = call.receive<AddressDto>()
-//            val result = manageDetailsRestaurant.addAddressToRestaurant(restaurantId, addresses.toEntity())
-//            call.respond(HttpStatusCode.OK, result)
-//        }
-
-//
-//        put("/{id}/address") {
-//            val restaurantId = call.parameters["id"] ?: ""
-//            val address = call.receive<AddressDto>()
-//            val result = manageDetailsRestaurant.updateAddressToRestaurant(restaurantId, address.toEntity())
-//            call.respond(HttpStatusCode.OK, result)
-//        }
-
-//        delete("/{id}/addresses") {
-//            val restaurantId = call.parameters["id"] ?: ""
-//            val addressesIds = call.receive<List<String>>()
-//            val result = manageRestaurant.deleteAddressToRestaurant(restaurantId, addressesIds)
-//            call.respond(HttpStatusCode.OK, result)
-//        }
     }
 }

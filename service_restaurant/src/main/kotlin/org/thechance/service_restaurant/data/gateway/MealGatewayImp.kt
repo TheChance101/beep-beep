@@ -25,8 +25,10 @@ import org.thechance.service_restaurant.domain.gateway.MealGateway
 @Single
 class MealGatewayImp(private val container: DataBaseContainer) : MealGateway {
 
-    override suspend fun getMeals(page: Int, limit: Int): List<Meal> =
-        container.mealCollection.find(MealCollection::isDeleted eq false).paginate(page, limit).toList().toEntity()
+    override suspend fun getMeals(page: Int, limit: Int): List<Meal> {
+        return container.mealCollection.find(MealCollection::isDeleted eq false).paginate(page, limit).toList()
+            .toEntity()
+    }
 
     override suspend fun getMealById(id: String): MealDetails? {
         return container.mealCollection.aggregate<MealWithCuisines>(

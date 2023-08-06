@@ -1,4 +1,4 @@
-package org.thechance.service_restaurant.domain.usecase.manageRestaurant
+package org.thechance.service_restaurant.domain.usecase
 
 import org.thechance.service_restaurant.domain.entity.*
 

@@ -13,7 +13,8 @@ fun RestaurantDto.toEntity() = Restaurant(
     rate = rate ?: -1.0,
     phone = phone ?: "",
     openingTime = openingTime ?: "",
-    closingTime = closingTime ?: ""
+    closingTime = closingTime ?: "",
+    address = address.toEntity()
 )
 
 fun Restaurant.toDto() = RestaurantDto(
@@ -37,7 +38,7 @@ fun Restaurant.toDetailsDto() = RestaurantDetailsDto(
     phone = phone,
     openingTime = openingTime,
     closingTime = closingTime,
-    addresses = addresses.toDto()
+    address = address.toDto()
 )
 
 fun List<Restaurant>.toDto(): List<RestaurantDto> = map { it.toDto() }

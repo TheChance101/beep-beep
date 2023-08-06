@@ -10,6 +10,6 @@ data class Restaurant(
     val phone: String,
     val openingTime: String,
     val closingTime: String,
-    val addresses: List<Address> = emptyList(),
+    val address: Address,
     val cuisines: List<Cuisine> = emptyList()
 )
