@@ -1,6 +1,5 @@
 package com.beepbeep.designSystem.ui.theme
 
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -18,18 +17,18 @@ fun Typography(): Typography {
     headlineLarge = TextStyle(
         fontSize = dimens.fontSize24,
         lineHeight =dimens.lineHeight32,
-        fontFamily =FontFamily(fontResources("font/roboto_medium.ttf")),
+        fontFamily =FontFamily(fontResources("Borel-medium.ttf")),
         fontWeight = FontWeight.W600,
         color = contentPrimaryLight,
     ),
     headlineMedium = TextStyle(
         fontSize = dimens.fontSize20,
-        fontFamily =FontFamily(fontResources("font/roboto_medium.ttf")),
+        fontFamily =FontFamily(fontResources("roboto-medium.ttf")),
         fontWeight = FontWeight.W600,
         color = contentPrimaryLight,
     ),
     titleLarge = TextStyle(
-        fontFamily =FontFamily(fontResources("font/roboto_medium.ttf")),
+        fontFamily =FontFamily(fontResources("roboto-medium.ttf")),
         fontSize = dimens.fontSize16,
         lineHeight = dimens.lineHeight20,
         fontWeight = FontWeight.W600,
@@ -38,12 +37,12 @@ fun Typography(): Typography {
         ),
     titleMedium = TextStyle(
         fontSize = dimens.fontSize14,
-        fontFamily =FontFamily(fontResources("font/roboto_medium.ttf")),
+        fontFamily =FontFamily(fontResources("roboto-medium.ttf")),
         fontWeight = FontWeight.W600,
         color = contentPrimaryLight,
     ),
     bodyLarge = TextStyle(
-        fontFamily =FontFamily(fontResources("font/roboto_regular.ttf")),
+        fontFamily =FontFamily(fontResources("roboto-Regular.ttf")),
         fontWeight = FontWeight.W400,
         fontSize =  dimens.fontSize16,
         color =contentPrimaryLight,
@@ -51,22 +50,15 @@ fun Typography(): Typography {
     bodyMedium = TextStyle(
         fontSize = dimens.fontSize14,
         lineHeight = dimens.lineHeight19,
-        fontFamily =FontFamily(fontResources("font/roboto_regular.ttf",)),
+        fontFamily =FontFamily(fontResources("roboto-Regular.ttf",)),
         fontWeight = FontWeight.W400,
         color = contentPrimaryLight,
     ),
     labelMedium = TextStyle(
         fontSize =dimens.fontSize12,
-        fontFamily =FontFamily(fontResources("font/roboto_regular.ttf")),
+        fontFamily =FontFamily(fontResources("roboto-Regular.ttf")),
         fontWeight = FontWeight.W400,
         color = contentPrimaryLight,
     ),
 
 )}
-@Composable
-fun ApplicationTheme(content: @Composable () -> Unit) {
-    MaterialTheme(
-        typography = Typography(),
-        content = content
-    )
-}

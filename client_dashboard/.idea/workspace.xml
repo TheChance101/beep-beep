@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="df8ed9f8-4306-400d-97c0-5b847f7058a4" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../api_gateway/local.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../client_restaurant/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client_delivery/iosApp/Pods/Pods.xcodeproj/xcuserdata/bareq.xcuserdatad/xcschemes/Pods-iosApp.xcscheme" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client_delivery/iosApp/Pods/Pods.xcodeproj/xcuserdata/bareq.xcuserdatad/xcschemes/shared.xcscheme" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client_delivery/iosApp/Pods/Pods.xcodeproj/xcuserdata/bareq.xcuserdatad/xcschemes/xcschememanagement.plist" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client_delivery/iosApp/iosApp.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/../client_delivery/iosApp/iosApp.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../service_identity/src/main/kotlin/org/thechance/service_identity/api/endpoints/walletRoutes.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../service_identity/src/main/kotlin/org/thechance/service_identity/api/endpoints/walletRoutes.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../service_identity/src/main/kotlin/org/thechance/service_identity/data/DataBaseContainer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../service_identity/src/main/kotlin/org/thechance/service_identity/data/DataBaseContainer.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../service_identity/src/main/kotlin/org/thechance/service_identity/data/geteway/WalletGeteWayImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../service_identity/src/main/kotlin/org/thechance/service_identity/data/geteway/WalletGeteWayImpl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../service_identity/src/main/kotlin/org/thechance/service_identity/di/IdentityModule.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../service_identity/src/main/kotlin/org/thechance/service_identity/di/IdentityModule.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../service_identity/src/main/kotlin/org/thechance/service_identity/domain/usecases/wallet/AddWalletUseCaseImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../service_identity/src/main/kotlin/org/thechance/service_identity/domain/usecases/wallet/AddWalletUseCaseImpl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../service_identity/src/main/kotlin/org/thechance/service_identity/domain/usecases/wallet/DeleteWalletUseCase.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../service_identity/src/main/kotlin/org/thechance/service_identity/domain/usecases/wallet/DeleteWalletUseCase.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../service_identity/src/main/kotlin/org/thechance/service_identity/domain/usecases/wallet/DeleteWalletUseCaseImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../service_identity/src/main/kotlin/org/thechance/service_identity/domain/usecases/wallet/DeleteWalletUseCaseImpl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../service_identity/src/main/kotlin/org/thechance/service_identity/domain/usecases/wallet/GetUserWalletUseCaseImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../service_identity/src/main/kotlin/org/thechance/service_identity/domain/usecases/wallet/GetUserWalletUseCaseImpl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../service_identity/src/main/kotlin/org/thechance/service_identity/domain/usecases/wallet/GetWalletUseCaseImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../service_identity/src/main/kotlin/org/thechance/service_identity/domain/usecases/wallet/GetWalletUseCaseImpl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../service_identity/src/main/kotlin/org/thechance/service_identity/domain/usecases/wallet/UpdateWalletUseCaseImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../service_identity/src/main/kotlin/org/thechance/service_identity/domain/usecases/wallet/UpdateWalletUseCaseImpl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../service_identity/src/main/kotlin/org/thechance/service_identity/plugins/Routing.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../service_identity/src/main/kotlin/org/thechance/service_identity/plugins/Routing.kt" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 7
+}]]></component>
+  <component name="ProjectId" id="2TNYBBGcTzj9e1DZYehcUF434Mx" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "android.gradle.sync.needed": "true",
+    "git-widget-placeholder": "feature/identity-wallet",
+    "last_opened_file_path": "/Users/ayamunadhil/the-chance/beep-beep/client_dashboard"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="df8ed9f8-4306-400d-97c0-5b847f7058a4" name="Changes" comment="" />
+      <created>1690884867439</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1690884867439</updated>
+    </task>
+    <servers />
+  </component>
+</project>
