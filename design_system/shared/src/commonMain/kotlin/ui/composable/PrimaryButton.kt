@@ -20,7 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
-import com.beepbeep.designSystem.ui.theme.shapes
 
 @ExperimentalMaterial3Api
 @Composable
@@ -28,10 +27,11 @@ fun PrimaryButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    shape: Shape = shapes.medium,
+    shape: Shape = BeepBeepTheme.shapes.medium,
     color: Color = BeepBeepTheme.colorScheme.primary,
     border: BorderStroke? = null,
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.Center,
     content: @Composable RowScope.() -> Unit
 ) {
     val buttonColor by animateColorAsState(
@@ -52,7 +52,7 @@ fun PrimaryButton(
                     minHeight = ButtonDefaults.MinHeight
                 )
                 .padding(contentPadding),
-            horizontalArrangement = Arrangement.Center,
+            horizontalArrangement = horizontalArrangement,
             verticalAlignment = Alignment.CenterVertically,
             content = content
         )
