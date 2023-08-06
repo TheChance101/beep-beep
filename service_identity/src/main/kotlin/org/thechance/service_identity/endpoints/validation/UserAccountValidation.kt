@@ -67,19 +67,19 @@ fun RequestValidationConfig.updateUserValidation() {
         val reasons = mutableListOf<String>()
         val validUserNameRegex = "[a-zA-Z0-9_]+".toRegex()
 
-        if (user.username?.isBlank() ?: false) {
+        if (user.username.isBlank()) {
             reasons.add(USERNAME_CANNOT_BE_BLANK)
         }
-        if (user.username?.matches(validUserNameRegex) ?: false) {
+        if (user.username.matches(validUserNameRegex)) {
             reasons.add(INVALID_USERNAME)
         }
-        if (user.fullName?.isEmpty() ?: false) {
+        if (user.fullName.isEmpty()) {
             reasons.add(INVALID_FULLNAME)
         }
-        if (user.password?.isEmpty() ?: false) {
+        if (user.password.isEmpty()) {
             reasons.add(PASSWORD_CANNOT_BE_BLANK)
         }
-        if ((user.password?.length ?: 8) < 8) {
+        if ((user.password.length) < 8) {
             reasons.add(PASSWORD_CANNOT_BE_LESS_THAN_8_CHARACTERS)
         }
 

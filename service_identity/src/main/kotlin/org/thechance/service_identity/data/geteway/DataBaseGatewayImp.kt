@@ -146,6 +146,7 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
     }
 
     override suspend fun getUserById(id: String): User {
+        val wallet = getWallet(id)
         return userCollection.aggregate<DetailedUserCollection>(
             match(UserCollection::id eq ObjectId(id)),
             lookup(
@@ -154,9 +155,11 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
                 foreignField = USER_DETAILS_LOCAL_FIELD,
                 newAs = DETAILED_USER_COLLECTION
             )
-        ).toList().toEntity().firstOrNull() ?: throw ResourceNotFoundException(NOT_FOUND)
+        ).toList().toEntity(wallet).firstOrNull() ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
+
+    // todo: add another mapper
     override suspend fun getUsers(fullName: String, username: String): List<User> {
         return userCollection.find(
             UserCollection::isDeleted eq false,
@@ -210,7 +213,7 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
     override suspend fun createWallet(wallet: Wallet): Boolean {
         userDetailsCollection.updateOne(
             filter = UserDetailsCollection::userId eq ObjectId(wallet.userId),
-            update = set(UserDetailsCollection::walletId setTo wallet.id)
+            update = set(UserDetailsCollection::walletCollection setTo wallet.toCollection())
         )
         return walletCollection.insertOne(wallet.toCollection()).wasAcknowledged()
     }

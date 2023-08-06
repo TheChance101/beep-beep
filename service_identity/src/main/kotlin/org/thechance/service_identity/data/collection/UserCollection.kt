@@ -13,11 +13,11 @@ data class UserCollection(
     @Contextual
     val id: ObjectId = ObjectId(),
     @SerialName("full_name")
-    val fullName: String?,
+    val fullName: String,
     @SerialName("user_name")
-    val username: String?,
+    val username: String,
     @SerialName("password")
-    val password: String?,
+    val password: String,
     @SerialName("is_deleted")
     val isDeleted: Boolean = false,
 )
