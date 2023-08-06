@@ -7,11 +7,11 @@ import org.thechance.service_identity.domain.entity.Wallet
 
 interface DataBaseGateway {
     // region: Permission
-    suspend fun getPermission(permissionId: String): Permission?
+    suspend fun getPermission(permissionId: Int): Permission
     suspend fun addPermission(permission: Permission): Boolean
-    suspend fun updatePermission(permissionId: String, permission: Permission): Boolean
-    suspend fun deletePermission(permissionId: String): Boolean
-    suspend fun getListOfPermission(permissionId: String): List<Permission>
+    suspend fun updatePermission(permissionId: Int, permission: Permission): Boolean
+    suspend fun deletePermission(permissionId: Int): Boolean
+    suspend fun getListOfPermission(permissionId: Int): List<Permission>
 
     // endregion: Permission
 

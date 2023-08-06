@@ -10,5 +10,4 @@ interface PermissionManagementUseCase {
     suspend fun updatePermission(permissionId: String, permission: Permission): Boolean
     suspend fun getListOfPermission(permissionId: String): List<Permission>
 
-
 }

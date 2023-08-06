@@ -1,18 +1,13 @@
 package org.thechance.service_identity.data.collection
 
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import org.bson.codecs.pojo.annotations.BsonId
-import org.bson.types.ObjectId
 import org.thechance.service_identity.data.geteway.DataBaseGatewayImp.Companion.CLIENT_PERMISSION
 
 @Serializable
 data class PermissionCollection(
     @SerialName("_id")
-    @BsonId
-    @Contextual
-    val id: ObjectId = ObjectId(),
+    val id: Int = 1,
     @SerialName("permission")
     val permission: Int = CLIENT_PERMISSION,
     @SerialName("is_deleted")

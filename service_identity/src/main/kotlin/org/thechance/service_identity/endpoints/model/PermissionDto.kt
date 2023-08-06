@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PermissionDto(
-    val id: String,
+    val id: Int,
     val permission: Int
 )

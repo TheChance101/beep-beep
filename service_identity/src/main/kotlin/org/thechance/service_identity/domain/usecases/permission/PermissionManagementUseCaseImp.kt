@@ -3,7 +3,7 @@ package org.thechance.service_identity.domain.usecases.permission
 import org.koin.core.annotation.Single
 import org.thechance.service_identity.domain.entity.Permission
 import org.thechance.service_identity.domain.gateway.DataBaseGateway
-import org.thechance.service_identity.domain.usecases.useraccount.UserAccountUseCase
+
 @Single
 class PermissionManagementUseCaseImp(
     private val dataBaseGateway: DataBaseGateway
@@ -13,15 +13,11 @@ class PermissionManagementUseCaseImp(
     }
 
     override suspend fun deletePermission(permissionId: String): Boolean {
-        return if (permissionId.isNotEmpty()) {
-            dataBaseGateway.deletePermission(permissionId)
-        } else {
-            throw Throwable()
-        }
+        return dataBaseGateway.deletePermission(permissionId)
     }
 
     override suspend fun getPermission(permissionId: String): Permission {
-        return dataBaseGateway.getPermission(permissionId) ?: throw Throwable("Invalid id")
+        return dataBaseGateway.getPermission(permissionId)
     }
 
     override suspend fun updatePermission(permissionId: String, permission: Permission): Boolean {
