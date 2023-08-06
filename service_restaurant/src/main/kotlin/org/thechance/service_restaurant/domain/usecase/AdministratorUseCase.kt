@@ -7,7 +7,6 @@ interface AdministratorUseCase {
     suspend fun updateCuisine(cuisine: Cuisine): Boolean
     suspend fun deleteCuisine(id: String): Boolean
     suspend fun addCuisine(cuisine: Cuisine): Boolean
-    suspend fun getCuisinesWithMeals(): List<Cuisine>
     suspend fun createRestaurant(restaurant: Restaurant): Boolean
     suspend fun deleteRestaurant(restaurantId: String): Boolean
     suspend fun deleteRestaurantsInCategory(categoryId: String, restaurantIds: List<String>): Boolean

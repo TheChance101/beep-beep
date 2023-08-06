@@ -7,6 +7,7 @@ import org.thechance.service_restaurant.domain.gateway.CuisineGateway
 import org.thechance.service_restaurant.domain.gateway.MealGateway
 import org.thechance.service_restaurant.domain.gateway.RestaurantGateway
 import org.thechance.service_restaurant.utils.DeleteCategoryException
+
 @Single
 class AdministratorUseCaseImp(
     private val restaurantGateway: RestaurantGateway,
@@ -22,10 +23,6 @@ class AdministratorUseCaseImp(
     //region cuisine
     override suspend fun addCuisine(cuisine: Cuisine): Boolean {
         return cuisineGateway.addCuisine(cuisine)
-    }
-
-    override suspend fun getCuisinesWithMeals(): List<Cuisine> {
-        TODO("get meals with cuisine by restaurant id")
     }
 
     override suspend fun updateCuisine(cuisine: Cuisine): Boolean {
