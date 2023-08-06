@@ -63,7 +63,6 @@ private val LocalShapes = staticCompositionLocalOf { shapes }
 
 @Composable
 fun BeepBeepTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
      useDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
