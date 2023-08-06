@@ -35,6 +35,9 @@ kotlin {
                 implementation(libs.compose.runtime)
                 implementation(libs.compose.foundation)
                 implementation(libs.compose.material)
+                implementation(libs.compose.material)
+                implementation(libs.compose.material3)
+
                 implementation(libs.compose.components.resources)
             }
         }
@@ -44,6 +47,7 @@ kotlin {
                 api(libs.androidx.appcompat)
                 api(libs.androidx.core.ktx)
                 api(libs.compose.preview)
+
             }
         }
         val iosX64Main by getting
@@ -82,4 +86,8 @@ android {
     kotlin {
         jvmToolchain(libs.versions.jvmToolchain.get().toInt())
     }
+}
+dependencies {
+    implementation(libs.androidx.ui.text)
+    implementation(libs.androidx.material3)
 }
