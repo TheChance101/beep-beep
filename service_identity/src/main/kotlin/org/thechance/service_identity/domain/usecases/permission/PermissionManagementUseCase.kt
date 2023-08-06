@@ -5,9 +5,9 @@ import org.thechance.service_identity.domain.entity.Permission
 
 interface PermissionManagementUseCase {
     suspend fun createPermission(permission: Permission): Boolean
-    suspend fun deletePermission(permissionId: String): Boolean
-    suspend fun getPermission(permissionId: String): Permission
-    suspend fun updatePermission(permissionId: String, permission: Permission): Boolean
-    suspend fun getListOfPermission(permissionId: String): List<Permission>
+    suspend fun deletePermission(permissionId: Int): Boolean
+    suspend fun getPermission(permissionId: Int): Permission
+    suspend fun updatePermission(permissionId: Int, permission: Permission): Boolean
+    suspend fun getListOfPermission(permissionId: Int): List<Permission>
 
 }

@@ -25,7 +25,7 @@ fun Route.permissionRoutes() {
         }
 
         delete("/{permissionId}") {
-            val permissionId = call.parameters["permissionId"] ?: throw MissingParameterException(
+            val permissionId = call.parameters["permissionId"]?.toIntOrNull() ?: throw MissingParameterException(
                 INVALID_REQUEST_PARAMETER
             )
             val success = permissionManagementUseCase.deletePermission(permissionId)
@@ -35,7 +35,9 @@ fun Route.permissionRoutes() {
 
         put("/{permissionId}") {
             val permissionId =
-                call.parameters["permissionId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+                call.parameters["permissionId"]?.toIntOrNull() ?: throw MissingParameterException(
+                    INVALID_REQUEST_PARAMETER
+                )
             val permission = call.receive<PermissionDto>()
             val success = permissionManagementUseCase.updatePermission(
                 permissionId,
@@ -45,7 +47,7 @@ fun Route.permissionRoutes() {
         }
 
         get("/{permissionId}") {
-            val permissionId = call.parameters["permissionId"]
+            val permissionId = call.parameters["permissionId"]?.toIntOrNull()
                 ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val permission =
                 permissionManagementUseCase.getPermission(permissionId).toDto()
@@ -54,7 +56,9 @@ fun Route.permissionRoutes() {
         }
         get("/{permissionId}") {
             val permissionId =
-                call.parameters["permissionId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+                call.parameters["permissionId"]?.toIntOrNull() ?: throw MissingParameterException(
+                    INVALID_REQUEST_PARAMETER
+                )
             val permissions = permissionManagementUseCase.getListOfPermission(permissionId)
             call.respond(HttpStatusCode.OK, permissions.map { it.toDto() })
         }
