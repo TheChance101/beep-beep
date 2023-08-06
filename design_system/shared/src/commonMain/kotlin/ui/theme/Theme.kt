@@ -11,7 +11,7 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.staticCompositionLocalOf
 
-private val lightColors = lightColorScheme(
+private val LightColorScheme = lightColorScheme(
     primary = primaryLight,
     secondary = secondaryLight,
     onPrimary = contentPrimaryLight,
@@ -29,7 +29,7 @@ private val lightColors = lightColorScheme(
     errorContainer = warningContainerLight,
 )
 
-private val darkColors = darkColorScheme(
+private val DarkColorScheme = darkColorScheme(
     primary = primaryDark,
     secondary = secondaryDark,
     onPrimary = contentPrimaryDark,
@@ -50,18 +50,17 @@ private val darkColors = darkColorScheme(
 private val LocalDimens = compositionLocalOf { Dimens() }
 internal val LocalColorScheme = staticCompositionLocalOf { lightColorScheme() }
 
-
+val dimens: Dimens
+    @Composable
+    @ReadOnlyComposable
+    get() = localDimens.current
 
 @Composable
 fun BeepBeepTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    useDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colorScheme = if (!darkTheme) {
-        lightColors
-    } else {
-        darkColors
-    }
+    val colorScheme = if (useDarkTheme) DarkColorScheme else LightColorScheme
 
     CompositionLocalProvider(LocalDimens provides Dimens(), LocalColorScheme provides colorScheme) {
         MaterialTheme(
