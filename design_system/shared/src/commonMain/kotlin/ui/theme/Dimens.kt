@@ -6,11 +6,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 data class Dimens(
+
     val space4: Dp = 4.dp,
     val space8: Dp = 8.dp,
     val space16: Dp = 16.dp,
     val space24: Dp = 24.dp,
     val space40: Dp = 40.dp,
+
     val fontSize12 : TextUnit  = 12.sp,
     val fontSize14 : TextUnit  = 14.sp,
     val fontSize16 : TextUnit  = 16.sp,
