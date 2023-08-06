@@ -48,12 +48,8 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LocalDimens = compositionLocalOf { Dimens() }
-internal val LocalColorScheme = staticCompositionLocalOf { lightColorScheme() }
+private val LocalColorScheme = staticCompositionLocalOf { lightColorScheme() }
 
-val dimens: Dimens
-    @Composable
-    @ReadOnlyComposable
-    get() = localDimens.current
 
 @Composable
 fun BeepBeepTheme(
