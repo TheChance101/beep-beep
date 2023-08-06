@@ -9,5 +9,4 @@ import androidx.compose.ui.text.platform.Font
 @Composable
 actual fun fontResources(
     font: String,
-    weight: FontWeight,
-): Font =Font("font/$font", weight)
+): Font =Font("font/$font")

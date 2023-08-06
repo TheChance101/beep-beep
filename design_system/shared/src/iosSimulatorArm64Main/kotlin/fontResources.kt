@@ -17,12 +17,11 @@ private val cache: MutableMap<String, Font> = mutableMapOf()
 
 actual fun fontResources(
     font: String,
-    weight: FontWeight,
 ): Font {
     return cache.getOrPut(font) {
         val byteArray = runBlocking {
             resource("font/$font.ttf").readBytes()
         }
-        Font(font, byteArray, weight)
+        Font(font, byteArray)
     }
 }
