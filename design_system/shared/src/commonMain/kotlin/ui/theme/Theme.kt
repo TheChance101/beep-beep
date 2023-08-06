@@ -16,6 +16,8 @@ private val LightColors = lightColors(
     primary = Color(0xFFD0BCFF),
     secondary = Color(0xFF10BCFF),
     background = Color(0x99F0BCFF),
+    onPrimary = Color(0x99F0BCFF),
+    onSecondary = Color(0x99F0BCFF),
 )
 
 // Will Replaced by Mustafa Colors
