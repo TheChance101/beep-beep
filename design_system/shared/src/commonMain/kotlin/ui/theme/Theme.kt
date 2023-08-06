@@ -1,30 +1,48 @@
 package com.beepbeep.designSystem.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.ui.graphics.Color
 
-
-// Will Replaced by Mustafa Colors
-private val LightColors = lightColors(
-    primary = Color(0xFFD0BCFF),
-    secondary = Color(0xFF10BCFF),
-    background = Color(0x99F0BCFF),
-    onPrimary = Color(0x99F0BCFF),
-    onSecondary = Color(0x99F0BCFF),
+private val LightColors = lightColorScheme(
+    primary = primaryLight,
+    secondary = secondaryLight,
+    onPrimary = contentPrimaryLight,
+    onSecondary = contentSecondaryLight,
+    onTertiary = contentTertiaryLight,
+    outline = contentBorderLight,
+    surface = surfaceLight,
+    onPrimaryContainer = onPrimaryLight,
+    tertiary = hoverLight,
+    background = backgroundLight,
+    tertiaryContainer = disableLight,
+    onSurface = successLight,
+    inversePrimary = successContainerLight,
+    error = warningLight,
+    errorContainer = warningContainerLight,
 )
 
-// Will Replaced by Mustafa Colors
-private val DarkColors = darkColors(
-    primary = Color(0xFFD4BCFF),
-    secondary = Color(0xF7D0BCFF),
-    background = Color(0x9FD0BCFF),
+private val DarkColors = darkColorScheme(
+    primary = primaryDark,
+    secondary = secondaryDark,
+    onPrimary = contentPrimaryDark,
+    onSecondary = contentSecondaryDark,
+    onTertiary = contentTertiaryDark,
+    outline = contentBorderDark,
+    surface = surfaceDark,
+    onPrimaryContainer = onPrimaryDark,
+    tertiary = hoverDark,
+    background = backgroundDark,
+    tertiaryContainer = disableDark,
+    onSurface = successDark,
+    inversePrimary = successContainerDark,
+    error = warningDark,
+    errorContainer = warningContainerDark,
 )
 
 private val localDimens = compositionLocalOf { Dimens() }
@@ -47,7 +65,7 @@ fun BeepBeepTheme(
 
     CompositionLocalProvider(localDimens provides Dimens()) {
         MaterialTheme(
-            colors = colorScheme,
+            colorScheme = colorScheme,
             shapes = shapes,
             // typography of Aya Will be added here
             content = content
