@@ -5,7 +5,6 @@ import org.koin.core.annotation.Single
 import org.litote.kmongo.coroutine.CoroutineCollection
 import org.litote.kmongo.coroutine.coroutine
 import org.thechance.service_restaurant.data.collection.*
-import org.thechance.service_restaurant.data.Constants.ADDRESS_COLLECTION
 import org.thechance.service_restaurant.data.Constants.CATEGORY_COLLECTION
 import org.thechance.service_restaurant.data.Constants.CUISINE_COLLECTION
 import org.thechance.service_restaurant.data.Constants.DATABASE_NAME
@@ -21,11 +20,8 @@ class DataBaseContainer(client: MongoClient) {
 
     val restaurantCollection: CoroutineCollection<RestaurantCollection> = database.getCollection(RESTAURANT_COLLECTION)
 
-    val addressCollection: CoroutineCollection<AddressCollection> = database.getCollection(ADDRESS_COLLECTION)
-
     val cuisineCollection: CoroutineCollection<CuisineCollection> = database.getCollection(CUISINE_COLLECTION)
 
     val mealCollection: CoroutineCollection<MealCollection> = database.getCollection(MEAL_COLLECTION)
-
 
 }

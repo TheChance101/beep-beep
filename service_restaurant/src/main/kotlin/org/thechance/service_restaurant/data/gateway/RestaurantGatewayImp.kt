@@ -13,6 +13,8 @@ import org.thechance.service_restaurant.data.DataBaseContainer
 import org.thechance.service_restaurant.data.collection.*
 import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
+import org.thechance.service_restaurant.data.collection.relationModels.CategoryRestaurant
+import org.thechance.service_restaurant.data.collection.relationModels.RestaurantCuisine
 import org.thechance.service_restaurant.data.utils.getNonEmptyFieldsMap
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
 import org.thechance.service_restaurant.data.utils.paginate
@@ -100,6 +102,10 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
 
     override suspend fun updateRestaurant(restaurant: Restaurant): Boolean {
         val updateFields = getNonEmptyFieldsMap(restaurant.copy(id = "", ownerId = ""))
+        if (restaurant.address.latitude!=-1.0 && restaurant.address.longitude!=-1.0){
+           val addressUpdateFields = getNonEmptyFieldsMap(restaurant.address)
+            updateFields[RestaurantCollection::address.name]= addressUpdateFields
+        }
         return container.restaurantCollection.updateOneById(
             id = ObjectId(restaurant.id),
             update = updateFields,

@@ -21,7 +21,11 @@ class ManageRestaurantUseCaseImp(
     }
 
     override suspend fun addMealToRestaurant(meal: MealDetails): Boolean {
-        val cuisineIds = meal.cuisines.map { it.id }
+        val cuisineIds = if (meal.cuisines.isNotEmpty()) {
+            meal.cuisines.map { it.id }
+        } else {
+            throw Throwable()
+        }
         restaurantGateway.addCuisineToRestaurant(meal.restaurantId, cuisineIds)
         return mealGateway.addMeal(meal)
     }

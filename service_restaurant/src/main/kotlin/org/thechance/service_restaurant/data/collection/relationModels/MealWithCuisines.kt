@@ -1,10 +1,11 @@
-package org.thechance.service_restaurant.data.collection
+package org.thechance.service_restaurant.data.collection.relationModels
 
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
+import org.thechance.service_restaurant.data.collection.CuisineCollection
 
 @Serializable
 data class MealWithCuisines(

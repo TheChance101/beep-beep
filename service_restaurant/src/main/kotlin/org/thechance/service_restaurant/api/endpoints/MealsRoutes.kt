@@ -6,9 +6,10 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import org.thechance.service_restaurant.api.models.MealDto
+import org.thechance.service_restaurant.api.models.MealWithCuisineDto
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
+import org.thechance.service_restaurant.api.models.mappers.toMealDto
 import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
 import org.thechance.service_restaurant.domain.usecase.AdministratorUseCase
@@ -24,7 +25,7 @@ fun Route.mealRoutes() {
         val page = call.parameters.extractInt("page") ?: 1
         val limit = call.parameters.extractInt("limit") ?: 10
         val meals = admin.getAllMeals(page, limit)
-        call.respond(meals.toDto())
+        call.respond(meals.toMealDto())
     }
 
     route("meal") {
@@ -36,13 +37,13 @@ fun Route.mealRoutes() {
         }
 
         put {
-            val meal = call.receive<MealDto>()
+            val meal = call.receive<MealWithCuisineDto>()
             val isUpdated = manageRestaurant.updateMealToRestaurant(meal.toEntity())
             if (isUpdated) call.respond(HttpStatusCode.OK, "updated successfully")
         }
 
         post {
-            val meal = call.receive<MealDto>()
+            val meal = call.receive<MealWithCuisineDto>()
             val result = manageRestaurant.addMealToRestaurant(meal.toEntity())
             call.respond(HttpStatusCode.Created, result)
         }

@@ -2,16 +2,19 @@ package org.thechance.service_restaurant.data.collection.mapper
 
 import org.bson.types.ObjectId
 import org.thechance.service_restaurant.data.collection.MealCollection
-import org.thechance.service_restaurant.data.collection.MealWithCuisines
+import org.thechance.service_restaurant.data.collection.relationModels.MealWithCuisines
 import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.entity.MealDetails
 
 fun MealDetails.toCollection(): MealCollection =
     MealCollection(
         name = name,
+        restaurantId = ObjectId(restaurantId),
         description = description,
         price = price,
-        cuisines = cuisines.map { ObjectId(it.id) }
+        cuisines = cuisines.map { cuisine ->
+            ObjectId(cuisine.id)
+        }
     )
 
 fun MealCollection.toEntity() = Meal(

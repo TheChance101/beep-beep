@@ -26,7 +26,8 @@ fun Restaurant.toDto() = RestaurantDto(
     rate = rate,
     phone = phone,
     openingTime = openingTime,
-    closingTime = closingTime
+    closingTime = closingTime,
+    address = address.toDto()
 )
 
 fun Restaurant.toDetailsDto() = RestaurantDetailsDto(

@@ -7,10 +7,11 @@ import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
 import org.thechance.service_restaurant.data.Constants.CUISINE_COLLECTION
 import org.thechance.service_restaurant.data.DataBaseContainer
+import org.thechance.service_restaurant.data.collection.CategoryCollection
 import org.thechance.service_restaurant.data.collection.CuisineCollection
 import org.thechance.service_restaurant.data.collection.MealCollection
-import org.thechance.service_restaurant.data.collection.MealCuisines
-import org.thechance.service_restaurant.data.collection.MealWithCuisines
+import org.thechance.service_restaurant.data.collection.relationModels.MealCuisines
+import org.thechance.service_restaurant.data.collection.relationModels.MealWithCuisines
 import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.utils.getNonEmptyFieldsMap
@@ -39,7 +40,6 @@ class MealGatewayImp(private val container: DataBaseContainer) : MealGateway {
                 foreignField = "_id",
                 newAs = MealWithCuisines::cuisines.name
             )
-
         ).toList().firstOrNull()?.toEntity()
     }
 
@@ -61,7 +61,15 @@ class MealGatewayImp(private val container: DataBaseContainer) : MealGateway {
     }
 
     override suspend fun addMeal(meal: MealDetails): Boolean {
-        return container.mealCollection.insertOne(meal.toCollection()).wasAcknowledged()
+        val mealDocument = meal.toCollection()
+        val addedMeal = container.mealCollection.insertOne(mealDocument).wasAcknowledged()
+
+        val addedMealToCuisine = container.cuisineCollection.updateMany(
+            CuisineCollection::id `in` meal.cuisines.map { it.id }.toObjectIds(),
+            addToSet(CuisineCollection::meals, mealDocument.id)
+        ).isSuccessfullyUpdated()
+
+        return addedMealToCuisine and addedMeal
     }
 
     override suspend fun addCuisinesToMeal(mealId: String, cuisineIds: List<String>): Boolean {

@@ -8,6 +8,5 @@ object Constants {
     const val RESTAURANT_COLLECTION = "restaurant"
     const val MEAL_COLLECTION = "meal"
     const val CUISINE_COLLECTION = "cuisine"
-    const val ADDRESS_COLLECTION = "address"
 }
 

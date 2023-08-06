@@ -10,9 +10,7 @@ fun AddressCollection.toEntity(): Address {
     )
 }
 
-fun Address.toCollection(): AddressCollection {
-    return AddressCollection(
-        latitude = latitude,
-        longitude = longitude,
-    )
-}
+fun Address.toCollection() = AddressCollection(
+    latitude = latitude,
+    longitude = longitude,
+)

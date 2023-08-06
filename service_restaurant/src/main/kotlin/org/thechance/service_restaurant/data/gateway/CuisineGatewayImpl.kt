@@ -1,6 +1,5 @@
 package org.thechance.service_restaurant.data.gateway
 
-import com.mongodb.client.model.Updates
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.*
@@ -11,11 +10,11 @@ import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
 import org.thechance.service_restaurant.data.utils.paginate
-import org.thechance.service_restaurant.data.utils.toObjectIds
 import org.thechance.service_restaurant.domain.entity.Cuisine
 import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.gateway.CuisineGateway
 import org.thechance.service_restaurant.data.Constants.MEAL_COLLECTION
+import org.thechance.service_restaurant.data.collection.relationModels.MealCuisines
 
 
 @Single
