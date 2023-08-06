@@ -19,46 +19,46 @@ fun Typography(): Typography {
         lineHeight =dimens.lineHeight32,
         fontFamily =FontFamily(fontResources("Borel-medium.ttf",FontWeight.W600)),
         fontWeight = FontWeight.W600,
-        color = Color.Black,
+        color = contentPrimaryLight,
     ),
     headlineMedium = TextStyle(
         fontSize = dimens.fontSize20,
         fontFamily =FontFamily(fontResources("roboto-medium.ttf",FontWeight.W600)),
         fontWeight = FontWeight.W600,
-        color = Color.Black,
+        color = contentPrimaryLight,
     ),
     titleLarge = TextStyle(
         fontFamily =FontFamily(fontResources("roboto-medium.ttf",FontWeight.W600)),
         fontSize = dimens.fontSize16,
         lineHeight = dimens.lineHeight20,
         fontWeight = FontWeight.W600,
-        color = Color.Black,
+        color = contentPrimaryLight,
 
         ),
     titleMedium = TextStyle(
         fontSize = dimens.fontSize14,
         fontFamily =FontFamily(fontResources("roboto-medium.ttf",FontWeight.W600)),
         fontWeight = FontWeight.W600,
-        color = Color.Black,
+        color = contentPrimaryLight,
     ),
     bodyLarge = TextStyle(
         fontFamily =FontFamily(fontResources("roboto-Regular.ttf",FontWeight.W400)),
         fontWeight = FontWeight.W400,
         fontSize =  dimens.fontSize16,
-        color = Color.Black,
+        color =contentPrimaryLight,
     ),
     bodyMedium = TextStyle(
         fontSize = dimens.fontSize14,
         lineHeight = dimens.lineHeight19,
         fontFamily =FontFamily(fontResources("roboto-Regular.ttf",FontWeight.W400)),
         fontWeight = FontWeight.W400,
-        color = Color.Black,
+        color = contentPrimaryLight,
     ),
     labelMedium = TextStyle(
         fontSize =dimens.fontSize12,
         fontFamily =FontFamily(fontResources("roboto-Regular.ttf",FontWeight.W400)),
         fontWeight = FontWeight.W400,
-        color = Color.Black,
+        color = contentPrimaryLight,
     ),
 
 )}
