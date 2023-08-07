@@ -2,9 +2,9 @@ package org.thechance.service_taxi.api.models.trip
 
 import kotlinx.datetime.LocalDateTime
 import org.bson.types.ObjectId
-import org.thechance.service_taxi.data.collection.LatLongCollection
+import org.thechance.service_taxi.data.collection.LocationCollection
 import org.thechance.service_taxi.data.collection.TripCollection
-import org.thechance.service_taxi.domain.entity.LatLong
+import org.thechance.service_taxi.domain.entity.Location
 import org.thechance.service_taxi.domain.entity.Trip
 import org.thechance.service_taxi.domain.entity.TripUpdateRequest
 import org.thechance.service_taxi.domain.util.CantBeNullException
@@ -24,15 +24,15 @@ fun TripDto.toEntity(): Trip {
     )
 }
 
-fun LatLongCollection.toEntity(): LatLong {
-    return LatLong(
+fun LocationCollection.toEntity(): Location {
+    return Location(
         latitude = latitude,
         longitude = longitude
     )
 }
 
-fun LatLong.toCollection(): LatLongCollection {
-    return LatLongCollection(
+fun Location.toCollection(): LocationCollection {
+    return LocationCollection(
         latitude = latitude,
         longitude = longitude
     )
