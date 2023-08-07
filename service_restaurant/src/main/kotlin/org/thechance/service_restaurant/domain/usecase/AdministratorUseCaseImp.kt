@@ -1,10 +1,7 @@
 package org.thechance.service_restaurant.domain.usecase
 
 import org.koin.core.annotation.Single
-import org.thechance.service_restaurant.domain.entity.Category
-import org.thechance.service_restaurant.domain.entity.Cuisine
-import org.thechance.service_restaurant.domain.entity.Meal
-import org.thechance.service_restaurant.domain.entity.Restaurant
+import org.thechance.service_restaurant.domain.entity.*
 import org.thechance.service_restaurant.domain.gateway.CategoryGateway
 import org.thechance.service_restaurant.domain.gateway.CuisineGateway
 import org.thechance.service_restaurant.domain.gateway.MealGateway
@@ -61,7 +58,7 @@ class AdministratorUseCaseImp(
     }
 
     override suspend fun deleteRestaurant(restaurantId: String): Boolean {
-        checkIfRestaurantIsExist(restaurantId)
+        checkIfRestaurantIsExist(restaurantId )
         return restaurantGateway.deleteRestaurant(restaurantId)
     }
     //endregion
@@ -81,11 +78,8 @@ class AdministratorUseCaseImp(
         return categoryGateway.updateCategory(category)
     }
 
-    override suspend fun deleteCategory(categoryId: String?): Boolean {
-        if (!isValidId(categoryId)) {
-            throw InvalidParameterException(INVALID_ID)
-        }
-        checkIfCategoryIsExist(categoryId!!)
+    override suspend fun deleteCategory(categoryId: String): Boolean {
+        checkIfCategoryIsExist(categoryId)
         return categoryGateway.deleteCategory(categoryId)
     }
 
@@ -105,12 +99,18 @@ class AdministratorUseCaseImp(
     }
 
     private suspend fun checkIfCategoryIsExist(categoryId: String) {
+        if (!isValidId(categoryId)) {
+            throw InvalidParameterException(INVALID_ID)
+        }
         if (categoryGateway.getCategory(categoryId) == null) {
             throw ResourceNotFoundException(NOT_FOUND)
         }
     }
 
     private suspend fun checkIfRestaurantIsExist(restaurantId: String) {
+        if (!isValidId(restaurantId)) {
+            throw InvalidParameterException(INVALID_ID)
+        }
         if (restaurantGateway.getRestaurant(restaurantId) == null) {
             throw ResourceNotFoundException(NOT_FOUND)
         }

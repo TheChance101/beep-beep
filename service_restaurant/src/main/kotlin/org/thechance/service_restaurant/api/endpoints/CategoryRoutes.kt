@@ -13,6 +13,8 @@ import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
 import org.thechance.service_restaurant.domain.usecase.ClientUseCase
 import org.thechance.service_restaurant.domain.usecase.AdministratorUseCase
+import org.thechance.service_restaurant.utils.INVALID_REQUEST_PARAMETER
+import org.thechance.service_restaurant.utils.MissingParameterException
 
 
 fun Route.categoryRoutes() {
@@ -55,7 +57,7 @@ fun Route.categoryRoutes() {
         }
 
         delete("/{id}") {
-            val categoryId = call.parameters.extractString("id")
+            val categoryId = call.parameters.extractString("id")?:throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val result = administrator.deleteCategory(categoryId)
             call.respond(HttpStatusCode.OK, result)
         }
