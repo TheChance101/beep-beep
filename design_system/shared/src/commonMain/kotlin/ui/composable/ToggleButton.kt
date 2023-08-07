@@ -56,7 +56,7 @@ fun ToggleButton(
     val alignment=remember { derivedStateOf { BiasAlignment(horizontalBias = horizontalBias, verticalBias = 0f) } }
     Box(
         Modifier
-            .border(width = 1.dp, color =  MaterialTheme.colorScheme.onTertiary, shape =shape.small)
+            .border(width = 1.dp, color =  MaterialTheme.colorScheme.surfaceTint, shape =shape.small)
         .width(64.dp)
         .height(32.dp)
         .background(color =  MaterialTheme.colorScheme.background, shape = RoundedCornerShape(size = 4.dp))
