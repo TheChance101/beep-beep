@@ -10,14 +10,7 @@ import org.thechance.service_notification.domain.gateway.IDatabaseGateway
 
 
 fun Route.testRoutes() {
-    val databaseGateway: IDatabaseGateway by inject()
     get("/test") {
         call.respond("welcome to notification service")
-    }
-
-    post("/user") {
-        val user = call.receive<UserCollection>()
-        databaseGateway.createUser(user)
-        call.respond("Created Successfully")
     }
 }
