@@ -1,5 +1,6 @@
 package org.thechance.service_taxi.data.gateway
 
+import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Updates
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
@@ -13,8 +14,10 @@ import org.thechance.service_taxi.api.models.trip.toEntity
 import org.thechance.service_taxi.data.DataBaseContainer
 import org.thechance.service_taxi.data.collection.TaxiCollection
 import org.thechance.service_taxi.data.collection.TripCollection
+import org.thechance.service_taxi.data.utils.isNotNull
 import org.thechance.service_taxi.data.utils.isSuccessfullyUpdated
 import org.thechance.service_taxi.data.utils.paginate
+import org.thechance.service_taxi.data.utils.updateNotNullProperties
 import org.thechance.service_taxi.domain.entity.Taxi
 import org.thechance.service_taxi.domain.entity.TaxiUpdateRequest
 import org.thechance.service_taxi.domain.entity.Trip
@@ -22,7 +25,7 @@ import org.thechance.service_taxi.domain.entity.TripUpdateRequest
 import org.thechance.service_taxi.domain.gateway.DataBaseGateway
 
 @Single
-class DataBaseGatewayImpl(private val container: DataBaseContainer): DataBaseGateway {
+class DataBaseGatewayImpl(private val container: DataBaseContainer) : DataBaseGateway {
     // region taxi curd
     override suspend fun addTaxi(taxi: Taxi): Boolean {
         return container.taxiCollection.insertOne(taxi.toCollection()).wasAcknowledged()
@@ -47,11 +50,15 @@ class DataBaseGatewayImpl(private val container: DataBaseContainer): DataBaseGat
     }
 
     override suspend fun updateTaxi(taxi: TaxiUpdateRequest): Boolean {
-        return container.taxiCollection.updateOneById(
-            ObjectId(taxi.id),
-            taxi.toCollection(),
-            updateOnlyNotNullProperties = true
-        ).isSuccessfullyUpdated()
+        return container.taxiCollection.findOneAndUpdate(
+            filter = and(
+                Filters.ne(TaxiCollection::isDeleted.name, true),
+                Filters.ne(TaxiCollection::id.name, ObjectId(taxi.id)),
+            ),
+            update = updateNotNullProperties(
+                taxi.toCollection(),
+                otherFilter = { it != "isDeleted" && it != "id"})
+        ).isNotNull()
     }
     //endregion
 
@@ -105,11 +112,15 @@ class DataBaseGatewayImpl(private val container: DataBaseContainer): DataBaseGat
     }
 
     override suspend fun updateTrip(trip: TripUpdateRequest): Boolean {
-        return container.tripCollection.updateOneById(
-            id = ObjectId(trip.id),
-            update = trip.toCollection(),
-            updateOnlyNotNullProperties = true
-        ).isSuccessfullyUpdated()
+        return container.tripCollection.findOneAndUpdate(
+            filter = and(
+                Filters.ne(TripCollection::isDeleted.name, true),
+                Filters.ne(TripCollection::id.name, ObjectId(trip.id)),
+            ),
+            update = updateNotNullProperties(
+                trip.toCollection(),
+                otherFilter = { it != "isDeleted" && it != "id"})
+        ).isNotNull()
     }
     //endregion
 }
