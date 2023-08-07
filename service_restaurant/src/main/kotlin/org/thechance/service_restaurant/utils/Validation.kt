@@ -5,7 +5,7 @@ import org.thechance.service_restaurant.domain.entity.Restaurant
 
 
 fun validationRestaurant(restaurant: Restaurant) {
-    val validationErrors = mutableListOf<String>()
+    val validationErrors = mutableListOf<Int>()
 
     if (!(isValidName(restaurant.name))) {
         validationErrors.add(INVALID_NAME)
@@ -36,40 +36,9 @@ fun validationRestaurant(restaurant: Restaurant) {
     }
 }
 
-fun validationUpdateRestaurant(restaurant: Restaurant) {
-    val validationErrors = mutableListOf<String>()
-
-    if (!restaurant.name.matches(Regex("^[A-Za-z0-9\\s\\[\\]\\(\\)\\-.,&]{4,20}$"))) {
-        validationErrors.add(INVALID_NAME)
-    }
-    if (!isValidId(restaurant.ownerId)) {
-        validationErrors.add(INVALID_ID)
-    }
-    if (!((restaurant.address.latitude in LATITUDE_MIN..LATITUDE_MAX) && (restaurant.address.longitude in LONGITUDE_MIN..LONGITUDE_MAX))) {
-        validationErrors.add(INVALID_LOCATION)
-    }
-    if (!validateDescription(restaurant.description)) {
-        validationErrors.add(INVALID_DESCRIPTION)
-    }
-    if (listOf("$", "$$", "$$$", "$$$$").contains(restaurant.priceLevel).not()) {
-        validationErrors.add(INVALID_PRICE_LEVEL)
-    }
-    if (!validateRate(restaurant.rate)) {
-        validationErrors.add(INVALID_RATE)
-    }
-    if (restaurant.phone.matches(Regex("\\d{3}\\d{3}\\d{4}")).not()) {
-        validationErrors.add(INVALID_PHONE)
-    }
-    if (!validateTime(restaurant.closingTime) || !validateTime(restaurant.openingTime)) {
-        validationErrors.add(INVALID_TIME)
-    }
-    if (validationErrors.isNotEmpty()) {
-        throw MultiErrorException(validationErrors)
-    }
-}
 
 fun validationCategory(category: Category) {
-    val validationErrors = mutableListOf<String>()
+    val validationErrors = mutableListOf<Int>()
 
     if (!isValidId(category.id)) {
         validationErrors.add(INVALID_ID)
@@ -83,7 +52,7 @@ fun validationCategory(category: Category) {
 }
 
 fun checkIsValidIds(id: String, listIds: List<String>) {
-    val validationErrors = mutableListOf<String>()
+    val validationErrors = mutableListOf<Int>()
 
     if (!isValidId(id)) {
         validationErrors.add(INVALID_ID)
@@ -98,11 +67,7 @@ fun checkIsValidIds(id: String, listIds: List<String>) {
 
 /* region require validation */
 fun isValidName(name: String?): Boolean {
-    return name != null && isNameValid(name)
-}
-
-fun isNameValid(name: String): Boolean {
-    return name.matches(Regex("^[A-Za-z0-9\\s\\[\\]\\(\\)\\-.,&]{4,20}$"))
+    return name != null && name.matches(Regex("^[A-Za-z0-9\\s\\[\\]\\(\\)\\-.,&]{4,20}$"))
 }
 
 fun validatePhone(phone: String?): Boolean {
