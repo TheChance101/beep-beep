@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -23,34 +24,38 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
 
-@ExperimentalMaterial3Api
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PrimaryButton(
+fun OutlinedButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    shape: Shape = BeepBeepTheme.shapes.medium,
-    containerColor: Color = BeepBeepTheme.colorScheme.primary,
-    contentColor: Color = Color.White,
-    border: BorderStroke? = null,
+    shape: Shape = RoundedCornerShape(8.dp),
+    contentColor: Color = BeepBeepTheme.colorScheme.primary,
+    border: BorderStroke = BorderStroke(1.dp, color = BeepBeepTheme.colorScheme.primary),
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Center,
     content: @Composable RowScope.() -> Unit
 ) {
-    val buttonColor by animateColorAsState(
-        if (enabled) containerColor else BeepBeepTheme.colorScheme.tertiaryContainer
+    val buttonBorderColor by animateColorAsState(
+        if (enabled) BeepBeepTheme.colorScheme.primary
+        else BeepBeepTheme.colorScheme.tertiaryContainer
+    )
+
+    val buttonContentColor by animateColorAsState(
+        if (enabled) contentColor
+        else BeepBeepTheme.colorScheme.tertiaryContainer
     )
 
     Surface(
         modifier = modifier.height(56.dp),
         onClick = onClick,
         shape = shape,
-        color = buttonColor,
         enabled = enabled,
-        contentColor = contentColor,
-        border = border
+        contentColor = buttonContentColor,
+        border = BorderStroke(border.width, buttonBorderColor)
     ) {
-        ProvideTextStyle(value = MaterialTheme.typography.labelLarge.copy(color = contentColor)) { // todo waiting aya to complete typography
+        ProvideTextStyle(value = MaterialTheme.typography.labelLarge.copy(color = buttonContentColor)) { // todo waiting aya to complete typography
             Row(
                 Modifier
                     .defaultMinSize(
@@ -64,5 +69,4 @@ fun PrimaryButton(
             )
         }
     }
-
 }
