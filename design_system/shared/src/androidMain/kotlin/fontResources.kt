@@ -11,6 +11,7 @@ import androidx.compose.ui.text.font.FontStyle
 @Composable
 actual fun fontResources(
     font: String,
+    res:String?
 ): Font {
 
     val context = LocalContext.current
