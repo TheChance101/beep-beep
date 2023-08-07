@@ -106,6 +106,7 @@ fun TogglePreview() {
 fun  CheckBoxButtonPrev(){
     var isChecked by remember { mutableStateOf(false) }
     CheckBoxButton(
+        text = "CheckBox",
         isChecked = isChecked,
         onCheck = {
             isChecked = it

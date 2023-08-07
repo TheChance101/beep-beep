@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 
 @Composable
 fun CheckBoxButton(
+    text: String = "",
     isChecked: Boolean =false,
     onCheck: (Boolean) -> Unit,
 ){
@@ -28,7 +29,7 @@ fun CheckBoxButton(
             onCheckedChange = { onCheck(it) },
         )
         Text(
-            text = "Cheese",
+            text = text,
             style = MaterialTheme.typography.bodyLarge,
         )
     }
