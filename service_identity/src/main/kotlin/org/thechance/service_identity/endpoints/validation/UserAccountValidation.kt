@@ -1,9 +1,9 @@
 package org.thechance.service_identity.endpoints.validation
 
 import io.ktor.server.plugins.requestvalidation.*
-import org.thechance.service_identity.api.model.request.UpdateUserRequest
 import org.thechance.service_identity.endpoints.model.AddressDto
 import org.thechance.service_identity.endpoints.model.request.CreateUserRequest
+import org.thechance.service_identity.endpoints.model.request.UpdateUserRequest
 
 fun RequestValidationConfig.addressValidation() {
     validate<AddressDto> { addressDto ->
@@ -17,7 +17,7 @@ fun RequestValidationConfig.addressValidation() {
             reasons.add(INVALID_HEX_STRING_LENGTH)
         }
 
-        if (addressDto.latitude !in -90.0..90.0 || addressDto.longitude !in -180.0..180.0) {
+        if (addressDto.location.latitude !in -90.0..90.0 || addressDto.location.longitude !in -180.0..180.0) {
             reasons.add(INVALID_ADDRESS_LOCATION)
         }
 

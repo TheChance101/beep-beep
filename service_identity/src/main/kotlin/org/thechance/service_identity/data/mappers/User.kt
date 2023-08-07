@@ -1,15 +1,15 @@
 package org.thechance.service_identity.data.mappers
 
 import org.bson.types.ObjectId
-import org.thechance.service_identity.api.model.UserDto
-import org.thechance.service_identity.api.model.WalletDto
-import org.thechance.service_identity.api.model.request.UpdateUserRequest
 import org.thechance.service_identity.data.collection.UserCollection
 import org.thechance.service_identity.data.collection.UserDetailsCollection
 import org.thechance.service_identity.domain.entity.User
 import org.thechance.service_identity.domain.entity.Wallet
 import org.thechance.service_identity.endpoints.model.DetailedUserDto
+import org.thechance.service_identity.endpoints.model.UserDto
+import org.thechance.service_identity.endpoints.model.WalletDto
 import org.thechance.service_identity.endpoints.model.request.CreateUserRequest
+import org.thechance.service_identity.endpoints.model.request.UpdateUserRequest
 
 fun UserCollection.toEntity(wallet: Wallet = Wallet("", "", 0.0)): User {
     return User(

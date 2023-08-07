@@ -6,11 +6,11 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import org.thechance.service_identity.api.model.PermissionDto
 import org.thechance.service_identity.data.mappers.toDto
 import org.thechance.service_identity.data.mappers.toEntity
 import org.thechance.service_identity.domain.entity.MissingParameterException
 import org.thechance.service_identity.domain.usecases.permission.PermissionManagementUseCase
+import org.thechance.service_identity.endpoints.model.PermissionDto
 import org.thechance.service_identity.endpoints.validation.INVALID_REQUEST_PARAMETER
 
 fun Route.permissionRoutes() {

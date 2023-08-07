@@ -1,9 +1,8 @@
 package org.thechance.service_identity.data.mappers
 
-import org.bson.types.ObjectId
-import org.thechance.service_identity.api.model.PermissionDto
 import org.thechance.service_identity.data.collection.PermissionCollection
 import org.thechance.service_identity.domain.entity.Permission
+import org.thechance.service_identity.endpoints.model.PermissionDto
 
 fun PermissionCollection.toEntity(): Permission {
     return Permission(
