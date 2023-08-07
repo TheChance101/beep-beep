@@ -1,14 +1,18 @@
 package com.beepbeep.designSystem
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
-
+@SuppressLint("DiscouragedApi")
 @Composable
-actual fun fontResources(font: String, weight: FontWeight): Font {
+actual fun fontResources(
+    font: String,
+): Font {
+
     val context = LocalContext.current
     val name = font.substringBefore(".")
     val fontRes = context.resources.getIdentifier(name, "font", context.packageName.plus("font"))
-    return Font(fontRes, weight)
+    return Font(fontRes)
 }

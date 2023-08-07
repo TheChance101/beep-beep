@@ -6,5 +6,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.platform.Font
 
 @Composable
-actual fun fontResources(font: String, weight: FontWeight): Font =
-    Font("font/$font", weight)
+actual fun fontResources(
+    font: String,
+): Font =Font("font/$font")
+
+

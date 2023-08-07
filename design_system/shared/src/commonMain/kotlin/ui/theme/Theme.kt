@@ -48,14 +48,13 @@ private val DarkColorScheme = darkColorScheme(
     errorContainer = warningContainerDark,
 )
 
-private val LocalDimens = compositionLocalOf { Dimens() }
+val LocalDimens = compositionLocalOf { Dimens() }
 private val LocalColorScheme = staticCompositionLocalOf { lightColorScheme() }
 private val LocalShapes = staticCompositionLocalOf { shapes }
 
 
 @Composable
 fun BeepBeepTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
@@ -70,7 +69,7 @@ fun BeepBeepTheme(
         MaterialTheme(
             colorScheme = colorScheme,
             shapes = shapes,
-//            typography = Typography(),
+            typography = Typography(),
             content = content
         )
     }
