@@ -9,15 +9,16 @@ import org.koin.dsl.module
 import org.litote.kmongo.reactivestreams.KMongo
 
 @Module
-@ComponentScan("org.thechance.service_service_notification")
+@ComponentScan("org.thechance.service_notification")
 class NotificationModule
 
 val kmongoModule = module {
     single {
-        val cluster = System.getenv("cluster")
-        val username = System.getenv("username")
-        val password = System.getenv("password")
-        KMongo.createClient("mongodb+srv://$username:$password@$cluster.mongodb.net/")
+//        val cluster = System.getenv("cluster")
+//        val username = System.getenv("username")
+//        val password = System.getenv("password")
+//        KMongo.createClient("mongodb+srv://$username:$password@$cluster.mongodb.net/")
+        KMongo.createClient("mongodb+srv://sheshox:Shstart7@mycluster.nh7kzst.mongodb.net/?retryWrites=true&w=majority")
     }
 }
 

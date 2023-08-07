@@ -11,23 +11,26 @@ import io.ktor.server.routing.route
 import org.koin.ktor.ext.inject
 import org.thechance.service_notification.data.mappers.toDto
 import org.thechance.service_notification.data.mappers.toEntity
-import org.thechance.service_notification.domain.usecases.CreateUserUseCase
-import org.thechance.service_notification.domain.usecases.GertUsersUseCase
+import org.thechance.service_notification.domain.usecases.IUserUseCase
 import org.thechance.service_notification.endpoints.model.UserDto
 
 fun Route.userRoutes() {
-    val createUser: CreateUserUseCase by inject()
-    val getUsers: GertUsersUseCase by inject()
+    val useCase: IUserUseCase by inject()
 
     route("/users") {
         post {
             val user = call.receive<UserDto>()
-            val result = createUser(user.toEntity())
+            val result = useCase.createUser(user.toEntity())
             call.respond(HttpStatusCode.Created, "User was created: $result")
         }
         get {
-            val users = getUsers()
-            call.respond(users.toDto())
+            val users = useCase.getUsers().toDto()
+            call.respond(HttpStatusCode.OK, users)
+        }
+        get("/{id}") {
+            val id = call.parameters["id"] ?: ""
+            val user = useCase.getUser(id).toDto()
+            call.respond(HttpStatusCode.OK, user)
         }
     }
 }
