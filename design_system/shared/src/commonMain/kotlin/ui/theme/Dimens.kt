@@ -6,7 +6,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 data class Dimens(
-
+    val space2: Dp = 2.dp,
     val space4: Dp = 4.dp,
     val space8: Dp = 8.dp,
     val space16: Dp = 16.dp,

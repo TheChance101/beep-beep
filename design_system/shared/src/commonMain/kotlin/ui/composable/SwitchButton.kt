@@ -1,11 +1,16 @@
 package com.beepbeep.designSystem.ui.composable
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateValueAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -13,9 +18,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -31,7 +38,6 @@ fun SwitchButton(
 ) {
     val dimens= LocalDimens.current
     val shape =LocalShapes.current
-
     val targetBackgroundColor by animateColorAsState(
         targetValue = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface
     )
@@ -39,7 +45,16 @@ fun SwitchButton(
     val targetBorderColor by animateColorAsState(
         targetValue = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.tertiaryContainer
     )
-        Box(
+    val horizontalBias by animateFloatAsState(
+        targetValue =  when (selected) {
+            true -> 1f
+            else -> -1f
+        },
+        animationSpec = tween(500)
+    )
+    val alignment=remember { derivedStateOf { BiasAlignment(horizontalBias = horizontalBias, verticalBias = 0f) } }
+
+    Box(
             modifier = modifier.width(50.dp).background(
               color=  targetBackgroundColor,
                         shape = shape.large,
@@ -53,7 +68,7 @@ fun SwitchButton(
                     interactionSource = remember { MutableInteractionSource() }
         ) {
             onUpdate(!selected)
-        }, contentAlignment = if (selected) Alignment.TopEnd else Alignment.TopStart
+        }, contentAlignment = alignment.value
         ) {
             Circle(
                 modifier = Modifier.padding(dimens.space4),

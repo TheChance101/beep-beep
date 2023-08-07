@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.OutlinedButton
 import com.beepbeep.designSystem.ui.composable.PrimaryButton
 import com.beepbeep.designSystem.ui.composable.SwitchButton
+import com.beepbeep.designSystem.ui.composable.ToggleButton
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
 
 
@@ -30,7 +31,8 @@ fun DesignApp() {
             Modifier.fillMaxSize().background(BeepBeepTheme.colorScheme.background),
             verticalArrangement = Arrangement.Bottom
         ) {
-            tooglePreview()
+            TogglePreview()
+            SwitchPreview()
             PreviewEnabledButtons()
             PreviewDisabledButtons()
         }
@@ -87,9 +89,14 @@ fun PreviewDisabledButtons() {
 }
 
 @Composable
-fun tooglePreview() {
+fun SwitchPreview() {
     var isToggle by remember { mutableStateOf(false) }
     SwitchButton(selected = isToggle, onUpdate = { isToggle = it })
 }
 
+@Composable
+fun TogglePreview() {
+    var isToggle by remember { mutableStateOf(false) }
+    ToggleButton(isToggle, onToggle = { isToggle = !isToggle })
+}
 expect fun getPlatformName(): String
