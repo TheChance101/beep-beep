@@ -19,6 +19,6 @@ actual fun fontResources(font: String, ): Font {
         val byteArray = runBlocking {
             resource("font/$font").readBytes()
         }
-        Font(font, byteArray)
+        Font("borel_regular", byteArray)
     }
 }
