@@ -6,6 +6,8 @@ import org.thechance.service_restaurant.domain.gateway.CategoryGateway
 import org.thechance.service_restaurant.domain.gateway.CuisineGateway
 import org.thechance.service_restaurant.domain.gateway.MealGateway
 import org.thechance.service_restaurant.domain.gateway.RestaurantGateway
+import org.thechance.service_restaurant.utils.NOT_FOUND
+import org.thechance.service_restaurant.utils.ResourceNotFoundException
 
 @Single
 class ClientUseCaseImp(
@@ -31,7 +33,7 @@ class ClientUseCaseImp(
     }
 
     override suspend fun getRestaurantDetails(restaurantId: String): Restaurant {
-        return restaurantGateway.getRestaurant(restaurantId) ?: throw Throwable()
+        return restaurantGateway.getRestaurant(restaurantId) ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
     override suspend fun getMealsInCuisines(cuisineId: String): List<Meal> {
@@ -39,6 +41,6 @@ class ClientUseCaseImp(
     }
 
     override suspend fun getMealDetails(mealId: String): MealDetails {
-        return mealGateway.getMealById(mealId) ?: throw Throwable()
+        return mealGateway.getMealById(mealId) ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 }

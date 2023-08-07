@@ -55,7 +55,7 @@ fun Route.categoryRoutes() {
         }
 
         delete("/{id}") {
-            val categoryId = call.parameters.extractString("id") ?: ""
+            val categoryId = call.parameters.extractString("id")
             val result = administrator.deleteCategory(categoryId)
             call.respond(HttpStatusCode.OK, result)
         }
