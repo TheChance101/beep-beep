@@ -5,8 +5,8 @@ import org.thechance.service_notification.domain.entity.User
 import org.thechance.service_notification.domain.gateway.UserGateway
 
 @Single
-class CreateUserUseCaseImp(private val userGateway: UserGateway): CreateUserUseCase {
-    override suspend fun invoke(user: User): Boolean {
-        return userGateway.createUser(user)
+class GetUsersUseCaseImp(private val userGateway: UserGateway): GertUsersUseCase {
+    override suspend fun invoke(): List<User> {
+        return userGateway.getUsers()
     }
 }

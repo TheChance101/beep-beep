@@ -10,10 +10,11 @@ import org.thechance.service_notification.domain.gateway.UserGateway
 @Single
 class UserGatewayImp(private val databaseContainer: DatabaseContainer) : UserGateway {
 
-    override suspend fun createUser(user: User) {
-        databaseContainer.userCollection.insertOne(user.toCollection())
+    override suspend fun createUser(user: User): Boolean {
+        return databaseContainer.userCollection.insertOne(user.toCollection()).wasAcknowledged()
     }
 
-
-
+    override suspend fun getUsers(): List<User> {
+        return databaseContainer.userCollection.find().toList().toEntity()
+    }
 }
