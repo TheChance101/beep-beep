@@ -10,7 +10,7 @@ import org.thechance.service_notification.data.collection.UserNotificationsHisto
 
 @Single
 class DatabaseContainer(client: MongoClient) {
-    private val database = client.coroutine.getDatabase("drinks")
+    private val database = client.coroutine.getDatabase(DATA_BASE_NAME)
 
     val userCollection = database.getCollection<UserCollection>(USER_COLLECTION)
     val notificationsCollection = database.getCollection<NotificationCollection>(USER_NOTIFICATION_HISTORY_COLLECTION)
