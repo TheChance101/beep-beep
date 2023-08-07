@@ -19,48 +19,48 @@ fun Typography(): Typography {
     headlineLarge = TextStyle(
         fontSize = dimens.fontSize24,
         lineHeight =dimens.lineHeight32,
-        fontFamily =FontFamily(fontResources("borel_regular.ttf")),
+        fontFamily =FontFamily(fontResources("roboto_medium.ttf")),
         fontWeight = FontWeight.W600,
         color = contentPrimaryLight,
     ),
-//    headlineMedium = TextStyle(
-//        fontSize = dimens.fontSize20,
-//        fontFamily =FontFamily(fontResources("roboto_medium.ttf")),
-//        fontWeight = FontWeight.W600,
-//        color = contentPrimaryLight,
-//    ),
-//    titleLarge = TextStyle(
-//        fontFamily =FontFamily(fontResources("roboto_medium.ttf")),
-//        fontSize = dimens.fontSize16,
-//        lineHeight = dimens.lineHeight20,
-//        fontWeight = FontWeight.W600,
-//        color = contentPrimaryLight,
-//
-//        ),
-//    titleMedium = TextStyle(
-//        fontSize = dimens.fontSize14,
-//        fontFamily =FontFamily(fontResources("roboto_medium.ttf")),
-//        fontWeight = FontWeight.W600,
-//        color = contentPrimaryLight,
-//    ),
-//    bodyLarge = TextStyle(
-//        fontFamily =FontFamily(fontResources("roboto_regular.ttf")),
-//        fontWeight = FontWeight.W400,
-//        fontSize =  dimens.fontSize16,
-//        color =contentPrimaryLight,
-//    ),
-//    bodyMedium = TextStyle(
-//        fontSize = dimens.fontSize14,
-//        lineHeight = dimens.lineHeight19,
-//        fontFamily =FontFamily(fontResources("roboto_regular.ttf",)),
-//        fontWeight = FontWeight.W400,
-//        color = contentPrimaryLight,
-//    ),
-//    labelMedium = TextStyle(
-//        fontSize =dimens.fontSize12,
-//        fontFamily =FontFamily(fontResources("roboto_regular.ttf")),
-//        fontWeight = FontWeight.W400,
-//        color = contentPrimaryLight,
-//    ),
+    headlineMedium = TextStyle(
+        fontSize = dimens.fontSize20,
+        fontFamily =FontFamily(fontResources("roboto_medium.ttf")),
+        fontWeight = FontWeight.W600,
+        color = contentPrimaryLight,
+    ),
+    titleLarge = TextStyle(
+        fontFamily =FontFamily(fontResources("roboto_medium.ttf")),
+        fontSize = dimens.fontSize16,
+        lineHeight = dimens.lineHeight20,
+        fontWeight = FontWeight.W600,
+        color = contentPrimaryLight,
+
+        ),
+    titleMedium = TextStyle(
+        fontSize = dimens.fontSize14,
+        fontFamily =FontFamily(fontResources("roboto_medium.ttf")),
+        fontWeight = FontWeight.W600,
+        color = contentPrimaryLight,
+    ),
+    bodyLarge = TextStyle(
+        fontFamily =FontFamily(fontResources("roboto_regular.ttf")),
+        fontWeight = FontWeight.W400,
+        fontSize =  dimens.fontSize16,
+        color =contentPrimaryLight,
+    ),
+    bodyMedium = TextStyle(
+        fontSize = dimens.fontSize14,
+        lineHeight = dimens.lineHeight19,
+        fontFamily =FontFamily(fontResources("roboto_regular.ttf",)),
+        fontWeight = FontWeight.W400,
+        color = contentPrimaryLight,
+    ),
+    labelMedium = TextStyle(
+        fontSize =dimens.fontSize12,
+        fontFamily =FontFamily(fontResources("roboto_regular.ttf")),
+        fontWeight = FontWeight.W400,
+        color = contentPrimaryLight,
+    ),
 
 )}

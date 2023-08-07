@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontFamily
 import com.beepbeep.designSystem.ui.composable.PrimaryButton
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -33,7 +34,7 @@ fun DesignApp() {
                 greetingText = "Hello, ${getPlatformName()}"
                 showImage = !showImage
             }) {
-                Text(greetingText, style = MaterialTheme.typography.headlineLarge)
+                Text(greetingText, fontFamily = FontFamily(fontResources("borel_regular.ttf")),)
             }
             AnimatedVisibility(showImage) {
                 Image(
