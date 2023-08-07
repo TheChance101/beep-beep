@@ -13,6 +13,7 @@ import org.thechance.service_taxi.api.models.trip.toEntity
 import org.thechance.service_taxi.data.DataBaseContainer
 import org.thechance.service_taxi.data.collection.TaxiCollection
 import org.thechance.service_taxi.data.collection.TripCollection
+import org.thechance.service_taxi.data.utils.isSuccessfullyUpdated
 import org.thechance.service_taxi.data.utils.paginate
 import org.thechance.service_taxi.domain.entity.Taxi
 import org.thechance.service_taxi.domain.entity.TaxiUpdateRequest
@@ -42,7 +43,7 @@ class DataBaseGatewayImpl(private val container: DataBaseContainer): DataBaseGat
             id = ObjectId(taxiId),
             update = Updates.set(TaxiCollection::isDeleted.name, true),
             updateOnlyNotNullProperties = true
-        ).modifiedCount > 0
+        ).isSuccessfullyUpdated()
     }
 
     override suspend fun updateTaxi(taxi: TaxiUpdateRequest): Boolean {
@@ -50,11 +51,11 @@ class DataBaseGatewayImpl(private val container: DataBaseContainer): DataBaseGat
             ObjectId(taxi.id),
             taxi.toCollection(),
             updateOnlyNotNullProperties = true
-        ).modifiedCount > 0
+        ).isSuccessfullyUpdated()
     }
     //endregion
 
-    //trip curd
+    //region trip curd
     override suspend fun addTrip(trip: Trip): Boolean {
         return container.tripCollection.insertOne(trip.toCollection()).wasAcknowledged()
     }
@@ -100,7 +101,7 @@ class DataBaseGatewayImpl(private val container: DataBaseContainer): DataBaseGat
         return container.tripCollection.updateOneById(
             id = ObjectId(tripId),
             update = Updates.set(TripCollection::isDeleted.name, true)
-        ).modifiedCount > 0
+        ).isSuccessfullyUpdated()
     }
 
     override suspend fun updateTrip(trip: TripUpdateRequest): Boolean {
@@ -108,7 +109,7 @@ class DataBaseGatewayImpl(private val container: DataBaseContainer): DataBaseGat
             id = ObjectId(trip.id),
             update = trip.toCollection(),
             updateOnlyNotNullProperties = true
-        ).modifiedCount > 0
+        ).isSuccessfullyUpdated()
     }
     //endregion
 }
