@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserDto(
-    val id: String = "",
+    val id: String,
     val deviceTokens: List<String>,
     val topics: List<Int>,
     val notifications: List<String>
