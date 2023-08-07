@@ -7,7 +7,5 @@ import androidx.compose.ui.text.font.FontWeight
 
 
 @Composable
-expect fun fontResources(font: String, weight: FontWeight,
-                         style: FontStyle
-): Font
+expect fun fontResources(font: String,): Font
 
