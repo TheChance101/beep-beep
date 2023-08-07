@@ -7,7 +7,6 @@ import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
 import org.thechance.service_restaurant.data.Constants.CUISINE_COLLECTION
 import org.thechance.service_restaurant.data.DataBaseContainer
-import org.thechance.service_restaurant.data.collection.CategoryCollection
 import org.thechance.service_restaurant.data.collection.CuisineCollection
 import org.thechance.service_restaurant.data.collection.MealCollection
 import org.thechance.service_restaurant.data.collection.relationModels.MealCuisines
@@ -87,13 +86,13 @@ class MealGatewayImp(private val container: DataBaseContainer) : MealGateway {
     }
 
     override suspend fun updateMeal(meal: MealDetails): Boolean {
-        val updateFields = getNonEmptyFieldsMap(meal.copy(id = "", restaurantId = "", cuisines = emptyList()))
+        val fieldsToUpdate = getNonEmptyFieldsMap(meal.copy(id = "", restaurantId = "", cuisines = emptyList()))
         if (meal.cuisines.isNotEmpty()) {
-            updateFields[MealDetails::cuisines.name] = meal.cuisines.map { ObjectId(it.id) }
+            fieldsToUpdate[MealDetails::cuisines.name] = meal.cuisines.map { ObjectId(it.id) }
         }
         return container.mealCollection.updateOneById(
             ObjectId(meal.id),
-            updateFields,
+            fieldsToUpdate,
             updateOnlyNotNullProperties = true
         ).isSuccessfullyUpdated()
     }

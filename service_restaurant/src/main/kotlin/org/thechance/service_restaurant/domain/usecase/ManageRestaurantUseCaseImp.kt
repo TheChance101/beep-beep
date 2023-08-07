@@ -1,7 +1,10 @@
 package org.thechance.service_restaurant.domain.usecase
 
 import org.koin.core.annotation.Single
-import org.thechance.service_restaurant.domain.entity.*
+import org.thechance.service_restaurant.domain.entity.Category
+import org.thechance.service_restaurant.domain.entity.Cuisine
+import org.thechance.service_restaurant.domain.entity.MealDetails
+import org.thechance.service_restaurant.domain.entity.Restaurant
 import org.thechance.service_restaurant.domain.gateway.CuisineGateway
 import org.thechance.service_restaurant.domain.gateway.MealGateway
 import org.thechance.service_restaurant.domain.gateway.RestaurantGateway
@@ -32,9 +35,14 @@ class ManageRestaurantUseCaseImp(
 
     override suspend fun deleteMealFromRestaurant(mealId: String): Boolean {
         val meal = mealGateway.getMealById(mealId)
-        val cuisineIds = meal?.cuisines?.map { it.id }
-        mealGateway.deleteMealById(mealId)
-        return restaurantGateway.deleteCuisinesFromRestaurant(meal?.restaurantId!!, cuisineIds!!)
+        return if (meal != null) {
+            val cuisineIds = meal.cuisines.map { it.id }
+            mealGateway.deleteMealById(mealId)
+            val cuisinesNeedToDelete = restaurantGateway.getCuisinesNotInRestaurant(meal.restaurantId, cuisineIds!!)
+            restaurantGateway.deleteCuisinesInRestaurant(restaurantId = meal.restaurantId, cuisinesNeedToDelete)
+        } else {
+            throw Throwable()
+        }
     }
 
     override suspend fun updateMealToRestaurant(meal: MealDetails): Boolean {

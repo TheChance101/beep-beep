@@ -101,14 +101,14 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
     }
 
     override suspend fun updateRestaurant(restaurant: Restaurant): Boolean {
-        val updateFields = getNonEmptyFieldsMap(restaurant.copy(id = "", ownerId = ""))
+        val fieldsToUpdate = getNonEmptyFieldsMap(restaurant.copy(id = "", ownerId = ""))
         if (restaurant.address.latitude!=-1.0 && restaurant.address.longitude!=-1.0){
            val addressUpdateFields = getNonEmptyFieldsMap(restaurant.address)
-            updateFields[RestaurantCollection::address.name]= addressUpdateFields
+            fieldsToUpdate[RestaurantCollection::address.name]= addressUpdateFields
         }
         return container.restaurantCollection.updateOneById(
             id = ObjectId(restaurant.id),
-            update = updateFields,
+            update = fieldsToUpdate,
             updateOnlyNotNullProperties = true
         ).isSuccessfullyUpdated()
     }
@@ -142,7 +142,7 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
         ).isSuccessfullyUpdated()
     }
 
-    override suspend fun deleteCuisinesFromRestaurant(restaurantId: String, cuisineIds: List<String>): Boolean {
+    override suspend fun getCuisinesNotInRestaurant(restaurantId: String, cuisineIds: List<String>): List<String> {
         val deletedCuisineIds = container.mealCollection.aggregate<MealCollection>(
             match(
                 and(
@@ -159,7 +159,7 @@ class RestaurantGatewayImp(private val container: DataBaseContainer) : Restauran
             unwind(MealCollection::cuisines.name),
             group(MealCollection::cuisines, Accumulators.addToSet("_id", "\$_id")),
         ).toList().flatMap { it.cuisines }.filter { it.toString() in cuisineIds }
-        return deleteCuisinesInRestaurant(restaurantId, deletedCuisineIds.map { it.toString() })
+        return  deletedCuisineIds.map { it.toString() }
     }
     //endregion
 }
