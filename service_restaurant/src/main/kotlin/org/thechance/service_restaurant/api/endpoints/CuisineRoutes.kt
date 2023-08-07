@@ -12,66 +12,49 @@ import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
-import org.thechance.service_restaurant.usecase.cuisine.CuisineUseCasesContainer
+import org.thechance.service_restaurant.domain.usecase.ClientUseCase
+import org.thechance.service_restaurant.domain.usecase.AdministratorUseCase
+import org.thechance.service_restaurant.domain.usecase.ManageRestaurantUseCase
 
 fun Route.cuisineRoutes() {
 
-    val cuisineUseCasesContainer: CuisineUseCasesContainer by inject()
+    val client: ClientUseCase by inject()
+    val administrator: AdministratorUseCase by inject()
+    val manageRestaurant: ManageRestaurantUseCase by inject ()
 
-    route("cuisines") {
-        get {
-            val page = call.parameters.extractInt("page") ?: 1
-            val limit = call.parameters.extractInt("limit") ?: 10
-            val cuisines = cuisineUseCasesContainer.getCuisinesUseCase(page, limit)
-            call.respond(HttpStatusCode.OK, cuisines.toDto())
-        }
+    get("cuisines") {
+        val page = call.parameters.extractInt("page") ?: 1
+        val limit = call.parameters.extractInt("limit") ?: 10
+        val cuisines = manageRestaurant.getCuisines(page, limit)
+        call.respond(HttpStatusCode.OK, cuisines.toDto())
     }
 
     route("cuisine") {
 
-        get("/{id}") {
-            val id = call.parameters.extractString("id") ?: throw NotFoundException()
-            val cuisine = cuisineUseCasesContainer.getCuisineByIdUseCase(id)
-            call.respond(HttpStatusCode.OK, cuisine.toDto())
-        }
-
         get("/{id}/meals") {
             val id = call.parameters.extractString("id") ?: throw NotFoundException()
-            val meals = cuisineUseCasesContainer.getMealsInCuisine(id).toDto()
+            val meals = client.getMealsInCuisines(id).toDto()
             call.respond(HttpStatusCode.OK, meals)
         }
 
         post {
             val cuisine = call.receive<CuisineDto>()
-            val isAdded = cuisineUseCasesContainer.addCuisineUseCase(cuisine.toEntity())
-            if (isAdded) call.respond(HttpStatusCode.Created, "Added Successfully")
-        }
-
-        post("/{id}/meals") {
-            val cuisineId = call.parameters.extractString("id") ?: ""
-            val mealIds = call.receive<List<String>>()
-            val isAdded = cuisineUseCasesContainer.addMealsToCuisine(cuisineId, mealIds)
+            val isAdded = administrator.addCuisine(cuisine.toEntity())
             if (isAdded) call.respond(HttpStatusCode.Created, "Added Successfully")
         }
 
         put {
             val cuisine = call.receive<CuisineDto>()
-            val isUpdated = cuisineUseCasesContainer.updateCuisineUseCase(cuisine.toEntity())
+            val isUpdated = administrator.updateCuisine(cuisine.toEntity())
             if (isUpdated) call.respond(HttpStatusCode.OK, "Updated Successfully")
         }
 
         delete("/{id}") {
             val id = call.parameters.extractString("id") ?: throw NotFoundException()
-            val isDeleted = cuisineUseCasesContainer.deleteCuisineUseCase(id)
+            val isDeleted = administrator.deleteCuisine(id)
             if (isDeleted) call.respond(HttpStatusCode.OK, "Deleted Successfully")
         }
 
-        delete("/{id}/meals") {
-            val id = call.parameters.extractString("id") ?: throw NotFoundException()
-            val mealIds = call.receive<List<String>>()
-            val isDeleted = cuisineUseCasesContainer.deleteMealsInCuisine(id, mealIds)
-            if (isDeleted) call.respond(HttpStatusCode.OK, "Deleted Successfully")
-        }
     }
 
 }

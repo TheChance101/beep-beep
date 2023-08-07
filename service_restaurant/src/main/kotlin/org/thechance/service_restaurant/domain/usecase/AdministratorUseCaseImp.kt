@@ -1,0 +1,77 @@
+package org.thechance.service_restaurant.domain.usecase
+
+import org.koin.core.annotation.Single
+import org.thechance.service_restaurant.domain.entity.*
+import org.thechance.service_restaurant.domain.gateway.CategoryGateway
+import org.thechance.service_restaurant.domain.gateway.CuisineGateway
+import org.thechance.service_restaurant.domain.gateway.MealGateway
+import org.thechance.service_restaurant.domain.gateway.RestaurantGateway
+import org.thechance.service_restaurant.utils.DeleteCategoryException
+
+@Single
+class AdministratorUseCaseImp(
+    private val restaurantGateway: RestaurantGateway,
+    private val categoryGateway: CategoryGateway,
+    private val cuisineGateway: CuisineGateway,
+    private val mealGateway: MealGateway
+) : AdministratorUseCase {
+
+    override suspend fun getAllMeals(page: Int, limit: Int): List<Meal> {
+        return mealGateway.getMeals(page, limit)
+    }
+
+    //region cuisine
+    override suspend fun addCuisine(cuisine: Cuisine): Boolean {
+        return cuisineGateway.addCuisine(cuisine)
+    }
+
+    override suspend fun updateCuisine(cuisine: Cuisine): Boolean {
+        return cuisineGateway.updateCuisine(cuisine)
+    }
+
+    override suspend fun deleteCuisine(id: String): Boolean {
+        return cuisineGateway.deleteCuisine(id)
+    }
+
+    //endregion
+
+    //region restaurant
+
+    override suspend fun createRestaurant(restaurant: Restaurant): Boolean {
+        return restaurantGateway.addRestaurant(restaurant)
+    }
+
+    override suspend fun deleteRestaurant(restaurantId: String): Boolean {
+        return if (restaurantId.isNotEmpty()) {
+            restaurantGateway.deleteRestaurant(restaurantId)
+        } else {
+            throw Throwable()
+        }
+    }
+    //endregion
+
+    //region category
+    override suspend fun createCategory(category: Category): Boolean {
+        return categoryGateway.addCategory(category)
+    }
+
+    override suspend fun updateCategory(category: Category): Boolean {
+        return categoryGateway.updateCategory(category)
+    }
+
+    override suspend fun deleteCategory(categoryId: String): Boolean {
+        return if (categoryGateway.deleteCategory(categoryId)) {
+            true
+        } else throw DeleteCategoryException
+    }
+
+    override suspend fun addRestaurantsToCategory(categoryId: String, restaurantIds: List<String>): Boolean {
+        return categoryGateway.addRestaurantsToCategory(categoryId, restaurantIds)
+    }
+
+    override suspend fun deleteRestaurantsInCategory(categoryId: String, restaurantIds: List<String>): Boolean {
+        return categoryGateway.deleteRestaurantsInCategory(categoryId, restaurantIds)
+    }
+
+    //endregion
+}

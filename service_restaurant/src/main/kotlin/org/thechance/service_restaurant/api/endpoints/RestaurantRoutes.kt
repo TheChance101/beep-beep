@@ -12,107 +12,66 @@ import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
-import org.thechance.service_restaurant.usecase.address.AddressUseCasesContainer
-import org.thechance.service_restaurant.usecase.restaurant.RestaurantUseCasesContainer
+import org.thechance.service_restaurant.domain.usecase.AdministratorUseCase
+import org.thechance.service_restaurant.domain.usecase.ClientUseCase
+import org.thechance.service_restaurant.domain.usecase.ManageRestaurantUseCase
 
 fun Route.restaurantRoutes() {
 
-    val addressUseCasesContainer: AddressUseCasesContainer by inject()
-    val restaurantUseCases: RestaurantUseCasesContainer by inject()
+    val client: ClientUseCase by inject()
+    val administrator: AdministratorUseCase by inject()
+    val manageRestaurant: ManageRestaurantUseCase by inject()
 
-    route("/restaurants") {
-        get {
-            val page = call.parameters.extractInt("page") ?: 1
-            val limit = call.parameters.extractInt("limit") ?: 10
-            val restaurants = restaurantUseCases.getRestaurants(page, limit).toDto()
-            call.respond(HttpStatusCode.OK, restaurants)
-        }
+    get("/restaurants") {
+        val page = call.parameters.extractInt("page") ?: 1
+        val limit = call.parameters.extractInt("limit") ?: 10
+        val restaurants = client.getRestaurants(page, limit).toDto()
+        call.respond(HttpStatusCode.OK, restaurants)
     }
 
     route("/restaurant") {
 
         get("/{id}") {
             val restaurantId = call.parameters["id"] ?: ""
-            val restaurant = restaurantUseCases.getRestaurantDetails(restaurantId).toDetailsDto()
+            val restaurant = client.getRestaurantDetails(restaurantId).toDetailsDto()
             call.respond(HttpStatusCode.OK, restaurant)
-        }
-
-        get("/{id}/addresses") {
-            val restaurantId = call.parameters["id"] ?: ""
-            val addressDto = addressUseCasesContainer.getAddressesInRestaurant(restaurantId).toDto()
-            call.respond(HttpStatusCode.OK, addressDto)
         }
 
         get("/{id}/categories") {
             val restaurantId = call.parameters.extractString("id") ?: ""
-            val category = restaurantUseCases.getCategoriesInRestaurant(restaurantId).toDto()
+            val category = client.getCategoriesInRestaurant(restaurantId).toDto()
             call.respond(HttpStatusCode.OK, category)
-        }
-
-        get("/{id}/cuisines") {
-            val restaurantId = call.parameters.extractString("id") ?: ""
-            val cuisines = restaurantUseCases.getCuisinesInRestaurant(restaurantId).toDto()
-            call.respond(HttpStatusCode.OK, cuisines)
         }
 
         post {
             val restaurant = call.receive<RestaurantDto>()
-            val result = restaurantUseCases.addRestaurant(restaurant.toEntity())
+            val result = administrator.createRestaurant(restaurant.toEntity())
             call.respond(HttpStatusCode.Created, result)
         }
 
         post("/{id}/categories") {
             val restaurantId = call.parameters.extractString("id") ?: ""
             val categoryIds = call.receive<List<String>>()
-            val result = restaurantUseCases.addCategoryToRestaurant(restaurantId, categoryIds)
+            val result = manageRestaurant.addCategoryToRestaurant(restaurantId, categoryIds)
             call.respond(HttpStatusCode.Created, result)
-        }
-
-        post("/{id}/cuisines") {
-            val restaurantId = call.parameters.extractString("id") ?: ""
-            val mealIds = call.receive<List<String>>()
-            val result = restaurantUseCases.addCuisinesToRestaurant(restaurantId, mealIds)
-            call.respond(HttpStatusCode.Created, result)
-        }
-
-        post("/{id}/addresses") {
-            val restaurantId = call.parameters["id"] ?: ""
-            val addressesIds = call.receive<List<String>>()
-            val result = addressUseCasesContainer.addAddressToRestaurant(restaurantId, addressesIds)
-            call.respond(HttpStatusCode.OK, result)
         }
 
         put {
             val restaurant = call.receive<RestaurantDto>()
-            val result = restaurantUseCases.updateRestaurant(restaurant.toEntity())
+            val result = manageRestaurant.updateRestaurant(restaurant.toEntity())
+            call.respond(HttpStatusCode.OK, result)
+        }
+
+        delete("/{id}/categories") {
+            val restaurantId = call.parameters.extractString("id") ?: ""
+            val categoryIds = call.receive<List<String>>()
+            val result = manageRestaurant.deleteCategoriesInRestaurant(restaurantId, categoryIds)
             call.respond(HttpStatusCode.OK, result)
         }
 
         delete("/{id}") {
             val restaurantId = call.parameters["id"] ?: ""
-            val result = restaurantUseCases.deleteRestaurant(restaurantId)
-            call.respond(HttpStatusCode.OK, result)
-        }
-
-        //need to fix
-        delete("/{id}/categories") {
-            val restaurantId = call.parameters.extractString("id") ?: ""
-            val categoryIds = call.receive<List<String>>()
-            val result = restaurantUseCases.deleteCategoriesInRestaurant(restaurantId, categoryIds)
-            call.respond(HttpStatusCode.OK, result)
-        }
-
-        delete("/{id}/addresses") {
-            val restaurantId = call.parameters["id"] ?: ""
-            val addressesIds = call.receive<List<String>>()
-            val result = addressUseCasesContainer.deleteAddressesInRestaurant(restaurantId, addressesIds)
-            call.respond(HttpStatusCode.OK, result)
-        }
-
-        delete("/{id}/Cuisines") {
-            val restaurantId = call.parameters["id"] ?: ""
-            val mealIds = call.receive<List<String>>()
-            val result = restaurantUseCases.deleteCuisinesInRestaurant(restaurantId, mealIds)
+            val result = administrator.deleteRestaurant(restaurantId)
             call.respond(HttpStatusCode.OK, result)
         }
     }
