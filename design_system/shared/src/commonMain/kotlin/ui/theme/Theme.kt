@@ -50,7 +50,7 @@ private val DarkColorScheme = darkColorScheme(
 
 val LocalDimens = compositionLocalOf { Dimens() }
 private val LocalColorScheme = staticCompositionLocalOf { lightColorScheme() }
-private val LocalShapes = staticCompositionLocalOf { shapes }
+ val LocalShapes = staticCompositionLocalOf { shapes }
 
 
 @Composable
