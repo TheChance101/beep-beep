@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import com.beepbeep.designSystem.ui.composable.CheckBoxButton
 
 import com.beepbeep.designSystem.ui.composable.OutlinedButton
 import com.beepbeep.designSystem.ui.composable.PrimaryButton
@@ -31,7 +32,8 @@ fun DesignApp() {
             Modifier.fillMaxSize().background(BeepBeepTheme.colorScheme.background),
             verticalArrangement = Arrangement.Bottom
         ) {
-            TogglePreview()
+            CheckBoxButtonPrev()
+//            TogglePreview()
             SwitchPreview()
             PreviewEnabledButtons()
             PreviewDisabledButtons()
@@ -98,5 +100,16 @@ fun SwitchPreview() {
 fun TogglePreview() {
     var isToggle by remember { mutableStateOf(false) }
     ToggleButton(isToggle, onToggle = { isToggle = !isToggle })
+}
+
+@Composable
+fun  CheckBoxButtonPrev(){
+    var isChecked by remember { mutableStateOf(false) }
+    CheckBoxButton(
+        isChecked = isChecked,
+        onCheck = {
+            isChecked = it
+        },
+    )
 }
 expect fun getPlatformName(): String
