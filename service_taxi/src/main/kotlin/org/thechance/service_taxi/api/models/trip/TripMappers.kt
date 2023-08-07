@@ -7,17 +7,18 @@ import org.thechance.service_taxi.data.collection.TripCollection
 import org.thechance.service_taxi.domain.entity.LatLong
 import org.thechance.service_taxi.domain.entity.Trip
 import org.thechance.service_taxi.domain.entity.TripUpdateRequest
+import org.thechance.service_taxi.domain.util.CantBeNullException
 
 fun TripDto.toEntity(): Trip {
     return Trip(
         id = id ?: "",
         taxiId = taxiId,
         driverId = driverId,
-        clientId = clientId ?: throw Throwable("cant be null"),
-        startPoint = startPoint?.toEntity() ?: throw Throwable("cant be null"),
-        destination = destination?.toEntity() ?: throw Throwable("cant be null"),
+        clientId = clientId ?: throw CantBeNullException,
+        startPoint = startPoint?.toEntity() ?: throw CantBeNullException,
+        destination = destination?.toEntity() ?: throw CantBeNullException,
         rate = rate,
-        price = price ?: throw Throwable("cant be null"),
+        price = price ?: throw CantBeNullException,
         startDate = startDate?.let { LocalDateTime.parse(it) },
         endDate = endDate?.let { LocalDateTime.parse(it) },
     )
@@ -59,8 +60,8 @@ fun TripCollection.toEntity(): Trip {
         id = id.toHexString(),
         taxiId = taxiId?.toHexString(),
         driverId = driverId?.toHexString(),
-        clientId = clientId?.toHexString() ?: throw Throwable("cant be null"),
-        startPoint = startPoint?.toEntity() ?: throw Throwable("cant be null"),
+        clientId = clientId?.toHexString() ?: throw CantBeNullException,
+        startPoint = startPoint?.toEntity() ?: throw CantBeNullException,
         destination = destination?.toEntity(),
         rate = rate,
         price = price ?: 0.0,

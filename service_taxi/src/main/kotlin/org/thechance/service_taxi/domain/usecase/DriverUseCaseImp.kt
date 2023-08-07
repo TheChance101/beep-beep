@@ -7,12 +7,14 @@ import org.koin.core.annotation.Single
 import org.thechance.service_taxi.domain.entity.Trip
 import org.thechance.service_taxi.domain.entity.TripUpdateRequest
 import org.thechance.service_taxi.domain.gateway.DataBaseGateway
+import org.thechance.service_taxi.domain.util.ResourceNotFoundException
 
 @Single
 class DriverUseCaseImp(
     private val dataBaseGateway: DataBaseGateway,
 ) : DriverUseCase {
     override suspend fun approveTrip(driverId: String, taxiId: String, tripId: String) {
+        dataBaseGateway.getTripById(tripId) ?: throw ResourceNotFoundException
         dataBaseGateway.updateTrip(
             TripUpdateRequest(
                 id = tripId,
@@ -24,6 +26,7 @@ class DriverUseCaseImp(
     }
 
     override suspend fun finishTrip(driverId: String, tripId: String) {
+        dataBaseGateway.getTripById(tripId) ?: throw ResourceNotFoundException
         dataBaseGateway.updateTrip(
             TripUpdateRequest(
                 tripId,

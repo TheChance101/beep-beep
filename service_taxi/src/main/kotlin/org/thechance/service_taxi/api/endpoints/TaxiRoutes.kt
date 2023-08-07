@@ -17,6 +17,7 @@ import org.thechance.service_taxi.api.models.taxi.toEntity
 import org.thechance.service_taxi.api.models.taxi.toUpdateRequest
 import org.thechance.service_taxi.domain.usecase.AdministratorUseCase
 import org.thechance.service_taxi.domain.usecase.CustomerUseCase
+import org.thechance.service_taxi.domain.util.MissingParameterException
 
 fun Route.taxiRoutes() {
     val administratorUseCase: AdministratorUseCase by inject()
@@ -31,41 +32,28 @@ fun Route.taxiRoutes() {
         }
 
         get("/{taxiId}") {
-            val id = call.parameters["taxiId"]?.trim().orEmpty()
-            val result = customerUseCase.getTaxi(id) ?: throw Throwable()
+            val id = call.parameters["taxiId"] ?: throw MissingParameterException
+            val result = customerUseCase.getTaxi(id)
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
         post {
             val taxi = call.receive<TaxiDto>()
-            val result = administratorUseCase.createTaxi(taxi.toEntity())
-            if (result) {
-                call.respond(HttpStatusCode.OK, "added")
-            } else {
-                call.respond(HttpStatusCode.NotFound, "taxi not added")
-            }
+            administratorUseCase.createTaxi(taxi.toEntity())
+            call.respond(HttpStatusCode.OK, "added")
         }
 
         put("/{taxiId}") {
-            val taxiId = call.parameters["taxiId"]?.trim().orEmpty()
+            val taxiId = call.parameters["taxiId"] ?: throw MissingParameterException
             val taxi = call.receive<TaxiDto>()
-            val result =
-                administratorUseCase.updateTaxi(taxi.toUpdateRequest().copy(id = taxiId))
-            if (result) {
-                call.respond(HttpStatusCode.OK, "updated")
-            } else {
-                call.respond(HttpStatusCode.NotFound, "taxi not updated")
-            }
+            administratorUseCase.updateTaxi(taxi.toUpdateRequest().copy(id = taxiId))
+            call.respond(HttpStatusCode.OK, "updated")
         }
 
         delete("/{taxiId}") {
-            val taxiId = call.parameters["taxiId"]?.trim().orEmpty()
-            val result = administratorUseCase.deleteTaxi(taxiId)
-            if (result) {
-                call.respond(HttpStatusCode.OK, "deleted")
-            } else {
-                call.respond(HttpStatusCode.NotFound, "taxi not deleted")
-            }
+            val taxiId = call.parameters["taxiId"] ?: throw MissingParameterException
+            administratorUseCase.deleteTaxi(taxiId)
+            call.respond(HttpStatusCode.OK, "deleted")
         }
     }
 }

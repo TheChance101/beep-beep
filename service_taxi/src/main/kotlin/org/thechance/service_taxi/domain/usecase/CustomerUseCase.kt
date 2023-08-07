@@ -9,5 +9,5 @@ interface CustomerUseCase {
     suspend fun rateTrip(tripId: String, rate: Double)
     suspend fun getTripById(tripId: String): Trip
     suspend fun getAllTaxi(page: Int, limit: Int): List<Taxi>
-    suspend fun getTaxi(taxiId: String): Taxi?
+    suspend fun getTaxi(taxiId: String): Taxi
 }

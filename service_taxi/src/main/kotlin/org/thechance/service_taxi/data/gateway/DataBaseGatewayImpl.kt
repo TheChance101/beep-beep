@@ -67,9 +67,9 @@ class DataBaseGatewayImpl(private val container: DataBaseContainer) : DataBaseGa
         return container.tripCollection.insertOne(trip.toCollection()).wasAcknowledged()
     }
 
-    override suspend fun getTripById(tripId: String): Trip {
+    override suspend fun getTripById(tripId: String): Trip? {
         return container.tripCollection.findOne(TripCollection::isDeleted ne true)?.toEntity()
-            ?: throw Throwable()
+
     }
 
     override suspend fun getAllTrips(page: Int, limit: Int): List<Trip> {

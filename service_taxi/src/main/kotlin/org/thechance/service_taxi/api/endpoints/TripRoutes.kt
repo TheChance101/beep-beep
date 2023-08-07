@@ -17,6 +17,7 @@ import org.thechance.service_taxi.api.models.trip.toEntity
 import org.thechance.service_taxi.domain.usecase.AdministratorUseCase
 import org.thechance.service_taxi.domain.usecase.CustomerUseCase
 import org.thechance.service_taxi.domain.usecase.DriverUseCase
+import org.thechance.service_taxi.domain.util.MissingParameterException
 
 fun Route.tripRoutes() {
     val driverUseCase: DriverUseCase by inject()
@@ -33,13 +34,13 @@ fun Route.tripRoutes() {
         }
 
         get("/{tripId}") {
-            val id = call.parameters["tripId"]?.trim().orEmpty()
+            val id = call.parameters["tripId"] ?: throw MissingParameterException
             val result = customerUseCase.getTripById(id)
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
         get("/driver/{driverId}") {
-            val id = call.parameters["driverId"]?.trim().orEmpty()
+            val id = call.parameters["driverId"] ?: throw MissingParameterException
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 20
             val result = driverUseCase.getTripsByDriverId(id, page, limit)
@@ -47,7 +48,7 @@ fun Route.tripRoutes() {
         }
 
         get("/client/{clientId}") {
-            val id = call.parameters["clientId"]?.trim().orEmpty()
+            val id = call.parameters["clientId"] ?: throw MissingParameterException
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 20
             val result = customerUseCase.getTripsByClientId(id, page, limit)
@@ -56,44 +57,36 @@ fun Route.tripRoutes() {
 
         post {
             val tripDto = call.receive<TripDto>()
-            val result = customerUseCase.createTrip(tripDto.toEntity())
-            if (result) {
-                call.respond(HttpStatusCode.Created, "added")
-            } else {
-                call.respond(HttpStatusCode.BadRequest, "taxi not added")
-            }
+            customerUseCase.createTrip(tripDto.toEntity())
+            call.respond(HttpStatusCode.Created, "added")
         }
 
         put("/{tripId}/rate") {
-            val tripId = call.parameters["tripId"]?.trim().orEmpty()
-            val rate = call.parameters["rate"]?.toDouble() ?: throw Throwable()
+            val tripId = call.parameters["tripId"] ?: throw MissingParameterException
+            val rate = call.parameters["rate"]?.toDouble() ?: throw MissingParameterException
             customerUseCase.rateTrip(tripId, rate)
             call.respond(HttpStatusCode.OK, "updated")
         }
 
         put("/{tripId}/approve") {
-            val tripId = call.parameters["tripId"]?.trim().orEmpty()
-            val driverId = call.parameters["driverId"] ?: throw Throwable()
-            val taxiId = call.parameters["taxiId"] ?: throw Throwable()
+            val tripId = call.parameters["tripId"] ?: throw MissingParameterException
+            val driverId = call.parameters["driverId"] ?: throw MissingParameterException
+            val taxiId = call.parameters["taxiId"] ?: throw MissingParameterException
             driverUseCase.approveTrip(driverId, taxiId, tripId)
             call.respond(HttpStatusCode.OK, "updated")
         }
 
         put("/{tripId}/finish") {
-            val tripId = call.parameters["tripId"]?.trim().orEmpty()
-            val driverId = call.parameters["driverId"] ?: throw Throwable()
+            val tripId = call.parameters["tripId"] ?: throw MissingParameterException
+            val driverId = call.parameters["driverId"] ?: throw MissingParameterException
             driverUseCase.finishTrip(driverId, tripId)
             call.respond(HttpStatusCode.OK, "updated")
         }
 
         delete("/{tripId}") {
-            val tripId = call.parameters["tripId"]?.trim().orEmpty()
-            val result = administratorUseCase.deleteTrip(tripId)
-            if (result) {
-                call.respond(HttpStatusCode.OK, "deleted")
-            } else {
-                call.respond(HttpStatusCode.NotFound, "taxi not deleted")
-            }
+            val tripId = call.parameters["tripId"] ?: throw MissingParameterException
+            administratorUseCase.deleteTrip(tripId)
+            call.respond(HttpStatusCode.OK, "deleted")
         }
     }
 }
