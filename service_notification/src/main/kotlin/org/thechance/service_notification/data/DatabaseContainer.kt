@@ -10,15 +10,11 @@ import org.thechance.service_notification.data.collection.UserNotificationsHisto
 
 @Single
 class DatabaseContainer(client: MongoClient) {
-
-    private val database = client.coroutine.getDatabase(DATA_BASE_NAME)
+    private val database = client.coroutine.getDatabase("drinks")
 
     val userCollection = database.getCollection<UserCollection>(USER_COLLECTION)
-
     val notificationsCollection = database.getCollection<NotificationCollection>(USER_NOTIFICATION_HISTORY_COLLECTION)
-
     val historyCollection = database.getCollection<UserNotificationsHistoryCollection>(NOTIFICATIONS_COLLECTION)
-
 
     companion object {
         private const val DATA_BASE_NAME = "TheChanceBeepBeep"
