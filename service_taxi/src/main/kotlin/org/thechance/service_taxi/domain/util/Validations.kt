@@ -74,7 +74,7 @@ fun validationTrip(trip: Trip) {
 
 
 fun isValidId(id: String): Boolean {
-    return id.matches(Regex("^[0-9A-Fa-f]{24}$"))
+    return "^[0-9A-Fa-f]{24}$".toRegex().matches(id)
 }
 
 fun validatePrice(price: Double): Boolean {
