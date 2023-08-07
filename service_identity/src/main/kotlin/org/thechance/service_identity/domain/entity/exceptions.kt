@@ -1,7 +1,7 @@
 package org.thechance.service_identity.domain.entity
 
 
-sealed class IdentityException(message: String) : Throwable(message)
+open class IdentityException(message: String) : Throwable(message)
 
 class UserAlreadyExistsException(message: String) : IdentityException(message)
 
