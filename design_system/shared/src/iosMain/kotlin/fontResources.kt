@@ -10,18 +10,20 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.resource
 
 
-//private val cache: MutableMap<String, Font> = mutableMapOf()
-//
+private val cache: MutableMap<String, Font> = mutableMapOf()
+
+//@OptIn(ExperimentalResourceApi::class)
 //@Composable
 //
 //actual fun fontResources(
 //    font: String,
 //    weight: FontWeight,
+//    style: FontStyle
 //): Font {
 //    return cache.getOrPut(font) {
 //        val byteArray = runBlocking {
-//            resource("font/$font.ttf").readBytes()
+//            resource("font/$font").readBytes()
 //        }
-//        Font(font, byteArray, weight)
+//        Font(font, byteArray, weight,style)
 //    }
 //}
