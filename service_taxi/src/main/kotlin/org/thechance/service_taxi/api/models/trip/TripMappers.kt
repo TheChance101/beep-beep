@@ -11,7 +11,7 @@ import org.thechance.service_taxi.domain.util.CantBeNullException
 
 fun TripDto.toEntity(): Trip {
     return Trip(
-        id = id ?: "",
+        id = if (id.isNullOrBlank()) ObjectId().toHexString() else ObjectId(id).toHexString(),
         taxiId = taxiId,
         driverId = driverId,
         clientId = clientId ?: throw CantBeNullException,
