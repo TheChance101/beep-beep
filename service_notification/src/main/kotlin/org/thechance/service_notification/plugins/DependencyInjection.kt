@@ -5,6 +5,7 @@ import io.ktor.server.application.install
 import org.koin.ksp.generated.module
 import org.koin.ktor.plugin.Koin
 import org.thechance.service_notification.di.NotificationModule
+import org.thechance.service_notification.di.firebaseModule
 import org.thechance.service_notification.di.kmongoModule
 
 fun Application.configureDependencyInjection() {
@@ -12,6 +13,7 @@ fun Application.configureDependencyInjection() {
         modules(
             NotificationModule().module,
             kmongoModule,
+            firebaseModule
         )
     }
 }

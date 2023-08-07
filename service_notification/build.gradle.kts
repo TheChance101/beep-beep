@@ -1,3 +1,6 @@
+import groovy.xml.dom.DOMCategory.attributes
+import org.jetbrains.kotlin.com.intellij.openapi.vfs.StandardFileSystems.jar
+
 val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
@@ -7,6 +10,7 @@ val koin_version : String by project
 val koin_ktor : String by project
 val kmongo_version : String by project
 val koin_ksp_version : String by project
+val firebase_version : String by project
 
 plugins {
     kotlin("jvm") version "1.8.10"
@@ -59,5 +63,8 @@ dependencies {
     // Kmongo
     implementation("org.litote.kmongo:kmongo:$kmongo_version")
     implementation("org.litote.kmongo:kmongo-coroutine:$kmongo_version")
+
+    // firebase
+    implementation("com.google.firebase:firebase-admin:$firebase_version")
 }
 
