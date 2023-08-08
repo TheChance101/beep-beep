@@ -9,12 +9,15 @@ import org.thechance.service_notification.data.collection.UserCollection
 import org.thechance.service_notification.data.mappers.toCollection
 import org.thechance.service_notification.data.mappers.toEntity
 import org.thechance.service_notification.data.utils.isSuccessfullyUpdated
-import org.thechance.service_notification.domain.gateway.IDatabaseGateway
 import org.thechance.service_notification.domain.NotFoundException
+import org.thechance.service_notification.domain.gateway.IDatabaseGateway
 import org.thechance.service_notification.domain.model.User
 
 @Single
-class DatabaseGateway(private val userCollection: CoroutineCollection<UserCollection>) : IDatabaseGateway {
+class DatabaseGateway(
+    private val userCollection: CoroutineCollection<UserCollection>,
+    private val taxiUsersCollection: CoroutineCollection<UserCollection>
+) : IDatabaseGateway {
 
     override suspend fun createUser(user: User): Boolean {
         return userCollection.insertOne(user.toCollection()).wasAcknowledged()
@@ -38,6 +41,17 @@ class DatabaseGateway(private val userCollection: CoroutineCollection<UserCollec
 
     override suspend fun getUserTokensById(id: String): List<String> {
         return userCollection.findOneById(ObjectId(id))?.deviceTokens ?: throw NotFoundException("4001")
+    }
+
+    override suspend fun getUserTokensByTopic(topic: String): List<String> {
+        return when (topic) {
+            "taxi_users" -> {
+                taxiUsersCollection.find().toList().flatMap { it.deviceTokens }
+            }
+
+            else -> emptyList()
+
+        }
     }
 
 }
