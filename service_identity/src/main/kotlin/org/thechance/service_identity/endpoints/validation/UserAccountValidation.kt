@@ -1,23 +1,26 @@
 package org.thechance.service_identity.endpoints.validation
 
 import io.ktor.server.plugins.requestvalidation.*
+import org.thechance.service_identity.domain.usecases.validation.IAddressValidationUseCase
+import org.thechance.service_identity.domain.usecases.validation.IUserValidationUseCase
 import org.thechance.service_identity.endpoints.model.AddressDto
 import org.thechance.service_identity.endpoints.model.request.CreateUserRequest
 import org.thechance.service_identity.endpoints.model.request.UpdateUserRequest
 
-fun RequestValidationConfig.addressValidation() {
+fun RequestValidationConfig.addressValidation(addressValidation: IAddressValidationUseCase) {
+
     validate<AddressDto> { addressDto ->
         val reasons = mutableListOf<String>()
 
-        if (addressDto.userId.isEmpty()) {
+        if (!addressValidation.validateUserIdNotEmpty(addressDto.userId)) {
             reasons.add(INVALID_USER_ID)
         }
 
-        if (!addressDto.userId.isHexStringValid()){
+        if (!addressValidation.validateUserIdHexLength(addressDto.userId)) {
             reasons.add(INVALID_HEX_STRING_LENGTH)
         }
 
-        if (addressDto.location.latitude !in -90.0..90.0 || addressDto.location.longitude !in -180.0..180.0) {
+        if (!addressValidation.validateLocation(addressDto.location.latitude, addressDto.location.longitude)) {
             reasons.add(INVALID_ADDRESS_LOCATION)
         }
 
@@ -30,25 +33,28 @@ fun RequestValidationConfig.addressValidation() {
 }
 
 
-fun RequestValidationConfig.createUserValidation() {
+fun RequestValidationConfig.createUserValidation(userValidation: IUserValidationUseCase) {
     validate<CreateUserRequest> { user ->
 
         val reasons = mutableListOf<String>()
-        val validUserNameRegex = "[a-zA-Z0-9_]+".toRegex()
 
-        if (user.username.isBlank()) {
+        if (!userValidation.validateUsernameIsNotBlank(user.username)) {
             reasons.add(USERNAME_CANNOT_BE_BLANK)
         }
-        if (!user.username.matches(validUserNameRegex)) {
+
+        if (!userValidation.validateUsername(user.username)) {
             reasons.add(INVALID_USERNAME)
         }
-        if (user.fullName.isEmpty()) {
+
+        if (!userValidation.validateFullNameIsNotEmpty(user.fullName)) {
             reasons.add(INVALID_FULLNAME)
         }
-        if (user.password.isEmpty()) {
+
+        if (!userValidation.validatePasswordIsNotEmpty(user.password)) {
             reasons.add(PASSWORD_CANNOT_BE_BLANK)
         }
-        if (user.password.length < 8) {
+
+        if (!userValidation.validatePasswordLength(user.password)) {
             reasons.add(PASSWORD_CANNOT_BE_LESS_THAN_8_CHARACTERS)
         }
 
@@ -61,25 +67,28 @@ fun RequestValidationConfig.createUserValidation() {
     }
 }
 
-fun RequestValidationConfig.updateUserValidation() {
+fun RequestValidationConfig.updateUserValidation(userValidation: IUserValidationUseCase) {
     validate<UpdateUserRequest> { user ->
 
         val reasons = mutableListOf<String>()
-        val validUserNameRegex = "[a-zA-Z0-9_]+".toRegex()
 
-        if (user.username.isBlank()) {
+        if (!userValidation.validateUsernameIsNotBlank(user.username)) {
             reasons.add(USERNAME_CANNOT_BE_BLANK)
         }
-        if (user.username.matches(validUserNameRegex)) {
+
+        if (!userValidation.validateUsername(user.username)) {
             reasons.add(INVALID_USERNAME)
         }
-        if (user.fullName.isEmpty()) {
+
+        if (!userValidation.validateFullNameIsNotEmpty(user.fullName)) {
             reasons.add(INVALID_FULLNAME)
         }
-        if (user.password.isEmpty()) {
+
+        if (!userValidation.validatePasswordIsNotEmpty(user.password)) {
             reasons.add(PASSWORD_CANNOT_BE_BLANK)
         }
-        if ((user.password.length) < 8) {
+
+        if (!userValidation.validatePasswordLength(user.password)) {
             reasons.add(PASSWORD_CANNOT_BE_LESS_THAN_8_CHARACTERS)
         }
 
@@ -90,8 +99,4 @@ fun RequestValidationConfig.updateUserValidation() {
         }
 
     }
-}
-
-fun String.isHexStringValid(): Boolean {
-    return this.length == 24
 }
