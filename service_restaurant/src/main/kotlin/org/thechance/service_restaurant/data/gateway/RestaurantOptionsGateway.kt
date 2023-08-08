@@ -5,6 +5,7 @@ import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
+import org.thechance.service_restaurant.data.Constants
 import org.thechance.service_restaurant.data.DataBaseContainer
 import org.thechance.service_restaurant.data.collection.CategoryCollection
 import org.thechance.service_restaurant.data.collection.relationModels.CategoryRestaurant
@@ -14,13 +15,17 @@ import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
 import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.data.utils.toObjectIds
-import org.thechance.service_restaurant.domain.entity.Category
-import org.thechance.service_restaurant.domain.entity.Restaurant
-import org.thechance.service_restaurant.domain.gateway.CategoryGateway
+import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
 import org.thechance.service_restaurant.data.Constants.RESTAURANT_COLLECTION
+import org.thechance.service_restaurant.data.collection.CuisineCollection
+import org.thechance.service_restaurant.data.collection.MealCollection
+import org.thechance.service_restaurant.data.collection.relationModels.MealCuisines
+import org.thechance.service_restaurant.data.collection.relationModels.MealWithCuisines
+import org.thechance.service_restaurant.data.utils.getNonEmptyFieldsMap
+import org.thechance.service_restaurant.domain.entity.*
 
 @Single
-class CategoryGatewayImp(private val container: DataBaseContainer) : CategoryGateway {
+class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRestaurantOptionsGateway {
 
     //region Category
     override suspend fun getCategories(page: Int, limit: Int): List<Category> {
@@ -92,4 +97,45 @@ class CategoryGatewayImp(private val container: DataBaseContainer) : CategoryGat
         return resultDeleteFromRestaurant and resultDeleteFromCategory
     }
     //endregion
+
+    //region Cuisines
+    override suspend fun getCuisines(page: Int, limit: Int): List<Cuisine> =
+        container.cuisineCollection.find(MealCollection::isDeleted eq false).paginate(page, limit).toList().toEntity()
+
+    override suspend fun getCuisineById(id: String): Cuisine? =
+        container.cuisineCollection.findOneById(ObjectId(id))?.takeIf { !it.isDeleted }?.toEntity()
+
+    override suspend fun getMealsInCuisine(cuisineId: String): List<Meal> {
+        return container.cuisineCollection.aggregate<MealCuisines>(
+            match(CuisineCollection::id eq ObjectId(cuisineId)),
+            lookup(
+                from = Constants.MEAL_COLLECTION,
+                localField = CuisineCollection::meals.name,
+                foreignField = "_id",
+                newAs = MealCuisines::meals.name
+            )
+        ).toList().first().meals.filterNot { it.isDeleted }.toEntity()
+    }
+
+
+    override suspend fun addCuisine(cuisine: Cuisine): Boolean {
+        return container.cuisineCollection.insertOne(cuisine.toCollection()).wasAcknowledged()
+    }
+
+    override suspend fun updateCuisine(cuisine: Cuisine): Boolean {
+        return container.cuisineCollection.updateOneById(
+            ObjectId(cuisine.id),
+            cuisine.toCollection(),
+            updateOnlyNotNullProperties = true
+        ).isSuccessfullyUpdated()
+    }
+
+    override suspend fun deleteCuisine(id: String): Boolean =
+        container.cuisineCollection.updateOne(
+            filter = CuisineCollection::id eq ObjectId(id),
+            update = set(CuisineCollection::isDeleted setTo true),
+        ).isSuccessfullyUpdated()
+
+    //endregion
+
 }
