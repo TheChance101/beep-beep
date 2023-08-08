@@ -17,13 +17,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BeepBeepNavigationBar
 import com.beepbeep.designSystem.ui.composable.BeepBeepNavigationBarItem
+import com.beepbeep.designSystem.ui.composable.BeepBeepTextField
 import com.beepbeep.designSystem.ui.composable.CheckBoxButton
 import com.beepbeep.designSystem.ui.composable.OutlinedButton
 import com.beepbeep.designSystem.ui.composable.PrimaryButton
@@ -40,7 +43,8 @@ fun DesignApp() {
     BeepBeepTheme {
         Column(
             Modifier.fillMaxSize().background(BeepBeepTheme.colorScheme.background),
-            verticalArrangement = Arrangement.Bottom
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceEvenly
         ) {
             TextButtonPrev()
             CheckBoxButtonPrev()
@@ -50,6 +54,9 @@ fun DesignApp() {
             DisabledButtonsPreview()
             Spacer(modifier = Modifier.height(16.dp))
             BottomNavigationBarPreview()
+            PreviewEnabledButtons()
+//            PreviewDisabledButtons()
+            PreviewTextField()
         }
     }
 }
@@ -103,6 +110,30 @@ fun DisabledButtonsPreview() {
         ) {
             Text("Button")
         }
+    }
+}
+
+@Composable
+fun PreviewTextField() {
+    Column(
+        modifier = Modifier.fillMaxWidth().padding(8.dp),
+    ) {
+        var text1 by rememberSaveable { mutableStateOf("") }
+        var text2 by rememberSaveable { mutableStateOf("") }
+        var text3 by rememberSaveable { mutableStateOf("") }
+
+        BeepBeepTextField(
+            onValueChange = { text1 = it },
+            text = text1,
+            label = "Password",
+            keyboardType = KeyboardType.Password
+        )
+        BeepBeepTextField(
+            onValueChange = { text2 = it },
+            text = text2,
+            label = "username",
+            errorMessage = "incorrect username or password" ,
+        )
     }
 }
 

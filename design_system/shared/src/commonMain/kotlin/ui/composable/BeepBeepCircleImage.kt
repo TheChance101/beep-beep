@@ -14,17 +14,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
+import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.dimens
 
 @Composable
 fun BeepBeepCircleImage(
     painter: Painter,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    boxSize: Int = 72,
-    imageSize: Int = 32,
-    strokeWidth: Int = 2,
+    boxSize: Dp = 72.dp,
+    imageSize: Dp = 32.dp,
+    strokeWidth: Dp = dimens.strokeSmall,
     strokeColor: Color = BeepBeepTheme.colorScheme.onTertiary,
     backgroundColor: Color = BeepBeepTheme.colorScheme.surface,
     imageScale: ContentScale = ContentScale.Crop,
@@ -33,13 +35,13 @@ fun BeepBeepCircleImage(
         modifier = modifier
             .clip(shape = CircleShape)
             .background(backgroundColor)
-            .size(boxSize.dp)
+            .size(boxSize)
             .clickable { onClick() }
-            .border(width = strokeWidth.dp, color = strokeColor, shape = CircleShape),
+            .border(width = strokeWidth, color = strokeColor, shape = CircleShape),
         contentAlignment = Alignment.Center
     ) {
         Image(
-            modifier = Modifier.size(imageSize.dp),
+            modifier = Modifier.size(imageSize),
             painter = painter,
             contentDescription = "",
             alignment = Alignment.Center,
