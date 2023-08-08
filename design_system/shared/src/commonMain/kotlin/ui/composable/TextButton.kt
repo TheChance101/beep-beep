@@ -38,7 +38,7 @@ fun TextButton(
     Surface(
         modifier=  modifier
         .height(height.dp)
-        .border(width = 1.dp, color =  colorScheme.surfaceTint, shape = shape.medium)
+        .border(width = 1.dp, color =  colorScheme.outline, shape = shape.medium)
         .padding(horizontal = dimens.space16, vertical = dimens.space10)
             .clickable(
                     indication = null,

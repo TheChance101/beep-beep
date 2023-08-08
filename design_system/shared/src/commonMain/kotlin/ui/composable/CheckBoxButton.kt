@@ -30,9 +30,6 @@ fun CheckBoxButton(
             ),
             onCheckedChange = { onCheck(it) },
         )
-        Text(
-            text = text,
-            style = typography.bodyLarge.copy(color = colorScheme.onPrimary),
-        )
+        Text(text = text, style = typography.bodyLarge.copy(color = colorScheme.onPrimary))
     }
 }

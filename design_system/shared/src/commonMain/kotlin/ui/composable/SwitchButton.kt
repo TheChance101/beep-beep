@@ -36,11 +36,13 @@ fun SwitchButton(
     val dimens= LocalDimens.current
     val shape =LocalShapes.current
     val targetBackgroundColor by animateColorAsState(
-        targetValue = if (selected) colorScheme.primary else colorScheme.surface
+        targetValue = if (selected) colorScheme.primary else colorScheme.background,
+        animationSpec = tween(500)
     )
 
     val targetBorderColor by animateColorAsState(
-        targetValue = if (selected) colorScheme.primary else colorScheme.tertiaryContainer
+        targetValue = if (selected) colorScheme.primary else colorScheme.tertiaryContainer,
+        animationSpec = tween(500)
     )
     val horizontalBias by animateFloatAsState(
         targetValue =  when (selected) {
@@ -51,21 +53,12 @@ fun SwitchButton(
     )
     val alignment=remember { derivedStateOf { BiasAlignment(horizontalBias = horizontalBias, verticalBias = 0f) } }
 
-    Box(
-            modifier = modifier.width(50.dp).background(
-              color=  targetBackgroundColor,
-                        shape = shape.large,
-            ).border(
-                width = 1.dp,
-                color =targetBorderColor,
-                shape = shape.large
-            )
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-        ) {
-            onUpdate(!selected)
-        }, contentAlignment = alignment.value
+    Box(modifier = modifier.width(50.dp)
+        .background(color=  targetBackgroundColor, shape = shape.large).
+        border(width = 1.dp, color =targetBorderColor, shape = shape.large)
+        .clickable(indication = null, interactionSource = remember { MutableInteractionSource() })
+        {onUpdate(!selected) },
+        contentAlignment = alignment.value
         ) {
             Circle(
                 modifier = Modifier.padding(dimens.space4),
