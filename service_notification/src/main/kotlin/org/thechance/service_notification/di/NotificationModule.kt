@@ -11,6 +11,7 @@ import org.koin.dsl.module
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.reactivestreams.KMongo
+import org.thechance.service_notification.data.collection.HistoryNotificationCollection
 import org.thechance.service_notification.data.collection.UserCollection
 
 @Module
@@ -31,6 +32,10 @@ val kmongoModule = module {
     single {
         val userCollection = "users"
         get<CoroutineDatabase>().getCollection<UserCollection>(userCollection)
+    }
+    single {
+        val historyNotificationCollection = "history_notification"
+        get<CoroutineDatabase>().getCollection<HistoryNotificationCollection>(historyNotificationCollection)
     }
 }
 
