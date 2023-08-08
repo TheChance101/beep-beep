@@ -10,7 +10,7 @@ fun User.toCollection(): UserCollection {
         id = ObjectId(id),
         deviceTokens = deviceTokens,
         topics = topics,
-        notifications = notifications.map { ObjectId(it) }
+        notifications = notifications.map { it.toCollection() }
     )
 }
 fun User.toDto(): UserDto {
@@ -18,7 +18,7 @@ fun User.toDto(): UserDto {
         id = id,
         deviceTokens = deviceTokens,
         topics = topics,
-        notifications = notifications
+        notifications = notifications.toDto()
     )
 }
 fun UserDto.toEntity(): User {
@@ -26,7 +26,7 @@ fun UserDto.toEntity(): User {
         id = id,
         deviceTokens = deviceTokens,
         topics = topics,
-        notifications = notifications
+        notifications = notifications.toEntity()
     )
 }
 fun UserCollection.toEntity(): User {
@@ -34,7 +34,7 @@ fun UserCollection.toEntity(): User {
         id = id.toHexString(),
         deviceTokens = deviceTokens,
         topics = topics,
-        notifications = notifications.map { it.toHexString() }
+        notifications = notifications.toNotificationEntity()
     )
 }
 
