@@ -14,30 +14,31 @@ import org.koin.ktor.ext.inject
 import org.thechance.service_taxi.api.models.taxi.TaxiDto
 import org.thechance.service_taxi.api.models.taxi.toDto
 import org.thechance.service_taxi.api.models.taxi.toEntity
-import org.thechance.service_taxi.api.usecase.taxi.TaxiUseCasesContainer
+import org.thechance.service_taxi.api.models.taxi.toUpdateRequest
+import org.thechance.service_taxi.domain.usecase.AdministratorUseCase
+import org.thechance.service_taxi.domain.usecase.CustomerUseCase
 
 fun Route.taxiRoutes() {
-    val taxiUseCasesContainer: TaxiUseCasesContainer by inject()
+    val administratorUseCase: AdministratorUseCase by inject()
+    val customerUseCase: CustomerUseCase by inject()
 
     route("/taxi") {
         get {
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 20
-            val result = taxiUseCasesContainer.getAllTaxesUseCase(page, limit)
+            val result = customerUseCase.getAllTaxi(page, limit)
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
         get("/{taxiId}") {
             val id = call.parameters["taxiId"]?.trim().orEmpty()
-            val result = taxiUseCasesContainer.getTaxiByIdUseCase(id)
-
-            result?.let { call.respond(HttpStatusCode.OK, result.toDto()) }
-                ?: call.respond(HttpStatusCode.NotFound, "taxi not found")
+            val result = customerUseCase.getTaxi(id) ?: throw Throwable()
+            call.respond(HttpStatusCode.OK, result.toDto())
         }
 
         post {
             val taxi = call.receive<TaxiDto>()
-            val result = taxiUseCasesContainer.addTaxiUseCase(taxi.toEntity())
+            val result = administratorUseCase.createTaxi(taxi.toEntity())
             if (result) {
                 call.respond(HttpStatusCode.OK, "added")
             } else {
@@ -49,7 +50,7 @@ fun Route.taxiRoutes() {
             val taxiId = call.parameters["taxiId"]?.trim().orEmpty()
             val taxi = call.receive<TaxiDto>()
             val result =
-                taxiUseCasesContainer.updateTaxiByIdUseCase(taxi.toEntity().copy(id = taxiId))
+                administratorUseCase.updateTaxi(taxi.toUpdateRequest().copy(id = taxiId))
             if (result) {
                 call.respond(HttpStatusCode.OK, "updated")
             } else {
@@ -59,7 +60,7 @@ fun Route.taxiRoutes() {
 
         delete("/{taxiId}") {
             val taxiId = call.parameters["taxiId"]?.trim().orEmpty()
-            val result = taxiUseCasesContainer.deleteTaxiUseCase(taxiId)
+            val result = administratorUseCase.deleteTaxi(taxiId)
             if (result) {
                 call.respond(HttpStatusCode.OK, "deleted")
             } else {

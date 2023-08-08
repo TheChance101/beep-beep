@@ -17,5 +17,7 @@ data class NotificationCollection(
     @SerialName("body")
     val body: String,
     @SerialName("date")
-    val date: Long
+    val date: Long,
+    @SerialName("is_deleted")
+    val isDeleted: Boolean = false
 )

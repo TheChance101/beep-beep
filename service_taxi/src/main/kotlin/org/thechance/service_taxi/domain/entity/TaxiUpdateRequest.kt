@@ -1,10 +1,7 @@
-package org.thechance.service_taxi.api.models.taxi
+package org.thechance.service_taxi.domain.entity
 
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class TaxiDto(
-    val id: String? = null,
+data class TaxiUpdateRequest(
+    val id: String,
     val plateNumber: String? = null,
     val color: String? = null,
     val type: String? = null,
