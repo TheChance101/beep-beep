@@ -3,14 +3,16 @@ package com.beepbeep.designSystem
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,6 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import com.beepbeep.designSystem.ui.composable.BeepBeepNavigationBar
+import com.beepbeep.designSystem.ui.composable.BeepBeepNavigationBarItem
 import com.beepbeep.designSystem.ui.composable.CheckBoxButton
 import com.beepbeep.designSystem.ui.composable.OutlinedButton
 import com.beepbeep.designSystem.ui.composable.PrimaryButton
@@ -42,15 +46,17 @@ fun DesignApp() {
             CheckBoxButtonPrev()
             TogglePreview()
             SwitchPreview()
-            PreviewEnabledButtons()
-            PreviewDisabledButtons()
+            EnabledButtonsPreview()
+            DisabledButtonsPreview()
+            Spacer(modifier = Modifier.height(16.dp))
+            BottomNavigationBarPreview()
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PreviewEnabledButtons() {
+fun EnabledButtonsPreview() {
     Column(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
     ) {
@@ -59,7 +65,10 @@ fun PreviewEnabledButtons() {
             onClick = { },
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
         ) {
-            Text("Button",   fontFamily = FontFamily(fontResources("borel_regular.ttf","borel_regular")),)
+            Text(
+                "Button",
+                fontFamily = FontFamily(fontResources("borel_regular.ttf", "borel_regular")),
+            )
         }
 
         OutlinedButton(
@@ -75,7 +84,7 @@ fun PreviewEnabledButtons() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PreviewDisabledButtons() {
+fun DisabledButtonsPreview() {
     Column(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
     ) {
@@ -98,6 +107,27 @@ fun PreviewDisabledButtons() {
 }
 
 @Composable
+fun BottomNavigationBarPreview() {
+    var selectedItem by remember { mutableStateOf(0) }
+    val items = listOf("Overview", "Taxis", "Restaurants", "Users")
+
+    BeepBeepNavigationBar {
+        items.forEachIndexed { index, item ->
+            BeepBeepNavigationBarItem(
+                icon = { tint ->
+                    Icon(Icons.Filled.Favorite, contentDescription = item, tint = tint)
+                },
+                label = { style ->
+                    Text(item, style = style)
+                },
+                selected = selectedItem == index,
+                onClick = { selectedItem = index }
+            )
+        }
+    }
+}
+
+@Composable
 fun SwitchPreview() {
     var isToggle by remember { mutableStateOf(false) }
     SwitchButton(selected = isToggle, onUpdate = { isToggle = it })
@@ -110,7 +140,7 @@ fun TogglePreview() {
 }
 
 @Composable
-fun  CheckBoxButtonPrev(){
+fun CheckBoxButtonPrev() {
     var isChecked by remember { mutableStateOf(false) }
     CheckBoxButton(
         text = "CheckBox",
@@ -123,16 +153,17 @@ fun  CheckBoxButtonPrev(){
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun TextButtonPrev(){
+fun TextButtonPrev() {
     TextButton(
         text = "TextButton",
         onClick = { },
-    ){
+    ) {
         Icon(
             painter = painterResource("sort.xml"),
             contentDescription = "",
-            tint =  MaterialTheme.colorScheme.onPrimary,
+            tint = BeepBeepTheme.colorScheme.onPrimary,
         )
     }
 }
+
 expect fun getPlatformName(): String
