@@ -19,7 +19,7 @@ val kmongoModule = module {
         val cluster = System.getenv("cluster")
         val username = System.getenv("username")
         val password = System.getenv("password")
-        KMongo.createClient("mongodb+srv://sheshox:Shstart7@mycluster.nh7kzst.mongodb.net/?retryWrites=true&w=majority")
+        KMongo.createClient("mongodb+srv://$username:$password@$cluster.mongodb.net/?retryWrites=true&w=majority")
     }
 
     single {
