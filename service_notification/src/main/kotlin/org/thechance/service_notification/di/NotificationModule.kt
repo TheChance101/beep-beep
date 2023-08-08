@@ -36,14 +36,6 @@ val kmongoModule = module {
 
 val firebaseModule = module {
     single {
-        val firebaseKey = System.getenv("firebaseKey")
-        val serviceAccount = this::class.java.classLoader.getResourceAsStream("beep-beep-12cae-firebase-adminsdk-hfmvb-ec3fac5f3d.json")
-        val options = FirebaseOptions.builder()
-            .setCredentials(GoogleCredentials.fromStream(serviceAccount)).build()
-        FirebaseApp.initializeApp(options)
-    }
-
-    single {
         FirebaseMessaging.getInstance()
     }
 }

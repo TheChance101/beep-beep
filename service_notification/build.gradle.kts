@@ -66,5 +66,9 @@ dependencies {
 
     // firebase
     implementation("com.google.firebase:firebase-admin:$firebase_version")
+
+    // koinLogger
+    implementation ("io.insert-koin:koin-logger-slf4j:$koin_version")
+
 }
 

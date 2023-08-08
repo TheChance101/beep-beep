@@ -11,11 +11,11 @@ data class UserCollection(
     @BsonId
     @SerialName("_id")
     @Contextual
-    val id: String,
+    val id: ObjectId,
     @SerialName("device_tokens")
     val deviceTokens: List<String>,
     @SerialName("topics")
-    val topics: List<Int>,
+    val topics: List<String>,
     @SerialName("notifications")
     val notifications: List<NotificationCollection> = emptyList()
 )
