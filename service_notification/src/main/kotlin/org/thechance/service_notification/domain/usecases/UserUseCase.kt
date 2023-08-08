@@ -17,4 +17,11 @@ class UserUseCase(private val userGateway: UserGateway): IUserUseCase {
     override suspend fun createUser(user: User): Boolean {
         return userGateway.createUser(user)
     }
+
+}
+
+interface IUserUseCase {
+    suspend fun createUser(user: User): Boolean
+    suspend fun getUsers(): List<User>
+    suspend fun getUser(id:String): User
 }

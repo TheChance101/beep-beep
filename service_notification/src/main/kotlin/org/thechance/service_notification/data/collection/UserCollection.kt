@@ -17,6 +17,6 @@ data class UserCollection(
     @SerialName("topics")
     val topics: List<Int>,
     @SerialName("notifications")
-    val notifications: List<String>
+    val notifications: List<@Contextual ObjectId>
 
 )
