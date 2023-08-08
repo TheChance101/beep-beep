@@ -28,6 +28,7 @@ private val LightColorScheme = lightColorScheme(
     inversePrimary = successContainerLight,
     error = warningLight,
     errorContainer = warningContainerLight,
+    surfaceTint = surfaceTintLight,
 )
 
 private val DarkColorScheme = darkColorScheme(
@@ -46,6 +47,7 @@ private val DarkColorScheme = darkColorScheme(
     inversePrimary = successContainerDark,
     error = warningDark,
     errorContainer = warningContainerDark,
+    surfaceTint = surfaceTintDar,
 )
 
 private val LocalDimens = compositionLocalOf { Dimens() }
@@ -81,11 +83,11 @@ object BeepBeepTheme {
         @ReadOnlyComposable
         get() = LocalColorScheme.current
 
-//        val typography
+    //    val typography: Typography
 //        @Composable
 //        @ReadOnlyComposable
 //        get() = LocalTypography.current
-
+//
     val shapes: Shapes
         @Composable
         @ReadOnlyComposable
