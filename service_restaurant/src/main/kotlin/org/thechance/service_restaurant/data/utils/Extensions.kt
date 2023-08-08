@@ -22,7 +22,7 @@ fun getNonEmptyFieldsMap(obj: Any): MutableMap<String, Any> {
         val value = property.getter.call(obj)
         if (value is String && value.isNotEmpty()) {
             updateFields[property.name] = value
-        } else if (value is Double && value != -1.0) {
+        } else if (value is Double && value != 0.0) {
             updateFields[property.name] = value
         } else if (value is List<*> && value.isNotEmpty()) {
             updateFields[property.name] = value
