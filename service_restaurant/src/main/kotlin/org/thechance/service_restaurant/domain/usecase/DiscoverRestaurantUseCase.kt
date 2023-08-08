@@ -34,7 +34,7 @@ class DiscoverRestaurantUseCase(
 
     override suspend fun getCategoriesInRestaurant(restaurantId: String): List<Category> {
         checkIfRestaurantIsExist(restaurantId)
-        return restaurantGateway.getCategoriesInRestaurant(restaurantId)
+        return optionsGateway.getCategoriesInRestaurant(restaurantId)
     }
 
     override suspend fun getRestaurantsInCategory(categoryId: String): List<Restaurant> {
