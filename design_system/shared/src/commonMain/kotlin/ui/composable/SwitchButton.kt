@@ -61,7 +61,7 @@ fun SwitchButton(
         contentAlignment = alignment.value
         ) {
             Circle(
-                modifier = Modifier.padding(dimens.space2),
+                modifier = Modifier.padding(dimens.space4),
                 isSelected = selected
             )
         }
