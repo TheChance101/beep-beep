@@ -14,8 +14,4 @@ data class UserCollection(
     val id: ObjectId,
     @SerialName("device_tokens")
     val deviceTokens: List<String>,
-    @SerialName("topics")
-    val topics: List<String>,
-    @SerialName("notifications")
-    val notifications: List<NotificationCollection> = emptyList()
 )

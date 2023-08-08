@@ -1,4 +1,4 @@
-package org.thechance.service_notification.domain.model
+package org.thechance.service_notification.domain
 
 open class NotificationServiceExceptions(message: String) : Throwable(message)
 

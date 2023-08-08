@@ -30,10 +30,7 @@ fun Route.userRoutes() {
             val result = useCase.addTokenToUser(userId, token)
             call.respond("Token was added: $result")
         }
-        get {
-            val users = useCase.getUsers().toDto()
-            call.respond(HttpStatusCode.OK, users)
-        }
+
         get("/{userId}") {
             val id = call.parameters["userId"] ?: throw BadRequestException("User id is required")
             val user = useCase.getUser(id).toDto()

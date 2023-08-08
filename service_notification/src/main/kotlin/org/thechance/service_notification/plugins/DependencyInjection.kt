@@ -7,7 +7,6 @@ import org.koin.ktor.plugin.Koin
 import org.thechance.service_notification.di.NotificationModule
 import org.thechance.service_notification.di.firebaseModule
 import org.thechance.service_notification.di.kmongoModule
-import org.thechance.service_notification.di.slf4jLogger
 
 fun Application.configureDependencyInjection() {
     install(Koin) {

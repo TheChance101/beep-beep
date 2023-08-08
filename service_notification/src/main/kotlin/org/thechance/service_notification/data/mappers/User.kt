@@ -9,32 +9,24 @@ fun User.toCollection(): UserCollection {
     return UserCollection(
         id = ObjectId(id),
         deviceTokens = deviceTokens,
-        topics = topics,
-        notifications = notifications.map { it.toCollection() }
     )
 }
 fun User.toDto(): UserDto {
     return UserDto(
         id = id,
         deviceTokens = deviceTokens,
-        topics = topics,
-        notifications = notifications.toDto()
     )
 }
 fun UserDto.toEntity(): User {
     return User(
         id = id,
         deviceTokens = deviceTokens,
-        topics = topics,
-        notifications = notifications.toEntity()
     )
 }
 fun UserCollection.toEntity(): User {
     return User(
         id = id.toHexString(),
         deviceTokens = deviceTokens,
-        topics = topics,
-        notifications = notifications.toNotificationEntity()
     )
 }
 
