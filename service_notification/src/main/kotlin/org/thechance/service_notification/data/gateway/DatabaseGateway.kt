@@ -11,14 +11,15 @@ import org.thechance.service_notification.data.mappers.toCollection
 import org.thechance.service_notification.data.mappers.toEntity
 import org.thechance.service_notification.data.utils.isSuccessfullyUpdated
 import org.thechance.service_notification.domain.NotFoundException
-import org.thechance.service_notification.domain.model.Notification
 import org.thechance.service_notification.domain.gateway.IDatabaseGateway
+import org.thechance.service_notification.domain.model.Notification
 import org.thechance.service_notification.domain.model.User
 
 @Single
 class DatabaseGateway(
     private val userCollection: CoroutineCollection<UserCollection>,
     private val historyCollection: CoroutineCollection<NotificationHistoryCollection>,
+    private val taxiUsersCollection: CoroutineCollection<UserCollection>,
 ) : IDatabaseGateway {
 
     override suspend fun createUser(user: User): Boolean {

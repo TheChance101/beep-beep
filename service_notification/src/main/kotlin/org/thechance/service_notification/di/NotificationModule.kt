@@ -20,7 +20,7 @@ val kmongoModule = module {
         val cluster = System.getenv("cluster")
         val username = System.getenv("username")
         val password = System.getenv("password")
-        KMongo.createClient("mongodb+srv://$username:$password@$cluster.mongodb.net/?retryWrites=true&w=majority")
+        KMongo.createClient("mongodb+srv://sadeq:01990199055@cluster0.ejfkr.mongodb.net/?retryWrites=true&w=majority")
     }
 
     single {
@@ -54,6 +54,7 @@ val kmongoModule = module {
 
     single {
         val endUserCollection = "end_users"
+        get<CoroutineDatabase>().getCollection<UserCollection>(endUserCollection)
     }
 
     single {
