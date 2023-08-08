@@ -31,7 +31,7 @@ fun CheckBoxButton(
         )
         Text(
             text = text,
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyLarge.copy(color = colorScheme.onPrimary),
         )
     }
 }

@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
+import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.colorScheme
 
 @ExperimentalMaterial3Api
 @Composable
@@ -38,7 +39,7 @@ fun PrimaryButton(
     content: @Composable RowScope.() -> Unit
 ) {
     val buttonColor by animateColorAsState(
-        if (enabled) containerColor else BeepBeepTheme.colorScheme.tertiaryContainer
+        if (enabled) containerColor else colorScheme.background
     )
 
     Surface(
