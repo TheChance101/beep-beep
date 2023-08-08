@@ -46,10 +46,10 @@ fun DesignApp() {
 //            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Bottom
         ) {
-//            TextButtonPrev()
-//            CheckBoxButtonPrev()
-//            TogglePreview()
-//            SwitchPreview()
+            TextButtonPrev()
+            CheckBoxButtonPrev()
+            TogglePreview()
+            SwitchPreview()
             EnabledButtonsPreview()
             DisabledButtonsPreview()
 //            Spacer(modifier = Modifier.height(16.dp))
