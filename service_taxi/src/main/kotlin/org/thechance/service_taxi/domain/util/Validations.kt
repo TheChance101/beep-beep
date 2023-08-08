@@ -82,11 +82,11 @@ fun validatePrice(price: Double): Boolean {
 }
 
 fun validateLatitude(latitude: Double): Boolean {
-    return (latitude != -1.0) && (latitude in LATITUDE_MIN..LATITUDE_MAX)
+    return latitude in LATITUDE_RANGE
 }
 
 fun validateLongitude(longitude: Double): Boolean {
-    return (longitude != -1.0) && (longitude in LONGITUDE_MIN..LONGITUDE_MAX)
+    return longitude in LONGITUDE_RANGE
 }
 
 fun validateLocation(latitude: Double, longitude: Double): Boolean {
@@ -98,14 +98,12 @@ fun isValidatePlateNumber(plateNumber: String): Boolean {
 }
 
 fun validateRate(rate: Double): Boolean {
-    return rate == 0.0 || rate in 1.0..5.0
+    return rate in 0.0..5.0
 }
 
 
-const val LATITUDE_MIN = -90.0
-const val LATITUDE_MAX = 90.0
-const val LONGITUDE_MIN = -180.0
-const val LONGITUDE_MAX = 180.0
+val LATITUDE_RANGE = -90.0..90.0
+val LONGITUDE_RANGE = -180.0..180.0
 val SEAT_RANGE = 4..5
 
 val PLATE_NUMBER_REGEX = listOf(
