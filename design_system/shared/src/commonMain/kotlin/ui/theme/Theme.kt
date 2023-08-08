@@ -50,9 +50,9 @@ private val DarkColorScheme = darkColorScheme(
     surfaceTint = surfaceTintDar,
 )
 
-private val LocalDimens = compositionLocalOf { Dimens() }
+val LocalDimens = compositionLocalOf { Dimens() }
 private val LocalColorScheme = staticCompositionLocalOf { lightColorScheme() }
-private val LocalShapes = staticCompositionLocalOf { shapes }
+val LocalShapes = staticCompositionLocalOf { shapes }
 private val LocalTypography = staticCompositionLocalOf { Typography }
 
 @Composable
