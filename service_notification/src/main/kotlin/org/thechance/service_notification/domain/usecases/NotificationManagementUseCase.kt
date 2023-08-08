@@ -13,21 +13,27 @@ class NotificationManagementUseCase(
 ) : INotificationManagementUseCase {
 
     override suspend fun sendNotificationToUser(userId: String, title: String, body: String) {
-        val tokens = databaseGateway.getUserTokensById(userId)
-        pushNotificationGateway.sendNotification(tokens, title, body)
+        val tokens = databaseGateway.getTokensForUserById(userId)
+        pushNotificationGateway.sendNotificationToUserByTokens(tokens, title, body)
         val notification = Notification(title, body, System.currentTimeMillis(), userId, false)
         databaseGateway.addNotificationToUserHistory(notification)
     }
 
-    override suspend fun getUsers(): List<User> {
-        return databaseGateway.getUsers()
+    override suspend fun addTokenToUser(id: String, token: String): Boolean {
+        return databaseGateway.addTokenToUser(id, token)
     }
+
+    override suspend fun createUser(user: User): Boolean {
+        return databaseGateway.createUser(user)
+    }
+
 
 }
 
 interface INotificationManagementUseCase {
     suspend fun sendNotificationToUser(userId: String, title: String, body: String)
 
-    suspend fun getUsers(): List<User>
+    suspend fun createUser(user: User): Boolean
 
+    suspend fun addTokenToUser(id: String, token: String): Boolean
 }
