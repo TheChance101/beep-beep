@@ -5,24 +5,23 @@ import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
-import org.thechance.service_restaurant.data.Constants
 import org.thechance.service_restaurant.data.DataBaseContainer
 import org.thechance.service_restaurant.data.collection.CategoryCollection
-import org.thechance.service_restaurant.data.collection.relationModels.CategoryRestaurant
+import org.thechance.service_restaurant.data.collection.CuisineCollection
+import org.thechance.service_restaurant.data.collection.MealCollection
 import org.thechance.service_restaurant.data.collection.RestaurantCollection
 import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
+import org.thechance.service_restaurant.data.collection.relationModels.CategoryRestaurant
+import org.thechance.service_restaurant.data.collection.relationModels.MealCuisines
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
 import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.data.utils.toObjectIds
+import org.thechance.service_restaurant.domain.entity.Category
+import org.thechance.service_restaurant.domain.entity.Cuisine
+import org.thechance.service_restaurant.domain.entity.Meal
+import org.thechance.service_restaurant.domain.entity.Restaurant
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
-import org.thechance.service_restaurant.data.Constants.RESTAURANT_COLLECTION
-import org.thechance.service_restaurant.data.collection.CuisineCollection
-import org.thechance.service_restaurant.data.collection.MealCollection
-import org.thechance.service_restaurant.data.collection.relationModels.MealCuisines
-import org.thechance.service_restaurant.data.collection.relationModels.MealWithCuisines
-import org.thechance.service_restaurant.data.utils.getNonEmptyFieldsMap
-import org.thechance.service_restaurant.domain.entity.*
 
 @Single
 class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRestaurantOptionsGateway {
@@ -44,7 +43,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         return container.categoryCollection.aggregate<CategoryRestaurant>(
             match(CategoryCollection::id eq ObjectId(categoryId)),
             lookup(
-                from = RESTAURANT_COLLECTION,
+                from = DataBaseContainer.RESTAURANT_COLLECTION,
                 localField = CategoryCollection::restaurantIds.name,
                 foreignField = "_id",
                 newAs = CategoryRestaurant::restaurants.name
@@ -68,7 +67,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         return container.restaurantCollection.aggregate<CategoryRestaurant>(
             match(RestaurantCollection::id eq ObjectId(restaurantId)),
             lookup(
-                from = Constants.CATEGORY_COLLECTION,
+                from = DataBaseContainer.CATEGORY_COLLECTION,
                 localField = RestaurantCollection::categoryIds.name,
                 foreignField = "_id",
                 newAs = CategoryRestaurant::categories.name
@@ -134,7 +133,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         return container.cuisineCollection.aggregate<MealCuisines>(
             match(CuisineCollection::id eq ObjectId(cuisineId)),
             lookup(
-                from = Constants.MEAL_COLLECTION,
+                from = DataBaseContainer.MEAL_COLLECTION,
                 localField = CuisineCollection::meals.name,
                 foreignField = "_id",
                 newAs = MealCuisines::meals.name

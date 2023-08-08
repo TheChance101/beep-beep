@@ -32,6 +32,10 @@ class ManageMealUseCase(
         return restaurantGateway.addMeal(meal)
     }
 
+    override suspend fun updateMealToRestaurant(meal: MealDetails): Boolean {
+        return restaurantGateway.updateMeal(meal)
+    }
+
     override suspend fun deleteMealFromRestaurant(mealId: String): Boolean {
         val meal = restaurantGateway.getMealById(mealId)
         return if (meal != null) {
@@ -42,9 +46,5 @@ class ManageMealUseCase(
         } else {
             throw Throwable()
         }
-    }
-
-    override suspend fun updateMealToRestaurant(meal: MealDetails): Boolean {
-        return restaurantGateway.updateMeal(meal)
     }
 }
