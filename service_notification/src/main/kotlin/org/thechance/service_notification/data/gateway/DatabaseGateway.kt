@@ -20,6 +20,11 @@ class DatabaseGateway(
     private val userCollection: CoroutineCollection<UserCollection>,
     private val historyCollection: CoroutineCollection<NotificationHistoryCollection>,
     private val taxiUsersCollection: CoroutineCollection<UserCollection>,
+    private val restaurantUsersCollection: CoroutineCollection<UserCollection>,
+    private val dashboardUsersCollection: CoroutineCollection<UserCollection>,
+    private val supportUsersCollection: CoroutineCollection<UserCollection>,
+    private val deliveryUsersCollection: CoroutineCollection<UserCollection>,
+    private val endUsersCollection: CoroutineCollection<UserCollection>,
 ) : IDatabaseGateway {
 
     override suspend fun createUser(user: User): Boolean {
@@ -42,14 +47,35 @@ class DatabaseGateway(
         return userCollection.findOneById(ObjectId(id))?.deviceTokens ?: throw NotFoundException("4001")
     }
 
-    override suspend fun getUserTokensByTopic(topic: String): List<String> {
-        return when (topic) {
+    override suspend fun getUserTokensByTopic(userGroup: String): List<String> {
+        return when (userGroup) {
             "taxi_users" -> {
                 taxiUsersCollection.find().toList().flatMap { it.deviceTokens }
             }
 
-            else -> emptyList()
+            "restaurant_users" -> {
+                restaurantUsersCollection.find().toList().flatMap { it.deviceTokens }
+            }
 
+            "dashboard_users" -> {
+                dashboardUsersCollection.find().toList().flatMap { it.deviceTokens }
+            }
+
+            "support_users" -> {
+                supportUsersCollection.find().toList().flatMap { it.deviceTokens }
+            }
+
+            "delivery_users" -> {
+                deliveryUsersCollection.find().toList().flatMap { it.deviceTokens }
+            }
+
+            "end_users" -> {
+                endUsersCollection.find().toList().flatMap { it.deviceTokens }
+            }
+
+            else -> {
+                throw NotFoundException("NOT_VALID_COLLECTION")
+            }
         }
     }
 

@@ -1,13 +1,11 @@
 package org.thechance.service_notification.endpoints
 
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.call
-import io.ktor.server.plugins.BadRequestException
+import io.ktor.http.*
+import io.ktor.server.application.*
+import io.ktor.server.plugins.*
 import io.ktor.server.request.*
-import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.post
-import io.ktor.server.routing.route
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.service_notification.data.mappers.toEntity
 import org.thechance.service_notification.domain.MissingRequestParameterException
