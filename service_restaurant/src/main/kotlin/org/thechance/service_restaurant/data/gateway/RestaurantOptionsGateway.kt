@@ -52,20 +52,45 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         ).toList().first().restaurants.filterNot { it.isDeleted }.toEntity()
     }
 
+    override suspend fun areCategoriesExisting(categoryIds: List<String>): Boolean {
+        val categoryObjects =
+            container.categoryCollection.find(
+                and(
+                    CategoryCollection::id `in` categoryIds.toObjectIds(),
+                    CategoryCollection::isDeleted eq false
+                )
+            ).toList()
+        return categoryObjects.size == categoryIds.size
+
+    }
+
+    override suspend fun getCategoriesInRestaurant(restaurantId: String): List<Category> {
+        return container.restaurantCollection.aggregate<CategoryRestaurant>(
+            match(RestaurantCollection::id eq ObjectId(restaurantId)),
+            lookup(
+                from = Constants.CATEGORY_COLLECTION,
+                localField = RestaurantCollection::categoryIds.name,
+                foreignField = "_id",
+                newAs = CategoryRestaurant::categories.name
+            )
+        ).toList().first().categories.filterNot { it.isDeleted }.toEntity()
+    }
+
     override suspend fun addCategory(category: Category): Boolean {
         return container.categoryCollection.insertOne(category.toCollection()).wasAcknowledged()
     }
 
-    override suspend fun addRestaurantsToCategory(categoryId: String, restaurantIds: List<String>): Boolean {
-        val resultAddToRestaurant = container.restaurantCollection.updateMany(
-            RestaurantCollection::id `in` restaurantIds.toObjectIds(),
-            addToSet(RestaurantCollection::categoryIds, ObjectId(categoryId))
+    override suspend fun addCategoriesToRestaurant(restaurantId: String, categoryIds: List<String>): Boolean {
+        val resultAddToCategory = container.categoryCollection.updateMany(
+            CategoryCollection::id `in` categoryIds.toObjectIds(),
+            addToSet(CategoryCollection::restaurantIds, ObjectId(restaurantId))
         ).isSuccessfullyUpdated()
 
-        val resultAddToCategory = container.categoryCollection.updateOneById(
-            ObjectId(categoryId),
-            update = Updates.addEachToSet(CategoryCollection::restaurantIds.name, restaurantIds.toObjectIds())
+        val resultAddToRestaurant = container.restaurantCollection.updateOneById(
+            ObjectId(restaurantId),
+            update = Updates.addEachToSet(RestaurantCollection::categoryIds.name, categoryIds.toObjectIds())
         ).isSuccessfullyUpdated()
+
         return resultAddToCategory and resultAddToRestaurant
     }
 

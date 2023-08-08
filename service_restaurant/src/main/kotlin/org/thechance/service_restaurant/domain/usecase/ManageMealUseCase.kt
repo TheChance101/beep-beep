@@ -4,6 +4,7 @@ import org.thechance.service_restaurant.domain.entity.Cuisine
 import org.thechance.service_restaurant.domain.entity.MealDetails
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
+import org.thechance.service_restaurant.utils.validatePagination
 
 interface IManageMealUseCase {
     suspend fun getCuisines(page: Int, limit: Int): List<Cuisine>
@@ -17,6 +18,7 @@ class ManageMealUseCase(
     private val optionsGateway: IRestaurantOptionsGateway
 ) : IManageMealUseCase {
     override suspend fun getCuisines(page: Int, limit: Int): List<Cuisine> {
+        validatePagination(page,limit)
         return optionsGateway.getCuisines(page, limit)
     }
 

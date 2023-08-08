@@ -23,10 +23,12 @@ class DiscoverRestaurantUseCase(
     private val optionsGateway: IRestaurantOptionsGateway,
 ) : IDiscoverRestaurantUseCase {
     override suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant> {
+        validatePagination(page,limit)
         return restaurantGateway.getRestaurants(page, limit)
     }
 
     override suspend fun getCategories(page: Int, limit: Int): List<Category> {
+        validatePagination(page,limit)
         return optionsGateway.getCategories(page, limit)
     }
 

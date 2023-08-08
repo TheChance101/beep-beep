@@ -6,7 +6,7 @@ import org.thechance.service_restaurant.utils.*
 
 interface IControlRestaurant {
     suspend fun createRestaurant(restaurant: Restaurant): Boolean
-    suspend fun getAllRestaurants(page: Int, limits: Int): List<Restaurant>
+    suspend fun getAllRestaurants(page: Int, limit: Int): List<Restaurant>
     suspend fun deleteRestaurant(restaurantId: String): Boolean
 }
 
@@ -19,8 +19,9 @@ class ControlRestaurant(
         return restaurantGateway.addRestaurant(restaurant)
     }
 
-    override suspend fun getAllRestaurants(page: Int, limits: Int): List<Restaurant> {
-        return restaurantGateway.getRestaurants(page,limits)
+    override suspend fun getAllRestaurants(page: Int, limit: Int): List<Restaurant> {
+        validatePagination(page,limit)
+        return restaurantGateway.getRestaurants(page,limit)
     }
 
     override suspend fun deleteRestaurant(restaurantId: String): Boolean {

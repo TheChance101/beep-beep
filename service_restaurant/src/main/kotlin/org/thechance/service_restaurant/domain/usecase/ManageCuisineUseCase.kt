@@ -16,6 +16,7 @@ class ManageCuisineUseCase(
     private val restaurantOptions: IRestaurantOptionsGateway
 ) : IManageCuisineUseCase {
     override suspend fun getCuisines(page: Int, limit: Int): List<Cuisine> {
+        validatePagination(page, limit)
         return restaurantOptions.getCuisines(page, limit)
     }
 

@@ -65,6 +65,20 @@ fun checkIsValidIds(id: String, listIds: List<String>) {
     }
 }
 
+fun validatePagination(page: Int, limit: Int) {
+    val validationErrors = mutableListOf<Int>()
+    if (page < 1) {
+        validationErrors.add(INVALID_PAGE)
+    }
+
+    if (limit !in 5..30) {
+        validationErrors.add(INVALID_PAGE_LIMIT)
+    }
+    if (validationErrors.isNotEmpty()) {
+        throw MultiErrorException(validationErrors)
+    }
+}
+
 /* region require validation */
 fun isValidName(name: String?): Boolean {
     return name != null && name.matches(Regex("^[A-Za-z0-9\\s\\[\\]\\(\\)\\-.,&]{4,20}$"))

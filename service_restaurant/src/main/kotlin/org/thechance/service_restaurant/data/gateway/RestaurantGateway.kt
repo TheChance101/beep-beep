@@ -50,18 +50,6 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
             .map { it.id }
     }
 
-    override suspend fun getCategoriesInRestaurant(restaurantId: String): List<Category> {
-        return container.restaurantCollection.aggregate<CategoryRestaurant>(
-            match(RestaurantCollection::id eq ObjectId(restaurantId)),
-            lookup(
-                from = CATEGORY_COLLECTION,
-                localField = RestaurantCollection::categoryIds.name,
-                foreignField = "_id",
-                newAs = CategoryRestaurant::categories.name
-            )
-        ).toList().first().categories.filterNot { it.isDeleted }.toEntity()
-    }
-
     override suspend fun getCuisineInRestaurant(restaurantId: String): List<Cuisine> {
         return container.restaurantCollection.aggregate<RestaurantCuisine>(
             match(RestaurantCollection::id eq ObjectId(restaurantId)),
@@ -76,20 +64,6 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
 
     override suspend fun addRestaurant(restaurant: Restaurant): Boolean {
         return container.restaurantCollection.insertOne(restaurant.toCollection()).wasAcknowledged()
-    }
-
-    override suspend fun addCategoriesToRestaurant(restaurantId: String, categoryIds: List<String>): Boolean {
-        val resultAddToCategory = container.categoryCollection.updateMany(
-            CategoryCollection::id `in` categoryIds.toObjectIds(),
-            addToSet(CategoryCollection::restaurantIds, ObjectId(restaurantId))
-        ).isSuccessfullyUpdated()
-
-        val resultAddToRestaurant = container.restaurantCollection.updateOneById(
-            ObjectId(restaurantId),
-            update = Updates.addEachToSet(RestaurantCollection::categoryIds.name, categoryIds.toObjectIds())
-        ).isSuccessfullyUpdated()
-
-        return resultAddToCategory and resultAddToRestaurant
     }
 
     override suspend fun addCuisineToRestaurant(restaurantId: String, cuisineIds: List<String>): Boolean {

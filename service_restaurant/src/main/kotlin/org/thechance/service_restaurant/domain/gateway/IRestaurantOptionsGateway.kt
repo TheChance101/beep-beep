@@ -6,11 +6,15 @@ import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.entity.Restaurant
 
 interface IRestaurantOptionsGateway {
+
     //region Category
     suspend fun getCategories(page: Int, limit: Int): List<Category>
     suspend fun getCategory(categoryId: String): Category?
     suspend fun getRestaurantsInCategory(categoryId: String): List<Restaurant>
-    suspend fun addRestaurantsToCategory(categoryId: String, restaurantIds: List<String>): Boolean
+
+    suspend fun areCategoriesExisting(categoryIds: List<String>): Boolean
+    suspend fun getCategoriesInRestaurant(restaurantId: String): List<Category>
+    suspend fun addCategoriesToRestaurant(categoryId: String, restaurantIds: List<String>): Boolean
     suspend fun addCategory(category: Category): Boolean
     suspend fun updateCategory(category: Category): Boolean
     suspend fun deleteCategory(categoryId: String): Boolean

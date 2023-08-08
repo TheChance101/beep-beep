@@ -7,7 +7,7 @@ import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
 import org.thechance.service_restaurant.utils.*
 
 interface IManageCategoryUseCase {
-    suspend fun getCategories(page: Int, limits: Int): List<Category>
+    suspend fun getCategories(page: Int, limit: Int): List<Category>
     suspend fun createCategory(category: Category): Boolean
     suspend fun updateCategory(category: Category): Boolean
     suspend fun deleteCategory(categoryId: String): Boolean
@@ -17,8 +17,9 @@ interface IManageCategoryUseCase {
 class ManageCategoryUseCase(
     private val restaurantOptions: IRestaurantOptionsGateway
 ) : IManageCategoryUseCase {
-    override suspend fun getCategories(page: Int, limits: Int): List<Category> {
-        return restaurantOptions.getCategories(page, limits)
+    override suspend fun getCategories(page: Int, limit: Int): List<Category> {
+        validatePagination(page,limit)
+        return restaurantOptions.getCategories(page, limit)
     }
 
     override suspend fun createCategory(category: Category): Boolean {
