@@ -31,7 +31,6 @@ fun Typography(): Typography {
             lineHeight = dimens.lineHeight20,
             fontWeight = FontWeight.W600,
             color = contentPrimaryLight,
-
             ),
         titleMedium = TextStyle(
             fontSize = dimens.fontSize14,

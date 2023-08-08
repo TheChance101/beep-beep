@@ -50,7 +50,7 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 val LocalDimens = compositionLocalOf { Dimens() }
-private val LocalColorScheme = staticCompositionLocalOf { LightColorScheme }
+val LocalColorScheme = staticCompositionLocalOf { LightColorScheme }
 val LocalShapes = staticCompositionLocalOf { shapes }
 val LocalTypography = compositionLocalOf { Typographies() }
 
@@ -77,8 +77,7 @@ fun BeepBeepTheme(
         LocalShapes provides shapes,
         LocalTypography provides typography,
         content = content,
-
-    )
+        )
 }
 
 object BeepBeepTheme {
@@ -87,10 +86,10 @@ object BeepBeepTheme {
         @ReadOnlyComposable
         get() = LocalColorScheme.current
 
-//    val typeography: Typographies
-//        @Composable
-//        @ReadOnlyComposable
-//        get() = LocalTypography.current
+    val typeography: Typographies
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalTypography.current
 
     val shapes: Shapes
         @Composable
