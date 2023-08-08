@@ -13,9 +13,7 @@ import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.*
-import org.thechance.service_identity.data.mappers.toCollection
-import org.thechance.service_identity.data.mappers.toDetailsCollection
-import org.thechance.service_identity.data.mappers.toEntity
+import org.thechance.service_identity.data.mappers.*
 import org.thechance.service_identity.data.util.*
 import org.thechance.service_identity.domain.entity.*
 import org.thechance.service_identity.domain.gateway.DataBaseGateway
@@ -145,7 +143,10 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
     }
 
     override suspend fun getUserById(id: String): User {
-        val wallet = getWallet(id)
+        val wallet = getWalletByUserId(id)
+        val userAddresses = getUserAddresses(id)
+        val userPermission = getUserPermissions(id)
+
         return userCollection.aggregate<DetailedUserCollection>(
             match(UserCollection::id eq ObjectId(id)),
             lookup(
@@ -154,7 +155,8 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
                 foreignField = USER_DETAILS_LOCAL_FIELD,
                 newAs = DETAILED_USER_COLLECTION
             )
-        ).toList().toEntity(wallet).firstOrNull() ?: throw ResourceNotFoundException(NOT_FOUND)
+        ).toList().toEntity(wallet.walletBalance, userAddresses, userPermission).firstOrNull()
+            ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
 
@@ -164,12 +166,14 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
             UserCollection::isDeleted eq false,
             UserCollection::fullName regex fullName,
             UserCollection::username regex username
-        ).toList().toUser()
+        ).toList().tEntity()
     }
 
     override suspend fun createUser(user: User): Boolean {
         val userDocument = user.toCollection()
         try {
+            val wallet = WalletCollection(userId = userDocument.id.toString(), walletBalance = 0.0)
+            createWallet(wallet.toEntity())
             userDetailsCollection.insertOne(user.toDetailsCollection(userDocument.id.toHexString()))
             return userCollection.insertOne(userDocument).wasAcknowledged()
         } catch (exception: MongoWriteException) {
@@ -185,7 +189,7 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
         )
         return userCollection.updateOneById(
             ObjectId(id),
-            user.toCollection(),
+            user.toUpdateCollection(),
             updateOnlyNotNullProperties = true
         ).isUpdatedSuccessfully()
     }
@@ -196,10 +200,6 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
             update = set(UserCollection::isDeleted setTo true)
         ).isUpdatedSuccessfully()
     }
-
-    private fun List<UserCollection>.toUser(): List<User> {
-        return this.map { it.toEntity() }
-    }
     //endregion
 
 
@@ -207,6 +207,12 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
     override suspend fun getWallet(walletId: String): Wallet {
         return walletCollection.findOneById(ObjectId(walletId))?.toEntity()
             ?: throw ResourceNotFoundException(NOT_FOUND)
+    }
+
+    override suspend fun getWalletByUserId(userId: String): Wallet {
+        return walletCollection.findOne(
+            WalletCollection::userId eq userId
+        )?.toEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
     override suspend fun createWallet(wallet: Wallet): Boolean {

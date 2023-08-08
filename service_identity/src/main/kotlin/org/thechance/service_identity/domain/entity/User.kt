@@ -6,7 +6,7 @@ data class User(
     val username: String,
     val password: String,
     val email: String,
-    val wallet: Wallet,
-    val addresses: List<String> = emptyList(),
-    val permissions: List<Int> = emptyList()
+    val walletBalance: Double = 0.0,
+    val addresses: List<Address> = emptyList(),
+    val permissions: List<Permission> = emptyList()
 )

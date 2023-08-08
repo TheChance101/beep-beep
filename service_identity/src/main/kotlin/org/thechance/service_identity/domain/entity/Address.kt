@@ -4,5 +4,4 @@ data class Address(
     val id: String,
     val userId: String,
     val location: Location,
-    val isDeleted: Boolean = false
 )

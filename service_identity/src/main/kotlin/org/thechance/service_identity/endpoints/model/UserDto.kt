@@ -8,4 +8,8 @@ data class UserDto(
     val fullName: String,
     val username: String,
     val password: String,
+    val email: String,
+    val walletBalance: Double,
+    val addresses: List<AddressDto>,
+    val permissions: List<PermissionDto>
 )

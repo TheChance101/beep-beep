@@ -72,25 +72,36 @@ fun RequestValidationConfig.updateUserValidation(userValidation: IUserValidation
 
         val reasons = mutableListOf<String>()
 
-        if (!userValidation.validateUsernameIsNotBlank(user.username)) {
-            reasons.add(USERNAME_CANNOT_BE_BLANK)
+        user.username?.let {
+            if (!userValidation.validateUsername(it)) {
+                reasons.add(INVALID_USERNAME)
+            }
         }
 
-        if (!userValidation.validateUsername(user.username)) {
-            reasons.add(INVALID_USERNAME)
+        user.username?.let {
+            if (!userValidation.validateUsernameIsNotBlank(it)) {
+                reasons.add(USERNAME_CANNOT_BE_BLANK)
+            }
         }
 
-        if (!userValidation.validateFullNameIsNotEmpty(user.fullName)) {
-            reasons.add(INVALID_FULLNAME)
+        user.fullName?.let {
+            if (!userValidation.validateFullNameIsNotEmpty(it)) {
+                reasons.add(INVALID_FULLNAME)
+            }
         }
 
-        if (!userValidation.validatePasswordIsNotEmpty(user.password)) {
-            reasons.add(PASSWORD_CANNOT_BE_BLANK)
+        user.password?.let {
+            if (!userValidation.validatePasswordIsNotEmpty(it)) {
+                reasons.add(PASSWORD_CANNOT_BE_BLANK)
+            }
         }
 
-        if (!userValidation.validatePasswordLength(user.password)) {
-            reasons.add(PASSWORD_CANNOT_BE_LESS_THAN_8_CHARACTERS)
+        user.password?.let {
+            if (!userValidation.validatePasswordLength(it)) {
+                reasons.add(PASSWORD_CANNOT_BE_LESS_THAN_8_CHARACTERS)
+            }
         }
+
 
         if (reasons.isNotEmpty()) {
             ValidationResult.Invalid(reasons)
