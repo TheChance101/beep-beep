@@ -63,12 +63,12 @@ fun BeepBeepTheme(
     val colorScheme = if (useDarkTheme) DarkColorScheme else LightColorScheme
     val typography = Typographies(
         headlineLarge = Typography().headlineLarge,
-        headlineMedium = Typography().headlineMedium,
+        headline = Typography().headlineMedium,
         titleLarge = Typography().titleLarge,
-        titleMedium = Typography().titleMedium,
+        title = Typography().titleMedium,
         bodyLarge = Typography().bodyLarge,
-        bodyMedium = Typography().bodyMedium,
-        labelMedium = Typography().labelMedium,
+        body = Typography().bodyMedium,
+        caption = Typography().labelMedium,
     )
 
     CompositionLocalProvider(

@@ -4,10 +4,10 @@ import androidx.compose.ui.text.TextStyle
 
 data class Typographies(
     val headlineLarge: TextStyle = TextStyle(),
-    val headlineMedium: TextStyle = TextStyle(),
+    val headline: TextStyle = TextStyle(),
    val titleLarge: TextStyle= TextStyle(),
-    val titleMedium: TextStyle= TextStyle(),
+    val title: TextStyle= TextStyle(),
     val bodyLarge: TextStyle= TextStyle(),
-    val bodyMedium: TextStyle= TextStyle(),
-    val labelMedium: TextStyle= TextStyle(),
+    val body: TextStyle= TextStyle(),
+    val caption : TextStyle= TextStyle(),
 )
