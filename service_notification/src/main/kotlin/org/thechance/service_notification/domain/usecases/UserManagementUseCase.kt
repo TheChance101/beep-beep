@@ -5,7 +5,7 @@ import org.thechance.service_notification.domain.gateway.IUserGateway
 import org.thechance.service_notification.domain.model.User
 
 @Single
-class UserUseCase(private val userGateway: IUserGateway): IUserUseCase {
+class UserManagementUseCase(private val userGateway: IUserGateway): IUserManagementUseCase {
     override suspend fun getUsers(): List<User> {
         return userGateway.getUsers()
     }
@@ -24,7 +24,7 @@ class UserUseCase(private val userGateway: IUserGateway): IUserUseCase {
 
 }
 
-interface IUserUseCase {
+interface IUserManagementUseCase {
     suspend fun createUser(user: User): Boolean
     suspend fun getUsers(): List<User>
     suspend fun getUser(id:String): User

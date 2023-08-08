@@ -12,11 +12,11 @@ import io.ktor.server.routing.route
 import org.koin.ktor.ext.inject
 import org.thechance.service_notification.data.mappers.toDto
 import org.thechance.service_notification.data.mappers.toEntity
-import org.thechance.service_notification.domain.usecases.IUserUseCase
+import org.thechance.service_notification.domain.usecases.IUserManagementUseCase
 import org.thechance.service_notification.endpoints.model.UserDto
 
 fun Route.userRoutes() {
-    val useCase: IUserUseCase by inject()
+    val useCase: IUserManagementUseCase by inject()
 
     route("/users") {
         post {
