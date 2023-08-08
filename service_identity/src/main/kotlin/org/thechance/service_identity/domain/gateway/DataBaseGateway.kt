@@ -58,4 +58,5 @@ interface DataBaseGateway {
     suspend fun getUserPermissions(userId: String): List<Permission>
 
     // endregion: user permission management
+    suspend fun getWalletByUserId(userId: String): Wallet
 }

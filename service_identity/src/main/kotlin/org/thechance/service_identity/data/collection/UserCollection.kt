@@ -22,3 +22,13 @@ data class UserCollection(
     val isDeleted: Boolean = false,
 )
 
+@Serializable
+data class UpdateUserCollection(
+    @SerialName("full_name")
+    val fullName: String? = null,
+    @SerialName("user_name")
+    val username: String? = null,
+    @SerialName("password")
+    val password: String? = null,
+)
+

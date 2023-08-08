@@ -8,7 +8,6 @@ fun PermissionCollection.toEntity(): Permission {
     return Permission(
         id = id,
         permission = permission,
-        isDeleted = isDeleted
     )
 }
 

@@ -7,7 +7,7 @@ import org.thechance.service_identity.domain.gateway.DataBaseGateway
 
 @Single
 class UserAccountUseCaseImp(
-    private val dataBaseGateway: DataBaseGateway
+    private val dataBaseGateway: DataBaseGateway,
 ) : UserAccountUseCase {
 
     // region user
