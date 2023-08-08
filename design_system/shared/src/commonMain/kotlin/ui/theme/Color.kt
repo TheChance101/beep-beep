@@ -24,7 +24,7 @@ val successContainerLight = Color(0xFFF0FFF7)
 val warningLight = Color(0xFFF2BD00)
 val warningContainerLight = Color(0xFFFFFCEB)
 
-val surfaceTintLight=Color(0x081F0000)
+val surfaceTintLight = Color(0x081F0000)
 
 //endregion
 
@@ -49,6 +49,7 @@ val successDark = Color(0xFF66CB9F)
 val successContainerDark = Color(0x14EBFFF4)
 val warningDark = Color(0xFFCBB567)
 val warningContainerDark = Color(0x14FFFCEB)
-val surfaceTintDar=Color(0x081F0000)
+
+val surfaceTintDark = Color(0x081F0000)
 
 //endregion

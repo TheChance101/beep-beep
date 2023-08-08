@@ -2,6 +2,7 @@ package com.beepbeep.designSystem.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -46,7 +47,7 @@ private val DarkColorScheme = darkColorScheme(
     inversePrimary = successContainerDark,
     error = warningDark,
     errorContainer = warningContainerDark,
-    surfaceTint = surfaceTintDar,
+    surfaceTint = surfaceTintDark,
 )
 
 val LocalDimens = compositionLocalOf { Dimens() }
@@ -76,8 +77,14 @@ fun BeepBeepTheme(
         LocalColorScheme provides colorScheme,
         LocalShapes provides shapes,
         LocalTypography provides typography,
-        content = content,
+    ) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            shapes = shapes,
+            typography = Typography(),
+            content = content
         )
+    }
 }
 
 object BeepBeepTheme {

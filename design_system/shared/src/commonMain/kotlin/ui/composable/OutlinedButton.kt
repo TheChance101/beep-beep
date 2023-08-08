@@ -52,6 +52,7 @@ fun OutlinedButton(
         onClick = onClick,
         shape = shape,
         enabled = enabled,
+        color = Color.Transparent,
         contentColor = buttonContentColor,
         border = BorderStroke(border.width, buttonBorderColor)
     ) {
