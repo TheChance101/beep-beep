@@ -1,4 +1,4 @@
-package org.thechance.service_notification.di
+package org.thechance.service_notification.plugins
 
 import org.koin.core.KoinApplication
 import org.koin.core.logger.Level

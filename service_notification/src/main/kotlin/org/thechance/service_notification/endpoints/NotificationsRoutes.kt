@@ -6,12 +6,13 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import org.thechance.service_notification.domain.model.MissingRequestParameterException
-import org.thechance.service_notification.domain.usecases.ISendNotificationsUseCase
+import org.thechance.service_notification.data.mappers.toDto
+import org.thechance.service_notification.domain.MissingRequestParameterException
+import org.thechance.service_notification.domain.usecases.INotificationManagementUseCase
 
 fun Route.notificationRoutes() {
 
-    val sendNotifications: ISendNotificationsUseCase by inject()
+    val sendNotifications: INotificationManagementUseCase by inject()
 
     post("notification/send") {
         val receivedData = call.receiveParameters()
@@ -21,5 +22,10 @@ fun Route.notificationRoutes() {
 
         sendNotifications.sendNotificationToUser(userId, title, body)
         call.respond(HttpStatusCode.OK, "Notification sent successfully")
+    }
+
+    get ("/notification"){
+        val users = sendNotifications.getUsers().toDto()
+        call.respond(HttpStatusCode.OK, users)
     }
 }

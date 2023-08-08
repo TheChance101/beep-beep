@@ -3,10 +3,10 @@ package org.thechance.service_notification.data.gateway
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.Message
 import org.koin.core.annotation.Single
-import org.thechance.service_notification.domain.gateway.INotificationGateway
+import org.thechance.service_notification.domain.gateway.IPushNotificationGateway
 
 @Single
-class NotificationGateway(private val firebaseMessaging: FirebaseMessaging) : INotificationGateway {
+class PushNotificationGateway(private val firebaseMessaging: FirebaseMessaging) : IPushNotificationGateway {
     override suspend fun sendNotification(userTokens: List<String>, title: String, body: String) {
         for (token in userTokens) {
             val message = Message.builder()
@@ -22,4 +22,5 @@ class NotificationGateway(private val firebaseMessaging: FirebaseMessaging) : IN
         private const val TITLE = "title"
         private const val BODY = "body"
     }
+
 }
