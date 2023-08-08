@@ -1,5 +1,6 @@
 package org.thechance.service_identity.data.util
 
+const val DATA_BASE_NAME = "beep_beep"
 const val PERMISSION_COLLECTION = "permission"
 const val USER_PERMISSION_FOREIGN_FIELD = "_id"
 const val USER_COLLECTION_LOCAL_PRIMARY_FIELD = "_id"

@@ -48,6 +48,8 @@ dependencies {
     implementation("io.ktor:ktor-server-auth-jwt-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
+    implementation("junit:junit:4.13.1")
+    implementation("org.junit.jupiter:junit-jupiter:5.8.1")
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 
@@ -64,6 +66,6 @@ dependencies {
 
     // Status pages error handler
     implementation("io.ktor:ktor-server-status-pages-jvm:$status_pages")
-
+    implementation("io.ktor:ktor-server-request-validation:$ktor_version")
 }
 
