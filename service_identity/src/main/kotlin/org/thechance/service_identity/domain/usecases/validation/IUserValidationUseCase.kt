@@ -18,17 +18,18 @@ interface IUserValidationUseCase {
 @Single
 class UserValidationUseCase : IUserValidationUseCase {
 
-    override fun validateUsernameIsNotBlank(username: String): Boolean = username.isBlank()
+    override fun validateUsernameIsNotBlank(username: String): Boolean = username.isNotBlank()
 
     override fun validateUsername(username: String): Boolean {
         val validUserNameRegex = "[a-zA-Z0-9_]+".toRegex()
         return username.matches(validUserNameRegex)
     }
 
-    override fun validateFullNameIsNotEmpty(fullName: String): Boolean = fullName.isEmpty()
+    override fun validateFullNameIsNotEmpty(fullName: String): Boolean = fullName.isNotBlank()
 
-    override fun validatePasswordIsNotEmpty(password: String): Boolean = password.isEmpty()
+    override fun validatePasswordIsNotEmpty(password: String): Boolean = password.isNotBlank()
 
-    override fun validatePasswordLength(password: String): Boolean = password.length < 8
+    override fun validatePasswordLength(password: String): Boolean = password.length > 8
+
 
 }
