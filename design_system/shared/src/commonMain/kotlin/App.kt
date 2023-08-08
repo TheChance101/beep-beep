@@ -43,8 +43,8 @@ fun DesignApp() {
     BeepBeepTheme {
         Column(
             Modifier.fillMaxSize().background(BeepBeepTheme.colorScheme.background),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceEvenly
+//            horizontalAlignment = Alignment.CenterHorizontally,
+//            verticalArrangement = Arrangement.SpaceEvenly
         ) {
             TextButtonPrev()
             CheckBoxButtonPrev()
@@ -53,10 +53,8 @@ fun DesignApp() {
             EnabledButtonsPreview()
             DisabledButtonsPreview()
             Spacer(modifier = Modifier.height(16.dp))
-            BottomNavigationBarPreview()
-            PreviewEnabledButtons()
-//            PreviewDisabledButtons()
             PreviewTextField()
+            BottomNavigationBarPreview()
         }
     }
 }
