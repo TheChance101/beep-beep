@@ -7,6 +7,6 @@ fun Cuisine.toDto(): CuisineDto = CuisineDto(id, name)
 
 fun List<Cuisine>.toDto(): List<CuisineDto> = this.map { it.toDto() }
 
-fun CuisineDto.toEntity(): Cuisine = Cuisine(id?:"", name)
+fun CuisineDto.toEntity(): Cuisine = Cuisine(id?:"", name?:"")
 
 

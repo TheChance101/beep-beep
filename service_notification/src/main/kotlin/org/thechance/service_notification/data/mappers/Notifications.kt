@@ -1,16 +1,16 @@
 package org.thechance.service_notification.data.mappers
 
 import org.bson.types.ObjectId
-import org.thechance.service_notification.data.collection.HistoryNotificationCollection
+import org.thechance.service_notification.data.collection.NotificationHistoryCollection
 import org.thechance.service_notification.domain.model.Notification
 import org.thechance.service_notification.endpoints.model.NotificationDto
 
-fun HistoryNotificationCollection.toEntity(): Notification =
+fun NotificationHistoryCollection.toEntity(): Notification =
     Notification(title, body, date, userId.toHexString(), isRead)
 
 
-fun Notification.toCollection(): HistoryNotificationCollection {
-    return HistoryNotificationCollection(
+fun Notification.toCollection(): NotificationHistoryCollection {
+    return NotificationHistoryCollection(
         title = title, body = body, date = date, userId = ObjectId(userId)
     )
 }
@@ -25,11 +25,11 @@ fun Notification.toDto(): NotificationDto =
     NotificationDto(title = title, body = body, date = date, userId = userId, isRead = isRead)
 
 
-fun List<Notification>.toCollection(): List<HistoryNotificationCollection> {
+fun List<Notification>.toCollection(): List<NotificationHistoryCollection> {
     return this.map { it.toCollection() }
 }
 
-fun List<HistoryNotificationCollection>.toNotificationEntity(): List<Notification> {
+fun List<NotificationHistoryCollection>.toNotificationEntity(): List<Notification> {
     return this.map { it.toEntity() }
 }
 

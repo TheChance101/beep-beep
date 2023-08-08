@@ -15,6 +15,8 @@ import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.gateway.CuisineGateway
 import org.thechance.service_restaurant.data.Constants.MEAL_COLLECTION
 import org.thechance.service_restaurant.data.collection.relationModels.MealCuisines
+import org.thechance.service_restaurant.utils.NOT_FOUND
+import org.thechance.service_restaurant.utils.ResourceNotFoundException
 
 
 @Single
@@ -55,6 +57,6 @@ class CuisineGatewayImpl(private val container: DataBaseContainer) : CuisineGate
         container.cuisineCollection.updateOne(
             filter = CuisineCollection::id eq ObjectId(id),
             update = set(CuisineCollection::isDeleted setTo true),
-        ).wasAcknowledged()
+        ).isSuccessfullyUpdated()
 
 }
