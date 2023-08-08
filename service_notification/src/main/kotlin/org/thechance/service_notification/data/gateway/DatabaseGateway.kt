@@ -37,7 +37,7 @@ class DatabaseGateway(
         ).isSuccessfullyUpdated()
     }
 
-    override suspend fun getUserTokensById(id: String): List<String> {
+    override suspend fun getTokensForUserById(id: String): List<String> {
         return userCollection.findOneById(ObjectId(id))?.deviceTokens ?: throw NotFoundException("4001")
     }
 
