@@ -3,7 +3,6 @@ package org.thechance.service_restaurant.utils
 import org.thechance.service_restaurant.domain.entity.Category
 import org.thechance.service_restaurant.domain.entity.Restaurant
 
-
 fun validationRestaurant(restaurant: Restaurant) {
     val validationErrors = mutableListOf<Int>()
 
@@ -79,7 +78,7 @@ fun validatePagination(page: Int, limit: Int) {
     }
 }
 
-/* region require validation */
+/* region require validation  */
 fun isValidName(name: String?): Boolean {
     return name != null && name.matches(Regex("^[A-Za-z0-9\\s\\[\\]\\(\\)\\-.,&]{4,20}$"))
 }
@@ -120,8 +119,10 @@ fun validatePriceLevel(priceLevel: String?): Boolean {
 }
 
 fun validateRate(rate: Double): Boolean {
-    return rate == 0.0 || rate in 1.0..5.0
+    return rate == NULL_DOUBLE || rate in 1.0..5.0
 }
+
+const val NULL_DOUBLE = -1.0
 
 fun validateDescription(description: String): Boolean {
     return description.length <= DESCRIPTION_MAX_LENGTH
@@ -131,8 +132,68 @@ fun validateDescription(description: String): Boolean {
 //endregion
 
 
-const val DESCRIPTION_MAX_LENGTH = 255
+fun getErrorsInUpdateRestaurantFields(restaurant: Restaurant): MutableList<Int>? {
+    val validationErrors = mutableListOf<Int>()
 
+    if (!isValidId(restaurant.ownerId) || !isValidId(restaurant.id)) {
+        validationErrors.add(INVALID_ID)
+    }
+
+    if (restaurant.address.longitude != NULL_DOUBLE || restaurant.address.latitude != NULL_DOUBLE) {
+        validationErrors.add(INVALID_PERMISSION_UPDATE_LOCATION)
+    }
+
+    if (restaurant.name.isEmpty() &&
+        restaurant.description.isEmpty() &&
+        restaurant.priceLevel.isEmpty() &&
+        restaurant.rate == NULL_DOUBLE &&
+        restaurant.phone.isEmpty() &&
+        restaurant.closingTime.isEmpty() &&
+        restaurant.openingTime.isEmpty()
+    ) {
+        validationErrors.add(INVALID_UPDATE_PARAMETER)
+    } else {
+        if (restaurant.name.isNotEmpty() && !(isValidName(restaurant.name))) {
+            validationErrors.add(INVALID_NAME)
+        }
+
+        if (restaurant.description.isNotEmpty() && !(validateDescription(restaurant.description))) {
+            validationErrors.add(INVALID_DESCRIPTION)
+        }
+        if (restaurant.priceLevel.isNotEmpty() && !validatePriceLevel(restaurant.priceLevel)) {
+            validationErrors.add(INVALID_PRICE_LEVEL)
+        }
+        if (restaurant.rate != -1.0 && !validateRate(restaurant.rate)) {
+            validationErrors.add(INVALID_RATE)
+        }
+        if (restaurant.phone.isNotEmpty() && !validatePhone(restaurant.phone)) {
+            validationErrors.add(INVALID_PHONE)
+        }
+        if (restaurant.closingTime.isNotEmpty() && !validateTime(restaurant.closingTime)) {
+            validationErrors.add(INVALID_TIME)
+        }
+        if (restaurant.openingTime.isNotEmpty() && !validateTime(restaurant.openingTime)) {
+            validationErrors.add(INVALID_TIME)
+        }
+    }
+
+    return validationErrors.ifEmpty {
+        null
+    }
+}
+
+fun validateRestaurantOwnership(restaurant: Restaurant?, ownerId: String): Int? {
+    return if (restaurant == null) {
+        INVALID_ID
+    } else if (restaurant.ownerId != ownerId) {
+        INVALID_PROPERTY_RIGHTS
+    } else {
+        null
+    }
+}
+
+
+const val DESCRIPTION_MAX_LENGTH = 255
 const val LATITUDE_MIN = -90.0
 const val LATITUDE_MAX = 90.0
 const val LONGITUDE_MIN = -180.0

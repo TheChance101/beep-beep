@@ -4,15 +4,15 @@ import org.thechance.service_restaurant.domain.entity.Restaurant
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.utils.*
 
-interface IControlRestaurant {
+interface IControlRestaurantsUseCase {
     suspend fun createRestaurant(restaurant: Restaurant): Boolean
     suspend fun getAllRestaurants(page: Int, limit: Int): List<Restaurant>
     suspend fun deleteRestaurant(restaurantId: String): Boolean
 }
 
-class ControlRestaurant(
+class ControlRestaurantsUseCase(
     private val restaurantGateway: IRestaurantGateway,
-) : IControlRestaurant {
+) : IControlRestaurantsUseCase {
 
     override suspend fun createRestaurant(restaurant: Restaurant): Boolean {
         validationRestaurant(restaurant)

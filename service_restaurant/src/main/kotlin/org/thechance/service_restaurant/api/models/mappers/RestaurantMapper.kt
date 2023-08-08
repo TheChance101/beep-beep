@@ -3,6 +3,7 @@ package org.thechance.service_restaurant.api.models.mappers
 import org.thechance.service_restaurant.api.models.RestaurantDetailsDto
 import org.thechance.service_restaurant.api.models.RestaurantDto
 import org.thechance.service_restaurant.domain.entity.Restaurant
+import org.thechance.service_restaurant.utils.NULL_DOUBLE
 
 fun RestaurantDto.toEntity() = Restaurant(
     id = id ?: "",
@@ -10,7 +11,7 @@ fun RestaurantDto.toEntity() = Restaurant(
     name = name ?: "",
     description = description ?: "",
     priceLevel = priceLevel ?: "",
-    rate = rate ?: 0.0,
+    rate = rate ?: NULL_DOUBLE,
     phone = phone ?: "",
     openingTime = openingTime ?: "",
     closingTime = closingTime ?: "",
