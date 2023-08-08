@@ -52,7 +52,7 @@ private val DarkColorScheme = darkColorScheme(
 val LocalDimens = compositionLocalOf { Dimens() }
 private val LocalColorScheme = staticCompositionLocalOf { LightColorScheme }
 val LocalShapes = staticCompositionLocalOf { shapes }
-private val LocalTypography = staticCompositionLocalOf { Typography }
+val LocalTypography = compositionLocalOf { Typographies() }
 
 @Composable
 fun BeepBeepTheme(
@@ -61,12 +61,23 @@ fun BeepBeepTheme(
 ) {
 
     val colorScheme = if (useDarkTheme) DarkColorScheme else LightColorScheme
+    val typography = Typographies(
+        headlineLarge = Typography().headlineLarge,
+        headlineMedium = Typography().headlineMedium,
+        titleLarge = Typography().titleLarge,
+        titleMedium = Typography().titleMedium,
+        bodyLarge = Typography().bodyLarge,
+        bodyMedium = Typography().bodyMedium,
+        labelMedium = Typography().labelMedium,
+    )
 
     CompositionLocalProvider(
         LocalDimens provides Dimens(),
         LocalColorScheme provides colorScheme,
         LocalShapes provides shapes,
-        content = content
+        LocalTypography provides typography,
+        content = content,
+
     )
 }
 
@@ -76,7 +87,7 @@ object BeepBeepTheme {
         @ReadOnlyComposable
         get() = LocalColorScheme.current
 
-//    val typography: Typography
+//    val typeography: Typographies
 //        @Composable
 //        @ReadOnlyComposable
 //        get() = LocalTypography.current

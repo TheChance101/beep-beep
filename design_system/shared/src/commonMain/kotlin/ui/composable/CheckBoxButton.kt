@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.colorScheme
+import com.beepbeep.designSystem.ui.theme.LocalTypography
 
 @Composable
 fun CheckBoxButton(
@@ -18,7 +19,7 @@ fun CheckBoxButton(
     isChecked: Boolean =false,
     onCheck: (Boolean) -> Unit,
 ){
-
+    val typography=  LocalTypography.current
     Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
         Checkbox(
             checked = isChecked,
@@ -31,7 +32,7 @@ fun CheckBoxButton(
         )
         Text(
             text = text,
-            style = MaterialTheme.typography.bodyLarge.copy(color = colorScheme.onPrimary),
+            style = typography.bodyLarge.copy(color = colorScheme.onPrimary),
         )
     }
 }

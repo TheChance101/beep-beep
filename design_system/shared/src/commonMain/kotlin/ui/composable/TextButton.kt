@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.colorScheme
 import com.beepbeep.designSystem.ui.theme.LocalDimens
 import com.beepbeep.designSystem.ui.theme.LocalShapes
+import com.beepbeep.designSystem.ui.theme.LocalTypography
 
 @Composable
 fun TextButton(
@@ -33,6 +34,7 @@ fun TextButton(
 ){
     val dimens= LocalDimens.current
     val shape = LocalShapes.current
+    val typography=  LocalTypography.current
     Surface(
         modifier=  modifier
         .height(height.dp)
@@ -51,7 +53,7 @@ fun TextButton(
             Text(
                 text = text,
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.bodyLarge.copy(color = colorScheme.onPrimary
+                style = typography.bodyLarge.copy(color = colorScheme.onPrimary
                 ),
             )
         }
