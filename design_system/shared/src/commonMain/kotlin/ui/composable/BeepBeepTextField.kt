@@ -13,6 +13,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -66,6 +67,14 @@ fun BeepBeepTextField(
             },
             visualTransformation = BeepBeepVisualTransformation(keyboardType, showPassword),
             isError = isError,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                containerColor = if (isError) colorScheme.primary else colorScheme.surface,
+                unfocusedBorderColor = colorScheme.outline,
+                focusedBorderColor = colorScheme.onTertiary,
+                errorBorderColor = colorScheme.primary,
+                errorCursorColor = colorScheme.primary,
+                cursorColor = colorScheme.outline,
+            )
         )
 
         if (isError) {
