@@ -4,6 +4,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.mongodb.reactivestreams.client.MongoClient
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.coroutine.coroutine
@@ -24,47 +25,35 @@ val kmongoModule = module {
     }
 
     single {
-        val databaseName = "TheChanceBeepBeep"
-        get<MongoClient>().coroutine.getDatabase(databaseName)
+        get<MongoClient>().coroutine.getDatabase("TheChanceBeepBeep")
     }
 
     single {
-        val userCollection = "users"
-        get<CoroutineDatabase>().getCollection<UserCollection>(userCollection)
-    }
-    single {
-        val historyNotificationCollection = "history_notification"
-        get<CoroutineDatabase>().getCollection<NotificationHistoryCollection>(historyNotificationCollection)
+        get<CoroutineDatabase>().getCollection<NotificationHistoryCollection>("history_notification")
     }
 
-    single {
-        val taxiCollection = "taxi_users"
-        get<CoroutineDatabase>().getCollection<UserCollection>(taxiCollection)
+    single(named("taxi_users")) {
+        get<CoroutineDatabase>().getCollection<UserCollection>("taxi_users")
     }
 
-    single {
-        val restaurantCollection = "restaurant_users"
-        get<CoroutineDatabase>().getCollection<UserCollection>(restaurantCollection)
+    single(named("restaurant_users")) {
+        get<CoroutineDatabase>().getCollection<UserCollection>("restaurant_users")
     }
 
-    single {
-        val deliveryCollection = "delivery_users"
-        get<CoroutineDatabase>().getCollection<UserCollection>(deliveryCollection)
+    single(named("delivery_users")) {
+        get<CoroutineDatabase>().getCollection<UserCollection>("delivery_users")
     }
 
-    single {
-        val endUserCollection = "end_users"
-        get<CoroutineDatabase>().getCollection<UserCollection>(endUserCollection)
+    single(named("end_users")) {
+        get<CoroutineDatabase>().getCollection<UserCollection>("end_users")
     }
 
-    single {
-        val supportCollection = "support_users"
-        get<CoroutineDatabase>().getCollection<UserCollection>(supportCollection)
+    single(named("support_users")) {
+        get<CoroutineDatabase>().getCollection<UserCollection>("support_users")
     }
 
-    single {
-        val dashboardCollection = "dashboard_users"
-        get<CoroutineDatabase>().getCollection<UserCollection>(dashboardCollection)
+    single(named("dashboard_users")) {
+        get<CoroutineDatabase>().getCollection<UserCollection>("dashboard_users")
     }
 }
 
