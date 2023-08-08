@@ -1,5 +1,6 @@
 package org.thechance.service_notification.domain.gateway
 
+import org.thechance.service_notification.domain.model.Notification
 import org.thechance.service_notification.domain.model.User
 
 interface IDatabaseGateway {
@@ -9,5 +10,7 @@ interface IDatabaseGateway {
     suspend fun addTokenToUser(id:String,token:String): Boolean
 
     suspend fun getUserTokensById(id: String): List<String>
+
+    suspend fun addNotificationToUserHistory(notification: Notification)
 
 }
