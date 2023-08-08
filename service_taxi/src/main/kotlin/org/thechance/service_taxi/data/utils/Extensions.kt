@@ -15,12 +15,12 @@ fun Any?.isNotNull() = this == null
 
 fun <T> updateNotNullProperties(
     obj: T,
-    otherFilter: (propertyName: String) -> Boolean = { true },
+    filter: (propertyName: String) -> Boolean = { true },
     foreach: (propertyName: String, value: Any) -> Bson = { n, v -> Updates.set(n, v) }
 ): Bson {
     return Updates.combine(
         obj!!::class.memberProperties
-            .filter { it.getter.call(obj) != null && otherFilter(it.name) }
+            .filter { it.getter.call(obj) != null && filter(it.name) }
             .map { foreach(it.name, it.getter.call(obj)!!) }
     )
 }
