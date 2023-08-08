@@ -2,6 +2,7 @@ package org.thechance.service_notification.endpoints
 
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
+import io.ktor.server.plugins.BadRequestException
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
@@ -23,12 +24,18 @@ fun Route.userRoutes() {
             val result = useCase.createUser(user.toEntity())
             call.respond(HttpStatusCode.Created, "User was created: $result")
         }
+        post("/{userId}/token") {
+            val userId = call.parameters["userId"] ?: throw BadRequestException("User id is required")
+            val token = call.receive<String>()
+            val result = useCase.addTokenToUser(userId, token)
+            call.respond("Token was added: $result")
+        }
         get {
             val users = useCase.getUsers().toDto()
             call.respond(HttpStatusCode.OK, users)
         }
-        get("/{id}") {
-            val id = call.parameters["id"] ?: ""
+        get("/{userId}") {
+            val id = call.parameters["userId"] ?: throw BadRequestException("User id is required")
             val user = useCase.getUser(id).toDto()
             call.respond(HttpStatusCode.OK, user)
         }
