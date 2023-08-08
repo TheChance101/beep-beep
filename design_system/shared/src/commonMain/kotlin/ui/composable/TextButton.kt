@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.colorScheme
 import com.beepbeep.designSystem.ui.theme.LocalDimens
 import com.beepbeep.designSystem.ui.theme.LocalShapes
 
@@ -35,7 +36,7 @@ fun TextButton(
     Surface(
         modifier=  modifier
         .height(height.dp)
-        .border(width = 1.dp, color =  MaterialTheme.colorScheme.surfaceTint, shape = shape.medium)
+        .border(width = 1.dp, color =  colorScheme.surfaceTint, shape = shape.medium)
         .padding(horizontal = dimens.space16, vertical = dimens.space10)
             .clickable(
                     indication = null,
@@ -50,7 +51,7 @@ fun TextButton(
             Text(
                 text = text,
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onPrimary
+                style = MaterialTheme.typography.bodyLarge.copy(color = colorScheme.onPrimary
                 ),
             )
         }
