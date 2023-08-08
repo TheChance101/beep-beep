@@ -86,7 +86,7 @@ object BeepBeepTheme {
         @ReadOnlyComposable
         get() = LocalColorScheme.current
 
-    val typeography: Typographies
+    val typography: Typographies
         @Composable
         @ReadOnlyComposable
         get() = LocalTypography.current

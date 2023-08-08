@@ -13,7 +13,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,11 +25,10 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.colorScheme
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.dimens
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.shapes
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.typeography
+import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.typography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,7 +51,7 @@ fun BeepBeepTextField(
         Text(
             text = label,
             modifier = Modifier.padding(bottom = dimens.space8),
-            style = typeography.titleLarge
+            style = typography.titleLarge
         )
 
         OutlinedTextField(
@@ -84,7 +82,7 @@ fun BeepBeepTextField(
             Text(
                 text = errorMessage,
                 modifier = Modifier.padding(top = dimens.space8),
-                style = typeography.body
+                style = typography.body
             )
         }
     }
