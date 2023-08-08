@@ -10,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.colorScheme
 
 @Composable
 fun CheckBoxButton(
@@ -23,8 +24,8 @@ fun CheckBoxButton(
             checked = isChecked,
             interactionSource = remember { MutableInteractionSource() },
             colors=   CheckboxDefaults.colors(
-                checkmarkColor =  MaterialTheme.colorScheme.background,
-                checkedColor = MaterialTheme.colorScheme.primary,
+                checkmarkColor =  colorScheme.background,
+                checkedColor = colorScheme.primary,
             ),
             onCheckedChange = { onCheck(it) },
         )

@@ -22,6 +22,7 @@ import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.colorScheme
 import com.beepbeep.designSystem.ui.theme.LocalDimens
 import com.beepbeep.designSystem.ui.theme.LocalShapes
 
@@ -35,11 +36,11 @@ fun SwitchButton(
     val dimens= LocalDimens.current
     val shape =LocalShapes.current
     val targetBackgroundColor by animateColorAsState(
-        targetValue = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface
+        targetValue = if (selected) colorScheme.primary else colorScheme.surface
     )
 
     val targetBorderColor by animateColorAsState(
-        targetValue = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.tertiaryContainer
+        targetValue = if (selected) colorScheme.primary else colorScheme.tertiaryContainer
     )
     val horizontalBias by animateFloatAsState(
         targetValue =  when (selected) {
@@ -81,6 +82,6 @@ fun Circle(
     Card(
         shape = CircleShape, modifier = modifier.size(20.dp), elevation = 0.dp
     ) {
-        Box(modifier = Modifier.background(if(isSelected)  Color.White else  MaterialTheme.colorScheme.primary) , )
+        Box(modifier = Modifier.background(if(isSelected)  Color.White else  colorScheme.primary) , )
     }
 }

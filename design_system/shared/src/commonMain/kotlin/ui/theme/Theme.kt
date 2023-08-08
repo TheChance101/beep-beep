@@ -69,9 +69,7 @@ fun BeepBeepTheme(
         LocalShapes provides shapes
     ) {
         MaterialTheme(
-//            colorScheme = colorScheme,
-//            shapes = shapes,
-//            typography = Typography(),
+            typography = Typography(),
             content = content
         )
     }

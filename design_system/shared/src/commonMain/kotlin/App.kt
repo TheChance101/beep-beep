@@ -70,10 +70,10 @@ fun EnabledButtonsPreview() {
             onClick = { },
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
         ) {
-            Text(
-                "Button",
-                fontFamily = FontFamily(fontResources("borel_regular.ttf", "borel_regular")),
-            )
+//            Text(
+//                "Button",
+//                fontFamily = FontFamily(fontResources("borel_regular.ttf", "borel_regular")),
+//            )
         }
 
         OutlinedButton(
