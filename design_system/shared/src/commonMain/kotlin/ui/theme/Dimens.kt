@@ -13,12 +13,16 @@ data class Dimens(
     val space24: Dp = 24.dp,
     val space40: Dp = 40.dp,
 
-    val fontSize12 : TextUnit  = 12.sp,
-    val fontSize14 : TextUnit  = 14.sp,
-    val fontSize16 : TextUnit  = 16.sp,
-    val fontSize20 : TextUnit  = 20.sp,
-    val fontSize24 : TextUnit  = 24.sp,
-    val lineHeight32 : TextUnit  = 32.4.sp,
-    val lineHeight20 : TextUnit  = 20.sp,
-    val lineHeight19 : TextUnit  = 19.6.sp,
+    val fontSize12: TextUnit = 12.sp,
+    val fontSize14: TextUnit = 14.sp,
+    val fontSize16: TextUnit = 16.sp,
+    val fontSize20: TextUnit = 20.sp,
+    val fontSize24: TextUnit = 24.sp,
+    val lineHeight32: TextUnit = 32.4.sp,
+    val lineHeight20: TextUnit = 20.sp,
+    val lineHeight19: TextUnit = 19.6.sp,
+
+    val strokeZero: Dp = 0.dp,
+    val strokeSmall: Dp = 2.dp,
+    val strokeNormal: Dp = 4.dp
 )
