@@ -68,7 +68,7 @@ fun BeepBeepTextField(
             visualTransformation = BeepBeepVisualTransformation(keyboardType, showPassword),
             isError = isError,
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                containerColor = if (isError) colorScheme.primary else colorScheme.surface,
+                containerColor = if (isError) colorScheme.secondary else colorScheme.surface,
                 unfocusedBorderColor = colorScheme.outline,
                 focusedBorderColor = colorScheme.onTertiary,
                 errorBorderColor = colorScheme.primary,
