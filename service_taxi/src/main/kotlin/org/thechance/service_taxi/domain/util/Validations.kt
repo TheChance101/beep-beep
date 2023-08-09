@@ -2,10 +2,12 @@ package org.thechance.service_taxi.domain.util
 
 import org.koin.core.annotation.Single
 import org.thechance.service_taxi.domain.entity.Taxi
+import org.thechance.service_taxi.domain.entity.TaxiUpdateRequest
 import org.thechance.service_taxi.domain.entity.Trip
 
 @Single
 class Validations {
+    // region taxi
     fun validationTaxi(taxi: Taxi) {
         val validationErrors = mutableListOf<Int>()
 
@@ -29,6 +31,41 @@ class Validations {
         }
     }
 
+    fun validateUpdateRequest(taxi: TaxiUpdateRequest){
+        val validationErrors = mutableListOf<Int>()
+
+        taxi.plateNumber?.let {
+            if (!isisValidPlateNumber(taxi.plateNumber)) {
+                validationErrors.add(INVALID_PLATE)
+            }
+        }
+        taxi.color?.let {
+            if (taxi.color.isBlank()) {
+                validationErrors.add(INVALID_COLOR)
+            }
+        }
+        taxi.type?.let {
+            if (taxi.type.isBlank()) {
+                validationErrors.add(INVALID_CAR_TYPE)
+            }
+        }
+        taxi.driverId?.let {
+            if (!isValidId(taxi.driverId)) {
+                validationErrors.add(INVALID_ID)
+            }
+        }
+        taxi.seats?.let {
+            if (taxi.seats !in SEAT_RANGE) {
+                validationErrors.add(SEAT_OUT_OF_RANGE)
+            }
+        }
+        if (validationErrors.isNotEmpty()) {
+            throw MultiErrorException(validationErrors)
+        }
+    }
+    // endregion
+
+    // region trips
     fun validationTrip(trip: Trip) {
         val validationErrors = mutableListOf<Int>()
 
@@ -73,6 +110,7 @@ class Validations {
             throw MultiErrorException(validationErrors)
         }
     }
+    // endregion
 
     // region helpers
     fun isValidId(id: String): Boolean {
@@ -107,7 +145,7 @@ class Validations {
     private companion object {
         val LATITUDE_RANGE = -90.0..90.0
         val LONGITUDE_RANGE = -180.0..180.0
-        val SEAT_RANGE = 4..5
+        val SEAT_RANGE = 2..8
 
         val PLATE_NUMBER_REGEX = listOf(
             "^\\d{5}\\s[A-Z]{3}\$".toRegex(), // Saudi Arabia

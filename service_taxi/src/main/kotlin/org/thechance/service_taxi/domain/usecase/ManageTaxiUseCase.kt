@@ -37,6 +37,7 @@ class ManageTaxiUseCase(
     override suspend fun updateTaxi(taxi: TaxiUpdateRequest): Boolean {
         if (!validations.isValidId(taxi.id)) throw InvalidIdException
         dataBaseGateway.getTaxiById(taxi.id) ?: throw ResourceNotFoundException
+        validations.validateUpdateRequest(taxi)
         return dataBaseGateway.updateTaxi(taxi)
     }
 
