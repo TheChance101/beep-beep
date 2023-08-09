@@ -3,6 +3,7 @@ package com.beepbeep.designSystem
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -64,17 +65,31 @@ fun DesignApp() {
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun PreviewChips() {
-    Column(
+    Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         var selected by remember { mutableStateOf(false) }
+        var selected1 by remember { mutableStateOf(true) }
+        var selected2 by remember { mutableStateOf(true) }
         BeepBeepChip(
             label = "Click me",
             onClick = { isSelected -> selected = isSelected },
             isSelected = selected,
             painter = painterResource("sort.xml")
+        )
+        BeepBeepChip(
+            label = "Click me",
+            onClick = { isSelected -> selected1 = isSelected },
+            isSelected = selected1,
+            painter = painterResource("sun.xml")
+        )
+        BeepBeepChip(
+            label = "Click me",
+            onClick = { isSelected -> selected2 = isSelected },
+            isSelected = selected2,
+            painter = painterResource("moon_stars.xml")
         )
     }
 
