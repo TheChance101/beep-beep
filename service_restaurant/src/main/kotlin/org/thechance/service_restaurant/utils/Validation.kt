@@ -120,15 +120,11 @@ fun validatePriceLevel(priceLevel: String?): Boolean {
 }
 
 fun validateRate(rate: Double): Boolean {
-    return rate == -1.0 || rate in 0.0..5.0
+    return rate in 0.0..5.0
 }
 
-//fun validateRate(rate: Double): Boolean {
-//    return rate == 0.0 || rate in 1.0..5.0
-//}
-
 fun validatePrice(price: Double): Boolean {
-    return price == NULL_DOUBLE || price in 1.0..1000.0
+    return  price in 1.0..1000.0
 }
 
 const val NULL_DOUBLE = -1.0

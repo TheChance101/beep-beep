@@ -8,7 +8,7 @@ class MissingParameterException(code: Int) : RestaurantException(code.toString()
 
 class InvalidParameterException(code: Int) : RestaurantException(code.toString())
 
-class MultiErrorException(errorCodes: List<Int>) : RestaurantException(errorCodes.joinToString(",") { it.toString() })
+class MultiErrorException(val errorCodes: List<Int>) : RestaurantException(errorCodes.joinToString(",") { it.toString() })
 
 
 const val INVALID_ID = 2001

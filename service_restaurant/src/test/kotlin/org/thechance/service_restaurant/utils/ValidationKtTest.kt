@@ -13,7 +13,7 @@ class ValidationKtTest {
     //region isValidId
     @Test
     fun `should return true if id is valid`() {
-        // given an valid id with 24 characters and only hex characters
+        // given a valid id with 24 characters and only hex characters
         val validId = "64cc5fdd52F4136b92938f8c"
         // when result is true
         val result = isValidId(validId)
@@ -60,8 +60,7 @@ class ValidationKtTest {
 
     //endregion
 
-
-    //region validationRestaurant
+    //region creat validationRestaurant
     @Test
     fun `should pass validation when creat restaurant with just require fields that valid`() {
         // given a valid fields of restaurant that  require
@@ -98,7 +97,8 @@ class ValidationKtTest {
         }
 
         // then check if throw exception
-        assertThrows(MultiErrorException::class.java, shortNameExecutable)
+       var  error =assertThrows(MultiErrorException::class.java, shortNameExecutable)
+       assertEquals(true, error.errorCodes.contains(INVALID_NAME))
         assertThrows(MultiErrorException::class.java, longNameExecutable)
         assertThrows(MultiErrorException::class.java, emptyNameExecutable)
         assertThrows(MultiErrorException::class.java, nullNameExecutable)
@@ -127,7 +127,7 @@ class ValidationKtTest {
 
         // then check if throw exception
         assertThrows(MultiErrorException::class.java, upperRateExecutable)
-        //   assertThrows(MultiErrorException::class.java, lowerRateExecutable) //not passing
+        assertThrows(MultiErrorException::class.java, lowerRateExecutable)
     }
 
     @Test
@@ -257,5 +257,135 @@ class ValidationKtTest {
     }
     //endregion
 
+    //region validate price
+    @Test
+    fun `should return true when price is valid`() {
+        // given a price that between 1.0 and 1000.0
+        val validPrice = 500.0
+        val result = validatePrice(validPrice)
+        // then return true
+        assertEquals(true, result)
+    }
+
+    @Test
+    fun `should return true when price is minimum`() {
+        // given a price that minimum 1.0
+        val minimumValidPrice = 1.0
+        val result = validatePrice(minimumValidPrice)
+        // then return true
+        assertEquals(true, result)
+    }
+
+    @Test
+    fun `should return true when price is maximum`() {
+        // given a price that maximum 1000.0
+        val maximumValidPrice = 1000.0
+        val result = validatePrice(maximumValidPrice)
+        // then return true
+        assertEquals(true, result)
+    }
+
+    @Test
+    fun `should return false when price below lower bound`() {
+        // given a price that less than  1.0
+        val invalidPrice = 0.5
+        val result = validatePrice(invalidPrice)
+        assertEquals(false, result)
+    }
+
+    @Test
+    fun `should return false when price above upper bound `() {
+        // given a price that more than 1000.0
+        val invalidPrice = 1500.0
+        val result = validatePrice(invalidPrice)
+        assertEquals(false, result)
+    }
+
+    @Test
+    fun `should return false when price is negative `() {
+        // given a price that negative
+        val negativePrice = -100.0
+        val result = validatePrice(negativePrice)
+        assertEquals(false, result)
+    }
+    //endregion
+
+    //region validate latitude and longitude
+    @Test
+    fun `should return true when latitude is valid`() {
+        // given a latitude that between -90.0 and 90.0
+        val validLatitude = 35.0
+        val result = validateLatitude(validLatitude)
+        // then return true
+        assertEquals(true, result)
+    }
+
+    @Test
+    fun `should return false when latitude invalid`() {
+        // given a latitude that more than -90.0
+        val invalidLatitude = -100.0
+        val result = validateLatitude(invalidLatitude)
+        // then return false
+        assertEquals(false, result)
+    }
+
+    @Test
+    fun `should return true when longitude valid`() {
+        // given a longitude that between -180.0 and 180.0
+        val validLongitude = -120.0
+        val result = validateLongitude(validLongitude)
+        // then return true
+        assertEquals(true, result)
+    }
+
+    @Test
+    fun `should return false when longitude invalid`() {
+        // given a longitude that more than -180.0
+        val invalidLongitude = -190.0
+        val result = validateLongitude(invalidLongitude)
+        // then return false
+        assertEquals(false, result)
+    }
+
+    @Test
+    fun `should return true when valid location`() {
+        // given a latitude and longitude that is valid
+        val validLatitude = 25.0
+        val validLongitude = -70.0
+        val result = validateLocation(validLatitude, validLongitude)
+        // then return true
+        assertEquals(true, result)
+    }
+
+    @Test
+    fun `should return false when location with invalid latitude`() {
+        // given a latitude that is valid and a longitude that is invalid
+        val invalidLatitude = -100.0
+        val validLongitude = 120.0
+        val result = validateLocation(invalidLatitude, validLongitude)
+        // then return false
+        assertEquals(false, result)
+    }
+
+    @Test
+    fun `should return false when location with invalid longitude`() {
+        // given a latitude that is valid  and a longitude that more than -180.0
+        val validLatitude = 40.0
+        val invalidLongitude = -190.0
+        val result = validateLocation(validLatitude, invalidLongitude)
+        // then return false
+        assertEquals(false, result)
+    }
+
+    @Test
+    fun `should return false when location with both invalid latitude and longitude`() {
+        // given a latitude that more than 90.0 and a longitude that more than 180.0
+        val invalidLatitude = 95.0
+        val invalidLongitude = 200.0
+        val result = validateLocation(invalidLatitude, invalidLongitude)
+        // then return false
+        assertEquals(false, result)
+    }
+    //endregion
 
 }
