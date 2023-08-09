@@ -5,7 +5,7 @@ import org.thechance.service_taxi.domain.entity.Taxi
 import org.thechance.service_taxi.domain.entity.TaxiUpdateRequest
 import org.thechance.service_taxi.domain.gateway.DataBaseGateway
 import org.thechance.service_taxi.domain.util.ResourceNotFoundException
-import org.thechance.service_taxi.domain.util.validationTaxi
+import org.thechance.service_taxi.domain.util.Validations
 
 interface IManageTaxiUseCase {
     suspend fun createTaxi(taxi: Taxi): Boolean
@@ -18,9 +18,10 @@ interface IManageTaxiUseCase {
 @Single
 class ManageTaxiUseCase(
     private val dataBaseGateway: DataBaseGateway,
+    private val validations: Validations,
 ) : IManageTaxiUseCase {
     override suspend fun createTaxi(taxi: Taxi): Boolean {
-        validationTaxi(taxi)
+        validations.validationTaxi(taxi)
         return dataBaseGateway.addTaxi(taxi)
     }
 

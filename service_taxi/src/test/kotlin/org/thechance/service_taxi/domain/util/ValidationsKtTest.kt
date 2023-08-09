@@ -4,6 +4,7 @@ import org.junit.Assert
 import org.junit.Test
 
 class ValidationsKtTest {
+    private val validations = Validations()
 
     // region id
     @Test
@@ -11,7 +12,7 @@ class ValidationsKtTest {
         // given an invalid id
         val userId = "123456789"
         // when result is false
-        val result = isValidId(userId)
+        val result = validations.isValidId(userId)
         // then check
         Assert.assertFalse(result)
     }
@@ -21,7 +22,7 @@ class ValidationsKtTest {
         // given an invalid id
         val userId = "2a1b3c4d5e6f7a8b9c0d1e2t"
         // when result is false
-        val result = isValidId(userId)
+        val result = validations.isValidId(userId)
         // then check
         Assert.assertFalse(result)
     }
@@ -31,7 +32,7 @@ class ValidationsKtTest {
         // given a valid id
         val userId = "2a1b3c4d5e6f7a8b9c0d1e2f"
         // when result is true
-        val result = isValidId(userId)
+        val result = validations.isValidId(userId)
         // then check
         Assert.assertTrue(result)
     }
@@ -43,7 +44,7 @@ class ValidationsKtTest {
         // given an invalid price
         val price = 9.0
         // when result is false
-        val result = validatePrice(price)
+        val result = validations.isValidPrice(price)
         // then check
         Assert.assertFalse(result)
     }
@@ -53,7 +54,7 @@ class ValidationsKtTest {
         // given an valid price
         val price = 10.0
         // when result is true
-        val result = validatePrice(price)
+        val result = validations.isValidPrice(price)
         // then check
         Assert.assertTrue(result)
     }
@@ -63,7 +64,7 @@ class ValidationsKtTest {
         // given an valid price
         val price = 15.0
         // when result is true
-        val result = validatePrice(price)
+        val result = validations.isValidPrice(price)
         // then check
         Assert.assertTrue(result)
     }
@@ -76,7 +77,7 @@ class ValidationsKtTest {
         val latitude = 80.0
         val longitude = 150.0
         // when result is true
-        val result = validateLocation(latitude, longitude)
+        val result = validations.isValidLocation(latitude, longitude)
         // then check
         Assert.assertTrue(result)
     }
@@ -87,7 +88,7 @@ class ValidationsKtTest {
         val latitude = 200.0
         val longitude = 190.0
         // when result is true
-        val result = validateLocation(latitude, longitude)
+        val result = validations.isValidLocation(latitude, longitude)
         // then check
         Assert.assertFalse(result)
     }
@@ -99,7 +100,7 @@ class ValidationsKtTest {
         // given an valid plate
         val plate = "1234 MOS"
         // when result is true
-        val result = isValidatePlateNumber(plate)
+        val result = validations.isisValidPlateNumber(plate)
         // then check
         Assert.assertTrue(result)
     }
@@ -109,7 +110,7 @@ class ValidationsKtTest {
         // given an valid plate
         val plate = "123456 MS"
         // when result is true
-        val result = isValidatePlateNumber(plate)
+        val result = validations.isisValidPlateNumber(plate)
         // then check
         Assert.assertTrue(result)
     }
@@ -119,11 +120,9 @@ class ValidationsKtTest {
         // given an valid plate
         val plate = "123456adsMS"
         // when result is true
-        val result = isValidatePlateNumber(plate)
+        val result = validations.isisValidPlateNumber(plate)
         // then check
         Assert.assertFalse(result)
     }
     // endregion
-
-
 }

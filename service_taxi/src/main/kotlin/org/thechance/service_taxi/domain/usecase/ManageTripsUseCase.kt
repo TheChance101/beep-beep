@@ -5,7 +5,7 @@ import org.thechance.service_taxi.domain.entity.Trip
 import org.thechance.service_taxi.domain.entity.TripUpdateRequest
 import org.thechance.service_taxi.domain.gateway.DataBaseGateway
 import org.thechance.service_taxi.domain.util.ResourceNotFoundException
-import org.thechance.service_taxi.domain.util.validationTrip
+import org.thechance.service_taxi.domain.util.Validations
 
 interface IManageTripsUseCase {
     suspend fun createTrip(trip: Trip): Boolean
@@ -17,7 +17,8 @@ interface IManageTripsUseCase {
 
 @Single
 class ManageTripsUseCase(
-    private val dataBaseGateway: DataBaseGateway
+    private val dataBaseGateway: DataBaseGateway,
+    private val validations: Validations
 ) : IManageTripsUseCase {
     override suspend fun getTrips(page: Int, limit: Int): List<Trip> {
         return dataBaseGateway.getAllTrips(page, limit)
@@ -29,7 +30,7 @@ class ManageTripsUseCase(
     }
 
     override suspend fun createTrip(trip: Trip): Boolean {
-        validationTrip(trip)
+        validations.validationTrip(trip)
         return dataBaseGateway.addTrip(trip)
     }
 
@@ -41,6 +42,4 @@ class ManageTripsUseCase(
     override suspend fun getTripById(tripId: String): Trip {
         return dataBaseGateway.getTripById(tripId) ?: throw ResourceNotFoundException
     }
-
-
 }
