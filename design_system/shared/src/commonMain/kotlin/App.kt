@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.beepbeep.designSystem.ui.composable.BeepBeepChip
 import com.beepbeep.designSystem.ui.composable.BeepBeepNavigationBar
 import com.beepbeep.designSystem.ui.composable.BeepBeepNavigationBarItem
 import com.beepbeep.designSystem.ui.composable.BeepBeepTextField
@@ -54,9 +55,29 @@ fun DesignApp() {
 //            DisabledButtonsPreview()
 //            Spacer(modifier = Modifier.height(16.dp))
             PreviewTextField()
+            PreviewChips()
 //            BottomNavigationBarPreview()
         }
     }
+}
+
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+fun PreviewChips() {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        var selected by remember { mutableStateOf(false) }
+        BeepBeepChip(
+            label = "Click me",
+            onClick = { isSelected -> selected = isSelected },
+            isSelected = selected,
+            painter = painterResource("sort.xml")
+        )
+    }
+
 }
 
 @Composable

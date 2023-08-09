@@ -6,9 +6,9 @@ import androidx.compose.ui.graphics.Color
 // region Colors / Light
 
 val primaryLight = Color(0xFFF53D47)
-val secondaryLight = Color(0xFFEFEDFF)
+val secondaryLight = Color(0xFFFFF3F2)
 
-val contentPrimaryLight = Color.Black
+val contentPrimaryLight = Color(0xDE1F0000)
 val contentSecondaryLight = Color(0x991F0000)
 val contentTertiaryLight = Color(0x611F0000)
 val contentBorderLight = Color(0x141F0000)
@@ -32,9 +32,9 @@ val surfaceTintLight = Color(0x081F0000)
 // region Colors / Dark
 
 val primaryDark = Color(0xFFF53D47)
-val secondaryDark = Color(0x15FFFFFF)
+val secondaryDark = Color(0x1AFFFFFF)
 
-val contentPrimaryDark = Color.White
+val contentPrimaryDark = Color(0xDEFFFFFF)
 val contentSecondaryDark = Color(0x99FFFFFF)
 val contentTertiaryDark = Color(0x61FFFFFF)
 val contentBorderDark = Color(0x14FFEFEF)

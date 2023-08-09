@@ -46,7 +46,6 @@ kotlin {
                 api(libs.androidx.appcompat)
                 api(libs.androidx.core.ktx)
                 api(libs.compose.preview)
-
             }
         }
         val iosX64Main by getting
