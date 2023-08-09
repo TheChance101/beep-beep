@@ -92,13 +92,11 @@ fun RowScope.BeepBeepNavigationBarItem(
             tween(500)
         )
         val style =
-            MaterialTheme.typography.bodyLarge.copy(color = textColor, fontWeight = FontWeight.Bold)
+            BeepBeepTheme.typography.caption.copy(color = textColor)
         label?.let {
             it(style)
         }
     }
-
-    var itemWidth by remember { mutableStateOf(0) }
 
     Box(
         modifier
@@ -112,18 +110,11 @@ fun RowScope.BeepBeepNavigationBarItem(
             ).selectableGroup()
             .fillMaxHeight()
             .weight(1f)
-            .onSizeChanged {
-                itemWidth = it.width
-            },
     ) {
         Column(
             modifier = modifier.align(Alignment.TopCenter)
         ) {
-            AnimatedVisibility(
-                selected,
-                enter = slideInHorizontally(animationSpec = tween(300), initialOffsetX = { -it }),
-//                exit = slideOutHorizontally(animationSpec = tween(200), targetOffsetX = { it })
-            ) {
+            AnimatedVisibility(selected) {
                 Indicator(40.dp)
             }
         }
