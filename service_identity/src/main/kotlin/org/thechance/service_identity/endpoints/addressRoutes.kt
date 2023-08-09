@@ -9,45 +9,43 @@ import org.koin.ktor.ext.inject
 import org.thechance.service_identity.data.mappers.toDto
 import org.thechance.service_identity.data.mappers.toEntity
 import org.thechance.service_identity.domain.entity.MissingParameterException
-import org.thechance.service_identity.domain.usecases.useraccount.UserAccountUseCase
+import org.thechance.service_identity.domain.usecases.user_address.IManageUserAddressUseCase
 import org.thechance.service_identity.endpoints.model.CreateAddressRequest
 import org.thechance.service_identity.endpoints.model.UpdateAddressRequest
 import org.thechance.service_identity.endpoints.validation.INVALID_REQUEST_PARAMETER
 
 fun Route.addressRoutes() {
 
-    val userAccountUseCase: UserAccountUseCase by inject()
+    val manageUserAddress: IManageUserAddressUseCase by inject()
 
-    route("/address") {
-
+    route("users/address") {
         post("{userId}") {
             val address = call.receive<CreateAddressRequest>()
             val userId = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            call.respond(HttpStatusCode.Created, userAccountUseCase.addAddress(userId, address.toEntity()))
+            call.respond(HttpStatusCode.Created, manageUserAddress.addAddress(userId, address.toEntity()))
         }
 
         get("/{id}") {
             val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            call.respond(HttpStatusCode.OK, userAccountUseCase.getAddress(id).toDto())
+            call.respond(HttpStatusCode.OK, manageUserAddress.getAddress(id).toDto())
         }
 
         delete("/{id}") {
             val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            call.respond(HttpStatusCode.OK, userAccountUseCase.deleteAddress(id))
+            call.respond(HttpStatusCode.OK, manageUserAddress.deleteAddress(id))
         }
 
         put("/{id}") {
             val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val address = call.receive<UpdateAddressRequest>()
-            call.respond(HttpStatusCode.OK, userAccountUseCase.updateAddress(id, address.toEntity()))
+            call.respond(HttpStatusCode.OK, manageUserAddress.updateAddress(id, address.toEntity()))
         }
 
-    }
-
-    get("/addresses/{userId}") {
-        val id = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-        val userAddresses = userAccountUseCase.getUserAddresses(id)
-        call.respond(HttpStatusCode.OK, userAddresses.map { it.toDto() })
+        get("/all/{userId}") {
+            val id = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            val userAddresses = manageUserAddress.getUserAddresses(id)
+            call.respond(HttpStatusCode.OK, userAddresses.map { it.toDto() })
+        }
     }
 
 }
