@@ -12,7 +12,7 @@ import org.thechance.service_notification.domain.MissingRequestParameterExceptio
 import org.thechance.service_notification.domain.usecases.INotificationManagementUseCase
 import org.thechance.service_notification.endpoints.model.UserDto
 
-fun Route.notificationManagementRoutes() {
+fun Route.notificationRoutes() {
 
     val notificationManagementUseCase: INotificationManagementUseCase by inject()
 

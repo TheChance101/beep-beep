@@ -14,5 +14,5 @@ interface IDatabaseGateway {
 
     suspend fun addNotificationToUserHistory(notification: Notification)
 
-    suspend fun getUserTokensByTopic(userGroup: String): List<String>
+    suspend fun getUsersGroupTokens(userGroup: String): List<String>
 }

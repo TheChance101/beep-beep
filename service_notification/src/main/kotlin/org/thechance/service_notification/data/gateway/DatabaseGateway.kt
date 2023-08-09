@@ -47,7 +47,7 @@ class DatabaseGateway(
         return userCollection.findOneById(ObjectId(id))?.deviceTokens ?: throw NotFoundException("4001")
     }
 
-    override suspend fun getUserTokensByTopic(userGroup: String): List<String> {
+    override suspend fun getUsersGroupTokens(userGroup: String): List<String> {
         return when (userGroup) {
             "taxi_users" -> {
                 taxiUsersCollection.find().toList().flatMap { it.deviceTokens }

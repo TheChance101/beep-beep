@@ -14,7 +14,7 @@ class NotificationManagementUseCase(
 
     override suspend fun sendNotificationToUser(userId: String, title: String, body: String) {
         val tokens = databaseGateway.getTokensForUserById(userId)
-        pushNotificationGateway.sendNotificationToUserByTokens(tokens, title, body)
+        pushNotificationGateway.sendNotification(tokens, title, body)
         val notification = Notification(title, body, System.currentTimeMillis(), userId, false)
         databaseGateway.addNotificationToUserHistory(notification)
     }
@@ -26,7 +26,6 @@ class NotificationManagementUseCase(
     override suspend fun createUser(user: User): Boolean {
         return databaseGateway.createUser(user)
     }
-
 
 }
 
