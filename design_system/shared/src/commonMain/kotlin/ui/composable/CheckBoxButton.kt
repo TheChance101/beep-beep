@@ -24,6 +24,7 @@ fun CheckBoxButton(
             colors=   CheckboxDefaults.colors(
                 checkmarkColor =  colorScheme.background,
                 checkedColor = colorScheme.primary,
+                uncheckedColor=colorScheme.onPrimary
             ),
             onCheckedChange = { onCheck(it) },
         )

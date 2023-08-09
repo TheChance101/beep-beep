@@ -50,6 +50,7 @@ fun DesignApp() {
 //            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Bottom
         ) {
+
             TextButtonPrev()
             CheckBoxButtonPrev()
             TogglePreview()
