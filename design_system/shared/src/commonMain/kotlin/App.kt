@@ -31,10 +31,10 @@ import com.beepbeep.designSystem.ui.composable.BeepBeepCheckBox
 import com.beepbeep.designSystem.ui.composable.BeepBeepChip
 import com.beepbeep.designSystem.ui.composable.BeepBeepNavigationBar
 import com.beepbeep.designSystem.ui.composable.BeepBeepNavigationBarItem
+import com.beepbeep.designSystem.ui.composable.BeepBeepSwitchButton
+import com.beepbeep.designSystem.ui.composable.BeepBeepTextButton
 import com.beepbeep.designSystem.ui.composable.BeepBeepTextField
-import com.beepbeep.designSystem.ui.composable.SwitchButton
-import com.beepbeep.designSystem.ui.composable.TextButton
-import com.beepbeep.designSystem.ui.composable.ToggleButton
+import com.beepbeep.designSystem.ui.composable.BeepBeepToggleButton
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -205,13 +205,13 @@ fun BottomNavigationBarPreview() {
 @Composable
 fun SwitchPreview() {
     var isToggle by remember { mutableStateOf(false) }
-    SwitchButton(selected = isToggle, onUpdate = { isToggle = it })
+    BeepBeepSwitchButton(selected = isToggle, onUpdate = { isToggle = it })
 }
 
 @Composable
 fun TogglePreview() {
     var isToggle by remember { mutableStateOf(false) }
-    ToggleButton(isToggle, onToggle = { isToggle = !isToggle })
+    BeepBeepToggleButton(isToggle, onToggle = { isToggle = !isToggle })
 }
 
 @Composable
@@ -221,7 +221,7 @@ fun CheckBoxButtonPrev() {
         text = "CheckBox",
         isChecked = isChecked,
         onCheck = {
-            isChecked = it
+            isChecked = !isChecked
         },
     )
 }
@@ -229,7 +229,7 @@ fun CheckBoxButtonPrev() {
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun TextButtonPrev() {
-    TextButton(
+    BeepBeepTextButton(
         text = "TextButton",
         onClick = { },
     ) {

@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -28,7 +27,7 @@ import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.dimens
 
 
 @Composable
-fun SwitchButton(
+fun BeepBeepSwitchButton(
     selected: Boolean,
     modifier: Modifier = Modifier,
     onUpdate: (Boolean) -> Unit,
