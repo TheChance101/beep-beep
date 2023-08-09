@@ -19,7 +19,7 @@ import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.typography
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun CheckBoxButton(
+fun BeepBeepCheckBox(
     modifier: Modifier = Modifier,
     text: String = "",
     isChecked: Boolean = false,
