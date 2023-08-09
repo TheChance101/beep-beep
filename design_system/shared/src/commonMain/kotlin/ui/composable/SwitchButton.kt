@@ -23,8 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.colorScheme
-import com.beepbeep.designSystem.ui.theme.LocalDimens
-import com.beepbeep.designSystem.ui.theme.LocalShapes
+import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.shapes
+import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.dimens
 
 
 @Composable
@@ -33,8 +33,6 @@ fun SwitchButton(
     modifier: Modifier = Modifier,
     onUpdate: (Boolean) -> Unit,
 ) {
-    val dimens= LocalDimens.current
-    val shape =LocalShapes.current
     val targetBackgroundColor by animateColorAsState(
         targetValue = if (selected) colorScheme.primary else colorScheme.background,
         animationSpec = tween(500)
@@ -54,8 +52,8 @@ fun SwitchButton(
     val alignment=remember { derivedStateOf { BiasAlignment(horizontalBias = horizontalBias, verticalBias = 0f) } }
 
     Box(modifier = modifier.width(50.dp)
-        .background(color=  targetBackgroundColor, shape = shape.large).
-        border(width = 1.dp, color =targetBorderColor, shape = shape.large)
+        .background(color=  targetBackgroundColor, shape = shapes.large).
+        border(width = 1.dp, color =targetBorderColor, shape = shapes.large)
         .clickable(indication = null, interactionSource = remember { MutableInteractionSource() })
         {onUpdate(!selected) },
         contentAlignment = alignment.value

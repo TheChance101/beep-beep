@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -31,8 +30,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.colorScheme
+import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.shapes
 import com.beepbeep.designSystem.ui.theme.LocalDimens
-import com.beepbeep.designSystem.ui.theme.LocalShapes
+import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.dimens
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -42,8 +42,6 @@ fun ToggleButton(
     isDark : Boolean = isSystemInDarkTheme(),
     onToggle: () -> Unit,
 ){
-    val dimens= LocalDimens.current
-    val shape = LocalShapes.current
     val horizontalBias by animateFloatAsState(
         targetValue =  when (isDark) {
             true -> 1f
@@ -52,17 +50,17 @@ fun ToggleButton(
         animationSpec = tween(500)
     )
     val alignment=remember { derivedStateOf { BiasAlignment(horizontalBias = horizontalBias, verticalBias = 0f) } }
-    Box(Modifier.border(width = 1.dp, color =  colorScheme.outline, shape =shape.small)
+    Box(Modifier.border(width = 1.dp, color =  colorScheme.outline, shape = shapes.small)
         .width(dimens.size64)
         .height(dimens.size32)
-        .background(color =  colorScheme.background, shape = shape.small)
+        .background(color =  colorScheme.background, shape = shapes.small)
         .padding(dimens.space2)
         .clickable(indication = null, interactionSource = remember { MutableInteractionSource() })
         { onToggle() }){
 
         Card(
             modifier = Modifier.width(28.dp).height(28.dp).padding( dimens.space2).align( alignment.value),
-            shape= shape.small,
+            shape= shapes.small,
             colors= CardDefaults.cardColors(containerColor = colorScheme.primary),
             elevation = CardDefaults.elevatedCardElevation(0.dp),
         ){}
