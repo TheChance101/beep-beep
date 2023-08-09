@@ -10,10 +10,14 @@ import org.thechance.service_taxi.domain.entity.Taxi
 import org.thechance.service_taxi.domain.util.INVALID_ID
 import org.thechance.service_taxi.domain.util.INVALID_PLATE
 import org.thechance.service_taxi.domain.util.MultiErrorException
+import org.thechance.service_taxi.domain.util.Validations
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class AdministratorUseCaseImpTest {
-    private val administratorUseCase: AdministratorUseCase = AdministratorUseCaseImp(FakeGateway)
+class ManageTaxiUseCaseTest {
+    private val administratorUseCase: IManageTaxiUseCase = ManageTaxiUseCase(
+        FakeGateway,
+        Validations()
+    )
 
     @Test
     fun `should throw MultiErrorException contains error code INVALID_PLATE when plate number is invalid`() {
