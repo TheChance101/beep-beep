@@ -15,10 +15,8 @@ data class AddressCollection(
     @SerialName("user_id")
     @Contextual
     val userId: ObjectId = ObjectId(),
-    @SerialName("latitude")
-    val latitude : Double,
-    @SerialName("longitude")
-    val longitude : Double,
+    @SerialName("location")
+    val location: LocationCollection ,
     @SerialName("is_deleted")
     val isDeleted: Boolean = false
 )

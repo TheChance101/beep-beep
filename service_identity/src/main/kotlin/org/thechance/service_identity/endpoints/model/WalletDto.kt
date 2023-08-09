@@ -1,4 +1,4 @@
-package org.thechance.service_identity.api.model
+package org.thechance.service_identity.endpoints.model
 
 import kotlinx.serialization.Serializable
 
