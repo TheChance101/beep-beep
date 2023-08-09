@@ -1,13 +1,12 @@
 package org.thechance.service_restaurant.api.utils
 
-import io.ktor.http.*
-import io.ktor.server.plugins.statuspages.*
-import io.ktor.server.response.*
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.plugins.statuspages.StatusPagesConfig
+import io.ktor.server.response.respond
 import org.thechance.service_restaurant.domain.utils.InvalidParameterException
 import org.thechance.service_restaurant.domain.utils.MissingParameterException
 import org.thechance.service_restaurant.domain.utils.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.ResourceNotFoundException
-import org.thechance.service_restaurant.utils.*
 
 fun StatusPagesConfig.configureStatusPages() {
 

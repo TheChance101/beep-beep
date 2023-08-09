@@ -14,7 +14,6 @@ import org.thechance.service_restaurant.domain.utils.isValidId
 import org.thechance.service_restaurant.domain.utils.validatePagination
 import org.thechance.service_restaurant.domain.utils.validateRestaurantOwnership
 import org.thechance.service_restaurant.domain.utils.validateUpdateRestaurant
-import org.thechance.service_restaurant.utils.*
 
 interface IManageRestaurantDetailsUseCase {
 

@@ -10,7 +10,6 @@ import org.thechance.service_restaurant.domain.utils.ResourceNotFoundException
 import org.thechance.service_restaurant.domain.utils.isValidId
 import org.thechance.service_restaurant.domain.utils.validatePagination
 import org.thechance.service_restaurant.domain.utils.validationRestaurant
-import org.thechance.service_restaurant.utils.*
 
 interface IControlRestaurantsUseCase {
     suspend fun createRestaurant(restaurant: Restaurant): Boolean

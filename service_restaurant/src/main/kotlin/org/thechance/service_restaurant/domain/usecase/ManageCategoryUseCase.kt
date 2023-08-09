@@ -1,6 +1,5 @@
 package org.thechance.service_restaurant.domain.usecase
 
-import io.netty.channel.unix.Limits
 import org.koin.core.annotation.Single
 import org.thechance.service_restaurant.domain.entity.Category
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
@@ -13,7 +12,6 @@ import org.thechance.service_restaurant.domain.utils.isValidId
 import org.thechance.service_restaurant.domain.utils.isValidName
 import org.thechance.service_restaurant.domain.utils.validatePagination
 import org.thechance.service_restaurant.domain.utils.validationCategory
-import org.thechance.service_restaurant.utils.*
 
 interface IManageCategoryUseCase {
     suspend fun getCategories(page: Int, limit: Int): List<Category>

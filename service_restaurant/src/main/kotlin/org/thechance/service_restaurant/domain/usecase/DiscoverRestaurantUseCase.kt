@@ -13,7 +13,6 @@ import org.thechance.service_restaurant.domain.utils.NOT_FOUND
 import org.thechance.service_restaurant.domain.utils.ResourceNotFoundException
 import org.thechance.service_restaurant.domain.utils.isValidId
 import org.thechance.service_restaurant.domain.utils.validatePagination
-import org.thechance.service_restaurant.utils.*
 
 interface IDiscoverRestaurantUseCase {
     suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant>

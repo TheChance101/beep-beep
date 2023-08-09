@@ -72,5 +72,78 @@ class ValidationHandlerKtTest {
     }
     //endregion
 
+    //region phone
+    @Test
+    fun `valid phone number`() {
+        val phone = "1234567890"
+
+        val result = isValidatePhone(phone)
+
+        Assertions.assertTrue(result)
+    }
+
+    @Test
+    fun `invalid phone number with spaces`() {
+        val phone = "123 456 7890"
+
+        val result = isValidatePhone(phone)
+
+        Assertions.assertFalse(result)
+    }
+
+    @Test
+    fun `invalid phone number with dashes`() {
+        val phone = "123-456-7890"
+
+        val result = isValidatePhone(phone)
+
+        Assertions.assertFalse(result)
+    }
+
+    @Test
+    fun `invalid phone number with non-numeric characters`() {
+        val phone = "123abc456def"
+
+        val result = isValidatePhone(phone)
+
+        Assertions.assertFalse(result)
+    }
+
+    @Test
+    fun `invalid phone number too short`() {
+        val phone = "123456"
+
+        val result = isValidatePhone(phone)
+
+        Assertions.assertFalse(result)
+    }
+
+    @Test
+    fun `invalid phone number too long`() {
+        val phone = "12345678901234"
+
+        val result = isValidatePhone(phone)
+
+        Assertions.assertFalse(result)
+    }
+
+    @Test
+    fun `invalid empty phone number`() {
+        val phone = ""
+
+        val result = isValidatePhone(phone)
+
+        Assertions.assertFalse(result)
+    }
+
+    @Test
+    fun `invalid null phone number`() {
+        val phone: String? = null
+
+        val result = isValidatePhone(phone)
+
+        Assertions.assertFalse(result)
+    }
+    //endregion
 
 }

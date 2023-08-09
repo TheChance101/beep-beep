@@ -25,7 +25,7 @@ fun validationRestaurant(restaurant: Restaurant) {
     if (!validateRate(restaurant.rate)) {
         validationErrors.add(INVALID_RATE)
     }
-    if (!validatePhone(restaurant.phone)) {
+    if (!isValidatePhone(restaurant.phone)) {
         validationErrors.add(INVALID_PHONE)
     }
     if (!validateTime(restaurant.closingTime) || !validateTime(restaurant.openingTime)) {
@@ -101,7 +101,7 @@ fun validateUpdateRestaurant(restaurant: Restaurant) {
         if (restaurant.rate != -1.0 && !validateRate(restaurant.rate)) {
             validationErrors.add(INVALID_RATE)
         }
-        if (restaurant.phone.isNotEmpty() && !validatePhone(restaurant.phone)) {
+        if (restaurant.phone.isNotEmpty() && !isValidatePhone(restaurant.phone)) {
             validationErrors.add(INVALID_PHONE)
         }
         if (restaurant.closingTime.isNotEmpty() && !validateTime(restaurant.closingTime)) {

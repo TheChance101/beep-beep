@@ -8,7 +8,6 @@ import org.thechance.service_restaurant.domain.utils.NOT_FOUND
 import org.thechance.service_restaurant.domain.utils.ResourceNotFoundException
 import org.thechance.service_restaurant.domain.utils.isValidName
 import org.thechance.service_restaurant.domain.utils.validatePagination
-import org.thechance.service_restaurant.utils.*
 
 interface IManageCuisineUseCase {
     suspend fun getCuisines(page: Int, limit: Int): List<Cuisine>

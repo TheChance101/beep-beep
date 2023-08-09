@@ -20,7 +20,7 @@ package org.thechance.service_restaurant.domain.utils
         return name != null && name.matches(Regex("^[A-Za-z0-9\\s\\[\\]\\(\\)\\-.,&]{4,25}$"))
     }
 
-    fun validatePhone(phone: String?): Boolean {
+    fun isValidatePhone(phone: String?): Boolean {
         return phone != null && phone.matches(Regex("\\d{3}\\d{3}\\d{4}"))
     }
 
