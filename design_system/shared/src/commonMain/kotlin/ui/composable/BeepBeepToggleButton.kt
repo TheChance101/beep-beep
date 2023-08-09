@@ -37,8 +37,8 @@ import org.jetbrains.compose.resources.painterResource
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun BeepBeepToggleButton(
-    isDark : Boolean = isSystemInDarkTheme(),
     onToggle: () -> Unit,
+    isDark : Boolean = isSystemInDarkTheme(),
 ){
     val horizontalBias by animateFloatAsState(
         targetValue =  when (isDark) {

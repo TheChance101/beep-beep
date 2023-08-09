@@ -22,9 +22,9 @@ import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.dimens
 
 @Composable
 fun BeepBeepTextButton(
+    modifier: Modifier = Modifier,
     text: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
     height: Int = 56,
     icon: @Composable (() -> Unit)
 ){

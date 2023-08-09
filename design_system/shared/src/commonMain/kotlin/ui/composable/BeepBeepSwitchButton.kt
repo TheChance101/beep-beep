@@ -28,9 +28,9 @@ import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.dimens
 
 @Composable
 fun BeepBeepSwitchButton(
-    selected: Boolean,
     modifier: Modifier = Modifier,
     onUpdate: (Boolean) -> Unit,
+    selected: Boolean,
 ) {
     val targetBackgroundColor by animateColorAsState(
         targetValue = if (selected) colorScheme.primary else colorScheme.background,
