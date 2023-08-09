@@ -24,7 +24,7 @@ import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
 
 @ExperimentalMaterial3Api
 @Composable
-fun PrimaryButton(
+fun BeepBeepButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,

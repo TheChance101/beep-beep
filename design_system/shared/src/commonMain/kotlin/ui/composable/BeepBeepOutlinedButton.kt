@@ -25,7 +25,7 @@ import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OutlinedButton(
+fun BeepBeepOutlinedButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,

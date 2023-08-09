@@ -31,8 +31,8 @@ import com.beepbeep.designSystem.ui.composable.BeepBeepNavigationBar
 import com.beepbeep.designSystem.ui.composable.BeepBeepNavigationBarItem
 import com.beepbeep.designSystem.ui.composable.BeepBeepTextField
 import com.beepbeep.designSystem.ui.composable.CheckBoxButton
-import com.beepbeep.designSystem.ui.composable.OutlinedButton
-import com.beepbeep.designSystem.ui.composable.PrimaryButton
+import com.beepbeep.designSystem.ui.composable.BeepBeepOutlinedButton
+import com.beepbeep.designSystem.ui.composable.BeepBeepButton
 import com.beepbeep.designSystem.ui.composable.SwitchButton
 import com.beepbeep.designSystem.ui.composable.TextButton
 import com.beepbeep.designSystem.ui.composable.ToggleButton
@@ -140,7 +140,7 @@ fun EnabledButtonsPreview() {
     Column(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
     ) {
-        PrimaryButton(
+        BeepBeepButton(
             enabled = true,
             onClick = { },
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
@@ -148,7 +148,7 @@ fun EnabledButtonsPreview() {
             Text("Button")
         }
 
-        OutlinedButton(
+        BeepBeepOutlinedButton(
             enabled = true,
             onClick = { },
             modifier = Modifier.fillMaxWidth()
@@ -165,7 +165,7 @@ fun DisabledButtonsPreview() {
     Column(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
     ) {
-        PrimaryButton(
+        BeepBeepButton(
             enabled = false,
             onClick = { },
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
@@ -173,7 +173,7 @@ fun DisabledButtonsPreview() {
             Text("Button")
         }
 
-        OutlinedButton(
+        BeepBeepOutlinedButton(
             enabled = false,
             onClick = {},
             modifier = Modifier.fillMaxWidth()
