@@ -15,7 +15,7 @@ data class RestaurantCollection(
     val name: String,
     val description: String,
     val priceLevel: String,
-    val rate: Double,
+    val rate: Double = 0.0,
     val phone: String,
     val openingTime: String,
     val closingTime: String,

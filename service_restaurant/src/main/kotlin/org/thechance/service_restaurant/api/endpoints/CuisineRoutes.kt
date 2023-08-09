@@ -12,22 +12,20 @@ import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
-import org.thechance.service_restaurant.domain.usecase.ClientUseCase
-import org.thechance.service_restaurant.domain.usecase.AdministratorUseCase
-import org.thechance.service_restaurant.domain.usecase.ManageRestaurantUseCase
+import org.thechance.service_restaurant.domain.usecase.IDiscoverRestaurantUseCase
+import org.thechance.service_restaurant.domain.usecase.IManageCuisineUseCase
 import org.thechance.service_restaurant.utils.MissingParameterException
 import org.thechance.service_restaurant.utils.NOT_FOUND
 
 fun Route.cuisineRoutes() {
 
-    val client: ClientUseCase by inject()
-    val administrator: AdministratorUseCase by inject()
-    val manageRestaurant: ManageRestaurantUseCase by inject ()
+    val manageCuisine: IManageCuisineUseCase by inject()
+    val discoverRestaurant: IDiscoverRestaurantUseCase by inject()
 
     get("cuisines") {
         val page = call.parameters.extractInt("page") ?: 1
         val limit = call.parameters.extractInt("limit") ?: 10
-        val cuisines = manageRestaurant.getCuisines(page, limit)
+        val cuisines = manageCuisine.getCuisines(page, limit)
         call.respond(HttpStatusCode.OK, cuisines.toDto())
     }
 
@@ -35,25 +33,25 @@ fun Route.cuisineRoutes() {
 
         get("/{id}/meals") {
             val id = call.parameters.extractString("id") ?: throw NotFoundException()
-            val meals = client.getMealsInCuisines(id).toDto()
+            val meals = discoverRestaurant.getMealsByCuisine(id).toDto()
             call.respond(HttpStatusCode.OK, meals)
         }
 
         post {
             val cuisine = call.receive<CuisineDto>()
-            val isAdded = administrator.addCuisine(cuisine.toEntity())
+            val isAdded = manageCuisine.addCuisine(cuisine.toEntity())
             if (isAdded) call.respond(HttpStatusCode.Created, "Added Successfully")
         }
 
         put {
             val cuisine = call.receive<CuisineDto>()
-            val isUpdated = administrator.updateCuisine(cuisine.toEntity())
+            val isUpdated = manageCuisine.updateCuisine(cuisine.toEntity())
             if (isUpdated) call.respond(HttpStatusCode.OK, "Updated Successfully")
         }
 
         delete("/{id}") {
             val id = call.parameters.extractString("id") ?: throw MissingParameterException(NOT_FOUND)
-            val isDeleted = administrator.deleteCuisine(id)
+            val isDeleted = manageCuisine.deleteCuisine(id)
             if (isDeleted) call.respond(HttpStatusCode.OK, "Deleted Successfully")
         }
 
