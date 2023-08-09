@@ -1,6 +1,5 @@
 package com.beepbeep.designSystem.ui.composable
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -15,7 +14,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.colorScheme
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.dimens
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.shapes
