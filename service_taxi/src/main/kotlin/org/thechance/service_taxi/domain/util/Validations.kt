@@ -102,7 +102,7 @@ class Validations {
             validationErrors.add(INVALID_PRICE)
         }
         if (trip.startDate != null && trip.endDate != null) {
-            if (trip.startDate > trip.endDate) {
+            if (trip.startDate >= trip.endDate) {
                 validationErrors.add(INVALID_DATE)
             }
         }
