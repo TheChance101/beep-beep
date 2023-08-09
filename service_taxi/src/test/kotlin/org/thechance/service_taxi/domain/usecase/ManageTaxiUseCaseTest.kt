@@ -14,7 +14,7 @@ import org.thechance.service_taxi.domain.util.Validations
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ManageTaxiUseCaseTest {
-    private val administratorUseCase: IManageTaxiUseCase = ManageTaxiUseCase(
+    private val manageTaxiUseCase: IManageTaxiUseCase = ManageTaxiUseCase(
         FakeGateway,
         Validations()
     )
@@ -34,7 +34,7 @@ class ManageTaxiUseCaseTest {
         // when create a new taxi
         val result = Executable {
             runBlocking {
-                administratorUseCase.createTaxi(taxi)
+                manageTaxiUseCase.createTaxi(taxi)
             }
         }
         // then check
@@ -57,7 +57,7 @@ class ManageTaxiUseCaseTest {
         // when create a new taxi
         val result = Executable {
             runBlocking {
-                administratorUseCase.createTaxi(taxi)
+                manageTaxiUseCase.createTaxi(taxi)
             }
         }
         // then check
