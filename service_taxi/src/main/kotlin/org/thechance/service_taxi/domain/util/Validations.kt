@@ -137,7 +137,7 @@ class Validations {
         return PLATE_NUMBER_REGEX.any { it.matches(plateNumber) }
     }
 
-    private fun isValidRate(rate: Double): Boolean {
+    fun isValidRate(rate: Double): Boolean {
         return rate in 0.0..5.0
     }
     // endregion

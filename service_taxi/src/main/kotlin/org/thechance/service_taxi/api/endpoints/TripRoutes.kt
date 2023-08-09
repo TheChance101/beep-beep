@@ -62,7 +62,7 @@ fun Route.tripRoutes() {
         put("/{tripId}/rate") {
             val tripId = call.parameters["tripId"] ?: throw MissingParameterException
             val rate = call.parameters["rate"]?.toDouble() ?: throw MissingParameterException
-            manageTripsUseCase.rateTrip(tripId, rate)
+            discoverTripsUseCase.rateTrip(tripId, rate)
             call.respond(HttpStatusCode.OK, "updated")
         }
 
