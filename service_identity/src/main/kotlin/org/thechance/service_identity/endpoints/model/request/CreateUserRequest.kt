@@ -1,4 +1,4 @@
-package org.thechance.service_identity.api.model.request
+package org.thechance.service_identity.endpoints.model.request
 
 import kotlinx.serialization.Serializable
 
@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class CreateUserRequest(
     val fullName: String,
     val username: String,
-    val password: String
+    val password: String,
 )

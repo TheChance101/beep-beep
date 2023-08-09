@@ -9,7 +9,7 @@ import org.bson.types.ObjectId
 @Serializable
 @SerialName("categoryCollection")
 data class CategoryCollection(
-    val name: String? = null,
+    val name: String,
     val restaurantIds: MutableList<@Contextual ObjectId> = mutableListOf()
 ) {
     @BsonId

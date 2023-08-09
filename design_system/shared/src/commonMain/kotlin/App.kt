@@ -30,6 +30,7 @@ import com.beepbeep.designSystem.ui.composable.BeepBeepChip
 import com.beepbeep.designSystem.ui.composable.BeepBeepNavigationBar
 import com.beepbeep.designSystem.ui.composable.BeepBeepNavigationBarItem
 import com.beepbeep.designSystem.ui.composable.BeepBeepTextField
+import com.beepbeep.designSystem.ui.composable.CheckBoxButton
 import com.beepbeep.designSystem.ui.composable.OutlinedButton
 import com.beepbeep.designSystem.ui.composable.PrimaryButton
 import com.beepbeep.designSystem.ui.composable.SwitchButton

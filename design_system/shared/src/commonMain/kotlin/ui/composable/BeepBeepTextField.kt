@@ -37,7 +37,6 @@ import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.typography
 fun BeepBeepTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    textFieldModifier: Modifier = Modifier,
     label: String,
     text: String,
     keyboardType: KeyboardType = KeyboardType.Text,
@@ -49,7 +48,7 @@ fun BeepBeepTextField(
     var showPassword by remember { mutableStateOf(false) }
 
     Column(
-        modifier = modifier.fillMaxWidth().padding(dimens.space16),
+        modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.Start
     ) {
         Text(
@@ -60,11 +59,11 @@ fun BeepBeepTextField(
         )
 
         OutlinedTextField(
-            modifier = textFieldModifier.fillMaxWidth().height(56.dp),
+            modifier = Modifier.fillMaxWidth().height(56.dp),
             value = text,
             onValueChange = onValueChange,
             shape = shapeRadius,
-            textStyle = typography.bodyLarge,
+            textStyle = typography.bodyLarge.copy(colorScheme.onPrimary),
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
             trailingIcon = {
@@ -100,7 +99,7 @@ private fun ContainerColor(isError: Boolean, correctValidation: Boolean): Color 
     return if (isError) {
         colorScheme.secondary
     } else if (correctValidation) {
-        colorScheme.onSurface.copy(alpha = 0.1f)
+        colorScheme.inversePrimary
     } else {
         colorScheme.surface
     }

@@ -13,12 +13,22 @@ data class UserCollection(
     @Contextual
     val id: ObjectId = ObjectId(),
     @SerialName("full_name")
-    val fullName: String?,
+    val fullName: String,
     @SerialName("user_name")
-    val username: String?,
+    val username: String,
     @SerialName("password")
-    val password: String?,
+    val password: String,
     @SerialName("is_deleted")
     val isDeleted: Boolean = false,
+)
+
+@Serializable
+data class UpdateUserCollection(
+    @SerialName("full_name")
+    val fullName: String? = null,
+    @SerialName("user_name")
+    val username: String? = null,
+    @SerialName("password")
+    val password: String? = null,
 )
 

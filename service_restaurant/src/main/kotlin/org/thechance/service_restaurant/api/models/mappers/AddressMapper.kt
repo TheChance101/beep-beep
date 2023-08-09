@@ -1,14 +1,18 @@
 package org.thechance.service_restaurant.api.models.mappers
 
 import org.thechance.service_restaurant.api.models.AddressDto
-import org.thechance.service_restaurant.entity.Address
+import org.thechance.service_restaurant.domain.entity.Address
 
 fun Address.toDto(): AddressDto {
     return AddressDto(
-        id = id,
-        lat = lat,
-        lon = lon,
+        latitude = latitude,
+        longitude = longitude,
     )
 }
 
-fun List<Address>.toDto(): List<AddressDto> = map { it.toDto() }
+fun AddressDto?.toEntity() = Address(
+    latitude = this?.latitude ?: -1.0,
+    longitude = this?.longitude ?: -1.0,
+)
+
+

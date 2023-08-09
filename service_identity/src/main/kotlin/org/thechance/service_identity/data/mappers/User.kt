@@ -1,13 +1,16 @@
 package org.thechance.service_identity.data.mappers
 
 import org.bson.types.ObjectId
-import org.thechance.service_identity.api.model.DetailedUserDto
-import org.thechance.service_identity.api.model.UserDto
-import org.thechance.service_identity.api.model.request.CreateUserRequest
-import org.thechance.service_identity.api.model.request.UpdateUserRequest
+import org.thechance.service_identity.data.collection.UpdateUserCollection
 import org.thechance.service_identity.data.collection.UserCollection
 import org.thechance.service_identity.data.collection.UserDetailsCollection
+import org.thechance.service_identity.data.collection.WalletCollection
 import org.thechance.service_identity.domain.entity.User
+import org.thechance.service_identity.endpoints.model.DetailedUserDto
+import org.thechance.service_identity.endpoints.model.UserDto
+import org.thechance.service_identity.endpoints.model.WalletDto
+import org.thechance.service_identity.endpoints.model.request.CreateUserRequest
+import org.thechance.service_identity.endpoints.model.request.UpdateUserRequest
 
 fun UserCollection.toEntity(): User {
     return User(
@@ -15,7 +18,19 @@ fun UserCollection.toEntity(): User {
         fullName = fullName,
         username = username,
         password = password,
-        isDeleted = isDeleted
+        email = "",
+    )
+}
+
+fun List<UserCollection>.tEntity(): List<User> {
+    return this.map { it.toEntity() }
+}
+
+fun User.toUpdateCollection(): UpdateUserCollection {
+    return UpdateUserCollection(
+        fullName = fullName.ifBlank { null },
+        username = username.ifBlank { null },
+        password = password.ifBlank { null },
     )
 }
 
@@ -25,6 +40,7 @@ fun UserDto.toEntity(): User {
         fullName = fullName,
         username = username,
         password = password,
+        email = "",
     )
 }
 
@@ -34,28 +50,34 @@ fun User.toDto(): UserDto {
         fullName = fullName,
         username = username,
         password = password,
+        email = "",
+        walletBalance = walletBalance,
+        addresses = addresses.toDto(),
+        permissions = permissions.toDto()
     )
 }
 
-fun User.toDetailedDto(): DetailedUserDto {
+fun List<User>.toDto(): List<UserDto> {
+    return map { it.toDto() }
+}
+
+fun User.toDetailedDto(walletDto: WalletDto): DetailedUserDto {
     return DetailedUserDto(
         id = id,
         fullName = fullName,
         username = username,
         password = password,
-        email = email,
-        walletId = walletId,
-        addresses = addresses,
-        permissions = permissions
+        wallet = walletDto,
+        addresses = addresses.toDto(),
+        permissions = permissions.toDto()
     )
 }
 
 fun User.toCollection(): UserCollection {
     return UserCollection(
-        fullName = this.fullName,
-        username = this.username,
-        password = this.password,
-        isDeleted = this.isDeleted,
+        fullName = fullName,
+        username = username,
+        password = password,
     )
 }
 
@@ -63,25 +85,28 @@ fun User.toDetailsCollection(userId: String): UserDetailsCollection {
     return UserDetailsCollection(
         userId = ObjectId(userId),
         email = email,
-        walletId = walletId,
-        addresses = addresses.map { ObjectId(it) },
-        permissions = permissions.map { ObjectId(it) }
+        walletCollection = WalletCollection(userId = userId, walletBalance = walletBalance),
+        addresses = addresses.map { ObjectId(it.id) },
+        permissions = permissions.map { it.id }
     )
 }
 
 fun CreateUserRequest.toEntity(): User {
     return User(
+        id = "",
         fullName = fullName,
         username = username,
-        password = password
+        password = password,
+        email = "",
     )
 }
 
 fun UpdateUserRequest.toEntity(): User {
     return User(
-        fullName = fullName,
-        username = username,
-        password = password,
-        email = email
+        id = "",
+        fullName = fullName ?: "",
+        username = username ?: "",
+        password = password ?: "",
+        email = ""
     )
 }
