@@ -10,8 +10,8 @@ import org.thechance.service_notification.data.mappers.toCollection
 import org.thechance.service_notification.data.mappers.toNotificationEntity
 import org.thechance.service_notification.data.utils.isSuccessfullyUpdated
 import org.thechance.service_notification.data.utils.paginate
-import org.thechance.service_notification.domain.gateway.IDatabaseGateway
 import org.thechance.service_notification.domain.NotFoundException
+import org.thechance.service_notification.domain.gateway.IDatabaseGateway
 import org.thechance.service_notification.domain.model.Notification
 import org.thechance.service_notification.domain.model.NotificationRequest
 import org.thechance.service_notification.domain.model.User
@@ -21,9 +21,9 @@ class DatabaseGateway(
     private val databaseContainer: DatabaseContainer
 ) : IDatabaseGateway {
 
-    val userCollection by lazy { databaseContainer.userCollection }
+    private val userCollection by lazy { databaseContainer.userCollection }
 
-    val historyCollection by lazy { databaseContainer.historyCollection }
+    private val historyCollection by lazy { databaseContainer.historyCollection }
 
     override suspend fun createUser(user: User): Boolean {
         return userCollection.insertOne(user.toCollection()).wasAcknowledged()
