@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RestaurantDto(
     val id: String? = null,
+    val ownerId: String,
     val name: String? = null,
     val description: String? = null,
     val priceLevel: String? = null,
@@ -12,17 +13,7 @@ data class RestaurantDto(
     val phone: String? = null,
     val openingTime: String? = null,
     val closingTime: String? = null,
+    val address: AddressDto? = null
 )
 
-@Serializable
-data class RestaurantDetailsDto(
-    val id: String? = null,
-    val name: String? = null,
-    val description: String? = null,
-    val priceLevel: String? = null,
-    val rate: Double? = null,
-    val phone: String? = null,
-    val openingTime: String? = null,
-    val closingTime: String? = null,
-    val addresses: List<AddressDto>? = null,
-)
+

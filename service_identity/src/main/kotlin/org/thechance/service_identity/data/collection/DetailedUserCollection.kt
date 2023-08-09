@@ -13,11 +13,11 @@ data class DetailedUserCollection(
     @Contextual
     val id: ObjectId,
     @SerialName("full_name")
-    val fullName: String?,
+    val fullName: String,
     @SerialName("user_name")
-    val username: String?,
+    val username: String,
     @SerialName("password")
-    val password: String?,
+    val password: String,
     @SerialName("isDeleted")
     val isDeleted: Boolean = false,
     @SerialName("details")

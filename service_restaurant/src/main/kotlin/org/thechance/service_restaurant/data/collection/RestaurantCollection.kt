@@ -10,13 +10,16 @@ import org.litote.kmongo.Id
 
 @Serializable
 data class RestaurantCollection(
-    val name: String? = null,
-    val description: String? = null,
-    val priceLevel: String? = null,
-    val rate: Double? = null,
-    val phone: String? = null,
-    val openingTime: String? = null,
-    val closingTime: String? = null,
+    @Contextual
+    val ownerId: ObjectId,
+    val name: String,
+    val description: String,
+    val priceLevel: String,
+    val rate: Double,
+    val phone: String,
+    val openingTime: String,
+    val closingTime: String,
+    val address: AddressCollection
 ) {
     @BsonId
     @Contextual
@@ -24,6 +27,6 @@ data class RestaurantCollection(
     val id: ObjectId = ObjectId()
     val isDeleted: Boolean = false
     val categoryIds: MutableList<@Contextual ObjectId> = mutableListOf()
-    val addressIds: List<@Contextual Id<AddressCollection>> = emptyList()
     val cuisineIds: MutableList<@Contextual ObjectId> = mutableListOf()
+    val mealIds: MutableList<@Contextual ObjectId> = mutableListOf()
 }
