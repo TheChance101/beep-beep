@@ -17,39 +17,39 @@ fun Typography(): Typography {
         headlineLarge = TextStyle(
             fontSize = dimens.fontSize24,
             lineHeight = dimens.lineHeight32,
-            fontFamily = FontFamily(fontResources("roboto_medium.ttf", "roboto_medium")),
+            fontFamily = FontFamily(fontResources( "roboto_medium")),
             fontWeight = FontWeight.W600,
         ),
         headlineMedium = TextStyle(
             fontSize = dimens.fontSize20,
-            fontFamily = FontFamily(fontResources("roboto_medium.ttf", "roboto_medium")),
+            fontFamily = FontFamily(fontResources( "roboto_medium")),
             fontWeight = FontWeight.W600,
         ),
         titleLarge = TextStyle(
-            fontFamily = FontFamily(fontResources("roboto_medium.ttf", "roboto_medium")),
+            fontFamily = FontFamily(fontResources( "roboto_medium")),
             fontSize = dimens.fontSize16,
             lineHeight = dimens.lineHeight20,
             fontWeight = FontWeight.W600,
         ),
         titleMedium = TextStyle(
             fontSize = dimens.fontSize14,
-            fontFamily = FontFamily(fontResources("roboto_medium.ttf", "roboto_medium")),
+            fontFamily = FontFamily(fontResources("roboto_medium")),
             fontWeight = FontWeight.W600,
         ),
         bodyLarge = TextStyle(
-            fontFamily = FontFamily(fontResources("roboto_regular.ttf", "roboto_medium")),
+            fontFamily = FontFamily(fontResources("roboto_medium")),
             fontWeight = FontWeight.W400,
             fontSize = dimens.fontSize16,
         ),
         bodyMedium = TextStyle(
             fontSize = dimens.fontSize14,
             lineHeight = dimens.lineHeight19,
-            fontFamily = FontFamily(fontResources("roboto_regular.ttf", "roboto_regular")),
+            fontFamily = FontFamily(fontResources("roboto_regular")),
             fontWeight = FontWeight.W400,
         ),
         labelMedium = TextStyle(
             fontSize = dimens.fontSize12,
-            fontFamily = FontFamily(fontResources("roboto_regular.ttf", "roboto_regular")),
+            fontFamily = FontFamily(fontResources( "roboto_regular")),
             fontWeight = FontWeight.W400,
         ),
         )
