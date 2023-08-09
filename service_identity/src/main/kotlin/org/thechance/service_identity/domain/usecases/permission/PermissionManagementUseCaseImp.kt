@@ -24,7 +24,7 @@ class PermissionManagementUseCaseImp(
         return dataBaseGateway.updatePermission(permissionId, permission)
     }
 
-    override suspend fun getListOfPermission(permissionId: Int): List<Permission> {
-        return dataBaseGateway.getListOfPermission(permissionId)
+    override suspend fun getListOfPermission(): List<Permission> {
+        return dataBaseGateway.getListOfPermission()
     }
 }

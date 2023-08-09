@@ -9,13 +9,9 @@ import org.bson.types.ObjectId
 data class UserDetailsCollection(
     @Contextual
     @SerialName("user_id")
-    val userId: ObjectId,
-    @SerialName("email")
-    val email: String,
+    val userId: ObjectId? = null,
     @SerialName("wallet")
-    val walletCollection: WalletCollection,
+    val walletCollection: WalletCollection? = null,
     @SerialName("addresses")
-    val addresses: List<@Contextual ObjectId> = emptyList(),
-    @SerialName("permissions")
-    val permissions: List<Int> = emptyList()
+    val addresses: List<@Contextual ObjectId> = emptyList()
 )

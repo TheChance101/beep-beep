@@ -21,4 +21,9 @@ data class AddressCollection(
     val isDeleted: Boolean = false
 )
 
+@Serializable
+data class UpdateAddressCollection(
+    @SerialName("location")
+    val location: UpdateLocationCollection
+)
 

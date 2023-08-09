@@ -1,37 +1,40 @@
 package org.thechance.service_identity.endpoints.validation
 
 import io.ktor.server.plugins.requestvalidation.*
+import org.thechance.service_identity.data.collection.CreateUserRequest
+import org.thechance.service_identity.data.collection.UpdateUserRequest
 import org.thechance.service_identity.domain.usecases.validation.IAddressValidationUseCase
 import org.thechance.service_identity.domain.usecases.validation.IUserValidationUseCase
-import org.thechance.service_identity.endpoints.model.AddressDto
-import org.thechance.service_identity.endpoints.model.request.CreateUserRequest
-import org.thechance.service_identity.endpoints.model.request.UpdateUserRequest
+import org.thechance.service_identity.endpoints.model.CreateAddressRequest
+import org.thechance.service_identity.endpoints.model.UpdateAddressRequest
 
 fun RequestValidationConfig.addressValidation(addressValidation: IAddressValidationUseCase) {
 
-    validate<AddressDto> { addressDto ->
+    validate<CreateAddressRequest> { addressDto ->
         val reasons = mutableListOf<String>()
-
-        if (!addressValidation.validateUserIdNotEmpty(addressDto.userId)) {
-            reasons.add(INVALID_USER_ID)
-        }
-
-        if (!addressValidation.validateUserIdHexLength(addressDto.userId)) {
-            reasons.add(INVALID_HEX_STRING_LENGTH)
-        }
 
         if (!addressValidation.validateLocation(addressDto.location.latitude, addressDto.location.longitude)) {
             reasons.add(INVALID_ADDRESS_LOCATION)
         }
 
-        if (reasons.isNotEmpty()) {
-            ValidationResult.Invalid(reasons)
-        } else {
-            ValidationResult.Valid
-        }
+        responseWithResult(reasons)
     }
 }
 
+fun RequestValidationConfig.updateAddressValidation(addressValidation: IAddressValidationUseCase) {
+
+    validate<UpdateAddressRequest> { addressDto ->
+        val reasons = mutableListOf<String>()
+
+        if (addressDto.location?.longitude != null && addressDto.location.latitude != null) {
+            if (!addressValidation.validateLocation(addressDto.location.latitude, addressDto.location.longitude)) {
+                reasons.add(INVALID_ADDRESS_LOCATION)
+            }
+        }
+
+        responseWithResult(reasons)
+    }
+}
 
 fun RequestValidationConfig.createUserValidation(userValidation: IUserValidationUseCase) {
     validate<CreateUserRequest> { user ->
@@ -58,11 +61,11 @@ fun RequestValidationConfig.createUserValidation(userValidation: IUserValidation
             reasons.add(PASSWORD_CANNOT_BE_LESS_THAN_8_CHARACTERS)
         }
 
-        if (reasons.isNotEmpty()) {
-            ValidationResult.Invalid(reasons)
-        } else {
-            ValidationResult.Valid
+        if (!userValidation.validateEmail(user.email)) {
+            reasons.add(INVALID_EMAIL)
         }
+
+        responseWithResult(reasons)
 
     }
 }
@@ -102,12 +105,20 @@ fun RequestValidationConfig.updateUserValidation(userValidation: IUserValidation
             }
         }
 
-
-        if (reasons.isNotEmpty()) {
-            ValidationResult.Invalid(reasons)
-        } else {
-            ValidationResult.Valid
+        user.email?.let {
+            if (!userValidation.validateEmail(it)) {
+                reasons.add(INVALID_EMAIL)
+            }
         }
 
+
+        responseWithResult(reasons)
+
     }
+}
+
+private fun responseWithResult(reasons: MutableList<String>) = if (reasons.isNotEmpty()) {
+    ValidationResult.Invalid(reasons)
+} else {
+    ValidationResult.Valid
 }

@@ -16,7 +16,7 @@ fun DetailedUserCollection.toEntity(
         fullName = fullName,
         username = username,
         password = password,
-        email = details.first().email,
+        email = email,
         walletBalance = walletBalance,
         addresses = addresses,
         permissions = permissions
@@ -41,7 +41,7 @@ fun DetailedUserDto.toEntity(
         fullName = fullName,
         username = username,
         password = password,
-        email = "",
+        email = email,
         walletBalance = walletBalance,
         addresses = addresses,
         permissions = permissions

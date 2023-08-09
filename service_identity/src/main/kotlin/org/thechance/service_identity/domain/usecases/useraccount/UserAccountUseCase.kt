@@ -1,16 +1,14 @@
 package org.thechance.service_identity.domain.usecases.useraccount
 
-import org.thechance.service_identity.domain.entity.User
-
 import org.thechance.service_identity.domain.entity.Address
-
-import org.thechance.service_identity.domain.entity.Wallet
+import org.thechance.service_identity.domain.entity.ManagedUser
+import org.thechance.service_identity.domain.entity.User
 
 interface UserAccountUseCase {
 
 
     // region address
-    suspend fun addAddress(address: Address): Boolean
+    suspend fun addAddress(userId: String, address: Address): Boolean
 
     suspend fun deleteAddress(id: String): Boolean
 
@@ -27,7 +25,7 @@ interface UserAccountUseCase {
     suspend fun createUser(user: User): Boolean
     suspend fun deleteUser(id: String): Boolean
     suspend fun updateUser(id: String, user: User): Boolean
-    suspend fun getUsers(): List<User>
+    suspend fun getUsers(): List<ManagedUser>
     suspend fun getUser(id: String): User
 
     // endregion

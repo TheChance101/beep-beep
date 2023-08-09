@@ -48,10 +48,10 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
 
     //region Address
 
-    override suspend fun addAddress(address: Address): Boolean {
-        val newAddressCollection = address.toCollection()
+    override suspend fun addAddress(userId: String, address: Address): Boolean {
+        val newAddressCollection = address.toCollection(userId)
         userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::userId eq newAddressCollection.userId,
+            filter = UserDetailsCollection::userId eq ObjectId(userId),
             update = push(UserDetailsCollection::addresses, newAddressCollection.id)
         )
         return addressCollection.insertOne(newAddressCollection).wasAcknowledged()
@@ -69,7 +69,7 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
     }
 
     override suspend fun updateAddress(id: String, address: Address): Boolean {
-        return addressCollection.updateOneById(ObjectId(id), address.toCollection()).isUpdatedSuccessfully()
+        return addressCollection.updateOneById(ObjectId(id), address.toUpdateRequest()).isUpdatedSuccessfully()
     }
 
     override suspend fun getAddress(id: String): Address {
@@ -95,22 +95,22 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
     }
 
     override suspend fun addPermission(permission: Permission): Boolean {
-        return permissionCollection.insertOne(permission.toCollection()).wasAcknowledged()
+        val maximumId = permissionCollection.find().toList().size
+        return permissionCollection.insertOne(permission.toCollection(maximumId + 1)).wasAcknowledged()
     }
 
     override suspend fun deletePermission(permissionId: Int): Boolean {
         return permissionCollection.updateOne(
             filter = Filters.and(
-                PermissionCollection::id eq permissionId,
+                PermissionCollection::_id eq permissionId,
                 PermissionCollection::isDeleted eq false
             ),
             update = setValue(PermissionCollection::isDeleted, true)
         ).isUpdatedSuccessfully()
     }
 
-    override suspend fun getListOfPermission(permissionId: Int): List<Permission> {
+    override suspend fun getListOfPermission(): List<Permission> {
         return permissionCollection.find(
-            PermissionCollection::id eq permissionId,
             PermissionCollection::isDeleted eq false
         ).toList().toEntity()
     }
@@ -119,7 +119,8 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
     override suspend fun updatePermission(permissionId: Int, permission: Permission): Boolean {
         return permissionCollection.updateOneById(
             id = permissionId,
-            update = permission.toCollection(),
+            update = permission.toUpdateRequest(),
+            updateOnlyNotNullProperties = true
         ).wasAcknowledged()
     }
     //endregion
@@ -148,7 +149,10 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
         val userPermission = getUserPermissions(id)
 
         return userCollection.aggregate<DetailedUserCollection>(
-            match(UserCollection::id eq ObjectId(id)),
+            match(
+                UserCollection::id eq ObjectId(id),
+                UserCollection::isDeleted eq false
+            ),
             lookup(
                 localField = USER_COLLECTION_LOCAL_PRIMARY_FIELD,
                 from = USER_DETAILS_COLLECTION,
@@ -159,14 +163,18 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
             ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
-
-    // todo: add another mapper
-    override suspend fun getUsers(fullName: String, username: String): List<User> {
+    override suspend fun getUsers(fullName: String, username: String): List<ManagedUser> {
         return userCollection.find(
-            UserCollection::isDeleted eq false,
             UserCollection::fullName regex fullName,
-            UserCollection::username regex username
-        ).toList().tEntity()
+            UserCollection::username regex username,
+            UserCollection::isDeleted eq false
+        ).projection(
+            UserCollection::id,
+            UserCollection::fullName,
+            UserCollection::username,
+            UserCollection::email,
+            UserCollection::permissions,
+        ).toList().toManagedEntity()
     }
 
     override suspend fun createUser(user: User): Boolean {
@@ -182,14 +190,9 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
     }
 
     override suspend fun updateUser(id: String, user: User): Boolean {
-        userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::userId eq ObjectId(id),
-            target = user.toDetailsCollection(id),
-            updateOnlyNotNullProperties = true
-        )
         return userCollection.updateOneById(
             ObjectId(id),
-            user.toUpdateCollection(),
+            user.toUpdateRequest(),
             updateOnlyNotNullProperties = true
         ).isUpdatedSuccessfully()
     }
@@ -234,29 +237,25 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
     // region: user permission management
 
     override suspend fun addPermissionToUser(userId: String, permissionId: Int): Boolean {
-        return userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::userId eq ObjectId(userId),
-            update = push(UserDetailsCollection::permissions, permissionId)
+        val permission = permissionCollection.findOne(PermissionCollection::_id eq permissionId)
+            ?: throw ResourceNotFoundException(NOT_FOUND)
+
+        return userCollection.updateOne(
+            filter = UserCollection::id eq ObjectId(userId),
+            update = push(UserCollection::permissions, permission)
         ).isUpdatedSuccessfully()
     }
 
     override suspend fun removePermissionFromUser(userId: String, permissionId: Int): Boolean {
-        return userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::userId eq ObjectId(userId),
-            update = pull(UserDetailsCollection::permissions, permissionId)
+        return userCollection.updateOne(
+            filter = UserCollection::id eq ObjectId(userId),
+            update = pullByFilter(UserCollection::permissions, PermissionCollection::_id eq permissionId)
         ).isUpdatedSuccessfully()
     }
 
     override suspend fun getUserPermissions(userId: String): List<Permission> {
-        return userDetailsCollection.aggregate<UserPermissionsCollection>(
-            match(UserDetailsCollection::userId eq ObjectId(userId)),
-            lookup(
-                localField = UserDetailsCollection::permissions.name,
-                from = PERMISSION_COLLECTION,
-                foreignField = USER_PERMISSION_FOREIGN_FIELD,
-                newAs = UserPermissionsCollection::userPermissions.name
-            )
-        ).first()?.userPermissions?.toEntity() ?: emptyList()
+        return userCollection.findOneById(ObjectId(userId))?.permissions?.toEntity()
+            ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
     // endregion: user permission management

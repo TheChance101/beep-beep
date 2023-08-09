@@ -2,6 +2,7 @@ package org.thechance.service_identity.domain.usecases.useraccount
 
 import org.koin.core.annotation.Single
 import org.thechance.service_identity.domain.entity.Address
+import org.thechance.service_identity.domain.entity.ManagedUser
 import org.thechance.service_identity.domain.entity.User
 import org.thechance.service_identity.domain.gateway.DataBaseGateway
 
@@ -23,7 +24,7 @@ class UserAccountUseCaseImp(
         return dataBaseGateway.updateUser(id, user)
     }
 
-    override suspend fun getUsers(): List<User> {
+    override suspend fun getUsers(): List<ManagedUser> {
         return dataBaseGateway.getUsers()
     }
 
@@ -34,8 +35,8 @@ class UserAccountUseCaseImp(
     // endregion
 
     // region address
-    override suspend fun addAddress(address: Address): Boolean {
-        return dataBaseGateway.addAddress(address)
+    override suspend fun addAddress(userId: String, address: Address): Boolean {
+        return dataBaseGateway.addAddress(userId, address)
     }
 
     override suspend fun deleteAddress(id: String): Boolean {

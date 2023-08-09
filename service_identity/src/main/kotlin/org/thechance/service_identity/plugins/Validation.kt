@@ -7,6 +7,7 @@ import org.thechance.service_identity.domain.usecases.validation.IAddressValidat
 import org.thechance.service_identity.domain.usecases.validation.IUserValidationUseCase
 import org.thechance.service_identity.endpoints.validation.addressValidation
 import org.thechance.service_identity.endpoints.validation.createUserValidation
+import org.thechance.service_identity.endpoints.validation.updateAddressValidation
 import org.thechance.service_identity.endpoints.validation.updateUserValidation
 
 fun Application.configureValidation() {
@@ -18,5 +19,6 @@ fun Application.configureValidation() {
         addressValidation(addressValidation)
         createUserValidation(userValidation)
         updateUserValidation(userValidation)
+        updateAddressValidation(addressValidation)
     }
 }

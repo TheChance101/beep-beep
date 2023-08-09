@@ -1,9 +1,6 @@
 package org.thechance.service_identity.domain.gateway
 
-import org.thechance.service_identity.domain.entity.Address
-import org.thechance.service_identity.domain.entity.Permission
-import org.thechance.service_identity.domain.entity.User
-import org.thechance.service_identity.domain.entity.Wallet
+import org.thechance.service_identity.domain.entity.*
 
 interface DataBaseGateway {
     // region: Permission
@@ -11,7 +8,7 @@ interface DataBaseGateway {
     suspend fun addPermission(permission: Permission): Boolean
     suspend fun updatePermission(permissionId: Int, permission: Permission): Boolean
     suspend fun deletePermission(permissionId: Int): Boolean
-    suspend fun getListOfPermission(permissionId: Int): List<Permission>
+    suspend fun getListOfPermission(): List<Permission>
 
     // endregion: Permission
 
@@ -24,7 +21,7 @@ interface DataBaseGateway {
 
     //region address
 
-    suspend fun addAddress(address: Address): Boolean
+    suspend fun addAddress(userId: String, address: Address): Boolean
 
     suspend fun deleteAddress(id: String): Boolean
 
@@ -39,7 +36,7 @@ interface DataBaseGateway {
     // region: user
     suspend fun getUserById(id: String): User
 
-    suspend fun getUsers(fullName: String = "", username: String = ""): List<User>
+    suspend fun getUsers(fullName: String = "", username: String = ""): List<ManagedUser>
 
     suspend fun createUser(user: User): Boolean
 

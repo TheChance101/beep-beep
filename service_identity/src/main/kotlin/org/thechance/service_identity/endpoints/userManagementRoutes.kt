@@ -1,6 +1,7 @@
 package org.thechance.service_identity.endpoints
 
 import io.ktor.server.application.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
@@ -16,14 +17,14 @@ fun Route.userManagementRoutes() {
     route("/dashboard/user") {
 
         get("/{id}") {
-            val id = call.parameters["id"] ?: ""
+            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             userManagement.getUserById(id)
         }
 
         get {
             val fullName = call.parameters["full_name"] ?: ""
             val username = call.parameters["username"] ?: ""
-            val users = userManagement.getUsersList(fullName, username)
+            val users = userManagement.getUsers(fullName, username)
             call.respond(users.toDto())
         }
 
@@ -35,7 +36,7 @@ fun Route.userManagementRoutes() {
 
         post("/{id}/permission") {
             val id = call.parameters["id"] ?: ""
-            val permissionId = call.parameters["permission_id"]?.toInt()
+            val permissionId = call.receiveParameters()["permission_id"]?.toInt()
                 ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val result = userManagement.addPermissionToUser(id, permissionId)
             call.respond(result)

@@ -1,5 +1,6 @@
 package org.thechance.service_identity.domain.usecases.user_management
 
+import org.thechance.service_identity.domain.entity.ManagedUser
 import org.thechance.service_identity.domain.entity.Permission
 import org.thechance.service_identity.domain.entity.User
 
@@ -13,6 +14,6 @@ interface UserManagementUseCase {
 
     suspend fun getUserById(id: String): User
 
-    suspend fun getUsersList(fullName: String, username: String): List<User>
+    suspend fun getUsers(fullName: String, username: String): List<ManagedUser>
 
 }

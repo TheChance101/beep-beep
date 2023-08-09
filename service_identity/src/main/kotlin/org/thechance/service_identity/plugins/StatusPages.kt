@@ -7,6 +7,7 @@ import io.ktor.server.plugins.requestvalidation.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
 import org.thechance.service_identity.domain.entity.MissingParameterException
+import org.thechance.service_identity.domain.entity.ResourceNotFoundException
 import org.thechance.service_identity.domain.entity.UserAlreadyExistsException
 
 fun Application.configureStatusPages() {
@@ -39,5 +40,9 @@ private fun StatusPagesConfig.handleStatusPagesExceptions() {
             HttpStatusCode.InternalServerError,
             listOf(cause.message?.toInt())
         )
+    }
+
+    exception<ResourceNotFoundException> { call, cause ->
+        call.respond(HttpStatusCode.NotFound, listOf(cause.message?.toInt()))
     }
 }
