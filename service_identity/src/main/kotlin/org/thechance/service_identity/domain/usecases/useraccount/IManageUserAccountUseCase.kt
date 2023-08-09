@@ -2,7 +2,6 @@ package org.thechance.service_identity.domain.usecases.useraccount
 
 import org.koin.core.annotation.Single
 import org.thechance.service_identity.domain.entity.InsufficientFundsException
-import org.thechance.service_identity.domain.entity.ManagedUser
 import org.thechance.service_identity.domain.entity.User
 import org.thechance.service_identity.domain.gateway.DataBaseGateway
 import org.thechance.service_identity.domain.usecases.util.INSUFFICIENT_FUNDS
@@ -16,8 +15,6 @@ interface IManageUserAccountUseCase {
     suspend fun deleteUser(id: String): Boolean
 
     suspend fun updateUser(id: String, user: User): Boolean
-
-    suspend fun getUsers(): List<ManagedUser>
 
     suspend fun getUser(id: String): User
 
@@ -46,10 +43,6 @@ class ManageUserAccountUseCase(
     override suspend fun updateUser(id: String, user: User): Boolean {
         validateUserInfo.validateUpdateUserInformation(user)
         return dataBaseGateway.updateUser(id, user)
-    }
-
-    override suspend fun getUsers(): List<ManagedUser> {
-        return dataBaseGateway.getUsers()
     }
 
     override suspend fun getUser(id: String): User {
