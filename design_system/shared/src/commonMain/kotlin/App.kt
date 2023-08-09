@@ -25,11 +25,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.beepbeep.designSystem.ui.composable.BeepBeepCheckBox
 import com.beepbeep.designSystem.ui.composable.BeepBeepChip
 import com.beepbeep.designSystem.ui.composable.BeepBeepNavigationBar
 import com.beepbeep.designSystem.ui.composable.BeepBeepNavigationBarItem
 import com.beepbeep.designSystem.ui.composable.BeepBeepTextField
-import com.beepbeep.designSystem.ui.composable.CheckBoxButton
 import com.beepbeep.designSystem.ui.composable.OutlinedButton
 import com.beepbeep.designSystem.ui.composable.PrimaryButton
 import com.beepbeep.designSystem.ui.composable.SwitchButton
@@ -217,7 +217,7 @@ fun TogglePreview() {
 @Composable
 fun CheckBoxButtonPrev() {
     var isChecked by remember { mutableStateOf(false) }
-    CheckBoxButton(
+    BeepBeepCheckBox(
         text = "CheckBox",
         isChecked = isChecked,
         onCheck = {
