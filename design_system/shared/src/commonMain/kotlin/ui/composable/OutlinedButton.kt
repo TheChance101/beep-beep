@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -56,7 +55,7 @@ fun OutlinedButton(
         contentColor = buttonContentColor,
         border = BorderStroke(border.width, buttonBorderColor)
     ) {
-        ProvideTextStyle(value = MaterialTheme.typography.labelLarge.copy(color = buttonContentColor)) { // todo waiting aya to complete typography
+        ProvideTextStyle(value = BeepBeepTheme.typography.titleLarge.copy(color = buttonContentColor)) {
             Row(
                 Modifier
                     .defaultMinSize(
