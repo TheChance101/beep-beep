@@ -9,7 +9,7 @@ import org.thechance.service_taxi.domain.gateway.DataBaseGateway
 
 
 object FakeGateway : DataBaseGateway {
-    private val taxes = mutableListOf(
+    var taxes = mutableListOf(
         Taxi(
             id = "64d111a60f294c4b8f718973",
             plateNumber = "1234 ABC",
@@ -20,7 +20,7 @@ object FakeGateway : DataBaseGateway {
             seats = 4
         )
     )
-    private val trips = mutableListOf(
+    var trips = mutableListOf(
         Trip(
             id = "64d111a60f294c4b8f718973",
             taxiId = null,
@@ -116,5 +116,30 @@ object FakeGateway : DataBaseGateway {
             )
         )
         return true
+    }
+
+    fun reset(){
+        taxes = mutableListOf(
+            Taxi(
+                id = "64d111a60f294c4b8f718973",
+                plateNumber = "1234 ABC",
+                color = "Blue",
+                type = "Sedan",
+                driverId = "123456789123456789123471",
+                isAvailable = true,
+                seats = 4
+            )
+        )
+        trips = mutableListOf(
+            Trip(
+                id = "64d111a60f294c4b8f718973",
+                taxiId = null,
+                driverId = null,
+                clientId = "123456789123456789123471",
+                startPoint = Location(30.0, 150.0),
+                destination = Location(50.0, 170.0),
+                price = 100.0,
+            )
+        )
     }
 }

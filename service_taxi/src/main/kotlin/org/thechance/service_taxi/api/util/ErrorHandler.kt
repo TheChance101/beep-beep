@@ -3,6 +3,8 @@ package org.thechance.service_taxi.api.util
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.plugins.statuspages.StatusPagesConfig
 import io.ktor.server.response.respond
+import org.thechance.service_taxi.domain.util.ALREADY_EXIST
+import org.thechance.service_taxi.domain.util.AlreadyExistException
 import org.thechance.service_taxi.domain.util.CantBeNullException
 import org.thechance.service_taxi.domain.util.INVALID_REQUEST_PARAMETER
 import org.thechance.service_taxi.domain.util.MissingParameterException
@@ -16,6 +18,9 @@ fun StatusPagesConfig.configureStatusPages() {
         call.respond(HttpStatusCode.BadRequest, INVALID_REQUEST_PARAMETER)
     }
 
+    exception<AlreadyExistException> { call, _ ->
+        call.respond(HttpStatusCode.NotFound, ALREADY_EXIST)
+    }
     exception<ResourceNotFoundException> { call, _ ->
         call.respond(HttpStatusCode.NotFound, NOT_FOUND)
     }

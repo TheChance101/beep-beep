@@ -4,6 +4,8 @@ import org.koin.core.annotation.Single
 import org.thechance.service_taxi.domain.entity.Taxi
 import org.thechance.service_taxi.domain.entity.TaxiUpdateRequest
 import org.thechance.service_taxi.domain.gateway.DataBaseGateway
+import org.thechance.service_taxi.domain.util.AlreadyExistException
+import org.thechance.service_taxi.domain.util.InvalidIdException
 import org.thechance.service_taxi.domain.util.ResourceNotFoundException
 import org.thechance.service_taxi.domain.util.Validations
 
@@ -22,15 +24,18 @@ class ManageTaxiUseCase(
 ) : IManageTaxiUseCase {
     override suspend fun createTaxi(taxi: Taxi): Boolean {
         validations.validationTaxi(taxi)
+        dataBaseGateway.getTaxiById(taxi.id)?.let { throw AlreadyExistException }
         return dataBaseGateway.addTaxi(taxi)
     }
 
     override suspend fun deleteTaxi(taxiId: String): Boolean {
+        if (!validations.isValidId(taxiId)) throw InvalidIdException
         dataBaseGateway.getTaxiById(taxiId) ?: throw ResourceNotFoundException
         return dataBaseGateway.deleteTaxi(taxiId)
     }
 
     override suspend fun updateTaxi(taxi: TaxiUpdateRequest): Boolean {
+        if (!validations.isValidId(taxi.id)) throw InvalidIdException
         dataBaseGateway.getTaxiById(taxi.id) ?: throw ResourceNotFoundException
         return dataBaseGateway.updateTaxi(taxi)
     }
