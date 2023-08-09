@@ -29,7 +29,7 @@ import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.dimens
 @Composable
 fun BeepBeepSwitchButton(
     modifier: Modifier = Modifier,
-    onUpdate: (Boolean) -> Unit,
+    onSwitch: (Boolean) -> Unit,
     selected: Boolean,
 ) {
     val targetBackgroundColor by animateColorAsState(
@@ -54,7 +54,7 @@ fun BeepBeepSwitchButton(
         .background(color=  targetBackgroundColor, shape = shapes.large).
         border(width = 1.dp, color =targetBorderColor, shape = shapes.large)
         .clickable(indication = null, interactionSource = remember { MutableInteractionSource() })
-        {onUpdate(!selected) },
+        {onSwitch(!selected) },
         contentAlignment = alignment.value
         ) {
             Circle(

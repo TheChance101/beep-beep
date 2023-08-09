@@ -205,24 +205,22 @@ fun BottomNavigationBarPreview() {
 @Composable
 fun SwitchPreview() {
     var isToggle by remember { mutableStateOf(false) }
-    BeepBeepSwitchButton(selected = isToggle, onUpdate = { isToggle = it })
+    BeepBeepSwitchButton(selected = isToggle, onSwitch = { isToggle = it })
 }
 
 @Composable
 fun TogglePreview() {
     var isToggle by remember { mutableStateOf(false) }
-    BeepBeepToggleButton(isToggle, onToggle = { isToggle = !isToggle })
+    BeepBeepToggleButton( onToggle = { isToggle = !isToggle }, isDark = isToggle)
 }
 
 @Composable
 fun CheckBoxButtonPrev() {
     var isChecked by remember { mutableStateOf(false) }
     BeepBeepCheckBox(
-        text = "CheckBox",
-        isChecked = isChecked,
-        onCheck = {
-            isChecked = !isChecked
-        },
+        label = "CheckBox",
+        onCheck = { isChecked = !isChecked },
+        isChecked = isChecked
     )
 }
 
