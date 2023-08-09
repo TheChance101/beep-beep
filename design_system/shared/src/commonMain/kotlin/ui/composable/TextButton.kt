@@ -20,9 +20,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.colorScheme
+import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.shapes
+import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.typography
 import com.beepbeep.designSystem.ui.theme.LocalDimens
-import com.beepbeep.designSystem.ui.theme.LocalShapes
-import com.beepbeep.designSystem.ui.theme.LocalTypography
+import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.dimens
 
 @Composable
 fun TextButton(
@@ -32,13 +33,10 @@ fun TextButton(
     height: Int = 56,
     icon: @Composable (() -> Unit)
 ){
-    val dimens= LocalDimens.current
-    val shape = LocalShapes.current
-    val typography=  LocalTypography.current
     Surface(
         modifier=  modifier
         .height(height.dp)
-        .border(width = 1.dp, color =  colorScheme.outline, shape = shape.medium)
+        .border(width = 1.dp, color =  colorScheme.outline, shape = shapes.medium)
         .padding(horizontal = dimens.space16, vertical = dimens.space10)
             .clickable(
                     indication = null,
@@ -53,8 +51,8 @@ fun TextButton(
             Text(
                 text = text,
                 textAlign = TextAlign.Center,
-                style = typography.bodyLarge.copy(color = colorScheme.onPrimary
-                ),
+                style = typography.bodyLarge,
+                color = colorScheme.onPrimary
             )
         }
     }
