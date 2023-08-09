@@ -37,7 +37,6 @@ import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.typography
 fun BeepBeepTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    textFieldModifier: Modifier = Modifier,
     label: String,
     text: String,
     keyboardType: KeyboardType = KeyboardType.Text,
@@ -60,7 +59,7 @@ fun BeepBeepTextField(
         )
 
         OutlinedTextField(
-            modifier = textFieldModifier.fillMaxWidth().height(56.dp),
+            modifier = Modifier.fillMaxWidth().height(56.dp),
             value = text,
             onValueChange = onValueChange,
             shape = shapeRadius,
