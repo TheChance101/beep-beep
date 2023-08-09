@@ -14,8 +14,7 @@ import org.litote.kmongo.coroutine.aggregate
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.*
 import org.thechance.service_identity.data.mappers.*
-import org.thechance.service_identity.data.util.USER_DETAILS_COLLECTION
-import org.thechance.service_identity.data.util.isUpdatedSuccessfully
+import org.thechance.service_identity.data.util.*
 import org.thechance.service_identity.domain.entity.*
 import org.thechance.service_identity.domain.gateway.DataBaseGateway
 import org.thechance.service_identity.domain.usecases.util.NOT_FOUND
@@ -164,7 +163,12 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
             ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
-    override suspend fun getUsers(fullName: String, username: String): List<ManagedUser> {
+    override suspend fun getUsers(
+        page: Int,
+        limit: Int,
+        fullName: String,
+        username: String
+    ): List<ManagedUser> {
         return userCollection.find(
             UserCollection::fullName regex fullName,
             UserCollection::username regex username,
@@ -175,7 +179,7 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
             UserCollection::username,
             UserCollection::email,
             UserCollection::permissions,
-        ).toList().toManagedEntity()
+        ).paginate(page, limit).toList().toManagedEntity()
     }
 
     override suspend fun createUser(user: User): Boolean {
@@ -274,17 +278,5 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
 
     // endregion: user permission management
 
-    companion object {
-        private const val WALLET_COLLECTION = "wallet"
-        private const val ADDRESS_COLLECTION_NAME = "address"
-        private const val PERMISSION_COLLECTION_NAME = "permission"
-        private const val USER_COLLECTION = "user"
-        const val CLIENT_PERMISSION = 1
-        private const val ADMIN_PERMISSION = 2
-        private const val DELIVERY_PERMISSION = 3
-        private const val TAXI_DRIVER_PERMISSION = 4
-        private const val RESTAURANT_OWNER_PERMISSION = 5
-        private const val SUPPORT_PERMISSION = 6
-    }
 
 }
