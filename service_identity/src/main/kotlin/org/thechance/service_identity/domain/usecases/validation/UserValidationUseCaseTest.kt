@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 
 class UserValidationUseCaseTest {
 
-    private val userValidationUseCase = UserValidationUseCase()
+    private val userValidationUseCase = ValidateUserInfoUseCase()
 
     @Test
     fun should_ReturnFalse_When_TheUsernameIsBlank() {

@@ -12,7 +12,7 @@ import org.thechance.service_identity.data.mappers.toDto
 import org.thechance.service_identity.data.mappers.toEntity
 import org.thechance.service_identity.domain.entity.MissingParameterException
 import org.thechance.service_identity.domain.usecases.useraccount.IManageUserAccountUseCase
-import org.thechance.service_identity.endpoints.validation.INVALID_REQUEST_PARAMETER
+import org.thechance.service_identity.domain.usecases.util.INVALID_REQUEST_PARAMETER
 
 fun Route.userRoutes() {
 
@@ -43,6 +43,22 @@ fun Route.userRoutes() {
         delete("/{id}") {
             val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val result = manageUserAccount.deleteUser(id)
+            call.respond(HttpStatusCode.OK, result)
+        }
+
+        post("/{id}/wallet/add") {
+            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            val amount = call.receiveParameters()["amount"]?.toDouble()
+                ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            val result = manageUserAccount.addToWallet(id, amount)
+            call.respond(HttpStatusCode.OK, result)
+        }
+
+        post("/{id}/wallet/subtract") {
+            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            val amount = call.receiveParameters()["amount"]?.toDouble()
+                ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            val result = manageUserAccount.subtractFromWallet(id, amount)
             call.respond(HttpStatusCode.OK, result)
         }
 

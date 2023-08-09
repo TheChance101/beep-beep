@@ -1,6 +1,9 @@
 package org.thechance.service_identity.domain.gateway
 
-import org.thechance.service_identity.domain.entity.*
+import org.thechance.service_identity.domain.entity.Address
+import org.thechance.service_identity.domain.entity.ManagedUser
+import org.thechance.service_identity.domain.entity.Permission
+import org.thechance.service_identity.domain.entity.User
 
 interface DataBaseGateway {
     // region: Permission
@@ -11,13 +14,6 @@ interface DataBaseGateway {
     suspend fun getListOfPermission(): List<Permission>
 
     // endregion: Permission
-
-    // region: wallet
-    suspend fun getWallet(walletId: String): Wallet
-    suspend fun createWallet(wallet: Wallet): Boolean
-    suspend fun updateWallet(walletId: String, wallet: Wallet): Boolean
-
-    // endregion: wallet
 
     //region address
 
@@ -55,5 +51,10 @@ interface DataBaseGateway {
     suspend fun getUserPermissions(userId: String): List<Permission>
 
     // endregion: user permission management
-    suspend fun getWalletByUserId(userId: String): Wallet
+    suspend fun subtractFromWallet(userId: String, amount: Double): Boolean
+
+    suspend fun getWalletBalance(userId: String): Double
+
+    suspend fun addToWallet(userId: String, amount: Double): Boolean
+
 }

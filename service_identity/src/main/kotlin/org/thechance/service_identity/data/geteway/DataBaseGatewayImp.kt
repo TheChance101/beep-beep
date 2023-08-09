@@ -14,11 +14,12 @@ import org.litote.kmongo.coroutine.aggregate
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.*
 import org.thechance.service_identity.data.mappers.*
-import org.thechance.service_identity.data.util.*
+import org.thechance.service_identity.data.util.USER_DETAILS_COLLECTION
+import org.thechance.service_identity.data.util.isUpdatedSuccessfully
 import org.thechance.service_identity.domain.entity.*
 import org.thechance.service_identity.domain.gateway.DataBaseGateway
-import org.thechance.service_identity.endpoints.validation.NOT_FOUND
-import org.thechance.service_identity.endpoints.validation.USER_ALREADY_EXISTS
+import org.thechance.service_identity.domain.usecases.util.NOT_FOUND
+import org.thechance.service_identity.domain.usecases.util.USER_ALREADY_EXISTS
 
 @Single
 class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway {
@@ -154,10 +155,10 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
                 UserCollection::isDeleted eq false
             ),
             lookup(
-                localField = USER_COLLECTION_LOCAL_PRIMARY_FIELD,
+                localField = UserCollection::id.name,
                 from = USER_DETAILS_COLLECTION,
-                foreignField = USER_DETAILS_LOCAL_FIELD,
-                newAs = DETAILED_USER_COLLECTION
+                foreignField = UserDetailsCollection::userId.name,
+                newAs = DetailedUserCollection::details.name
             )
         ).toList().toEntity(wallet.walletBalance, userAddresses, userPermission).firstOrNull()
             ?: throw ResourceNotFoundException(NOT_FOUND)
@@ -180,8 +181,8 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
     override suspend fun createUser(user: User): Boolean {
         val userDocument = user.toCollection()
         try {
-            val wallet = WalletCollection(userId = userDocument.id.toString(), walletBalance = 0.0)
-            createWallet(wallet.toEntity())
+            val wallet = WalletCollection(userId = userDocument.id.toString())
+            createWallet(wallet)
             userDetailsCollection.insertOne(user.toDetailsCollection(userDocument.id.toHexString()))
             return userCollection.insertOne(userDocument).wasAcknowledged()
         } catch (exception: MongoWriteException) {
@@ -190,11 +191,15 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
     }
 
     override suspend fun updateUser(id: String, user: User): Boolean {
-        return userCollection.updateOneById(
-            ObjectId(id),
-            user.toUpdateRequest(),
-            updateOnlyNotNullProperties = true
-        ).isUpdatedSuccessfully()
+        try {
+            return userCollection.updateOneById(
+                ObjectId(id),
+                user.toUpdateRequest(),
+                updateOnlyNotNullProperties = true
+            ).isUpdatedSuccessfully()
+        } catch (exception: MongoWriteException) {
+            throw UserAlreadyExistsException(USER_ALREADY_EXISTS)
+        }
     }
 
     override suspend fun deleteUser(id: String): Boolean {
@@ -207,30 +212,39 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
 
 
     // region: wallet
-    override suspend fun getWallet(walletId: String): Wallet {
-        return walletCollection.findOneById(ObjectId(walletId))?.toEntity()
-            ?: throw ResourceNotFoundException(NOT_FOUND)
-    }
 
-    override suspend fun getWalletByUserId(userId: String): Wallet {
+    private suspend fun getWalletByUserId(userId: String): Wallet {
         return walletCollection.findOne(
             WalletCollection::userId eq userId
         )?.toEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
-    override suspend fun createWallet(wallet: Wallet): Boolean {
-        userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::userId eq ObjectId(wallet.userId),
-            update = set(UserDetailsCollection::walletCollection setTo wallet.toCollection())
-        )
-        return walletCollection.insertOne(wallet.toCollection()).wasAcknowledged()
+    override suspend fun subtractFromWallet(userId: String, amount: Double): Boolean {
+        return walletCollection.updateOne(
+            filter = WalletCollection::userId eq userId,
+            update = inc(WalletCollection::walletBalance, -amount)
+        ).isUpdatedSuccessfully()
     }
 
-    override suspend fun updateWallet(walletId: String, wallet: Wallet): Boolean {
-        return walletCollection.updateOneById(
-            id = ObjectId(walletId),
-            update = wallet.toCollection(),
-        ).wasAcknowledged()
+    override suspend fun getWalletBalance(userId: String): Double {
+        return walletCollection.findOne(
+            WalletCollection::userId eq userId
+        )?.walletBalance ?: throw ResourceNotFoundException(NOT_FOUND)
+    }
+
+    override suspend fun addToWallet(userId: String, amount: Double): Boolean {
+        return walletCollection.updateOne(
+            filter = WalletCollection::userId eq userId,
+            update = inc(WalletCollection::walletBalance, amount)
+        ).isUpdatedSuccessfully()
+    }
+
+    private suspend fun createWallet(wallet: WalletCollection): Boolean {
+        userDetailsCollection.updateOne(
+            filter = UserDetailsCollection::userId eq ObjectId(wallet.userId),
+            update = set(UserDetailsCollection::walletCollection setTo wallet)
+        )
+        return walletCollection.insertOne(wallet).wasAcknowledged()
     }
     // endregion: wallet
 
