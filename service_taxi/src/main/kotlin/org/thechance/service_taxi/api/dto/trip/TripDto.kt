@@ -1,4 +1,4 @@
-package org.thechance.service_taxi.api.models.trip
+package org.thechance.service_taxi.api.dto.trip
 
 import kotlinx.serialization.Serializable
 import org.thechance.service_taxi.data.collection.LocationCollection

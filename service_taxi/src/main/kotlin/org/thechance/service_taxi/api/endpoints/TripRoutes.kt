@@ -11,9 +11,9 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 import org.koin.ktor.ext.inject
-import org.thechance.service_taxi.api.models.trip.TripDto
-import org.thechance.service_taxi.api.models.trip.toDto
-import org.thechance.service_taxi.api.models.trip.toEntity
+import org.thechance.service_taxi.api.dto.trip.TripDto
+import org.thechance.service_taxi.api.dto.trip.toDto
+import org.thechance.service_taxi.api.dto.trip.toEntity
 import org.thechance.service_taxi.domain.usecase.IDiscoverTripsUseCase
 import org.thechance.service_taxi.domain.usecase.IManageTripsUseCase
 import org.thechance.service_taxi.domain.util.MissingParameterException

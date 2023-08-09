@@ -9,10 +9,10 @@ import org.litote.kmongo.eq
 import org.litote.kmongo.ne
 import org.litote.kmongo.set
 import org.litote.kmongo.setTo
-import org.thechance.service_taxi.api.models.taxi.toCollection
-import org.thechance.service_taxi.api.models.taxi.toEntity
-import org.thechance.service_taxi.api.models.trip.toCollection
-import org.thechance.service_taxi.api.models.trip.toEntity
+import org.thechance.service_taxi.api.dto.taxi.toCollection
+import org.thechance.service_taxi.api.dto.taxi.toEntity
+import org.thechance.service_taxi.api.dto.trip.toCollection
+import org.thechance.service_taxi.api.dto.trip.toEntity
 import org.thechance.service_taxi.data.DataBaseContainer
 import org.thechance.service_taxi.data.collection.TaxiCollection
 import org.thechance.service_taxi.data.collection.TripCollection

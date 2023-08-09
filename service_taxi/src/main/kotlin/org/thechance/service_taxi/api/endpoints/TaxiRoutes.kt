@@ -11,10 +11,10 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 import org.koin.ktor.ext.inject
-import org.thechance.service_taxi.api.models.taxi.TaxiDto
-import org.thechance.service_taxi.api.models.taxi.toDto
-import org.thechance.service_taxi.api.models.taxi.toEntity
-import org.thechance.service_taxi.api.models.taxi.toUpdateRequest
+import org.thechance.service_taxi.api.dto.taxi.TaxiDto
+import org.thechance.service_taxi.api.dto.taxi.toDto
+import org.thechance.service_taxi.api.dto.taxi.toEntity
+import org.thechance.service_taxi.api.dto.taxi.toUpdateRequest
 import org.thechance.service_taxi.domain.usecase.IManageTaxiUseCase
 import org.thechance.service_taxi.domain.util.MissingParameterException
 

@@ -1,4 +1,4 @@
-package org.thechance.service_taxi.api.models.trip
+package org.thechance.service_taxi.api.dto.trip
 
 import kotlinx.datetime.LocalDateTime
 import org.bson.types.ObjectId

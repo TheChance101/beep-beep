@@ -1,4 +1,4 @@
-package org.thechance.service_taxi.api.models.taxi
+package org.thechance.service_taxi.api.dto.taxi
 
 import org.bson.types.ObjectId
 import org.thechance.service_taxi.data.collection.TaxiCollection
