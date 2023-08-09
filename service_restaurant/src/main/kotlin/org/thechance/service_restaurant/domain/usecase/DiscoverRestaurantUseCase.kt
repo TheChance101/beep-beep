@@ -7,6 +7,12 @@ import org.thechance.service_restaurant.domain.entity.MealDetails
 import org.thechance.service_restaurant.domain.entity.Restaurant
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
+import org.thechance.service_restaurant.domain.utils.INVALID_ID
+import org.thechance.service_restaurant.domain.utils.InvalidParameterException
+import org.thechance.service_restaurant.domain.utils.NOT_FOUND
+import org.thechance.service_restaurant.domain.utils.ResourceNotFoundException
+import org.thechance.service_restaurant.domain.utils.isValidId
+import org.thechance.service_restaurant.domain.utils.validatePagination
 import org.thechance.service_restaurant.utils.*
 
 interface IDiscoverRestaurantUseCase {
@@ -46,7 +52,9 @@ class DiscoverRestaurantUseCase(
 
     override suspend fun getRestaurantDetails(restaurantId: String): Restaurant {
         checkIfRestaurantIsExist(restaurantId)
-        return restaurantGateway.getRestaurant(restaurantId) ?: throw ResourceNotFoundException(NOT_FOUND)
+        return restaurantGateway.getRestaurant(restaurantId) ?: throw ResourceNotFoundException(
+            NOT_FOUND
+        )
     }
 
     override suspend fun getMealsByCuisine(cuisineId: String): List<Meal> {

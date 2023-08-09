@@ -14,8 +14,8 @@ import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
 import org.thechance.service_restaurant.domain.usecase.IDiscoverRestaurantUseCase
 import org.thechance.service_restaurant.domain.usecase.IManageCuisineUseCase
-import org.thechance.service_restaurant.utils.MissingParameterException
-import org.thechance.service_restaurant.utils.NOT_FOUND
+import org.thechance.service_restaurant.domain.utils.MissingParameterException
+import org.thechance.service_restaurant.domain.utils.NOT_FOUND
 
 fun Route.cuisineRoutes() {
 
@@ -50,7 +50,9 @@ fun Route.cuisineRoutes() {
         }
 
         delete("/{id}") {
-            val id = call.parameters.extractString("id") ?: throw MissingParameterException(NOT_FOUND)
+            val id = call.parameters.extractString("id") ?: throw MissingParameterException(
+                NOT_FOUND
+            )
             val isDeleted = manageCuisine.deleteCuisine(id)
             if (isDeleted) call.respond(HttpStatusCode.OK, "Deleted Successfully")
         }
