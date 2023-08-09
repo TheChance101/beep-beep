@@ -3,26 +3,25 @@ package org.thechance.service_taxi.domain.usecase
 import org.koin.core.annotation.Single
 import org.thechance.service_taxi.domain.entity.Taxi
 import org.thechance.service_taxi.domain.entity.TaxiUpdateRequest
-import org.thechance.service_taxi.domain.entity.Trip
 import org.thechance.service_taxi.domain.gateway.DataBaseGateway
 import org.thechance.service_taxi.domain.util.ResourceNotFoundException
-import org.thechance.service_taxi.domain.util.validationTaxi
+import org.thechance.service_taxi.domain.util.Validations
+
+interface IManageTaxiUseCase {
+    suspend fun createTaxi(taxi: Taxi): Boolean
+    suspend fun deleteTaxi(taxiId: String): Boolean
+    suspend fun updateTaxi(taxi: TaxiUpdateRequest): Boolean
+    suspend fun getAllTaxi(page: Int, limit: Int): List<Taxi>
+    suspend fun getTaxi(taxiId: String): Taxi
+}
 
 @Single
-class AdministratorUseCaseImp(
-        private val dataBaseGateway: DataBaseGateway
-) : AdministratorUseCase {
-    override suspend fun getTrips(page: Int, limit: Int): List<Trip> {
-        return dataBaseGateway.getAllTrips(page, limit)
-    }
-
-    override suspend fun deleteTrip(tripId: String): Boolean {
-        dataBaseGateway.getTripById(tripId) ?: throw ResourceNotFoundException
-        return dataBaseGateway.deleteTrip(tripId)
-    }
-
+class ManageTaxiUseCase(
+    private val dataBaseGateway: DataBaseGateway,
+    private val validations: Validations,
+) : IManageTaxiUseCase {
     override suspend fun createTaxi(taxi: Taxi): Boolean {
-        validationTaxi(taxi)
+        validations.validationTaxi(taxi)
         return dataBaseGateway.addTaxi(taxi)
     }
 
@@ -38,5 +37,9 @@ class AdministratorUseCaseImp(
 
     override suspend fun getAllTaxi(page: Int, limit: Int): List<Taxi> {
         return dataBaseGateway.getAllTaxes(page, limit)
+    }
+
+    override suspend fun getTaxi(taxiId: String): Taxi {
+        return dataBaseGateway.getTaxiById(taxiId) ?: throw ResourceNotFoundException
     }
 }
