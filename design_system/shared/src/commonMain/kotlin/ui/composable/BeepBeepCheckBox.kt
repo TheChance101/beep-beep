@@ -45,6 +45,7 @@ fun BeepBeepCheckBox(
         verticalAlignment = Alignment.CenterVertically) {
         CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
             Checkbox(
+                modifier = Modifier.size(dimens.size32).padding(0.dp),
                 enabled = enabled,
                 checked = isChecked,
                 interactionSource = remember { MutableInteractionSource() },
