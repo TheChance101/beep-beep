@@ -3,14 +3,21 @@ package com.beepbeep.designSystem.ui.composable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkOut
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Checkbox
-import androidx.compose.material.CheckboxDefaults
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.IconButton
 import androidx.compose.material.LocalMinimumInteractiveComponentEnforcement
@@ -44,17 +51,18 @@ fun BeepBeepCheckBox(
         horizontalArrangement = Arrangement.spacedBy(dimens.space8),
         verticalAlignment = Alignment.CenterVertically) {
         CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
-            Checkbox(
-                enabled = enabled,
-                checked = isChecked,
-                interactionSource = remember { MutableInteractionSource() },
-                colors = CheckboxDefaults.colors(
-                    checkmarkColor = colorScheme.background,
-                    checkedColor = colorScheme.primary,
-                    uncheckedColor = colorScheme.outline
-                ),
-                onCheckedChange = { onCheck(it) },
-            )
+              Checkbox(
+                  modifier = Modifier.size(dimens.size32).padding(0.dp),
+                  enabled = enabled,
+                  checked = isChecked,
+                  interactionSource = remember { MutableInteractionSource() },
+                  colors = CheckboxDefaults.colors(
+                      checkmarkColor = colorScheme.background,
+                      checkedColor = colorScheme.primary,
+                      uncheckedColor = colorScheme.outline
+                  ),
+                  onCheckedChange = { onCheck(it) },
+              )
         }
         Text(text = text, style = typography.body,color = colorScheme.onSecondary)
     }
