@@ -35,10 +35,10 @@ import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.typography
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BeepBeepTextField(
-    onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
     label: String,
     text: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
     keyboardType: KeyboardType = KeyboardType.Text,
     shapeRadius: Shape = shapes.medium,
     errorMessage: String = "",

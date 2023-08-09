@@ -18,10 +18,10 @@ import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BeepBeepChip(
-    modifier: Modifier = Modifier,
     label: String,
     isSelected: Boolean,
     onClick: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
     painter: Painter? = null
 ) {
     val containerColor =

@@ -20,35 +20,35 @@ import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.colorScheme
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.dimens
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.typography
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalResourceApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BeepBeepCheckBoxDraft(
-    modifier : Modifier = Modifier,
-    text: String = "",
-    isChecked: Boolean =false,
-    enabled: Boolean = true,
     onCheck: (Boolean) -> Unit,
-){
+    modifier: Modifier = Modifier,
+    text: String = "",
+    isChecked: Boolean = false,
+    enabled: Boolean = true,
+) {
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(dimens.space8),
-        verticalAlignment = Alignment.CenterVertically) {
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
-              Checkbox(
-                  modifier = Modifier.size(dimens.size32).padding(0.dp),
-                  enabled = enabled,
-                  checked = isChecked,
-                  interactionSource = remember { MutableInteractionSource() },
-                  colors = CheckboxDefaults.colors(
-                      checkmarkColor = colorScheme.background,
-                      checkedColor = colorScheme.primary,
-                      uncheckedColor = colorScheme.outline
-                  ),
-                  onCheckedChange = { onCheck(it) },
-              )
+            Checkbox(
+                modifier = Modifier.size(dimens.size32).padding(0.dp),
+                enabled = enabled,
+                checked = isChecked,
+                interactionSource = remember { MutableInteractionSource() },
+                colors = CheckboxDefaults.colors(
+                    checkmarkColor = colorScheme.background,
+                    checkedColor = colorScheme.primary,
+                    uncheckedColor = colorScheme.outline
+                ),
+                onCheckedChange = { onCheck(it) },
+            )
         }
-        Text(text = text, style = typography.body,color = colorScheme.onSecondary)
+        Text(text = text, style = typography.body, color = colorScheme.onSecondary)
     }
 }

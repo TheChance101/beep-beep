@@ -1,4 +1,3 @@
-
 package com.beepbeep.designSystem.ui.composable
 
 import androidx.compose.animation.animateColorAsState
@@ -29,18 +28,19 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.colorScheme
-import com.beepbeep.designSystem.ui.theme.shapes
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.dimens
+import com.beepbeep.designSystem.ui.theme.shapes
+
 @Composable
 fun BeepBeepCheckBox(
+    label: String,
+    onCheck: () -> Unit,
     modifier: Modifier = Modifier,
     isChecked: Boolean = false,
     gapBetweenLabelAndCheckbox: Int = 8,
-    onCheck: () -> Unit,
-    label: String,
 ) {
     val checkboxColor: Color by animateColorAsState(
-        targetValue= if (isChecked) colorScheme.primary else Color.Transparent,
+        targetValue = if (isChecked) colorScheme.primary else Color.Transparent,
         animationSpec = tween(300)
     )
     val density = LocalDensity.current
@@ -61,10 +61,14 @@ fun BeepBeepCheckBox(
                 ),
             elevation = 0.dp,
             shape = shapes.small,
-            border = BorderStroke(1.dp, color = if (isChecked) colorScheme.primary else colorScheme.outline),
+            border = BorderStroke(
+                1.dp,
+                color = if (isChecked) colorScheme.primary else colorScheme.outline
+            ),
         ) {
             Box(
-                modifier = Modifier.size(dimens.size32).background(color=checkboxColor, shape = shapes.small),
+                modifier = Modifier.size(dimens.size32)
+                    .background(color = checkboxColor, shape = shapes.small),
                 contentAlignment = Alignment.Center
             ) {
                 androidx.compose.animation.AnimatedVisibility(
@@ -87,6 +91,6 @@ fun BeepBeepCheckBox(
                 }
             }
         }
-        Text(text = label, style = BeepBeepTheme.typography.body,color = colorScheme.onSecondary)
+        Text(text = label, style = BeepBeepTheme.typography.body, color = colorScheme.onSecondary)
     }
 }
