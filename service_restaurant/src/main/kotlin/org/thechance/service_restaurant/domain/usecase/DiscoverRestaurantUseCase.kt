@@ -1,5 +1,6 @@
 package org.thechance.service_restaurant.domain.usecase
 
+import org.koin.core.annotation.Single
 import org.thechance.service_restaurant.domain.entity.Category
 import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.entity.MealDetails
@@ -18,6 +19,7 @@ interface IDiscoverRestaurantUseCase {
     suspend fun getRestaurantsInCategory(categoryId: String): List<Restaurant>
 }
 
+@Single
 class DiscoverRestaurantUseCase(
     private val restaurantGateway: IRestaurantGateway,
     private val optionsGateway: IRestaurantOptionsGateway,

@@ -1,5 +1,6 @@
 package org.thechance.service_restaurant.domain.usecase
 
+import org.koin.core.annotation.Single
 import org.thechance.service_restaurant.domain.entity.Restaurant
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.utils.*
@@ -10,6 +11,7 @@ interface IControlRestaurantsUseCase {
     suspend fun deleteRestaurant(restaurantId: String): Boolean
 }
 
+@Single
 class ControlRestaurantsUseCase(
     private val restaurantGateway: IRestaurantGateway,
 ) : IControlRestaurantsUseCase {

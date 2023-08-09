@@ -146,6 +146,17 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         return container.cuisineCollection.insertOne(cuisine.toCollection()).wasAcknowledged()
     }
 
+    override suspend fun areCuisinesExist(cuisineIds: List<String>): Boolean {
+        val cuisines = container.cuisineCollection.find(
+            and(
+                CuisineCollection::id `in` cuisineIds.toObjectIds(),
+                CuisineCollection::isDeleted eq false
+            )
+        ).toList()
+
+        return cuisines.size == cuisineIds.size
+    }
+
     override suspend fun updateCuisine(cuisine: Cuisine): Boolean {
         return container.cuisineCollection.updateOneById(
             ObjectId(cuisine.id),

@@ -27,6 +27,7 @@ interface IRestaurantOptionsGateway {
     suspend fun getCuisineById(id: String): Cuisine?
     suspend fun getMealsInCuisine(cuisineId: String): List<Meal>
     suspend fun addCuisine(cuisine: Cuisine): Boolean
+    suspend fun areCuisinesExist(cuisineIds: List<String>): Boolean
     suspend fun updateCuisine(cuisine: Cuisine): Boolean
     suspend fun deleteCuisine(id: String): Boolean
     //endregion

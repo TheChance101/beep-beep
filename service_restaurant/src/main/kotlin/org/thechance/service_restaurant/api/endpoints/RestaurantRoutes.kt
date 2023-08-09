@@ -12,7 +12,7 @@ import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
-import org.thechance.service_restaurant.domain.usecase.IControlRestaurant
+import org.thechance.service_restaurant.domain.usecase.IControlRestaurantsUseCase
 import org.thechance.service_restaurant.domain.usecase.IDiscoverRestaurantUseCase
 import org.thechance.service_restaurant.domain.usecase.IManageRestaurantDetailsUseCase
 import org.thechance.service_restaurant.utils.INVALID_REQUEST_PARAMETER
@@ -20,7 +20,7 @@ import org.thechance.service_restaurant.utils.MissingParameterException
 
 fun Route.restaurantRoutes() {
 
-    val controlRestaurant: IControlRestaurant by inject()
+    val controlRestaurant: IControlRestaurantsUseCase by inject()
     val manageRestaurantDetails: IManageRestaurantDetailsUseCase by inject()
     val discoverRestaurant: IDiscoverRestaurantUseCase by inject()
 
