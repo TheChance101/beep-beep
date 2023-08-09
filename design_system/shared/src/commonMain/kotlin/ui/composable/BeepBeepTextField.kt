@@ -99,7 +99,7 @@ private fun ContainerColor(isError: Boolean, correctValidation: Boolean): Color 
     return if (isError) {
         colorScheme.secondary
     } else if (correctValidation) {
-        colorScheme.onSurface.copy(alpha = 0.1f)
+        colorScheme.inversePrimary
     } else {
         colorScheme.surface
     }
