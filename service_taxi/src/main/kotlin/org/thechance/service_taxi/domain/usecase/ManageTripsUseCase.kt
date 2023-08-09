@@ -1,28 +1,36 @@
 package org.thechance.service_taxi.domain.usecase
 
 import org.koin.core.annotation.Single
-import org.thechance.service_taxi.domain.entity.Taxi
 import org.thechance.service_taxi.domain.entity.Trip
 import org.thechance.service_taxi.domain.entity.TripUpdateRequest
 import org.thechance.service_taxi.domain.gateway.DataBaseGateway
 import org.thechance.service_taxi.domain.util.ResourceNotFoundException
 import org.thechance.service_taxi.domain.util.validationTrip
 
+interface IManageTripsUseCase {
+    suspend fun createTrip(trip: Trip): Boolean
+    suspend fun getTrips(page: Int, limit: Int): List<Trip>
+    suspend fun rateTrip(tripId: String, rate: Double)
+    suspend fun deleteTrip(tripId: String): Boolean
+    suspend fun getTripById(tripId: String): Trip
+}
+
 @Single
-class CustomerUseCaseImp(
+class ManageTripsUseCase(
     private val dataBaseGateway: DataBaseGateway
-) : CustomerUseCase {
+) : IManageTripsUseCase {
+    override suspend fun getTrips(page: Int, limit: Int): List<Trip> {
+        return dataBaseGateway.getAllTrips(page, limit)
+    }
+
+    override suspend fun deleteTrip(tripId: String): Boolean {
+        dataBaseGateway.getTripById(tripId) ?: throw ResourceNotFoundException
+        return dataBaseGateway.deleteTrip(tripId)
+    }
+
     override suspend fun createTrip(trip: Trip): Boolean {
         validationTrip(trip)
         return dataBaseGateway.addTrip(trip)
-    }
-
-    override suspend fun getTripsByClientId(
-        clientId: String,
-        page: Int,
-        limit: Int
-    ): List<Trip> {
-        return dataBaseGateway.getClientTripsHistory(clientId, page, limit)
     }
 
     override suspend fun rateTrip(tripId: String, rate: Double) {
@@ -34,11 +42,5 @@ class CustomerUseCaseImp(
         return dataBaseGateway.getTripById(tripId) ?: throw ResourceNotFoundException
     }
 
-    override suspend fun getTaxi(taxiId: String): Taxi {
-        return dataBaseGateway.getTaxiById(taxiId) ?: throw ResourceNotFoundException
-    }
 
-    override suspend fun getAllTaxi(page: Int, limit: Int): List<Taxi> {
-        return dataBaseGateway.getAllTaxes(page, limit)
-    }
 }
