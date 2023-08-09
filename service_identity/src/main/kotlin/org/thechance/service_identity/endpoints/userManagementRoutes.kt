@@ -16,11 +16,6 @@ fun Route.userManagementRoutes() {
 
     route("/dashboard/user") {
 
-        get("/{id}") {
-            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            userManagement.getUserById(id)
-        }
-
         get {
             val fullName = call.parameters["full_name"] ?: ""
             val username = call.parameters["username"] ?: ""
@@ -29,13 +24,13 @@ fun Route.userManagementRoutes() {
         }
 
         get("/{id}/permission") {
-            val id = call.parameters["id"] ?: ""
+            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val permissions = userManagement.getUserPermissions(id).toDto()
             call.respond(permissions)
         }
 
         post("/{id}/permission") {
-            val id = call.parameters["id"] ?: ""
+            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val permissionId = call.receiveParameters()["permission_id"]?.toInt()
                 ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val result = userManagement.addPermissionToUser(id, permissionId)
@@ -43,7 +38,7 @@ fun Route.userManagementRoutes() {
         }
 
         delete("/{id}/permission") {
-            val id = call.parameters["id"] ?: ""
+            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val permissionId = call.parameters["permission_id"]?.toInt()
                 ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val result = userManagement.removePermissionFromUser(id, permissionId)
