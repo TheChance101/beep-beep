@@ -28,7 +28,7 @@ interface IManageUserAccountUseCase {
 }
 
 @Single
-class IManageUserAccountUseCaseImp(
+class ManageUserAccountUseCase(
     private val dataBaseGateway: DataBaseGateway,
     private val validateWalletBalance: IValidateWalletBalanceUseCase,
     private val validateUserInfo: IValidateUserInfoUseCase

@@ -9,25 +9,25 @@ import org.koin.ktor.ext.inject
 import org.thechance.service_identity.data.mappers.toDto
 import org.thechance.service_identity.data.mappers.toEntity
 import org.thechance.service_identity.domain.entity.MissingParameterException
-import org.thechance.service_identity.domain.usecases.permission.PermissionManagementUseCase
+import org.thechance.service_identity.domain.usecases.permission.IPermissionManagementUseCase
 import org.thechance.service_identity.domain.usecases.util.INVALID_REQUEST_PARAMETER
 import org.thechance.service_identity.endpoints.model.CreatePermissionRequest
 import org.thechance.service_identity.endpoints.model.UpdatePermissionRequest
 
 fun Route.permissionRoutes() {
-    val permissionManagementUseCase: PermissionManagementUseCase by inject()
+    val IPermissionManagementUseCase: IPermissionManagementUseCase by inject()
     route("/permissions") {
 
         post {
             val permission = call.receive<CreatePermissionRequest>()
-            val success = permissionManagementUseCase.createPermission(permission.toEntity())
+            val success = IPermissionManagementUseCase.createPermission(permission.toEntity())
             call.respond(HttpStatusCode.OK, success)
         }
 
         delete("/{permissionId}") {
             val permissionId = call.parameters["permissionId"]?.toIntOrNull()
                 ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val success = permissionManagementUseCase.deletePermission(permissionId)
+            val success = IPermissionManagementUseCase.deletePermission(permissionId)
             call.respond(HttpStatusCode.OK, success)
         }
 
@@ -35,19 +35,19 @@ fun Route.permissionRoutes() {
             val permissionId = call.parameters["permissionId"]?.toIntOrNull()
                 ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val permission = call.receive<UpdatePermissionRequest>()
-            val success = permissionManagementUseCase.updatePermission(permissionId, permission.toEntity())
+            val success = IPermissionManagementUseCase.updatePermission(permissionId, permission.toEntity())
             call.respond(HttpStatusCode.OK, success)
         }
 
         get("/{permissionId}") {
             val permissionId = call.parameters["permissionId"]?.toIntOrNull()
                 ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val permission = permissionManagementUseCase.getPermission(permissionId).toDto()
+            val permission = IPermissionManagementUseCase.getPermission(permissionId).toDto()
             call.respond(HttpStatusCode.OK, permission)
         }
 
         get {
-            val permissions = permissionManagementUseCase.getListOfPermission()
+            val permissions = IPermissionManagementUseCase.getListOfPermission()
             call.respond(HttpStatusCode.OK, permissions.map { it.toDto() })
         }
     }

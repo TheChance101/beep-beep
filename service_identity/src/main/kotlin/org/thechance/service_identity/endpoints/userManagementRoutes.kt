@@ -7,12 +7,12 @@ import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.service_identity.data.mappers.toDto
 import org.thechance.service_identity.domain.entity.MissingParameterException
-import org.thechance.service_identity.domain.usecases.user_management.UserManagementUseCase
+import org.thechance.service_identity.domain.usecases.user_management.IUserManagementUseCase
 import org.thechance.service_identity.domain.usecases.util.INVALID_REQUEST_PARAMETER
 
 fun Route.userManagementRoutes() {
 
-    val userManagement: UserManagementUseCase by inject()
+    val userManagement: IUserManagementUseCase by inject()
 
     route("/dashboard/user") {
 
