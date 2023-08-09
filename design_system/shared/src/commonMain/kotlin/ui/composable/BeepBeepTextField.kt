@@ -64,7 +64,7 @@ fun BeepBeepTextField(
             value = text,
             onValueChange = onValueChange,
             shape = shapeRadius,
-            textStyle = typography.bodyLarge,
+            textStyle = typography.bodyLarge.copy(colorScheme.onPrimary),
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
             trailingIcon = {
