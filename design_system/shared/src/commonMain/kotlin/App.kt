@@ -49,7 +49,7 @@ fun DesignApp() {
 //            verticalArrangement = Arrangement.Bottom
         ) {
 //            TextButtonPrev()
-//            CheckBoxButtonPrev()
+            CheckBoxButtonPrev()
 //            TogglePreview()
 //            SwitchPreview()
 //            EnabledButtonsPreview()
