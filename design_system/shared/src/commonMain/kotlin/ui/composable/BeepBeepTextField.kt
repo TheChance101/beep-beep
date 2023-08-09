@@ -2,10 +2,10 @@ package com.beepbeep.designSystem.ui.composable
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,10 +21,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.colorScheme
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.dimens
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.shapes
@@ -35,11 +37,13 @@ import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.typography
 fun BeepBeepTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    textFieldModifier: Modifier = Modifier,
     label: String,
     text: String,
     keyboardType: KeyboardType = KeyboardType.Text,
     shapeRadius: Shape = shapes.medium,
     errorMessage: String = "",
+    correctValidation: Boolean = false,
     isError: Boolean = errorMessage.isNotEmpty(),
 ) {
     var showPassword by remember { mutableStateOf(false) }
@@ -51,14 +55,16 @@ fun BeepBeepTextField(
         Text(
             text = label,
             modifier = Modifier.padding(bottom = dimens.space8),
-            style = typography.titleLarge
+            style = typography.titleLarge,
+            color = colorScheme.onPrimary
         )
 
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = textFieldModifier.fillMaxWidth().height(56.dp),
             value = text,
             onValueChange = onValueChange,
             shape = shapeRadius,
+            textStyle = typography.bodyLarge,
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
             trailingIcon = {
@@ -69,22 +75,34 @@ fun BeepBeepTextField(
             visualTransformation = BeepBeepVisualTransformation(keyboardType, showPassword),
             isError = isError,
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                containerColor = if (isError) colorScheme.secondary else colorScheme.surface,
-                unfocusedBorderColor = colorScheme.outline,
-                focusedBorderColor = colorScheme.onTertiary,
-                errorBorderColor = colorScheme.primary,
+                containerColor = ContainerColor(isError, correctValidation),
+                unfocusedBorderColor = colorScheme.outline.copy(alpha = 0.1f),
+                focusedBorderColor = colorScheme.onTertiary.copy(alpha = 0.2f),
+                errorBorderColor = colorScheme.primary.copy(alpha = 0.5f),
                 errorCursorColor = colorScheme.primary,
                 cursorColor = colorScheme.outline,
-            )
+            ),
         )
 
         if (isError) {
             Text(
                 text = errorMessage,
                 modifier = Modifier.padding(top = dimens.space8),
-                style = typography.body
+                style = typography.body,
+                color = colorScheme.primary
             )
         }
+    }
+}
+
+@Composable
+private fun ContainerColor(isError: Boolean, correctValidation: Boolean): Color {
+    return if (isError) {
+        colorScheme.secondary
+    } else if (correctValidation) {
+        colorScheme.onSurface.copy(alpha = 0.1f)
+    } else {
+        colorScheme.surface
     }
 }
 
@@ -95,17 +113,12 @@ fun TrailingIcon(
     showPassword: Boolean,
     togglePasswordVisibility: () -> Unit
 ) {
-    if (isError) {
-        Icon(
-            imageVector = Icons.Outlined.Error,
-            contentDescription = "error icon",
-            tint = colorScheme.error
-        )
-    } else if ((keyboardType == KeyboardType.Password || keyboardType == KeyboardType.NumberPassword) && !isError) {
+    if ((keyboardType == KeyboardType.Password || keyboardType == KeyboardType.NumberPassword) && !isError) {
         IconButton(onClick = { togglePasswordVisibility() }) {
             Icon(
                 imageVector = if (showPassword) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility,
-                contentDescription = if (showPassword) "Show Password" else "Hide Password"
+                contentDescription = if (showPassword) "Show Password" else "Hide Password",
+                tint = colorScheme.onTertiary
             )
         }
     }

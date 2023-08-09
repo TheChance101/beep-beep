@@ -44,18 +44,54 @@ fun DesignApp() {
         Column(
             Modifier.fillMaxSize().background(BeepBeepTheme.colorScheme.background),
 //            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Bottom
+//            verticalArrangement = Arrangement.Bottom
         ) {
-            TextButtonPrev()
-            CheckBoxButtonPrev()
-            TogglePreview()
-            SwitchPreview()
-            EnabledButtonsPreview()
-            DisabledButtonsPreview()
+//            TextButtonPrev()
+//            CheckBoxButtonPrev()
+//            TogglePreview()
+//            SwitchPreview()
+//            EnabledButtonsPreview()
+//            DisabledButtonsPreview()
 //            Spacer(modifier = Modifier.height(16.dp))
-//            PreviewTextField()
+            PreviewTextField()
 //            BottomNavigationBarPreview()
         }
+    }
+}
+
+@Composable
+fun PreviewTextField() {
+    Column(
+        modifier = Modifier.fillMaxWidth().padding(8.dp),
+    ) {
+        var text1 by rememberSaveable { mutableStateOf("") }
+        var text2 by rememberSaveable { mutableStateOf("") }
+        var text3 by rememberSaveable { mutableStateOf("") }
+        var text4 by rememberSaveable { mutableStateOf("Ahmed Nasser") }
+
+        BeepBeepTextField(
+            onValueChange = { text3 = it },
+            text = text3,
+            label = "Email",
+        )
+        BeepBeepTextField(
+            onValueChange = { text1 = it },
+            text = text1,
+            label = "Password",
+            keyboardType = KeyboardType.Password
+        )
+        BeepBeepTextField(
+            onValueChange = { text2 = it },
+            text = text2,
+            label = "Username",
+            errorMessage = "incorrect username or password",
+        )
+        BeepBeepTextField(
+            onValueChange = { text4 = it },
+            text = text4,
+            label = "FullName",
+            correctValidation = true
+        )
     }
 }
 
@@ -108,29 +144,6 @@ fun DisabledButtonsPreview() {
     }
 }
 
-@Composable
-fun PreviewTextField() {
-    Column(
-        modifier = Modifier.fillMaxWidth().padding(8.dp),
-    ) {
-        var text1 by rememberSaveable { mutableStateOf("") }
-        var text2 by rememberSaveable { mutableStateOf("") }
-        var text3 by rememberSaveable { mutableStateOf("") }
-
-        BeepBeepTextField(
-            onValueChange = { text1 = it },
-            text = text1,
-            label = "Password",
-            keyboardType = KeyboardType.Password
-        )
-        BeepBeepTextField(
-            onValueChange = { text2 = it },
-            text = text2,
-            label = "username",
-            errorMessage = "incorrect username or password" ,
-        )
-    }
-}
 
 @Composable
 fun BottomNavigationBarPreview() {
