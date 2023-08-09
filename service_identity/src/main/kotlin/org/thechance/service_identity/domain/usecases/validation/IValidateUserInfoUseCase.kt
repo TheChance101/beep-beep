@@ -11,7 +11,7 @@ interface IValidateUserInfoUseCase {
 
     fun validateUpdateUserInformation(user: User)
 
-    fun validateUsernameIsNotBlank(username: String): Boolean
+    fun validateUsernameIsNotEmpty(username: String): Boolean
 
     fun validateFullNameIsNotEmpty(fullName: String): Boolean
 
@@ -30,7 +30,7 @@ class ValidateUserInfoUseCase : IValidateUserInfoUseCase {
     override fun validateUserInformation(user: User) {
         val reasons = mutableListOf<String>()
 
-        if (!validateUsernameIsNotBlank(user.username)) {
+        if (!validateUsernameIsNotEmpty(user.username)) {
             reasons.add(USERNAME_CANNOT_BE_BLANK)
         }
 
@@ -79,16 +79,16 @@ class ValidateUserInfoUseCase : IValidateUserInfoUseCase {
         }
     }
 
-    override fun validateUsernameIsNotBlank(username: String): Boolean = username.isNotBlank()
+    override fun validateUsernameIsNotEmpty(username: String): Boolean = username.isNotEmpty()
 
     override fun validateUsername(username: String): Boolean {
         val validUserNameRegex = "[a-zA-Z0-9_]+".toRegex()
         return username.matches(validUserNameRegex)
     }
 
-    override fun validateFullNameIsNotEmpty(fullName: String): Boolean = fullName.isNotBlank()
+    override fun validateFullNameIsNotEmpty(fullName: String): Boolean = fullName.isNotEmpty()
 
-    override fun validatePasswordIsNotEmpty(password: String): Boolean = password.isNotBlank()
+    override fun validatePasswordIsNotEmpty(password: String): Boolean = password.isNotEmpty()
 
     override fun validatePasswordLength(password: String): Boolean = password.length > 8
 

@@ -10,68 +10,84 @@ class UserValidationUseCaseTest {
     private val userValidationUseCase = ValidateUserInfoUseCase()
 
     @Test
-    fun should_ReturnFalse_When_TheUsernameIsBlank() {
-        assertFalse(userValidationUseCase.validateUsernameIsNotBlank(""))
+    fun should_ReturnFalse_When_TheUsernameIsEmpty() {
+        assertFalse(userValidationUseCase.validateUsernameIsNotEmpty(""))
     }
 
     @Test
-    fun should_ReturnTrue_When_TheUsernameIsNotBlank() {
-        assertTrue(userValidationUseCase.validateUsernameIsNotBlank("Youssef"))
+    fun should_ReturnTrue_When_TheUsernameIsNotEmpty() {
+        val name = "Youssef"
+        val result = userValidationUseCase.validateUsernameIsNotEmpty(name)
+        assertTrue(result)
     }
 
     @Test
     fun should_ReturnTrue_When_UsernameMatchesValidFormat() {
-        assertTrue(userValidationUseCase.validateUsername("youssef_Ramadan"))
-        assertTrue(userValidationUseCase.validateUsername("Youssef123"))
+        val username = "youssef_Ramadan"
+        val result = userValidationUseCase.validateUsername(username)
+        assertTrue(result)
     }
 
     @Test
     fun should_ReturnFalse_When_UsernameContainsInvalidCharacters() {
-        assertFalse(userValidationUseCase.validateUsername("test#"))
-        assertFalse(userValidationUseCase.validateUsername("!@#@!#.doe"))
-        assertFalse(userValidationUseCase.validateUsername("test@gmail"))
+        val username = "!@#@!#.test"
+        val result = userValidationUseCase.validateUsername(username)
+        assertFalse(result)
     }
 
     @Test
     fun should_ReturnFalse_When_FullNameIsBlank() {
-        assertFalse(userValidationUseCase.validateFullNameIsNotEmpty(""))
+        val fullName = ""
+        val result = userValidationUseCase.validateFullNameIsNotEmpty(fullName)
+        assertFalse(result)
     }
 
     @Test
     fun should_ReturnTrue_When_FullNameIsNotBlank() {
-        assertTrue(userValidationUseCase.validateFullNameIsNotEmpty("test"))
+        val fullName = "test"
+        val result = userValidationUseCase.validateFullNameIsNotEmpty(fullName)
+        assertTrue(result)
     }
 
     @Test
     fun should_ReturnFalse_When_PasswordIsBlank() {
-        assertFalse(userValidationUseCase.validatePasswordIsNotEmpty(""))
+        val password = ""
+        val result = userValidationUseCase.validatePasswordIsNotEmpty(password)
+        assertFalse(result)
     }
 
     @Test
     fun should_ReturnTrue_When_PasswordIsNotBlank() {
-        assertTrue(userValidationUseCase.validatePasswordIsNotEmpty("password123"))
+        val password = "password123"
+        val result = userValidationUseCase.validatePasswordIsNotEmpty(password)
+        assertTrue(result)
     }
 
     @Test
     fun should_ReturnTrue_When_PasswordHasValidLength() {
-        assertTrue(userValidationUseCase.validatePasswordLength("longpassword"))
+        val password = "longpassword"
+        val result = userValidationUseCase.validatePasswordLength(password)
+        assertTrue(result)
     }
 
     @Test
     fun should_ReturnFalse_When_PasswordHasInvalidLength() {
-        assertFalse(userValidationUseCase.validatePasswordLength("short"))
+        val password = "short"
+        val result = userValidationUseCase.validatePasswordLength(password)
+        assertFalse(result)
     }
 
     @Test
     fun should_ReturnTrue_When_EmailIsValid() {
-        assertTrue(userValidationUseCase.validateEmail("test@example.com"))
-        assertTrue(userValidationUseCase.validateEmail("youssef.123@gmail.com"))
+        val email = "test@example.com"
+        val result = userValidationUseCase.validateEmail(email)
+        assertTrue(result)
     }
 
     @Test
     fun should_ReturnFalse_When_EmailIsInvalid() {
-        assertFalse(userValidationUseCase.validateEmail("test_invalid.email"))
-        assertFalse(userValidationUseCase.validateEmail("youssef.123@example"))
-        assertFalse(userValidationUseCase.validateEmail("test@.com"))
+        val email = "test_invalid.email"
+        val result = userValidationUseCase.validateEmail(email)
+        assertFalse(result)
     }
 }

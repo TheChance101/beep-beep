@@ -2,6 +2,7 @@ package org.thechance.service_identity.domain.usecases.validation
 
 import org.junit.Assert.*
 import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.thechance.service_identity.domain.entity.RequestValidationException
 import org.thechance.service_identity.domain.usecases.util.AMOUNT_MUST_BE_POSITIVE
 
@@ -20,18 +21,25 @@ class ValidateWalletBalanceUseCaseTest {
         }
     }
 
-    @Test(expected = RequestValidationException::class)
+    @Test
     fun `should throw RequestValidationException when balance is negative and not numeric`() {
+        // Given
         val invalidBalance = "-100.0"
 
-        validateWalletBalanceUseCase.validateWalletBalance(invalidBalance.toDouble())
+        assertThrows(RequestValidationException::class.java) {
+            validateWalletBalanceUseCase.validateWalletBalance(invalidBalance.toDouble())
+        }
     }
 
     @Test
     fun `should not throw any exception when balance is positive and numeric`() {
+        // Given
         val validBalance = 100.0
 
-        validateWalletBalanceUseCase.validateWalletBalance(validBalance)
+        // When & Then
+        assertDoesNotThrow {
+            validateWalletBalanceUseCase.validateWalletBalance(validBalance)
+        }
     }
 
     @Test
@@ -72,7 +80,7 @@ class ValidateWalletBalanceUseCaseTest {
 
     @Test
     fun `should return false when balance is not numeric`() {
-        val nonNumericBalance = "abc"
+        val nonNumericBalance = "hi"
 
         val result = nonNumericBalance.toDoubleOrNull() == null
 
