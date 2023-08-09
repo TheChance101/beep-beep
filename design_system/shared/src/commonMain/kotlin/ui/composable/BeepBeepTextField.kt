@@ -49,7 +49,7 @@ fun BeepBeepTextField(
     var showPassword by remember { mutableStateOf(false) }
 
     Column(
-        modifier = modifier.fillMaxWidth().padding(dimens.space16),
+        modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.Start
     ) {
         Text(
