@@ -63,7 +63,7 @@ class ValidationKtTest {
 
     //region validationRestaurant
     @Test
-    fun `validation restaurant should pass validation with just require fields`() {
+    fun `should pass validation when creat restaurant with just require fields that valid`() {
         // given a valid fields of restaurant that  require
         val validRestaurant = createValidRestaurant()
         //then no exception should be thrown and pass validation
@@ -71,7 +71,7 @@ class ValidationKtTest {
     }
 
     @Test
-    fun `validation restaurant should pass validation with all fields`() {
+    fun `should pass validation when creat restaurant with all fields that valid`() {
         // given a valid fields of restaurant with optional fields
         val validRestaurant = createValidRestaurant()
         //then no exception should be thrown and pass validation
@@ -79,7 +79,7 @@ class ValidationKtTest {
     }
 
     @Test
-    fun `validation restaurant should throw exception when name is invalid`() {
+    fun `should throw exception when creat restaurant with name is invalid`() {
         // given a restaurant when name is less than four letter
         val shortNameExecutable = Executable {
             validationRestaurant(createValidRestaurant()[0].copy(name = "Asi").toEntity())
@@ -105,7 +105,7 @@ class ValidationKtTest {
     }
 
     @Test
-    fun `validation restaurant should throw exception when description is invalid `() {
+    fun `should throw exception when creat restaurant with description is invalid `() {
         // given a restaurant when description is more than 255
         val longDescriptionRestaurantExecutable = Executable {
             validationRestaurant(createValidRestaurant()[0].toEntity().copy(description = "A".repeat(256)))
@@ -115,7 +115,7 @@ class ValidationKtTest {
     }
 
     @Test
-    fun `validation restaurant should throw exception when rate is invalid`() {
+    fun `should throw exception when creat restaurant with rate is invalid`() {
         // given a restaurant when rate is above upper bound  5.0
         val upperRateExecutable = Executable {
             validationRestaurant(createValidRestaurant()[0].toEntity().copy(rate = 5.1))
@@ -131,7 +131,7 @@ class ValidationKtTest {
     }
 
     @Test
-    fun `validation restaurant should throw exception when phone is invalid`() {
+    fun `should throw exception when creat restaurant with phone is invalid`() {
         // given a restaurant when phone is more than 10
         val longPhoneExecutable = Executable {
             validationRestaurant(createValidRestaurant()[0].copy(phone = "1".repeat(11)).toEntity())
@@ -161,6 +161,77 @@ class ValidationKtTest {
         assertThrows(MultiErrorException::class.java, characterPhoneExecutable)
     }
 
+    @Test
+    fun `should throw exception when creat restaurant with address null`() {
+        // given a restaurant when address is null
+        val nullAddressExecutable = Executable {
+            validationRestaurant(createValidRestaurant()[0].copy(address = null).toEntity())
+        }
+
+        // then check if throw exception
+        assertThrows(MultiErrorException::class.java, nullAddressExecutable)
+    }
+
+    @Test
+    fun `should throw exception when creat restaurant with latitude invalid`() {
+        // given a restaurant when latitude is more than 90.0
+        val invalidLatitudeExecutable = Executable {
+            validationRestaurant(createValidRestaurant()[0].copy(address = AddressDto(latitude =  95.0, longitude =  200.0)).toEntity())
+        }
+        // then check if throw exception
+        assertThrows(MultiErrorException::class.java, invalidLatitudeExecutable)
+    }
+    @Test
+    fun `should throw exception when creat restaurant with longitude invalid`() {
+        // given a restaurant when longitude is more than 180.0
+        val invalidLongitudeExecutable = Executable {
+            validationRestaurant(createValidRestaurant()[0].copy(address = AddressDto(40.0, -190.0)).toEntity())
+        }
+        // then check if throw exception
+        assertThrows(MultiErrorException::class.java, invalidLongitudeExecutable)
+    }
+
+    @Test
+    fun `should throw exception when creat restaurant with latitude and longitude invalid`() {
+        val invalidLongitudeAndLatitudeExecutable = Executable {
+            validationRestaurant(createValidRestaurant()[0].copy(address = AddressDto(-91.0, -181.0)).toEntity())
+        }
+        // then check if throw exception
+        assertThrows(MultiErrorException::class.java, invalidLongitudeAndLatitudeExecutable)
+    }
+
+    @Test
+    fun `should pass validation when creat restaurant with null price level`() {
+        // given a restaurant when price level is null
+        val nullPrice = createValidRestaurant().first().copy(priceLevel = null)
+        // then no exception should be thrown
+        validationRestaurant(nullPrice.toEntity())
+    }
+
+    @Test
+    fun `should pass validation when creat restaurant with blank price level`() {
+        // given a restaurant when price level is blank
+        val blankPrice = createValidRestaurant().first().copy(priceLevel = "")
+        // then no exception should be thrown
+        validationRestaurant(blankPrice.toEntity())
+    }
+  @Test
+    fun `should pass validation when creat restaurant with valid price level`() {
+        // given a restaurant when price level is blank
+        val blankPrice = createValidRestaurant().first().copy(priceLevel = "$")
+        // then no exception should be thrown
+        validationRestaurant(blankPrice.toEntity())
+    }
+
+    @Test
+    fun `should throw exception when creat restaurant with invalid price level`() {
+        // given a restaurant when price level not is $, $$, $$$, $$$$
+        val invalidPriceLevelExecutable = Executable {
+            validationRestaurant(createValidRestaurant()[0].copy(priceLevel = "invalid_level").toEntity())
+        }
+        // then check if throw exception
+        assertThrows(MultiErrorException::class.java, invalidPriceLevelExecutable)
+    }
     private fun createValidRestaurant(): List<RestaurantDto> {
         return listOf(
             RestaurantDto(
