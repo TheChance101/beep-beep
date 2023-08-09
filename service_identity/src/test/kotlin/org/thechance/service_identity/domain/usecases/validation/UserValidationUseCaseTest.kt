@@ -61,4 +61,17 @@ class UserValidationUseCaseTest {
     fun should_ReturnFalse_When_PasswordHasInvalidLength() {
         assertFalse(userValidationUseCase.validatePasswordLength("short"))
     }
+
+    @Test
+    fun should_ReturnTrue_When_EmailIsValid() {
+        assertTrue(userValidationUseCase.validateEmail("test@example.com"))
+        assertTrue(userValidationUseCase.validateEmail("youssef.123@gmail.com"))
+    }
+
+    @Test
+    fun should_ReturnFalse_When_EmailIsInvalid() {
+        assertFalse(userValidationUseCase.validateEmail("test_invalid.email"))
+        assertFalse(userValidationUseCase.validateEmail("youssef.123@example"))
+        assertFalse(userValidationUseCase.validateEmail("test@.com"))
+    }
 }
