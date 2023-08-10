@@ -19,7 +19,7 @@ fun validationRestaurant(restaurant: Restaurant) {
     if (!(validateDescription(restaurant.description))) {
         validationErrors.add(INVALID_DESCRIPTION)
     }
-    if (!validatePriceLevel(restaurant.priceLevel)) {
+    if (!isValidatePriceLevel(restaurant.priceLevel)) {
         validationErrors.add(INVALID_PRICE_LEVEL)
     }
     if (!validateRate(restaurant.rate)) {
@@ -95,7 +95,7 @@ fun validateUpdateRestaurant(restaurant: Restaurant) {
         if (!(validateDescription(restaurant.description))) {
             validationErrors.add(INVALID_DESCRIPTION)
         }
-        if (restaurant.priceLevel.isNotEmpty() && !validatePriceLevel(restaurant.priceLevel)) {
+        if (restaurant.priceLevel.isNotEmpty() && !isValidatePriceLevel(restaurant.priceLevel)) {
             validationErrors.add(INVALID_PRICE_LEVEL)
         }
         if (restaurant.rate != -1.0 && !validateRate(restaurant.rate)) {

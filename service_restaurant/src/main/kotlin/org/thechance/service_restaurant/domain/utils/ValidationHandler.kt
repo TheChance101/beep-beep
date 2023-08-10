@@ -32,8 +32,8 @@ internal fun isValidIds(ids: List<String>?): Boolean {
     return !ids.isNullOrEmpty() && ids.all { isValidId(it) }
 }
 
-fun validatePriceLevel(priceLevel: String?): Boolean {
-    return priceLevel.isNullOrBlank() || listOf("$", "$$", "$$$", "$$$$").contains(priceLevel)
+fun isValidatePriceLevel(priceLevel: String?): Boolean {
+    return !priceLevel.isNullOrEmpty() && listOf("$", "$$", "$$$", "$$$$").contains(priceLevel)
 }
 
 fun validateRate(rate: Double): Boolean {
