@@ -1,31 +1,25 @@
 package org.thechance.service_restaurant.utils
 
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.function.Executable
-import org.thechance.service_restaurant.api.models.AddressDto
-import org.thechance.service_restaurant.api.models.RestaurantDto
-import org.thechance.service_restaurant.api.models.mappers.toEntity
+import org.thechance.service_restaurant.domain.entity.Address
+import org.thechance.service_restaurant.domain.entity.Cuisine
+import org.thechance.service_restaurant.domain.entity.MealDetails
+import org.thechance.service_restaurant.domain.entity.Restaurant
 
-class ValidationKtTest {
+class RestaurantValidationTest {
 
     //region creat validationRestaurant
     @Test
     fun `should pass validation when creat restaurant with just require fields that valid`() {
         // given a valid fields of restaurant that  require
-        val validRestaurant = createValidRestaurant()
+        val restaurantExecutable = Executable {
+            validationRestaurant(createValidRestaurant()[0])
+        }
         //then no exception should be thrown and pass validation
-        validationRestaurant(validRestaurant[0].toEntity())
-    }
+        assertDoesNotThrow(restaurantExecutable)
 
-
-    @Test
-    fun `should pass validation when creat restaurant with null price level`() {
-        // given a restaurant when price level is null
-        val nullPrice = createValidRestaurant().first().copy(priceLevel = null)
-        // then no exception should be thrown
-        validationRestaurant(nullPrice.toEntity())
     }
 
     @Test
@@ -33,7 +27,7 @@ class ValidationKtTest {
         // given a restaurant when price level is blank
         val blankPrice = createValidRestaurant().first().copy(priceLevel = "")
         // then no exception should be thrown
-        validationRestaurant(blankPrice.toEntity())
+        validationRestaurant(blankPrice)
     }
 
     @Test
@@ -41,22 +35,24 @@ class ValidationKtTest {
         // given a restaurant when price level is blank
         val blankPrice = createValidRestaurant().first().copy(priceLevel = "$")
         // then no exception should be thrown
-        validationRestaurant(blankPrice.toEntity())
+        validationRestaurant(blankPrice)
     }
 
     @Test
     fun `should pass validation when creat restaurant with all fields that valid`() {
         // given a valid fields of restaurant with optional fields
-        val validRestaurant = createValidRestaurant()
+        val restaurantExecutable = Executable {
+            validationRestaurant(createValidRestaurant()[1])
+        }
         //then no exception should be thrown and pass validation
-        validationRestaurant(validRestaurant[1].toEntity())
+        assertDoesNotThrow(restaurantExecutable)
     }
 
     @Test
     fun `should throw exception when creat restaurant with name is empty`() {
         // given a restaurant when name is empty
         val emptyNameExecutable = Executable {
-            validationRestaurant(createValidRestaurant()[0].copy(name = " ").toEntity())
+            validationRestaurant(createValidRestaurant()[0].copy(name = " "))
         }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, emptyNameExecutable)
@@ -64,21 +60,10 @@ class ValidationKtTest {
     }
 
     @Test
-    fun `should throw exception when creat restaurant with name is null`() {
-        // given a restaurant when name is null
-        val nullNameExecutable = Executable {
-            validationRestaurant(createValidRestaurant()[0].copy(name = null).toEntity())
-        }
-        // then check if throw exception
-        val error = assertThrows(MultiErrorException::class.java, nullNameExecutable)
-        assertEquals(true, error.errorCodes.contains(INVALID_NAME))
-    }
-
-    @Test
     fun `should throw exception when creat restaurant with name is long`() {
         // given a restaurant when name is more than 25
         val longNameExecutable = Executable {
-            validationRestaurant(createValidRestaurant()[0].copy(name = "A".repeat(26)).toEntity())
+            validationRestaurant(createValidRestaurant()[0].copy(name = "A".repeat(26)))
         }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, longNameExecutable)
@@ -89,7 +74,7 @@ class ValidationKtTest {
     fun `should throw exception when creat restaurant with name is short`() {
         // given a restaurant when name is less than four letter
         val shortNameExecutable = Executable {
-            validationRestaurant(createValidRestaurant()[0].copy(name = "Asi").toEntity())
+            validationRestaurant(createValidRestaurant()[0].copy(name = "Asi"))
         }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, shortNameExecutable)
@@ -100,7 +85,7 @@ class ValidationKtTest {
     fun `should throw exception when creat restaurant with description is invalid `() {
         // given a restaurant when description is more than 255
         val longDescriptionExecutable = Executable {
-            validationRestaurant(createValidRestaurant()[0].toEntity().copy(description = "A".repeat(256)))
+            validationRestaurant(createValidRestaurant()[0].copy(description = "A".repeat(256)))
         }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, longDescriptionExecutable)
@@ -108,10 +93,20 @@ class ValidationKtTest {
     }
 
     @Test
+    fun `should pass when creat restaurant with description is valid `() {
+        // given a restaurant when description is 255
+        val longDescriptionExecutable = Executable {
+            validationRestaurant(createValidRestaurant()[0].copy(description = "A".repeat(255)))
+        }
+        // then check if throw exception
+        assertDoesNotThrow(longDescriptionExecutable)
+    }
+
+    @Test
     fun `should throw exception when creat restaurant with rate is more than five`() {
         // given a restaurant when rate is above upper bound  5.0
         val upperRateExecutable = Executable {
-            validationRestaurant(createValidRestaurant()[0].toEntity().copy(rate = 5.1))
+            validationRestaurant(createValidRestaurant()[0].copy(rate = 5.1))
         }
 
         // then check if throw exception
@@ -124,7 +119,7 @@ class ValidationKtTest {
     fun `should throw exception when creat restaurant with rate is lower than zero`() {
         // given a restaurant when rate is  below lower bound 0.0
         val lowerRateExecutable = Executable {
-            validationRestaurant(createValidRestaurant()[0].toEntity().copy(rate = -1.0))
+            validationRestaurant(createValidRestaurant()[0].copy(rate = -1.0))
         }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, lowerRateExecutable)
@@ -135,7 +130,7 @@ class ValidationKtTest {
     fun `should throw exception when creat restaurant with phone is invalid`() {
         // given a restaurant when phone is character
         val characterPhoneExecutable = Executable {
-            validationRestaurant(createValidRestaurant()[0].copy(phone = "s".repeat(10)).toEntity())
+            validationRestaurant(createValidRestaurant()[0].copy(phone = "s".repeat(10)))
         }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, characterPhoneExecutable)
@@ -143,10 +138,20 @@ class ValidationKtTest {
     }
 
     @Test
+    fun `should pass when creat restaurant with phone is valid`() {
+        // given a restaurant when phone is character
+        val characterPhoneExecutable = Executable {
+            validationRestaurant(createValidRestaurant()[0].copy(phone = "1".repeat(10)))
+        }
+        // then check if throw exception
+        assertDoesNotThrow(characterPhoneExecutable)
+    }
+
+    @Test
     fun `should throw exception when creat restaurant with phone is short`() {
         // given a restaurant when phone is less than 10
         val shortPhoneExecutable = Executable {
-            validationRestaurant(createValidRestaurant()[0].copy(phone = "1".repeat(9)).toEntity())
+            validationRestaurant(createValidRestaurant()[0].copy(phone = "1".repeat(9)))
         }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, shortPhoneExecutable)
@@ -157,7 +162,7 @@ class ValidationKtTest {
     fun `should throw exception when creat restaurant with phone is long`() {
         // given a restaurant when phone is more than 10
         val longPhoneExecutable = Executable {
-            validationRestaurant(createValidRestaurant()[0].copy(phone = "1".repeat(11)).toEntity())
+            validationRestaurant(createValidRestaurant()[0].copy(phone = "1".repeat(11)))
         }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, longPhoneExecutable)
@@ -165,37 +170,14 @@ class ValidationKtTest {
     }
 
     @Test
-    fun `should throw exception when creat restaurant with phone is null`() {
-        // given a restaurant when phone is null
-        val nullPhoneExecutable = Executable {
-            validationRestaurant(createValidRestaurant()[0].copy(phone = null).toEntity())
-        }
-        // then check if throw exception
-        val error = assertThrows(MultiErrorException::class.java, nullPhoneExecutable)
-        assertEquals(true, error.errorCodes.contains(INVALID_PHONE))
-    }
-
-    @Test
     fun `should throw exception when creat restaurant with phone is empty`() {
         // given a restaurant when phone is empty
         val emptyPhoneExecutable = Executable {
-            validationRestaurant(createValidRestaurant()[0].copy(phone = " ").toEntity())
+            validationRestaurant(createValidRestaurant()[0].copy(phone = " "))
         }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, emptyPhoneExecutable)
         assertEquals(true, error.errorCodes.contains(INVALID_PHONE))
-    }
-
-    @Test
-    fun `should throw exception when creat restaurant with address null`() {
-        // given a restaurant when address is null
-        val nullAddressExecutable = Executable {
-            validationRestaurant(createValidRestaurant()[0].copy(address = null).toEntity())
-        }
-
-        // then check if throw exception
-        val error = assertThrows(MultiErrorException::class.java, nullAddressExecutable)
-        assertEquals(true, error.errorCodes.contains(INVALID_LOCATION))
     }
 
     @Test
@@ -204,11 +186,11 @@ class ValidationKtTest {
         val invalidLatitudeExecutable = Executable {
             validationRestaurant(
                 createValidRestaurant()[0].copy(
-                    address = AddressDto(
+                    address = Address(
                         latitude = 95.0,
                         longitude = 200.0
                     )
-                ).toEntity()
+                )
             )
         }
         // then check if throw exception
@@ -220,7 +202,7 @@ class ValidationKtTest {
     fun `should throw exception when creat restaurant with longitude invalid`() {
         // given a restaurant when longitude is more than 180.0
         val invalidLongitudeExecutable = Executable {
-            validationRestaurant(createValidRestaurant()[0].copy(address = AddressDto(40.0, -190.0)).toEntity())
+            validationRestaurant(createValidRestaurant()[0].copy(address = Address(40.0, -190.0)))
         }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, invalidLongitudeExecutable)
@@ -230,7 +212,7 @@ class ValidationKtTest {
     @Test
     fun `should throw exception when creat restaurant with latitude and longitude invalid`() {
         val invalidLongitudeAndLatitudeExecutable = Executable {
-            validationRestaurant(createValidRestaurant()[0].copy(address = AddressDto(-91.0, -181.0)).toEntity())
+            validationRestaurant(createValidRestaurant()[0].copy(address = Address(-91.0, -181.0)))
         }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, invalidLongitudeAndLatitudeExecutable)
@@ -242,37 +224,102 @@ class ValidationKtTest {
     fun `should throw exception when creat restaurant with invalid price level`() {
         // given a restaurant when price level not is $, $$, $$$, $$$$
         val invalidPriceLevelExecutable = Executable {
-            validationRestaurant(createValidRestaurant()[0].copy(priceLevel = "invalid_level").toEntity())
+            validationRestaurant(createValidRestaurant()[0].copy(priceLevel = "invalid_level"))
         }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, invalidPriceLevelExecutable)
         assertEquals(true, error.errorCodes.contains(INVALID_PRICE_LEVEL))
     }
 
-    private fun createValidRestaurant(): List<RestaurantDto> {
+    private fun createValidRestaurant(): List<Restaurant> {
         return listOf(
-            RestaurantDto(
+            Restaurant(
                 name = "Good Restaurant",
                 ownerId = "64cc5fdd52c4136b92938f8c",
-                address = AddressDto(0.0, 0.0),
+                address = Address(0.0, 0.0),
                 phone = "1234561234",
                 openingTime = "08:00",
                 closingTime = "22:00",
+                id = "",
             ),
-            RestaurantDto(
+            Restaurant(
                 name = "Good Restaurant",
                 ownerId = "64cc5fdd52c4136b92938f8c",
-                address = AddressDto(0.0, 0.0),
+                address = Address(0.0, 0.0),
                 phone = "1234561234",
                 openingTime = "08:00",
                 closingTime = "22:00",
-                description = "hhg",
                 priceLevel = "$",
                 rate = 4.5,
+                description = "Good Restaurant",
+                id = "",
             )
         )
     }
     //endregion
+
+
+}
+
+class RestaurantOwnershipValidationTest {
+
+    @Test
+    fun `should throw exception when restaurant not exists in database`() {
+        // given a restaurant with a valid ownerId
+        val ownerId = "64cc5fdd52c4136b92938f8c"
+        //when there is no restaurant with that ownerId
+        val invalidOwnerIdExecutable = Executable {
+            validateRestaurantOwnership(null, ownerId)
+        }
+        // then throw exception
+        val error = assertThrows(MultiErrorException::class.java, invalidOwnerIdExecutable)
+        assertEquals(true, error.errorCodes.contains(INVALID_ID))
+    }
+
+    @Test
+    fun `should pass validation when restaurant has valid ownership`() {
+        // given a restaurant with a valid ownerId
+        val validRestaurant = createValidRestaurant()
+        val ownerId = "64cc5fdd52c4136b92938f8c"
+        // when the restaurant has the same ownerId
+        val restaurantExecutable = Executable {
+            validateRestaurantOwnership(validRestaurant, ownerId)
+        }
+        //then no exception should be thrown and pass validation
+        assertDoesNotThrow(restaurantExecutable)
+    }
+
+    @Test
+    fun `should throw exception when restaurant has invalid ownership`() {
+        // given a restaurant with a valid ownerId
+        val validRestaurant = createValidRestaurant()
+        val ownerId = "64cc5fdd52c4131b92938f8c"
+        // when the restaurant has not same ownerId
+        val restaurantExecutable = Executable {
+            validateRestaurantOwnership(validRestaurant, ownerId)
+        }
+        // then throw exception
+        val error = assertThrows(MultiErrorException::class.java, restaurantExecutable)
+        assertEquals(true, error.errorCodes.contains(INVALID_PROPERTY_RIGHTS))
+    }
+
+    private fun createValidRestaurant(): Restaurant {
+        return Restaurant(
+            name = "Good Restaurant",
+            ownerId = "64cc5fdd52c4136b92938f8c",
+            address = Address(0.0, 0.0),
+            description = "A nice place to eat",
+            priceLevel = "$$",
+            rate = 4.5,
+            phone = "123-456-7890",
+            openingTime = "08:00",
+            closingTime = "22:00",
+            id = ""
+        )
+    }
+}
+
+class GeneralValidationTest {
 
     //region isValidId
     @Test
@@ -454,4 +501,189 @@ class ValidationKtTest {
     }
     //endregion
 
+}
+
+class MealValidationTest {
+
+    @Test
+    fun `should pass validation when add meal with valid details`() {
+        //given a valid meal
+        val validMeal = createValidMeal()
+        // No exception should be thrown
+        val mealExecutable = Executable {
+            validateAddMeal(validMeal)
+        }
+        //then no exception should be thrown and pass validation
+        assertDoesNotThrow(mealExecutable)
+    }
+
+    @Test
+    fun `should throw exception when add meal with name is empty`() {
+        // given a meal with name is empty
+        val invalidNameMeal = createValidMeal().copy(name = " ")
+        val nameExecutable = Executable { validateAddMeal(invalidNameMeal) }
+        // then check if throw exception
+        val error = assertThrows(MultiErrorException::class.java, nameExecutable)
+        assertEquals(true, error.errorCodes.contains(INVALID_NAME))
+    }
+
+    @Test
+    fun `should throw exception when add meal with name is long`() {
+        //given a meal with name is more than 25
+        val invalidNameMeal = createValidMeal().copy(name = "A".repeat(26))
+        val nameExecutable = Executable { validateAddMeal(invalidNameMeal) }
+        // then check if throw exception
+        val error = assertThrows(MultiErrorException::class.java, nameExecutable)
+        assertEquals(true, error.errorCodes.contains(INVALID_NAME))
+    }
+
+    @Test
+    fun `should throw exception when add meal with name is short`() {
+        // given a meal with name is less than four letter
+        val invalidNameMeal = createValidMeal().copy(name = "A")
+        val nameExecutable = Executable { validateAddMeal(invalidNameMeal) }
+        // then check if throw exception
+        val error = assertThrows(MultiErrorException::class.java, nameExecutable)
+        assertEquals(true, error.errorCodes.contains(INVALID_NAME))
+    }
+
+    @Test
+    fun `should throw exception when add meal with invalid restaurant Id`() {
+        val invalidRestaurantIdMeal = createValidMeal().copy(restaurantId = "invalid_id")
+        val restaurantIdExecutable = Executable { validateAddMeal(invalidRestaurantIdMeal) }
+        // then check if throw exception
+        val error = assertThrows(MultiErrorException::class.java, restaurantIdExecutable)
+        assertEquals(true, error.errorCodes.contains(INVALID_ID))
+    }
+
+    @Test
+    fun `should throw exception when add meal with empty cuisines`() {
+        // given a meal with empty cuisines
+        val emptyCuisinesMeal = createValidMeal().copy(cuisines = emptyList())
+        val cuisineExecutable = Executable { validateAddMeal(emptyCuisinesMeal) }
+        // then check if throw exception
+        val error = assertThrows(MultiErrorException::class.java, cuisineExecutable)
+        assertEquals(true, error.errorCodes.contains(INVALID_REQUEST_PARAMETER))
+    }
+
+    @Test
+    fun `should throw exception when add meal with invalid cuisine Id`() {
+        // given a meal with invalid cuisine Id
+        val invalidCuisineIdMeal = createValidMeal().copy(cuisines = listOf(Cuisine("invalid_id", "Italian")))
+        val cuisineExecutable = Executable { validateAddMeal(invalidCuisineIdMeal) }
+        // then check if throw exception
+        val error = assertThrows(MultiErrorException::class.java, cuisineExecutable)
+        assertEquals(true, error.errorCodes.contains(INVALID_ONE_OR_MORE_IDS))
+    }
+
+    @Test
+    fun `should throw exception when add meal with empty description`() {
+        // given a meal with empty description
+        val emptyDescriptionMeal = createValidMeal().copy(description = "")
+        val mealExecutable = Executable { validateAddMeal(emptyDescriptionMeal) }
+        // then check if throw exception
+        val error = assertThrows(MultiErrorException::class.java, mealExecutable)
+        assertEquals(true, error.errorCodes.contains(INVALID_DESCRIPTION))
+    }
+
+    @Test
+    fun `should throw exception when add meal with description is more than 255 `() {
+        // given a meal when description is more than 255
+        val invalidDescriptionMeal = createValidMeal().copy(description = "A".repeat(256))
+        val mealExecutable = Executable { validateAddMeal(invalidDescriptionMeal) }
+
+        // then check if throw exception
+        val error = assertThrows(MultiErrorException::class.java, mealExecutable)
+        assertEquals(true, error.errorCodes.contains(INVALID_DESCRIPTION))
+    }
+
+    @Test
+    fun `should pass when add meal with description is valid `() {
+        // given a meal when description is 255
+        val invalidDescriptionMeal = createValidMeal().copy(description = "A".repeat(255))
+        val mealExecutable = Executable { validateAddMeal(invalidDescriptionMeal) }
+
+        // then check if throw exception
+        assertDoesNotThrow(mealExecutable)
+    }
+
+    @Test
+    fun `should throw exception when add meal with invalid price`() {
+        val invalidPriceMeal = createValidMeal().copy(price = -10.0)
+        val mealExecutable = Executable { validateAddMeal(invalidPriceMeal) }
+        // then check if throw exception
+        val error = assertThrows(MultiErrorException::class.java, mealExecutable)
+        assertEquals(true, error.errorCodes.contains(INVALID_PRICE))
+    }
+
+    @Test
+    fun `should pass when add meal with valid price`() {
+        // given a meal with valid price
+        val validPriceMeal = createValidMeal().copy(price = 10.0)
+        val mealExecutable = Executable { validateAddMeal(validPriceMeal) }
+
+        // then check if throw exception
+        assertDoesNotThrow(mealExecutable)
+    }
+
+    @Test
+    fun `should pass when add meal with minimum valid price `() {
+        // given a meal with minimum valid price
+        val minimumPriceMeal = createValidMeal().copy(price = 1.0)
+        val mealExecutable = Executable { validateAddMeal(minimumPriceMeal) }
+
+        // then check if throw exception
+        assertDoesNotThrow(mealExecutable)
+    }
+
+    @Test
+    fun `should pass when add meal with maximum valid price `() {
+        // given a meal with maximum valid price
+        val maximumPriceMeal = createValidMeal().copy(price = 1000.0)
+        val mealExecutable = Executable { validateAddMeal(maximumPriceMeal) }
+
+        // then check if throw exception
+        assertDoesNotThrow(mealExecutable)    }
+
+    @Test
+    fun `should throw exception when add meal with invalid negative price`() {
+        // given a meal with invalid negative price
+        val invalidNegativePriceMeal = createValidMeal().copy(price = -10.0)
+        val mealExecutable = Executable { validateAddMeal(invalidNegativePriceMeal) }
+        // then check if throw exception
+        val error = assertThrows(MultiErrorException::class.java, mealExecutable)
+        assertEquals(true, error.errorCodes.contains(INVALID_PRICE))
+    }
+
+    @Test
+    fun `should throw exception when add meal with invalid zero price `() {
+        // given a meal with invalid zero price
+        val invalidZeroPriceMeal = createValidMeal().copy(price = 0.0)
+        val mealExecutable = Executable { validateAddMeal(invalidZeroPriceMeal) }
+        // then check if throw exception
+        val error = assertThrows(MultiErrorException::class.java, mealExecutable)
+        assertEquals(true, error.errorCodes.contains(INVALID_PRICE))
+    }
+
+    @Test
+    fun `should throw exception when add meal with invalid high price `() {
+        // given a meal with invalid high price
+        val invalidHighPriceMeal = createValidMeal().copy(price = 1500.0)
+        val mealExecutable = Executable { validateAddMeal(invalidHighPriceMeal) }
+        // then check if throw exception
+        val error = assertThrows(MultiErrorException::class.java, mealExecutable)
+        assertEquals(true, error.errorCodes.contains(INVALID_PRICE))
+    }
+
+
+    private fun createValidMeal(): MealDetails {
+        return MealDetails(
+            id = "",
+            restaurantId = "64cc5fdd52F4136b92938f8c",
+            name = "Delicious Meal",
+            description = "A mouthwatering dish",
+            price = 20.0,
+            cuisines = listOf(Cuisine("64cc5fdd52F4136b92938f8c", "Italian"))
+        )
+    }
 }

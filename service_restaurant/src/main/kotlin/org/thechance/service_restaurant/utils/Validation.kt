@@ -16,13 +16,13 @@ fun validationRestaurant(restaurant: Restaurant) {
     if (!validateLocation(restaurant.address.longitude, restaurant.address.latitude)) {
         validationErrors.add(INVALID_LOCATION)
     }
-    if (!(validateDescription(restaurant.description))) {
+    if (!(restaurant.description.isNullOrBlank() || validateDescription(restaurant.description))) {
         validationErrors.add(INVALID_DESCRIPTION)
     }
     if (!validatePriceLevel(restaurant.priceLevel)) {
         validationErrors.add(INVALID_PRICE_LEVEL)
     }
-    if (!validateRate(restaurant.rate)) {
+    if (!(restaurant.rate==null || restaurant.rate != NULL_DOUBLE && validateRate(restaurant.rate))) {
         validationErrors.add(INVALID_RATE)
     }
     if (!validatePhone(restaurant.phone)) {
@@ -149,8 +149,8 @@ fun validateUpdateRestaurant(restaurant: Restaurant) {
     }
 
     if (restaurant.name.isEmpty() &&
-        restaurant.description.isEmpty() &&
-        restaurant.priceLevel.isEmpty() &&
+        restaurant.description.isNullOrEmpty() &&
+        restaurant.priceLevel.isNullOrEmpty() &&
         restaurant.rate == NULL_DOUBLE &&
         restaurant.phone.isEmpty() &&
         restaurant.closingTime.isEmpty() &&
@@ -162,13 +162,13 @@ fun validateUpdateRestaurant(restaurant: Restaurant) {
             validationErrors.add(INVALID_NAME)
         }
 
-        if (!(validateDescription(restaurant.description))) {
+        if (!(restaurant.description.isNullOrEmpty() || validateDescription(restaurant.description))) {
             validationErrors.add(INVALID_DESCRIPTION)
         }
-        if (restaurant.priceLevel.isNotEmpty() && !validatePriceLevel(restaurant.priceLevel)) {
+        if (restaurant.priceLevel.isNullOrEmpty().not() && !validatePriceLevel(restaurant.priceLevel)) {
             validationErrors.add(INVALID_PRICE_LEVEL)
         }
-        if (restaurant.rate != -1.0 && !validateRate(restaurant.rate)) {
+        if ( restaurant.rate == null || restaurant.rate != NULL_DOUBLE && !validateRate(restaurant.rate)) {
             validationErrors.add(INVALID_RATE)
         }
         if (restaurant.phone.isNotEmpty() && !validatePhone(restaurant.phone)) {
