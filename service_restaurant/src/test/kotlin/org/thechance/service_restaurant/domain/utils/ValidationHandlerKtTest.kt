@@ -76,74 +76,186 @@ class ValidationHandlerKtTest {
     @Test
     fun `valid phone number`() {
         val phone = "1234567890"
-
         val result = isValidatePhone(phone)
-
         Assertions.assertTrue(result)
     }
 
     @Test
     fun `invalid phone number with spaces`() {
         val phone = "123 456 7890"
-
         val result = isValidatePhone(phone)
-
         Assertions.assertFalse(result)
     }
 
     @Test
     fun `invalid phone number with dashes`() {
         val phone = "123-456-7890"
-
         val result = isValidatePhone(phone)
-
         Assertions.assertFalse(result)
     }
 
     @Test
     fun `invalid phone number with non-numeric characters`() {
         val phone = "123abc456def"
-
         val result = isValidatePhone(phone)
-
         Assertions.assertFalse(result)
     }
 
     @Test
     fun `invalid phone number too short`() {
         val phone = "123456"
-
         val result = isValidatePhone(phone)
-
         Assertions.assertFalse(result)
     }
 
     @Test
     fun `invalid phone number too long`() {
         val phone = "12345678901234"
-
         val result = isValidatePhone(phone)
-
         Assertions.assertFalse(result)
     }
 
     @Test
     fun `invalid empty phone number`() {
         val phone = ""
-
         val result = isValidatePhone(phone)
-
         Assertions.assertFalse(result)
     }
 
     @Test
     fun `invalid null phone number`() {
         val phone: String? = null
-
         val result = isValidatePhone(phone)
-
         Assertions.assertFalse(result)
     }
     //endregion
 
+
+    //region ID
+    @Test
+    fun `valid ID`() {
+        val id = "64cef66bc6aa0b35318c2b26"
+        val result = isValidId(id)
+        Assertions.assertTrue(result)
+    }
+
+    @Test
+    fun `invalid ID with lowercase letters`() {
+        val id = "a1b2c3d4e5f6g7h8i9j0k1l"
+        val result = isValidId(id)
+        Assertions.assertFalse(result)
+    }
+
+    @Test
+    fun `invalid ID with special characters`() {
+        val id = "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o%"
+        val result = isValidId(id)
+        Assertions.assertFalse(result)
+    }
+
+    @Test
+    fun `invalid ID too short`() {
+        val id = "a1b2c3d4e5f6g7h8i9j0k1l"
+        val result = isValidId(id)
+        Assertions.assertFalse(result)
+    }
+
+    @Test
+    fun `invalid ID too long`() {
+        val id = "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q"
+        val result = isValidId(id)
+        Assertions.assertFalse(result)
+    }
+
+    @Test
+    fun `invalid ID empty`() {
+        val id = ""
+        val result = isValidId(id)
+        Assertions.assertFalse(result)
+    }
+
+    @Test
+    fun `invalid ID null`() {
+        val id: String? = null
+        val result = isValidId(id)
+        Assertions.assertFalse(result)
+    }
+    //endregion
+
+    //region ids
+
+
+    @Test
+    fun `valid IDs list`() {
+        val ids = listOf("64cef670c6aa0b35318c2b27", "64cef673c6aa0b35318c2b28")
+        val result = isValidIds(ids)
+        Assertions.assertTrue(result)
+    }
+
+    @Test
+    fun `invalid IDs list`() {
+        val ids = listOf("a1b2c3d4e5f6g7h8i9j0k1l", "invalidId", "1234567890abcdef12345678")
+        val result = isValidIds(ids)
+        Assertions.assertFalse(result)
+    }
+
+    @Test
+    fun `invalid IDs empty`() {
+        val ids = emptyList<String>()
+        val result = isValidIds(ids)
+        Assertions.assertFalse(result)
+    }
+
+    @Test
+    fun `invalid IDs null`() {
+        val ids: List<String>? = null
+        val result = isValidIds(ids)
+        Assertions.assertFalse(result)
+    }
+    //endregion
+
+    //region Price level
+    @Test
+    fun `valid price level`() {
+        val priceLevel = "$$$"
+        val result = validatePriceLevel(priceLevel)
+        Assertions.assertTrue(result)
+    }
+
+    @Test
+    fun `invalid price level empty`() {
+        val priceLevel = ""
+        val result = validatePriceLevel(priceLevel)
+        Assertions.assertTrue(result)
+    }
+
+    @Test
+    fun `invalid price level null`() {
+        val priceLevel: String? = null
+        val result = validatePriceLevel(priceLevel)
+        Assertions.assertTrue(result)
+    }
+
+    @Test
+    fun `invalid price level`() {
+        val priceLevel = "invalid"
+        val result = validatePriceLevel(priceLevel)
+        Assertions.assertFalse(result)
+    }
+
+    @Test
+    fun `invalid price level long string`() {
+        val priceLevel = "$$$$$"
+        val result = validatePriceLevel(priceLevel)
+        Assertions.assertFalse(result)
+    }
+
+    @Test
+    fun `invalid price level special char`() {
+        val priceLevel = "@@@"
+        val result = validatePriceLevel(priceLevel)
+        Assertions.assertFalse(result)
+    }
+
+    //endregion
 }
