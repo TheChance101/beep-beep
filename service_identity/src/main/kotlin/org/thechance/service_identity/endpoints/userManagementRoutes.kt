@@ -20,8 +20,8 @@ fun Route.userManagementRoutes() {
         get {
             val fullName = call.parameters["full_name"] ?: ""
             val username = call.parameters["username"] ?: ""
-            val users = userManagement.getUsers(fullName, username)
-            call.respond(HttpStatusCode.OK, users.toDto())
+            val users = userManagement.getUsers(fullName, username).toDto()
+            call.respond(HttpStatusCode.OK, users)
         }
 
         get("/{id}/permission") {
