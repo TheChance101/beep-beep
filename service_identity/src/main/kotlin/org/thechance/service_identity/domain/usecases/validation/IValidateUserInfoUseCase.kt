@@ -12,7 +12,7 @@ interface IValidateUserInfoUseCase {
 
     fun validateUpdateUserInformation(user: UpdateUserRequest)
 
-    fun validateUsernameIsNotBlank(username: String): Boolean
+    fun validateUsernameIsNotEmpty(username: String): Boolean
 
     fun validateFullNameIsNotEmpty(fullName: String): Boolean
 
@@ -31,7 +31,7 @@ class ValidateUserInfoUseCase : IValidateUserInfoUseCase {
     override fun validateUserInformation(user: CreateUserRequest) {
         val reasons = mutableListOf<String>()
 
-        if (!validateUsernameIsNotBlank(user.username)) {
+        if (!validateUsernameIsNotEmpty(user.username)) {
             reasons.add(USERNAME_CANNOT_BE_BLANK)
         }
 
@@ -64,7 +64,7 @@ class ValidateUserInfoUseCase : IValidateUserInfoUseCase {
         val reasons = mutableListOf<String>()
 
         user.username?.let {
-            if (!validateUsernameIsNotBlank(it)) {
+            if (!validateUsernameIsNotEmpty(it)) {
                 reasons.add(USERNAME_CANNOT_BE_BLANK)
             }
         }
@@ -104,7 +104,7 @@ class ValidateUserInfoUseCase : IValidateUserInfoUseCase {
         }
     }
 
-    override fun validateUsernameIsNotBlank(username: String): Boolean = username.isNotBlank()
+    override fun validateUsernameIsNotEmpty(username: String): Boolean = username.isNotBlank()
 
     override fun validateUsername(username: String): Boolean {
         val validUserNameRegex = "[a-zA-Z0-9_]+".toRegex()
