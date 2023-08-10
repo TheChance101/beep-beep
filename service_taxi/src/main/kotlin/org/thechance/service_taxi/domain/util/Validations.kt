@@ -1,11 +1,9 @@
 package org.thechance.service_taxi.domain.util
 
-import org.koin.core.annotation.Single
 import org.thechance.service_taxi.domain.entity.Taxi
 import org.thechance.service_taxi.domain.entity.TaxiUpdateRequest
 import org.thechance.service_taxi.domain.entity.Trip
 
-@Single
 class Validations {
     // region taxi
     fun validationTaxi(taxi: Taxi) {

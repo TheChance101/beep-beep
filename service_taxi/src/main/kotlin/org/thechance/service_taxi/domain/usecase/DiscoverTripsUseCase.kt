@@ -3,7 +3,6 @@ package org.thechance.service_taxi.domain.usecase
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.koin.core.annotation.Single
 import org.thechance.service_taxi.domain.entity.Trip
 import org.thechance.service_taxi.domain.entity.TripUpdateRequest
 import org.thechance.service_taxi.domain.gateway.DataBaseGateway
@@ -20,7 +19,6 @@ interface IDiscoverTripsUseCase {
     suspend fun finishTrip(driverId: String, tripId: String)
 }
 
-@Single
 class DiscoverTripsUseCase(
     private val dataBaseGateway: DataBaseGateway,
     private val validations: Validations

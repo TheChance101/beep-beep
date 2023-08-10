@@ -63,16 +63,6 @@ dependencies {
     //Koin
     implementation("io.insert-koin:koin-core:3.4.2")
 
-    val koinKsp = "1.2.2"
-    //Koin annotations
-    implementation("io.insert-koin:koin-annotations:$koinKsp")
-
-    //Koin KSP
-    ksp("io.insert-koin:koin-ksp-compiler:$koinKsp")
-
-    //Kotlin symbol processor
-    implementation("com.google.devtools.ksp:symbol-processing-api:1.8.10-1.0.9")
-
     //Kotlinx Serialization for json
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:2.2.4")
 

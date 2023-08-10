@@ -1,6 +1,5 @@
 package org.thechance.service_taxi.domain.usecase
 
-import org.koin.core.annotation.Single
 import org.thechance.service_taxi.domain.entity.Trip
 import org.thechance.service_taxi.domain.gateway.DataBaseGateway
 import org.thechance.service_taxi.domain.util.ResourceNotFoundException
@@ -13,7 +12,6 @@ interface IManageTripsUseCase {
     suspend fun getTripById(tripId: String): Trip
 }
 
-@Single
 class ManageTripsUseCase(
     private val dataBaseGateway: DataBaseGateway,
     private val validations: Validations

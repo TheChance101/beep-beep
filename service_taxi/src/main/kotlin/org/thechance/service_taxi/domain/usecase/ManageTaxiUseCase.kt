@@ -1,6 +1,5 @@
 package org.thechance.service_taxi.domain.usecase
 
-import org.koin.core.annotation.Single
 import org.thechance.service_taxi.domain.entity.Taxi
 import org.thechance.service_taxi.domain.entity.TaxiUpdateRequest
 import org.thechance.service_taxi.domain.gateway.DataBaseGateway
@@ -17,7 +16,6 @@ interface IManageTaxiUseCase {
     suspend fun getTaxi(taxiId: String): Taxi
 }
 
-@Single
 class ManageTaxiUseCase(
     private val dataBaseGateway: DataBaseGateway,
     private val validations: Validations,
