@@ -6,7 +6,6 @@ import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.reactivestreams.KMongo
 import org.thechance.service_notification.data.collection.GroupUser

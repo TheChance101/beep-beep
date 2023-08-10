@@ -16,7 +16,7 @@ interface DataBaseGateway {
 
     //region trips curd
     suspend fun addTrip(trip: Trip): Boolean
-    suspend fun getTripById(tripId: String): Trip
+    suspend fun getTripById(tripId: String): Trip?
     suspend fun getAllTrips(page: Int, limit: Int): List<Trip>
     suspend fun getDriverTripsHistory(driverId: String, page: Int, limit: Int): List<Trip>
     suspend fun getClientTripsHistory(clientId: String, page: Int, limit: Int): List<Trip>
