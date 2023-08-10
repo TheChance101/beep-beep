@@ -1,4 +1,4 @@
-package org.thechance.service_identity.domain.usecases.user_management
+package org.thechance.service_identity.domain.usecases
 
 import org.koin.core.annotation.Single
 import org.thechance.service_identity.domain.entity.ManagedUser

@@ -1,52 +1,18 @@
 package org.thechance.service_identity.data.mappers
 
-import org.bson.types.ObjectId
-import org.thechance.service_identity.data.collection.*
+import org.thechance.service_identity.data.collection.CreateUserDocument
+import org.thechance.service_identity.data.collection.UpdateUserDocument
+import org.thechance.service_identity.data.collection.UserCollection
+import org.thechance.service_identity.domain.entity.CreateUserRequest
+import org.thechance.service_identity.domain.entity.UpdateUserRequest
 import org.thechance.service_identity.domain.entity.User
-import org.thechance.service_identity.endpoints.model.DetailedUserDto
 import org.thechance.service_identity.endpoints.model.UserDto
-import org.thechance.service_identity.endpoints.model.WalletDto
-
-fun UserCollection.toEntity(): User {
-    return User(
-        id = id.toHexString(),
-        fullName = fullName,
-        username = username,
-        password = password ?: "",
-        email = email,
-        permissions = permissions.toEntity()
-    )
-}
-
-fun List<UserCollection>.toEntity(): List<User> {
-    return this.map { it.toEntity() }
-}
-
-fun User.toUpdateRequest(): UpdateUserRequest {
-    return UpdateUserRequest(
-        fullName = fullName.ifBlank { null },
-        username = username.ifBlank { null },
-        password = password.ifBlank { null },
-        email = email.ifBlank { null },
-    )
-}
-
-fun UserDto.toEntity(): User {
-    return User(
-        id = id,
-        fullName = fullName,
-        username = username,
-        password = password,
-        email = email,
-    )
-}
 
 fun User.toDto(): UserDto {
     return UserDto(
         id = id,
         fullName = fullName,
         username = username,
-        password = password,
         email = email,
         walletBalance = walletBalance,
         addresses = addresses.toDto(),
@@ -54,57 +20,34 @@ fun User.toDto(): UserDto {
     )
 }
 
-fun List<User>.toDto(): List<UserDto> {
-    return map { it.toDto() }
-}
+fun CreateUserDocument.toCreateRequest(): CreateUserRequest = CreateUserRequest(
+    fullName = fullName,
+    username = username,
+    password = password,
+    email = email,
+)
 
-fun User.toDetailedDto(walletDto: WalletDto): DetailedUserDto {
-    return DetailedUserDto(
-        id = id,
-        fullName = fullName,
-        username = username,
-        password = password,
-        email = email,
-        wallet = walletDto,
-        addresses = addresses.toDto(),
-        permissions = permissions.toDto()
-    )
-}
+fun UpdateUserDocument.toUpdateRequest(): UpdateUserRequest = UpdateUserRequest(
+    fullName = fullName,
+    username = username,
+    password = password,
+    email = email,
+)
 
-fun User.toCollection(): UserCollection {
+fun CreateUserRequest.toCollection(): UserCollection {
     return UserCollection(
         fullName = fullName,
         username = username,
         password = password,
         email = email,
-        permissions = permissions.toCollection()
     )
 }
 
-fun User.toDetailsCollection(userId: String): UserDetailsCollection {
-    return UserDetailsCollection(
-        userId = ObjectId(userId),
-        walletCollection = WalletCollection(userId = userId, walletBalance = walletBalance),
-        addresses = addresses.map { ObjectId(it.id) },
-    )
-}
-
-fun CreateUserRequest.toEntity(): User {
-    return User(
-        id = "",
+fun UpdateUserRequest.toUpdateRequest(): UpdateUserDocument {
+    return UpdateUserDocument(
         fullName = fullName,
         username = username,
         password = password,
         email = email,
-    )
-}
-
-fun UpdateUserRequest.toEntity(): User {
-    return User(
-        id = "",
-        fullName = fullName ?: "",
-        username = username ?: "",
-        password = password ?: "",
-        email = email ?: "",
     )
 }

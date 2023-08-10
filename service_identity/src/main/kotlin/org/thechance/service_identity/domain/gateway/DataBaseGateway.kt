@@ -1,15 +1,12 @@
 package org.thechance.service_identity.domain.gateway
 
-import org.thechance.service_identity.domain.entity.Address
-import org.thechance.service_identity.domain.entity.ManagedUser
-import org.thechance.service_identity.domain.entity.Permission
-import org.thechance.service_identity.domain.entity.User
+import org.thechance.service_identity.domain.entity.*
 
 interface DataBaseGateway {
     // region: Permission
     suspend fun getPermission(permissionId: Int): Permission
-    suspend fun addPermission(permission: Permission): Boolean
-    suspend fun updatePermission(permissionId: Int, permission: Permission): Boolean
+    suspend fun addPermission(permission: CreatePermissionRequest): Boolean
+    suspend fun updatePermission(permissionId: Int, permission: UpdatePermissionRequest): Boolean
     suspend fun deletePermission(permissionId: Int): Boolean
     suspend fun getListOfPermission(): List<Permission>
 
@@ -17,11 +14,11 @@ interface DataBaseGateway {
 
     //region address
 
-    suspend fun addAddress(userId: String, address: Address): Boolean
+    suspend fun addAddress(userId: String, address: CreateAddressRequest): Boolean
 
     suspend fun deleteAddress(id: String): Boolean
 
-    suspend fun updateAddress(id: String, address: Address): Boolean
+    suspend fun updateAddress(id: String, address: UpdateAddressRequest): Boolean
 
     suspend fun getAddress(id: String): Address
 
@@ -34,9 +31,9 @@ interface DataBaseGateway {
 
     suspend fun getUsers(fullName: String = "", username: String = ""): List<ManagedUser>
 
-    suspend fun createUser(user: User): Boolean
+    suspend fun createUser(user: CreateUserRequest): Boolean
 
-    suspend fun updateUser(id: String, user: User): Boolean
+    suspend fun updateUser(id: String, user: UpdateUserRequest): Boolean
 
     suspend fun deleteUser(id: String): Boolean
 

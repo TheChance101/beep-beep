@@ -2,8 +2,8 @@ package org.thechance.service_identity.domain.usecases.validation
 
 import org.koin.core.annotation.Single
 import org.thechance.service_identity.domain.entity.RequestValidationException
-import org.thechance.service_identity.domain.usecases.util.AMOUNT_MUST_BE_NUMERIC
-import org.thechance.service_identity.domain.usecases.util.AMOUNT_MUST_BE_POSITIVE
+import org.thechance.service_identity.domain.util.AMOUNT_MUST_BE_NUMERIC
+import org.thechance.service_identity.domain.util.AMOUNT_MUST_BE_POSITIVE
 
 interface IValidateWalletBalanceUseCase {
 

@@ -1,20 +1,22 @@
-package org.thechance.service_identity.domain.usecases.useraccount
+package org.thechance.service_identity.domain.usecases
 
 import org.koin.core.annotation.Single
+import org.thechance.service_identity.domain.entity.CreateUserRequest
 import org.thechance.service_identity.domain.entity.InsufficientFundsException
+import org.thechance.service_identity.domain.entity.UpdateUserRequest
 import org.thechance.service_identity.domain.entity.User
 import org.thechance.service_identity.domain.gateway.DataBaseGateway
-import org.thechance.service_identity.domain.usecases.util.INSUFFICIENT_FUNDS
 import org.thechance.service_identity.domain.usecases.validation.IValidateUserInfoUseCase
 import org.thechance.service_identity.domain.usecases.validation.IValidateWalletBalanceUseCase
+import org.thechance.service_identity.domain.util.INSUFFICIENT_FUNDS
 
 interface IManageUserAccountUseCase {
 
-    suspend fun createUser(user: User): Boolean
+    suspend fun createUser(user: CreateUserRequest): Boolean
 
     suspend fun deleteUser(id: String): Boolean
 
-    suspend fun updateUser(id: String, user: User): Boolean
+    suspend fun updateUser(id: String, user: UpdateUserRequest): Boolean
 
     suspend fun getUser(id: String): User
 
@@ -31,7 +33,7 @@ class ManageUserAccountUseCase(
     private val validateUserInfo: IValidateUserInfoUseCase
 ) : IManageUserAccountUseCase {
 
-    override suspend fun createUser(user: User): Boolean {
+    override suspend fun createUser(user: CreateUserRequest): Boolean {
         validateUserInfo.validateUserInformation(user)
         return dataBaseGateway.createUser(user)
     }
@@ -40,7 +42,7 @@ class ManageUserAccountUseCase(
         return dataBaseGateway.deleteUser(id)
     }
 
-    override suspend fun updateUser(id: String, user: User): Boolean {
+    override suspend fun updateUser(id: String, user: UpdateUserRequest): Boolean {
         validateUserInfo.validateUpdateUserInformation(user)
         return dataBaseGateway.updateUser(id, user)
     }
