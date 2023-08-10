@@ -22,9 +22,10 @@ fun validationRestaurant(restaurant: Restaurant) {
     if (!validatePriceLevel(restaurant.priceLevel)) {
         validationErrors.add(INVALID_PRICE_LEVEL)
     }
-    if (!(restaurant.rate==null || restaurant.rate != NULL_DOUBLE && validateRate(restaurant.rate))) {
+    if (restaurant.rate != null && restaurant.rate != NULL_DOUBLE && !validateRate(restaurant.rate)) {
         validationErrors.add(INVALID_RATE)
     }
+
     if (!validatePhone(restaurant.phone)) {
         validationErrors.add(INVALID_PHONE)
     }
