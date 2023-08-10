@@ -1,15 +1,14 @@
 package org.thechance.service_restaurant.domain.usecase
 
-import org.koin.core.annotation.Single
 import org.thechance.service_restaurant.domain.entity.Cuisine
 import org.thechance.service_restaurant.domain.entity.MealDetails
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
+import org.thechance.service_restaurant.domain.usecase.validation.MealValidation
+import org.thechance.service_restaurant.domain.usecase.validation.Validation
 import org.thechance.service_restaurant.domain.utils.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.NOT_FOUND
-import org.thechance.service_restaurant.domain.usecase.validation.MealValidation
-import org.thechance.service_restaurant.domain.usecase.validation.Validation
 
 interface IManageMealUseCase {
     suspend fun getCuisines(page: Int, limit: Int): List<Cuisine>
@@ -18,7 +17,6 @@ interface IManageMealUseCase {
     suspend fun deleteMealFromRestaurant(mealId: String): Boolean
 }
 
-@Single
 class ManageMealUseCase(
     private val restaurantGateway: IRestaurantGateway,
     private val optionsGateway: IRestaurantOptionsGateway,

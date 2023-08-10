@@ -1,12 +1,21 @@
 package org.thechance.service_restaurant.domain.usecase.validation
 
-import org.koin.core.annotation.Single
 import org.thechance.service_restaurant.domain.entity.Category
 import org.thechance.service_restaurant.domain.entity.Restaurant
-import org.thechance.service_restaurant.domain.utils.*
 import org.thechance.service_restaurant.domain.usecase.validation.Validation.Companion.NULL_DOUBLE
+import org.thechance.service_restaurant.domain.utils.INVALID_DESCRIPTION
+import org.thechance.service_restaurant.domain.utils.INVALID_ID
+import org.thechance.service_restaurant.domain.utils.INVALID_LOCATION
+import org.thechance.service_restaurant.domain.utils.INVALID_NAME
+import org.thechance.service_restaurant.domain.utils.INVALID_PERMISSION_UPDATE_LOCATION
+import org.thechance.service_restaurant.domain.utils.INVALID_PHONE
+import org.thechance.service_restaurant.domain.utils.INVALID_PRICE_LEVEL
+import org.thechance.service_restaurant.domain.utils.INVALID_PROPERTY_RIGHTS
+import org.thechance.service_restaurant.domain.utils.INVALID_RATE
+import org.thechance.service_restaurant.domain.utils.INVALID_TIME
+import org.thechance.service_restaurant.domain.utils.INVALID_UPDATE_PARAMETER
+import org.thechance.service_restaurant.domain.utils.MultiErrorException
 
-@Single
 class RestaurantValidation(
     private val basicValidation: Validation
 ) {

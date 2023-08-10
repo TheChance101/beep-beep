@@ -1,7 +1,6 @@
 package org.thechance.service_restaurant.data
 
 import com.mongodb.reactivestreams.client.MongoClient
-import org.koin.core.annotation.Single
 import org.litote.kmongo.coroutine.CoroutineCollection
 import org.litote.kmongo.coroutine.coroutine
 import org.thechance.service_restaurant.data.collection.CategoryCollection
@@ -9,7 +8,6 @@ import org.thechance.service_restaurant.data.collection.CuisineCollection
 import org.thechance.service_restaurant.data.collection.MealCollection
 import org.thechance.service_restaurant.data.collection.RestaurantCollection
 
-@Single
 class DataBaseContainer(client: MongoClient) {
 
     private val database = client.coroutine.getDatabase(DATABASE_NAME)

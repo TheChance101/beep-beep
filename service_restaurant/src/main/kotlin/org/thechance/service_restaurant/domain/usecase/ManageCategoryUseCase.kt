@@ -1,6 +1,5 @@
 package org.thechance.service_restaurant.domain.usecase
 
-import org.koin.core.annotation.Single
 import org.thechance.service_restaurant.domain.entity.Category
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
 import org.thechance.service_restaurant.domain.usecase.validation.RestaurantValidation
@@ -18,7 +17,6 @@ interface IManageCategoryUseCase {
     suspend fun deleteCategory(categoryId: String): Boolean
 }
 
-@Single
 class ManageCategoryUseCase(
     private val restaurantOptions: IRestaurantOptionsGateway,
     private val restaurantValidation: RestaurantValidation,

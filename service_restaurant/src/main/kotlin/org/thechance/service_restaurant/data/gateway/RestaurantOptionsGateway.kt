@@ -2,9 +2,18 @@ package org.thechance.service_restaurant.data.gateway
 
 import com.mongodb.client.model.Updates
 import org.bson.types.ObjectId
-import org.koin.core.annotation.Single
-import org.litote.kmongo.*
+import org.litote.kmongo.addToSet
+import org.litote.kmongo.and
 import org.litote.kmongo.coroutine.aggregate
+import org.litote.kmongo.eq
+import org.litote.kmongo.`in`
+import org.litote.kmongo.lookup
+import org.litote.kmongo.match
+import org.litote.kmongo.project
+import org.litote.kmongo.pull
+import org.litote.kmongo.pullAll
+import org.litote.kmongo.set
+import org.litote.kmongo.setTo
 import org.thechance.service_restaurant.data.DataBaseContainer
 import org.thechance.service_restaurant.data.collection.CategoryCollection
 import org.thechance.service_restaurant.data.collection.CuisineCollection
@@ -23,7 +32,6 @@ import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.entity.Restaurant
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
 
-@Single
 class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRestaurantOptionsGateway {
 
     //region Category

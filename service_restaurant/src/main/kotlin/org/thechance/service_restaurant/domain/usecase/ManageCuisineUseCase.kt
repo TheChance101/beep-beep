@@ -2,11 +2,11 @@ package org.thechance.service_restaurant.domain.usecase
 
 import org.thechance.service_restaurant.domain.entity.Cuisine
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
+import org.thechance.service_restaurant.domain.usecase.validation.Validation
 import org.thechance.service_restaurant.domain.utils.INVALID_NAME
 import org.thechance.service_restaurant.domain.utils.InvalidParameterException
 import org.thechance.service_restaurant.domain.utils.NOT_FOUND
 import org.thechance.service_restaurant.domain.utils.ResourceNotFoundException
-import org.thechance.service_restaurant.domain.usecase.validation.Validation
 
 interface IManageCuisineUseCase {
     suspend fun getCuisines(page: Int, limit: Int): List<Cuisine>
@@ -14,7 +14,6 @@ interface IManageCuisineUseCase {
     suspend fun updateCuisine(cuisine: Cuisine): Boolean
     suspend fun deleteCuisine(id: String): Boolean
 }
-
 
 class ManageCuisineUseCase(
     private val restaurantOptions: IRestaurantOptionsGateway,
