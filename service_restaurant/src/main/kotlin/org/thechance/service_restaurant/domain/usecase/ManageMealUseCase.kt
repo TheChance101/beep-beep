@@ -5,7 +5,13 @@ import org.thechance.service_restaurant.domain.entity.Cuisine
 import org.thechance.service_restaurant.domain.entity.MealDetails
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
-import org.thechance.service_restaurant.utils.*
+import org.thechance.service_restaurant.domain.utils.INVALID_ID
+import org.thechance.service_restaurant.domain.utils.MultiErrorException
+import org.thechance.service_restaurant.domain.utils.NOT_FOUND
+import org.thechance.service_restaurant.domain.utils.isValidId
+import org.thechance.service_restaurant.domain.utils.validateAddMeal
+import org.thechance.service_restaurant.domain.utils.validatePagination
+import org.thechance.service_restaurant.domain.utils.validateUpdateMeal
 
 interface IManageMealUseCase {
     suspend fun getCuisines(page: Int, limit: Int): List<Cuisine>
@@ -26,7 +32,9 @@ class ManageMealUseCase(
 
     override suspend fun addMealToRestaurant(meal: MealDetails): Boolean {
         validateAddMeal(meal)
-        restaurantGateway.getRestaurant(meal.restaurantId) ?: throw MultiErrorException(listOf(NOT_FOUND))
+        restaurantGateway.getRestaurant(meal.restaurantId) ?: throw MultiErrorException(listOf(
+            NOT_FOUND
+        ))
         val cuisineIds = meal.cuisines.map { it.id }
         if (!optionsGateway.areCuisinesExist(cuisineIds)) throw MultiErrorException(listOf(NOT_FOUND))
         restaurantGateway.addCuisineToRestaurant(meal.restaurantId, cuisineIds)
@@ -40,7 +48,9 @@ class ManageMealUseCase(
 
     override suspend fun deleteMealFromRestaurant(mealId: String): Boolean {
         if (!isValidId(mealId)) throw MultiErrorException(listOf(INVALID_ID))
-        val meal = restaurantGateway.getMealById(mealId) ?: throw MultiErrorException(listOf(NOT_FOUND))
+        val meal = restaurantGateway.getMealById(mealId) ?: throw MultiErrorException(listOf(
+            NOT_FOUND
+        ))
         val cuisineIds = meal.cuisines.map { it.id }
         restaurantGateway.deleteMealById(mealId)
         val cuisinesNeedToDelete = restaurantGateway.getCuisinesNotInRestaurant(meal.restaurantId, cuisineIds!!)

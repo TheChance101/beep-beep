@@ -2,7 +2,12 @@ package org.thechance.service_restaurant.domain.usecase
 
 import org.thechance.service_restaurant.domain.entity.Cuisine
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
-import org.thechance.service_restaurant.utils.*
+import org.thechance.service_restaurant.domain.utils.INVALID_NAME
+import org.thechance.service_restaurant.domain.utils.InvalidParameterException
+import org.thechance.service_restaurant.domain.utils.NOT_FOUND
+import org.thechance.service_restaurant.domain.utils.ResourceNotFoundException
+import org.thechance.service_restaurant.domain.utils.isValidName
+import org.thechance.service_restaurant.domain.utils.validatePagination
 
 interface IManageCuisineUseCase {
     suspend fun getCuisines(page: Int, limit: Int): List<Cuisine>

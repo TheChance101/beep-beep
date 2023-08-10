@@ -3,7 +3,13 @@ package org.thechance.service_restaurant.domain.usecase
 import org.koin.core.annotation.Single
 import org.thechance.service_restaurant.domain.entity.Restaurant
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
-import org.thechance.service_restaurant.utils.*
+import org.thechance.service_restaurant.domain.utils.INVALID_ID
+import org.thechance.service_restaurant.domain.utils.InvalidParameterException
+import org.thechance.service_restaurant.domain.utils.NOT_FOUND
+import org.thechance.service_restaurant.domain.utils.ResourceNotFoundException
+import org.thechance.service_restaurant.domain.utils.isValidId
+import org.thechance.service_restaurant.domain.utils.validatePagination
+import org.thechance.service_restaurant.domain.utils.validationRestaurant
 
 interface IControlRestaurantsUseCase {
     suspend fun createRestaurant(restaurant: Restaurant): Boolean

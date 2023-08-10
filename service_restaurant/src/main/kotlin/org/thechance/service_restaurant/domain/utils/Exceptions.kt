@@ -1,4 +1,4 @@
-package org.thechance.service_restaurant.utils
+package org.thechance.service_restaurant.domain.utils
 
 open class RestaurantException(message: String) : Throwable(message)
 
