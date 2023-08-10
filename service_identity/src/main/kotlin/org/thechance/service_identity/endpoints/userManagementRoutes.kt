@@ -27,6 +27,12 @@ fun Route.userManagementRoutes() {
             call.respond(HttpStatusCode.OK, users)
         }
 
+        get("/search/{search_term}") {
+            val searchTerm = call.parameters["search_term"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            val users = userManagement.searchUsers(searchTerm).toDto()
+            call.respond(HttpStatusCode.OK, users)
+        }
+
         get("/{id}/permission") {
             val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val permissions = userManagement.getUserPermissions(id).toDto()

@@ -188,6 +188,15 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
         ).paginate(page, limit).toList().toManagedEntity()
     }
 
+    override suspend fun searchUsers(searchTerm: String): List<ManagedUser> {
+        val searchQuery = or(
+            User::username regex searchTerm,
+            User::fullName regex searchTerm
+        )
+
+        return userCollection.find(searchQuery).toList().toManagedEntity()
+    }
+
     override suspend fun createUser(user: CreateUserRequest): Boolean {
         val userDocument = user.toCollection()
         try {

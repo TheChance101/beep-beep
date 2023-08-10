@@ -31,6 +31,8 @@ interface DataBaseGateway {
 
     suspend fun getUsers(page: Int, limit: Int, fullName: String = "", username: String = ""): List<ManagedUser>
 
+    suspend fun searchUsers(searchTerm: String): List<ManagedUser>
+
     suspend fun createUser(user: CreateUserRequest): Boolean
 
     suspend fun updateUser(id: String, user: UpdateUserRequest): Boolean
