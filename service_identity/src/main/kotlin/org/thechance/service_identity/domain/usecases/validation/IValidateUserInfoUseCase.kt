@@ -64,7 +64,7 @@ class ValidateUserInfoUseCase : IValidateUserInfoUseCase {
         val reasons = mutableListOf<String>()
 
         user.username?.let {
-            if (!validateUsernameIsNotBlank(it)) {
+            if (!validateUsernameIsNotEmpty(it)) {
                 reasons.add(USERNAME_CANNOT_BE_BLANK)
             }
         }
@@ -104,16 +104,16 @@ class ValidateUserInfoUseCase : IValidateUserInfoUseCase {
         }
     }
 
-    override fun validateUsernameIsNotEmpty(username: String): Boolean = username.isNotEmpty()
+    override fun validateUsernameIsNotEmpty(username: String): Boolean = username.isNotBlank()
 
     override fun validateUsername(username: String): Boolean {
         val validUserNameRegex = "[a-zA-Z0-9_]+".toRegex()
         return username.matches(validUserNameRegex)
     }
 
-    override fun validateFullNameIsNotEmpty(fullName: String): Boolean = fullName.isNotEmpty()
+    override fun validateFullNameIsNotEmpty(fullName: String): Boolean = fullName.isNotBlank()
 
-    override fun validatePasswordIsNotEmpty(password: String): Boolean = password.isNotEmpty()
+    override fun validatePasswordIsNotEmpty(password: String): Boolean = password.isNotBlank()
 
     override fun validatePasswordLength(password: String): Boolean = password.length > 8
 
