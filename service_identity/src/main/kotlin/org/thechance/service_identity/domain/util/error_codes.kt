@@ -1,9 +1,6 @@
-package org.thechance.service_identity.domain.usecases.util
-
-const val INVALID_HEX_STRING_LENGTH = "1043"
+package org.thechance.service_identity.domain.util
 
 
-const val INVALID_USER_ID = "1044"
 const val INVALID_REQUEST_PARAMETER = "1042"
 const val INVALID_ADDRESS_LOCATION = "1045"
 
@@ -18,8 +15,6 @@ const val INVALID_EMAIL = "1008"
 
 const val NOT_FOUND = "1041"
 
-const val INVALID_AMOUNT = "1009"
-const val INSUFFICIENT_FUNDS = "1010"
-
 const val AMOUNT_MUST_BE_POSITIVE = "1011"
 const val AMOUNT_MUST_BE_NUMERIC = "1012"
+const val INSUFFICIENT_FUNDS = "1010"

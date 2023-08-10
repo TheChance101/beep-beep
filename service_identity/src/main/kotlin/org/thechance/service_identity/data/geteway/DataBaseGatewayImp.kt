@@ -14,11 +14,13 @@ import org.litote.kmongo.coroutine.aggregate
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.*
 import org.thechance.service_identity.data.mappers.*
-import org.thechance.service_identity.data.util.*
+import org.thechance.service_identity.data.util.USER_DETAILS_COLLECTION
+import org.thechance.service_identity.data.util.isUpdatedSuccessfully
+import org.thechance.service_identity.data.util.paginate
 import org.thechance.service_identity.domain.entity.*
 import org.thechance.service_identity.domain.gateway.DataBaseGateway
-import org.thechance.service_identity.domain.usecases.util.NOT_FOUND
-import org.thechance.service_identity.domain.usecases.util.USER_ALREADY_EXISTS
+import org.thechance.service_identity.domain.util.NOT_FOUND
+import org.thechance.service_identity.domain.util.USER_ALREADY_EXISTS
 
 @Single
 class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway {
@@ -48,7 +50,7 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
 
     //region Address
 
-    override suspend fun addAddress(userId: String, address: Address): Boolean {
+    override suspend fun addAddress(userId: String, address: CreateAddressRequest): Boolean {
         val newAddressCollection = address.toCollection(userId)
         userDetailsCollection.updateOne(
             filter = UserDetailsCollection::userId eq ObjectId(userId),
@@ -68,8 +70,12 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
         ).isUpdatedSuccessfully()
     }
 
-    override suspend fun updateAddress(id: String, address: Address): Boolean {
-        return addressCollection.updateOneById(ObjectId(id), address.toUpdateRequest()).isUpdatedSuccessfully()
+    override suspend fun updateAddress(id: String, address: UpdateAddressRequest): Boolean {
+        return addressCollection.updateOneById(
+            ObjectId(id),
+            address.toUpdateDocument(),
+            updateOnlyNotNullProperties = true
+        ).isUpdatedSuccessfully()
     }
 
     override suspend fun getAddress(id: String): Address {
@@ -94,7 +100,7 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
             ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
-    override suspend fun addPermission(permission: Permission): Boolean {
+    override suspend fun addPermission(permission: CreatePermissionRequest): Boolean {
         val maximumId = permissionCollection.find().toList().size
         return permissionCollection.insertOne(permission.toCollection(maximumId + 1)).wasAcknowledged()
     }
@@ -116,12 +122,12 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
     }
 
 
-    override suspend fun updatePermission(permissionId: Int, permission: Permission): Boolean {
+    override suspend fun updatePermission(permissionId: Int, permission: UpdatePermissionRequest): Boolean {
         return permissionCollection.updateOneById(
             id = permissionId,
-            update = permission.toUpdateRequest(),
+            update = permission.toUpdateDocument(),
             updateOnlyNotNullProperties = true
-        ).wasAcknowledged()
+        ).isUpdatedSuccessfully()
     }
     //endregion
 
@@ -182,19 +188,19 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
         ).paginate(page, limit).toList().toManagedEntity()
     }
 
-    override suspend fun createUser(user: User): Boolean {
+    override suspend fun createUser(user: CreateUserRequest): Boolean {
         val userDocument = user.toCollection()
         try {
             val wallet = WalletCollection(userId = userDocument.id.toString())
             createWallet(wallet)
-            userDetailsCollection.insertOne(user.toDetailsCollection(userDocument.id.toHexString()))
+            userDetailsCollection.insertOne(UserDetailsCollection(userId = userDocument.id))
             return userCollection.insertOne(userDocument).wasAcknowledged()
         } catch (exception: MongoWriteException) {
             throw UserAlreadyExistsException(USER_ALREADY_EXISTS)
         }
     }
 
-    override suspend fun updateUser(id: String, user: User): Boolean {
+    override suspend fun updateUser(id: String, user: UpdateUserRequest): Boolean {
         try {
             return userCollection.updateOneById(
                 ObjectId(id),
@@ -217,10 +223,10 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
 
     // region: wallet
 
-    private suspend fun getWalletByUserId(userId: String): Wallet {
+    private suspend fun getWalletByUserId(userId: String): WalletCollection {
         return walletCollection.findOne(
             WalletCollection::userId eq userId
-        )?.toEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
+        ) ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
     override suspend fun subtractFromWallet(userId: String, amount: Double): Boolean {
@@ -279,7 +285,10 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
     // endregion: user permission management
 
     companion object {
-
+        private const val WALLET_COLLECTION = "wallet"
+        private const val ADDRESS_COLLECTION_NAME = "address"
+        private const val PERMISSION_COLLECTION_NAME = "permission"
+        private const val USER_COLLECTION = "user"
         private const val USER_NAME = "username"
         private const val INDEX_NAME = "username_1"
     }

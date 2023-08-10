@@ -6,13 +6,14 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
+import org.thechance.service_identity.data.collection.CreateAddressDocument
+import org.thechance.service_identity.data.collection.UpdateAddressDocument
+import org.thechance.service_identity.data.mappers.toCreateRequest
 import org.thechance.service_identity.data.mappers.toDto
-import org.thechance.service_identity.data.mappers.toEntity
+import org.thechance.service_identity.data.mappers.toUpdateRequest
 import org.thechance.service_identity.domain.entity.MissingParameterException
-import org.thechance.service_identity.domain.usecases.user_address.IManageUserAddressUseCase
-import org.thechance.service_identity.domain.usecases.util.INVALID_REQUEST_PARAMETER
-import org.thechance.service_identity.endpoints.model.CreateAddressRequest
-import org.thechance.service_identity.endpoints.model.UpdateAddressRequest
+import org.thechance.service_identity.domain.usecases.IManageUserAddressUseCase
+import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
 
 fun Route.addressRoutes() {
 
@@ -20,9 +21,9 @@ fun Route.addressRoutes() {
 
     route("users/address") {
         post("{userId}") {
-            val address = call.receive<CreateAddressRequest>()
+            val address = call.receive<CreateAddressDocument>()
             val userId = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            call.respond(HttpStatusCode.Created, manageUserAddress.addAddress(userId, address.toEntity()))
+            call.respond(HttpStatusCode.Created, manageUserAddress.addAddress(userId, address.toCreateRequest()))
         }
 
         get("/{id}") {
@@ -37,8 +38,8 @@ fun Route.addressRoutes() {
 
         put("/{id}") {
             val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val address = call.receive<UpdateAddressRequest>()
-            call.respond(HttpStatusCode.OK, manageUserAddress.updateAddress(id, address.toEntity()))
+            val address = call.receive<UpdateAddressDocument>()
+            call.respond(HttpStatusCode.OK, manageUserAddress.updateAddress(id, address.toUpdateRequest()))
         }
 
         get("/all/{userId}") {
