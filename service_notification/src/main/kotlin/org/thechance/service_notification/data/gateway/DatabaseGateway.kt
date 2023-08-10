@@ -1,10 +1,14 @@
 package org.thechance.service_notification.data.gateway
 
+import com.mongodb.client.model.UpdateOptions
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.addToSet
 import org.litote.kmongo.coroutine.CoroutineCollection
+import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
+import org.litote.kmongo.`in`
+import org.thechance.service_notification.data.collection.GroupUser
 import org.thechance.service_notification.data.collection.NotificationHistoryCollection
 import org.thechance.service_notification.data.collection.UserCollection
 import org.thechance.service_notification.data.mappers.toCollection
@@ -17,66 +21,40 @@ import org.thechance.service_notification.domain.model.User
 
 @Single
 class DatabaseGateway(
+    private val database: CoroutineDatabase,
     private val userCollection: CoroutineCollection<UserCollection>,
     private val historyCollection: CoroutineCollection<NotificationHistoryCollection>,
-    private val taxiUsersCollection: CoroutineCollection<UserCollection>,
-    private val restaurantUsersCollection: CoroutineCollection<UserCollection>,
-    private val dashboardUsersCollection: CoroutineCollection<UserCollection>,
-    private val supportUsersCollection: CoroutineCollection<UserCollection>,
-    private val deliveryUsersCollection: CoroutineCollection<UserCollection>,
-    private val endUsersCollection: CoroutineCollection<UserCollection>,
 ) : IDatabaseGateway {
-
-    override suspend fun createUser(user: User): Boolean {
-        return userCollection.insertOne(user.toCollection()).wasAcknowledged()
-    }
 
     override suspend fun getNotificationByUserId(id: String): Notification {
         return historyCollection.find(NotificationHistoryCollection::userId eq ObjectId(id)).first()?.toEntity()
             ?: throw NotFoundException("4005")
     }
 
-    override suspend fun addTokenToUser(id: String, token: String): Boolean {
-        return userCollection.updateOne(
-            filter = UserCollection::id eq ObjectId(id),
-            update = addToSet(UserCollection::deviceTokens, token)
-        ).isSuccessfullyUpdated()
-    }
-
     override suspend fun getTokensForUserById(id: String): List<String> {
         return userCollection.findOneById(ObjectId(id))?.deviceTokens ?: throw NotFoundException("4001")
     }
 
-    override suspend fun getUsersGroupTokens(userGroup: String): List<String> {
-        return when (userGroup) {
-            "taxi_users" -> {
-                taxiUsersCollection.find().toList().flatMap { it.deviceTokens }
-            }
+    override suspend fun registerToken(userId: String, token: String): Boolean {
+        return userCollection.updateOneById(
+            id = userId,
+            update = addToSet(UserCollection::deviceTokens, token),
+            options = UpdateOptions().upsert(true)
+        ).isSuccessfullyUpdated()
+    }
 
-            "restaurant_users" -> {
-                restaurantUsersCollection.find().toList().flatMap { it.deviceTokens }
-            }
+    override suspend fun getUsersGroupIds(userGroup: String): List<String> {
+        val collection = database.getCollection<GroupUser>(userGroup)
+        return collection.find().toList().map { it.userId }
+    }
 
-            "dashboard_users" -> {
-                dashboardUsersCollection.find().toList().flatMap { it.deviceTokens }
-            }
+    override suspend fun getUsersTokens(ids: List<String>): List<String> {
+        return userCollection.find(User::id `in` ids).toList().flatMap { it.deviceTokens }
+    }
 
-            "support_users" -> {
-                supportUsersCollection.find().toList().flatMap { it.deviceTokens }
-            }
-
-            "delivery_users" -> {
-                deliveryUsersCollection.find().toList().flatMap { it.deviceTokens }
-            }
-
-            "end_users" -> {
-                endUsersCollection.find().toList().flatMap { it.deviceTokens }
-            }
-
-            else -> {
-                throw NotFoundException("NOT_VALID_COLLECTION")
-            }
-        }
+    override suspend fun addUserToGroup(userId: String, userGroup: String): Boolean {
+        val collection = database.getCollection<GroupUser>(userGroup)
+        return collection.insertOne(GroupUser(userId = userId)).wasAcknowledged()
     }
 
     override suspend fun addNotificationToUserHistory(notification: Notification) {

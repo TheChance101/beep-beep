@@ -9,6 +9,7 @@ import org.koin.dsl.module
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.reactivestreams.KMongo
+import org.thechance.service_notification.data.collection.GroupUser
 import org.thechance.service_notification.data.collection.NotificationHistoryCollection
 import org.thechance.service_notification.data.collection.UserCollection
 
@@ -21,7 +22,7 @@ val kmongoModule = module {
         val cluster = System.getenv("cluster")
         val username = System.getenv("username")
         val password = System.getenv("password")
-        KMongo.createClient("mongodb+srv://sadeq:01990199055@cluster0.ejfkr.mongodb.net/?retryWrites=true&w=majority")
+        KMongo.createClient("mongodb+srv://$username:$password@$cluster.mongodb.net/?retryWrites=true&w=majority")
     }
 
     single {
@@ -29,31 +30,11 @@ val kmongoModule = module {
     }
 
     single {
-        get<CoroutineDatabase>().getCollection<NotificationHistoryCollection>("history_notification")
+        get<CoroutineDatabase>().getCollection<UserCollection>("users")
     }
 
-    single(named("taxi_users")) {
-        get<CoroutineDatabase>().getCollection<UserCollection>("taxi_users")
-    }
-
-    single(named("restaurant_users")) {
-        get<CoroutineDatabase>().getCollection<UserCollection>("restaurant_users")
-    }
-
-    single(named("delivery_users")) {
-        get<CoroutineDatabase>().getCollection<UserCollection>("delivery_users")
-    }
-
-    single(named("end_users")) {
-        get<CoroutineDatabase>().getCollection<UserCollection>("end_users")
-    }
-
-    single(named("support_users")) {
-        get<CoroutineDatabase>().getCollection<UserCollection>("support_users")
-    }
-
-    single(named("dashboard_users")) {
-        get<CoroutineDatabase>().getCollection<UserCollection>("dashboard_users")
+    single {
+        get<CoroutineDatabase>().getCollection<NotificationHistoryCollection>("notification_history")
     }
 }
 

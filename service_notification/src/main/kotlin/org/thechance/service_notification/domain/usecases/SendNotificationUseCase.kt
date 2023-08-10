@@ -8,8 +8,12 @@ import org.thechance.service_notification.domain.gateway.IPushNotificationGatewa
 class SendNotificationUseCase(
     private val pushNotificationGateway: IPushNotificationGateway
 ) : ISendNotificationUseCase {
-    override suspend fun sendNotification(tokens: List<String>, title: String, body: String) {
-        pushNotificationGateway.sendNotification(tokens, title, body)
+    override suspend fun invoke(tokens: List<String>, title: String, body: String): Boolean {
+        return pushNotificationGateway.sendNotification(tokens, title, body)
     }
 
+}
+
+interface ISendNotificationUseCase {
+    suspend operator fun invoke(tokens: List<String>, title: String, body: String): Boolean
 }

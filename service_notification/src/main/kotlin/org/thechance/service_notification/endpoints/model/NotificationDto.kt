@@ -7,6 +7,6 @@ data class NotificationDto(
     val title: String,
     val body: String,
     val date: Long,
-    val userId : String,
-    val isRead : Boolean
+    val userId: String, // TODO: is this important?
+    val isRead: Boolean // TODO: is this important?
 )
