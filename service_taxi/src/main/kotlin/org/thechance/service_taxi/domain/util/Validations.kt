@@ -156,6 +156,8 @@ class Validations {
             "^\\d{4}\\s[A-Z]{2}\$".toRegex(), // Morocco
             "^\\d{3}\\s[A-Z]{2}\$".toRegex(), // Tunisia
             "^[A-Z0-9]{1,2}-[0-9]{4,5}\$".toRegex(), // Iraq
+            "^[A-Z0-9]{1,2}-[0-9]{4,5}\$".toRegex(), // Syria
+            "^[A-Z0-9]{1,7}\$".toRegex(), // United States
         )
     }
 }

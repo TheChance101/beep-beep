@@ -12,25 +12,30 @@ import org.thechance.service_taxi.domain.util.MultiErrorException
 import org.thechance.service_taxi.domain.util.NOT_FOUND
 import org.thechance.service_taxi.domain.util.REQUIRED_QUERY
 import org.thechance.service_taxi.domain.util.ResourceNotFoundException
+import org.thechance.service_taxi.domain.util.UNKNOWN_ERROR
 
 fun StatusPagesConfig.configureStatusPages() {
     exception<MissingParameterException> { call, _ ->
-        call.respond(HttpStatusCode.BadRequest, INVALID_REQUEST_PARAMETER)
+        call.respond(HttpStatusCode.BadRequest, listOf(INVALID_REQUEST_PARAMETER))
     }
 
     exception<AlreadyExistException> { call, _ ->
-        call.respond(HttpStatusCode.NotFound, ALREADY_EXIST)
+        call.respond(HttpStatusCode.NotFound, listOf(ALREADY_EXIST))
     }
+
     exception<ResourceNotFoundException> { call, _ ->
-        call.respond(HttpStatusCode.NotFound, NOT_FOUND)
+        call.respond(HttpStatusCode.NotFound, listOf(NOT_FOUND))
     }
+
     exception<CantBeNullException> { call, _ ->
-        call.respond(HttpStatusCode.BadRequest, REQUIRED_QUERY)
+        call.respond(HttpStatusCode.BadRequest, listOf(REQUIRED_QUERY))
     }
+
+    exception<Throwable> { call, _ ->
+        call.respond(HttpStatusCode.InternalServerError, listOf(UNKNOWN_ERROR))
+    }
+
     exception<MultiErrorException> { call, exception ->
         call.respond(HttpStatusCode.BadRequest, exception.errorCodes)
-    }
-    exception<Throwable> { call, throwable ->
-        call.respond(HttpStatusCode.InternalServerError, throwable.message ?: "Unknown Error")
     }
 }
