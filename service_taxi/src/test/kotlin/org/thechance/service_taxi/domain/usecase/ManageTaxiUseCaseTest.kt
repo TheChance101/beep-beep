@@ -156,7 +156,7 @@ class ManageTaxiUseCaseTest {
 
     // region update taxi
     @Test
-    fun `should throw ResourceNotFoundException when taxi not found ti update`() {
+    fun `should throw ResourceNotFoundException when taxi not found to update`() {
         // given taxi id not in system
         val taxiId = "64d111a60f294c4b8f718979"
         // when update taxi
