@@ -1,4 +1,4 @@
-package org.thechance.service_taxi.api.models.taxi
+package org.thechance.service_taxi.api.dto.taxi
 
 import kotlinx.serialization.Serializable
 
