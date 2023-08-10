@@ -214,6 +214,7 @@ fun validateUpdateMeal(meal: MealDetails) {
 }
 
 const val DESCRIPTION_MAX_LENGTH = 255
+const val DESCRIPTION_MIN_LENGTH = 20
 const val LATITUDE_MIN = -90.0
 const val LATITUDE_MAX = 90.0
 const val LONGITUDE_MIN = -180.0

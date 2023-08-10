@@ -130,7 +130,6 @@ class ValidationHandlerKtTest {
     }
     //endregion
 
-
     //region ID
     @Test
     fun `valid ID`() {
@@ -257,5 +256,131 @@ class ValidationHandlerKtTest {
         Assertions.assertFalse(result)
     }
 
+    //endregion
+
+    //region price
+    @Test
+    fun `valid rate within range`() {
+        val rate = 3.5
+        val result = validateRate(rate)
+        Assertions.assertTrue(result)
+    }
+
+    @Test
+    fun `invalid rate at lower bound`() {
+        val rate = 0.0
+        val result = validateRate(rate)
+        Assertions.assertTrue(result)
+    }
+
+    @Test
+    fun `valid rate at upper bound`() {
+        val rate = 5.0
+        val result = validateRate(rate)
+        Assertions.assertTrue(result)
+    }
+
+    @Test
+    fun `invalid rate below lower bound`() {
+        val rate = -1.0
+        val result = validateRate(rate)
+        Assertions.assertFalse(result)
+    }
+
+    @Test
+    fun `invalid rate above upper bound`() {
+        val rate = 6.0
+        val result = validateRate(rate)
+        Assertions.assertFalse(result)
+    }
+    //endregion
+
+    //region description
+
+    @Test
+    fun `valid description within length limit`() {
+        val description = "A valid description."
+        val result = validateDescription(description)
+        Assertions.assertTrue(result)
+    }
+
+    @Test
+    fun `valid description at lower length limit`() {
+        val description = "T".repeat(DESCRIPTION_MIN_LENGTH)
+        val result = validateDescription(description)
+        Assertions.assertTrue(result)
+    }
+
+    @Test
+    fun `invalid description short length limit`() {
+        val description = "T".repeat(DESCRIPTION_MIN_LENGTH - 1)
+        val result = validateDescription(description)
+        Assertions.assertFalse(result)
+    }
+
+    @Test
+    fun `valid description at upper length limit`() {
+        val description = "Max length description."
+        val result = validateDescription(description)
+        Assertions.assertTrue(result)
+    }
+
+    @Test
+    fun `invalid description below lower length limit`() {
+        val description = "Too short."
+        val result = validateDescription(description)
+        Assertions.assertFalse(result)
+    }
+
+    @Test
+    fun `valid description on max length limit`() {
+        val description = "T".repeat(DESCRIPTION_MAX_LENGTH)
+        val result = validateDescription(description)
+        Assertions.assertTrue(result)
+    }
+
+    @Test
+    fun `invalid description above upper length limit`() {
+        val description = "T".repeat(DESCRIPTION_MAX_LENGTH) + "T"
+        val result = validateDescription(description)
+        Assertions.assertFalse(result)
+    }
+
+    @Test
+    fun `invalid empty description`() {
+        val description = ""
+        val result = validateDescription(description)
+        Assertions.assertFalse(result)
+    }
+    //endregion
+
+    //region time
+    @Test
+    fun `valid time format`() {
+        val time = "12:34"
+        val result = validateTime(time)
+        Assertions.assertTrue(result)
+    }
+
+    @Test
+    fun `invalid time format`() {
+        val time = "123:45"
+        val result = validateTime(time)
+        Assertions.assertFalse(result)
+    }
+
+    @Test
+    fun `invalid time null`() {
+        val time: String? = null
+        val result = validateTime(time)
+        Assertions.assertFalse(result)
+    }
+
+    @Test
+    fun `invalid time empty`() {
+        val time = ""
+        val result = validateTime(time)
+        Assertions.assertFalse(result)
+    }
     //endregion
 }

@@ -32,7 +32,6 @@ internal fun isValidIds(ids: List<String>?): Boolean {
     return !ids.isNullOrEmpty() && ids.all { isValidId(it) }
 }
 
-
 fun validatePriceLevel(priceLevel: String?): Boolean {
     return priceLevel.isNullOrBlank() || listOf("$", "$$", "$$$", "$$$$").contains(priceLevel)
 }
@@ -45,9 +44,8 @@ fun validatePrice(price: Double): Boolean {
     return price in 1.0..1000.0
 }
 
-
 fun validateDescription(description: String): Boolean {
-    return description.length <= DESCRIPTION_MAX_LENGTH
+    return description.length in DESCRIPTION_MIN_LENGTH..DESCRIPTION_MAX_LENGTH
 }
 
 
