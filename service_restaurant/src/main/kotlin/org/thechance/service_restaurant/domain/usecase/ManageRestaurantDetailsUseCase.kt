@@ -5,7 +5,15 @@ import org.thechance.service_restaurant.domain.entity.Category
 import org.thechance.service_restaurant.domain.entity.Restaurant
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
-import org.thechance.service_restaurant.utils.*
+import org.thechance.service_restaurant.domain.utils.INVALID_ID
+import org.thechance.service_restaurant.domain.utils.INVALID_ONE_OR_MORE_IDS
+import org.thechance.service_restaurant.domain.utils.MultiErrorException
+import org.thechance.service_restaurant.domain.utils.NOT_FOUND
+import org.thechance.service_restaurant.domain.utils.checkIsValidIds
+import org.thechance.service_restaurant.domain.utils.isValidId
+import org.thechance.service_restaurant.domain.utils.validatePagination
+import org.thechance.service_restaurant.domain.utils.validateRestaurantOwnership
+import org.thechance.service_restaurant.domain.utils.validateUpdateRestaurant
 
 interface IManageRestaurantDetailsUseCase {
 
@@ -27,7 +35,9 @@ class ManageRestaurantDetailsUseCase(
         if (!isValidId(restaurantId)) {
             throw MultiErrorException(listOf(INVALID_ID))
         }
-        return restaurantGateway.getRestaurant(restaurantId) ?: throw MultiErrorException(listOf(NOT_FOUND))
+        return restaurantGateway.getRestaurant(restaurantId) ?: throw MultiErrorException(listOf(
+            NOT_FOUND
+        ))
     }
 
     override suspend fun getCategoriesInRestaurant(restaurantId: String): List<Category> {
@@ -58,7 +68,9 @@ class ManageRestaurantDetailsUseCase(
     override suspend fun updateRestaurant(restaurant: Restaurant): Boolean {
         validateUpdateRestaurant(restaurant)
         val existRestaurant =
-            restaurantGateway.getRestaurant(restaurant.id) ?: throw MultiErrorException(listOf(NOT_FOUND))
+            restaurantGateway.getRestaurant(restaurant.id) ?: throw MultiErrorException(listOf(
+                NOT_FOUND
+            ))
         validateRestaurantOwnership(existRestaurant, restaurant.ownerId)
         return restaurantGateway.updateRestaurant(restaurant)
     }
@@ -67,7 +79,9 @@ class ManageRestaurantDetailsUseCase(
         checkIsValidIds(restaurantId, categoryIds)
         val validationErrors = mutableListOf<Int>()
         restaurantGateway.getRestaurant(restaurantId) ?: validationErrors.add(NOT_FOUND)
-        if (!optionsGateway.areCategoriesExisting(categoryIds)) { validationErrors.add(INVALID_ONE_OR_MORE_IDS) }
+        if (!optionsGateway.areCategoriesExisting(categoryIds)) { validationErrors.add(
+            INVALID_ONE_OR_MORE_IDS
+        ) }
         return if (validationErrors.isNotEmpty()) {
             throw MultiErrorException(validationErrors)
         } else {

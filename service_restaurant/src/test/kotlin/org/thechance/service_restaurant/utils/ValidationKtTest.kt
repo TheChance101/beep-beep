@@ -7,6 +7,19 @@ import org.junit.jupiter.api.function.Executable
 import org.thechance.service_restaurant.api.models.AddressDto
 import org.thechance.service_restaurant.api.models.RestaurantDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
+import org.thechance.service_restaurant.domain.utils.INVALID_DESCRIPTION
+import org.thechance.service_restaurant.domain.utils.INVALID_LOCATION
+import org.thechance.service_restaurant.domain.utils.INVALID_NAME
+import org.thechance.service_restaurant.domain.utils.INVALID_PHONE
+import org.thechance.service_restaurant.domain.utils.INVALID_PRICE_LEVEL
+import org.thechance.service_restaurant.domain.utils.INVALID_RATE
+import org.thechance.service_restaurant.domain.utils.MultiErrorException
+import org.thechance.service_restaurant.domain.utils.isValidId
+import org.thechance.service_restaurant.domain.utils.validateLatitude
+import org.thechance.service_restaurant.domain.utils.validateLocation
+import org.thechance.service_restaurant.domain.utils.validateLongitude
+import org.thechance.service_restaurant.domain.utils.validatePrice
+import org.thechance.service_restaurant.domain.utils.validationRestaurant
 
 class ValidationKtTest {
 

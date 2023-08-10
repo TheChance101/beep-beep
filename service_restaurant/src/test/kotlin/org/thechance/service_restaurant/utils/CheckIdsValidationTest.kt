@@ -4,6 +4,9 @@ import org.junit.Test
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.function.Executable
+import org.thechance.service_restaurant.domain.utils.INVALID_ID
+import org.thechance.service_restaurant.domain.utils.MultiErrorException
+import org.thechance.service_restaurant.domain.utils.checkIsValidIds
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CheckIdsValidationTest {

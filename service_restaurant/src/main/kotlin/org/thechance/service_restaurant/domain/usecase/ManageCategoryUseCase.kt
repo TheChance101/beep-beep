@@ -1,10 +1,17 @@
 package org.thechance.service_restaurant.domain.usecase
 
-import io.netty.channel.unix.Limits
 import org.koin.core.annotation.Single
 import org.thechance.service_restaurant.domain.entity.Category
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
-import org.thechance.service_restaurant.utils.*
+import org.thechance.service_restaurant.domain.utils.INVALID_ID
+import org.thechance.service_restaurant.domain.utils.INVALID_NAME
+import org.thechance.service_restaurant.domain.utils.InvalidParameterException
+import org.thechance.service_restaurant.domain.utils.NOT_FOUND
+import org.thechance.service_restaurant.domain.utils.ResourceNotFoundException
+import org.thechance.service_restaurant.domain.utils.isValidId
+import org.thechance.service_restaurant.domain.utils.isValidName
+import org.thechance.service_restaurant.domain.utils.validatePagination
+import org.thechance.service_restaurant.domain.utils.validationCategory
 
 interface IManageCategoryUseCase {
     suspend fun getCategories(page: Int, limit: Int): List<Category>

@@ -6,6 +6,17 @@ import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.function.Executable
 import org.thechance.service_restaurant.domain.entity.Cuisine
 import org.thechance.service_restaurant.domain.entity.MealDetails
+import org.thechance.service_restaurant.domain.utils.DESCRIPTION_MAX_LENGTH
+import org.thechance.service_restaurant.domain.utils.INVALID_DESCRIPTION
+import org.thechance.service_restaurant.domain.utils.INVALID_ID
+import org.thechance.service_restaurant.domain.utils.INVALID_NAME
+import org.thechance.service_restaurant.domain.utils.INVALID_ONE_OR_MORE_IDS
+import org.thechance.service_restaurant.domain.utils.INVALID_PRICE
+import org.thechance.service_restaurant.domain.utils.INVALID_REQUEST_PARAMETER
+import org.thechance.service_restaurant.domain.utils.INVALID_UPDATE_PARAMETER
+import org.thechance.service_restaurant.domain.utils.MultiErrorException
+import org.thechance.service_restaurant.domain.utils.NULL_DOUBLE
+import org.thechance.service_restaurant.domain.utils.validateUpdateMeal
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ValidateUpdateMealTest {
