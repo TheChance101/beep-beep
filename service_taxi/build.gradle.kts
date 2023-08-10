@@ -77,5 +77,7 @@ dependencies {
     //kotlinx-datetime
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
 
+    //validation
+    implementation("io.ktor:ktor-server-status-pages:$ktorVersion")
 }
 
