@@ -16,6 +16,7 @@ import org.thechance.service_identity.data.collection.*
 import org.thechance.service_identity.data.mappers.*
 import org.thechance.service_identity.data.util.USER_DETAILS_COLLECTION
 import org.thechance.service_identity.data.util.isUpdatedSuccessfully
+import org.thechance.service_identity.data.util.paginate
 import org.thechance.service_identity.domain.entity.*
 import org.thechance.service_identity.domain.gateway.DataBaseGateway
 import org.thechance.service_identity.domain.util.NOT_FOUND
@@ -135,12 +136,12 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
     private suspend fun createUniqueIndexIfNotExists() {
         if (!isUniqueIndexCreated()) {
             val indexOptions = IndexOptions().unique(true)
-            userCollection.createIndex(Indexes.ascending("username"), indexOptions)
+            userCollection.createIndex(Indexes.ascending(USER_NAME), indexOptions)
         }
     }
 
     private suspend fun isUniqueIndexCreated(): Boolean {
-        val indexName = "username_1"
+        val indexName = INDEX_NAME
 
         val indexInfo = userCollection.listIndexes<Indexes>().toList()
             .filter { it.equals(indexName) }
@@ -168,7 +169,12 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
             ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
-    override suspend fun getUsers(fullName: String, username: String): List<ManagedUser> {
+    override suspend fun getUsers(
+        page: Int,
+        limit: Int,
+        fullName: String,
+        username: String
+    ): List<ManagedUser> {
         return userCollection.find(
             UserCollection::fullName regex fullName,
             UserCollection::username regex username,
@@ -179,7 +185,7 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
             UserCollection::username,
             UserCollection::email,
             UserCollection::permissions,
-        ).toList().toManagedEntity()
+        ).paginate(page, limit).toList().toManagedEntity()
     }
 
     override suspend fun createUser(user: CreateUserRequest): Boolean {
@@ -283,6 +289,8 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
         private const val ADDRESS_COLLECTION_NAME = "address"
         private const val PERMISSION_COLLECTION_NAME = "permission"
         private const val USER_COLLECTION = "user"
+        private const val USER_NAME = "username"
+        private const val INDEX_NAME = "username_1"
     }
 
 }

@@ -10,6 +10,7 @@ import org.thechance.service_identity.data.mappers.toDto
 import org.thechance.service_identity.domain.entity.MissingParameterException
 import org.thechance.service_identity.domain.usecases.IUserManagementUseCase
 import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
+import org.thechance.service_identity.endpoints.util.extractInt
 
 fun Route.userManagementRoutes() {
 
@@ -20,7 +21,9 @@ fun Route.userManagementRoutes() {
         get {
             val fullName = call.parameters["full_name"] ?: ""
             val username = call.parameters["username"] ?: ""
-            val users = userManagement.getUsers(fullName, username).toDto()
+            val page = call.parameters.extractInt("page") ?: 1
+            val limit = call.parameters.extractInt("limit") ?: 10
+            val users = userManagement.getUsers(page, limit, fullName, username).toDto()
             call.respond(HttpStatusCode.OK, users)
         }
 

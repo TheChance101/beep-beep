@@ -29,7 +29,7 @@ interface DataBaseGateway {
     // region: user
     suspend fun getUserById(id: String): User
 
-    suspend fun getUsers(fullName: String = "", username: String = ""): List<ManagedUser>
+    suspend fun getUsers(page: Int, limit: Int, fullName: String = "", username: String = ""): List<ManagedUser>
 
     suspend fun createUser(user: CreateUserRequest): Boolean
 
