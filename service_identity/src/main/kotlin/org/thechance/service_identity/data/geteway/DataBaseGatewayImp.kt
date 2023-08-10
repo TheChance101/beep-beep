@@ -130,12 +130,12 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
     private suspend fun createUniqueIndexIfNotExists() {
         if (!isUniqueIndexCreated()) {
             val indexOptions = IndexOptions().unique(true)
-            userCollection.createIndex(Indexes.ascending("username"), indexOptions)
+            userCollection.createIndex(Indexes.ascending(USER_NAME), indexOptions)
         }
     }
 
     private suspend fun isUniqueIndexCreated(): Boolean {
-        val indexName = "username_1"
+        val indexName = INDEX_NAME
 
         val indexInfo = userCollection.listIndexes<Indexes>().toList()
             .filter { it.equals(indexName) }
@@ -278,5 +278,10 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
 
     // endregion: user permission management
 
+    companion object {
+
+        private const val USER_NAME = "username"
+        private const val INDEX_NAME = "username_1"
+    }
 
 }
