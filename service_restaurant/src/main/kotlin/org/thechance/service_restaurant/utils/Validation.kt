@@ -81,7 +81,7 @@ fun validatePagination(page: Int, limit: Int) {
 
 /* region require validation  */
 fun isValidName(name: String?): Boolean {
-    return name != null && name.matches(Regex("^[A-Za-z0-9\\s\\[\\]\\(\\)\\-.,&]{4,20}$"))
+    return name != null && name.matches(Regex("^[A-Za-z0-9\\s\\[\\]\\(\\)\\-.,&]{4,25}$"))
 }
 
 fun validatePhone(phone: String?): Boolean {
@@ -93,7 +93,7 @@ fun isValidId(id: String?): Boolean {
 }
 
 internal fun isValidIds(ids: List<String>?): Boolean {
-    return !ids.isNullOrEmpty() && ids.onEach { it.matches(Regex("^[0-9A-Fa-f]+$")) }.isNotEmpty()
+    return !ids.isNullOrEmpty() && ids.all { it.matches(Regex("^[0-9A-Fa-f]+$")) }
 }
 
 fun validateTime(time: String?): Boolean {
@@ -120,11 +120,11 @@ fun validatePriceLevel(priceLevel: String?): Boolean {
 }
 
 fun validateRate(rate: Double): Boolean {
-    return rate == NULL_DOUBLE || rate in 1.0..5.0
+    return rate in 0.0..5.0
 }
 
 fun validatePrice(price: Double): Boolean {
-    return price == NULL_DOUBLE || price in 1.0..1000.0
+    return  price in 1.0..1000.0
 }
 
 const val NULL_DOUBLE = -1.0
