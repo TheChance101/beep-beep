@@ -1,18 +1,19 @@
-package org.thechance.service_taxi.api.models.taxi
+package org.thechance.service_taxi.api.dto.taxi
 
 import org.bson.types.ObjectId
 import org.thechance.service_taxi.data.collection.TaxiCollection
 import org.thechance.service_taxi.domain.entity.Taxi
 import org.thechance.service_taxi.domain.entity.TaxiUpdateRequest
+import org.thechance.service_taxi.domain.util.CantBeNullException
 
 fun TaxiDto.toEntity(): Taxi {
     return Taxi(
         id = if (id.isNullOrBlank()) ObjectId().toHexString() else ObjectId(id).toHexString(),
-        plateNumber = plateNumber ?: throw Throwable("cant be null"),
-        color = color ?: throw Throwable("cant be null"),
-        type = type ?: throw Throwable("cant be null"),
-        driverId = driverId ?: throw Throwable("cant be null"),
-        isAvailable = isAvailable ?: throw Throwable("cant be null"),
+        plateNumber = plateNumber ?: throw CantBeNullException,
+        color = color ?: throw CantBeNullException,
+        type = type ?: throw CantBeNullException,
+        driverId = driverId ?: throw CantBeNullException,
+        isAvailable = isAvailable ?: throw CantBeNullException,
         seats = seats ?: 4,
     )
 }
@@ -35,10 +36,10 @@ fun List<Taxi>.toDto(): List<TaxiDto> = map(Taxi::toDto)
 fun TaxiCollection.toEntity(): Taxi {
     return Taxi(
         id = id.toHexString(),
-        plateNumber = plateNumber ?: throw Throwable("cant be null"),
-        color = color ?: throw Throwable("cant be null"),
-        type = type ?: throw Throwable("cant be null"),
-        driverId = driverId?.toHexString() ?: throw Throwable("cant be null"),
+        plateNumber = plateNumber ?: throw CantBeNullException,
+        color = color ?: throw CantBeNullException,
+        type = type ?: throw CantBeNullException,
+        driverId = driverId?.toHexString() ?: throw CantBeNullException,
         isAvailable = isAvailable ?: true,
         seats = seats ?: 4
     )

@@ -4,6 +4,7 @@ import org.koin.core.annotation.Single
 import org.thechance.service_notification.domain.gateway.IPushNotificationGateway
 import org.thechance.service_notification.domain.gateway.IDatabaseGateway
 import org.thechance.service_notification.domain.model.Notification
+import org.thechance.service_notification.domain.model.NotificationRequest
 import org.thechance.service_notification.domain.model.User
 
 @Single
@@ -13,10 +14,11 @@ class NotificationManagementUseCase(
 ) : INotificationManagementUseCase {
 
     override suspend fun sendNotificationToUser(userId: String, title: String, body: String) {
+        val notification = NotificationRequest(title, body, System.currentTimeMillis(), listOf(userId))
+        databaseGateway.addNotificationToUserHistory(notification)
         val tokens = databaseGateway.getTokensForUserById(userId)
         pushNotificationGateway.sendNotificationToUserByTokens(tokens, title, body)
-        val notification = Notification(title, body, System.currentTimeMillis(), userId, false)
-        databaseGateway.addNotificationToUserHistory(notification)
+
     }
 
     override suspend fun addTokenToUser(id: String, token: String): Boolean {

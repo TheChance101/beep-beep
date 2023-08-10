@@ -15,8 +15,8 @@ data class TripCollection(
     val driverId: ObjectId? = null,
     @Contextual
     val clientId: ObjectId?,
-    val startPoint: LatLongCollection? = null,
-    val destination: LatLongCollection? = null,
+    val startPoint: LocationCollection? = null,
+    val destination: LocationCollection? = null,
     val rate: Double? = null,
     val price: Double?,
     val startDate: LocalDateTime? = null,
@@ -30,7 +30,7 @@ data class TripCollection(
 }
 
 @Serializable
-data class LatLongCollection(
+data class LocationCollection(
     val latitude: Double,
     val longitude: Double,
 )

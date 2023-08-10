@@ -7,10 +7,12 @@ import org.koin.core.annotation.Single
 import org.litote.kmongo.and
 import org.litote.kmongo.eq
 import org.litote.kmongo.ne
-import org.thechance.service_taxi.api.models.taxi.toCollection
-import org.thechance.service_taxi.api.models.taxi.toEntity
-import org.thechance.service_taxi.api.models.trip.toCollection
-import org.thechance.service_taxi.api.models.trip.toEntity
+import org.litote.kmongo.set
+import org.litote.kmongo.setTo
+import org.thechance.service_taxi.api.dto.taxi.toCollection
+import org.thechance.service_taxi.api.dto.taxi.toEntity
+import org.thechance.service_taxi.api.dto.trip.toCollection
+import org.thechance.service_taxi.api.dto.trip.toEntity
 import org.thechance.service_taxi.data.DataBaseContainer
 import org.thechance.service_taxi.data.collection.TaxiCollection
 import org.thechance.service_taxi.data.collection.TripCollection
@@ -44,7 +46,7 @@ class DataBaseGatewayImpl(private val container: DataBaseContainer) : DataBaseGa
     override suspend fun deleteTaxi(taxiId: String): Boolean {
         return container.taxiCollection.updateOneById(
             id = ObjectId(taxiId),
-            update = Updates.set(TaxiCollection::isDeleted.name, true),
+            update = set(TaxiCollection::isDeleted setTo true),
             updateOnlyNotNullProperties = true
         ).isSuccessfullyUpdated()
     }
@@ -57,7 +59,7 @@ class DataBaseGatewayImpl(private val container: DataBaseContainer) : DataBaseGa
             ),
             update = updateNotNullProperties(
                 taxi.toCollection(),
-                otherFilter = { it != "isDeleted" && it != "id"})
+                filter = { it != "isDeleted" && it != "id"})
         ).isNotNull()
     }
     //endregion
@@ -67,9 +69,8 @@ class DataBaseGatewayImpl(private val container: DataBaseContainer) : DataBaseGa
         return container.tripCollection.insertOne(trip.toCollection()).wasAcknowledged()
     }
 
-    override suspend fun getTripById(tripId: String): Trip {
+    override suspend fun getTripById(tripId: String): Trip? {
         return container.tripCollection.findOne(TripCollection::isDeleted ne true)?.toEntity()
-            ?: throw Throwable()
     }
 
     override suspend fun getAllTrips(page: Int, limit: Int): List<Trip> {
@@ -119,7 +120,7 @@ class DataBaseGatewayImpl(private val container: DataBaseContainer) : DataBaseGa
             ),
             update = updateNotNullProperties(
                 trip.toCollection(),
-                otherFilter = { it != "isDeleted" && it != "id"})
+                filter = { it != "isDeleted" && it != "id"})
         ).isNotNull()
     }
     //endregion
