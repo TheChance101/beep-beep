@@ -14,7 +14,7 @@ class AddressValidationUseCaseTest {
     }
 
     @Test
-    fun `should return true when user ID is empty`() {
+    fun `should return false when user ID is empty`() {
         val userId = ""
         val result = addressValidationUseCase.validateUserIdNotEmpty(userId)
         assertFalse(result)
