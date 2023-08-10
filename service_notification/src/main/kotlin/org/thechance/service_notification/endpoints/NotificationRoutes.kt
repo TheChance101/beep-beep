@@ -7,24 +7,28 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
+import org.thechance.service_notification.data.mappers.toDto
 import org.thechance.service_notification.domain.MissingRequestParameterException
+import org.thechance.service_notification.domain.usecases.IGetNotificationHistoryUseCase
 import org.thechance.service_notification.domain.usecases.IRegisterTokenUseCase
-import org.thechance.service_notification.domain.usecases.ISendNotificationToUserUseCase
-import org.thechance.service_notification.domain.usecases.ISendNotificationToUsersGroupUseCase
+import org.thechance.service_notification.domain.usecases.ISendNotificationContainerUseCase
+import org.thechance.service_notification.endpoints.utils.extractInt
 
 fun Route.notificationRoutes() {
 
     val registerToken: IRegisterTokenUseCase by inject()
-    val sendNotificationToUsersGroup: ISendNotificationToUsersGroupUseCase by inject()
-    val sendNotificationToUser: ISendNotificationToUserUseCase by inject()
+    val getNotificationHistory: IGetNotificationHistoryUseCase by inject()
+    val sendNotificationsContainer: ISendNotificationContainerUseCase by inject()
 
     route("notifications") {
 
         post("/register_token/{userId}") {
             val userId = call.parameters["userId"] ?: throw BadRequestException("User id is required")
-            val token = call.receiveParameters()["token"] ?: throw MissingRequestParameterException("4001")
+            val receivedData = call.receiveParameters()
+            val token = receivedData["token"] ?: throw MissingRequestParameterException("4001")
+            val group = receivedData["group"] ?: throw MissingRequestParameterException("4004")
 
-            registerToken(userId, token)
+            registerToken(userId, token, group)
             call.respond(HttpStatusCode.OK, "Token registered successfully")
         }
 
@@ -34,7 +38,7 @@ fun Route.notificationRoutes() {
             val title = receivedData["title"] ?: throw MissingRequestParameterException("4002")
             val body = receivedData["body"] ?: throw MissingRequestParameterException("4003")
 
-            val result = sendNotificationToUser(userId, title, body)
+            val result = sendNotificationsContainer.sendNotificationToUser(userId, title, body)
             if (!result) call.respond(HttpStatusCode.InternalServerError, "Notification was not sent")
             else call.respond(HttpStatusCode.OK, "Notification sent successfully")
         }
@@ -45,9 +49,17 @@ fun Route.notificationRoutes() {
             val title = receivedData["title"] ?: throw MissingRequestParameterException("4002")
             val body = receivedData["body"] ?: throw MissingRequestParameterException("4003")
 
-            val result = sendNotificationToUsersGroup(usersGroup, title, body)
+            val result = sendNotificationsContainer.sendNotificationToUsersGroup(usersGroup, title, body)
             if (!result) call.respond(HttpStatusCode.InternalServerError, "Notification was not sent")
             else call.respond(HttpStatusCode.OK, "Notification sent successfully")
+        }
+
+        get("/history") {
+            val limit = call.parameters.extractInt("limit") ?: 10
+            val page = call.parameters.extractInt("page") ?: 1
+
+            val notificationsHistory = getNotificationHistory(page, limit)
+            call.respond(HttpStatusCode.OK, notificationsHistory.toDto())
         }
     }
 }

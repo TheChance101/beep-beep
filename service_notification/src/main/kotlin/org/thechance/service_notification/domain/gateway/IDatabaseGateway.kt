@@ -2,10 +2,8 @@ package org.thechance.service_notification.domain.gateway
 
 import org.thechance.service_notification.domain.model.Notification
 import org.thechance.service_notification.domain.model.NotificationRequest
-import org.thechance.service_notification.domain.model.User
 
 interface IDatabaseGateway {
-    suspend fun getNotificationByUserId(id: String): Notification
 
     suspend fun getTokensForUserById(id: String): List<String>
 

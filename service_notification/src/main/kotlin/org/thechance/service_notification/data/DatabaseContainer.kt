@@ -7,7 +7,7 @@ import org.thechance.service_notification.data.collection.NotificationHistoryCol
 import org.thechance.service_notification.data.collection.UserCollection
 
 @Single
-class DatabaseContainer(database: CoroutineDatabase) {
+class DatabaseContainer(val database: CoroutineDatabase) {
 
     val userCollection: CoroutineCollection<UserCollection> =
         database.getCollection<UserCollection>("users")

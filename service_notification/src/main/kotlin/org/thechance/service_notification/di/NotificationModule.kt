@@ -4,13 +4,9 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.mongodb.reactivestreams.client.MongoClient
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.reactivestreams.KMongo
-import org.thechance.service_notification.data.collection.GroupUser
-import org.thechance.service_notification.data.collection.NotificationHistoryCollection
-import org.thechance.service_notification.data.collection.UserCollection
 
 @Module
 @ComponentScan("org.thechance.service_notification")
@@ -26,14 +22,6 @@ val kmongoModule = module {
 
     single {
         get<MongoClient>().coroutine.getDatabase("TheChanceBeepBeep")
-    }
-
-    single {
-        get<CoroutineDatabase>().getCollection<UserCollection>("users")
-    }
-
-    single {
-        get<CoroutineDatabase>().getCollection<NotificationHistoryCollection>("notification_history")
     }
 }
 
