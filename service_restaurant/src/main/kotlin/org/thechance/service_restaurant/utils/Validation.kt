@@ -93,7 +93,7 @@ fun isValidId(id: String?): Boolean {
 }
 
 internal fun isValidIds(ids: List<String>?): Boolean {
-    return !ids.isNullOrEmpty() && ids.onEach { it.matches(Regex("^[0-9A-Fa-f]+$")) }.isNotEmpty()
+    return !ids.isNullOrEmpty() && ids.all { it.matches(Regex("^[0-9A-Fa-f]+$")) }
 }
 
 fun validateTime(time: String?): Boolean {
