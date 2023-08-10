@@ -184,7 +184,7 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
         ).paginate(page, limit).toList().toManagedEntity()
     }
 
-    override suspend fun searchUsers(searchTerm: String): List<ManagedUser> {
+    override suspend fun searchUser(searchTerm: String): List<ManagedUser> {
         val searchQuery = or(
             User::username regex searchTerm,
             User::fullName regex searchTerm

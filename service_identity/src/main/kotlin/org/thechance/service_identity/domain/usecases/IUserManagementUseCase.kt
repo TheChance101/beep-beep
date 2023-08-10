@@ -39,7 +39,7 @@ class UserManagementUseCase(private val dataBaseGateway: DataBaseGateway) : IUse
     }
 
     override suspend fun searchUsers(searchTerm: String): List<ManagedUser> {
-        return dataBaseGateway.searchUsers(searchTerm)
+        return dataBaseGateway.searchUser(searchTerm)
     }
 
 }
