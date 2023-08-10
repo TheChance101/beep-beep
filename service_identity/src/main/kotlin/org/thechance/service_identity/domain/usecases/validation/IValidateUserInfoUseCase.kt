@@ -1,15 +1,16 @@
 package org.thechance.service_identity.domain.usecases.validation
 
 import org.koin.core.annotation.Single
+import org.thechance.service_identity.domain.entity.CreateUserRequest
 import org.thechance.service_identity.domain.entity.RequestValidationException
-import org.thechance.service_identity.domain.entity.User
-import org.thechance.service_identity.domain.usecases.util.*
+import org.thechance.service_identity.domain.entity.UpdateUserRequest
+import org.thechance.service_identity.domain.util.*
 
 interface IValidateUserInfoUseCase {
 
-    fun validateUserInformation(user: User)
+    fun validateUserInformation(user: CreateUserRequest)
 
-    fun validateUpdateUserInformation(user: User)
+    fun validateUpdateUserInformation(user: UpdateUserRequest)
 
     fun validateUsernameIsNotEmpty(username: String): Boolean
 
@@ -27,7 +28,7 @@ interface IValidateUserInfoUseCase {
 @Single
 class ValidateUserInfoUseCase : IValidateUserInfoUseCase {
 
-    override fun validateUserInformation(user: User) {
+    override fun validateUserInformation(user: CreateUserRequest) {
         val reasons = mutableListOf<String>()
 
         if (!validateUsernameIsNotEmpty(user.username)) {
@@ -59,19 +60,43 @@ class ValidateUserInfoUseCase : IValidateUserInfoUseCase {
         }
     }
 
-    override fun validateUpdateUserInformation(user: User) {
+    override fun validateUpdateUserInformation(user: UpdateUserRequest) {
         val reasons = mutableListOf<String>()
 
-        if (user.username.isNotBlank() && !validateUsername(user.username)) {
-            reasons.add(INVALID_USERNAME)
+        user.username?.let {
+            if (!validateUsernameIsNotBlank(it)) {
+                reasons.add(USERNAME_CANNOT_BE_BLANK)
+            }
         }
 
-        if (user.password.isNotBlank() && !validatePasswordLength(user.password)) {
-            reasons.add(PASSWORD_CANNOT_BE_LESS_THAN_8_CHARACTERS)
+        user.username?.let {
+            if (!validateUsername(it)) {
+                reasons.add(INVALID_USERNAME)
+            }
         }
 
-        if (user.email.isNotBlank() && !validateEmail(user.email)) {
-            reasons.add(INVALID_EMAIL)
+        user.fullName?.let {
+            if (!validateFullNameIsNotEmpty(it)) {
+                reasons.add(INVALID_FULLNAME)
+            }
+        }
+
+        user.password?.let {
+            if (!validatePasswordIsNotEmpty(it)) {
+                reasons.add(PASSWORD_CANNOT_BE_BLANK)
+            }
+        }
+
+        user.password?.let {
+            if (!validatePasswordLength(it)) {
+                reasons.add(PASSWORD_CANNOT_BE_LESS_THAN_8_CHARACTERS)
+            }
+        }
+
+        user.email?.let {
+            if (!validateEmail(it)) {
+                reasons.add(INVALID_EMAIL)
+            }
         }
 
         if (reasons.isNotEmpty()) {

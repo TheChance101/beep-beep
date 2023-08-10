@@ -6,13 +6,14 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import org.thechance.service_identity.data.collection.CreateUserRequest
-import org.thechance.service_identity.data.collection.UpdateUserRequest
+import org.thechance.service_identity.data.collection.CreateUserDocument
+import org.thechance.service_identity.data.collection.UpdateUserDocument
+import org.thechance.service_identity.data.mappers.toCreateRequest
 import org.thechance.service_identity.data.mappers.toDto
-import org.thechance.service_identity.data.mappers.toEntity
+import org.thechance.service_identity.data.mappers.toUpdateRequest
 import org.thechance.service_identity.domain.entity.MissingParameterException
-import org.thechance.service_identity.domain.usecases.useraccount.IManageUserAccountUseCase
-import org.thechance.service_identity.domain.usecases.util.INVALID_REQUEST_PARAMETER
+import org.thechance.service_identity.domain.usecases.IManageUserAccountUseCase
+import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
 
 fun Route.userRoutes() {
 
@@ -28,15 +29,15 @@ fun Route.userRoutes() {
         }
 
         post {
-            val user = call.receive<CreateUserRequest>()
-            val result = manageUserAccount.createUser(user.toEntity())
+            val user = call.receive<CreateUserDocument>()
+            val result = manageUserAccount.createUser(user.toCreateRequest())
             call.respond(HttpStatusCode.Created, result)
         }
 
         put("/{id}") {
             val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val userDto = call.receive<UpdateUserRequest>()
-            val result = manageUserAccount.updateUser(id, userDto.toEntity())
+            val userDto = call.receive<UpdateUserDocument>()
+            val result = manageUserAccount.updateUser(id, userDto.toUpdateRequest())
             call.respond(HttpStatusCode.OK, result)
         }
 

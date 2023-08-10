@@ -1,24 +1,10 @@
 package org.thechance.service_identity.domain.usecases.validation
 
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.Assertions.*
+
 class AddressValidationUseCaseTest {
 
-    private val addressValidationUseCase = AddressValidationUseCase()
-
-    @Test
-    fun `should return true when user ID is not empty`() {
-        val userId = "5f1d7e9d8456a60d887"
-        val result = addressValidationUseCase.validateUserIdNotEmpty(userId)
-        assertTrue(result)
-    }
-
-    @Test
-    fun `should return false when user ID is empty`() {
-        val userId = ""
-        val result = addressValidationUseCase.validateUserIdNotEmpty(userId)
-        assertFalse(result)
-    }
+    private val addressValidationUseCase = ValidateAddressUseCase()
 
     @Test
     fun `should return true when location is accepted`() {
@@ -44,17 +30,4 @@ class AddressValidationUseCaseTest {
         assertFalse(result, "Invalid longitude should be rejected")
     }
 
-    @Test
-    fun `should return true when user ID length is accepted`() {
-        val validUserId = "5f1d7e9d8456a60d8877f8b2"
-        val result = addressValidationUseCase.validateUserIdHexLength(validUserId)
-        assertTrue(result, "Valid user ID length should be accepted")
-    }
-
-    @Test
-    fun `should return false when user ID length is rejected`() {
-        val invalidUserId = "5f1d7e9d8456a60d88"
-        val result = addressValidationUseCase.validateUserIdHexLength(invalidUserId)
-        assertFalse(result, "Invalid user ID length should be rejected")
-    }
 }

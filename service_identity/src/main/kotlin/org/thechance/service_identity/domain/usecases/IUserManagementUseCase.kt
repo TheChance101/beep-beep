@@ -1,4 +1,4 @@
-package org.thechance.service_identity.domain.usecases.user_management
+package org.thechance.service_identity.domain.usecases
 
 import org.koin.core.annotation.Single
 import org.thechance.service_identity.domain.entity.ManagedUser
@@ -13,7 +13,7 @@ interface IUserManagementUseCase {
 
     suspend fun getUserPermissions(userId: String): List<Permission>
 
-    suspend fun getUsers(fullName: String, username: String): List<ManagedUser>
+    suspend fun getUsers(page: Int, limit: Int, fullName: String, username: String): List<ManagedUser>
 
 }
 
@@ -32,8 +32,8 @@ class UserManagementUseCase(private val dataBaseGateway: DataBaseGateway) : IUse
         return dataBaseGateway.getUserPermissions(userId)
     }
 
-    override suspend fun getUsers(fullName: String, username: String): List<ManagedUser> {
-        return dataBaseGateway.getUsers(fullName, username)
+    override suspend fun getUsers(page: Int, limit: Int,fullName: String, username: String): List<ManagedUser> {
+        return dataBaseGateway.getUsers(page, limit,fullName, username)
     }
 
 }

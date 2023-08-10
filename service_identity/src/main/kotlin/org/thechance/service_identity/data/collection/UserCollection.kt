@@ -27,7 +27,7 @@ data class UserCollection(
 )
 
 @Serializable
-data class UpdateUserRequest(
+data class UpdateUserDocument(
     @SerialName("fullName")
     val fullName: String? = null,
     @SerialName("username")
@@ -39,7 +39,11 @@ data class UpdateUserRequest(
 )
 
 @Serializable
-data class CreateUserRequest(
+data class CreateUserDocument(
+    @SerialName("_id")
+    @BsonId
+    @Contextual
+    val id: ObjectId = ObjectId(),
     @SerialName("fullName")
     val fullName: String,
     @SerialName("username")

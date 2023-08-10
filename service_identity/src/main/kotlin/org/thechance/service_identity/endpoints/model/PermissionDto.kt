@@ -9,11 +9,11 @@ data class PermissionDto(
 )
 
 @Serializable
-data class CreatePermissionRequest(
+data class CreatePermissionDocument(
     val permission: String
 )
 
 @Serializable
-data class UpdatePermissionRequest(
+data class UpdatePermissionDocument(
     val permission: String? = null
 )
