@@ -7,10 +7,8 @@ import org.thechance.service_restaurant.domain.utils.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.InvalidParameterException
 import org.thechance.service_restaurant.domain.utils.NOT_FOUND
 import org.thechance.service_restaurant.domain.utils.ResourceNotFoundException
-import org.thechance.service_restaurant.domain.utils.isValidId
-import org.thechance.service_restaurant.domain.utils.validatePagination
-import org.thechance.service_restaurant.domain.utils.validationRestaurant
-
+import org.thechance.service_restaurant.domain.usecase.validation.RestaurantValidation
+import org.thechance.service_restaurant.domain.usecase.validation.Validation
 interface IControlRestaurantsUseCase {
     suspend fun createRestaurant(restaurant: Restaurant): Boolean
     suspend fun getAllRestaurants(page: Int, limit: Int): List<Restaurant>
@@ -20,15 +18,17 @@ interface IControlRestaurantsUseCase {
 @Single
 class ControlRestaurantsUseCase(
     private val restaurantGateway: IRestaurantGateway,
+    private val restaurantValidation: RestaurantValidation,
+    private val basicValidation: Validation
 ) : IControlRestaurantsUseCase {
 
     override suspend fun createRestaurant(restaurant: Restaurant): Boolean {
-        validationRestaurant(restaurant)
+        restaurantValidation.validationRestaurant(restaurant)
         return restaurantGateway.addRestaurant(restaurant)
     }
 
     override suspend fun getAllRestaurants(page: Int, limit: Int): List<Restaurant> {
-        validatePagination(page,limit)
+        basicValidation.validatePagination(page,limit)
         return restaurantGateway.getRestaurants(page,limit)
     }
 
@@ -38,7 +38,7 @@ class ControlRestaurantsUseCase(
     }
 
     private suspend fun checkIfRestaurantIsExist(restaurantId: String) {
-        if (!isValidId(restaurantId)) {
+        if (!basicValidation.isValidId(restaurantId)) {
             throw InvalidParameterException(INVALID_ID)
         }
         if (restaurantGateway.getRestaurant(restaurantId) == null) {

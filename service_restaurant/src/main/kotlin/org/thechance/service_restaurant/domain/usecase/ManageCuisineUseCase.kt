@@ -6,8 +6,7 @@ import org.thechance.service_restaurant.domain.utils.INVALID_NAME
 import org.thechance.service_restaurant.domain.utils.InvalidParameterException
 import org.thechance.service_restaurant.domain.utils.NOT_FOUND
 import org.thechance.service_restaurant.domain.utils.ResourceNotFoundException
-import org.thechance.service_restaurant.domain.utils.isValidName
-import org.thechance.service_restaurant.domain.utils.validatePagination
+import org.thechance.service_restaurant.domain.usecase.validation.Validation
 
 interface IManageCuisineUseCase {
     suspend fun getCuisines(page: Int, limit: Int): List<Cuisine>
@@ -18,15 +17,16 @@ interface IManageCuisineUseCase {
 
 
 class ManageCuisineUseCase(
-    private val restaurantOptions: IRestaurantOptionsGateway
+    private val restaurantOptions: IRestaurantOptionsGateway,
+    private val basicValidation: Validation
 ) : IManageCuisineUseCase {
     override suspend fun getCuisines(page: Int, limit: Int): List<Cuisine> {
-        validatePagination(page, limit)
+        basicValidation. validatePagination(page, limit)
         return restaurantOptions.getCuisines(page, limit)
     }
 
     override suspend fun addCuisine(cuisine: Cuisine): Boolean {
-        if (!isValidName(cuisine.name)) {
+        if (! basicValidation.isValidName(cuisine.name)) {
             throw InvalidParameterException(INVALID_NAME)
         }
         return restaurantOptions.addCuisine(cuisine)
@@ -39,7 +39,7 @@ class ManageCuisineUseCase(
 
     override suspend fun updateCuisine(cuisine: Cuisine): Boolean {
         checkIfCuisineIsExist(cuisine.id)
-        if (!isValidName(cuisine.name)) {
+        if (! basicValidation.isValidName(cuisine.name)) {
             throw InvalidParameterException(INVALID_NAME)
         }
         return restaurantOptions.updateCuisine(cuisine)

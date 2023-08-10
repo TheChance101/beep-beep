@@ -13,9 +13,9 @@ data class RestaurantCollection(
     @Contextual
     val ownerId: ObjectId,
     val name: String,
-    val description: String,
-    val priceLevel: String,
-    val rate: Double = 0.0,
+    val description: String?,
+    val priceLevel: String?,
+    val rate: Double?,
     val phone: String,
     val openingTime: String,
     val closingTime: String,

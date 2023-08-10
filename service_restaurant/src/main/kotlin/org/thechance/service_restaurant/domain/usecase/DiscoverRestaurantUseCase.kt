@@ -11,8 +11,7 @@ import org.thechance.service_restaurant.domain.utils.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.InvalidParameterException
 import org.thechance.service_restaurant.domain.utils.NOT_FOUND
 import org.thechance.service_restaurant.domain.utils.ResourceNotFoundException
-import org.thechance.service_restaurant.domain.utils.isValidId
-import org.thechance.service_restaurant.domain.utils.validatePagination
+import org.thechance.service_restaurant.domain.usecase.validation.Validation
 
 interface IDiscoverRestaurantUseCase {
     suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant>
@@ -28,14 +27,15 @@ interface IDiscoverRestaurantUseCase {
 class DiscoverRestaurantUseCase(
     private val restaurantGateway: IRestaurantGateway,
     private val optionsGateway: IRestaurantOptionsGateway,
+    private val basicValidation: Validation
 ) : IDiscoverRestaurantUseCase {
     override suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant> {
-        validatePagination(page,limit)
+        basicValidation.validatePagination(page,limit)
         return restaurantGateway.getRestaurants(page, limit)
     }
 
     override suspend fun getCategories(page: Int, limit: Int): List<Category> {
-        validatePagination(page,limit)
+        basicValidation.validatePagination(page,limit)
         return optionsGateway.getCategories(page, limit)
     }
 
@@ -62,14 +62,14 @@ class DiscoverRestaurantUseCase(
     }
 
     override suspend fun getMealDetails(mealId: String): MealDetails {
-        if (!isValidId(mealId)) {
+        if (!basicValidation.isValidId(mealId)) {
             throw InvalidParameterException(INVALID_ID)
         }
         return restaurantGateway.getMealById(mealId) ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
     private suspend fun checkIfCategoryIsExist(categoryId: String) {
-        if (!isValidId(categoryId)) {
+        if (!basicValidation.isValidId(categoryId)) {
             throw InvalidParameterException(INVALID_ID)
         }
         if (optionsGateway.getCategory(categoryId) == null) {
@@ -78,7 +78,7 @@ class DiscoverRestaurantUseCase(
     }
 
     private suspend fun checkIfRestaurantIsExist(restaurantId: String) {
-        if (!isValidId(restaurantId)) {
+        if (!basicValidation.isValidId(restaurantId)) {
             throw InvalidParameterException(INVALID_ID)
         }
         if (restaurantGateway.getRestaurant(restaurantId) == null) {
@@ -87,7 +87,7 @@ class DiscoverRestaurantUseCase(
     }
 
     private suspend fun checkIfCuisineIsExist(cuisineId: String) {
-        if (!isValidId(cuisineId)) {
+        if (!basicValidation.isValidId(cuisineId)) {
             throw InvalidParameterException(INVALID_ID)
         }
         if (optionsGateway.getCuisineById(cuisineId) == null) {
