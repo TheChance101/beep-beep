@@ -9,7 +9,6 @@ class GetUsersGroupTokensUseCase(
 ) : IGetUsersGroupTokensUseCase {
     override suspend fun invoke(usersGroup: String): List<String> {
         val ids = databaseGateway.getUsersGroupIds(usersGroup)
-        println("********* ids: $ids")
         return databaseGateway.getUsersTokens(ids)
     }
 

@@ -9,7 +9,6 @@ class SendNotificationToUsersGroupUseCase(
 ) : ISendNotificationToUsersGroupUseCase {
     override suspend fun invoke(usersGroup: String, title: String, body: String): Boolean {
         val tokens = getUsersGroupTokensUseCase(usersGroup)
-        println("********* tokens: $tokens")
         return sendNotificationUseCase(tokens, title, body)
     }
 
