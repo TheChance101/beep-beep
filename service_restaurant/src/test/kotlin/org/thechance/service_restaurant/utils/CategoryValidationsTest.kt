@@ -6,11 +6,6 @@ import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.function.Executable
 import org.thechance.service_restaurant.domain.entity.Category
 
-/*
-validationCategory
-checkIsValidIds
-validateUpdateMeal
- */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CategoryValidationsTest {
     @Test
