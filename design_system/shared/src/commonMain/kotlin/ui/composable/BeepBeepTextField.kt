@@ -60,7 +60,7 @@ fun BeepBeepTextField(
         )
 
         OutlinedTextField(
-            modifier = Modifier.height(56.dp),
+            modifier = Modifier.fillMaxWidth().height(56.dp),
             value = text,
             onValueChange = onValueChange,
             shape = shapeRadius,
