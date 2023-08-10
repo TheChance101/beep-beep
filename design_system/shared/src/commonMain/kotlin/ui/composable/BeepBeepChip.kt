@@ -24,12 +24,17 @@ fun BeepBeepChip(
     modifier: Modifier = Modifier,
     painter: Painter? = null
 ) {
-    val containerColor =
-        animateColorAsState(targetValue = if (isSelected) BeepBeepTheme.colorScheme.primary else Color.Transparent)
-    val labelColor =
-        animateColorAsState(targetValue = if (isSelected) BeepBeepTheme.colorScheme.onPrimaryContainer else BeepBeepTheme.colorScheme.onSecondary)
-    val iconColor =
-        animateColorAsState(targetValue = if (isSelected) BeepBeepTheme.colorScheme.onPrimaryContainer else BeepBeepTheme.colorScheme.onSecondary)
+    val containerColor = animateColorAsState(
+        targetValue = if (isSelected) BeepBeepTheme.colorScheme.primary else Color.Transparent
+    )
+    val labelColor = animateColorAsState(
+        targetValue = if (isSelected) BeepBeepTheme.colorScheme.onPrimaryContainer
+        else BeepBeepTheme.colorScheme.onSecondary
+    )
+    val iconColor = animateColorAsState(
+        targetValue = if (isSelected) BeepBeepTheme.colorScheme.onPrimaryContainer
+        else BeepBeepTheme.colorScheme.onSecondary
+    )
     AssistChip(
         modifier = modifier.height(32.dp),
         onClick = { onClick(!isSelected) },
