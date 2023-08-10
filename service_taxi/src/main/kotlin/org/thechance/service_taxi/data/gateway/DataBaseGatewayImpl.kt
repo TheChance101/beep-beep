@@ -3,7 +3,6 @@ package org.thechance.service_taxi.data.gateway
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Updates
 import org.bson.types.ObjectId
-import org.koin.core.annotation.Single
 import org.litote.kmongo.and
 import org.litote.kmongo.eq
 import org.litote.kmongo.ne
@@ -26,7 +25,6 @@ import org.thechance.service_taxi.domain.entity.Trip
 import org.thechance.service_taxi.domain.entity.TripUpdateRequest
 import org.thechance.service_taxi.domain.gateway.DataBaseGateway
 
-@Single
 class DataBaseGatewayImpl(private val container: DataBaseContainer) : DataBaseGateway {
     // region taxi curd
     override suspend fun addTaxi(taxi: Taxi): Boolean {

@@ -1,14 +1,18 @@
 package org.thechance.service_taxi.di
 
-import org.koin.core.annotation.ComponentScan
-import org.koin.core.annotation.Module
 import org.koin.dsl.module
 import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.reactivestreams.KMongo
-
-@Module
-@ComponentScan("org.thechance.service_taxi")
-class AppModule
+import org.thechance.service_taxi.data.DataBaseContainer
+import org.thechance.service_taxi.data.gateway.DataBaseGatewayImpl
+import org.thechance.service_taxi.domain.gateway.DataBaseGateway
+import org.thechance.service_taxi.domain.usecase.DiscoverTripsUseCase
+import org.thechance.service_taxi.domain.usecase.IDiscoverTripsUseCase
+import org.thechance.service_taxi.domain.usecase.IManageTaxiUseCase
+import org.thechance.service_taxi.domain.usecase.IManageTripsUseCase
+import org.thechance.service_taxi.domain.usecase.ManageTaxiUseCase
+import org.thechance.service_taxi.domain.usecase.ManageTripsUseCase
+import org.thechance.service_taxi.domain.util.Validations
 
 val kmongoModule = module {
     single {
@@ -18,4 +22,13 @@ val kmongoModule = module {
         KMongo.createClient("mongodb+srv://$username:$password@$cluster.mongodb.net/")
             .coroutine
     }
+    single { DataBaseContainer(get()) }
+    single<DataBaseGateway> { DataBaseGatewayImpl(get()) }
+}
+
+val useCasesModule = module {
+    single<IDiscoverTripsUseCase> { DiscoverTripsUseCase(get(), get()) }
+    single<IManageTripsUseCase> { ManageTripsUseCase(get(), get()) }
+    single<IManageTaxiUseCase> { ManageTaxiUseCase(get(), get()) }
+    single { Validations() }
 }
