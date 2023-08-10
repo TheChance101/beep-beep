@@ -49,7 +49,7 @@ fun BeepBeepTextField(
     var showPassword by remember { mutableStateOf(false) }
 
     Column(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier,
         horizontalAlignment = Alignment.Start
     ) {
         Text(
@@ -60,7 +60,7 @@ fun BeepBeepTextField(
         )
 
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth().height(56.dp),
+            modifier = Modifier.height(56.dp),
             value = text,
             onValueChange = onValueChange,
             shape = shapeRadius,
