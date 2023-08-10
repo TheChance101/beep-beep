@@ -50,9 +50,7 @@ fun BeepBeepNavigationBar(
         elevation = elevation,
         modifier = modifier
     ) {
-        Row(
-            Modifier
-                .fillMaxWidth()
+        Row( Modifier .fillMaxWidth()
                 .height(navigationBarHeight)
                 .selectableGroup(),
             horizontalArrangement = horizontalArrangement,
@@ -93,8 +91,7 @@ fun RowScope.BeepBeepNavigationBarItem(
     }
 
     Box(
-        modifier
-            .selectable(
+        modifier.selectable(
                 indication = null,
                 interactionSource = interactionSource,
                 selected = selected,
@@ -105,9 +102,7 @@ fun RowScope.BeepBeepNavigationBarItem(
             .fillMaxHeight()
             .weight(1f)
     ) {
-        Column(
-            modifier = modifier.align(Alignment.TopCenter)
-        ) {
+        Column(modifier = modifier.align(Alignment.TopCenter)) {
             AnimatedVisibility(selected) {
                 Indicator(40.dp)
             }

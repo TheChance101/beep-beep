@@ -55,14 +55,14 @@ fun BeepBeepOutlinedButton(
         contentColor = buttonContentColor,
         border = BorderStroke(border.width, buttonBorderColor)
     ) {
-        ProvideTextStyle(value = BeepBeepTheme.typography.titleLarge.copy(color = buttonContentColor)) {
+        ProvideTextStyle(
+            value = BeepBeepTheme.typography.titleLarge.copy(color = buttonContentColor)) {
             Row(
                 Modifier
                     .defaultMinSize(
                         minWidth = ButtonDefaults.MinWidth,
                         minHeight = ButtonDefaults.MinHeight
-                    )
-                    .padding(contentPadding),
+                    ).padding(contentPadding),
                 horizontalArrangement = horizontalArrangement,
                 verticalAlignment = Alignment.CenterVertically,
                 content = content
