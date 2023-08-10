@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,7 +40,7 @@ fun LoginContent() {
         )
         Spacer(Modifier.weight(1f))
         Column(
-            Modifier.fillMaxHeight().padding(horizontal = 150.dp),
+            Modifier.fillMaxHeight().padding(horizontal = 150.dp).width(350.dp),
             verticalArrangement = Arrangement.Center,
         ) {
             Text("Login", fontSize = 24.sp, color = Color.Black.copy(.87f))
