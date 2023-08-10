@@ -1,5 +1,6 @@
 package com.beepbeep.designSystem.ui.composable
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -83,7 +84,7 @@ fun BeepBeepTextField(
             ),
         )
 
-        if (isError) {
+        AnimatedVisibility(isError) {
             Text(
                 text = errorMessage,
                 modifier = Modifier.padding(top = dimens.space8),
@@ -112,7 +113,7 @@ fun TrailingIcon(
     showPassword: Boolean,
     togglePasswordVisibility: () -> Unit
 ) {
-    if ((keyboardType == KeyboardType.Password || keyboardType == KeyboardType.NumberPassword) && !isError) {
+    AnimatedVisibility((keyboardType == KeyboardType.Password || keyboardType == KeyboardType.NumberPassword) && !isError) {
         IconButton(onClick = { togglePasswordVisibility() }) {
             Icon(
                 imageVector = if (showPassword) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility,
