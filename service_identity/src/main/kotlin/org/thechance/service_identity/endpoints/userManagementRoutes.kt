@@ -19,11 +19,9 @@ fun Route.userManagementRoutes() {
     route("/dashboard/user") {
 
         get {
-            val fullName = call.parameters["full_name"] ?: ""
-            val username = call.parameters["username"] ?: ""
             val page = call.parameters.extractInt("page") ?: 1
             val limit = call.parameters.extractInt("limit") ?: 10
-            val users = userManagement.getUsers(page, limit, fullName, username).toDto()
+            val users = userManagement.getUsers(page, limit).toDto()
             call.respond(HttpStatusCode.OK, users)
         }
 

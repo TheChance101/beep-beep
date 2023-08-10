@@ -172,12 +172,8 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
     override suspend fun getUsers(
         page: Int,
         limit: Int,
-        fullName: String,
-        username: String
     ): List<ManagedUser> {
         return userCollection.find(
-            UserCollection::fullName regex fullName,
-            UserCollection::username regex username,
             UserCollection::isDeleted eq false
         ).projection(
             UserCollection::id,
@@ -194,7 +190,15 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
             User::fullName regex searchTerm
         )
 
-        return userCollection.find(searchQuery).toList().toManagedEntity()
+        return userCollection.find(
+            searchQuery
+        ).projection(
+            UserCollection::id,
+            UserCollection::fullName,
+            UserCollection::username,
+            UserCollection::email,
+            UserCollection::permissions,
+        ).toList().toManagedEntity()
     }
 
     override suspend fun createUser(user: CreateUserRequest): Boolean {
