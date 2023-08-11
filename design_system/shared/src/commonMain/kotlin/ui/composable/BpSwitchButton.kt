@@ -68,7 +68,7 @@ fun BpSwitchButton(
 }
 
 @Composable
-fun Circle(
+private fun Circle(
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
 ) {

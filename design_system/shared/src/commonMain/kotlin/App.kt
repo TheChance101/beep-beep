@@ -47,8 +47,6 @@ fun DesignApp() {
 //            horizontalAlignment = Alignment.CenterHorizontally,
 //            verticalArrangement = Arrangement.Bottom
         ) {
-            TextButtonPrev()
-//            TogglePreview()
 //            EnabledButtonsPreview()
 //            DisabledButtonsPreview()
 //            Spacer(modifier = Modifier.height(16.dp))
@@ -200,13 +198,5 @@ fun BottomNavigationBarPreview() {
 }
 
 
-@OptIn(ExperimentalResourceApi::class)
-@Composable
-fun TextButtonPrev() {
-    BpTextButton(
-        text="Button",
-        onClick = { },
-    )
-}
 
 expect fun getPlatformName(): String
