@@ -199,8 +199,6 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) :
             email = user.email
         )
 
-       // val userDocument = user.toCollection()
-
         try {
             val wallet = WalletCollection(userId = userDocument.id.toString())
             createWallet(wallet)
