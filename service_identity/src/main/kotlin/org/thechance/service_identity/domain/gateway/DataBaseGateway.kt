@@ -1,5 +1,6 @@
 package org.thechance.service_identity.domain.gateway
 
+import org.thechance.service_identity.data.security.hashing.SaltedHash
 import org.thechance.service_identity.domain.entity.*
 
 interface DataBaseGateway {
@@ -31,7 +32,7 @@ interface DataBaseGateway {
 
     suspend fun getUsers(page: Int, limit: Int, searchTerm: String = ""): List<ManagedUser>
 
-    suspend fun createUser(user: CreateUserRequest): Boolean
+    suspend fun createUser(saltedHash: SaltedHash, user: CreateUserRequest): Boolean
 
     suspend fun updateUser(id: String, user: UpdateUserRequest): Boolean
 
