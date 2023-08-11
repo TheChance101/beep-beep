@@ -1,6 +1,3 @@
-import groovy.xml.dom.DOMCategory.attributes
-import org.jetbrains.kotlin.com.intellij.openapi.vfs.StandardFileSystems.jar
-
 val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
@@ -11,6 +8,7 @@ val koin_ktor : String by project
 val kmongo_version : String by project
 val koin_ksp_version : String by project
 val firebase_version : String by project
+val status_pages: String by project
 
 plugins {
     kotlin("jvm") version "1.8.10"
@@ -69,6 +67,10 @@ dependencies {
 
     // koinLogger
     implementation ("io.insert-koin:koin-logger-slf4j:$koin_version")
+
+    // Status pages error handler
+    implementation("io.ktor:ktor-server-status-pages-jvm:$status_pages")
+    implementation("io.ktor:ktor-server-request-validation:$ktor_version")
 
 }
 

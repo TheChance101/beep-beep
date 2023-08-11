@@ -12,5 +12,7 @@ class GetNotificationHistoryUseCase(private val databaseGateway: IDatabaseGatewa
 }
 
 interface IGetNotificationHistoryUseCase {
+
     suspend operator fun invoke(page: Int, limit: Int): List<Notification>
+
 }

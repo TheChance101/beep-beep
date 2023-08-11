@@ -10,8 +10,13 @@ import org.thechance.service_notification.data.collection.UserCollection
 class DatabaseContainer(val database: CoroutineDatabase) {
 
     val userCollection: CoroutineCollection<UserCollection> =
-        database.getCollection<UserCollection>("users")
+        database.getCollection<UserCollection>(USERS)
 
     val historyCollection: CoroutineCollection<NotificationHistoryCollection> =
-        database.getCollection<NotificationHistoryCollection>("history_notification")
+        database.getCollection<NotificationHistoryCollection>(HISTORY_NOTIFICATION)
+
+    companion object {
+        const val USERS = "users"
+        const val HISTORY_NOTIFICATION = "history_notification"
+    }
 }
