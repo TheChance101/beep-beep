@@ -35,7 +35,7 @@ data class UpdateUserDocument(
     @SerialName("username")
     val username: String? = null,
     @SerialName("password")
-    val password: String? = null,//hashed password
+    val password: String? = null,
     @SerialName("email")
     val email: String? = null,
 )
@@ -51,7 +51,7 @@ data class CreateUserDocument(
     @SerialName("username")
     val username: String,
     @SerialName("password")
-    val password: String,//hashed password
+    val password: String,
     @SerialName("email")
     val email: String,
 )
