@@ -14,11 +14,13 @@ import org.litote.kmongo.coroutine.aggregate
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.*
 import org.thechance.service_identity.data.mappers.*
-import org.thechance.service_identity.data.util.*
+import org.thechance.service_identity.data.util.USER_DETAILS_COLLECTION
+import org.thechance.service_identity.data.util.isUpdatedSuccessfully
+import org.thechance.service_identity.data.util.paginate
 import org.thechance.service_identity.domain.entity.*
 import org.thechance.service_identity.domain.gateway.DataBaseGateway
-import org.thechance.service_identity.endpoints.validation.NOT_FOUND
-import org.thechance.service_identity.endpoints.validation.USER_ALREADY_EXISTS
+import org.thechance.service_identity.domain.util.NOT_FOUND
+import org.thechance.service_identity.domain.util.USER_ALREADY_EXISTS
 
 @Single
 class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway {
@@ -48,10 +50,10 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
 
     //region Address
 
-    override suspend fun addAddress(address: Address): Boolean {
-        val newAddressCollection = address.toCollection()
+    override suspend fun addAddress(userId: String, address: CreateAddressRequest): Boolean {
+        val newAddressCollection = address.toCollection(userId)
         userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::userId eq newAddressCollection.userId,
+            filter = UserDetailsCollection::userId eq ObjectId(userId),
             update = push(UserDetailsCollection::addresses, newAddressCollection.id)
         )
         return addressCollection.insertOne(newAddressCollection).wasAcknowledged()
@@ -68,8 +70,12 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
         ).isUpdatedSuccessfully()
     }
 
-    override suspend fun updateAddress(id: String, address: Address): Boolean {
-        return addressCollection.updateOneById(ObjectId(id), address.toCollection()).isUpdatedSuccessfully()
+    override suspend fun updateAddress(id: String, address: UpdateAddressRequest): Boolean {
+        return addressCollection.updateOneById(
+            ObjectId(id),
+            address.toUpdateDocument(),
+            updateOnlyNotNullProperties = true
+        ).isUpdatedSuccessfully()
     }
 
     override suspend fun getAddress(id: String): Address {
@@ -94,33 +100,34 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
             ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
-    override suspend fun addPermission(permission: Permission): Boolean {
-        return permissionCollection.insertOne(permission.toCollection()).wasAcknowledged()
+    override suspend fun addPermission(permission: CreatePermissionRequest): Boolean {
+        val maximumId = permissionCollection.find().toList().size
+        return permissionCollection.insertOne(permission.toCollection(maximumId + 1)).wasAcknowledged()
     }
 
     override suspend fun deletePermission(permissionId: Int): Boolean {
         return permissionCollection.updateOne(
             filter = Filters.and(
-                PermissionCollection::id eq permissionId,
+                PermissionCollection::_id eq permissionId,
                 PermissionCollection::isDeleted eq false
             ),
             update = setValue(PermissionCollection::isDeleted, true)
         ).isUpdatedSuccessfully()
     }
 
-    override suspend fun getListOfPermission(permissionId: Int): List<Permission> {
+    override suspend fun getListOfPermission(): List<Permission> {
         return permissionCollection.find(
-            PermissionCollection::id eq permissionId,
             PermissionCollection::isDeleted eq false
         ).toList().toEntity()
     }
 
 
-    override suspend fun updatePermission(permissionId: Int, permission: Permission): Boolean {
+    override suspend fun updatePermission(permissionId: Int, permission: UpdatePermissionRequest): Boolean {
         return permissionCollection.updateOneById(
             id = permissionId,
-            update = permission.toCollection(),
-        ).wasAcknowledged()
+            update = permission.toUpdateDocument(),
+            updateOnlyNotNullProperties = true
+        ).isUpdatedSuccessfully()
     }
     //endregion
 
@@ -129,12 +136,12 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
     private suspend fun createUniqueIndexIfNotExists() {
         if (!isUniqueIndexCreated()) {
             val indexOptions = IndexOptions().unique(true)
-            userCollection.createIndex(Indexes.ascending("username"), indexOptions)
+            userCollection.createIndex(Indexes.ascending(USER_NAME), indexOptions)
         }
     }
 
     private suspend fun isUniqueIndexCreated(): Boolean {
-        val indexName = "username_1"
+        val indexName = INDEX_NAME
 
         val indexInfo = userCollection.listIndexes<Indexes>().toList()
             .filter { it.equals(indexName) }
@@ -148,50 +155,59 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
         val userPermission = getUserPermissions(id)
 
         return userCollection.aggregate<DetailedUserCollection>(
-            match(UserCollection::id eq ObjectId(id)),
+            match(
+                UserCollection::id eq ObjectId(id),
+                UserCollection::isDeleted eq false
+            ),
             lookup(
-                localField = USER_COLLECTION_LOCAL_PRIMARY_FIELD,
+                localField = UserCollection::id.name,
                 from = USER_DETAILS_COLLECTION,
-                foreignField = USER_DETAILS_LOCAL_FIELD,
-                newAs = DETAILED_USER_COLLECTION
+                foreignField = UserDetailsCollection::userId.name,
+                newAs = DetailedUserCollection::details.name
             )
         ).toList().toEntity(wallet.walletBalance, userAddresses, userPermission).firstOrNull()
             ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
-
-    // todo: add another mapper
-    override suspend fun getUsers(fullName: String, username: String): List<User> {
+    override suspend fun getUsers(page: Int, limit: Int, searchTerm: String): List<ManagedUser> {
+        val searchQuery = or(
+            UserCollection::fullName regex searchTerm,
+            UserCollection::username regex searchTerm
+        )
         return userCollection.find(
-            UserCollection::isDeleted eq false,
-            UserCollection::fullName regex fullName,
-            UserCollection::username regex username
-        ).toList().tEntity()
+            searchQuery,
+            UserCollection::isDeleted eq false
+        ).projection(
+            UserCollection::id,
+            UserCollection::fullName,
+            UserCollection::username,
+            UserCollection::email,
+            UserCollection::permissions,
+        ).paginate(page, limit).toList().toManagedEntity()
     }
 
-    override suspend fun createUser(user: User): Boolean {
+    override suspend fun createUser(user: CreateUserRequest): Boolean {
         val userDocument = user.toCollection()
         try {
-            val wallet = WalletCollection(userId = userDocument.id.toString(), walletBalance = 0.0)
-            createWallet(wallet.toEntity())
-            userDetailsCollection.insertOne(user.toDetailsCollection(userDocument.id.toHexString()))
+            val wallet = WalletCollection(userId = userDocument.id.toString())
+            createWallet(wallet)
+            userDetailsCollection.insertOne(UserDetailsCollection(userId = userDocument.id))
             return userCollection.insertOne(userDocument).wasAcknowledged()
         } catch (exception: MongoWriteException) {
             throw UserAlreadyExistsException(USER_ALREADY_EXISTS)
         }
     }
 
-    override suspend fun updateUser(id: String, user: User): Boolean {
-        userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::userId eq ObjectId(id),
-            target = user.toDetailsCollection(id),
-            updateOnlyNotNullProperties = true
-        )
-        return userCollection.updateOneById(
-            ObjectId(id),
-            user.toUpdateCollection(),
-            updateOnlyNotNullProperties = true
-        ).isUpdatedSuccessfully()
+    override suspend fun updateUser(id: String, user: UpdateUserRequest): Boolean {
+        try {
+            return userCollection.updateOneById(
+                ObjectId(id),
+                user.toUpdateRequest(),
+                updateOnlyNotNullProperties = true
+            ).isUpdatedSuccessfully()
+        } catch (exception: MongoWriteException) {
+            throw UserAlreadyExistsException(USER_ALREADY_EXISTS)
+        }
     }
 
     override suspend fun deleteUser(id: String): Boolean {
@@ -204,59 +220,64 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
 
 
     // region: wallet
-    override suspend fun getWallet(walletId: String): Wallet {
-        return walletCollection.findOneById(ObjectId(walletId))?.toEntity()
-            ?: throw ResourceNotFoundException(NOT_FOUND)
-    }
 
-    override suspend fun getWalletByUserId(userId: String): Wallet {
+    private suspend fun getWalletByUserId(userId: String): WalletCollection {
         return walletCollection.findOne(
             WalletCollection::userId eq userId
-        )?.toEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
+        ) ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
-    override suspend fun createWallet(wallet: Wallet): Boolean {
+    override suspend fun subtractFromWallet(userId: String, amount: Double): Boolean {
+        return walletCollection.updateOne(
+            filter = WalletCollection::userId eq userId,
+            update = inc(WalletCollection::walletBalance, -amount)
+        ).isUpdatedSuccessfully()
+    }
+
+    override suspend fun getWalletBalance(userId: String): Double {
+        return walletCollection.findOne(
+            WalletCollection::userId eq userId
+        )?.walletBalance ?: throw ResourceNotFoundException(NOT_FOUND)
+    }
+
+    override suspend fun addToWallet(userId: String, amount: Double): Boolean {
+        return walletCollection.updateOne(
+            filter = WalletCollection::userId eq userId,
+            update = inc(WalletCollection::walletBalance, amount)
+        ).isUpdatedSuccessfully()
+    }
+
+    private suspend fun createWallet(wallet: WalletCollection): Boolean {
         userDetailsCollection.updateOne(
             filter = UserDetailsCollection::userId eq ObjectId(wallet.userId),
-            update = set(UserDetailsCollection::walletCollection setTo wallet.toCollection())
+            update = set(UserDetailsCollection::walletCollection setTo wallet)
         )
-        return walletCollection.insertOne(wallet.toCollection()).wasAcknowledged()
-    }
-
-    override suspend fun updateWallet(walletId: String, wallet: Wallet): Boolean {
-        return walletCollection.updateOneById(
-            id = ObjectId(walletId),
-            update = wallet.toCollection(),
-        ).wasAcknowledged()
+        return walletCollection.insertOne(wallet).wasAcknowledged()
     }
     // endregion: wallet
 
     // region: user permission management
 
     override suspend fun addPermissionToUser(userId: String, permissionId: Int): Boolean {
-        return userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::userId eq ObjectId(userId),
-            update = push(UserDetailsCollection::permissions, permissionId)
+        val permission = permissionCollection.findOne(PermissionCollection::_id eq permissionId)
+            ?: throw ResourceNotFoundException(NOT_FOUND)
+
+        return userCollection.updateOne(
+            filter = UserCollection::id eq ObjectId(userId),
+            update = push(UserCollection::permissions, permission)
         ).isUpdatedSuccessfully()
     }
 
     override suspend fun removePermissionFromUser(userId: String, permissionId: Int): Boolean {
-        return userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::userId eq ObjectId(userId),
-            update = pull(UserDetailsCollection::permissions, permissionId)
+        return userCollection.updateOne(
+            filter = UserCollection::id eq ObjectId(userId),
+            update = pullByFilter(UserCollection::permissions, PermissionCollection::_id eq permissionId)
         ).isUpdatedSuccessfully()
     }
 
     override suspend fun getUserPermissions(userId: String): List<Permission> {
-        return userDetailsCollection.aggregate<UserPermissionsCollection>(
-            match(UserDetailsCollection::userId eq ObjectId(userId)),
-            lookup(
-                localField = UserDetailsCollection::permissions.name,
-                from = PERMISSION_COLLECTION,
-                foreignField = USER_PERMISSION_FOREIGN_FIELD,
-                newAs = UserPermissionsCollection::userPermissions.name
-            )
-        ).first()?.userPermissions?.toEntity() ?: emptyList()
+        return userCollection.findOneById(ObjectId(userId))?.permissions?.toEntity()
+            ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
     // endregion: user permission management
@@ -266,12 +287,8 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
         private const val ADDRESS_COLLECTION_NAME = "address"
         private const val PERMISSION_COLLECTION_NAME = "permission"
         private const val USER_COLLECTION = "user"
-        const val CLIENT_PERMISSION = 1
-        private const val ADMIN_PERMISSION = 2
-        private const val DELIVERY_PERMISSION = 3
-        private const val TAXI_DRIVER_PERMISSION = 4
-        private const val RESTAURANT_OWNER_PERMISSION = 5
-        private const val SUPPORT_PERMISSION = 6
+        private const val USER_NAME = "username"
+        private const val INDEX_NAME = "username_1"
     }
 
 }
