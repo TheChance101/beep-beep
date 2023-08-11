@@ -80,7 +80,7 @@ fun BeepBeepTheme(
 }
 
 object BeepBeepTheme {
-    val colorScheme: ColorScheme
+    val color: ColorScheme
         @Composable
         @ReadOnlyComposable
         get() = LocalColorScheme.current

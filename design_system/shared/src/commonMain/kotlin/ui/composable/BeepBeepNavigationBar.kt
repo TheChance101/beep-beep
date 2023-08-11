@@ -38,7 +38,7 @@ import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
 fun BeepBeepNavigationBar(
     modifier: Modifier = Modifier,
     navigationBarHeight: Dp = 64.dp,
-    backgroundColor: Color = BeepBeepTheme.colorScheme.surface,
+    backgroundColor: Color = BeepBeepTheme.color.surface,
     contentColor: Color = contentColorFor(backgroundColor),
     elevation: Dp = BottomNavigationDefaults.Elevation,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
@@ -73,7 +73,7 @@ fun RowScope.BeepBeepNavigationBarItem(
 ) {
     val styledIcon = @Composable {
         val iconColor by animateColorAsState(
-            if (selected) BeepBeepTheme.colorScheme.primary else BeepBeepTheme.colorScheme.onSecondary,
+            if (selected) BeepBeepTheme.color.primary else BeepBeepTheme.color.onSecondary,
             tween(500)
         )
         icon(tint = iconColor)
@@ -81,7 +81,7 @@ fun RowScope.BeepBeepNavigationBarItem(
 
     val styledLabel = @Composable {
         val textColor by animateColorAsState(
-            if (selected) BeepBeepTheme.colorScheme.primary else BeepBeepTheme.colorScheme.onSecondary,
+            if (selected) BeepBeepTheme.color.primary else BeepBeepTheme.color.onSecondary,
             tween(500)
         )
         val style =
@@ -126,7 +126,7 @@ private fun Indicator(
     width: Dp,
     height: Dp = 3.dp,
     shape: Shape = BeepBeepTheme.shapes.small,
-    color: Color = BeepBeepTheme.colorScheme.primary
+    color: Color = BeepBeepTheme.color.primary
 ) {
     Box(modifier = Modifier.width(width).height(height).clip(shape).background(color))
 }

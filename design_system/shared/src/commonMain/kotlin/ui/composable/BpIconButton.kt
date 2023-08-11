@@ -30,7 +30,7 @@ fun BpIconButton(
     Surface(
         modifier = modifier
             .height(height.dp)
-            .border(width = 1.dp, color = BeepBeepTheme.colorScheme.outline,
+            .border(width = 1.dp, color = BeepBeepTheme.color.outline,
                 shape = BeepBeepTheme.shapes.medium)
             .padding(horizontal = BeepBeepTheme.dimens.space16,
                 vertical = BeepBeepTheme.dimens.space8)
@@ -45,7 +45,7 @@ fun BpIconButton(
             Icon(
                 painter = painter ,
                 contentDescription = "",
-                tint = BeepBeepTheme.colorScheme.onPrimary,
+                tint = BeepBeepTheme.color.onPrimary,
             )
             content()
         }

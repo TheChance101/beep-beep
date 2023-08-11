@@ -42,7 +42,7 @@ import org.jetbrains.compose.resources.painterResource
 fun DesignApp() {
     BeepBeepTheme {
         Column(
-            Modifier.fillMaxSize().background(BeepBeepTheme.colorScheme.background),
+            Modifier.fillMaxSize().background(BeepBeepTheme.color.background),
 //            horizontalAlignment = Alignment.CenterHorizontally,
 //            verticalArrangement = Arrangement.Bottom
         ) {

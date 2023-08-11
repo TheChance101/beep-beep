@@ -27,7 +27,7 @@ import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.colorScheme
+import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.color
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.dimens
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.shapes
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -48,17 +48,17 @@ fun BpToggleButton(
     )
     val alignment = remember { derivedStateOf {
         BiasAlignment(horizontalBias = horizontalBias, verticalBias = 0f) } }
-    Box(Modifier.border(width = 1.dp, color = colorScheme.outline, shape = shapes.small)
+    Box(Modifier.border(width = 1.dp, color = color.outline, shape = shapes.small)
         .width(dimens.size64)
         .height(dimens.size32)
-        .background(color = colorScheme.background, shape = shapes.small)
+        .background(color = color.background, shape = shapes.small)
         .padding(dimens.space2)
         .clickable(indication = null, interactionSource = remember { MutableInteractionSource() })
         { onToggle() }) {
 
         Card(modifier = Modifier.width(28.dp).height(28.dp).padding(dimens.space2).align(alignment.value),
             shape = shapes.small,
-            colors = CardDefaults.cardColors(containerColor = colorScheme.primary),
+            colors = CardDefaults.cardColors(containerColor = color.primary),
             elevation = CardDefaults.elevatedCardElevation(0.dp),
         ) {}
         Row(horizontalArrangement = Arrangement.SpaceBetween,
@@ -67,14 +67,14 @@ fun BpToggleButton(
             Icon(
                 painter = painterResource("sun.xml"),
                 contentDescription = "",
-                tint = if (isDark) colorScheme.onTertiary else Color.White,
+                tint = if (isDark) color.onTertiary else Color.White,
                 modifier = Modifier.size(24.dp).padding(dimens.space2)
             )
 
             Icon(
                 painter = painterResource("moon_stars.xml"),
                 contentDescription = "",
-                tint = if (isDark) Color.White else colorScheme.onTertiary,
+                tint = if (isDark) Color.White else color.onTertiary,
                 modifier = Modifier.size(24.dp).padding(dimens.space2)
             )
         }

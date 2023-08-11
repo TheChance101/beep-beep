@@ -26,7 +26,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.colorScheme
+import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.color
 import com.beepbeep.designSystem.ui.theme.shapes
 
 @Composable
@@ -39,7 +39,7 @@ fun BpCheckBox(
     gapBetweenLabelAndCheckbox: Int = 8,
 ) {
     val checkboxColor: Color by animateColorAsState(
-        targetValue = if (isChecked) colorScheme.primary else Color.Transparent,
+        targetValue = if (isChecked) color.primary else Color.Transparent,
         animationSpec = tween(300)
     )
     val density = LocalDensity.current
@@ -52,7 +52,7 @@ fun BpCheckBox(
             Box(modifier = Modifier.size(size.dp)
                     .background(color = checkboxColor, shape = shapes.small)
                     .border(width = 1.dp,shape = shapes.small,
-                        color = if (isChecked) colorScheme.primary else colorScheme.outline)
+                        color = if (isChecked) color.primary else color.outline)
                     .toggleable(
                         value = isChecked,
                         role = Role.Checkbox,
@@ -80,6 +80,6 @@ fun BpCheckBox(
                 }
 
         }
-        Text(text = label, style = BeepBeepTheme.typography.body, color = colorScheme.onSecondary)
+        Text(text = label, style = BeepBeepTheme.typography.body, color = color.onSecondary)
     }
 }

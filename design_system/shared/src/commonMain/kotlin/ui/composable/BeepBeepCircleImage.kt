@@ -27,8 +27,8 @@ fun BeepBeepCircleImage(
     boxSize: Dp = 72.dp,
     imageSize: Dp = 32.dp,
     strokeWidth: Dp = dimens.strokeSmall,
-    strokeColor: Color = BeepBeepTheme.colorScheme.onTertiary,
-    backgroundColor: Color = BeepBeepTheme.colorScheme.surface,
+    strokeColor: Color = BeepBeepTheme.color.onTertiary,
+    backgroundColor: Color = BeepBeepTheme.color.surface,
     imageScale: ContentScale = ContentScale.Crop,
 ) {
     Box(

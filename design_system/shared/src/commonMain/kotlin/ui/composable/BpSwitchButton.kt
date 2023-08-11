@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.dimens
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.shapes
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.colorScheme
+import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.color
 
 
 @Composable
@@ -33,12 +33,12 @@ fun BpSwitchButton(
     selected: Boolean = false,
 ) {
     val targetBackgroundColor by animateColorAsState(
-        targetValue = if (selected) colorScheme.primary else colorScheme.background,
+        targetValue = if (selected) color.primary else color.background,
         animationSpec = tween(500)
     )
 
     val targetBorderColor by animateColorAsState(
-        targetValue = if (selected) colorScheme.primary else colorScheme.tertiaryContainer,
+        targetValue = if (selected) color.primary else color.tertiaryContainer,
         animationSpec = tween(500)
     )
     val horizontalBias by animateFloatAsState(

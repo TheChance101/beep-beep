@@ -30,20 +30,20 @@ fun BeepBeepOutlinedButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     shape: Shape = RoundedCornerShape(8.dp),
-    contentColor: Color = BeepBeepTheme.colorScheme.primary,
-    border: BorderStroke = BorderStroke(1.dp, color = BeepBeepTheme.colorScheme.primary),
+    contentColor: Color = BeepBeepTheme.color.primary,
+    border: BorderStroke = BorderStroke(1.dp, color = BeepBeepTheme.color.primary),
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Center,
     content: @Composable RowScope.() -> Unit
 ) {
     val buttonBorderColor by animateColorAsState(
-        if (enabled) BeepBeepTheme.colorScheme.primary
-        else BeepBeepTheme.colorScheme.tertiaryContainer
+        if (enabled) BeepBeepTheme.color.primary
+        else BeepBeepTheme.color.tertiaryContainer
     )
 
     val buttonContentColor by animateColorAsState(
         if (enabled) contentColor
-        else BeepBeepTheme.colorScheme.tertiaryContainer
+        else BeepBeepTheme.color.tertiaryContainer
     )
 
     Surface(

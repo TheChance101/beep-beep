@@ -25,15 +25,15 @@ fun BeepBeepChip(
     painter: Painter? = null
 ) {
     val containerColor = animateColorAsState(
-        targetValue = if (isSelected) BeepBeepTheme.colorScheme.primary else Color.Transparent
+        targetValue = if (isSelected) BeepBeepTheme.color.primary else Color.Transparent
     )
     val labelColor = animateColorAsState(
-        targetValue = if (isSelected) BeepBeepTheme.colorScheme.onPrimaryContainer
-        else BeepBeepTheme.colorScheme.onSecondary
+        targetValue = if (isSelected) BeepBeepTheme.color.onPrimaryContainer
+        else BeepBeepTheme.color.onSecondary
     )
     val iconColor = animateColorAsState(
-        targetValue = if (isSelected) BeepBeepTheme.colorScheme.onPrimaryContainer
-        else BeepBeepTheme.colorScheme.onSecondary
+        targetValue = if (isSelected) BeepBeepTheme.color.onPrimaryContainer
+        else BeepBeepTheme.color.onSecondary
     )
     AssistChip(
         modifier = modifier.height(32.dp),
@@ -54,7 +54,7 @@ fun BeepBeepChip(
             labelColor = labelColor.value
         ),
         border = AssistChipDefaults.assistChipBorder(
-            borderColor = BeepBeepTheme.colorScheme.outline,
+            borderColor = BeepBeepTheme.color.outline,
             borderWidth = 1.dp
         ),
         shape = BeepBeepTheme.shapes.small
