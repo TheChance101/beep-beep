@@ -388,6 +388,19 @@ class RestaurantValidationTest {
 
     //endregion
 
+    //region update restaurant
+    @Test
+    fun `should pass when admin update restaurant with address that not null`() {
+        // given a restaurant when address is not null
+        val invalidAddressExecutable = Executable {
+            restaurantValidation.validateUpdateRestaurant(fakeRestaurant()[2].copy(address = Address(40.0, 40.0)))
+        }
+        // then check if pass
+        assertDoesNotThrow(invalidAddressExecutable)
+    }
+
+    //endregion
+
     //region owner validation
     @Test
     fun `should throw exception when restaurant not exists in database`() {
