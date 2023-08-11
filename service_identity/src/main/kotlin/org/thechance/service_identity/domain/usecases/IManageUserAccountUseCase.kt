@@ -7,7 +7,7 @@ import org.thechance.service_identity.domain.entity.CreateUserRequest
 import org.thechance.service_identity.domain.entity.InsufficientFundsException
 import org.thechance.service_identity.domain.entity.UpdateUserRequest
 import org.thechance.service_identity.domain.entity.User
-import org.thechance.service_identity.domain.gateway.DataBaseGateway
+import org.thechance.service_identity.domain.gateway.IDataBaseGateway
 import org.thechance.service_identity.domain.usecases.validation.IValidateUserInfoUseCase
 import org.thechance.service_identity.domain.usecases.validation.IValidateWalletBalanceUseCase
 import org.thechance.service_identity.domain.util.INSUFFICIENT_FUNDS
@@ -31,7 +31,7 @@ interface IManageUserAccountUseCase {
 
 @Single
 class ManageUserAccountUseCase(
-    private val dataBaseGateway: DataBaseGateway,
+    private val dataBaseGateway: IDataBaseGateway,
     private val validateWalletBalance: IValidateWalletBalanceUseCase,
     private val validateUserInfo: IValidateUserInfoUseCase,
     private val hashingService: HashingService

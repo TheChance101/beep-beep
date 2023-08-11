@@ -13,20 +13,19 @@ import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.*
-import org.thechance.service_identity.data.geteway.security.HashingService
 import org.thechance.service_identity.data.mappers.*
 import org.thechance.service_identity.data.security.hashing.SaltedHash
 import org.thechance.service_identity.data.util.USER_DETAILS_COLLECTION
 import org.thechance.service_identity.data.util.isUpdatedSuccessfully
 import org.thechance.service_identity.data.util.paginate
 import org.thechance.service_identity.domain.entity.*
-import org.thechance.service_identity.domain.gateway.DataBaseGateway
+import org.thechance.service_identity.domain.gateway.IDataBaseGateway
 import org.thechance.service_identity.domain.util.NOT_FOUND
 import org.thechance.service_identity.domain.util.USER_ALREADY_EXISTS
 
 @Single
-class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) :
-    DataBaseGateway {
+class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
+    IDataBaseGateway {
 
 
     private val addressCollection by lazy {

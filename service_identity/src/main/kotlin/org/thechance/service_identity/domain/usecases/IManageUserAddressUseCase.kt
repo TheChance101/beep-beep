@@ -4,7 +4,7 @@ import org.koin.core.annotation.Single
 import org.thechance.service_identity.domain.entity.Address
 import org.thechance.service_identity.domain.entity.CreateAddressRequest
 import org.thechance.service_identity.domain.entity.UpdateAddressRequest
-import org.thechance.service_identity.domain.gateway.DataBaseGateway
+import org.thechance.service_identity.domain.gateway.IDataBaseGateway
 import org.thechance.service_identity.domain.usecases.validation.IValidateAddressUseCase
 
 interface IManageUserAddressUseCase {
@@ -23,7 +23,7 @@ interface IManageUserAddressUseCase {
 
 @Single
 class ManageUserAddressUseCase(
-    private val dataBaseGateway: DataBaseGateway,
+    private val dataBaseGateway: IDataBaseGateway,
     private val validateAddress: IValidateAddressUseCase
 ) : IManageUserAddressUseCase {
 
