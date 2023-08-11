@@ -1,10 +1,15 @@
 package org.thechance.service_restaurant.api.endpoints
 
-import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.request.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.call
+import io.ktor.server.request.receive
+import io.ktor.server.response.respond
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.delete
+import io.ktor.server.routing.get
+import io.ktor.server.routing.post
+import io.ktor.server.routing.put
+import io.ktor.server.routing.route
 import org.koin.ktor.ext.inject
 import org.thechance.service_restaurant.api.models.CategoryDto
 import org.thechance.service_restaurant.api.models.mappers.toDto
@@ -14,7 +19,7 @@ import org.thechance.service_restaurant.api.utils.extractString
 import org.thechance.service_restaurant.domain.usecase.IDiscoverRestaurantUseCase
 import org.thechance.service_restaurant.domain.usecase.IManageCategoryUseCase
 import org.thechance.service_restaurant.domain.utils.INVALID_REQUEST_PARAMETER
-import org.thechance.service_restaurant.domain.utils.MissingParameterException
+import org.thechance.service_restaurant.domain.utils.MultiErrorException
 
 
 fun Route.categoryRoutes() {
@@ -51,9 +56,8 @@ fun Route.categoryRoutes() {
 
         delete("/{id}") {
             val categoryId =
-                call.parameters.extractString("id") ?: throw MissingParameterException(
-                    INVALID_REQUEST_PARAMETER
-                )
+                call.parameters.extractString("id") ?:
+                throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER))
             val result = manageCategory.deleteCategory(categoryId)
             call.respond(HttpStatusCode.OK, result)
         }

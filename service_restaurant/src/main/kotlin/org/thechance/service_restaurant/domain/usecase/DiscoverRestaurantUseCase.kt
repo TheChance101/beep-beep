@@ -8,9 +8,8 @@ import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
 import org.thechance.service_restaurant.domain.usecase.validation.Validation
 import org.thechance.service_restaurant.domain.utils.INVALID_ID
-import org.thechance.service_restaurant.domain.utils.InvalidParameterException
+import org.thechance.service_restaurant.domain.utils.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.NOT_FOUND
-import org.thechance.service_restaurant.domain.utils.ResourceNotFoundException
 
 interface IDiscoverRestaurantUseCase {
     suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant>
@@ -49,9 +48,8 @@ class DiscoverRestaurantUseCase(
 
     override suspend fun getRestaurantDetails(restaurantId: String): Restaurant {
         checkIfRestaurantIsExist(restaurantId)
-        return restaurantGateway.getRestaurant(restaurantId) ?: throw ResourceNotFoundException(
-            NOT_FOUND
-        )
+        return restaurantGateway.getRestaurant(restaurantId) ?:
+        throw MultiErrorException(listOf(NOT_FOUND))
     }
 
     override suspend fun getMealsByCuisine(cuisineId: String): List<Meal> {
@@ -61,35 +59,35 @@ class DiscoverRestaurantUseCase(
 
     override suspend fun getMealDetails(mealId: String): MealDetails {
         if (!basicValidation.isValidId(mealId)) {
-            throw InvalidParameterException(INVALID_ID)
+            throw MultiErrorException(listOf(INVALID_ID))
         }
-        return restaurantGateway.getMealById(mealId) ?: throw ResourceNotFoundException(NOT_FOUND)
+        return restaurantGateway.getMealById(mealId) ?:
+        throw MultiErrorException(listOf(NOT_FOUND))
     }
 
     private suspend fun checkIfCategoryIsExist(categoryId: String) {
         if (!basicValidation.isValidId(categoryId)) {
-            throw InvalidParameterException(INVALID_ID)
+            throw MultiErrorException(listOf(INVALID_ID))
         }
         if (optionsGateway.getCategory(categoryId) == null) {
-            throw ResourceNotFoundException(NOT_FOUND)
-        }
+            throw MultiErrorException(listOf(NOT_FOUND))        }
     }
 
     private suspend fun checkIfRestaurantIsExist(restaurantId: String) {
         if (!basicValidation.isValidId(restaurantId)) {
-            throw InvalidParameterException(INVALID_ID)
+            throw MultiErrorException(listOf(INVALID_ID))
         }
         if (restaurantGateway.getRestaurant(restaurantId) == null) {
-            throw ResourceNotFoundException(NOT_FOUND)
+            throw MultiErrorException(listOf(NOT_FOUND))
         }
     }
 
     private suspend fun checkIfCuisineIsExist(cuisineId: String) {
         if (!basicValidation.isValidId(cuisineId)) {
-            throw InvalidParameterException(INVALID_ID)
+            throw MultiErrorException(listOf(INVALID_ID))
         }
         if (optionsGateway.getCuisineById(cuisineId) == null) {
-            throw ResourceNotFoundException(NOT_FOUND)
+            throw MultiErrorException(listOf(NOT_FOUND))
         }
     }
 }

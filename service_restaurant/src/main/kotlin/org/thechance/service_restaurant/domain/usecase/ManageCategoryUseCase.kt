@@ -6,9 +6,8 @@ import org.thechance.service_restaurant.domain.usecase.validation.RestaurantVali
 import org.thechance.service_restaurant.domain.usecase.validation.Validation
 import org.thechance.service_restaurant.domain.utils.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.INVALID_NAME
-import org.thechance.service_restaurant.domain.utils.InvalidParameterException
+import org.thechance.service_restaurant.domain.utils.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.NOT_FOUND
-import org.thechance.service_restaurant.domain.utils.ResourceNotFoundException
 
 interface IManageCategoryUseCase {
     suspend fun getCategories(page: Int, limit: Int): List<Category>
@@ -29,7 +28,7 @@ class ManageCategoryUseCase(
 
     override suspend fun createCategory(category: Category): Boolean {
         if (!basicValidation.isValidName(category.name)) {
-            throw InvalidParameterException(INVALID_NAME)
+            throw MultiErrorException(listOf(INVALID_NAME))
         }
         return restaurantOptions.addCategory(category)
     }
@@ -47,10 +46,10 @@ class ManageCategoryUseCase(
 
     private suspend fun checkIfCategoryIsExist(categoryId: String) {
         if (!basicValidation.isValidId(categoryId)) {
-            throw InvalidParameterException(INVALID_ID)
+            throw MultiErrorException(listOf(INVALID_ID))
         }
         if (restaurantOptions.getCategory(categoryId) == null) {
-            throw ResourceNotFoundException(NOT_FOUND)
+            throw MultiErrorException(listOf(NOT_FOUND))
         }
     }
 }
