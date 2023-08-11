@@ -33,12 +33,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
+import com.beepbeep.designSystem.ui.theme.Theme
 
 @Composable
 fun BeepBeepNavigationBar(
     modifier: Modifier = Modifier,
     navigationBarHeight: Dp = 64.dp,
-    backgroundColor: Color = BeepBeepTheme.color.surface,
+    backgroundColor: Color = Theme.color.surface,
     contentColor: Color = contentColorFor(backgroundColor),
     elevation: Dp = BottomNavigationDefaults.Elevation,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
@@ -73,7 +74,7 @@ fun RowScope.BeepBeepNavigationBarItem(
 ) {
     val styledIcon = @Composable {
         val iconColor by animateColorAsState(
-            if (selected) BeepBeepTheme.color.primary else BeepBeepTheme.color.onSecondary,
+            if (selected) Theme.color.primary else Theme.color.onSecondary,
             tween(500)
         )
         icon(tint = iconColor)
@@ -81,11 +82,11 @@ fun RowScope.BeepBeepNavigationBarItem(
 
     val styledLabel = @Composable {
         val textColor by animateColorAsState(
-            if (selected) BeepBeepTheme.color.primary else BeepBeepTheme.color.onSecondary,
+            if (selected) Theme.color.primary else Theme.color.onSecondary,
             tween(500)
         )
         val style =
-            BeepBeepTheme.typography.caption.copy(color = textColor)
+            Theme.typography.caption.copy(color = textColor)
         label?.let {
             it(style)
         }
@@ -125,8 +126,8 @@ fun RowScope.BeepBeepNavigationBarItem(
 private fun Indicator(
     width: Dp,
     height: Dp = 3.dp,
-    shape: Shape = BeepBeepTheme.shapes.small,
-    color: Color = BeepBeepTheme.color.primary
+    shape: Shape = Theme.shapes.small,
+    color: Color = Theme.color.primary
 ) {
     Box(modifier = Modifier.width(width).height(height).clip(shape).background(color))
 }

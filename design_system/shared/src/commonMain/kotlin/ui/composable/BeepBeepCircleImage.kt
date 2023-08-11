@@ -17,7 +17,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.dimens
+import com.beepbeep.designSystem.ui.theme.Theme
+import com.beepbeep.designSystem.ui.theme.Theme.dimens
 
 @Composable
 fun BeepBeepCircleImage(
@@ -27,8 +28,8 @@ fun BeepBeepCircleImage(
     boxSize: Dp = 72.dp,
     imageSize: Dp = 32.dp,
     strokeWidth: Dp = dimens.strokeSmall,
-    strokeColor: Color = BeepBeepTheme.color.onTertiary,
-    backgroundColor: Color = BeepBeepTheme.color.surface,
+    strokeColor: Color = Theme.color.onTertiary,
+    backgroundColor: Color = Theme.color.surface,
     imageScale: ContentScale = ContentScale.Crop,
 ) {
     Box(

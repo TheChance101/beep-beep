@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
+import com.beepbeep.designSystem.ui.theme.Theme
 
 @ExperimentalMaterial3Api
 @Composable
@@ -28,8 +29,8 @@ fun BeepBeepButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    shape: Shape = BeepBeepTheme.shapes.medium,
-    containerColor: Color = BeepBeepTheme.color.primary,
+    shape: Shape = Theme.shapes.medium,
+    containerColor: Color = Theme.color.primary,
     contentColor: Color = Color.White,
     border: BorderStroke? = null,
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
@@ -37,7 +38,7 @@ fun BeepBeepButton(
     content: @Composable RowScope.() -> Unit
 ) {
     val buttonColor by animateColorAsState(
-        if (enabled) containerColor else BeepBeepTheme.color.tertiaryContainer
+        if (enabled) containerColor else Theme.color.tertiaryContainer
     )
 
     Surface(
@@ -49,7 +50,7 @@ fun BeepBeepButton(
         contentColor = contentColor,
         border = border
     ) {
-        ProvideTextStyle(value = BeepBeepTheme.typography.titleLarge.copy(color = contentColor)) {
+        ProvideTextStyle(value = Theme.typography.titleLarge.copy(color = contentColor)) {
             Row(
                 Modifier.defaultMinSize(
                     minWidth = ButtonDefaults.MinWidth,

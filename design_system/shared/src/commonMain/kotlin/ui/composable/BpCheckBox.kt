@@ -26,7 +26,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.color
+import com.beepbeep.designSystem.ui.theme.Theme
+import com.beepbeep.designSystem.ui.theme.Theme.color
 import com.beepbeep.designSystem.ui.theme.shapes
 
 @Composable
@@ -80,6 +81,6 @@ fun BpCheckBox(
                 }
 
         }
-        Text(text = label, style = BeepBeepTheme.typography.body, color = color.onSecondary)
+        Text(text = label, style = Theme.typography.body, color = color.onSecondary)
     }
 }

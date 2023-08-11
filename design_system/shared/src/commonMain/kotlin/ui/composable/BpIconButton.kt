@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
+import com.beepbeep.designSystem.ui.theme.Theme
 
 @Composable
 fun BpIconButton(
@@ -30,10 +31,10 @@ fun BpIconButton(
     Surface(
         modifier = modifier
             .height(height.dp)
-            .border(width = 1.dp, color = BeepBeepTheme.color.outline,
-                shape = BeepBeepTheme.shapes.medium)
-            .padding(horizontal = BeepBeepTheme.dimens.space16,
-                vertical = BeepBeepTheme.dimens.space8)
+            .border(width = 1.dp, color = Theme.color.outline,
+                shape = Theme.shapes.medium)
+            .padding(horizontal = Theme.dimens.space16,
+                vertical = Theme.dimens.space8)
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }
@@ -45,7 +46,7 @@ fun BpIconButton(
             Icon(
                 painter = painter ,
                 contentDescription = "",
-                tint = BeepBeepTheme.color.onPrimary,
+                tint = Theme.color.onPrimary,
             )
             content()
         }

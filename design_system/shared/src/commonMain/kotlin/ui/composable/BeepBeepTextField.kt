@@ -28,10 +28,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.color
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.dimens
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.shapes
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.typography
+import com.beepbeep.designSystem.ui.theme.Theme.color
+import com.beepbeep.designSystem.ui.theme.Theme.dimens
+import com.beepbeep.designSystem.ui.theme.Theme.shapes
+import com.beepbeep.designSystem.ui.theme.Theme.typography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

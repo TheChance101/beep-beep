@@ -21,9 +21,9 @@ import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.dimens
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.shapes
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.color
+import com.beepbeep.designSystem.ui.theme.Theme.dimens
+import com.beepbeep.designSystem.ui.theme.Theme.shapes
+import com.beepbeep.designSystem.ui.theme.Theme.color
 
 
 @Composable

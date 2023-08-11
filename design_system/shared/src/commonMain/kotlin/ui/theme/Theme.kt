@@ -79,7 +79,7 @@ fun BeepBeepTheme(
     )
 }
 
-object BeepBeepTheme {
+object Theme {
     val color: ColorScheme
         @Composable
         @ReadOnlyComposable

@@ -34,6 +34,7 @@ import com.beepbeep.designSystem.ui.composable.BeepBeepTextField
 import com.beepbeep.designSystem.ui.composable.BpIconButton
 import com.beepbeep.designSystem.ui.composable.BpTextButton
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
+import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -42,7 +43,7 @@ import org.jetbrains.compose.resources.painterResource
 fun DesignApp() {
     BeepBeepTheme {
         Column(
-            Modifier.fillMaxSize().background(BeepBeepTheme.color.background),
+            Modifier.fillMaxSize().background(Theme.color.background),
 //            horizontalAlignment = Alignment.CenterHorizontally,
 //            verticalArrangement = Arrangement.Bottom
         ) {

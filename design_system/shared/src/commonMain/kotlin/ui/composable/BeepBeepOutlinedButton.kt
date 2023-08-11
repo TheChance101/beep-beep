@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
+import com.beepbeep.designSystem.ui.theme.Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,20 +31,20 @@ fun BeepBeepOutlinedButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     shape: Shape = RoundedCornerShape(8.dp),
-    contentColor: Color = BeepBeepTheme.color.primary,
-    border: BorderStroke = BorderStroke(1.dp, color = BeepBeepTheme.color.primary),
+    contentColor: Color = Theme.color.primary,
+    border: BorderStroke = BorderStroke(1.dp, color = Theme.color.primary),
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Center,
     content: @Composable RowScope.() -> Unit
 ) {
     val buttonBorderColor by animateColorAsState(
-        if (enabled) BeepBeepTheme.color.primary
-        else BeepBeepTheme.color.tertiaryContainer
+        if (enabled) Theme.color.primary
+        else Theme.color.tertiaryContainer
     )
 
     val buttonContentColor by animateColorAsState(
         if (enabled) contentColor
-        else BeepBeepTheme.color.tertiaryContainer
+        else Theme.color.tertiaryContainer
     )
 
     Surface(
@@ -56,7 +57,7 @@ fun BeepBeepOutlinedButton(
         border = BorderStroke(border.width, buttonBorderColor)
     ) {
         ProvideTextStyle(
-            value = BeepBeepTheme.typography.titleLarge.copy(color = buttonContentColor)
+            value = Theme.typography.titleLarge.copy(color = buttonContentColor)
         ) {
             Row(
                 Modifier
