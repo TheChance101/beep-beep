@@ -16,9 +16,9 @@ class RestaurantValidationTest {
     
     private val restaurantValidation = RestaurantValidation(Validation())
 
-    //region creat validationRestaurant
+    //region create validationRestaurant
     @Test
-    fun `should pass validation when creat restaurant with just require fields that valid`() {
+    fun `should pass validation when create restaurant with just require fields that valid`() {
         // given a valid fields of restaurant that  require
         val restaurantExecutable = Executable {
             restaurantValidation.validationRestaurant(fakeRestaurant()[0])
@@ -28,7 +28,7 @@ class RestaurantValidationTest {
     }
 
     @Test
-    fun `should pass validation when creat restaurant with all fields that valid`() {
+    fun `should pass validation when create restaurant with all fields that valid`() {
         // given a valid fields of restaurant with optional fields
         val restaurantExecutable = Executable {
             restaurantValidation.validationRestaurant(fakeRestaurant()[2])
@@ -38,7 +38,7 @@ class RestaurantValidationTest {
     }
 
     @Test
-    fun `should pass validation when creat restaurant with blank price level`() {
+    fun `should pass validation when create restaurant with blank price level`() {
         // given a restaurant when price level is blank
         val blankPrice = fakeRestaurant().first().copy(priceLevel = "")
         // then no exception should be thrown
@@ -46,7 +46,7 @@ class RestaurantValidationTest {
     }
 
     @Test
-    fun `should pass validation when creat restaurant with valid price level`() {
+    fun `should pass validation when create restaurant with valid price level`() {
         // given a restaurant when price level is blank
         val blankPrice = fakeRestaurant().first().copy(priceLevel = "$")
         // then no exception should be thrown
@@ -227,13 +227,13 @@ class RestaurantValidationTest {
 
     //endregion
 
-    //region update restaurant
+    //region update restaurant details
 
     @Test
     fun `should throw exception when update restaurant with address that not null`() {
         // given a restaurant when address is not null
         val invalidAddressExecutable = Executable {
-            restaurantValidation.validateUpdateRestaurant(fakeRestaurant()[2].copy(address = Address(40.0, 40.0)))
+            restaurantValidation.validateUpdateRestaurantDetails(fakeRestaurant()[2].copy(address = Address(40.0, 40.0)))
         }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, invalidAddressExecutable)
@@ -244,7 +244,7 @@ class RestaurantValidationTest {
     fun `should pass when update restaurant with address that null`() {
         // given a restaurant when address is null
         val invalidAddressExecutable = Executable {
-            restaurantValidation.validateUpdateRestaurant(fakeRestaurant()[2].copy(address = Address(NULL_DOUBLE, NULL_DOUBLE)))
+            restaurantValidation.validateUpdateRestaurantDetails(fakeRestaurant()[2].copy(address = Address(NULL_DOUBLE, NULL_DOUBLE)))
         }
         // then check if throw exception
         assertDoesNotThrow(invalidAddressExecutable)
@@ -254,7 +254,7 @@ class RestaurantValidationTest {
     fun `should throw exception when update restaurant with invalid id and owner id`() {
         // given a restaurant when id and owner id is invalid
         val invalidIdExecutable = Executable {
-            restaurantValidation.validateUpdateRestaurant(fakeRestaurant()[0].copy(id = "invalid_id", ownerId = "invalid_id"))
+            restaurantValidation.validateUpdateRestaurantDetails(fakeRestaurant()[0].copy(id = "invalid_id", ownerId = "invalid_id"))
         }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, invalidIdExecutable)
@@ -265,7 +265,7 @@ class RestaurantValidationTest {
     fun `should throw exception when update restaurant with invalid price level`() {
         // given a restaurant when price level not is $, $$, $$$, $$$$
         val invalidPriceLevelExecutable = Executable {
-            restaurantValidation.validateUpdateRestaurant(fakeRestaurant()[0].copy(priceLevel = "invalid_level"))
+            restaurantValidation.validateUpdateRestaurantDetails(fakeRestaurant()[0].copy(priceLevel = "invalid_level"))
         }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, invalidPriceLevelExecutable)
@@ -276,7 +276,7 @@ class RestaurantValidationTest {
     fun `should throw exception when update restaurant with name is empty`() {
         // given a restaurant when name is empty
         val emptyNameExecutable = Executable {
-            restaurantValidation.validateUpdateRestaurant(fakeRestaurant()[0].copy(name = " "))
+            restaurantValidation.validateUpdateRestaurantDetails(fakeRestaurant()[0].copy(name = " "))
         }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, emptyNameExecutable)
@@ -287,7 +287,7 @@ class RestaurantValidationTest {
     fun `should throw exception when update restaurant with name is long`() {
         // given a restaurant when name is more than 25
         val longNameExecutable = Executable {
-            restaurantValidation.validateUpdateRestaurant(fakeRestaurant()[0].copy(name = "A".repeat(26)))
+            restaurantValidation.validateUpdateRestaurantDetails(fakeRestaurant()[0].copy(name = "A".repeat(26)))
         }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, longNameExecutable)
@@ -298,7 +298,7 @@ class RestaurantValidationTest {
     fun `should throw exception when update restaurant with name is short`() {
         // given a restaurant when name is less than four letter
         val shortNameExecutable = Executable {
-            restaurantValidation.validateUpdateRestaurant(fakeRestaurant()[0].copy(name = "Asi"))
+            restaurantValidation.validateUpdateRestaurantDetails(fakeRestaurant()[0].copy(name = "Asi"))
         }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, shortNameExecutable)
@@ -309,7 +309,7 @@ class RestaurantValidationTest {
     fun `should throw exception when update restaurant with description is invalid `() {
         // given a restaurant when description is more than 255
         val longDescriptionExecutable = Executable {
-            restaurantValidation.validateUpdateRestaurant(fakeRestaurant()[0].copy(description = "A".repeat(256)))
+            restaurantValidation.validateUpdateRestaurantDetails(fakeRestaurant()[0].copy(description = "A".repeat(256)))
         }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, longDescriptionExecutable)
@@ -320,7 +320,7 @@ class RestaurantValidationTest {
     fun `should pass when update restaurant with description is valid `() {
         // given a restaurant when description is 255
         val longDescriptionExecutable = Executable {
-            restaurantValidation.validateUpdateRestaurant(fakeRestaurant()[1].copy(description = "A".repeat(255)))
+            restaurantValidation.validateUpdateRestaurantDetails(fakeRestaurant()[1].copy(description = "A".repeat(255)))
         }
         // then check if throw exception
         assertDoesNotThrow(longDescriptionExecutable)
@@ -330,7 +330,7 @@ class RestaurantValidationTest {
     fun `should pass when update restaurant with description is empty`() {
         // given a restaurant when description is 255
         val longDescriptionExecutable = Executable {
-            restaurantValidation.validateUpdateRestaurant(fakeRestaurant()[1].copy(description = ""))
+            restaurantValidation.validateUpdateRestaurantDetails(fakeRestaurant()[1].copy(description = ""))
         }
         // then check if throw exception
         assertDoesNotThrow(longDescriptionExecutable)
@@ -340,7 +340,7 @@ class RestaurantValidationTest {
     fun `should throw exception for invalid price level`() {
         // given a restaurant when price level not is $, $$, $$$, $$$$
         val invalidPriceLevelUpdate = fakeRestaurant()[2].copy(priceLevel = "invalid_level")
-        val upperRestaurantExecutable = Executable { restaurantValidation.validateUpdateRestaurant(invalidPriceLevelUpdate) }
+        val upperRestaurantExecutable = Executable { restaurantValidation.validateUpdateRestaurantDetails(invalidPriceLevelUpdate) }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, upperRestaurantExecutable)
         assert(error.errorCodes.contains(INVALID_PRICE_LEVEL))
@@ -350,7 +350,7 @@ class RestaurantValidationTest {
     fun `should throw exception for invalid phone`() {
         // given a restaurant when phone is invalid
         val invalidPhoneUpdate = fakeRestaurant()[2].copy(phone = "122")
-        val upperRestaurantExecutable = Executable { restaurantValidation.validateUpdateRestaurant(invalidPhoneUpdate) }
+        val upperRestaurantExecutable = Executable { restaurantValidation.validateUpdateRestaurantDetails(invalidPhoneUpdate) }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, upperRestaurantExecutable)
         assert(error.errorCodes.contains(INVALID_PHONE))
@@ -359,7 +359,7 @@ class RestaurantValidationTest {
     @Test
     fun `should throw exception for invalid closing time`() {
         val invalidClosingTimeUpdate = fakeRestaurant()[2].copy(closingTime = "000:00")
-        val upperRestaurantExecutable = Executable { restaurantValidation.validateUpdateRestaurant(invalidClosingTimeUpdate) }
+        val upperRestaurantExecutable = Executable { restaurantValidation.validateUpdateRestaurantDetails(invalidClosingTimeUpdate) }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, upperRestaurantExecutable)
         assert(error.errorCodes.contains(INVALID_TIME))
@@ -369,7 +369,7 @@ class RestaurantValidationTest {
     fun `should throw exception for invalid opening time`() {
         // given a restaurant when opening time is invalid
         val invalidOpeningTimeUpdate = fakeRestaurant()[2].copy(openingTime = "07:6")
-        val upperRestaurantExecutable = Executable { restaurantValidation.validateUpdateRestaurant(invalidOpeningTimeUpdate) }
+        val upperRestaurantExecutable = Executable { restaurantValidation.validateUpdateRestaurantDetails(invalidOpeningTimeUpdate) }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, upperRestaurantExecutable)
         assert(error.errorCodes.contains(INVALID_TIME))
@@ -379,7 +379,7 @@ class RestaurantValidationTest {
     fun `should throw exception when update restaurant with rate is more than five`() {
         // given a restaurant when rate is above upper bound  5.0
         val upperRateExecutable = Executable {
-            restaurantValidation.validateUpdateRestaurant(fakeRestaurant()[0].copy(rate = 5.1))
+            restaurantValidation.validateUpdateRestaurantDetails(fakeRestaurant()[0].copy(rate = 5.1))
         }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, upperRateExecutable)

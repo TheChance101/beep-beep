@@ -61,7 +61,7 @@ class ManageRestaurantDetailsUseCase(
     }
 
     override suspend fun updateRestaurant(restaurant: Restaurant): Boolean {
-        restaurantValidation.  validateUpdateRestaurant(restaurant)
+        restaurantValidation.  validateUpdateRestaurantDetails(restaurant)
         val existRestaurant =
             restaurantGateway.getRestaurant(restaurant.id) ?: throw MultiErrorException(listOf(NOT_FOUND))
         restaurantValidation. validateRestaurantOwnership(existRestaurant, restaurant.ownerId)

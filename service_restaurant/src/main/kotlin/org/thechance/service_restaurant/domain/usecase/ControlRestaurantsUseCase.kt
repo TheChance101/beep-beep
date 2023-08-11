@@ -32,6 +32,8 @@ class ControlRestaurantsUseCase(
     }
 
     override suspend fun updateRestaurant(restaurant: Restaurant): Boolean {
+        restaurantValidation.validateUpdateRestaurant(restaurant)
+        checkIfRestaurantIsExist(restaurant.id)
         return restaurantGateway.updateRestaurant(restaurant)
     }
 
