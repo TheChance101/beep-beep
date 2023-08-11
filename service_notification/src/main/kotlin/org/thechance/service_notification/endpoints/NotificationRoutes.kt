@@ -7,12 +7,11 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.service_notification.data.mappers.toDto
-import org.thechance.service_notification.domain.MISSING_PARAMETER
-import org.thechance.service_notification.domain.MissingRequestParameterException
 import org.thechance.service_notification.domain.usecases.IGetNotificationHistoryUseCase
 import org.thechance.service_notification.domain.usecases.IRegisterTokenUseCase
 import org.thechance.service_notification.domain.usecases.ISendNotificationContainerUseCase
 import org.thechance.service_notification.endpoints.utils.extractInt
+import org.thechance.service_notification.endpoints.utils.requireNotEmpty
 
 fun Route.notificationRoutes() {
 
@@ -24,9 +23,9 @@ fun Route.notificationRoutes() {
 
         post("/register_token/{userId}") {
             val receivedData = call.receiveParameters()
-            val token = receivedData["token"] ?: throw MissingRequestParameterException(MISSING_PARAMETER)
-            val group = receivedData["group"] ?: throw MissingRequestParameterException(MISSING_PARAMETER)
-            val userId = call.parameters["userId"] ?: throw MissingRequestParameterException(MISSING_PARAMETER)
+            val token = receivedData.requireNotEmpty("token")
+            val group = receivedData.requireNotEmpty("group")
+            val userId = call.parameters.requireNotEmpty("userId")
             val result = registerToken(userId, token, group)
             call.respondWithResult(result, successMessage = "Token registered successfully")
 
@@ -34,18 +33,18 @@ fun Route.notificationRoutes() {
 
         post("/user/{userId}") {
             val receivedData = call.receiveParameters()
-            val title = receivedData["title"] ?: throw MissingRequestParameterException(MISSING_PARAMETER)
-            val body = receivedData["body"] ?: throw MissingRequestParameterException(MISSING_PARAMETER)
-            val userId = call.parameters["userId"] ?: throw MissingRequestParameterException(MISSING_PARAMETER)
+            val title = receivedData.requireNotEmpty("title")
+            val body = receivedData.requireNotEmpty("body")
+            val userId = call.parameters.requireNotEmpty("userId")
             val result = sendNotificationsContainer.sendNotificationToUser(userId, title, body)
             call.respondWithResult(result, successMessage = "Notification sent successfully")
         }
 
         post("/group/{usersGroup}") {
             val receivedData = call.receiveParameters()
-            val title = receivedData["title"] ?: throw MissingRequestParameterException(MISSING_PARAMETER)
-            val body = receivedData["body"] ?: throw MissingRequestParameterException(MISSING_PARAMETER)
-            val usersGroup = call.parameters["usersGroup"] ?: throw MissingRequestParameterException(MISSING_PARAMETER)
+            val title = receivedData.requireNotEmpty("title")
+            val body = receivedData.requireNotEmpty("body")
+            val usersGroup = call.parameters.requireNotEmpty("usersGroup")
             val result = sendNotificationsContainer.sendNotificationToUsersGroup(usersGroup, title, body)
             call.respondWithResult(result, successMessage = "Notification sent successfully")
 

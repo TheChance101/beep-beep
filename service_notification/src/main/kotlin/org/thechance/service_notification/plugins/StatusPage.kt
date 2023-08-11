@@ -16,17 +16,11 @@ fun Application.configureStatusPage() {
 fun StatusPagesConfig.handleExceptions() {
 
     exception<MissingRequestParameterException> { call, cause ->
-        call.respond(
-            HttpStatusCode.BadRequest,
-            listOf(cause.message?.toInt())
-        )
+        call.respond(HttpStatusCode.BadRequest, listOf(cause.message?.toInt()))
     }
 
     exception<NotFoundException> { call, cause ->
-        call.respond(
-            HttpStatusCode.NotFound,
-            listOf(cause.message?.toInt())
-        )
+        call.respond(HttpStatusCode.NotFound, listOf(cause.message?.toInt()))
     }
 
 }

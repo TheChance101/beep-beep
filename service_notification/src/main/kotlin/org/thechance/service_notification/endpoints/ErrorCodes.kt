@@ -1,4 +1,4 @@
-package org.thechance.service_notification.domain
+package org.thechance.service_notification.endpoints
 
 const val MISSING_PARAMETER = "4001"
 const val NOTIFICATION_FAILED = "4003"

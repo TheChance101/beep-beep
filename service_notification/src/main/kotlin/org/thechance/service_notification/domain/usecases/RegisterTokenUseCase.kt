@@ -9,9 +9,7 @@ class RegisterTokenUseCase(
 ) : IRegisterTokenUseCase {
 
     override suspend fun invoke(userId: String, token: String, group: String): Boolean {
-        return databaseGateway.registerToken(userId, token).also {
-            databaseGateway.addUserToGroup(userId, group)
-        }
+        return databaseGateway.registerToken(userId, token).also { databaseGateway.addUserToGroup(userId, group) }
     }
 
 }

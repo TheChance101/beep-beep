@@ -10,13 +10,12 @@ import org.thechance.service_notification.data.collection.GroupUserCollection
 import org.thechance.service_notification.data.collection.UserCollection
 import org.thechance.service_notification.data.mappers.toCollection
 import org.thechance.service_notification.data.mappers.toNotificationEntity
-import org.thechance.service_notification.data.utils.isSuccessfullyUpdated
 import org.thechance.service_notification.data.utils.paginate
 import org.thechance.service_notification.domain.NotFoundException
-import org.thechance.service_notification.domain.TOKENS_NOT_FOUND
 import org.thechance.service_notification.domain.gateway.IDatabaseGateway
 import org.thechance.service_notification.domain.model.Notification
 import org.thechance.service_notification.domain.model.NotificationRequest
+import org.thechance.service_notification.endpoints.TOKENS_NOT_FOUND
 
 @Single
 class DatabaseGateway(
@@ -35,7 +34,7 @@ class DatabaseGateway(
             id = ObjectId(userId),
             update = addToSet(UserCollection::deviceTokens, token),
             options = UpdateOptions().upsert(true)
-        ).isSuccessfullyUpdated()
+        ).wasAcknowledged()
     }
 
     override suspend fun getUsersGroupIds(userGroup: String): List<String> {
