@@ -13,7 +13,9 @@ import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.*
+import org.thechance.service_identity.data.geteway.security.HashingService
 import org.thechance.service_identity.data.mappers.*
+import org.thechance.service_identity.data.security.hashing.SaltedHash
 import org.thechance.service_identity.data.util.USER_DETAILS_COLLECTION
 import org.thechance.service_identity.data.util.isUpdatedSuccessfully
 import org.thechance.service_identity.data.util.paginate
@@ -23,7 +25,8 @@ import org.thechance.service_identity.domain.util.NOT_FOUND
 import org.thechance.service_identity.domain.util.USER_ALREADY_EXISTS
 
 @Single
-class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway {
+class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) :
+    DataBaseGateway {
 
 
     private val addressCollection by lazy {
@@ -186,13 +189,25 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
         ).paginate(page, limit).toList().toManagedEntity()
     }
 
-    override suspend fun createUser(user: CreateUserRequest): Boolean {
-        val userDocument = user.toCollection()
+    override suspend fun createUser(saltedHash: SaltedHash, user: CreateUserRequest): Boolean {
+
+        val userDocument = UserCollection(
+            password = saltedHash.hash,
+            salt = saltedHash.salt,
+            username = user.username,
+            fullName = user.fullName,
+            email = user.email
+        )
+
+       // val userDocument = user.toCollection()
+
         try {
             val wallet = WalletCollection(userId = userDocument.id.toString())
             createWallet(wallet)
+
             userDetailsCollection.insertOne(UserDetailsCollection(userId = userDocument.id))
             return userCollection.insertOne(userDocument).wasAcknowledged()
+
         } catch (exception: MongoWriteException) {
             throw UserAlreadyExistsException(USER_ALREADY_EXISTS)
         }

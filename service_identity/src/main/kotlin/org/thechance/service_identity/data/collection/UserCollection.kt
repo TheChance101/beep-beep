@@ -17,9 +17,11 @@ data class UserCollection(
     @SerialName("username")
     val username: String,
     @SerialName("password")
-    val password: String? = null,
+    val password: String? = null,//hashed password
     @SerialName("email")
     val email: String,
+    @SerialName("salt")
+    val salt: String,
     @SerialName("permissions")
     val permissions: List<PermissionCollection> = emptyList(),
     @SerialName("isDeleted")
@@ -33,9 +35,11 @@ data class UpdateUserDocument(
     @SerialName("username")
     val username: String? = null,
     @SerialName("password")
-    val password: String? = null,
+    val password: String? = null,//hashed password
     @SerialName("email")
     val email: String? = null,
+//    @SerialName("salt")
+//    val salt: String,
 )
 
 @Serializable
@@ -49,7 +53,9 @@ data class CreateUserDocument(
     @SerialName("username")
     val username: String,
     @SerialName("password")
-    val password: String,
+    val password: String,//hashed password
     @SerialName("email")
     val email: String,
+    @SerialName("salt")
+    val salt: String,
 )

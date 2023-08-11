@@ -34,14 +34,15 @@ fun UpdateUserDocument.toUpdateRequest(): UpdateUserRequest = UpdateUserRequest(
     email = email,
 )
 
-fun CreateUserRequest.toCollection(): UserCollection {
+/*fun CreateUserRequest.toCollection(): UserCollection {
     return UserCollection(
         fullName = fullName,
         username = username,
         password = password,
         email = email,
+
     )
-}
+}*/
 
 fun UpdateUserRequest.toUpdateRequest(): UpdateUserDocument {
     return UpdateUserDocument(
