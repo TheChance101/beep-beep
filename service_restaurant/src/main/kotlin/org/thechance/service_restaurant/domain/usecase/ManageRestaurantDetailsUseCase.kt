@@ -1,16 +1,15 @@
 package org.thechance.service_restaurant.domain.usecase
 
-import org.koin.core.annotation.Single
 import org.thechance.service_restaurant.domain.entity.Category
 import org.thechance.service_restaurant.domain.entity.Restaurant
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
+import org.thechance.service_restaurant.domain.usecase.validation.RestaurantValidation
+import org.thechance.service_restaurant.domain.usecase.validation.Validation
 import org.thechance.service_restaurant.domain.utils.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.INVALID_ONE_OR_MORE_IDS
 import org.thechance.service_restaurant.domain.utils.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.NOT_FOUND
-import org.thechance.service_restaurant.domain.usecase.validation.RestaurantValidation
-import org.thechance.service_restaurant.domain.usecase.validation.Validation
 
 interface IManageRestaurantDetailsUseCase {
 
@@ -23,7 +22,6 @@ interface IManageRestaurantDetailsUseCase {
 
 }
 
-@Single
 class ManageRestaurantDetailsUseCase(
     private val restaurantGateway: IRestaurantGateway,
     private val optionsGateway: IRestaurantOptionsGateway,

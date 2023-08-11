@@ -1,17 +1,16 @@
 package org.thechance.service_restaurant.domain.usecase
 
-import org.koin.core.annotation.Single
 import org.thechance.service_restaurant.domain.entity.Category
 import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.entity.MealDetails
 import org.thechance.service_restaurant.domain.entity.Restaurant
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
+import org.thechance.service_restaurant.domain.usecase.validation.Validation
 import org.thechance.service_restaurant.domain.utils.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.InvalidParameterException
 import org.thechance.service_restaurant.domain.utils.NOT_FOUND
 import org.thechance.service_restaurant.domain.utils.ResourceNotFoundException
-import org.thechance.service_restaurant.domain.usecase.validation.Validation
 
 interface IDiscoverRestaurantUseCase {
     suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant>
@@ -23,7 +22,6 @@ interface IDiscoverRestaurantUseCase {
     suspend fun getRestaurantsInCategory(categoryId: String): List<Restaurant>
 }
 
-@Single
 class DiscoverRestaurantUseCase(
     private val restaurantGateway: IRestaurantGateway,
     private val optionsGateway: IRestaurantOptionsGateway,

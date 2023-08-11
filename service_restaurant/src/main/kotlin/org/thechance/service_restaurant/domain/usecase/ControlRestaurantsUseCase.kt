@@ -1,21 +1,20 @@
 package org.thechance.service_restaurant.domain.usecase
 
-import org.koin.core.annotation.Single
 import org.thechance.service_restaurant.domain.entity.Restaurant
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
+import org.thechance.service_restaurant.domain.usecase.validation.RestaurantValidation
+import org.thechance.service_restaurant.domain.usecase.validation.Validation
 import org.thechance.service_restaurant.domain.utils.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.InvalidParameterException
 import org.thechance.service_restaurant.domain.utils.NOT_FOUND
 import org.thechance.service_restaurant.domain.utils.ResourceNotFoundException
-import org.thechance.service_restaurant.domain.usecase.validation.RestaurantValidation
-import org.thechance.service_restaurant.domain.usecase.validation.Validation
+
 interface IControlRestaurantsUseCase {
     suspend fun createRestaurant(restaurant: Restaurant): Boolean
     suspend fun getAllRestaurants(page: Int, limit: Int): List<Restaurant>
     suspend fun deleteRestaurant(restaurantId: String): Boolean
 }
 
-@Single
 class ControlRestaurantsUseCase(
     private val restaurantGateway: IRestaurantGateway,
     private val restaurantValidation: RestaurantValidation,
