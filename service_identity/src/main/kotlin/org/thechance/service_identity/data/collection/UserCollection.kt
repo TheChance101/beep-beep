@@ -38,8 +38,6 @@ data class UpdateUserDocument(
     val password: String? = null,//hashed password
     @SerialName("email")
     val email: String? = null,
-//    @SerialName("salt")
-//    val salt: String,
 )
 
 @Serializable
@@ -56,6 +54,4 @@ data class CreateUserDocument(
     val password: String,//hashed password
     @SerialName("email")
     val email: String,
-    @SerialName("salt")
-    val salt: String,
 )
