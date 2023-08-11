@@ -34,7 +34,6 @@ import com.beepbeep.designSystem.ui.composable.BeepBeepNavigationBar
 import com.beepbeep.designSystem.ui.composable.BeepBeepNavigationBarItem
 import com.beepbeep.designSystem.ui.composable.BeepBeepTextButton
 import com.beepbeep.designSystem.ui.composable.BeepBeepTextField
-import com.beepbeep.designSystem.ui.composable.BeepBeepToggleButton
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -198,14 +197,6 @@ fun BottomNavigationBarPreview() {
             )
         }
     }
-}
-
-
-@Composable
-fun TogglePreview() {
-    var isToggle by remember { mutableStateOf(false) }
-    BeepBeepToggleButton(isDark=isToggle, onToggle = { isToggle = !isToggle })
-    BeepBeepToggleButton( onToggle = { isToggle = !isToggle }, isDark = isToggle)
 }
 
 
