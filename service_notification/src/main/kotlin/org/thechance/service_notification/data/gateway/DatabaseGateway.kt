@@ -6,7 +6,7 @@ import org.koin.core.annotation.Single
 import org.litote.kmongo.addToSet
 import org.litote.kmongo.`in`
 import org.thechance.service_notification.data.DatabaseContainer
-import org.thechance.service_notification.data.collection.GroupUser
+import org.thechance.service_notification.data.collection.GroupUserCollection
 import org.thechance.service_notification.data.collection.UserCollection
 import org.thechance.service_notification.data.mappers.toCollection
 import org.thechance.service_notification.data.mappers.toNotificationEntity
@@ -38,7 +38,7 @@ class DatabaseGateway(
     }
 
     override suspend fun getUsersGroupIds(userGroup: String): List<String> {
-        val collection = databaseContainer.database.getCollection<GroupUser>(userGroup)
+        val collection = databaseContainer.database.getCollection<GroupUserCollection>(userGroup)
         return collection.find().toList().map { it.userId.toHexString() }
     }
 
@@ -48,8 +48,8 @@ class DatabaseGateway(
     }
 
     override suspend fun addUserToGroup(userId: String, userGroup: String): Boolean {
-        val collection = databaseContainer.database.getCollection<GroupUser>(userGroup)
-        return collection.insertOne(GroupUser(userId = ObjectId(userId))).wasAcknowledged()
+        val collection = databaseContainer.database.getCollection<GroupUserCollection>(userGroup)
+        return collection.insertOne(GroupUserCollection(userId = ObjectId(userId))).wasAcknowledged()
     }
 
     override suspend fun addNotificationToUserHistory(notification: NotificationRequest) {

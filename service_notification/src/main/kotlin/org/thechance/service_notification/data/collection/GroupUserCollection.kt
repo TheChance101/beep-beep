@@ -5,9 +5,10 @@ import kotlinx.serialization.SerialName
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
 
-data class GroupUser(
+data class GroupUserCollection(
     @BsonId
     @SerialName("_id")
     @Contextual
+    val id: ObjectId? = ObjectId(),
     val userId: ObjectId,
 )
