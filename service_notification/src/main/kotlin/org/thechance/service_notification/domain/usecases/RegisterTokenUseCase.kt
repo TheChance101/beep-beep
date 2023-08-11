@@ -7,13 +7,17 @@ import org.thechance.service_notification.domain.gateway.IDatabaseGateway
 class RegisterTokenUseCase(
     private val databaseGateway: IDatabaseGateway
 ) : IRegisterTokenUseCase {
+
     override suspend fun invoke(userId: String, token: String, group: String): Boolean {
         return databaseGateway.registerToken(userId, token).also {
             databaseGateway.addUserToGroup(userId, group)
         }
     }
+
 }
 
 interface IRegisterTokenUseCase {
+
     suspend operator fun invoke(userId: String, token: String, group: String): Boolean
+
 }

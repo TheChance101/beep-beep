@@ -17,36 +17,27 @@ class SendNotificationContainerUseCase(
 
     override suspend fun sendNotificationToUser(userId: String, title: String, body: String): Boolean {
         val tokens = databaseGateway.getUsersTokens(listOf(userId))
-        return sendNotification(tokens, title, body).also {
-            databaseGateway.addNotificationToUserHistory(
-                NotificationRequest(
-                    title = title,
-                    body = body,
-                    date = System.currentTimeMillis(),
-                    userIds = listOf(userId),
-                )
-            )
-        }
+        return sendNotification(tokens, title, body).also { updateNotificationHistory(title, body, listOf(userId)) }
     }
 
     override suspend fun sendNotificationToUsersGroup(usersGroup: String, title: String, body: String): Boolean {
         val ids = databaseGateway.getUsersGroupIds(usersGroup)
         val tokens = databaseGateway.getUsersTokens(ids)
-        return sendNotification(tokens, title, body).also {
-            databaseGateway.addNotificationToUserHistory(
-                NotificationRequest(
-                    title = title,
-                    body = body,
-                    date = System.currentTimeMillis(),
-                    userIds = ids,
-                )
-            )
-        }
+        return sendNotification(tokens, title, body).also { updateNotificationHistory(title, body, ids) }
     }
+
+    private suspend fun updateNotificationHistory(title: String, body: String, userIds: List<String>) {
+        databaseGateway.addNotificationToUserHistory(
+            NotificationRequest(title = title, body = body, date = System.currentTimeMillis(), userIds = userIds)
+        )
+    }
+
 }
 
 interface ISendNotificationContainerUseCase {
+
     suspend fun sendNotificationToUser(userId: String, title: String, body: String): Boolean
 
     suspend fun sendNotificationToUsersGroup(usersGroup: String, title: String, body: String): Boolean
+
 }
