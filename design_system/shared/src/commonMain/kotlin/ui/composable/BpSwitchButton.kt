@@ -27,7 +27,7 @@ import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.colorScheme
 
 
 @Composable
-fun BbSwitchButton(
+fun BpSwitchButton(
     onSwitch: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     selected: Boolean = false,

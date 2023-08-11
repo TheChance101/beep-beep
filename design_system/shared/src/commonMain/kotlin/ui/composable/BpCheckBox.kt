@@ -30,7 +30,7 @@ import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.colorScheme
 import com.beepbeep.designSystem.ui.theme.shapes
 
 @Composable
-fun BbCheckBox(
+fun BpCheckBox(
     label: String,
     onCheck: () -> Unit,
     modifier: Modifier = Modifier,

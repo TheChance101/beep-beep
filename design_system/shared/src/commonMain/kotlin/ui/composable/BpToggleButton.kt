@@ -35,7 +35,7 @@ import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun BbToggleButton(
+fun BpToggleButton(
     onToggle: () -> Unit,
     isDark: Boolean = isSystemInDarkTheme(),
 ) {

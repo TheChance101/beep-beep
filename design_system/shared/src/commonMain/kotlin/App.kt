@@ -26,14 +26,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.beepbeep.designSystem.ui.composable.BbCheckBox
-import com.beepbeep.designSystem.ui.composable.BbSwitchButton
 import com.beepbeep.designSystem.ui.composable.BeepBeepButton
 import com.beepbeep.designSystem.ui.composable.BeepBeepChip
 import com.beepbeep.designSystem.ui.composable.BeepBeepNavigationBar
 import com.beepbeep.designSystem.ui.composable.BeepBeepNavigationBarItem
-import com.beepbeep.designSystem.ui.composable.BeepBeepTextButton
 import com.beepbeep.designSystem.ui.composable.BeepBeepTextField
+import com.beepbeep.designSystem.ui.composable.BpIconButton
+import com.beepbeep.designSystem.ui.composable.BpTextButton
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -47,7 +46,7 @@ fun DesignApp() {
 //            horizontalAlignment = Alignment.CenterHorizontally,
 //            verticalArrangement = Arrangement.Bottom
         ) {
-//            TextButtonPrev()
+            TextButtonPrev()
 //            TogglePreview()
 //            EnabledButtonsPreview()
 //            DisabledButtonsPreview()
@@ -203,16 +202,10 @@ fun BottomNavigationBarPreview() {
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun TextButtonPrev() {
-    BeepBeepTextButton(
-        text = "TextButton",
+    BpTextButton(
+        text="Button",
         onClick = { },
-    ) {
-        Icon(
-            painter = painterResource("sort.xml"),
-            contentDescription = "",
-            tint = BeepBeepTheme.colorScheme.onPrimary,
-        )
-    }
+    )
 }
 
 expect fun getPlatformName(): String
