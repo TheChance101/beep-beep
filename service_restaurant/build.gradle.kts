@@ -50,6 +50,9 @@ dependencies {
     implementation("io.insert-koin:koin-ktor:3.4.1")
     implementation("io.insert-koin:koin-core:3.4.2")
 
+    testImplementation("junit:junit:4.13.1")
+    implementation("org.junit.jupiter:junit-jupiter:5.8.1")
+
     //Koin annotations
     ksp("io.insert-koin:koin-ksp-compiler:$koinKsp")
     implementation("io.insert-koin:koin-annotations:$koinKsp")

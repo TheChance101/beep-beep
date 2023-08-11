@@ -12,8 +12,8 @@ fun main() {
 }
 
 fun Application.module() {
-    configureStatusExceptions()
     configureDependencyInjection()
+    configureStatusExceptions()
     configureSerialization()
     configureMonitoring()
     configureRouting()

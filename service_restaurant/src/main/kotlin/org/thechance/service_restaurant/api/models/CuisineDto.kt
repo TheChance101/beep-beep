@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CuisineDto(
     val id: String? = null,
-    val name: String
+    val name: String?= null
 )
