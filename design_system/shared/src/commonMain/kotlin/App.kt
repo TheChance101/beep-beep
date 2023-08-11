@@ -27,13 +27,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BbCheckBox
+import com.beepbeep.designSystem.ui.composable.BbSwitchButton
 import com.beepbeep.designSystem.ui.composable.BeepBeepButton
 import com.beepbeep.designSystem.ui.composable.BeepBeepChip
-import com.beepbeep.designSystem.ui.composable.BeepBeepIcon
-import com.beepbeep.designSystem.ui.composable.BeepBeepLogo
 import com.beepbeep.designSystem.ui.composable.BeepBeepNavigationBar
 import com.beepbeep.designSystem.ui.composable.BeepBeepNavigationBarItem
-import com.beepbeep.designSystem.ui.composable.BeepBeepSwitchButton
 import com.beepbeep.designSystem.ui.composable.BeepBeepTextButton
 import com.beepbeep.designSystem.ui.composable.BeepBeepTextField
 import com.beepbeep.designSystem.ui.composable.BeepBeepToggleButton
@@ -52,7 +50,6 @@ fun DesignApp() {
         ) {
 //            TextButtonPrev()
 //            TogglePreview()
-//            SwitchPreview()
 //            EnabledButtonsPreview()
 //            DisabledButtonsPreview()
 //            Spacer(modifier = Modifier.height(16.dp))
@@ -203,11 +200,6 @@ fun BottomNavigationBarPreview() {
     }
 }
 
-@Composable
-fun SwitchPreview() {
-    var isToggle by remember { mutableStateOf(false) }
-    BeepBeepSwitchButton(selected = isToggle, onSwitch = { isToggle = it })
-}
 
 @Composable
 fun TogglePreview() {

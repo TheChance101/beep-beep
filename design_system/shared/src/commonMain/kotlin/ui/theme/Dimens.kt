@@ -20,6 +20,9 @@ data class Dimens(
     val strokeNormal: Dp = 4.dp,
 
 
+    val size18: Dp = 18.dp,
+    val size24: Dp = 24.dp,
     val size32: Dp = 32.dp,
+    val size48: Dp = 48.dp,
     val size64: Dp = 64.dp,
 )
