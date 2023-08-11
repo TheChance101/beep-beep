@@ -59,16 +59,10 @@ fun BeepBeepCheckBox(
                         onCheck()
                     }
                 ),
-            elevation = 0.dp,
-            shape = shapes.small,
-            border = BorderStroke(
-                1.dp,
-                color = if (isChecked) colorScheme.primary else colorScheme.outline
-            ),
+            elevation = 0.dp,shape = shapes.small,
+            border = BorderStroke(1.dp, color = if (isChecked) colorScheme.primary else colorScheme.outline),
         ) {
-            Box(
-                modifier = Modifier.size(size.dp)
-                    .background(color = checkboxColor, shape = shapes.small),
+            Box(modifier = Modifier.size(size.dp).background(color = checkboxColor, shape = shapes.small),
                 contentAlignment = Alignment.Center
             ) {
                 androidx.compose.animation.AnimatedVisibility(

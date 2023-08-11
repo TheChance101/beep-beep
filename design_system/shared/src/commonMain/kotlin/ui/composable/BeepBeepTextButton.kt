@@ -39,10 +39,8 @@ fun BeepBeepTextButton(
             ) { onClick() },
         color = Color.Transparent,
     ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(dimens.space8),
-            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-        ) {
+        Row(horizontalArrangement = Arrangement.spacedBy(dimens.space8),
+            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
             icon()
             Text(
                 text = text,

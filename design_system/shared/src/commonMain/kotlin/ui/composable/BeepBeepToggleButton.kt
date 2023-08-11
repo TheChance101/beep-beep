@@ -46,37 +46,24 @@ fun BeepBeepToggleButton(
         },
         animationSpec = tween(500)
     )
-    val alignment = remember {
-        derivedStateOf {
-            BiasAlignment(
-                horizontalBias = horizontalBias,
-                verticalBias = 0f
-            )
-        }
-    }
+    val alignment = remember { derivedStateOf {
+        BiasAlignment(horizontalBias = horizontalBias, verticalBias = 0f) } }
     Box(Modifier.border(width = 1.dp, color = colorScheme.outline, shape = shapes.small)
         .width(dimens.size64)
         .height(dimens.size32)
         .background(color = colorScheme.background, shape = shapes.small)
         .padding(dimens.space2)
-        .clickable(
-            indication = null,
-            interactionSource = remember { MutableInteractionSource() })
+        .clickable(indication = null, interactionSource = remember { MutableInteractionSource() })
         { onToggle() }) {
 
-        Card(
-            modifier = Modifier.width(28.dp).height(28.dp).padding(dimens.space2)
-                .align(alignment.value),
+        Card(modifier = Modifier.width(28.dp).height(28.dp).padding(dimens.space2).align(alignment.value),
             shape = shapes.small,
             colors = CardDefaults.cardColors(containerColor = colorScheme.primary),
             elevation = CardDefaults.elevatedCardElevation(0.dp),
         ) {}
-
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
+        Row(horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxSize().padding(horizontal = dimens.space2)
-        ) {
+            modifier = Modifier.fillMaxSize().padding(horizontal = dimens.space2)) {
             Icon(
                 painter = painterResource("sun.xml"),
                 contentDescription = "",
