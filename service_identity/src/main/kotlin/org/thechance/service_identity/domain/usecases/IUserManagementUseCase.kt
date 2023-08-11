@@ -13,7 +13,7 @@ interface IUserManagementUseCase {
 
     suspend fun getUserPermissions(userId: String): List<Permission>
 
-    suspend fun getUsers(page: Int, limit: Int, fullName: String, username: String): List<ManagedUser>
+    suspend fun getUsers(page: Int, limit: Int, searchTerm: String): List<ManagedUser>
 
 }
 
@@ -32,8 +32,8 @@ class UserManagementUseCase(private val dataBaseGateway: DataBaseGateway) : IUse
         return dataBaseGateway.getUserPermissions(userId)
     }
 
-    override suspend fun getUsers(page: Int, limit: Int,fullName: String, username: String): List<ManagedUser> {
-        return dataBaseGateway.getUsers(page, limit,fullName, username)
+    override suspend fun getUsers(page: Int, limit: Int, searchTerm: String): List<ManagedUser> {
+        return dataBaseGateway.getUsers(page, limit, searchTerm)
     }
 
 }
