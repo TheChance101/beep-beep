@@ -27,16 +27,12 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BeepBeepButton
-import com.beepbeep.designSystem.ui.composable.BeepBeepCheckBox
 import com.beepbeep.designSystem.ui.composable.BeepBeepChip
-import com.beepbeep.designSystem.ui.composable.BeepBeepIcon
-import com.beepbeep.designSystem.ui.composable.BeepBeepLogo
 import com.beepbeep.designSystem.ui.composable.BeepBeepNavigationBar
 import com.beepbeep.designSystem.ui.composable.BeepBeepNavigationBarItem
-import com.beepbeep.designSystem.ui.composable.BeepBeepSwitchButton
-import com.beepbeep.designSystem.ui.composable.BeepBeepTextButton
 import com.beepbeep.designSystem.ui.composable.BeepBeepTextField
-import com.beepbeep.designSystem.ui.composable.BeepBeepToggleButton
+import com.beepbeep.designSystem.ui.composable.BpIconButton
+import com.beepbeep.designSystem.ui.composable.BpTextButton
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -46,14 +42,12 @@ import org.jetbrains.compose.resources.painterResource
 fun DesignApp() {
     BeepBeepTheme {
         Column(
-            Modifier.fillMaxSize().background(BeepBeepTheme.colorScheme.background),
+            Modifier.fillMaxSize().background(BeepBeepTheme.color.background),
 //            horizontalAlignment = Alignment.CenterHorizontally,
 //            verticalArrangement = Arrangement.Bottom
         ) {
-//            TextButtonPrev()
-            CheckBoxButtonPrev()
+            TextButtonPrev()
 //            TogglePreview()
-//            SwitchPreview()
 //            EnabledButtonsPreview()
 //            DisabledButtonsPreview()
 //            Spacer(modifier = Modifier.height(16.dp))
@@ -204,42 +198,14 @@ fun BottomNavigationBarPreview() {
     }
 }
 
-@Composable
-fun SwitchPreview() {
-    var isToggle by remember { mutableStateOf(false) }
-    BeepBeepSwitchButton(selected = isToggle, onSwitch = { isToggle = it })
-}
-
-@Composable
-fun TogglePreview() {
-    var isToggle by remember { mutableStateOf(false) }
-    BeepBeepToggleButton(isDark=isToggle, onToggle = { isToggle = !isToggle })
-    BeepBeepToggleButton( onToggle = { isToggle = !isToggle }, isDark = isToggle)
-}
-
-@Composable
-fun CheckBoxButtonPrev() {
-    var isChecked by remember { mutableStateOf(false) }
-    BeepBeepCheckBox(
-        label = "CheckBox",
-        onCheck = { isChecked = !isChecked },
-        isChecked = isChecked
-    )
-}
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun TextButtonPrev() {
-    BeepBeepTextButton(
-        text = "TextButton",
+    BpTextButton(
+        text="Button",
         onClick = { },
-    ) {
-        Icon(
-            painter = painterResource("sort.xml"),
-            contentDescription = "",
-            tint = BeepBeepTheme.colorScheme.onPrimary,
-        )
-    }
+    )
 }
 
 expect fun getPlatformName(): String

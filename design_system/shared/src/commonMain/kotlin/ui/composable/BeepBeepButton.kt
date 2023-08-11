@@ -29,7 +29,7 @@ fun BeepBeepButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     shape: Shape = BeepBeepTheme.shapes.medium,
-    containerColor: Color = BeepBeepTheme.colorScheme.primary,
+    containerColor: Color = BeepBeepTheme.color.primary,
     contentColor: Color = Color.White,
     border: BorderStroke? = null,
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
@@ -37,7 +37,7 @@ fun BeepBeepButton(
     content: @Composable RowScope.() -> Unit
 ) {
     val buttonColor by animateColorAsState(
-        if (enabled) containerColor else BeepBeepTheme.colorScheme.tertiaryContainer
+        if (enabled) containerColor else BeepBeepTheme.color.tertiaryContainer
     )
 
     Surface(
