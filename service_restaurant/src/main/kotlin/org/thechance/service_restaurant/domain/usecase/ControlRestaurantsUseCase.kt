@@ -5,13 +5,13 @@ import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.usecase.validation.RestaurantValidation
 import org.thechance.service_restaurant.domain.usecase.validation.Validation
 import org.thechance.service_restaurant.domain.utils.INVALID_ID
-import org.thechance.service_restaurant.domain.utils.InvalidParameterException
+import org.thechance.service_restaurant.domain.utils.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.NOT_FOUND
-import org.thechance.service_restaurant.domain.utils.ResourceNotFoundException
 
 interface IControlRestaurantsUseCase {
     suspend fun createRestaurant(restaurant: Restaurant): Boolean
     suspend fun getAllRestaurants(page: Int, limit: Int): List<Restaurant>
+    suspend fun updateRestaurant(restaurant: Restaurant): Boolean
     suspend fun deleteRestaurant(restaurantId: String): Boolean
 }
 
@@ -27,8 +27,12 @@ class ControlRestaurantsUseCase(
     }
 
     override suspend fun getAllRestaurants(page: Int, limit: Int): List<Restaurant> {
-        basicValidation.validatePagination(page,limit)
-        return restaurantGateway.getRestaurants(page,limit)
+        basicValidation.validatePagination(page, limit)
+        return restaurantGateway.getRestaurants(page, limit)
+    }
+
+    override suspend fun updateRestaurant(restaurant: Restaurant): Boolean {
+        return restaurantGateway.updateRestaurant(restaurant)
     }
 
     override suspend fun deleteRestaurant(restaurantId: String): Boolean {
@@ -38,10 +42,10 @@ class ControlRestaurantsUseCase(
 
     private suspend fun checkIfRestaurantIsExist(restaurantId: String) {
         if (!basicValidation.isValidId(restaurantId)) {
-            throw InvalidParameterException(INVALID_ID)
+            throw MultiErrorException(listOf( INVALID_ID))
         }
         if (restaurantGateway.getRestaurant(restaurantId) == null) {
-            throw ResourceNotFoundException(NOT_FOUND)
+            throw MultiErrorException(listOf( NOT_FOUND))
         }
     }
 }

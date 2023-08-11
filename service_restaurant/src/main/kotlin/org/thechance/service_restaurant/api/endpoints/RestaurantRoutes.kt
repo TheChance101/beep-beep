@@ -16,7 +16,7 @@ import org.thechance.service_restaurant.domain.usecase.IControlRestaurantsUseCas
 import org.thechance.service_restaurant.domain.usecase.IDiscoverRestaurantUseCase
 import org.thechance.service_restaurant.domain.usecase.IManageRestaurantDetailsUseCase
 import org.thechance.service_restaurant.domain.utils.INVALID_REQUEST_PARAMETER
-import org.thechance.service_restaurant.domain.utils.MissingParameterException
+import org.thechance.service_restaurant.domain.utils.MultiErrorException
 
 fun Route.restaurantRoutes() {
 
@@ -34,18 +34,16 @@ fun Route.restaurantRoutes() {
     route("/restaurant") {
 
         get("/{id}") {
-            val restaurantId = call.parameters["id"] ?: throw MissingParameterException(
-                INVALID_REQUEST_PARAMETER
-            )
+            val restaurantId = call.parameters["id"] ?:
+            throw MultiErrorException(listOf( INVALID_REQUEST_PARAMETER))
             val restaurant = manageRestaurantDetails.getRestaurant(restaurantId).toDetailsDto()
             call.respond(HttpStatusCode.OK, restaurant)
         }
 
         get("/{id}/categories") {
             val restaurantId =
-                call.parameters.extractString("id") ?: throw MissingParameterException(
-                    INVALID_REQUEST_PARAMETER
-                )
+                call.parameters.extractString("id") ?:
+                throw MultiErrorException(listOf( INVALID_REQUEST_PARAMETER))
             val category = manageRestaurantDetails.getCategoriesInRestaurant(restaurantId).toDto()
             call.respond(HttpStatusCode.OK, category)
         }
@@ -58,34 +56,38 @@ fun Route.restaurantRoutes() {
 
         post("/{id}/categories") {
             val restaurantId =
-                call.parameters.extractString("id") ?: throw MissingParameterException(
-                    INVALID_REQUEST_PARAMETER
-                )
+                call.parameters.extractString("id") ?:
+                throw MultiErrorException(listOf( INVALID_REQUEST_PARAMETER))
             val categoryIds = call.receive<List<String>>()
             val result = manageRestaurantDetails.addCategoryToRestaurant(restaurantId, categoryIds)
             call.respond(HttpStatusCode.Created, result)
         }
 
-        put {
+        put("/details") {
             val restaurant = call.receive<RestaurantDto>()
             val result = manageRestaurantDetails.updateRestaurant(restaurant.toEntity())
             call.respond(HttpStatusCode.OK, result)
         }
 
+        put {
+            val restaurant = call.receive<RestaurantDto>()
+            val result = controlRestaurant.updateRestaurant(restaurant.toEntity())
+            call.respond(HttpStatusCode.OK, result)
+        }
+
         delete("/{id}/categories") {
             val restaurantId =
-                call.parameters.extractString("id") ?: throw MissingParameterException(
-                    INVALID_REQUEST_PARAMETER
-                )
+                call.parameters.extractString("id") ?:
+                throw MultiErrorException(listOf( INVALID_REQUEST_PARAMETER))
             val categoryIds = call.receive<List<String>>()
-            val result = manageRestaurantDetails.deleteCategoriesInRestaurant(restaurantId, categoryIds)
+            val result =
+                manageRestaurantDetails.deleteCategoriesInRestaurant(restaurantId, categoryIds)
             call.respond(HttpStatusCode.OK, result)
         }
 
         delete("/{id}") {
-            val restaurantId = call.parameters["id"] ?: throw MissingParameterException(
-                INVALID_REQUEST_PARAMETER
-            )
+            val restaurantId = call.parameters["id"] ?:
+            throw MultiErrorException(listOf( INVALID_REQUEST_PARAMETER))
             val result = controlRestaurant.deleteRestaurant(restaurantId)
             call.respond(HttpStatusCode.OK, result)
         }

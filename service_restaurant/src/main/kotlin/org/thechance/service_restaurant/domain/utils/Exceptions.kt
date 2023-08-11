@@ -1,15 +1,6 @@
 package org.thechance.service_restaurant.domain.utils
 
-open class RestaurantException(message: String) : Throwable(message)
-
-class ResourceNotFoundException(code: Int) : RestaurantException(code.toString())
-
-class MissingParameterException(code: Int) : RestaurantException(code.toString())
-
-class InvalidParameterException(code: Int) : RestaurantException(code.toString())
-
-class MultiErrorException(val errorCodes: List<Int>) : RestaurantException(errorCodes.joinToString(",") { it.toString() })
-
+class MultiErrorException(val errorCodes: List<Int>) : Throwable(errorCodes.toString())
 
 const val INVALID_ID = 2001
 const val INVALID_NAME = 2002

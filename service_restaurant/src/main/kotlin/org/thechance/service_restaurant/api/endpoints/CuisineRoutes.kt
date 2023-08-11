@@ -1,11 +1,16 @@
 package org.thechance.service_restaurant.api.endpoints
 
-import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.plugins.*
-import io.ktor.server.request.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.call
+import io.ktor.server.plugins.NotFoundException
+import io.ktor.server.request.receive
+import io.ktor.server.response.respond
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.delete
+import io.ktor.server.routing.get
+import io.ktor.server.routing.post
+import io.ktor.server.routing.put
+import io.ktor.server.routing.route
 import org.koin.ktor.ext.inject
 import org.thechance.service_restaurant.api.models.CuisineDto
 import org.thechance.service_restaurant.api.models.mappers.toDto
@@ -14,7 +19,7 @@ import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
 import org.thechance.service_restaurant.domain.usecase.IDiscoverRestaurantUseCase
 import org.thechance.service_restaurant.domain.usecase.IManageCuisineUseCase
-import org.thechance.service_restaurant.domain.utils.MissingParameterException
+import org.thechance.service_restaurant.domain.utils.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.NOT_FOUND
 
 fun Route.cuisineRoutes() {
@@ -50,9 +55,8 @@ fun Route.cuisineRoutes() {
         }
 
         delete("/{id}") {
-            val id = call.parameters.extractString("id") ?: throw MissingParameterException(
-                NOT_FOUND
-            )
+            val id = call.parameters.extractString("id") ?:
+            throw MultiErrorException(listOf(NOT_FOUND))
             val isDeleted = manageCuisine.deleteCuisine(id)
             if (isDeleted) call.respond(HttpStatusCode.OK, "Deleted Successfully")
         }
