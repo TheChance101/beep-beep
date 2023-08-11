@@ -28,7 +28,6 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.colorScheme
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.dimens
 import com.beepbeep.designSystem.ui.theme.shapes
 
 @Composable
@@ -36,7 +35,7 @@ fun BeepBeepCheckBox(
     label: String,
     onCheck: () -> Unit,
     modifier: Modifier = Modifier,
-    size : Int = 32,
+    size: Int = 32,
     isChecked: Boolean = false,
     gapBetweenLabelAndCheckbox: Int = 8,
 ) {
@@ -62,9 +61,14 @@ fun BeepBeepCheckBox(
                 ),
             elevation = 0.dp,
             shape = shapes.small,
-            border = BorderStroke(1.dp, color = if (isChecked) colorScheme.primary else colorScheme.outline),
+            border = BorderStroke(
+                1.dp,
+                color = if (isChecked) colorScheme.primary else colorScheme.outline
+            ),
         ) {
-            Box(modifier = Modifier.size(size.dp).background(color = checkboxColor, shape = shapes.small),
+            Box(
+                modifier = Modifier.size(size.dp)
+                    .background(color = checkboxColor, shape = shapes.small),
                 contentAlignment = Alignment.Center
             ) {
                 androidx.compose.animation.AnimatedVisibility(

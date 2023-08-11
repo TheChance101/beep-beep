@@ -56,7 +56,8 @@ fun BeepBeepOutlinedButton(
         border = BorderStroke(border.width, buttonBorderColor)
     ) {
         ProvideTextStyle(
-            value = BeepBeepTheme.typography.titleLarge.copy(color = buttonContentColor)) {
+            value = BeepBeepTheme.typography.titleLarge.copy(color = buttonContentColor)
+        ) {
             Row(
                 Modifier
                     .defaultMinSize(

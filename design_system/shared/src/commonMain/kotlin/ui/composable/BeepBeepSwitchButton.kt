@@ -22,8 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.colorScheme
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.shapes
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.dimens
+import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.shapes
 
 
 @Composable
@@ -42,26 +42,36 @@ fun BeepBeepSwitchButton(
         animationSpec = tween(500)
     )
     val horizontalBias by animateFloatAsState(
-        targetValue =  when (selected) {
+        targetValue = when (selected) {
             true -> 1f
             else -> -1f
         },
         animationSpec = tween(500)
     )
-    val alignment=remember { derivedStateOf { BiasAlignment(horizontalBias = horizontalBias, verticalBias = 0f) } }
-
-    Box(modifier = modifier.width(50.dp)
-        .background(color=  targetBackgroundColor, shape = shapes.large).
-        border(width = 1.dp, color =targetBorderColor, shape = shapes.large)
-        .clickable(indication = null, interactionSource = remember { MutableInteractionSource() })
-        {onSwitch(!selected) },
-        contentAlignment = alignment.value
-        ) {
-            Circle(
-                modifier = Modifier.padding(dimens.space4),
-                isSelected = selected
+    val alignment = remember {
+        derivedStateOf {
+            BiasAlignment(
+                horizontalBias = horizontalBias,
+                verticalBias = 0f
             )
         }
+    }
+
+    Box(
+        modifier = modifier.width(50.dp)
+            .background(color = targetBackgroundColor, shape = shapes.large)
+            .border(width = 1.dp, color = targetBorderColor, shape = shapes.large)
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() })
+            { onSwitch(!selected) },
+        contentAlignment = alignment.value
+    ) {
+        Circle(
+            modifier = Modifier.padding(dimens.space4),
+            isSelected = selected
+        )
+    }
 }
 
 @Composable
@@ -72,6 +82,6 @@ fun Circle(
     Card(
         shape = CircleShape, modifier = modifier.size(20.dp), elevation = 0.dp
     ) {
-        Box(modifier = Modifier.background(if(isSelected)  Color.White else  colorScheme.primary) , )
+        Box(modifier = Modifier.background(if (isSelected) Color.White else colorScheme.primary))
     }
 }

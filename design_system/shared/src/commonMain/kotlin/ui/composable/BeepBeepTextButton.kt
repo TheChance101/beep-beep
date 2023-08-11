@@ -16,9 +16,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.colorScheme
+import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.dimens
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.shapes
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.typography
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.dimens
 
 @Composable
 fun BeepBeepTextButton(
@@ -27,21 +27,22 @@ fun BeepBeepTextButton(
     modifier: Modifier = Modifier,
     height: Int = 56,
     icon: @Composable (() -> Unit)
-){
+) {
     Surface(
-        modifier=  modifier
-        .height(height.dp)
-        .border(width = 1.dp, color =  colorScheme.outline, shape = shapes.medium)
-        .padding(horizontal = dimens.space16, vertical = dimens.space10)
+        modifier = modifier
+            .height(height.dp)
+            .border(width = 1.dp, color = colorScheme.outline, shape = shapes.medium)
+            .padding(horizontal = dimens.space16, vertical = dimens.space10)
             .clickable(
-                    indication = null,
+                indication = null,
                 interactionSource = remember { MutableInteractionSource() }
             ) { onClick() },
         color = Color.Transparent,
-      ) {
-        Row (
+    ) {
+        Row(
             horizontalArrangement = Arrangement.spacedBy(dimens.space8),
-            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+        ) {
             icon()
             Text(
                 text = text,

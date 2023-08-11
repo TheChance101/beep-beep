@@ -51,10 +51,10 @@ fun BeepBeepButton(
     ) {
         ProvideTextStyle(value = BeepBeepTheme.typography.titleLarge.copy(color = contentColor)) {
             Row(
-                Modifier .defaultMinSize(
-                        minWidth = ButtonDefaults.MinWidth,
-                        minHeight = ButtonDefaults.MinHeight
-                    ) .padding(contentPadding),
+                Modifier.defaultMinSize(
+                    minWidth = ButtonDefaults.MinWidth,
+                    minHeight = ButtonDefaults.MinHeight
+                ).padding(contentPadding),
                 horizontalArrangement = horizontalArrangement,
                 verticalAlignment = Alignment.CenterVertically,
                 content = content

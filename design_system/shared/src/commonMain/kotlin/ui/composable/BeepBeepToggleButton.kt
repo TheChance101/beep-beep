@@ -1,4 +1,5 @@
 package com.beepbeep.designSystem.ui.composable
+
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -10,11 +11,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -29,8 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.colorScheme
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.shapes
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.dimens
+import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.shapes
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -38,46 +37,58 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun BeepBeepToggleButton(
     onToggle: () -> Unit,
-    isDark : Boolean = isSystemInDarkTheme(),
-){
+    isDark: Boolean = isSystemInDarkTheme(),
+) {
     val horizontalBias by animateFloatAsState(
-        targetValue =  when (isDark) {
+        targetValue = when (isDark) {
             true -> 1f
             else -> -1f
         },
         animationSpec = tween(500)
     )
-    val alignment=remember { derivedStateOf { BiasAlignment(horizontalBias = horizontalBias, verticalBias = 0f) } }
-    Box(Modifier.border(width = 1.dp, color =  colorScheme.outline, shape = shapes.small)
+    val alignment = remember {
+        derivedStateOf {
+            BiasAlignment(
+                horizontalBias = horizontalBias,
+                verticalBias = 0f
+            )
+        }
+    }
+    Box(Modifier.border(width = 1.dp, color = colorScheme.outline, shape = shapes.small)
         .width(dimens.size64)
         .height(dimens.size32)
-        .background(color =  colorScheme.background, shape = shapes.small)
+        .background(color = colorScheme.background, shape = shapes.small)
         .padding(dimens.space2)
-        .clickable(indication = null, interactionSource = remember { MutableInteractionSource() })
-        { onToggle() }){
+        .clickable(
+            indication = null,
+            interactionSource = remember { MutableInteractionSource() })
+        { onToggle() }) {
 
         Card(
-            modifier = Modifier.width(28.dp).height(28.dp).padding( dimens.space2).align( alignment.value),
-            shape= shapes.small,
-            colors= CardDefaults.cardColors(containerColor = colorScheme.primary),
+            modifier = Modifier.width(28.dp).height(28.dp).padding(dimens.space2)
+                .align(alignment.value),
+            shape = shapes.small,
+            colors = CardDefaults.cardColors(containerColor = colorScheme.primary),
             elevation = CardDefaults.elevatedCardElevation(0.dp),
-        ){}
+        ) {}
 
-        Row(horizontalArrangement = Arrangement.SpaceBetween,
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxSize().padding(horizontal = dimens.space2)) {
+            modifier = Modifier.fillMaxSize().padding(horizontal = dimens.space2)
+        ) {
             Icon(
                 painter = painterResource("sun.xml"),
                 contentDescription = "",
-                tint =  if (isDark) colorScheme.onTertiary else Color.White,
-                modifier = Modifier.size(24.dp).padding( dimens.space2)
+                tint = if (isDark) colorScheme.onTertiary else Color.White,
+                modifier = Modifier.size(24.dp).padding(dimens.space2)
             )
 
             Icon(
                 painter = painterResource("moon_stars.xml"),
                 contentDescription = "",
-                tint =  if (isDark) Color.White else colorScheme.onTertiary,
-                modifier = Modifier.size(24.dp).padding( dimens.space2)
+                tint = if (isDark) Color.White else colorScheme.onTertiary,
+                modifier = Modifier.size(24.dp).padding(dimens.space2)
             )
         }
     }
