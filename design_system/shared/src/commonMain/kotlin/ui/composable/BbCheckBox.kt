@@ -5,14 +5,13 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.toggleable
-import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -31,7 +30,7 @@ import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.colorScheme
 import com.beepbeep.designSystem.ui.theme.shapes
 
 @Composable
-fun BeepBeepCheckBox(
+fun BbCheckBox(
     label: String,
     onCheck: () -> Unit,
     modifier: Modifier = Modifier,
@@ -50,19 +49,15 @@ fun BeepBeepCheckBox(
         horizontalArrangement = Arrangement.spacedBy(gapBetweenLabelAndCheckbox.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Card(
-            modifier = Modifier
-                .toggleable(
-                    value = isChecked,
-                    role = Role.Checkbox,
-                    onValueChange = {
-                        onCheck()
-                    }
-                ),
-            elevation = 0.dp,shape = shapes.small,
-            border = BorderStroke(1.dp, color = if (isChecked) colorScheme.primary else colorScheme.outline),
-        ) {
-            Box(modifier = Modifier.size(size.dp).background(color = checkboxColor, shape = shapes.small),
+            Box(modifier = Modifier.size(size.dp)
+                    .background(color = checkboxColor, shape = shapes.small)
+                    .border(width = 1.dp,shape = shapes.small,
+                        color = if (isChecked) colorScheme.primary else colorScheme.outline)
+                    .toggleable(
+                        value = isChecked,
+                        role = Role.Checkbox,
+                        onValueChange = { onCheck() }
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 androidx.compose.animation.AnimatedVisibility(
@@ -83,7 +78,7 @@ fun BeepBeepCheckBox(
                         tint = White,
                     )
                 }
-            }
+
         }
         Text(text = label, style = BeepBeepTheme.typography.body, color = colorScheme.onSecondary)
     }

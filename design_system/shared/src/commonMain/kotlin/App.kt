@@ -26,8 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.beepbeep.designSystem.ui.composable.BbCheckBox
 import com.beepbeep.designSystem.ui.composable.BeepBeepButton
-import com.beepbeep.designSystem.ui.composable.BeepBeepCheckBox
 import com.beepbeep.designSystem.ui.composable.BeepBeepChip
 import com.beepbeep.designSystem.ui.composable.BeepBeepIcon
 import com.beepbeep.designSystem.ui.composable.BeepBeepLogo
@@ -51,7 +51,6 @@ fun DesignApp() {
 //            verticalArrangement = Arrangement.Bottom
         ) {
 //            TextButtonPrev()
-            CheckBoxButtonPrev()
 //            TogglePreview()
 //            SwitchPreview()
 //            EnabledButtonsPreview()
@@ -217,15 +216,6 @@ fun TogglePreview() {
     BeepBeepToggleButton( onToggle = { isToggle = !isToggle }, isDark = isToggle)
 }
 
-@Composable
-fun CheckBoxButtonPrev() {
-    var isChecked by remember { mutableStateOf(false) }
-    BeepBeepCheckBox(
-        label = "CheckBox",
-        onCheck = { isChecked = !isChecked },
-        isChecked = isChecked
-    )
-}
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable

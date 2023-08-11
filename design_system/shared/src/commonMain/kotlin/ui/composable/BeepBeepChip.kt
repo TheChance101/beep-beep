@@ -38,7 +38,7 @@ fun BeepBeepChip(
     AssistChip(
         modifier = modifier.height(32.dp),
         onClick = { onClick(!isSelected) },
-        label = { Text(text = label, style = BeepBeepTheme.typography.titleMedium) },
+        label = { Text(text = label, style = BeepBeepTheme.typography.title) },
         leadingIcon = {
             painter?.let {
                 Icon(
