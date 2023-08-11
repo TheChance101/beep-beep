@@ -3,7 +3,7 @@ package org.thechance.service_identity.domain.gateway
 import org.thechance.service_identity.data.security.hashing.SaltedHash
 import org.thechance.service_identity.domain.entity.*
 
-interface DataBaseGateway {
+interface IDataBaseGateway {
     // region: Permission
     suspend fun getPermission(permissionId: Int): Permission
     suspend fun addPermission(permission: CreatePermissionRequest): Boolean
