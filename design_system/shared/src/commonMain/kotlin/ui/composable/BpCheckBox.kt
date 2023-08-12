@@ -38,7 +38,8 @@ fun BpCheckBox(
     isChecked: Boolean = false,
     gapBetweenLabelAndCheckbox: Int = 8,
 ) {
-    val checkboxColor: Color by animateColorAsState(targetValue = if (isChecked) colors.primary else Color.Transparent,
+    val checkboxColor: Color by animateColorAsState(
+        targetValue = if (isChecked) colors.primary else Color.Transparent,
         animationSpec = tween(300)
     )
     val density = LocalDensity.current
@@ -48,8 +49,11 @@ fun BpCheckBox(
         horizontalArrangement = Arrangement.spacedBy(gapBetweenLabelAndCheckbox.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(modifier = Modifier.size(size.dp).background(color = checkboxColor, shape = radius.small)
-            .border(width = 1.dp, shape = radius.small, color = if (isChecked) colors.primary else colors.contentBorder)
+        Box( modifier = Modifier
+            .size(size.dp)
+            .background(color = checkboxColor, shape = radius.small)
+            .border(width = 1.dp, shape = radius.small,
+                color = if (isChecked) colors.primary else colors.contentBorder)
             .toggleable(
                 value = isChecked,
                 role = Role.Checkbox,
