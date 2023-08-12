@@ -7,9 +7,9 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 
 private val localDimens = staticCompositionLocalOf { Dimens() }
-private val localColorScheme = staticCompositionLocalOf { LightBPColors }
+private val localColorScheme = staticCompositionLocalOf { LightColors }
 private val localRadius = staticCompositionLocalOf { Radius() }
-private val localTypography = staticCompositionLocalOf { Typographies() }
+private val localTypography = staticCompositionLocalOf { Typography() }
 
 @Composable
 fun BpTheme(
@@ -17,9 +17,9 @@ fun BpTheme(
     content: @Composable () -> Unit,
 ) {
 
-    val colorScheme = if (useDarkTheme) DarkBpColors else LightBPColors
+    val colorScheme = if (useDarkTheme) DarkColors else LightColors
 
-    val typography = Typographies(
+    val typography = Typography(
         headlineLarge = headlineLarge(),
         headline = headline(),
         titleLarge = titleLarge(),
@@ -40,12 +40,12 @@ fun BpTheme(
 }
 
 object Theme {
-    val colors: BpColors
+    val colors: Colors
         @Composable
         @ReadOnlyComposable
         get() = localColorScheme.current
 
-    val typography: Typographies
+    val typography: Typography
         @Composable
         @ReadOnlyComposable
         get() = localTypography.current

@@ -2,7 +2,7 @@ package com.beepbeep.designSystem.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-data class BpColors(
+data class Colors(
     val primary: Color,
     val secondary: Color,
     val contentPrimary: Color,
@@ -21,7 +21,7 @@ data class BpColors(
     val surfaceTint: Color,
 )
 
-val LightBPColors = BpColors(
+val LightColors = Colors(
     primary = Color(0xFFF53D47),
     secondary = Color(0xFFFFF3F2),
     contentPrimary = Color(0xDE1F0000),
@@ -40,7 +40,7 @@ val LightBPColors = BpColors(
     surfaceTint = Color(0x081F0000),
 )
 
-val DarkBpColors = BpColors(
+val DarkColors = Colors(
     primary = Color(0xFFF53D47),
     secondary = Color(0x1AFFFFFF),
     contentPrimary = Color(0xDEFFFFFF),

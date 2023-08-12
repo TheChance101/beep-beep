@@ -2,7 +2,7 @@ package com.beepbeep.designSystem.ui.theme
 
 import androidx.compose.ui.text.TextStyle
 
-data class Typographies(
+data class Typography(
     val headlineLarge: TextStyle = TextStyle(),
     val headline: TextStyle = TextStyle(),
     val titleLarge: TextStyle = TextStyle(),

@@ -40,14 +40,14 @@ fun DesignApp() {
         Column(
             Modifier.fillMaxSize().background(Theme.colors.background),
 //            horizontalAlignment = Alignment.CenterHorizontally,
-//            verticalArrangement = Arrangement.Bottom
+            verticalArrangement = Arrangement.Bottom
         ) {
 //            EnabledButtonsPreview()
 //            DisabledButtonsPreview()
 //            Spacer(modifier = Modifier.height(16.dp))
             PreviewTextField()
             PreviewChips()
-//            BottomNavigationBarPreview()
+            BottomNavigationBarPreview()
         }
     }
 }
