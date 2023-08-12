@@ -2,10 +2,12 @@ package org.thechance.common.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import kotlin.math.ceil
 import kotlin.math.floor
 
@@ -17,17 +19,31 @@ fun RatingBar(
     selectedIcon: Painter,
     notSelectedIcon: Painter,
     halfSelectedIcon: Painter,
+    iconsSize: Dp = 24.dp,
     modifier: Modifier = Modifier,
 ) {
+    if (rating > count) throw Exception("rating is bigger than count")
     Row(modifier = modifier) {
         repeat(floor(rating).toInt()) {
-            Icon(painter = selectedIcon, contentDescription = null)
+            Image(
+                painter = selectedIcon,
+                contentDescription = null,
+                modifier = Modifier.size(iconsSize)
+            )
         }
         if (!(rating.rem(1).equals(0.0))) {
-            Icon(painter = halfSelectedIcon, contentDescription = null)
+            Image(
+                painter = halfSelectedIcon,
+                contentDescription = null,
+                modifier = Modifier.size(iconsSize)
+            )
         }
         repeat((count - ceil(rating)).toInt()) {
-            Icon(painter = notSelectedIcon, contentDescription = null)
+            Image(
+                painter = notSelectedIcon,
+                contentDescription = null,
+                modifier = Modifier.size(iconsSize)
+            )
         }
     }
 }
