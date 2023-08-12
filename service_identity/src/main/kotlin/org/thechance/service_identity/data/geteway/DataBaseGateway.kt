@@ -203,6 +203,16 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
 
     override suspend fun createUser(user: CreateUserRequest): Boolean {
         val userDocument = user.toCollection()
+    override suspend fun createUser(saltedHash: SaltedHash, user: CreateUserRequest): Boolean {
+
+        val userDocument = UserCollection(
+            password = saltedHash.hash,
+            salt = saltedHash.salt,
+            username = user.username,
+            fullName = user.fullName,
+            email = user.email
+        )
+
         try {
             val wallet = WalletCollection(userId = userDocument.id.toString())
             createWallet(wallet)

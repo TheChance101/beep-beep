@@ -26,7 +26,7 @@ interface IValidateUserInfoUseCase {
 }
 
 @Single
-class ValidateUserInfoUseCase : IValidateUserInfoUseCase {
+class ValidateUserInfoUseCase() : IValidateUserInfoUseCase {
 
     override fun validateUserInformation(user: CreateUserRequest) {
         val reasons = mutableListOf<String>()

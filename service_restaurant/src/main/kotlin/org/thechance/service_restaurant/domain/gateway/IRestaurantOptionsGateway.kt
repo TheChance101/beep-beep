@@ -14,7 +14,7 @@ interface IRestaurantOptionsGateway {
 
     suspend fun areCategoriesExisting(categoryIds: List<String>): Boolean
     suspend fun getCategoriesInRestaurant(restaurantId: String): List<Category>
-    suspend fun addCategoriesToRestaurant(categoryId: String, restaurantIds: List<String>): Boolean
+    suspend fun addCategoriesToRestaurant(restaurantId: String, categoryIds: List<String>): Boolean
     suspend fun addCategory(category: Category): Boolean
     suspend fun updateCategory(category: Category): Boolean
     suspend fun deleteCategory(categoryId: String): Boolean

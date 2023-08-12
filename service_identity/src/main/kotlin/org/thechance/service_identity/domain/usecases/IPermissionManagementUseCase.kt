@@ -4,7 +4,7 @@ import org.koin.core.annotation.Single
 import org.thechance.service_identity.domain.entity.CreatePermissionRequest
 import org.thechance.service_identity.domain.entity.Permission
 import org.thechance.service_identity.domain.entity.UpdatePermissionRequest
-import org.thechance.service_identity.domain.gateway.DataBaseGateway
+import org.thechance.service_identity.domain.gateway.IDataBaseGateway
 
 interface IPermissionManagementUseCase {
 
@@ -22,7 +22,7 @@ interface IPermissionManagementUseCase {
 
 @Single
 class PermissionManagementUseCase(
-    private val dataBaseGateway: DataBaseGateway
+    private val dataBaseGateway: IDataBaseGateway
 ) : IPermissionManagementUseCase {
     override suspend fun createPermission(permission: CreatePermissionRequest): Boolean {
         return dataBaseGateway.addPermission(permission)

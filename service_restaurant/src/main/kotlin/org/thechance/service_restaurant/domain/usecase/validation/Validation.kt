@@ -1,9 +1,10 @@
 package org.thechance.service_restaurant.domain.usecase.validation
 
-import org.koin.core.annotation.Single
-import org.thechance.service_restaurant.domain.utils.*
+import org.thechance.service_restaurant.domain.utils.INVALID_ID
+import org.thechance.service_restaurant.domain.utils.INVALID_PAGE
+import org.thechance.service_restaurant.domain.utils.INVALID_PAGE_LIMIT
+import org.thechance.service_restaurant.domain.utils.MultiErrorException
 
-@Single
 class Validation {
     fun validatePagination(page: Int, limit: Int) {
         val validationErrors = mutableListOf<Int>()

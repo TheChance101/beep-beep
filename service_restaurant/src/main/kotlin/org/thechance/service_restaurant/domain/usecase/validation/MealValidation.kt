@@ -1,10 +1,15 @@
 package org.thechance.service_restaurant.domain.usecase.validation
 
-import org.koin.core.annotation.Single
 import org.thechance.service_restaurant.domain.entity.MealDetails
-import org.thechance.service_restaurant.domain.utils.*
+import org.thechance.service_restaurant.domain.utils.INVALID_DESCRIPTION
+import org.thechance.service_restaurant.domain.utils.INVALID_ID
+import org.thechance.service_restaurant.domain.utils.INVALID_NAME
+import org.thechance.service_restaurant.domain.utils.INVALID_ONE_OR_MORE_IDS
+import org.thechance.service_restaurant.domain.utils.INVALID_PRICE
+import org.thechance.service_restaurant.domain.utils.INVALID_REQUEST_PARAMETER
+import org.thechance.service_restaurant.domain.utils.INVALID_UPDATE_PARAMETER
+import org.thechance.service_restaurant.domain.utils.MultiErrorException
 
-@Single
 class MealValidation(
     private val basicValidation: Validation
 ) {

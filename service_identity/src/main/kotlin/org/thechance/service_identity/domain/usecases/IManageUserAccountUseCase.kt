@@ -1,11 +1,13 @@
 package org.thechance.service_identity.domain.usecases
 
 import org.koin.core.annotation.Single
+import org.thechance.service_identity.data.geteway.security.HashingService
+import org.thechance.service_identity.data.security.hashing.SaltedHash
 import org.thechance.service_identity.domain.entity.CreateUserRequest
 import org.thechance.service_identity.domain.entity.InsufficientFundsException
 import org.thechance.service_identity.domain.entity.UpdateUserRequest
 import org.thechance.service_identity.domain.entity.User
-import org.thechance.service_identity.domain.gateway.DataBaseGateway
+import org.thechance.service_identity.domain.gateway.IDataBaseGateway
 import org.thechance.service_identity.domain.usecases.validation.IValidateUserInfoUseCase
 import org.thechance.service_identity.domain.usecases.validation.IValidateWalletBalanceUseCase
 import org.thechance.service_identity.domain.util.INSUFFICIENT_FUNDS
@@ -13,6 +15,7 @@ import org.thechance.service_identity.domain.util.INSUFFICIENT_FUNDS
 interface IManageUserAccountUseCase {
 
     suspend fun createUser(user: CreateUserRequest): Boolean
+    suspend fun securePassword(password: String): SaltedHash
 
     suspend fun deleteUser(id: String): Boolean
 
@@ -28,14 +31,20 @@ interface IManageUserAccountUseCase {
 
 @Single
 class ManageUserAccountUseCase(
-    private val dataBaseGateway: DataBaseGateway,
+    private val dataBaseGateway: IDataBaseGateway,
     private val validateWalletBalance: IValidateWalletBalanceUseCase,
-    private val validateUserInfo: IValidateUserInfoUseCase
+    private val validateUserInfo: IValidateUserInfoUseCase,
+    private val hashingService: HashingService
 ) : IManageUserAccountUseCase {
 
     override suspend fun createUser(user: CreateUserRequest): Boolean {
         validateUserInfo.validateUserInformation(user)
-        return dataBaseGateway.createUser(user)
+        val saltedHash = securePassword(user.password)
+        return dataBaseGateway.createUser(saltedHash,user)
+    }
+
+    override suspend fun securePassword(password: String): SaltedHash {
+        return hashingService.generateSaltedHash(password)
     }
 
     override suspend fun deleteUser(id: String): Boolean {
