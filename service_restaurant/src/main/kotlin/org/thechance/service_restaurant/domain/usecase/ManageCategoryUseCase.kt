@@ -1,10 +1,9 @@
 package org.thechance.service_restaurant.domain.usecase
 
 import org.thechance.service_restaurant.domain.entity.Category
-import org.thechance.service_restaurant.domain.entity.Restaurant
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
+import org.thechance.service_restaurant.domain.usecase.validation.ICategoryValidationUseCase
 import org.thechance.service_restaurant.domain.utils.IValidation
-import org.thechance.service_restaurant.domain.utils.Validation
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_NAME
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
@@ -15,12 +14,15 @@ interface IManageCategoryUseCase {
     suspend fun createCategory(category: Category): Category
     suspend fun updateCategory(category: Category): Category
     suspend fun deleteCategory(categoryId: String): Boolean
+
 }
 
 class ManageCategoryUseCase(
     private val restaurantOptions: IRestaurantOptionsGateway,
-    private val basicValidation: IValidation
+    private val basicValidation: IValidation,
+    private val categoryValidation: ICategoryValidationUseCase
 ) : IManageCategoryUseCase {
+
     override suspend fun getCategories(page: Int, limit: Int): List<Category> {
         basicValidation.validatePagination(page, limit)
         return restaurantOptions.getCategories(page, limit)
@@ -34,7 +36,7 @@ class ManageCategoryUseCase(
     }
 
     override suspend fun updateCategory(category: Category): Category {
-        validationCategory(category)
+        categoryValidation.validationCategory(category)
         checkIfCategoryIsExist(category.id)
         return restaurantOptions.updateCategory(category)
     }
@@ -50,20 +52,6 @@ class ManageCategoryUseCase(
         }
         if (restaurantOptions.getCategory(categoryId) == null) {
             throw MultiErrorException(listOf(NOT_FOUND))
-        }
-    }
-
-    private fun validationCategory(category: Category) {
-        val validationErrors = mutableListOf<Int>()
-
-        if (!basicValidation.isValidId(category.id)) {
-            validationErrors.add(INVALID_ID)
-        }
-        if (!basicValidation.isValidName(category.name)) {
-            validationErrors.add(INVALID_NAME)
-        }
-        if (validationErrors.isNotEmpty()) {
-            throw MultiErrorException(validationErrors)
         }
     }
 

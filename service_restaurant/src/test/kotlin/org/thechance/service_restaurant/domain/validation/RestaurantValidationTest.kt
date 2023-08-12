@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.function.Executable
 import org.thechance.service_restaurant.domain.entity.Location
 import org.thechance.service_restaurant.domain.entity.Restaurant
+import org.thechance.service_restaurant.domain.usecase.validation.RestaurantValidationUseCase
 import org.thechance.service_restaurant.domain.utils.Validation
 import org.thechance.service_restaurant.domain.utils.Validation.Companion.DESCRIPTION_MIN_LENGTH
 import org.thechance.service_restaurant.domain.utils.Validation.Companion.NULL_DOUBLE
@@ -21,9 +22,11 @@ import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_RATE
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_TIME
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 
-class RestaurantValidationTest {
-    
-  /*  private val restaurantValidation = RestaurantValidation(Validation())
+class RestaurantValidationTest  {
+
+    private val restaurantValidation = RestaurantValidationUseCase(Validation())
+
+
 
     //region create validationRestaurant
     @Test
@@ -77,7 +80,7 @@ class RestaurantValidationTest {
     fun `should throw exception when creat restaurant with name is long`() {
         // given a restaurant when name is more than 25
         val longNameExecutable = Executable {
-            restaurantValidation.validateAddRestaurant(fakeRestaurant()[0].copy(name = "A".repeat(26)))
+            restaurantValidation.validateAddRestaurant(fakeRestaurant()[0].copy(name = "A".repeat(51)))
         }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, longNameExecutable)
@@ -242,7 +245,14 @@ class RestaurantValidationTest {
     fun `should throw exception when update restaurant with address that not null`() {
         // given a restaurant when address is not null
         val invalidAddressExecutable = Executable {
-            restaurantValidation.validateUpdateRestaurantDetails(fakeRestaurant()[2].copy(address = Location(40.0, 40.0)))
+            restaurantValidation.validateUpdateRestaurantDetails(
+                fakeRestaurant()[2].copy(
+                    address = Location(
+                        40.0,
+                        40.0
+                    )
+                )
+            )
         }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, invalidAddressExecutable)
@@ -253,7 +263,14 @@ class RestaurantValidationTest {
     fun `should pass when update restaurant with address that null`() {
         // given a restaurant when address is null
         val invalidAddressExecutable = Executable {
-            restaurantValidation.validateUpdateRestaurantDetails(fakeRestaurant()[2].copy(address = Location(NULL_DOUBLE, NULL_DOUBLE)))
+            restaurantValidation.validateUpdateRestaurantDetails(
+                fakeRestaurant()[2].copy(
+                    address = Location(
+                        NULL_DOUBLE,
+                        NULL_DOUBLE
+                    )
+                )
+            )
         }
         // then check if throw exception
         assertDoesNotThrow(invalidAddressExecutable)
@@ -263,7 +280,12 @@ class RestaurantValidationTest {
     fun `should throw exception when update restaurant with invalid id and owner id`() {
         // given a restaurant when id and owner id is invalid
         val invalidIdExecutable = Executable {
-            restaurantValidation.validateUpdateRestaurantDetails(fakeRestaurant()[0].copy(id = "invalid_id", ownerId = "invalid_id"))
+            restaurantValidation.validateUpdateRestaurantDetails(
+                fakeRestaurant()[0].copy(
+                    id = "invalid_id",
+                    ownerId = "invalid_id"
+                )
+            )
         }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, invalidIdExecutable)
@@ -296,7 +318,7 @@ class RestaurantValidationTest {
     fun `should throw exception when update restaurant with name is long`() {
         // given a restaurant when name is more than 25
         val longNameExecutable = Executable {
-            restaurantValidation.validateUpdateRestaurantDetails(fakeRestaurant()[0].copy(name = "A".repeat(26)))
+            restaurantValidation.validateUpdateRestaurantDetails(fakeRestaurant()[0].copy(name = "A".repeat(51)))
         }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, longNameExecutable)
@@ -349,7 +371,8 @@ class RestaurantValidationTest {
     fun `should throw exception for invalid price level`() {
         // given a restaurant when price level not is $, $$, $$$, $$$$
         val invalidPriceLevelUpdate = fakeRestaurant()[2].copy(priceLevel = "invalid_level")
-        val upperRestaurantExecutable = Executable { restaurantValidation.validateUpdateRestaurantDetails(invalidPriceLevelUpdate) }
+        val upperRestaurantExecutable =
+            Executable { restaurantValidation.validateUpdateRestaurantDetails(invalidPriceLevelUpdate) }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, upperRestaurantExecutable)
         assert(error.errorCodes.contains(INVALID_PRICE_LEVEL))
@@ -359,7 +382,8 @@ class RestaurantValidationTest {
     fun `should throw exception for invalid phone`() {
         // given a restaurant when phone is invalid
         val invalidPhoneUpdate = fakeRestaurant()[2].copy(phone = "122")
-        val upperRestaurantExecutable = Executable { restaurantValidation.validateUpdateRestaurantDetails(invalidPhoneUpdate) }
+        val upperRestaurantExecutable =
+            Executable { restaurantValidation.validateUpdateRestaurantDetails(invalidPhoneUpdate) }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, upperRestaurantExecutable)
         assert(error.errorCodes.contains(INVALID_PHONE))
@@ -368,7 +392,8 @@ class RestaurantValidationTest {
     @Test
     fun `should throw exception for invalid closing time`() {
         val invalidClosingTimeUpdate = fakeRestaurant()[2].copy(closingTime = "000:00")
-        val upperRestaurantExecutable = Executable { restaurantValidation.validateUpdateRestaurantDetails(invalidClosingTimeUpdate) }
+        val upperRestaurantExecutable =
+            Executable { restaurantValidation.validateUpdateRestaurantDetails(invalidClosingTimeUpdate) }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, upperRestaurantExecutable)
         assert(error.errorCodes.contains(INVALID_TIME))
@@ -378,7 +403,8 @@ class RestaurantValidationTest {
     fun `should throw exception for invalid opening time`() {
         // given a restaurant when opening time is invalid
         val invalidOpeningTimeUpdate = fakeRestaurant()[2].copy(openingTime = "07:6")
-        val upperRestaurantExecutable = Executable { restaurantValidation.validateUpdateRestaurantDetails(invalidOpeningTimeUpdate) }
+        val upperRestaurantExecutable =
+            Executable { restaurantValidation.validateUpdateRestaurantDetails(invalidOpeningTimeUpdate) }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, upperRestaurantExecutable)
         assert(error.errorCodes.contains(INVALID_TIME))
@@ -401,11 +427,14 @@ class RestaurantValidationTest {
     @Test
     fun `should pass when admin update restaurant with address that not null`() {
         // given a restaurant when address is not null
+        val d = restaurantValidation.validateUpdateRestaurant(fakeRestaurant()[2].copy(address = Location(40.0, 40.0)))
+
         val invalidAddressExecutable = Executable {
             restaurantValidation.validateUpdateRestaurant(fakeRestaurant()[2].copy(address = Location(40.0, 40.0)))
         }
         // then check if pass
-        assertDoesNotThrow(invalidAddressExecutable)
+        println("dddddddd:$d")
+        //assertDoesNotThrow(invalidAddressExecutable)
     }
 
     //endregion
@@ -428,7 +457,7 @@ class RestaurantValidationTest {
     fun `should pass validation when restaurant has valid ownership`() {
         // given a restaurant with a valid ownerId
         val validRestaurant = fakeRestaurant()[1]
-        val ownerId = "64cc5fdd52c4136b92938f8c"
+        val ownerId = "3edf2fc8-6983-484f-a35c-8190f44a08c6"
         // when the restaurant has the same ownerId
         val restaurantExecutable = Executable {
             restaurantValidation.validateRestaurantOwnership(validRestaurant, ownerId)
@@ -457,7 +486,7 @@ class RestaurantValidationTest {
         return listOf(
             Restaurant(
                 name = "Good Restaurant",
-                ownerId = "64cc5fdd52c4136b92938f8c",
+                ownerId = "3edf2fc8-6983-484f-a35c-8190f44a08c6",
                 address = Location(0.0, 0.0),
                 phone = "1234561234",
                 openingTime = "08:00",
@@ -465,9 +494,9 @@ class RestaurantValidationTest {
                 id = "",
             ),
             Restaurant(
-                id = "64cc5fdd52c4136b92938f8c",
+                id = "3edf2fc8-6983-484f-a35c-8190f44a08c6",
                 name = "Good Restaurant",
-                ownerId = "64cc5fdd52c4136b92938f8c",
+                ownerId = "3edf2fc8-6983-484f-a35c-8190f44a08c6",
                 address = Location(NULL_DOUBLE, NULL_DOUBLE),
                 phone = "1234561234",
                 openingTime = "08:00",
@@ -477,9 +506,9 @@ class RestaurantValidationTest {
                 description = "G".repeat(DESCRIPTION_MIN_LENGTH),
             ),
             Restaurant(
-                id = "64cc5fdd52c4136b92938f8c",
+                id = "3edf2fc8-6983-484f-a35c-8190f44a08c6",
                 name = "Good Restaurant",
-                ownerId = "64cc5fdd52c4136b92938f8c",
+                ownerId = "3edf2fc8-6983-484f-a35c-8190f44a08c5",
                 address = Location(0.0, 0.0),
                 phone = "1234561234",
                 openingTime = "08:00",
@@ -489,6 +518,6 @@ class RestaurantValidationTest {
                 description = "G".repeat(DESCRIPTION_MIN_LENGTH),
             )
         )
-    }*/
+    }
 
 }

@@ -46,7 +46,7 @@ class Validation : IValidation {
     }
 
     override fun isValidId(id: String?): Boolean {
-        return id != null && id.matches(Regex("[0-9a-fA-F]{24}"))
+        return id != null && id.matches(Regex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}"))
     }
 
     internal fun isValidIds(ids: List<String>?): Boolean {

@@ -4,7 +4,7 @@ val logback_version: String by project
 val exposed_version: String by project
 val h2_version: String by project
 val kmongoVersion: String by project
-val koinKsp : String by project
+val koinKsp: String by project
 
 plugins {
     kotlin("jvm") version "1.8.10"
@@ -44,12 +44,11 @@ dependencies {
     implementation("org.litote.kmongo:kmongo-id:$kmongoVersion")
 
     //Koin
-    implementation("io.insert-koin:koin-ktor:3.4.1")
-    implementation("io.insert-koin:koin-core:3.4.2")
+    implementation("io.insert-koin:koin-ktor:3.4.3")
+    implementation("io.insert-koin:koin-core:3.4.3")
 
     testImplementation("junit:junit:4.13.1")
     implementation("org.junit.jupiter:junit-jupiter:5.8.1")
-
     //validation
     implementation("io.ktor:ktor-server-status-pages:$ktor_version")
 
