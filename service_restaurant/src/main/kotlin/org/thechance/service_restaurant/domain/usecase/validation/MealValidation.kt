@@ -1,6 +1,8 @@
 package org.thechance.service_restaurant.domain.usecase.validation
 
 import org.thechance.service_restaurant.domain.entity.MealDetails
+import org.thechance.service_restaurant.domain.usecase.validation.Validation.Companion.MAX_CUISINE
+import org.thechance.service_restaurant.domain.utils.INVALID_CUISINE_LIMIT
 import org.thechance.service_restaurant.domain.utils.INVALID_DESCRIPTION
 import org.thechance.service_restaurant.domain.utils.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.INVALID_NAME
@@ -43,6 +45,11 @@ class MealValidation(
             }
         }
 
+
+        if (meal.cuisines.size !in 1..MAX_CUISINE) {
+            validationErrors.add(INVALID_CUISINE_LIMIT)
+        }
+
         if (validationErrors.isNotEmpty()) {
             throw MultiErrorException(validationErrors)
         }
@@ -77,17 +84,13 @@ class MealValidation(
 
             meal.cuisines.forEach {
                 if (!basicValidation.isValidId(it.id)) {
-                    validationErrors.add(INVALID_ID)
+                    validationErrors.add(INVALID_ONE_OR_MORE_IDS)
                     return@forEach
                 }
             }
 
-
-            meal.cuisines.forEach {
-                if (!basicValidation.isValidId(it.id)) {
-                    validationErrors.add(INVALID_ONE_OR_MORE_IDS)
-                    return@forEach
-                }
+            if (meal.cuisines.size !in 1..MAX_CUISINE) {
+                validationErrors.add(INVALID_CUISINE_LIMIT)
             }
         }
 
