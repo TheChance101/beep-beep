@@ -492,7 +492,7 @@ class ValidationTest {
     @Test
     fun `should return false when price level long string`() {
         // given priceLevel
-        val priceLevel = "$$$$$"
+        val priceLevel = "$$$$"
         // when validatePriceLevel is invoked
         val result = validation.isValidatePriceLevel(priceLevel)
         // expected return false

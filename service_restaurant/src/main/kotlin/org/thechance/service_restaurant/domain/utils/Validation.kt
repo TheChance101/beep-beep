@@ -54,7 +54,7 @@ class Validation : IValidation {
     }
 
     override fun isValidatePriceLevel(priceLevel: String): Boolean {
-        return listOf("$", "$$", "$$$", "$$$$").contains(priceLevel)
+        return listOf("$", "$$", "$$$").contains(priceLevel)
     }
 
     override fun isValidRate(rate: Double): Boolean {
