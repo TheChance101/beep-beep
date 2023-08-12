@@ -34,7 +34,8 @@ kotlin {
             dependencies {
                 implementation(libs.compose.runtime)
                 implementation(libs.compose.foundation)
-                implementation(libs.compose.material)
+                implementation(libs.compose.material3)
+                implementation(libs.compose.materialIcons)
                 implementation(libs.compose.components.resources)
             }
         }
@@ -82,4 +83,8 @@ android {
     kotlin {
         jvmToolchain(libs.versions.jvmToolchain.get().toInt())
     }
+}
+dependencies {
+    implementation(libs.androidx.ui.text)
+    implementation(libs.androidx.material3)
 }
