@@ -15,20 +15,20 @@ interface IRestaurantOptionsGateway {
     suspend fun areCategoriesExisting(categoryIds: List<String>): Boolean
     suspend fun getCategoriesInRestaurant(restaurantId: String): List<Category>
     suspend fun addCategoriesToRestaurant(restaurantId: String, categoryIds: List<String>): Boolean
-    suspend fun addCategory(category: Category): Boolean
-    suspend fun updateCategory(category: Category): Boolean
+    suspend fun addCategory(category: Category): Category
+    suspend fun updateCategory(category: Category): Category
     suspend fun deleteCategory(categoryId: String): Boolean
     suspend fun deleteRestaurantsInCategory(categoryId: String, restaurantIds: List<String>): Boolean
 
     //endregion
 
     //region Cuisines
-    suspend fun getCuisines(page: Int, limit: Int): List<Cuisine>
+    suspend fun getCuisines(): List<Cuisine>
     suspend fun getCuisineById(id: String): Cuisine?
     suspend fun getMealsInCuisine(cuisineId: String): List<Meal>
-    suspend fun addCuisine(cuisine: Cuisine): Boolean
+    suspend fun addCuisine(cuisine: Cuisine): Cuisine
     suspend fun areCuisinesExist(cuisineIds: List<String>): Boolean
-    suspend fun updateCuisine(cuisine: Cuisine): Boolean
+    suspend fun updateCuisine(cuisine: Cuisine): Cuisine
     suspend fun deleteCuisine(id: String): Boolean
     //endregion
 }

@@ -1,26 +1,28 @@
 package org.thechance.service_restaurant.domain.usecase.validation
 
-import org.thechance.service_restaurant.domain.entity.Category
+import org.koin.core.component.KoinComponent
 import org.thechance.service_restaurant.domain.entity.Restaurant
-import org.thechance.service_restaurant.domain.usecase.validation.Validation.Companion.NULL_DOUBLE
-import org.thechance.service_restaurant.domain.utils.INVALID_DESCRIPTION
-import org.thechance.service_restaurant.domain.utils.INVALID_ID
-import org.thechance.service_restaurant.domain.utils.INVALID_LOCATION
-import org.thechance.service_restaurant.domain.utils.INVALID_NAME
-import org.thechance.service_restaurant.domain.utils.INVALID_PERMISSION_UPDATE_LOCATION
-import org.thechance.service_restaurant.domain.utils.INVALID_PHONE
-import org.thechance.service_restaurant.domain.utils.INVALID_PRICE_LEVEL
-import org.thechance.service_restaurant.domain.utils.INVALID_PROPERTY_RIGHTS
-import org.thechance.service_restaurant.domain.utils.INVALID_RATE
-import org.thechance.service_restaurant.domain.utils.INVALID_REQUEST_PARAMETER
-import org.thechance.service_restaurant.domain.utils.INVALID_TIME
-import org.thechance.service_restaurant.domain.utils.INVALID_UPDATE_PARAMETER
-import org.thechance.service_restaurant.domain.utils.MultiErrorException
+import org.thechance.service_restaurant.domain.utils.IValidation
+import org.thechance.service_restaurant.domain.utils.Validation
+import org.thechance.service_restaurant.domain.utils.exceptions.*
 
-class RestaurantValidation(
-    private val basicValidation: Validation
-) {
-    fun validationRestaurant(restaurant: Restaurant) {
+interface IRestaurantValidationUseCase {
+
+    fun validateUpdateRestaurantDetails(restaurant: Restaurant)
+
+    fun validateRestaurantOwnership(restaurant: Restaurant?, ownerId: String)
+    fun validateAddRestaurant(restaurant: Restaurant)
+
+    fun validateUpdateRestaurant(restaurant: Restaurant)
+
+}
+
+class RestaurantValidationUseCase(
+    private val basicValidation: IValidation
+) : IRestaurantValidationUseCase, KoinComponent {
+
+
+    override fun validateAddRestaurant(restaurant: Restaurant) {
         val validationErrors = mutableListOf<Int>()
 
         if (!(basicValidation.isValidName(restaurant.name))) {
@@ -48,7 +50,7 @@ class RestaurantValidation(
         ) {
             validationErrors.add(INVALID_PRICE_LEVEL)
         }
-        if (restaurant.rate != null && restaurant.rate != NULL_DOUBLE && !basicValidation.isValidRate(
+        if (restaurant.rate != null && restaurant.rate != Validation.NULL_DOUBLE && !basicValidation.isValidRate(
                 restaurant.rate
             )
         ) {
@@ -68,65 +70,7 @@ class RestaurantValidation(
         }
     }
 
-    fun validateUpdateRestaurantDetails(restaurant: Restaurant) {
-        val validationErrors = mutableListOf<Int>()
-
-        if (!basicValidation.isValidId(restaurant.ownerId) || !basicValidation.isValidId(restaurant.id)) {
-            validationErrors.add(INVALID_ID)
-        }
-
-        if (restaurant.address.longitude != NULL_DOUBLE || restaurant.address.latitude != NULL_DOUBLE) {
-            validationErrors.add(INVALID_PERMISSION_UPDATE_LOCATION)
-        }
-
-        if (restaurant.name.isEmpty() &&
-            restaurant.description.isNullOrEmpty() &&
-            restaurant.priceLevel.isNullOrEmpty() &&
-            restaurant.rate == NULL_DOUBLE &&
-            restaurant.phone.isEmpty() &&
-            restaurant.closingTime.isEmpty() &&
-            restaurant.openingTime.isEmpty()
-        ) {
-            validationErrors.add(INVALID_UPDATE_PARAMETER)
-        } else {
-            if (restaurant.name.isNotEmpty() && !(basicValidation.isValidName(restaurant.name))) {
-                validationErrors.add(INVALID_NAME)
-            }
-
-            if (!(restaurant.description.isNullOrEmpty() || basicValidation.isValidDescription(
-                    restaurant.description
-                ))
-            ) {
-                validationErrors.add(INVALID_DESCRIPTION)
-            }
-            if (!(restaurant.priceLevel.isNullOrEmpty() || basicValidation.isValidatePriceLevel(
-                    restaurant.priceLevel
-                ))
-            ) {
-                validationErrors.add(INVALID_PRICE_LEVEL)
-            }
-            if (restaurant.rate == null || restaurant.rate != NULL_DOUBLE && !basicValidation.isValidRate(
-                    restaurant.rate
-                )
-            ) {
-                validationErrors.add(INVALID_RATE)
-            }
-            if (restaurant.phone.isNotEmpty() && !basicValidation.isValidPhone(restaurant.phone)) {
-                validationErrors.add(INVALID_PHONE)
-            }
-            if (restaurant.closingTime.isNotEmpty() && !basicValidation.isValidTime(restaurant.closingTime)) {
-                validationErrors.add(INVALID_TIME)
-            }
-            if (restaurant.openingTime.isNotEmpty() && !basicValidation.isValidTime(restaurant.openingTime)) {
-                validationErrors.add(INVALID_TIME)
-            }
-        }
-        if (validationErrors.isNotEmpty()) {
-            throw MultiErrorException(validationErrors)
-        }
-    }
-
-    fun validateUpdateRestaurant(restaurant: Restaurant) {
+    override fun validateUpdateRestaurant(restaurant: Restaurant) {
         val validationErrors = mutableListOf<Int>()
 
         if (restaurant.id.isEmpty() || restaurant.ownerId.isEmpty()) {
@@ -144,8 +88,8 @@ class RestaurantValidation(
             restaurant.phone.isEmpty() &&
             restaurant.closingTime.isEmpty() &&
             restaurant.openingTime.isEmpty() &&
-            restaurant.address.latitude == NULL_DOUBLE &&
-            restaurant.address.longitude == NULL_DOUBLE
+            restaurant.address.latitude == Validation.NULL_DOUBLE &&
+            restaurant.address.longitude == Validation.NULL_DOUBLE
         ) {
             validationErrors.add(INVALID_UPDATE_PARAMETER)
         } else {
@@ -176,13 +120,13 @@ class RestaurantValidation(
             if (restaurant.openingTime.isNotEmpty() && !basicValidation.isValidTime(restaurant.openingTime)) {
                 validationErrors.add(INVALID_TIME)
             }
-            if (restaurant.address.longitude != NULL_DOUBLE && !basicValidation.isValidLongitude(
+            if (restaurant.address.longitude != Validation.NULL_DOUBLE && !basicValidation.isValidLongitude(
                     restaurant.address.longitude
                 )
             ) {
                 validationErrors.add(INVALID_LOCATION)
             }
-            if (restaurant.address.latitude != NULL_DOUBLE && !basicValidation.isValidLatitude(
+            if (restaurant.address.latitude != Validation.NULL_DOUBLE && !basicValidation.isValidLatitude(
                     restaurant.address.latitude
                 )
             ) {
@@ -194,7 +138,65 @@ class RestaurantValidation(
         }
     }
 
-    fun validateRestaurantOwnership(restaurant: Restaurant?, ownerId: String) {
+    override fun validateUpdateRestaurantDetails(restaurant: Restaurant) {
+        val validationErrors = mutableListOf<Int>()
+
+        if (!basicValidation.isValidId(restaurant.ownerId) || !basicValidation.isValidId(restaurant.id)) {
+            validationErrors.add(INVALID_ID)
+        }
+
+        if (restaurant.address.longitude != Validation.NULL_DOUBLE || restaurant.address.latitude != Validation.NULL_DOUBLE) {
+            validationErrors.add(INVALID_PERMISSION_UPDATE_LOCATION)
+        }
+
+        if (restaurant.name.isEmpty() &&
+            restaurant.description.isNullOrEmpty() &&
+            restaurant.priceLevel.isNullOrEmpty() &&
+            restaurant.rate == Validation.NULL_DOUBLE &&
+            restaurant.phone.isEmpty() &&
+            restaurant.closingTime.isEmpty() &&
+            restaurant.openingTime.isEmpty()
+        ) {
+            validationErrors.add(INVALID_UPDATE_PARAMETER)
+        } else {
+            if (restaurant.name.isNotEmpty() && !(basicValidation.isValidName(restaurant.name))) {
+                validationErrors.add(INVALID_NAME)
+            }
+
+            if (!(restaurant.description.isNullOrEmpty() || basicValidation.isValidDescription(
+                    restaurant.description
+                ))
+            ) {
+                validationErrors.add(INVALID_DESCRIPTION)
+            }
+            if (!(restaurant.priceLevel.isNullOrEmpty() || basicValidation.isValidatePriceLevel(
+                    restaurant.priceLevel
+                ))
+            ) {
+                validationErrors.add(INVALID_PRICE_LEVEL)
+            }
+            if (restaurant.rate == null || restaurant.rate != Validation.NULL_DOUBLE && !basicValidation.isValidRate(
+                    restaurant.rate
+                )
+            ) {
+                validationErrors.add(INVALID_RATE)
+            }
+            if (restaurant.phone.isNotEmpty() && !basicValidation.isValidPhone(restaurant.phone)) {
+                validationErrors.add(INVALID_PHONE)
+            }
+            if (restaurant.closingTime.isNotEmpty() && !basicValidation.isValidTime(restaurant.closingTime)) {
+                validationErrors.add(INVALID_TIME)
+            }
+            if (restaurant.openingTime.isNotEmpty() && !basicValidation.isValidTime(restaurant.openingTime)) {
+                validationErrors.add(INVALID_TIME)
+            }
+        }
+        if (validationErrors.isNotEmpty()) {
+            throw MultiErrorException(validationErrors)
+        }
+    }
+
+    override fun validateRestaurantOwnership(restaurant: Restaurant?, ownerId: String) {
         val error = if (restaurant == null) {
             INVALID_ID
         } else if (restaurant.ownerId != ownerId) {
@@ -206,19 +208,5 @@ class RestaurantValidation(
         if (error != null)
             throw MultiErrorException(listOf(error))
     }
-
-    fun validationCategory(category: Category) {
-        val validationErrors = mutableListOf<Int>()
-
-        if (!basicValidation.isValidId(category.id)) {
-            validationErrors.add(INVALID_ID)
-        }
-        if (!basicValidation.isValidName(category.name)) {
-            validationErrors.add(INVALID_NAME)
-        }
-        if (validationErrors.isNotEmpty()) {
-            throw MultiErrorException(validationErrors)
-        }
-    }
-
 }
+

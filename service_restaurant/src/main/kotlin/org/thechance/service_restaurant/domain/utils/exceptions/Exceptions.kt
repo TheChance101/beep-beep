@@ -1,4 +1,4 @@
-package org.thechance.service_restaurant.domain.utils
+package org.thechance.service_restaurant.domain.utils.exceptions
 
 class MultiErrorException(val errorCodes: List<Int>) : Throwable(errorCodes.toString())
 

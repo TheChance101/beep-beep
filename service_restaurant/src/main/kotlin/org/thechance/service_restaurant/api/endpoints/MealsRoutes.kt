@@ -14,15 +14,8 @@ import org.thechance.service_restaurant.domain.usecase.IDiscoverRestaurantUseCas
 import org.thechance.service_restaurant.domain.usecase.IManageMealUseCase
 
 fun Route.mealRoutes() {
-    val manageMealUseCase: IManageMealUseCase  by inject()
+    val manageMealUseCase: IManageMealUseCase by inject()
     val discoverRestaurant: IDiscoverRestaurantUseCase by inject()
-
-//    get("meals") {
-//        val page = call.parameters.extractInt("page") ?: 1
-//        val limit = call.parameters.extractInt("limit") ?: 10
-//        val meals = admin.getAllMeals(page, limit)
-//        call.respond(meals.toMealDto())
-//    }
 
     route("meal") {
 
@@ -34,14 +27,14 @@ fun Route.mealRoutes() {
 
         put {
             val meal = call.receive<MealWithCuisineDto>()
-            val isUpdated = manageMealUseCase.updateMealToRestaurant(meal.toEntity())
-            if (isUpdated) call.respond(HttpStatusCode.OK, "updated successfully")
+            val result = manageMealUseCase.updateMealToRestaurant(meal.toEntity())
+            call.respond(HttpStatusCode.OK, result.toDto())
         }
 
         post {
             val meal = call.receive<MealWithCuisineDto>()
             val result = manageMealUseCase.addMealToRestaurant(meal.toEntity())
-            call.respond(HttpStatusCode.Created, result)
+            call.respond(HttpStatusCode.Created, result.toDto())
         }
 
         delete("/{id}") {

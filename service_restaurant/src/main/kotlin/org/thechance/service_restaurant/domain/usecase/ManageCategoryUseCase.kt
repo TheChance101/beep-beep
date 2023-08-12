@@ -2,39 +2,41 @@ package org.thechance.service_restaurant.domain.usecase
 
 import org.thechance.service_restaurant.domain.entity.Category
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
-import org.thechance.service_restaurant.domain.usecase.validation.RestaurantValidation
-import org.thechance.service_restaurant.domain.usecase.validation.Validation
-import org.thechance.service_restaurant.domain.utils.INVALID_ID
-import org.thechance.service_restaurant.domain.utils.INVALID_NAME
-import org.thechance.service_restaurant.domain.utils.MultiErrorException
-import org.thechance.service_restaurant.domain.utils.NOT_FOUND
+import org.thechance.service_restaurant.domain.usecase.validation.ICategoryValidationUseCase
+import org.thechance.service_restaurant.domain.utils.IValidation
+import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
+import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_NAME
+import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
+import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 
 interface IManageCategoryUseCase {
     suspend fun getCategories(page: Int, limit: Int): List<Category>
-    suspend fun createCategory(category: Category): Boolean
-    suspend fun updateCategory(category: Category): Boolean
+    suspend fun createCategory(category: Category): Category
+    suspend fun updateCategory(category: Category): Category
     suspend fun deleteCategory(categoryId: String): Boolean
+
 }
 
 class ManageCategoryUseCase(
     private val restaurantOptions: IRestaurantOptionsGateway,
-    private val restaurantValidation: RestaurantValidation,
-    private val basicValidation: Validation
+    private val basicValidation: IValidation,
+    private val categoryValidation: ICategoryValidationUseCase
 ) : IManageCategoryUseCase {
+
     override suspend fun getCategories(page: Int, limit: Int): List<Category> {
-        basicValidation. validatePagination(page,limit)
+        basicValidation.validatePagination(page, limit)
         return restaurantOptions.getCategories(page, limit)
     }
 
-    override suspend fun createCategory(category: Category): Boolean {
+    override suspend fun createCategory(category: Category): Category {
         if (!basicValidation.isValidName(category.name)) {
             throw MultiErrorException(listOf(INVALID_NAME))
         }
         return restaurantOptions.addCategory(category)
     }
 
-    override suspend fun updateCategory(category: Category): Boolean {
-        restaurantValidation.validationCategory(category)
+    override suspend fun updateCategory(category: Category): Category {
+        categoryValidation.validationCategory(category)
         checkIfCategoryIsExist(category.id)
         return restaurantOptions.updateCategory(category)
     }
@@ -52,4 +54,5 @@ class ManageCategoryUseCase(
             throw MultiErrorException(listOf(NOT_FOUND))
         }
     }
+
 }
