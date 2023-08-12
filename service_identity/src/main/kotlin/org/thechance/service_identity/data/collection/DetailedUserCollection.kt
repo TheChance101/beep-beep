@@ -18,6 +18,8 @@ data class DetailedUserCollection(
     val username: String,
     @SerialName("password")
     val password: String,
+    @SerialName("email")
+    val email: String,
     @SerialName("isDeleted")
     val isDeleted: Boolean = false,
     @SerialName("details")

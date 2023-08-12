@@ -1,36 +1,30 @@
 package org.thechance.service_taxi.data.collection
 
-import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
-import org.bson.types.ObjectId
+import java.util.UUID
 
 @Serializable
 data class TripCollection(
     @Contextual
-    val taxiId: ObjectId? = null,
+    val taxiId: UUID? = null,
     @Contextual
-    val driverId: ObjectId? = null,
+    val driverId: UUID? = null,
     @Contextual
-    val clientId: ObjectId?,
-    val startPoint: LatLongCollection? = null,
-    val destination: LatLongCollection? = null,
+    val clientId: UUID?,
+    val startPoint: LocationCollection? = null,
+    val destination: LocationCollection? = null,
     val rate: Double? = null,
     val price: Double?,
-    val startDate: LocalDateTime? = null,
-    val endDate: LocalDateTime? = null,
+    val startDate: String? = null,
+    val endDate: String? = null,
 ) {
     @SerialName("_id")
     @BsonId
     @Contextual
-    val id: ObjectId = ObjectId()
+    val id: UUID = UUID.randomUUID()
     val isDeleted: Boolean = false
 }
 
-@Serializable
-data class LatLongCollection(
-    val latitude: Double,
-    val longitude: Double,
-)

@@ -3,11 +3,9 @@ package org.thechance.service_identity.plugins
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
-import io.ktor.server.plugins.requestvalidation.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
-import org.thechance.service_identity.domain.entity.MissingParameterException
-import org.thechance.service_identity.domain.entity.UserAlreadyExistsException
+import org.thechance.service_identity.domain.entity.*
 
 fun Application.configureStatusPages() {
     install(StatusPages) {
@@ -24,7 +22,8 @@ private fun StatusPagesConfig.handleStatusPagesExceptions() {
     }
 
     exception<RequestValidationException> { call, cause ->
-        call.respond(HttpStatusCode.BadRequest, cause.reasons.map { it.toInt() })
+        val reasons = cause.message?.split(",")?.map { it.toInt() } ?: emptyList()
+        call.respond(HttpStatusCode.BadRequest, reasons)
     }
 
     exception<NotFoundException> { call, cause ->
@@ -39,5 +38,13 @@ private fun StatusPagesConfig.handleStatusPagesExceptions() {
             HttpStatusCode.InternalServerError,
             listOf(cause.message?.toInt())
         )
+    }
+
+    exception<ResourceNotFoundException> { call, cause ->
+        call.respond(HttpStatusCode.NotFound, listOf(cause.message?.toInt()))
+    }
+
+    exception<InsufficientFundsException> { call, cause ->
+        call.respond(HttpStatusCode.BadRequest, listOf(cause.message?.toInt()))
     }
 }
