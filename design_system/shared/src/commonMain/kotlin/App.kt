@@ -27,6 +27,7 @@ import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpChip
 import com.beepbeep.designSystem.ui.composable.BpNavigationBar
 import com.beepbeep.designSystem.ui.composable.BpNavigationBarItem
+import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.BpTheme
 import com.beepbeep.designSystem.ui.theme.Theme
@@ -40,14 +41,14 @@ fun DesignApp() {
         Column(
             Modifier.fillMaxSize().background(Theme.colors.background),
 //            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Bottom
+//            verticalArrangement = Arrangement.Bottom
         ) {
 //            EnabledButtonsPreview()
 //            DisabledButtonsPreview()
 //            Spacer(modifier = Modifier.height(16.dp))
             PreviewTextField()
             PreviewChips()
-            BottomNavigationBarPreview()
+//            BottomNavigationBarPreview()
         }
     }
 }
@@ -56,9 +57,9 @@ fun DesignApp() {
 @Composable
 fun PreviewChips() {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxSize(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly
+        horizontalArrangement = Arrangement.SpaceAround
     ) {
         var selected by remember { mutableStateOf(false) }
         var selected1 by remember { mutableStateOf(true) }
@@ -85,16 +86,25 @@ fun PreviewChips() {
 
 }
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun PreviewTextField() {
     Column(
-        modifier = Modifier.fillMaxWidth().padding(8.dp),
+        modifier = Modifier.fillMaxSize().padding(8.dp),
+        verticalArrangement = Arrangement.SpaceAround
     ) {
         var text1 by rememberSaveable { mutableStateOf("") }
         var text2 by rememberSaveable { mutableStateOf("") }
         var text3 by rememberSaveable { mutableStateOf("") }
         var text4 by rememberSaveable { mutableStateOf("Ahmed Nasser") }
+        var text5 by rememberSaveable { mutableStateOf("") }
 
+        BpSimpleTextField(
+            onValueChange = { text5 = it },
+            text = text5,
+            hint = "Search for users",
+            trailingPainter = painterResource("sort.xml")
+        )
         BpTextField(
             onValueChange = { text3 = it },
             text = text3,
@@ -191,7 +201,6 @@ fun BottomNavigationBarPreview() {
         }
     }
 }
-
 
 
 expect fun getPlatformName(): String

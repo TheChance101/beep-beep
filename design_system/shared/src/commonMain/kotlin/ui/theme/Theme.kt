@@ -24,7 +24,7 @@ fun BpTheme(
         headline = headline(),
         titleLarge = titleLarge(),
         title = title(),
-        bodyLarge = bodyLarge(),
+        titleMedium = titleMedium(),
         body = body(),
         caption = caption(),
     )

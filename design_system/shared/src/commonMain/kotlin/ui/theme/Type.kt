@@ -42,7 +42,7 @@ fun title(): TextStyle {
     )
 }
 @Composable
-fun bodyLarge(): TextStyle {
+fun titleMedium(): TextStyle {
     return TextStyle(
         fontSize = 16.sp,
         fontFamily = FontFamily(fontResources("roboto_medium")),

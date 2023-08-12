@@ -65,7 +65,7 @@ fun BpTextField(
             value = text,
             onValueChange = onValueChange,
             shape = shapeRadius,
-            textStyle = typography.bodyLarge.copy(colors.contentPrimary),
+            textStyle = typography.titleMedium.copy(colors.contentPrimary),
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
             trailingIcon = {
@@ -99,7 +99,7 @@ fun BpTextField(
 @Composable
 private fun ContainerColor(isError: Boolean, correctValidation: Boolean): Color {
     return if (isError) {
-        colors.secondary
+        colors.hover
     } else if (correctValidation) {
         colors.successContainer
     } else {
