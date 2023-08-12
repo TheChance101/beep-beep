@@ -15,8 +15,8 @@ import org.thechance.service_restaurant.api.utils.extractString
 import org.thechance.service_restaurant.domain.usecase.IControlRestaurantsUseCase
 import org.thechance.service_restaurant.domain.usecase.IDiscoverRestaurantUseCase
 import org.thechance.service_restaurant.domain.usecase.IManageRestaurantDetailsUseCase
-import org.thechance.service_restaurant.domain.utils.INVALID_REQUEST_PARAMETER
-import org.thechance.service_restaurant.domain.utils.MultiErrorException
+import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_REQUEST_PARAMETER
+import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 
 fun Route.restaurantRoutes() {
 
@@ -34,51 +34,42 @@ fun Route.restaurantRoutes() {
     route("/restaurant") {
 
         get("/{id}") {
-            val restaurantId = call.parameters["id"] ?:
-            throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER))
+            val restaurantId = call.parameters["id"] ?: throw MultiErrorException(
+                listOf(
+                    INVALID_REQUEST_PARAMETER
+                )
+            )
             val restaurant = manageRestaurantDetails.getRestaurant(restaurantId).toDetailsDto()
             call.respond(HttpStatusCode.OK, restaurant)
         }
 
-        get("/{id}/categories") {
-            val restaurantId =
-                call.parameters.extractString("id") ?:
-                throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER))
-            val category = manageRestaurantDetails.getCategoriesInRestaurant(restaurantId).toDto()
-            call.respond(HttpStatusCode.OK, category)
-        }
 
         post {
             val restaurant = call.receive<RestaurantDto>()
             val result = controlRestaurant.createRestaurant(restaurant.toEntity())
-            call.respond(HttpStatusCode.Created, result)
+            call.respond(HttpStatusCode.Created, result.toDto())
         }
 
-        post("/{id}/categories") {
-            val restaurantId =
-                call.parameters.extractString("id") ?:
-                throw MultiErrorException(listOf( INVALID_REQUEST_PARAMETER))
-            val categoryIds = call.receive<List<String>>()
-            val result = manageRestaurantDetails.addCategoryToRestaurant(restaurantId, categoryIds)
-            call.respond(HttpStatusCode.Created, result)
-        }
 
         put("/details") {
             val restaurant = call.receive<RestaurantDto>()
             val result = manageRestaurantDetails.updateRestaurant(restaurant.toEntity())
-            call.respond(HttpStatusCode.OK, result)
+            call.respond(HttpStatusCode.OK, result.toDto())
         }
 
         put {
             val restaurant = call.receive<RestaurantDto>()
             val result = controlRestaurant.updateRestaurant(restaurant.toEntity())
-            call.respond(HttpStatusCode.OK, result)
+            call.respond(HttpStatusCode.OK, result.toDto())
         }
 
         delete("/{id}/categories") {
             val restaurantId =
-                call.parameters.extractString("id") ?:
-                throw MultiErrorException(listOf( INVALID_REQUEST_PARAMETER))
+                call.parameters.extractString("id") ?: throw MultiErrorException(
+                    listOf(
+                        INVALID_REQUEST_PARAMETER
+                    )
+                )
             val categoryIds = call.receive<List<String>>()
             val result =
                 manageRestaurantDetails.deleteCategoriesInRestaurant(restaurantId, categoryIds)
@@ -86,8 +77,11 @@ fun Route.restaurantRoutes() {
         }
 
         delete("/{id}") {
-            val restaurantId = call.parameters["id"] ?:
-            throw MultiErrorException(listOf( INVALID_REQUEST_PARAMETER))
+            val restaurantId = call.parameters["id"] ?: throw MultiErrorException(
+                listOf(
+                    INVALID_REQUEST_PARAMETER
+                )
+            )
             val result = controlRestaurant.deleteRestaurant(restaurantId)
             call.respond(HttpStatusCode.OK, result)
         }

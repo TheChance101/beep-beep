@@ -31,8 +31,11 @@ import org.thechance.service_restaurant.domain.entity.Cuisine
 import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.entity.Restaurant
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
+import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
+import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 
-class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRestaurantOptionsGateway {
+class RestaurantOptionsGateway(private val container: DataBaseContainer) :
+    IRestaurantOptionsGateway {
 
     //region Category
     override suspend fun getCategories(page: Int, limit: Int): List<Category> {
@@ -42,7 +45,12 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
 
     override suspend fun getCategory(categoryId: String): Category? {
         return container.categoryCollection.aggregate<CategoryCollection>(
-            match(and(CategoryCollection::id eq ObjectId(categoryId), CategoryCollection::isDeleted eq false)),
+            match(
+                and(
+                    CategoryCollection::id eq ObjectId(categoryId),
+                    CategoryCollection::isDeleted eq false
+                )
+            ),
             project(CategoryCollection::name, CategoryCollection::id)
         ).toList().firstOrNull()?.toEntity()
     }
@@ -83,11 +91,16 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         ).toList().first().categories.filterNot { it.isDeleted }.toEntity()
     }
 
-    override suspend fun addCategory(category: Category): Boolean {
-        return container.categoryCollection.insertOne(category.toCollection()).wasAcknowledged()
+    override suspend fun addCategory(category: Category): Category {
+        val addedCategory = category.toCollection()
+        container.categoryCollection.insertOne(addedCategory)
+        return addedCategory.toEntity()
     }
 
-    override suspend fun addCategoriesToRestaurant(restaurantId: String, categoryIds: List<String>): Boolean {
+    override suspend fun addCategoriesToRestaurant(
+        restaurantId: String,
+        categoryIds: List<String>
+    ): Boolean {
         val resultAddToCategory = container.categoryCollection.updateMany(
             CategoryCollection::id `in` categoryIds.toObjectIds(),
             addToSet(CategoryCollection::restaurantIds, ObjectId(restaurantId))
@@ -95,18 +108,20 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
 
         val resultAddToRestaurant = container.restaurantCollection.updateOneById(
             ObjectId(restaurantId),
-            update = Updates.addEachToSet(RestaurantCollection::categoryIds.name, categoryIds.toObjectIds())
+            update = Updates.addEachToSet(
+                RestaurantCollection::categoryIds.name,
+                categoryIds.toObjectIds()
+            )
         ).isSuccessfullyUpdated()
 
         return resultAddToCategory and resultAddToRestaurant
     }
 
-    override suspend fun updateCategory(category: Category): Boolean {
-        return container.categoryCollection.updateOneById(
-            id = ObjectId(category.id),
+    override suspend fun updateCategory(category: Category): Category {
+        return container.categoryCollection.findOneAndUpdate(
+            filter = CategoryCollection::id eq ObjectId(category.id),
             update = category.toCollection(),
-            updateOnlyNotNullProperties = true
-        ).isSuccessfullyUpdated()
+        )?.toEntity() ?: throw MultiErrorException(listOf(NOT_FOUND))
     }
 
     override suspend fun deleteCategory(categoryId: String): Boolean {
@@ -116,7 +131,10 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         ).isSuccessfullyUpdated()
     }
 
-    override suspend fun deleteRestaurantsInCategory(categoryId: String, restaurantIds: List<String>): Boolean {
+    override suspend fun deleteRestaurantsInCategory(
+        categoryId: String,
+        restaurantIds: List<String>
+    ): Boolean {
         val resultDeleteFromRestaurant = container.restaurantCollection.updateMany(
             RestaurantCollection::id `in` restaurantIds.toObjectIds(),
             pull(RestaurantCollection::categoryIds, ObjectId(categoryId))
@@ -131,8 +149,8 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
     //endregion
 
     //region Cuisines
-    override suspend fun getCuisines(page: Int, limit: Int): List<Cuisine> =
-        container.cuisineCollection.find(MealCollection::isDeleted eq false).paginate(page, limit).toList().toEntity()
+    override suspend fun getCuisines(): List<Cuisine> =
+        container.cuisineCollection.find(MealCollection::isDeleted eq false).toList().toEntity()
 
     override suspend fun getCuisineById(id: String): Cuisine? =
         container.cuisineCollection.findOneById(ObjectId(id))?.takeIf { !it.isDeleted }?.toEntity()
@@ -150,8 +168,10 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
     }
 
 
-    override suspend fun addCuisine(cuisine: Cuisine): Boolean {
-        return container.cuisineCollection.insertOne(cuisine.toCollection()).wasAcknowledged()
+    override suspend fun addCuisine(cuisine: Cuisine): Cuisine {
+        val addedCuisine = cuisine.toCollection()
+        container.cuisineCollection.insertOne(addedCuisine)
+        return addedCuisine.toEntity()
     }
 
     override suspend fun areCuisinesExist(cuisineIds: List<String>): Boolean {
@@ -165,12 +185,11 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         return cuisines.size == cuisineIds.size
     }
 
-    override suspend fun updateCuisine(cuisine: Cuisine): Boolean {
-        return container.cuisineCollection.updateOneById(
-            ObjectId(cuisine.id),
+    override suspend fun updateCuisine(cuisine: Cuisine): Cuisine {
+        return container.cuisineCollection.findOneAndUpdate(
+            CuisineCollection::id eq ObjectId(cuisine.id),
             cuisine.toCollection(),
-            updateOnlyNotNullProperties = true
-        ).isSuccessfullyUpdated()
+        )?.toEntity() ?: throw MultiErrorException(listOf(NOT_FOUND))
     }
 
     override suspend fun deleteCuisine(id: String): Boolean =

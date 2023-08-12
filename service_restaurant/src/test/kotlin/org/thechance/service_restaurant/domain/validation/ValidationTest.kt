@@ -4,13 +4,13 @@ import org.junit.Test
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.function.Executable
-import org.thechance.service_restaurant.domain.usecase.validation.Validation
-import org.thechance.service_restaurant.domain.usecase.validation.Validation.Companion.DESCRIPTION_MAX_LENGTH
-import org.thechance.service_restaurant.domain.usecase.validation.Validation.Companion.DESCRIPTION_MIN_LENGTH
-import org.thechance.service_restaurant.domain.utils.INVALID_ID
-import org.thechance.service_restaurant.domain.utils.INVALID_PAGE
-import org.thechance.service_restaurant.domain.utils.INVALID_PAGE_LIMIT
-import org.thechance.service_restaurant.domain.utils.MultiErrorException
+import org.thechance.service_restaurant.domain.utils.Validation
+import org.thechance.service_restaurant.domain.utils.Validation.Companion.DESCRIPTION_MAX_LENGTH
+import org.thechance.service_restaurant.domain.utils.Validation.Companion.DESCRIPTION_MIN_LENGTH
+import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
+import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_PAGE
+import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_PAGE_LIMIT
+import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 
 class ValidationTest {
 
