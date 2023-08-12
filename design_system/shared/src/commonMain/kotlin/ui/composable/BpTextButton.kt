@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +28,7 @@ fun BpTextButton(
     Surface(
         modifier = modifier
             .height(height.dp)
-            .border(width = 1.dp, color = colors.contentBorder, shape = radius.small)
+            .border(width = 1.dp, color = colors.contentBorder, shape = RoundedCornerShape(radius.small))
             .padding(horizontal = dimens.space16, vertical = dimens.space8)
             .clickable(
                 indication = null,

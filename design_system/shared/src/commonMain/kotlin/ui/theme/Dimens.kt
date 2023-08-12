@@ -1,9 +1,7 @@
 package com.beepbeep.designSystem.ui.theme
 
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 data class Dimens(
     val space4: Dp = 4.dp,

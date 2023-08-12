@@ -3,6 +3,7 @@ package com.beepbeep.designSystem.ui.composable
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -58,6 +59,6 @@ fun BpChip(
             borderColor = Theme.colors.contentBorder,
             borderWidth = 1.dp
         ),
-        shape = Theme.radius.small
+        shape = RoundedCornerShape(Theme.radius.small)
     )
 }

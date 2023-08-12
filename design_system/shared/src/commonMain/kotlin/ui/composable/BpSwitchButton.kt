@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -55,8 +56,8 @@ fun BpSwitchButton(
         modifier = modifier
             .width(48.dp)
             .height(24.dp)
-            .background(color = targetBackgroundColor, shape = radius.large)
-            .border(width = 1.dp, color = targetBorderColor, shape = radius.large)
+            .background(color = targetBackgroundColor, shape = RoundedCornerShape(radius.large))
+            .border(width = 1.dp, color = targetBorderColor, shape = RoundedCornerShape(radius.large))
             .clickable(indication = null, interactionSource = remember { MutableInteractionSource() })
             { onSwitch(!selected) },
         contentAlignment = alignment.value

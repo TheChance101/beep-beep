@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -28,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme.colors
-import com.beepbeep.designSystem.ui.theme.Theme.dimens
 import com.beepbeep.designSystem.ui.theme.Theme.radius
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -51,10 +51,10 @@ fun BpToggleButton(
     } }
     Box(
         Modifier
-            .border(width = 1.dp, color = colors.contentBorder, shape = radius.small)
+            .border(width = 1.dp, color = colors.contentBorder, shape = RoundedCornerShape(radius.small))
             .width(64.dp)
             .height(32.dp)
-            .background(color = colors.background, shape = radius.small)
+            .background(color = colors.background, shape = RoundedCornerShape(radius.small))
             .padding(2.dp)
             .clickable(
                 indication = null,
@@ -67,7 +67,7 @@ fun BpToggleButton(
                 .height(28.dp)
                 .padding(2.dp)
                 .align(alignment.value),
-            shape = radius.small,
+            shape = RoundedCornerShape(radius.small),
             colors = CardDefaults.cardColors(containerColor = colors.primary),
             elevation = CardDefaults.elevatedCardElevation(0.dp),) {}
         Row(

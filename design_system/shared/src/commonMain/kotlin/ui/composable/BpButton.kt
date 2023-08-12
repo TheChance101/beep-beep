@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ProvideTextStyle
@@ -28,11 +29,11 @@ fun BpButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    shape: Shape = Theme.radius.medium,
+    shape: Shape = RoundedCornerShape(Theme.radius.medium),
     containerColor: Color = Theme.colors.primary,
     contentColor: Color = Color.White,
     border: BorderStroke? = null,
-    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
+    contentPadding: PaddingValues = PaddingValues(Theme.dimens.space24),
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Center,
     content: @Composable RowScope.() -> Unit
 ) {

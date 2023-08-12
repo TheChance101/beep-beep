@@ -7,8 +7,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -30,7 +31,9 @@ fun BpIconButton(
     Surface(
         modifier = modifier
             .height(height.dp)
-            .border(width = 1.dp, color = Theme.colors.contentBorder, shape = Theme.radius.medium)
+            .border(width = 1.dp, color = Theme.colors.contentBorder, shape = RoundedCornerShape(
+                Theme.radius.medium)
+            )
             .padding(horizontal = Theme.dimens.space16, vertical = Theme.dimens.space8)
             .clickable(
                 indication = null,

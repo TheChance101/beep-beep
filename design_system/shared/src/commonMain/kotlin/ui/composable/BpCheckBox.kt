@@ -12,10 +12,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.toggleable
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -51,8 +52,8 @@ fun BpCheckBox(
     ) {
         Box( modifier = Modifier
             .size(size.dp)
-            .background(color = checkboxColor, shape = radius.small)
-            .border(width = 1.dp, shape = radius.small,
+            .background(color = checkboxColor, shape = RoundedCornerShape(radius.small))
+            .border(width = 1.dp, shape = RoundedCornerShape(radius.small),
                 color = if (isChecked) colors.primary else colors.contentBorder)
             .toggleable(
                 value = isChecked,
