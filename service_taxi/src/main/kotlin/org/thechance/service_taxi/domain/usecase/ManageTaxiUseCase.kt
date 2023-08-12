@@ -45,8 +45,7 @@ class ManageTaxiUseCase(
         return dataBaseGateway.getTaxiById(taxiId) ?: throw ResourceNotFoundException
     }
 
-    private
-    fun validationTaxi(taxi: Taxi) {
+    private fun validationTaxi(taxi: Taxi) {
         val validationErrors = mutableListOf<Int>()
 
         if (!validations.isisValidPlateNumber(taxi.plateNumber)) {
