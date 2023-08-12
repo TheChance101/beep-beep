@@ -55,7 +55,7 @@ fun BpToggleButton(
             .width(64.dp)
             .height(32.dp)
             .background(color = colors.background, shape = radius.small)
-            .padding(dimens.space2)
+            .padding(2.dp)
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() })
@@ -65,7 +65,7 @@ fun BpToggleButton(
             modifier = Modifier
                 .width(28.dp)
                 .height(28.dp)
-                .padding(dimens.space2)
+                .padding(2.dp)
                 .align(alignment.value),
             shape = radius.small,
             colors = CardDefaults.cardColors(containerColor = colors.primary),
@@ -73,17 +73,17 @@ fun BpToggleButton(
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxSize().padding(horizontal = dimens.space2)
+            modifier = Modifier.fillMaxSize().padding(horizontal = 2.dp)
         ) {
             Icon(
                 painter = painterResource("sun.xml"),
                 contentDescription = "", tint = if (isDark) colors.contentTertiary else Color.White,
-                modifier = Modifier.size(24.dp).padding(dimens.space2)
+                modifier = Modifier.size(24.dp).padding(2.dp)
             )
             Icon(
                 painter = painterResource("moon_stars.xml"),
                 contentDescription = "", tint = if (isDark) Color.White else colors.contentTertiary,
-                modifier = Modifier.size(24.dp).padding(dimens.space2)
+                modifier = Modifier.size(24.dp).padding(2.dp)
             )
         }
     }
