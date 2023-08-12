@@ -37,11 +37,6 @@ class DatabaseGateway(
         ).wasAcknowledged()
     }
 
-    override suspend fun getUsersGroupIds(userGroup: String): List<String> {
-        val collection = databaseContainer.database.getCollection<GroupUserCollection>(userGroup)
-        return collection.find().toList().map { it.userId.toHexString() }
-    }
-
     override suspend fun getUsersTokens(ids: List<String>): List<String> {
         return userCollection.find(UserCollection::id `in` ids.map { ObjectId(it) }).toList()
             .flatMap { it.deviceTokens }
