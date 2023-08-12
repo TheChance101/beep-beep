@@ -39,6 +39,7 @@ import org.jetbrains.compose.resources.painterResource
 fun BeepBeepToggleButton(
     onToggle: () -> Unit,
     isDark : Boolean = isSystemInDarkTheme(),
+    modifier: Modifier =Modifier
 ){
     val horizontalBias by animateFloatAsState(
         targetValue =  when (isDark) {
@@ -48,7 +49,7 @@ fun BeepBeepToggleButton(
         animationSpec = tween(500)
     )
     val alignment=remember { derivedStateOf { BiasAlignment(horizontalBias = horizontalBias, verticalBias = 0f) } }
-    Box(Modifier.border(width = 1.dp, color =  colorScheme.outline, shape = shapes.small)
+    Box(modifier.border(width = 1.dp, color =  colorScheme.outline, shape = shapes.small)
         .width(dimens.size64)
         .height(dimens.size32)
         .background(color =  colorScheme.background, shape = shapes.small)

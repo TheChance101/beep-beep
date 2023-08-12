@@ -1,9 +1,9 @@
 package org.thechance.common
 
-import com.beepbeep.designSystem.DesignApp
 import androidx.compose.runtime.Composable
+import org.thechance.common.ui.screen.DashBoardScaffold
 
 @Composable
 fun App() {
-    DesignApp()
+    DashBoardScaffold()
 }
