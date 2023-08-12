@@ -33,7 +33,6 @@ kotlin {
 
 android {
     compileSdkVersion(libs.versions.compileSdk.get().toInt())
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
         minSdkVersion(libs.versions.minSdk.get().toInt())
         targetSdkVersion(libs.versions.targetSdk.get().toInt())
