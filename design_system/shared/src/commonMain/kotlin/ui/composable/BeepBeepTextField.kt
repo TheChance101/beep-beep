@@ -28,9 +28,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import com.beepbeep.designSystem.ui.theme.Theme.color
+import com.beepbeep.designSystem.ui.theme.Theme.colors
 import com.beepbeep.designSystem.ui.theme.Theme.dimens
-import com.beepbeep.designSystem.ui.theme.Theme.shapes
+import com.beepbeep.designSystem.ui.theme.Theme.radius
 import com.beepbeep.designSystem.ui.theme.Theme.typography
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,7 +41,7 @@ fun BeepBeepTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     keyboardType: KeyboardType = KeyboardType.Text,
-    shapeRadius: Shape = shapes.medium,
+    shapeRadius: Shape = radius.medium,
     errorMessage: String = "",
     correctValidation: Boolean = false,
     isError: Boolean = errorMessage.isNotEmpty(),
@@ -56,7 +56,7 @@ fun BeepBeepTextField(
             text = label,
             modifier = Modifier.padding(bottom = dimens.space8),
             style = typography.titleLarge,
-            color = color.onPrimary
+            color = colors.onPrimary
         )
 
         OutlinedTextField(
@@ -64,7 +64,7 @@ fun BeepBeepTextField(
             value = text,
             onValueChange = onValueChange,
             shape = shapeRadius,
-            textStyle = typography.bodyLarge.copy(color.onPrimary),
+            textStyle = typography.bodyLarge.copy(colors.onPrimary),
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
             trailingIcon = {
@@ -76,11 +76,11 @@ fun BeepBeepTextField(
             isError = isError,
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 containerColor = ContainerColor(isError, correctValidation),
-                unfocusedBorderColor = color.outline.copy(alpha = 0.1f),
-                focusedBorderColor = color.onTertiary.copy(alpha = 0.2f),
-                errorBorderColor = color.primary.copy(alpha = 0.5f),
-                errorCursorColor = color.primary,
-                cursorColor = color.outline,
+                unfocusedBorderColor = colors.contentBorder.copy(alpha = 0.1f),
+                focusedBorderColor = colors.contentTertiary.copy(alpha = 0.2f),
+                errorBorderColor = colors.primary.copy(alpha = 0.5f),
+                errorCursorColor = colors.primary,
+                cursorColor = colors.contentBorder,
             ),
         )
 
@@ -89,7 +89,7 @@ fun BeepBeepTextField(
                 text = errorMessage,
                 modifier = Modifier.padding(top = dimens.space8),
                 style = typography.body,
-                color = color.primary
+                color = colors.primary
             )
         }
     }
@@ -98,11 +98,11 @@ fun BeepBeepTextField(
 @Composable
 private fun ContainerColor(isError: Boolean, correctValidation: Boolean): Color {
     return if (isError) {
-        color.secondary
+        colors.secondary
     } else if (correctValidation) {
-        color.inversePrimary
+        colors.successContainer
     } else {
-        color.surface
+        colors.surface
     }
 }
 
@@ -118,7 +118,7 @@ fun TrailingIcon(
             Icon(
                 imageVector = if (showPassword) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility,
                 contentDescription = if (showPassword) "Show Password" else "Hide Password",
-                tint = color.onTertiary
+                tint = colors.contentTertiary
             )
         }
     }

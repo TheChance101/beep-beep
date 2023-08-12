@@ -21,9 +21,9 @@ import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.beepbeep.designSystem.ui.theme.Theme.colors
 import com.beepbeep.designSystem.ui.theme.Theme.dimens
-import com.beepbeep.designSystem.ui.theme.Theme.shapes
-import com.beepbeep.designSystem.ui.theme.Theme.color
+import com.beepbeep.designSystem.ui.theme.Theme.radius
 
 
 @Composable
@@ -33,12 +33,12 @@ fun BpSwitchButton(
     selected: Boolean = false,
 ) {
     val targetBackgroundColor by animateColorAsState(
-        targetValue = if (selected) color.primary else color.background,
+        targetValue = if (selected) colors.primary else colors.background,
         animationSpec = tween(500)
     )
 
     val targetBorderColor by animateColorAsState(
-        targetValue = if (selected) color.primary else color.tertiaryContainer,
+        targetValue = if (selected) colors.primary else colors.disable,
         animationSpec = tween(500)
     )
     val horizontalBias by animateFloatAsState(
@@ -48,15 +48,23 @@ fun BpSwitchButton(
         },
         animationSpec = tween(500)
     )
-    val alignment = remember { derivedStateOf { BiasAlignment(
-        horizontalBias = horizontalBias, verticalBias = 0f) } }
+    val alignment = remember {
+        derivedStateOf {
+            BiasAlignment(
+                horizontalBias = horizontalBias, verticalBias = 0f
+            )
+        }
+    }
 
-    Box(modifier = modifier
-             .width(dimens.size48)
-            .height(dimens.size24)
-            .background(color = targetBackgroundColor, shape = shapes.large)
-            .border(width = 1.dp, color = targetBorderColor, shape = shapes.large)
-            .clickable(indication = null, interactionSource = remember { MutableInteractionSource() })
+    Box(
+        modifier = modifier
+            .width(48.dp)
+            .height(24.dp)
+            .background(color = targetBackgroundColor, shape = radius.large)
+            .border(width = 1.dp, color = targetBorderColor, shape = radius.large)
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() })
             { onSwitch(!selected) },
         contentAlignment = alignment.value
     ) {
@@ -72,7 +80,7 @@ private fun Circle(
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
 ) {
-    Canvas(modifier = modifier.size(size = dimens.size18).background(color = Color.Transparent)){
+    Canvas(modifier = modifier.size(size = 18.dp).background(color = Color.Transparent)) {
         drawCircle(
             color = if (isSelected) Color.White else Color(0xFFF53D47),
             radius = 18f

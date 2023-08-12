@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
 import com.beepbeep.designSystem.ui.theme.Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,20 +30,20 @@ fun BeepBeepOutlinedButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     shape: Shape = RoundedCornerShape(8.dp),
-    contentColor: Color = Theme.color.primary,
-    border: BorderStroke = BorderStroke(1.dp, color = Theme.color.primary),
+    contentColor: Color = Theme.colors.primary,
+    border: BorderStroke = BorderStroke(1.dp, color = Theme.colors.primary),
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Center,
     content: @Composable RowScope.() -> Unit
 ) {
     val buttonBorderColor by animateColorAsState(
-        if (enabled) Theme.color.primary
-        else Theme.color.tertiaryContainer
+        if (enabled) Theme.colors.primary
+        else Theme.colors.disable
     )
 
     val buttonContentColor by animateColorAsState(
         if (enabled) contentColor
-        else Theme.color.tertiaryContainer
+        else Theme.colors.disable
     )
 
     Surface(
