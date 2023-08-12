@@ -14,16 +14,15 @@ import org.litote.kmongo.coroutine.aggregate
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.*
 import org.thechance.service_identity.data.mappers.*
-import org.thechance.service_identity.data.util.USER_DETAILS_COLLECTION
-import org.thechance.service_identity.data.util.isUpdatedSuccessfully
-import org.thechance.service_identity.data.util.paginate
+import org.thechance.service_identity.data.security.hashing.SaltedHash
+import org.thechance.service_identity.data.util.*
 import org.thechance.service_identity.domain.entity.*
-import org.thechance.service_identity.domain.gateway.DataBaseGateway
+import org.thechance.service_identity.domain.gateway.IDataBaseGateway
 import org.thechance.service_identity.domain.util.NOT_FOUND
 import org.thechance.service_identity.domain.util.USER_ALREADY_EXISTS
 
 @Single
-class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway {
+class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : IDataBaseGateway {
 
 
     private val addressCollection by lazy {
@@ -201,8 +200,6 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
         ).toList().toManagedEntity()
     }
 
-    override suspend fun createUser(user: CreateUserRequest): Boolean {
-        val userDocument = user.toCollection()
     override suspend fun createUser(saltedHash: SaltedHash, user: CreateUserRequest): Boolean {
 
         val userDocument = UserCollection(
@@ -308,10 +305,6 @@ class DataBaseGatewayImp(dataBaseContainer: DataBaseContainer) : DataBaseGateway
     // endregion: user permission management
 
     companion object {
-        private const val WALLET_COLLECTION = "wallet"
-        private const val ADDRESS_COLLECTION_NAME = "address"
-        private const val PERMISSION_COLLECTION_NAME = "permission"
-        private const val USER_COLLECTION = "user"
         private const val USER_NAME = "username"
         private const val INDEX_NAME = "username_1"
     }
