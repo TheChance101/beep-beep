@@ -10,6 +10,7 @@ import org.thechance.service_notification.data.mappers.toDto
 import org.thechance.service_notification.domain.usecases.IGetNotificationHistoryUseCase
 import org.thechance.service_notification.domain.usecases.IRegisterTokenUseCase
 import org.thechance.service_notification.domain.usecases.ISendNotificationContainerUseCase
+import org.thechance.service_notification.domain.usecases.ISendNotificationToTopicContainer
 import org.thechance.service_notification.endpoints.utils.extractInt
 import org.thechance.service_notification.endpoints.utils.requireNotEmpty
 
@@ -18,6 +19,7 @@ fun Route.notificationRoutes() {
     val registerToken: IRegisterTokenUseCase by inject()
     val getNotificationHistory: IGetNotificationHistoryUseCase by inject()
     val sendNotificationsContainer: ISendNotificationContainerUseCase by inject()
+    val sendNotificationToTopicContainer: ISendNotificationToTopicContainer by inject()
 
     route("notifications") {
 
@@ -40,21 +42,51 @@ fun Route.notificationRoutes() {
             call.respondWithResult(result, successMessage = "Notification sent successfully")
         }
 
-        post("/group/{usersGroup}") {
-            val receivedData = call.receiveParameters()
-            val title = receivedData.requireNotEmpty("title")
-            val body = receivedData.requireNotEmpty("body")
-            val usersGroup = call.parameters.requireNotEmpty("usersGroup")
-            val result = sendNotificationsContainer.sendNotificationToUsersGroup(usersGroup, title, body)
-            call.respondWithResult(result, successMessage = "Notification sent successfully")
-
-        }
-
         get("/history") {
             val limit = call.parameters.extractInt("limit") ?: 10
             val page = call.parameters.extractInt("page") ?: 1
             val notificationsHistory = getNotificationHistory(page, limit)
             call.respond(HttpStatusCode.OK, notificationsHistory.toDto())
+        }
+
+        post("/topic") {
+            val topicName = call.parameters.requireNotEmpty("topic")
+            sendNotificationToTopicContainer.createTopic(topicName)
+            call.respond(HttpStatusCode.Created, "Topic Created Successfully")
+        }
+
+        get("/topic") {
+            val topics = sendNotificationToTopicContainer.getTopics()
+            call.respond(HttpStatusCode.OK, topics)
+        }
+
+        post("/topics") {
+            val topicName = call.parameters.requireNotEmpty("topic")
+            val result = sendNotificationToTopicContainer.isTopicAlreadyExists(topicName)
+            call.respondWithResult(result, successMessage = "Topic is exist")
+        }
+
+        post("/subscribe") {
+            val topicName = call.parameters.requireNotEmpty("topic")
+            val token = call.parameters.requireNotEmpty("token")
+            val result = sendNotificationToTopicContainer.subscribeTokenToTopic(topicName, token)
+            call.respondWithResult(result, successMessage = "Subscribe Successfully")
+        }
+
+        post("/unsubscribe") {
+            val topicName = call.parameters.requireNotEmpty("topic")
+            val token = call.parameters.requireNotEmpty("token")
+            val result = sendNotificationToTopicContainer.unsubscribeTokenFromTopic(topicName, token)
+            call.respondWithResult(result, successMessage = "Unsubscribed Successfully")
+        }
+
+        post("/send/topic/{topicName}") {
+            val topicName = call.parameters.requireNotEmpty("topicName")
+            val receivedData = call.receiveParameters()
+            val title = receivedData.requireNotEmpty("title")
+            val body = receivedData.requireNotEmpty("body")
+            val result = sendNotificationToTopicContainer.sendNotificationToTopic(topicName, title, body)
+            call.respondWithResult(result, successMessage = "Notification sent successfully")
         }
     }
 
