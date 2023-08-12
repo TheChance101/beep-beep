@@ -4,6 +4,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.Dp
@@ -22,15 +26,17 @@ fun RatingBar(
     iconsSize: Dp = 24.dp,
     modifier: Modifier = Modifier,
 ) {
-    if (rating > count) throw Exception("rating is bigger than count")
+    var ratings by remember { mutableStateOf(rating) }
+     ratings = rating
+    if (ratings > count) ratings = 5.0
     Row(modifier = modifier) {
         repeat(
             when {
-                (rating.rem(1) <= 0.9) -> {
-                    floor(rating).toInt()
+                (ratings.rem(1) <= 0.9) -> {
+                    floor(ratings).toInt()
                 }
 
-                else -> ceil(rating).toInt()
+                else -> ceil(ratings).toInt()
             }
         ) {
             Image(
@@ -39,8 +45,8 @@ fun RatingBar(
                 modifier = Modifier.size(iconsSize)
             )
         }
-        if (rating.rem(1) in 0.5..0.9) {
-            println(rating)
+        if (ratings.rem(1) in 0.5..0.9) {
+            println(ratings)
             Image(
                 painter = halfSelectedIcon,
                 contentDescription = null,
@@ -49,11 +55,11 @@ fun RatingBar(
         }
         repeat(
             when {
-                (rating.rem(1) >= 0.5) -> {
-                    (count - ceil(rating)).toInt()
+                (ratings.rem(1) >= 0.5) -> {
+                    (count - ceil(ratings)).toInt()
                 }
 
-                else -> (count - floor(rating)).toInt()
+                else -> (count - floor(ratings)).toInt()
             }
         ) {
             Image(

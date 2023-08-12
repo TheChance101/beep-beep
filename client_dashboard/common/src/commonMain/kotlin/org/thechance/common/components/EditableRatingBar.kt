@@ -1,6 +1,7 @@
 package org.thechance.common.components
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,17 +27,7 @@ fun EditableRatingBar(
 ) {
     val editableRating = remember { mutableStateOf(rating) }
     val position = remember { mutableStateOf(0.0) }
-    Row(
-        modifier
-            .onPointerEvent(PointerEventType.Exit) { editableRating.value = rating }
-            .onPointerEvent(PointerEventType.Move) {
-                position.value = currentEvent.changes[0].position.x.toDouble()
-            }
-            .onPointerEvent(PointerEventType.Move) {
-                editableRating.value = position.value / iconsSize.value.toInt()
-            }
-            .onPointerEvent(PointerEventType.Press) { onClick(editableRating.value) }
-    ) {
+    Row(modifier) {
         RatingBar(
             rating = editableRating.value,
             count = count,
@@ -44,6 +35,16 @@ fun EditableRatingBar(
             notSelectedIcon = notSelectedIcon,
             halfSelectedIcon = halfSelectedIcon,
             iconsSize = iconsSize,
+            modifier = Modifier
+                .onPointerEvent(PointerEventType.Exit) { editableRating.value = rating }
+                .onPointerEvent(PointerEventType.Move) {
+                    position.value = currentEvent.changes[0].position.x.toDouble()
+                }
+                .onPointerEvent(PointerEventType.Move) {
+                    editableRating.value = position.value / iconsSize.value.toInt()
+                }
+                .onPointerEvent(PointerEventType.Press) { onClick(editableRating.value) }
+                .padding(end = 8.dp)
         )
     }
 }
