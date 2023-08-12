@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.toggleable
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.runtime.Composable
@@ -25,9 +25,9 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
-import com.beepbeep.designSystem.ui.theme.Radius
 import com.beepbeep.designSystem.ui.theme.Theme
 import com.beepbeep.designSystem.ui.theme.Theme.colors
+import com.beepbeep.designSystem.ui.theme.Theme.radius
 
 @Composable
 fun BpCheckBox(
@@ -50,9 +50,9 @@ fun BpCheckBox(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(modifier = Modifier.size(size.dp)
-            .background(color = checkboxColor, shape = Radius.small)
+            .background(color = checkboxColor, shape = radius.small)
             .border(
-                width = 1.dp, shape = Radius.small,
+                width = 1.dp, shape = radius.small,
                 color = if (isChecked) colors.primary else colors.contentBorder
             )
             .toggleable(

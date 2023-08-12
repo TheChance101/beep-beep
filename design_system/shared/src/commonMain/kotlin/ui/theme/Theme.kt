@@ -1,7 +1,6 @@
 package com.beepbeep.designSystem.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.Shapes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
@@ -9,16 +8,17 @@ import androidx.compose.runtime.staticCompositionLocalOf
 
 private val localDimens = staticCompositionLocalOf { Dimens() }
 private val localColorScheme = staticCompositionLocalOf { LightBPColors }
-private val localRadius = staticCompositionLocalOf { Radius }
+private val localRadius = staticCompositionLocalOf { Radius() }
 private val localTypography = staticCompositionLocalOf { Typographies() }
 
 @Composable
-fun BeepBeepTheme(
+fun BpTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
 
     val colorScheme = if (useDarkTheme) DarkBpColors else LightBPColors
+
     val typography = Typographies(
         headlineLarge = headlineLarge(),
         headline = headline(),
@@ -33,7 +33,7 @@ fun BeepBeepTheme(
         localColorScheme provides colorScheme,
         localTypography provides typography,
         localDimens provides Dimens(),
-        localRadius provides Radius,
+        localRadius provides Radius(),
     ) {
         content()
     }
@@ -50,7 +50,7 @@ object Theme {
         @ReadOnlyComposable
         get() = localTypography.current
 
-    val radius: Shapes
+    val radius: Radius
         @Composable
         @ReadOnlyComposable
         get() = localRadius.current

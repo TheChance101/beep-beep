@@ -28,7 +28,7 @@ import com.beepbeep.designSystem.ui.composable.BpChip
 import com.beepbeep.designSystem.ui.composable.BpNavigationBar
 import com.beepbeep.designSystem.ui.composable.BpNavigationBarItem
 import com.beepbeep.designSystem.ui.composable.BpTextField
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
+import com.beepbeep.designSystem.ui.theme.BpTheme
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -36,7 +36,7 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun DesignApp() {
-    BeepBeepTheme {
+    BpTheme {
         Column(
             Modifier.fillMaxSize().background(Theme.colors.background),
 //            horizontalAlignment = Alignment.CenterHorizontally,
