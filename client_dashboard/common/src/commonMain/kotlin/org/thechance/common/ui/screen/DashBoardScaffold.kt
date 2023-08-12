@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -33,6 +34,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
@@ -45,6 +47,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.beepbeep.designSystem.ui.composable.BeepBeepToggleButton
+import com.beepbeep.designSystem.ui.theme.surfaceTintLight
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -81,28 +84,28 @@ fun DashBoardScaffold() {
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Image(painterResource("ic_overview_empty.svg"), contentDescription = null)
+                        Icon(painterResource("ic_overview_empty.svg"), contentDescription = null)
                         Text("Overview")
                     }
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Image(painterResource("ic_taxi_empty.svg"), contentDescription = null)
+                        Icon(painterResource("ic_taxi_empty.xml"), contentDescription = null, tint = Color(0xff1F0000))
                         Text("Taxis")
                     }
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Image(painterResource("ic_resaurant_empty.svg"), contentDescription = null)
+                        Icon(painterResource("ic_resaurant_empty.svg"), contentDescription = null)
                         Text("Resaurants")
                     }
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Image(painterResource("ic_users_empty.svg"), contentDescription = null)
+                        Icon(painterResource("ic_users_empty.svg"), contentDescription = null)
                         Text("Users")
                     }
                 }
