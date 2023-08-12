@@ -33,12 +33,12 @@ fun LoginContent() {
         Modifier.fillMaxSize().padding(top = 40.dp, start = 40.dp, bottom = 40.dp),
         horizontalArrangement = Arrangement.Center
     ) {
-        Box(Modifier.weight(.7f)) {
+        Box(Modifier.weight(1f)) {
             Image(
                 painter = painterResource("login_image.png"),
                 contentDescription = null,
                 alignment = Alignment.CenterStart,
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.Fit,
                 modifier = Modifier.fillMaxSize()
             )
             Image(
