@@ -1,7 +1,9 @@
 package org.thechance.common.ui.login
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -32,51 +34,53 @@ fun LoginContent() {
         Modifier.fillMaxSize().padding(top = 40.dp, start = 40.dp, bottom = 40.dp),
         horizontalArrangement = Arrangement.Center
     ) {
-        Image(
-            painter = painterResource("login_image.png"),
-            contentDescription = null,
-            alignment = Alignment.CenterStart,
-            contentScale = ContentScale.Fit,
-        )
-        Spacer(Modifier.weight(1f))
-        Column(
-            Modifier.fillMaxHeight().padding(horizontal = 150.dp).width(350.dp),
-            verticalArrangement = Arrangement.Center,
-        ) {
-            Text("Login", fontSize = 24.sp, color = Color.Black.copy(.87f))
-            Text(
-                "Use admin account to login",
-                fontSize = 16.sp,
-                color = Color.Black.copy(.38f),
-                modifier = Modifier.padding(top = 8.dp)
+        Box(Modifier.weight(.7f)){
+            Image(
+                painter = painterResource("login_image.png"),
+                contentDescription = null,
+                alignment = Alignment.CenterStart,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
             )
-            BeepBeepTextField(
-                onValueChange = { },
-                text = "",
-                label = "Username",
-                modifier = Modifier.padding(top = 16.dp)
-            )
-            BeepBeepTextField(
-                onValueChange = { },
-                text = "",
-                label = "Password",
-                keyboardType = KeyboardType.Password,
-                modifier = Modifier.padding(top = 16.dp)
-            )
-            BeepBeepCheckBoxDraft(
-                text = "Keep me logged in",
-                isChecked = false,
-                onCheck = {},
-                modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
-            )
-            BeepBeepButton(
-                onClick = {},
-                modifier = Modifier.padding(top = 24.dp).fillMaxWidth()
+        }
+        Box(Modifier.weight(1f), contentAlignment = Alignment.Center){
+            Column(
+                Modifier.fillMaxHeight().width(350.dp),
+                verticalArrangement = Arrangement.Center,
             ) {
-                Text("Login")
+                Text("Login", fontSize = 24.sp, color = Color.Black.copy(.87f))
+                Text(
+                    "Use admin account to login",
+                    fontSize = 16.sp,
+                    color = Color.Black.copy(.38f),
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+                BeepBeepTextField(
+                    onValueChange = { },
+                    text = "",
+                    label = "Username",
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+                BeepBeepTextField(
+                    onValueChange = { },
+                    text = "",
+                    label = "Password",
+                    keyboardType = KeyboardType.Password,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+                BeepBeepCheckBoxDraft(
+                    text = "Keep me logged in",
+                    isChecked = false,
+                    onCheck = {},
+                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
+                )
+                BeepBeepButton(
+                    onClick = {},
+                    modifier = Modifier.padding(top = 24.dp).fillMaxWidth()
+                ) {
+                    Text("Login")
+                }
             }
         }
-
-        Spacer(Modifier.weight(1f))
     }
 }
