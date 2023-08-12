@@ -8,6 +8,7 @@ data class DetailedUserDto(
     val fullName: String,
     val username: String,
     val password: String,
+    val email: String,
     val wallet: WalletDto,
     val addresses: List<AddressDto> = emptyList(),
     val permissions: List<PermissionDto> = emptyList()

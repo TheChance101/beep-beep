@@ -1,11 +1,9 @@
 package org.thechance.common
 
 import androidx.compose.runtime.Composable
-import org.thechance.common.ui.login.LoginContent
-
+import org.thechance.common.ui.screen.DashBoardScaffold
 
 @Composable
 fun App() {
-    val platformName = getPlatformName()
-    LoginContent()
+    DashBoardScaffold()
 }

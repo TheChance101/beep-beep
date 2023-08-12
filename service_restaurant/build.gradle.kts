@@ -1,6 +1,3 @@
-import groovy.xml.dom.DOMCategory.attributes
-import org.jetbrains.kotlin.com.intellij.openapi.vfs.StandardFileSystems.jar
-
 val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
@@ -50,10 +47,8 @@ dependencies {
     implementation("io.insert-koin:koin-ktor:3.4.1")
     implementation("io.insert-koin:koin-core:3.4.2")
 
-    //Koin annotations
-    ksp("io.insert-koin:koin-ksp-compiler:$koinKsp")
-    implementation("io.insert-koin:koin-annotations:$koinKsp")
-    implementation("com.google.devtools.ksp:symbol-processing-api:1.8.10-1.0.9")
+    testImplementation("junit:junit:4.13.1")
+    implementation("org.junit.jupiter:junit-jupiter:5.8.1")
 
     //validation
     implementation("io.ktor:ktor-server-status-pages:$ktor_version")
