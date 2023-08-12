@@ -6,8 +6,7 @@ import org.thechance.service_taxi.data.collection.LocationCollection
 import org.thechance.service_taxi.data.collection.TripCollection
 import org.thechance.service_taxi.domain.entity.Location
 import org.thechance.service_taxi.domain.entity.Trip
-import org.thechance.service_taxi.domain.entity.TripUpdateRequest
-import org.thechance.service_taxi.domain.util.CantBeNullException
+import org.thechance.service_taxi.domain.exceptions.CantBeNullException
 
 fun TripDto.toEntity(): Trip {
     return Trip(
@@ -83,19 +82,5 @@ fun Trip.toCollection(): TripCollection {
         price = price,
         startDate = startDate,
         endDate = endDate
-    )
-}
-
-fun TripUpdateRequest.toCollection(): TripCollection {
-    return TripCollection(
-        taxiId = taxiId?.let { ObjectId(it) },
-        driverId = driverId?.let { ObjectId(it) },
-        clientId = clientId?.let { ObjectId(it) },
-        startPoint = startPoint?.toCollection(),
-        destination = destination?.toCollection(),
-        rate = rate,
-        price = price,
-        startDate = startDate,
-        endDate = endDate,
     )
 }

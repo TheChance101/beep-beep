@@ -1,20 +1,17 @@
 package org.thechance.service_taxi.domain.usecase
 
 import org.thechance.service_taxi.domain.entity.Trip
+import org.thechance.service_taxi.domain.exceptions.ResourceNotFoundException
 import org.thechance.service_taxi.domain.gateway.DataBaseGateway
-import org.thechance.service_taxi.domain.util.ResourceNotFoundException
-import org.thechance.service_taxi.domain.util.Validations
 
 interface IManageTripsUseCase {
-    suspend fun createTrip(trip: Trip): Boolean
-    suspend fun getTrips(page: Int, limit: Int): List<Trip>
-    suspend fun deleteTrip(tripId: String): Boolean
-    suspend fun getTripById(tripId: String): Trip
+    suspend fun getTrips(page: Int, limit: Int): List<Trip> // admin
+    suspend fun deleteTrip(tripId: String): Boolean // admin
+    suspend fun getTripById(tripId: String): Trip // admin
 }
 
 class ManageTripsUseCase(
-    private val dataBaseGateway: DataBaseGateway,
-    private val validations: Validations
+    private val dataBaseGateway: DataBaseGateway
 ) : IManageTripsUseCase {
     override suspend fun getTrips(page: Int, limit: Int): List<Trip> {
         return dataBaseGateway.getAllTrips(page, limit)
@@ -23,11 +20,6 @@ class ManageTripsUseCase(
     override suspend fun deleteTrip(tripId: String): Boolean {
         dataBaseGateway.getTripById(tripId) ?: throw ResourceNotFoundException
         return dataBaseGateway.deleteTrip(tripId)
-    }
-
-    override suspend fun createTrip(trip: Trip): Boolean {
-        validations.validationTrip(trip)
-        return dataBaseGateway.addTrip(trip)
     }
 
     override suspend fun getTripById(tripId: String): Trip {

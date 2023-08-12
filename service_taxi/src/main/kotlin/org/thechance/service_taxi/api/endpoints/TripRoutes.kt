@@ -14,14 +14,15 @@ import org.koin.ktor.ext.inject
 import org.thechance.service_taxi.api.dto.trip.TripDto
 import org.thechance.service_taxi.api.dto.trip.toDto
 import org.thechance.service_taxi.api.dto.trip.toEntity
-import org.thechance.service_taxi.domain.usecase.IDiscoverTripsUseCase
+import org.thechance.service_taxi.domain.exceptions.MissingParameterException
+import org.thechance.service_taxi.domain.usecase.IClientTripsManagementUseCase
+import org.thechance.service_taxi.domain.usecase.IDriverTripsManagementUseCase
 import org.thechance.service_taxi.domain.usecase.IManageTripsUseCase
-import org.thechance.service_taxi.domain.util.MissingParameterException
 
 fun Route.tripRoutes() {
     val manageTripsUseCase: IManageTripsUseCase by inject()
-    val discoverTripsUseCase: IDiscoverTripsUseCase by inject()
-
+    val driverTripsManagementUseCase: IDriverTripsManagementUseCase by inject()
+    val clientTripsManagementUseCase: IClientTripsManagementUseCase by inject()
 
     route("/trip") {
         get {
@@ -41,7 +42,7 @@ fun Route.tripRoutes() {
             val id = call.parameters["driverId"] ?: throw MissingParameterException
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 20
-            val result = discoverTripsUseCase.getTripsByDriverId(id, page, limit)
+            val result = driverTripsManagementUseCase.getTripsByDriverId(id, page, limit)
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
@@ -49,20 +50,20 @@ fun Route.tripRoutes() {
             val id = call.parameters["clientId"] ?: throw MissingParameterException
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 20
-            val result = discoverTripsUseCase.getTripsByClientId(id, page, limit)
+            val result = clientTripsManagementUseCase.getTripsByClientId(id, page, limit)
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
         post {
             val tripDto = call.receive<TripDto>()
-            manageTripsUseCase.createTrip(tripDto.toEntity())
+            clientTripsManagementUseCase.createTrip(tripDto.toEntity())
             call.respond(HttpStatusCode.Created, "added")
         }
 
         put("/{tripId}/rate") {
             val tripId = call.parameters["tripId"] ?: throw MissingParameterException
             val rate = call.parameters["rate"]?.toDouble() ?: throw MissingParameterException
-            discoverTripsUseCase.rateTrip(tripId, rate)
+            clientTripsManagementUseCase.rateTrip(tripId, rate)
             call.respond(HttpStatusCode.OK, "updated")
         }
 
@@ -70,14 +71,14 @@ fun Route.tripRoutes() {
             val tripId = call.parameters["tripId"] ?: throw MissingParameterException
             val driverId = call.parameters["driverId"] ?: throw MissingParameterException
             val taxiId = call.parameters["taxiId"] ?: throw MissingParameterException
-            discoverTripsUseCase.approveTrip(driverId, taxiId, tripId)
+            driverTripsManagementUseCase.approveTrip(driverId, taxiId, tripId)
             call.respond(HttpStatusCode.OK, "updated")
         }
 
         put("/{tripId}/finish") {
             val tripId = call.parameters["tripId"] ?: throw MissingParameterException
             val driverId = call.parameters["driverId"] ?: throw MissingParameterException
-            discoverTripsUseCase.finishTrip(driverId, tripId)
+            driverTripsManagementUseCase.finishTrip(driverId, tripId)
             call.respond(HttpStatusCode.OK, "updated")
         }
 

@@ -9,7 +9,7 @@ import org.bson.types.ObjectId
 @Serializable
 data class TaxiCollection(
     val plateNumber: String? = null,
-    val color: String? = null,
+    val color: Int? = null,
     val type: String? = null,
     @Contextual
     val driverId: ObjectId? = null,

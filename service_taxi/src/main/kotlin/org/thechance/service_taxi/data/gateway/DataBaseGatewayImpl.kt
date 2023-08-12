@@ -1,7 +1,9 @@
 package org.thechance.service_taxi.data.gateway
 
-import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Updates
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.bson.types.ObjectId
 import org.litote.kmongo.and
 import org.litote.kmongo.eq
@@ -15,14 +17,10 @@ import org.thechance.service_taxi.api.dto.trip.toEntity
 import org.thechance.service_taxi.data.DataBaseContainer
 import org.thechance.service_taxi.data.collection.TaxiCollection
 import org.thechance.service_taxi.data.collection.TripCollection
-import org.thechance.service_taxi.data.utils.isNotNull
 import org.thechance.service_taxi.data.utils.isSuccessfullyUpdated
 import org.thechance.service_taxi.data.utils.paginate
-import org.thechance.service_taxi.data.utils.updateNotNullProperties
 import org.thechance.service_taxi.domain.entity.Taxi
-import org.thechance.service_taxi.domain.entity.TaxiUpdateRequest
 import org.thechance.service_taxi.domain.entity.Trip
-import org.thechance.service_taxi.domain.entity.TripUpdateRequest
 import org.thechance.service_taxi.domain.gateway.DataBaseGateway
 
 class DataBaseGatewayImpl(private val container: DataBaseContainer) : DataBaseGateway {
@@ -47,18 +45,6 @@ class DataBaseGatewayImpl(private val container: DataBaseContainer) : DataBaseGa
             update = set(TaxiCollection::isDeleted setTo true),
             updateOnlyNotNullProperties = true
         ).isSuccessfullyUpdated()
-    }
-
-    override suspend fun updateTaxi(taxi: TaxiUpdateRequest): Boolean {
-        return container.taxiCollection.findOneAndUpdate(
-            filter = and(
-                Filters.ne(TaxiCollection::isDeleted.name, true),
-                Filters.ne(TaxiCollection::id.name, ObjectId(taxi.id)),
-            ),
-            update = updateNotNullProperties(
-                taxi.toCollection(),
-                filter = { it != "isDeleted" && it != "id"})
-        ).isNotNull()
     }
     //endregion
 
@@ -110,16 +96,47 @@ class DataBaseGatewayImpl(private val container: DataBaseContainer) : DataBaseGa
         ).isSuccessfullyUpdated()
     }
 
-    override suspend fun updateTrip(trip: TripUpdateRequest): Boolean {
+    override suspend fun approveTrip(tripId: String, taxiId: String, driverId: String): Trip? {
         return container.tripCollection.findOneAndUpdate(
             filter = and(
-                Filters.ne(TripCollection::isDeleted.name, true),
-                Filters.ne(TripCollection::id.name, ObjectId(trip.id)),
+                TripCollection::isDeleted ne true,
+                TripCollection::id eq ObjectId(tripId),
             ),
-            update = updateNotNullProperties(
-                trip.toCollection(),
-                filter = { it != "isDeleted" && it != "id"})
-        ).isNotNull()
+            update = Updates.combine(
+                Updates.set(TripCollection::taxiId.name, ObjectId(taxiId)),
+                Updates.set(TripCollection::driverId.name, ObjectId(driverId)),
+                Updates.set(
+                    TripCollection::startDate.name, Clock.System.now().toLocalDateTime(
+                        TimeZone.currentSystemDefault()
+                    )
+                )
+            )
+        )?.toEntity()
+    }
+
+    override suspend fun finishTrip(tripId: String, driverId: String): Trip? {
+        return container.tripCollection.findOneAndUpdate(
+            filter = and(
+                TripCollection::isDeleted ne true,
+                TripCollection::id eq ObjectId(tripId),
+                TripCollection::driverId eq ObjectId(driverId),
+            ),
+            update = Updates.set(
+                TripCollection::endDate.name, Clock.System.now().toLocalDateTime(
+                    TimeZone.currentSystemDefault()
+                )
+            )
+        )?.toEntity()
+    }
+
+    override suspend fun rateTrip(tripId: String, rate: Double): Trip? {
+        return container.tripCollection.findOneAndUpdate(
+            filter = and(
+                TripCollection::isDeleted ne true,
+                TripCollection::id eq ObjectId(tripId),
+            ),
+            update = Updates.set(TripCollection::rate.name, rate)
+        )?.toEntity()
     }
     //endregion
 }

@@ -1,4 +1,4 @@
-package org.thechance.service_taxi.domain.util
+package org.thechance.service_taxi.domain.exceptions
 
 open class TaxiException : Throwable()
 object InvalidIdException : TaxiException()

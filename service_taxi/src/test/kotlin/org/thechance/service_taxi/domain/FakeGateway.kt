@@ -1,10 +1,12 @@
 package org.thechance.service_taxi.domain
 
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import org.thechance.service_taxi.domain.entity.Color
 import org.thechance.service_taxi.domain.entity.Location
 import org.thechance.service_taxi.domain.entity.Taxi
-import org.thechance.service_taxi.domain.entity.TaxiUpdateRequest
 import org.thechance.service_taxi.domain.entity.Trip
-import org.thechance.service_taxi.domain.entity.TripUpdateRequest
 import org.thechance.service_taxi.domain.gateway.DataBaseGateway
 
 
@@ -13,7 +15,7 @@ object FakeGateway : DataBaseGateway {
         Taxi(
             id = "64d111a60f294c4b8f718973",
             plateNumber = "1234 ABC",
-            color = "Blue",
+            color = Color.BLACK,
             type = "Sedan",
             driverId = "123456789123456789123471",
             isAvailable = true,
@@ -48,23 +50,6 @@ object FakeGateway : DataBaseGateway {
         return getTaxiById(taxiId)?.let { taxes.remove(it); true } ?: false
     }
 
-    override suspend fun updateTaxi(taxi: TaxiUpdateRequest): Boolean {
-        val target = taxes.find { it.id == taxi.id } ?: return false
-        val position = taxes.indexOf(target)
-        taxes.removeAt(position)
-        taxes.add(
-            position, target.copy(
-                plateNumber = taxi.plateNumber ?: target.plateNumber,
-                color = taxi.color ?: target.color,
-                type = taxi.type ?: target.type,
-                driverId = taxi.driverId ?: target.driverId,
-                isAvailable = taxi.isAvailable ?: target.isAvailable,
-                seats = taxi.seats ?: target.seats,
-            )
-        )
-        return true
-    }
-
     override suspend fun addTrip(trip: Trip): Boolean {
         trips.add(trip); return true
     }
@@ -97,33 +82,55 @@ object FakeGateway : DataBaseGateway {
         getTripById(tripId)?.let { trips.remove(it); return true }; return false
     }
 
-    override suspend fun updateTrip(trip: TripUpdateRequest): Boolean {
-        val target = trips.find { it.id == trip.id } ?: return false
+    override suspend fun approveTrip(tripId: String, taxiId: String, driverId: String): Trip? {
+        val target = trips.find { it.id == tripId } ?: return null
         val position = trips.indexOf(target)
         trips.removeAt(position)
         trips.add(
             position,
             target.copy(
-                taxiId = trip.taxiId ?: target.taxiId,
-                driverId = trip.driverId ?: target.driverId,
-                clientId = trip.clientId ?: target.clientId,
-                startPoint = trip.startPoint ?: target.startPoint,
-                destination = trip.destination ?: target.destination,
-                rate = trip.rate ?: target.rate,
-                price = trip.price ?: target.price,
-                startDate = trip.startDate ?: target.startDate,
-                endDate = trip.endDate ?: target.endDate,
+                taxiId = taxiId,
+                driverId = driverId,
+                startDate = Clock.System.now().toLocalDateTime(
+                    TimeZone.currentSystemDefault()
+                )
             )
         )
-        return true
+        return trips[position]
     }
 
-    fun reset(){
+    override suspend fun finishTrip(tripId: String, driverId: String): Trip? {
+        val target = trips.find { it.id == tripId } ?: return null
+        val position = trips.indexOf(target)
+        trips.removeAt(position)
+        trips.add(
+            position,
+            target.copy(
+                endDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+            )
+        )
+        return trips[position]
+    }
+
+    override suspend fun rateTrip(tripId: String, rate: Double): Trip? {
+        val target = trips.find { it.id == tripId } ?: return null
+        val position = trips.indexOf(target)
+        trips.removeAt(position)
+        trips.add(
+            position,
+            target.copy(
+                rate = rate
+            )
+        )
+        return trips[position]
+    }
+
+    fun reset() {
         taxes = mutableListOf(
             Taxi(
                 id = "64d111a60f294c4b8f718973",
                 plateNumber = "1234 ABC",
-                color = "Blue",
+                color = Color.BLACK,
                 type = "Sedan",
                 driverId = "123456789123456789123471",
                 isAvailable = true,

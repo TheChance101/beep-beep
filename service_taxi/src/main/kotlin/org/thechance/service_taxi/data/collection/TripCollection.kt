@@ -29,8 +29,3 @@ data class TripCollection(
     val isDeleted: Boolean = false
 }
 
-@Serializable
-data class LocationCollection(
-    val latitude: Double,
-    val longitude: Double,
-)
