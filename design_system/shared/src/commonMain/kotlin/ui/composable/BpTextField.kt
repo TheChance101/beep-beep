@@ -56,7 +56,7 @@ fun BpTextField(
             text = label,
             modifier = Modifier.padding(bottom = dimens.space8),
             style = typography.titleLarge,
-            color = colors.primary
+            color = colors.contentPrimary
         )
 
         OutlinedTextField(
@@ -64,7 +64,7 @@ fun BpTextField(
             value = text,
             onValueChange = onValueChange,
             shape = shapeRadius,
-            textStyle = typography.bodyLarge.copy(colors.onPrimary),
+            textStyle = typography.bodyLarge.copy(colors.contentPrimary),
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
             trailingIcon = {
@@ -80,7 +80,7 @@ fun BpTextField(
                 focusedBorderColor = colors.contentTertiary.copy(alpha = 0.2f),
                 errorBorderColor = colors.primary.copy(alpha = 0.5f),
                 errorCursorColor = colors.primary,
-                cursorColor = colors.contentBorder,
+                cursorColor = colors.contentTertiary,
             ),
         )
 
