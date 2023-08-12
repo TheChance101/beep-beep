@@ -17,10 +17,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
-import com.beepbeep.designSystem.ui.theme.Theme.dimens
 
 @Composable
-fun BeepBeepCircleImage(
+fun BpCircleImage(
     painter: Painter,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,

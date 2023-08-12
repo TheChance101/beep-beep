@@ -35,7 +35,7 @@ import com.beepbeep.designSystem.ui.theme.Theme.typography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BeepBeepTextField(
+fun BpTextField(
     label: String,
     text: String,
     onValueChange: (String) -> Unit,
@@ -72,7 +72,7 @@ fun BeepBeepTextField(
                     showPassword = !showPassword
                 }
             },
-            visualTransformation = BeepBeepVisualTransformation(keyboardType, showPassword),
+            visualTransformation = BpVisualTransformation(keyboardType, showPassword),
             isError = isError,
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 containerColor = ContainerColor(isError, correctValidation),
@@ -107,7 +107,7 @@ private fun ContainerColor(isError: Boolean, correctValidation: Boolean): Color 
 }
 
 @Composable
-fun TrailingIcon(
+private fun TrailingIcon(
     keyboardType: KeyboardType,
     isError: Boolean,
     showPassword: Boolean,
@@ -125,7 +125,7 @@ fun TrailingIcon(
 }
 
 @Composable
-private fun BeepBeepVisualTransformation(
+private fun BpVisualTransformation(
     keyboardType: KeyboardType,
     showPassword: Boolean
 ): VisualTransformation {

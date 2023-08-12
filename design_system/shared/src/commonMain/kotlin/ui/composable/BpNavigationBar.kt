@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 
 @Composable
-fun BeepBeepNavigationBar(
+fun BpNavigationBar(
     modifier: Modifier = Modifier,
     navigationBarHeight: Dp = 64.dp,
     backgroundColor: Color = Theme.colors.surface,
@@ -61,7 +61,7 @@ fun BeepBeepNavigationBar(
 }
 
 @Composable
-fun RowScope.BeepBeepNavigationBarItem(
+fun RowScope.BpNavigationBarItem(
     selected: Boolean,
     onClick: () -> Unit,
     icon: @Composable (tint: Color) -> Unit,

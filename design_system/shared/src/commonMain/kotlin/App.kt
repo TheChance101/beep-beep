@@ -23,11 +23,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.beepbeep.designSystem.ui.composable.BeepBeepButton
-import com.beepbeep.designSystem.ui.composable.BeepBeepChip
-import com.beepbeep.designSystem.ui.composable.BeepBeepNavigationBar
-import com.beepbeep.designSystem.ui.composable.BeepBeepNavigationBarItem
-import com.beepbeep.designSystem.ui.composable.BeepBeepTextField
+import com.beepbeep.designSystem.ui.composable.BpButton
+import com.beepbeep.designSystem.ui.composable.BpChip
+import com.beepbeep.designSystem.ui.composable.BpNavigationBar
+import com.beepbeep.designSystem.ui.composable.BpNavigationBarItem
+import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -63,19 +63,19 @@ fun PreviewChips() {
         var selected by remember { mutableStateOf(false) }
         var selected1 by remember { mutableStateOf(true) }
         var selected2 by remember { mutableStateOf(true) }
-        BeepBeepChip(
+        BpChip(
             label = "Click me",
             onClick = { isSelected -> selected = isSelected },
             isSelected = selected,
             painter = painterResource("sort.xml")
         )
-        BeepBeepChip(
+        BpChip(
             label = "Click me",
             onClick = { isSelected -> selected1 = isSelected },
             isSelected = selected1,
             painter = painterResource("sun.xml")
         )
-        BeepBeepChip(
+        BpChip(
             label = "Click me",
             onClick = { isSelected -> selected2 = isSelected },
             isSelected = selected2,
@@ -95,24 +95,24 @@ fun PreviewTextField() {
         var text3 by rememberSaveable { mutableStateOf("") }
         var text4 by rememberSaveable { mutableStateOf("Ahmed Nasser") }
 
-        BeepBeepTextField(
+        BpTextField(
             onValueChange = { text3 = it },
             text = text3,
             label = "Email",
         )
-        BeepBeepTextField(
+        BpTextField(
             onValueChange = { text1 = it },
             text = text1,
             label = "Password",
             keyboardType = KeyboardType.Password
         )
-        BeepBeepTextField(
+        BpTextField(
             onValueChange = { text2 = it },
             text = text2,
             label = "Username",
             errorMessage = "incorrect username or password",
         )
-        BeepBeepTextField(
+        BpTextField(
             onValueChange = { text4 = it },
             text = text4,
             label = "FullName",
@@ -127,7 +127,7 @@ fun EnabledButtonsPreview() {
     Column(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
     ) {
-        BeepBeepButton(
+        BpButton(
             enabled = true,
             onClick = { },
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
@@ -152,7 +152,7 @@ fun DisabledButtonsPreview() {
     Column(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
     ) {
-        BeepBeepButton(
+        BpButton(
             enabled = false,
             onClick = { },
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
@@ -176,9 +176,9 @@ fun BottomNavigationBarPreview() {
     var selectedItem by remember { mutableStateOf(0) }
     val items = listOf("Overview", "Taxis", "Restaurants", "Users")
 
-    BeepBeepNavigationBar {
+    BpNavigationBar {
         items.forEachIndexed { index, item ->
-            BeepBeepNavigationBarItem(
+            BpNavigationBarItem(
                 icon = { tint ->
                     Icon(Icons.Filled.Favorite, contentDescription = item, tint = tint)
                 },

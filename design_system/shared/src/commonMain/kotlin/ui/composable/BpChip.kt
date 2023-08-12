@@ -17,7 +17,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BeepBeepChip(
+fun BpChip(
     label: String,
     isSelected: Boolean,
     onClick: (Boolean) -> Unit,
