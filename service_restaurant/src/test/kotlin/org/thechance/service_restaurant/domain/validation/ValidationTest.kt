@@ -44,8 +44,8 @@ class ValidationTest {
     @Test
     fun `should return false if id is too short or too long`() {
         // given an invalid id that
-        val invalidIdToShort = "3edf2fc8-6983-484f-a35c-8190f44a08c6"  //less than 24 characters
-        val invalidIdToLong = "3edf2fc8-6983-484f-a35c-8190f44a08c6" // more than 24 characters
+        val invalidIdToShort = "3edf2fc8-6983-484f-a35c-8f44a08c6"  //less than 24 characters
+        val invalidIdToLong = "3edf2fc8-6983-484f-a35c-8190f4hfff4a08c6" // more than 24 characters
 
         // when result is false
         val resultShortId = validation.isValidId(invalidIdToShort)
