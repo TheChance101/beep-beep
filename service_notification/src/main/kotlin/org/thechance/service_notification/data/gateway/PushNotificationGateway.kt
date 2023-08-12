@@ -7,15 +7,14 @@ import org.thechance.service_notification.domain.gateway.IPushNotificationGatewa
 
 @Single
 class PushNotificationGateway(private val firebaseMessaging: FirebaseMessaging) : IPushNotificationGateway {
-    override suspend fun sendNotificationToUserByTokens(userTokens: List<String>, title: String, body: String) {
-        for (token in userTokens) {
-            val message = Message.builder()
+    override suspend fun sendNotification(userTokens: List<String>, title: String, body: String): Boolean {
+        return firebaseMessaging.sendAll(userTokens.map {
+            Message.builder()
                 .putData(TITLE, title)
                 .putData(BODY, body)
-                .setToken(token)
+                .setToken(it)
                 .build()
-            firebaseMessaging.send(message)
-        }
+        }).failureCount == 0
     }
 
     companion object {
