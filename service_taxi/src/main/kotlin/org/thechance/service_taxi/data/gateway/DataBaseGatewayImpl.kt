@@ -111,7 +111,7 @@ class DataBaseGatewayImpl(private val container: DataBaseContainer) : DataBaseGa
                 Updates.set(
                     TripCollection::startDate.name, Clock.System.now().toLocalDateTime(
                         TimeZone.currentSystemDefault()
-                    )
+                    ).toString()
                 )
             )
         )?.toEntity()
@@ -127,7 +127,7 @@ class DataBaseGatewayImpl(private val container: DataBaseContainer) : DataBaseGa
             update = Updates.set(
                 TripCollection::endDate.name, Clock.System.now().toLocalDateTime(
                     TimeZone.currentSystemDefault()
-                )
+                ).toString()
             )
         )?.toEntity()
     }

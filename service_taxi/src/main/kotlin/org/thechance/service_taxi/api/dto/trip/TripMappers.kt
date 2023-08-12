@@ -64,8 +64,8 @@ fun TripCollection.toEntity(): Trip {
         destination = destination?.toEntity(),
         rate = rate,
         price = price ?: 0.0,
-        startDate = startDate,
-        endDate = endDate
+        startDate = startDate?.let { LocalDateTime.parse(it) },
+        endDate = endDate?.let { LocalDateTime.parse(it) }
     )
 }
 
@@ -80,7 +80,7 @@ fun Trip.toCollection(): TripCollection {
         destination = destination?.toCollection(),
         rate = rate,
         price = price,
-        startDate = startDate,
-        endDate = endDate
+        startDate = startDate?.toString(),
+        endDate = endDate?.toString()
     )
 }

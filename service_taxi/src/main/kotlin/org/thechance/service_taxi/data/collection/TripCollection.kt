@@ -1,6 +1,5 @@
 package org.thechance.service_taxi.data.collection
 
-import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -19,8 +18,8 @@ data class TripCollection(
     val destination: LocationCollection? = null,
     val rate: Double? = null,
     val price: Double?,
-    val startDate: LocalDateTime? = null,
-    val endDate: LocalDateTime? = null,
+    val startDate: String? = null,
+    val endDate: String? = null,
 ) {
     @SerialName("_id")
     @BsonId
