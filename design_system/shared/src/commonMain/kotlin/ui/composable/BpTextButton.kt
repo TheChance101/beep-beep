@@ -25,26 +25,14 @@ fun BpTextButton(
     height: Int = 32,
 ) {
     Surface(
-        modifier = modifier
-            .height(height.dp)
-            .border(
-                width = 1.dp, color = colors.contentBorder,
-                shape = radius.small
-            )
-            .padding(
-                horizontal = dimens.space16,
-                vertical = dimens.space8
-            )
+        modifier = modifier.height(height.dp).border(width = 1.dp, color = colors.contentBorder, shape = radius.small
+            ).padding(horizontal = dimens.space16, vertical = dimens.space8)
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }
             ) { onClick() },
         color = Color.Transparent,
     ) {
-        Text(
-            text = text,
-            style = typography.body,
-            color = colors.onPrimary,
-        )
+        Text(text = text, style = typography.body, color = colors.onPrimary,)
     }
 }
