@@ -46,22 +46,40 @@ fun BpToggleButton(
         },
         animationSpec = tween(500)
     )
-    val alignment = remember { derivedStateOf { BiasAlignment(horizontalBias = horizontalBias, verticalBias = 0f) } }
-    Box(Modifier.border(width = 1.dp, color = colors.contentBorder, shape = radius.small).width(64.dp)
-        .height(32.dp).background(color = colors.background, shape = radius.small)
-        .padding(dimens.space2).clickable(indication = null, interactionSource = remember { MutableInteractionSource() })
-        { onToggle() }) {
+    val alignment = remember { derivedStateOf {
+        BiasAlignment(horizontalBias = horizontalBias, verticalBias = 0f)
+    } }
+    Box(
+        Modifier
+            .border(width = 1.dp, color = colors.contentBorder, shape = radius.small)
+            .width(64.dp)
+            .height(32.dp)
+            .background(color = colors.background, shape = radius.small)
+            .padding(dimens.space2)
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() })
+            { onToggle() }) {
 
-        Card(modifier = Modifier.width(28.dp).height(28.dp).padding(dimens.space2).align(alignment.value),
-            shape = radius.small, colors = CardDefaults.cardColors(containerColor = colors.primary),
+        Card(
+            modifier = Modifier
+                .width(28.dp)
+                .height(28.dp)
+                .padding(dimens.space2)
+                .align(alignment.value),
+            shape = radius.small,
+            colors = CardDefaults.cardColors(containerColor = colors.primary),
             elevation = CardDefaults.elevatedCardElevation(0.dp),) {}
-        Row(horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxSize().padding(horizontal = dimens.space2)) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxSize().padding(horizontal = dimens.space2)
+        ) {
             Icon(
                 painter = painterResource("sun.xml"),
                 contentDescription = "", tint = if (isDark) colors.contentTertiary else Color.White,
                 modifier = Modifier.size(24.dp).padding(dimens.space2)
             )
-
             Icon(
                 painter = painterResource("moon_stars.xml"),
                 contentDescription = "", tint = if (isDark) Color.White else colors.contentTertiary,
