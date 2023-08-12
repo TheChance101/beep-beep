@@ -4,11 +4,11 @@ import org.junit.Assert.*
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.thechance.service_identity.domain.entity.RequestValidationException
-import org.thechance.service_identity.domain.usecases.util.AMOUNT_MUST_BE_POSITIVE
+import org.thechance.service_identity.domain.util.AMOUNT_MUST_BE_POSITIVE
 
-class ValidateWalletBalanceUseCaseTest {
+class WalletBalanceValidationUseCaseTest {
 
-    private val validateWalletBalanceUseCase = ValidateWalletBalanceUseCase()
+    private val validateWalletBalanceUseCase = WalletBalanceValidationUseCase()
 
     @Test
     fun `should throw RequestValidationException with AMOUNT_MUST_BE_POSITIVE when balance is negative`() {

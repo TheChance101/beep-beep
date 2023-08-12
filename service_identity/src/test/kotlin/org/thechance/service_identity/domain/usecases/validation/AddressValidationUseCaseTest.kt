@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 
 class AddressValidationUseCaseTest {
 
-    private val addressValidationUseCase = ValidateAddressUseCase()
+    private val addressValidationUseCase = AddressValidationUseCase()
 
     @Test
     fun `should return true when location is accepted`() {

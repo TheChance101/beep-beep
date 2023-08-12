@@ -5,7 +5,7 @@ import org.thechance.service_identity.domain.entity.RequestValidationException
 import org.thechance.service_identity.domain.util.AMOUNT_MUST_BE_NUMERIC
 import org.thechance.service_identity.domain.util.AMOUNT_MUST_BE_POSITIVE
 
-interface IValidateWalletBalanceUseCase {
+interface IWalletBalanceValidationUseCase {
 
     fun validateWalletBalance(amount: Double)
 
@@ -16,7 +16,7 @@ interface IValidateWalletBalanceUseCase {
 }
 
 @Single
-class ValidateWalletBalanceUseCase : IValidateWalletBalanceUseCase {
+class WalletBalanceValidationUseCase : IWalletBalanceValidationUseCase {
 
     override fun validateWalletBalance(amount: Double) {
 

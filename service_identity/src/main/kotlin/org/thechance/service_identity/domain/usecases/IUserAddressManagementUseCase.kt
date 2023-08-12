@@ -5,9 +5,9 @@ import org.thechance.service_identity.domain.entity.Address
 import org.thechance.service_identity.domain.entity.CreateAddressRequest
 import org.thechance.service_identity.domain.entity.UpdateAddressRequest
 import org.thechance.service_identity.domain.gateway.IDataBaseGateway
-import org.thechance.service_identity.domain.usecases.validation.IValidateAddressUseCase
+import org.thechance.service_identity.domain.usecases.validation.IAddressValidationUseCase
 
-interface IManageUserAddressUseCase {
+interface IUserAddressManagementUseCase {
 
     suspend fun addAddress(userId: String, address: CreateAddressRequest): Boolean
 
@@ -22,10 +22,10 @@ interface IManageUserAddressUseCase {
 }
 
 @Single
-class ManageUserAddressUseCase(
+class UserAddressManagementUseCase(
     private val dataBaseGateway: IDataBaseGateway,
-    private val validateAddress: IValidateAddressUseCase
-) : IManageUserAddressUseCase {
+    private val validateAddress: IAddressValidationUseCase
+) : IUserAddressManagementUseCase {
 
     override suspend fun addAddress(userId: String, address: CreateAddressRequest): Boolean {
         validateAddress.validateCreateAddressRequest(address)

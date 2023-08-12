@@ -8,11 +8,11 @@ import org.thechance.service_identity.domain.entity.InsufficientFundsException
 import org.thechance.service_identity.domain.entity.UpdateUserRequest
 import org.thechance.service_identity.domain.entity.User
 import org.thechance.service_identity.domain.gateway.IDataBaseGateway
-import org.thechance.service_identity.domain.usecases.validation.IValidateUserInfoUseCase
-import org.thechance.service_identity.domain.usecases.validation.IValidateWalletBalanceUseCase
+import org.thechance.service_identity.domain.usecases.validation.IUserInfoValidationUseCase
+import org.thechance.service_identity.domain.usecases.validation.IWalletBalanceValidationUseCase
 import org.thechance.service_identity.domain.util.INSUFFICIENT_FUNDS
 
-interface IManageUserAccountUseCase {
+interface IUserAccountManagementUseCase {
 
     suspend fun createUser(user: CreateUserRequest): Boolean
     suspend fun securePassword(password: String): SaltedHash
@@ -30,15 +30,15 @@ interface IManageUserAccountUseCase {
 }
 
 @Single
-class ManageUserAccountUseCase(
+class UserAccountManagementUseCase(
     private val dataBaseGateway: IDataBaseGateway,
-    private val validateWalletBalance: IValidateWalletBalanceUseCase,
-    private val validateUserInfo: IValidateUserInfoUseCase,
+    private val walletBalanceValidationUseCase: IWalletBalanceValidationUseCase,
+    private val userInfoValidationUseCase: IUserInfoValidationUseCase,
     private val hashingService: HashingService
-) : IManageUserAccountUseCase {
+) : IUserAccountManagementUseCase {
 
     override suspend fun createUser(user: CreateUserRequest): Boolean {
-        validateUserInfo.validateUserInformation(user)
+        userInfoValidationUseCase.validateUserInformation(user)
         val saltedHash = securePassword(user.password)
         return dataBaseGateway.createUser(saltedHash,user)
     }
@@ -52,7 +52,7 @@ class ManageUserAccountUseCase(
     }
 
     override suspend fun updateUser(id: String, user: UpdateUserRequest): Boolean {
-        validateUserInfo.validateUpdateUserInformation(user)
+        userInfoValidationUseCase.validateUpdateUserInformation(user)
         return dataBaseGateway.updateUser(id, user)
     }
 
@@ -61,12 +61,12 @@ class ManageUserAccountUseCase(
     }
 
     override suspend fun addToWallet(userId: String, amount: Double): Boolean {
-        validateWalletBalance.validateWalletBalance(amount)
+        walletBalanceValidationUseCase.validateWalletBalance(amount)
         return dataBaseGateway.addToWallet(userId, amount)
     }
 
     override suspend fun subtractFromWallet(userId: String, amount: Double): Boolean {
-        validateWalletBalance.validateWalletBalance(amount)
+        walletBalanceValidationUseCase.validateWalletBalance(amount)
         if (amount > dataBaseGateway.getWalletBalance(userId)) {
             throw InsufficientFundsException(INSUFFICIENT_FUNDS)
         }
