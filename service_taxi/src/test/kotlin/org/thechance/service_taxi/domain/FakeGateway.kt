@@ -34,8 +34,8 @@ object FakeGateway : DataBaseGateway {
         )
     )
 
-    override suspend fun addTaxi(taxi: Taxi): Boolean {
-        taxes.add(taxi); return true
+    override suspend fun addTaxi(taxi: Taxi): Taxi {
+        taxes.add(taxi); return taxes[taxes.indexOf(taxi)]
     }
 
     override suspend fun getTaxiById(taxiId: String): Taxi? {
@@ -46,12 +46,15 @@ object FakeGateway : DataBaseGateway {
         return taxes.toList()
     }
 
-    override suspend fun deleteTaxi(taxiId: String): Boolean {
-        return getTaxiById(taxiId)?.let { taxes.remove(it); true } ?: false
+    override suspend fun deleteTaxi(taxiId: String): Taxi? {
+        val taxi = getTaxiById(taxiId)
+        taxes.remove(taxi)
+        return taxi
     }
 
-    override suspend fun addTrip(trip: Trip): Boolean {
-        trips.add(trip); return true
+    override suspend fun addTrip(trip: Trip): Trip? {
+        trips.add(trip)
+        return getTripById(trip.id)
     }
 
     override suspend fun getTripById(tripId: String): Trip? {
@@ -78,8 +81,10 @@ object FakeGateway : DataBaseGateway {
         return trips.filter { it.clientId == clientId }
     }
 
-    override suspend fun deleteTrip(tripId: String): Boolean {
-        getTripById(tripId)?.let { trips.remove(it); return true }; return false
+    override suspend fun deleteTrip(tripId: String): Trip? {
+        val trip = getTripById(tripId)
+        trips.remove(trip)
+        return trip
     }
 
     override suspend fun approveTrip(tripId: String, taxiId: String, driverId: String): Trip? {

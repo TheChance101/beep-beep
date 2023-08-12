@@ -15,8 +15,8 @@ import org.thechance.service_taxi.domain.gateway.DataBaseGateway
 import org.thechance.service_taxi.domain.usecase.utils.IValidations
 
 interface IManageTaxiUseCase {
-    suspend fun createTaxi(taxi: Taxi): Boolean
-    suspend fun deleteTaxi(taxiId: String): Boolean
+    suspend fun createTaxi(taxi: Taxi): Taxi
+    suspend fun deleteTaxi(taxiId: String): Taxi
     suspend fun getAllTaxi(page: Int, limit: Int): List<Taxi>
     suspend fun getTaxi(taxiId: String): Taxi
 }
@@ -25,16 +25,16 @@ class ManageTaxiUseCase(
     private val dataBaseGateway: DataBaseGateway,
     private val validations: IValidations,
 ) : IManageTaxiUseCase {
-    override suspend fun createTaxi(taxi: Taxi): Boolean {
+    override suspend fun createTaxi(taxi: Taxi): Taxi {
         validationTaxi(taxi)
         dataBaseGateway.getTaxiById(taxi.id)?.let { throw AlreadyExistException }
         return dataBaseGateway.addTaxi(taxi)
     }
 
-    override suspend fun deleteTaxi(taxiId: String): Boolean {
+    override suspend fun deleteTaxi(taxiId: String): Taxi {
         if (!validations.isValidId(taxiId)) throw InvalidIdException
         dataBaseGateway.getTaxiById(taxiId) ?: throw ResourceNotFoundException
-        return dataBaseGateway.deleteTaxi(taxiId)
+        return dataBaseGateway.deleteTaxi(taxiId) ?: throw ResourceNotFoundException
     }
 
     override suspend fun getAllTaxi(page: Int, limit: Int): List<Taxi> {

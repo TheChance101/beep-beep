@@ -35,14 +35,14 @@ fun Route.taxiRoutes() {
 
         post {
             val taxi = call.receive<TaxiDto>()
-            manageTaxiUseCase.createTaxi(taxi.toEntity())
-            call.respond(HttpStatusCode.OK, "added")
+            val result = manageTaxiUseCase.createTaxi(taxi.toEntity())
+            call.respond(HttpStatusCode.OK, result.toDto())
         }
 
         delete("/{taxiId}") {
             val taxiId = call.parameters["taxiId"] ?: throw MissingParameterException
-            manageTaxiUseCase.deleteTaxi(taxiId)
-            call.respond(HttpStatusCode.OK, "deleted")
+            val result = manageTaxiUseCase.deleteTaxi(taxiId)
+            call.respond(HttpStatusCode.OK, result.toDto())
         }
     }
 }

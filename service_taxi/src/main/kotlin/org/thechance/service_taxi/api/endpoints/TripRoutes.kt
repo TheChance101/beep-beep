@@ -56,36 +56,36 @@ fun Route.tripRoutes() {
 
         post {
             val tripDto = call.receive<TripDto>()
-            clientTripsManagementUseCase.createTrip(tripDto.toEntity())
-            call.respond(HttpStatusCode.Created, "added")
+            val result = clientTripsManagementUseCase.createTrip(tripDto.toEntity())
+            call.respond(HttpStatusCode.Created, result.toDto())
         }
 
         put("/{tripId}/rate") {
             val tripId = call.parameters["tripId"] ?: throw MissingParameterException
             val rate = call.parameters["rate"]?.toDouble() ?: throw MissingParameterException
-            clientTripsManagementUseCase.rateTrip(tripId, rate)
-            call.respond(HttpStatusCode.OK, "updated")
+            val result = clientTripsManagementUseCase.rateTrip(tripId, rate)
+            call.respond(HttpStatusCode.OK, result.toDto())
         }
 
         put("/{tripId}/approve") {
             val tripId = call.parameters["tripId"] ?: throw MissingParameterException
             val driverId = call.parameters["driverId"] ?: throw MissingParameterException
             val taxiId = call.parameters["taxiId"] ?: throw MissingParameterException
-            driverTripsManagementUseCase.approveTrip(driverId, taxiId, tripId)
-            call.respond(HttpStatusCode.OK, "updated")
+            val result = driverTripsManagementUseCase.approveTrip(driverId, taxiId, tripId)
+            call.respond(HttpStatusCode.OK, result.toDto())
         }
 
         put("/{tripId}/finish") {
             val tripId = call.parameters["tripId"] ?: throw MissingParameterException
             val driverId = call.parameters["driverId"] ?: throw MissingParameterException
-            driverTripsManagementUseCase.finishTrip(driverId, tripId)
-            call.respond(HttpStatusCode.OK, "updated")
+            val result = driverTripsManagementUseCase.finishTrip(driverId, tripId)
+            call.respond(HttpStatusCode.OK, result.toDto())
         }
 
         delete("/{tripId}") {
             val tripId = call.parameters["tripId"] ?: throw MissingParameterException
-            manageTripsUseCase.deleteTrip(tripId)
-            call.respond(HttpStatusCode.OK, "deleted")
+            val result = manageTripsUseCase.deleteTrip(tripId)
+            call.respond(HttpStatusCode.OK, result.toDto())
         }
     }
 }

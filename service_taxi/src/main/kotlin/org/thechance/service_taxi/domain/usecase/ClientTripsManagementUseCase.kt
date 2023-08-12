@@ -14,7 +14,7 @@ import org.thechance.service_taxi.domain.usecase.utils.IValidations
 interface IClientTripsManagementUseCase {
     suspend fun getTripsByClientId(clientId: String, page: Int, limit: Int): List<Trip> // user
     suspend fun rateTrip(tripId: String, rate: Double): Trip // user
-    suspend fun createTrip(trip: Trip): Boolean // user
+    suspend fun createTrip(trip: Trip): Trip // user
 }
 
 class ClientTripsManagementUseCase(
@@ -36,9 +36,9 @@ class ClientTripsManagementUseCase(
         return dataBaseGateway.rateTrip(tripId, rate) ?: throw ResourceNotFoundException
     }
 
-    override suspend fun createTrip(trip: Trip): Boolean {
+    override suspend fun createTrip(trip: Trip): Trip {
         validationTrip(trip)
-        return dataBaseGateway.addTrip(trip)
+        return dataBaseGateway.addTrip(trip) ?: throw ResourceNotFoundException
     }
 
     private fun validationTrip(trip: Trip) {
