@@ -3,16 +3,17 @@ package com.beepbeep.designSystem.ui.composable
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Card
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -21,57 +22,57 @@ import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.colorScheme
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.shapes
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.dimens
+import com.beepbeep.designSystem.ui.theme.Theme.colors
+import com.beepbeep.designSystem.ui.theme.Theme.dimens
+import com.beepbeep.designSystem.ui.theme.Theme.radius
 
 
 @Composable
-fun BeepBeepSwitchButton(
+fun BpSwitchButton(
     onSwitch: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     selected: Boolean = false,
 ) {
     val targetBackgroundColor by animateColorAsState(
-        targetValue = if (selected) colorScheme.primary else colorScheme.background,
+        targetValue = if (selected) colors.primary else colors.background,
         animationSpec = tween(500)
     )
 
     val targetBorderColor by animateColorAsState(
-        targetValue = if (selected) colorScheme.primary else colorScheme.tertiaryContainer,
+        targetValue = if (selected) colors.primary else colors.disable,
         animationSpec = tween(500)
     )
     val horizontalBias by animateFloatAsState(
-        targetValue =  when (selected) {
+        targetValue = when (selected) {
             true -> 1f
             else -> -1f
         },
         animationSpec = tween(500)
     )
-    val alignment=remember { derivedStateOf { BiasAlignment(horizontalBias = horizontalBias, verticalBias = 0f) } }
+    val alignment = remember { derivedStateOf { BiasAlignment(
+                horizontalBias = horizontalBias, verticalBias = 0f) } }
 
-    Box(modifier = modifier.width(50.dp)
-        .background(color=  targetBackgroundColor, shape = shapes.large).
-        border(width = 1.dp, color =targetBorderColor, shape = shapes.large)
-        .clickable(indication = null, interactionSource = remember { MutableInteractionSource() })
-        {onSwitch(!selected) },
+    Box(
+        modifier = modifier
+            .width(48.dp)
+            .height(24.dp)
+            .background(color = targetBackgroundColor, shape = RoundedCornerShape(radius.large))
+            .border(width = 1.dp, color = targetBorderColor, shape = RoundedCornerShape(radius.large))
+            .clickable(indication = null, interactionSource = remember { MutableInteractionSource() })
+            { onSwitch(!selected) },
         contentAlignment = alignment.value
-        ) {
-            Circle(
-                modifier = Modifier.padding(dimens.space4),
-                isSelected = selected
-            )
-        }
+    ) {
+        Circle(modifier = Modifier.padding(dimens.space4), isSelected = selected)
+    }
 }
 
 @Composable
-fun Circle(
+private fun Circle(
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
 ) {
-    Card(
-        shape = CircleShape, modifier = modifier.size(20.dp), elevation = 0.dp
-    ) {
-        Box(modifier = Modifier.background(if(isSelected)  Color.White else  colorScheme.primary) , )
+   val primary= colors.primary
+    Canvas(modifier = modifier.size(size = 18.dp).background(color = Color.Transparent)) {
+        drawCircle(color = if (isSelected) Color.White else primary, radius = 18f)
     }
 }

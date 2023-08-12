@@ -1,4 +1,5 @@
 package com.beepbeep.designSystem.ui.composable
+
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -10,12 +11,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -28,56 +28,63 @@ import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.colorScheme
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.shapes
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.dimens
+import com.beepbeep.designSystem.ui.theme.Theme.colors
+import com.beepbeep.designSystem.ui.theme.Theme.radius
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun BeepBeepToggleButton(
+fun BpToggleButton(
     onToggle: () -> Unit,
-    isDark : Boolean = isSystemInDarkTheme(),
-){
+    modifier: Modifier= Modifier,
+    isDark: Boolean = isSystemInDarkTheme(),
+) {
     val horizontalBias by animateFloatAsState(
-        targetValue =  when (isDark) {
+        targetValue = when (isDark) {
             true -> 1f
             else -> -1f
         },
         animationSpec = tween(500)
     )
-    val alignment=remember { derivedStateOf { BiasAlignment(horizontalBias = horizontalBias, verticalBias = 0f) } }
-    Box(Modifier.border(width = 1.dp, color =  colorScheme.outline, shape = shapes.small)
-        .width(dimens.size64)
-        .height(dimens.size32)
-        .background(color =  colorScheme.background, shape = shapes.small)
-        .padding(dimens.space2)
-        .clickable(indication = null, interactionSource = remember { MutableInteractionSource() })
-        { onToggle() }){
+    val alignment = remember { derivedStateOf {
+        BiasAlignment(horizontalBias = horizontalBias, verticalBias = 0f)
+    } }
+    Box(
+        modifier
+            .border(width = 1.dp, color = colors.contentBorder, shape = RoundedCornerShape(radius.small))
+            .width(64.dp)
+            .height(32.dp)
+            .background(color = colors.background, shape = RoundedCornerShape(radius.small))
+            .padding(2.dp)
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() })
+            { onToggle() }) {
 
         Card(
-            modifier = Modifier.width(28.dp).height(28.dp).padding( dimens.space2).align( alignment.value),
-            shape= shapes.small,
-            colors= CardDefaults.cardColors(containerColor = colorScheme.primary),
-            elevation = CardDefaults.elevatedCardElevation(0.dp),
-        ){}
-
-        Row(horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .width(28.dp)
+                .height(28.dp)
+                .padding(2.dp)
+                .align(alignment.value),
+            shape = RoundedCornerShape(radius.small),
+            colors = CardDefaults.cardColors(containerColor = colors.primary),
+            elevation = CardDefaults.elevatedCardElevation(0.dp),) {}
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxSize().padding(horizontal = dimens.space2)) {
+            modifier = Modifier.fillMaxSize().padding(horizontal = 2.dp)
+        ) {
             Icon(
                 painter = painterResource("sun.xml"),
-                contentDescription = "",
-                tint =  if (isDark) colorScheme.onTertiary else Color.White,
-                modifier = Modifier.size(24.dp).padding( dimens.space2)
+                contentDescription = "", tint = if (isDark) colors.contentTertiary else Color.White,
+                modifier = Modifier.size(24.dp).padding(2.dp)
             )
-
             Icon(
                 painter = painterResource("moon_stars.xml"),
-                contentDescription = "",
-                tint =  if (isDark) Color.White else colorScheme.onTertiary,
-                modifier = Modifier.size(24.dp).padding( dimens.space2)
+                contentDescription = "", tint = if (isDark) Color.White else colors.contentTertiary,
+                modifier = Modifier.size(24.dp).padding(2.dp)
             )
         }
     }

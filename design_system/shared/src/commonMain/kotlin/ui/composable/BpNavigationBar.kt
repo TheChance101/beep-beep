@@ -3,7 +3,7 @@ package com.beepbeep.designSystem.ui.composable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,43 +14,43 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.material.BottomNavigationDefaults
-import androidx.compose.material.Surface
-import androidx.compose.material.contentColorFor
+import androidx.compose.material3.Surface
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
+import com.beepbeep.designSystem.ui.theme.Theme
 
 @Composable
-fun BeepBeepNavigationBar(
+fun BpNavigationBar(
     modifier: Modifier = Modifier,
     navigationBarHeight: Dp = 64.dp,
-    backgroundColor: Color = BeepBeepTheme.colorScheme.surface,
+    backgroundColor: Color = Theme.colors.surface,
     contentColor: Color = contentColorFor(backgroundColor),
-    elevation: Dp = BottomNavigationDefaults.Elevation,
+    elevation: Dp = 8.dp,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
     content: @Composable RowScope.() -> Unit
 ) {
     Surface(
         color = backgroundColor,
         contentColor = contentColor,
-        elevation = elevation,
+        shadowElevation = elevation,
         modifier = modifier
     ) {
-        Row( Modifier .fillMaxWidth()
+        Row(
+            Modifier.fillMaxWidth()
                 .height(navigationBarHeight)
                 .selectableGroup(),
             horizontalArrangement = horizontalArrangement,
@@ -60,7 +60,7 @@ fun BeepBeepNavigationBar(
 }
 
 @Composable
-fun RowScope.BeepBeepNavigationBarItem(
+fun RowScope.BpNavigationBarItem(
     selected: Boolean,
     onClick: () -> Unit,
     icon: @Composable (tint: Color) -> Unit,
@@ -72,7 +72,7 @@ fun RowScope.BeepBeepNavigationBarItem(
 ) {
     val styledIcon = @Composable {
         val iconColor by animateColorAsState(
-            if (selected) BeepBeepTheme.colorScheme.primary else BeepBeepTheme.colorScheme.onSecondary,
+            if (selected) Theme.colors.primary else Theme.colors.contentSecondary,
             tween(500)
         )
         icon(tint = iconColor)
@@ -80,11 +80,11 @@ fun RowScope.BeepBeepNavigationBarItem(
 
     val styledLabel = @Composable {
         val textColor by animateColorAsState(
-            if (selected) BeepBeepTheme.colorScheme.primary else BeepBeepTheme.colorScheme.onSecondary,
+            if (selected) Theme.colors.primary else Theme.colors.contentSecondary,
             tween(500)
         )
         val style =
-            BeepBeepTheme.typography.caption.copy(color = textColor)
+            Theme.typography.caption.copy(color = textColor)
         label?.let {
             it(style)
         }
@@ -92,13 +92,13 @@ fun RowScope.BeepBeepNavigationBarItem(
 
     Box(
         modifier.selectable(
-                indication = null,
-                interactionSource = interactionSource,
-                selected = selected,
-                onClick = onClick,
-                enabled = enabled,
-                role = Role.Tab,
-            ).selectableGroup()
+            indication = null,
+            interactionSource = interactionSource,
+            selected = selected,
+            onClick = onClick,
+            enabled = enabled,
+            role = Role.Tab,
+        ).selectableGroup()
             .fillMaxHeight()
             .weight(1f)
     ) {
@@ -123,9 +123,14 @@ fun RowScope.BeepBeepNavigationBarItem(
 @Composable
 private fun Indicator(
     width: Dp,
-    height: Dp = 3.dp,
-    shape: Shape = BeepBeepTheme.shapes.small,
-    color: Color = BeepBeepTheme.colorScheme.primary
+    height: Dp = 2.dp,
+    cornerRadius: Float = 4f,
+    color: Color = Theme.colors.primary
 ) {
-    Box(modifier = Modifier.width(width).height(height).clip(shape).background(color))
+    Canvas(modifier = Modifier.size(width, height)) {
+        drawRoundRect(
+            color = color,
+            cornerRadius = CornerRadius(cornerRadius)
+        )
+    }
 }
