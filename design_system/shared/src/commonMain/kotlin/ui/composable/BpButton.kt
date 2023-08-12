@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -57,7 +58,7 @@ fun BpButton(
         ) {
             painter?.let {
                 Image(
-                    modifier = Modifier.padding(end = 8.dp),
+                    modifier = Modifier.size(24.dp).padding(end = 8.dp),
                     painter = painter,
                     contentDescription = null
                 )
