@@ -16,19 +16,18 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme.dimens
+import com.beepbeep.designSystem.ui.theme.Theme
 
 @Composable
-fun BeepBeepCircleImage(
+fun BpCircleImage(
     painter: Painter,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     boxSize: Dp = 72.dp,
     imageSize: Dp = 32.dp,
-    strokeWidth: Dp = dimens.strokeSmall,
-    strokeColor: Color = BeepBeepTheme.colorScheme.onTertiary,
-    backgroundColor: Color = BeepBeepTheme.colorScheme.surface,
+    strokeWidth: Dp = 2.dp,
+    strokeColor: Color = Theme.colors.contentTertiary,
+    backgroundColor: Color = Theme.colors.surface,
     imageScale: ContentScale = ContentScale.Crop,
 ) {
     Box(

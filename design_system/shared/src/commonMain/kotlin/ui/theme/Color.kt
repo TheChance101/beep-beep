@@ -2,54 +2,59 @@ package com.beepbeep.designSystem.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+data class Colors(
+    val primary: Color,
+    val secondary: Color,
+    val contentPrimary: Color,
+    val contentSecondary: Color,
+    val contentTertiary: Color,
+    val contentBorder: Color,
+    val surface: Color,
+    val onPrimary: Color,
+    val hover: Color,
+    val background: Color,
+    val disable: Color,
+    val success: Color,
+    val successContainer: Color,
+    val warning: Color,
+    val warningContainer: Color,
+    val surfaceTint: Color,
+)
 
-// region Colors / Light
+val LightColors = Colors(
+    primary = Color(0xFFF53D47),
+    secondary = Color(0xFFFFF3F2),
+    contentPrimary = Color(0xDE1F0000),
+    contentSecondary = Color(0x991F0000),
+    contentTertiary = Color(0x611F0000),
+    contentBorder = Color(0x141F0000),
+    surface = Color(0xFFFFFFFF),
+    onPrimary = Color(0xFFFFFFFF),
+    hover = Color(0xFFFFFAFA),
+    background = Color(0xFFFAFAFA),
+    disable = Color(0x401F0000),
+    success = Color(0xFF41BE88),
+    successContainer = Color(0xFFF0FFF7),
+    warning = Color(0xFFF2BD00),
+    warningContainer = Color(0xFFFFFCEB),
+    surfaceTint = Color(0x081F0000),
+)
 
-val primaryLight = Color(0xFFF53D47)
-val secondaryLight = Color(0xFFFFF3F2)
-
-val contentPrimaryLight = Color(0xDE1F0000)
-val contentSecondaryLight = Color(0x991F0000)
-val contentTertiaryLight = Color(0x611F0000)
-val contentBorderLight = Color(0x141F0000)
-
-val surfaceLight = Color(0xFFFFFFFF)
-val onPrimaryLight = Color(0xFFFFFFFF)
-val hoverLight = Color(0xFFFFFAFA)
-val backgroundLight = Color(0xFFFAFAFA)
-val disableLight = Color(0x401F0000)
-
-val successLight = Color(0xFF41BE88)
-val successContainerLight = Color(0xFFF0FFF7)
-val warningLight = Color(0xFFF2BD00)
-val warningContainerLight = Color(0xFFFFFCEB)
-
-val surfaceTintLight = Color(0x081F0000)
-
-//endregion
-
-
-// region Colors / Dark
-
-val primaryDark = Color(0xFFF53D47)
-val secondaryDark = Color(0x1AFFFFFF)
-
-val contentPrimaryDark = Color(0xDEFFFFFF)
-val contentSecondaryDark = Color(0x99FFFFFF)
-val contentTertiaryDark = Color(0x61FFFFFF)
-val contentBorderDark = Color(0x14FFEFEF)
-
-val surfaceDark = Color(0xFF1C1C1C)
-val onPrimaryDark = Color(0xFFFFFFFF)
-val hoverDark = Color(0xFF242424)
-val backgroundDark = Color(0xFF151515)
-val disableDark = Color(0x40FFFFFF)
-
-val successDark = Color(0xFF66CB9F)
-val successContainerDark = Color(0x14EBFFF4)
-val warningDark = Color(0xFFCBB567)
-val warningContainerDark = Color(0x14FFFCEB)
-
-val surfaceTintDark = Color(0x081F0000)
-
-//endregion
+val DarkColors = Colors(
+    primary = Color(0xFFF53D47),
+    secondary = Color(0x1AFFFFFF),
+    contentPrimary = Color(0xDEFFFFFF),
+    contentSecondary = Color(0x99FFFFFF),
+    contentTertiary = Color(0x61FFFFFF),
+    contentBorder = Color(0x14FFEFEF),
+    surface = Color(0xFF1C1C1C),
+    onPrimary = Color(0xFFFFFFFF),
+    hover = Color(0xFF242424),
+    background = Color(0xFF151515),
+    disable = Color(0x40FFFFFF),
+    success = Color(0xFF66CB9F),
+    successContainer = Color(0x14EBFFF4),
+    warning = Color(0xFFCBB567),
+    warningContainer = Color(0x14FFFCEB),
+    surfaceTint = Color(0x081F0000),
+)
