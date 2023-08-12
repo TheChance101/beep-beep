@@ -49,8 +49,7 @@ fun BpSwitchButton(
     val alignment = remember { derivedStateOf { BiasAlignment(
                 horizontalBias = horizontalBias, verticalBias = 0f) } }
 
-    Box(modifier = modifier.width(48.dp).height(24.dp).background(color = targetBackgroundColor, shape = radius.large)
-        .border(width = 1.dp, color = targetBorderColor, shape = radius.large)
+    Box(modifier = modifier.width(48.dp).height(24.dp).background(color = targetBackgroundColor, shape = radius.large).border(width = 1.dp, color = targetBorderColor, shape = radius.large)
             .clickable(indication = null, interactionSource = remember { MutableInteractionSource() })
             { onSwitch(!selected) },
         contentAlignment = alignment.value
