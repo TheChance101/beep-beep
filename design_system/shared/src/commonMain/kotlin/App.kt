@@ -9,11 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,43 +23,35 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.beepbeep.designSystem.ui.composable.BeepBeepButton
-import com.beepbeep.designSystem.ui.composable.BeepBeepCheckBox
-import com.beepbeep.designSystem.ui.composable.BeepBeepChip
-import com.beepbeep.designSystem.ui.composable.BeepBeepIcon
-import com.beepbeep.designSystem.ui.composable.BeepBeepLogo
-import com.beepbeep.designSystem.ui.composable.BeepBeepNavigationBar
-import com.beepbeep.designSystem.ui.composable.BeepBeepNavigationBarItem
-import com.beepbeep.designSystem.ui.composable.BeepBeepSwitchButton
-import com.beepbeep.designSystem.ui.composable.BeepBeepTextButton
-import com.beepbeep.designSystem.ui.composable.BeepBeepTextField
-import com.beepbeep.designSystem.ui.composable.BeepBeepToggleButton
-import com.beepbeep.designSystem.ui.theme.BeepBeepTheme
+import com.beepbeep.designSystem.ui.composable.BpButton
+import com.beepbeep.designSystem.ui.composable.BpChip
+import com.beepbeep.designSystem.ui.composable.BpNavigationBar
+import com.beepbeep.designSystem.ui.composable.BpNavigationBarItem
+import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
+import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
+import com.beepbeep.designSystem.ui.composable.BpTextField
+import com.beepbeep.designSystem.ui.theme.BpTheme
+import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
 
 @Composable
 fun DesignApp() {
-    BeepBeepTheme {
+    BpTheme {
         Column(
-            Modifier.fillMaxSize().background(BeepBeepTheme.colorScheme.background),
+            Modifier.fillMaxSize().background(Theme.colors.background),
 //            horizontalAlignment = Alignment.CenterHorizontally,
-//            verticalArrangement = Arrangement.Bottom
+            verticalArrangement = Arrangement.Bottom
         ) {
-//            TextButtonPrev()
-            CheckBoxButtonPrev()
-//            TogglePreview()
-//            SwitchPreview()
-//            EnabledButtonsPreview()
-//            DisabledButtonsPreview()
-//            Spacer(modifier = Modifier.height(16.dp))
-            PreviewTextField()
-            PreviewChips()
-//            BottomNavigationBarPreview()
+            EnabledButtonsPreview()
+            DisabledButtonsPreview()
+            Spacer(modifier = Modifier.height(16.dp))
+//            PreviewTextField()
+//            PreviewChips()
+            BottomNavigationBarPreview()
         }
     }
 }
@@ -75,19 +67,19 @@ fun PreviewChips() {
         var selected by remember { mutableStateOf(false) }
         var selected1 by remember { mutableStateOf(true) }
         var selected2 by remember { mutableStateOf(true) }
-        BeepBeepChip(
+        BpChip(
             label = "Click me",
             onClick = { isSelected -> selected = isSelected },
             isSelected = selected,
             painter = painterResource("sort.xml")
         )
-        BeepBeepChip(
+        BpChip(
             label = "Click me",
             onClick = { isSelected -> selected1 = isSelected },
             isSelected = selected1,
             painter = painterResource("sun.xml")
         )
-        BeepBeepChip(
+        BpChip(
             label = "Click me",
             onClick = { isSelected -> selected2 = isSelected },
             isSelected = selected2,
@@ -97,6 +89,7 @@ fun PreviewChips() {
 
 }
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun PreviewTextField() {
     Column(
@@ -106,25 +99,32 @@ fun PreviewTextField() {
         var text2 by rememberSaveable { mutableStateOf("") }
         var text3 by rememberSaveable { mutableStateOf("") }
         var text4 by rememberSaveable { mutableStateOf("Ahmed Nasser") }
+        var text5 by rememberSaveable { mutableStateOf("") }
 
-        BeepBeepTextField(
+        BpSimpleTextField(
+            onValueChange = { text5 = it },
+            text = text5,
+            hint = "Search for users",
+            trailingPainter = painterResource("sort.xml")
+        )
+        BpTextField(
             onValueChange = { text3 = it },
             text = text3,
             label = "Email",
         )
-        BeepBeepTextField(
+        BpTextField(
             onValueChange = { text1 = it },
             text = text1,
             label = "Password",
             keyboardType = KeyboardType.Password
         )
-        BeepBeepTextField(
+        BpTextField(
             onValueChange = { text2 = it },
             text = text2,
             label = "Username",
             errorMessage = "incorrect username or password",
         )
-        BeepBeepTextField(
+        BpTextField(
             onValueChange = { text4 = it },
             text = text4,
             label = "FullName",
@@ -133,27 +133,26 @@ fun PreviewTextField() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 @Composable
 fun EnabledButtonsPreview() {
     Column(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
     ) {
-        BeepBeepButton(
+        BpButton(
+            title = "Button",
+            painter = painterResource("sun.xml"),
             enabled = true,
             onClick = { },
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
-        ) {
-            Text("Button")
-        }
+        )
 
-        OutlinedButton(
+        BpOutlinedButton(
+            title = "Button",
             enabled = true,
             onClick = { },
             modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Button")
-        }
+        )
     }
 }
 
@@ -161,24 +160,24 @@ fun EnabledButtonsPreview() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DisabledButtonsPreview() {
-    Column(
+    Row(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
     ) {
-        BeepBeepButton(
+        BpButton(
+            title = "Button",
             enabled = false,
             onClick = { },
-            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
-        ) {
-            Text("Button")
-        }
+            modifier = Modifier.fillMaxWidth().weight(1f)
+        )
 
-        OutlinedButton(
+        Spacer(modifier = Modifier.width(8.dp))
+
+        BpOutlinedButton(
+            title = "Button",
             enabled = false,
             onClick = {},
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Button")
-        }
+            modifier = Modifier.weight(1f).fillMaxWidth()
+        )
     }
 }
 
@@ -188,9 +187,9 @@ fun BottomNavigationBarPreview() {
     var selectedItem by remember { mutableStateOf(0) }
     val items = listOf("Overview", "Taxis", "Restaurants", "Users")
 
-    BeepBeepNavigationBar {
+    BpNavigationBar {
         items.forEachIndexed { index, item ->
-            BeepBeepNavigationBarItem(
+            BpNavigationBarItem(
                 icon = { tint ->
                     Icon(Icons.Filled.Favorite, contentDescription = item, tint = tint)
                 },
@@ -204,42 +203,5 @@ fun BottomNavigationBarPreview() {
     }
 }
 
-@Composable
-fun SwitchPreview() {
-    var isToggle by remember { mutableStateOf(false) }
-    BeepBeepSwitchButton(selected = isToggle, onSwitch = { isToggle = it })
-}
-
-@Composable
-fun TogglePreview() {
-    var isToggle by remember { mutableStateOf(false) }
-    BeepBeepToggleButton(isDark=isToggle, onToggle = { isToggle = !isToggle })
-    BeepBeepToggleButton( onToggle = { isToggle = !isToggle }, isDark = isToggle)
-}
-
-@Composable
-fun CheckBoxButtonPrev() {
-    var isChecked by remember { mutableStateOf(false) }
-    BeepBeepCheckBox(
-        label = "CheckBox",
-        onCheck = { isChecked = !isChecked },
-        isChecked = isChecked
-    )
-}
-
-@OptIn(ExperimentalResourceApi::class)
-@Composable
-fun TextButtonPrev() {
-    BeepBeepTextButton(
-        text = "TextButton",
-        onClick = { },
-    ) {
-        Icon(
-            painter = painterResource("sort.xml"),
-            contentDescription = "",
-            tint = BeepBeepTheme.colorScheme.onPrimary,
-        )
-    }
-}
 
 expect fun getPlatformName(): String
