@@ -56,7 +56,7 @@ fun BpTextField(
             text = label,
             modifier = Modifier.padding(bottom = dimens.space8),
             style = typography.titleLarge,
-            color = colors.onPrimary
+            color = colors.primary
         )
 
         OutlinedTextField(
