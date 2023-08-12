@@ -4,9 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,6 +30,7 @@ import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpChip
 import com.beepbeep.designSystem.ui.composable.BpNavigationBar
 import com.beepbeep.designSystem.ui.composable.BpNavigationBarItem
+import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.BpTheme
 import com.beepbeep.designSystem.ui.theme.Theme
@@ -42,11 +46,11 @@ fun DesignApp() {
 //            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Bottom
         ) {
-//            EnabledButtonsPreview()
-//            DisabledButtonsPreview()
-//            Spacer(modifier = Modifier.height(16.dp))
-            PreviewTextField()
-            PreviewChips()
+            EnabledButtonsPreview()
+            DisabledButtonsPreview()
+            Spacer(modifier = Modifier.height(16.dp))
+//            PreviewTextField()
+//            PreviewChips()
             BottomNavigationBarPreview()
         }
     }
@@ -121,27 +125,26 @@ fun PreviewTextField() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 @Composable
 fun EnabledButtonsPreview() {
     Column(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
     ) {
         BpButton(
+            title = "Button",
+            painter = painterResource("sun.xml"),
             enabled = true,
             onClick = { },
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
-        ) {
-            Text("Button")
-        }
+        )
 
-        OutlinedButton(
+        BpOutlinedButton(
+            title = "Button",
             enabled = true,
             onClick = { },
             modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Button")
-        }
+        )
     }
 }
 
@@ -149,24 +152,24 @@ fun EnabledButtonsPreview() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DisabledButtonsPreview() {
-    Column(
+    Row(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
     ) {
         BpButton(
+            title = "Button",
             enabled = false,
             onClick = { },
-            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
-        ) {
-            Text("Button")
-        }
+            modifier = Modifier.fillMaxWidth().weight(1f)
+        )
 
-        OutlinedButton(
+        Spacer(modifier = Modifier.width(8.dp))
+
+        BpOutlinedButton(
+            title = "Button",
             enabled = false,
             onClick = {},
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Button")
-        }
+            modifier = Modifier.weight(1f).fillMaxWidth()
+        )
     }
 }
 
