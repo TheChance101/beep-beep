@@ -1,16 +1,15 @@
 package org.thechance.common.ui.login
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -23,9 +22,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.beepbeep.designSystem.ui.composable.BeepBeepButton
-import com.beepbeep.designSystem.ui.composable.BeepBeepCheckBoxDraft
-import com.beepbeep.designSystem.ui.composable.BeepBeepTextField
+import com.beepbeep.designSystem.ui.composable.BpButton
+import com.beepbeep.designSystem.ui.composable.BpCheckBox
+import com.beepbeep.designSystem.ui.composable.BpTextField
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,7 +33,7 @@ fun LoginContent() {
         Modifier.fillMaxSize().padding(top = 40.dp, start = 40.dp, bottom = 40.dp),
         horizontalArrangement = Arrangement.Center
     ) {
-        Box(Modifier.weight(.7f)){
+        Box(Modifier.weight(.7f)) {
             Image(
                 painter = painterResource("login_image.png"),
                 contentDescription = null,
@@ -42,8 +41,13 @@ fun LoginContent() {
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )
+            Image(
+                painterResource("ic_beepbeep_logo_expanded.svg"),
+                contentDescription = null,
+                modifier = Modifier.align(Alignment.TopStart).padding(32.dp)
+            )
         }
-        Box(Modifier.weight(1f), contentAlignment = Alignment.Center){
+        Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
             Column(
                 Modifier.fillMaxHeight().width(350.dp),
                 verticalArrangement = Arrangement.Center,
@@ -55,31 +59,30 @@ fun LoginContent() {
                     color = Color.Black.copy(.38f),
                     modifier = Modifier.padding(top = 8.dp)
                 )
-                BeepBeepTextField(
+                BpTextField(
                     onValueChange = { },
                     text = "",
                     label = "Username",
                     modifier = Modifier.padding(top = 16.dp)
                 )
-                BeepBeepTextField(
+                BpTextField(
                     onValueChange = { },
                     text = "",
                     label = "Password",
                     keyboardType = KeyboardType.Password,
                     modifier = Modifier.padding(top = 16.dp)
                 )
-                BeepBeepCheckBoxDraft(
-                    text = "Keep me logged in",
+                BpCheckBox(
+                    label = "Keep me logged in",
                     isChecked = false,
                     onCheck = {},
                     modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
                 )
-                BeepBeepButton(
+                BpButton(
+                    title = "Login",
                     onClick = {},
                     modifier = Modifier.padding(top = 24.dp).fillMaxWidth()
-                ) {
-                    Text("Login")
-                }
+                )
             }
         }
     }
