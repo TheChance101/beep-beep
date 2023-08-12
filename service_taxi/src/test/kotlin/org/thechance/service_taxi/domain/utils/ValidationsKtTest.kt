@@ -1,7 +1,8 @@
-package org.thechance.service_taxi.domain.util
+package org.thechance.service_taxi.domain.utils
 
 import org.junit.Assert
 import org.junit.Test
+import org.thechance.service_taxi.domain.usecase.utils.Validations
 
 class ValidationsKtTest {
     private val validations = Validations()

@@ -3,16 +3,16 @@ package org.thechance.service_taxi.api.util
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.plugins.statuspages.StatusPagesConfig
 import io.ktor.server.response.respond
-import org.thechance.service_taxi.domain.util.ALREADY_EXIST
-import org.thechance.service_taxi.domain.util.AlreadyExistException
-import org.thechance.service_taxi.domain.util.CantBeNullException
-import org.thechance.service_taxi.domain.util.INVALID_REQUEST_PARAMETER
-import org.thechance.service_taxi.domain.util.MissingParameterException
-import org.thechance.service_taxi.domain.util.MultiErrorException
-import org.thechance.service_taxi.domain.util.NOT_FOUND
-import org.thechance.service_taxi.domain.util.REQUIRED_QUERY
-import org.thechance.service_taxi.domain.util.ResourceNotFoundException
-import org.thechance.service_taxi.domain.util.UNKNOWN_ERROR
+import org.thechance.service_taxi.domain.exceptions.ALREADY_EXIST
+import org.thechance.service_taxi.domain.exceptions.AlreadyExistException
+import org.thechance.service_taxi.domain.exceptions.CantBeNullException
+import org.thechance.service_taxi.domain.exceptions.INVALID_REQUEST_PARAMETER
+import org.thechance.service_taxi.domain.exceptions.MissingParameterException
+import org.thechance.service_taxi.domain.exceptions.MultiErrorException
+import org.thechance.service_taxi.domain.exceptions.NOT_FOUND
+import org.thechance.service_taxi.domain.exceptions.REQUIRED_QUERY
+import org.thechance.service_taxi.domain.exceptions.ResourceNotFoundException
+import org.thechance.service_taxi.domain.exceptions.UNKNOWN_ERROR
 
 fun StatusPagesConfig.configureStatusPages() {
     exception<MissingParameterException> { call, _ ->
@@ -31,7 +31,8 @@ fun StatusPagesConfig.configureStatusPages() {
         call.respond(HttpStatusCode.BadRequest, listOf(REQUIRED_QUERY))
     }
 
-    exception<Throwable> { call, _ ->
+    exception<Throwable> { call, th ->
+        println("\n\n***** ERROR(${th.message}) *****\n\n")
         call.respond(HttpStatusCode.InternalServerError, listOf(UNKNOWN_ERROR))
     }
 

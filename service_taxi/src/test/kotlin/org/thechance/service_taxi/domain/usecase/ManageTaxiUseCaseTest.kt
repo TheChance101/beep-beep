@@ -7,15 +7,15 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.function.Executable
 import org.thechance.service_taxi.domain.FakeGateway
+import org.thechance.service_taxi.domain.entity.Color
 import org.thechance.service_taxi.domain.entity.Taxi
-import org.thechance.service_taxi.domain.entity.TaxiUpdateRequest
-import org.thechance.service_taxi.domain.util.AlreadyExistException
-import org.thechance.service_taxi.domain.util.INVALID_ID
-import org.thechance.service_taxi.domain.util.INVALID_PLATE
-import org.thechance.service_taxi.domain.util.InvalidIdException
-import org.thechance.service_taxi.domain.util.MultiErrorException
-import org.thechance.service_taxi.domain.util.ResourceNotFoundException
-import org.thechance.service_taxi.domain.util.Validations
+import org.thechance.service_taxi.domain.exceptions.AlreadyExistException
+import org.thechance.service_taxi.domain.exceptions.INVALID_ID
+import org.thechance.service_taxi.domain.exceptions.INVALID_PLATE
+import org.thechance.service_taxi.domain.exceptions.InvalidIdException
+import org.thechance.service_taxi.domain.exceptions.MultiErrorException
+import org.thechance.service_taxi.domain.exceptions.ResourceNotFoundException
+import org.thechance.service_taxi.domain.usecase.utils.Validations
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ManageTaxiUseCaseTest {
@@ -33,7 +33,7 @@ class ManageTaxiUseCaseTest {
         val taxi = Taxi(
             id = "64d111a60f294c4b8f718973",
             plateNumber = "1234amsm",
-            color = "Red",
+            color = Color.BLACK,
             type = "type",
             driverId = "123456789123456789123471",
             isAvailable = true,
@@ -56,7 +56,7 @@ class ManageTaxiUseCaseTest {
         val taxi = Taxi(
             id = "64d111a60f294c4b8f718973",
             plateNumber = "1234amsm",
-            color = "Red",
+            color = Color.BLACK,
             type = "type",
             driverId = "12345678912345678912347",
             isAvailable = true,
@@ -87,7 +87,7 @@ class ManageTaxiUseCaseTest {
         val taxi = Taxi(
             id = "64d111a60f294c4b8f718977",
             plateNumber = "1234 ABC",
-            color = "Red",
+            color = Color.BLACK,
             type = "type",
             driverId = "123456789123456789123471",
             isAvailable = true,
@@ -107,7 +107,7 @@ class ManageTaxiUseCaseTest {
         val taxi = Taxi(
             id = "64d111a60f294c4b8f718977",
             plateNumber = "1234 ABC",
-            color = "Red",
+            color = Color.BLACK,
             type = "type",
             driverId = "123456789123456789123471",
             isAvailable = true,
@@ -151,55 +151,6 @@ class ManageTaxiUseCaseTest {
         runBlocking { manageTaxiUseCase.deleteTaxi(taxiId) }
         // check
         Assertions.assertTrue { FakeGateway.taxes.size == oldSize - 1 }
-    }
-    // endregion
-
-    // region update taxi
-    @Test
-    fun `should throw ResourceNotFoundException when taxi not found to update`() {
-        // given taxi id not in system
-        val taxiId = "64d111a60f294c4b8f718979"
-        // when update taxi
-        val result =
-            Executable { runBlocking { manageTaxiUseCase.updateTaxi(TaxiUpdateRequest(id = taxiId)) } }
-        // then check
-        Assertions.assertThrows(ResourceNotFoundException::class.java, result)
-    }
-
-    @Test
-    fun `should throw InvalidIdException when id is invalid to update`() {
-        // given taxi id not valid
-        val taxiId = "64d111a60f294c4b8"
-        // when update taxi
-        val result =
-            Executable { runBlocking { manageTaxiUseCase.updateTaxi(TaxiUpdateRequest(id = taxiId)) } }
-        // then check
-        Assertions.assertThrows(InvalidIdException::class.java, result)
-    }
-
-    @Test
-    fun `should throw MultiErrorException contains error code INVALID_PLATE when id is valid and plate number not valid`() {
-        // valid id
-        val taxiId = FakeGateway.taxes.first().id
-        val updateRequest = TaxiUpdateRequest(taxiId, plateNumber = "ab")
-        // when update taxi
-        val result = Executable { runBlocking { manageTaxiUseCase.updateTaxi(updateRequest) } }
-        // check
-        val throwable = Assertions.assertThrows(MultiErrorException::class.java, result)
-        Assertions.assertTrue { throwable.errorCodes.contains(INVALID_PLATE) }
-    }
-
-    @Test
-    fun `should update single property when id is valid and update request has only attribute not null`() {
-        // valid id
-        val taxiId = FakeGateway.taxes.first().id
-        val updateRequest = TaxiUpdateRequest(taxiId, seats = 2)
-        // when update taxi
-        val oldTaxi = FakeGateway.taxes.first()
-        runBlocking { manageTaxiUseCase.updateTaxi(updateRequest) }
-        // check
-        val updatedTaxi = FakeGateway.taxes.first()
-        Assertions.assertTrue { oldTaxi.seats != updatedTaxi.seats && oldTaxi.plateNumber == updatedTaxi.plateNumber }
     }
     // endregion
 
