@@ -49,12 +49,11 @@ fun BpCheckBox(
         horizontalArrangement = Arrangement.spacedBy(gapBetweenLabelAndCheckbox.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(modifier = Modifier.size(size.dp)
+        Box( modifier = Modifier
+            .size(size.dp)
             .background(color = checkboxColor, shape = radius.small)
-            .border(
-                width = 1.dp, shape = radius.small,
-                color = if (isChecked) colors.primary else colors.contentBorder
-            )
+            .border(width = 1.dp, shape = radius.small,
+                color = if (isChecked) colors.primary else colors.contentBorder)
             .toggleable(
                 value = isChecked,
                 role = Role.Checkbox,
@@ -80,8 +79,7 @@ fun BpCheckBox(
                     tint = White,
                 )
             }
-
         }
-        Text(text = label, style = Theme.typography.body, color = colors.contentSecondary)
+        Text(text = label, style = Theme.typography.body, color = colors.contentPrimary)
     }
 }

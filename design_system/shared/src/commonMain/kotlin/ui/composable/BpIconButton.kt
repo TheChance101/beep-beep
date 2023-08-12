@@ -30,14 +30,8 @@ fun BpIconButton(
     Surface(
         modifier = modifier
             .height(height.dp)
-            .border(
-                width = 1.dp, color = Theme.colors.contentBorder,
-                shape = Theme.radius.medium
-            )
-            .padding(
-                horizontal = Theme.dimens.space16,
-                vertical = Theme.dimens.space8
-            )
+            .border(width = 1.dp, color = Theme.colors.contentBorder, shape = Theme.radius.medium)
+            .padding(horizontal = Theme.dimens.space16, vertical = Theme.dimens.space8)
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }
@@ -48,11 +42,7 @@ fun BpIconButton(
             horizontalArrangement = Arrangement.spacedBy(gapBetweenIconAndContent.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                painter = painter,
-                contentDescription = "",
-                tint = Theme.colors.onPrimary,
-            )
+            Icon(painter = painter, contentDescription = "", tint = Theme.colors.contentPrimary)
             content()
         }
     }

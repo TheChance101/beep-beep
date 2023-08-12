@@ -32,13 +32,11 @@ fun BpSwitchButton(
     modifier: Modifier = Modifier,
     selected: Boolean = false,
 ) {
-    val targetBackgroundColor by animateColorAsState(
-        targetValue = if (selected) colors.primary else colors.background,
+    val targetBackgroundColor by animateColorAsState(targetValue = if (selected) colors.primary else colors.background,
         animationSpec = tween(500)
     )
 
-    val targetBorderColor by animateColorAsState(
-        targetValue = if (selected) colors.primary else colors.disable,
+    val targetBorderColor by animateColorAsState(targetValue = if (selected) colors.primary else colors.disable,
         animationSpec = tween(500)
     )
     val horizontalBias by animateFloatAsState(
@@ -48,23 +46,12 @@ fun BpSwitchButton(
         },
         animationSpec = tween(500)
     )
-    val alignment = remember {
-        derivedStateOf {
-            BiasAlignment(
-                horizontalBias = horizontalBias, verticalBias = 0f
-            )
-        }
-    }
+    val alignment = remember { derivedStateOf { BiasAlignment(
+                horizontalBias = horizontalBias, verticalBias = 0f) } }
 
-    Box(
-        modifier = modifier
-            .width(48.dp)
-            .height(24.dp)
-            .background(color = targetBackgroundColor, shape = radius.large)
-            .border(width = 1.dp, color = targetBorderColor, shape = radius.large)
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() })
+    Box(modifier = modifier.width(48.dp).height(24.dp).background(color = targetBackgroundColor, shape = radius.large)
+        .border(width = 1.dp, color = targetBorderColor, shape = radius.large)
+            .clickable(indication = null, interactionSource = remember { MutableInteractionSource() })
             { onSwitch(!selected) },
         contentAlignment = alignment.value
     ) {
@@ -79,8 +66,7 @@ fun BpSwitchButton(
 private fun Circle(
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
-) {
-    Canvas(modifier = modifier.size(size = 18.dp).background(color = Color.Transparent)) {
+) { Canvas(modifier = modifier.size(size = 18.dp).background(color = Color.Transparent)) {
         drawCircle(
             color = if (isSelected) Color.White else Color(0xFFF53D47),
             radius = 18f
