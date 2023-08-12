@@ -58,8 +58,8 @@ class ValidationTest {
     @Test
     fun `should return false if id contains non-hex characters uppercase or lowercase `() {
         // given an invalid id that 'z' and 'Z' is not a valid hex character
-        val invalidIdWithLowercase = "3edf2fc8-6983-484f-a35c-8190f44a08c6"
-        val invalidIdWithUppercase = "3edf2fc8-6983-484f-a35c-8190f44a08c6"
+        val invalidIdWithLowercase = "3edf2fc8-6983-484f-a35c-8190f4q08c6"
+        val invalidIdWithUppercase = "3edf2fc8-6983-484f-a35c-8190fQ4a08c6"
         // when result is false
         val resultLowercaseId = validation.isValidId(invalidIdWithLowercase)
         val resultUppercaseId = validation.isValidId(invalidIdWithUppercase)
