@@ -9,6 +9,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
@@ -24,14 +25,14 @@ fun BpChip(
     modifier: Modifier = Modifier,
     painter: Painter? = null
 ) {
-    val containerColor = animateColorAsState(
+    val containerColor by animateColorAsState(
         targetValue = if (isSelected) Theme.colors.primary else Color.Transparent
     )
-    val labelColor = animateColorAsState(
+    val labelColor by animateColorAsState(
         targetValue = if (isSelected) Theme.colors.onPrimary
         else Theme.colors.contentSecondary
     )
-    val iconColor = animateColorAsState(
+    val iconColor by animateColorAsState(
         targetValue = if (isSelected) Theme.colors.onPrimary
         else Theme.colors.contentSecondary
     )
@@ -45,13 +46,13 @@ fun BpChip(
                     painter = painter,
                     contentDescription = "$label icon",
                     Modifier.size(AssistChipDefaults.IconSize),
-                    tint = iconColor.value
+                    tint = iconColor
                 )
             }
         },
         colors = AssistChipDefaults.assistChipColors(
-            containerColor = containerColor.value,
-            labelColor = labelColor.value
+            containerColor = containerColor,
+            labelColor = labelColor
         ),
         border = AssistChipDefaults.assistChipBorder(
             borderColor = Theme.colors.contentBorder,
