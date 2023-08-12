@@ -27,7 +27,6 @@ import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpChip
 import com.beepbeep.designSystem.ui.composable.BpNavigationBar
 import com.beepbeep.designSystem.ui.composable.BpNavigationBarItem
-import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.BpTheme
 import com.beepbeep.designSystem.ui.theme.Theme
@@ -41,14 +40,14 @@ fun DesignApp() {
         Column(
             Modifier.fillMaxSize().background(Theme.colors.background),
 //            horizontalAlignment = Alignment.CenterHorizontally,
-//            verticalArrangement = Arrangement.Bottom
+            verticalArrangement = Arrangement.Bottom
         ) {
-//            EnabledButtonsPreview()
-//            DisabledButtonsPreview()
-//            Spacer(modifier = Modifier.height(16.dp))
-            PreviewTextField()
-            PreviewChips()
-//            BottomNavigationBarPreview()
+            EnabledButtonsPreview()
+            DisabledButtonsPreview()
+            Spacer(modifier = Modifier.height(16.dp))
+//            PreviewTextField()
+//            PreviewChips()
+            BottomNavigationBarPreview()
         }
     }
 }
@@ -57,9 +56,9 @@ fun DesignApp() {
 @Composable
 fun PreviewChips() {
     Row(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceAround
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         var selected by remember { mutableStateOf(false) }
         var selected1 by remember { mutableStateOf(true) }
@@ -86,12 +85,10 @@ fun PreviewChips() {
 
 }
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun PreviewTextField() {
     Column(
-        modifier = Modifier.fillMaxSize().padding(8.dp),
-        verticalArrangement = Arrangement.SpaceAround
+        modifier = Modifier.fillMaxWidth().padding(8.dp),
     ) {
         var text1 by rememberSaveable { mutableStateOf("") }
         var text2 by rememberSaveable { mutableStateOf("") }
@@ -131,27 +128,26 @@ fun PreviewTextField() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 @Composable
 fun EnabledButtonsPreview() {
     Column(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
     ) {
         BpButton(
+            title = "Button",
+            painter = painterResource("sun.xml"),
             enabled = true,
             onClick = { },
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
-        ) {
-            Text("Button")
-        }
+        )
 
-        OutlinedButton(
+        BpOutlinedButton(
+            title = "Button",
             enabled = true,
             onClick = { },
             modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Button")
-        }
+        )
     }
 }
 
@@ -159,24 +155,24 @@ fun EnabledButtonsPreview() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DisabledButtonsPreview() {
-    Column(
+    Row(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
     ) {
         BpButton(
+            title = "Button",
             enabled = false,
             onClick = { },
-            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
-        ) {
-            Text("Button")
-        }
+            modifier = Modifier.fillMaxWidth().weight(1f)
+        )
 
-        OutlinedButton(
+        Spacer(modifier = Modifier.width(8.dp))
+
+        BpOutlinedButton(
+            title = "Button",
             enabled = false,
             onClick = {},
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Button")
-        }
+            modifier = Modifier.weight(1f).fillMaxWidth()
+        )
     }
 }
 
@@ -201,6 +197,7 @@ fun BottomNavigationBarPreview() {
         }
     }
 }
+
 
 
 expect fun getPlatformName(): String
