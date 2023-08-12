@@ -37,6 +37,7 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun BpToggleButton(
     onToggle: () -> Unit,
+    modifier: Modifier= Modifier,
     isDark: Boolean = isSystemInDarkTheme(),
 ) {
     val horizontalBias by animateFloatAsState(
@@ -50,7 +51,7 @@ fun BpToggleButton(
         BiasAlignment(horizontalBias = horizontalBias, verticalBias = 0f)
     } }
     Box(
-        Modifier
+        modifier
             .border(width = 1.dp, color = colors.contentBorder, shape = RoundedCornerShape(radius.small))
             .width(64.dp)
             .height(32.dp)
