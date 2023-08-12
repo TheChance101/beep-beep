@@ -70,7 +70,8 @@ private fun Circle(
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
 ) {
+   val primary= colors.primary
     Canvas(modifier = modifier.size(size = 18.dp).background(color = Color.Transparent)) {
-        drawCircle(color = if (isSelected) Color.White else Color(0xFFF53D47), radius = 18f)
+        drawCircle(color = if (isSelected) Color.White else primary, radius = 18f)
     }
 }
