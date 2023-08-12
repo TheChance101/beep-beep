@@ -34,7 +34,6 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
@@ -46,8 +45,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.beepbeep.designSystem.ui.composable.BeepBeepToggleButton
-import com.beepbeep.designSystem.ui.theme.surfaceTintLight
+import com.beepbeep.designSystem.ui.composable.BpToggleButton
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -111,7 +109,7 @@ fun DashBoardScaffold() {
                 }
             }
             Spacer(Modifier.weight(1f))
-            BeepBeepToggleButton(onToggle = {}, modifier = Modifier.padding(start = 24.dp))
+            BpToggleButton(onToggle = {}, modifier = Modifier.padding(start = 24.dp))
         }
         //endregion
 
