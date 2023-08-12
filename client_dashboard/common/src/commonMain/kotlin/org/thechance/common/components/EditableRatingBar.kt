@@ -33,7 +33,7 @@ fun EditableRatingBar(
                 position.value = currentEvent.changes[0].position.x.toDouble()
             }
             .onPointerEvent(PointerEventType.Move) {
-                editableRating.value = roundRating(position.value / iconsSize.value.toInt())
+                editableRating.value = position.value / iconsSize.value.toInt()
             }
             .onPointerEvent(PointerEventType.Press) { onClick(editableRating.value) }
     ) {
@@ -46,10 +46,4 @@ fun EditableRatingBar(
             iconsSize = iconsSize,
         )
     }
-}
-
-private fun roundRating(number: Double): Double {
-    val integerPart = number.toInt()
-    val decimalPart = number - integerPart
-    return if (decimalPart >= 0.6) integerPart + 1.0 else number
 }

@@ -24,21 +24,38 @@ fun RatingBar(
 ) {
     if (rating > count) throw Exception("rating is bigger than count")
     Row(modifier = modifier) {
-        repeat(floor(rating).toInt()) {
+        repeat(
+            when {
+                (rating.rem(1) <= 0.9) -> {
+                    floor(rating).toInt()
+                }
+
+                else -> ceil(rating).toInt()
+            }
+        ) {
             Image(
                 painter = selectedIcon,
                 contentDescription = null,
                 modifier = Modifier.size(iconsSize)
             )
         }
-        if (!(rating.rem(1).equals(0.0))) {
+        if (rating.rem(1) in 0.5..0.9) {
+            println(rating)
             Image(
                 painter = halfSelectedIcon,
                 contentDescription = null,
                 modifier = Modifier.size(iconsSize)
             )
         }
-        repeat((count - ceil(rating)).toInt()) {
+        repeat(
+            when {
+                (rating.rem(1) >= 0.5) -> {
+                    (count - ceil(rating)).toInt()
+                }
+
+                else -> (count - floor(rating)).toInt()
+            }
+        ) {
             Image(
                 painter = notSelectedIcon,
                 contentDescription = null,
