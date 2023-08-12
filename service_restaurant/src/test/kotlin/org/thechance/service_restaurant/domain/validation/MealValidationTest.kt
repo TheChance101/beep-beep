@@ -9,6 +9,7 @@ import org.thechance.service_restaurant.domain.usecase.validation.MealValidation
 import org.thechance.service_restaurant.domain.usecase.validation.Validation
 import org.thechance.service_restaurant.domain.usecase.validation.Validation.Companion.DESCRIPTION_MAX_LENGTH
 import org.thechance.service_restaurant.domain.usecase.validation.Validation.Companion.DESCRIPTION_MIN_LENGTH
+import org.thechance.service_restaurant.domain.usecase.validation.Validation.Companion.MAX_CUISINE
 import org.thechance.service_restaurant.domain.usecase.validation.Validation.Companion.NULL_DOUBLE
 import org.thechance.service_restaurant.domain.utils.*
 
@@ -24,7 +25,7 @@ class MealValidationTest {
         val validMeal = createValidMeal()
         // No exception should be thrown
         val mealExecutable = Executable {
-            validationMeal .validateAddMeal(validMeal)
+            validationMeal.validateAddMeal(validMeal)
         }
         //then no exception should be thrown and pass validation
         assertDoesNotThrow(mealExecutable)
@@ -63,7 +64,8 @@ class MealValidationTest {
     @Test
     fun `should throw exception when add meal with invalid restaurant Id`() {
         val invalidRestaurantIdMeal = createValidMeal().copy(restaurantId = "invalid_id")
-        val restaurantIdExecutable = Executable { validationMeal.validateAddMeal(invalidRestaurantIdMeal) }
+        val restaurantIdExecutable =
+            Executable { validationMeal.validateAddMeal(invalidRestaurantIdMeal) }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, restaurantIdExecutable)
         assertEquals(true, error.errorCodes.contains(INVALID_ID))
@@ -73,16 +75,31 @@ class MealValidationTest {
     fun `should throw exception when add meal with empty cuisines`() {
         // given a meal with empty cuisines
         val emptyCuisinesMeal = createValidMeal().copy(cuisines = emptyList())
-        val cuisineExecutable = Executable {validationMeal. validateAddMeal(emptyCuisinesMeal) }
+        val cuisineExecutable = Executable { validationMeal.validateAddMeal(emptyCuisinesMeal) }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, cuisineExecutable)
         assertEquals(true, error.errorCodes.contains(INVALID_REQUEST_PARAMETER))
     }
 
     @Test
+    fun `should throw exception when add meal with more than MAX cuisines`() {
+        // given a meal with more than max cuisines
+        val cuisines = mutableListOf<Cuisine>()
+        for (i in 0..(MAX_CUISINE + 1)) {
+            cuisines.add(Cuisine("64cc5fdd52F4136b92938f8c", "Italian"))
+        }
+        val emptyCuisinesMeal = createValidMeal().copy(cuisines = cuisines)
+        val cuisineExecutable = Executable { validationMeal.validateAddMeal(emptyCuisinesMeal) }
+        // then check if throw exception
+        val error = assertThrows(MultiErrorException::class.java, cuisineExecutable)
+        assertEquals(true, error.errorCodes.contains(INVALID_CUISINE_LIMIT))
+    }
+
+    @Test
     fun `should throw exception when add meal with invalid cuisine Id`() {
         // given a meal with invalid cuisine Id
-        val invalidCuisineIdMeal = createValidMeal().copy(cuisines = listOf(Cuisine("invalid_id", "Italian")))
+        val invalidCuisineIdMeal =
+            createValidMeal().copy(cuisines = listOf(Cuisine("invalid_id", "Italian")))
         val cuisineExecutable = Executable { validationMeal.validateAddMeal(invalidCuisineIdMeal) }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, cuisineExecutable)
@@ -114,7 +131,7 @@ class MealValidationTest {
     fun `should pass when add meal with description is valid `() {
         // given a meal when description is 255
         val invalidDescriptionMeal = createValidMeal().copy(description = "A".repeat(255))
-        val mealExecutable = Executable {validationMeal. validateAddMeal(invalidDescriptionMeal) }
+        val mealExecutable = Executable { validationMeal.validateAddMeal(invalidDescriptionMeal) }
 
         // then check if throw exception
         assertDoesNotThrow(mealExecutable)
@@ -123,7 +140,7 @@ class MealValidationTest {
     @Test
     fun `should throw exception when add meal with invalid price`() {
         val invalidPriceMeal = createValidMeal().copy(price = -10.0)
-        val mealExecutable = Executable {validationMeal. validateAddMeal(invalidPriceMeal) }
+        val mealExecutable = Executable { validationMeal.validateAddMeal(invalidPriceMeal) }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, mealExecutable)
         assertEquals(true, error.errorCodes.contains(INVALID_PRICE))
@@ -133,7 +150,7 @@ class MealValidationTest {
     fun `should pass when add meal with valid price`() {
         // given a meal with valid price
         val validPriceMeal = createValidMeal().copy(price = 10.0)
-        val mealExecutable = Executable {validationMeal. validateAddMeal(validPriceMeal) }
+        val mealExecutable = Executable { validationMeal.validateAddMeal(validPriceMeal) }
 
         // then check if throw exception
         assertDoesNotThrow(mealExecutable)
@@ -153,7 +170,7 @@ class MealValidationTest {
     fun `should pass when add meal with maximum valid price `() {
         // given a meal with maximum valid price
         val maximumPriceMeal = createValidMeal().copy(price = 1000.0)
-        val mealExecutable = Executable {validationMeal. validateAddMeal(maximumPriceMeal) }
+        val mealExecutable = Executable { validationMeal.validateAddMeal(maximumPriceMeal) }
 
         // then check if throw exception
         assertDoesNotThrow(mealExecutable)
@@ -173,7 +190,7 @@ class MealValidationTest {
     fun `should throw exception when add meal with invalid zero price `() {
         // given a meal with invalid zero price
         val invalidZeroPriceMeal = createValidMeal().copy(price = 0.0)
-        val mealExecutable = Executable {validationMeal. validateAddMeal(invalidZeroPriceMeal) }
+        val mealExecutable = Executable { validationMeal.validateAddMeal(invalidZeroPriceMeal) }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, mealExecutable)
         assertEquals(true, error.errorCodes.contains(INVALID_PRICE))
@@ -183,7 +200,7 @@ class MealValidationTest {
     fun `should throw exception when add meal with invalid high price `() {
         // given a meal with invalid high price
         val invalidHighPriceMeal = createValidMeal().copy(price = 1500.0)
-        val mealExecutable = Executable {validationMeal. validateAddMeal(invalidHighPriceMeal) }
+        val mealExecutable = Executable { validationMeal.validateAddMeal(invalidHighPriceMeal) }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, mealExecutable)
         assertEquals(true, error.errorCodes.contains(INVALID_PRICE))
@@ -236,7 +253,7 @@ class MealValidationTest {
             cuisines = listOf(),
         )
         // when validateUpdateMeal is invoked
-        val result = Executable {validationMeal. validateUpdateMeal(mealDetails) }
+        val result = Executable { validationMeal.validateUpdateMeal(mealDetails) }
         // then throw MultiErrorException contains INVALID_REQUEST_PARAMETER
         val throwable = assertThrows(MultiErrorException::class.java, result)
         assertTrue(throwable.errorCodes.contains(INVALID_REQUEST_PARAMETER))
@@ -274,7 +291,7 @@ class MealValidationTest {
             cuisines = listOf(),
         )
         // when validateUpdateMeal is invoked
-        val result = Executable {validationMeal. validateUpdateMeal(mealDetails) }
+        val result = Executable { validationMeal.validateUpdateMeal(mealDetails) }
         // then throw MultiErrorException contains INVALID_ID
         val throwable = assertThrows(MultiErrorException::class.java, result)
         assertTrue(throwable.errorCodes.contains(INVALID_ID))
@@ -311,10 +328,24 @@ class MealValidationTest {
             cuisines = listOf(),
         )
         // when validateUpdateMeal is invoked
-        val result = Executable {validationMeal. validateUpdateMeal(mealDetails) }
+        val result = Executable { validationMeal.validateUpdateMeal(mealDetails) }
         // then throw MultiErrorException contains INVALID_NAME
         val throwable = assertThrows(MultiErrorException::class.java, result)
         assertTrue(throwable.errorCodes.contains(INVALID_NAME))
+    }
+
+    @Test
+    fun `should throw exception when update meal with more than MAX cuisines`() {
+        // given a meal with more than max cuisines
+        val cuisines = mutableListOf<Cuisine>()
+        for (i in 0..(MAX_CUISINE + 1)) {
+            cuisines.add(Cuisine("64cc5fdd52F4136b92938f8c", "Italian"))
+        }
+        val emptyCuisinesMeal = createValidMeal().copy(cuisines = cuisines)
+        val cuisineExecutable = Executable { validationMeal.validateUpdateMeal(emptyCuisinesMeal) }
+        // then check if throw exception
+        val error = assertThrows(MultiErrorException::class.java, cuisineExecutable)
+        assertEquals(true, error.errorCodes.contains(INVALID_CUISINE_LIMIT))
     }
 
     @Test
@@ -380,7 +411,7 @@ class MealValidationTest {
         val result = Executable { validationMeal.validateUpdateMeal(mealDetails) }
         // then throw MultiErrorException contains INVALID_ID
         val throwable = assertThrows(MultiErrorException::class.java, result)
-        assertTrue(throwable.errorCodes.contains(INVALID_ID))
+        assertTrue(throwable.errorCodes.contains(INVALID_ONE_OR_MORE_IDS))
     }
 
     @Test
@@ -405,7 +436,7 @@ class MealValidationTest {
             cuisines = cuisines,
         )
         // when  validateUpdateMeal is invoked
-        val result = Executable {validationMeal. validateUpdateMeal(mealDetails) }
+        val result = Executable { validationMeal.validateUpdateMeal(mealDetails) }
         // then check throw MultiErrorException contains INVALID_ONE_OR_MORE_IDS
         val throwable = assertThrows(MultiErrorException::class.java, result)
         assertTrue(throwable.errorCodes.contains(INVALID_ONE_OR_MORE_IDS))
@@ -433,7 +464,7 @@ class MealValidationTest {
             cuisines = cuisines,
         )
         // when validateUpdateMeal is invoked
-        val result = Executable {validationMeal. validateUpdateMeal(mealDetails) }
+        val result = Executable { validationMeal.validateUpdateMeal(mealDetails) }
         // then check nothing happens
         assertDoesNotThrow(result)
     }

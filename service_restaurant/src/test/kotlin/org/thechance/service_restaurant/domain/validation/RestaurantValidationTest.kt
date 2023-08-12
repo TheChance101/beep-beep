@@ -108,7 +108,7 @@ class RestaurantValidationTest {
     }
 
     @Test
-    fun `should throw exception when creat restaurant with rate is more than five`() {
+    fun `should throw exception when create restaurant with rate is more than five`() {
         // given a restaurant when rate is above upper bound  5.0
         val upperRateExecutable = Executable {
             restaurantValidation.validationRestaurant(fakeRestaurant()[0].copy(rate = 5.1))
@@ -121,7 +121,7 @@ class RestaurantValidationTest {
     }
 
     @Test
-    fun `should throw exception when creat restaurant with phone is invalid`() {
+    fun `should throw exception when create restaurant with phone is invalid`() {
         // given a restaurant when phone is character
         val characterPhoneExecutable = Executable {
             restaurantValidation.validationRestaurant(fakeRestaurant()[0].copy(phone = "s".repeat(10)))
@@ -132,7 +132,7 @@ class RestaurantValidationTest {
     }
 
     @Test
-    fun `should pass when creat restaurant with phone is valid`() {
+    fun `should pass when create restaurant with phone is valid`() {
         // given a restaurant when phone is character
         val characterPhoneExecutable = Executable {
             restaurantValidation.validationRestaurant(fakeRestaurant()[0].copy(phone = "1".repeat(10)))
@@ -142,7 +142,7 @@ class RestaurantValidationTest {
     }
 
     @Test
-    fun `should throw exception when creat restaurant with phone is short`() {
+    fun `should throw exception when create restaurant with phone is short`() {
         // given a restaurant when phone is less than 10
         val shortPhoneExecutable = Executable {
             restaurantValidation.validationRestaurant(fakeRestaurant()[0].copy(phone = "1".repeat(9)))
@@ -153,7 +153,7 @@ class RestaurantValidationTest {
     }
 
     @Test
-    fun `should throw exception when creat restaurant with phone is long`() {
+    fun `should throw exception when create restaurant with phone is long`() {
         // given a restaurant when phone is more than 10
         val longPhoneExecutable = Executable {
             restaurantValidation.validationRestaurant(fakeRestaurant()[0].copy(phone = "1".repeat(11)))
@@ -164,7 +164,7 @@ class RestaurantValidationTest {
     }
 
     @Test
-    fun `should throw exception when creat restaurant with phone is empty`() {
+    fun `should throw exception when create restaurant with phone is empty`() {
         // given a restaurant when phone is empty
         val emptyPhoneExecutable = Executable {
             restaurantValidation.validationRestaurant(fakeRestaurant()[0].copy(phone = " "))
@@ -175,7 +175,7 @@ class RestaurantValidationTest {
     }
 
     @Test
-    fun `should throw exception when creat restaurant with latitude invalid`() {
+    fun `should throw exception when create restaurant with latitude invalid`() {
         // given a restaurant when latitude is more than 90.0
         val invalidLatitudeExecutable = Executable {
             restaurantValidation.validationRestaurant(
@@ -193,7 +193,7 @@ class RestaurantValidationTest {
     }
 
     @Test
-    fun `should throw exception when creat restaurant with longitude invalid`() {
+    fun `should throw exception when create restaurant with longitude invalid`() {
         // given a restaurant when longitude is more than 180.0
         val invalidLongitudeExecutable = Executable {
             restaurantValidation.validationRestaurant(fakeRestaurant()[0].copy(address = Address(40.0, -190.0)))
@@ -204,7 +204,7 @@ class RestaurantValidationTest {
     }
 
     @Test
-    fun `should throw exception when creat restaurant with latitude and longitude invalid`() {
+    fun `should throw exception when create restaurant with latitude and longitude invalid`() {
         val invalidLongitudeAndLatitudeExecutable = Executable {
             restaurantValidation.validationRestaurant(fakeRestaurant()[0].copy(address = Address(-91.0, -181.0)))
         }
@@ -215,7 +215,7 @@ class RestaurantValidationTest {
 
 
     @Test
-    fun `should throw exception when creat restaurant with invalid price level`() {
+    fun `should throw exception when create restaurant with invalid price level`() {
         // given a restaurant when price level not is $, $$, $$$, $$$$
         val invalidPriceLevelExecutable = Executable {
             restaurantValidation.validationRestaurant(fakeRestaurant()[0].copy(priceLevel = "invalid_level"))

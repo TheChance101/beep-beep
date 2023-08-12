@@ -93,6 +93,7 @@ class Validation {
         const val LONGITUDE_MIN = -180.0
         const val LONGITUDE_MAX = 180.0
         const val NULL_DOUBLE = -1.0
+        const val MAX_CUISINE = 3
     }
 
 
