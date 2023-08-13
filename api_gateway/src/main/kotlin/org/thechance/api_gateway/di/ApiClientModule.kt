@@ -8,17 +8,25 @@ import io.ktor.client.plugins.logging.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.util.*
 import kotlinx.serialization.json.Json
-import org.koin.dsl.module
+import org.koin.core.annotation.Module
+import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.APIS
 
-val ApiGatewayModule = module {
 
-    single { Attributes(true) }
+@Module
+class ApiClientModule {
 
-    single {
-        HttpClient(OkHttp) {
+    @Single
+    fun provideHttpClientAttribute(): Attributes {
+       return  Attributes(true)
+    }
 
-            val clientAttributes = get<Attributes>()
+    @Single
+    fun provideHttpClient(
+        clientAttributes: Attributes
+    ): HttpClient {
+        return HttpClient(OkHttp) {
+
 
             install(Logging) {
                 logger = Logger.DEFAULT
@@ -29,22 +37,18 @@ val ApiGatewayModule = module {
                 when (clientAttributes[AttributeKey<String>("API")]) {
                     APIS.IDENTITY_API.value -> {
                         url("http://127.0.0.1:8080")
-
                     }
 
                     APIS.RESTAURANT_API.value -> {
-                        url("http://127.0.0.1:8080")
-
+                        url("http://127.0.0.2:8080")
                     }
 
                     APIS.TAXI_API.value -> {
-                        url("http://127.0.0.1:8080")
-
+                        url("http://127.0.0.3:8080")
                     }
 
                     APIS.NOTIFICATION_API.value -> {
-                        url("http://127.0.0.1:8080")
-
+                        url("http://127.0.0.4:8080")
                     }
 
                 }
@@ -59,7 +63,7 @@ val ApiGatewayModule = module {
                 )
             }
         }
-    }
 
+    }
 
 }
