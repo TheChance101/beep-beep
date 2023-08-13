@@ -106,7 +106,7 @@ fun DashBoardScaffold() {
     val animatedFloat = animateFloatAsState(targetValue = when(isExpanded.value){
         true -> .16f
         false -> .08f
-    }
+    },
     )
     val sideBarWidth = remember { mutableStateOf(0f) }
     Row(Modifier.fillMaxSize()) {
@@ -167,7 +167,7 @@ fun DashBoardScaffold() {
                             )
                             AnimatedVisibility(
                                 visible = isExpanded.value,
-                                enter = fadeIn(tween(600)),
+                                enter = fadeIn(tween(550)),
                                 exit = fadeOut()
                             ) {
                                 Text(
@@ -184,14 +184,14 @@ fun DashBoardScaffold() {
                 }
             }
             Spacer(Modifier.weight(1f))
-            Row (horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically){
-                BpToggleButton(onToggle = {}, modifier = Modifier.offset(x=animateDpAsState(targetValue = if (!isExpanded.value) sideBarWidth.value.pxToDp() /2 - 32.dp else 32.dp -24.dp,
+            Row (horizontalArrangement = Arrangement.spacedBy(32.dp), verticalAlignment = Alignment.CenterVertically){
+                BpToggleButton(onToggle = {}, modifier = Modifier.offset(x=animateDpAsState(targetValue = if (!isExpanded.value) sideBarWidth.value.pxToDp() /2 - 32.dp else 24.dp,
                     tween(600)
                 ).value))
                 AnimatedVisibility(
                     visible = isExpanded.value,
-                    enter = fadeIn(),
-                    exit = fadeOut()
+                    enter = fadeIn(tween(500)),
+                    exit = fadeOut(tween(500))
                 ){
                     Text("Dark theme", maxLines = 1)
                 }
@@ -202,7 +202,7 @@ fun DashBoardScaffold() {
 
         //region Appbar
         Row(
-            Modifier.height(96.dp).weight(1.5f)
+            Modifier.height(96.dp).weight(1.5f).background(Color.White)
                 .bottomBorder(color = Color.Black.copy(.08f), strokeWidth = 2f)
                 .padding(horizontal = 40.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
