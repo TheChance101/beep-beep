@@ -4,6 +4,7 @@ import org.koin.core.annotation.Single
 import org.thechance.service_notification.domain.entity.InternalServerErrorException
 import org.thechance.service_notification.domain.gateway.IDatabaseGateway
 import org.thechance.service_notification.domain.gateway.IPushNotificationGateway
+import org.thechance.service_notification.endpoints.ALREADY_EXISTS_TOPIC
 import org.thechance.service_notification.endpoints.TOPIC_NOT_EXISTS
 
 interface ITopicManagementUseCase {
@@ -22,6 +23,7 @@ class TopicManagementUseCase(
     private val databaseGateway: IDatabaseGateway,
 ) : ITopicManagementUseCase {
     override suspend fun createTopic(topic: String): Boolean {
+        if (databaseGateway.isTopicAlreadyExists(topic)) throw InternalServerErrorException(ALREADY_EXISTS_TOPIC)
         return databaseGateway.createTopic(topic)
     }
 
