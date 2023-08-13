@@ -1,9 +1,11 @@
 package org.thechance.service_notification.domain.usecases
 
+import org.koin.core.annotation.Single
+import org.thechance.service_notification.domain.entity.InternalServerErrorException
 import org.thechance.service_notification.domain.entity.Notification
-import org.thechance.service_notification.domain.entity.NotificationRequest
 import org.thechance.service_notification.domain.gateway.IDatabaseGateway
 import org.thechance.service_notification.domain.gateway.IPushNotificationGateway
+import org.thechance.service_notification.endpoints.TOPIC_NOT_EXISTS
 
 interface INotificationManagementUseCase {
     suspend fun sendNotificationToUser(userId: String, title: String, body: String): Boolean
@@ -13,6 +15,7 @@ interface INotificationManagementUseCase {
     suspend fun getNotificationHistory(page: Int, limit: Int): List<Notification>
 }
 
+@Single
 class NotificationManagementUseCase(
     private val pushNotificationGateway: IPushNotificationGateway,
     private val databaseGateway: IDatabaseGateway,
@@ -22,7 +25,7 @@ class NotificationManagementUseCase(
         val tokens = databaseGateway.getUserTokens(userId)
         return pushNotificationGateway.sendNotification(tokens, title, body).also {
             databaseGateway.addNotificationToHistory(
-                NotificationRequest(
+                Notification(
                     title = title,
                     body = body,
                     date = System.currentTimeMillis(),
@@ -33,9 +36,10 @@ class NotificationManagementUseCase(
     }
 
     override suspend fun sendNotificationToTopic(topic: String, title: String, body: String): Boolean {
+        if (!databaseGateway.isTopicAlreadyExists(topic)) throw InternalServerErrorException(TOPIC_NOT_EXISTS)
         return pushNotificationGateway.sendNotificationToTopic(topic, title, body).also {
             databaseGateway.addNotificationToHistory(
-                NotificationRequest(
+                Notification(
                     title = title,
                     body = body,
                     date = System.currentTimeMillis(),

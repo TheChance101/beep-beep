@@ -14,7 +14,6 @@ import org.thechance.service_notification.data.mappers.toNotificationEntity
 import org.thechance.service_notification.data.utils.paginate
 import org.thechance.service_notification.domain.entity.NotFoundException
 import org.thechance.service_notification.domain.entity.Notification
-import org.thechance.service_notification.domain.entity.NotificationRequest
 import org.thechance.service_notification.domain.gateway.IDatabaseGateway
 import org.thechance.service_notification.endpoints.TOKENS_NOT_FOUND
 
@@ -55,7 +54,7 @@ class DatabaseGateway(
         return databaseContainer.topicCollection.findOne(TopicCollection::name eq name) != null
     }
 
-    override suspend fun addNotificationToHistory(notification: NotificationRequest) {
+    override suspend fun addNotificationToHistory(notification: Notification) {
         historyCollection.insertOne(notification.toCollection())
     }
 

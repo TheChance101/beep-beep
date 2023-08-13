@@ -5,6 +5,7 @@ import io.ktor.server.application.*
 import io.ktor.server.plugins.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
+import org.thechance.service_notification.domain.entity.InternalServerErrorException
 import org.thechance.service_notification.domain.entity.NotFoundException
 
 fun Application.configureStatusPage() {
@@ -21,6 +22,10 @@ fun StatusPagesConfig.handleExceptions() {
 
     exception<NotFoundException> { call, cause ->
         call.respond(HttpStatusCode.NotFound, listOf(cause.message?.toInt()))
+    }
+
+    exception<InternalServerErrorException> { call, cause ->
+        call.respond(HttpStatusCode.InternalServerError, listOf(cause.message?.toInt()))
     }
 
 }

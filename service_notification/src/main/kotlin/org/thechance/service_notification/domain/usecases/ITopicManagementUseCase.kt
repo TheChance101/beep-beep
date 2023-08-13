@@ -1,8 +1,10 @@
 package org.thechance.service_notification.domain.usecases
 
 import org.koin.core.annotation.Single
+import org.thechance.service_notification.domain.entity.InternalServerErrorException
 import org.thechance.service_notification.domain.gateway.IDatabaseGateway
 import org.thechance.service_notification.domain.gateway.IPushNotificationGateway
+import org.thechance.service_notification.endpoints.TOPIC_NOT_EXISTS
 
 interface ITopicManagementUseCase {
     suspend fun createTopic(topic: String): Boolean
@@ -28,12 +30,12 @@ class TopicManagementUseCase(
     }
 
     override suspend fun subscribeToTopic(topic: String, token: String): Boolean {
-        if (!databaseGateway.isTopicAlreadyExists(topic)) return false
+        if (!databaseGateway.isTopicAlreadyExists(topic)) throw InternalServerErrorException(TOPIC_NOT_EXISTS)
         return pushNotificationGateway.subscribeTokenToTopic(topic, token)
     }
 
     override suspend fun unsubscribeFromTopic(topic: String, token: String): Boolean {
-        if (!databaseGateway.isTopicAlreadyExists(topic)) return false
+        if (!databaseGateway.isTopicAlreadyExists(topic)) throw InternalServerErrorException(TOPIC_NOT_EXISTS)
         return pushNotificationGateway.unsubscribeTokenFromTopic(topic, token)
     }
 

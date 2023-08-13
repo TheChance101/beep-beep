@@ -7,6 +7,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.service_notification.data.mappers.toDto
+import org.thechance.service_notification.domain.entity.InternalServerErrorException
 import org.thechance.service_notification.domain.usecases.INotificationManagementUseCase
 import org.thechance.service_notification.domain.usecases.IRegisterTokenUseCase
 import org.thechance.service_notification.domain.usecases.ITopicManagementUseCase
@@ -24,7 +25,8 @@ fun Route.notificationRoutes() {
     route("tokens") {
         post("/register") {
             val receivedData = call.receive<TokenRegistrationDto>()
-            registerToken(receivedData.userId, receivedData.token)
+            val result = registerToken(receivedData.userId, receivedData.token)
+            if (!result) throw InternalServerErrorException(TOKEN_NOT_REGISTERED)
             call.respond(HttpStatusCode.OK, "Token registered successfully")
         }
     }
@@ -33,22 +35,24 @@ fun Route.notificationRoutes() {
         post("send/user/{userId}") {
             val userId = call.parameters.requireNotEmpty("userId")
             val receivedData = call.receive<NotificationDto>()
-            notificationManagement.sendNotificationToUser(
+            val result = notificationManagement.sendNotificationToUser(
                 userId,
                 receivedData.title,
                 receivedData.body
             )
+            if (!result) throw InternalServerErrorException(NOTIFICATION_NOT_SENT)
             call.respond(HttpStatusCode.OK, "Notification sent successfully")
         }
 
         post("send/topic/{topicName}") {
             val topicName = call.parameters.requireNotEmpty("topicName")
             val receivedData = call.receive<NotificationDto>()
-            notificationManagement.sendNotificationToTopic(
+            val result = notificationManagement.sendNotificationToTopic(
                 topicName,
                 receivedData.title,
                 receivedData.body
             )
+            if (!result) throw InternalServerErrorException(NOTIFICATION_NOT_SENT)
             call.respond(HttpStatusCode.OK, "Notification sent successfully")
         }
 
@@ -63,7 +67,8 @@ fun Route.notificationRoutes() {
     route("topics") {
         post("/{topic}") {
             val topic = call.parameters.requireNotEmpty("topic")
-            topicManagement.createTopic(topic)
+            val result = topicManagement.createTopic(topic)
+            if (!result) throw InternalServerErrorException(TOPIC_NOT_CREATED)
             call.respond(HttpStatusCode.Created, "Topic created successfully")
         }
 
@@ -74,13 +79,15 @@ fun Route.notificationRoutes() {
 
         post("subscribe") {
             val receivedData = call.receive<TopicSubscriptionDto>()
-            topicManagement.subscribeToTopic(receivedData.topic, receivedData.token)
+            val result = topicManagement.subscribeToTopic(receivedData.topic, receivedData.token)
+            if (!result) throw InternalServerErrorException(COULD_NOT_SUBSCRIBE_TO_TOPIC)
             call.respond(HttpStatusCode.OK, "Token subscribed successfully")
         }
 
         post("unsubscribe") {
             val receivedData = call.receive<TopicSubscriptionDto>()
-            topicManagement.unsubscribeFromTopic(receivedData.topic, receivedData.token)
+            val result = topicManagement.unsubscribeFromTopic(receivedData.topic, receivedData.token)
+            if (!result) throw InternalServerErrorException(COULD_NOT_UNSUBSCRIBE_FROM_TOPIC)
             call.respond(HttpStatusCode.OK, "Token unsubscribed successfully")
         }
 
