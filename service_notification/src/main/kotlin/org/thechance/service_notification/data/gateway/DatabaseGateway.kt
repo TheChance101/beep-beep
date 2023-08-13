@@ -4,9 +4,10 @@ import com.mongodb.client.model.UpdateOptions
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.addToSet
+import org.litote.kmongo.eq
 import org.litote.kmongo.`in`
 import org.thechance.service_notification.data.DatabaseContainer
-import org.thechance.service_notification.data.collection.GroupUserCollection
+import org.thechance.service_notification.data.collection.TopicCollection
 import org.thechance.service_notification.data.collection.UserCollection
 import org.thechance.service_notification.data.mappers.toCollection
 import org.thechance.service_notification.data.mappers.toNotificationEntity
@@ -37,19 +38,22 @@ class DatabaseGateway(
         ).wasAcknowledged()
     }
 
-    override suspend fun getUsersGroupIds(userGroup: String): List<String> {
-        val collection = databaseContainer.database.getCollection<GroupUserCollection>(userGroup)
-        return collection.find().toList().map { it.userId.toHexString() }
-    }
-
     override suspend fun getUsersTokens(ids: List<String>): List<String> {
         return userCollection.find(UserCollection::id `in` ids.map { ObjectId(it) }).toList()
             .flatMap { it.deviceTokens }
     }
 
-    override suspend fun addUserToGroup(userId: String, userGroup: String): Boolean {
-        val collection = databaseContainer.database.getCollection<GroupUserCollection>(userGroup)
-        return collection.insertOne(GroupUserCollection(userId = ObjectId(userId))).wasAcknowledged()
+    override suspend fun createTopic(name: String) {
+        val topicCollection = TopicCollection(name)
+        databaseContainer.topicCollection.insertOne(topicCollection)
+    }
+
+    override suspend fun getTopics(): List<String> {
+        return databaseContainer.topicCollection.find().toList().map { it.toString() }
+    }
+
+    override suspend fun isTopicAlreadyExists(name: String): Boolean {
+        return databaseContainer.topicCollection.findOne(TopicCollection::name eq name) != null
     }
 
     override suspend fun addNotificationToUserHistory(notification: NotificationRequest) {

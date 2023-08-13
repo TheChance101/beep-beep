@@ -13,10 +13,13 @@ interface IDatabaseGateway {
 
     suspend fun registerToken(userId: String, token: String): Boolean
 
-    suspend fun getUsersGroupIds(userGroup: String): List<String>
 
     suspend fun getUsersTokens(ids: List<String>): List<String>
 
-    suspend fun addUserToGroup(userId: String, userGroup: String): Boolean
+    suspend fun createTopic(name: String)
+
+    suspend fun getTopics(): List<String>
+
+    suspend fun isTopicAlreadyExists(name: String): Boolean
 
 }
