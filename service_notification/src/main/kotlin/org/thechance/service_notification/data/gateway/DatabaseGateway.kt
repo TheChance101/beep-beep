@@ -12,7 +12,7 @@ import org.thechance.service_notification.data.collection.UserCollection
 import org.thechance.service_notification.data.mappers.toCollection
 import org.thechance.service_notification.data.mappers.toNotificationEntity
 import org.thechance.service_notification.data.utils.paginate
-import org.thechance.service_notification.domain.NotFoundException
+import org.thechance.service_notification.domain.entity.NotFoundException
 import org.thechance.service_notification.domain.entity.Notification
 import org.thechance.service_notification.domain.entity.NotificationRequest
 import org.thechance.service_notification.domain.gateway.IDatabaseGateway
@@ -26,7 +26,7 @@ class DatabaseGateway(
     private val userCollection by lazy { databaseContainer.userCollection }
     private val historyCollection by lazy { databaseContainer.historyCollection }
 
-    override suspend fun getTokensForUserById(id: String): List<String> {
+    override suspend fun getUserTokens(id: String): List<String> {
         return userCollection.findOneById(ObjectId(id))?.deviceTokens ?: throw NotFoundException(TOKENS_NOT_FOUND)
     }
 
@@ -43,9 +43,8 @@ class DatabaseGateway(
             .flatMap { it.deviceTokens }
     }
 
-    override suspend fun createTopic(name: String) {
-        val topicCollection = TopicCollection(name)
-        databaseContainer.topicCollection.insertOne(topicCollection)
+    override suspend fun createTopic(name: String): Boolean {
+        return databaseContainer.topicCollection.insertOne(TopicCollection(name)).wasAcknowledged()
     }
 
     override suspend fun getTopics(): List<String> {
@@ -56,7 +55,7 @@ class DatabaseGateway(
         return databaseContainer.topicCollection.findOne(TopicCollection::name eq name) != null
     }
 
-    override suspend fun addNotificationToUserHistory(notification: NotificationRequest) {
+    override suspend fun addNotificationToHistory(notification: NotificationRequest) {
         historyCollection.insertOne(notification.toCollection())
     }
 

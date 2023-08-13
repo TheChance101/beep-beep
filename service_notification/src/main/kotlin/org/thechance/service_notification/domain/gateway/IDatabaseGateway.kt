@@ -5,9 +5,9 @@ import org.thechance.service_notification.domain.entity.NotificationRequest
 
 interface IDatabaseGateway {
 
-    suspend fun getTokensForUserById(id: String): List<String>
+    suspend fun getUserTokens(id: String): List<String>
 
-    suspend fun addNotificationToUserHistory(notification: NotificationRequest)
+    suspend fun addNotificationToHistory(notification: NotificationRequest)
 
     suspend fun getNotificationHistory(page: Int, limit: Int): List<Notification>
 
@@ -16,7 +16,7 @@ interface IDatabaseGateway {
 
     suspend fun getUsersTokens(ids: List<String>): List<String>
 
-    suspend fun createTopic(name: String)
+    suspend fun createTopic(name: String): Boolean
 
     suspend fun getTopics(): List<String>
 
