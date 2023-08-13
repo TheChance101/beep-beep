@@ -1,9 +1,9 @@
 package org.thechance.service_notification.domain.usecases
 
 import org.koin.core.annotation.Single
+import org.thechance.service_notification.domain.entity.NotificationRequest
 import org.thechance.service_notification.domain.gateway.IDatabaseGateway
 import org.thechance.service_notification.domain.gateway.IPushNotificationGateway
-import org.thechance.service_notification.domain.model.NotificationRequest
 
 @Single
 class SendNotificationContainerUseCase(

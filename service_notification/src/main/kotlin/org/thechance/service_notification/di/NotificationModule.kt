@@ -21,7 +21,7 @@ val kmongoModule = module {
     }
 
     single {
-        get<MongoClient>().coroutine.getDatabase("TheChanceBeepBeep")
+        get<MongoClient>().coroutine.getDatabase("BeepBeepNotificationsDB")
     }
 }
 

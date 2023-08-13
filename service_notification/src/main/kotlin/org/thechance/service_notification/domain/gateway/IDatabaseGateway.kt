@@ -1,7 +1,7 @@
 package org.thechance.service_notification.domain.gateway
 
-import org.thechance.service_notification.domain.model.Notification
-import org.thechance.service_notification.domain.model.NotificationRequest
+import org.thechance.service_notification.domain.entity.Notification
+import org.thechance.service_notification.domain.entity.NotificationRequest
 
 interface IDatabaseGateway {
 

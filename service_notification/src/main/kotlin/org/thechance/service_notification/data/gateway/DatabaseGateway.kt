@@ -13,9 +13,9 @@ import org.thechance.service_notification.data.mappers.toCollection
 import org.thechance.service_notification.data.mappers.toNotificationEntity
 import org.thechance.service_notification.data.utils.paginate
 import org.thechance.service_notification.domain.NotFoundException
+import org.thechance.service_notification.domain.entity.Notification
+import org.thechance.service_notification.domain.entity.NotificationRequest
 import org.thechance.service_notification.domain.gateway.IDatabaseGateway
-import org.thechance.service_notification.domain.model.Notification
-import org.thechance.service_notification.domain.model.NotificationRequest
 import org.thechance.service_notification.endpoints.TOKENS_NOT_FOUND
 
 @Single
