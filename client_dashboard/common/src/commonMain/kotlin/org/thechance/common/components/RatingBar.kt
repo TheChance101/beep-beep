@@ -2,6 +2,7 @@ package org.thechance.common.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -12,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import kotlin.math.ceil
 import kotlin.math.floor
 
 
@@ -21,51 +21,28 @@ fun RatingBar(
     rating: Double,
     count: Int,
     selectedIcon: Painter,
-    notSelectedIcon: Painter,
     halfSelectedIcon: Painter,
+    notSelectedIcon: Painter,
     iconsSize: Dp = 24.dp,
+    iconsPadding: Dp = 0.dp,
     modifier: Modifier = Modifier,
 ) {
     var ratings by remember { mutableStateOf(rating) }
-     ratings = rating
-    if (ratings > count) ratings = 5.0
+    ratings = rating
+    if (ratings > count) throw Exception("rating is bigger than count")
     Row(modifier = modifier) {
-        repeat(
-            when {
-                (ratings.rem(1) <= 0.9) -> {
-                    floor(ratings).toInt()
-                }
+        repeat(count) { position ->
+            Image(
+                painter = when {
+                    position < floor(ratings) || (position == floor(ratings).toInt() && ratings.rem(
+                        1
+                    ) >= 0.9) -> selectedIcon
 
-                else -> ceil(ratings).toInt()
-            }
-        ) {
-            Image(
-                painter = selectedIcon,
+                    position < ratings && ratings.rem(1) in 0.5..0.9 -> halfSelectedIcon
+                    else -> notSelectedIcon
+                },
                 contentDescription = null,
-                modifier = Modifier.size(iconsSize)
-            )
-        }
-        if (ratings.rem(1) in 0.5..0.9) {
-            println(ratings)
-            Image(
-                painter = halfSelectedIcon,
-                contentDescription = null,
-                modifier = Modifier.size(iconsSize)
-            )
-        }
-        repeat(
-            when {
-                (ratings.rem(1) >= 0.5) -> {
-                    (count - ceil(ratings)).toInt()
-                }
-
-                else -> (count - floor(ratings)).toInt()
-            }
-        ) {
-            Image(
-                painter = notSelectedIcon,
-                contentDescription = null,
-                modifier = Modifier.size(iconsSize)
+                modifier = Modifier.padding(iconsPadding).size(iconsSize)
             )
         }
     }

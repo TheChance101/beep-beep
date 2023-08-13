@@ -8,7 +8,7 @@ import org.thechance.common.components.EditableRatingBar
 
 @Composable
 fun App() {
-    val rating = remember { mutableStateOf(1.7) }
+    val rating = remember { mutableStateOf(1.0) }
     fun onClick(newRating: Double) {
         rating.value = newRating
     }
