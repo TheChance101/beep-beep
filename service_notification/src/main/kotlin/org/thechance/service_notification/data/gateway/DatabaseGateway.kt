@@ -25,7 +25,7 @@ class DatabaseGateway(
     private val userCollection by lazy { databaseContainer.userCollection }
     private val historyCollection by lazy { databaseContainer.historyCollection }
 
-    override suspend fun getTokensForUserById(id: String): List<String> {
+    override suspend fun getUserTokens(id: String): List<String> {
         return userCollection.findOneById(ObjectId(id))?.deviceTokens ?: throw NotFoundException(TOKENS_NOT_FOUND)
     }
 
@@ -54,7 +54,7 @@ class DatabaseGateway(
         return databaseContainer.topicCollection.findOne(TopicCollection::name eq name) != null
     }
 
-    override suspend fun addNotificationToUserHistory(notification: Notification) {
+    override suspend fun addNotificationToHistory(notification: Notification) {
         historyCollection.insertOne(notification.toCollection())
     }
 
