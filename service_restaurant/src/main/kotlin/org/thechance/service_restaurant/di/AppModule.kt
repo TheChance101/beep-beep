@@ -1,13 +1,9 @@
 package org.thechance.service_restaurant.di
 
-import org.koin.dsl.module
+import org.koin.core.annotation.ComponentScan
+import org.koin.core.annotation.Module
 
 
-val BeepClient = module {
-    includes(
-        DataBaseModule,
-        UseCasesModule,
-        GatewaysModule
-    )
-}
-
+@Module(includes = [DataBaseModule::class])
+@ComponentScan("org.thechance.service_restaurant")
+class AppModule

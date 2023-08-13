@@ -1,5 +1,6 @@
 package org.thechance.service_restaurant.domain.usecase
 
+import org.koin.core.annotation.Single
 import org.thechance.service_restaurant.domain.entity.Cuisine
 import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.entity.MealDetails
@@ -7,15 +8,7 @@ import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
 import org.thechance.service_restaurant.domain.usecase.validation.MealValidationUseCase
 import org.thechance.service_restaurant.domain.utils.IValidation
-import org.thechance.service_restaurant.domain.utils.Validation
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_CUISINE_LIMIT
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_DESCRIPTION
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_NAME
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ONE_OR_MORE_IDS
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_PRICE
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_REQUEST_PARAMETER
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_UPDATE_PARAMETER
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 
@@ -26,6 +19,7 @@ interface IManageMealUseCase {
     suspend fun deleteMealFromRestaurant(mealId: String): Boolean
 }
 
+@Single(binds = [IManageMealUseCase::class])
 class ManageMealUseCase(
     private val restaurantGateway: IRestaurantGateway,
     private val optionsGateway: IRestaurantOptionsGateway,

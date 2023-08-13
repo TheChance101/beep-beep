@@ -1,5 +1,6 @@
 package org.thechance.service_restaurant.domain.usecase
 
+import org.koin.core.annotation.Single
 import org.thechance.service_restaurant.domain.entity.Restaurant
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.usecase.validation.IRestaurantValidationUseCase
@@ -15,6 +16,7 @@ interface IControlRestaurantsUseCase {
     suspend fun deleteRestaurant(restaurantId: String): Boolean
 }
 
+@Single(binds = [IControlRestaurantsUseCase::class])
 class ControlRestaurantsUseCase(
     private val restaurantGateway: IRestaurantGateway,
     private val basicValidation: IValidation,

@@ -1,5 +1,6 @@
 package org.thechance.service_restaurant.domain.usecase.validation
 
+import org.koin.core.annotation.Single
 import org.koin.core.component.KoinComponent
 import org.thechance.service_restaurant.domain.entity.Restaurant
 import org.thechance.service_restaurant.domain.utils.IValidation
@@ -17,6 +18,7 @@ interface IRestaurantValidationUseCase {
 
 }
 
+@Single(binds = [IRestaurantValidationUseCase::class])
 class RestaurantValidationUseCase(
     private val basicValidation: IValidation
 ) : IRestaurantValidationUseCase, KoinComponent {

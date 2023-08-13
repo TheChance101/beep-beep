@@ -1,5 +1,6 @@
 package org.thechance.service_restaurant.domain.usecase
 
+import org.koin.core.annotation.Single
 import org.thechance.service_restaurant.domain.entity.Restaurant
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
@@ -20,6 +21,7 @@ interface IManageRestaurantDetailsUseCase {
 
 }
 
+@Single(binds = [IManageRestaurantDetailsUseCase::class])
 class ManageRestaurantDetailsUseCase(
     private val restaurantGateway: IRestaurantGateway,
     private val optionsGateway: IRestaurantOptionsGateway,

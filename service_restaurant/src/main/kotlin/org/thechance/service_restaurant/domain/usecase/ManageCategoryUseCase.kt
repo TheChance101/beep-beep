@@ -1,5 +1,6 @@
 package org.thechance.service_restaurant.domain.usecase
 
+import org.koin.core.annotation.Single
 import org.thechance.service_restaurant.domain.entity.Category
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
 import org.thechance.service_restaurant.domain.usecase.validation.ICategoryValidationUseCase
@@ -17,6 +18,7 @@ interface IManageCategoryUseCase {
 
 }
 
+@Single(binds = [IManageCategoryUseCase::class])
 class ManageCategoryUseCase(
     private val restaurantOptions: IRestaurantOptionsGateway,
     private val basicValidation: IValidation,

@@ -1,5 +1,6 @@
 package org.thechance.service_restaurant.domain.utils
 
+import org.koin.core.annotation.Single
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_PAGE
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_PAGE_LIMIT
@@ -21,6 +22,7 @@ interface IValidation {
     fun checkIsValidIds(id: String, listIds: List<String>)
 }
 
+@Single(binds = [IValidation::class])
 class Validation : IValidation {
     override fun validatePagination(page: Int, limit: Int) {
         val validationErrors = mutableListOf<Int>()

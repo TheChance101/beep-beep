@@ -1,5 +1,6 @@
 package org.thechance.service_restaurant.domain.usecase.validation
 
+import org.koin.core.annotation.Single
 import org.thechance.service_restaurant.domain.entity.MealDetails
 import org.thechance.service_restaurant.domain.utils.Validation
 import org.thechance.service_restaurant.domain.utils.exceptions.*
@@ -12,6 +13,7 @@ interface IMealValidationUseCase {
     fun validateUpdateMeal(meal: MealDetails)
 }
 
+@Single(binds = [IMealValidationUseCase::class])
 class MealValidationUseCase(
     private val basicValidation: Validation
 ) : IMealValidationUseCase{
