@@ -16,5 +16,6 @@ fun Application.module() {
     configureStatusExceptions()
     configureSerialization()
     configureMonitoring()
+    configureSockets()
     configureRouting()
 }
