@@ -21,7 +21,7 @@ class DatabaseContainer(val database: CoroutineDatabase) {
 
     companion object {
         const val USERS = "users"
-        const val HISTORY_NOTIFICATION = "history_notification"
+        const val HISTORY_NOTIFICATION = "history"
         const val TOPICS = "topics"
     }
 }

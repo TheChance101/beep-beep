@@ -8,7 +8,7 @@ class RegisterTokenUseCase(
     private val databaseGateway: IDatabaseGateway
 ) : IRegisterTokenUseCase {
 
-    override suspend fun invoke(userId: String, token: String, group: String): Boolean {
+    override suspend fun invoke(userId: String, token: String): Boolean {
         return databaseGateway.registerToken(userId, token)
     }
 
@@ -16,6 +16,6 @@ class RegisterTokenUseCase(
 
 interface IRegisterTokenUseCase {
 
-    suspend operator fun invoke(userId: String, token: String, group: String): Boolean
+    suspend operator fun invoke(userId: String, token: String): Boolean
 
 }

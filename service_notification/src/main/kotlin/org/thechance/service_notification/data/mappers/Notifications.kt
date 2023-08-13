@@ -4,7 +4,7 @@ import org.bson.types.ObjectId
 import org.thechance.service_notification.data.collection.NotificationHistoryCollection
 import org.thechance.service_notification.domain.entity.Notification
 import org.thechance.service_notification.domain.entity.NotificationRequest
-import org.thechance.service_notification.endpoints.model.NotificationDto
+import org.thechance.service_notification.endpoints.model.NotificationHistoryDto
 
 fun NotificationHistoryCollection.toEntity(): Notification =
     Notification(
@@ -21,14 +21,14 @@ fun Notification.toCollection(): NotificationHistoryCollection {
     )
 }
 
-fun NotificationDto.toEntity(): Notification {
+fun NotificationHistoryDto.toEntity(): Notification {
     return Notification(
         title = title, body = body, date = date, userIds = userIds, id = id
     )
 }
 
-fun Notification.toDto(): NotificationDto =
-    NotificationDto(title = title, body = body, date = date, userIds = userIds, id = id)
+fun Notification.toDto(): NotificationHistoryDto =
+    NotificationHistoryDto(title = title, body = body, date = date, userIds = userIds, id = id)
 
 
 fun List<Notification>.toCollection(): List<NotificationHistoryCollection> {
@@ -39,11 +39,11 @@ fun List<NotificationHistoryCollection>.toNotificationEntity(): List<Notificatio
     return this.map { it.toEntity() }
 }
 
-fun List<NotificationDto>.toEntity(): List<Notification> {
+fun List<NotificationHistoryDto>.toEntity(): List<Notification> {
     return this.map { it.toEntity() }
 }
 
-fun List<Notification>.toDto(): List<NotificationDto> {
+fun List<Notification>.toDto(): List<NotificationHistoryDto> {
     return this.map { it.toDto() }
 }
 
