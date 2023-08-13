@@ -1,12 +1,14 @@
 package org.thechance.common.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -26,6 +28,8 @@ fun EditableRatingBar(
     notSelectedIcon: Painter,
     iconsSize: Dp = 24.dp,
     iconsPadding: Dp = 0.dp,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+    verticalAlignment: Alignment.Vertical = Alignment.Top,
     onClick: (Double) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -36,7 +40,9 @@ fun EditableRatingBar(
 
     Row(modifier = modifier
         .onPointerEvent(PointerEventType.Exit) { editableRating.value = rating }
-        .onPointerEvent(PointerEventType.Press) { onClick(editableRating.value) }
+        .onPointerEvent(PointerEventType.Press) { onClick(editableRating.value) },
+        horizontalArrangement = horizontalArrangement,
+        verticalAlignment = verticalAlignment
     ) {
         repeat(count) { iconPosition ->
             Image(
