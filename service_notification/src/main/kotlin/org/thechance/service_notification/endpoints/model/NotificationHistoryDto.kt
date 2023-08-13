@@ -1,6 +1,9 @@
-package org.thechance.service_notification.domain.model
+package org.thechance.service_notification.endpoints.model
 
-data class Notification(
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class NotificationHistoryDto(
     val id: String? = null,
     val title: String,
     val body: String,

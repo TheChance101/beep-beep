@@ -15,7 +15,7 @@ data class NotificationHistoryCollection(
     @SerialName("user_id")
     val userId: String? = null,
     @SerialName("topic")
-    val topicName: String? = null,
+    val topic: String? = null,
     @SerialName("title")
     val title: String,
     @SerialName("body")

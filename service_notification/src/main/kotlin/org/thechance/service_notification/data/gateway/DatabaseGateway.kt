@@ -15,7 +15,6 @@ import org.thechance.service_notification.data.utils.paginate
 import org.thechance.service_notification.domain.NotFoundException
 import org.thechance.service_notification.domain.gateway.IDatabaseGateway
 import org.thechance.service_notification.domain.model.Notification
-import org.thechance.service_notification.domain.model.NotificationRequest
 import org.thechance.service_notification.endpoints.TOKENS_NOT_FOUND
 
 @Single
@@ -43,9 +42,8 @@ class DatabaseGateway(
             .flatMap { it.deviceTokens }
     }
 
-    override suspend fun createTopic(name: String) {
-        val topicCollection = TopicCollection(name)
-        databaseContainer.topicCollection.insertOne(topicCollection)
+    override suspend fun createTopic(name: String): Boolean {
+        return databaseContainer.topicCollection.insertOne(TopicCollection(name)).wasAcknowledged()
     }
 
     override suspend fun getTopics(): List<String> {
@@ -56,7 +54,7 @@ class DatabaseGateway(
         return databaseContainer.topicCollection.findOne(TopicCollection::name eq name) != null
     }
 
-    override suspend fun addNotificationToUserHistory(notification: NotificationRequest) {
+    override suspend fun addNotificationToUserHistory(notification: Notification) {
         historyCollection.insertOne(notification.toCollection())
     }
 
