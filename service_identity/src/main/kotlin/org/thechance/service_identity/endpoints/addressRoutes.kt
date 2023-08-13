@@ -12,12 +12,12 @@ import org.thechance.service_identity.data.mappers.toCreateRequest
 import org.thechance.service_identity.data.mappers.toDto
 import org.thechance.service_identity.data.mappers.toUpdateRequest
 import org.thechance.service_identity.domain.entity.MissingParameterException
-import org.thechance.service_identity.domain.usecases.IManageUserAddressUseCase
+import org.thechance.service_identity.domain.usecases.IUserAddressManagementUseCase
 import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
 
 fun Route.addressRoutes() {
 
-    val manageUserAddress: IManageUserAddressUseCase by inject()
+    val manageUserAddress: IUserAddressManagementUseCase by inject()
 
     route("users/address") {
         post("{userId}") {

@@ -6,7 +6,7 @@ import org.thechance.service_identity.domain.entity.RequestValidationException
 import org.thechance.service_identity.domain.entity.UpdateUserRequest
 import org.thechance.service_identity.domain.util.*
 
-interface IValidateUserInfoUseCase {
+interface IUserInfoValidationUseCase {
 
     fun validateUserInformation(user: CreateUserRequest)
 
@@ -26,7 +26,7 @@ interface IValidateUserInfoUseCase {
 }
 
 @Single
-class ValidateUserInfoUseCase() : IValidateUserInfoUseCase {
+class UserInfoValidationUseCase() : IUserInfoValidationUseCase {
 
     override fun validateUserInformation(user: CreateUserRequest) {
         val reasons = mutableListOf<String>()

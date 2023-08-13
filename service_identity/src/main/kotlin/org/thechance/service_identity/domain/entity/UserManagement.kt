@@ -1,6 +1,6 @@
 package org.thechance.service_identity.domain.entity
 
-data class ManagedUser(
+data class UserManagement(
     val id: String,
     val fullName: String,
     val username: String,
