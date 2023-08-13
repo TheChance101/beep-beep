@@ -1,7 +1,7 @@
 package org.thechance.service_notification.data.mappers
 
 import org.thechance.service_notification.data.collection.NotificationHistoryCollection
-import org.thechance.service_notification.domain.model.Notification
+import org.thechance.service_notification.domain.entity.Notification
 import org.thechance.service_notification.endpoints.model.NotificationHistoryDto
 
 fun NotificationHistoryCollection.toEntity(): Notification =
