@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -29,7 +28,6 @@ fun EditableRatingBar(
     iconsSize: Dp = 24.dp,
     iconsPadding: Dp = 0.dp,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-    verticalAlignment: Alignment.Vertical = Alignment.Top,
     onClick: (Double) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -41,8 +39,7 @@ fun EditableRatingBar(
     Row(modifier = modifier
         .onPointerEvent(PointerEventType.Exit) { editableRating.value = rating }
         .onPointerEvent(PointerEventType.Press) { onClick(editableRating.value) },
-        horizontalArrangement = horizontalArrangement,
-        verticalAlignment = verticalAlignment
+        horizontalArrangement = horizontalArrangement
     ) {
         repeat(count) { iconPosition ->
             Image(
@@ -63,7 +60,7 @@ fun EditableRatingBar(
                         println("M ${mousePosition.value} , R ${editableRating.value}")
                         editableRating.value = when {
 
-                            (mousePosition.value / size.width) in 0.9.. 1.0 -> iconPosition + 1.0
+                            (mousePosition.value / size.width) >= 0.9 -> iconPosition + 1.0
 
                             (mousePosition.value / size.width) in (0.5..0.9) -> iconPosition + 0.5
 
