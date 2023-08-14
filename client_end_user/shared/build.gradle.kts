@@ -44,6 +44,8 @@ kotlin {
                 api(libs.voyager.bottomsheet.navigator)
                 api(libs.voyager.tab.navigator)
                 api(libs.voyager.transitions)
+                api(libs.google.accompanist)
+                api(libs.firebase.bom)
                 api(libs.voyager.koin)
                 implementation(project(":design_system:shared"))
             }
@@ -53,17 +55,6 @@ kotlin {
                 api(libs.androidx.activity.compose)
                 api(libs.androidx.appcompat)
                 api(libs.androidx.core.ktx)
-                api(libs.coil.kt)
-                api(libs.google.hilt.compiler)
-                api(libs.google.hilt.android)
-                api(libs.google.hilt.navigation)
-                api(libs.google.accompanist)
-                api(libs.voyager.androidx.viewmodel)
-                api(libs.voyager.hilt)
-                api(libs.firebase.bom)
-                implementation(libs.androidx.lifecycle.viewmodel)
-                implementation(libs.androidx.lifecycle.compose)
-                implementation(libs.androidx.lifecycle.runtime)
                 implementation(libs.androidx.constraint)
             }
         }
