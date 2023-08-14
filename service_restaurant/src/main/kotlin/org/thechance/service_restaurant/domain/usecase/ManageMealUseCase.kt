@@ -5,17 +5,9 @@ import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.entity.MealDetails
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
-import org.thechance.service_restaurant.domain.usecase.validation.MealValidationUseCase
+import org.thechance.service_restaurant.domain.usecase.validation.IMealValidationUseCase
 import org.thechance.service_restaurant.domain.utils.IValidation
-import org.thechance.service_restaurant.domain.utils.Validation
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_CUISINE_LIMIT
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_DESCRIPTION
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_NAME
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ONE_OR_MORE_IDS
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_PRICE
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_REQUEST_PARAMETER
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_UPDATE_PARAMETER
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 
@@ -30,7 +22,7 @@ class ManageMealUseCase(
     private val restaurantGateway: IRestaurantGateway,
     private val optionsGateway: IRestaurantOptionsGateway,
     private val basicValidation: IValidation,
-    private val mealValidation: MealValidationUseCase
+    private val mealValidation: IMealValidationUseCase
 ) : IManageMealUseCase {
     override suspend fun getCuisines(): List<Cuisine> {
         return optionsGateway.getCuisines()
@@ -64,7 +56,7 @@ class ManageMealUseCase(
         val cuisineIds = meal.cuisines.map { it.id }
         restaurantGateway.deleteMealById(mealId)
         val cuisinesNeedToDelete =
-            restaurantGateway.getCuisinesNotInRestaurant(meal.restaurantId, cuisineIds!!)
+            restaurantGateway.getCuisinesNotInRestaurant(meal.restaurantId, cuisineIds)
         return restaurantGateway.deleteCuisinesInRestaurant(
             restaurantId = meal.restaurantId,
             cuisinesNeedToDelete

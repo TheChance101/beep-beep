@@ -15,7 +15,6 @@ import org.koin.ktor.ext.inject
 import org.thechance.service_restaurant.api.models.CuisineDto
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
-import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
 import org.thechance.service_restaurant.domain.usecase.IDiscoverRestaurantUseCase
 import org.thechance.service_restaurant.domain.usecase.IManageCuisineUseCase
@@ -43,13 +42,13 @@ fun Route.cuisineRoutes() {
         post {
             val cuisine = call.receive<CuisineDto>()
             val result = manageCuisine.addCuisine(cuisine.toEntity())
-            call.respond(HttpStatusCode.Created, result)
+            call.respond(HttpStatusCode.Created, result.toDto())
         }
 
         put {
             val cuisine = call.receive<CuisineDto>()
             val result = manageCuisine.updateCuisine(cuisine.toEntity())
-            call.respond(HttpStatusCode.OK, result)
+            call.respond(HttpStatusCode.OK, result.toDto())
         }
 
         delete("/{id}") {

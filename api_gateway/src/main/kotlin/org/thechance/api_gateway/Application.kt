@@ -3,6 +3,7 @@ package org.thechance.api_gateway
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import org.thechance.api_gateway.plugins.configureDependencyInjection
 import org.thechance.api_gateway.plugins.configureMonitoring
 import org.thechance.api_gateway.plugins.configureRouting
 import org.thechance.api_gateway.plugins.configureSerialization
@@ -13,7 +14,7 @@ fun main() {
 }
 
 fun Application.module() {
-
+    configureDependencyInjection()
     configureSerialization()
     configureMonitoring()
     configureRouting()

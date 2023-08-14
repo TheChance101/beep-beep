@@ -1,6 +1,7 @@
 package org.thechance.service_restaurant.domain.usecase.validation
 
 import org.thechance.service_restaurant.domain.entity.MealDetails
+import org.thechance.service_restaurant.domain.utils.IValidation
 import org.thechance.service_restaurant.domain.utils.Validation
 import org.thechance.service_restaurant.domain.utils.exceptions.*
 
@@ -13,7 +14,7 @@ interface IMealValidationUseCase {
 }
 
 class MealValidationUseCase(
-    private val basicValidation: Validation
+    private val basicValidation: IValidation
 ) : IMealValidationUseCase{
 
     override fun validateAddMeal(meal: MealDetails) {

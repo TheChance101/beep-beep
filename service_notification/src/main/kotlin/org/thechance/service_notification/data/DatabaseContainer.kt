@@ -17,11 +17,11 @@ class DatabaseContainer(val database: CoroutineDatabase) {
         database.getCollection<TopicCollection>(TOPICS)
 
     val historyCollection: CoroutineCollection<NotificationHistoryCollection> =
-        database.getCollection<NotificationHistoryCollection>(HISTORY_NOTIFICATION)
+        database.getCollection<NotificationHistoryCollection>(HISTORY)
 
     companion object {
         const val USERS = "users"
-        const val HISTORY_NOTIFICATION = "history_notification"
+        const val HISTORY = "history"
         const val TOPICS = "topics"
     }
 }
