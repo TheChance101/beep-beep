@@ -2,7 +2,9 @@ package org.thechance.common.ui.login
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,12 +21,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpCheckBox
 import com.beepbeep.designSystem.ui.composable.BpTextField
@@ -34,26 +34,33 @@ import com.beepbeep.designSystem.ui.theme.Theme
 @Composable
 fun LoginContent() {
     Row(
-        Modifier.fillMaxSize().padding(top = 40.dp, start = 40.dp, bottom = 40.dp),
+        Modifier.background(Theme.colors.surface).fillMaxSize()
+            .padding(
+                top = Theme.dimens.space40,
+                start = Theme.dimens.space40,
+                bottom = Theme.dimens.space40
+            ),
         horizontalArrangement = Arrangement.Center
     ) {
         Box(Modifier.weight(1f)) {
             Image(
-                painter = painterResource("login_image.png"),
+                painter = painterResource(
+                    if (isSystemInDarkTheme()) "login_image_dark.png" else "login_image_light.png"
+                ),
                 contentDescription = null,
                 alignment = Alignment.CenterStart,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
                     .border(
-                        BorderStroke(width = 1.dp, color = Color(0xFF1F0000).copy(.08f)),
-                        shape = RoundedCornerShape(16.dp)
+                        BorderStroke(width = 1.dp, color = Theme.colors.divider),
+                        shape = RoundedCornerShape(Theme.radius.large)
                     )
-                    .clip(RoundedCornerShape(16.dp))
+                    .clip(RoundedCornerShape(Theme.radius.large))
             )
             Image(
                 painterResource("ic_beepbeep_logo_expanded.svg"),
                 contentDescription = null,
-                modifier = Modifier.align(Alignment.TopStart).padding(32.dp)
+                modifier = Modifier.align(Alignment.TopStart).padding(Theme.dimens.space32)
             )
         }
         Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
@@ -61,36 +68,40 @@ fun LoginContent() {
                 Modifier.fillMaxHeight().width(350.dp),
                 verticalArrangement = Arrangement.Center,
             ) {
-                Text("Login",style = Theme.typography.headlineLarge, color = Theme.colors.contentPrimary)
+                Text(
+                    "Login",
+                    style = Theme.typography.headlineLarge,
+                    color = Theme.colors.contentPrimary
+                )
                 Text(
                     "Use admin account to login",
                     style = Theme.typography.titleMedium,
-                    color =  Theme.colors.contentTertiary,
-                    modifier = Modifier.padding(top = 8.dp)
+                    color = Theme.colors.contentTertiary,
+                    modifier = Modifier.padding(Theme.dimens.space8)
                 )
                 BpTextField(
                     onValueChange = { },
                     text = "",
                     label = "Username",
-                    modifier = Modifier.padding(top = 16.dp)
+                    modifier = Modifier.padding(top = Theme.dimens.space16)
                 )
                 BpTextField(
                     onValueChange = { },
                     text = "",
                     label = "Password",
                     keyboardType = KeyboardType.Password,
-                    modifier = Modifier.padding(top = 16.dp)
+                    modifier = Modifier.padding(top = Theme.dimens.space16)
                 )
                 BpCheckBox(
                     label = "Keep me logged in",
                     isChecked = false,
                     onCheck = {},
-                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
+                    modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16)
                 )
                 BpButton(
                     title = "Login",
                     onClick = {},
-                    modifier = Modifier.padding(top = 24.dp).fillMaxWidth()
+                    modifier = Modifier.padding(top = Theme.dimens.space24).fillMaxWidth()
                 )
             }
         }
