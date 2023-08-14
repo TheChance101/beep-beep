@@ -1,4 +1,4 @@
-package org.thechance.common.ui.composables
+package org.thechance.common.ui.composables.table
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
@@ -30,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -40,17 +41,24 @@ import com.beepbeep.designSystem.ui.theme.BpTheme
 import com.beepbeep.designSystem.ui.theme.Theme
 import java.util.UUID
 
+/**
+ * @param rowsCount number of rows in the table without header row
+ */
 @Composable
 fun BpTable(
     rowsCount: Int,
     headers: List<String>,
     modifier: Modifier = Modifier,
-    headerTextStyle: TextStyle = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
-    cellPadding: PaddingValues = PaddingValues(16.dp),
-    border: Dp = 1.dp,
-    shape: Shape = RoundedCornerShape(8.dp),
+    offset: Int = 0,
     firstColumnWeight: Float = 1f,
+    lastColumnWeight: Float = 1f,
     otherColumnsWeight: Float = 3f,
+    shape: Shape = RoundedCornerShape(8.dp),
+    headerTextStyle: TextStyle = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
+    rowPadding: PaddingValues = PaddingValues(16.dp),
+    border: Dp = 1.dp,
+    headerColor: Color = Theme.colors.surface,
+    rowsColor: Color = Theme.colors.background,
     rowContent: @Composable RowScope.(row: Int) -> Unit,
 ) {
     LazyColumn(
@@ -58,14 +66,20 @@ fun BpTable(
     ) {
         item {
             Row(
-                Modifier.fillMaxWidth().background(Theme.colors.surface).padding(cellPadding),
+                Modifier.fillMaxWidth().background(headerColor).padding(rowPadding),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                repeat(headers.size) { index ->
+                (offset until offset + headers.size).forEach { index ->
                     Text(
-                        headers[index],
+                        headers[index - offset],
                         style = headerTextStyle,
-                        modifier = Modifier.weight(if (index == 0 || index == headers.size - 1) firstColumnWeight else otherColumnsWeight)
+                        modifier = Modifier.weight(
+                            when (index) {
+                                offset -> firstColumnWeight
+                                offset + headers.size - 1 -> lastColumnWeight
+                                else -> otherColumnsWeight
+                            }
+                        )
                     )
                 }
             }
@@ -74,9 +88,9 @@ fun BpTable(
 
         items(rowsCount) { rowIndex ->
             Row(
-                Modifier.fillMaxWidth().background(Theme.colors.background).padding(cellPadding),
+                Modifier.fillMaxWidth().background(rowsColor).padding(rowPadding),
                 verticalAlignment = Alignment.CenterVertically
-            ) { rowContent(rowIndex) }
+            ) { rowContent(rowIndex + offset) }
             Divider(Modifier.fillMaxWidth(), thickness = border)
         }
     }
@@ -97,16 +111,18 @@ fun BpTablePreview() {
                 "Permission",
                 "",
             )
-            val users = getDummyUsers()
+            val users = getDummyUsers() * 9
 
             BpTable(
                 headers = headers,
-                rowsCount = users.size,
+                rowsCount = 9,
+                offset = 11,
                 modifier = Modifier.fillMaxWidth(0.9f),
             ) { index ->
                 UserRow(
                     onClickEditUser = { selectedUser = it },
-                    user = users[index]
+                    user = users[index],
+                    position = index + 1,
                 )
             }
 
@@ -119,16 +135,21 @@ fun BpTablePreview() {
     }
 }
 
+operator fun <E> List<E>.times(i: Int): List<E> {
+    return (0 until i).flatMap { this }
+}
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun RowScope.UserRow(
+fun RowScope.UserRow(
     onClickEditUser: (userId: String) -> Unit,
+    position: Int,
     user: UserRowUIState,
     firstColumnWeight: Float = 1f,
     otherColumnsWeight: Float = 3f,
 ) {
     Text(
-        user.number.toString(),
+        position.toString(),
         style = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
         modifier = Modifier.weight(firstColumnWeight)
     )
@@ -182,7 +203,6 @@ private fun RowScope.UserRow(
 private fun getDummyUsers() = listOf(
     UserRowUIState(
         id = UUID.randomUUID().toString(),
-        number = 1,
         photoPath = "dummy_img.png",
         fullName = "Ali Mohammed",
         username = "@Ali_ahmed",
@@ -196,7 +216,6 @@ private fun getDummyUsers() = listOf(
     ),
     UserRowUIState(
         id = UUID.randomUUID().toString(),
-        number = 2,
         photoPath = "dummy_img.png",
         fullName = "Mohammed Sayed",
         username = "@Mohammed_sayed",
@@ -208,7 +227,6 @@ private fun getDummyUsers() = listOf(
     ),
     UserRowUIState(
         id = UUID.randomUUID().toString(),
-        number = 3,
         photoPath = "dummy_img.png",
         fullName = "Mohammed Sayed",
         username = "@Mohammed_sayed",
@@ -221,7 +239,6 @@ private fun getDummyUsers() = listOf(
     ),
     UserRowUIState(
         id = UUID.randomUUID().toString(),
-        number = 4,
         photoPath = "dummy_img.png",
         fullName = "Mohammed Sayed",
         username = "@Mohammed_sayed",
@@ -235,7 +252,6 @@ private fun getDummyUsers() = listOf(
 
 class UserRowUIState(
     val id: String,
-    val number: Int,
     val photoPath: String,
     val fullName: String,
     val username: String,
