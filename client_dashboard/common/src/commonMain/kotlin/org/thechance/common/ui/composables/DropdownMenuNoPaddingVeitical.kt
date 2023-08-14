@@ -35,7 +35,6 @@ import androidx.compose.ui.window.PopupPositionProvider
 // Menu open/close animation.
 const val InTransitionDuration = 120
 const val OutTransitionDuration = 75
-private val MenuElevation = 8.dp
 
 @Composable
 fun DropdownMenuNoPaddingVeitical(
@@ -43,7 +42,6 @@ fun DropdownMenuNoPaddingVeitical(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
     offset: DpOffset = DpOffset(0.dp, 0.dp),
-//    properties: PopupProperties = PopupProperties(focusable = true),
     content: @Composable ColumnScope.() -> Unit
 ) {
     val expandedStates = remember { MutableTransitionState(false) }
