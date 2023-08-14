@@ -15,8 +15,14 @@ data class OrderCollection(
     val userId: UUID,
     @Contextual
     val restaurantId: UUID,
-    val meals: List<@Contextual UUID> = emptyList(),
+    val meals: List<OrderMealCollection> = emptyList(),
     val totalPrice: Double,
     val createdAt: String,
     val orderStatus: Int
+)
+
+data class OrderMealCollection(
+    @Contextual
+    val mealId: UUID,
+    val quantity: Int
 )

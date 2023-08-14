@@ -2,12 +2,10 @@ package org.thechance.service_restaurant.data.collection.mapper
 
 import kotlinx.datetime.LocalDateTime
 import org.thechance.service_restaurant.data.collection.OrderCollection
-import org.thechance.service_restaurant.data.collection.RestaurantCollection
+import org.thechance.service_restaurant.data.collection.OrderMealCollection
 import org.thechance.service_restaurant.data.utils.toUUID
-import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.entity.Order
-import org.thechance.service_restaurant.domain.entity.Restaurant
-import org.thechance.service_restaurant.domain.utils.OrderStatus
+import org.thechance.service_restaurant.domain.entity.OrderMeal
 
 
 fun Order.toCollection(): OrderCollection {
@@ -15,10 +13,10 @@ fun Order.toCollection(): OrderCollection {
         id = id.toUUID(),
         userId = userId.toUUID(),
         restaurantId = restaurantId.toUUID(),
-        meals = meals.map { it.id.toUUID() },
+        meals = meals.map { it.toCollection() },
         totalPrice = totalPrice,
         createdAt = createdAt.toString(),
-        orderStatus = orderStatus.statusCode
+        orderStatus = status
     )
 }
 
@@ -27,18 +25,24 @@ fun OrderCollection.toEntity(): Order {
         id = id.toString(),
         userId = userId.toString(),
         restaurantId = restaurantId.toString(),
-        meals = meals.map {
-            Meal(
-                id = it.toString(),
-                restaurantId = restaurantId.toString(),
-                name = "",
-                description = "",
-                price = 0.0
-            )
-        },
+        meals = meals.map { it.toEntity() },
         totalPrice = totalPrice,
         createdAt = createdAt.let { LocalDateTime.parse(it) },
-        orderStatus = OrderStatus.getOrderStatus(orderStatus)
+        status = orderStatus
+    )
+}
+
+fun OrderMealCollection.toEntity(): OrderMeal {
+    return OrderMeal(
+        meadId = mealId.toString(),
+        quantity = quantity
+    )
+}
+
+fun OrderMeal.toCollection(): OrderMealCollection {
+    return OrderMealCollection(
+        mealId = meadId.toUUID(),
+        quantity = quantity
     )
 }
 
