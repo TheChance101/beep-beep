@@ -7,7 +7,7 @@ import org.thechance.common.ui.login.LoginContent
 
 @Composable
 fun App() {
-    BpTheme(useDarkTheme = false) {
+    BpTheme() {
         LoginContent()
     }
 }
