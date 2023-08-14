@@ -9,10 +9,8 @@ import org.thechance.service_restaurant.domain.utils.exceptions.*
 interface IRestaurantValidationUseCase {
 
     fun validateUpdateRestaurantDetails(restaurant: Restaurant)
-
     fun validateRestaurantOwnership(restaurant: Restaurant?, ownerId: String)
     fun validateAddRestaurant(restaurant: Restaurant)
-
     fun validateUpdateRestaurant(restaurant: Restaurant)
 
 }
@@ -31,38 +29,22 @@ class RestaurantValidationUseCase(
         if (!basicValidation.isValidId(restaurant.ownerId)) {
             validationErrors.add(INVALID_ID)
         }
-        if (!basicValidation.isValidLocation(
-                restaurant.address.longitude,
-                restaurant.address.latitude
-            )
-        ) {
+        if (!basicValidation.isValidLocation(restaurant.address.longitude, restaurant.address.latitude)) {
             validationErrors.add(INVALID_LOCATION)
         }
-        if (!(restaurant.description.isNullOrBlank() || basicValidation.isValidDescription(
-                restaurant.description
-            ))
-        ) {
+        if (!(restaurant.description.isNullOrBlank() || basicValidation.isValidDescription(restaurant.description))) {
             validationErrors.add(INVALID_DESCRIPTION)
         }
-        if (!(restaurant.priceLevel.isNullOrEmpty() || basicValidation.isValidatePriceLevel(
-                restaurant.priceLevel
-            ))
-        ) {
+        if (!(restaurant.priceLevel.isNullOrEmpty() || basicValidation.isValidatePriceLevel(restaurant.priceLevel))) {
             validationErrors.add(INVALID_PRICE_LEVEL)
         }
-        if (restaurant.rate != null && restaurant.rate != Validation.NULL_DOUBLE && !basicValidation.isValidRate(
-                restaurant.rate
-            )
-        ) {
+        if (restaurant.rate != null && !basicValidation.isValidRate(restaurant.rate)) {
             validationErrors.add(INVALID_RATE)
         }
         if (!basicValidation.isValidPhone(restaurant.phone)) {
             validationErrors.add(INVALID_PHONE)
         }
-        if (!basicValidation.isValidTime(restaurant.closingTime) || !basicValidation.isValidTime(
-                restaurant.openingTime
-            )
-        ) {
+        if (!basicValidation.isValidTime(restaurant.closingTime) || !basicValidation.isValidTime(restaurant.openingTime)) {
             validationErrors.add(INVALID_TIME)
         }
         if (validationErrors.isNotEmpty()) {
@@ -152,7 +134,7 @@ class RestaurantValidationUseCase(
         if (restaurant.name.isEmpty() &&
             restaurant.description.isNullOrEmpty() &&
             restaurant.priceLevel.isNullOrEmpty() &&
-            restaurant.rate == Validation.NULL_DOUBLE &&
+            restaurant.rate == null &&
             restaurant.phone.isEmpty() &&
             restaurant.closingTime.isEmpty() &&
             restaurant.openingTime.isEmpty()
@@ -175,10 +157,7 @@ class RestaurantValidationUseCase(
             ) {
                 validationErrors.add(INVALID_PRICE_LEVEL)
             }
-            if (restaurant.rate == null || restaurant.rate != Validation.NULL_DOUBLE && !basicValidation.isValidRate(
-                    restaurant.rate
-                )
-            ) {
+            if (restaurant.rate != null && !basicValidation.isValidRate(restaurant.rate)) {
                 validationErrors.add(INVALID_RATE)
             }
             if (restaurant.phone.isNotEmpty() && !basicValidation.isValidPhone(restaurant.phone)) {

@@ -1,5 +1,7 @@
 package org.thechance.service_restaurant.data.gateway
 
+import com.mongodb.client.model.FindOneAndUpdateOptions
+import com.mongodb.client.model.ReturnDocument
 import com.mongodb.client.model.Updates
 import org.litote.kmongo.addToSet
 import org.litote.kmongo.and
@@ -121,6 +123,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) :
         return container.categoryCollection.findOneAndUpdate(
             filter = CategoryCollection::id eq UUID.fromString(category.id),
             update = category.toCollection(),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toEntity() ?: throw MultiErrorException(listOf(NOT_FOUND))
     }
 
@@ -189,6 +192,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) :
         return container.cuisineCollection.findOneAndUpdate(
             CuisineCollection::id eq UUID.fromString(cuisine.id),
             cuisine.toCollection(),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toEntity() ?: throw MultiErrorException(listOf(NOT_FOUND))
     }
 
