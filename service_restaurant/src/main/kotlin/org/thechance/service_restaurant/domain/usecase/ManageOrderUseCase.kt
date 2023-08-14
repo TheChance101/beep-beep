@@ -10,6 +10,8 @@ import org.thechance.service_restaurant.domain.utils.exceptions.*
 interface IManageOrderUseCase {
     suspend fun getOrderById(orderId: String): Order
     suspend fun updateOrderState(orderId: String, state: OrderStatus): Order
+
+    suspend fun getOrdersHistory(page: Int, limit: Int): List<Order>
 }
 
 class ManageOrderUseCase(
@@ -28,6 +30,10 @@ class ManageOrderUseCase(
     override suspend fun updateOrderState(orderId: String, state: OrderStatus): Order {
         orderValidationUseCase.validateUpdateOrder(orderId, state)
         return optionsGateway.updateOrderState(orderId, state)!!
+    }
+
+    override suspend fun getOrdersHistory(page: Int, limit: Int): List<Order> {
+        return optionsGateway.getOrdersHistory(page, limit)
     }
 
 }

@@ -196,6 +196,13 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) :
         )
         return updatedOrder?.toEntity()
     }
+
+    override suspend fun getOrdersHistory(page: Int, limit: Int): List<Order> {
+        return container.orderCollection
+            .find(OrderCollection::orderStatus eq OrderStatus.DONE.statusCode)
+            .sort(descending(OrderCollection::createdAt))
+            .paginate(page, limit).toList().toEntity()
+    }
     //endregion
 
 }

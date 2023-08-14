@@ -30,6 +30,7 @@ interface IRestaurantOptionsGateway {
 
     //region Order
     suspend fun getOrderById(orderId: String): Order?
-    suspend fun updateOrderState(orderId: String , state:OrderStatus): Order?
+    suspend fun updateOrderState(orderId: String, state: OrderStatus): Order?
+    suspend fun getOrdersHistory(page: Int, limit: Int): List<Order>
     //endregion
 }
