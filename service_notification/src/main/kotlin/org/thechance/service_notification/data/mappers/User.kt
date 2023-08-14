@@ -2,7 +2,7 @@ package org.thechance.service_notification.data.mappers
 
 import org.bson.types.ObjectId
 import org.thechance.service_notification.data.collection.UserCollection
-import org.thechance.service_notification.domain.model.User
+import org.thechance.service_notification.domain.entity.User
 import org.thechance.service_notification.endpoints.model.UserDto
 
 fun User.toCollection(): UserCollection {

@@ -5,7 +5,9 @@ import io.ktor.server.application.*
 import io.ktor.server.plugins.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
-import org.thechance.service_notification.domain.NotFoundException
+import org.thechance.service_notification.domain.entity.InternalServerErrorException
+import org.thechance.service_notification.domain.entity.NotFoundException
+import org.thechance.service_notification.domain.entity.ResourceAlreadyExistsException
 
 fun Application.configureStatusPage() {
     install(StatusPages) {
@@ -15,12 +17,21 @@ fun Application.configureStatusPage() {
 
 fun StatusPagesConfig.handleExceptions() {
 
-    exception<MissingRequestParameterException> { call, cause ->
-        call.respond(HttpStatusCode.BadRequest, listOf(cause.message?.toInt()))
-    }
+    respondWithErrorCodes<MissingRequestParameterException>(HttpStatusCode.BadRequest)
 
-    exception<NotFoundException> { call, cause ->
-        call.respond(HttpStatusCode.NotFound, listOf(cause.message?.toInt()))
-    }
+    respondWithErrorCodes<NotFoundException>(HttpStatusCode.NotFound)
 
+    respondWithErrorCodes<InternalServerErrorException>(HttpStatusCode.InternalServerError)
+
+    respondWithErrorCodes<ResourceAlreadyExistsException>(HttpStatusCode.Conflict)
+}
+
+
+private inline fun <reified T : Throwable> StatusPagesConfig.respondWithErrorCodes(
+    statusCode: HttpStatusCode,
+) {
+    exception<T> { call, t ->
+        val reasons = t.message?.split(",")?.map { it.toInt() } ?: emptyList()
+        call.respond(statusCode, reasons)
+    }
 }
