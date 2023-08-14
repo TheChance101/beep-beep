@@ -1,7 +1,7 @@
 package org.thechance.service_notification.endpoints.utils
 
 import io.ktor.http.*
-import org.thechance.service_notification.domain.MissingRequestParameterException
+import org.thechance.service_notification.domain.entity.MissingRequestParameterException
 import org.thechance.service_notification.endpoints.MISSING_PARAMETER
 
 fun Parameters.extractString(key: String): String? {

@@ -13,7 +13,9 @@ data class NotificationHistoryCollection(
     @Contextual
     val id: ObjectId = ObjectId(),
     @SerialName("user_id")
-    val userIds: List<@Contextual ObjectId>,
+    val userId: String? = null,
+    @SerialName("topic")
+    val topic: String? = null,
     @SerialName("title")
     val title: String,
     @SerialName("body")
