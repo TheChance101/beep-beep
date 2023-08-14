@@ -26,12 +26,12 @@ class TopicManagementUseCase(
 ) : ITopicManagementUseCase {
 
     override suspend fun subscribeToTopic(topicName: String, token: String): Boolean {
-        if (!databaseGateway.isTopicAlreadyExists(token)) throw NotFoundException(TOPIC_NOT_EXISTS)
+        if (!databaseGateway.isTopicAlreadyExists(topicName)) throw NotFoundException(TOPIC_NOT_EXISTS)
         return pusNotificationGateway.subscribeTokenToTopic(topicName, token)
     }
 
     override suspend fun unsubscribeFromTopic(topicName: String, token: String): Boolean {
-        if (!databaseGateway.isTopicAlreadyExists(token)) throw NotFoundException(TOPIC_NOT_EXISTS)
+        if (!databaseGateway.isTopicAlreadyExists(topicName)) throw NotFoundException(TOPIC_NOT_EXISTS)
         return pusNotificationGateway.unsubscribeTokenFromTopic(topicName, token)
     }
 
