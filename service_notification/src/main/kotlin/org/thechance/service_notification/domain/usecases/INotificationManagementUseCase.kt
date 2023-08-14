@@ -7,7 +7,7 @@ import org.thechance.service_notification.domain.gateway.IDatabaseGateway
 import org.thechance.service_notification.domain.gateway.IPushNotificationGateway
 import org.thechance.service_notification.endpoints.TOPIC_NOT_EXISTS
 
-interface ISendNotificationContainerUseCase {
+interface INotificationManagementUseCase {
     suspend fun sendNotificationToUser(userId: String, title: String, body: String): Boolean
 
     suspend fun sendNotificationToTopic(topic: String, title: String, body: String): Boolean
@@ -16,10 +16,10 @@ interface ISendNotificationContainerUseCase {
 }
 
 @Single
-class SendNotificationContainerUseCase(
+class NotificationManagementUseCase(
     private val pushNotificationGateway: IPushNotificationGateway,
     private val databaseGateway: IDatabaseGateway,
-) : ISendNotificationContainerUseCase {
+) : INotificationManagementUseCase {
 
     override suspend fun sendNotificationToUser(userId: String, title: String, body: String): Boolean {
         val tokens = databaseGateway.getUserTokens(userId)
