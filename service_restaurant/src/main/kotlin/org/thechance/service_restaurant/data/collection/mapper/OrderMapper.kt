@@ -2,9 +2,11 @@ package org.thechance.service_restaurant.data.collection.mapper
 
 import kotlinx.datetime.LocalDateTime
 import org.thechance.service_restaurant.data.collection.OrderCollection
+import org.thechance.service_restaurant.data.collection.RestaurantCollection
 import org.thechance.service_restaurant.data.utils.toUUID
 import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.entity.Order
+import org.thechance.service_restaurant.domain.entity.Restaurant
 import org.thechance.service_restaurant.domain.utils.OrderStatus
 
 
@@ -39,3 +41,5 @@ fun OrderCollection.toEntity(): Order {
         orderStatus = OrderStatus.getOrderStatus(orderStatus)
     )
 }
+
+fun List<OrderCollection>.toEntity(): List<Order> = map { it.toEntity() }
