@@ -75,6 +75,8 @@ fun BpTable(
                     Text(
                         headers[index - offset],
                         style = headerTextStyle,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(
                             when (index) {
                                 offset -> firstColumnWeight
@@ -153,31 +155,38 @@ fun RowScope.UserRow(
     Text(
         position.toString(),
         style = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
-        modifier = Modifier.weight(firstColumnWeight)
+        modifier = Modifier.weight(firstColumnWeight),
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
     )
 
     Row(Modifier.weight(otherColumnsWeight), verticalAlignment = Alignment.CenterVertically) {
         Image(painter = painterResource(user.photoPath), contentDescription = null)
         Text(
-            user.fullName, overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.padding(start = 16.dp)
+            user.fullName,
+            modifier = Modifier.padding(start = 16.dp),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
         )
     }
 
     Text(
         user.username,
         overflow = TextOverflow.Ellipsis,
-        modifier = Modifier.weight(otherColumnsWeight)
+        modifier = Modifier.weight(otherColumnsWeight),
+        maxLines = 1,
     )
     Text(
         user.email,
         overflow = TextOverflow.Ellipsis,
-        modifier = Modifier.weight(otherColumnsWeight)
+        modifier = Modifier.weight(otherColumnsWeight),
+        maxLines = 1,
     )
     Text(
         user.country,
         overflow = TextOverflow.Ellipsis,
-        modifier = Modifier.weight(otherColumnsWeight)
+        modifier = Modifier.weight(otherColumnsWeight),
+        maxLines = 1,
     )
     FlowRow(
         Modifier.weight(otherColumnsWeight),
