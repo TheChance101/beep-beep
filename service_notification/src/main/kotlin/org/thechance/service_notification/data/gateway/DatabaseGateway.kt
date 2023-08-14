@@ -47,7 +47,7 @@ class DatabaseGateway(
     }
 
     override suspend fun getTopics(): List<String> {
-        return databaseContainer.topicCollection.find().toList().map { it.toString() }
+        return databaseContainer.topicCollection.find().toList().map { it.name }
     }
 
     override suspend fun isTopicAlreadyExists(name: String): Boolean {
