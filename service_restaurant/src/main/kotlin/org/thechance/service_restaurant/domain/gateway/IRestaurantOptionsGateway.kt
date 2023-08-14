@@ -1,9 +1,7 @@
 package org.thechance.service_restaurant.domain.gateway
 
-import org.thechance.service_restaurant.domain.entity.Category
-import org.thechance.service_restaurant.domain.entity.Cuisine
-import org.thechance.service_restaurant.domain.entity.Meal
-import org.thechance.service_restaurant.domain.entity.Restaurant
+import org.thechance.service_restaurant.domain.entity.*
+import org.thechance.service_restaurant.domain.utils.OrderStatus
 
 interface IRestaurantOptionsGateway {
 
@@ -11,7 +9,6 @@ interface IRestaurantOptionsGateway {
     suspend fun getCategories(page: Int, limit: Int): List<Category>
     suspend fun getCategory(categoryId: String): Category?
     suspend fun getRestaurantsInCategory(categoryId: String): List<Restaurant>
-
     suspend fun areCategoriesExisting(categoryIds: List<String>): Boolean
     suspend fun getCategoriesInRestaurant(restaurantId: String): List<Category>
     suspend fun addCategoriesToRestaurant(restaurantId: String, categoryIds: List<String>): Boolean
@@ -19,7 +16,6 @@ interface IRestaurantOptionsGateway {
     suspend fun updateCategory(category: Category): Category
     suspend fun deleteCategory(categoryId: String): Boolean
     suspend fun deleteRestaurantsInCategory(categoryId: String, restaurantIds: List<String>): Boolean
-
     //endregion
 
     //region Cuisines
@@ -30,5 +26,11 @@ interface IRestaurantOptionsGateway {
     suspend fun areCuisinesExist(cuisineIds: List<String>): Boolean
     suspend fun updateCuisine(cuisine: Cuisine): Cuisine
     suspend fun deleteCuisine(id: String): Boolean
+    //endregion
+
+    //region Order
+    suspend fun getOrderById(orderId: String): Order?
+    suspend fun updateOrderStatus(orderId: String, status: OrderStatus): Order?
+    suspend fun getOrdersHistory(restaurantId:String, page: Int, limit: Int): List<Order>
     //endregion
 }

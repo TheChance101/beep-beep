@@ -12,6 +12,8 @@ import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.extractString
 import org.thechance.service_restaurant.domain.usecase.IDiscoverRestaurantUseCase
 import org.thechance.service_restaurant.domain.usecase.IManageMealUseCase
+import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
+import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 
 fun Route.mealRoutes() {
     val manageMealUseCase: IManageMealUseCase by inject()
@@ -20,7 +22,7 @@ fun Route.mealRoutes() {
     route("meal") {
 
         get("/{id}") {
-            val id = call.parameters.extractString("id") ?: ""
+            val id = call.parameters.extractString("id") ?: throw MultiErrorException(listOf(NOT_FOUND))
             val meal = discoverRestaurant.getMealDetails(id)
             call.respond(meal.toDto())
         }
