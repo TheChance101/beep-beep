@@ -188,8 +188,8 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) :
     override suspend fun getOrderById(orderId: String): Order? =
         container.orderCollection.findOneById(UUID.fromString(orderId))?.toEntity()
 
-    override suspend fun updateOrderState(orderId: String, state: OrderStatus): Order? {
-        val updateOperation = setValue(OrderCollection::orderStatus, state.statusCode)
+    override suspend fun updateOrderStatus(orderId: String, status: OrderStatus): Order? {
+        val updateOperation = setValue(OrderCollection::orderStatus, status.statusCode)
         val updatedOrder = container.orderCollection.findOneAndUpdate(
             filter = OrderCollection::id eq UUID.fromString(orderId),
             update = updateOperation
@@ -197,9 +197,9 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) :
         return updatedOrder?.toEntity()
     }
 
-    override suspend fun getOrdersHistory(page: Int, limit: Int): List<Order> {
+    override suspend fun getOrdersHistory(restaurantId:String,page: Int, limit: Int): List<Order> {
         return container.orderCollection
-            .find(OrderCollection::orderStatus eq OrderStatus.DONE.statusCode)
+            .find(OrderCollection::orderStatus eq OrderStatus.DONE.statusCode,OrderCollection::restaurantId eq UUID.fromString(restaurantId))
             .sort(descending(OrderCollection::createdAt))
             .paginate(page, limit).toList().toEntity()
     }
