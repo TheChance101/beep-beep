@@ -20,6 +20,7 @@ import org.thechance.service_restaurant.domain.usecase.IDiscoverRestaurantUseCas
 import org.thechance.service_restaurant.domain.usecase.IManageCategoryUseCase
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_REQUEST_PARAMETER
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
+import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 
 
 fun Route.categoryRoutes() {
@@ -37,7 +38,7 @@ fun Route.categoryRoutes() {
     route("/category") {
 
         get("/{id}/restaurants") {
-            val categoryId = call.parameters.extractString("id") ?: ""
+            val categoryId = call.parameters.extractString("id") ?:  throw MultiErrorException(listOf(NOT_FOUND))
             val category = discoverRestaurant.getRestaurantsInCategory(categoryId).toDto()
             call.respond(HttpStatusCode.OK, category)
         }
