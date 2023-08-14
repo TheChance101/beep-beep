@@ -1,6 +1,7 @@
 package org.thechance.common.ui.composables.table
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -44,6 +45,7 @@ import java.util.UUID
 /**
  * @param rowsCount number of rows in the table without header row
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BpTable(
     rowsCount: Int,
@@ -64,7 +66,7 @@ fun BpTable(
     LazyColumn(
         modifier = modifier.clip(shape = shape).border(border, Theme.colors.contentBorder, shape),
     ) {
-        item {
+        stickyHeader {
             Row(
                 Modifier.fillMaxWidth().background(headerColor).padding(rowPadding),
                 verticalAlignment = Alignment.CenterVertically
