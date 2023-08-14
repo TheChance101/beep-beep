@@ -3,9 +3,11 @@ package org.thechance.service_restaurant.data.collection
 
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import java.util.*
 
+@Serializable
 data class OrderCollection(
     @BsonId
     @Contextual
@@ -21,6 +23,7 @@ data class OrderCollection(
     val orderStatus: Int
 )
 
+@Serializable
 data class OrderMealCollection(
     @Contextual
     val mealId: UUID,

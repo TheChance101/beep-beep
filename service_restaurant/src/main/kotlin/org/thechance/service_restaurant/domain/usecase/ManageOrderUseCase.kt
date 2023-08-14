@@ -2,10 +2,11 @@ package org.thechance.service_restaurant.domain.usecase
 
 import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
-import org.thechance.service_restaurant.domain.usecase.validation.OrderValidationUseCase
+import org.thechance.service_restaurant.domain.usecase.validation.IOrderValidationUseCase
+import org.thechance.service_restaurant.domain.utils.IValidation
 import org.thechance.service_restaurant.domain.utils.OrderStatus
-import org.thechance.service_restaurant.domain.utils.Validation
-import org.thechance.service_restaurant.domain.utils.exceptions.*
+import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
+import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 
 interface IManageOrderUseCase {
     suspend fun getOrderById(orderId: String): Order
@@ -16,8 +17,8 @@ interface IManageOrderUseCase {
 
 class ManageOrderUseCase(
     private val optionsGateway: IRestaurantOptionsGateway,
-    private val basicValidation: Validation,
-    private val orderValidationUseCase: OrderValidationUseCase
+    private val basicValidation: IValidation,
+    private val orderValidationUseCase: IOrderValidationUseCase
 ) : IManageOrderUseCase {
 
     override suspend fun getOrderById(orderId: String): Order {
