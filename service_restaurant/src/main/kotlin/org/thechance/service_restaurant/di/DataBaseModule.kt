@@ -17,7 +17,7 @@ val DataBaseModule = module {
             .applyConnectionString(connectionString)
             .uuidRepresentation(UuidRepresentation.STANDARD)
             .build()
-        KMongo.createClient(settings)
+        KMongo.createClient()
     }
 
     single { DataBaseContainer(get()) }
