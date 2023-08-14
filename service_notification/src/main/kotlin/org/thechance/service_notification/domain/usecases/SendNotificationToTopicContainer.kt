@@ -2,53 +2,46 @@ package org.thechance.service_notification.domain.usecases
 
 import org.koin.core.annotation.Single
 import org.thechance.service_notification.data.gateway.DatabaseGateway
+import org.thechance.service_notification.domain.entity.NotFoundException
+import org.thechance.service_notification.domain.entity.ResourceAlreadyExistsException
 import org.thechance.service_notification.domain.gateway.IPushNotificationGateway
+import org.thechance.service_notification.endpoints.ALREADY_EXISTS_TOPIC
+import org.thechance.service_notification.endpoints.TOPIC_NOT_EXISTS
+
+
+interface ITopicManagementUseCase {
+    suspend fun subscribeToTopic(topicName: String, token: String): Boolean
+
+    suspend fun unsubscribeFromTopic(topicName: String, token: String): Boolean
+
+    suspend fun createTopic(name: String): Boolean
+
+    suspend fun getTopics(): List<String>
+}
 
 @Single
-class SendNotificationToTopicContainer(
+class TopicManagementUseCase(
     private val pusNotificationGateway: IPushNotificationGateway,
     private val databaseGateway: DatabaseGateway
-) : ISendNotificationToTopicContainer {
+) : ITopicManagementUseCase {
 
-    override suspend fun sendNotificationToTopic(topic: String, title: String, body: String): Boolean {
-        return pusNotificationGateway.sendNotificationToTopic(topic, title, body)
-    }
-
-    override suspend fun subscribeTokenToTopic(topicName: String, token: String): Boolean {
+    override suspend fun subscribeToTopic(topicName: String, token: String): Boolean {
+        if (!databaseGateway.isTopicAlreadyExists(token)) throw NotFoundException(TOPIC_NOT_EXISTS)
         return pusNotificationGateway.subscribeTokenToTopic(topicName, token)
     }
 
-    override suspend fun unsubscribeTokenFromTopic(topicName: String, token: String): Boolean {
+    override suspend fun unsubscribeFromTopic(topicName: String, token: String): Boolean {
+        if (!databaseGateway.isTopicAlreadyExists(token)) throw NotFoundException(TOPIC_NOT_EXISTS)
         return pusNotificationGateway.unsubscribeTokenFromTopic(topicName, token)
     }
 
-    override suspend fun createTopic(name: String) {
-        databaseGateway.createTopic(name)
+    override suspend fun createTopic(name: String): Boolean {
+        if (databaseGateway.isTopicAlreadyExists(name)) throw ResourceAlreadyExistsException(ALREADY_EXISTS_TOPIC)
+        return databaseGateway.createTopic(name)
     }
 
     override suspend fun getTopics(): List<String> {
         return databaseGateway.getTopics()
     }
-
-    override suspend fun isTopicAlreadyExists(name: String): Boolean {
-        return databaseGateway.isTopicAlreadyExists(name)
-    }
-
-}
-
-
-interface ISendNotificationToTopicContainer {
-
-    suspend fun sendNotificationToTopic(topic: String, title: String, body: String): Boolean
-
-    suspend fun subscribeTokenToTopic(topicName: String, token: String): Boolean
-
-    suspend fun unsubscribeTokenFromTopic(topicName: String, token: String): Boolean
-
-    suspend fun createTopic(name: String)
-
-    suspend fun getTopics(): List<String>
-
-    suspend fun isTopicAlreadyExists(name: String): Boolean
 
 }
