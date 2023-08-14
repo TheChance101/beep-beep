@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpCheckBox
 import com.beepbeep.designSystem.ui.composable.BpTextField
+import com.beepbeep.designSystem.ui.theme.Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,11 +61,11 @@ fun LoginContent() {
                 Modifier.fillMaxHeight().width(350.dp),
                 verticalArrangement = Arrangement.Center,
             ) {
-                Text("Login", fontSize = 24.sp, color = Color.Black.copy(.87f))
+                Text("Login",style = Theme.typography.headlineLarge, color = Theme.colors.contentPrimary)
                 Text(
                     "Use admin account to login",
-                    fontSize = 16.sp,
-                    color = Color.Black.copy(.38f),
+                    style = Theme.typography.titleMedium,
+                    color =  Theme.colors.contentTertiary,
                     modifier = Modifier.padding(top = 8.dp)
                 )
                 BpTextField(
