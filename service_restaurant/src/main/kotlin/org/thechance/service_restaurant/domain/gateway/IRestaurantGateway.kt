@@ -13,13 +13,13 @@ interface IRestaurantGateway {
     //endregion
 
     //region Add
-    suspend fun addRestaurant(restaurant: Restaurant): Boolean
+    suspend fun addRestaurant(restaurant: Restaurant): Restaurant
     suspend fun addCuisineToRestaurant(restaurantId: String, cuisineIds: List<String>): Boolean
     suspend fun addMealToRestaurant(restaurantId: String, mealId: String): Boolean
     //endregion
 
 
-    suspend fun updateRestaurant(restaurant: Restaurant): Boolean
+    suspend fun updateRestaurant(restaurant: Restaurant): Restaurant
 
     //region delete
     suspend fun deleteRestaurant(restaurantId: String): Boolean
@@ -33,8 +33,8 @@ interface IRestaurantGateway {
     suspend fun getMeals(page: Int, limit: Int): List<Meal>
     suspend fun getMealById(id: String): MealDetails?
     suspend fun addCuisinesToMeal(mealId: String, cuisineIds: List<String>): Boolean
-    suspend fun addMeal(meal: MealDetails): Boolean
-    suspend fun updateMeal(meal: MealDetails): Boolean
+    suspend fun addMeal(meal: MealDetails): Meal
+    suspend fun updateMeal(meal: MealDetails): Meal
     suspend fun deleteMealById(id: String): Boolean
     suspend fun deleteCuisineFromMeal(mealId: String, cuisineId: String): Boolean
 //endregion

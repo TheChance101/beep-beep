@@ -18,8 +18,8 @@ import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
 import org.thechance.service_restaurant.domain.usecase.IDiscoverRestaurantUseCase
 import org.thechance.service_restaurant.domain.usecase.IManageCategoryUseCase
-import org.thechance.service_restaurant.domain.utils.INVALID_REQUEST_PARAMETER
-import org.thechance.service_restaurant.domain.utils.MultiErrorException
+import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_REQUEST_PARAMETER
+import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 
 
 fun Route.categoryRoutes() {
