@@ -16,6 +16,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,15 +26,42 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpCheckBox
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
+
+object LoginScreen : Screen, KoinComponent {
+
+    private val screenModel: LoginScreenModel by inject()
+
+    @Composable
+    override fun Content() {
+        val navigate = LocalNavigator.currentOrThrow
+        val state by screenModel.state.collectAsState()
+
+        LoginContent(
+            state = state,
+            onClickLogin = { },
+            onUserNameChanged = screenModel::onUsernameChange,
+            onPasswordChanged = screenModel::onPasswordChange,
+        )
+    }
+}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginContent() {
+private fun LoginContent(
+    state: LoginUiState,
+    onClickLogin: () -> Unit,
+    onUserNameChanged: (String) -> Unit,
+    onPasswordChanged: (String) -> Unit,
+) {
     Row(
         Modifier.fillMaxSize().padding(top = 40.dp, start = 40.dp, bottom = 40.dp),
         horizontalArrangement = Arrangement.Center
@@ -69,14 +98,14 @@ fun LoginContent() {
                     modifier = Modifier.padding(top = 8.dp)
                 )
                 BpTextField(
-                    onValueChange = { },
-                    text = "",
+                    onValueChange = onUserNameChanged,
+                    text = state.username,
                     label = "Username",
                     modifier = Modifier.padding(top = 16.dp)
                 )
                 BpTextField(
-                    onValueChange = { },
-                    text = "",
+                    onValueChange = onPasswordChanged,
+                    text = state.password,
                     label = "Password",
                     keyboardType = KeyboardType.Password,
                     modifier = Modifier.padding(top = 16.dp)
@@ -89,7 +118,7 @@ fun LoginContent() {
                 )
                 BpButton(
                     title = "Login",
-                    onClick = {},
+                    onClick = onClickLogin,
                     modifier = Modifier.padding(top = 24.dp).fillMaxWidth()
                 )
             }
