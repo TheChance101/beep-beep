@@ -12,6 +12,16 @@ androidx-core = "1.9.0"
 androidx-activity-compose = "1.6.1"
 androidx-appcompat = "1.6.1"
 compose-version = "1.4.3"
+accompanist-version = "0.28.0"
+hilt-version = "2.46.1"
+hilt-navigation-version = "1.1.0-alpha01"
+viewmodel-version = "2.6.1"
+constraint-version = "1.0.1"
+coil-version = "2.4.0"
+google-services-version = "4.3.15"
+koin-version = "3.4.3"
+voyager-version = "1.0.0-rc05"
+firebase-bom-version = "32.2.2"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
@@ -27,6 +37,28 @@ compose-components-resources = { module = "org.jetbrains.compose.components:comp
 compose-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose-version" }
 androidx-ui-text = { group = "androidx.compose.ui", name = "ui-text", version = "1.4.3" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version = "1.1.1" }
+google-accompanist = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist-version"}
+google-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt-version"}
+google-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt-version"}
+google-hilt-navigation = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-navigation-version"}
+androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "viewmodel-version"}
+androidx-lifecycle-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "viewmodel-version"}
+androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-compose",version.ref = "viewmodel-version"}
+androidx-constraint = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraint-version"}
+coil-kt = { module = "io.coil-kt:coil-compose", version.ref = "coil-version"}
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin-version"}
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-version"}
+koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin-version"}
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin-version"}
+voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager-version"}
+voyager-bottomsheet-navigator = { module = "cafe.adriel.voyager:voyager-bottom-sheet-navigator", version.ref = "voyager-version"}
+voyager-tab-navigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager-version"}
+voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager-version"}
+voyager-androidx-viewmodel = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager-version"}
+voyager-koin = { module = "cafe.adriel.voyager:voyager-androidx", version.ref = "voyager-version"}
+voyager-hilt = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager-version"}
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom-version"}
+
 
 [plugins]
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
@@ -35,5 +67,7 @@ kotlin-native-cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", versio
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose-version" }
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services-version"}
+google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt-version"}
 
 
