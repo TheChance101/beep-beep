@@ -11,11 +11,18 @@ import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BpTheme
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.ui.screen.DashBoardScaffold
+import org.thechance.common.ui.screen.DashboardAppbar
+import org.thechance.common.ui.screen.DashboardSideBar
 
 @Composable
 fun App() {
     BpTheme(useDarkTheme = false) {
-        DashBoardScaffold(title = "Users",username = "Ahmed", onLogOut = {}){innerPadding ->
+        DashBoardScaffold(
+            appbar = {
+                DashboardAppbar("Users", "Mohammad", {})
+            },
+            sideBar = { DashboardSideBar() },
+        ){innerPadding ->
             Column(Modifier.fillMaxSize().padding(innerPadding).background(color = Color.Black)) {  }
         }
     }
