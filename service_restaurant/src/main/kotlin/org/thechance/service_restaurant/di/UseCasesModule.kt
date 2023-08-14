@@ -2,10 +2,7 @@ package org.thechance.service_restaurant.di
 
 import org.koin.dsl.module
 import org.thechance.service_restaurant.domain.usecase.*
-import org.thechance.service_restaurant.domain.usecase.validation.CategoryValidationUseCase
-import org.thechance.service_restaurant.domain.usecase.validation.ICategoryValidationUseCase
-import org.thechance.service_restaurant.domain.usecase.validation.IRestaurantValidationUseCase
-import org.thechance.service_restaurant.domain.usecase.validation.RestaurantValidationUseCase
+import org.thechance.service_restaurant.domain.usecase.validation.*
 import org.thechance.service_restaurant.domain.utils.IValidation
 import org.thechance.service_restaurant.domain.utils.Validation
 
@@ -17,6 +14,7 @@ val UseCasesModule = module {
     single<IDiscoverRestaurantUseCase> { DiscoverRestaurantUseCase(get(), get(), get()) }
     single<IManageCategoryUseCase> { ManageCategoryUseCase(get(), get(),get()) }
     single<IManageCuisineUseCase> { ManageCuisineUseCase(get(), get()) }
+    single<IMealValidationUseCase> { MealValidationUseCase(get()) }
     single<IManageMealUseCase> { ManageMealUseCase(get(), get(), get(),get()) }
     single<IManageRestaurantDetailsUseCase> { ManageRestaurantDetailsUseCase(get(), get(), get(),get()) }
 }

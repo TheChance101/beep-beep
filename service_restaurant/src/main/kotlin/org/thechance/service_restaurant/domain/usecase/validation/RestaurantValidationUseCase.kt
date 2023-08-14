@@ -1,6 +1,5 @@
 package org.thechance.service_restaurant.domain.usecase.validation
 
-import org.koin.core.component.KoinComponent
 import org.thechance.service_restaurant.domain.entity.Restaurant
 import org.thechance.service_restaurant.domain.utils.IValidation
 import org.thechance.service_restaurant.domain.utils.Validation
@@ -17,7 +16,7 @@ interface IRestaurantValidationUseCase {
 
 class RestaurantValidationUseCase(
     private val basicValidation: IValidation
-) : IRestaurantValidationUseCase, KoinComponent {
+) : IRestaurantValidationUseCase {
 
 
     override fun validateAddRestaurant(restaurant: Restaurant) {
