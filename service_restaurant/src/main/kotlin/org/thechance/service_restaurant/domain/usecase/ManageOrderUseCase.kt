@@ -28,9 +28,9 @@ class ManageOrderUseCase(
         return optionsGateway.getOrderById(orderId)!!
     }
 
-    override suspend fun updateOrderStatus(orderId: String, status: OrderStatus): Order {
-        orderValidationUseCase.validateUpdateOrder(orderId, status)
-        return optionsGateway.updateOrderStatus(orderId, status)!!
+    override suspend fun updateOrderStatus(orderId: String, state: OrderStatus): Order {
+        orderValidationUseCase.validateUpdateOrder(orderId, state)
+        return optionsGateway.updateOrderStatus(orderId, state)!!
     }
 
     override suspend fun getOrdersHistory(restaurantId: String,page: Int, limit: Int): List<Order> {
