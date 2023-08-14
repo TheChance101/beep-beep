@@ -17,20 +17,21 @@ fun Application.configureStatusPage() {
 
 fun StatusPagesConfig.handleExceptions() {
 
-    exception<MissingRequestParameterException> { call, cause ->
-        call.respond(HttpStatusCode.BadRequest, listOf(cause.message?.toInt()))
-    }
+    respondWithErrorCodes<MissingRequestParameterException>(HttpStatusCode.BadRequest)
 
-    exception<NotFoundException> { call, cause ->
-        call.respond(HttpStatusCode.NotFound, listOf(cause.message?.toInt()))
-    }
+    respondWithErrorCodes<NotFoundException>(HttpStatusCode.NotFound)
 
-    exception<InternalServerErrorException> { call, cause ->
-        call.respond(HttpStatusCode.InternalServerError, listOf(cause.message?.toInt()))
-    }
+    respondWithErrorCodes<InternalServerErrorException>(HttpStatusCode.InternalServerError)
 
-    exception<ResourceAlreadyExistsException> { call, cause ->
-        call.respond(HttpStatusCode.Conflict, listOf(cause.message?.toInt()))
-    }
+    respondWithErrorCodes<ResourceAlreadyExistsException>(HttpStatusCode.Conflict)
+}
 
+
+private inline fun <reified T : Throwable> StatusPagesConfig.respondWithErrorCodes(
+    statusCode: HttpStatusCode,
+) {
+    exception<T> { call, t ->
+        val reasons = t.message?.split(",")?.map { it.toInt() } ?: emptyList()
+        call.respond(statusCode, reasons)
+    }
 }
