@@ -28,7 +28,7 @@ kotlin {
                 implementation(libs.voyager.androidx)
                 implementation(libs.voyager.koin)
 
-                implementation(libs.koin.core)
+                api(libs.koin.core)
                 implementation(libs.koin.annotations)
                 implementation(libs.koin.ksp)
 
