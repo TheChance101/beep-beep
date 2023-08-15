@@ -171,7 +171,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
             ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
-    override suspend fun getUsers(page: Int, limit: Int, searchTerm: String): List<ManagedUser> {
+    override suspend fun getUsers(page: Int, limit: Int, searchTerm: String): List<UserManagement> {
         val searchQuery = or(
             UserCollection::fullName regex searchTerm,
             UserCollection::username regex searchTerm

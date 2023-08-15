@@ -17,11 +17,11 @@ val kmongoModule = module {
         val cluster = System.getenv("cluster")
         val username = System.getenv("username")
         val password = System.getenv("password")
-        KMongo.createClient("mongodb+srv://$username:$password@cluster0.0k23cqq.mongodb.net/")
+        KMongo.createClient("mongodb+srv://$username:$password@$cluster.mongodb.net/")
     }
 
     single {
-        get<MongoClient>().coroutine.getDatabase("TheChanceBeepBeep")
+        get<MongoClient>().coroutine.getDatabase("BeepBeepNotificationsDB")
     }
 }
 
