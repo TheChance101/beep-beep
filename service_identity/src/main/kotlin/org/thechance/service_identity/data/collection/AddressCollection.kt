@@ -4,7 +4,6 @@ import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
-import org.bson.types.ObjectId
 import java.util.UUID
 
 
@@ -16,7 +15,7 @@ data class AddressCollection(
     val id: UUID = UUID.randomUUID(),
     @SerialName("user_id")
     @Contextual
-    val userId: ObjectId,
+    val userId: UUID,
     @SerialName("location")
     val location: LocationCollection ,
     @SerialName("is_deleted")
