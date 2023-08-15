@@ -1,4 +1,4 @@
-package org.thechance.service_identity.data.security.hashing
+package org.thechance.service_identity.domain.entity
 
 /**
  * Created by Aziza Helmy on 8/10/2023.

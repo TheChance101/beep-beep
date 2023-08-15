@@ -1,20 +1,18 @@
 package org.thechance.service_identity.domain.usecases
 
 import org.koin.core.annotation.Single
-import org.thechance.service_identity.domain.entity.CreatePermissionRequest
 import org.thechance.service_identity.domain.entity.Permission
-import org.thechance.service_identity.domain.entity.UpdatePermissionRequest
 import org.thechance.service_identity.domain.gateway.IDataBaseGateway
 
 interface IPermissionManagementUseCase {
 
-    suspend fun createPermission(permission: CreatePermissionRequest): Boolean
+    suspend fun createPermission(permission: Permission): Boolean
 
     suspend fun deletePermission(permissionId: Int): Boolean
 
     suspend fun getPermission(permissionId: Int): Permission
 
-    suspend fun updatePermission(permissionId: Int, permission: UpdatePermissionRequest): Boolean
+    suspend fun updatePermission(permissionId: Int, permission: String?): Boolean
 
     suspend fun getListOfPermission(): List<Permission>
 
@@ -24,7 +22,7 @@ interface IPermissionManagementUseCase {
 class PermissionManagementUseCase(
     private val dataBaseGateway: IDataBaseGateway
 ) : IPermissionManagementUseCase {
-    override suspend fun createPermission(permission: CreatePermissionRequest): Boolean {
+    override suspend fun createPermission(permission: Permission): Boolean {
         return dataBaseGateway.addPermission(permission)
     }
 
@@ -36,7 +34,7 @@ class PermissionManagementUseCase(
         return dataBaseGateway.getPermission(permissionId)
     }
 
-    override suspend fun updatePermission(permissionId: Int, permission: UpdatePermissionRequest): Boolean {
+    override suspend fun updatePermission(permissionId: Int, permission: String?): Boolean {
         return dataBaseGateway.updatePermission(permissionId, permission)
     }
 

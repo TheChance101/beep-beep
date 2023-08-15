@@ -5,7 +5,7 @@ import org.thechance.service_identity.domain.entity.UserManagement
 import org.thechance.service_identity.endpoints.model.UserManagementDto
 
 fun UserCollection.toManagedEntity() = UserManagement(
-    id.toHexString(),
+    id.toString(),
     fullName,
     username,
     email,
