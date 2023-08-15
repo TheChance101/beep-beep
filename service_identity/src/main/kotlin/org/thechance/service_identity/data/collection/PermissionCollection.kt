@@ -12,14 +12,3 @@ data class PermissionCollection(
     @SerialName("is_deleted")
     val isDeleted: Boolean = false
 )
-
-@Serializable
-data class UserPermissionsCollection(
-    @SerialName("permissions")
-    val userPermissions: List<PermissionCollection> = emptyList()
-)
-
-@Serializable
-data class UpdatePermissionCollection(
-    val permission: String? = null
-)

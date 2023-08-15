@@ -17,7 +17,7 @@ data class UserCollection(
     @SerialName("username")
     val username: String,
     @SerialName("password")
-    val password: String? = null,//hashed password
+    val password: String,//hashed password
     @SerialName("email")
     val email: String,
     @SerialName("salt")
@@ -26,32 +26,4 @@ data class UserCollection(
     val permissions: List<PermissionCollection> = emptyList(),
     @SerialName("isDeleted")
     val isDeleted: Boolean = false,
-)
-
-@Serializable
-data class UpdateUserDocument(
-    @SerialName("fullName")
-    val fullName: String? = null,
-    @SerialName("username")
-    val username: String? = null,
-    @SerialName("password")
-    val password: String? = null,
-    @SerialName("email")
-    val email: String? = null,
-)
-
-@Serializable
-data class CreateUserDocument(
-    @SerialName("_id")
-    @BsonId
-    @Contextual
-    val id: ObjectId = ObjectId(),
-    @SerialName("fullName")
-    val fullName: String,
-    @SerialName("username")
-    val username: String,
-    @SerialName("password")
-    val password: String,
-    @SerialName("email")
-    val email: String,
 )
