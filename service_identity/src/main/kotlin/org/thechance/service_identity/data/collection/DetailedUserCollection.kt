@@ -17,7 +17,7 @@ data class DetailedUserCollection(
     @SerialName("user_name")
     val username: String,
     @SerialName("password")
-    val password: String,
+    val password: String? = null,
     @SerialName("email")
     val email: String,
     @SerialName("isDeleted")
