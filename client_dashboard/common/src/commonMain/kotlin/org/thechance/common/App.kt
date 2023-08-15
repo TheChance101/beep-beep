@@ -1,9 +1,13 @@
 package org.thechance.common
 
-import com.beepbeep.designSystem.DesignApp
 import androidx.compose.runtime.Composable
+import com.beepbeep.designSystem.ui.theme.BpTheme
+import org.thechance.common.ui.login.LoginContent
+
 
 @Composable
 fun App() {
-    DesignApp()
+    BpTheme() {
+        LoginContent()
+    }
 }

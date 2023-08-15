@@ -1,9 +1,10 @@
-package org.thechance.service_identity.data.security.hashing
+package org.thechance.service_identity.data.security
 
 import org.apache.commons.codec.binary.Hex
 import org.apache.commons.codec.digest.DigestUtils
 import org.koin.core.annotation.Single
-import org.thechance.service_identity.data.geteway.security.HashingService
+import org.thechance.service_identity.domain.security.HashingService
+import org.thechance.service_identity.domain.entity.SaltedHash
 import java.security.SecureRandom
 
 /**

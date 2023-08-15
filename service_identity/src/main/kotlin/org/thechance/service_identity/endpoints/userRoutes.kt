@@ -6,21 +6,19 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import org.thechance.service_identity.data.collection.CreateUserDocument
-import org.thechance.service_identity.data.collection.UpdateUserDocument
-import org.thechance.service_identity.data.mappers.toCreateRequest
 import org.thechance.service_identity.data.mappers.toDto
-import org.thechance.service_identity.data.mappers.toUpdateRequest
 import org.thechance.service_identity.domain.entity.MissingParameterException
 import org.thechance.service_identity.domain.usecases.IUserAccountManagementUseCase
 import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
+import org.thechance.service_identity.endpoints.model.UserDto
+import org.thechance.service_identity.endpoints.model.UserTokenDto
 
 fun Route.userRoutes() {
 
 
     val manageUserAccount: IUserAccountManagementUseCase by inject()
 
-    route("/users") {
+    route("/user") {
 
         get("/{id}") {
             val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
@@ -29,15 +27,25 @@ fun Route.userRoutes() {
         }
 
         post {
-            val user = call.receive<CreateUserDocument>()
-            val result = manageUserAccount.createUser(user.toCreateRequest())
+            val params = call.receiveParameters()
+            val fullName = params["fullName"]?.trim()
+            val username = params["username"]?.trim()
+            val password = params["password"]?.trim()
+            val email = params["email"]?.trim()
+
+            val result = manageUserAccount.createUser(
+                fullName = fullName.toString(),
+                username = username.toString(),
+                password = password.toString(),
+                email = email.toString()
+            )
             call.respond(HttpStatusCode.Created, result)
         }
 
         put("/{id}") {
             val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val userDto = call.receive<UpdateUserDocument>()
-            val result = manageUserAccount.updateUser(id, userDto.toUpdateRequest())
+            val userDto = call.receive<UserDto>()
+            val result = manageUserAccount.updateUser(id, userDto.fullName, userDto.username, userDto.password, userDto.email)
             call.respond(HttpStatusCode.OK, result)
         }
 
@@ -63,5 +71,23 @@ fun Route.userRoutes() {
             call.respond(HttpStatusCode.OK, result)
         }
 
+        post("/login") {
+            val parameters = call.receiveParameters()
+            val username = parameters["username"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            val password = parameters["password"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            val isLoggedIn = manageUserAccount.login(username, password)
+            call.respond(HttpStatusCode.OK, isLoggedIn)
+        }
+
+        post("/save-token") {
+            val userTokenDto = call.receive<UserTokenDto>()
+            val isSavedTokens = manageUserAccount.saveUserTokens(
+                userTokenDto.userId,
+                userTokenDto.accessToken,
+                userTokenDto.refreshToken,
+                userTokenDto.expiresIn
+            )
+            call.respond(HttpStatusCode.OK, isSavedTokens)
+        }
     }
 }

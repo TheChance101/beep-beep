@@ -11,7 +11,7 @@ fun DetailedUserCollection.toEntity(
     permissions: List<Permission>
 ): User {
     return User(
-        id = id.toHexString(),
+        id = id.toString(),
         fullName = fullName,
         username = username,
         email = email,

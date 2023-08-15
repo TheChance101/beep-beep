@@ -111,23 +111,27 @@ fun PreviewTextField() {
             onValueChange = { text3 = it },
             text = text3,
             label = "Email",
+            hint = "Enter your Email",
         )
         BpTextField(
             onValueChange = { text1 = it },
             text = text1,
             label = "Password",
+            hint = "Enter your Password",
             keyboardType = KeyboardType.Password
         )
         BpTextField(
             onValueChange = { text2 = it },
             text = text2,
             label = "Username",
+            hint = "Enter your Username",
             errorMessage = "incorrect username or password",
         )
         BpTextField(
             onValueChange = { text4 = it },
             text = text4,
             label = "FullName",
+            hint = "Enter your FullName",
             correctValidation = true
         )
     }
