@@ -23,8 +23,10 @@ fun Route.orderRoutes(){
 
         webSocket("/{id}"){
             val id = call.parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
-            val restaurant =  manageRestaurants.getRestaurant(id)
-            manageOrder.checkRestaurantOpen(restaurant.openingTime,restaurant.closingTime)
+            val restaurant =  manageRestaurants.getRestaurant(id).toDto()
+            manageOrder.checkRestaurantOpen(
+                openingTime=restaurant.openingTime?:"",
+                closingTime=restaurant.closingTime?:"")
             val result =manageOrder.getOrdersByRestaurantId(id)
             call.respond(HttpStatusCode.OK,result.map { it.toDto() })
         }
@@ -32,7 +34,7 @@ fun Route.orderRoutes(){
         get("details/{id}"){
             val id = call.parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
 
-            val result =manageOrder.getOrderById(id)
+            val result =manageOrder.getOrderById(orderId=id)
             call.respond(HttpStatusCode.OK,result.toDto())
         }
 
@@ -40,7 +42,8 @@ fun Route.orderRoutes(){
             val id = call.parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
             val status = call.receiveParameters()["status"]?.toInt() ?: throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER))
 
-            val result =manageOrder.updateOrderStatus(id, OrderStatus.getOrderStatus(status))
+            val result =manageOrder.updateOrderStatus(
+                orderId= id,status= OrderStatus.getOrderStatus(status))
             call.respond(HttpStatusCode.OK,result)
         }
 
@@ -49,7 +52,7 @@ fun Route.orderRoutes(){
             val page= call.parameters["page"]?.toInt() ?: 1
             val limit= call.parameters["limit"]?.toInt() ?:10
 
-            val result =manageOrder.getOrdersHistory(id,page,limit)
+            val result =manageOrder.getOrdersHistory(restaurantId=id,page=page,limit=limit)
             call.respond(HttpStatusCode.OK,result.map { it.toDto() })
         }
     }

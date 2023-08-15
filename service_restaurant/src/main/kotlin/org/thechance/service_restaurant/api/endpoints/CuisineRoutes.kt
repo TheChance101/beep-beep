@@ -35,26 +35,26 @@ fun Route.cuisineRoutes() {
 
         get("/{id}/meals") {
             val id = call.parameters.extractString("id") ?: throw NotFoundException()
-            val meals = discoverRestaurant.getMealsByCuisine(id).toDto()
+            val meals = discoverRestaurant.getMealsByCuisine(cuisineId=id).toDto()
             call.respond(HttpStatusCode.OK, meals)
         }
 
         post {
             val cuisine = call.receive<CuisineDto>()
-            val result = manageCuisine.addCuisine(cuisine.toEntity())
+            val result = manageCuisine.addCuisine(cuisine=cuisine.toEntity())
             call.respond(HttpStatusCode.Created, result.toDto())
         }
 
         put {
             val cuisine = call.receive<CuisineDto>()
-            val result = manageCuisine.updateCuisine(cuisine.toEntity())
+            val result = manageCuisine.updateCuisine(cuisine=cuisine.toEntity())
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
         delete("/{id}") {
             val id =
                 call.parameters.extractString("id") ?: throw MultiErrorException(listOf(NOT_FOUND))
-            val isDeleted = manageCuisine.deleteCuisine(id)
+            val isDeleted = manageCuisine.deleteCuisine(id=id)
             if (isDeleted) call.respond(HttpStatusCode.OK, "Deleted Successfully")
         }
 

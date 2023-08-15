@@ -28,23 +28,23 @@ class ManageOrderUseCase(
     private val orderValidationUseCase: IOrderValidationUseCase
 ) : IManageOrderUseCase {
     override suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order> {
-       return optionsGateway.getOrdersByRestaurantId(restaurantId)
+       return optionsGateway.getOrdersByRestaurantId(restaurantId=restaurantId)
     }
 
     override suspend fun getOrderById(orderId: String): Order {
         if (!basicValidation.isValidId(orderId)) {
             throw MultiErrorException(listOf(INVALID_ID))
         }
-        return optionsGateway.getOrderById(orderId)!!
+        return optionsGateway.getOrderById(orderId=orderId)!!
     }
 
     override suspend fun updateOrderStatus(orderId: String, status: OrderStatus): Order {
-        orderValidationUseCase.validateUpdateOrder(orderId, status)
-        return optionsGateway.updateOrderStatus(orderId, status)!!
+        orderValidationUseCase.validateUpdateOrder(orderId=orderId,status= status)
+        return optionsGateway.updateOrderStatus(orderId=orderId,status= status)!!
     }
 
     override suspend fun getOrdersHistory(restaurantId: String,page: Int, limit: Int): List<Order> {
-        return optionsGateway.getOrdersHistory(restaurantId,page, limit)
+        return optionsGateway.getOrdersHistory(restaurantId=restaurantId,page=page,limit= limit)
     }
 
     override fun checkRestaurantOpen(openTime: String, closTime: String): Boolean {
