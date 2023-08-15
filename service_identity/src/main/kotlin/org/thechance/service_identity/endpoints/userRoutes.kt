@@ -18,7 +18,7 @@ fun Route.userRoutes() {
 
     val manageUserAccount: IUserAccountManagementUseCase by inject()
 
-    route("/users") {
+    route("/user") {
 
         get("/{id}") {
             val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
@@ -27,12 +27,17 @@ fun Route.userRoutes() {
         }
 
         post {
-            val userDto = call.receive<UserDto>()
+            val params = call.receiveParameters()
+            val fullName = params["fullName"]?.trim()
+            val username = params["username"]?.trim()
+            val password = params["password"]?.trim()
+            val email = params["email"]?.trim()
+
             val result = manageUserAccount.createUser(
-                userDto.fullName ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER),
-                userDto.username  ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER),
-                userDto.password  ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER),
-                userDto.email ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+                fullName = fullName.toString(),
+                username = username.toString(),
+                password = password.toString(),
+                email = email.toString()
             )
             call.respond(HttpStatusCode.Created, result)
         }
