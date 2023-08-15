@@ -5,6 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
+import java.util.UUID
 
 
 @Serializable
@@ -12,7 +13,7 @@ data class AddressCollection(
     @SerialName("_id")
     @BsonId
     @Contextual
-    val id: ObjectId = ObjectId(),
+    val id: UUID = UUID.randomUUID(),
     @SerialName("user_id")
     @Contextual
     val userId: ObjectId,

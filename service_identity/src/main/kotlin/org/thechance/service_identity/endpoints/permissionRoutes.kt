@@ -15,19 +15,19 @@ import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
 import org.thechance.service_identity.endpoints.model.PermissionDto
 
 fun Route.permissionRoutes() {
-    val IPermissionManagementUseCase: IPermissionManagementUseCase by inject()
+    val permissionManagementUseCase: IPermissionManagementUseCase by inject()
     route("/permissions") {
 
         post {
             val permissionDto = call.receive<PermissionDto>()
-            val success = IPermissionManagementUseCase.createPermission(permissionDto.toEntity())
+            val success = permissionManagementUseCase.createPermission(permissionDto.toEntity())
             call.respond(HttpStatusCode.OK, success)
         }
 
         delete("/{permissionId}") {
             val permissionId = call.parameters["permissionId"]?.toIntOrNull()
                 ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val success = IPermissionManagementUseCase.deletePermission(permissionId)
+            val success = permissionManagementUseCase.deletePermission(permissionId)
             call.respond(HttpStatusCode.OK, success)
         }
 
@@ -35,19 +35,19 @@ fun Route.permissionRoutes() {
             val permissionId = call.parameters["permissionId"]?.toIntOrNull()
                 ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val permission = call.receive<Permission>()
-            val success = IPermissionManagementUseCase.updatePermission(permissionId, permission.permission)
+            val success = permissionManagementUseCase.updatePermission(permissionId, permission.permission)
             call.respond(HttpStatusCode.OK, success)
         }
 
         get("/{permissionId}") {
             val permissionId = call.parameters["permissionId"]?.toIntOrNull()
                 ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val permission = IPermissionManagementUseCase.getPermission(permissionId).toDto()
+            val permission = permissionManagementUseCase.getPermission(permissionId).toDto()
             call.respond(HttpStatusCode.OK, permission)
         }
 
         get {
-            val permissions = IPermissionManagementUseCase.getListOfPermission()
+            val permissions = permissionManagementUseCase.getListOfPermission()
             call.respond(HttpStatusCode.OK, permissions.map { it.toDto() })
         }
     }

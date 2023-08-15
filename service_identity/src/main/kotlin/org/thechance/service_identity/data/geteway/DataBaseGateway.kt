@@ -61,19 +61,22 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
     override suspend fun addAddress(userId: String, location: Location): Boolean {
         val address = AddressCollection(userId = ObjectId(userId), location = location.toCollection())
         userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::userId eq ObjectId(userId),
-            update = push(UserDetailsCollection::addresses, address.id)
+            filter = UserDetailsCollection::userId eq UUID.fromString(userId),
+            update = push(
+                UserDetailsCollection::addresses,
+                address.id
+            )
         )
         return addressCollection.insertOne(address).wasAcknowledged()
     }
 
     override suspend fun deleteAddress(id: String): Boolean {
         userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::addresses contains ObjectId(id),
-            update = pull(UserDetailsCollection::addresses, ObjectId(id))
+            filter = UserDetailsCollection::addresses contains UUID.fromString(id),
+            update = pull(UserDetailsCollection::addresses, UUID.fromString(id))
         )
         return addressCollection.updateOne(
-            filter = Filters.and(AddressCollection::id eq ObjectId(id), AddressCollection::isDeleted eq false),
+            filter = Filters.and(AddressCollection::id eq UUID.fromString(id), AddressCollection::isDeleted eq false),
             update = setValue(AddressCollection::isDeleted, true)
         ).isUpdatedSuccessfully()
     }
@@ -88,7 +91,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
 
     override suspend fun getAddress(id: String): Address {
         return addressCollection.findOne(
-            AddressCollection::id eq ObjectId(id),
+            AddressCollection::id eq UUID.fromString(id),
             AddressCollection::isDeleted eq false
         )?.toEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
     }
@@ -164,7 +167,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
 
         return userCollection.aggregate<DetailedUserCollection>(
             match(
-                UserCollection::id eq ObjectId(id),
+                UserCollection::id eq UUID.fromString(id),
                 UserCollection::isDeleted eq false
             ),
             lookup(
@@ -248,7 +251,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
 
     override suspend fun deleteUser(id: String): Boolean {
         return userCollection.updateOne(
-            filter = UserCollection::id eq ObjectId(id),
+            filter = UserCollection::id eq UUID.fromString(id),
             update = set(UserCollection::isDeleted setTo true)
         ).isUpdatedSuccessfully()
     }
@@ -287,7 +290,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
 
     private suspend fun createWallet(wallet: WalletCollection): Boolean {
         userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::userId eq ObjectId(wallet.userId),
+            filter = UserDetailsCollection::userId eq UUID.fromString(wallet.userId),
             update = set(UserDetailsCollection::walletCollection setTo wallet)
         )
         return walletCollection.insertOne(wallet).wasAcknowledged()
@@ -301,14 +304,14 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
             ?: throw ResourceNotFoundException(NOT_FOUND)
 
         return userCollection.updateOne(
-            filter = UserCollection::id eq ObjectId(userId),
+            filter = UserCollection::id eq UUID.fromString(userId),
             update = push(UserCollection::permissions, permission)
         ).isUpdatedSuccessfully()
     }
 
     override suspend fun removePermissionFromUser(userId: String, permissionId: Int): Boolean {
         return userCollection.updateOne(
-            filter = UserCollection::id eq ObjectId(userId),
+            filter = UserCollection::id eq UUID.fromString(userId),
             update = pullByFilter(UserCollection::permissions, PermissionCollection::_id eq permissionId)
         ).isUpdatedSuccessfully()
     }

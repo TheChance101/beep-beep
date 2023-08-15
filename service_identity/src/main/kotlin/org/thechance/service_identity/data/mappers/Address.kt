@@ -6,7 +6,7 @@ import org.thechance.service_identity.endpoints.model.AddressDto
 
 fun AddressCollection.toEntity(): Address {
     return Address(
-        id = id.toHexString(),
+        id = id.toString(),
         location = location.toEntity(),
     )
 }
