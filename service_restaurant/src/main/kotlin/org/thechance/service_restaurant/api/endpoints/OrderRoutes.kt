@@ -20,11 +20,18 @@ fun Route.orderRoutes(){
         get("/{id}"){
             val id = call.parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
 
+            val result =manageOrder.getOrdersByRestaurantId(id)
+            call.respond(HttpStatusCode.OK,result.map { it.toDto() })
+        }
+
+        get("details/{id}"){
+            val id = call.parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
+
             val result =manageOrder.getOrderById(id)
             call.respond(HttpStatusCode.OK,result.toDto())
         }
 
-        post("/{id}/status"){
+        post("/status/{id}"){
             val id = call.parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
             val status = call.receiveParameters()["status"]?.toInt() ?: throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER))
 
