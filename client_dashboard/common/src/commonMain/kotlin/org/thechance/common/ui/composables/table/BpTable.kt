@@ -43,9 +43,9 @@ import kotlin.math.roundToInt
 @Composable
 fun <T> BpTable(
     data: List<T>,
-    key: ((item: T) -> Any)?,
     headers: List<String>,
     modifier: Modifier = Modifier,
+    key: ((item: T) -> Any)? = null,
     rowsCount: Int = 9,
     offset: Int = 0,
     firstColumnWeight: Float = 1f,
