@@ -25,11 +25,11 @@ fun EditableRatingBar(
     selectedIcon: Painter,
     halfSelectedIcon: Painter,
     notSelectedIcon: Painter,
+    onClick: (Double) -> Unit,
+    modifier: Modifier = Modifier,
     iconsSize: Dp = 24.dp,
     iconsPadding: Dp = 0.dp,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-    onClick: (Double) -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     val editableRating = remember { mutableStateOf(rating) }
     val mousePosition = remember { mutableStateOf(0.0) }
@@ -57,7 +57,6 @@ fun EditableRatingBar(
                         mousePosition.value = currentEvent.changes[0].position.x.toDouble()
                     }
                     .onPointerEvent(PointerEventType.Move) {
-                        println("M ${mousePosition.value} , R ${editableRating.value}")
                         editableRating.value = when {
 
                             (mousePosition.value / size.width) >= 0.9 -> iconPosition + 1.0

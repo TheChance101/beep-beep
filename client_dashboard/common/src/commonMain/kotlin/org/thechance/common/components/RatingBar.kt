@@ -19,10 +19,10 @@ fun RatingBar(
     rating: Double,
     selectedIcon: Painter,
     halfSelectedIcon: Painter,
+    modifier: Modifier = Modifier,
     iconsSize: Dp = 24.dp,
     iconsPadding: Dp = 0.dp,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier,
