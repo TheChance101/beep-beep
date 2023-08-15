@@ -9,6 +9,7 @@ import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 
 interface IManageOrderUseCase {
+    suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order>
     suspend fun getOrderById(orderId: String): Order
     suspend fun updateOrderStatus(orderId: String, status: OrderStatus): Order
 
@@ -20,6 +21,9 @@ class ManageOrderUseCase(
     private val basicValidation: IValidation,
     private val orderValidationUseCase: IOrderValidationUseCase
 ) : IManageOrderUseCase {
+    override suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order> {
+       return optionsGateway.getOrdersByRestaurantId(restaurantId)
+    }
 
     override suspend fun getOrderById(orderId: String): Order {
         if (!basicValidation.isValidId(orderId)) {

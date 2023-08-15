@@ -186,6 +186,12 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) :
             filter = CuisineCollection::id eq UUID.fromString(id),
             update = set(CuisineCollection::isDeleted setTo true),
         ).isSuccessfullyUpdated()
+
+    override suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order> {
+     return  container.orderCollection.find(
+            OrderCollection::restaurantId
+                    eq UUID.fromString(restaurantId)).toList().toEntity()
+    }
     //endregion
 
     //region Order
