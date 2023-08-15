@@ -42,11 +42,11 @@ fun Route.userRoutes() {
             call.respond(HttpStatusCode.Created, token)
         }
 
-        get("/{id}") {
-            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val user = userAccountManagementUseCase.getUser(id)
-            call.respond(HttpStatusCode.OK, user)
-        }
+//        get("/{id}") {
+//            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+//            val user = userAccountManagementUseCase.getUser(id)
+//            call.respond(HttpStatusCode.OK, user)
+//        }
 
 
 }

@@ -44,8 +44,19 @@ fun Route.userRoutes() {
 
         put("/{id}") {
             val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val userDto = call.receive<UserDto>()
-            val result = manageUserAccount.updateUser(id, userDto.fullName, userDto.username, userDto.password, userDto.email)
+            val params = call.receiveParameters()
+            val fullName = params["fullName"]?.trim()
+            val username = params["username"]?.trim()
+            val password = params["password"]?.trim()
+            val email = params["email"]?.trim()
+
+            val result = manageUserAccount.updateUser(
+                id = id,
+                fullName = fullName.toString(),
+                username = username.toString(),
+                password = password.toString(),
+                email = email.toString()
+            )
             call.respond(HttpStatusCode.OK, result)
         }
 

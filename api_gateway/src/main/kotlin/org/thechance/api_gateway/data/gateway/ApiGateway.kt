@@ -32,11 +32,10 @@ class ApiGateway(private val client: HttpClient, private val attributes: Attribu
 
     override suspend fun loginUser(userName: String, password: String): Boolean =
         tryToExecute<Boolean>(APIS.IDENTITY_API) {
-            submitForm("user",
+            submitForm("user/login",
                 formParameters = parameters {
                     append("username", userName)
                     append("password", password)
-
                 }
             )
         }
