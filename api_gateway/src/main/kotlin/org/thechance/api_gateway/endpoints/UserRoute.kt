@@ -17,8 +17,6 @@ fun Route.userRoutes() {
 
     val userAccountManagementUseCase: IUserAccountManagementUseCase by inject()
 
-    route("/user") {
-
         post("/signup") {
             val params = call.receiveParameters()
             val fullName = params["fullName"]?.trim()
@@ -51,5 +49,4 @@ fun Route.userRoutes() {
         }
 
 
-    }
 }

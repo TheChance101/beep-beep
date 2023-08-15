@@ -11,7 +11,7 @@ import org.thechance.api_gateway.data.security.hashing.SaltedHash
 interface IUserAccountManagementUseCase {
 
     suspend fun createUser(fullName: String, username: String, password: String, email: String): Boolean
-    suspend fun loginUser(userName: String, password: String): String
+    suspend fun loginUser(userName: String, password: String): Boolean
     suspend fun getUser(id: String): UserManagementResource
     suspend fun securePassword(password: String): SaltedHash
     suspend fun deleteUser(id: String): Boolean
@@ -28,8 +28,8 @@ class UserAccountManagementUseCase(
         return apiGateway.createUser(fullName, username, password, email)
     }
 
-    override suspend fun loginUser(userName: String, password: String): String {
-       // userInfoValidationUseCase.validateUserInformation(userName, password)
+    override suspend fun loginUser(userName: String, password: String): Boolean {
+        userInfoValidationUseCase.validateLoginInformation(userName, password)
         return apiGateway.loginUser(userName, password)
     }
 

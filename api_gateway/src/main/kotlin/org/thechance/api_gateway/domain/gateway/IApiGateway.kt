@@ -8,11 +8,11 @@ interface IApiGateway {
 
     // region User
     suspend fun createUser(fullName:String,username:String,password:String,email:String): Boolean
-    suspend fun loginUser(userName: String, password: String): String
+    suspend fun loginUser(userName: String, password: String): Boolean
     suspend fun getUsers(page: Int, limit: Int, searchTerm: String = ""): List<UserManagementResource>
     suspend fun getUserById(id: String): User
     suspend fun deleteUser(id: String): Boolean
-
+    suspend fun getToken(id: Long, role: String): String
     // endregion: user
 
     //region Address

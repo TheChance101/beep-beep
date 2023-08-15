@@ -5,8 +5,8 @@ import org.thechance.api_gateway.util.*
 
 interface IUserInfoValidationUseCase {
 
-    fun validateUserInformation(fullName: String,username: String, password: String, email: String)
-    fun validateUser(username: String, password: String)
+    fun validateUserInformation(fullName: String, username: String, password: String, email: String)
+    fun validateLoginInformation(username: String, password: String)
 
     fun validateUsernameIsNotEmpty(username: String): Boolean
 
@@ -24,7 +24,7 @@ interface IUserInfoValidationUseCase {
 @Single
 class UserInfoValidationUseCase() : IUserInfoValidationUseCase {
 
-    override fun validateUserInformation(fullName: String,username: String, password: String, email: String) {
+    override fun validateUserInformation(fullName: String, username: String, password: String, email: String) {
         val reasons = mutableListOf<String>()
 
         if (!validateUsernameIsNotEmpty(username)) {
@@ -56,8 +56,26 @@ class UserInfoValidationUseCase() : IUserInfoValidationUseCase {
         }
     }
 
-    override fun validateUser(username: String, password: String) {
+    override fun validateLoginInformation(username: String, password: String) {
+        val reasons = mutableListOf<String>()
 
+        if (!validateUsernameIsNotEmpty(username)) {
+            reasons.add(USERNAME_CANNOT_BE_BLANK)
+        }
+
+        if (!validateUsername(username)) {
+            reasons.add(INVALID_USERNAME)
+        }
+        if (!validatePasswordIsNotEmpty(password)) {
+            reasons.add(PASSWORD_CANNOT_BE_BLANK)
+        }
+
+        if (!validatePasswordLength(password)) {
+            reasons.add(PASSWORD_CANNOT_BE_LESS_THAN_8_CHARACTERS)
+        }
+        if (reasons.isNotEmpty()) {
+            throw RequestValidationException(reasons)
+        }
     }
 
     override fun validateUsernameIsNotEmpty(username: String): Boolean = username.isNotBlank()

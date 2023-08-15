@@ -19,7 +19,7 @@ class ApiGateway(private val client: HttpClient, private val attributes: Attribu
     // region identity
     override suspend fun createUser( fullName: String,username: String, password: String, email: String): Boolean =
         tryToExecute<Boolean>(APIS.IDENTITY_API) {
-            submitForm("user",
+            submitForm("/user",
                 formParameters = parameters {
                     append("fullName", fullName)
                     append("username", username)
@@ -30,8 +30,8 @@ class ApiGateway(private val client: HttpClient, private val attributes: Attribu
             )
         }
 
-    override suspend fun loginUser(userName: String, password: String): String =
-        tryToExecute<String>(APIS.IDENTITY_API) {
+    override suspend fun loginUser(userName: String, password: String): Boolean =
+        tryToExecute<Boolean>(APIS.IDENTITY_API) {
             submitForm("user",
                 formParameters = parameters {
                     append("username", userName)
@@ -59,6 +59,10 @@ class ApiGateway(private val client: HttpClient, private val attributes: Attribu
 
 
     override suspend fun deleteUser(id: String): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getToken(id: Long, role: String): String {
         TODO("Not yet implemented")
     }
 
