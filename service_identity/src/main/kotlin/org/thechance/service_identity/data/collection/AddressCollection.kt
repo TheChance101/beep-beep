@@ -12,7 +12,7 @@ data class AddressCollection(
     @SerialName("_id")
     @BsonId
     @Contextual
-    val id: UUID = UUID.randomUUID(),
+    val id: String = UUID.randomUUID().toString(),
     @SerialName("user_id")
     @Contextual
     val userId: UUID,
