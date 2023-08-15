@@ -4,12 +4,12 @@ data class Restaurant(
     val id: String,
     val ownerId: String,
     val name: String,
-    val description: String,
-    val priceLevel: String,
-    val rate: Double,
+    val description: String? = null,
+    val priceLevel: String?=null,
+    val rate: Double?= null,
     val phone: String,
     val openingTime: String,
     val closingTime: String,
-    val address: Address,
+    val address: Location,
     val cuisines: List<Cuisine> = emptyList()
 )

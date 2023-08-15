@@ -6,19 +6,12 @@ import org.thechance.service_identity.endpoints.model.PermissionDto
 
 fun PermissionCollection.toEntity(): Permission {
     return Permission(
-        id = id,
+        id = _id,
         permission = permission,
     )
 }
 
 fun List<PermissionCollection>.toEntity(): List<Permission> = map { it.toEntity() }
-
-fun PermissionDto.toEntity(): Permission {
-    return Permission(
-        id = id,
-        permission = permission
-    )
-}
 
 fun Permission.toDto(): PermissionDto {
     return PermissionDto(
@@ -27,12 +20,18 @@ fun Permission.toDto(): PermissionDto {
     )
 }
 
-fun List<Permission>.toDto(): List<PermissionDto> = map { it.toDto() }
-
-fun Permission.toCollection(): PermissionCollection {
-    return PermissionCollection(
-        id = this.id,
-        permission = this.permission
+fun PermissionDto.toEntity(): Permission {
+    return Permission(
+        id = id ?: 0,
+        permission = permission
     )
 }
 
+fun Permission.toCollection(id: Int): PermissionCollection {
+    return PermissionCollection(
+        _id = id,
+        permission = permission
+    )
+}
+
+fun List<Permission>.toDto(): List<PermissionDto> = map { it.toDto() }

@@ -1,11 +1,9 @@
 package org.thechance.service_taxi.data
 
-import org.koin.core.annotation.Single
 import org.litote.kmongo.coroutine.CoroutineClient
 import org.thechance.service_taxi.data.collection.TaxiCollection
 import org.thechance.service_taxi.data.collection.TripCollection
 
-@Single
 class DataBaseContainer(client: CoroutineClient) {
     private val database by lazy { client.getDatabase(DATA_BASE_NAME) }
 

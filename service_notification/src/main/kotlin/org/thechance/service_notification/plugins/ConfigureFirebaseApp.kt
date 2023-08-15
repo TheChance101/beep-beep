@@ -8,6 +8,7 @@ import io.ktor.server.application.*
 fun Application.configureFirebaseApp(){
     val serviceAccount = this::class.java.classLoader.getResourceAsStream("ktor_firebase_auth.json")
     val options = FirebaseOptions.builder()
-        .setCredentials(GoogleCredentials.fromStream(serviceAccount)).build()
+        .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+        .build()
     FirebaseApp.initializeApp(options)
 }

@@ -5,15 +5,16 @@ import org.thechance.service_restaurant.data.collection.MealCollection
 import org.thechance.service_restaurant.data.collection.relationModels.MealWithCuisines
 import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.entity.MealDetails
+import java.util.*
 
 fun MealDetails.toCollection(): MealCollection =
     MealCollection(
         name = name,
-        restaurantId = ObjectId(restaurantId),
+        restaurantId = UUID.fromString(restaurantId),
         description = description,
         price = price,
         cuisines = cuisines.map { cuisine ->
-            ObjectId(cuisine.id)
+            UUID.fromString(cuisine.id)
         }
     )
 

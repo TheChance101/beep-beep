@@ -12,9 +12,10 @@ data class NotificationHistoryCollection(
     @SerialName("_id")
     @Contextual
     val id: ObjectId = ObjectId(),
-    @Contextual
     @SerialName("user_id")
-    val userId: ObjectId,
+    val userId: String? = null,
+    @SerialName("topic")
+    val topic: String? = null,
     @SerialName("title")
     val title: String,
     @SerialName("body")
@@ -23,6 +24,4 @@ data class NotificationHistoryCollection(
     val date: Long,
     @SerialName("is_deleted")
     val isDeleted: Boolean = false,
-    @SerialName("is_read")
-    val isRead: Boolean = false
 )
