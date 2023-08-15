@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -47,10 +48,11 @@ import java.util.UUID
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun BpTable(
-    rowsCount: Int,
+fun <T> BpTable(
+    data: List<T>,
     headers: List<String>,
     modifier: Modifier = Modifier,
+    rowsCount: Int = 9,
     offset: Int = 0,
     firstColumnWeight: Float = 1f,
     lastColumnWeight: Float = 1f,
@@ -59,43 +61,44 @@ fun BpTable(
     headerTextStyle: TextStyle = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
     rowPadding: PaddingValues = PaddingValues(16.dp),
     border: Dp = 1.dp,
+    borderColor: Color = Theme.colors.contentBorder,
     headerColor: Color = Theme.colors.surface,
     rowsColor: Color = Theme.colors.background,
-    rowContent: @Composable RowScope.(row: Int) -> Unit,
+    rowContent: @Composable RowScope.(T) -> Unit,
 ) {
     LazyColumn(
-        modifier = modifier.clip(shape = shape).border(border, Theme.colors.contentBorder, shape),
+        modifier = modifier.clip(shape = shape).border(border, borderColor, shape),
     ) {
         stickyHeader {
             Row(
                 Modifier.fillMaxWidth().background(headerColor).padding(rowPadding),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                (offset until offset + headers.size).forEach { index ->
+                headers.forEachIndexed { index, header ->
                     Text(
-                        headers[index - offset],
+                        header,
                         style = headerTextStyle,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(
                             when (index) {
-                                offset -> firstColumnWeight
-                                offset + headers.size - 1 -> lastColumnWeight
+                                0 -> firstColumnWeight
+                                headers.size - 1 -> lastColumnWeight
                                 else -> otherColumnsWeight
                             }
                         )
                     )
                 }
             }
-            Divider(Modifier.fillMaxWidth(), thickness = border)
+            Divider(Modifier.fillMaxWidth(), thickness = border, color = borderColor)
         }
 
-        items(rowsCount) { rowIndex ->
+        items(data.filterIndexed { index, _ -> index in offset until offset + rowsCount }) {
             Row(
                 Modifier.fillMaxWidth().background(rowsColor).padding(rowPadding),
                 verticalAlignment = Alignment.CenterVertically
-            ) { rowContent(rowIndex + offset) }
-            Divider(Modifier.fillMaxWidth(), thickness = border)
+            ) { rowContent(it) }
+            Divider(Modifier.fillMaxWidth(), thickness = border, color = borderColor)
         }
     }
 }
@@ -115,18 +118,19 @@ fun BpTablePreview() {
                 "Permission",
                 "",
             )
-            val users = getDummyUsers() * 9
+            val users = getDummyUsers() * 1
 
             BpTable(
+                data = users,
                 headers = headers,
                 rowsCount = 9,
-                offset = 11,
+                offset = 0,
                 modifier = Modifier.fillMaxWidth(0.9f),
-            ) { index ->
+            ) { user ->
                 UserRow(
                     onClickEditUser = { selectedUser = it },
-                    user = users[index],
-                    position = index + 1,
+                    user = user,
+                    position = users.indexOf(user) + 1,
                 )
             }
 
