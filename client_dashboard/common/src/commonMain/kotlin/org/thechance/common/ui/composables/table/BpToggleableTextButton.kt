@@ -4,8 +4,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.with
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
@@ -49,7 +47,7 @@ fun BpToggleableTextButton(
     AnimatedContent(
         targetState = selected,
         modifier = modifier,
-        transitionSpec = { slideInVertically { -it } + fadeIn() with slideOutVertically { it } + fadeOut() }
+        transitionSpec = { fadeIn() with fadeOut() }
     ) {
         Text(
             text = text,
@@ -65,9 +63,6 @@ fun BpToggleableTextButton(
 @Preview
 @Composable
 fun BpToggleableTextButtonPreview() {
-    var selectedUser by remember { mutableStateOf<String?>(null) }
-    var offset by remember { mutableStateOf(0) }
-    val pageCount = 9
     var selected by remember { mutableStateOf(true) }
 
     BpTheme(useDarkTheme = false) {
