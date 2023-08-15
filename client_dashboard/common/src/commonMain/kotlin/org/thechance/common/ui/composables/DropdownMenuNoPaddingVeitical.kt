@@ -1,3 +1,5 @@
+package org.thechance.common.ui.composables
+
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.animateFloat
@@ -12,13 +14,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
@@ -31,13 +33,11 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
+import com.beepbeep.designSystem.ui.theme.Theme
 
-// Menu open/close animation.
-const val InTransitionDuration = 120
-const val OutTransitionDuration = 75
 
 @Composable
-fun DropdownMenuNoPaddingVeitical(
+fun DropdownMenuNoPaddingVertical(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
@@ -60,7 +60,6 @@ fun DropdownMenuNoPaddingVeitical(
         Popup(
             onDismissRequest = onDismissRequest,
             popupPositionProvider = popupPositionProvider,
-//            properties = properties
         ) {
             DropdownMenuContent(
                 expandedStates = expandedStates,
@@ -80,6 +79,9 @@ fun DropdownMenuContent(
     content: @Composable ColumnScope.() -> Unit
 ) {
     // Menu open/close animation.
+    val inTransitionDuration = 120
+    val outTransitionDuration = 75
+    // Menu open/close animation.
     val transition = updateTransition(expandedStates, "DropDownMenu")
 
     val scale by transition.animateFloat(
@@ -87,14 +89,14 @@ fun DropdownMenuContent(
             if (false isTransitioningTo true) {
                 // Dismissed to expanded
                 tween(
-                    durationMillis = InTransitionDuration,
+                    durationMillis = inTransitionDuration,
                     easing = LinearOutSlowInEasing
                 )
             } else {
                 // Expanded to dismissed.
                 tween(
                     durationMillis = 1,
-                    delayMillis = OutTransitionDuration - 1
+                    delayMillis = outTransitionDuration - 1
                 )
             }
         }, label = ""
@@ -115,7 +117,7 @@ fun DropdownMenuContent(
                 tween(durationMillis = 30)
             } else {
                 // Expanded to dismissed.
-                tween(durationMillis = OutTransitionDuration)
+                tween(durationMillis = outTransitionDuration)
             }
         }, label = ""
     ) {
@@ -134,14 +136,16 @@ fun DropdownMenuContent(
             this.alpha = alpha
             transformOrigin = transformOriginState.value
         },
-        border = BorderStroke(width = 1.dp, color = Color.Black.copy(alpha = .08f)),
+        border = BorderStroke(width = 1.dp, color = Theme.colors.divider),
+        colors = CardDefaults.cardColors(
+            containerColor = (Theme.colors.surface),
+        ),
         shape = RoundedCornerShape(
             topEnd = 4.dp,
             topStart = 8.dp,
             bottomEnd = 8.dp,
             bottomStart = 8.dp
         )
-//        elevation = MenuElevation
     ) {
         Column(
             modifier = modifier
@@ -152,8 +156,6 @@ fun DropdownMenuContent(
     }
 }
 
-
-private val MenuVerticalMargin = 48.dp
 
 data class DropdownMenuPositionProvider(
     val contentOffset: DpOffset,
@@ -166,8 +168,9 @@ data class DropdownMenuPositionProvider(
         layoutDirection: LayoutDirection,
         popupContentSize: IntSize
     ): IntOffset {
+        val menuVerticalMargin = 48.dp
         // The min margin above and below the menu, relative to the screen.
-        val verticalMargin = with(density) { MenuVerticalMargin.roundToPx() }
+        val verticalMargin = with(density) { menuVerticalMargin.roundToPx() }
         // The content offset specified using the dropdown offset parameter.
         val contentOffsetX = with(density) { contentOffset.x.roundToPx() }
         val contentOffsetY = with(density) { contentOffset.y.roundToPx() }

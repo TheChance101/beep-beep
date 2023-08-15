@@ -1,4 +1,4 @@
-package org.thechance.common.ui.screen
+package org.thechance.common.ui.screen.scaffold
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +18,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -29,24 +29,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.layout.boundsInParent
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BpToggleButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.ui.composables.Logo
+import org.thechance.common.ui.composables.modifier.border
+import org.thechance.common.ui.composables.modifier.centerItem
 import org.thechance.common.ui.composables.modifier.cursorHoverIconHand
 import org.thechance.common.ui.composables.pxToDp
 
@@ -81,63 +80,52 @@ val mainMenuItems = listOf(
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
-fun DashboardSideBar() {
-    val isDropMenuExpanded = remember { mutableStateOf(false) }
-    animateFloatAsState(targetValue = if (isDropMenuExpanded.value) 180f else 0f)
-    val mainMenuItemSize = remember { mutableStateOf(0f) }
-    val mainMenuCurrentItem = remember { mutableStateOf(0) }
+fun DashboardSideBar(onSwitchTheme: () -> Unit, darkTheme: Boolean) {
+    val mainMenuItemHeight = remember { mutableStateOf(0f) }
+    var mainMenuCurrentItem by remember { mutableStateOf(0) }
+    val iconSize by remember { mutableStateOf(24.dp) }
     val mainMenuIsExpanded = remember { mutableStateOf(false) }
-    val mainMenuAnimatedWidth = animateFloatAsState(
-        targetValue = if (mainMenuIsExpanded.value) .16f else .08f
-    )
     val sideBarWidth = remember { mutableStateOf(0f) }
-    val sideBarPadding by remember { mutableStateOf(24.dp) }
+
 
     Column(
         Modifier.fillMaxHeight()
-            .fillMaxWidth(mainMenuAnimatedWidth.value).onGloballyPositioned {
-                sideBarWidth.value = it.boundsInParent().width
-            }
-            .background(Color(0xffFAFAFA))
-            .drawBehind {
-                drawEndBorder(strokeWidth = 1.dp, color = Color.Black.copy(.08f))
-            }
+            .fillMaxWidth(
+                animateFloatAsState(
+                    targetValue = if (mainMenuIsExpanded.value) .16f else .08f
+                ).value
+            ).onGloballyPositioned { sideBarWidth.value = it.boundsInParent().width }
+            .background(Theme.colors.background)
+            .border(end = BorderStroke(width = 1.dp, color = Theme.colors.divider))
             .padding(vertical = 40.dp).onPointerEvent(PointerEventType.Enter) {
                 mainMenuIsExpanded.value = true
             }
             .onPointerEvent(PointerEventType.Exit) { mainMenuIsExpanded.value = false },
     ) {
         //region logo
-        Box(
-            Modifier.fillMaxWidth()
-                .offset(
-                    x = animateDpAsState(
-                        targetValue =
-                        if (!mainMenuIsExpanded.value) sideBarWidth.value.pxToDp() / 2
-                                - sideBarPadding / 2
-                        else sideBarPadding,
-                        tween(600)
-                    ).value
-                )
-        ) {
-            Logo(
-                expanded = mainMenuIsExpanded.value,
+        Logo(
+            expanded = mainMenuIsExpanded.value,
+            modifier = Modifier.fillMaxWidth().centerItem(
+                targetState = mainMenuIsExpanded.value,
+                parentWidth = sideBarWidth.value.pxToDp(),
+                itemWidth = iconSize,
+                tween = tween(600)
             )
-        }
+        )
         //endregion
-        Spacer(Modifier.fillMaxHeight(.09f))
+        Spacer(Modifier.fillMaxHeight(.1f))
         //region main menu
         Box(Modifier.height(200.dp)) {
             Column(Modifier.fillMaxSize()) {
                 Spacer(
                     Modifier.height(
                         animateDpAsState(
-                            (mainMenuItemSize.value.pxToDp() * mainMenuCurrentItem.value)
+                            (mainMenuItemHeight.value.pxToDp() * mainMenuCurrentItem)
                         ).value
                     )
                 )
                 Spacer(
-                    Modifier.height(mainMenuItemSize.value.pxToDp())
+                    Modifier.height(mainMenuItemHeight.value.pxToDp())
                         .width(4.dp)
                         .clip(RoundedCornerShape(8.dp))
                         .background(Color(0xffF53D47))
@@ -153,27 +141,25 @@ fun DashboardSideBar() {
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.weight(1f).fillMaxWidth().onGloballyPositioned {
-                            mainMenuItemSize.value = it.boundsInParent().height
-                        }.onClick { mainMenuCurrentItem.value = index }.cursorHoverIconHand()
+                            mainMenuItemHeight.value = it.boundsInParent().height
+                        }.onClick { mainMenuCurrentItem = index }.cursorHoverIconHand()
                     ) {
                         Icon(
                             painterResource(
-                                if (mainMenuCurrentItem.value == index) item.enabledIconResource
+                                if (mainMenuCurrentItem == index) item.enabledIconResource
                                 else item.disabledIconResource
                             ),
                             contentDescription = null,
                             tint =
-                            if (mainMenuCurrentItem.value == index) Color(0xffF53D47)
-                            else Color(0xff1F0000),
-                            modifier = Modifier.size(24.dp).offset(
-                                x = animateDpAsState(
-                                    targetValue =
-                                    if (!mainMenuIsExpanded.value)
-                                        sideBarWidth.value.pxToDp() / 2 - sideBarPadding / 2
-                                    else sideBarPadding,
-                                    tween(500)
-                                ).value
-                            )
+                            if (mainMenuCurrentItem == index) Color(0xffF53D47)
+                            else Theme.colors.contentSecondary,
+                            modifier = Modifier.size(24.dp)
+                                .centerItem(
+                                    targetState = mainMenuIsExpanded.value,
+                                    parentWidth = sideBarWidth.value.pxToDp(),
+                                    itemWidth = iconSize,
+                                    tween = tween(600)
+                                )
                         )
                         AnimatedVisibility(
                             visible = mainMenuIsExpanded.value,
@@ -184,10 +170,10 @@ fun DashboardSideBar() {
                                 item.label,
                                 style = Theme.typography.headline,
                                 color =
-                                if (mainMenuCurrentItem.value == index) Theme.colors.primary
+                                if (mainMenuCurrentItem == index) Theme.colors.primary
                                 else Theme.colors.contentSecondary,
                                 maxLines = 1,
-                                modifier = Modifier.padding(start = sideBarPadding)
+                                modifier = Modifier.padding(start = iconSize)
                             )
                         }
                     }
@@ -202,12 +188,14 @@ fun DashboardSideBar() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             BpToggleButton(
-                onToggle = {}, modifier = Modifier.offset(
-                    x = animateDpAsState(
-                        targetValue = if (!mainMenuIsExpanded.value) sideBarWidth.value.pxToDp() / 2 - 32.dp else sideBarPadding,
-                        tween(600)
-                    ).value
-                )
+                isDark = darkTheme,
+                onToggle = onSwitchTheme::invoke, modifier = Modifier
+                    .centerItem(
+                        targetState = mainMenuIsExpanded.value,
+                        parentWidth = sideBarWidth.value.pxToDp(),
+                        itemWidth = 64.dp,
+                        tween = tween(600)
+                    )
             )
             AnimatedVisibility(
                 visible = mainMenuIsExpanded.value,
@@ -225,26 +213,4 @@ fun DashboardSideBar() {
         }
         //endregion
     }
-}
-
-private fun DrawScope.drawEndBorder(
-    strokeWidth: Dp,
-    color: Color,
-    shareTop: Boolean = true,
-    shareBottom: Boolean = true
-) {
-    val strokeWidthPx = strokeWidth.toPx()
-    if (strokeWidthPx == 0f) return
-    drawPath(
-        Path().apply {
-            val width = size.width
-            val height = size.height
-            moveTo(width, 0f)
-            lineTo(width - strokeWidthPx, if (shareTop) strokeWidthPx else 0f)
-            lineTo(width - strokeWidthPx, if (shareBottom) height - strokeWidthPx else height)
-            lineTo(width, height)
-            close()
-        },
-        color = color
-    )
 }

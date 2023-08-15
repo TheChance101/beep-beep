@@ -5,23 +5,27 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BpTheme
-import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.ui.screen.DashBoardScaffold
-import org.thechance.common.ui.screen.DashboardAppbar
-import org.thechance.common.ui.screen.DashboardSideBar
+import org.thechance.common.ui.screen.scaffold.DashBoardScaffold
+import org.thechance.common.ui.screen.scaffold.DashboardAppbar
+import org.thechance.common.ui.screen.scaffold.DashboardSideBar
 
 @Composable
 fun App() {
-    BpTheme(useDarkTheme = false) {
+    val isDark = remember { mutableStateOf(false) }
+    BpTheme(useDarkTheme = isDark.value) {
+
         DashBoardScaffold(
             appbar = {
                 DashboardAppbar("Users", "Mohammad", {})
             },
-            sideBar = { DashboardSideBar() },
+            sideBar = { DashboardSideBar(onSwitchTheme = {
+                isDark.value = !isDark.value
+            },darkTheme = isDark.value) },
         ){innerPadding ->
             Column(Modifier.fillMaxSize().padding(innerPadding).background(color = Color.Black)) {  }
         }
