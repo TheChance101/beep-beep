@@ -9,6 +9,7 @@ import org.thechance.service_restaurant.domain.utils.Validation
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_REQUEST_PARAMETER
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_STATUS
+import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_TIME
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_UPDATE_PARAMETER
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 
@@ -163,6 +164,6 @@ class OrderValidationTest{
         }
 
         val error = assertThrows(MultiErrorException::class.java, executable)
-        assertEquals(true, error.errorCodes.contains(INVALID_REQUEST_PARAMETER))
+        assertEquals(true, error.errorCodes.contains(INVALID_TIME))
     }
 }
