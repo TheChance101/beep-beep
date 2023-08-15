@@ -5,7 +5,6 @@ plugins {
     alias(libs.plugins.kotlin.native.cocoapods)
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.compose)
-    alias(libs.plugins.google.services)
 }
 
 tasks.register("prepareKotlinBuildScriptModel"){}
@@ -45,8 +44,6 @@ kotlin {
                 api(libs.voyager.tab.navigator)
                 api(libs.voyager.transitions)
                 api(libs.google.accompanist)
-                api(libs.firebase.bom)
-                api(libs.voyager.koin)
                 implementation(project(":design_system:shared"))
             }
         }
