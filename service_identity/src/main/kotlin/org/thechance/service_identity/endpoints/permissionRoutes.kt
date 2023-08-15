@@ -9,18 +9,18 @@ import org.koin.ktor.ext.inject
 import org.thechance.service_identity.data.mappers.toDto
 import org.thechance.service_identity.data.mappers.toEntity
 import org.thechance.service_identity.domain.entity.MissingParameterException
+import org.thechance.service_identity.domain.entity.Permission
 import org.thechance.service_identity.domain.usecases.IPermissionManagementUseCase
 import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
-import org.thechance.service_identity.endpoints.model.CreatePermissionDocument
-import org.thechance.service_identity.endpoints.model.UpdatePermissionDocument
+import org.thechance.service_identity.endpoints.model.PermissionDto
 
 fun Route.permissionRoutes() {
     val IPermissionManagementUseCase: IPermissionManagementUseCase by inject()
     route("/permissions") {
 
         post {
-            val permission = call.receive<CreatePermissionDocument>()
-            val success = IPermissionManagementUseCase.createPermission(permission.toEntity())
+            val permissionDto = call.receive<PermissionDto>()
+            val success = IPermissionManagementUseCase.createPermission(permissionDto.toEntity())
             call.respond(HttpStatusCode.OK, success)
         }
 
@@ -34,8 +34,8 @@ fun Route.permissionRoutes() {
         put("/{permissionId}") {
             val permissionId = call.parameters["permissionId"]?.toIntOrNull()
                 ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val permission = call.receive<UpdatePermissionDocument>()
-            val success = IPermissionManagementUseCase.updatePermission(permissionId, permission.toEntity())
+            val permission = call.receive<Permission>()
+            val success = IPermissionManagementUseCase.updatePermission(permissionId, permission.permission)
             call.respond(HttpStatusCode.OK, success)
         }
 
