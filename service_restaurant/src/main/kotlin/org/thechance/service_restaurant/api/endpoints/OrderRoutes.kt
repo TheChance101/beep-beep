@@ -6,6 +6,10 @@ import io.ktor.server.request.receiveParameters
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.webSocket
+import io.ktor.websocket.CloseReason
+import io.ktor.websocket.Frame
+import io.ktor.websocket.close
+import io.ktor.websocket.readText
 import org.koin.ktor.ext.inject
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.domain.usecase.IManageOrderUseCase
@@ -24,10 +28,12 @@ fun Route.orderRoutes(){
         webSocket("/{id}"){
             val id = call.parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
             val restaurant =  manageRestaurants.getRestaurant(id).toDto()
-            manageOrder.checkRestaurantOpen(
+           val isOpen= manageOrder.checkRestaurantOpen(
                 openingTime=restaurant.openingTime?:"",
                 closingTime=restaurant.closingTime?:"")
             val result =manageOrder.getOrdersByRestaurantId(id)
+
+
             call.respond(HttpStatusCode.OK,result.map { it.toDto() })
         }
 

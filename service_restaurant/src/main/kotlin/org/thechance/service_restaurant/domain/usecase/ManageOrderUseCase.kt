@@ -28,6 +28,7 @@ class ManageOrderUseCase(
     private val orderValidationUseCase: IOrderValidationUseCase
 ) : IManageOrderUseCase {
     override suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order> {
+
        return optionsGateway.getOrdersByRestaurantId(restaurantId=restaurantId)
     }
 
