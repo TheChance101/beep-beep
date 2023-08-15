@@ -28,13 +28,21 @@ fun Route.orderRoutes(){
         webSocket("/{id}"){
             val id = call.parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
             val restaurant =  manageRestaurants.getRestaurant(id).toDto()
-           val isOpen= manageOrder.checkRestaurantOpen(
+            val isOpen= manageOrder.checkRestaurantOpen(
                 openingTime=restaurant.openingTime?:"",
                 closingTime=restaurant.closingTime?:"")
-            val result =manageOrder.getOrdersByRestaurantId(id)
+            if (isOpen) {
+                try{
+                    val orders = manageOrder.getOrdersByRestaurantId(id)
+                    send(Frame.Text(orders.map { it.toDto().toString() }.toString()))
+                }catch (e:Exception){
+                    close(CloseReason(CloseReason.Codes.CANNOT_ACCEPT, "Restaurant is closed"))
+                }
 
-
-            call.respond(HttpStatusCode.OK,result.map { it.toDto() })
+            }else{
+                close(CloseReason(CloseReason.Codes.GOING_AWAY, "Restaurant is closed"))
+                return@webSocket
+            }
         }
 
         get("details/{id}"){
