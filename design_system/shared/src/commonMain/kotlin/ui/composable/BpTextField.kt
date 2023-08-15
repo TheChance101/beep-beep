@@ -39,6 +39,7 @@ import com.beepbeep.designSystem.ui.theme.Theme.typography
 fun BpTextField(
     label: String,
     text: String,
+    hint: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     keyboardType: KeyboardType = KeyboardType.Text,
@@ -56,16 +57,23 @@ fun BpTextField(
         Text(
             text = label,
             modifier = Modifier.padding(bottom = dimens.space8),
-            style = typography.titleLarge,
+            style = typography.title,
             color = colors.contentPrimary
         )
 
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth().height(56.dp),
             value = text,
+            placeholder = {
+                Text(
+                    hint,
+                    style = typography.caption,
+                    color = colors.contentTertiary
+                )
+            },
             onValueChange = onValueChange,
             shape = shapeRadius,
-            textStyle = typography.titleMedium.copy(colors.contentPrimary),
+            textStyle = typography.body.copy(colors.contentPrimary),
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
             trailingIcon = {
@@ -89,7 +97,7 @@ fun BpTextField(
             Text(
                 text = errorMessage,
                 modifier = Modifier.padding(top = dimens.space8),
-                style = typography.body,
+                style = typography.caption,
                 color = colors.primary
             )
         }
