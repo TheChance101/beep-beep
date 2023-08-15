@@ -7,6 +7,9 @@ import org.thechance.service_restaurant.domain.utils.IValidation
 import org.thechance.service_restaurant.domain.utils.OrderStatus
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 interface IManageOrderUseCase {
     suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order>
@@ -14,6 +17,9 @@ interface IManageOrderUseCase {
     suspend fun updateOrderStatus(orderId: String, status: OrderStatus): Order
 
     suspend fun getOrdersHistory(restaurantId: String,page: Int, limit: Int): List<Order>
+
+     fun  checkRestaurantOpen(openingTime : String,closingTime:String):Boolean
+
 }
 
 class ManageOrderUseCase(
@@ -39,6 +45,15 @@ class ManageOrderUseCase(
 
     override suspend fun getOrdersHistory(restaurantId: String,page: Int, limit: Int): List<Order> {
         return optionsGateway.getOrdersHistory(restaurantId,page, limit)
+    }
+
+    override fun checkRestaurantOpen(openTime: String, closTime: String): Boolean {
+        val currentTime = Calendar.getInstance().time
+        val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val openingTime = sdf.parse(openTime)
+        val closingTime = sdf.parse(closTime)
+
+        return currentTime.after(openingTime) && currentTime.before(closingTime)
     }
 
 }
