@@ -2,27 +2,27 @@ package org.thechance.service_restaurant.domain.usecase
 
 import org.thechance.service_restaurant.domain.entity.Restaurant
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
-import org.thechance.service_restaurant.domain.usecase.validation.RestaurantValidation
-import org.thechance.service_restaurant.domain.usecase.validation.Validation
-import org.thechance.service_restaurant.domain.utils.INVALID_ID
-import org.thechance.service_restaurant.domain.utils.MultiErrorException
-import org.thechance.service_restaurant.domain.utils.NOT_FOUND
+import org.thechance.service_restaurant.domain.usecase.validation.IRestaurantValidationUseCase
+import org.thechance.service_restaurant.domain.utils.IValidation
+import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
+import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
+import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 
 interface IControlRestaurantsUseCase {
-    suspend fun createRestaurant(restaurant: Restaurant): Boolean
+    suspend fun createRestaurant(restaurant: Restaurant): Restaurant
     suspend fun getAllRestaurants(page: Int, limit: Int): List<Restaurant>
-    suspend fun updateRestaurant(restaurant: Restaurant): Boolean
+    suspend fun updateRestaurant(restaurant: Restaurant): Restaurant
     suspend fun deleteRestaurant(restaurantId: String): Boolean
 }
 
 class ControlRestaurantsUseCase(
     private val restaurantGateway: IRestaurantGateway,
-    private val restaurantValidation: RestaurantValidation,
-    private val basicValidation: Validation
+    private val basicValidation: IValidation,
+    private val restaurantValidation: IRestaurantValidationUseCase
 ) : IControlRestaurantsUseCase {
 
-    override suspend fun createRestaurant(restaurant: Restaurant): Boolean {
-        restaurantValidation.validationRestaurant(restaurant)
+    override suspend fun createRestaurant(restaurant: Restaurant): Restaurant {
+        restaurantValidation. validateAddRestaurant(restaurant)
         return restaurantGateway.addRestaurant(restaurant)
     }
 
@@ -31,7 +31,7 @@ class ControlRestaurantsUseCase(
         return restaurantGateway.getRestaurants(page, limit)
     }
 
-    override suspend fun updateRestaurant(restaurant: Restaurant): Boolean {
+    override suspend fun updateRestaurant(restaurant: Restaurant): Restaurant {
         restaurantValidation.validateUpdateRestaurant(restaurant)
         checkIfRestaurantIsExist(restaurant.id)
         return restaurantGateway.updateRestaurant(restaurant)
@@ -44,10 +44,11 @@ class ControlRestaurantsUseCase(
 
     private suspend fun checkIfRestaurantIsExist(restaurantId: String) {
         if (!basicValidation.isValidId(restaurantId)) {
-            throw MultiErrorException(listOf( INVALID_ID))
+            throw MultiErrorException(listOf(INVALID_ID))
         }
         if (restaurantGateway.getRestaurant(restaurantId) == null) {
-            throw MultiErrorException(listOf( NOT_FOUND))
+            throw MultiErrorException(listOf(NOT_FOUND))
         }
     }
+
 }

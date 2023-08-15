@@ -19,8 +19,8 @@ import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
 import org.thechance.service_restaurant.domain.usecase.IDiscoverRestaurantUseCase
 import org.thechance.service_restaurant.domain.usecase.IManageCuisineUseCase
-import org.thechance.service_restaurant.domain.utils.MultiErrorException
-import org.thechance.service_restaurant.domain.utils.NOT_FOUND
+import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
+import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 
 fun Route.cuisineRoutes() {
 
@@ -28,9 +28,7 @@ fun Route.cuisineRoutes() {
     val discoverRestaurant: IDiscoverRestaurantUseCase by inject()
 
     get("cuisines") {
-        val page = call.parameters.extractInt("page") ?: 1
-        val limit = call.parameters.extractInt("limit") ?: 10
-        val cuisines = manageCuisine.getCuisines(page, limit)
+        val cuisines = manageCuisine.getCuisines()
         call.respond(HttpStatusCode.OK, cuisines.toDto())
     }
 
@@ -44,19 +42,19 @@ fun Route.cuisineRoutes() {
 
         post {
             val cuisine = call.receive<CuisineDto>()
-            val isAdded = manageCuisine.addCuisine(cuisine.toEntity())
-            if (isAdded) call.respond(HttpStatusCode.Created, "Added Successfully")
+            val result = manageCuisine.addCuisine(cuisine.toEntity())
+            call.respond(HttpStatusCode.Created, result)
         }
 
         put {
             val cuisine = call.receive<CuisineDto>()
-            val isUpdated = manageCuisine.updateCuisine(cuisine.toEntity())
-            if (isUpdated) call.respond(HttpStatusCode.OK, "Updated Successfully")
+            val result = manageCuisine.updateCuisine(cuisine.toEntity())
+            call.respond(HttpStatusCode.OK, result)
         }
 
         delete("/{id}") {
-            val id = call.parameters.extractString("id") ?:
-            throw MultiErrorException(listOf(NOT_FOUND))
+            val id =
+                call.parameters.extractString("id") ?: throw MultiErrorException(listOf(NOT_FOUND))
             val isDeleted = manageCuisine.deleteCuisine(id)
             if (isDeleted) call.respond(HttpStatusCode.OK, "Deleted Successfully")
         }

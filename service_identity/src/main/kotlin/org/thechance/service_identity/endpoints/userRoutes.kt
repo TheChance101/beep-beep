@@ -12,13 +12,13 @@ import org.thechance.service_identity.data.mappers.toCreateRequest
 import org.thechance.service_identity.data.mappers.toDto
 import org.thechance.service_identity.data.mappers.toUpdateRequest
 import org.thechance.service_identity.domain.entity.MissingParameterException
-import org.thechance.service_identity.domain.usecases.IManageUserAccountUseCase
+import org.thechance.service_identity.domain.usecases.IUserAccountManagementUseCase
 import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
 
 fun Route.userRoutes() {
 
 
-    val manageUserAccount: IManageUserAccountUseCase by inject()
+    val manageUserAccount: IUserAccountManagementUseCase by inject()
 
     route("/users") {
 

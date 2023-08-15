@@ -1,8 +1,9 @@
 package org.thechance.service_taxi.data.gateway
 
-import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Updates
-import org.bson.types.ObjectId
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.litote.kmongo.and
 import org.litote.kmongo.eq
 import org.litote.kmongo.ne
@@ -15,24 +16,22 @@ import org.thechance.service_taxi.api.dto.trip.toEntity
 import org.thechance.service_taxi.data.DataBaseContainer
 import org.thechance.service_taxi.data.collection.TaxiCollection
 import org.thechance.service_taxi.data.collection.TripCollection
-import org.thechance.service_taxi.data.utils.isNotNull
-import org.thechance.service_taxi.data.utils.isSuccessfullyUpdated
 import org.thechance.service_taxi.data.utils.paginate
-import org.thechance.service_taxi.data.utils.updateNotNullProperties
 import org.thechance.service_taxi.domain.entity.Taxi
-import org.thechance.service_taxi.domain.entity.TaxiUpdateRequest
 import org.thechance.service_taxi.domain.entity.Trip
-import org.thechance.service_taxi.domain.entity.TripUpdateRequest
 import org.thechance.service_taxi.domain.gateway.DataBaseGateway
+import java.util.UUID
 
 class DataBaseGatewayImpl(private val container: DataBaseContainer) : DataBaseGateway {
     // region taxi curd
-    override suspend fun addTaxi(taxi: Taxi): Boolean {
-        return container.taxiCollection.insertOne(taxi.toCollection()).wasAcknowledged()
+    override suspend fun addTaxi(taxi: Taxi): Taxi {
+        val taxiCollection = taxi.toCollection()
+        container.taxiCollection.insertOne(taxiCollection)
+        return taxiCollection.toEntity()
     }
 
     override suspend fun getTaxiById(taxiId: String): Taxi? {
-        return container.taxiCollection.findOneById(ObjectId(taxiId))
+        return container.taxiCollection.findOneById(UUID.fromString(taxiId))
             ?.takeIf { !it.isDeleted }?.toEntity()
     }
 
@@ -41,30 +40,18 @@ class DataBaseGatewayImpl(private val container: DataBaseContainer) : DataBaseGa
             .paginate(page, limit).toList().toEntity()
     }
 
-    override suspend fun deleteTaxi(taxiId: String): Boolean {
-        return container.taxiCollection.updateOneById(
-            id = ObjectId(taxiId),
-            update = set(TaxiCollection::isDeleted setTo true),
-            updateOnlyNotNullProperties = true
-        ).isSuccessfullyUpdated()
-    }
-
-    override suspend fun updateTaxi(taxi: TaxiUpdateRequest): Boolean {
+    override suspend fun deleteTaxi(taxiId: String): Taxi? {
         return container.taxiCollection.findOneAndUpdate(
-            filter = and(
-                Filters.ne(TaxiCollection::isDeleted.name, true),
-                Filters.ne(TaxiCollection::id.name, ObjectId(taxi.id)),
-            ),
-            update = updateNotNullProperties(
-                taxi.toCollection(),
-                filter = { it != "isDeleted" && it != "id"})
-        ).isNotNull()
+            filter = TaxiCollection::id eq UUID.fromString(taxiId),
+            update = set(TaxiCollection::isDeleted setTo true)
+        )?.toEntity()
     }
     //endregion
 
     //region trip curd
-    override suspend fun addTrip(trip: Trip): Boolean {
-        return container.tripCollection.insertOne(trip.toCollection()).wasAcknowledged()
+    override suspend fun addTrip(trip: Trip): Trip? {
+        container.tripCollection.insertOne(trip.toCollection())
+        return getTripById(trip.id)
     }
 
     override suspend fun getTripById(tripId: String): Trip? {
@@ -85,7 +72,7 @@ class DataBaseGatewayImpl(private val container: DataBaseContainer) : DataBaseGa
         return container.tripCollection.find(
             and(
                 TripCollection::isDeleted ne true,
-                TripCollection::driverId eq ObjectId(driverId)
+                TripCollection::driverId eq UUID.fromString(driverId)
             )
         ).paginate(page, limit).toList().toEntity()
     }
@@ -98,28 +85,61 @@ class DataBaseGatewayImpl(private val container: DataBaseContainer) : DataBaseGa
         return container.tripCollection.find(
             and(
                 TripCollection::isDeleted ne true,
-                TripCollection::clientId eq ObjectId(clientId)
+                TripCollection::clientId eq UUID.fromString(clientId)
             )
         ).paginate(page, limit).toList().toEntity()
     }
 
-    override suspend fun deleteTrip(tripId: String): Boolean {
-        return container.tripCollection.updateOneById(
-            id = ObjectId(tripId),
+    override suspend fun deleteTrip(tripId: String): Trip? {
+        val trip = container.tripCollection.findOneById(UUID.fromString(tripId))
+        container.tripCollection.updateOneById(
+            id = UUID.fromString(tripId),
             update = Updates.set(TripCollection::isDeleted.name, true)
-        ).isSuccessfullyUpdated()
+        )
+        return trip?.toEntity()
     }
 
-    override suspend fun updateTrip(trip: TripUpdateRequest): Boolean {
+    override suspend fun approveTrip(tripId: String, taxiId: String, driverId: String): Trip? {
         return container.tripCollection.findOneAndUpdate(
             filter = and(
-                Filters.ne(TripCollection::isDeleted.name, true),
-                Filters.ne(TripCollection::id.name, ObjectId(trip.id)),
+                TripCollection::isDeleted ne true,
+                TripCollection::id eq UUID.fromString(tripId),
             ),
-            update = updateNotNullProperties(
-                trip.toCollection(),
-                filter = { it != "isDeleted" && it != "id"})
-        ).isNotNull()
+            update = Updates.combine(
+                Updates.set(TripCollection::taxiId.name, UUID.fromString(taxiId)),
+                Updates.set(TripCollection::driverId.name, UUID.fromString(driverId)),
+                Updates.set(
+                    TripCollection::startDate.name, Clock.System.now().toLocalDateTime(
+                        TimeZone.currentSystemDefault()
+                    ).toString()
+                )
+            )
+        )?.toEntity()
+    }
+
+    override suspend fun finishTrip(tripId: String, driverId: String): Trip? {
+        return container.tripCollection.findOneAndUpdate(
+            filter = and(
+                TripCollection::isDeleted ne true,
+                TripCollection::id eq UUID.fromString(tripId),
+                TripCollection::driverId eq UUID.fromString(driverId),
+            ),
+            update = Updates.set(
+                TripCollection::endDate.name, Clock.System.now().toLocalDateTime(
+                    TimeZone.currentSystemDefault()
+                ).toString()
+            )
+        )?.toEntity()
+    }
+
+    override suspend fun rateTrip(tripId: String, rate: Double): Trip? {
+        return container.tripCollection.findOneAndUpdate(
+            filter = and(
+                TripCollection::isDeleted ne true,
+                TripCollection::id eq UUID.fromString(tripId),
+            ),
+            update = Updates.set(TripCollection::rate.name, rate)
+        )?.toEntity()
     }
     //endregion
 }

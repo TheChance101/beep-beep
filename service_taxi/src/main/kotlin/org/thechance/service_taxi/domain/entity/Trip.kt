@@ -14,8 +14,3 @@ data class Trip(
     val startDate: LocalDateTime? = null,
     val endDate: LocalDateTime? = null,
 )
-
-data class Location(
-    val latitude: Double,
-    val longitude: Double,
-)
