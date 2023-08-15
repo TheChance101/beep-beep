@@ -17,7 +17,7 @@ data class UserCollection(
     @SerialName("username")
     val username: String,
     @SerialName("password")
-    val password: String,//hashed password
+    val hashedPassword: String,
     @SerialName("email")
     val email: String,
     @SerialName("salt")

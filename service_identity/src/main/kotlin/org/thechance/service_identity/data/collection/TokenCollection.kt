@@ -6,11 +6,11 @@ import java.util.UUID
 
 
 @Serializable
-data class TokensCollection(
+data class TokenCollection(
     @Contextual
     val userId: UUID,
     val refreshToken: String,
     val accessToken: String,
-    val expiresIn: Int,
+    val expiresDate: Int,
 )
 

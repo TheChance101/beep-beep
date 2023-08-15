@@ -47,7 +47,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
         dataBaseContainer.database.getCollection<WalletCollection>(WALLET_COLLECTION)
     }
     private val tokensCollection by lazy {
-        dataBaseContainer.database.getCollection<TokensCollection>(TOKENS_COLLECTION)
+        dataBaseContainer.database.getCollection<TokenCollection>(TOKENS_COLLECTION)
     }
 
     init {
@@ -59,7 +59,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
     //region Address
 
     override suspend fun addAddress(userId: String, location: Location): Boolean {
-        val address = AddressCollection(userId = ObjectId(userId), location = location.toCollection())
+        val address = AddressCollection(userId = UUID.fromString(userId), location = location.toCollection())
         userDetailsCollection.updateOne(
             filter = UserDetailsCollection::userId eq UUID.fromString(userId),
             update = push(
@@ -98,7 +98,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
 
     override suspend fun getUserAddresses(userId: String): List<Address> {
         return addressCollection.find(
-            AddressCollection::userId eq ObjectId(userId),
+            AddressCollection::userId eq UUID.fromString(userId),
             AddressCollection::isDeleted eq false
         ).toList().toEntity()
     }
@@ -205,7 +205,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
     ): Boolean {
 
         val userDocument = UserCollection(
-            password = saltedHash.hash,
+            hashedPassword = saltedHash.hash,
             salt = saltedHash.salt,
             username = username,
             fullName = fullName,
@@ -236,7 +236,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
             return userCollection.updateOneById(
                 ObjectId(id),
                 set(
-                    UserCollection::password setTo saltedHash?.hash,
+                    UserCollection::hashedPassword setTo saltedHash?.hash,
                     UserCollection::salt setTo saltedHash?.salt,
                     UserCollection::username setTo username,
                     UserCollection::fullName setTo fullName,
@@ -330,18 +330,18 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
         val user = userCollection.findOne(
             UserCollection::username eq username
         ) ?: throw NotFoundException(NOT_FOUND)
-        return SaltedHash(user.password, user.salt)
+        return SaltedHash(user.hashedPassword, user.salt)
     }
 
     override suspend fun saveUserTokens(userId: String, accessToken: String, refreshToken: String, expirationDate: Int): Boolean {
-        val tokens = TokensCollection(
+        val tokens = TokenCollection(
             UUID.fromString(userId),
             refreshToken,
             accessToken,
             expirationDate
         )
         return tokensCollection.updateOne(
-            filter = TokensCollection::userId eq UUID.fromString(userId),
+            filter = TokenCollection::userId eq UUID.fromString(userId),
             target = tokens,
             options = UpdateOptions().upsert(true)
         ).isUpdatedSuccessfully()

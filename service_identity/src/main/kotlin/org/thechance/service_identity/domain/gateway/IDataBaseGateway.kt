@@ -7,7 +7,10 @@ interface IDataBaseGateway {
     // region: Permission
     suspend fun getPermission(permissionId: Int): Permission
     suspend fun addPermission(permission: Permission): Boolean
-    suspend fun updatePermission(permissionId: Int, permission: String?): Boolean
+    suspend fun updatePermission(
+        permissionId: Int,
+        permission: String?
+    ): Boolean
     suspend fun deletePermission(permissionId: Int): Boolean
     suspend fun getListOfPermission(): List<Permission>
 
@@ -15,7 +18,10 @@ interface IDataBaseGateway {
 
     //region address
 
-    suspend fun addAddress(userId: String, location: Location): Boolean
+    suspend fun addAddress(
+        userId: String,
+        location: Location
+    ): Boolean
 
     suspend fun deleteAddress(id: String): Boolean
 
@@ -30,17 +36,26 @@ interface IDataBaseGateway {
     // region: user
     suspend fun getUserById(id: String): User
 
-    suspend fun getUsers(page: Int, limit: Int, searchTerm: String = ""): List<UserManagement>
+    suspend fun getUsers(
+        page: Int,
+        limit: Int,
+        searchTerm: String = ""
+    ): List<UserManagement>
 
-    suspend fun createUser(saltedHash: SaltedHash, fullName: String,
-                           username: String,
-                           email: String,): Boolean
+    suspend fun createUser(
+        saltedHash: SaltedHash,
+        fullName: String,
+        username: String,
+        email: String
+    ): Boolean
 
-    suspend fun updateUser(id: String,
-                           saltedHash: SaltedHash?,
-                           fullName: String?,
-                           username: String?,
-                           email: String?): Boolean
+    suspend fun updateUser(
+        id: String,
+        saltedHash: SaltedHash?,
+        fullName: String?,
+        username: String?,
+        email: String?
+    ): Boolean
 
     suspend fun deleteUser(id: String): Boolean
 
@@ -52,8 +67,8 @@ interface IDataBaseGateway {
 
     suspend fun saveUserTokens(
         userId: String,
-        accessToken:String,
-        refreshToken: String ,
+        accessToken: String,
+        refreshToken: String,
         expirationDate: Int
     ): Boolean
 
