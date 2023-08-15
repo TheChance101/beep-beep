@@ -34,7 +34,8 @@ fun Route.orderRoutes(){
             if (isOpen) {
                 try{
                     val orders = manageOrder.getOrdersByRestaurantId(id)
-                    send(Frame.Text(orders.map { it.toDto().toString() }.toString()))
+                    val ordersJson = orders.map { it.toDto().toString() }
+                    send(Frame.Text(ordersJson.joinToString()))
                 }catch (e:Exception){
                     close(CloseReason(CloseReason.Codes.CANNOT_ACCEPT, "Restaurant is closed"))
                 }
