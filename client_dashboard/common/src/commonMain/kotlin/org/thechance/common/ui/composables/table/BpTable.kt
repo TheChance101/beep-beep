@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -49,13 +50,14 @@ fun <T> BpTable(
     firstColumnWeight: Float = 1f,
     lastColumnWeight: Float = 1f,
     otherColumnsWeight: Float = 3f,
-    shape: Shape = RoundedCornerShape(8.dp),
+    shape: Shape = RoundedCornerShape(Theme.radius.medium),
     headerTextStyle: TextStyle = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
     rowPadding: PaddingValues = PaddingValues(16.dp),
+    maxHeight: Dp = 72.dp,
     border: Dp = 1.dp,
     borderColor: Color = Theme.colors.contentBorder,
-    headerColor: Color = Theme.colors.surface,
-    rowsColor: Color = Theme.colors.background,
+    headerColor: Color = Theme.colors.background,
+    rowsColor: Color = Theme.colors.surface,
     rowContent: @Composable RowScope.(T) -> Unit,
 ) {
     LazyColumn(
@@ -63,7 +65,7 @@ fun <T> BpTable(
     ) {
         stickyHeader {
             Row(
-                Modifier.fillMaxWidth().background(headerColor).padding(rowPadding),
+                Modifier.fillMaxWidth().background(headerColor).padding(rowPadding).heightIn(max = maxHeight),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 headers.forEachIndexed { index, header ->
@@ -87,7 +89,7 @@ fun <T> BpTable(
 
         items(data.filterIndexed { index, _ -> index in offset until offset + rowsCount }) {
             Row(
-                Modifier.fillMaxWidth().background(rowsColor).padding(rowPadding),
+                Modifier.fillMaxWidth().background(rowsColor).padding(rowPadding).heightIn(max = maxHeight),
                 verticalAlignment = Alignment.CenterVertically
             ) { rowContent(it) }
             Divider(Modifier.fillMaxWidth(), thickness = border, color = borderColor)
