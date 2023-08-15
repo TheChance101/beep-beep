@@ -5,6 +5,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.receiveParameters
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.websocket.sendSerialized
 import io.ktor.server.websocket.webSocket
 import io.ktor.websocket.CloseReason
 import io.ktor.websocket.Frame
@@ -34,8 +35,7 @@ fun Route.orderRoutes(){
             if (isOpen) {
                 try{
                     val orders = manageOrder.getOrdersByRestaurantId(id)
-                    val ordersJson = orders.map { it.toDto().toString() }
-                    send(Frame.Text(ordersJson.joinToString()))
+                    sendSerialized( orders.map { it.toDto()})
                 }catch (e:Exception){
                     close(CloseReason(CloseReason.Codes.CANNOT_ACCEPT, "Restaurant is closed"))
                 }
