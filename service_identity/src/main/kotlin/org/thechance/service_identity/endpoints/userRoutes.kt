@@ -10,7 +10,6 @@ import org.thechance.service_identity.data.mappers.toDto
 import org.thechance.service_identity.domain.entity.MissingParameterException
 import org.thechance.service_identity.domain.usecases.IUserAccountManagementUseCase
 import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
-import org.thechance.service_identity.endpoints.model.UserDto
 import org.thechance.service_identity.endpoints.model.UserTokenDto
 
 fun Route.userRoutes() {
@@ -18,7 +17,7 @@ fun Route.userRoutes() {
 
     val manageUserAccount: IUserAccountManagementUseCase by inject()
 
-    route("/users") {
+    route("/user") {
 
         get("/{id}") {
             val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
@@ -27,20 +26,36 @@ fun Route.userRoutes() {
         }
 
         post {
-            val userDto = call.receive<UserDto>()
+            val params = call.receiveParameters()
+            val fullName = params["fullName"]?.trim()
+            val username = params["username"]?.trim()
+            val password = params["password"]?.trim()
+            val email = params["email"]?.trim()
+
             val result = manageUserAccount.createUser(
-                userDto.fullName ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER),
-                userDto.username  ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER),
-                userDto.password  ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER),
-                userDto.email ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+                fullName = fullName.toString(),
+                username = username.toString(),
+                password = password.toString(),
+                email = email.toString()
             )
             call.respond(HttpStatusCode.Created, result)
         }
 
         put("/{id}") {
             val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val userDto = call.receive<UserDto>()
-            val result = manageUserAccount.updateUser(id, userDto.fullName, userDto.username, userDto.password, userDto.email)
+            val params = call.receiveParameters()
+            val fullName = params["fullName"]?.trim()
+            val username = params["username"]?.trim()
+            val password = params["password"]?.trim()
+            val email = params["email"]?.trim()
+
+            val result = manageUserAccount.updateUser(
+                id = id,
+                fullName = fullName.toString(),
+                username = username.toString(),
+                password = password.toString(),
+                email = email.toString()
+            )
             call.respond(HttpStatusCode.OK, result)
         }
 
@@ -83,6 +98,13 @@ fun Route.userRoutes() {
                 userTokenDto.expiresIn
             )
             call.respond(HttpStatusCode.OK, isSavedTokens)
+        }
+
+
+        get("/get-user") {
+            val username = call.parameters["username"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            val user = manageUserAccount.getUserByUsername(username)
+            call.respond(HttpStatusCode.OK, user.toDto())
         }
     }
 }
