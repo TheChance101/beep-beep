@@ -7,6 +7,8 @@ plugins {
     alias(libs.plugins.jetbrains.compose)
 }
 
+tasks.register("prepareKotlinBuildScriptModel"){}
+
 kotlin {
     androidTarget()
 
@@ -35,6 +37,13 @@ kotlin {
                 implementation(libs.compose.foundation)
                 implementation(libs.compose.material3)
                 implementation(libs.compose.components.resources)
+                api(libs.koin.core)
+                api(libs.koin.test)
+                api(libs.voyager.navigator)
+                api(libs.voyager.bottomsheet.navigator)
+                api(libs.voyager.tab.navigator)
+                api(libs.voyager.transitions)
+                api(libs.google.accompanist)
                 implementation(project(":design_system:shared"))
             }
         }
@@ -43,6 +52,7 @@ kotlin {
                 api(libs.androidx.activity.compose)
                 api(libs.androidx.appcompat)
                 api(libs.androidx.core.ktx)
+                implementation(libs.androidx.constraint)
             }
         }
         val iosX64Main by getting

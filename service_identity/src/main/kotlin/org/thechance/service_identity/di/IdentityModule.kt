@@ -1,10 +1,12 @@
 package org.thechance.service_identity.di
 
 
+import com.mongodb.ConnectionString
+import com.mongodb.MongoClientSettings
+import org.bson.UuidRepresentation
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
 import org.koin.dsl.module
-import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.reactivestreams.KMongo
 
 @Module
@@ -16,6 +18,11 @@ val kmongoModule = module {
         val cluster = System.getenv("cluster")
         val username = System.getenv("username")
         val password = System.getenv("password")
-        KMongo.createClient("mongodb+srv://$username:$password@$cluster.mongodb.net/")
+        val connectionString = ConnectionString("mongodb+srv://$username:$password@$cluster.mongodb.net/")
+        val settings = MongoClientSettings.builder()
+            .applyConnectionString(connectionString)
+            .uuidRepresentation(UuidRepresentation.STANDARD)
+            .build()
+        KMongo.createClient(settings)
     }
 }

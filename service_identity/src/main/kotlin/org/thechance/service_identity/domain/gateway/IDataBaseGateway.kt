@@ -1,13 +1,16 @@
 package org.thechance.service_identity.domain.gateway
 
-import org.thechance.service_identity.data.security.hashing.SaltedHash
+import org.thechance.service_identity.domain.entity.SaltedHash
 import org.thechance.service_identity.domain.entity.*
 
 interface IDataBaseGateway {
     // region: Permission
     suspend fun getPermission(permissionId: Int): Permission
-    suspend fun addPermission(permission: CreatePermissionRequest): Boolean
-    suspend fun updatePermission(permissionId: Int, permission: UpdatePermissionRequest): Boolean
+    suspend fun addPermission(permission: Permission): Boolean
+    suspend fun updatePermission(
+        permissionId: Int,
+        permission: String?
+    ): Boolean
     suspend fun deletePermission(permissionId: Int): Boolean
     suspend fun getListOfPermission(): List<Permission>
 
@@ -15,11 +18,14 @@ interface IDataBaseGateway {
 
     //region address
 
-    suspend fun addAddress(userId: String, address: CreateAddressRequest): Boolean
+    suspend fun addAddress(
+        userId: String,
+        location: Location
+    ): Boolean
 
     suspend fun deleteAddress(id: String): Boolean
 
-    suspend fun updateAddress(id: String, address: UpdateAddressRequest): Boolean
+    suspend fun updateAddress(id: String, location: Location): Boolean
 
     suspend fun getAddress(id: String): Address
 
@@ -30,15 +36,42 @@ interface IDataBaseGateway {
     // region: user
     suspend fun getUserById(id: String): User
 
-    suspend fun getUsers(page: Int, limit: Int, searchTerm: String = ""): List<UserManagement>
+    suspend fun getUsers(
+        page: Int,
+        limit: Int,
+        searchTerm: String = ""
+    ): List<UserManagement>
 
-    suspend fun createUser(saltedHash: SaltedHash, user: CreateUserRequest): Boolean
+    suspend fun createUser(
+        saltedHash: SaltedHash,
+        fullName: String,
+        username: String,
+        email: String
+    ): Boolean
 
-    suspend fun updateUser(id: String, user: UpdateUserRequest): Boolean
+    suspend fun updateUser(
+        id: String,
+        saltedHash: SaltedHash?,
+        fullName: String?,
+        username: String?,
+        email: String?
+    ): Boolean
 
     suspend fun deleteUser(id: String): Boolean
 
     // endregion: user
+
+    // region token
+
+    suspend fun getSaltedHash(username: String): SaltedHash
+
+    suspend fun updateRefreshToken(
+        userId: String,
+        refreshToken: String,
+        expirationDate: Long
+    ): Boolean
+
+    // endregion
 
     // region: user permission management
 
@@ -54,5 +87,11 @@ interface IDataBaseGateway {
     suspend fun getWalletBalance(userId: String): Double
 
     suspend fun addToWallet(userId: String, amount: Double): Boolean
+
+    suspend fun getUserByUsername(username: String): UserManagement
+
+    suspend fun validateRefreshToken(refreshToken: String): Boolean
+
+    suspend fun getUserIdByRefreshToken(refreshToken: String): String
 
 }

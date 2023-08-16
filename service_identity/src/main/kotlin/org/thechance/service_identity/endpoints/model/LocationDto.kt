@@ -7,15 +7,3 @@ data class LocationDto(
     val latitude: Double,
     val longitude: Double,
 )
-
-@Serializable
-data class CreateLocationBody(
-    val latitude: Double,
-    val longitude: Double,
-)
-
-@Serializable
-data class UpdateLocationBody(
-    val latitude: Double? = null,
-    val longitude: Double? = null,
-)

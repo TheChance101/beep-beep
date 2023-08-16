@@ -1,16 +1,24 @@
 package org.thechance.service_identity.domain.usecases.validation
 
 import org.koin.core.annotation.Single
-import org.thechance.service_identity.domain.entity.CreateUserRequest
 import org.thechance.service_identity.domain.entity.RequestValidationException
-import org.thechance.service_identity.domain.entity.UpdateUserRequest
 import org.thechance.service_identity.domain.util.*
 
 interface IUserInfoValidationUseCase {
 
-    fun validateUserInformation(user: CreateUserRequest)
+    fun validateUserInformation(
+        fullName: String,
+        username: String,
+        password: String,
+        email: String
+    )
 
-    fun validateUpdateUserInformation(user: UpdateUserRequest)
+    fun validateUpdateUserInformation(
+        fullName: String?,
+        username: String?,
+        password: String?,
+        email: String?
+    )
 
     fun validateUsernameIsNotEmpty(username: String): Boolean
 
@@ -28,30 +36,35 @@ interface IUserInfoValidationUseCase {
 @Single
 class UserInfoValidationUseCase() : IUserInfoValidationUseCase {
 
-    override fun validateUserInformation(user: CreateUserRequest) {
+    override fun validateUserInformation(
+        fullName: String,
+        username: String,
+        password: String,
+        email: String
+    ) {
         val reasons = mutableListOf<String>()
 
-        if (!validateUsernameIsNotEmpty(user.username)) {
+        if (!validateUsernameIsNotEmpty(username)) {
             reasons.add(USERNAME_CANNOT_BE_BLANK)
         }
 
-        if (!validateUsername(user.username)) {
+        if (!validateUsername(username)) {
             reasons.add(INVALID_USERNAME)
         }
 
-        if (!validateFullNameIsNotEmpty(user.fullName)) {
+        if (!validateFullNameIsNotEmpty(fullName)) {
             reasons.add(INVALID_FULLNAME)
         }
 
-        if (!validatePasswordIsNotEmpty(user.password)) {
+        if (!validatePasswordIsNotEmpty(password)) {
             reasons.add(PASSWORD_CANNOT_BE_BLANK)
         }
 
-        if (!validatePasswordLength(user.password)) {
+        if (!validatePasswordLength(password)) {
             reasons.add(PASSWORD_CANNOT_BE_LESS_THAN_8_CHARACTERS)
         }
 
-        if (!validateEmail(user.email)) {
+        if (!validateEmail(email)) {
             reasons.add(INVALID_EMAIL)
         }
 
@@ -60,40 +73,45 @@ class UserInfoValidationUseCase() : IUserInfoValidationUseCase {
         }
     }
 
-    override fun validateUpdateUserInformation(user: UpdateUserRequest) {
+    override fun validateUpdateUserInformation(
+        fullName: String?,
+        username: String?,
+        password: String?,
+        email: String?
+    ) {
         val reasons = mutableListOf<String>()
 
-        user.username?.let {
+        username?.let {
             if (!validateUsernameIsNotEmpty(it)) {
                 reasons.add(USERNAME_CANNOT_BE_BLANK)
             }
         }
 
-        user.username?.let {
+        username?.let {
             if (!validateUsername(it)) {
                 reasons.add(INVALID_USERNAME)
             }
         }
 
-        user.fullName?.let {
+        fullName?.let {
             if (!validateFullNameIsNotEmpty(it)) {
                 reasons.add(INVALID_FULLNAME)
             }
         }
 
-        user.password?.let {
+        password?.let {
             if (!validatePasswordIsNotEmpty(it)) {
                 reasons.add(PASSWORD_CANNOT_BE_BLANK)
             }
         }
 
-        user.password?.let {
+        password?.let {
             if (!validatePasswordLength(it)) {
                 reasons.add(PASSWORD_CANNOT_BE_LESS_THAN_8_CHARACTERS)
             }
         }
 
-        user.email?.let {
+        email?.let {
             if (!validateEmail(it)) {
                 reasons.add(INVALID_EMAIL)
             }
