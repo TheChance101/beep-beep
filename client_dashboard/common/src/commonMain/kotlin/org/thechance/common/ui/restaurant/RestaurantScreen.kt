@@ -9,9 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.thechance.common.ui.main.MainScreenModel
 
-object RestaurantScreen : Screen {
+object RestaurantScreen : Screen , KoinComponent {
 
+    private val screenModel: RestaurantScreenModel by inject()
     @Composable
     override fun Content() {
         RestaurantContent()

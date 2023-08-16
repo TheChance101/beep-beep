@@ -17,12 +17,17 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.beepbeep.designSystem.ui.theme.BpTheme
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import org.thechance.common.ui.composables.scaffold.BpSideBarItem
 import org.thechance.common.ui.composables.scaffold.DashBoardScaffold
 import org.thechance.common.ui.composables.scaffold.DashboardAppbar
 import org.thechance.common.ui.composables.scaffold.DashboardSideBar
+import org.thechance.common.ui.login.LoginScreenModel
 
-object MainContainer : Screen {
+object MainContainer : Screen , KoinComponent {
+
+    private val screenModel: MainScreenModel by inject()
     @Composable
     override fun Content() {
         TabNavigator(OverviewTab) {

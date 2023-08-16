@@ -16,8 +16,13 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.thechance.common.ui.main.MainScreenModel
 
-object OverviewScreen : Screen {
+object OverviewScreen : Screen , KoinComponent {
+
+    private val screenModel: OverviewScreenModel by inject()
     @Composable
     override fun Content() {
         val navigate = LocalNavigator.currentOrThrow

@@ -1,4 +1,4 @@
-package org.thechance.common.ui.login
+package org.thechance.common.ui.uistate
 
 
 data class LoginUiState(

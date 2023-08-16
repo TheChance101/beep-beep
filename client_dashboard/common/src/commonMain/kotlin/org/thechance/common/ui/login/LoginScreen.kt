@@ -37,6 +37,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.thechance.common.ui.main.MainContainer
+import org.thechance.common.ui.uistate.LoginUiState
 
 
 object LoginScreen : Screen, KoinComponent {

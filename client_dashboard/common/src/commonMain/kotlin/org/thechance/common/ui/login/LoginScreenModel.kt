@@ -2,6 +2,7 @@ package org.thechance.common.ui.login
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import kotlinx.coroutines.flow.update
+import org.thechance.common.ui.uistate.LoginUiState
 
 
 class LoginScreenModel : StateScreenModel<LoginUiState>(LoginUiState()) {
