@@ -80,7 +80,7 @@ fun Route.orderRoutes() {
                 for (frame in incoming) {
                     return@webSocket
                 }
-            } else if (manageOrder.isRestaurantOpened(restaurantId)) {
+            } else if (!manageOrder.isRestaurantOpened(restaurantId)) {
                 openingRestaurants[restaurantId]?.users?.add(mutableMapOf(userId to this))
                 broadcast(
                     receiveChannel = incoming,
