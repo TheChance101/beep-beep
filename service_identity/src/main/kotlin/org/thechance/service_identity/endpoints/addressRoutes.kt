@@ -6,24 +6,22 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import org.thechance.service_identity.data.collection.CreateAddressDocument
-import org.thechance.service_identity.data.collection.UpdateAddressDocument
-import org.thechance.service_identity.data.mappers.toCreateRequest
 import org.thechance.service_identity.data.mappers.toDto
-import org.thechance.service_identity.data.mappers.toUpdateRequest
+import org.thechance.service_identity.data.mappers.toEntity
 import org.thechance.service_identity.domain.entity.MissingParameterException
-import org.thechance.service_identity.domain.usecases.IManageUserAddressUseCase
+import org.thechance.service_identity.domain.usecases.IUserAddressManagementUseCase
 import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
+import org.thechance.service_identity.endpoints.model.LocationDto
 
 fun Route.addressRoutes() {
 
-    val manageUserAddress: IManageUserAddressUseCase by inject()
+    val manageUserAddress: IUserAddressManagementUseCase by inject()
 
     route("users/address") {
         post("{userId}") {
-            val address = call.receive<CreateAddressDocument>()
+            val location = call.receive<LocationDto>()
             val userId = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            call.respond(HttpStatusCode.Created, manageUserAddress.addAddress(userId, address.toCreateRequest()))
+            call.respond(HttpStatusCode.Created, manageUserAddress.addAddress(userId, location.toEntity()))
         }
 
         get("/{id}") {
@@ -38,8 +36,8 @@ fun Route.addressRoutes() {
 
         put("/{id}") {
             val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val address = call.receive<UpdateAddressDocument>()
-            call.respond(HttpStatusCode.OK, manageUserAddress.updateAddress(id, address.toUpdateRequest()))
+            val location = call.receive<LocationDto>()
+            call.respond(HttpStatusCode.OK, manageUserAddress.updateAddress(id, location.toEntity()))
         }
 
         get("/all/{userId}") {

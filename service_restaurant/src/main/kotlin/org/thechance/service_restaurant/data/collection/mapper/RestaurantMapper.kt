@@ -3,6 +3,7 @@ package org.thechance.service_restaurant.data.collection.mapper
 import org.bson.types.ObjectId
 import org.thechance.service_restaurant.data.collection.RestaurantCollection
 import org.thechance.service_restaurant.domain.entity.Restaurant
+import java.util.*
 
 
 fun RestaurantCollection.toEntity() = Restaurant(
@@ -22,7 +23,7 @@ fun List<RestaurantCollection>.toEntity(): List<Restaurant> = map { it.toEntity(
 
 
 fun Restaurant.toCollection() = RestaurantCollection(
-    ownerId = ObjectId(ownerId),
+    ownerId = UUID.fromString(ownerId),
     name = name,
     description = description,
     priceLevel = priceLevel,

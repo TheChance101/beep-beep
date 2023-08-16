@@ -34,13 +34,13 @@ fun BpSimpleTextField(
         placeholder = {
             Text(
                 hint,
-                style = Theme.typography.body,
+                style = Theme.typography.caption,
                 color = Theme.colors.contentTertiary
             )
         },
         onValueChange = onValueChange,
         shape = RoundedCornerShape(radius),
-        textStyle = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
+        textStyle = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         trailingIcon = {

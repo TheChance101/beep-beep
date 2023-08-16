@@ -2,25 +2,29 @@ package org.thechance.service_restaurant.domain.validation
 
 import org.junit.Test
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.function.Executable
-import org.thechance.service_restaurant.domain.usecase.validation.Validation
-import org.thechance.service_restaurant.domain.usecase.validation.Validation.Companion.DESCRIPTION_MAX_LENGTH
-import org.thechance.service_restaurant.domain.usecase.validation.Validation.Companion.DESCRIPTION_MIN_LENGTH
-import org.thechance.service_restaurant.domain.utils.INVALID_ID
-import org.thechance.service_restaurant.domain.utils.INVALID_PAGE
-import org.thechance.service_restaurant.domain.utils.INVALID_PAGE_LIMIT
-import org.thechance.service_restaurant.domain.utils.MultiErrorException
+import org.koin.core.context.GlobalContext
+import org.thechance.service_restaurant.domain.utils.IValidation
+import org.thechance.service_restaurant.domain.utils.Validation
+import org.thechance.service_restaurant.domain.utils.Validation.Companion.DESCRIPTION_MAX_LENGTH
+import org.thechance.service_restaurant.domain.utils.Validation.Companion.DESCRIPTION_MIN_LENGTH
+import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
+import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_PAGE
+import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_PAGE_LIMIT
+import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 
 class ValidationTest {
 
-   private val validation = Validation()
+    private var validation= Validation()
+
 
     //region isValidId
     @Test
     fun `should return true if id is valid`() {
         // given a valid id with 24 characters and only hex characters
-        val validId = "64cc5fdd52F4136b92938f8c"
+        val validId = "3edf2fc8-6983-484f-a35c-8190f44a08c6"
         // when result is true
         val result = validation.isValidId(validId)
         // then check
@@ -40,8 +44,8 @@ class ValidationTest {
     @Test
     fun `should return false if id is too short or too long`() {
         // given an invalid id that
-        val invalidIdToShort = "12345678901234567890123"  //less than 24 characters
-        val invalidIdToLong = "123456789012345678f9012345" // more than 24 characters
+        val invalidIdToShort = "3edf2fc8-6983-484f-a35c-8f44a08c6"  //less than 24 characters
+        val invalidIdToLong = "3edf2fc8-6983-484f-a35c-8190f4hfff4a08c6" // more than 24 characters
 
         // when result is false
         val resultShortId = validation.isValidId(invalidIdToShort)
@@ -54,8 +58,8 @@ class ValidationTest {
     @Test
     fun `should return false if id contains non-hex characters uppercase or lowercase `() {
         // given an invalid id that 'z' and 'Z' is not a valid hex character
-        val invalidIdWithLowercase = "64cc5fdd52c4136b92938f8z"
-        val invalidIdWithUppercase = "64cc5fdd52c4136b92938f8Z"
+        val invalidIdWithLowercase = "3edf2fc8-6983-484f-a35c-8190f4q08c6"
+        val invalidIdWithUppercase = "3edf2fc8-6983-484f-a35c-8190fQ4a08c6"
         // when result is false
         val resultLowercaseId = validation.isValidId(invalidIdWithLowercase)
         val resultUppercaseId = validation.isValidId(invalidIdWithUppercase)
@@ -234,7 +238,7 @@ class ValidationTest {
     fun `should throw MultiErrorException contains INVALID_PAGE_LIMIT when limit above valid range`() {
         // given valid pagination values
         val page = 1
-        val limit = 31
+        val limit = 101
         // when validatePagination is invoked
         val result = assertThrows<MultiErrorException> { validation.validatePagination(page, limit) }
         // then throw MultiErrorException contains INVALID_PAGE_LIMIT
@@ -245,7 +249,7 @@ class ValidationTest {
     fun `should throw MultiErrorException contains INVALID_PAGE_LIMIT, INVALID_PAGE when limit and page invalid`() {
         // given valid pagination values
         val page = -1
-        val limit = 31
+        val limit = 101
         // when validatePagination is invoked
         val result = assertThrows<MultiErrorException> { validation.validatePagination(page, limit) }
         // then throw MultiErrorException contains INVALID_PAGE_LIMIT and INVALID_PAGE
@@ -343,7 +347,7 @@ class ValidationTest {
     @Test
     fun `should return true when valid ID`() {
         // given valid id
-        val id = "64cef66bc6aa0b35318c2b26"
+        val id = "3edf2fc8-6983-484f-a35c-8190f44a08c6"
         // when isValidId is invoked
         val result = validation.isValidId(id)
         // expected return true
@@ -351,9 +355,9 @@ class ValidationTest {
     }
 
     @Test
-    fun `should return false when ID has lowercase letters`() {
+    fun `should return false when ID has valid lowercase letters`() {
         // given valid id
-        val id = "a1b2c3d4e5f6g7h8i9j0k1l"
+        val id = "3edf2fc8-6983-484f-a35c-8190f44q08c6"
         // when isValidId is invoked
         val result = validation.isValidId(id)
         // expected return false
@@ -363,7 +367,7 @@ class ValidationTest {
     @Test
     fun `should return false when ID contains special characters`() {
         // given valid id
-        val id = "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o%"
+        val id = "3edf2fc8-6983-484f-a35c-8190q44a08q6%"
         // when isValidId is invoked
         val result = validation.isValidId(id)
         // expected return false
@@ -373,7 +377,7 @@ class ValidationTest {
     @Test
     fun `should return false when ID too short`() {
         // given valid id
-        val id = "a1b2c3d4e5f6g7h8i9j0k1l"
+        val id = "3edf2fc8-6983-484f-a35c-8190f4"
         // when isValidId is invoked
         val result = validation.isValidId(id)
         // expected return false
@@ -383,7 +387,7 @@ class ValidationTest {
     @Test
     fun `should return false when ID too long`() {
         // given valid id
-        val id = "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q"
+        val id = "3edf2fc8-6983-484f-a35c-8190f44a08c6ffff"
         // when isValidId is invoked
         val result = validation.isValidId(id)
         // expected return false
@@ -416,7 +420,7 @@ class ValidationTest {
     @Test
     fun `should return true when all IDs list are valid`() {
         // given valid ids list
-        val ids = listOf("64cef670c6aa0b35318c2b27", "64cef673c6aa0b35318c2b28")
+        val ids = listOf("3edf2fc8-6983-484f-a35c-8190f44a08c6", "3edf2fc8-6983-484f-a35c-8190f44a08c6")
         // when isValidIds is invoked
         val result = validation.isValidIds(ids)
         // expected return true
@@ -426,7 +430,7 @@ class ValidationTest {
     @Test
     fun `should return false when not all IDs list valid`() {
         // given valid ids list
-        val ids = listOf("a1b2c3d4e5f6g7h8i9j0k1l", "invalidId", "1234567890abcdef12345678")
+        val ids = listOf("3edf2fc8-6983-484f-a35c-8190f44a08c6", "invalidId", "3edf2fc8-6983-484f-a35c-8190f44a08c6")
         // when isValidIds is invoked
         val result = validation.isValidIds(ids)
         // expected return false
@@ -488,7 +492,7 @@ class ValidationTest {
     @Test
     fun `should return false when price level long string`() {
         // given priceLevel
-        val priceLevel = "$$$$$"
+        val priceLevel = "$$$$"
         // when validatePriceLevel is invoked
         val result = validation.isValidatePriceLevel(priceLevel)
         // expected return false
@@ -711,8 +715,8 @@ class ValidationTest {
     @Test
     fun `should do nothing when ids are valid`() {
         // given valid id and listIds
-        val id = "2a1b3c4d5e6f7a8b9c0d1e2f"
-        val listIds = listOf("2a1b3c4d5e6f7a8b9c0d1e2f", "2a1b3c4d5e6f7a8b9c0d1e2e")
+        val id = "3edf2fc8-6983-484f-a35c-8190f44a08c6"
+        val listIds = listOf("3edf2fc8-6983-484f-a35c-8190f44a08c6", "3edf2fc8-6983-484f-a35c-8190f44a08c6")
         // when checkIsValidIds is called
         val result = Executable { validation.checkIsValidIds(id, listIds) }
         // then check if result has no errors

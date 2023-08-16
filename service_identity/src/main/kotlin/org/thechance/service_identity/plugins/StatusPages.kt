@@ -2,7 +2,6 @@ package org.thechance.service_identity.plugins
 
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.plugins.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
 import org.thechance.service_identity.domain.entity.*
@@ -14,37 +13,22 @@ fun Application.configureStatusPages() {
 }
 
 private fun StatusPagesConfig.handleStatusPagesExceptions() {
-    exception<MissingParameterException> { call, cause ->
-        call.respond(
-            HttpStatusCode.BadRequest,
-            listOf(cause.message?.toInt())
-        )
-    }
+    respondWithErrorCodes<MissingParameterException>(HttpStatusCode.BadRequest)
 
-    exception<RequestValidationException> { call, cause ->
-        val reasons = cause.message?.split(",")?.map { it.toInt() } ?: emptyList()
-        call.respond(HttpStatusCode.BadRequest, reasons)
-    }
+    respondWithErrorCodes<RequestValidationException>(HttpStatusCode.BadRequest)
 
-    exception<NotFoundException> { call, cause ->
-        call.respond(
-            HttpStatusCode.NotFound,
-            listOf(cause.message?.toInt())
-        )
-    }
+    respondWithErrorCodes<UserAlreadyExistsException>(HttpStatusCode.UnprocessableEntity)
 
-    exception<UserAlreadyExistsException> { call, cause ->
-        call.respond(
-            HttpStatusCode.InternalServerError,
-            listOf(cause.message?.toInt())
-        )
-    }
+    respondWithErrorCodes<ResourceNotFoundException>(HttpStatusCode.NotFound)
 
-    exception<ResourceNotFoundException> { call, cause ->
-        call.respond(HttpStatusCode.NotFound, listOf(cause.message?.toInt()))
-    }
+    respondWithErrorCodes<InsufficientFundsException>(HttpStatusCode.UnprocessableEntity)
+}
 
-    exception<InsufficientFundsException> { call, cause ->
-        call.respond(HttpStatusCode.BadRequest, listOf(cause.message?.toInt()))
+private inline fun <reified T : Throwable> StatusPagesConfig.respondWithErrorCodes(
+    statusCode: HttpStatusCode,
+) {
+    exception<T> { call, t ->
+        val reasons = t.message?.split(",")?.map { it.toInt() } ?: emptyList()
+        call.respond(statusCode, reasons)
     }
 }

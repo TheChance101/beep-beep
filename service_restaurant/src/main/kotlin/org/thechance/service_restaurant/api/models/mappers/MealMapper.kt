@@ -6,6 +6,7 @@ import org.thechance.service_restaurant.api.models.MealWithCuisineDto
 import org.thechance.service_restaurant.domain.entity.Cuisine
 import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.entity.MealDetails
+import org.thechance.service_restaurant.domain.utils.Validation.Companion.NULL_DOUBLE
 
 fun MealDetails.toDto() = MealDetailsDto(
     id = id,
@@ -21,7 +22,7 @@ fun MealWithCuisineDto.toEntity() = MealDetails(
     restaurantId = restaurantId ?: "",
     name = name ?: "",
     description = description ?: "",
-    price = price ?: -1.0,
+    price = price ?: NULL_DOUBLE,
     cuisines = cuisines?.map { Cuisine(id = it, name = "") } ?: emptyList()
 )
 
