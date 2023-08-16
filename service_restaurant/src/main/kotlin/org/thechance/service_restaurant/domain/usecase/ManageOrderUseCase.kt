@@ -14,7 +14,7 @@ import java.util.Locale
 interface IManageOrderUseCase {
     suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order>
 
-    suspend fun addOrder(order: Order)
+    suspend fun addOrder(order: Order) :Boolean
 
     suspend fun updateOrderStatus(orderId: String, state: OrderStatus): Order
 
@@ -22,7 +22,7 @@ interface IManageOrderUseCase {
 
     suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order>
 
-    fun checkRestaurantOpen(openTime: String, closeTime: String): Boolean
+    fun isRestaurantOpen(openTime: String, closeTime: String): Boolean
 
 }
 
@@ -42,8 +42,8 @@ class ManageOrderUseCase(
         return optionsGateway.getOrderById(orderId = orderId)!!
     }
 
-    override suspend fun addOrder(order: Order) {
-        optionsGateway.addOrder(order)
+    override suspend fun addOrder(order: Order): Boolean {
+        return optionsGateway.addOrder(order)
     }
 
     override suspend fun updateOrderStatus(orderId: String, state: OrderStatus): Order {
@@ -52,10 +52,10 @@ class ManageOrderUseCase(
     }
 
     override suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order> {
-        return optionsGateway.getOrdersHistory(restaurantId = restaurantId, page = page, limit = limit)
+        return optionsGateway.getOrdersHistory(restaurantId = restaurantId,page = page, limit = limit)
     }
 
-    override fun checkRestaurantOpen(openTime: String, closeTime: String): Boolean {
+    override fun isRestaurantOpen(openTime: String, closeTime: String): Boolean {
         val currentTime = Calendar.getInstance().time
         val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
         val openingTime = sdf.parse(openTime)

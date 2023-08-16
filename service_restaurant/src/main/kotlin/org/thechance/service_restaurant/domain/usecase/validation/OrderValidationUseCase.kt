@@ -8,12 +8,12 @@ import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_TIME
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 
 interface IOrderValidationUseCase {
-     fun validateGetOrdersByRestaurantId(restaurantId: String)
-     fun validateGetOrderById(orderId: String)
+    fun validateGetOrdersByRestaurantId(restaurantId: String)
+    fun validateGetOrderById(orderId: String)
     fun validateUpdateOrder(orderId: String, status: OrderStatus)
-     fun validateGetOrdersHistory(restaurantId: String,page: Int, limit: Int)
+    fun validateGetOrdersHistory(restaurantId: String, page: Int, limit: Int)
 
-    fun  validateIsRestaurantOpen(openingTime : String,closingTime:String)
+    fun validateIsRestaurantOpen(openingTime: String, closingTime: String)
 }
 
 class OrderValidationUseCase(
@@ -21,14 +21,14 @@ class OrderValidationUseCase(
 ) : IOrderValidationUseCase {
     override fun validateGetOrdersByRestaurantId(restaurantId: String) {
         val validationErrors = mutableListOf<Int>()
-        if(!basicValidation.isValidId(restaurantId)){
+        if (!basicValidation.isValidId(restaurantId)) {
             validationErrors.add(INVALID_ID)
         }
     }
 
     override fun validateGetOrderById(orderId: String) {
         val validationErrors = mutableListOf<Int>()
-        if(!basicValidation.isValidId(orderId)){
+        if (!basicValidation.isValidId(orderId)) {
             validationErrors.add(INVALID_ID)
         }
     }
@@ -49,16 +49,16 @@ class OrderValidationUseCase(
 
     override fun validateGetOrdersHistory(restaurantId: String, page: Int, limit: Int) {
         val validationErrors = mutableListOf<Int>()
-        if(!basicValidation.isValidId(restaurantId)){
+        if (!basicValidation.isValidId(restaurantId)) {
             validationErrors.add(INVALID_ID)
         }
     }
 
     override fun validateIsRestaurantOpen(openingTime: String, closingTime: String) {
         val validationErrors = mutableListOf<Int>()
-       if(!basicValidation.isValidTime(openingTime) || !basicValidation.isValidTime(closingTime)){
-           validationErrors.add(INVALID_TIME)
-       }
+        if (!basicValidation.isValidTime(openingTime) || !basicValidation.isValidTime(closingTime)) {
+            validationErrors.add(INVALID_TIME)
+        }
     }
 }
 

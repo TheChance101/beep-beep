@@ -195,8 +195,8 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) :
     //endregion
 
     //region Order
-    override suspend fun addOrder(order: Order) {
-        container.orderCollection.insertOne(order.toCollection())
+    override suspend fun addOrder(order: Order) :Boolean {
+       return container.orderCollection.insertOne(order.toCollection()).wasAcknowledged()
     }
 
     override suspend fun getOrderById(orderId: String): Order? =
