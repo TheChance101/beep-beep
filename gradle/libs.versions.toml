@@ -17,6 +17,8 @@ hilt-version = "2.46.1"
 constraint-version = "1.0.1"
 koin-version = "3.4.3"
 voyager-version = "1.0.0-rc05"
+ktor-version = "2.3.3"
+google-gson-version = "2.10.1"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
@@ -41,6 +43,10 @@ voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.
 voyager-bottomsheet-navigator = { module = "cafe.adriel.voyager:voyager-bottom-sheet-navigator", version.ref = "voyager-version"}
 voyager-tab-navigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager-version"}
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager-version"}
+voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager-version"}
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor-version"}
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor-version"}
+google-code-gson = { module = "com.google.code.gson:gson", version.ref = "google-gson-version"}
 
 
 [plugins]
