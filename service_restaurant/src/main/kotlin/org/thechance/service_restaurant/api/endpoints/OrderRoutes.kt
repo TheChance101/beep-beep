@@ -1,17 +1,12 @@
 package org.thechance.service_restaurant.api.endpoints
 
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.call
-import io.ktor.server.request.receiveParameters
-import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.get
-import io.ktor.server.routing.post
-import io.ktor.server.routing.route
-import io.ktor.server.websocket.webSocket
-import io.ktor.websocket.Frame
-import io.ktor.websocket.readText
-import io.ktor.websocket.send
+import io.ktor.http.*
+import io.ktor.server.application.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
+import io.ktor.server.websocket.*
+import io.ktor.websocket.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -30,12 +25,8 @@ import org.thechance.service_restaurant.domain.utils.OrderStatus
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_REQUEST_PARAMETER
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
-import java.util.UUID
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.collections.listOf
-import kotlin.collections.map
-import kotlin.collections.mutableListOf
-import kotlin.collections.mutableMapOf
 import kotlin.collections.set
 
 
@@ -81,7 +72,6 @@ fun Route.orderRoutes() {
         }
 
         webSocket("/{restaurantId}/{userId?}") {
-
             val restaurantId = call.parameters["restaurantId"]?.trim().orEmpty()
             val userId = call.parameters["userId"]?.trim().orEmpty()
 
@@ -90,7 +80,7 @@ fun Route.orderRoutes() {
                 for (frame in incoming) {
                     return@webSocket
                 }
-            } else {
+            } else if (manageOrder.isRestaurantOpened(restaurantId)) {
                 openingRestaurants[restaurantId]?.users?.add(mutableMapOf(userId to this))
                 broadcast(
                     receiveChannel = incoming,
@@ -99,6 +89,7 @@ fun Route.orderRoutes() {
                 )
             }
         }
+
     }
 }
 
@@ -114,7 +105,7 @@ private suspend fun broadcast(
             if (frame is Frame.Text) {
 
                 val order = createOrder(frame)
-                val isOrderInserted: Boolean = insertOrder(order!!, manageOrder)
+                val isOrderInserted: Boolean = insertOrder(order, manageOrder)
 
                 if (isOrderInserted) {
                     ownerSession?.send(order.toString())
@@ -132,7 +123,7 @@ private suspend fun broadcast(
     }
 }
 
-private fun createOrder(frame: Frame.Text): OrderDto? {
+private fun createOrder(frame: Frame.Text): OrderDto {
     val orderJson = frame.readText()
     return Json.decodeFromString<OrderDto>(orderJson)
         .copy(id = UUID.randomUUID().toString())

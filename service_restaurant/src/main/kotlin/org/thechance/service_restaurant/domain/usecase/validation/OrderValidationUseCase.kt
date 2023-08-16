@@ -6,14 +6,17 @@ import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_STATUS
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_TIME
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
+import java.text.SimpleDateFormat
+import java.util.*
 
 interface IOrderValidationUseCase {
     fun validateGetOrdersByRestaurantId(restaurantId: String)
     fun validateGetOrderById(orderId: String)
     fun validateUpdateOrder(orderId: String, status: OrderStatus)
     fun validateGetOrdersHistory(restaurantId: String, page: Int, limit: Int)
-
     fun validateIsRestaurantOpen(openingTime: String, closingTime: String)
+    fun isRestaurantOpen(openTime: String, closeTime: String): Boolean
+
 }
 
 class OrderValidationUseCase(
@@ -59,6 +62,15 @@ class OrderValidationUseCase(
         if (!basicValidation.isValidTime(openingTime) || !basicValidation.isValidTime(closingTime)) {
             validationErrors.add(INVALID_TIME)
         }
+    }
+
+    override fun isRestaurantOpen(openTime: String, closeTime: String): Boolean {
+        val currentTime = Calendar.getInstance().time
+        val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val openingTime = sdf.parse(openTime)
+        val closingTime = sdf.parse(closeTime)
+
+        return currentTime.after(openingTime) && currentTime.before(closingTime)
     }
 }
 

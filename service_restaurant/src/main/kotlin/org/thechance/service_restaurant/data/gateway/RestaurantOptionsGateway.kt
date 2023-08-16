@@ -21,8 +21,7 @@ import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorExcept
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 import java.util.*
 
-class RestaurantOptionsGateway(private val container: DataBaseContainer) :
-    IRestaurantOptionsGateway {
+class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRestaurantOptionsGateway {
 
     //region Category
     override suspend fun getCategories(page: Int, limit: Int): List<Category> {
