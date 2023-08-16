@@ -18,21 +18,30 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.awt.ComposeDialog
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Window
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpCheckBox
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.thechance.common.ui.resturant.RestaurantDialog
+import java.awt.Dialog
+import java.awt.Dimension
+import java.awt.Window
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginContent() {
+    val showDialog = remember { false }
     Row(
         Modifier.background(Theme.colors.surface).fillMaxSize()
             .padding(
@@ -83,14 +92,16 @@ fun LoginContent() {
                     onValueChange = { },
                     text = "",
                     label = "Username",
-                    modifier = Modifier.padding(top = Theme.dimens.space16)
+                    modifier = Modifier.padding(top = Theme.dimens.space16),
+                    hint = "Username"
                 )
                 BpTextField(
                     onValueChange = { },
                     text = "",
                     label = "Password",
                     keyboardType = KeyboardType.Password,
-                    modifier = Modifier.padding(top = Theme.dimens.space16)
+                    modifier = Modifier.padding(top = Theme.dimens.space16),
+                    hint = "Password"
                 )
                 BpCheckBox(
                     label = "Keep me logged in",
@@ -100,10 +111,14 @@ fun LoginContent() {
                 )
                 BpButton(
                     title = "Login",
-                    onClick = {},
+                    onClick = { showDialog.not() },
                     modifier = Modifier.padding(top = Theme.dimens.space24).fillMaxWidth()
                 )
             }
+
+
+            RestaurantDialog()
+
         }
     }
 }

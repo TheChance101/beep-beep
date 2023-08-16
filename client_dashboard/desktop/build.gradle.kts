@@ -3,6 +3,7 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 plugins {
     kotlin("multiplatform")
     id("org.jetbrains.compose")
+    id( "org.openjfx.javafxplugin" ) version "0.0.13"
 }
 
 group = "org.thechance"
@@ -34,4 +35,9 @@ compose.desktop {
             packageVersion = "1.0.0"
         }
     }
+}
+
+javafx {
+    version = "17"
+    modules = listOf("javafx.controls", "javafx.swing", "javafx.web", "javafx.graphics")
 }
