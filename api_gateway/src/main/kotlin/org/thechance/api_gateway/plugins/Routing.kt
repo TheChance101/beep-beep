@@ -1,12 +1,12 @@
 package org.thechance.api_gateway.plugins
 
-import io.ktor.server.routing.*
 import io.ktor.server.application.*
-import org.thechance.api_gateway.endpoints.testRoutes
+import io.ktor.server.routing.*
+import org.thechance.api_gateway.domain.entity.TokenConfiguration
+import org.thechance.api_gateway.endpoints.userRoutes
 
-fun Application.configureRouting(
-) {
+fun Application.configureRouting(tokenConfiguration: TokenConfiguration) {
     routing {
-        testRoutes()
+        userRoutes(tokenConfiguration)
     }
 }

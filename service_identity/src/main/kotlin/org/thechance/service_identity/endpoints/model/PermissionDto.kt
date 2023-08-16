@@ -4,16 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PermissionDto(
-    val id: Int,
+    val id: Int? = null,
     val permission: String
-)
-
-@Serializable
-data class CreatePermissionDocument(
-    val permission: String
-)
-
-@Serializable
-data class UpdatePermissionDocument(
-    val permission: String? = null
 )

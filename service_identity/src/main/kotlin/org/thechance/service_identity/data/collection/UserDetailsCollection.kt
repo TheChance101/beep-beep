@@ -3,15 +3,18 @@ package org.thechance.service_identity.data.collection
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import org.bson.types.ObjectId
+import org.bson.codecs.pojo.annotations.BsonId
+import java.util.*
 
 @Serializable
 data class UserDetailsCollection(
+    @SerialName("_id")
+    @BsonId
     @Contextual
-    @SerialName("user_id")
-    val userId: ObjectId? = null,
-    @SerialName("wallet")
+    val id: UUID = UUID.randomUUID(),
+    @SerialName("user_Id")
+    @Contextual
+    val userId: UUID? = null,
     val walletCollection: WalletCollection? = null,
-    @SerialName("addresses")
-    val addresses: List<@Contextual ObjectId> = emptyList()
+    val addresses: List<@Contextual String> = emptyList()
 )

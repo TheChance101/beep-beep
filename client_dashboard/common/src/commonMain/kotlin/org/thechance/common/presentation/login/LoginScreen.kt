@@ -57,7 +57,6 @@ object LoginScreen : Screen, KoinComponent {
         )
     }
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LoginContent(

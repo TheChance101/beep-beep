@@ -9,6 +9,10 @@ fun LocationCollection.toEntity() = Location(
     longitude = longitude,
 )
 
+fun LocationDto.toEntity() = Location(
+    latitude = latitude,
+    longitude = longitude,
+)
 
 fun Location.toCollection() = LocationCollection(
     latitude = latitude,

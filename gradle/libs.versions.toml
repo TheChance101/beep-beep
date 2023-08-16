@@ -15,12 +15,11 @@ compose-version = "1.4.3"
 accompanist-version = "0.28.0"
 hilt-version = "2.46.1"
 constraint-version = "1.0.1"
-koin-version = "3.4.3"
-voyager-version = "1.0.0-rc05"
-koinKspVersion = "1.2.2"
-
-voyager = "1.0.0-rc05"
 ksp = "1.8.21-1.0.11"
+koin-version = "3.4.3"
+koinKspVersion = "1.2.2"
+#voyager version
+voyager-version = "1.0.0-rc05"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
@@ -44,8 +43,9 @@ voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.
 voyager-bottomsheet-navigator = { module = "cafe.adriel.voyager:voyager-bottom-sheet-navigator", version.ref = "voyager-version"}
 voyager-tab-navigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager-version"}
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager-version"}
+voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager-version" }
+
 voyager-androidx = { module = "cafe.adriel.voyager:voyager-androidx", version.ref = "voyager" }
-voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin-version" }
 koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koinKspVersion" }
 koin-ksp = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp" }

@@ -26,13 +26,11 @@ kotlin {
                 implementation(libs.voyager.bottomsheet.navigator)
                 implementation(libs.voyager.tab.navigator)
                 implementation(libs.voyager.transitions)
-                implementation(libs.voyager.androidx)
                 implementation(libs.voyager.koin)
 
-                implementation(libs.koin.core)
+                api(libs.koin.core)
                 implementation(libs.koin.annotations)
                 implementation(libs.koin.ksp)
-
                 implementation(project(":design_system:shared"))
             }
         }
