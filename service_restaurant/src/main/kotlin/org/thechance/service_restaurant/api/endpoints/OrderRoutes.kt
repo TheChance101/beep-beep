@@ -104,8 +104,8 @@ private suspend fun broadcast(
         for (frame in receiveChannel) {
             if (frame is Frame.Text) {
 
-                val order = createOrder(frame)
-                val isOrderInserted: Boolean = insertOrder(order, manageOrder)
+                val order = createOrder(frame = frame)
+                val isOrderInserted: Boolean = insertOrder(order = order, manageOrder = manageOrder)
 
                 if (isOrderInserted) {
                     ownerSession?.send(order.toString())
@@ -124,8 +124,7 @@ private suspend fun broadcast(
 }
 
 
-
-private  fun createOrder(frame: Frame.Text): OrderDto {
+private fun createOrder(frame: Frame.Text): OrderDto {
     val orderJson = frame.readText()
     return Json.decodeFromString<OrderDto>(orderJson).copy(id = UUID.randomUUID().toString())
 }
