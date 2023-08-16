@@ -13,7 +13,7 @@ interface IOrderValidationUseCase {
     fun validateUpdateOrder(orderId: String, status: OrderStatus)
      fun validateGetOrdersHistory(restaurantId: String,page: Int, limit: Int)
 
-    fun  validateCheckRestaurantOpen(openingTime : String,closingTime:String)
+    fun  validateIsRestaurantOpen(openingTime : String,closingTime:String)
 }
 
 class OrderValidationUseCase(
@@ -54,7 +54,7 @@ class OrderValidationUseCase(
         }
     }
 
-    override fun validateCheckRestaurantOpen(openingTime: String, closingTime: String) {
+    override fun validateIsRestaurantOpen(openingTime: String, closingTime: String) {
         val validationErrors = mutableListOf<Int>()
        if(!basicValidation.isValidTime(openingTime) || !basicValidation.isValidTime(closingTime)){
            validationErrors.add(INVALID_TIME)

@@ -160,7 +160,7 @@ class OrderValidationTest{
         val closeTime = ""
 
         val executable = Executable {
-            orderValidation.validateCheckRestaurantOpen(openingTime=openTime,closingTime=closeTime)
+            orderValidation.validateIsRestaurantOpen(openingTime=openTime,closingTime=closeTime)
         }
 
         val error = assertThrows(MultiErrorException::class.java, executable)
