@@ -46,13 +46,13 @@ fun Route.categoryRoutes() {
         post {
             val category = call.receive<CategoryDto>()
             val result = manageCategory.createCategory(category.toEntity())
-            call.respond(HttpStatusCode.Created, result)
+            call.respond(HttpStatusCode.Created, result.toDto())
         }
 
         put {
             val category = call.receive<CategoryDto>()
             val result = manageCategory.updateCategory(category.toEntity())
-            call.respond(HttpStatusCode.OK, result)
+            call.respond(HttpStatusCode.OK, result.toDto())
         }
 
         delete("/{id}") {

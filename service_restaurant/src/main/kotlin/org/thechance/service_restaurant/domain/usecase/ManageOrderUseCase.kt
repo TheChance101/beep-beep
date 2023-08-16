@@ -9,8 +9,12 @@ import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 
 interface IManageOrderUseCase {
-    suspend fun getOrderById(orderId: String): Order
+
+    suspend fun addOrder(order: Order)
+
     suspend fun updateOrderStatus(orderId: String, state: OrderStatus): Order
+
+    suspend fun getOrderById(orderId: String): Order
 
     suspend fun getOrdersHistory(restaurantId: String,page: Int, limit: Int): List<Order>
 }
@@ -26,6 +30,10 @@ class ManageOrderUseCase(
             throw MultiErrorException(listOf(INVALID_ID))
         }
         return optionsGateway.getOrderById(orderId)!!
+    }
+
+    override suspend fun addOrder(order: Order) {
+        optionsGateway.addOrder(order)
     }
 
     override suspend fun updateOrderStatus(orderId: String, state: OrderStatus): Order {
