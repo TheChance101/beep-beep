@@ -47,7 +47,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
         dataBaseContainer.database.getCollection<WalletCollection>(WALLET_COLLECTION)
     }
     private val tokensCollection by lazy {
-        dataBaseContainer.database.getCollection<TokenCollection>(TOKENS_COLLECTION)
+        dataBaseContainer.database.getCollection<RefreshTokensCollection>(TOKENS_COLLECTION)
     }
 
     init {
@@ -263,18 +263,41 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
         )?.toManagedEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
+    override suspend fun validateRefreshToken(refreshToken: String): Boolean {
+        return tokensCollection.findOne(
+            RefreshTokensCollection::refreshToken eq refreshToken
+        )?.let {
+            it.expirationDate > Date().time
+        } ?: throw ResourceNotFoundException(NOT_FOUND)
+    }
+
+    override suspend fun getUserIdByRefreshToken(refreshToken: String): String {
+        return tokensCollection.findOne(
+            RefreshTokensCollection::refreshToken eq refreshToken
+        )?.userId?.toString() ?: throw ResourceNotFoundException(NOT_FOUND)
+    }
+
+    override suspend fun updateRefreshToken(userId: String, refreshToken: String, expirationDate: Long): Boolean {
+        val token = RefreshTokensCollection(UUID.fromString(userId), refreshToken, expirationDate)
+        return tokensCollection.updateOne(
+            filter = RefreshTokensCollection::userId eq UUID.fromString(userId),
+            target = token,
+            options = UpdateOptions().upsert(true)
+        ).isUpdatedSuccessfully()
+    }
+
+
     //endregion
 
-
     // region: wallet
+
+
 
     private suspend fun getWalletByUserId(userId: String): WalletCollection {
         return walletCollection.findOne(
             WalletCollection::userId eq UUID.fromString(userId)
         ) ?: throw ResourceNotFoundException(NOT_FOUND)
     }
-
-
 
     override suspend fun subtractFromWallet(userId: String, amount: Double): Boolean {
         return walletCollection.updateOne(
@@ -295,7 +318,6 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
             update = inc(WalletCollection::walletBalance, amount)
         ).isUpdatedSuccessfully()
     }
-
     private suspend fun createWallet(wallet: WalletCollection): Boolean {
         userDetailsCollection.updateOne(
             filter = UserDetailsCollection::userId eq wallet.userId,
@@ -303,6 +325,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
         )
         return walletCollection.insertOne(wallet).wasAcknowledged()
     }
+
     // endregion: wallet
 
     // region: user permission management
@@ -329,8 +352,8 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
             ?: emptyList()
     }
 
-    // endregion: user permission management
 
+    // endregion: user permission management
 
     // region Token
 
@@ -339,20 +362,6 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
             UserCollection::username eq username
         ) ?: throw NotFoundException(NOT_FOUND)
         return SaltedHash(user.hashedPassword!!, user.salt!!)
-    }
-
-    override suspend fun saveUserTokens(userId: String, accessToken: String, refreshToken: String, expirationDate: Int): Boolean {
-        val tokens = TokenCollection(
-            UUID.fromString(userId),
-            refreshToken,
-            accessToken,
-            expirationDate
-        )
-        return tokensCollection.updateOne(
-            filter = TokenCollection::userId eq UUID.fromString(userId),
-            target = tokens,
-            options = UpdateOptions().upsert(true)
-        ).isUpdatedSuccessfully()
     }
 
     // endregion

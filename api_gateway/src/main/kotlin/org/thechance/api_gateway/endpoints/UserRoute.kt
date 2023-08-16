@@ -42,6 +42,14 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
         call.respond(HttpStatusCode.Created, token)
     }
 
+
+    post("/refresh-access-token") {
+        val params = call.receiveParameters()
+        val refreshToken = params["refreshToken"]?.trim().toString()
+        val token = userAccountManagementUseCase.refreshAccessToken(refreshToken, tokenConfiguration)
+        call.respond(HttpStatusCode.Created, token)
+    }
+
     authenticate("auth-jwt") {
         get("/me") {
             val tokenClaim = call.principal<JWTPrincipal>()

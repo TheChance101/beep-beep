@@ -65,7 +65,7 @@ class ApiGateway(private val client: HttpClient, private val attributes: Attribu
 
     override suspend fun saveRefreshToken(userId: String, refreshToken: String, expirationDate: Long): Boolean {
         return tryToExecute<Boolean>(APIS.IDENTITY_API) {
-            submitForm("user/save-refresh-token",
+            submitForm("user/update-refresh-token",
                 formParameters = parameters {
                     append("userId", userId)
                     append("refreshToken", refreshToken)
@@ -75,13 +75,25 @@ class ApiGateway(private val client: HttpClient, private val attributes: Attribu
         }
     }
 
-//    override suspend fun refreshUserTokens(refreshToken: String): Boolean {
-//        return tryToExecute<Boolean>(APIS.IDENTITY_API) {
-//            get("user/refresh-tokens") {
-//                parameter("refreshToken", refreshToken)
-//            }
-//        }
-//    }
+    override suspend fun validateRefreshToken(refreshToken: String): Boolean {
+        return tryToExecute<Boolean>(APIS.IDENTITY_API) {
+            submitForm("user/validate-refresh-token",
+                formParameters = parameters {
+                    append("refreshToken", refreshToken)
+                }
+            )
+        }
+    }
+
+    override suspend fun getUserIdByRefreshToken(refreshToken: String): String {
+        return tryToExecute<String>(APIS.IDENTITY_API) {
+            submitForm("user/get-user-id-by-refresh-token",
+                formParameters = parameters {
+                    append("refreshToken", refreshToken)
+                }
+            )
+        }
+    }
 
     override suspend fun getUserById(id: String): UserResource {
         TODO("Not yet implemented")
