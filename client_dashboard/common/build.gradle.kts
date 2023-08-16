@@ -20,6 +20,14 @@ kotlin {
                 api(libs.compose.runtime)
                 api(libs.compose.foundation)
                 api(libs.compose.material3)
+
+                implementation(libs.voyager.navigator)
+                implementation(libs.voyager.bottomsheet.navigator)
+                implementation(libs.voyager.tab.navigator)
+                implementation(libs.voyager.transitions)
+                implementation(libs.voyager.koin)
+
+                api(libs.koin.core)
                 implementation(project(":design_system:shared"))
             }
         }
