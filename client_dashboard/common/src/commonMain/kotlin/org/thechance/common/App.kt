@@ -6,7 +6,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import com.beepbeep.designSystem.ui.theme.BpTheme
 import org.thechance.common.di.initKoin
-import org.thechance.common.ui.login.LoginScreen
+import org.thechance.common.presentation.login.LoginScreen
 
 
 @OptIn(ExperimentalAnimationApi::class)
