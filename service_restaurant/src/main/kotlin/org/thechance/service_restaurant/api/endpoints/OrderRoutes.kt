@@ -45,7 +45,7 @@ private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 fun Route.orderRoutes() {
     val manageOrder: IManageOrderUseCase by inject()
 
-    route("restaurant/order") {
+    route("/order") {
 
         get("/{id}") {
             val id = call.parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
@@ -71,6 +71,12 @@ fun Route.orderRoutes() {
             val limit = call.parameters["limit"]?.toInt() ?: 10
 
             val result = manageOrder.getOrdersHistory(restaurantId = id, page = page, limit = limit)
+            call.respond(HttpStatusCode.OK, result.map { it.toDto() })
+        }
+
+        get("/{restaurantId}/orders") {
+            val id = call.parameters["restaurantId"] ?: throw MultiErrorException(listOf(NOT_FOUND))
+            val result = manageOrder.getActiveOrdersByRestaurantId(restaurantId = id)
             call.respond(HttpStatusCode.OK, result.map { it.toDto() })
         }
 

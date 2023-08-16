@@ -186,17 +186,25 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) :
             filter = CuisineCollection::id eq UUID.fromString(id),
             update = set(CuisineCollection::isDeleted setTo true),
         ).isSuccessfullyUpdated()
-
-    override suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order> {
-     return  container.orderCollection.find(
-            OrderCollection::restaurantId
-                    eq UUID.fromString(restaurantId)).toList().toEntity()
-    }
     //endregion
 
     //region Order
     override suspend fun addOrder(order: Order) :Boolean {
        return container.orderCollection.insertOne(order.toCollection()).wasAcknowledged()
+    }
+
+    override suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order> {
+        return  container.orderCollection.find(
+            OrderCollection::restaurantId
+                    eq UUID.fromString(restaurantId)).toList().toEntity()
+    }
+
+    override suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order> {
+        return container.orderCollection.find(
+            OrderCollection::restaurantId eq UUID.fromString(restaurantId),
+            OrderCollection::orderStatus ne OrderStatus.CANCELED.statusCode,
+            OrderCollection::orderStatus ne OrderStatus.DONE.statusCode
+        ).toList().toEntity()
     }
 
     override suspend fun getOrderById(orderId: String): Order? =

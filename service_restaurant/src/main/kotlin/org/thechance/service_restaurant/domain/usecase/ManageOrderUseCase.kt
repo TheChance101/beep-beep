@@ -22,6 +22,8 @@ interface IManageOrderUseCase {
 
     suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order>
 
+    suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order>
+
     fun isRestaurantOpen(openTime: String, closeTime: String): Boolean
 
 }
@@ -53,6 +55,13 @@ class ManageOrderUseCase(
 
     override suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order> {
         return optionsGateway.getOrdersHistory(restaurantId = restaurantId,page = page, limit = limit)
+    }
+
+    override suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order> {
+        if (!basicValidation.isValidId(restaurantId)) {
+            throw MultiErrorException(listOf(INVALID_ID))
+        }
+        return optionsGateway.getActiveOrdersByRestaurantId(restaurantId)
     }
 
     override fun isRestaurantOpen(openTime: String, closeTime: String): Boolean {
