@@ -7,7 +7,7 @@ import org.thechance.common.domain.usecase.IGetUserInfoUseCase
 import org.thechance.common.presentation.uistate.LoginUiState
 
 
-class LoginScreenModel() : StateScreenModel<LoginUiState>(LoginUiState())
+class LoginScreenModel() : StateScreenModel<LoginUiState>(LoginUiState()){
 
     fun onPasswordChange(password: String) {
         mutableState.update { it.copy(password = password) }

@@ -45,7 +45,7 @@ voyager-tab-navigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", 
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager-version"}
 voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager-version" }
 
-voyager-androidx = { module = "cafe.adriel.voyager:voyager-androidx", version.ref = "voyager" }
+voyager-androidx = { module = "cafe.adriel.voyager:voyager-androidx", version.ref = "voyager-version" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin-version" }
 koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koinKspVersion" }
 koin-ksp = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp" }
