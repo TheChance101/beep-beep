@@ -12,13 +12,10 @@ data class AddressCollection(
     @SerialName("_id")
     @BsonId
     @Contextual
-    val id: String = UUID.randomUUID().toString(),
-    @SerialName("user_id")
+    val id: UUID = UUID.randomUUID(),
     @Contextual
     val userId: UUID,
-    @SerialName("location")
     val location: LocationCollection ,
-    @SerialName("is_deleted")
     val isDeleted: Boolean = false
 )
 
