@@ -68,24 +68,11 @@ fun Route.orderRoutes() {
             val userId = call.parameters["userId"]?.trim().orEmpty()
 
             if (userId.isEmpty()) {
-                println("I'm restaurant owner $restaurantId")
                     openingRestaurants[restaurantId] = RestaurantInfo(owner = this, mutableListOf())
-                    broadcast(
-                        receiveChannel = this.incoming,
-                        restaurantId = restaurantId,
-                        openingRestaurants = openingRestaurants,
-                        manageOrder = manageOrder
-                    )
+                    broadcast(receiveChannel = incoming, restaurantId = restaurantId, manageOrder = manageOrder)
             } else {
-                println("I'm user $userId")
                 openingRestaurants[restaurantId]?.users?.add(mutableMapOf(userId to this))
-                broadcast(
-                    receiveChannel = this.incoming,
-                    isUser = true,
-                    restaurantId = restaurantId,
-                    openingRestaurants = openingRestaurants,
-                    manageOrder = manageOrder
-                )
+                broadcast(receiveChannel = incoming, isUser = true, restaurantId = restaurantId, manageOrder = manageOrder)
             }
         }
     }
@@ -95,7 +82,6 @@ private suspend fun broadcast(
     receiveChannel: ReceiveChannel<Frame>,
     isUser: Boolean = false,
     restaurantId: String,
-    openingRestaurants: ConcurrentHashMap<String, RestaurantInfo>,
     manageOrder: IManageOrderUseCase
 ) {
     try {
