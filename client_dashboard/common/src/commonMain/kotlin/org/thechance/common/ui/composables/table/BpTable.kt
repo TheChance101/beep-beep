@@ -143,12 +143,20 @@ fun BpTablePreview() {
                 },
             )
 
-            BpPager(
-                modifier = Modifier.align(Alignment.End),
-                maxPages = 2,
-                currentPage = selectedPage,
-                onPageClicked = { selectedPage = it },
-            )
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                TotalItemsIndicator(numberItemInPage = 9, totalItems = 190)
+
+                BpPager(
+                    maxPages = 2,
+                    currentPage = selectedPage,
+                    onPageClicked = { selectedPage = it },
+                )
+            }
+
         }
     }
 }

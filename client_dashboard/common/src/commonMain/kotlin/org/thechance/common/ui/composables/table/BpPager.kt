@@ -14,7 +14,13 @@ fun BpPager(
     maxPages: Int,
     currentPage: Int,
     onPageClicked: (Int) -> Unit,
+    maxDisplayPages: Int = 6
 ) {
+    val pagerTimesToRepeat = if (maxPages > maxDisplayPages) {
+        maxDisplayPages - 1
+    } else {
+        maxPages - 1
+    }
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -26,7 +32,7 @@ fun BpPager(
             enable = currentPage != 1
         )
 
-        repeat(maxPages) {
+        repeat(pagerTimesToRepeat) {
             val position = it + 1
             BpToggleableTextButton(
                 "$position",
@@ -34,6 +40,20 @@ fun BpPager(
                 selected = currentPage == position
             )
         }
+
+        if (maxDisplayPages < maxPages) {
+            BpToggleableTextButton(
+                "...",
+                onSelectChange = {},
+                selected = false
+            )
+        }
+
+        BpToggleableTextButton(
+            "$maxPages",
+            onSelectChange = { onPageClicked(maxPages) },
+            selected = currentPage == maxPages
+        )
 
         ArrowIcon(
             painter = painterResource("right_arrow.svg"),
