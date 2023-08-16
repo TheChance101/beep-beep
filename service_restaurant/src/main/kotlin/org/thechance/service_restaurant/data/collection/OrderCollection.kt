@@ -12,7 +12,7 @@ data class OrderCollection(
     @BsonId
     @Contextual
     @SerialName("_id")
-    val id: UUID = UUID.randomUUID(),
+    val id: UUID,
     @Contextual
     val userId: UUID,
     @Contextual

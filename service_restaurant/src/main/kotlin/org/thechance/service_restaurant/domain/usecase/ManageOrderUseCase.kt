@@ -16,6 +16,12 @@ interface IManageOrderUseCase {
     suspend fun getOrderById(orderId: String): Order
     suspend fun updateOrderStatus(orderId: String, status: OrderStatus): Order
 
+    suspend fun addOrder(order: Order)
+
+    suspend fun updateOrderStatus(orderId: String, state: OrderStatus): Order
+
+    suspend fun getOrderById(orderId: String): Order
+
     suspend fun getOrdersHistory(restaurantId: String,page: Int, limit: Int): List<Order>
 
      fun  checkRestaurantOpen(openingTime : String,closingTime:String):Boolean
@@ -39,6 +45,13 @@ class ManageOrderUseCase(
         return optionsGateway.getOrderById(orderId=orderId)!!
     }
 
+    override suspend fun addOrder(order: Order) {
+        optionsGateway.addOrder(order)
+    }
+
+    override suspend fun updateOrderStatus(orderId: String, state: OrderStatus): Order {
+        orderValidationUseCase.validateUpdateOrder(orderId, state)
+        return optionsGateway.updateOrderStatus(orderId, state)!!
     override suspend fun updateOrderStatus(orderId: String, status: OrderStatus): Order {
         orderValidationUseCase.validateUpdateOrder(orderId=orderId,status= status)
         return optionsGateway.updateOrderStatus(orderId=orderId,status= status)!!

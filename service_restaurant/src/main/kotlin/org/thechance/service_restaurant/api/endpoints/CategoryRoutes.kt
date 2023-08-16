@@ -31,7 +31,7 @@ fun Route.categoryRoutes() {
     get("/categories") {
         val page = call.parameters.extractInt("page") ?: 1
         val limit = call.parameters.extractInt("limit") ?: 10
-        val categories = manageCategory.getCategories(page=page,limit= limit).toDto()
+        val categories = manageCategory.getCategories(page, limit).toDto()
         call.respond(HttpStatusCode.OK, categories)
     }
 
@@ -39,27 +39,27 @@ fun Route.categoryRoutes() {
 
         get("/{id}/restaurants") {
             val categoryId = call.parameters.extractString("id") ?:  throw MultiErrorException(listOf(NOT_FOUND))
-            val category = discoverRestaurant.getRestaurantsInCategory(categoryId=categoryId).toDto()
+            val category = discoverRestaurant.getRestaurantsInCategory(categoryId).toDto()
             call.respond(HttpStatusCode.OK, category)
         }
 
         post {
             val category = call.receive<CategoryDto>()
-            val result = manageCategory.createCategory(category=category.toEntity())
-            call.respond(HttpStatusCode.Created, result)
+            val result = manageCategory.createCategory(category.toEntity())
+            call.respond(HttpStatusCode.Created, result.toDto())
         }
 
         put {
             val category = call.receive<CategoryDto>()
-            val result = manageCategory.updateCategory(category=category.toEntity())
-            call.respond(HttpStatusCode.OK, result)
+            val result = manageCategory.updateCategory(category.toEntity())
+            call.respond(HttpStatusCode.OK, result.toDto())
         }
 
         delete("/{id}") {
             val categoryId =
                 call.parameters.extractString("id") ?:
                 throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER))
-            val result = manageCategory.deleteCategory(categoryId=categoryId)
+            val result = manageCategory.deleteCategory(categoryId)
             call.respond(HttpStatusCode.OK, result)
         }
 
