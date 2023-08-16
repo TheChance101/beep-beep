@@ -5,6 +5,7 @@ import io.ktor.client.engine.okhttp.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
+import io.ktor.client.request.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.util.*
 import kotlinx.serialization.json.Json
@@ -34,6 +35,9 @@ class ApiClientModule {
             }
 
             defaultRequest {
+
+                header("Content-Type", "application/json")
+
                 when (clientAttributes[AttributeKey<String>("API")]) {
                     APIS.IDENTITY_API.value -> {
                         url("http://127.0.0.5:8088")

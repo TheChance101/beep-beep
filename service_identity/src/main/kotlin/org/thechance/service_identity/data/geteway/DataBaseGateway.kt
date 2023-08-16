@@ -256,6 +256,14 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
             update = set(UserCollection::isDeleted setTo true)
         ).isUpdatedSuccessfully()
     }
+
+    override suspend fun getUserByUsername(username: String): UserManagement {
+        return userCollection.findOne(
+            UserCollection::username eq username,
+            UserCollection::isDeleted eq false
+        )?.toManagedEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
+    }
+
     //endregion
 
 

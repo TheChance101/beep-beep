@@ -10,7 +10,6 @@ import org.thechance.service_identity.data.mappers.toDto
 import org.thechance.service_identity.domain.entity.MissingParameterException
 import org.thechance.service_identity.domain.usecases.IUserAccountManagementUseCase
 import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
-import org.thechance.service_identity.endpoints.model.UserDto
 import org.thechance.service_identity.endpoints.model.UserTokenDto
 
 fun Route.userRoutes() {
@@ -99,6 +98,13 @@ fun Route.userRoutes() {
                 userTokenDto.expiresIn
             )
             call.respond(HttpStatusCode.OK, isSavedTokens)
+        }
+
+
+        get("/get-user") {
+            val username = call.parameters["username"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            val user = manageUserAccount.getUserByUsername(username)
+            call.respond(HttpStatusCode.OK, user.toDto())
         }
     }
 }

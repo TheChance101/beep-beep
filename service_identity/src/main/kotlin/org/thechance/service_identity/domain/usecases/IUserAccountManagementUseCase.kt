@@ -4,6 +4,7 @@ import org.koin.core.annotation.Single
 import org.thechance.service_identity.domain.security.HashingService
 import org.thechance.service_identity.domain.entity.InsufficientFundsException
 import org.thechance.service_identity.domain.entity.User
+import org.thechance.service_identity.domain.entity.UserManagement
 import org.thechance.service_identity.domain.gateway.IDataBaseGateway
 import org.thechance.service_identity.domain.usecases.validation.IUserInfoValidationUseCase
 import org.thechance.service_identity.domain.usecases.validation.IWalletBalanceValidationUseCase
@@ -36,6 +37,9 @@ interface IUserAccountManagementUseCase {
     suspend fun login(username: String, password: String): Boolean
 
     suspend fun saveUserTokens(userId: String, accessToken: String, refreshToken: String, expirationDate: Int): Boolean
+
+    suspend fun getUserByUsername(username: String): UserManagement
+
 }
 
 @Single
@@ -55,6 +59,10 @@ class UserAccountManagementUseCase(
         userInfoValidationUseCase.validateUserInformation(fullName, username, password, email)
         val saltedHash = hashingService.generateSaltedHash(password)
         return dataBaseGateway.createUser(saltedHash, fullName, username, email)
+    }
+
+    override suspend fun getUserByUsername(username: String): UserManagement {
+        return dataBaseGateway.getUserByUsername(username)
     }
 
     override suspend fun login(username: String, password: String): Boolean {

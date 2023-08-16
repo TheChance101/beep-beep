@@ -89,4 +89,6 @@ interface IDataBaseGateway {
 
     suspend fun addToWallet(userId: String, amount: Double): Boolean
 
+    suspend fun getUserByUsername(username: String): UserManagement
+
 }

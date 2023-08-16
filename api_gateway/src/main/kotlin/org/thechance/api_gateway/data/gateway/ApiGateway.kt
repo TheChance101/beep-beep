@@ -8,9 +8,14 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.util.*
 import org.koin.core.annotation.Single
-import org.thechance.api_gateway.util.APIS
-import org.thechance.api_gateway.data.model.identity.*
+import org.thechance.api_gateway.data.mappers.toManagedUser
+import org.thechance.api_gateway.data.model.identity.AddressResource
+import org.thechance.api_gateway.data.model.identity.PermissionResource
+import org.thechance.api_gateway.data.model.identity.UserManagementResource
+import org.thechance.api_gateway.data.model.identity.UserResource
+import org.thechance.api_gateway.domain.entity.UserManagement
 import org.thechance.api_gateway.domain.gateway.IApiGateway
+import org.thechance.api_gateway.util.APIS
 
 
 @Single(binds = [IApiGateway::class])
@@ -50,11 +55,37 @@ class ApiGateway(private val client: HttpClient, private val attributes: Attribu
             }
         }
 
-
-    override suspend fun getUserById(id: String): User {
-        TODO("Not yet implemented")
+    override suspend fun getUserByUsername(username: String): UserManagement {
+        return tryToExecute<UserManagementResource>(APIS.IDENTITY_API) {
+            get("user/get-user") {
+                parameter("username", username)
+            }
+        }.toManagedUser()
     }
 
+    override suspend fun saveRefreshToken(userId: String, refreshToken: String, expirationDate: Long): Boolean {
+        return tryToExecute<Boolean>(APIS.IDENTITY_API) {
+            submitForm("user/save-refresh-token",
+                formParameters = parameters {
+                    append("userId", userId)
+                    append("refreshToken", refreshToken)
+                    append("expirationDate", expirationDate.toString())
+                }
+            )
+        }
+    }
+
+//    override suspend fun refreshUserTokens(refreshToken: String): Boolean {
+//        return tryToExecute<Boolean>(APIS.IDENTITY_API) {
+//            get("user/refresh-tokens") {
+//                parameter("refreshToken", refreshToken)
+//            }
+//        }
+//    }
+
+    override suspend fun getUserById(id: String): UserResource {
+        TODO("Not yet implemented")
+    }
 
 
     override suspend fun deleteUser(id: String): Boolean {
