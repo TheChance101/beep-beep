@@ -77,9 +77,9 @@ fun Route.orderRoutes() {
 
             if (userId.isEmpty()) {
                 openingRestaurants[restaurantId] = RestaurantInfo(owner = this, mutableListOf())
-                for (frame in incoming) {
-                    return@webSocket
-                }
+
+                for (frame in incoming) return@webSocket
+
             } else if (!manageOrder.isRestaurantOpened(restaurantId)) {
                 openingRestaurants[restaurantId]?.users?.add(mutableMapOf(userId to this))
                 broadcast(
