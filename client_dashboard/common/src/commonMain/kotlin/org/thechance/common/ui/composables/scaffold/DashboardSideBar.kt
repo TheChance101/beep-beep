@@ -1,4 +1,4 @@
-package org.thechance.common.ui.scaffold
+package org.thechance.common.ui.composables.scaffold
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
@@ -7,6 +7,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,8 +20,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.onClick
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,6 +39,7 @@ import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.layout.boundsInParent
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BpToggleButton
@@ -42,6 +47,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.ui.composables.Logo
 import org.thechance.common.ui.composables.modifier.border
 import org.thechance.common.ui.composables.modifier.centerItem
+import org.thechance.common.ui.composables.modifier.cursorHoverIconHand
 import org.thechance.common.ui.composables.pxToDp
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -146,5 +152,55 @@ fun DashboardSideBar(
 
         }
         //endregion
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun ColumnScope.BpSideBarItem(
+    onClick: () -> Unit,
+    isSelected: Boolean,
+    selectedIconResource: String,
+    unSelectedIconResource: String,
+    mainMenuIsExpanded: Boolean,
+    sideBarWidth: Dp,
+    itemWidth: Dp,
+    label: String,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier.weight(1f).fillMaxWidth().onGloballyPositioned {
+//            mainMenuItemHeight.value = it.boundsInParent().height
+        }.onClick(onClick = onClick).cursorHoverIconHand()
+    ) {
+        Icon(
+            painterResource(if (isSelected) selectedIconResource else unSelectedIconResource),
+            contentDescription = null,
+            tint = if (isSelected) Theme.colors.primary else Theme.colors.contentSecondary,
+            modifier = Modifier.size(24.dp)
+                .centerItem(
+                    targetState = mainMenuIsExpanded,
+                    parentWidth = sideBarWidth,
+                    itemWidth = itemWidth,
+                    tween = tween(600)
+                )
+        )
+        AnimatedVisibility(
+            visible = mainMenuIsExpanded,
+            enter = fadeIn(tween(800)),
+            exit = fadeOut()
+        ) {
+            Text(
+                label,
+                style = Theme.typography.headline,
+                color =
+                if (isSelected) Theme.colors.primary
+                else Theme.colors.contentSecondary,
+                maxLines = 1,
+                modifier = Modifier.padding(start = itemWidth)
+            )
+        }
     }
 }

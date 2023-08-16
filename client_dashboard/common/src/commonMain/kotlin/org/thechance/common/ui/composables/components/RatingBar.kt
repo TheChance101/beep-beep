@@ -1,4 +1,4 @@
-package org.thechance.common.components
+package org.thechance.common.ui.composables.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

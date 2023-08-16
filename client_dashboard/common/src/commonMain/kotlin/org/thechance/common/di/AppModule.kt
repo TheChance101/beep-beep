@@ -3,7 +3,7 @@ package org.thechance.common.di
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
-import org.thechance.common.ui.screen.login.LoginScreenModel
+import org.thechance.common.ui.login.LoginScreenModel
 
 fun appModule() = module {
     factory { LoginScreenModel() }

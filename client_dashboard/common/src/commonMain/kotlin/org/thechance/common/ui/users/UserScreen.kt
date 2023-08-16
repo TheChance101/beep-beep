@@ -7,29 +7,24 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import cafe.adriel.voyager.core.screen.Screen
+import com.beepbeep.designSystem.ui.theme.Theme
 
 
 object UserScreen : Screen {
     @Composable
     override fun Content() {
-        UserContent(
-            onClickBack = {}
-        )
+        UserContent()
     }
 
     @Composable
-    private fun UserContent(
-        onClickBack: () -> Unit,
-    ) {
+    private fun UserContent() {
 
         Column(
-            Modifier.fillMaxSize().background(color = Color.Blue),
+            Modifier.background(Theme.colors.surface).fillMaxSize()
         ) {
             Box(Modifier.weight(1f)) {
                 Text(text = "User Screen")
-
             }
         }
     }

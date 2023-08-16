@@ -36,9 +36,7 @@ import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import org.thechance.common.HomeContent
-import org.thechance.common.ui.screen.login.LoginScreenModel
-import org.thechance.common.ui.screen.login.LoginUiState
+import org.thechance.common.ui.main.MainContainer
 
 
 object LoginScreen : Screen, KoinComponent {
@@ -52,7 +50,7 @@ object LoginScreen : Screen, KoinComponent {
 
         LoginContent(
             state = state,
-            onClickLogin = { navigate.push(HomeContent) },
+            onClickLogin = { navigate.push(MainContainer) },
             onUserNameChanged = screenModel::onUsernameChange,
             onPasswordChanged = screenModel::onPasswordChange,
         )

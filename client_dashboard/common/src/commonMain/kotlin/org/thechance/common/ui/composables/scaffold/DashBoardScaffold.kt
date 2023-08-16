@@ -1,4 +1,4 @@
-package org.thechance.common.ui.scaffold
+package org.thechance.common.ui.composables.scaffold
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

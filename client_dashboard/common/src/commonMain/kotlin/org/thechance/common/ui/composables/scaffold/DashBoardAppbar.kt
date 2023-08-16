@@ -1,4 +1,4 @@
-package org.thechance.common.ui.scaffold
+package org.thechance.common.ui.composables.scaffold
 
 import org.thechance.common.ui.composables.DropdownMenuNoPaddingVertical
 import androidx.compose.animation.core.animateFloatAsState
@@ -35,7 +35,11 @@ import org.thechance.common.ui.composables.modifier.cursorHoverIconHand
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun DashboardAppbar(title: String, username: String, onLogOut: () -> Unit) {
+fun DashboardAppbar(
+    title: String,
+    username: String,
+    onLogOut: () -> Unit
+) {
     val isDropMenuExpanded = remember { mutableStateOf(false) }
     val dropMenuArrowRotateDirection =
         animateFloatAsState(targetValue = if (isDropMenuExpanded.value) 180f else 0f)

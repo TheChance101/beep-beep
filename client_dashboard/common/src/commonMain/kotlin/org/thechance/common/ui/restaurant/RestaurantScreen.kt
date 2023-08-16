@@ -7,27 +7,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import cafe.adriel.voyager.core.screen.Screen
+import com.beepbeep.designSystem.ui.theme.Theme
 
-object RestaurantScreen: Screen {
+object RestaurantScreen : Screen {
 
     @Composable
     override fun Content() {
-        RestaurantContent(
-            onClickBack = {
-
-            }
-        )
+        RestaurantContent()
     }
 
-  @Composable
-  private  fun RestaurantContent(
-        onClickBack: () -> Unit,
-    ) {
+    @Composable
+    private fun RestaurantContent() {
 
         Column(
-            Modifier.fillMaxSize().background(color = Color.Cyan),
+            Modifier.background(Theme.colors.surface).fillMaxSize()
         ) {
             Box(Modifier.weight(1f)) {
                 Text(text = "Restaurant Screen")

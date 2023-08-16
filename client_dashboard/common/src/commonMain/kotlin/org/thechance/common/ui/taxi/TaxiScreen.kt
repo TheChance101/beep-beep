@@ -1,4 +1,4 @@
-package org.thechance.common.ui.screen.taxi
+package org.thechance.common.ui.taxi
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -7,24 +7,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import cafe.adriel.voyager.core.screen.Screen
+import com.beepbeep.designSystem.ui.theme.Theme
 
 object TaxiScreen : Screen {
     @Composable
     override fun Content() {
-        TaxiContent(
-            onClickBack = {}
-        )
+        TaxiContent()
     }
 
     @Composable
-    private fun TaxiContent(
-        onClickBack: () -> Unit,
-    ) {
+    private fun TaxiContent() {
 
         Column(
-            Modifier.fillMaxSize().background(color = Color.Gray),
+            Modifier.background(Theme.colors.surface).fillMaxSize()
         ) {
             Box(Modifier.weight(1f)) {
                 Text(text = "Taxi Screen")

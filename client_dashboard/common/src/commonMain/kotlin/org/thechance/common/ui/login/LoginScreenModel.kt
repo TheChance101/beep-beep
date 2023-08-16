@@ -1,4 +1,4 @@
-package org.thechance.common.ui.screen.login
+package org.thechance.common.ui.login
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import kotlinx.coroutines.flow.update
