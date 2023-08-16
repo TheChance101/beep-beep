@@ -51,32 +51,42 @@ class ManageOrderUseCase(
     }
 
     override suspend fun addOrder(order: Order): Boolean {
-        return optionsGateway.addOrder(order)
+        return optionsGateway.addOrder(order = order)
     }
 
     override suspend fun updateOrderStatus(orderId: String, state: OrderStatus): Order {
-        orderValidationUseCase.validateUpdateOrder(orderId, state)
-        return optionsGateway.updateOrderStatus(orderId, state)!!
+        orderValidationUseCase.validateUpdateOrder(orderId = orderId, status = state)
+        return optionsGateway.updateOrderStatus(orderId = orderId, status = state)!!
     }
 
-    override suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order> {
-        return optionsGateway.getOrdersHistory(restaurantId = restaurantId, page = page, limit = limit)
+    override suspend fun getOrdersHistory(
+        restaurantId: String,
+        page: Int,
+        limit: Int
+    ): List<Order> {
+        return optionsGateway.getOrdersHistory(
+            restaurantId = restaurantId,
+            page = page,
+            limit = limit
+        )
     }
 
     override suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order> {
         if (!basicValidation.isValidId(restaurantId)) {
             throw MultiErrorException(listOf(INVALID_ID))
         }
-        return optionsGateway.getActiveOrdersByRestaurantId(restaurantId)
+        return optionsGateway.getActiveOrdersByRestaurantId(restaurantId = restaurantId)
     }
 
     override suspend fun isRestaurantOpened(restaurantId: String): Boolean {
-        val restaurant = restaurantGateway.getRestaurant(restaurantId)
-        if (restaurant == null){
+        val restaurant = restaurantGateway.getRestaurant(id = restaurantId)
+        if (restaurant == null) {
             throw MultiErrorException(listOf(NOT_FOUND))
-        }
-        else {
-            return orderValidationUseCase.isRestaurantOpen(restaurant.openingTime, restaurant.closingTime)
+        } else {
+            return orderValidationUseCase.isRestaurantOpen(
+                openTime = restaurant.openingTime,
+                closeTime = restaurant.closingTime
+            )
         }
     }
 
