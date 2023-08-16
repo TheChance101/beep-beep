@@ -83,14 +83,16 @@ fun LoginContent() {
                     onValueChange = { },
                     text = "",
                     label = "Username",
-                    modifier = Modifier.padding(top = Theme.dimens.space16)
+                    modifier = Modifier.padding(top = Theme.dimens.space16),
+                    hint = "Username"
                 )
                 BpTextField(
                     onValueChange = { },
                     text = "",
                     label = "Password",
                     keyboardType = KeyboardType.Password,
-                    modifier = Modifier.padding(top = Theme.dimens.space16)
+                    modifier = Modifier.padding(top = Theme.dimens.space16),
+                    hint = "Password"
                 )
                 BpCheckBox(
                     label = "Keep me logged in",
