@@ -13,7 +13,7 @@ import domain.usecase.FakeUseCaseImp
 import org.koin.core.Koin
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
-import presentation.screens.fake.FakeViewModel
+import presentation.screens.HomeViewModel
 
 object AppModule {
 
@@ -41,7 +41,7 @@ object AppModule {
     }
 
     val viewModelModule = module {
-        single { FakeViewModel() }
+        single { HomeViewModel() }
     }
     lateinit var koin: Koin
     fun initKoin() = startKoin {
