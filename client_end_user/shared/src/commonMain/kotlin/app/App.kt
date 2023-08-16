@@ -1,7 +1,10 @@
 import androidx.compose.runtime.Composable
-import com.beepbeep.designSystem.DesignApp
+import app.di.AppModule.initKoin
+import cafe.adriel.voyager.navigator.Navigator
+import presentation.screens.HomeScreen
 
 @Composable
 fun App() {
-    DesignApp()
+    initKoin()
+    Navigator(HomeScreen())
 }

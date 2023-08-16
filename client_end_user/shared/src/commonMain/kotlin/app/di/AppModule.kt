@@ -12,10 +12,21 @@ import domain.usecase.FakeUseCase
 import domain.usecase.FakeUseCaseImp
 import org.koin.core.Koin
 import org.koin.core.context.startKoin
+import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 import presentation.screens.HomeViewModel
 
 object AppModule {
+
+    fun initKoin(appDeclaration: KoinAppDeclaration = {}) = startKoin {
+        appDeclaration()
+        modules(
+            networkModule,
+            gatewayModule,
+            useCaseModule,
+            viewModelModule,
+        )
+    }
 
     val networkModule = module {
 
@@ -27,9 +38,11 @@ object AppModule {
         single<FakeRemoteDataSource> {
             FakeRemoteDataSourceImp(get())
         }
+
         single<FakeLocalDataSource> {
             FakeLocalDataSourceImp()
         }
+
     }
 
     val gatewayModule = module {
@@ -43,15 +56,5 @@ object AppModule {
     val viewModelModule = module {
         single { HomeViewModel() }
     }
-    lateinit var koin: Koin
-    fun initKoin() = startKoin {
-        modules(
-            networkModule,
-            gatewayModule,
-            useCaseModule,
-            viewModelModule,
-        )
-    }.koin.also { koin = it }
 
-    inline fun <reified T : Any> koinViewModel() = koin.get<T>()
 }
