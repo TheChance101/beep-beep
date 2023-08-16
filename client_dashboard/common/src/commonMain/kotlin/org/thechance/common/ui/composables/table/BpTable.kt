@@ -107,7 +107,7 @@ fun BpTablePreview() {
     var selectedUser by remember { mutableStateOf<String?>(null) }
     var selectedPage by remember { mutableStateOf(1) }
 
-    val pageCount = 2
+    val pageCount = 12
 
     BpTheme(useDarkTheme = false) {
         Column(
@@ -151,7 +151,7 @@ fun BpTablePreview() {
                 TotalItemsIndicator(numberItemInPage = 9, totalItems = 190)
 
                 BpPager(
-                    maxPages = 2,
+                    maxPages = pageCount,
                     currentPage = selectedPage,
                     onPageClicked = { selectedPage = it },
                 )
