@@ -1,9 +1,9 @@
-package org.thechance.service_identity.data.security.hashing
+package org.thechance.api_gateway.data.security.hashing
 
 import org.apache.commons.codec.binary.Hex
 import org.apache.commons.codec.digest.DigestUtils
 import org.koin.core.annotation.Single
-import org.thechance.service_identity.data.geteway.security.HashingService
+import org.thechance.api_gateway.data.gateway.security.HashingService
 import java.security.SecureRandom
 
 /**

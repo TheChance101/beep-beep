@@ -1,0 +1,13 @@
+ktor:
+  deployment:
+    port: 8080
+    host: "0.0.0.0"
+  application:
+    modules:
+      - org.thechance.api_gateway.ApplicationKt.module
+
+jwt:
+  secret: $JWT_SECRET
+  issuer: "http://0.0.0.0:8080"
+  audience: "http://0.0.0.0:8080"
+  realm: "Access to 'hello'"

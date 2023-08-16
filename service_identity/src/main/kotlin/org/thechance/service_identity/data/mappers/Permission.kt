@@ -1,16 +1,12 @@
 package org.thechance.service_identity.data.mappers
 
 import org.thechance.service_identity.data.collection.PermissionCollection
-import org.thechance.service_identity.domain.entity.CreatePermissionRequest
 import org.thechance.service_identity.domain.entity.Permission
-import org.thechance.service_identity.domain.entity.UpdatePermissionRequest
-import org.thechance.service_identity.endpoints.model.CreatePermissionDocument
 import org.thechance.service_identity.endpoints.model.PermissionDto
-import org.thechance.service_identity.endpoints.model.UpdatePermissionDocument
 
 fun PermissionCollection.toEntity(): Permission {
     return Permission(
-        id = _id,
+        id = id,
         permission = permission,
     )
 }
@@ -24,25 +20,18 @@ fun Permission.toDto(): PermissionDto {
     )
 }
 
-fun List<Permission>.toDto(): List<PermissionDto> = map { it.toDto() }
-
-fun CreatePermissionDocument.toEntity(): CreatePermissionRequest {
-    return CreatePermissionRequest(
+fun PermissionDto.toEntity(): Permission {
+    return Permission(
+        id = id ?: 0,
         permission = permission
     )
 }
 
-fun CreatePermissionRequest.toCollection(id: Int): PermissionCollection {
+fun Permission.toCollection(id: Int): PermissionCollection {
     return PermissionCollection(
-        _id = id,
+        id = id,
         permission = permission
     )
 }
 
-fun UpdatePermissionDocument.toEntity() = UpdatePermissionRequest(
-    permission = permission
-)
-
-fun UpdatePermissionRequest.toUpdateDocument() = UpdatePermissionDocument(
-    permission = permission
-)
+fun List<Permission>.toDto(): List<PermissionDto> = map { it.toDto() }
