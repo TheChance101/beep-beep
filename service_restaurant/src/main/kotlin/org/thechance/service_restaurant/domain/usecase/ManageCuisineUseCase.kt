@@ -3,7 +3,6 @@ package org.thechance.service_restaurant.domain.usecase
 import org.thechance.service_restaurant.domain.entity.Cuisine
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
 import org.thechance.service_restaurant.domain.utils.IValidation
-import org.thechance.service_restaurant.domain.utils.Validation
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_NAME
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND

@@ -48,8 +48,9 @@ fun Route.orderRoutes() {
                 listOf(INVALID_REQUEST_PARAMETER)
             )
             val result = manageOrder.updateOrderStatus(
-                orderId=id,
-                state= OrderStatus.getOrderStatus(status))
+                orderId = id,
+                state = OrderStatus.getOrderStatus(status)
+            )
             call.respond(HttpStatusCode.OK, result)
         }
 
@@ -69,17 +70,12 @@ fun Route.orderRoutes() {
 
             if (userId.isEmpty()) {
                 openingRestaurants[restaurantId] = RestaurantInfo(owner = this, mutableListOf())
-                broadcast(
-                    receiveChannel = incoming,
-                    restaurantId = restaurantId,
-                    manageOrder = manageOrder)
+                for (frame in incoming) {
+                    return@webSocket
+                }
             } else {
                 openingRestaurants[restaurantId]?.users?.add(mutableMapOf(userId to this))
-                broadcast(
-                    receiveChannel = incoming,
-                    isUser = true,
-                    restaurantId = restaurantId,
-                    manageOrder = manageOrder)
+                broadcast(receiveChannel = incoming, restaurantId = restaurantId, manageOrder = manageOrder)
             }
         }
     }
@@ -87,7 +83,6 @@ fun Route.orderRoutes() {
 
 private suspend fun broadcast(
     receiveChannel: ReceiveChannel<Frame>,
-    isUser: Boolean = false,
     restaurantId: String,
     manageOrder: IManageOrderUseCase
 ) {
@@ -96,14 +91,12 @@ private suspend fun broadcast(
 
         for (frame in receiveChannel) {
             if (frame is Frame.Text) {
-                if (isUser) {
-                    val orderId: UUID = UUID.randomUUID()
-                    val orderJson = frame.readText()
-                    val order = Json.decodeFromString<OrderDto>(orderJson).copy(id = orderId.toString())
-                    ownerSession?.send(order.toString())
-                    scope.launch {
-                        manageOrder.addOrder(order = order.toEntity())
-                    }
+                val orderId: UUID = UUID.randomUUID()
+                val orderJson = frame.readText()
+                val order = Json.decodeFromString<OrderDto>(orderJson).copy(id = orderId.toString())
+                ownerSession?.send(order.toString())
+                scope.launch {
+                    manageOrder.addOrder(order = order.toEntity())
                 }
             }
         }
