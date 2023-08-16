@@ -59,6 +59,10 @@ interface IApiGateway {
 
     suspend fun getUserPermissions(userId: String): List<PermissionResource>
 
+    suspend fun validateRefreshToken(refreshToken: String): Boolean
+
+    suspend fun getUserIdByRefreshToken(refreshToken: String): String
+
     // endregion: user permission management
 
     // endregion identity

@@ -36,10 +36,13 @@ interface IUserAccountManagementUseCase {
 
     suspend fun login(username: String, password: String): Boolean
 
-    suspend fun saveUserTokens(userId: String, accessToken: String, refreshToken: String, expirationDate: Int): Boolean
+    suspend fun updateRefreshToken(userId: String, refreshToken: String, expirationDate: Long): Boolean
 
     suspend fun getUserByUsername(username: String): UserManagement
 
+    suspend fun validateRefreshToken(refreshToken: String): Boolean
+
+    suspend fun getUserIdByRefreshToken(refreshToken: String): String
 }
 
 @Single
@@ -70,15 +73,13 @@ class UserAccountManagementUseCase(
         return hashingService.verify(password, saltedHash)
     }
 
-    override suspend fun saveUserTokens(
+    override suspend fun updateRefreshToken(
         userId: String,
-        accessToken: String,
         refreshToken: String,
-        expirationDate: Int
+        expirationDate: Long
     ): Boolean {
-        return dataBaseGateway.saveUserTokens(userId, accessToken, refreshToken, expirationDate)
+        return dataBaseGateway.updateRefreshToken(userId, refreshToken, expirationDate)
     }
-
 
     override suspend fun deleteUser(id: String): Boolean {
         return dataBaseGateway.deleteUser(id)
@@ -114,5 +115,12 @@ class UserAccountManagementUseCase(
         return dataBaseGateway.subtractFromWallet(userId, amount)
     }
 
+    override suspend fun validateRefreshToken(refreshToken: String): Boolean {
+        return dataBaseGateway.validateRefreshToken(refreshToken)
+    }
+
+    override suspend fun getUserIdByRefreshToken(refreshToken: String): String {
+        return dataBaseGateway.getUserIdByRefreshToken(refreshToken)
+    }
 
 }
