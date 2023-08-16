@@ -63,7 +63,11 @@ class OrderValidationUseCase(
             validationErrors.add(INVALID_TIME)
         }
     }
-
+    override fun isRestaurantOpen(openTime: String, closeTime: String): Boolean {
+        val currentTime = Calendar.getInstance().time
+        val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+        return currentTime.after(sdf.parse(openTime)) && currentTime.before(sdf.parse(closeTime))
+    }
 
 }
 
