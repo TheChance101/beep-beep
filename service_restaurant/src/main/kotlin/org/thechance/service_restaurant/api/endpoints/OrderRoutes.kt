@@ -38,17 +38,16 @@ fun Route.orderRoutes() {
 
         get("/{id}") {
             val id = call.parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
-            val result = manageOrder.getOrderById(orderId=id)
+            val result = manageOrder.getOrderById(orderId = id)
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
         post("/{id}/status") {
             val id = call.parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
-            val status = call.receiveParameters()["status"]?.toInt() ?:
-            throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER))
-            val result = manageOrder.updateOrderStatus(
-                orderId=id,
-                state= OrderStatus.getOrderStatus(status))
+            val status = call.receiveParameters()["status"]?.toInt() ?: throw MultiErrorException(
+                listOf(INVALID_REQUEST_PARAMETER)
+            )
+            val result = manageOrder.updateOrderStatus(orderId=id, state= OrderStatus.getOrderStatus(status))
             call.respond(HttpStatusCode.OK, result)
         }
 
@@ -57,7 +56,7 @@ fun Route.orderRoutes() {
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 10
 
-            val result = manageOrder.getOrdersHistory(restaurantId=id, page=page, limit=limit)
+            val result = manageOrder.getOrdersHistory(restaurantId = id, page = page, limit = limit)
             call.respond(HttpStatusCode.OK, result.map { it.toDto() })
         }
 
@@ -67,17 +66,17 @@ fun Route.orderRoutes() {
             val userId = call.parameters["userId"]?.trim().orEmpty()
 
             if (userId.isEmpty()) {
-                    openingRestaurants[restaurantId] = RestaurantInfo(owner = this, mutableListOf())
-                    broadcast(receiveChannel = incoming, restaurantId = restaurantId, manageOrder = manageOrder)
+                openingRestaurants[restaurantId] = RestaurantInfo(owner = this, mutableListOf())
+                broadcastToUser(receiveChannel = incoming, restaurantId = restaurantId, manageOrder = manageOrder)
             } else {
                 openingRestaurants[restaurantId]?.users?.add(mutableMapOf(userId to this))
-                broadcast(receiveChannel = incoming, isUser = true, restaurantId = restaurantId, manageOrder = manageOrder)
+                broadcastToUser(receiveChannel = incoming, isUser = true, restaurantId = restaurantId, manageOrder = manageOrder)
             }
         }
     }
 }
 
-private suspend fun broadcast(
+private suspend fun broadcastToUser(
     receiveChannel: ReceiveChannel<Frame>,
     isUser: Boolean = false,
     restaurantId: String,
@@ -91,10 +90,10 @@ private suspend fun broadcast(
                 if (isUser) {
                     val orderId: UUID = UUID.randomUUID()
                     val orderJson = frame.readText()
-                    val order = Json.decodeFromString<OrderDto>(orderJson)
-                    ownerSession?.send(order.copy(id = orderId.toString()).toString())
+                    val order = Json.decodeFromString<OrderDto>(orderJson).copy(id = orderId.toString())
+                    ownerSession?.send(order.toString())
                     scope.launch {
-                        manageOrder.addOrder(order=order.copy(id = orderId.toString()).toEntity())
+                        manageOrder.addOrder(order = order.toEntity())
                     }
                 }
             }
