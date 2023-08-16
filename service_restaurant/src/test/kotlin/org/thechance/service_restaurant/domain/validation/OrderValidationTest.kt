@@ -167,9 +167,24 @@ class OrderValidationTest {
     }
 
     @Test
-    fun `should throw MultiErrorException contains INVALID_TIME when openTime or closeTime is invalid`() {
+    fun `should throw MultiErrorException contains INVALID_TIME when openTime or closeTime is empty`() {
         val openTime = ""
         val closeTime = ""
+
+        val executable = Executable {
+            orderValidation.validateIsRestaurantOpen(
+                openingTime = openTime,
+                closingTime = closeTime
+            )
+        }
+
+        val error = assertThrows(MultiErrorException::class.java, executable)
+        assertEquals(true, error.errorCodes.contains(INVALID_TIME))
+    }
+    @Test
+    fun `should throw MultiErrorException contains INVALID_TIME when openTime or closeTime is invalid`() {
+        val openTime = "88888"
+        val closeTime = "9999"
 
         val executable = Executable {
             orderValidation.validateIsRestaurantOpen(
