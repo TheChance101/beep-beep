@@ -12,7 +12,8 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 
 
-class DetailsScreen : Screen {
+class DetailsScreen(private val text: String) : Screen {
+
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
@@ -22,12 +23,19 @@ class DetailsScreen : Screen {
 }
 
 @Composable
-fun DetailsScreenContent() {
+fun DetailsScreenContent(text: String, onNavigateUp: () -> Unit) {
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(text = "Details Screen")
+        Text(text = text)
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = onNavigateUp) {
+            Text(text = "Back To Home")
+        }
     }
+
 }
