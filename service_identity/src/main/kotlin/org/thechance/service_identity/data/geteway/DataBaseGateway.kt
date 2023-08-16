@@ -9,14 +9,14 @@ import io.ktor.server.plugins.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.*
-import org.thechance.service_identity.data.mappers.*
-import org.thechance.service_identity.domain.entity.SaltedHash
+import org.thechance.service_identity.data.mappers.toCollection
+import org.thechance.service_identity.data.mappers.toEntity
+import org.thechance.service_identity.data.mappers.toManagedEntity
 import org.thechance.service_identity.data.util.USER_DETAILS_COLLECTION
 import org.thechance.service_identity.data.util.isUpdatedSuccessfully
 import org.thechance.service_identity.data.util.paginate
@@ -61,10 +61,10 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
     override suspend fun addAddress(userId: String, location: Location): Boolean {
         val address = AddressCollection(userId = UUID.fromString(userId), location = location.toCollection())
         userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::userId eq userId,
+            filter = UserDetailsCollection::userId eq UUID.fromString(userId),
             update = push(
                 UserDetailsCollection::addresses,
-                address.id
+                address.id.toString()
             )
         )
         return addressCollection.insertOne(address).wasAcknowledged()
@@ -76,14 +76,14 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
             update = pull(UserDetailsCollection::addresses, id)
         )
         return addressCollection.updateOne(
-            filter = Filters.and(AddressCollection::id eq (id), AddressCollection::isDeleted eq false),
+            filter = Filters.and(AddressCollection::id eq UUID.fromString(id), AddressCollection::isDeleted eq false),
             update = setValue(AddressCollection::isDeleted, true)
         ).isUpdatedSuccessfully()
     }
 
     override suspend fun updateAddress(id: String, location: Location): Boolean {
         return addressCollection.updateOneById(
-            ObjectId(id),
+            UUID.fromString(id),
             location,
             updateOnlyNotNullProperties = true
         ).isUpdatedSuccessfully()
@@ -91,7 +91,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
 
     override suspend fun getAddress(id: String): Address {
         return addressCollection.findOne(
-            AddressCollection::id eq id,
+            AddressCollection::id eq UUID.fromString(id),
             AddressCollection::isDeleted eq false
         )?.toEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
     }
@@ -119,7 +119,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
     override suspend fun deletePermission(permissionId: Int): Boolean {
         return permissionCollection.updateOne(
             filter = Filters.and(
-                PermissionCollection::_id eq permissionId,
+                PermissionCollection::id eq permissionId,
                 PermissionCollection::isDeleted eq false
             ),
             update = setValue(PermissionCollection::isDeleted, true)
@@ -168,7 +168,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
 
         return userCollection.aggregate<DetailedUserCollection>(
             match(
-                UserCollection::id eq id,
+                UserCollection::id eq UUID.fromString(id),
                 UserCollection::isDeleted eq false
             ),
             lookup(
@@ -216,7 +216,6 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
         try {
             val wallet = WalletCollection(userId = userDocument.id)
             createWallet(wallet)
-
             userDetailsCollection.insertOne(UserDetailsCollection(userId = userDocument.id))
             return userCollection.insertOne(userDocument).wasAcknowledged()
 
@@ -235,7 +234,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
 
         try {
             return userCollection.updateOneById(
-                ObjectId(id),
+                UUID.fromString(id),
                 set(
                     UserCollection::hashedPassword setTo saltedHash?.hash,
                     UserCollection::salt setTo saltedHash?.salt,
@@ -252,7 +251,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
 
     override suspend fun deleteUser(id: String): Boolean {
         return userCollection.updateOne(
-            filter = UserCollection::id eq id,
+            filter = UserCollection::id eq UUID.fromString(id),
             update = set(UserCollection::isDeleted setTo true)
         ).isUpdatedSuccessfully()
     }
@@ -263,7 +262,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
 
     private suspend fun getWalletByUserId(userId: String): WalletCollection {
         return walletCollection.findOne(
-            WalletCollection::userId eq userId
+            WalletCollection::userId eq UUID.fromString(userId)
         ) ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
@@ -271,20 +270,20 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
 
     override suspend fun subtractFromWallet(userId: String, amount: Double): Boolean {
         return walletCollection.updateOne(
-            filter = WalletCollection::userId eq userId,
+            filter = WalletCollection::userId eq UUID.fromString(userId),
             update = inc(WalletCollection::walletBalance, -amount)
         ).isUpdatedSuccessfully()
     }
 
     override suspend fun getWalletBalance(userId: String): Double {
         return walletCollection.findOne(
-            WalletCollection::userId eq userId
+            WalletCollection::userId eq UUID.fromString(userId)
         )?.walletBalance ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
     override suspend fun addToWallet(userId: String, amount: Double): Boolean {
         return walletCollection.updateOne(
-            filter = WalletCollection::userId eq userId,
+            filter = WalletCollection::userId eq UUID.fromString(userId),
             update = inc(WalletCollection::walletBalance, amount)
         ).isUpdatedSuccessfully()
     }
@@ -301,19 +300,19 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
     // region: user permission management
 
     override suspend fun addPermissionToUser(userId: String, permissionId: Int): Boolean {
-        val permission = permissionCollection.findOne(PermissionCollection::_id eq permissionId)
+        val permission = permissionCollection.findOne(PermissionCollection::id eq permissionId)
             ?: throw ResourceNotFoundException(NOT_FOUND)
 
         return userCollection.updateOne(
-            filter = UserCollection::id eq userId,
+            filter = UserCollection::id eq UUID.fromString(userId),
             update = push(UserCollection::permissions, permission)
         ).isUpdatedSuccessfully()
     }
 
     override suspend fun removePermissionFromUser(userId: String, permissionId: Int): Boolean {
         return userCollection.updateOne(
-            filter = UserCollection::id eq userId,
-            update = pullByFilter(UserCollection::permissions, PermissionCollection::_id eq permissionId)
+            filter = UserCollection::id eq UUID.fromString(userId),
+            update = pullByFilter(UserCollection::permissions, PermissionCollection::id eq permissionId)
         ).isUpdatedSuccessfully()
     }
 
