@@ -64,14 +64,7 @@ class OrderValidationUseCase(
         }
     }
 
-    override fun isRestaurantOpen(openTime: String, closeTime: String): Boolean {
-        val currentTime = Calendar.getInstance().time
-        val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
-        val openingTime = sdf.parse(openTime)
-        val closingTime = sdf.parse(closeTime)
 
-        return currentTime.after(openingTime) && currentTime.before(closingTime)
-    }
 }
 
 

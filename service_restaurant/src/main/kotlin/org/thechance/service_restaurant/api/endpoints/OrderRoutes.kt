@@ -123,10 +123,11 @@ private suspend fun broadcast(
     }
 }
 
-private fun createOrder(frame: Frame.Text): OrderDto {
+
+
+private  fun createOrder(frame: Frame.Text): OrderDto {
     val orderJson = frame.readText()
-    return Json.decodeFromString<OrderDto>(orderJson)
-        .copy(id = UUID.randomUUID().toString())
+    return Json.decodeFromString<OrderDto>(orderJson).copy(id = UUID.randomUUID().toString())
 }
 
 private suspend fun insertOrder(order: OrderDto, manageOrder: IManageOrderUseCase): Boolean {
