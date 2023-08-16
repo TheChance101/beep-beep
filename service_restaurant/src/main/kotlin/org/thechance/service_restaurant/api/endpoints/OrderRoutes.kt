@@ -47,7 +47,9 @@ fun Route.orderRoutes() {
             val status = call.receiveParameters()["status"]?.toInt() ?: throw MultiErrorException(
                 listOf(INVALID_REQUEST_PARAMETER)
             )
-            val result = manageOrder.updateOrderStatus(orderId=id, state= OrderStatus.getOrderStatus(status))
+            val result = manageOrder.updateOrderStatus(
+                orderId=id,
+                state= OrderStatus.getOrderStatus(status))
             call.respond(HttpStatusCode.OK, result)
         }
 
@@ -67,10 +69,17 @@ fun Route.orderRoutes() {
 
             if (userId.isEmpty()) {
                 openingRestaurants[restaurantId] = RestaurantInfo(owner = this, mutableListOf())
-                broadcast(receiveChannel = incoming, restaurantId = restaurantId, manageOrder = manageOrder)
+                broadcast(
+                    receiveChannel = incoming,
+                    restaurantId = restaurantId,
+                    manageOrder = manageOrder)
             } else {
                 openingRestaurants[restaurantId]?.users?.add(mutableMapOf(userId to this))
-                broadcast(receiveChannel = incoming, isUser = true, restaurantId = restaurantId, manageOrder = manageOrder)
+                broadcast(
+                    receiveChannel = incoming,
+                    isUser = true,
+                    restaurantId = restaurantId,
+                    manageOrder = manageOrder)
             }
         }
     }
