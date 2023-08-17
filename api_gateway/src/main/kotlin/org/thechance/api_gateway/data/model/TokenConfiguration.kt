@@ -1,4 +1,4 @@
-package org.thechance.api_gateway.domain.entity
+package org.thechance.api_gateway.data.model
 
 data class TokenConfiguration(
     val secret: String,

@@ -4,8 +4,8 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
-import org.thechance.api_gateway.domain.entity.MultiErrorException
-import org.thechance.api_gateway.domain.entity.MultiLocalizedMessageException
+import org.thechance.api_gateway.data.model.MultiErrorException
+import org.thechance.api_gateway.data.model.MultiLocalizedMessageException
 
 fun Application.configureStatusPages() {
     install(StatusPages) {

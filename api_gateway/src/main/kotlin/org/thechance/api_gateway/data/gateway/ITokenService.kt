@@ -1,7 +1,7 @@
-package org.thechance.api_gateway.domain.security
+package org.thechance.api_gateway.data.gateway
 
-import org.thechance.api_gateway.domain.entity.TokenClaim
-import org.thechance.api_gateway.domain.entity.TokenConfiguration
+import org.thechance.api_gateway.data.model.TokenClaim
+import org.thechance.api_gateway.data.model.TokenConfiguration
 
 interface ITokenService {
 

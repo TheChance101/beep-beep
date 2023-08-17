@@ -2,7 +2,7 @@ package org.thechance.api_gateway
 
 import io.ktor.server.application.*
 import io.ktor.server.netty.*
-import org.thechance.api_gateway.domain.entity.TokenConfiguration
+import org.thechance.api_gateway.data.model.TokenConfiguration
 import org.thechance.api_gateway.plugins.*
 
 fun main(args: Array<String>): Unit = EngineMain.main(args)

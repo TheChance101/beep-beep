@@ -1,7 +1,6 @@
 package org.thechance.api_gateway.data.gateway
 
 import org.koin.core.annotation.Single
-import org.thechance.api_gateway.domain.gateway.IResourcesGateway
 import java.util.*
 
 @Single

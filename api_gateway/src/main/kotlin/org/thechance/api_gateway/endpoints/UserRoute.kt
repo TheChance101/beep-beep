@@ -8,9 +8,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import org.thechance.api_gateway.data.mappers.toDto
-import org.thechance.api_gateway.domain.entity.TokenConfiguration
-import org.thechance.api_gateway.domain.usecase.IUserAccountManagementUseCase
+import org.thechance.api_gateway.data.model.TokenConfiguration
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
 import java.util.*
 
@@ -19,7 +17,7 @@ import java.util.*
  */
 fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
 
-    val userAccountManagementUseCase: IUserAccountManagementUseCase by inject()
+    val userAccountManagementUseCase: IApiGateway by inject()
 
     post("/signup") {
         val params = call.receiveParameters()
@@ -51,17 +49,20 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
             email,
             password,
             tokenConfiguration,
-            locale = Locale(language, countryCode)
+            Locale(language, countryCode)
         )
 
-        call.respond(HttpStatusCode.Created, token.toDto())
+        call.respond(HttpStatusCode.Created, token)
     }
 
 
     post("/refresh-access-token") {
         val params = call.receiveParameters()
         val refreshToken = params["refreshToken"]?.trim().toString()
-        val token = userAccountManagementUseCase.refreshAccessToken(refreshToken, tokenConfiguration)
+
+        val (language, countryCode) = extractLocalizationHeader()
+        val locale = Locale(language, countryCode)
+        val token = userAccountManagementUseCase.refreshAccessToken(refreshToken, tokenConfiguration, locale)
         call.respond(HttpStatusCode.Created, token)
     }
 
@@ -72,12 +73,6 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
             call.respond(HttpStatusCode.OK, id)
         }
     }
-
-//        get("/{id}") {
-//            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-//            val user = userAccountManagementUseCase.getUser(id)
-//            call.respond(HttpStatusCode.OK, user)
-//        }
 
 
 }
