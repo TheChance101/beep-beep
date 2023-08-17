@@ -1,4 +1,4 @@
-package org.thechance.common.ui.composables.table
+package org.thechance.common.presentation.composables.table
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

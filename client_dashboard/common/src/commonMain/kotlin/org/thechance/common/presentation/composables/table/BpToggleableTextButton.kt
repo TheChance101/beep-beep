@@ -1,4 +1,4 @@
-package org.thechance.common.ui.composables.table
+package org.thechance.common.presentation.composables.table
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi

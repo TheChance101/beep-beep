@@ -1,4 +1,4 @@
-package org.thechance.common.ui.composables.table
+package org.thechance.common.presentation.composables.table
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -34,7 +34,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BpTheme
 import com.beepbeep.designSystem.ui.theme.Theme
-import kotlin.math.roundToInt
 
 /**
  * @param rowsCount number of rows in the table without header row
