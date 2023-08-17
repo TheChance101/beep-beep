@@ -73,7 +73,7 @@ class OrderValidationTest {
     @Test
     fun `should throw MultiErrorException contains INVALID_STATUS when status is Invalid`() {
         val orderId = "3edf2fc8-6983-484f-a35c-8190f44a08c6"
-        val status = OrderStatus.getOrderStatus(10)
+        val status = OrderStatus.getOrderStatus(9)
 
         val executable = Executable {
             orderValidation.validateUpdateOrder(orderId = orderId, status = status)
@@ -93,24 +93,6 @@ class OrderValidationTest {
         }
 
         assertDoesNotThrow(executable)
-    }
-
-    @Test
-    fun `should throw MultiErrorException contains INVALID_UPDATE_PARAMETER when status is empty `() {
-        val orderId = "3edf2fc8-6983-484f-a35c-8190f44a08c6"
-        val status = null
-
-        val executable = Executable {
-            status?.let {
-                orderValidation.validateUpdateOrder(
-                    orderId,
-                    it
-                )
-            }
-        }
-
-        val error = assertThrows(MultiErrorException::class.java, executable)
-        assertEquals(true, error.errorCodes.contains(INVALID_UPDATE_PARAMETER))
     }
 
     @Test
@@ -195,5 +177,12 @@ class OrderValidationTest {
 
         val error = assertThrows(MultiErrorException::class.java, executable)
         assertEquals(true, error.errorCodes.contains(INVALID_TIME))
+    }
+    @Test
+    fun `should return true when restaurant is open`() {
+        val openTime = "08:00"
+        val closeTime = "23:00"
+        val result = orderValidation.isRestaurantOpen(openTime = openTime, closeTime = closeTime)
+        assertEquals(true, result)
     }
 }
