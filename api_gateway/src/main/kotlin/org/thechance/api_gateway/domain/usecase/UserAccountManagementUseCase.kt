@@ -6,6 +6,7 @@ import org.thechance.api_gateway.domain.entity.TokenConfiguration
 import org.thechance.api_gateway.domain.entity.UserTokens
 import org.thechance.api_gateway.domain.gateway.IApiGateway
 import org.thechance.api_gateway.domain.security.ITokenService
+import org.thechance.api_gateway.domain.usecase.util.tryToExecute
 import java.util.*
 
 /**
@@ -13,11 +14,12 @@ import java.util.*
  */
 interface IUserAccountManagementUseCase {
 
-    suspend fun createUser(fullName: String, username: String, password: String, email: String): Boolean
+    suspend fun createUser(fullName: String, username: String, password: String, email: String, locale: Locale): Boolean
     suspend fun loginUser(
         userName: String,
         password: String,
         tokenConfiguration: TokenConfiguration,
+        locale: Locale,
     ): UserTokens
 //    suspend fun getUser(id: String): UserManagementResource
 //    suspend fun securePassword(password: String): SaltedHash
@@ -29,23 +31,30 @@ interface IUserAccountManagementUseCase {
 @Single
 class UserAccountManagementUseCase(
     private val apiGateway: IApiGateway,
-    private val userInfoValidationUseCase: IUserInfoValidationUseCase,
+    private val getLocalizedErrorMessages: IGetLocalizedErrorMessagesUseCase,
     private val tokenManagementService: ITokenService
 ) : IUserAccountManagementUseCase {
-    override suspend fun createUser(fullName: String, username: String, password: String, email: String): Boolean {
-        userInfoValidationUseCase.validateUserInformation(fullName, username, password, email)
-        return apiGateway.createUser(fullName, username, password, email)
+
+    override suspend fun createUser(
+        fullName: String,
+        username: String,
+        password: String,
+        email: String,
+        locale: Locale
+    ): Boolean {
+        return tryToExecute({ getLocalizedErrorMessages.getLocalizedErrors(it, locale) })
+        { apiGateway.createUser(fullName, username, password, email) }
     }
+
 
     override suspend fun loginUser(
         userName: String,
         password: String,
         tokenConfiguration: TokenConfiguration,
+        locale: Locale,
     ): UserTokens {
-        userInfoValidationUseCase.validateLoginInformation(userName, password)
-        if (!apiGateway.loginUser(userName, password)) {
-            throw Exception("Invalid username or password")
-        }
+        tryToExecute({ getLocalizedErrorMessages.getLocalizedErrors(it, locale) })
+        { !apiGateway.loginUser(userName, password) }
         return generateUserTokens(userName, tokenConfiguration)
     }
 

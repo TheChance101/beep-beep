@@ -3,12 +3,14 @@ package org.thechance.service_identity.domain.usecases
 import org.koin.core.annotation.Single
 import org.thechance.service_identity.domain.security.HashingService
 import org.thechance.service_identity.domain.entity.InsufficientFundsException
+import org.thechance.service_identity.domain.entity.InvalidCredentialsException
 import org.thechance.service_identity.domain.entity.User
 import org.thechance.service_identity.domain.entity.UserManagement
 import org.thechance.service_identity.domain.gateway.IDataBaseGateway
 import org.thechance.service_identity.domain.usecases.validation.IUserInfoValidationUseCase
 import org.thechance.service_identity.domain.usecases.validation.IWalletBalanceValidationUseCase
 import org.thechance.service_identity.domain.util.INSUFFICIENT_FUNDS
+import org.thechance.service_identity.domain.util.INVALID_CREDENTIALS
 
 interface IUserAccountManagementUseCase {
 
@@ -70,7 +72,8 @@ class UserAccountManagementUseCase(
 
     override suspend fun login(username: String, password: String): Boolean {
         val saltedHash = dataBaseGateway.getSaltedHash(username)
-        return hashingService.verify(password, saltedHash)
+        return if(hashingService.verify(password, saltedHash)) true
+            else throw InvalidCredentialsException(INVALID_CREDENTIALS)
     }
 
     override suspend fun updateRefreshToken(
