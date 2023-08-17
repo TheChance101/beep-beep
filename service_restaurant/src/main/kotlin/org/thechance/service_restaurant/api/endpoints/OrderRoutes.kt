@@ -9,7 +9,7 @@ import io.ktor.server.websocket.*
 import org.koin.ktor.ext.inject
 import org.thechance.service_restaurant.api.models.RestaurantInfo
 import org.thechance.service_restaurant.api.models.mappers.toDto
-import org.thechance.service_restaurant.api.utils.OrderSocketHandler
+import org.thechance.service_restaurant.api.utils.SocketHandler
 import org.thechance.service_restaurant.domain.usecase.IManageOrderUseCase
 import org.thechance.service_restaurant.domain.utils.OrderStatus
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_REQUEST_PARAMETER
@@ -20,7 +20,7 @@ import kotlin.collections.set
 
 fun Route.orderRoutes() {
     val manageOrder: IManageOrderUseCase by inject()
-    val orderSocketHandler: OrderSocketHandler by inject()
+    val orderSocketHandler: SocketHandler by inject()
 
     route("/order") {
 
@@ -62,7 +62,8 @@ fun Route.orderRoutes() {
             val userId = call.parameters["userId"]?.trim().orEmpty()
 
             if (userId.isEmpty()) {
-                orderSocketHandler.openedRestaurants[restaurantId] = RestaurantInfo(owner = this, mutableListOf())
+                orderSocketHandler.openedRestaurants[restaurantId] =
+                    RestaurantInfo(owner = this, mutableListOf())
                 for (frame in incoming) return@webSocket
 
             } else if (manageOrder.isRestaurantOpened(restaurantId)) {

@@ -71,7 +71,7 @@ class OrderValidationTest {
     }
 
     @Test
-    fun `should should throw MultiErrorException contains INVALID_STATUS when status is Invalid`() {
+    fun `should throw MultiErrorException contains INVALID_STATUS when status is Invalid`() {
         val orderId = "3edf2fc8-6983-484f-a35c-8190f44a08c6"
         val status = OrderStatus.getOrderStatus(10)
 
@@ -84,7 +84,7 @@ class OrderValidationTest {
     }
 
     @Test
-    fun `should do nothing when orderStatus is valid`() {
+    fun `should pass when orderStatus is valid`() {
         val orderId = "3edf2fc8-6983-484f-a35c-8190f44a08c6"
         val status = OrderStatus.PENDING
 

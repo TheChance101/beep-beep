@@ -1,6 +1,8 @@
 package org.thechance.service_restaurant.api.utils
 
-import io.ktor.websocket.*
+import io.ktor.websocket.Frame
+import io.ktor.websocket.readText
+import io.ktor.websocket.send
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -12,10 +14,10 @@ import org.thechance.service_restaurant.api.models.OrderDto
 import org.thechance.service_restaurant.api.models.RestaurantInfo
 import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.domain.usecase.IManageOrderUseCase
-import java.util.*
+import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
-class OrderSocketHandler {
+class SocketHandler {
     val openedRestaurants: ConcurrentHashMap<String, RestaurantInfo> = ConcurrentHashMap()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -31,7 +33,8 @@ class OrderSocketHandler {
                 if (frame is Frame.Text) {
 
                     val order = convertOrderFromTextFrameToOrderDto(frame = frame)
-                    val isOrderInserted: Boolean = insertOrder(order = order, manageOrder = manageOrder)
+                    val isOrderInserted: Boolean =
+                        insertOrder(order = order, manageOrder = manageOrder)
 
                     if (isOrderInserted) {
                         ownerSession?.send(order.toString())
