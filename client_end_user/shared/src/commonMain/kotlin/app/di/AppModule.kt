@@ -25,7 +25,7 @@ object AppModule {
             gatewayModule,
             useCaseModule,
             viewModelModule,
-            dataSourceModule
+            dataSourceModule,
             dataSourceModule
         )
     }
