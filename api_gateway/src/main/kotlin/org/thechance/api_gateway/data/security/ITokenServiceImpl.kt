@@ -3,9 +3,9 @@ package org.thechance.api_gateway.data.security
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import org.koin.core.annotation.Single
-import org.thechance.api_gateway.domain.entity.TokenClaim
-import org.thechance.api_gateway.domain.entity.TokenConfiguration
-import org.thechance.api_gateway.domain.security.ITokenService
+import org.thechance.api_gateway.data.gateway.ITokenService
+import org.thechance.api_gateway.data.model.TokenClaim
+import org.thechance.api_gateway.data.model.TokenConfiguration
 import java.util.*
 
 @Single(binds = [ITokenService::class])
