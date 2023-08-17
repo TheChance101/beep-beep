@@ -3,7 +3,6 @@ package org.thechance.common.ui.composables.table
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -17,19 +16,9 @@ fun BpPager(
     onPageClicked: (Int) -> Unit,
     maxDisplayPages: Int = 6
 ) {
-    val pagerTimesToRepeat = if (maxPages > maxDisplayPages) {
-        maxDisplayPages - 2
-    } else {
-        maxPages - 1
-    }
-
-    val start = if (currentPage == maxPages) {
-        currentPage - 4
-    } else if (currentPage >= (maxDisplayPages - 1)) {
-        currentPage - 3
-    } else {
-        1
-    }
+    val start = calculateStartPage(currentPage, maxPages, maxDisplayPages)
+    val end = calculateEndPage(start, currentPage, maxPages, maxDisplayPages)
+    val showPages = (start..end).toList()
 
     Row(
         modifier = modifier,
@@ -42,48 +31,56 @@ fun BpPager(
             enable = currentPage != 1
         )
 
-        BpToggleableTextButton(
-            "1",
-            onSelectChange = { onPageClicked(1) },
-            selected = currentPage == 1
-        )
-
-        if (currentPage >= (maxDisplayPages - 1)) {
+        showPages.forEachIndexed { index, position ->
             BpToggleableTextButton(
-                "...",
-                onSelectChange = {},
-                selected = false
+                "$position",
+                onSelectChange = { onPageClicked(position) },
+                selected = currentPage == position
             )
+            if (index == showPages.lastIndex) {
+                if (position < maxPages - 1) {
+                    BpToggleableTextButton(
+                        "...",
+                        onSelectChange = {},
+                        selected = false
+                    )
+                }
+                if (position != maxPages) {
+                    BpToggleableTextButton(
+                        "$maxPages",
+                        onSelectChange = { onPageClicked(maxPages) },
+                        selected = currentPage == maxPages
+                    )
+                }
+            }
         }
-
-        repeat(pagerTimesToRepeat) {
-            val position = it + start + 1
-            if (position < maxPages)
-                BpToggleableTextButton(
-                    "$position",
-                    onSelectChange = { onPageClicked(position) },
-                    selected = currentPage == position
-                )
-        }
-
-        if (maxDisplayPages < maxPages && (maxPages - 1) > currentPage) {
-            BpToggleableTextButton(
-                "...",
-                onSelectChange = {},
-                selected = false
-            )
-        }
-        BpToggleableTextButton(
-            "$maxPages",
-            onSelectChange = { onPageClicked(maxPages) },
-            selected = currentPage == maxPages
-        )
-
 
         ArrowIcon(
             painter = painterResource("right_arrow.svg"),
             onClick = { onPageClicked(currentPage + 1) },
             enable = currentPage != maxPages
         )
+    }
+}
+
+private fun calculateStartPage(currentPage: Int, maxPages: Int, maxDisplayPages: Int): Int {
+    return when {
+        maxPages < maxDisplayPages -> 1
+        currentPage >= maxPages - 2 -> maxPages - 4
+        currentPage >= maxDisplayPages - 2 -> currentPage - 2
+        currentPage > maxDisplayPages - 1 -> currentPage - 3
+        else -> 1
+    }
+}
+
+private fun calculateEndPage(
+    start: Int, currentPage: Int, maxPages: Int, maxDisplayPages: Int
+): Int {
+    return if (maxDisplayPages > maxPages) {
+        maxPages
+    } else if (currentPage <= maxPages - 1) {
+        start + 4
+    } else {
+        maxPages
     }
 }

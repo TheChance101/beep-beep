@@ -107,7 +107,7 @@ fun BpTablePreview() {
     var selectedUser by remember { mutableStateOf<String?>(null) }
     var selectedPage by remember { mutableStateOf(1) }
 
-    val pageCount = 12
+    val pageCount = 10
 
     BpTheme(useDarkTheme = false) {
         Column(
