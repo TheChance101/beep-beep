@@ -10,26 +10,27 @@ data class ServerResponse<T>(
 
     companion object {
 
-        fun error(errorMessage: String, code: Int): ServerResponse<String> {
+        fun error(errorMessage: List<String>, code: Int): ServerResponse<String> {
             return ServerResponse(
                 value = "",
                 isSuccess = false,
-                status = ResponseStatus(message = errorMessage, code = code)
+                status = ResponseStatus(errorMessages = errorMessage, code = code)
             )
         }
 
-        fun <T> success(result: T,successMessage: String? = null): ServerResponse<T> {
+        fun <T> success(result: T, successMessage:String?): ServerResponse<T> {
             return ServerResponse(
                 value = result,
                 isSuccess = true,
-                status = ResponseStatus(message = successMessage, code = 200),
+                status = ResponseStatus(successMessage = successMessage, code = 200),
             )
         }
     }
 
     @kotlinx.serialization.Serializable
     data class ResponseStatus(
-        val message: String?,
+        val errorMessages: List<String>? = null,
+        val successMessage: String? = null,
         val code: Int?
     )
 
