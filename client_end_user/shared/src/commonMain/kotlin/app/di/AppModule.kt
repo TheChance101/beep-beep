@@ -25,6 +25,7 @@ object AppModule {
             gatewayModule,
             useCaseModule,
             viewModelModule,
+            dataSourceModule
         )
     }
 
@@ -54,7 +55,7 @@ object AppModule {
     }
 
     val viewModelModule = module {
-        single { HomeViewModel() }
+        factory { HomeViewModel() }
     }
 
 }
