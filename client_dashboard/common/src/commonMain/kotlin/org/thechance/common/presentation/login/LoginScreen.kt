@@ -1,4 +1,4 @@
-package org.thechance.common.ui.login
+package org.thechance.common.presentation.login
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -36,6 +36,9 @@ import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.thechance.common.presentation.composables.Logo
+import org.thechance.common.presentation.main.MainContainer
+import org.thechance.common.presentation.uistate.LoginUiState
 
 
 object LoginScreen : Screen, KoinComponent {
@@ -49,7 +52,7 @@ object LoginScreen : Screen, KoinComponent {
 
         LoginContent(
             state = state,
-            onClickLogin = { },
+            onClickLogin = { navigate.push(MainContainer) },
             onUserNameChanged = screenModel::onUsernameChange,
             onPasswordChanged = screenModel::onPasswordChange,
         )
@@ -87,9 +90,8 @@ private fun LoginContent(
                     )
                     .clip(RoundedCornerShape(Theme.radius.large))
             )
-            Image(
-                painterResource("ic_beepbeep_logo_expanded.svg"),
-                contentDescription = null,
+            Logo(
+                expanded = true,
                 modifier = Modifier.align(Alignment.TopStart).padding(Theme.dimens.space32)
             )
         }
@@ -107,14 +109,14 @@ private fun LoginContent(
                     "Use admin account to login",
                     style = Theme.typography.titleMedium,
                     color = Theme.colors.contentTertiary,
-                    modifier = Modifier.padding(Theme.dimens.space8)
+                    modifier = Modifier.padding(top = Theme.dimens.space8)
                 )
                 BpTextField(
                     onValueChange = onUserNameChanged,
                     text = state.username,
                     label = "Username",
-                    modifier = Modifier.padding(top = Theme.dimens.space16),
-                    hint = "Enter your username"
+                    modifier = Modifier.padding(top = Theme.dimens.space40),
+                    hint = ""
                 )
                 BpTextField(
                     onValueChange = onPasswordChanged,
@@ -122,7 +124,7 @@ private fun LoginContent(
                     label = "Password",
                     keyboardType = KeyboardType.Password,
                     modifier = Modifier.padding(top = Theme.dimens.space16),
-                    hint = "Enter your password"
+                    hint = ""
                 )
                 BpCheckBox(
                     label = "Keep me logged in",

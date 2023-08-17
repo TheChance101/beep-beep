@@ -15,8 +15,9 @@ compose-version = "1.4.3"
 accompanist-version = "0.28.0"
 hilt-version = "2.46.1"
 constraint-version = "1.0.1"
-koin-version = "3.4.3"
 ksp = "1.8.21-1.0.11"
+koin-version = "3.4.3"
+koinKspVersion = "1.2.2"
 #voyager version
 voyager-version = "1.0.0-rc05"
 ktor-version = "2.3.3"
@@ -38,7 +39,6 @@ androidx-ui-text = { group = "androidx.compose.ui", name = "ui-text", version = 
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version = "1.1.1" }
 google-accompanist = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist-version"}
 androidx-constraint = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraint-version"}
-koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin-version"}
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-version"}
 koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin-version"}
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager-version"}
@@ -50,6 +50,11 @@ ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor-ve
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor-version"}
 google-code-gson = { module = "com.google.code.gson:gson", version.ref = "google-gson-version"}
 
+voyager-androidx = { module = "cafe.adriel.voyager:voyager-androidx", version.ref = "voyager-version" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin-version" }
+koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koinKspVersion" }
+koin-ksp = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp" }
+koin-compiler = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koinKspVersion" }
 
 [plugins]
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

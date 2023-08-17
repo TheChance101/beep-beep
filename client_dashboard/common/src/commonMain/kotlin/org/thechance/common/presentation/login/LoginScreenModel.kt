@@ -1,12 +1,13 @@
-package org.thechance.common.ui.login
+package org.thechance.common.presentation.login
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import kotlinx.coroutines.flow.update
-import org.thechance.common.ui.login.LoginUiState
+import org.thechance.common.domain.usecase.GetUserInfoUseCase
+import org.thechance.common.domain.usecase.IGetUserInfoUseCase
+import org.thechance.common.presentation.uistate.LoginUiState
 
 
-class LoginScreenModel : StateScreenModel<LoginUiState>(LoginUiState()) {
-
+class LoginScreenModel() : StateScreenModel<LoginUiState>(LoginUiState()){
 
     fun onPasswordChange(password: String) {
         mutableState.update { it.copy(password = password) }
