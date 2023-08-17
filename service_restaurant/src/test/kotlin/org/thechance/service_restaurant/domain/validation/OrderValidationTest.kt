@@ -70,18 +70,7 @@ class OrderValidationTest {
         assertEquals(true, error.errorCodes.contains(INVALID_ID))
     }
 
-    @Test
-    fun `should throw MultiErrorException contains INVALID_STATUS when status is Invalid`() {
-        val orderId = "3edf2fc8-6983-484f-a35c-8190f44a08c6"
-        val status = OrderStatus.getOrderStatus(9)
 
-        val executable = Executable {
-            orderValidation.validateUpdateOrder(orderId = orderId, status = status)
-        }
-
-        val error = assertThrows(MultiErrorException::class.java, executable)
-        assertEquals(true, error.errorCodes.contains(INVALID_STATUS))
-    }
 
     @Test
     fun `should pass when orderStatus is valid`() {

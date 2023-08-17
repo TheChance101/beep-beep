@@ -58,10 +58,6 @@ class OrderValidationUseCase(
         if (orderId.isEmpty()) {
             validationErrors.add(INVALID_REQUEST_PARAMETER)
         }
-        if (status.statusCode !in 0..4) {
-            println("status code is ${status.statusCode}")
-            validationErrors.add(INVALID_STATUS)
-        }
         if (validationErrors.isNotEmpty()) {
             throw MultiErrorException(validationErrors)
         }
