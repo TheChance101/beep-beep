@@ -66,7 +66,7 @@ fun Route.orderRoutes() {
                     RestaurantInfo(owner = this, mutableListOf())
                 for (frame in incoming) return@webSocket
 
-            } else if (manageOrder.isRestaurantOpened(restaurantId)) {
+            } else if (!manageOrder.isRestaurantOpened(restaurantId)) {
                 socketHandler.openedRestaurants[restaurantId]?.users?.add(mutableMapOf(userId to this))
                 socketHandler.broadcastOrder(
                     receiveChannel = incoming,
