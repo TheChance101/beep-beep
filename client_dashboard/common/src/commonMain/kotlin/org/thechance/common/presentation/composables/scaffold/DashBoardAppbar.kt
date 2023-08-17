@@ -1,6 +1,5 @@
 package org.thechance.common.presentation.composables.scaffold
 
-import org.thechance.common.presentation.composables.DropdownMenuNoPaddingVertical
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -14,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.onClick
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +30,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.thechance.common.presentation.composables.BpDropdownMenu
 import org.thechance.common.presentation.composables.modifier.border
 import org.thechance.common.presentation.composables.modifier.circleLayout
 import org.thechance.common.presentation.composables.modifier.cursorHoverIconHand
@@ -65,7 +67,7 @@ fun DashboardAppbar(
                 }.cursorHoverIconHand()
             ) {
                 Text(
-                    modifier = Modifier.circleLayout().padding(8.dp),
+                    modifier = Modifier.circleLayout().padding(Theme.dimens.space8),
                     style = Theme.typography.titleMedium,
                     text = username.first().uppercase(),
                     color = Color.White
@@ -85,12 +87,12 @@ fun DashboardAppbar(
                 )
             }
             Box(contentAlignment = Alignment.BottomEnd) {
-                DropdownMenuNoPaddingVertical(
+                BpDropdownMenu(
                     expanded = isDropMenuExpanded.value,
                     onDismissRequest = { isDropMenuExpanded.value = false },
-                    offset = DpOffset(0.dp, 24.dp),
-                    modifier = Modifier
-
+                    offset = DpOffset.Zero.copy(y = Theme.dimens.space24),
+                    shape = RoundedCornerShape(Theme.radius.medium)
+                        .copy(topEnd = CornerSize(Theme.radius.small)),
                 ) {
                     DropdownMenuItem(
                         onClick = {

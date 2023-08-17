@@ -11,12 +11,13 @@ import androidx.compose.ui.res.painterResource
 @Composable
 fun Logo(expanded: Boolean, modifier: Modifier = Modifier) {
     Box(modifier) {
-        Crossfade(expanded){targetState ->
+        Crossfade(expanded) { targetState ->
             Image(
-                painterResource(if (targetState) "ic_beepbeep_logo_expanded.svg" else "ic_beepbeep_logo.svg"),
+                painterResource(
+                    if (targetState) "ic_beepbeep_logo_expanded.svg" else "ic_beepbeep_logo.svg"
+                ),
                 contentDescription = null,
                 alignment = Alignment.CenterStart,
-                modifier = Modifier
             )
         }
     }

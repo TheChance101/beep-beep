@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.boundsInParent
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -67,7 +66,6 @@ object MainContainer : Screen, KoinComponent {
                 DashboardSideBar(
                     currentItem = tabNavigator.current.options.index.toInt()
                 ) { sideBarWidth, mainMenuIsExpanded, itemHeight ->
-
                     TabNavigationItem(
                         tab = OverviewTab,
                         selectedIconResource = "ic_overview_fill.svg",
@@ -120,7 +118,6 @@ object MainContainer : Screen, KoinComponent {
 
 }
 
-
 @Composable
 fun ColumnScope.TabNavigationItem(
     tab: Tab,
@@ -134,7 +131,6 @@ fun ColumnScope.TabNavigationItem(
     BpSideBarItem(
         onClick = { tabNavigator.current = tab },
         isSelected = tabNavigator.current == tab,
-        itemWidth = 24.dp,
         label = tab.options.title,
         selectedIconResource = selectedIconResource,
         unSelectedIconResource = unSelectedIconResource,

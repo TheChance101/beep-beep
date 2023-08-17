@@ -1,10 +1,7 @@
 package org.thechance.common.presentation.main
 
 import cafe.adriel.voyager.core.model.StateScreenModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.thechance.common.domain.usecase.IGetUserInfoUseCase
@@ -23,7 +20,7 @@ class MainScreenModel : StateScreenModel<MainUiState>(MainUiState()), KoinCompon
     private fun getUserInfo() {
             val user = getUserInfo.getUserInfo().toUiState()
             mutableState.update { it.copy(username = user.name) }
-            println("User: ${user}")
+            println("User: $user")
     }
 
     fun logout() {

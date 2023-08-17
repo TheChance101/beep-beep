@@ -40,6 +40,7 @@ import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.layout.boundsInParent
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BpToggleButton
@@ -62,8 +63,6 @@ fun DashboardSideBar(
     ) -> Unit
 ) {
     val mainMenuItemHeight = remember { mutableStateOf(0f) }
-    val mainMenuCurrentItem = remember { mutableStateOf(0) }
-    val iconSize by remember { mutableStateOf(24.dp) }
     val mainMenuIsExpanded = remember { mutableStateOf(false) }
     val sideBarWidth = remember { mutableStateOf(0f) }
 
@@ -76,7 +75,7 @@ fun DashboardSideBar(
             ).onGloballyPositioned { sideBarWidth.value = it.boundsInParent().width }
             .background(Theme.colors.background)
             .border(end = BorderStroke(width = 1.dp, color = Theme.colors.divider))
-            .padding(vertical = 40.dp).onPointerEvent(PointerEventType.Enter) {
+            .padding(vertical = Theme.dimens.space40).onPointerEvent(PointerEventType.Enter) {
                 mainMenuIsExpanded.value = true
             }
             .onPointerEvent(PointerEventType.Exit) { mainMenuIsExpanded.value = false },
@@ -84,10 +83,10 @@ fun DashboardSideBar(
         //region logo
         Logo(
             expanded = mainMenuIsExpanded.value,
-            modifier = Modifier.fillMaxWidth().centerItem(
+            modifier = Modifier.centerItem(
                 targetState = mainMenuIsExpanded.value,
                 parentWidth = sideBarWidth.value.pxToDp(),
-                itemWidth = iconSize,
+                itemWidth = 24.dp,
                 tween = tween(600)
             )
         )
@@ -106,7 +105,7 @@ fun DashboardSideBar(
                 Spacer(
                     Modifier.height(mainMenuItemHeight.value.pxToDp())
                         .width(4.dp)
-                        .clip(RoundedCornerShape(8.dp))
+                        .clip(RoundedCornerShape(Theme.radius.medium))
                         .background(Color(0xffF53D47))
                 )
             }
@@ -129,11 +128,11 @@ fun DashboardSideBar(
         ) {
             BpToggleButton(
                 isDark = darkTheme,
-                onToggle = onSwitchTheme::invoke, modifier = Modifier
+                onToggle = onSwitchTheme::invoke,
+                modifier = Modifier
                     .centerItem(
                         targetState = mainMenuIsExpanded.value,
                         parentWidth = sideBarWidth.value.pxToDp(),
-                        itemWidth = 64.dp,
                         tween = tween(600)
                     )
             )
@@ -164,42 +163,39 @@ fun ColumnScope.BpSideBarItem(
     unSelectedIconResource: String,
     mainMenuIsExpanded: Boolean,
     sideBarWidth: Dp,
-    itemWidth: Dp,
     label: String,
     modifier: Modifier = Modifier,
 ) {
+    val iconSize: Dp by remember { mutableStateOf(24.dp) }
     Row(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(iconSize + Theme.dimens.space16),
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.weight(1f).fillMaxWidth().onGloballyPositioned {
-//            mainMenuItemHeight.value = it.boundsInParent().height
-        }.onClick(onClick = onClick).cursorHoverIconHand()
+        modifier = modifier.weight(1f).fillMaxWidth().onClick(onClick = onClick)
+            .cursorHoverIconHand()
     ) {
         Icon(
             painterResource(if (isSelected) selectedIconResource else unSelectedIconResource),
             contentDescription = null,
             tint = if (isSelected) Theme.colors.primary else Theme.colors.contentSecondary,
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(iconSize)
                 .centerItem(
                     targetState = mainMenuIsExpanded,
                     parentWidth = sideBarWidth,
-                    itemWidth = itemWidth,
                     tween = tween(600)
                 )
         )
         AnimatedVisibility(
             visible = mainMenuIsExpanded,
             enter = fadeIn(tween(800)),
-            exit = fadeOut()
+            exit = fadeOut(),
+            modifier = Modifier.padding(end = Theme.dimens.space16)
         ) {
             Text(
                 label,
                 style = Theme.typography.headline,
-                color =
-                if (isSelected) Theme.colors.primary
-                else Theme.colors.contentSecondary,
+                color = if (isSelected) Theme.colors.primary else Theme.colors.contentSecondary,
+                overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
-                modifier = Modifier.padding(start = itemWidth)
             )
         }
     }

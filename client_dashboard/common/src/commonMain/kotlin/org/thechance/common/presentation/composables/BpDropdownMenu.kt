@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -21,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
@@ -37,11 +37,12 @@ import com.beepbeep.designSystem.ui.theme.Theme
 
 
 @Composable
-fun DropdownMenuNoPaddingVertical(
+fun BpDropdownMenu(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
     offset: DpOffset = DpOffset(0.dp, 0.dp),
+    shape:Shape,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val expandedStates = remember { MutableTransitionState(false) }
@@ -65,6 +66,7 @@ fun DropdownMenuNoPaddingVertical(
                 expandedStates = expandedStates,
                 transformOriginState = transformOriginState,
                 modifier = modifier,
+                shape = shape,
                 content = content
             )
         }
@@ -76,6 +78,7 @@ fun DropdownMenuContent(
     expandedStates: MutableTransitionState<Boolean>,
     transformOriginState: MutableState<TransformOrigin>,
     modifier: Modifier = Modifier,
+    shape:Shape,
     content: @Composable ColumnScope.() -> Unit
 ) {
     // Menu open/close animation.
@@ -140,12 +143,7 @@ fun DropdownMenuContent(
         colors = CardDefaults.cardColors(
             containerColor = (Theme.colors.surface),
         ),
-        shape = RoundedCornerShape(
-            topEnd = 4.dp,
-            topStart = 8.dp,
-            bottomEnd = 8.dp,
-            bottomStart = 8.dp
-        )
+        shape = shape
     ) {
         Column(
             modifier = modifier
