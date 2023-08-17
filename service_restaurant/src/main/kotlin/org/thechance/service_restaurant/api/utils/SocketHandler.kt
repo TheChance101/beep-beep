@@ -32,7 +32,7 @@ class SocketHandler {
             for (frame in receiveChannel) {
                 if (frame is Frame.Text) {
 
-                    val order = convertOrderFromTextFrameToOrderDto(frame = frame)
+                    val order = createOrder(frame = frame)
                     val isOrderInserted: Boolean =
                         insertOrder(order = order, manageOrder = manageOrder)
 
@@ -52,10 +52,11 @@ class SocketHandler {
         }
     }
 
-    private fun convertOrderFromTextFrameToOrderDto(frame: Frame.Text): OrderDto {
+    private fun createOrder(frame: Frame.Text): OrderDto {
         val orderJson = frame.readText()
         return Json.decodeFromString<OrderDto>(orderJson).copy(id = UUID.randomUUID().toString())
     }
+
 
     private suspend fun insertOrder(order: OrderDto, manageOrder: IManageOrderUseCase): Boolean {
         return scope.async {
