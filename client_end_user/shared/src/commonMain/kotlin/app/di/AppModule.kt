@@ -26,6 +26,7 @@ object AppModule {
             useCaseModule,
             viewModelModule,
             dataSourceModule
+            dataSourceModule
         )
     }
 
