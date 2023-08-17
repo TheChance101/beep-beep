@@ -4,6 +4,7 @@ import org.koin.core.annotation.Single
 import org.thechance.service_identity.domain.security.HashingService
 import org.thechance.service_identity.domain.entity.InsufficientFundsException
 import org.thechance.service_identity.domain.entity.User
+import org.thechance.service_identity.domain.entity.UserManagement
 import org.thechance.service_identity.domain.gateway.IDataBaseGateway
 import org.thechance.service_identity.domain.usecases.validation.IUserInfoValidationUseCase
 import org.thechance.service_identity.domain.usecases.validation.IWalletBalanceValidationUseCase
@@ -35,7 +36,13 @@ interface IUserAccountManagementUseCase {
 
     suspend fun login(username: String, password: String): Boolean
 
-    suspend fun saveUserTokens(userId: String, accessToken: String, refreshToken: String, expirationDate: Int): Boolean
+    suspend fun updateRefreshToken(userId: String, refreshToken: String, expirationDate: Long): Boolean
+
+    suspend fun getUserByUsername(username: String): UserManagement
+
+    suspend fun validateRefreshToken(refreshToken: String): Boolean
+
+    suspend fun getUserIdByRefreshToken(refreshToken: String): String
 }
 
 @Single
@@ -57,20 +64,22 @@ class UserAccountManagementUseCase(
         return dataBaseGateway.createUser(saltedHash, fullName, username, email)
     }
 
+    override suspend fun getUserByUsername(username: String): UserManagement {
+        return dataBaseGateway.getUserByUsername(username)
+    }
+
     override suspend fun login(username: String, password: String): Boolean {
         val saltedHash = dataBaseGateway.getSaltedHash(username)
         return hashingService.verify(password, saltedHash)
     }
 
-    override suspend fun saveUserTokens(
+    override suspend fun updateRefreshToken(
         userId: String,
-        accessToken: String,
         refreshToken: String,
-        expirationDate: Int
+        expirationDate: Long
     ): Boolean {
-        return dataBaseGateway.saveUserTokens(userId, accessToken, refreshToken, expirationDate)
+        return dataBaseGateway.updateRefreshToken(userId, refreshToken, expirationDate)
     }
-
 
     override suspend fun deleteUser(id: String): Boolean {
         return dataBaseGateway.deleteUser(id)
@@ -106,5 +115,12 @@ class UserAccountManagementUseCase(
         return dataBaseGateway.subtractFromWallet(userId, amount)
     }
 
+    override suspend fun validateRefreshToken(refreshToken: String): Boolean {
+        return dataBaseGateway.validateRefreshToken(refreshToken)
+    }
+
+    override suspend fun getUserIdByRefreshToken(refreshToken: String): String {
+        return dataBaseGateway.getUserIdByRefreshToken(refreshToken)
+    }
 
 }
