@@ -8,8 +8,11 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
+import org.thechance.api_gateway.data.mappers.toDto
 import org.thechance.api_gateway.domain.entity.TokenConfiguration
 import org.thechance.api_gateway.domain.usecase.IUserAccountManagementUseCase
+import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
+import java.util.*
 
 /**
  * Created by Aziza Helmy on 8/14/2023.
@@ -25,11 +28,14 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
         val password = params["password"]?.trim()
         val email = params["email"]?.trim()
 
+        val (language, countryCode) = extractLocalizationHeader()
+
         val result = userAccountManagementUseCase.createUser(
             fullName = fullName.toString(),
             username = username.toString(),
             password = password.toString(),
-            email = email.toString()
+            email = email.toString(),
+            locale = Locale(language, countryCode)
         )
         call.respond(HttpStatusCode.Created, result)
     }
@@ -38,8 +44,17 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
         val params = call.receiveParameters()
         val email = params["username"]?.trim().toString()
         val password = params["password"]?.trim().toString()
-        val token = userAccountManagementUseCase.loginUser(email, password, tokenConfiguration)
-        call.respond(HttpStatusCode.Created, token)
+
+        val (language, countryCode) = extractLocalizationHeader()
+
+        val token = userAccountManagementUseCase.loginUser(
+            email,
+            password,
+            tokenConfiguration,
+            locale = Locale(language, countryCode)
+        )
+
+        call.respond(HttpStatusCode.Created, token.toDto())
     }
 
 

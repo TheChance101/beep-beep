@@ -22,6 +22,7 @@ import org.thechance.service_identity.data.util.isUpdatedSuccessfully
 import org.thechance.service_identity.data.util.paginate
 import org.thechance.service_identity.domain.entity.*
 import org.thechance.service_identity.domain.gateway.IDataBaseGateway
+import org.thechance.service_identity.domain.util.INVALID_CREDENTIALS
 import org.thechance.service_identity.domain.util.NOT_FOUND
 import org.thechance.service_identity.domain.util.USER_ALREADY_EXISTS
 import java.util.*
@@ -360,7 +361,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
     override suspend fun getSaltedHash(username: String): SaltedHash {
         val user = userCollection.findOne(
             UserCollection::username eq username
-        ) ?: throw NotFoundException(NOT_FOUND)
+        ) ?: throw InvalidCredentialsException(INVALID_CREDENTIALS)
         return SaltedHash(user.hashedPassword!!, user.salt!!)
     }
 

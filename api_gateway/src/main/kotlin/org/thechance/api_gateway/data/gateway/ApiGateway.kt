@@ -13,6 +13,7 @@ import org.thechance.api_gateway.data.model.identity.AddressResource
 import org.thechance.api_gateway.data.model.identity.PermissionResource
 import org.thechance.api_gateway.data.model.identity.UserManagementResource
 import org.thechance.api_gateway.data.model.identity.UserResource
+import org.thechance.api_gateway.domain.entity.MultiErrorException
 import org.thechance.api_gateway.domain.entity.UserManagement
 import org.thechance.api_gateway.domain.gateway.IApiGateway
 import org.thechance.api_gateway.util.APIS
@@ -22,38 +23,40 @@ import org.thechance.api_gateway.util.APIS
 class ApiGateway(private val client: HttpClient, private val attributes: Attributes) : IApiGateway {
 
     // region identity
-    override suspend fun createUser( fullName: String,username: String, password: String, email: String): Boolean =
-        tryToExecute<Boolean>(APIS.IDENTITY_API) {
+    override suspend fun createUser(fullName: String, username: String, password: String, email: String): Boolean {
+        return tryToExecute<Boolean>(APIS.IDENTITY_API) {
             submitForm("/user",
                 formParameters = parameters {
                     append("fullName", fullName)
                     append("username", username)
                     append("password", password)
                     append("email", email)
-
                 }
             )
         }
+    }
 
-    override suspend fun loginUser(userName: String, password: String): Boolean =
-        tryToExecute<Boolean>(APIS.IDENTITY_API) {
-            submitForm("user/login",
+    override suspend fun loginUser(userName: String, password: String): Boolean {
+        return tryToExecute<Boolean>(APIS.IDENTITY_API) {
+            submitForm("/user/login",
                 formParameters = parameters {
                     append("username", userName)
                     append("password", password)
                 }
             )
         }
+    }
 
 
-    override suspend fun getUsers(page: Int, limit: Int, searchTerm: String): List<UserManagementResource> =
-        tryToExecute<List<UserManagementResource>>(APIS.IDENTITY_API) {
+    override suspend fun getUsers(page: Int, limit: Int, searchTerm: String): List<UserManagementResource> {
+        return tryToExecute<List<UserManagementResource>>(APIS.IDENTITY_API) {
             get("/users") {
                 parameter("page", page)
                 parameter("limit", limit)
                 parameter("searchTerm", searchTerm)
             }
         }
+    }
 
     override suspend fun getUserByUsername(username: String): UserManagement {
         return tryToExecute<UserManagementResource>(APIS.IDENTITY_API) {
@@ -164,12 +167,13 @@ class ApiGateway(private val client: HttpClient, private val attributes: Attribu
         api: APIS,
         method: HttpClient.() -> HttpResponse
     ): T {
-        try {
-            attributes.put(AttributeKey("API"), api.value)
-            val response = client.method()
+        attributes.put(AttributeKey("API"), api.value)
+        val response = client.method()
+        if (response.status.isSuccess()) {
             return response.body<T>()
-        } catch (e: Throwable) {
-            throw e
+        } else {
+            val errorResponse = response.body<List<Int>>()
+            throw MultiErrorException(errorResponse)
         }
     }
 }
