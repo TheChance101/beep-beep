@@ -46,7 +46,6 @@ voyager-bottomsheet-navigator = { module = "cafe.adriel.voyager:voyager-bottom-s
 voyager-tab-navigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager-version"}
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager-version"}
 voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager-version" }
-voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager-version"}
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor-version"}
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor-version"}
 google-code-gson = { module = "com.google.code.gson:gson", version.ref = "google-gson-version"}
