@@ -20,7 +20,7 @@ import kotlin.collections.set
 
 fun Route.orderRoutes() {
     val manageOrder: IManageOrderUseCase by inject()
-    val orderSocketHandler: SocketHandler by inject()
+    val socketHandler: SocketHandler by inject()
 
     route("/order") {
 
@@ -62,13 +62,13 @@ fun Route.orderRoutes() {
             val userId = call.parameters["userId"]?.trim().orEmpty()
 
             if (userId.isEmpty()) {
-                orderSocketHandler.openedRestaurants[restaurantId] =
+                socketHandler.openedRestaurants[restaurantId] =
                     RestaurantInfo(owner = this, mutableListOf())
                 for (frame in incoming) return@webSocket
 
             } else if (manageOrder.isRestaurantOpened(restaurantId)) {
-                orderSocketHandler.openedRestaurants[restaurantId]?.users?.add(mutableMapOf(userId to this))
-                orderSocketHandler.broadcastOrder(
+                socketHandler.openedRestaurants[restaurantId]?.users?.add(mutableMapOf(userId to this))
+                socketHandler.broadcastOrder(
                     receiveChannel = incoming,
                     restaurantId = restaurantId,
                     manageOrder = manageOrder
