@@ -115,7 +115,7 @@ fun getDummyUsers() = listOf(
     UserRowUIState(
         id = UUID.randomUUID().toString(),
         photoPath = "dummy_img.png",
-        fullName = "Ali Mohammed",
+        fullName = "Ali Mohammed1",
         username = "@Ali_ahmed",
         email = "Aliahmed@gmail.com",
         country = "Egypt",
@@ -130,7 +130,7 @@ fun getDummyUsers() = listOf(
     UserRowUIState(
         id = UUID.randomUUID().toString(),
         photoPath = "dummy_img.png",
-        fullName = "Mohammed Sayed",
+        fullName = "Mohammed Sayed2",
         username = "@Mohammed_sayed",
         email = "Mosayed@gmail.com",
         country = "Egypt",
@@ -141,7 +141,7 @@ fun getDummyUsers() = listOf(
     UserRowUIState(
         id = UUID.randomUUID().toString(),
         photoPath = "dummy_img.png",
-        fullName = "Mohammed Sayed",
+        fullName = "Mohammed Sayed3",
         username = "@Mohammed_sayed",
         email = "Mosayed@gmail.com",
         country = "Egypt",
@@ -153,7 +153,40 @@ fun getDummyUsers() = listOf(
     UserRowUIState(
         id = UUID.randomUUID().toString(),
         photoPath = "dummy_img.png",
-        fullName = "Mohammed Sayed",
+        fullName = "Mohammed Sayed4",
+        username = "@Mohammed_sayed",
+        email = "Mosayed@gmail.com",
+        country = "Egypt",
+        permissions = listOf(
+            UserRowUIState.Permission.END_USER,
+        ),
+    ),
+    UserRowUIState(
+        id = UUID.randomUUID().toString(),
+        photoPath = "dummy_img.png",
+        fullName = "Mohammed Sayed5",
+        username = "@Mohammed_sayed",
+        email = "Mosayed@gmail.com",
+        country = "Egypt",
+        permissions = listOf(
+            UserRowUIState.Permission.END_USER,
+        ),
+    ),
+    UserRowUIState(
+        id = UUID.randomUUID().toString(),
+        photoPath = "dummy_img.png",
+        fullName = "Mohammed Sayed6",
+        username = "@Mohammed_sayed",
+        email = "Mosayed@gmail.com",
+        country = "Egypt",
+        permissions = listOf(
+            UserRowUIState.Permission.END_USER,
+        ),
+    ),
+    UserRowUIState(
+        id = UUID.randomUUID().toString(),
+        photoPath = "dummy_img.png",
+        fullName = "Mohammed Sayed7",
         username = "@Mohammed_sayed",
         email = "Mosayed@gmail.com",
         country = "Egypt",

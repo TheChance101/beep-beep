@@ -1,5 +1,6 @@
 package org.thechance.common.ui.composables.table
 
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -27,13 +28,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BpTheme
 import com.beepbeep.designSystem.ui.theme.Theme
+import kotlin.math.roundToInt
 
 /**
  * @param rowsCount number of rows in the table without header row
@@ -42,14 +43,11 @@ import com.beepbeep.designSystem.ui.theme.Theme
 @Composable
 fun <T> BpTable(
     data: List<T>,
-    headers: List<String>,
+    headers: List<Header>,
     modifier: Modifier = Modifier,
     key: ((item: T) -> Any)? = null,
     rowsCount: Int = 9,
     offset: Int = 0,
-    firstColumnWeight: Float = 1f,
-    lastColumnWeight: Float = 1f,
-    otherColumnsWeight: Float = 3f,
     shape: Shape = RoundedCornerShape(Theme.radius.medium),
     headerTextStyle: TextStyle = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
     rowPadding: PaddingValues = PaddingValues(16.dp),
@@ -58,7 +56,7 @@ fun <T> BpTable(
     borderColor: Color = Theme.colors.contentBorder,
     headerColor: Color = Theme.colors.background,
     rowsColor: Color = Theme.colors.surface,
-    rowContent: @Composable() (RowScope.(T) -> Unit),
+    rowContent: @Composable RowScope.(T) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier.clip(shape = shape).border(border, borderColor, shape),
@@ -69,19 +67,13 @@ fun <T> BpTable(
                     .heightIn(max = maxHeight),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                headers.forEachIndexed { index, header ->
+                headers.forEach { header ->
                     Text(
-                        header,
+                        header.text,
                         style = headerTextStyle,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(
-                            when (index) {
-                                0 -> firstColumnWeight
-                                headers.size - 1 -> lastColumnWeight
-                                else -> otherColumnsWeight
-                            }
-                        )
+                        modifier = Modifier.weight(header.weight)
                     )
                 }
             }
@@ -101,37 +93,37 @@ fun <T> BpTable(
     }
 }
 
+data class Header(val text: String, val weight: Float = 1f)
 
+@Preview
 @Composable
 fun BpTablePreview() {
     var selectedUser by remember { mutableStateOf<String?>(null) }
     var selectedPage by remember { mutableStateOf(1) }
-
-    val pageCount = 10
+    val pageCount = 2
 
     BpTheme(useDarkTheme = false) {
         Column(
-            Modifier.fillMaxSize().padding(40.dp),
+            Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
         ) {
             val headers = listOf(
-                "No.",
-                "Users",
-                "Username",
-                "Email",
-                "Country",
-                "Permission",
-                "",
+                Header("No.", 1f),
+                Header("Users", 3f),
+                Header("Username", 3f),
+                Header("Email", 3f),
+                Header("Country", 3f),
+                Header("Permission", 3f),
+                Header("", 1f),
             )
             val users = getDummyUsers()
-            println("\n\n ***** ${users.size}")
 
             BpTable(
                 data = users,
                 key = { it.id },
                 headers = headers,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(0.9f),
                 rowsCount = pageCount,
                 offset = selectedPage - 1,
                 rowContent = { user ->
@@ -144,29 +136,21 @@ fun BpTablePreview() {
             )
 
             Row(
-                modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8),
             ) {
-                TotalItemsIndicator(
-                    numberItemInPage = 50,
-                    totalItems = 190,
-                    itemType = "user",
-                    onItemPerPageChange = {}
-                )
-
-                BpPager(
-                    maxPages = pageCount,
-                    currentPage = selectedPage,
-                    onPageClicked = { selectedPage = it },
-                )
+                val size = (users.size / pageCount.toDouble()).roundToInt()
+                val expanded = size > 7
+                repeat(if (expanded) 7 else size) {
+                    val position = 1 + it
+                    BpToggleableTextButton(
+                        "$position",
+                        onSelectChange = { selectedPage = position },
+                        selected = selectedPage == position
+                    )
+                }
             }
-
         }
     }
 }
-
-
-
-
 
