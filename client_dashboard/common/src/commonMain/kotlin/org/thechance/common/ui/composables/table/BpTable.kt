@@ -148,7 +148,12 @@ fun BpTablePreview() {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                TotalItemsIndicator(numberItemInPage = 9, totalItems = 190)
+                TotalItemsIndicator(
+                    numberItemInPage = 50,
+                    totalItems = 190,
+                    itemType = "user",
+                    onItemPerPageChange = {}
+                )
 
                 BpPager(
                     maxPages = pageCount,
