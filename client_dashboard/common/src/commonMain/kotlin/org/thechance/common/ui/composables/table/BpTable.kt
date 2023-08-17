@@ -43,14 +43,11 @@ import kotlin.math.roundToInt
 @Composable
 fun <T> BpTable(
     data: List<T>,
-    headers: List<String>,
+    headers: List<Header>,
     modifier: Modifier = Modifier,
     key: ((item: T) -> Any)? = null,
     rowsCount: Int = 9,
     offset: Int = 0,
-    firstColumnWeight: Float = 1f,
-    lastColumnWeight: Float = 1f,
-    otherColumnsWeight: Float = 3f,
     shape: Shape = RoundedCornerShape(Theme.radius.medium),
     headerTextStyle: TextStyle = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
     rowPadding: PaddingValues = PaddingValues(16.dp),
@@ -59,7 +56,7 @@ fun <T> BpTable(
     borderColor: Color = Theme.colors.contentBorder,
     headerColor: Color = Theme.colors.background,
     rowsColor: Color = Theme.colors.surface,
-    rowContent: @Composable() (RowScope.(T) -> Unit),
+    rowContent: @Composable RowScope.(T) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier.clip(shape = shape).border(border, borderColor, shape),
@@ -70,26 +67,21 @@ fun <T> BpTable(
                     .heightIn(max = maxHeight),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                headers.forEachIndexed { index, header ->
+                headers.forEach { header ->
                     Text(
-                        header,
+                        header.text,
                         style = headerTextStyle,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(
-                            when (index) {
-                                0 -> firstColumnWeight
-                                headers.size - 1 -> lastColumnWeight
-                                else -> otherColumnsWeight
-                            }
-                        )
+                        modifier = Modifier.weight(header.weight)
                     )
                 }
             }
             Divider(Modifier.fillMaxWidth(), thickness = border, color = borderColor)
         }
 
-        val paginatedData = data.filterIndexed { index, _ -> index in (offset * rowsCount) until (offset * rowsCount) + rowsCount }
+        val paginatedData =
+            data.filterIndexed { index, _ -> index in (offset * rowsCount) until (offset * rowsCount) + rowsCount }
         items(paginatedData, key = key) {
             Row(
                 Modifier.fillMaxWidth().background(rowsColor).padding(rowPadding)
@@ -100,6 +92,8 @@ fun <T> BpTable(
         }
     }
 }
+
+data class Header(val text: String, val weight: Float = 1f)
 
 @Preview
 @Composable
@@ -115,16 +109,15 @@ fun BpTablePreview() {
             verticalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
         ) {
             val headers = listOf(
-                "No.",
-                "Users",
-                "Username",
-                "Email",
-                "Country",
-                "Permission",
-                "",
+                Header("No.", 1f),
+                Header("Users", 3f),
+                Header("Username", 3f),
+                Header("Email", 3f),
+                Header("Country", 3f),
+                Header("Permission", 3f),
+                Header("", 1f),
             )
             val users = getDummyUsers()
-            println("\n\n ***** ${users.size}")
 
             BpTable(
                 data = users,
