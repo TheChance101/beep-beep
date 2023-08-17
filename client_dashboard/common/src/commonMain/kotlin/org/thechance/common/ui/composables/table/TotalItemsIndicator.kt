@@ -47,7 +47,7 @@ fun TotalItemsIndicator(
                 ).padding(8.dp).width(40.dp),
             value = "100",
             onValueChange = {},
-            textStyle = TextStyle().copy(textAlign = TextAlign.Center)
+            textStyle = TextStyle(textAlign = TextAlign.Center)
         )
 
 
