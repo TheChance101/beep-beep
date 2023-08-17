@@ -1,4 +1,4 @@
-package org.thechance.api_gateway.domain.gateway
+package org.thechance.api_gateway.data.gateway
 
 import java.util.*
 
