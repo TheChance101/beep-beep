@@ -65,11 +65,10 @@ interface IDataBaseGateway {
 
     suspend fun getSaltedHash(username: String): SaltedHash
 
-    suspend fun saveUserTokens(
+    suspend fun updateRefreshToken(
         userId: String,
-        accessToken: String,
         refreshToken: String,
-        expirationDate: Int
+        expirationDate: Long
     ): Boolean
 
     // endregion
@@ -88,5 +87,11 @@ interface IDataBaseGateway {
     suspend fun getWalletBalance(userId: String): Double
 
     suspend fun addToWallet(userId: String, amount: Double): Boolean
+
+    suspend fun getUserByUsername(username: String): UserManagement
+
+    suspend fun validateRefreshToken(refreshToken: String): Boolean
+
+    suspend fun getUserIdByRefreshToken(refreshToken: String): String
 
 }

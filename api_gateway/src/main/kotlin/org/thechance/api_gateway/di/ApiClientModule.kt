@@ -5,12 +5,13 @@ import io.ktor.client.engine.okhttp.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
+import io.ktor.client.request.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.util.*
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
-import org.thechance.api_gateway.data.model.APIS
+import org.thechance.api_gateway.util.APIS
 
 
 @Module
@@ -34,9 +35,12 @@ class ApiClientModule {
             }
 
             defaultRequest {
+
+                header("Content-Type", "application/json")
+
                 when (clientAttributes[AttributeKey<String>("API")]) {
                     APIS.IDENTITY_API.value -> {
-                        url("http://127.0.0.1:8080")
+                        url("http://127.0.0.5:8088")
                     }
 
                     APIS.RESTAURANT_API.value -> {

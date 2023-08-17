@@ -6,7 +6,7 @@ import org.thechance.service_identity.endpoints.model.PermissionDto
 
 fun PermissionCollection.toEntity(): Permission {
     return Permission(
-        id = _id,
+        id = id,
         permission = permission,
     )
 }
@@ -29,7 +29,7 @@ fun PermissionDto.toEntity(): Permission {
 
 fun Permission.toCollection(id: Int): PermissionCollection {
     return PermissionCollection(
-        _id = id,
+        id = id,
         permission = permission
     )
 }

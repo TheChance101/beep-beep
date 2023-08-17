@@ -12,11 +12,9 @@ data class WalletCollection(
     @BsonId
     @Contextual
     val id: UUID = UUID.randomUUID(),
-    @SerialName("user_id")
-    val userId: String,
-    @SerialName("wallet_balance")
+    @Contextual
+    val userId: UUID,
     val walletBalance: Double = 0.0,
-    @SerialName("is_deleted")
     val isDeleted: Boolean = false
 )
 

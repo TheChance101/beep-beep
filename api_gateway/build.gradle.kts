@@ -6,6 +6,7 @@ val h2_version: String by project
 val koin_version: String by project
 val koin_ktor: String by project
 val koin_ksp_version: String by project
+val status_pages: String by project
 
 plugins {
     kotlin("jvm") version "1.8.10"
@@ -47,6 +48,7 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+    implementation("io.ktor:ktor-server-config-yaml:$ktor_version")
     // koin
     implementation("io.insert-koin:koin-ktor:$koin_ktor")
     implementation("io.insert-koin:koin-core:$koin_version")
@@ -63,6 +65,8 @@ dependencies {
     implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
     implementation("io.ktor:ktor-client-logging-jvm:1.5.0")
     implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.11")
+    // Status pages error handler
+    implementation("io.ktor:ktor-server-status-pages-jvm:$status_pages")
 
 }
 
