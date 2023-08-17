@@ -24,6 +24,7 @@ fun RatingBar(
     iconsPadding: Dp = 0.dp,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
 ) {
+    if (rating < 1) throw Exception("rating is Invalid")
     Row(
         modifier = modifier,
         horizontalArrangement = horizontalArrangement

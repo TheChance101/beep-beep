@@ -20,13 +20,13 @@ import kotlin.math.floor
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun EditableRatingBar(
-    rating: Double,
     count: Int,
     selectedIcon: Painter,
     halfSelectedIcon: Painter,
     notSelectedIcon: Painter,
     onClick: (Double) -> Unit,
     modifier: Modifier = Modifier,
+    rating: Double = 0.0,
     iconsSize: Dp = 24.dp,
     iconsPadding: Dp = 0.dp,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
@@ -34,7 +34,7 @@ fun EditableRatingBar(
     val editableRating = remember { mutableStateOf(rating) }
     val mousePosition = remember { mutableStateOf(0.0) }
 
-    if (editableRating.value > count) throw Exception("rating is bigger than count")
+    if (rating > count || rating < 0.0) throw Exception("rating is Invalid")
 
     Row(modifier = modifier
         .onPointerEvent(PointerEventType.Exit) { editableRating.value = rating }
@@ -55,8 +55,6 @@ fun EditableRatingBar(
                 modifier = Modifier.padding(iconsPadding).size(iconsSize)
                     .onPointerEvent(PointerEventType.Move) {
                         mousePosition.value = currentEvent.changes[0].position.x.toDouble()
-                    }
-                    .onPointerEvent(PointerEventType.Move) {
                         editableRating.value = when {
 
                             (mousePosition.value / size.width) >= 0.9 -> iconPosition + 1.0
