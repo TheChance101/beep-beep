@@ -6,7 +6,4 @@ import kotlinx.serialization.Serializable
 data class NotificationDto(
     val title: String,
     val body: String,
-    val date: Long,
-    val userId : String,
-    val isRead : Boolean
 )

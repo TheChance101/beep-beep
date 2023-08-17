@@ -35,3 +35,5 @@ out/
 
 ### VS Code ###
 .vscode/
+/src/main/resources/beep-beep-12cae-firebase-adminsdk-hfmvb-ec3fac5f3d.json
+/src/main/resources/ktor_firebase_auth.json

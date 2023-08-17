@@ -104,7 +104,7 @@ fun BpTablePreview() {
 
     BpTheme(useDarkTheme = false) {
         Column(
-            Modifier.fillMaxSize(),
+            Modifier.fillMaxSize().padding(40.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
         ) {
@@ -123,7 +123,7 @@ fun BpTablePreview() {
                 data = users,
                 key = { it.id },
                 headers = headers,
-                modifier = Modifier.fillMaxWidth(0.9f),
+                modifier = Modifier.fillMaxWidth(),
                 rowsCount = pageCount,
                 offset = selectedPage - 1,
                 rowContent = { user ->
@@ -135,20 +135,24 @@ fun BpTablePreview() {
                 },
             )
 
+
             Row(
+                modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                val size = (users.size / pageCount.toDouble()).roundToInt()
-                val expanded = size > 7
-                repeat(if (expanded) 7 else size) {
-                    val position = 1 + it
-                    BpToggleableTextButton(
-                        "$position",
-                        onSelectChange = { selectedPage = position },
-                        selected = selectedPage == position
-                    )
-                }
+                TotalItemsIndicator(
+                    numberItemInPage = 50,
+                    totalItems = 190,
+                    itemType = "user",
+                    onItemPerPageChange = {}
+                )
+
+                BpPager(
+                    maxPages = pageCount,
+                    currentPage = selectedPage,
+                    onPageClicked = { selectedPage = it },
+                )
             }
         }
     }

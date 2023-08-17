@@ -16,5 +16,4 @@ fun Application.module() {
     configureMonitoring()
     configureRouting()
     configureStatusPages()
-    configureValidation()
 }
