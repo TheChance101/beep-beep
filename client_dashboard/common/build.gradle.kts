@@ -2,18 +2,19 @@
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.compose)
+    id("org.openjfx.javafxplugin") version "0.0.14"
 }
 
 group = "org.thechance"
 version = "1.0-SNAPSHOT"
 
 kotlin {
-    android()
     jvm("desktop") {
+        withJava()
         jvmToolchain(libs.versions.jvmToolchain.get().toInt())
     }
+
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -21,25 +22,20 @@ kotlin {
                 api(libs.compose.foundation)
                 api(libs.compose.material3)
                 implementation(project(":design_system:shared"))
+                implementation(compose.desktop.currentOs)
+                implementation ("com.google.accompanist:accompanist-webview:0.30.1")
             }
         }
         val desktopMain by getting {
             dependencies {
                 api(libs.compose.preview)
             }
+
         }
     }
 }
 
-android {
-    compileSdkVersion(libs.versions.compileSdk.get().toInt())
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-    defaultConfig {
-        minSdkVersion(libs.versions.minSdk.get().toInt())
-        targetSdkVersion(libs.versions.targetSdk.get().toInt())
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
+javafx {
+    version = "17"
+    modules = listOf("javafx.controls", "javafx.swing", "javafx.web", "javafx.graphics")
 }
