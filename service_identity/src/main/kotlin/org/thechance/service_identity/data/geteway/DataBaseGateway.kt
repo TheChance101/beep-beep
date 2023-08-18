@@ -5,7 +5,6 @@ import com.mongodb.client.model.Filters
 import com.mongodb.client.model.IndexOptions
 import com.mongodb.client.model.Indexes
 import com.mongodb.client.model.UpdateOptions
-import io.ktor.server.plugins.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -272,10 +271,15 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
         } ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
-    override suspend fun getUserIdByRefreshToken(refreshToken: String): String {
-        return tokensCollection.findOne(
+    override suspend fun getUserByRefreshToken(refreshToken: String): UserManagement {
+        val userId = tokensCollection.findOne(
             RefreshTokensCollection::refreshToken eq refreshToken
         )?.userId?.toString() ?: throw ResourceNotFoundException(NOT_FOUND)
+
+        return userCollection.findOne(
+            UserCollection::id eq UUID.fromString(userId),
+            UserCollection::isDeleted eq false
+        )?.toManagedEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
     override suspend fun updateRefreshToken(userId: String, refreshToken: String, expirationDate: Long): Boolean {
