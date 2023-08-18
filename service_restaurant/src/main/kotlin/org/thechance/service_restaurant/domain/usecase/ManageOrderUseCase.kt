@@ -1,6 +1,5 @@
 package org.thechance.service_restaurant.domain.usecase
 
-import org.thechance.service_restaurant.data.gateway.RestaurantGateway
 import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
@@ -10,9 +9,6 @@ import org.thechance.service_restaurant.domain.utils.OrderStatus
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
 
 interface IManageOrderUseCase {
     suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order>
