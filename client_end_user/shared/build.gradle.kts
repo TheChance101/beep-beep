@@ -49,6 +49,7 @@ kotlin {
                 implementation(libs.ktor.client.cio)
                 implementation(libs.google.code.gson)
                 implementation(project(":design_system:shared"))
+                implementation(libs.kotlin.serialization)
             }
         }
         val androidMain by getting {
