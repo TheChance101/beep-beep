@@ -9,6 +9,10 @@ import org.thechance.service_restaurant.api.models.OrderDto
 import org.thechance.service_restaurant.api.models.RestaurantInfo
 import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.domain.usecase.IManageOrderUseCase
+import org.thechance.service_restaurant.domain.utils.exceptions.INSERT_ORDER_ERROR
+import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_RECEIVED_FRAMES
+import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
+import org.thechance.service_restaurant.domain.utils.exceptions.RESTAURANT_CLOSED
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
@@ -17,51 +21,52 @@ class SocketHandler {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     suspend fun broadcastOrder(
-        receiveChannel: ReceiveChannel<Frame>,
-        userId: String,
-        restaurantId: String,
-        manageOrder: IManageOrderUseCase
+        receiveChannel: ReceiveChannel<Frame>, userId: String, restaurantId: String, manageOrder: IManageOrderUseCase
     ) {
         val ownerSession = openedRestaurants[restaurantId]?.owner
         val userSession = openedRestaurants[restaurantId]?.users?.firstOrNull { it.containsKey(userId) }?.get(userId)
 
         try {
-            receiveChannel.consumeEach {
-                if (it is Frame.Text) {
+            receiveChannel.consumeEach { frame ->
 
-                    val order = createOrder(frame = it)
+                if (frame is Frame.Text) {
+
                     val isOpen = checkIfRestaurantOpened(restaurantId, manageOrder).await()
-                    println("----mmm--- $isOpen")
-                    val isOrderInserted: Boolean = insertOrder(order = order, manageOrder = manageOrder).await()
 
                     if (isOpen) {
-                        if (isOrderInserted) ownerSession?.send(order.toString())
+                        val order = createOrder(frame = frame)
+                        val isOrderInserted: Boolean = insertOrder(order = order, manageOrder = manageOrder).await()
+
+                        if (isOrderInserted) {
+                            ownerSession?.send(order.toString())
+                            userSession?.close()
+                        }
+                        else throw MultiErrorException(listOf(INSERT_ORDER_ERROR))
+
                     } else {
-                        userSession?.send("Closed")
-                        userSession?.close()
+                        throw MultiErrorException(listOf(RESTAURANT_CLOSED))
                     }
+
                 } else {
-                    userSession?.send("some thing error when u send an object")
-                    userSession?.close()
+                    throw MultiErrorException(listOf(INVALID_RECEIVED_FRAMES))
                 }
             }
 
-        } catch (e: Exception) {
-            userSession?.send("some thing error ${e.message}")
+        } catch (e: MultiErrorException) {
+            userSession?.send(e.errorCodes.toString())
             userSession?.close()
-        } finally {
         }
     }
 
     private fun createOrder(frame: Frame.Text): OrderDto {
         val orderJson = frame.readText()
-        return Json.decodeFromString<OrderDto>(orderJson)
+        return Json.decodeFromString<OrderDto>(orderJson).copy(id = UUID.randomUUID().toString())
     }
 
 
     private suspend fun insertOrder(order: OrderDto, manageOrder: IManageOrderUseCase): Deferred<Boolean> {
         return scope.async {
-            manageOrder.addOrder(order = order.copy(id = UUID.randomUUID().toString()).toEntity())
+            manageOrder.addOrder(order = order.toEntity())
         }
     }
 

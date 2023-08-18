@@ -4,7 +4,6 @@ import org.thechance.service_restaurant.domain.utils.IValidation
 import org.thechance.service_restaurant.domain.utils.OrderStatus
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_REQUEST_PARAMETER
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_STATUS
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_TIME
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 
