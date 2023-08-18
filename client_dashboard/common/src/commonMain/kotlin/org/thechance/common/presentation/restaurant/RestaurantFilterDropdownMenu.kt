@@ -22,20 +22,20 @@ import org.thechance.common.presentation.composables.BpDropdownMenu
 import org.thechance.common.presentation.composables.EditableRatingBar
 
 @Composable
-fun RestaurantFilterDropDownMenu(
-    expanded: Boolean,
-    rating: Double,
-    priceLevel: Int,
+fun RestaurantFilterDropdownMenu(
     onClickRating: (Double) -> Unit,
     onClickPrice: (Int) -> Unit,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
+    expanded: Boolean,
+    rating: Double,
+    priceLevel: Int
 ) {
     BpDropdownMenu(
         onDismissRequest = onDismissRequest,
         expanded = expanded,
         shape = RoundedCornerShape(Theme.dimens.space8)
     ) {
-        RestaurantFilterDropDownMenuContent(
+        RestaurantFilterDropdownMenuContent(
             rating = rating,
             priceLevel = priceLevel,
             onClickRating = onClickRating,
@@ -46,11 +46,11 @@ fun RestaurantFilterDropDownMenu(
 
 
 @Composable
-private fun RestaurantFilterDropDownMenuContent(
-    rating: Double,
-    priceLevel: Int,
+private fun RestaurantFilterDropdownMenuContent(
     onClickRating: (Double) -> Unit,
-    onClickPrice: (Int) -> Unit
+    onClickPrice: (Int) -> Unit,
+    rating: Double,
+    priceLevel: Int
 ) {
     Column(
         modifier = Modifier.background(
@@ -73,9 +73,15 @@ private fun RestaurantFilterDropDownMenuContent(
         EditableRatingBar(
             rating = rating,
             count = 5,
-            selectedIcon = painterResource(if (isSystemInDarkTheme()) "ic_filled_star_dark.svg" else "ic_filled_star_light.svg"),
-            halfSelectedIcon = painterResource(if (isSystemInDarkTheme()) "ic_half_filled_star_dark.svg" else "ic_half_filled_star_light.svg"),
-            notSelectedIcon = painterResource(if (isSystemInDarkTheme()) "ic_star_dark.svg" else "ic_star_light.svg"),
+            selectedIcon = painterResource(
+                if (isSystemInDarkTheme()) "ic_filled_star_dark.svg" else "ic_filled_star_light.svg"
+            ),
+            halfSelectedIcon = painterResource(
+                if (isSystemInDarkTheme()) "ic_half_filled_star_dark.svg" else "ic_half_filled_star_light.svg"
+            ),
+            notSelectedIcon = painterResource(
+                if (isSystemInDarkTheme()) "ic_star_dark.svg" else "ic_star_light.svg"
+            ),
             iconsSize = Theme.dimens.space24,
             iconsPadding = PaddingValues(horizontal = Theme.dimens.space8),
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16)
@@ -111,7 +117,8 @@ private fun RestaurantFilterDropDownMenuContent(
             BpTextButton(
                 text = "Cancel",
                 onClick = {},
-                modifier = Modifier.padding(end = Theme.dimens.space16).height(Theme.dimens.space32).weight(1f)
+                modifier = Modifier.padding(end = Theme.dimens.space16).height(Theme.dimens.space32)
+                    .weight(1f)
             )
             BpOutlinedButton(
                 title = "Save",
