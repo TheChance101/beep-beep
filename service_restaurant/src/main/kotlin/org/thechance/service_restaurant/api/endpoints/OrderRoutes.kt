@@ -6,18 +6,32 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
+import io.ktor.websocket.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import org.koin.ktor.ext.inject
+import org.thechance.service_restaurant.api.models.OrderDto
 import org.thechance.service_restaurant.api.models.RestaurantInfo
 import org.thechance.service_restaurant.api.models.mappers.toDto
+import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.SocketHandler
+import org.thechance.service_restaurant.api.utils.closeSession
 import org.thechance.service_restaurant.domain.usecase.IManageOrderUseCase
 import org.thechance.service_restaurant.domain.utils.OrderStatus
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_REQUEST_PARAMETER
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
+import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.set
 
-
+private val openedRestaurants: ConcurrentHashMap<String, RestaurantInfo> = ConcurrentHashMap()
+private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 fun Route.orderRoutes() {
     val manageOrder: IManageOrderUseCase by inject()
     val socketHandler: SocketHandler by inject()
@@ -62,11 +76,10 @@ fun Route.orderRoutes() {
             val userId = call.parameters["userId"]?.trim().orEmpty()
 
             if (userId.isEmpty()) {
-                socketHandler.openedRestaurants[restaurantId] =
-                    RestaurantInfo(owner = this, mutableListOf())
+                socketHandler.openedRestaurants[restaurantId] = RestaurantInfo(owner = this, mutableListOf())
                 for (frame in incoming) return@webSocket
 
-            } else if (!manageOrder.isRestaurantOpened(restaurantId)) {
+            } else if (manageOrder.isRestaurantOpened(restaurantId)) {
                 socketHandler.openedRestaurants[restaurantId]?.users?.add(mutableMapOf(userId to this))
                 socketHandler.broadcastOrder(
                     receiveChannel = incoming,
@@ -77,5 +90,48 @@ fun Route.orderRoutes() {
         }
 
     }
+}
+
+suspend fun broadcastOrder(
+    receiveChannel: ReceiveChannel<Frame>,
+    restaurantId: String,
+    manageOrder: IManageOrderUseCase
+) {
+    val ownerSession = openedRestaurants[restaurantId]?.owner
+
+    try {
+        for (frame in receiveChannel) {
+            if (frame is Frame.Text) {
+
+                val order = createOrder(frame = frame)
+                val isOrderInserted: Boolean =
+                    insertOrder(order = order, manageOrder = manageOrder)
+
+                if (isOrderInserted) {
+                    ownerSession?.send(order.toString())
+                }
+            }
+        }
+
+    } catch (e: Exception) {
+        ownerSession.closeSession(e)
+        ownerSession?.send(Frame.Text("An error occurred: ${e.message}"))
+
+    } finally {
+        ownerSession.closeSession()
+        openedRestaurants.remove(restaurantId)
+    }
+}
+
+private fun createOrder(frame: Frame.Text): OrderDto {
+    val orderJson = frame.readText()
+    return Json.decodeFromString<OrderDto>(orderJson).copy(id = UUID.randomUUID().toString())
+}
+
+
+private suspend fun insertOrder(order: OrderDto, manageOrder: IManageOrderUseCase): Boolean {
+    return scope.async {
+        manageOrder.addOrder(order = order.toEntity())
+    }.await()
 }
 

@@ -71,7 +71,6 @@ class OrderValidationTest {
     }
 
 
-
     @Test
     fun `should pass when orderStatus is valid`() {
         val orderId = "3edf2fc8-6983-484f-a35c-8190f44a08c6"
@@ -152,6 +151,7 @@ class OrderValidationTest {
         val error = assertThrows(MultiErrorException::class.java, executable)
         assertEquals(true, error.errorCodes.contains(INVALID_TIME))
     }
+
     @Test
     fun `should throw MultiErrorException contains INVALID_TIME when openTime or closeTime is invalid`() {
         val openTime = "88888"
@@ -167,11 +167,26 @@ class OrderValidationTest {
         val error = assertThrows(MultiErrorException::class.java, executable)
         assertEquals(true, error.errorCodes.contains(INVALID_TIME))
     }
+
     @Test
-    fun `should return true when restaurant is open`() {
+    fun `should return true when currentTime is between open and closed time`() {
+        // given opening and closing time
         val openTime = "08:00"
         val closeTime = "23:00"
+        // when we pass opening and closing time to the function and the current time is between this time
         val result = orderValidation.isRestaurantOpen(openTime = openTime, closeTime = closeTime)
-        assertEquals(true, result)
+        // then it should return true
+        assertTrue(result)
+    }
+
+    @Test
+    fun `should return false when current time is out of open and closed time`() {
+        // given opening and closing time
+        val openTime = "09:00"
+        val closeTime = "12:00"
+        // when we pass opening and closing time to the function and the current time is not between this time
+        val result = orderValidation.isRestaurantOpen(openTime = openTime, closeTime = closeTime)
+        // then it should return false
+        assertFalse(result)
     }
 }
