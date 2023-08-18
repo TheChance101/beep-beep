@@ -64,6 +64,7 @@ fun RowScope.UserRow(
         Image(painter = painterResource(user.photoPath), contentDescription = null)
         Text(
             user.fullName,
+            style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
             modifier = Modifier.padding(start = 16.dp),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
@@ -72,18 +73,21 @@ fun RowScope.UserRow(
 
     Text(
         user.username,
+        style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
         overflow = TextOverflow.Ellipsis,
         modifier = Modifier.weight(otherColumnsWeight),
         maxLines = 1,
     )
     Text(
         user.email,
+        style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
         overflow = TextOverflow.Ellipsis,
         modifier = Modifier.weight(otherColumnsWeight),
         maxLines = 1,
     )
     Text(
         user.country,
+        style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
         overflow = TextOverflow.Ellipsis,
         modifier = Modifier.weight(otherColumnsWeight),
         maxLines = 1,

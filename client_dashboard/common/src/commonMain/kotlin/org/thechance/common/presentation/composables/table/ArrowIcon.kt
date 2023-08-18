@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
+import com.beepbeep.designSystem.ui.theme.Theme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -27,9 +28,9 @@ fun ArrowIcon(
             }
         },
         tint = if (!enable) {
-            Color.Gray
+            Theme.colors.contentTertiary
         } else {
-            Color.Black
+            Theme.colors.onPrimary
         }
     )
 }

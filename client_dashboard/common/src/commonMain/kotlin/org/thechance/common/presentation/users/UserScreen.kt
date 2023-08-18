@@ -49,6 +49,7 @@ object UserScreen : Screen, KoinComponent {
         //This need to change to get it from state
         var selectedUser by remember { mutableStateOf<String?>(null) }
         var selectedPage by remember { mutableStateOf(1) }
+        var numberItemInPage by remember { mutableStateOf(10) }
         val pageCount = 2
         ////////
 
@@ -91,10 +92,10 @@ object UserScreen : Screen, KoinComponent {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 TotalItemsIndicator(
-                    numberItemInPage = 50,
+                    numberItemInPage = numberItemInPage,
                     totalItems = 190,
                     itemType = "user",
-                    onItemPerPageChange = {}
+                    onItemPerPageChange = { numberItemInPage = it.toIntOrNull() ?: 10 }
                 )
 
                 BpPager(
