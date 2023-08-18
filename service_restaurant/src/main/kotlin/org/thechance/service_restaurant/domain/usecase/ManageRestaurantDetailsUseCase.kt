@@ -11,7 +11,6 @@ import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorExcept
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 
 interface IManageRestaurantDetailsUseCase {
-
     suspend fun getRestaurant(restaurantId: String): Restaurant
     suspend fun updateRestaurant(restaurant: Restaurant): Restaurant
     suspend fun deleteCategoriesInRestaurant(
@@ -40,11 +39,7 @@ class ManageRestaurantDetailsUseCase(
     override suspend fun updateRestaurant(restaurant: Restaurant): Restaurant {
         restaurantValidation.validateUpdateRestaurantDetails(restaurant)
         val existRestaurant =
-            restaurantGateway.getRestaurant(restaurant.id) ?: throw MultiErrorException(
-                listOf(
-                    NOT_FOUND
-                )
-            )
+            restaurantGateway.getRestaurant(restaurant.id) ?: throw MultiErrorException(listOf(NOT_FOUND))
         restaurantValidation.validateRestaurantOwnership(existRestaurant, restaurant.ownerId)
         return restaurantGateway.updateRestaurant(restaurant)
     }

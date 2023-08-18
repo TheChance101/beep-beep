@@ -1,8 +1,9 @@
 package org.thechance.service_restaurant.data.gateway
 
 import com.mongodb.client.model.Accumulators
+import com.mongodb.client.model.FindOneAndUpdateOptions
+import com.mongodb.client.model.ReturnDocument
 import com.mongodb.client.model.Updates
-import org.bson.types.ObjectId
 import org.litote.kmongo.addToSet
 import org.litote.kmongo.and
 import org.litote.kmongo.coroutine.aggregate
@@ -35,6 +36,7 @@ import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.entity.MealDetails
 import org.thechance.service_restaurant.domain.entity.Restaurant
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
+import org.thechance.service_restaurant.domain.utils.exceptions.ERROR_ADD
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 import java.util.UUID
@@ -48,22 +50,14 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
     }
 
     override suspend fun getRestaurant(id: String): Restaurant? {
-        try {
-            val error = container.restaurantCollection.aggregate<RestaurantCollection>(
-                match(
-                    and(
-                        RestaurantCollection::id eq UUID.fromString(id) ,
-                        RestaurantCollection::isDeleted eq false
-                    )
-                ),
-            ).toList().firstOrNull()?.toEntity()
-            return error
-        } catch (e: Exception) {
-            println("Errrrrrrrrrrror: $e")
-            println("Errrrrrrrrrrror: ${ RestaurantCollection::id.toString()}")
-
-        }
-        return null
+        return container.restaurantCollection.aggregate<RestaurantCollection>(
+            match(
+                and(
+                    RestaurantCollection::id eq UUID.fromString(id),
+                    RestaurantCollection::isDeleted eq false
+                )
+            ),
+        ).toList().firstOrNull()?.toEntity()
     }
 
     override suspend fun getRestaurantIds(): List<String> {
@@ -95,7 +89,7 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
         cuisineIds: List<String>
     ): Boolean {
         return container.restaurantCollection.updateOneById(
-            ObjectId(restaurantId),
+            UUID.fromString(restaurantId),
             update = Updates.addEachToSet(
                 RestaurantCollection::cuisineIds.name,
                 cuisineIds.toUUIDs()
@@ -105,8 +99,8 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
 
     override suspend fun addMealToRestaurant(restaurantId: String, mealId: String): Boolean {
         return container.restaurantCollection.updateOneById(
-            ObjectId(restaurantId),
-            update = Updates.addToSet(RestaurantCollection::mealIds.name, ObjectId(mealId))
+            UUID.fromString(restaurantId),
+            update = Updates.addToSet(RestaurantCollection::mealIds.name, UUID.fromString(mealId))
         ).isSuccessfullyUpdated()
     }
 
@@ -118,14 +112,15 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
         }
         return container.restaurantCollection.findOneAndUpdate(
             filter = RestaurantCollection::id eq UUID.fromString(restaurant.id),
-            update = Updates.combine(fieldsToUpdate.map { Updates.set(it.key, it.value) })
+            update = Updates.combine(fieldsToUpdate.map { Updates.set(it.key, it.value) }),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toEntity() ?: throw MultiErrorException(listOf(NOT_FOUND))
     }
 
 
     override suspend fun deleteRestaurant(restaurantId: String): Boolean {
         return container.restaurantCollection.updateOneById(
-            id = ObjectId(restaurantId),
+            id = UUID.fromString(restaurantId),
             update = Updates.set(RestaurantCollection::isDeleted.name, true),
         ).isSuccessfullyUpdated()
     }
@@ -219,14 +214,19 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
 
     override suspend fun addMeal(meal: MealDetails): Meal {
         val mealDocument = meal.toCollection()
-        val addedMeal = container.mealCollection.insertOne(mealDocument)
+        val addedMeal = container.mealCollection.insertOne(mealDocument).wasAcknowledged()
 
         val addedMealToCuisine = container.cuisineCollection.updateMany(
             CuisineCollection::id `in` meal.cuisines.map { it.id }.toUUIDs(),
             addToSet(CuisineCollection::meals, mealDocument.id)
-        )
+        ).isSuccessfullyUpdated()
 
-        return mealDocument.toEntity()
+        return if (addedMeal && addedMealToCuisine) {
+            mealDocument.toEntity()
+        } else {
+            throw MultiErrorException(listOf(ERROR_ADD))
+        }
+
     }
 
     override suspend fun addCuisinesToMeal(mealId: String, cuisineIds: List<String>): Boolean {
@@ -251,7 +251,8 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
         }
         return container.mealCollection.findOneAndUpdate(
             filter = MealCollection::id eq UUID.fromString(meal.id),
-            update = Updates.combine(fieldsToUpdate.map { Updates.set(it.key, it.value) })
+            update = Updates.combine(fieldsToUpdate.map { Updates.set(it.key, it.value) }),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toEntity() ?: throw MultiErrorException(listOf(NOT_FOUND))
 
     }

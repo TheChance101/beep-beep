@@ -7,7 +7,8 @@ val BeepClient = module {
     includes(
         DataBaseModule,
         UseCasesModule,
-        GatewaysModule
+        GatewaysModule,
+        HelperModule
     )
 }
 
