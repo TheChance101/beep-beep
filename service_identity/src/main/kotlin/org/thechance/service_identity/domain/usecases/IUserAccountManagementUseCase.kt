@@ -44,7 +44,7 @@ interface IUserAccountManagementUseCase {
 
     suspend fun validateRefreshToken(refreshToken: String): Boolean
 
-    suspend fun getUserIdByRefreshToken(refreshToken: String): String
+    suspend fun getUserByRefreshToken(refreshToken: String): UserManagement
 }
 
 @Single
@@ -122,8 +122,8 @@ class UserAccountManagementUseCase(
         return dataBaseGateway.validateRefreshToken(refreshToken)
     }
 
-    override suspend fun getUserIdByRefreshToken(refreshToken: String): String {
-        return dataBaseGateway.getUserIdByRefreshToken(refreshToken)
+    override suspend fun getUserByRefreshToken(refreshToken: String): UserManagement {
+        return dataBaseGateway.getUserByRefreshToken(refreshToken)
     }
 
 }

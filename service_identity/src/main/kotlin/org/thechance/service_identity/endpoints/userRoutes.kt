@@ -10,7 +10,6 @@ import org.thechance.service_identity.data.mappers.toDto
 import org.thechance.service_identity.domain.entity.MissingParameterException
 import org.thechance.service_identity.domain.usecases.IUserAccountManagementUseCase
 import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
-import org.thechance.service_identity.endpoints.model.UserTokenDto
 
 fun Route.userRoutes() {
 
@@ -98,12 +97,12 @@ fun Route.userRoutes() {
             call.respond(HttpStatusCode.OK, isSavedTokens)
         }
 
-        post("/get-user-id-by-refresh-token") {
+        post("/get-user-by-refresh-token") {
             val formParameters = call.receiveParameters()
             val refreshToken = formParameters["refreshToken"]
                 ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val userId = manageUserAccount.getUserIdByRefreshToken(refreshToken)
-            call.respond(HttpStatusCode.OK, userId)
+            val userManagementDto = manageUserAccount.getUserIdByRefreshToken(refreshToken).toDto()
+            call.respond(HttpStatusCode.OK, userManagementDto)
         }
 
         post("/validate-refresh-token") {

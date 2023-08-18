@@ -2,6 +2,7 @@ package org.thechance.common.presentation.composables
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,21 +21,24 @@ import kotlin.math.floor
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun EditableRatingBar(
-    rating: Double,
     count: Int,
     selectedIcon: Painter,
     halfSelectedIcon: Painter,
     notSelectedIcon: Painter,
     onClick: (Double) -> Unit,
     modifier: Modifier = Modifier,
+    rating: Double = 0.0,
     iconsSize: Dp = 24.dp,
-    iconsPadding: Dp = 0.dp,
+    iconsPadding: PaddingValues = PaddingValues(0.dp),
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
 ) {
     val editableRating = remember { mutableStateOf(rating) }
     val mousePosition = remember { mutableStateOf(0.0) }
 
-    if (editableRating.value > count) throw Exception("rating is bigger than count")
+    when {
+        (rating > count) -> throw Exception("rating is bigger than count")
+        (rating < 0.0) -> throw Exception("rating is smaller than 0")
+    }
 
     Row(modifier = modifier
         .onPointerEvent(PointerEventType.Exit) { editableRating.value = rating }
@@ -55,8 +59,6 @@ fun EditableRatingBar(
                 modifier = Modifier.padding(iconsPadding).size(iconsSize)
                     .onPointerEvent(PointerEventType.Move) {
                         mousePosition.value = currentEvent.changes[0].position.x.toDouble()
-                    }
-                    .onPointerEvent(PointerEventType.Move) {
                         editableRating.value = when {
 
                             (mousePosition.value / size.width) >= 0.9 -> iconPosition + 1.0
