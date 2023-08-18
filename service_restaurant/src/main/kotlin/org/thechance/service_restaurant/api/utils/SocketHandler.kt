@@ -1,16 +1,15 @@
 package org.thechance.service_restaurant.api.utils
 
-import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.consumeEach
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.thechance.service_restaurant.api.models.OrderDto
 import org.thechance.service_restaurant.api.models.RestaurantInfo
 import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.domain.usecase.IManageOrderUseCase
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 class SocketHandler {
@@ -32,18 +31,15 @@ class SocketHandler {
 
                     val order = createOrder(frame = it)
                     val isOpen = checkIfRestaurantOpened(restaurantId, manageOrder).await()
+                    println("----mmm--- $isOpen")
                     val isOrderInserted: Boolean = insertOrder(order = order, manageOrder = manageOrder).await()
 
                     if (isOpen) {
-                        ownerSession?.sendSerialized(order)
+                        if (isOrderInserted) ownerSession?.send(order.toString())
+                    } else {
+                        userSession?.send("Closed")
+                        userSession?.close()
                     }
-//                    } else if (isOpen) {
-//                    ownerSession?.sendSerialized(order)
-//                        userSession?.close()
-//                    } else {
-//                        userSession?.send("isClosed")
-//                        userSession?.close()
-//                    }
                 } else {
                     userSession?.send("some thing error when u send an object")
                     userSession?.close()
@@ -65,7 +61,7 @@ class SocketHandler {
 
     private suspend fun insertOrder(order: OrderDto, manageOrder: IManageOrderUseCase): Deferred<Boolean> {
         return scope.async {
-            manageOrder.addOrder(order = order.toEntity())
+            manageOrder.addOrder(order = order.copy(id = UUID.randomUUID().toString()).toEntity())
         }
     }
 
