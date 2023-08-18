@@ -1,7 +1,9 @@
 package data.remote
 
+import data.mapper.toEntity
 import data.remote.remoteDto.BaseResponse
 import data.remote.remoteDto.TokensResponse
+import domain.entity.Tokens
 import domain.gateway.IRemoteGateway
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -15,7 +17,7 @@ class RemoteGateway(private val client: HttpClient) : IRemoteGateway {
         username: String,
         password: String,
         email: String
-    ): BaseResponse<Boolean> {
+    ): Boolean {
         return client.submitForm("/user",
             formParameters = parameters {
                 append("fullName", fullName)
@@ -23,19 +25,19 @@ class RemoteGateway(private val client: HttpClient) : IRemoteGateway {
                 append("password", password)
                 append("email", email)
             }
-        ).body()
+        ).body<BaseResponse<Boolean>>().value ?: false
     }
 
     override suspend fun loginUser(
         userName: String,
         password: String,
-    ): BaseResponse<TokensResponse> {
+    ): Tokens {
         return client.submitForm("/user/login",
             formParameters = parameters {
                 append("username", userName)
                 append("password", password)
             }
-        ).body()
+        ).body<BaseResponse<TokensResponse>>().value?.toEntity() ?: throw Exception()
     }
 
 }

@@ -1,7 +1,7 @@
 package domain.gateway
 
-import data.remote.remoteDto.BaseResponse
-import data.remote.remoteDto.TokensResponse
+
+import domain.entity.Tokens
 
 interface IRemoteGateway {
 
@@ -10,11 +10,11 @@ interface IRemoteGateway {
         username: String,
         password: String,
         email: String
-    ) : BaseResponse<Boolean>
+    ) : Boolean
 
     suspend fun loginUser(
         userName: String,
         password: String,
-    ):BaseResponse<TokensResponse>
+    ): Tokens
 
 }
