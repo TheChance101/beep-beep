@@ -35,7 +35,10 @@ fun EditableRatingBar(
     val editableRating = remember { mutableStateOf(rating) }
     val mousePosition = remember { mutableStateOf(0.0) }
 
-    if (rating > count || rating < 0.0) throw Exception("rating is Invalid")
+    when {
+        (rating > count) -> throw Exception("rating is bigger than count")
+        (rating < 0.0) -> throw Exception("rating is smaller than 0")
+    }
 
     Row(modifier = modifier
         .onPointerEvent(PointerEventType.Exit) { editableRating.value = rating }

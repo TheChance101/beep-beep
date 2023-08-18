@@ -1,6 +1,7 @@
 package org.thechance.common.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpTextButton
 import com.beepbeep.designSystem.ui.theme.Theme
 
@@ -44,9 +46,9 @@ fun RestaurantFilterDropDownMenu(
         EditableRatingBar(
             rating = rating,
             count = 5,
-            selectedIcon = painterResource("ic_filled_star.svg"),
-            halfSelectedIcon = painterResource("ic_half_filled_star.svg"),
-            notSelectedIcon = painterResource("ic_star.svg"),
+            selectedIcon = painterResource(if (isSystemInDarkTheme()) "ic_filled_star_dark.svg" else "ic_filled_star_light.svg"),
+            halfSelectedIcon = painterResource(if (isSystemInDarkTheme()) "ic_half_filled_star_dark.svg" else "ic_half_filled_star_light.svg"),
+            notSelectedIcon = painterResource(if (isSystemInDarkTheme()) "ic_star_dark.svg" else "ic_star_light.svg"),
             iconsSize = Theme.dimens.space32,
             iconsPadding = PaddingValues(horizontal = Theme.dimens.space8),
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16)
@@ -76,17 +78,18 @@ fun RestaurantFilterDropDownMenu(
         )
 
         Row(
-            Modifier.fillMaxWidth().padding(vertical = 24.dp),
+            Modifier.fillMaxWidth().padding(Theme.dimens.space24),
             horizontalArrangement = Arrangement.Center
         ) {
             BpTextButton(
                 text = "Cancel",
                 onClick = {},
-                modifier = Modifier.padding(end = Theme.dimens.space16)
+                modifier = Modifier.padding(end = Theme.dimens.space16).weight(1f)
             )
-            BpTextButton(
-                text = "Save",
+            BpOutlinedButton(
+                title = "Save",
                 onClick = {},
+                modifier = Modifier.weight(3f)
             )
         }
     }

@@ -34,7 +34,13 @@ fun EditablePriceBar(
 ) {
     val editablePriceLevel = remember { mutableStateOf(priceLevel) }
 
-    if (count < 1 || priceLevel > count || priceLevel < 0) throw Exception("price level is Invalid")
+    when {
+        (count < 1) -> throw Exception("count is smaller than 1")
+
+        (priceLevel > count) -> throw Exception("price level is bigger than count")
+
+        (priceLevel < 0) -> throw Exception("price level is smaller than 0")
+    }
     Row(
         modifier = modifier
             .onPointerEvent(PointerEventType.Exit) { editablePriceLevel.value = priceLevel }
