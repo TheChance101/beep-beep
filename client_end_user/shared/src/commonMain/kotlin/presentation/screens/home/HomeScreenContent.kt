@@ -1,4 +1,4 @@
-package presentation.screens
+package presentation.screens.home
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
@@ -14,6 +14,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import org.koin.core.component.KoinComponent
+import presentation.screens.details.DetailsScreen
 
 class HomeScreen : Screen, KoinComponent {
 
