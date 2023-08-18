@@ -60,7 +60,7 @@ fun BpOutlinedButton(
             horizontalArrangement = horizontalArrangement,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(text = title, style = Theme.typography.title.copy(color = buttonContentColor))
+            Text(text = title, style = Theme.typography.titleLarge.copy(color = buttonContentColor))
         }
     }
 }

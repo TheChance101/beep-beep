@@ -54,7 +54,7 @@ fun BpCheckBox(
             .size(size.dp)
             .background(color = checkboxColor, shape = RoundedCornerShape(radius.small))
             .border(width = 1.dp, shape = RoundedCornerShape(radius.small),
-                color = if (isChecked) colors.primary else colors.contentBorder)
+                color = if (isChecked) colors.primary else colors.divider)
             .toggleable(
                 value = isChecked,
                 role = Role.Checkbox,
@@ -81,6 +81,6 @@ fun BpCheckBox(
                 )
             }
         }
-        Text(text = label, style = Theme.typography.body, color = colors.contentPrimary)
+        Text(text = label, style = Theme.typography.titleMedium, color = colors.contentPrimary)
     }
 }
