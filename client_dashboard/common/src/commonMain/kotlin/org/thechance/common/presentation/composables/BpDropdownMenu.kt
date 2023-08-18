@@ -35,14 +35,17 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import com.beepbeep.designSystem.ui.theme.Theme
 
+internal const val InTransitionDuration = 120
+internal const val OutTransitionDuration = 75
 
 @Composable
 fun BpDropdownMenu(
-    expanded: Boolean,
     onDismissRequest: () -> Unit,
+    expanded: Boolean,
     modifier: Modifier = Modifier,
     offset: DpOffset = DpOffset(0.dp, 0.dp),
-    shape:Shape,
+    focusable: Boolean = true,
+    shape: Shape,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val expandedStates = remember { MutableTransitionState(false) }
@@ -61,6 +64,7 @@ fun BpDropdownMenu(
         Popup(
             onDismissRequest = onDismissRequest,
             popupPositionProvider = popupPositionProvider,
+            focusable = focusable
         ) {
             DropdownMenuContent(
                 expandedStates = expandedStates,
@@ -78,12 +82,9 @@ fun DropdownMenuContent(
     expandedStates: MutableTransitionState<Boolean>,
     transformOriginState: MutableState<TransformOrigin>,
     modifier: Modifier = Modifier,
-    shape:Shape,
+    shape: Shape,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    // Menu open/close animation.
-    val inTransitionDuration = 120
-    val outTransitionDuration = 75
     // Menu open/close animation.
     val transition = updateTransition(expandedStates, "DropDownMenu")
 
@@ -92,14 +93,14 @@ fun DropdownMenuContent(
             if (false isTransitioningTo true) {
                 // Dismissed to expanded
                 tween(
-                    durationMillis = inTransitionDuration,
+                    durationMillis = InTransitionDuration,
                     easing = LinearOutSlowInEasing
                 )
             } else {
                 // Expanded to dismissed.
                 tween(
                     durationMillis = 1,
-                    delayMillis = outTransitionDuration - 1
+                    delayMillis = OutTransitionDuration - 1
                 )
             }
         }, label = ""
@@ -120,7 +121,7 @@ fun DropdownMenuContent(
                 tween(durationMillis = 30)
             } else {
                 // Expanded to dismissed.
-                tween(durationMillis = outTransitionDuration)
+                tween(durationMillis = OutTransitionDuration)
             }
         }, label = ""
     ) {
