@@ -1,4 +1,4 @@
-package app.di
+package di
 
 import domain.usecase.FakeUseCase
 import domain.usecase.FakeUseCaseImp
