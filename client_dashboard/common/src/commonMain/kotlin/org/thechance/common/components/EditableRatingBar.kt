@@ -2,6 +2,7 @@ package org.thechance.common.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -28,7 +29,7 @@ fun EditableRatingBar(
     modifier: Modifier = Modifier,
     rating: Double = 0.0,
     iconsSize: Dp = 24.dp,
-    iconsPadding: Dp = 0.dp,
+    iconsPadding: PaddingValues = PaddingValues(0.dp),
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
 ) {
     val editableRating = remember { mutableStateOf(rating) }

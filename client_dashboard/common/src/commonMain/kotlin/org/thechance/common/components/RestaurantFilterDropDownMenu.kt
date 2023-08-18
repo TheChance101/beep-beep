@@ -3,6 +3,7 @@ package org.thechance.common.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.beepbeep.designSystem.ui.composable.BpTextButton
 import com.beepbeep.designSystem.ui.theme.Theme
 
@@ -48,7 +48,7 @@ fun RestaurantFilterDropDownMenu(
             halfSelectedIcon = painterResource("ic_half_filled_star.svg"),
             notSelectedIcon = painterResource("ic_star.svg"),
             iconsSize = Theme.dimens.space32,
-            iconsPadding = Theme.dimens.space8,
+            iconsPadding = PaddingValues(horizontal = Theme.dimens.space8),
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16)
                 .background(color = Theme.colors.background)
                 .padding(horizontal = Theme.dimens.space24, vertical = Theme.dimens.space16),
@@ -64,11 +64,11 @@ fun RestaurantFilterDropDownMenu(
         EditablePriceBar(
             priceLevel = priceLevel,
             count = 3,
-            text = "$",
+            icon = painterResource("ic_dollar_sign.svg"),
             enabledIconsColor = Theme.colors.success,
             disabledIconsColor = Theme.colors.disable,
-            textSize = 24.sp,
-            textPadding = 8.dp,
+            iconsPadding = PaddingValues(horizontal = Theme.dimens.space8),
+            iconsSize = Theme.dimens.space32,
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16)
                 .background(color = Theme.colors.background)
                 .padding(horizontal = Theme.dimens.space24, vertical = Theme.dimens.space16),
