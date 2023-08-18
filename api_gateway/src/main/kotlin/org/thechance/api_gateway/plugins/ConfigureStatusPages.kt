@@ -14,17 +14,8 @@ fun Application.configureStatusPages() {
 
 private fun StatusPagesConfig.handleStatusPagesExceptions() {
 
-    respondWithErrorMessages<MultiLocalizedMessageException>(HttpStatusCode.UnprocessableEntity)
-
-}
-
-private inline fun <reified T : Throwable> StatusPagesConfig.respondWithErrorMessages(
-    statusCode: HttpStatusCode,
-) {
-    exception<T> { call, t ->
-        val reasons = t.message?.split(",") ?: emptyList()
-
-        respondWithError(call, statusCode, reasons)
+    exception<MultiLocalizedMessageException> { call, t ->
+        respondWithError(call, HttpStatusCode.BadRequest, t.errors)
     }
-}
 
+}
