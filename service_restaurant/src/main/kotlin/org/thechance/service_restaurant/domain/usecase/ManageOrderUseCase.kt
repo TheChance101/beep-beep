@@ -1,5 +1,6 @@
 package org.thechance.service_restaurant.domain.usecase
 
+import org.thechance.service_restaurant.api.utils.isRestaurantOpen
 import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
@@ -69,7 +70,7 @@ class ManageOrderUseCase(
     override suspend fun isRestaurantOpened(restaurantId: String): Boolean {
         val restaurant = restaurantGateway.getRestaurant(id = restaurantId)
         return restaurant?.let {
-            orderValidationUseCase.isRestaurantOpen(openTime = restaurant.openingTime, closeTime = restaurant.closingTime)
+           isRestaurantOpen(openTime = restaurant.openingTime, closeTime = restaurant.closingTime)
         } ?: throw MultiErrorException(listOf(NOT_FOUND))
     }
 
