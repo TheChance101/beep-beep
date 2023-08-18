@@ -27,11 +27,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpChip
+import com.beepbeep.designSystem.ui.composable.BpExpandedTextField
 import com.beepbeep.designSystem.ui.composable.BpNavigationBar
 import com.beepbeep.designSystem.ui.composable.BpNavigationBarItem
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.composable.BpTextField
+import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.BpTheme
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -100,6 +102,7 @@ fun PreviewTextField() {
         var text3 by rememberSaveable { mutableStateOf("") }
         var text4 by rememberSaveable { mutableStateOf("Ahmed Nasser") }
         var text5 by rememberSaveable { mutableStateOf("") }
+        var text6 by rememberSaveable { mutableStateOf("") }
 
         BpSimpleTextField(
             onValueChange = { text5 = it },
@@ -134,6 +137,12 @@ fun PreviewTextField() {
             hint = "Enter your FullName",
             correctValidation = true
         )
+        BpExpandedTextField(
+            onValueChange = { text6 = it },
+            text = text6,
+            label = "FullName",
+            hint = "Enter your FullName",
+        )
     }
 }
 
@@ -142,6 +151,7 @@ fun PreviewTextField() {
 fun EnabledButtonsPreview() {
     Column(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         BpButton(
             title = "Button",
@@ -155,7 +165,13 @@ fun EnabledButtonsPreview() {
             title = "Button",
             enabled = true,
             onClick = { },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+        )
+
+        BpTransparentButton(
+            title = "Button",
+            onClick = { },
+            contentColor = Theme.colors.primary
         )
     }
 }

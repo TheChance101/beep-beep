@@ -1,7 +1,5 @@
 package com.beepbeep.designSystem.ui.composable
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
@@ -12,7 +10,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,34 +19,21 @@ import com.beepbeep.designSystem.ui.theme.Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BpOutlinedButton(
+fun BpTransparentButton(
     title: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true,
     shape: Shape = RoundedCornerShape(8.dp),
-    contentColor: Color = Theme.colors.primary,
-    border: BorderStroke = BorderStroke(1.dp, color = Theme.colors.primary),
+    contentColor: Color = Theme.colors.contentTertiary,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Center
 ) {
-    val buttonBorderColor by animateColorAsState(
-        if (enabled) Theme.colors.primary
-        else Theme.colors.disable
-    )
-
-    val buttonContentColor by animateColorAsState(
-        if (enabled) contentColor
-        else Theme.colors.disable
-    )
 
     Surface(
-        modifier = modifier.height(56.dp),
+        modifier = modifier.height(32.dp),
         onClick = onClick,
         shape = shape,
-        enabled = enabled,
         color = Color.Transparent,
-        contentColor = buttonContentColor,
-        border = BorderStroke(border.width, buttonBorderColor)
+        contentColor = contentColor,
     ) {
         Row(
             Modifier
@@ -60,7 +44,7 @@ fun BpOutlinedButton(
             horizontalArrangement = horizontalArrangement,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(text = title, style = Theme.typography.title.copy(color = buttonContentColor))
+            Text(text = title, style = Theme.typography.title.copy(color = contentColor))
         }
     }
 }
