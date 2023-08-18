@@ -59,16 +59,8 @@ class ManageOrderUseCase(
         return optionsGateway.updateOrderStatus(orderId = orderId, status = state)!!
     }
 
-    override suspend fun getOrdersHistory(
-        restaurantId: String,
-        page: Int,
-        limit: Int
-    ): List<Order> {
-        return optionsGateway.getOrdersHistory(
-            restaurantId = restaurantId,
-            page = page,
-            limit = limit
-        )
+    override suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order> {
+        return optionsGateway.getOrdersHistory(restaurantId = restaurantId, page = page, limit = limit)
     }
 
     override suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order> {
@@ -80,14 +72,9 @@ class ManageOrderUseCase(
 
     override suspend fun isRestaurantOpened(restaurantId: String): Boolean {
         val restaurant = restaurantGateway.getRestaurant(id = restaurantId)
-        if (restaurant == null) {
-            throw MultiErrorException(listOf(NOT_FOUND))
-        } else {
-            return orderValidationUseCase.isRestaurantOpen(
-                openTime = restaurant.openingTime,
-                closeTime = restaurant.closingTime
-            )
-        }
+        return restaurant?.let {
+            orderValidationUseCase.isRestaurantOpen(openTime = restaurant.openingTime, closeTime = restaurant.closingTime)
+        } ?: throw MultiErrorException(listOf(NOT_FOUND))
     }
 
 }

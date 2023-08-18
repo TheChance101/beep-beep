@@ -77,14 +77,11 @@ class OrderValidationUseCase(
     }
 
     override fun validateIsRestaurantOpen(openingTime: String, closingTime: String) {
-        val validationErrors = mutableListOf<Int>()
         if (!basicValidation.isValidTime(openingTime) || !basicValidation.isValidTime(closingTime)) {
-            validationErrors.add(INVALID_TIME)
-        }
-        if (validationErrors.isNotEmpty()) {
-            throw MultiErrorException(validationErrors)
+            throw MultiErrorException(listOf(INVALID_TIME))
         }
     }
+
     override fun isRestaurantOpen(openTime: String, closeTime: String): Boolean {
         val now = LocalTime.now()
         return now.isAfter(LocalTime.parse(openTime)) && now.isBefore(LocalTime.parse(closeTime))
