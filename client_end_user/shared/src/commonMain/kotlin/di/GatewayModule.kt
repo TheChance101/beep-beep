@@ -1,4 +1,4 @@
-package app.di
+package di
 
 import data.gateway.FakeGatewayImp
 import domain.gateway.FakeGateway

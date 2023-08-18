@@ -1,4 +1,4 @@
-package app.di
+package di
 
 import data.local.source.FakeLocalDataSourceImp
 import data.remote.source.FakeRemoteDataSourceImp
