@@ -1,20 +1,16 @@
 package org.thechance.service_restaurant.api.utils
 
-import io.ktor.websocket.Frame
-import io.ktor.websocket.readText
-import io.ktor.websocket.send
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.async
+import io.ktor.server.websocket.*
+import io.ktor.websocket.*
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.channels.consumeEach
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.thechance.service_restaurant.api.models.OrderDto
 import org.thechance.service_restaurant.api.models.RestaurantInfo
 import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.domain.usecase.IManageOrderUseCase
-import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
 class SocketHandler {
@@ -23,44 +19,62 @@ class SocketHandler {
 
     suspend fun broadcastOrder(
         receiveChannel: ReceiveChannel<Frame>,
+        userId: String,
         restaurantId: String,
         manageOrder: IManageOrderUseCase
     ) {
         val ownerSession = openedRestaurants[restaurantId]?.owner
+        val userSession = openedRestaurants[restaurantId]?.users?.firstOrNull { it.containsKey(userId) }?.get(userId)
 
         try {
-            for (frame in receiveChannel) {
-                if (frame is Frame.Text) {
+            receiveChannel.consumeEach {
+                if (it is Frame.Text) {
 
-                    val order = createOrder(frame = frame)
-                    val isOrderInserted: Boolean =
-                        insertOrder(order = order, manageOrder = manageOrder)
+                    val order = createOrder(frame = it)
+                    val isOpen = checkIfRestaurantOpened(restaurantId, manageOrder).await()
+                    val isOrderInserted: Boolean = insertOrder(order = order, manageOrder = manageOrder).await()
 
-                    if (isOrderInserted) {
-                        ownerSession?.send(order.toString())
+                    if (isOpen) {
+                        ownerSession?.sendSerialized(order)
                     }
+//                    } else if (isOpen) {
+//                    ownerSession?.sendSerialized(order)
+//                        userSession?.close()
+//                    } else {
+//                        userSession?.send("isClosed")
+//                        userSession?.close()
+//                    }
+                } else {
+                    userSession?.send("some thing error when u send an object")
+                    userSession?.close()
                 }
             }
 
         } catch (e: Exception) {
-            ownerSession.closeSession(e)
-            ownerSession?.send(Frame.Text("An error occurred: ${e.message}"))
-
+            userSession?.send("some thing error ${e.message}")
+            userSession?.close()
         } finally {
-            ownerSession.closeSession()
-            openedRestaurants.remove(restaurantId)
         }
     }
 
     private fun createOrder(frame: Frame.Text): OrderDto {
         val orderJson = frame.readText()
-        return Json.decodeFromString<OrderDto>(orderJson).copy(id = UUID.randomUUID().toString())
+        return Json.decodeFromString<OrderDto>(orderJson)
     }
 
 
-    private suspend fun insertOrder(order: OrderDto, manageOrder: IManageOrderUseCase): Boolean {
+    private suspend fun insertOrder(order: OrderDto, manageOrder: IManageOrderUseCase): Deferred<Boolean> {
         return scope.async {
             manageOrder.addOrder(order = order.toEntity())
-        }.await()
+        }
+    }
+
+    private suspend fun checkIfRestaurantOpened(
+        restaurantId: String,
+        manageOrder: IManageOrderUseCase
+    ): Deferred<Boolean> {
+        return scope.async {
+            manageOrder.isRestaurantOpened(restaurantId)
+        }
     }
 }
