@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -110,7 +111,8 @@ fun RowScope.UserRow(
         painter = painterResource("horizontal_dots.xml"),
         contentDescription = null,
         modifier = Modifier.clickable { onClickEditUser(user.id) }
-            .weight(firstColumnWeight)
+            .weight(firstColumnWeight),
+        colorFilter = ColorFilter.tint(color = Theme.colors.contentPrimary)
     )
 }
 
