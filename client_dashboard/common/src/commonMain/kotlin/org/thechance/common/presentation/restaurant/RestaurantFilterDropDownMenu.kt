@@ -1,4 +1,4 @@
-package org.thechance.common.components
+package org.thechance.common.presentation.restaurant
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -13,13 +13,39 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpTextButton
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.thechance.common.components.EditablePriceBar
+import org.thechance.common.presentation.composables.BpDropdownMenu
+import org.thechance.common.presentation.composables.EditableRatingBar
 
 @Composable
 fun RestaurantFilterDropDownMenu(
+    expanded: Boolean,
+    rating: Double,
+    priceLevel: Int,
+    onClickRating: (Double) -> Unit,
+    onClickPrice: (Int) -> Unit,
+    onDismissRequest: () -> Unit
+) {
+    BpDropdownMenu(
+        onDismissRequest = onDismissRequest,
+        expanded = expanded,
+        shape = RoundedCornerShape(Theme.dimens.space8)
+    ) {
+        RestaurantFilterDropDownMenuContent(
+            rating = rating,
+            priceLevel = priceLevel,
+            onClickRating = onClickRating,
+            onClickPrice = onClickPrice
+        )
+    }
+}
+
+
+@Composable
+private fun RestaurantFilterDropDownMenuContent(
     rating: Double,
     priceLevel: Int,
     onClickRating: (Double) -> Unit,
