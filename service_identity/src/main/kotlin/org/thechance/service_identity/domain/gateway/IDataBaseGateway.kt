@@ -92,6 +92,6 @@ interface IDataBaseGateway {
 
     suspend fun validateRefreshToken(refreshToken: String): Boolean
 
-    suspend fun getUserIdByRefreshToken(refreshToken: String): String
+    suspend fun getUserByRefreshToken(refreshToken: String): UserManagement
 
 }

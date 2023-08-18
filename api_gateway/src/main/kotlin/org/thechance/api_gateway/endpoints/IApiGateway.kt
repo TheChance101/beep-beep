@@ -76,7 +76,7 @@ interface IApiGateway {
 
     suspend fun validateRefreshToken(refreshToken: String, locale: Locale): Boolean
 
-    suspend fun getUserIdByRefreshToken(refreshToken: String, locale: Locale): String
+    suspend fun getUserByRefreshToken(refreshToken: String, locale: Locale): UserManagement
 
     // endregion: user permission management
 
