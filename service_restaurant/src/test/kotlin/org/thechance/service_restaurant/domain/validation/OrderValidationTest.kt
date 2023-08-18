@@ -18,46 +18,56 @@ class OrderValidationTest {
 
     @Test
     fun `should should throw MultiErrorException contains INVALID_ID when orderId is Invalid`() {
+        // given
         val orderId = "not_good_id"
         val status = OrderStatus.PENDING
-
+        //when
         val executable = Executable {
             orderValidation.validateUpdateOrder(orderId = orderId, status = status)
         }
 
+        //then
         val error = assertThrows(MultiErrorException::class.java, executable)
-        assertEquals(true, error.errorCodes.contains(INVALID_ID))
+        assertTrue( error.errorCodes.contains(INVALID_ID))
     }
 
     @Test
     fun `should should throw MultiErrorException contains INVALID_ID when orderId is Invalid in getOrderById`() {
+       // given
         val orderId = "not_good_id"
 
+        // when
         val executable = Executable { orderValidation.validateGetOrderById(orderId = orderId) }
 
+        //then
         val error = assertThrows(MultiErrorException::class.java, executable)
-        assertEquals(true, error.errorCodes.contains(INVALID_ID))
+        assertTrue(error.errorCodes.contains(INVALID_ID))
     }
 
 
     @Test
     fun `should should throw MultiErrorException contains INVALID_ID when restaurantId is Invalid`() {
+       // given
         val restaurantId = "not_good_id"
 
+        // when
         val executable = Executable {
             orderValidation.validateGetOrdersByRestaurantId(restaurantId = restaurantId)
         }
 
+        //then
         val error = assertThrows(MultiErrorException::class.java, executable)
-        assertEquals(true, error.errorCodes.contains(INVALID_ID))
+        assertTrue(error.errorCodes.contains(INVALID_ID))
     }
 
     @Test
     fun `should should throw MultiErrorException contains INVALID_ID when restaurantId is Invalid in order history`() {
+       //given
         val restaurantId = "not_good_id"
         val page = 1
         val limit = 10
 
+        //when
         val executable = Executable {
             orderValidation.validateGetOrdersHistory(
                 restaurantId = restaurantId,
@@ -66,64 +76,79 @@ class OrderValidationTest {
             )
         }
 
+        //then
         val error = assertThrows(MultiErrorException::class.java, executable)
-        assertEquals(true, error.errorCodes.contains(INVALID_ID))
+        assertTrue(error.errorCodes.contains(INVALID_ID))
     }
 
 
     @Test
     fun `should pass when orderStatus is valid`() {
+        //given
         val orderId = "3edf2fc8-6983-484f-a35c-8190f44a08c6"
         val status = OrderStatus.PENDING
 
+        //when
         val executable = Executable {
             orderValidation.validateUpdateOrder(orderId = orderId, status = status)
         }
 
+        //then
         assertDoesNotThrow(executable)
     }
 
     @Test
     fun `should throw MultiErrorException contains INVALID_REQUEST_PARAMETER when orderId is empty`() {
+       //given
         val orderId = ""
         val status = OrderStatus.PENDING
 
+        //when
         val executable = Executable {
             orderValidation.validateUpdateOrder(orderId = orderId, status = status)
         }
 
+        //then
         val error = assertThrows(MultiErrorException::class.java, executable)
-        assertEquals(true, error.errorCodes.contains(INVALID_REQUEST_PARAMETER))
+        assertTrue(error.errorCodes.contains(INVALID_REQUEST_PARAMETER))
     }
 
     @Test
     fun `should throw MultiErrorException contains INVALID_REQUEST_PARAMETER when orderId is empty in getOrderById`() {
+       // given
         val orderId = ""
 
+        // when
         val executable = Executable { orderValidation.validateGetOrderById(orderId = orderId) }
 
+        //then
         val error = assertThrows(MultiErrorException::class.java, executable)
-        assertEquals(true, error.errorCodes.contains(INVALID_REQUEST_PARAMETER))
+        assertTrue(error.errorCodes.contains(INVALID_REQUEST_PARAMETER))
     }
 
     @Test
     fun `should throw MultiErrorException contains INVALID_REQUEST_PARAMETER when restaurantId is empty`() {
+       // given
         val restaurantId = ""
 
+        // when
         val executable = Executable {
             orderValidation.validateGetOrdersByRestaurantId(restaurantId = restaurantId)
         }
 
+        //then
         val error = assertThrows(MultiErrorException::class.java, executable)
-        assertEquals(true, error.errorCodes.contains(INVALID_REQUEST_PARAMETER))
+        assertTrue( error.errorCodes.contains(INVALID_REQUEST_PARAMETER))
     }
 
     @Test
     fun `should throw MultiErrorException contains INVALID_REQUEST_PARAMETER when restaurantId is empty in history order`() {
+       // given
         val restaurantId = ""
         val page = 1
         val limit = 10
 
+        // when
         val executable = Executable {
             orderValidation.validateGetOrdersHistory(
                 restaurantId = restaurantId,
@@ -132,15 +157,18 @@ class OrderValidationTest {
             )
         }
 
+        //then
         val error = assertThrows(MultiErrorException::class.java, executable)
-        assertEquals(true, error.errorCodes.contains(INVALID_REQUEST_PARAMETER))
+        assertTrue( error.errorCodes.contains(INVALID_REQUEST_PARAMETER))
     }
 
     @Test
     fun `should throw MultiErrorException contains INVALID_TIME when openTime or closeTime is empty`() {
+       // given
         val openTime = ""
         val closeTime = ""
 
+        // when
         val executable = Executable {
             orderValidation.validateIsRestaurantOpen(
                 openingTime = openTime,
@@ -148,15 +176,18 @@ class OrderValidationTest {
             )
         }
 
+        //then
         val error = assertThrows(MultiErrorException::class.java, executable)
-        assertEquals(true, error.errorCodes.contains(INVALID_TIME))
+        assertTrue( error.errorCodes.contains(INVALID_TIME))
     }
 
     @Test
     fun `should throw MultiErrorException contains INVALID_TIME when openTime or closeTime is invalid`() {
-        val openTime = "88888"
+       // given
+        val openTime = "8888"
         val closeTime = "9999"
 
+        // when
         val executable = Executable {
             orderValidation.validateIsRestaurantOpen(
                 openingTime = openTime,
@@ -164,8 +195,9 @@ class OrderValidationTest {
             )
         }
 
+        //then
         val error = assertThrows(MultiErrorException::class.java, executable)
-        assertEquals(true, error.errorCodes.contains(INVALID_TIME))
+        assertTrue(error.errorCodes.contains(INVALID_TIME))
     }
 
     @Test
