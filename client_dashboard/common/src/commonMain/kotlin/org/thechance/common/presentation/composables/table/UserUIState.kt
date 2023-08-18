@@ -1,7 +1,6 @@
 package org.thechance.common.presentation.composables.table
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -19,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.thechance.common.presentation.composables.modifier.noRipple
 import java.util.UUID
 
 class UserRowUIState(
@@ -110,11 +110,13 @@ fun RowScope.UserRow(
     Image(
         painter = painterResource("horizontal_dots.xml"),
         contentDescription = null,
-        modifier = Modifier.clickable { onClickEditUser(user.id) }
+        modifier = Modifier.noRipple { onClickEditUser(user.id) }
             .weight(firstColumnWeight),
         colorFilter = ColorFilter.tint(color = Theme.colors.contentPrimary)
     )
 }
+
+
 
 
 fun getDummyUsers() = listOf(
