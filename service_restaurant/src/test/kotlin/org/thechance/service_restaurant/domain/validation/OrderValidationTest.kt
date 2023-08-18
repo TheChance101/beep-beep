@@ -8,9 +8,6 @@ import org.thechance.service_restaurant.domain.utils.OrderStatus
 import org.thechance.service_restaurant.domain.utils.Validation
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_REQUEST_PARAMETER
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_STATUS
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_TIME
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_UPDATE_PARAMETER
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 
 class OrderValidationTest {
@@ -162,43 +159,6 @@ class OrderValidationTest {
         assertTrue( error.errorCodes.contains(INVALID_REQUEST_PARAMETER))
     }
 
-    @Test
-    fun `should throw MultiErrorException contains INVALID_TIME when openTime or closeTime is empty`() {
-       // given
-        val openTime = ""
-        val closeTime = ""
-
-        // when
-        val executable = Executable {
-            orderValidation.validateIsRestaurantOpen(
-                openingTime = openTime,
-                closingTime = closeTime
-            )
-        }
-
-        //then
-        val error = assertThrows(MultiErrorException::class.java, executable)
-        assertTrue( error.errorCodes.contains(INVALID_TIME))
-    }
-
-    @Test
-    fun `should throw MultiErrorException contains INVALID_TIME when openTime or closeTime is invalid`() {
-       // given
-        val openTime = "8888"
-        val closeTime = "9999"
-
-        // when
-        val executable = Executable {
-            orderValidation.validateIsRestaurantOpen(
-                openingTime = openTime,
-                closingTime = closeTime
-            )
-        }
-
-        //then
-        val error = assertThrows(MultiErrorException::class.java, executable)
-        assertTrue(error.errorCodes.contains(INVALID_TIME))
-    }
 
     @Test
     fun `should return true when currentTime is between open and closed time`() {

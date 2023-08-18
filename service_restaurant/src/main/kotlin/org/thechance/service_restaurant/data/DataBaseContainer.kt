@@ -20,7 +20,7 @@ class DataBaseContainer(client: MongoClient) {
     val orderCollection:CoroutineCollection<OrderCollection> = database.getCollection(ORDER_COLLECTION)
 
     companion object {
-        const val DATABASE_NAME = "TheChanceBeepBeep"
+        const val DATABASE_NAME = "TheChanceBeepBeep1"
         const val CATEGORY_COLLECTION = "category"
         const val RESTAURANT_COLLECTION = "restaurant"
         const val MEAL_COLLECTION = "meal"

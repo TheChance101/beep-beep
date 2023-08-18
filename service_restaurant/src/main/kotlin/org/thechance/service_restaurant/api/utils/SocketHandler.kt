@@ -4,6 +4,7 @@ import io.ktor.websocket.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.consumeEach
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.thechance.service_restaurant.api.models.OrderDto
 import org.thechance.service_restaurant.api.models.RestaurantInfo
