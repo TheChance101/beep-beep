@@ -18,11 +18,11 @@ import presentation.screens.details.DetailsScreen
 
 class HomeScreen : Screen, KoinComponent {
 
-    private val homeViewModel: HomeViewModel by inject()
+    private val homeScreenModel: HomeScreenModel by inject()
 
     @Composable
     override fun Content() {
-        val state by homeViewModel.state.collectAsState()
+        val state by homeScreenModel.state.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
         HomeScreenContent { navigator push DetailsScreen(state.text) }
     }
