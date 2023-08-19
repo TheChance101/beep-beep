@@ -7,7 +7,7 @@ data class Address(
     val location: Location,
 ) {
     init {
-        require(location.latitude in -90.0..90.0) { throw Throwable(INVALID_ADDRESS_LOCATION) }
-        require(location.longitude in -180.0..180.0) { throw Throwable(INVALID_ADDRESS_LOCATION) }
+        require(location.latitude in -90.0..90.0) { throw InvalidLocationException(INVALID_ADDRESS_LOCATION) }
+        require(location.longitude in -180.0..180.0) { throw InvalidLocationException(INVALID_ADDRESS_LOCATION) }
     }
 }
