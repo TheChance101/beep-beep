@@ -35,7 +35,7 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
             email = email.toString(),
             locale = Locale(language, countryCode)
         )
-        respondWithResult(HttpStatusCode.Created, result, "user created successfully 🎉")
+        respondWithResult(HttpStatusCode.Created, result)
     }
 
     post("/login") {
@@ -51,10 +51,8 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
             tokenConfiguration,
             Locale(language, countryCode)
         )
-
         respondWithResult(HttpStatusCode.Created, token)
     }
-
 
     post("/refresh-access-token") {
         val params = call.receiveParameters()

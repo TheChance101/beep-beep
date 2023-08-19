@@ -14,7 +14,7 @@ interface IApiGateway {
     // region identity
 
     // region User
-    suspend fun createUser(fullName: String, username: String, password: String, email: String, locale: Locale): Boolean
+    suspend fun createUser(fullName: String, username: String, password: String, email: String, locale: Locale): Map<Int, String>
     suspend fun loginUser(
         userName: String, password: String, tokenConfiguration: TokenConfiguration, locale: Locale
     ): UserTokens
