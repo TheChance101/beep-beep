@@ -219,7 +219,7 @@ class ApiGateway(
         val expirationDate = getExpirationDate(tokenConfiguration.accessTokenExpirationTimestamp)
 
         if (!validateRefreshToken(refreshToken, locale)) {
-            val errorMessage = resourcesGateway.getLocalizedErrorMessage(1049, locale)
+            val errorMessage = resourcesGateway.getLocalizedResponseMessage(1049, locale)
             throw MultiLocalizedMessageException(listOf(errorMessage))
         }
 
@@ -254,7 +254,7 @@ class ApiGateway(
         } else {
             val errorResponse = response.body<List<Int>>()
             val errorMessages = errorResponse.map {
-                resourcesGateway.getLocalizedErrorMessage(it, locale = locale)
+                resourcesGateway.getLocalizedResponseMessage(it, locale = locale)
             }
             throw MultiLocalizedMessageException(errorMessages)
         }
