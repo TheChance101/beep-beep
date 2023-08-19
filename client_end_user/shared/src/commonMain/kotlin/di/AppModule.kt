@@ -11,7 +11,7 @@ object AppModule {
             networkModule,
             gatewayModule,
             useCaseModule,
-            viewModelModule,
+            screenModelsModule,
         )
     }
 
