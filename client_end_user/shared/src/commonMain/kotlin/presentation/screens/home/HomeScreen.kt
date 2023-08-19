@@ -19,7 +19,6 @@ import presentation.screens.details.DetailsScreen
 class HomeScreen : Screen, KoinComponent {
 
     private val homeScreenModel: HomeScreenModel by inject()
-
     @Composable
     override fun Content() {
         val state by homeScreenModel.state.collectAsState()
