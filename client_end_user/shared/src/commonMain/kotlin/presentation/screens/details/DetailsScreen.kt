@@ -1,46 +1,40 @@
-package presentation.screens.home
+package presentation.screens.details
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.koin.core.component.inject
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import org.koin.core.component.KoinComponent
-import presentation.screens.details.DetailsScreen
 
-class HomeScreen : Screen, KoinComponent {
 
-    private val homeViewModel: HomeViewModel by inject()
+class DetailsScreen(private val text: String) : Screen {
 
     @Composable
     override fun Content() {
-        val state by homeViewModel.state.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
-        HomeScreenContent { navigator push DetailsScreen(state.text) }
+        DetailsScreenContent(text) { navigator.pop() }
     }
 
 }
 
 @Composable
-fun HomeScreenContent(onNavigateToDetails: () -> Unit) {
+private fun DetailsScreenContent(text: String, onNavigateUp: () -> Unit) {
 
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = "Home Screen")
+        Text(text = "Details Screen")
+        Text(text = text)
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = onNavigateToDetails) {
-            Text(text = "Go to Details")
+        Button(onClick = onNavigateUp) {
+            Text(text = "Back To Home")
         }
     }
 
