@@ -203,12 +203,12 @@ class ApiGateway(
         val refreshToken = tokenManagementService.generateRefreshToken(tokenConfiguration)
 
         val accessTokenExpirationDate = getExpirationDate(tokenConfiguration.accessTokenExpirationTimestamp)
-        val freshTokenExpirationDate = getExpirationDate(tokenConfiguration.refreshTokenExpirationTimestamp)
-        saveRefreshToken(user.id, refreshToken, accessTokenExpirationDate.time, locale)
+        val refreshTokenExpirationDate = getExpirationDate(tokenConfiguration.refreshTokenExpirationTimestamp)
+        saveRefreshToken(user.id, refreshToken, refreshTokenExpirationDate.time, locale)
 
         val accessToken = generateAccessToken(user, tokenConfiguration)
 
-        return UserTokens(accessTokenExpirationDate.time, freshTokenExpirationDate.time, accessToken, refreshToken)
+        return UserTokens(accessTokenExpirationDate.time, refreshTokenExpirationDate.time, accessToken, refreshToken)
     }
 
     override suspend fun refreshAccessToken(
@@ -219,7 +219,8 @@ class ApiGateway(
         val expirationDate = getExpirationDate(tokenConfiguration.accessTokenExpirationTimestamp)
 
         if (!validateRefreshToken(refreshToken, locale)) {
-            throw Exception("Invalid refresh token")
+            val errorMessage = resourcesGateway.getLocalizedErrorMessage(1049, locale)
+            throw MultiLocalizedMessageException(listOf(errorMessage))
         }
 
         val user = getUserByRefreshToken(refreshToken, locale)
