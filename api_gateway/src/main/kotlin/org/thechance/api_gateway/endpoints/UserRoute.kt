@@ -40,13 +40,13 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
 
     post("/login") {
         val params = call.receiveParameters()
-        val email = params["username"]?.trim().toString()
+        val userName = params["username"]?.trim().toString()
         val password = params["password"]?.trim().toString()
 
         val (language, countryCode) = extractLocalizationHeader()
 
         val token = userAccountManagementUseCase.loginUser(
-            email,
+            userName,
             password,
             tokenConfiguration,
             Locale(language, countryCode)
