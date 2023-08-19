@@ -10,6 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
+import com.beepbeep.designSystem.ui.composable.BpTextButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -22,12 +23,13 @@ object TaxiScreen : Screen, KoinComponent {
     @Composable
     override fun Content() {
         val state by screenModel.state.collectAsState()
-        TaxiContent(state = state)
+        TaxiContent(state = state , screenModel::updateAddNewTaxiDialogVisibility)
     }
 
     @Composable
     private fun TaxiContent(
         state: TaxiUiState,
+        updateAddNewTaxiDialogVisibility: () -> Unit
     ) {
 
         Column(
@@ -36,6 +38,18 @@ object TaxiScreen : Screen, KoinComponent {
             Box(Modifier.weight(1f)) {
                 Text(text = "Taxi Screen", color = Theme.colors.onPrimary)
 
+                BpTextButton(
+                    text = "Add Taxi",
+                    updateAddNewTaxiDialogVisibility,
+                    modifier = Modifier,
+                )
+
+                AddNewTaxiDialog(
+                    modifier = Modifier,
+                    onTaxiPlateNumberChange = {},
+                    setShowDialog = updateAddNewTaxiDialogVisibility,
+                    state.isAddNewTaxiDialogVisible
+                )
             }
         }
     }

@@ -35,17 +35,26 @@ import java.awt.Dimension
 
 
 @Composable
-fun addTaxi(
+fun AddNewTaxiDialog(
     modifier: Modifier = Modifier,
     onTaxiPlateNumberChange: (String) -> Unit,
-    setShowDialog: (Boolean) -> Unit
+    setShowDialog: () -> Unit,
+    isVisible: Boolean
 ) {
-    val carColors = listOf(Color.Gray, Color.Red, Color.DarkGray, Color.Cyan)
+    val carColors = listOf(
+        Color(0xffF47373),
+        Color(0xffF8EC7E),
+        Color(0xff80E5AB),
+        Color(0xff77DEEE),
+        Color(0xffFFFFFF),
+        Color(0xffAFAFAF),
+        Color(0xff3F3F3F),
+    )
     var carColor by remember { mutableStateOf(carColors.first()) }
 
     Dialog(
-        visible = true,
-        onCloseRequest = { setShowDialog(false) },
+        visible = isVisible,
+        onCloseRequest = setShowDialog,
         focusable = true,
     ) {
         this.window.title = "Create new Taxi"
