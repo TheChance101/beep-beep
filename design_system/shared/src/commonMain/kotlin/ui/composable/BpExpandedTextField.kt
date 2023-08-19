@@ -2,7 +2,7 @@ package com.beepbeep.designSystem.ui.composable
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -23,7 +23,7 @@ import com.beepbeep.designSystem.ui.theme.Theme.typography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BpExpandedTextField(
+fun BpExpandableTextField(
     label: String,
     text: String,
     onValueChange: (String) -> Unit,
@@ -44,7 +44,7 @@ fun BpExpandedTextField(
         )
 
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth().height(104.dp),
+            modifier = Modifier.fillMaxWidth().heightIn(min = 104.dp, max = 160.dp),
             value = text,
             placeholder = {
                 Text(

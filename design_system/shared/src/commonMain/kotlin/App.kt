@@ -27,7 +27,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpChip
-import com.beepbeep.designSystem.ui.composable.BpExpandedTextField
+import com.beepbeep.designSystem.ui.composable.BpExpandableTextField
 import com.beepbeep.designSystem.ui.composable.BpNavigationBar
 import com.beepbeep.designSystem.ui.composable.BpNavigationBarItem
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
@@ -137,7 +137,7 @@ fun PreviewTextField() {
             hint = "Enter your FullName",
             correctValidation = true
         )
-        BpExpandedTextField(
+        BpExpandableTextField(
             onValueChange = { text6 = it },
             text = text6,
             label = "FullName",
