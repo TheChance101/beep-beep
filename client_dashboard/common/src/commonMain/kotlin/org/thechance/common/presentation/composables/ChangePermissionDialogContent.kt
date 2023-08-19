@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BpChip
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpTextButton
@@ -48,13 +49,12 @@ fun ChangePermissionDialogContent() {
         BpTextButton(
             text = "Cancel",
             onClick = { },
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f).height(32.dp)
         )
         BpOutlinedButton(
             title = "Save",
             onClick = { },
-            modifier = Modifier.weight(3f),
-//                height = 32.dp // todo: need to customize height
+            modifier = Modifier.weight(3f).height(32.dp),
         )
     }
 }
