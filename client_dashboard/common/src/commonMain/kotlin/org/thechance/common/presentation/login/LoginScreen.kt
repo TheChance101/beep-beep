@@ -38,6 +38,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.thechance.common.presentation.composables.Logo
 import org.thechance.common.presentation.main.MainContainer
+import org.thechance.common.presentation.taxi.addTaxi
 import org.thechance.common.presentation.uistate.LoginUiState
 
 
@@ -49,7 +50,7 @@ object LoginScreen : Screen, KoinComponent {
     override fun Content() {
         val navigate = LocalNavigator.currentOrThrow
         val state by screenModel.state.collectAsState()
-
+        addTaxi(onTaxiPlateNumberChange = {})
         LoginContent(
             state = state,
             onClickLogin = { navigate.push(MainContainer) },
@@ -58,6 +59,7 @@ object LoginScreen : Screen, KoinComponent {
         )
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LoginContent(
