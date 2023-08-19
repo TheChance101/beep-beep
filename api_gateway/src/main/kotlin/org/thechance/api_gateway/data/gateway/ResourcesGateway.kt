@@ -7,7 +7,7 @@ import java.util.*
 class ResourcesGateway : IResourcesGateway {
 
     override suspend fun getLocalizedResponseMessage(code: Int, locale: Locale): Map<Int, String> {
-        val resourceBundle = ResourceBundle.getBundle("errors", locale)
+        val resourceBundle = ResourceBundle.getBundle("response_messages", locale)
         val localizedMessage = resourceBundle.getString(code.toString())
         return mapOf(code to localizedMessage)
     }
