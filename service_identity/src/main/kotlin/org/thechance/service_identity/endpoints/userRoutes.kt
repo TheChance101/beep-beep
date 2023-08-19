@@ -101,7 +101,7 @@ fun Route.userRoutes() {
             val formParameters = call.receiveParameters()
             val refreshToken = formParameters["refreshToken"]
                 ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val userManagementDto = manageUserAccount.getUserIdByRefreshToken(refreshToken).toDto()
+            val userManagementDto = manageUserAccount.getUserByRefreshToken(refreshToken).toDto()
             call.respond(HttpStatusCode.OK, userManagementDto)
         }
 
