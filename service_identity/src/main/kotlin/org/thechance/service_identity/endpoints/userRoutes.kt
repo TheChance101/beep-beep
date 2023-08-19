@@ -88,31 +88,6 @@ fun Route.userRoutes() {
             call.respond(HttpStatusCode.OK, isLoggedIn)
         }
 
-        post("/update-refresh-token") {
-            val formParameters = call.receiveParameters()
-            val userId = formParameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val refreshToken = formParameters["refreshToken"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val expiresIn = formParameters["expirationDate"]?.toLong() ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val isSavedTokens = manageUserAccount.updateRefreshToken(userId, refreshToken, expiresIn)
-            call.respond(HttpStatusCode.OK, isSavedTokens)
-        }
-
-        post("/get-user-by-refresh-token") {
-            val formParameters = call.receiveParameters()
-            val refreshToken = formParameters["refreshToken"]
-                ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val userManagementDto = manageUserAccount.getUserByRefreshToken(refreshToken).toDto()
-            call.respond(HttpStatusCode.OK, userManagementDto)
-        }
-
-        post("/validate-refresh-token") {
-            val formParameters = call.receiveParameters()
-            val refreshToken = formParameters["refreshToken"]
-                ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val isValid = manageUserAccount.validateRefreshToken(refreshToken)
-            call.respond(HttpStatusCode.OK, isValid)
-        }
-
         get("/get-user") {
             val username = call.parameters["username"]
                 ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
