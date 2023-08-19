@@ -18,8 +18,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,13 +36,15 @@ import org.thechance.common.presentation.composables.modifier.cursorHoverIconHan
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DashboardAppbar(
+    onClickDropDownMenu: () -> Unit,
+    onDismissDropDownMenu: () -> Unit,
     title: String,
     username: String,
+    isDropMenuExpanded: Boolean,
     onLogOut: () -> Unit
 ) {
-    val isDropMenuExpanded = remember { mutableStateOf(false) }
     val dropMenuArrowRotateDirection =
-        animateFloatAsState(targetValue = if (isDropMenuExpanded.value) 180f else 0f)
+        animateFloatAsState(targetValue = if (isDropMenuExpanded) 180f else 0f)
 
     Row(
         Modifier.height(96.dp).fillMaxWidth().background(Theme.colors.surface)
@@ -62,9 +62,7 @@ fun DashboardAppbar(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.onClick {
-                    isDropMenuExpanded.value = !isDropMenuExpanded.value
-                }.cursorHoverIconHand()
+                modifier = Modifier.onClick(onClick = onClickDropDownMenu).cursorHoverIconHand()
             ) {
                 Text(
                     modifier = Modifier.circleLayout().padding(Theme.dimens.space8),
@@ -88,15 +86,15 @@ fun DashboardAppbar(
             }
             Box(contentAlignment = Alignment.BottomEnd) {
                 BpDropdownMenu(
-                    expanded = isDropMenuExpanded.value,
-                    onDismissRequest = { isDropMenuExpanded.value = false },
+                    expanded = isDropMenuExpanded,
+                    onDismissRequest = onDismissDropDownMenu,
                     offset = DpOffset.Zero.copy(y = Theme.dimens.space24),
                     shape = RoundedCornerShape(Theme.radius.medium)
                         .copy(topEnd = CornerSize(Theme.radius.small)),
                 ) {
                     DropdownMenuItem(
                         onClick = {
-                            isDropMenuExpanded.value = false
+                            onDismissDropDownMenu()
                             onLogOut()
                         },
                         modifier = Modifier.cursorHoverIconHand(),
