@@ -38,7 +38,7 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
             locale = Locale(language, countryCode)
         )
         val locale = Locale(language, countryCode)
-        val message = resourcesGateway.getLocalizedErrorMessage(errorCode = 1076, locale = locale)
+        val message = resourcesGateway.getLocalizedResponseMessage(code = 1076, locale = locale)
 
         respondWithResult(HttpStatusCode.Created, result,message)
     }
