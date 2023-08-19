@@ -18,26 +18,47 @@ class RemoteGateway(private val client: HttpClient) : IRemoteGateway {
         password: String,
         email: String
     ): Boolean {
-        return client.submitForm("/user",
-            formParameters = parameters {
-                append("fullName", fullName)
-                append("username", username)
-                append("password", password)
-                append("email", email)
+        try {
+            val response = client.submitForm("/user",
+                formParameters = parameters {
+                    append("fullName", fullName)
+                    append("username", username)
+                    append("password", password)
+                    append("email", email)
+                }
+            )
+            val responseBody = response.body<BaseResponse<Boolean>>()
+            if (response.status.isSuccess()) {
+                return responseBody.value ?: false
+            } else {
+                throw Exception(responseBody.status.errorMessages.toString())
             }
-        ).body<BaseResponse<Boolean>>().value ?: false
+        } catch (exception: Exception) {
+            throw Exception(exception.message)
+        }
     }
 
     override suspend fun loginUser(
         userName: String,
         password: String,
     ): Tokens {
-        return client.submitForm("/user/login",
-            formParameters = parameters {
-                append("username", userName)
-                append("password", password)
+        try {
+            val response = client.submitForm("/user/login",
+                formParameters = parameters {
+                    append("username", userName)
+                    append("password", password)
+                }
+            )
+            val responseBody = response.body<BaseResponse<TokensResponse>>()
+            if (response.status.isSuccess()) {
+                return responseBody.value?.toEntity() ?: throw Exception()
+            } else {
+                throw Exception(responseBody.status.errorMessages.toString())
             }
-        ).body<BaseResponse<TokensResponse>>().value?.toEntity() ?: throw Exception()
+
+        } catch (exception: Exception) {
+            throw Exception(exception.message)
+        }
     }
 
 }

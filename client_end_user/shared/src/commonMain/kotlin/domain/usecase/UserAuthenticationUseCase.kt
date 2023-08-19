@@ -9,13 +9,14 @@ class UserAuthenticationUseCase (private val remoteGateway: IRemoteGateway) : IU
         return remoteGateway.createUser(fullName, username, password, email)
     }
 
-    override suspend fun loginUser(userName: String, password: String): Tokens {
-        return remoteGateway.loginUser(userName, password)
+    override suspend fun loginUser(userName: String, password: String) {
+         remoteGateway.loginUser(userName, password)
     }
 
 }
 
 interface IUserAuthenticationUseCase{
+
     suspend fun createUser(
         fullName: String,
         username: String,
@@ -26,6 +27,6 @@ interface IUserAuthenticationUseCase{
     suspend fun loginUser(
         userName: String,
         password: String,
-    ): Tokens
+    )
 
 }
