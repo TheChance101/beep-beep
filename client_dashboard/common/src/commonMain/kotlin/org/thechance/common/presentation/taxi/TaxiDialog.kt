@@ -38,12 +38,14 @@ import java.awt.Dimension
 fun addTaxi(
     modifier: Modifier = Modifier,
     onTaxiPlateNumberChange: (String) -> Unit,
+    setShowDialog: (Boolean) -> Unit
 ) {
     val carColors = listOf(Color.Gray, Color.Red, Color.DarkGray, Color.Cyan)
     var carColor by remember { mutableStateOf(carColors.first()) }
 
     Dialog(
-        onCloseRequest = { },
+        visible = true,
+        onCloseRequest = { setShowDialog(false) },
         focusable = true,
     ) {
         this.window.title = "Create new Taxi"
@@ -172,8 +174,6 @@ private fun Seats(
                 ),
                 contentDescription = null,
                 tint = Theme.colors.contentSecondary
-
-
             )
         }
     }
