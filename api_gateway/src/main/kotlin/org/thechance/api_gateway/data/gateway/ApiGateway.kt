@@ -35,9 +35,8 @@ class ApiGateway(
         password: String,
         email: String,
         locale: Locale
-    ): Map<Int, String> {
-        val message = resourcesGateway.getLocalizedErrorMessage(errorCode = 1076, locale = locale)
-        tryToExecute<Boolean>(APIS.IDENTITY_API, locale) {
+    ): Boolean{
+        return   tryToExecute<Boolean>(APIS.IDENTITY_API, locale) {
             submitForm("/user",
                 formParameters = parameters {
                     append("fullName", fullName)
@@ -47,7 +46,7 @@ class ApiGateway(
                 }
             )
         }
-        return message
+
     }
 
     override suspend fun loginUser(
