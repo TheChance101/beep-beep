@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.composables.modifier.noRipple
 import org.thechance.common.presentation.uistate.UserScreenUiState
-import java.util.UUID
 
 
 operator fun <E> List<E>.times(i: Int): List<E> {

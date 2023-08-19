@@ -18,5 +18,18 @@ class UserScreenModel : StateScreenModel<UserScreenUiState>(UserScreenUiState())
 
     private fun updateUsers() {
         mutableState.update { it.copy(users = getUsers().toUiState()) }
+        mutableState.update { it.copy(numberOfUsers = it.users.size) }
+    }
+
+    fun onSearchChange(text: String) {
+        mutableState.update { it.copy(search = text) }
+    }
+
+    fun onClickDropDownMenu() {
+        mutableState.update { it.copy(isFilterDropdownMenuExpanded = true) }
+    }
+
+    fun onDismissDropDownMenu() {
+        mutableState.update { it.copy(isFilterDropdownMenuExpanded = false) }
     }
 }

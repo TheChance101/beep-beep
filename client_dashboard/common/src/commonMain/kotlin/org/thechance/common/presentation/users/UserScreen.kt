@@ -44,7 +44,6 @@ import org.thechance.common.presentation.composables.BpDropdownMenu
 import org.thechance.common.presentation.composables.modifier.cursorHoverIconHand
 import org.thechance.common.presentation.composables.table.BpPager
 import org.thechance.common.presentation.composables.table.BpTable
-import org.thechance.common.presentation.composables.table.Header
 import org.thechance.common.presentation.composables.table.TotalItemsIndicator
 import org.thechance.common.presentation.composables.table.UserRow
 import org.thechance.common.presentation.uistate.UserScreenUiState
@@ -57,8 +56,9 @@ object UserScreen : Screen, KoinComponent {
     @Composable
     override fun Content() {
         val state by screenModel.state.collectAsState()
-
-        UserContent(state = state)
+        UserContent(
+            state = state
+        )
     }
 
     @OptIn(ExperimentalLayoutApi::class)
@@ -69,55 +69,43 @@ object UserScreen : Screen, KoinComponent {
         //This need to change to get it from state
         var selectedUser by remember { mutableStateOf<String?>(null) }
         var selectedPage by remember { mutableStateOf(1) }
-        var numberItemInPage by remember { mutableStateOf(10) }
-        var search by remember { mutableStateOf("") }
-        val pageCount = 10
-        val isDropMenuExpanded = remember { mutableStateOf(false) }
+        var numberItemInPage by remember { mutableStateOf(3) }
+        val pageCount = 3
 
         Column(
             Modifier.background(Theme.colors.surface).fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
         ) {
-
-            val headers = listOf(
-                Header("No.", 1f),
-                Header("Users", 3f),
-                Header("Username", 3f),
-                Header("Email", 3f),
-                Header("Country", 3f),
-                Header("Permission", 3f),
-                Header("", 1f),
-            )
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
                 verticalAlignment = Alignment.Top
             ) {
                 BpSimpleTextField(
                     modifier = Modifier.widthIn(max = 440.dp),
                     hint = "Search for users",
-                    onValueChange = { search = it },
-                    text = search,
+                    onValueChange = screenModel::onSearchChange,
+                    text = state.search,
                     keyboardType = KeyboardType.Text,
-                    trailingPainter = painterResource("search.svg")
+                    trailingPainter = painterResource("ic_search.svg")
                 )
                 Row {
                     BpIconButton(
                         content = {
                             Text(
                                 "Filter",
-                                style = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
+                                style = Theme.typography.titleMedium
+                                    .copy(color = Theme.colors.contentTertiary),
                             )
                         },
-                        onClick = { isDropMenuExpanded.value = true },
-                        painter = painterResource("sort.svg"),
+                        onClick = screenModel::onClickDropDownMenu,
+                        painter = painterResource("ic_filter.svg"),
                         modifier = Modifier.cursorHoverIconHand()
                     )
                     BpDropdownMenu(
-                        expanded = isDropMenuExpanded.value,
-                        onDismissRequest = { isDropMenuExpanded.value = false },
+                        expanded = state.isFilterDropdownMenuExpanded,
+                        onDismissRequest = screenModel::onDismissDropDownMenu,
                         offset = DpOffset.Zero.copy(y = Theme.dimens.space16),
                         shape = RoundedCornerShape(Theme.radius.medium)
                             .copy(topStart = CornerSize(Theme.radius.small)),
@@ -126,72 +114,85 @@ object UserScreen : Screen, KoinComponent {
                         DropdownMenuItem(
                             contentPadding = PaddingValues(0.dp),
                             modifier = Modifier.width(400.dp),
-                            onClick = { isDropMenuExpanded.value = false },
+                            onClick = screenModel::onDismissDropDownMenu,
                             text = {
                                 Column(Modifier.fillMaxSize()) {
                                     Text(
                                         "Filter",
                                         style = Theme.typography.headline,
                                         color = Theme.colors.contentPrimary,
-                                        modifier = Modifier.padding(start = 24.dp, top = 24.dp)
+                                        modifier = Modifier.padding(
+                                            start = Theme.dimens.space24,
+                                            top = Theme.dimens.space24
+                                        )
                                     )
                                     Text(
                                         "Permission",
                                         style = Theme.typography.titleLarge,
                                         color = Theme.colors.contentPrimary,
                                         modifier = Modifier.padding(
-                                            start = 24.dp,
-                                            top = 40.dp,
-                                            bottom = 16.dp
+                                            start = Theme.dimens.space24,
+                                            top = Theme.dimens.space40,
+                                            bottom = Theme.dimens.space16
                                         ),
                                     )
 
                                     FlowRow(
                                         modifier = Modifier.fillMaxWidth()
                                             .background(Color(0xff151515))
-                                            .padding(start = 24.dp, top = 16.dp),
-                                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                                            .padding(
+                                                start = Theme.dimens.space24,
+                                                top = Theme.dimens.space16
+                                            ),
+                                        horizontalArrangement = Arrangement
+                                            .spacedBy(Theme.dimens.space16),
                                         maxItemsInEachRow = 3,
                                     ) {
                                         BpChip(
-                                            painter = painterResource("chart.xml"),
+                                            painter = painterResource("ic_admin.xml"),
                                             onClick = {},
                                             label = "Dashboard admin",
                                             isSelected = true
                                         )
                                         BpChip(
-                                            painter = painterResource("ic_restaurant_empty.svg"),
+                                            painter =
+                                            painterResource("ic_restaurant_empty.svg"),
                                             onClick = {},
                                             label = "Restaurant owner",
                                             isSelected = false,
                                         )
                                         BpChip(
-                                            painter = painterResource("ic_taxi_empty.svg"),
+                                            painter =
+                                            painterResource("ic_taxi_empty.svg"),
                                             onClick = {},
                                             label = "Taxi driver",
                                             isSelected = false,
-                                            modifier = Modifier.padding(top = 16.dp)
+                                            modifier = Modifier.padding(top = Theme.dimens.space16)
                                         )
                                         BpChip(
-                                            painter = painterResource("ic_users_empty.svg"),
+                                            painter =
+                                            painterResource("ic_users_empty.svg"),
                                             onClick = {},
                                             label = "End user",
                                             isSelected = false,
-                                            modifier = Modifier.padding(top = 16.dp)
+                                            modifier = Modifier.padding(top = Theme.dimens.space16)
                                         )
                                         BpChip(
                                             painter = painterResource("ic_support.xml"),
                                             onClick = {},
                                             label = "Support",
                                             isSelected = true,
-                                            modifier = Modifier.padding(top = 16.dp)
+                                            modifier = Modifier.padding(top = Theme.dimens.space16)
                                         )
                                         BpChip(
                                             painter = painterResource("ic_delivery.xml"),
                                             onClick = {},
                                             label = "Delivery",
                                             isSelected = false,
-                                            modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
+                                            modifier = Modifier.padding(
+                                                top = Theme.dimens.space16,
+                                                bottom = Theme.dimens.space16
+                                            )
                                         )
                                     }
                                     Text(
@@ -199,15 +200,19 @@ object UserScreen : Screen, KoinComponent {
                                         style = Theme.typography.titleLarge,
                                         color = Theme.colors.contentPrimary,
                                         modifier = Modifier.padding(
-                                            start = 24.dp,
-                                            top = 32.dp,
-                                            bottom = 16.dp
+                                            start = Theme.dimens.space24,
+                                            top = Theme.dimens.space32,
+                                            bottom = Theme.dimens.space16
                                         )
                                     )
                                     Column(
-                                        Modifier.fillMaxWidth().background(Color(0xff151515))
-                                            .padding(horizontal = 24.dp, vertical = 16.dp),
-                                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                                        Modifier.fillMaxWidth().background(Theme.colors.background)
+                                            .padding(
+                                                horizontal = Theme.dimens.space24,
+                                                vertical = Theme.dimens.space16
+                                            ),
+                                        verticalArrangement = Arrangement
+                                            .spacedBy(Theme.dimens.space16)
                                     ) {
                                         BpCheckBox(
                                             label = "Palestine",
@@ -241,19 +246,22 @@ object UserScreen : Screen, KoinComponent {
                                         )
                                     }
                                     Row(
-                                        Modifier.padding(24.dp),
-                                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                        Modifier.padding(Theme.dimens.space24),
+                                        horizontalArrangement = Arrangement
+                                            .spacedBy(Theme.dimens.space16)
                                     ) {
                                         BpTextButton(
                                             "Cancel",
-                                            onClick = { isDropMenuExpanded.value = false },
+                                            onClick = screenModel::onDismissDropDownMenu,
+                                            heightInDp = 40,
                                             modifier = Modifier.cursorHoverIconHand()
+
                                         )
                                         BpOutlinedButton(
                                             title = "Save",
-                                            onClick = { isDropMenuExpanded.value = false },
+                                            onClick = screenModel::onDismissDropDownMenu,
                                             shape = RoundedCornerShape(Theme.radius.small),
-                                            modifier = Modifier.height(32.dp).weight(1f)
+                                            modifier = Modifier.height(40.dp).weight(1f)
                                         )
                                     }
                                 }
@@ -266,7 +274,7 @@ object UserScreen : Screen, KoinComponent {
             BpTable(
                 data = state.users,
                 key = { it.username },
-                headers = headers,
+                headers = state.tableHeader,
                 modifier = Modifier.fillMaxWidth(),
                 rowsCount = pageCount,
                 offset = selectedPage - 1,
@@ -286,7 +294,7 @@ object UserScreen : Screen, KoinComponent {
             ) {
                 TotalItemsIndicator(
                     numberItemInPage = numberItemInPage,
-                    totalItems = 190,
+                    totalItems = state.numberOfUsers,
                     itemType = "user",
                     onItemPerPageChange = { numberItemInPage = it.toIntOrNull() ?: 10 }
                 )

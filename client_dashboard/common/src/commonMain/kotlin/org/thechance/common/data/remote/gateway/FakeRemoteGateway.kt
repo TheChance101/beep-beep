@@ -19,43 +19,45 @@ class FakeRemoteGateway : IRemoteGateway {
         return listOf(
             UserDto(
                 id = "c4425a0e-9f0a-4df1-bcc1-6dd96322a990",
-                fullName = "John Smith",
-                username = "john_smith_123",
-                email = "john_smith@example.com",
-                country = "USA",
+                fullName = "mohammed sayed",
+                username = "mohammed_sayed",
+                email = "elzamalk@example.com",
+                country = "Egypt",
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "RESTAURANT"),
                     UserDto.PermissionDto(id = 2, permission = "DRIVER"),
-                    UserDto.PermissionDto(id = 3, permission = "END_USER")
+                    UserDto.PermissionDto(id = 3, permission = "END_USER"),
+                    UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
+                    UserDto.PermissionDto(id = 2, permission = "ADMIN")
                 )
             ),
             UserDto(
                 id = "f7b087da-8c02-417b-a3db-54c82b5ff5b4",
-                fullName = "Emily Johnson",
-                username = "emily_johnson_456",
-                email = "emily_johnson@example.com",
-                country = "Canada",
+                fullName = "asia",
+                username = "asia",
+                email = "asia@example.com",
+                country = "Iraq",
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
-                    UserDto.PermissionDto(id = 2, permission = "DELIVERY")
+                    UserDto.PermissionDto(id = 2, permission = "ADMIN")
                 )
             ),
             UserDto(
                 id = "3e1f5d4a-8317-4f13-aa89-2c094652e6a3",
-                fullName = "Michael Williams",
-                username = "michael_williams_789",
-                email = "michael_williams@example.com",
-                country = "UK",
+                fullName = "ali",
+                username = "ali_jamal",
+                email = "ali_jamal@example.com",
+                country = "Iraq",
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "ADMIN")
                 )
             ),
             UserDto(
                 id = "c3d8fe2b-6d36-47ea-964a-57d45e780bce",
-                fullName = "Sarah Brown",
-                username = "sarah_brown_246",
-                email = "sarah_brown@example.com",
-                country = "Australia",
+                fullName = "mustafa",
+                username = "mustafa_246",
+                email = "mustafa_246@example.com",
+                country = "Syria",
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "END_USER"),
                     UserDto.PermissionDto(id = 2, permission = "RESTAURANT")
@@ -63,10 +65,10 @@ class FakeRemoteGateway : IRemoteGateway {
             ),
             UserDto(
                 id = "7a1bfe39-4b2c-4f76-bde0-82da2eaf9e99",
-                fullName = "David Jones",
-                username = "david_jones_567",
-                email = "david_jones@example.com",
-                country = "USA",
+                fullName = "sarah ali",
+                username = "sarah_ali_567",
+                email = "sarah_ali_567@example.com",
+                country = "Palestine",
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                     UserDto.PermissionDto(id = 2, permission = "ADMIN"),
@@ -78,7 +80,7 @@ class FakeRemoteGateway : IRemoteGateway {
                 fullName = "Jane Davis",
                 username = "jane_davis_890",
                 email = "jane_davis@example.com",
-                country = "Canada",
+                country = "Other",
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "END_USER"),
                     UserDto.PermissionDto(id = 2, permission = "DRIVER")
