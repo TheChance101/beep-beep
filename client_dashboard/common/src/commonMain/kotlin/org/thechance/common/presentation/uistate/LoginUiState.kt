@@ -1,5 +1,6 @@
 package org.thechance.common.presentation.uistate
 
+import org.thechance.common.domain.entity.Admin
 import org.thechance.common.domain.entity.User
 
 
@@ -11,6 +12,3 @@ data class LoginUiState(
 )
 
 
-fun User.toUiState() = UserUiState(
-    name = name
-)

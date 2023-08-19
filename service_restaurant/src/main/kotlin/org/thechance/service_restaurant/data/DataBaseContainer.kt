@@ -3,10 +3,7 @@ package org.thechance.service_restaurant.data
 import com.mongodb.reactivestreams.client.MongoClient
 import org.litote.kmongo.coroutine.CoroutineCollection
 import org.litote.kmongo.coroutine.coroutine
-import org.thechance.service_restaurant.data.collection.CategoryCollection
-import org.thechance.service_restaurant.data.collection.CuisineCollection
-import org.thechance.service_restaurant.data.collection.MealCollection
-import org.thechance.service_restaurant.data.collection.RestaurantCollection
+import org.thechance.service_restaurant.data.collection.*
 
 class DataBaseContainer(client: MongoClient) {
 
@@ -20,11 +17,14 @@ class DataBaseContainer(client: MongoClient) {
 
     val mealCollection: CoroutineCollection<MealCollection> = database.getCollection(MEAL_COLLECTION)
 
+    val orderCollection:CoroutineCollection<OrderCollection> = database.getCollection(ORDER_COLLECTION)
+
     companion object {
         const val DATABASE_NAME = "TheChanceBeepBeep"
         const val CATEGORY_COLLECTION = "category"
         const val RESTAURANT_COLLECTION = "restaurant"
         const val MEAL_COLLECTION = "meal"
         const val CUISINE_COLLECTION = "cuisine"
+        const val ORDER_COLLECTION = "order"
     }
 }

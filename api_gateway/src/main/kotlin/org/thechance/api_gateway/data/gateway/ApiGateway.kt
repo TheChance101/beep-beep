@@ -35,8 +35,8 @@ class ApiGateway(
         password: String,
         email: String,
         locale: Locale
-    ): Boolean {
-        return tryToExecute<Boolean>(APIS.IDENTITY_API, locale) {
+    ): Boolean{
+        return   tryToExecute<Boolean>(APIS.IDENTITY_API, locale) {
             submitForm("/user",
                 formParameters = parameters {
                     append("fullName", fullName)
@@ -46,6 +46,7 @@ class ApiGateway(
                 }
             )
         }
+
     }
 
     override suspend fun loginUser(
@@ -63,7 +64,6 @@ class ApiGateway(
             )
         }
         return generateUserTokens(userName, tokenConfiguration, locale)
-
     }
 
 
@@ -110,9 +110,9 @@ class ApiGateway(
     override suspend fun validateRefreshToken(refreshToken: String, locale: Locale): Boolean {
         return tryToExecute<Boolean>(APIS.IDENTITY_API, locale) {
             submitForm("user/validate-refresh-token",
-                    formParameters = parameters {
-                        append("refreshToken", refreshToken)
-                    }
+                formParameters = parameters {
+                    append("refreshToken", refreshToken)
+                }
             )
         }
     }
@@ -120,9 +120,9 @@ class ApiGateway(
     override suspend fun getUserByRefreshToken(refreshToken: String, locale: Locale): UserManagement {
         return tryToExecute<UserManagementResource>(APIS.IDENTITY_API, locale) {
             submitForm("user/get-user-by-refresh-token",
-                    formParameters = parameters {
-                        append("refreshToken", refreshToken)
-                    }
+                formParameters = parameters {
+                    append("refreshToken", refreshToken)
+                }
             )
         }.toManagedUser()
     }
@@ -203,12 +203,12 @@ class ApiGateway(
         val refreshToken = tokenManagementService.generateRefreshToken(tokenConfiguration)
 
         val accessTokenExpirationDate = getExpirationDate(tokenConfiguration.accessTokenExpirationTimestamp)
-        val freshTokenExpirationDate = getExpirationDate(tokenConfiguration.refreshTokenExpirationTimestamp)
-        saveRefreshToken(user.id, refreshToken, accessTokenExpirationDate.time, locale)
+        val refreshTokenExpirationDate = getExpirationDate(tokenConfiguration.refreshTokenExpirationTimestamp)
+        saveRefreshToken(user.id, refreshToken, refreshTokenExpirationDate.time, locale)
 
         val accessToken = generateAccessToken(user, tokenConfiguration)
 
-        return UserTokens(accessTokenExpirationDate.time, freshTokenExpirationDate.time, accessToken, refreshToken)
+        return UserTokens(accessTokenExpirationDate.time, refreshTokenExpirationDate.time, accessToken, refreshToken)
     }
 
     override suspend fun refreshAccessToken(
@@ -219,7 +219,8 @@ class ApiGateway(
         val expirationDate = getExpirationDate(tokenConfiguration.accessTokenExpirationTimestamp)
 
         if (!validateRefreshToken(refreshToken, locale)) {
-            throw Exception("Invalid refresh token")
+            val errorMessage = resourcesGateway.getLocalizedErrorMessage(1049, locale)
+            throw MultiLocalizedMessageException(listOf(errorMessage))
         }
 
         val user = getUserByRefreshToken(refreshToken, locale)
@@ -242,9 +243,9 @@ class ApiGateway(
     }
 
     private suspend inline fun <reified T> tryToExecute(
-            api: APIS,
-            locale: Locale,
-            method: HttpClient.() -> HttpResponse
+        api: APIS,
+        locale: Locale,
+        method: HttpClient.() -> HttpResponse
     ): T {
         attributes.put(AttributeKey("API"), api.value)
         val response = client.method()

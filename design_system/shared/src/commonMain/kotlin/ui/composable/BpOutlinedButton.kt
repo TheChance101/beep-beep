@@ -28,7 +28,7 @@ fun BpOutlinedButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    shape: Shape = RoundedCornerShape(8.dp),
+    shape: Shape = RoundedCornerShape(Theme.radius.medium),
     contentColor: Color = Theme.colors.primary,
     border: BorderStroke = BorderStroke(1.dp, color = Theme.colors.primary),
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Center

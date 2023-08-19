@@ -23,11 +23,11 @@ fun BpTextButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    height: Int = 32,
+    heightInDp: Int = 32,
 ) {
     Surface(
         modifier = modifier
-            .height(height.dp)
+            .height(heightInDp.dp)
             .border(width = 1.dp, color = colors.contentBorder, shape = RoundedCornerShape(radius.small))
             .padding(horizontal = dimens.space16, vertical = dimens.space8)
             .clickable(

@@ -15,7 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
-import com.beepbeep.designSystem.ui.composable.BpTextButton
+import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.components.EditablePriceBar
 import org.thechance.common.presentation.composables.BpDropdownMenu
@@ -114,8 +114,8 @@ private fun RestaurantFilterDropdownMenuContent(
             Modifier.fillMaxWidth().padding(Theme.dimens.space24),
             horizontalArrangement = Arrangement.Center
         ) {
-            BpTextButton(
-                text = "Cancel",
+            BpTransparentButton(
+                title = "Cancel",
                 onClick = {},
                 modifier = Modifier.padding(end = Theme.dimens.space16).height(Theme.dimens.space32)
                     .weight(1f)
