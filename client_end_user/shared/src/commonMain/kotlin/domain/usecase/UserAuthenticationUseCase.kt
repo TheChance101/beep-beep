@@ -10,7 +10,8 @@ class UserAuthenticationUseCase (private val remoteGateway: IRemoteGateway) : IU
     }
 
     override suspend fun loginUser(userName: String, password: String) {
-         remoteGateway.loginUser(userName, password)
+         val tokens = remoteGateway.loginUser(userName, password)
+        //save tokens to shared Preferences
     }
 
 }

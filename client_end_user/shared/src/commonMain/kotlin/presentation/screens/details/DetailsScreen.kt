@@ -23,7 +23,7 @@ class DetailsScreen(private val text: String) : Screen {
 }
 
 @Composable
-fun DetailsScreenContent(text: String, onNavigateUp: () -> Unit) {
+private fun DetailsScreenContent(text: String, onNavigateUp: () -> Unit) {
 
     Column(
         modifier = Modifier.fillMaxSize(),

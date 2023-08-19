@@ -29,7 +29,7 @@ class HomeScreen : Screen, KoinComponent {
 }
 
 @Composable
-fun HomeScreenContent(onNavigateToDetails: () -> Unit) {
+private fun HomeScreenContent(onNavigateToDetails: () -> Unit) {
 
     Column(
         modifier = Modifier.fillMaxSize(),
