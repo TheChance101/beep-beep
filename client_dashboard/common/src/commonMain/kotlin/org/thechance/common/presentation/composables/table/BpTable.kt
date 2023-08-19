@@ -94,66 +94,66 @@ fun <T> BpTable(
 
 data class Header(val text: String, val weight: Float = 1f)
 
-@Preview
-@Composable
-fun BpTablePreview() {
-    var selectedUser by remember { mutableStateOf<String?>(null) }
-    var selectedPage by remember { mutableStateOf(1) }
-    val pageCount = 2
-
-    BpTheme(useDarkTheme = false) {
-        Column(
-            Modifier.fillMaxSize().padding(40.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
-        ) {
-            val headers = listOf(
-                Header("No.", 1f),
-                Header("Users", 3f),
-                Header("Username", 3f),
-                Header("Email", 3f),
-                Header("Country", 3f),
-                Header("Permission", 3f),
-                Header("", 1f),
-            )
-            val users = getDummyUsers()
-
-            BpTable(
-                data = users,
-                key = { it.id },
-                headers = headers,
-                modifier = Modifier.fillMaxWidth(),
-                rowsCount = pageCount,
-                offset = selectedPage - 1,
-                rowContent = { user ->
-                    UserRow(
-                        onClickEditUser = { selectedUser = it },
-                        user = user,
-                        position = users.indexOf(user) + 1,
-                    )
-                },
-            )
-
-
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                TotalItemsIndicator(
-                    numberItemInPage = 50,
-                    totalItems = 190,
-                    itemType = "user",
-                    onItemPerPageChange = {}
-                )
-
-                BpPager(
-                    maxPages = pageCount,
-                    currentPage = selectedPage,
-                    onPageClicked = { selectedPage = it },
-                )
-            }
-        }
-    }
-}
-
+//@Preview
+//@Composable
+//fun BpTablePreview() {
+//    var selectedUser by remember { mutableStateOf<String?>(null) }
+//    var selectedPage by remember { mutableStateOf(1) }
+//    val pageCount = 2
+//
+//    BpTheme(useDarkTheme = false) {
+//        Column(
+//            Modifier.fillMaxSize().padding(40.dp),
+//            horizontalAlignment = Alignment.CenterHorizontally,
+//            verticalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
+//        ) {
+//            val headers = listOf(
+//                Header("No.", 1f),
+//                Header("Users", 3f),
+//                Header("Username", 3f),
+//                Header("Email", 3f),
+//                Header("Country", 3f),
+//                Header("Permission", 3f),
+//                Header("", 1f),
+//            )
+//            val users = getDummyUsers()
+//
+//            BpTable(
+//                data = users,
+//                key = { it.id },
+//                headers = headers,
+//                modifier = Modifier.fillMaxWidth(),
+//                rowsCount = pageCount,
+//                offset = selectedPage - 1,
+//                rowContent = { user ->
+//                    UserRow(
+//                        onClickEditUser = { selectedUser = it },
+//                        user = user,
+//                        position = users.indexOf(user) + 1,
+//                    )
+//                },
+//            )
+//
+//
+//            Row(
+//                modifier = Modifier.fillMaxSize(),
+//                verticalAlignment = Alignment.CenterVertically,
+//                horizontalArrangement = Arrangement.SpaceBetween
+//            ) {
+//                TotalItemsIndicator(
+//                    numberItemInPage = 50,
+//                    totalItems = 190,
+//                    itemType = "user",
+//                    onItemPerPageChange = {}
+//                )
+//
+//                BpPager(
+//                    maxPages = pageCount,
+//                    currentPage = selectedPage,
+//                    onPageClicked = { selectedPage = it },
+//                )
+//            }
+//        }
+//    }
+//}
+//

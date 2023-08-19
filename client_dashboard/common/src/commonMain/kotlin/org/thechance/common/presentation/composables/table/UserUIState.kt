@@ -19,26 +19,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.composables.modifier.noRipple
+import org.thechance.common.presentation.uistate.UserScreenUiState
 import java.util.UUID
 
-class UserRowUIState(
-    val id: String,
-    val photoPath: String,
-    val fullName: String,
-    val username: String,
-    val email: String,
-    val country: String,
-    val permissions: List<Permission>,
-) {
-    enum class Permission(val iconPath: String) {
-        RESTAURANT("outline_restaurants.xml"),
-        DRIVER("wheel.xml"),
-        END_USER("end_user.xml"),
-        SUPPORT("support.xml"),
-        DELIVERY("delivery_guy.xml"),
-        ADMIN("chart.xml"),
-    }
-}
 
 operator fun <E> List<E>.times(i: Int): List<E> {
     return (0 until i).flatMap { this }
@@ -49,7 +32,7 @@ operator fun <E> List<E>.times(i: Int): List<E> {
 fun RowScope.UserRow(
     onClickEditUser: (userId: String) -> Unit,
     position: Int,
-    user: UserRowUIState,
+    user: UserScreenUiState.UserUiState,
     firstColumnWeight: Float = 1f,
     otherColumnsWeight: Float = 3f,
 ) {
@@ -62,7 +45,7 @@ fun RowScope.UserRow(
     )
 
     Row(Modifier.weight(otherColumnsWeight), verticalAlignment = Alignment.CenterVertically) {
-        Image(painter = painterResource(user.photoPath), contentDescription = null)
+        Image(painter = painterResource("dummy_img.png"), contentDescription = null)
         Text(
             user.fullName,
             style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
@@ -110,96 +93,8 @@ fun RowScope.UserRow(
     Image(
         painter = painterResource("horizontal_dots.xml"),
         contentDescription = null,
-        modifier = Modifier.noRipple { onClickEditUser(user.id) }
+        modifier = Modifier.noRipple { onClickEditUser(user.fullName) }
             .weight(firstColumnWeight),
         colorFilter = ColorFilter.tint(color = Theme.colors.contentPrimary)
     )
 }
-
-
-
-
-fun getDummyUsers() = listOf(
-    UserRowUIState(
-        id = UUID.randomUUID().toString(),
-        photoPath = "dummy_img.png",
-        fullName = "Ali Mohammed1",
-        username = "@Ali_ahmed",
-        email = "Aliahmed@gmail.com",
-        country = "Egypt",
-        permissions = listOf(
-            UserRowUIState.Permission.ADMIN,
-            UserRowUIState.Permission.RESTAURANT,
-            UserRowUIState.Permission.SUPPORT,
-            UserRowUIState.Permission.DRIVER,
-            UserRowUIState.Permission.ADMIN,
-        ),
-    ),
-    UserRowUIState(
-        id = UUID.randomUUID().toString(),
-        photoPath = "dummy_img.png",
-        fullName = "Mohammed Sayed2",
-        username = "@Mohammed_sayed",
-        email = "Mosayed@gmail.com",
-        country = "Egypt",
-        permissions = listOf(
-            UserRowUIState.Permission.END_USER,
-        ),
-    ),
-    UserRowUIState(
-        id = UUID.randomUUID().toString(),
-        photoPath = "dummy_img.png",
-        fullName = "Mohammed Sayed3",
-        username = "@Mohammed_sayed",
-        email = "Mosayed@gmail.com",
-        country = "Egypt",
-        permissions = listOf(
-            UserRowUIState.Permission.DRIVER,
-            UserRowUIState.Permission.DELIVERY,
-        ),
-    ),
-    UserRowUIState(
-        id = UUID.randomUUID().toString(),
-        photoPath = "dummy_img.png",
-        fullName = "Mohammed Sayed4",
-        username = "@Mohammed_sayed",
-        email = "Mosayed@gmail.com",
-        country = "Egypt",
-        permissions = listOf(
-            UserRowUIState.Permission.END_USER,
-        ),
-    ),
-    UserRowUIState(
-        id = UUID.randomUUID().toString(),
-        photoPath = "dummy_img.png",
-        fullName = "Mohammed Sayed5",
-        username = "@Mohammed_sayed",
-        email = "Mosayed@gmail.com",
-        country = "Egypt",
-        permissions = listOf(
-            UserRowUIState.Permission.END_USER,
-        ),
-    ),
-    UserRowUIState(
-        id = UUID.randomUUID().toString(),
-        photoPath = "dummy_img.png",
-        fullName = "Mohammed Sayed6",
-        username = "@Mohammed_sayed",
-        email = "Mosayed@gmail.com",
-        country = "Egypt",
-        permissions = listOf(
-            UserRowUIState.Permission.END_USER,
-        ),
-    ),
-    UserRowUIState(
-        id = UUID.randomUUID().toString(),
-        photoPath = "dummy_img.png",
-        fullName = "Mohammed Sayed7",
-        username = "@Mohammed_sayed",
-        email = "Mosayed@gmail.com",
-        country = "Egypt",
-        permissions = listOf(
-            UserRowUIState.Permission.END_USER,
-        ),
-    ),
-)
