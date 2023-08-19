@@ -11,20 +11,14 @@ import java.util.*
 @Single(binds = [ITokenService::class])
 class ITokenServiceImpl : ITokenService {
 
-    override fun generateRefreshToken(tokenConfig: TokenConfiguration): String {
-        return JWT.create()
-            .withExpiresAt(Date(System.currentTimeMillis() + tokenConfig.accessTokenExpirationTimestamp))
-            .sign(Algorithm.HMAC256(tokenConfig.secret))
-    }
-
-    override fun generateAccessToken(
+    override fun generateToken(
         tokenConfig: TokenConfiguration,
         vararg tokenClaim: TokenClaim
     ): String {
         val accessToken = JWT.create()
-                .withIssuer(tokenConfig.issuer)
-                .withAudience(tokenConfig.audience)
-                .withExpiresAt(Date(System.currentTimeMillis() + tokenConfig.accessTokenExpirationTimestamp))
+            .withIssuer(tokenConfig.issuer)
+            .withAudience(tokenConfig.audience)
+            .withExpiresAt(Date(System.currentTimeMillis() + tokenConfig.accessTokenExpirationTimestamp))
 
         tokenClaim.forEach {
             accessToken.withClaim(it.name, it.value)
