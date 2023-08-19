@@ -7,6 +7,7 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
+import org.thechance.api_gateway.data.gateway.IResourcesGateway
 import org.thechance.api_gateway.data.model.TokenConfiguration
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
 import org.thechance.api_gateway.endpoints.utils.respondWithResult
@@ -18,6 +19,7 @@ import java.util.*
 fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
 
     val userAccountManagementUseCase: IApiGateway by inject()
+    val resourcesGateway: IResourcesGateway by inject()
 
     post("/signup") {
         val params = call.receiveParameters()
@@ -35,7 +37,10 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
             email = email.toString(),
             locale = Locale(language, countryCode)
         )
-        respondWithResult(HttpStatusCode.Created, result, "user created successfully 🎉")
+        val locale = Locale(language, countryCode)
+        val message = resourcesGateway.getLocalizedErrorMessage(errorCode = 1076, locale = locale)
+
+        respondWithResult(HttpStatusCode.Created, result,message)
     }
 
     post("/login") {
@@ -51,10 +56,8 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
             tokenConfiguration,
             Locale(language, countryCode)
         )
-
         respondWithResult(HttpStatusCode.Created, token)
     }
-
 
     post("/refresh-access-token") {
         val params = call.receiveParameters()

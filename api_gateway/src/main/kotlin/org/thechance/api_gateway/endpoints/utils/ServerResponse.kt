@@ -20,7 +20,7 @@ data class ServerResponse<T>(
             )
         }
 
-        inline fun <reified T> success(result: T, successMessage: String?): ServerResponse<T> {
+        inline fun <reified T> success(result: T, successMessage: Map<Int, String>?): ServerResponse<T> {
             return ServerResponse(
                     value = result,
                     isSuccess = true,
@@ -32,7 +32,7 @@ data class ServerResponse<T>(
     @Serializable
     data class ResponseStatus(
             val errorMessages: List<Map<Int, String>>? = null,
-            val successMessage: String? = null,
+            val successMessage: Map<Int, String>? = null,
             val code: Int?
     )
 
