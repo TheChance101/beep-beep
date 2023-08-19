@@ -110,21 +110,21 @@ class ApiGateway(
     override suspend fun validateRefreshToken(refreshToken: String, locale: Locale): Boolean {
         return tryToExecute<Boolean>(APIS.IDENTITY_API, locale) {
             submitForm("user/validate-refresh-token",
-                formParameters = parameters {
-                    append("refreshToken", refreshToken)
-                }
+                    formParameters = parameters {
+                        append("refreshToken", refreshToken)
+                    }
             )
         }
     }
 
-    override suspend fun getUserIdByRefreshToken(refreshToken: String, locale: Locale): String {
-        return tryToExecute<String>(APIS.IDENTITY_API, locale) {
-            submitForm("user/get-user-id-by-refresh-token",
-                formParameters = parameters {
-                    append("refreshToken", refreshToken)
-                }
+    override suspend fun getUserByRefreshToken(refreshToken: String, locale: Locale): UserManagement {
+        return tryToExecute<UserManagementResource>(APIS.IDENTITY_API, locale) {
+            submitForm("user/get-user-by-refresh-token",
+                    formParameters = parameters {
+                        append("refreshToken", refreshToken)
+                    }
             )
-        }
+        }.toManagedUser()
     }
 
 
@@ -203,12 +203,12 @@ class ApiGateway(
         val refreshToken = tokenManagementService.generateRefreshToken(tokenConfiguration)
 
         val accessTokenExpirationDate = getExpirationDate(tokenConfiguration.accessTokenExpirationTimestamp)
-        val freshTokenExpirationDate = getExpirationDate(tokenConfiguration.refreshTokenExpirationTimestamp)
-        saveRefreshToken(user.id, refreshToken, accessTokenExpirationDate.time, locale)
+        val refreshTokenExpirationDate = getExpirationDate(tokenConfiguration.refreshTokenExpirationTimestamp)
+        saveRefreshToken(user.id, refreshToken, refreshTokenExpirationDate.time, locale)
 
-        val accessToken = generateAccessToken(user.id, tokenConfiguration)
+        val accessToken = generateAccessToken(user, tokenConfiguration)
 
-        return UserTokens(accessTokenExpirationDate.time, freshTokenExpirationDate.time, accessToken, refreshToken)
+        return UserTokens(accessTokenExpirationDate.time, refreshTokenExpirationDate.time, accessToken, refreshToken)
     }
 
     override suspend fun refreshAccessToken(
@@ -219,12 +219,13 @@ class ApiGateway(
         val expirationDate = getExpirationDate(tokenConfiguration.accessTokenExpirationTimestamp)
 
         if (!validateRefreshToken(refreshToken, locale)) {
-            throw Exception("Invalid refresh token")
+            val errorMessage = resourcesGateway.getLocalizedErrorMessage(1049, locale)
+            throw MultiLocalizedMessageException(listOf(errorMessage))
         }
 
-        val userId = getUserIdByRefreshToken(refreshToken, locale)
+        val user = getUserByRefreshToken(refreshToken, locale)
 
-        val accessToken = generateAccessToken(userId, tokenConfiguration)
+        val accessToken = generateAccessToken(user, tokenConfiguration)
 
         return UserTokens(expirationDate.time, expirationDate.time, accessToken, refreshToken)
     }
@@ -233,15 +234,18 @@ class ApiGateway(
         return Date(System.currentTimeMillis() + timestamp)
     }
 
-    private fun generateAccessToken(userId: String, tokenConfiguration: TokenConfiguration): String {
-        val userIdClaim = TokenClaim("userId", userId)
-        return tokenManagementService.generateAccessToken(tokenConfiguration, userIdClaim)
+    private fun generateAccessToken(user: UserManagement, tokenConfiguration: TokenConfiguration): String {
+        val userIdClaim = TokenClaim("userId", user.id)
+        val claims = user.permissions.map {
+            TokenClaim("role", it.id.toString())
+        }
+        return tokenManagementService.generateAccessToken(tokenConfiguration, userIdClaim, *claims.toTypedArray())
     }
 
     private suspend inline fun <reified T> tryToExecute(
-        api: APIS,
-        locale: Locale,
-        method: HttpClient.() -> HttpResponse
+            api: APIS,
+            locale: Locale,
+            method: HttpClient.() -> HttpResponse
     ): T {
         attributes.put(AttributeKey("API"), api.value)
         val response = client.method()

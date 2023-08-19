@@ -5,6 +5,7 @@ val exposed_version: String by project
 val h2_version: String by project
 val kmongoVersion: String by project
 val koinKsp: String by project
+val kotlinx_datetime: String by project
 
 plugins {
     kotlin("jvm") version "1.8.10"
@@ -60,5 +61,9 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlinx_datetime")
+    implementation("io.ktor:ktor-server-websockets-jvm:$ktor_version")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
 }
 

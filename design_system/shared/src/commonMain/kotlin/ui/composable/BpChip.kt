@@ -40,7 +40,7 @@ fun BpChip(
     AssistChip(
         modifier = modifier.height(32.dp),
         onClick = { onClick(!isSelected) },
-        label = { Text(text = label, style = Theme.typography.title) },
+        label = { Text(text = label, style = Theme.typography.titleMedium) },
         leadingIcon = {
             painter?.let {
                 Icon(
@@ -56,7 +56,7 @@ fun BpChip(
             labelColor = labelColor
         ),
         border = AssistChipDefaults.assistChipBorder(
-            borderColor = Theme.colors.contentBorder,
+            borderColor = Theme.colors.divider,
             borderWidth = 1.dp
         ),
         shape = RoundedCornerShape(Theme.radius.small)

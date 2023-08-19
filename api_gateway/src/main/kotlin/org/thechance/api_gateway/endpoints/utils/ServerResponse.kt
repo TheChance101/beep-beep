@@ -1,36 +1,39 @@
 package org.thechance.api_gateway.endpoints.utils
 
-@kotlinx.serialization.Serializable
-data class ServerResponse<T>(
-    val value: T?,
-    val isSuccess: Boolean = true,
-    val status: ResponseStatus,
+import kotlinx.serialization.Serializable
 
-    ) {
+@Serializable
+data class ServerResponse<T>(
+        val value: T?,
+        val isSuccess: Boolean = true,
+        val status: ResponseStatus,
+
+        ) {
 
     companion object {
 
-        fun error(errorMessage: String, code: Int): ServerResponse<String> {
+        fun error(errorMessage: List<Map<Int, String>>, code: Int): ServerResponse<String> {
             return ServerResponse(
-                value = "",
-                isSuccess = false,
-                status = ResponseStatus(message = errorMessage, code = code)
+                    value = "",
+                    isSuccess = false,
+                    status = ResponseStatus(errorMessages = errorMessage, code = code)
             )
         }
 
-        fun <T> success(result: T,successMessage: String? = null): ServerResponse<T> {
+        inline fun <reified T> success(result: T, successMessage: String?): ServerResponse<T> {
             return ServerResponse(
-                value = result,
-                isSuccess = true,
-                status = ResponseStatus(message = successMessage, code = 200),
+                    value = result,
+                    isSuccess = true,
+                    status = ResponseStatus(successMessage = successMessage, code = 200),
             )
         }
     }
 
-    @kotlinx.serialization.Serializable
+    @Serializable
     data class ResponseStatus(
-        val message: String?,
-        val code: Int?
+            val errorMessages: List<Map<Int, String>>? = null,
+            val successMessage: String? = null,
+            val code: Int?
     )
 
 }

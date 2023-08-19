@@ -22,9 +22,9 @@ class ITokenServiceImpl : ITokenService {
         vararg tokenClaim: TokenClaim
     ): String {
         val accessToken = JWT.create()
-            .withIssuer(tokenConfig.issuer)
-            .withAudience(tokenConfig.audience)
-            .withExpiresAt(Date(tokenConfig.accessTokenExpirationTimestamp))
+                .withIssuer(tokenConfig.issuer)
+                .withAudience(tokenConfig.audience)
+                .withExpiresAt(Date(System.currentTimeMillis() + tokenConfig.accessTokenExpirationTimestamp))
 
         tokenClaim.forEach {
             accessToken.withClaim(it.name, it.value)

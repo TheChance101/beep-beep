@@ -5,11 +5,11 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
-import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.model.TokenConfiguration
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
+import org.thechance.api_gateway.endpoints.utils.respondWithResult
 import java.util.*
 
 /**
@@ -35,24 +35,24 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
             email = email.toString(),
             locale = Locale(language, countryCode)
         )
-        call.respond(HttpStatusCode.Created, result)
+        respondWithResult(HttpStatusCode.Created, result, "user created successfully 🎉")
     }
 
     post("/login") {
         val params = call.receiveParameters()
-        val email = params["username"]?.trim().toString()
+        val userName = params["username"]?.trim().toString()
         val password = params["password"]?.trim().toString()
 
         val (language, countryCode) = extractLocalizationHeader()
 
         val token = userAccountManagementUseCase.loginUser(
-            email,
+            userName,
             password,
             tokenConfiguration,
             Locale(language, countryCode)
         )
 
-        call.respond(HttpStatusCode.Created, token)
+        respondWithResult(HttpStatusCode.Created, token)
     }
 
 
@@ -63,16 +63,17 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
         val (language, countryCode) = extractLocalizationHeader()
         val locale = Locale(language, countryCode)
         val token = userAccountManagementUseCase.refreshAccessToken(refreshToken, tokenConfiguration, locale)
-        call.respond(HttpStatusCode.Created, token)
+
+        respondWithResult(HttpStatusCode.Created, token)
     }
 
     authenticate("auth-jwt") {
         get("/me") {
             val tokenClaim = call.principal<JWTPrincipal>()
             val id = tokenClaim?.payload?.getClaim("userId").toString()
-            call.respond(HttpStatusCode.OK, id)
+            respondWithResult(HttpStatusCode.OK, id)
         }
     }
 
-
 }
+

@@ -2,7 +2,19 @@ package org.thechance.common.domain.entity
 
 
 data class User(
-    val id: Int,
-    val name: String,
-    val role: String,
-)
+    val id: String,
+    val fullName: String,
+    val username:String,
+    val email:String,
+    val country:String,
+    val permission:List<Permission>,
+){
+    enum class Permission {
+        RESTAURANT,
+        DRIVER,
+        END_USER,
+        SUPPORT,
+        DELIVERY,
+        ADMIN,
+    }
+}
