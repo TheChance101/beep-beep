@@ -39,9 +39,9 @@ import com.beepbeep.designSystem.ui.theme.Theme.typography
 fun BpTextField(
     label: String,
     text: String,
-    hint: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    hint: String = "",
     keyboardType: KeyboardType = KeyboardType.Text,
     shapeRadius: Shape = RoundedCornerShape(radius.medium),
     errorMessage: String = "",

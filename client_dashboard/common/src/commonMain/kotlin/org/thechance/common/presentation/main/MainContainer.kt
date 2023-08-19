@@ -59,7 +59,10 @@ object MainContainer : Screen, KoinComponent {
                 DashboardAppbar(
                     title = tabNavigator.current.options.title,
                     username = state.username,
-                    onLogOut = onClickLogout
+                    onLogOut = onClickLogout,
+                    isDropMenuExpanded = state.isDropMenuExpanded,
+                    onClickDropDownMenu = screenModel::onClickDropDownMenu,
+                    onDismissDropDownMenu = screenModel::onDismissDropDownMenu
                 )
             },
             sideBar = {

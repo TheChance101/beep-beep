@@ -19,11 +19,16 @@ class MainScreenModel : StateScreenModel<MainUiState>(MainUiState()), KoinCompon
 
     private fun getUserInfo() {
             val user = getUserInfo.getUserInfo().toUiState()
-            mutableState.update { it.copy(username = user.name) }
-            println("User: $user")
+            mutableState.update { it.copy(username = user.fullName) }
     }
 
     fun logout() {
         mutableState.update { it.copy(isLogin = false) }
+    }
+    fun onClickDropDownMenu(){
+        mutableState.update { it.copy(isDropMenuExpanded = true) }
+    }
+    fun onDismissDropDownMenu(){
+        mutableState.update { it.copy(isDropMenuExpanded = false) }
     }
 }
