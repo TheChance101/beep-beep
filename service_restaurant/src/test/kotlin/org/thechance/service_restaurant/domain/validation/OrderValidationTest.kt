@@ -3,6 +3,7 @@ package org.thechance.service_restaurant.domain.validation
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.function.Executable
+import org.thechance.service_restaurant.api.utils.isRestaurantOpen
 import org.thechance.service_restaurant.domain.usecase.validation.OrderValidationUseCase
 import org.thechance.service_restaurant.domain.utils.OrderStatus
 import org.thechance.service_restaurant.domain.utils.Validation
@@ -166,7 +167,7 @@ class OrderValidationTest {
         val openTime = "08:00"
         val closeTime = "23:00"
         // when we pass opening and closing time to the function and the current time is between this time
-        val result = orderValidation.isRestaurantOpen(openTime = openTime, closeTime = closeTime)
+        val result = isRestaurantOpen(openTime = openTime, closeTime = closeTime)
         // then it should return true
         assertTrue(result)
     }
@@ -177,7 +178,7 @@ class OrderValidationTest {
         val openTime = "09:00"
         val closeTime = "12:00"
         // when we pass opening and closing time to the function and the current time is not between this time
-        val result = orderValidation.isRestaurantOpen(openTime = openTime, closeTime = closeTime)
+        val result = isRestaurantOpen(openTime = openTime, closeTime = closeTime)
         // then it should return false
         assertFalse(result)
     }

@@ -15,8 +15,6 @@ interface IOrderValidationUseCase {
     fun validateUpdateOrder(orderId: String, status: OrderStatus)
     fun validateGetOrdersHistory(restaurantId: String, page: Int, limit: Int)
 
-    fun isRestaurantOpen(openTime: String, closeTime: String): Boolean
-
 }
 
 class OrderValidationUseCase(
@@ -73,12 +71,6 @@ class OrderValidationUseCase(
         if (validationErrors.isNotEmpty()) {
             throw MultiErrorException(validationErrors)
         }
-    }
-
-
-    override fun isRestaurantOpen(openTime: String, closeTime: String): Boolean {
-        val now = LocalTime.now()
-        return now.isAfter(LocalTime.parse(openTime)) && now.isBefore(LocalTime.parse(closeTime))
     }
 
 }

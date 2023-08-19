@@ -61,12 +61,18 @@ fun Route.orderRoutes() {
             val userId = call.parameters["userId"]?.trim().orEmpty()
 
             if (userId.isEmpty()) {
-                socketHandler.openedRestaurants[restaurantId] = RestaurantInfo(owner = this, mutableListOf())
+                socketHandler.openedRestaurants[restaurantId] =
+                    RestaurantInfo(owner = this, mutableListOf())
                 for (frame in incoming) return@webSocket
 
             } else {
                 socketHandler.openedRestaurants[restaurantId]?.users?.add(mutableMapOf(userId to this))
-                socketHandler.broadcastOrder(receiveChannel = incoming, userId = userId, restaurantId = restaurantId, manageOrder = manageOrder)
+                socketHandler.broadcastOrder(
+                    receiveChannel = incoming,
+                    userId = userId,
+                    restaurantId = restaurantId,
+                    manageOrder = manageOrder
+                )
             }
         }
 

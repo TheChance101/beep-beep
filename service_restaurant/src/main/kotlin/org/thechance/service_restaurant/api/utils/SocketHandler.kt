@@ -22,27 +22,32 @@ class SocketHandler {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     suspend fun broadcastOrder(
-        receiveChannel: ReceiveChannel<Frame>, userId: String, restaurantId: String, manageOrder: IManageOrderUseCase
+        receiveChannel: ReceiveChannel<Frame>,
+        userId: String,
+        restaurantId: String,
+        manageOrder: IManageOrderUseCase
     ) {
         val ownerSession = openedRestaurants[restaurantId]?.owner
-        val userSession = openedRestaurants[restaurantId]?.users?.firstOrNull { it.containsKey(userId) }?.get(userId)
+        val userSession =
+            openedRestaurants[restaurantId]?.users?.firstOrNull { it.containsKey(userId) }
+                ?.get(userId)
 
         try {
             receiveChannel.consumeEach { frame ->
 
                 if (frame is Frame.Text) {
 
-                    val isOpen = checkIfRestaurantOpened(restaurantId, manageOrder).await()
+                    val isOpen = ifRestaurantOpened(restaurantId, manageOrder).await()
 
                     if (isOpen) {
                         val order = createOrder(frame = frame)
-                        val isOrderInserted: Boolean = insertOrder(order = order, manageOrder = manageOrder).await()
+                        val isOrderInserted: Boolean =
+                            insertOrder(order = order, manageOrder = manageOrder).await()
 
                         if (isOrderInserted) {
                             ownerSession?.send(order.toString())
                             userSession?.close()
-                        }
-                        else throw MultiErrorException(listOf(INSERT_ORDER_ERROR))
+                        } else throw MultiErrorException(listOf(INSERT_ORDER_ERROR))
 
                     } else {
                         throw MultiErrorException(listOf(RESTAURANT_CLOSED))
@@ -65,18 +70,17 @@ class SocketHandler {
     }
 
 
-    private suspend fun insertOrder(order: OrderDto, manageOrder: IManageOrderUseCase): Deferred<Boolean> {
-        return scope.async {
-            manageOrder.addOrder(order = order.toEntity())
-        }
+    private suspend fun insertOrder(
+        order: OrderDto,
+        manageOrder: IManageOrderUseCase
+    ): Deferred<Boolean> {
+        return scope.async { manageOrder.addOrder(order = order.toEntity()) }
     }
 
-    private suspend fun checkIfRestaurantOpened(
+    private suspend fun ifRestaurantOpened(
         restaurantId: String,
         manageOrder: IManageOrderUseCase
     ): Deferred<Boolean> {
-        return scope.async {
-            manageOrder.isRestaurantOpened(restaurantId)
-        }
+        return scope.async { manageOrder.isRestaurantOpened(restaurantId) }
     }
 }
