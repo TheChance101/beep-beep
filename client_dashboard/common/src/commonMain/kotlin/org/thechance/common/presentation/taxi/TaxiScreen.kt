@@ -5,16 +5,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import cafe.adriel.voyager.core.screen.Screen
 import com.beepbeep.designSystem.ui.composable.BpTextButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import org.thechance.common.presentation.uistate.TaxiUiState
 
 object TaxiScreen : Screen, KoinComponent {
 
@@ -23,13 +21,27 @@ object TaxiScreen : Screen, KoinComponent {
     @Composable
     override fun Content() {
         val state by screenModel.state.collectAsState()
-        TaxiContent(state = state , screenModel::updateAddNewTaxiDialogVisibility)
+
+        TaxiContent(
+            state = state,
+            screenModel::updateAddNewTaxiDialogVisibility,
+            screenModel::onTaxiPlateNumberChange,
+            screenModel::onDriverUserNamChange,
+            screenModel::onCarModelChange,
+            screenModel::onCarColorSelected,
+            screenModel::onSeatsSelected
+        )
     }
 
     @Composable
     private fun TaxiContent(
         state: TaxiUiState,
-        updateAddNewTaxiDialogVisibility: () -> Unit
+        updateAddNewTaxiDialogVisibility: () -> Unit,
+        onTaxiPlateNumberChange: (String) -> Unit,
+        onDriverUserNamChange: (String) -> Unit,
+        onCarModelChange: (String) -> Unit,
+        onCarColorSelected: (CarColor) -> Unit,
+        onSeatsSelected: (Int) -> Unit,
     ) {
 
         Column(
@@ -46,9 +58,14 @@ object TaxiScreen : Screen, KoinComponent {
 
                 AddNewTaxiDialog(
                     modifier = Modifier,
-                    onTaxiPlateNumberChange = {},
-                    setShowDialog = updateAddNewTaxiDialogVisibility,
-                    state.isAddNewTaxiDialogVisible
+                    onTaxiPlateNumberChange = onTaxiPlateNumberChange,
+                    setDialogVisibility = updateAddNewTaxiDialogVisibility,
+                    isVisible = state.addTaxiDialogUiState.isAddNewTaxiDialogVisible,
+                    onDriverUserNamChange = onDriverUserNamChange,
+                    onCarModelChange = onCarModelChange,
+                    onCarColorSelected = onCarColorSelected,
+                    onSeatsSelected = onSeatsSelected,
+                    addTaxiDialogUiState = state.addTaxiDialogUiState
                 )
             }
         }

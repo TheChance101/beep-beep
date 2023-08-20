@@ -4,6 +4,10 @@ package org.thechance.common.presentation.taxi
 data class TaxiUiState(
     val isLoading: Boolean = false,
     val error: String = "",
+    val addTaxiDialogUiState: AddTaxiDialogUiState = AddTaxiDialogUiState()
+)
+
+data class AddTaxiDialogUiState(
     val isAddNewTaxiDialogVisible: Boolean = false,
     val taxiPlateNumber: String = "",
     val driverUserName: String = "",

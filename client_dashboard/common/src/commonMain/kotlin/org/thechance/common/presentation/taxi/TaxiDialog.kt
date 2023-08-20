@@ -37,7 +37,7 @@ fun AddNewTaxiDialog(
     onSeatsSelected: (Int) -> Unit,
     setDialogVisibility: () -> Unit,
     isVisible: Boolean,
-    selectedCarColor: CarColor,
+    addTaxiDialogUiState : AddTaxiDialogUiState
 ) {
 
     Dialog(
@@ -62,21 +62,21 @@ fun AddNewTaxiDialog(
                 modifier = Modifier.padding(vertical = 16.dp),
                 label = "Taxi Plate Number",
                 onValueChange = onTaxiPlateNumberChange,
-                text = ""
+                text = addTaxiDialogUiState.taxiPlateNumber
             )
 
             BpTextField(
                 modifier = Modifier.padding(vertical = 16.dp),
                 label = "Driver Username",
                 onValueChange = onDriverUserNamChange,
-                text = ""
+                text = addTaxiDialogUiState.driverUserName
             )
 
             BpTextField(
                 modifier = Modifier.padding(vertical = 16.dp),
                 label = "Car Model",
                 onValueChange = onCarModelChange,
-                text = ""
+                text = addTaxiDialogUiState.carModel
             )
 
             Text(
@@ -89,7 +89,7 @@ fun AddNewTaxiDialog(
             Colors(
                 colors = CarColor.values().toList(),
                 onSelectColor = { onCarColorSelected(it) },
-                selectedCarColor = selectedCarColor
+                selectedCarColor = addTaxiDialogUiState.selectedCarColor
             )
 
             Text(
