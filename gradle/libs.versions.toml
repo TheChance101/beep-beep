@@ -62,10 +62,8 @@ koin-ksp = { module = "com.google.devtools.ksp:symbol-processing-api", version.r
 koin-compiler = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koinKspVersion" }
 kotlin-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization_version" }
 
-
 [bundles]
-voyager = ["voyager-navigator", "voyager-bottomsheet-navigator",
-    "voyager-transitions", "voyager-koin"]
+voyager = ["voyager-navigator", "voyager-koin", "voyager-transitions"]
 
 [plugins]
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
