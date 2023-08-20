@@ -33,17 +33,49 @@ class UserScreenModel : StateScreenModel<UserScreenUiState>(UserScreenUiState())
         mutableState.update { it.copy(isFilterDropdownMenuExpanded = false) }
     }
 
-    fun togglePermission(
-        username: String,
-        permissionUiState: UserScreenUiState.PermissionUiState
-    ) {
-        val user = findUserByUsername(username) ?: return
-        val permissions = getUpdatedPermissions(user.permissions, permissionUiState)
-        updateUserPermissions(username, permissions)
+    fun showPermissionsDialog(user: UserScreenUiState.UserUiState) {
+        mutableState.update {
+            it.copy(
+                permissionsDialog = it.permissionsDialog.copy(
+                    show = true,
+                    username = user.username,
+                    permissions = user.permissions
+                )
+            )
+        }
     }
 
-    private fun findUserByUsername(username: String): UserScreenUiState.UserUiState? {
-        return mutableState.value.users.find { it.username == username }
+    fun hidePermissionsDialog() {
+        mutableState.update {
+            it.copy(
+                permissionsDialog = it.permissionsDialog.copy(
+                    show = false,
+                    username = "",
+                    permissions = emptyList()
+                )
+            )
+        }
+    }
+
+    fun onPermissionDialogSave() {
+        val username = mutableState.value.permissionsDialog.username
+        val permissions = mutableState.value.permissionsDialog.permissions
+        updateUserPermissions(username, permissions)
+        hidePermissionsDialog()
+    }
+
+    fun togglePermission(permission: UserScreenUiState.PermissionUiState) {
+        val permissions = getUpdatedPermissions(
+            mutableState.value.permissionsDialog.permissions,
+            permission
+        )
+        mutableState.update {
+            it.copy(
+                permissionsDialog = it.permissionsDialog.copy(
+                    permissions = permissions
+                )
+            )
+        }
     }
 
     private fun getUpdatedPermissions(
