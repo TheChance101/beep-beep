@@ -1,6 +1,5 @@
 package org.thechance.common.presentation.composables
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
@@ -17,7 +16,10 @@ import org.thechance.common.presentation.uistate.UserScreenUiState
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ChangePermissionDialogContent() {
+fun PermissionsDialogContent(
+    user: UserScreenUiState.UserUiState,
+    togglePermission: (String, UserScreenUiState.PermissionUiState) -> Unit
+) {
     Text(
         "Permission",
         style = Theme.typography.headline.copy(color = Theme.colors.contentPrimary),
@@ -34,9 +36,9 @@ fun ChangePermissionDialogContent() {
             BpChip(
                 label = permission.name.lowercase().capitalizeWords(),
                 modifier = Modifier.padding(Theme.dimens.space8),
-                onClick = { },
+                onClick = { togglePermission(user.username, permission) },
                 painter = painterResource(permission.iconPath),
-                isSelected = false
+                isSelected = user.permissions.contains(permission)
             )
         }
     }
@@ -57,12 +59,6 @@ fun ChangePermissionDialogContent() {
             modifier = Modifier.weight(3f).height(32.dp),
         )
     }
-}
-
-@Composable
-@Preview
-fun ChangePermissionDialogContentPreview() {
-    ChangePermissionDialogContent()
 }
 
 private fun String.capitalizeWords(): String = split(" ")
