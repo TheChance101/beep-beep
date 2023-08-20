@@ -83,7 +83,7 @@ class UserScreenModel : StateScreenModel<UserScreenUiState>(UserScreenUiState())
         permissionUiState: UserScreenUiState.PermissionUiState
     ): List<UserScreenUiState.PermissionUiState> {
         return if (permissions.contains(permissionUiState)) {
-            if (permissions.size == 1) return permissions
+            if (permissionUiState == UserScreenUiState.PermissionUiState.END_USER) return permissions
             permissions.filterNot { it == permissionUiState }
         } else {
             permissions.plus(permissionUiState)
