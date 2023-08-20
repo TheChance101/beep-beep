@@ -3,6 +3,7 @@ package org.thechance.common.data.remote.gateway
 import org.thechance.common.data.remote.model.AdminDto
 import org.thechance.common.data.remote.model.UserDto
 import org.thechance.common.data.remote.model.toEntity
+import org.thechance.common.domain.entity.AddTaxi
 import org.thechance.common.domain.entity.Admin
 import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.getway.IRemoteGateway
@@ -88,4 +89,9 @@ class FakeRemoteGateway : IRemoteGateway {
             ),
         ).toEntity()
     }
+
+    override suspend fun createTaxi(taxi: AddTaxi) {
+
+    }
+
 }
