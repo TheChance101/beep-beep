@@ -15,6 +15,7 @@ import org.thechance.api_gateway.data.model.identity.PermissionResource
 import org.thechance.api_gateway.data.model.identity.UserManagementResource
 import org.thechance.api_gateway.data.model.identity.UserResource
 import org.thechance.api_gateway.endpoints.IApiGateway
+import org.thechance.api_gateway.plugins.TokenType
 import org.thechance.api_gateway.util.APIS
 import java.util.*
 
@@ -46,6 +47,7 @@ class ApiGateway(
                 }
             )
         }
+
     }
 
     override suspend fun loginUser(
@@ -62,8 +64,10 @@ class ApiGateway(
                 }
             )
         }
-        return generateUserTokens(userName, tokenConfiguration, locale)
 
+        val user = getUserByUsername(userName)
+
+        return generateUserTokens(user.id, user.permissions.map { it.id }, tokenConfiguration)
     }
 
 
@@ -82,62 +86,20 @@ class ApiGateway(
         }
     }
 
-    override suspend fun getUserByUsername(username: String, locale: Locale): UserManagement {
-        return tryToExecute<UserManagementResource>(APIS.IDENTITY_API, locale) {
+    override suspend fun getUserByUsername(username: String): UserManagement {
+        return tryToExecute<UserManagementResource>(APIS.IDENTITY_API) {
             get("user/get-user") {
                 parameter("username", username)
             }
         }.toManagedUser()
     }
 
-    override suspend fun saveRefreshToken(
-        userId: String,
-        refreshToken: String,
-        expirationDate: Long,
-        locale: Locale
-    ): Boolean {
-        return tryToExecute<Boolean>(APIS.IDENTITY_API, locale) {
-            submitForm("user/update-refresh-token",
-                formParameters = parameters {
-                    append("userId", userId)
-                    append("refreshToken", refreshToken)
-                    append("expirationDate", expirationDate.toString())
-                }
-            )
-        }
-    }
-
-    override suspend fun validateRefreshToken(refreshToken: String, locale: Locale): Boolean {
-        return tryToExecute<Boolean>(APIS.IDENTITY_API, locale) {
-            submitForm("user/validate-refresh-token",
-                    formParameters = parameters {
-                        append("refreshToken", refreshToken)
-                    }
-            )
-        }
-    }
-
-    override suspend fun getUserByRefreshToken(refreshToken: String, locale: Locale): UserManagement {
-        return tryToExecute<UserManagementResource>(APIS.IDENTITY_API, locale) {
-            submitForm("user/get-user-by-refresh-token",
-                    formParameters = parameters {
-                        append("refreshToken", refreshToken)
-                    }
-            )
-        }.toManagedUser()
-    }
-
-
-    override suspend fun getUserById(id: String, locale: Locale): UserResource {
+    override suspend fun getUserById(id: String): UserResource {
         TODO("Not yet implemented")
     }
 
 
     override suspend fun deleteUser(id: String, locale: Locale): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getToken(id: Long, role: String, locale: Locale): String {
         TODO("Not yet implemented")
     }
 
@@ -193,59 +155,46 @@ class ApiGateway(
 
     // endregion
 
-    private suspend fun generateUserTokens(
-        userName: String,
+    override suspend fun generateUserTokens(
+        userId: String,
+        userPermissions: List<Int>,
         tokenConfiguration: TokenConfiguration,
-        locale: Locale
     ): UserTokens {
-        val user = getUserByUsername(userName, locale)
-
-        val refreshToken = tokenManagementService.generateRefreshToken(tokenConfiguration)
 
         val accessTokenExpirationDate = getExpirationDate(tokenConfiguration.accessTokenExpirationTimestamp)
         val refreshTokenExpirationDate = getExpirationDate(tokenConfiguration.refreshTokenExpirationTimestamp)
-        saveRefreshToken(user.id, refreshToken, refreshTokenExpirationDate.time, locale)
 
-        val accessToken = generateAccessToken(user, tokenConfiguration)
+        val refreshToken = generateUserToken(userId, userPermissions, tokenConfiguration, TokenType.REFRESH_TOKEN)
+        val accessToken = generateUserToken(userId, userPermissions, tokenConfiguration, TokenType.ACCESS_TOKEN)
 
         return UserTokens(accessTokenExpirationDate.time, refreshTokenExpirationDate.time, accessToken, refreshToken)
     }
 
-    override suspend fun refreshAccessToken(
-        refreshToken: String,
-        tokenConfiguration: TokenConfiguration,
-        locale: Locale
-    ): UserTokens {
-        val expirationDate = getExpirationDate(tokenConfiguration.accessTokenExpirationTimestamp)
-
-        if (!validateRefreshToken(refreshToken, locale)) {
-            val errorMessage = resourcesGateway.getLocalizedErrorMessage(1049, locale)
-            throw MultiLocalizedMessageException(listOf(errorMessage))
-        }
-
-        val user = getUserByRefreshToken(refreshToken, locale)
-
-        val accessToken = generateAccessToken(user, tokenConfiguration)
-
-        return UserTokens(expirationDate.time, expirationDate.time, accessToken, refreshToken)
-    }
-
-    private fun getExpirationDate(timestamp: Long): Date {
+    private suspend fun getExpirationDate(timestamp: Long): Date {
         return Date(System.currentTimeMillis() + timestamp)
     }
 
-    private fun generateAccessToken(user: UserManagement, tokenConfiguration: TokenConfiguration): String {
-        val userIdClaim = TokenClaim("userId", user.id)
-        val claims = user.permissions.map {
-            TokenClaim("role", it.id.toString())
-        }
-        return tokenManagementService.generateAccessToken(tokenConfiguration, userIdClaim, *claims.toTypedArray())
+    private suspend fun generateUserToken(
+        userId: String,
+        userPermissions: List<Int>,
+        tokenConfiguration: TokenConfiguration,
+        tokenType: TokenType
+    ): String {
+        val userIdClaim = TokenClaim("userId", userId)
+        val claims = userPermissions.map { TokenClaim("role", it.toString()) }
+        val accessTokenClaim = TokenClaim("tokenType", tokenType.name)
+        return tokenManagementService.generateToken(
+            tokenConfiguration,
+            userIdClaim,
+            *claims.toTypedArray(),
+            accessTokenClaim
+        )
     }
 
     private suspend inline fun <reified T> tryToExecute(
-            api: APIS,
-            locale: Locale,
-            method: HttpClient.() -> HttpResponse
+        api: APIS,
+        locale: Locale = Locale.ENGLISH,
+        method: HttpClient.() -> HttpResponse
     ): T {
         attributes.put(AttributeKey("API"), api.value)
         val response = client.method()
@@ -254,7 +203,7 @@ class ApiGateway(
         } else {
             val errorResponse = response.body<List<Int>>()
             val errorMessages = errorResponse.map {
-                resourcesGateway.getLocalizedErrorMessage(it, locale = locale)
+                resourcesGateway.getLocalizedResponseMessage(it, locale = locale)
             }
             throw MultiLocalizedMessageException(errorMessages)
         }

@@ -4,7 +4,6 @@ import com.mongodb.MongoWriteException
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.IndexOptions
 import com.mongodb.client.model.Indexes
-import com.mongodb.client.model.UpdateOptions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,9 +44,6 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
     }
     private val walletCollection by lazy {
         dataBaseContainer.database.getCollection<WalletCollection>(WALLET_COLLECTION)
-    }
-    private val tokensCollection by lazy {
-        dataBaseContainer.database.getCollection<RefreshTokensCollection>(TOKENS_COLLECTION)
     }
 
     init {
@@ -262,35 +258,6 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
             UserCollection::isDeleted eq false
         )?.toManagedEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
     }
-
-    override suspend fun validateRefreshToken(refreshToken: String): Boolean {
-        return tokensCollection.findOne(
-            RefreshTokensCollection::refreshToken eq refreshToken
-        )?.let {
-            it.expirationDate > Date().time
-        } ?: throw ResourceNotFoundException(NOT_FOUND)
-    }
-
-    override suspend fun getUserByRefreshToken(refreshToken: String): UserManagement {
-        val userId = tokensCollection.findOne(
-            RefreshTokensCollection::refreshToken eq refreshToken
-        )?.userId?.toString() ?: throw ResourceNotFoundException(NOT_FOUND)
-
-        return userCollection.findOne(
-            UserCollection::id eq UUID.fromString(userId),
-            UserCollection::isDeleted eq false
-        )?.toManagedEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
-    }
-
-    override suspend fun updateRefreshToken(userId: String, refreshToken: String, expirationDate: Long): Boolean {
-        val token = RefreshTokensCollection(UUID.fromString(userId), refreshToken, expirationDate)
-        return tokensCollection.updateOne(
-            filter = RefreshTokensCollection::userId eq UUID.fromString(userId),
-            target = token,
-            options = UpdateOptions().upsert(true)
-        ).isUpdatedSuccessfully()
-    }
-
 
     //endregion
 

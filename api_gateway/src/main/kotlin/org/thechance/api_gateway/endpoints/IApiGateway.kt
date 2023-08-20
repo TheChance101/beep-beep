@@ -14,23 +14,33 @@ interface IApiGateway {
     // region identity
 
     // region User
-    suspend fun createUser(fullName: String, username: String, password: String, email: String, locale: Locale): Boolean
+    suspend fun createUser(
+        fullName: String,
+        username: String,
+        password: String,
+        email: String,
+        locale: Locale
+    ): Boolean
+
     suspend fun loginUser(
-        userName: String, password: String, tokenConfiguration: TokenConfiguration, locale: Locale
+        userName: String,
+        password: String,
+        tokenConfiguration: TokenConfiguration,
+        locale: Locale
     ): UserTokens
 
-    suspend fun getUsers(page: Int, limit: Int, searchTerm: String = "", locale: Locale): List<UserManagementResource>
-    suspend fun getUserById(id: String, locale: Locale): UserResource
+    suspend fun getUsers(
+        page: Int,
+        limit: Int,
+        searchTerm: String = "",
+        locale: Locale
+    ): List<UserManagementResource>
+
+    suspend fun getUserById(id: String): UserResource
+
     suspend fun deleteUser(id: String, locale: Locale): Boolean
-    suspend fun getToken(id: Long, role: String, locale: Locale): String
 
-    suspend fun getUserByUsername(username: String, locale: Locale): UserManagement
-
-    suspend fun refreshAccessToken(
-        refreshToken: String, tokenConfiguration: TokenConfiguration, locale: Locale
-    ): UserTokens
-
-    suspend fun saveRefreshToken(userId: String, refreshToken: String, expirationDate: Long, locale: Locale): Boolean
+    suspend fun getUserByUsername(username: String): UserManagement
 
     // endregion: user
 
@@ -68,13 +78,13 @@ interface IApiGateway {
     suspend fun removePermissionFromUser(userId: String, permissionId: Int, locale: Locale): Boolean
 
     suspend fun getUserPermissions(userId: String, locale: Locale): List<PermissionResource>
-
-    suspend fun validateRefreshToken(refreshToken: String, locale: Locale): Boolean
-
-    suspend fun getUserByRefreshToken(refreshToken: String, locale: Locale): UserManagement
-
     // endregion: user permission management
 
     // endregion identity
 
+    suspend fun generateUserTokens(
+        userId: String,
+        userPermissions: List<Int>,
+        tokenConfiguration: TokenConfiguration
+    ): UserTokens
 }

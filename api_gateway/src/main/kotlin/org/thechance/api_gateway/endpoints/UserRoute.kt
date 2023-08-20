@@ -7,6 +7,7 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
+import org.thechance.api_gateway.data.gateway.IResourcesGateway
 import org.thechance.api_gateway.data.model.TokenConfiguration
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
 import org.thechance.api_gateway.endpoints.utils.respondWithResult
@@ -17,7 +18,8 @@ import java.util.*
  */
 fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
 
-    val userAccountManagementUseCase: IApiGateway by inject()
+    val gateway: IApiGateway by inject()
+    val resourcesGateway: IResourcesGateway by inject()
 
     post("/signup") {
         val params = call.receiveParameters()
@@ -28,14 +30,17 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
 
         val (language, countryCode) = extractLocalizationHeader()
 
-        val result = userAccountManagementUseCase.createUser(
+        val result = gateway.createUser(
             fullName = fullName.toString(),
             username = username.toString(),
             password = password.toString(),
             email = email.toString(),
             locale = Locale(language, countryCode)
         )
-        respondWithResult(HttpStatusCode.Created, result, "user created successfully 🎉")
+        val locale = Locale(language, countryCode)
+        val message = resourcesGateway.getLocalizedResponseMessage(code = 1076, locale = locale)
+
+        respondWithResult(HttpStatusCode.Created, result,message)
     }
 
     post("/login") {
@@ -45,33 +50,32 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
 
         val (language, countryCode) = extractLocalizationHeader()
 
-        val token = userAccountManagementUseCase.loginUser(
+        val token = gateway.loginUser(
             userName,
             password,
             tokenConfiguration,
             Locale(language, countryCode)
         )
-
         respondWithResult(HttpStatusCode.Created, token)
     }
 
 
-    post("/refresh-access-token") {
-        val params = call.receiveParameters()
-        val refreshToken = params["refreshToken"]?.trim().toString()
-
-        val (language, countryCode) = extractLocalizationHeader()
-        val locale = Locale(language, countryCode)
-        val token = userAccountManagementUseCase.refreshAccessToken(refreshToken, tokenConfiguration, locale)
-
-        respondWithResult(HttpStatusCode.Created, token)
-    }
 
     authenticate("auth-jwt") {
         get("/me") {
             val tokenClaim = call.principal<JWTPrincipal>()
             val id = tokenClaim?.payload?.getClaim("userId").toString()
             respondWithResult(HttpStatusCode.OK, id)
+        }
+    }
+
+    authenticate("refresh-jwt") {
+        post("/refresh-access-token") {
+            val tokenClaim = call.principal<JWTPrincipal>()
+            val userId = tokenClaim?.payload?.getClaim("userId").toString()
+            val userPermissions = tokenClaim?.payload?.getClaim("role")?.asList(Int::class.java) ?: emptyList()
+            val token = gateway.generateUserTokens(userId, userPermissions, tokenConfiguration)
+            respondWithResult(HttpStatusCode.Created, token)
         }
     }
 
