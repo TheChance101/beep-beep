@@ -3,19 +3,29 @@ package org.thechance.api_gateway.data.localized_messages
 import org.thechance.api_gateway.data.localized_messages.error_codes.*
 import java.util.*
 
-object ErrorCodeMessagesFactory {
-    fun createErrorCodeMessages(locale: Locale): LocalizedMessages {
+object LocalizedMessagesFactory {
+    fun createLocalizedMessages(locale: Locale): LocalizedMessages {
         return when (locale.language) {
-            "en" -> EnglishLocalizedMessages()
-            "ar" -> {
+            Language.ENGLISH.code -> EnglishLocalizedMessages()
+            Language.ARABIC.code -> {
                 when (locale.country) {
-                    "EG" -> EgyptLocalizedMessages()
-                    "PS" -> PalestineLocalizedMessages()
+                    Country.EGYPT.code -> EgyptLocalizedMessages()
+                    Country.PALESTINE.code -> PalestineLocalizedMessages()
                     else -> ArabicLocalizedMessages()
                 }
             }
-
             else -> EnglishLocalizedMessages()
         }
     }
+}
+
+
+enum class Language(val code: String) {
+    ENGLISH("en"),
+    ARABIC("ar")
+}
+
+enum class Country(val code: String) {
+    EGYPT("EG"),
+    PALESTINE("PS")
 }
