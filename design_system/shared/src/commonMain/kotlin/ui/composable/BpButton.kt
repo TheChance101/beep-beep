@@ -3,6 +3,7 @@ package com.beepbeep.designSystem.ui.composable
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.height
@@ -31,6 +32,7 @@ fun BpButton(
     modifier: Modifier = Modifier,
     painter: Painter? = null,
     enabled: Boolean = true,
+    textPadding: PaddingValues = PaddingValues(Theme.dimens.space16),
     shape: Shape = RoundedCornerShape(Theme.radius.medium),
     containerColor: Color = Theme.colors.primary,
     contentColor: Color = Color.White,
@@ -66,7 +68,7 @@ fun BpButton(
             Text(
                 text = title,
                 style = Theme.typography.titleLarge.copy(color = contentColor),
-                modifier=Modifier)
+                modifier=Modifier.padding(textPadding))
         }
     }
 

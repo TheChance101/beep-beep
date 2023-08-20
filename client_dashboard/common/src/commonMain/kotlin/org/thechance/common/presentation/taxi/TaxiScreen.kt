@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -37,7 +38,6 @@ import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import org.thechance.common.di.getScreenModel
 import org.thechance.common.presentation.composables.modifier.noRipple
 import org.thechance.common.presentation.composables.table.BpPager
@@ -105,11 +105,12 @@ class TaxiScreen : Screen, KoinComponent {
                 BpOutlinedButton(
                     title = "Export",
                     onClick = { /* Export */ },
+                    textPadding = PaddingValues(horizontal = Theme.dimens.space24),
                 )
                 BpButton(
                     title = "New Taxi",
                     onClick = { /* Show New Taxi Dialog */ },
-                    modifier = Modifier
+                    textPadding = PaddingValues(horizontal = Theme.dimens.space24),
                 )
             }
 
