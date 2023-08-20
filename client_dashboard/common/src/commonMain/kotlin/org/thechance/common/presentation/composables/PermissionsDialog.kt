@@ -28,7 +28,7 @@ fun PermissionsDialog(
             .background(Theme.colors.background)
     ) {
         Text(
-            "Permission",
+            "Permissions",
             style = Theme.typography.headline.copy(color = Theme.colors.contentPrimary),
             modifier = Modifier.padding(Theme.dimens.space24)
         )
@@ -51,7 +51,9 @@ fun PermissionsDialog(
         }
 
         Row(
-            Modifier.fillMaxWidth().padding(Theme.dimens.space24),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(Theme.dimens.space24),
             horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8),
             verticalAlignment = Alignment.CenterVertically
         ) {
