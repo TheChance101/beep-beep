@@ -9,10 +9,8 @@ import org.thechance.common.domain.usecase.IGetUsersUseCase
 
 
 class TaxiScreenModel(
-
-) : StateScreenModel<TaxiUiState>(TaxiUiState()) , KoinComponent {
-
-    private val getTaxis: IGetTaxisUseCase by inject()
+    private val getTaxis: IGetTaxisUseCase
+) : StateScreenModel<TaxiUiState>(TaxiUiState()) {
 
     init {
         println("TaxiScreenModel init")
