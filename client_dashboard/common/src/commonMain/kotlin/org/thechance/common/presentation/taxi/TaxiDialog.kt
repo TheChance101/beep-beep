@@ -3,25 +3,15 @@ package org.thechance.common.presentation.taxi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.onClick
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,47 +19,44 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.beepbeep.designSystem.ui.composable.BpButton
+import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import java.awt.Dimension
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddNewTaxiDialog(
     modifier: Modifier = Modifier,
     onTaxiPlateNumberChange: (String) -> Unit,
-    setShowDialog: () -> Unit,
-    isVisible: Boolean
+    onDriverUserNamChange: (String) -> Unit,
+    onCarModelChange: (String) -> Unit,
+    onCarColorSelected: (CarColor) -> Unit,
+    onSeatsSelected: (Int) -> Unit,
+    setDialogVisibility: () -> Unit,
+    isVisible: Boolean,
+    selectedCarColor: CarColor,
 ) {
-    val carColors = listOf(
-        Color(0xffF47373),
-        Color(0xffF8EC7E),
-        Color(0xff80E5AB),
-        Color(0xff77DEEE),
-        Color(0xffFFFFFF),
-        Color(0xffAFAFAF),
-        Color(0xff3F3F3F),
-    )
-    var carColor by remember { mutableStateOf(carColors.first()) }
 
     Dialog(
         visible = isVisible,
-        onCloseRequest = setShowDialog,
+        onCloseRequest = setDialogVisibility,
         focusable = true,
+        undecorated = true
     ) {
         this.window.title = "Create new Taxi"
         this.window.minimumSize = Dimension(464, 680)
         this.window.background = convertComposeColorToJavaSwingWindow(Theme.colors.background)
 
-        Column(modifier = modifier.padding(16.dp)) {
+        Column(modifier = modifier.padding(Theme.dimens.space24)) {
 
             Text(
                 "Create new Taxi",
                 style = Theme.typography.headlineLarge,
                 color = Theme.colors.contentPrimary,
             )
-
-            Spacer(Modifier.height(24.dp))
 
             BpTextField(
                 modifier = Modifier.padding(vertical = 16.dp),
@@ -81,14 +68,14 @@ fun AddNewTaxiDialog(
             BpTextField(
                 modifier = Modifier.padding(vertical = 16.dp),
                 label = "Driver Username",
-                onValueChange = onTaxiPlateNumberChange,
+                onValueChange = onDriverUserNamChange,
                 text = ""
             )
 
             BpTextField(
                 modifier = Modifier.padding(vertical = 16.dp),
                 label = "Car Model",
-                onValueChange = onTaxiPlateNumberChange,
+                onValueChange = onCarModelChange,
                 text = ""
             )
 
@@ -100,9 +87,9 @@ fun AddNewTaxiDialog(
             )
 
             Colors(
-                colors = carColors,
-                onSelectColor = { carColor = it },
-                selectColor = carColor
+                colors = CarColor.values().toList(),
+                onSelectColor = { onCarColorSelected(it) },
+                selectedCarColor = selectedCarColor
             )
 
             Text(
@@ -112,6 +99,22 @@ fun AddNewTaxiDialog(
                 modifier = Modifier.padding(top = 24.dp, bottom = 16.dp),
             )
             Seats()
+
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space40),
+                horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space16)
+            ) {
+                BpOutlinedButton(
+                    "Cancel",
+                    onClick = setDialogVisibility,
+                    modifier = Modifier.width(120.dp)
+                )
+                BpButton(
+                    title = "Create",
+                    onClick = {},
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
 
         }
     }
@@ -123,9 +126,9 @@ fun AddNewTaxiDialog(
 @Composable
 private fun Colors(
     modifier: Modifier = Modifier,
-    colors: List<Color>,
-    onSelectColor: (Color) -> Unit,
-    selectColor: Color
+    colors: List<CarColor>,
+    onSelectColor: (CarColor) -> Unit,
+    selectedCarColor: CarColor
 ) {
     LazyRow(
         modifier = modifier,
@@ -133,13 +136,24 @@ private fun Colors(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(colors) { carColor ->
-            val selectedModifier = if (selectColor == carColor) {
+            val color = when (carColor) {
+                CarColor.RED -> Color(0xffF47373)
+                CarColor.YELLOW -> Color(0xffF8EC7E)
+                CarColor.GREEN -> Color(0xff80E5AB)
+                CarColor.BLUE -> Color(0xff77DEEE)
+                CarColor.WHITE -> Color(0xffFFFFFF)
+                CarColor.GREY -> Color(0xffAFAFAF)
+                CarColor.BLACK -> Color(0xff3F3F3F)
+
+            }
+            val selectedModifier = if (selectedCarColor == carColor) {
                 Modifier.size(32.dp)
                     .border(
                         width = 2.dp,
                         color = Theme.colors.contentSecondary,
                         shape = RoundedCornerShape(4.dp)
                     ).padding(4.dp)
+
             } else {
                 Modifier.size(32.dp).padding(4.dp)
             }
@@ -149,7 +163,7 @@ private fun Colors(
             ) {
                 Box(
                     modifier = Modifier.size(20.dp)
-                        .background(carColor, shape = RoundedCornerShape(4.dp))
+                        .background(color, shape = RoundedCornerShape(4.dp))
                         .border(
                             width = 2.dp,
                             color = Color.Gray.copy(alpha = 0.5f),
