@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -39,26 +38,26 @@ import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.thechance.common.di.getScreenModel
 import org.thechance.common.presentation.composables.modifier.noRipple
 import org.thechance.common.presentation.composables.table.BpPager
 import org.thechance.common.presentation.composables.table.BpTable
-import org.thechance.common.presentation.composables.table.Header
 import org.thechance.common.presentation.composables.table.TotalItemsIndicator
-import org.thechance.common.presentation.uistate.TaxiUiState
 
-object TaxiScreen : Screen, KoinComponent {
-
-    private val screenModel: TaxiScreenModel by inject()
+class TaxiScreen : Screen, KoinComponent {
 
     @Composable
     override fun Content() {
+        val screenModel = getScreenModel<TaxiScreenModel>()
         val state by screenModel.state.collectAsState()
         TaxiContent(
             state = state,
             onClickEdit = {},
-            onSearchInputChange = screenModel::onSearchInputChange
+            onSearchInputChange = screenModel::onSearchInputChange,
+            onTaxiNumberChange = screenModel::onTaxiNumberChange,
         )
     }
+
 
     @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
     @Composable
@@ -66,26 +65,14 @@ object TaxiScreen : Screen, KoinComponent {
         state: TaxiUiState,
         onClickEdit: (String) -> Unit,
         onSearchInputChange: (String) -> Unit,
+        onTaxiNumberChange: (String) -> Unit,
     ) {
         var selectedTaxi by remember { mutableStateOf<String?>(null) }
         var selectedPage by remember { mutableStateOf(1) }
-        val pageCount = 5
-        var numberItemInPage by remember { mutableStateOf(10) }
+        val pageCount = 2
 
         val firstColumnWeight by remember { mutableStateOf(1f) }
         val otherColumnsWeight by remember { mutableStateOf(3f) }
-        val headers = listOf(
-            Header("No.", 1f),
-            Header("Plate number", 3f),
-            Header("Driver username", 3f),
-            Header("Status", 3f),
-            Header("Car model", 3f),
-            Header("car color", 3f),
-            Header("Seats", 3f),
-            Header("Trips", 3f),
-            Header("", 1f),
-        )
-
 
         Column(
             Modifier.background(Theme.colors.surface).fillMaxSize(),
@@ -103,12 +90,11 @@ object TaxiScreen : Screen, KoinComponent {
                     onValueChange = onSearchInputChange,
                     text = state.searchQuery,
                     keyboardType = KeyboardType.Text,
-                    trailingPainter = painterResource("search.svg")
+                    trailingPainter = painterResource("ic_search.svg")
                 )
-
                 BpIconButton(
                     onClick = { /* Show Taxi Filter Dialog */ },
-                    painter = painterResource("sort.svg")
+                    painter = painterResource("ic_filter.svg"),
                 ) {
                     Text(
                         text = "Filter",
@@ -116,7 +102,6 @@ object TaxiScreen : Screen, KoinComponent {
                     )
                 }
                 Spacer(modifier = Modifier.weight(1f))
-
                 BpOutlinedButton(
                     title = "Export",
                     onClick = { /* Export */ },
@@ -124,16 +109,16 @@ object TaxiScreen : Screen, KoinComponent {
                 BpButton(
                     title = "New Taxi",
                     onClick = { /* Show New Taxi Dialog */ },
-                    modifier =Modifier
+                    modifier = Modifier
                 )
             }
 
             BpTable(
                 data = state.taxis,
                 key = { it.id },
-                headers = headers,
+                headers = state.tabHeader,
                 modifier = Modifier.fillMaxWidth(),
-                rowsCount = pageCount,
+                rowsCount = state.taxiNumberInPage.toInt(),
                 offset = selectedPage - 1,
                 rowContent = { taxi ->
                     Text(
@@ -158,11 +143,16 @@ object TaxiScreen : Screen, KoinComponent {
                         maxLines = 1,
                     )
                     Text(
-                        taxi.status,
-                        style = Theme.typography.titleMedium.copy(color = if (taxi.status == "Online") Theme.colors.success else if (taxi.status == "Offline") Theme.colors.primary else Theme.colors.warning),
+                        taxi.status.status,
+                        style = Theme.typography.titleMedium,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(otherColumnsWeight),
                         maxLines = 1,
+                        color = when (taxi.status) {
+                            TaxiStatus.ONLINE -> Theme.colors.success
+                            TaxiStatus.OFFLINE -> Theme.colors.primary
+                            else -> Theme.colors.warning
+                        }
                     )
                     Text(
                         taxi.type,
@@ -211,19 +201,18 @@ object TaxiScreen : Screen, KoinComponent {
                     )
                 },
             )
-
+            Spacer(modifier = Modifier.weight(1f))
             Row(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 TotalItemsIndicator(
-                    numberItemInPage = numberItemInPage,
                     totalItems = state.taxis.size,
                     itemType = "taxi",
-                    onItemPerPageChange = { numberItemInPage = it.toIntOrNull() ?: 10 }
+                    numberItemInPage = state.taxiNumberInPage,
+                    onItemPerPageChange = onTaxiNumberChange
                 )
-
                 BpPager(
                     maxPages = pageCount,
                     currentPage = selectedPage,

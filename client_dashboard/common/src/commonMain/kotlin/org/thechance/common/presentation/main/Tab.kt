@@ -35,7 +35,7 @@ object TaxisTab : Tab {
 
     @Composable
     override fun Content() {
-        Navigator(screen = TaxiScreen)
+        Navigator(screen = TaxiScreen())
     }
 }
 
