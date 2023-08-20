@@ -50,15 +50,6 @@ fun DesignApp() {
 //            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Bottom
         ) {
-            var selectedItem by remember { mutableStateOf(1) }
-            BpTap(
-                onTap = {
-                    selectedItem = it
-                },
-                selectedTab = selectedItem,
-                firstTabLabel = "First",
-                secondTabLabel = "Second",
-            )
             EnabledButtonsPreview()
             DisabledButtonsPreview()
             Spacer(modifier = Modifier.height(16.dp))
