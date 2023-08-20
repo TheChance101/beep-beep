@@ -4,10 +4,11 @@ plugins {
     alias(libs.plugins.kotlin.native.cocoapods)
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.compose)
+    alias(libs.plugins.kotlinKsp)
 }
 
 kotlin {
-    androidTarget()
+    android()
 
     iosX64()
     iosArm64()
@@ -33,6 +34,12 @@ kotlin {
                 implementation(libs.compose.foundation)
                 implementation(libs.compose.material3)
                 implementation(libs.compose.components.resources)
+
+                implementation(libs.bundles.voyager)
+
+                api(libs.koin.core)
+                implementation(libs.koin.annotations)
+//                implementation(libs.koin.ksp)
                 implementation(project(":design_system:shared"))
             }
         }
