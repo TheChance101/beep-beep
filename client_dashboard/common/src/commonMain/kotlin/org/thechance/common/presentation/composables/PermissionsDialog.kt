@@ -10,13 +10,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BpChip
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
-import com.beepbeep.designSystem.ui.composable.BpTextButton
+import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.uistate.UserScreenUiState
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun PermissionsDialogContent(
+fun PermissionsDialog(
     dialogUiState: UserScreenUiState.PermissionsDialogUiState,
     togglePermission: (UserScreenUiState.PermissionUiState) -> Unit,
     onSaveClick: () -> Unit,
@@ -50,8 +50,8 @@ fun PermissionsDialogContent(
         horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        BpTextButton(
-            text = "Cancel",
+        BpTransparentButton(
+            title = "Cancel",
             onClick = onCancelClick,
             modifier = Modifier.weight(1f).height(32.dp)
         )
