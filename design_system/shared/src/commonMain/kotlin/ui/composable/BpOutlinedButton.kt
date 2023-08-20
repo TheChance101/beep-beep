@@ -64,7 +64,6 @@ fun BpOutlinedButton(
             Text(
                 text = title,
                 style = Theme.typography.titleLarge.copy(color = buttonContentColor),
-                modifier = Modifier.padding(horizontal = Theme.dimens.space24)
             )
         }
     }

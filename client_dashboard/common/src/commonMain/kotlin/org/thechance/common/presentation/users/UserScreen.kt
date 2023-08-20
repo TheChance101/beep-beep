@@ -69,6 +69,7 @@ object UserScreen : Screen, KoinComponent {
         //This need to change to get it from state
         var selectedUser by remember { mutableStateOf<String?>(null) }
         var selectedPage by remember { mutableStateOf(1) }
+
         var numberItemInPage by remember { mutableStateOf(3) }
         val pageCount = 3
 
@@ -276,7 +277,7 @@ object UserScreen : Screen, KoinComponent {
                 key = { it.username },
                 headers = state.tableHeader,
                 modifier = Modifier.fillMaxWidth(),
-                rowsCount = pageCount,
+                rowsCount = numberItemInPage,
                 offset = selectedPage - 1,
                 rowContent = { user ->
                     UserRow(
@@ -288,12 +289,12 @@ object UserScreen : Screen, KoinComponent {
             )
 
             Row(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 TotalItemsIndicator(
-                    numberItemInPage = numberItemInPage,
+                    numberItemInPage = numberItemInPage.toString(),
                     totalItems = state.numberOfUsers,
                     itemType = "user",
                     onItemPerPageChange = { numberItemInPage = it.toIntOrNull() ?: 10 }

@@ -63,7 +63,10 @@ fun BpButton(
                     contentDescription = null
                 )
             }
-            Text(text = title, style = Theme.typography.titleLarge.copy(color = contentColor),modifier=Modifier.padding(horizontal = Theme.dimens.space24))
+            Text(
+                text = title,
+                style = Theme.typography.titleLarge.copy(color = contentColor),
+                modifier=Modifier)
         }
     }
 
