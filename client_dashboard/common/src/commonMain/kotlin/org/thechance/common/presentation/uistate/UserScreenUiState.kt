@@ -16,7 +16,8 @@ data class UserScreenUiState(
     ),
     val numberOfUsers: Int = 0,
     val search: String = "",
-    val isFilterDropdownMenuExpanded:Boolean = false
+    val isFilterDropdownMenuExpanded: Boolean = false,
+    val permissionsDialog: PermissionsDialogUiState = PermissionsDialogUiState(),
 ) {
     data class Header(val text: String, val weight: Float = 1f)
     data class UserUiState(
@@ -35,6 +36,12 @@ data class UserScreenUiState(
         DELIVERY("ic_delivery.xml"),
         DASHBOARD_ADMIN("ic_admin.xml"),
     }
+
+    data class PermissionsDialogUiState(
+        val show: Boolean = false,
+        val username: String = "",
+        val permissions: List<PermissionUiState> = emptyList(),
+    )
 }
 
 fun List<User>.toUiState(): List<UserScreenUiState.UserUiState> {
