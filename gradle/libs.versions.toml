@@ -65,7 +65,7 @@ kotlin-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-j
 
 [bundles]
 voyager = ["voyager-navigator", "voyager-bottomsheet-navigator",
-    "voyager-transitions", "voyager-koin", "voyager-androidx"]
+    "voyager-transitions", "voyager-koin"]
 
 [plugins]
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
