@@ -22,44 +22,50 @@ fun PermissionsDialog(
     onSaveClick: () -> Unit,
     onCancelClick: () -> Unit,
 ) {
-    Text(
-        "Permission",
-        style = Theme.typography.headline.copy(color = Theme.colors.contentPrimary),
-        modifier = Modifier.padding(Theme.dimens.space24)
-    )
-
-    FlowRow(
+    Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .background(Theme.colors.background)
-            .padding(Theme.dimens.space8)
     ) {
-        UserScreenUiState.PermissionUiState.values().forEach { permission ->
-            BpChip(
-                label = permission.name.lowercase().capitalizeWords(),
-                modifier = Modifier.padding(Theme.dimens.space8),
-                onClick = { togglePermission(permission) },
-                painter = painterResource(permission.iconPath),
-                isSelected = dialogUiState.permissions.contains(permission)
+        Text(
+            "Permission",
+            style = Theme.typography.headline.copy(color = Theme.colors.contentPrimary),
+            modifier = Modifier.padding(Theme.dimens.space24)
+        )
+
+        FlowRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Theme.colors.background)
+                .padding(Theme.dimens.space8)
+        ) {
+            UserScreenUiState.PermissionUiState.values().forEach { permission ->
+                BpChip(
+                    label = permission.name.lowercase().capitalizeWords(),
+                    modifier = Modifier.padding(Theme.dimens.space8),
+                    onClick = { togglePermission(permission) },
+                    painter = painterResource(permission.iconPath),
+                    isSelected = dialogUiState.permissions.contains(permission)
+                )
+            }
+        }
+
+        Row(
+            Modifier.fillMaxWidth().padding(Theme.dimens.space24),
+            horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            BpTransparentButton(
+                title = "Cancel",
+                onClick = onCancelClick,
+                modifier = Modifier.weight(1f).height(32.dp)
+            )
+            BpOutlinedButton(
+                title = "Save",
+                onClick = onSaveClick,
+                modifier = Modifier.weight(3f).height(32.dp),
             )
         }
-    }
-
-    Row(
-        Modifier.fillMaxWidth().padding(Theme.dimens.space24),
-        horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        BpTransparentButton(
-            title = "Cancel",
-            onClick = onCancelClick,
-            modifier = Modifier.weight(1f).height(32.dp)
-        )
-        BpOutlinedButton(
-            title = "Save",
-            onClick = onSaveClick,
-            modifier = Modifier.weight(3f).height(32.dp),
-        )
     }
 }
 
