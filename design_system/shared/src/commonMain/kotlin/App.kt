@@ -32,6 +32,7 @@ import com.beepbeep.designSystem.ui.composable.BpExpandableTextField
 import com.beepbeep.designSystem.ui.composable.BpNavigationBar
 import com.beepbeep.designSystem.ui.composable.BpNavigationBarItem
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
+import com.beepbeep.designSystem.ui.composable.BpPriceField
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.composable.BpTap
 import com.beepbeep.designSystem.ui.composable.BpTextField
@@ -42,6 +43,7 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun DesignApp() {
     BpTheme {
