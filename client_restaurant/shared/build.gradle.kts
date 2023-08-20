@@ -7,6 +7,10 @@ plugins {
     alias(libs.plugins.kotlinKsp)
 }
 
+group = "org.thechance"
+version = "1.0-SNAPSHOT"
+
+
 kotlin {
     android()
 
@@ -40,6 +44,7 @@ kotlin {
                 api(libs.koin.core)
                 implementation(libs.koin.annotations)
 //                implementation(libs.koin.ksp)
+                implementation(libs.koin.compose)
                 implementation(project(":design_system:shared"))
             }
         }

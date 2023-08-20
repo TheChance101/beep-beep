@@ -40,7 +40,7 @@ androidx-ui-text = { group = "androidx.compose.ui", name = "ui-text", version = 
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version = "1.1.1" }
 google-accompanist = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist-version" }
 androidx-constraint = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraint-version" }
-koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-version" }
+koin-compose = { module = "io.insert-koin:koin-compose", version= "1.0.4" }
 koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin-version" }
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager-version" }
 voyager-bottomsheet-navigator = { module = "cafe.adriel.voyager:voyager-bottom-sheet-navigator", version.ref = "voyager-version" }
