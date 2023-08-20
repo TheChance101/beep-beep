@@ -28,12 +28,12 @@ data class UserScreenUiState(
     )
 
     enum class PermissionUiState(val iconPath: String) {
-        RESTAURANT("outline_restaurants.xml"),
-        DRIVER("ic_taxi.xml"),
+        RESTAURANT_OWNER("outline_restaurants.xml"),
+        TAXI_DRIVER("ic_taxi.xml"),
         END_USER("ic_end_user.xml"),
         SUPPORT("ic_support.xml"),
         DELIVERY("ic_delivery.xml"),
-        ADMIN("ic_admin.xml"),
+        DASHBOARD_ADMIN("ic_admin.xml"),
     }
 }
 
@@ -46,12 +46,12 @@ fun List<User>.toUiState(): List<UserScreenUiState.UserUiState> {
             country = it.country,
             permissions = it.permission.map { permission ->
                 when (permission) {
-                    User.Permission.RESTAURANT -> UserScreenUiState.PermissionUiState.RESTAURANT
-                    User.Permission.DRIVER -> UserScreenUiState.PermissionUiState.DRIVER
+                    User.Permission.RESTAURANT -> UserScreenUiState.PermissionUiState.RESTAURANT_OWNER
+                    User.Permission.DRIVER -> UserScreenUiState.PermissionUiState.TAXI_DRIVER
                     User.Permission.END_USER -> UserScreenUiState.PermissionUiState.END_USER
                     User.Permission.SUPPORT -> UserScreenUiState.PermissionUiState.SUPPORT
                     User.Permission.DELIVERY -> UserScreenUiState.PermissionUiState.DELIVERY
-                    User.Permission.ADMIN -> UserScreenUiState.PermissionUiState.ADMIN
+                    User.Permission.ADMIN -> UserScreenUiState.PermissionUiState.DASHBOARD_ADMIN
                 }
             })
     }
