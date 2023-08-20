@@ -33,6 +33,7 @@ import com.beepbeep.designSystem.ui.composable.BpNavigationBar
 import com.beepbeep.designSystem.ui.composable.BpNavigationBarItem
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
+import com.beepbeep.designSystem.ui.composable.BpTap
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.BpTheme
@@ -49,11 +50,15 @@ fun DesignApp() {
 //            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Bottom
         ) {
-            BpAppBar(
-                title = "Design System",
-                onNavigateUp = { },
-                modifier = Modifier.fillMaxWidth()
-            ){}
+            var selectedItem by remember { mutableStateOf(1) }
+            BpTap(
+                onTap = {
+                    selectedItem = it
+                },
+                selectedTab = selectedItem,
+                firstTabLabel = "First",
+                secondTabLabel = "Second",
+            )
             EnabledButtonsPreview()
             DisabledButtonsPreview()
             Spacer(modifier = Modifier.height(16.dp))
