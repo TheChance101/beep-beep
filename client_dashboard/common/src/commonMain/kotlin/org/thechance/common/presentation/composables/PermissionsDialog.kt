@@ -58,12 +58,12 @@ fun PermissionsDialog(
             BpTransparentButton(
                 title = "Cancel",
                 onClick = onCancelClick,
-                modifier = Modifier.weight(1f).height(32.dp)
+                modifier = Modifier.weight(1f).height(36.dp)
             )
             BpOutlinedButton(
                 title = "Save",
                 onClick = onSaveClick,
-                modifier = Modifier.weight(3f).height(32.dp),
+                modifier = Modifier.weight(3f).height(36.dp),
             )
         }
     }
