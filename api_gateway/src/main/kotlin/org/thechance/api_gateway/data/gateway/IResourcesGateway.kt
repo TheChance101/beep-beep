@@ -4,6 +4,6 @@ import java.util.*
 
 interface IResourcesGateway {
 
-    suspend fun getLocalizedErrorMessage(errorCode: Int, locale: Locale): Map<Int, String>
+    suspend fun getLocalizedResponseMessage(code: Int, locale: Locale): Map<Int, String>
 
 }

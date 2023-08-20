@@ -8,7 +8,7 @@ import io.ktor.util.pipeline.*
 suspend inline fun <reified T> PipelineContext<Unit, ApplicationCall>.respondWithResult(
         statusCode: HttpStatusCode,
         result: T,
-        message: String? = null
+        message: Map<Int, String>? = null
 ) {
     call.respond(statusCode, ServerResponse.success(result, message))
 }
