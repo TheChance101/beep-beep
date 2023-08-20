@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,14 +38,14 @@ import com.beepbeep.designSystem.ui.composable.BpIconButton
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.koin.core.component.KoinComponent
 import org.thechance.common.di.getScreenModel
+import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.presentation.composables.modifier.noRipple
 import org.thechance.common.presentation.composables.table.BpPager
 import org.thechance.common.presentation.composables.table.BpTable
 import org.thechance.common.presentation.composables.table.TotalItemsIndicator
 
-class TaxiScreen : Screen, KoinComponent {
+class TaxiScreen : Screen {
 
     @Composable
     override fun Content() {
@@ -52,27 +53,21 @@ class TaxiScreen : Screen, KoinComponent {
         val state by screenModel.state.collectAsState()
         TaxiContent(
             state = state,
-            onClickEdit = {},
             onSearchInputChange = screenModel::onSearchInputChange,
             onTaxiNumberChange = screenModel::onTaxiNumberChange,
         )
     }
 
-
-    @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun TaxiContent(
         state: TaxiUiState,
-        onClickEdit: (String) -> Unit,
         onSearchInputChange: (String) -> Unit,
         onTaxiNumberChange: (String) -> Unit,
     ) {
         var selectedTaxi by remember { mutableStateOf<String?>(null) }
         var selectedPage by remember { mutableStateOf(1) }
         val pageCount = 2
-
-        val firstColumnWeight by remember { mutableStateOf(1f) }
-        val otherColumnsWeight by remember { mutableStateOf(3f) }
 
         Column(
             Modifier.background(Theme.colors.surface).fillMaxSize(),
@@ -122,83 +117,10 @@ class TaxiScreen : Screen, KoinComponent {
                 rowsCount = state.taxiNumberInPage.toInt(),
                 offset = selectedPage - 1,
                 rowContent = { taxi ->
-                    Text(
-                        text = (state.taxis.indexOf(taxi) + 1).toString(),
-                        style = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
-                        modifier = Modifier.weight(firstColumnWeight),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                    Text(
-                        taxi.plateNumber,
-                        style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(otherColumnsWeight),
-                        maxLines = 1,
-                    )
-                    Text(
-                        taxi.username,
-                        style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(otherColumnsWeight),
-                        maxLines = 1,
-                    )
-                    Text(
-                        taxi.status.status,
-                        style = Theme.typography.titleMedium,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(otherColumnsWeight),
-                        maxLines = 1,
-                        color = when (taxi.status) {
-                            TaxiStatus.ONLINE -> Theme.colors.success
-                            TaxiStatus.OFFLINE -> Theme.colors.primary
-                            else -> Theme.colors.warning
-                        }
-                    )
-                    Text(
-                        taxi.type,
-                        style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(otherColumnsWeight),
-                        maxLines = 1,
-                    )
-                    Box(modifier = Modifier.weight(otherColumnsWeight)) {
-                        Spacer(
-                            modifier = Modifier.size(24.dp).background(
-                                color = Theme.colors.primary,
-                                shape = RoundedCornerShape(4.dp)
-                            )
-                        )
-                    }
-
-                    FlowRow(
-                        modifier = Modifier.weight(otherColumnsWeight),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        maxItemsInEachRow = 3,
-                    ) {
-                        repeat(taxi.seats) {
-                            Icon(
-                                painter = painterResource("outline_seat.xml"),
-                                contentDescription = null,
-                                tint = Theme.colors.contentPrimary.copy(alpha = 0.87f),
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-                    }
-                    Text(
-                        taxi.trips,
-                        style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(otherColumnsWeight),
-                        maxLines = 1,
-                    )
-
-                    Image(
-                        painter = painterResource("horizontal_dots.xml"),
-                        contentDescription = null,
-                        modifier = Modifier.noRipple { selectedTaxi = taxi.id }
-                            .weight(firstColumnWeight),
-                        colorFilter = ColorFilter.tint(color = Theme.colors.contentPrimary)
+                    TaxiRow(
+                        onClickEdit = { selectedTaxi = it },
+                        taxi = taxi,
+                        position = state.taxis.indexOf(taxi) + 1,
                     )
                 },
             )
@@ -221,5 +143,88 @@ class TaxiScreen : Screen, KoinComponent {
                 )
             }
         }
+    }
+
+    @OptIn(ExperimentalLayoutApi::class)
+    @Composable
+    private fun RowScope.TaxiRow(
+        onClickEdit: (id: String) -> Unit,
+        position: Int,
+        taxi: TaxiDetailsUiState,
+        firstColumnWeight: Float = 1f,
+        otherColumnsWeight: Float = 3f,
+    ) {
+        Text(
+            text = position.toString(),
+            style = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
+            modifier = Modifier.weight(firstColumnWeight),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+        Text(
+            taxi.plateNumber,
+            style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(otherColumnsWeight),
+            maxLines = 1,
+        )
+        Text(
+            taxi.username,
+            style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(otherColumnsWeight),
+            maxLines = 1,
+        )
+        Text(
+            text = taxi.statusText,
+            style = Theme.typography.titleMedium,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(otherColumnsWeight),
+            maxLines = 1,
+            color = taxi.statusColor
+        )
+        Text(
+            taxi.type,
+            style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(otherColumnsWeight),
+            maxLines = 1,
+        )
+        Box(modifier = Modifier.weight(otherColumnsWeight)) {
+            Spacer(
+                modifier = Modifier.size(24.dp).background(
+                    color = taxi.color,
+                    shape = RoundedCornerShape(4.dp)
+                )
+            )
+        }
+        FlowRow(
+            modifier = Modifier.weight(otherColumnsWeight),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            maxItemsInEachRow = 3,
+        ) {
+            repeat(taxi.seats) {
+                Icon(
+                    painter = painterResource("outline_seat.xml"),
+                    contentDescription = null,
+                    tint = Theme.colors.contentPrimary.copy(alpha = 0.87f),
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+        }
+        Text(
+            taxi.trips,
+            style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(otherColumnsWeight),
+            maxLines = 1,
+        )
+        Image(
+            painter = painterResource("horizontal_dots.xml"),
+            contentDescription = null,
+            modifier = Modifier.noRipple { onClickEdit(taxi.id) }
+                .weight(firstColumnWeight),
+            colorFilter = ColorFilter.tint(color = Theme.colors.contentPrimary)
+        )
     }
 }

@@ -9,7 +9,6 @@ import org.thechance.common.domain.entity.Admin
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.getway.IRemoteGateway
-import org.thechance.common.presentation.taxi.TaxiStatus
 
 
 class FakeRemoteGateway : IRemoteGateway {
@@ -99,7 +98,7 @@ class FakeRemoteGateway : IRemoteGateway {
                 type = "Sedan",
                 seats = 4,
                 username = "john_doe",
-                status = TaxiStatus.ONLINE,
+                status = 1,
                 trips = "10"
             ),
             TaxiDto(
@@ -109,7 +108,7 @@ class FakeRemoteGateway : IRemoteGateway {
                 type = "SUV",
                 seats = 6,
                 username = "jane_doe",
-                status = TaxiStatus.OFFLINE,
+                status = 2,
                 trips = "5"
             ),
             TaxiDto(
@@ -119,7 +118,7 @@ class FakeRemoteGateway : IRemoteGateway {
                 type = "Hatchback",
                 seats = 4,
                 username = "james_smith",
-                status = TaxiStatus.ON_RIDE,
+                status = 0,
                 trips = "2"
             ),
             TaxiDto(
@@ -129,7 +128,7 @@ class FakeRemoteGateway : IRemoteGateway {
                 type = "Minivan",
                 seats = 6,
                 username = "mary_johnson",
-                status = TaxiStatus.ONLINE,
+                status = 1,
                 trips = "15"
             ),
             TaxiDto(
@@ -139,7 +138,7 @@ class FakeRemoteGateway : IRemoteGateway {
                 type = "Convertible",
                 seats = 4,
                 username = "robert_white",
-                status = TaxiStatus.OFFLINE,
+                status = 2,
                 trips = "3"
             ),
             TaxiDto(
@@ -149,7 +148,7 @@ class FakeRemoteGateway : IRemoteGateway {
                 type = "Sedan",
                 seats = 4,
                 username = "linda_miller",
-                status = TaxiStatus.ON_RIDE,
+                status = 0,
                 trips = "7"
             ),
             TaxiDto(
@@ -159,7 +158,7 @@ class FakeRemoteGateway : IRemoteGateway {
                 type = "Hatchback",
                 seats = 4,
                 username = "david_jones",
-                status = TaxiStatus.ONLINE,
+                status = 1,
                 trips = "12"
             ),
             TaxiDto(
@@ -169,7 +168,7 @@ class FakeRemoteGateway : IRemoteGateway {
                 type = "Minivan",
                 seats = 2,
                 username = "susan_anderson",
-                status = TaxiStatus.OFFLINE,
+                status = 2,
                 trips = "9"
             ),
         ).toEntity()

@@ -1,7 +1,11 @@
 package org.thechance.common.presentation.taxi
 
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.domain.entity.Taxi
+import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.presentation.composables.table.Header
 
 
@@ -28,13 +32,27 @@ data class TaxiUiState(
 data class TaxiDetailsUiState(
     val id: String,
     val plateNumber: String,
-    val color: Int,
+    val color: Color,
     val type: String,
     val seats: Int = 4,
     val username: String = "",
     val status: TaxiStatus = TaxiStatus.ONLINE,
     val trips: String = "1",
-)
+) {
+    val statusColor: Color
+        @Composable get() = when (status) {
+            TaxiStatus.OFFLINE -> Theme.colors.primary
+            TaxiStatus.ONLINE -> Theme.colors.success
+            TaxiStatus.ON_RIDE -> Theme.colors.warning
+        }
+    val statusText: String
+        get() = when (status) {
+            TaxiStatus.OFFLINE -> "Offline"
+            TaxiStatus.ONLINE -> "Online"
+            TaxiStatus.ON_RIDE -> "On Ride"
+        }
+}
+
 
 fun Taxi.toUiState(): TaxiDetailsUiState = TaxiDetailsUiState(
     id = id,
@@ -48,8 +66,3 @@ fun Taxi.toUiState(): TaxiDetailsUiState = TaxiDetailsUiState(
 )
 
 fun List<Taxi>.toUiState() = map { it.toUiState() }
-enum class TaxiStatus( val status: String) {
-    OFFLINE("Offline"),
-    ONLINE("Online"),
-    ON_RIDE("On ride"),
-}

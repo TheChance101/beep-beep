@@ -1,15 +1,17 @@
 package org.thechance.common.domain.entity
 
-import org.thechance.common.presentation.taxi.TaxiStatus
+import androidx.compose.ui.graphics.Color
+import org.thechance.common.domain.util.TaxiColor
+import org.thechance.common.domain.util.TaxiStatus
 
 
 data class Taxi(
     val id: String,
     val plateNumber: String,
-    val color: Int,
+    val color: Color,
     val type: String,
-    val seats: Int = 4,
-    val username: String = "",
-    val status: TaxiStatus = TaxiStatus.ONLINE,
-    val trips: String = "1",
+    val seats: Int,
+    val username: String,
+    val status: TaxiStatus,
+    val trips: String,
 )
