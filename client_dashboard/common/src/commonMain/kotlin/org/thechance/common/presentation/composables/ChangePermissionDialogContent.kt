@@ -36,7 +36,7 @@ fun ChangePermissionDialogContent() {
                 modifier = Modifier.padding(Theme.dimens.space8),
                 onClick = { },
                 painter = painterResource(permission.iconPath),
-                isSelected = false,
+                isSelected = false
             )
         }
     }
@@ -64,3 +64,7 @@ fun ChangePermissionDialogContent() {
 fun ChangePermissionDialogContentPreview() {
     ChangePermissionDialogContent()
 }
+
+private fun String.capitalizeWords(): String = split(" ")
+    .joinToString(" ") { it.replaceFirstChar { char -> char.uppercase() } }
+    .replace("_", " ")
