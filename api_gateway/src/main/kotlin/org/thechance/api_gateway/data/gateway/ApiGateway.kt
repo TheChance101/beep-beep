@@ -10,10 +10,7 @@ import io.ktor.util.*
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.mappers.toManagedUser
 import org.thechance.api_gateway.data.model.*
-import org.thechance.api_gateway.data.model.identity.AddressResource
-import org.thechance.api_gateway.data.model.identity.PermissionResource
 import org.thechance.api_gateway.data.model.identity.UserManagementResource
-import org.thechance.api_gateway.data.model.identity.UserResource
 import org.thechance.api_gateway.endpoints.IApiGateway
 import org.thechance.api_gateway.plugins.TokenType
 import org.thechance.api_gateway.util.APIS
@@ -94,64 +91,6 @@ class ApiGateway(
         }.toManagedUser()
     }
 
-    override suspend fun getUserById(id: String): UserResource {
-        TODO("Not yet implemented")
-    }
-
-
-    override suspend fun deleteUser(id: String, locale: Locale): Boolean {
-        TODO("Not yet implemented")
-    }
-
-
-    override suspend fun deleteAddress(id: String, locale: Locale): Boolean {
-        TODO("Not yet implemented")
-    }
-
-
-    override suspend fun getAddress(id: String, locale: Locale): AddressResource {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getUserAddresses(userId: String, locale: Locale): List<AddressResource> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun subtractFromWallet(userId: String, amount: Double, locale: Locale): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getWalletBalance(userId: String, locale: Locale): Double {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun addToWallet(userId: String, amount: Double, locale: Locale): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getPermission(permissionId: Int, locale: Locale): PermissionResource {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun deletePermission(permissionId: Int, locale: Locale): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getListOfPermission(locale: Locale): List<PermissionResource> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun addPermissionToUser(userId: String, permissionId: Int, locale: Locale): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun removePermissionFromUser(userId: String, permissionId: Int, locale: Locale): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getUserPermissions(userId: String, locale: Locale): List<PermissionResource> {
-        TODO("Not yet implemented")
-    }
 
     // endregion
 
