@@ -17,8 +17,10 @@ import org.thechance.common.presentation.uistate.UserScreenUiState
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun PermissionsDialogContent(
-    user: UserScreenUiState.UserUiState,
-    togglePermission: (String, UserScreenUiState.PermissionUiState) -> Unit
+    dialogUiState: UserScreenUiState.PermissionsDialogUiState,
+    togglePermission: (UserScreenUiState.PermissionUiState) -> Unit,
+    onSaveClick: () -> Unit,
+    onCancelClick: () -> Unit,
 ) {
     Text(
         "Permission",
@@ -36,9 +38,9 @@ fun PermissionsDialogContent(
             BpChip(
                 label = permission.name.lowercase().capitalizeWords(),
                 modifier = Modifier.padding(Theme.dimens.space8),
-                onClick = { togglePermission(user.username, permission) },
+                onClick = { togglePermission(permission) },
                 painter = painterResource(permission.iconPath),
-                isSelected = user.permissions.contains(permission)
+                isSelected = dialogUiState.permissions.contains(permission)
             )
         }
     }
@@ -50,12 +52,12 @@ fun PermissionsDialogContent(
     ) {
         BpTextButton(
             text = "Cancel",
-            onClick = { },
+            onClick = onCancelClick,
             modifier = Modifier.weight(1f).height(32.dp)
         )
         BpOutlinedButton(
             title = "Save",
-            onClick = { },
+            onClick = onSaveClick,
             modifier = Modifier.weight(3f).height(32.dp),
         )
     }
