@@ -2,9 +2,12 @@ package org.thechance.common.presentation.taxi
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import kotlinx.coroutines.flow.update
+import org.thechance.common.domain.entity.CarColor
+import org.thechance.common.domain.usecase.ICreateNewTaxiUseCase
 
 
-class TaxiScreenModel : StateScreenModel<TaxiUiState>(TaxiUiState()), TaxiScreenInteractionListener {
+class TaxiScreenModel(val createNewTaxi: ICreateNewTaxiUseCase) : StateScreenModel<TaxiUiState>(TaxiUiState()),
+    TaxiScreenInteractionListener {
 
     override fun updateAddNewTaxiDialogVisibility() {
         val taxiDialog = mutableState.value.addTaxiDialogUiState
@@ -35,4 +38,9 @@ class TaxiScreenModel : StateScreenModel<TaxiUiState>(TaxiUiState()), TaxiScreen
         mutableState.update { it.copy(addTaxiDialogUiState = it.addTaxiDialogUiState.copy(seats = seats)) }
     }
 
+    override suspend fun createTaxi() {
+        mutableState.collect {
+            createNewTaxi.createTaxi(it.addTaxiDialogUiState.toEntity())
+        }
+    }
 }

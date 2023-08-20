@@ -19,6 +19,7 @@ import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.presentation.composables.SeatsBar
 import java.awt.Dimension
 
@@ -34,7 +35,8 @@ fun AddTaxiDialog(
     onSeatsSelected: (Int) -> Unit,
     setDialogVisibility: () -> Unit,
     isVisible: Boolean,
-    addTaxiDialogUiState: AddTaxiDialogUiState
+    addTaxiDialogUiState: AddTaxiDialogUiState,
+    onCreateTaxiClicked: () -> Unit
 ) {
 
 
@@ -131,7 +133,7 @@ fun AddTaxiDialog(
                 )
                 BpButton(
                     title = "Create",
-                    onClick = {},
+                    onClick = onCreateTaxiClicked,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -157,16 +159,8 @@ private fun Colors(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(colors) { carColor ->
-            val color = when (carColor) {
-                CarColor.RED -> Color(0xffF47373)
-                CarColor.YELLOW -> Color(0xffF8EC7E)
-                CarColor.GREEN -> Color(0xff80E5AB)
-                CarColor.BLUE -> Color(0xff77DEEE)
-                CarColor.WHITE -> Color(0xffFFFFFF)
-                CarColor.GREY -> Color(0xffAFAFAF)
-                CarColor.BLACK -> Color(0xff3F3F3F)
+            val color = Color(carColor.hexadecimal)
 
-            }
             val selectedModifier = if (selectedCarColor == carColor) {
                 Modifier.size(32.dp)
                     .border(

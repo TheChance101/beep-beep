@@ -8,12 +8,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import com.beepbeep.designSystem.ui.composable.BpTextButton
 import com.beepbeep.designSystem.ui.theme.Theme
+import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.thechance.common.domain.entity.CarColor
 
 object TaxiScreen : Screen, KoinComponent {
 
@@ -22,6 +25,7 @@ object TaxiScreen : Screen, KoinComponent {
     @Composable
     override fun Content() {
         val state by screenModel.state.collectAsState()
+        val scope = rememberCoroutineScope()
 
         TaxiContent(
             state = state,
@@ -30,8 +34,11 @@ object TaxiScreen : Screen, KoinComponent {
             screenModel::onDriverUserNamChange,
             screenModel::onCarModelChange,
             screenModel::onCarColorSelected,
-            screenModel::onSeatsSelected
+            screenModel::onSeatsSelected,
+            onCreateTaxiClicked = { scope.launch { screenModel.createTaxi() } }
         )
+
+
     }
 
     @Composable
@@ -43,6 +50,7 @@ object TaxiScreen : Screen, KoinComponent {
         onCarModelChange: (String) -> Unit,
         onCarColorSelected: (CarColor) -> Unit,
         onSeatsSelected: (Int) -> Unit,
+        onCreateTaxiClicked: () -> Unit
     ) {
 
         Column(
@@ -66,7 +74,8 @@ object TaxiScreen : Screen, KoinComponent {
                     onCarModelChange = onCarModelChange,
                     onCarColorSelected = onCarColorSelected,
                     onSeatsSelected = onSeatsSelected,
-                    addTaxiDialogUiState = state.addTaxiDialogUiState
+                    addTaxiDialogUiState = state.addTaxiDialogUiState,
+                    onCreateTaxiClicked = onCreateTaxiClicked
                 )
             }
         }

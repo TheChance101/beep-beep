@@ -1,5 +1,8 @@
 package org.thechance.common.presentation.taxi
 
+import org.thechance.common.domain.entity.AddTaxi
+import org.thechance.common.domain.entity.CarColor
+
 
 data class TaxiUiState(
     val isLoading: Boolean = false,
@@ -16,6 +19,6 @@ data class AddTaxiDialogUiState(
     val seats: Int = 0
 )
 
-enum class CarColor {
-    RED, YELLOW, GREEN, BLUE, WHITE, GREY, BLACK
+fun AddTaxiDialogUiState.toEntity(): AddTaxi {
+    return AddTaxi(isAddNewTaxiDialogVisible, taxiPlateNumber, driverUserName, carModel, selectedCarColor, seats)
 }
