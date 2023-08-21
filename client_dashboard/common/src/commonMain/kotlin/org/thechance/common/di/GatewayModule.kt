@@ -8,6 +8,5 @@ import org.thechance.common.domain.getway.IRemoteGateway
 
 
 val GatewayModule=  module {
-//    single<IRemoteGateway> { FakeRemoteGateway() }
     singleOf(::FakeRemoteGateway){ bind<IRemoteGateway>()}
 }

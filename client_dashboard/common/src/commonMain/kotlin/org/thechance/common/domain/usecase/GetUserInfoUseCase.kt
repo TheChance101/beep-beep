@@ -12,7 +12,7 @@ interface IGetUserInfoUseCase {
 
 class GetUserInfoUseCase(
     private val remoteGateway: IRemoteGateway,
-) : IGetUserInfoUseCase,KoinComponent {
+) : IGetUserInfoUseCase {
     override fun getUserInfo(): Admin {
         return remoteGateway.getUserData()
     }

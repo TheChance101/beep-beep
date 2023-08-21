@@ -7,12 +7,32 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.domain.usecase.ICreateNewTaxiUseCase
+import org.thechance.common.domain.usecase.IGetTaxisUseCase
 
 
 class TaxiScreenModel(
+    private val getTaxis: IGetTaxisUseCase,
     private val createNewTaxi: ICreateNewTaxiUseCase
-) : StateScreenModel<TaxiUiState>(TaxiUiState()), TaxiScreenInteractionListener {
 
+) : StateScreenModel<TaxiUiState>(TaxiUiState()), TaxiScreenInteractionListener  {
+
+    init {
+        getDummyTaxiData()
+    }
+
+    fun onTaxiNumberChange(number: String) {
+        mutableState.update { it.copy(taxiNumberInPage = number) }
+    }
+
+    fun onSearchInputChange(searchQuery: String) {
+        mutableState.update { it.copy(searchQuery = searchQuery) }
+    }
+
+    private fun getDummyTaxiData() {
+        mutableState.update {
+            it.copy(taxis = getTaxis.getTaxis().toUiState(),)
+        }
+    }
     override fun onCancelCreateTaxiClicked() {
         mutableState.update { it.copy(isAddNewTaxiDialogVisible = false) }
     }
@@ -37,7 +57,6 @@ class TaxiScreenModel(
         mutableState.update {
             it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(selectedCarColor = color))
         }
-
     }
 
     override fun onSeatsSelected(seats: Int) {

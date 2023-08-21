@@ -9,9 +9,10 @@ import org.thechance.common.presentation.uistate.MainUiState
 import org.thechance.common.presentation.uistate.toUiState
 
 
-class MainScreenModel : StateScreenModel<MainUiState>(MainUiState()), KoinComponent {
+class MainScreenModel(
+    private val getUserInfo: IGetUserInfoUseCase
+) : StateScreenModel<MainUiState>(MainUiState()) {
 
-    private val getUserInfo: IGetUserInfoUseCase by inject()
 
     init {
         getUserInfo()
