@@ -66,7 +66,7 @@ fun Route.orderRoutes() {
             val isOrderInserted = manageOrder.addOrder(order.toEntity())
             isOrderInserted.takeIf { it }.apply {
                 socketHandler.openedRestaurants[order.restaurantId]?.orders?.emit(order)
-                call.respond(HttpStatusCode.OK, isOrderInserted)
+                call.respond(HttpStatusCode.Created, order)
             } ?: throw MultiErrorException(listOf(INSERT_ORDER_ERROR))
         }
 
