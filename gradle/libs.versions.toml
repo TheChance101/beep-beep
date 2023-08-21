@@ -24,6 +24,8 @@ ktor-version = "2.3.3"
 google-gson-version = "2.10.1"
 serialization_version = "1.6.0-RC"
 ktor-logging-version = "1.5.0"
+coroutine-version = "1.7.1"
+
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
@@ -40,7 +42,7 @@ androidx-ui-text = { group = "androidx.compose.ui", name = "ui-text", version = 
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version = "1.1.1" }
 google-accompanist = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist-version" }
 androidx-constraint = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraint-version" }
-koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-version" }
+koin-compose = { module = "io.insert-koin:koin-compose", version= "1.0.4" }
 koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin-version" }
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager-version" }
 voyager-bottomsheet-navigator = { module = "cafe.adriel.voyager:voyager-bottom-sheet-navigator", version.ref = "voyager-version" }
@@ -50,9 +52,9 @@ voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voy
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor-version" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor-version" }
 google-code-gson = { module = "com.google.code.gson:gson", version.ref = "google-gson-version" }
-ktor-logging = { module = "io.ktor:ktor-client-logging" , version.ref = "ktor-version" }
-ktor-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation" , version.ref = "ktor-version" }
-ktor-json-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json" , version.ref = "ktor-version" }
+ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor-version" }
+ktor-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor-version" }
+ktor-json-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor-version" }
 
 
 voyager-androidx = { module = "cafe.adriel.voyager:voyager-androidx", version.ref = "voyager-version" }
@@ -61,6 +63,10 @@ koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "
 koin-ksp = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp" }
 koin-compiler = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koinKspVersion" }
 kotlin-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization_version" }
+kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutine-version"}
+
+[bundles]
+voyager = ["voyager-navigator", "voyager-koin", "voyager-transitions"]
 
 [plugins]
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
@@ -69,7 +75,7 @@ kotlin-native-cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", versio
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose-version" }
-google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt-version"}
+google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt-version" }
 kotlinKsp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 

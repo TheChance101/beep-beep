@@ -21,25 +21,24 @@ import com.beepbeep.designSystem.ui.theme.Theme
 @Composable
 fun TotalItemsIndicator(
     modifier: Modifier = Modifier,
-    numberItemInPage: Int,
     totalItems: Int,
+    numberItemInPage: String,
     onItemPerPageChange: (String) -> Unit,
-    itemType: String
+    itemType: String,
 ) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space16)
     ) {
-
         BasicTextField(
             modifier = Modifier
                 .border(
                     width = 1.dp,
                     color = Theme.colors.contentBorder,
-                    shape = RoundedCornerShape(8.dp)
-                ).padding(vertical = 8.dp).width(40.dp),
-            value = "$numberItemInPage",
+                    shape = RoundedCornerShape(Theme.radius.medium)
+                ).padding(vertical = Theme.dimens.space8).width(Theme.dimens.space40),
+            value = numberItemInPage,
             onValueChange = onItemPerPageChange,
             textStyle = TextStyle(
                 textAlign = TextAlign.Center,

@@ -1,4 +1,4 @@
-package org.thechance.common.presentation.composables.table
+package org.thechance.common.presentation.users.composables
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -22,9 +22,6 @@ import org.thechance.common.presentation.composables.modifier.noRipple
 import org.thechance.common.presentation.uistate.UserScreenUiState
 
 
-operator fun <E> List<E>.times(i: Int): List<E> {
-    return (0 until i).flatMap { this }
-}
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
