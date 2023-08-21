@@ -40,7 +40,4 @@ bin/
 
 ### Mac OS ###
 .DS_Store
-/.idea/shelf/Uncommitted_changes_before_Checkout_at_8_14_2023_5_18_PM_[Changes]/shelved.patch
-/.idea/shelf/Uncommitted_changes_before_Checkout_at_8_14_2023_5_18_PM_[Changes]1/shelved.patch
-/.idea/shelf/Uncommitted_changes_before_Checkout_at_8_14_2023_5_20_PM_[Changes]/shelved.patch
-/.idea/shelf/Uncommitted_changes_before_Checkout_at_8_14_2023_5_20_PM_[Changes]1/shelved.patch
+/.idea/

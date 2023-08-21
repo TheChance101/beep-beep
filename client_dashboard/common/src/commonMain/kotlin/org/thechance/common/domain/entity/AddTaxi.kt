@@ -2,7 +2,6 @@ package org.thechance.common.domain.entity
 
 
 data class AddTaxi(
-    val isAddNewTaxiDialogVisible: Boolean,
     val taxiPlateNumber: String,
     val driverUserName: String,
     val carModel: String,

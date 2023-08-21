@@ -27,33 +27,32 @@ import java.awt.Dimension
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTaxiDialog(
-    modifier: Modifier = Modifier,
-    onTaxiPlateNumberChange: (String) -> Unit,
-    onDriverUserNamChange: (String) -> Unit,
+    isVisible: Boolean,
+    onSeatsSelected: (Int) -> Unit,
+    onCreateTaxiClicked: () -> Unit,
+    onCancelCreateTaxiClicked: () -> Unit,
     onCarModelChange: (String) -> Unit,
     onCarColorSelected: (CarColor) -> Unit,
-    onSeatsSelected: (Int) -> Unit,
-    setDialogVisibility: () -> Unit,
-    isVisible: Boolean,
-    addTaxiDialogUiState: AddTaxiDialogUiState,
-    onCreateTaxiClicked: () -> Unit
+    onDriverUserNamChange: (String) -> Unit,
+    onTaxiPlateNumberChange: (String) -> Unit,
+    state: AddTaxiDialogUiState,
+    modifier: Modifier = Modifier,
 ) {
-
 
     Dialog(
         transparent = true,
-        visible = isVisible,
-        onCloseRequest = setDialogVisibility,
         focusable = true,
-        undecorated = true
-    ) {
+        undecorated = true,
+        visible = isVisible,
+        onCloseRequest = onCancelCreateTaxiClicked,
 
+        ) {
 
         this.window.minimumSize = Dimension(464, 800)
 
         Column(
             modifier = modifier
-                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+                .padding(top = Theme.dimens.space16, start = Theme.dimens.space16, end = Theme.dimens.space16)
                 .shadow(elevation = 5.dp)
                 .background(Theme.colors.surface, RoundedCornerShape(Theme.dimens.space8))
                 .padding(Theme.dimens.space24)
@@ -69,21 +68,21 @@ fun AddTaxiDialog(
                 modifier = Modifier.padding(top = Theme.dimens.space40),
                 label = "Taxi Plate Number",
                 onValueChange = onTaxiPlateNumberChange,
-                text = addTaxiDialogUiState.taxiPlateNumber
+                text = state.taxiPlateNumber
             )
 
             BpTextField(
                 modifier = Modifier.padding(top = Theme.dimens.space24),
                 label = "Driver Username",
                 onValueChange = onDriverUserNamChange,
-                text = addTaxiDialogUiState.driverUserName
+                text = state.driverUserName
             )
 
             BpTextField(
                 modifier = Modifier.padding(top = Theme.dimens.space24),
                 label = "Car Model",
                 onValueChange = onCarModelChange,
-                text = addTaxiDialogUiState.carModel
+                text = state.carModel
             )
 
             Text(
@@ -97,7 +96,7 @@ fun AddTaxiDialog(
                 modifier = Modifier.padding(top = Theme.dimens.space16),
                 colors = CarColor.values().toList(),
                 onSelectColor = { onCarColorSelected(it) },
-                selectedCarColor = addTaxiDialogUiState.selectedCarColor
+                selectedCarColor = state.selectedCarColor
             )
 
             Text(
@@ -108,7 +107,7 @@ fun AddTaxiDialog(
             )
 
             SeatsBar(
-                selectedSeatsCount = addTaxiDialogUiState.seats,
+                selectedSeatsCount = state.seats,
                 count = 6,
                 selectedIcon = painterResource(
                     if (isSystemInDarkTheme()) "ic_filled_seat_dark.svg" else "ic_filled_seat_light.svg"
@@ -126,9 +125,10 @@ fun AddTaxiDialog(
                 modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space40),
                 horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space16)
             ) {
+
                 BpOutlinedButton(
                     "Cancel",
-                    onClick = setDialogVisibility,
+                    onClick = onCancelCreateTaxiClicked,
                     modifier = Modifier.width(120.dp)
                 )
                 BpButton(
@@ -137,11 +137,8 @@ fun AddTaxiDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-
         }
     }
-
-
 }
 
 

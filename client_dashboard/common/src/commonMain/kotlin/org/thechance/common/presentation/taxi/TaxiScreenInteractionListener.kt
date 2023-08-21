@@ -4,7 +4,7 @@ import org.thechance.common.domain.entity.CarColor
 
 interface TaxiScreenInteractionListener {
 
-    fun updateAddNewTaxiDialogVisibility()
+    fun onCancelCreateTaxiClicked()
 
     fun onTaxiPlateNumberChange(number: String)
 
@@ -16,6 +16,8 @@ interface TaxiScreenInteractionListener {
 
     fun onSeatsSelected(seats: Int)
 
-    suspend fun createTaxi()
+    fun onCreateTaxiClicked()
+
+    fun onAddNewTaxiClicked()
 
 }

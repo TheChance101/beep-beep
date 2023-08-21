@@ -8,14 +8,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
+import com.beepbeep.designSystem.ui.composable.BpTextButton
 import com.beepbeep.designSystem.ui.theme.Theme
-import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import org.thechance.common.domain.entity.CarColor
 
 object TaxiScreen : Screen, KoinComponent {
 
@@ -23,33 +21,16 @@ object TaxiScreen : Screen, KoinComponent {
 
     @Composable
     override fun Content() {
+
         val state by screenModel.state.collectAsState()
-        val scope = rememberCoroutineScope()
-
-        TaxiContent(
-            state = state,
-            screenModel::updateAddNewTaxiDialogVisibility,
-            screenModel::onTaxiPlateNumberChange,
-            screenModel::onDriverUserNamChange,
-            screenModel::onCarModelChange,
-            screenModel::onCarColorSelected,
-            screenModel::onSeatsSelected,
-            onCreateTaxiClicked = { scope.launch { screenModel.createTaxi() } }
-        )
-
+        TaxiContent(state, screenModel)
 
     }
 
     @Composable
     private fun TaxiContent(
         state: TaxiUiState,
-        updateAddNewTaxiDialogVisibility: () -> Unit,
-        onTaxiPlateNumberChange: (String) -> Unit,
-        onDriverUserNamChange: (String) -> Unit,
-        onCarModelChange: (String) -> Unit,
-        onCarColorSelected: (CarColor) -> Unit,
-        onSeatsSelected: (Int) -> Unit,
-        onCreateTaxiClicked: () -> Unit
+        interactionListener: TaxiScreenInteractionListener
     ) {
 
         Column(
@@ -58,18 +39,25 @@ object TaxiScreen : Screen, KoinComponent {
             Box(Modifier.weight(1f)) {
                 Text(text = "Taxi Screen", color = Theme.colors.onPrimary)
 
+                BpTextButton(
+                    text = "Add Taxi",
+                    interactionListener::onAddNewTaxiClicked,
+                    modifier = Modifier,
+                )
+
                 AddTaxiDialog(
                     modifier = Modifier,
-                    onTaxiPlateNumberChange = onTaxiPlateNumberChange,
-                    setDialogVisibility = updateAddNewTaxiDialogVisibility,
-                    isVisible = state.addTaxiDialogUiState.isAddNewTaxiDialogVisible,
-                    onDriverUserNamChange = onDriverUserNamChange,
-                    onCarModelChange = onCarModelChange,
-                    onCarColorSelected = onCarColorSelected,
-                    onSeatsSelected = onSeatsSelected,
-                    addTaxiDialogUiState = state.addTaxiDialogUiState,
-                    onCreateTaxiClicked = onCreateTaxiClicked
+                    onTaxiPlateNumberChange = interactionListener::onTaxiPlateNumberChange,
+                    onCancelCreateTaxiClicked = interactionListener::onCancelCreateTaxiClicked,
+                    isVisible = state.isAddNewTaxiDialogVisible,
+                    onDriverUserNamChange = interactionListener::onDriverUserNamChange,
+                    onCarModelChange = interactionListener::onCarModelChange,
+                    onCarColorSelected = interactionListener::onCarColorSelected,
+                    onSeatsSelected = interactionListener::onSeatsSelected,
+                    state = state.addNewTaxiDialogUiState,
+                    onCreateTaxiClicked = interactionListener::onCreateTaxiClicked
                 )
+
             }
         }
     }

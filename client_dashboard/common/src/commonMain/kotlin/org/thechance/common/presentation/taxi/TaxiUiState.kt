@@ -7,11 +7,11 @@ import org.thechance.common.domain.entity.CarColor
 data class TaxiUiState(
     val isLoading: Boolean = false,
     val error: String = "",
-    val addTaxiDialogUiState: AddTaxiDialogUiState = AddTaxiDialogUiState()
+    val isAddNewTaxiDialogVisible: Boolean = false,
+    val addNewTaxiDialogUiState: AddTaxiDialogUiState = AddTaxiDialogUiState()
 )
 
 data class AddTaxiDialogUiState(
-    val isAddNewTaxiDialogVisible: Boolean = false,
     val taxiPlateNumber: String = "",
     val driverUserName: String = "",
     val carModel: String = "",
@@ -20,5 +20,5 @@ data class AddTaxiDialogUiState(
 )
 
 fun AddTaxiDialogUiState.toEntity(): AddTaxi {
-    return AddTaxi(isAddNewTaxiDialogVisible, taxiPlateNumber, driverUserName, carModel, selectedCarColor, seats)
+    return AddTaxi(taxiPlateNumber, driverUserName, carModel, selectedCarColor, seats)
 }
