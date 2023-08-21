@@ -13,14 +13,14 @@ data class OrderDto(
     var orderStatus: Int? = null
 )
 
-fun List<OrderDto>.toEntity(): List<Order> = map { it.toEntity() }
-fun List<OrderMealDto>.toEntity(): List<OrderMeal> = map { it.toEntity() }
+fun List<OrderDto>.toOrderEntity(): List<Order> = map { it.toEntity() }
+fun List<OrderMealDto>.toOrderMeaEntity(): List<OrderMeal> = map { it.toEntity() }
 fun OrderDto.toEntity(): Order {
     return Order(
         id = id,
         userId = userId,
         restaurantId = restaurantId,
-        meals = meals.toEntity(),
+        meals = meals.toOrderMeaEntity(),
         totalPrice = totalPrice ?: 0.0,
         createdAt = createdAt ?: 0,
         orderStatus = orderStatus ?: 0
