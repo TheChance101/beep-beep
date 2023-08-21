@@ -55,6 +55,7 @@ fun DashboardSideBar(
     darkTheme: Boolean = true,
     currentItem: Int,
     content: @Composable ColumnScope.(
+        sideBarUnexpandedWidthInKms:Dp,
         mainMenuIsExpanded: Boolean,
         itemHeight: (itemHeight: Float) -> Unit
     ) -> Unit
@@ -112,7 +113,7 @@ fun DashboardSideBar(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxHeight()
                 ) {
-                    content(mainMenuIsExpanded.value) { itemHeight ->
+                    content(sideBarUnexpandedWidthInKms,mainMenuIsExpanded.value) { itemHeight ->
                         mainMenuItemHeight.value = itemHeight
                     }
                 }
@@ -167,6 +168,7 @@ fun ColumnScope.BpSideBarItem(
     selectedIconResource: String,
     unSelectedIconResource: String,
     mainMenuIsExpanded: Boolean,
+    sideBarUnexpandedWidthInKms: Dp,
     label: String,
     modifier: Modifier = Modifier,
 ) {
@@ -182,7 +184,7 @@ fun ColumnScope.BpSideBarItem(
             contentDescription = null,
             tint = if (isSelected) Theme.colors.primary else Theme.colors.contentSecondary,
             modifier = Modifier.size(iconSize).graphicsLayer {
-                translationX = (113.0f - iconSize.toPx()) / 2
+                translationX = (sideBarUnexpandedWidthInKms.toPx() - iconSize.toPx()) / 2
             }
         )
         AnimatedVisibility(
