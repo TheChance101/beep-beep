@@ -30,11 +30,14 @@ import org.thechance.common.presentation.uistate.UserScreenUiState
 /**
  * @param rowsCount number of rows in the table without header row
  */
+
+data class Header(val text: String, val weight: Float = 1f)
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun <T> BpTable(
     data: List<T>,
-    headers: List<UserScreenUiState.Header>,
+    headers: List<Header>,
     modifier: Modifier = Modifier,
     key: ((item: T) -> Any)? = null,
     rowsCount: Int = 9,

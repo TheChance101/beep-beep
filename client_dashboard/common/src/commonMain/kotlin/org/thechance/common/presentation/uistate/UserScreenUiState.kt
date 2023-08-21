@@ -1,6 +1,7 @@
 package org.thechance.common.presentation.uistate
 
 import org.thechance.common.domain.entity.User
+import org.thechance.common.presentation.composables.table.Header
 
 
 data class UserScreenUiState(
@@ -19,7 +20,6 @@ data class UserScreenUiState(
     val isFilterDropdownMenuExpanded: Boolean = false,
     val permissionsDialog: PermissionsDialogUiState = PermissionsDialogUiState(),
 ) {
-    data class Header(val text: String, val weight: Float = 1f)
     data class UserUiState(
         val fullName: String = "",
         val username: String = "",
