@@ -42,13 +42,14 @@ abstract class BaseScreen<VM, S, E, I> : Screen
 
     abstract fun onEffect(effect: E, navigator: Navigator)
 
-    @Composable
-    inline fun <reified T : ScreenModel> getScreenModel(
-        qualifier: Qualifier? = null,
-        noinline parameters: ParametersDefinition? = null,
-    ): T {
-        val koin = getKoin()
-        return rememberScreenModel(tag = qualifier?.value) { koin.get(qualifier, parameters) }
-    }
 
+}
+
+@Composable
+inline fun <reified T : ScreenModel> Screen.getScreenModel(
+    qualifier: Qualifier? = null,
+    noinline parameters: ParametersDefinition? = null,
+): T {
+    val koin = getKoin()
+    return rememberScreenModel(tag = qualifier?.value) { koin.get(qualifier, parameters) }
 }

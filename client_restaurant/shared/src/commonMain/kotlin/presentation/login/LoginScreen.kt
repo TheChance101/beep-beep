@@ -15,6 +15,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.koin.compose.koinInject
 import presentation.base.BaseScreen
 import presentation.main.MainScreen
 
@@ -23,7 +24,7 @@ class LoginScreen :
 
     @Composable
     override fun Content() {
-        initScreen(getScreenModel())
+        initScreen(koinInject())
     }
 
     override fun onEffect(effect: LoginScreenUIEffect, navigator: Navigator) {
