@@ -5,7 +5,6 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +22,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.onClick
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,7 +43,6 @@ import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BpToggleButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.composables.BpLogo
-import org.thechance.common.presentation.composables.modifier.border
 import org.thechance.common.presentation.composables.modifier.centerItem
 import org.thechance.common.presentation.composables.modifier.cursorHoverIconHand
 import org.thechance.common.presentation.composables.pxToDp
@@ -65,86 +64,97 @@ fun DashboardSideBar(
     val sideBarUnexpandedWidthInKms: Dp by remember { mutableStateOf(120.kms) }
     val sideBarExpandedWidthInKms: Dp by remember { mutableStateOf(300.kms) }
 
-    Column(
-        Modifier.fillMaxHeight()
-            .width(
-                animateDpAsState(
-                    targetValue = if (mainMenuIsExpanded.value) sideBarExpandedWidthInKms
-                    else sideBarUnexpandedWidthInKms
-                ).value
+    Row(Modifier.fillMaxHeight().background(Theme.colors.background)) {
+        //region sidebar
+        Column(
+            Modifier
+                .width(
+                    animateDpAsState(
+                        targetValue = if (mainMenuIsExpanded.value) sideBarExpandedWidthInKms
+                        else sideBarUnexpandedWidthInKms
+                    ).value
+                )
+                .padding(vertical = 40.kms).onPointerEvent(PointerEventType.Enter) {
+                    mainMenuIsExpanded.value = true
+                }
+                .onPointerEvent(PointerEventType.Exit) { mainMenuIsExpanded.value = false },
+        ) {
+            //region logo
+            BpLogo(
+                expanded = mainMenuIsExpanded.value,
+                modifier = Modifier.centerItem(
+                    sideBarUnexpandedWidthInDp = sideBarUnexpandedWidthInKms,
+                    itemWidth = 36f
+                )
             )
-            .background(Theme.colors.background)
-            .border(end = BorderStroke(width = 1.dp, color = Theme.colors.divider))
-            .padding(vertical = 40.kms).onPointerEvent(PointerEventType.Enter) {
-                mainMenuIsExpanded.value = true
-            }
-            .onPointerEvent(PointerEventType.Exit) { mainMenuIsExpanded.value = false },
-    ) {
-        //region logo
-        BpLogo(
-            expanded = mainMenuIsExpanded.value,
-            modifier = Modifier.centerItem(
-                sideBarUnexpandedWidthInDp = sideBarUnexpandedWidthInKms,
-                itemWidth = 36f
-            )
-        )
-        //endregion
-        Spacer(Modifier.fillMaxHeight(.1f))
-        //region main menu
-        Box(Modifier.height(sideBarExpandedWidthInKms)) {
-            Column(Modifier.fillMaxSize()) {
-                Spacer(
-                    Modifier.height(
-                        animateDpAsState(
-                            (mainMenuItemHeight.value.pxToDp() * currentItem)
-                        ).value
+            //endregion
+            Spacer(Modifier.fillMaxHeight(.1f))
+            //region main menu
+            Box(Modifier.height(sideBarExpandedWidthInKms)) {
+                Column(Modifier.fillMaxSize()) {
+                    Spacer(
+                        Modifier.height(
+                            animateDpAsState(
+                                (mainMenuItemHeight.value.pxToDp() * currentItem)
+                            ).value
+                        )
                     )
-                )
-                Spacer(
-                    Modifier.height(mainMenuItemHeight.value.pxToDp())
-                        .padding(vertical = Theme.dimens.space8)
-                        .width(4.dp)
-                        .clip(RoundedCornerShape(Theme.dimens.space16))
-                        .background(Color(0xffF53D47))
-                )
-            }
-            Column(
-                verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxHeight()
-            ) {
-                content(mainMenuIsExpanded.value) { itemHeight ->
-                    mainMenuItemHeight.value = itemHeight
+                    Spacer(
+                        Modifier.height(mainMenuItemHeight.value.pxToDp())
+                            .padding(vertical = Theme.dimens.space8)
+                            .width(4.dp)
+                            .clip(RoundedCornerShape(Theme.dimens.space16))
+                            .background(Color(0xffF53D47))
+                    )
+                }
+                Column(
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxHeight()
+                ) {
+                    content(mainMenuIsExpanded.value) { itemHeight ->
+                        mainMenuItemHeight.value = itemHeight
+                    }
                 }
             }
+            //endregion
+            Spacer(Modifier.weight(1f))
+            //region toggle theme button
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(32.kms),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                BpToggleButton(
+                    isDark = darkTheme,
+                    onToggle = onSwitchTheme::invoke,
+                    modifier = Modifier
+                        .centerItem(sideBarUnexpandedWidthInDp = sideBarUnexpandedWidthInKms)
+                )
+                AnimatedVisibility(
+                    visible = mainMenuIsExpanded.value,
+                    enter = fadeIn(tween(500)),
+                    exit = fadeOut()
+                ) {
+                    Text(
+                        "Dark theme",
+                        maxLines = 1,
+                        style = Theme.typography.titleMedium,
+                        color = Theme.colors.contentPrimary
+                    )
+                }
+
+            }
+            //endregion
         }
         //endregion
-        Spacer(Modifier.weight(1f))
-        //region toggle theme button
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(32.kms),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            BpToggleButton(
-                isDark = darkTheme,
-                onToggle = onSwitchTheme::invoke,
-                modifier = Modifier
-                    .centerItem(sideBarUnexpandedWidthInDp = sideBarUnexpandedWidthInKms)
-            )
-            AnimatedVisibility(
-                visible = mainMenuIsExpanded.value,
-                enter = fadeIn(tween(500)),
-                exit = fadeOut()
-            ) {
-                Text(
-                    "Dark theme",
-                    maxLines = 1,
-                    style = Theme.typography.titleMedium,
-                    color = Theme.colors.contentPrimary
-                )
-            }
 
-        }
+        //region end border
+        Divider(
+            color = Theme.colors.divider,
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(1.kms)
+        )
         //endregion
     }
 }
