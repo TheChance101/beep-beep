@@ -1,20 +1,25 @@
 package presentation.login
 
-import cafe.adriel.voyager.core.model.StateScreenModel
-import kotlinx.coroutines.flow.update
-import org.koin.core.component.KoinComponent
+import cafe.adriel.voyager.core.model.coroutineScope
+import kotlinx.coroutines.CoroutineScope
+import presentation.base.BaseScreenModel
 
-class LoginScreenModel : StateScreenModel<LoginScreenUIState>(LoginScreenUIState()), KoinComponent {
+class LoginScreenModel :
+    BaseScreenModel<LoginScreenUIState, LoginScreenUIEffect>(LoginScreenUIState()),
+    LoginScreenInteractionListener {
 
-    fun onEmailChanged(email: String) {
+    override val viewModelScope: CoroutineScope
+        get() = coroutineScope
+
+    override fun onEmailChanged(email: String) {
         updateState { it.copy(email = email) }
     }
 
-    fun onPasswordChanged(password: String) {
+    override fun onPasswordChanged(password: String) {
         updateState { it.copy(password = password) }
     }
 
-    private fun updateState(update: (LoginScreenUIState) -> LoginScreenUIState) {
-        mutableState.update(update)
+    override fun onClickLogin() {
+        sendNewEffect(LoginScreenUIEffect.Login)
     }
 }

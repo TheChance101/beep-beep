@@ -1,14 +1,13 @@
 package presentation.main
 
-import cafe.adriel.voyager.core.model.StateScreenModel
-import kotlinx.coroutines.flow.update
-import org.koin.core.component.KoinComponent
+import cafe.adriel.voyager.core.model.coroutineScope
+import kotlinx.coroutines.CoroutineScope
+import presentation.base.BaseScreenModel
 
-class MainScreenModel : StateScreenModel<MainScreenUIState>(MainScreenUIState()), KoinComponent {
+class MainScreenModel : BaseScreenModel<MainScreenUIState, MainScreenUIEffect>(MainScreenUIState()), MainScreenInteractionListener {
+    override val viewModelScope: CoroutineScope = coroutineScope
 
-
-
-    private fun updateState(update: (MainScreenUIState) -> MainScreenUIState) {
-        mutableState.update(update)
+    override fun onClickBack() {
+        sendNewEffect(MainScreenUIEffect.Back)
     }
 }
