@@ -9,6 +9,8 @@ data class MealDto(
     val description: String? = null,
     val price: Double? = null,
 )
+
+fun List<MealDto>.toEntity(): List<Meal> = map { it.toEntity() }
 fun MealDto.toEntity(): Meal {
     return Meal(
         id = id,

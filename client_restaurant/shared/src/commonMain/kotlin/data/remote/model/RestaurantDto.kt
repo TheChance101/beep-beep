@@ -1,6 +1,5 @@
 package data.remote.model
 
-import domain.entity.Order
 import domain.entity.Restaurant
 
 data class RestaurantDto(
@@ -15,6 +14,8 @@ data class RestaurantDto(
     val closingTime: String? = null,
     val address: AddressDto? = null
 )
+
+fun List<RestaurantDto>.toEntity():List<Restaurant> = map { it.toEntity() }
 
 fun RestaurantDto.toEntity(): Restaurant {
     return Restaurant(
