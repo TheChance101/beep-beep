@@ -13,9 +13,12 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -39,7 +42,6 @@ import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.di.getScreenModel
-import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.presentation.composables.modifier.noRipple
 import org.thechance.common.presentation.composables.table.BpPager
 import org.thechance.common.presentation.composables.table.BpTable
@@ -88,7 +90,7 @@ class TaxiScreen : Screen {
                     trailingPainter = painterResource("ic_search.svg")
                 )
                 BpIconButton(
-                    onClick = { /* Show Taxi Filter Dialog */ },
+                    onClick = { /* TODO: Show Taxi Filter Dialog */ },
                     painter = painterResource("ic_filter.svg"),
                 ) {
                     Text(
@@ -99,12 +101,12 @@ class TaxiScreen : Screen {
                 Spacer(modifier = Modifier.weight(1f))
                 BpOutlinedButton(
                     title = "Export",
-                    onClick = { /* Export */ },
+                    onClick = { /* TODO: Export */ },
                     textPadding = PaddingValues(horizontal = Theme.dimens.space24),
                 )
                 BpButton(
                     title = "New Taxi",
-                    onClick = { /* Show New Taxi Dialog */ },
+                    onClick = { /*TODO:  Show New Taxi Dialog */ },
                     textPadding = PaddingValues(horizontal = Theme.dimens.space24),
                 )
             }

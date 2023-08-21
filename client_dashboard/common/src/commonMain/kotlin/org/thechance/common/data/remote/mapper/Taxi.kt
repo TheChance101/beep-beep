@@ -9,27 +9,41 @@ import org.thechance.common.domain.util.TaxiStatus
 fun TaxiDto.toEntity() = Taxi(
     id = id,
     plateNumber = plateNumber,
-    color = colorMapper[color] ?: Color.White,
+    color = colorMap[color] ?: Color.White,
     type = type,
     seats = seats,
-    status = statusMapper[status]?: TaxiStatus.ONLINE,
+    status = statusMap[status] ?: TaxiStatus.ONLINE,
     username = username,
     trips = trips,
 )
 
-private val colorMapper: Map<Int, Color> = mapOf(
-    TaxiColor.RED.colorNumber to Color(0xFFF47373),
-    TaxiColor.YELLOW.colorNumber to Color(0xFFF8EC7E),
-    TaxiColor.GREEN.colorNumber to Color(0xFF80E5AB),
-    TaxiColor.BLUE.colorNumber to Color(0xFF77DEEE),
-    TaxiColor.WHITE.colorNumber to Color.White,
-    TaxiColor.GRAY.colorNumber to Color(0xFFAFAFAF),
-    TaxiColor.BLACK.colorNumber to Color(0xFF3F3F3F),
-)
-private val statusMapper: Map<Int, TaxiStatus> = mapOf(
-    0 to TaxiStatus.OFFLINE,
-    1 to TaxiStatus.ONLINE,
-    2 to TaxiStatus.ON_RIDE,
-)
+private val colorMap: Map<Int, Color>
+    get() = mapOf(
+        RED to TaxiColor.RED.color,
+        YELLOW to TaxiColor.YELLOW.color,
+        GREEN to TaxiColor.GREEN.color,
+        BLUE to TaxiColor.BLUE.color,
+        WHITE to TaxiColor.WHITE.color,
+        GRAY to TaxiColor.GRAY.color,
+        BLACK to TaxiColor.BLACK.color,
+    )
+private val statusMap: Map<Int, TaxiStatus>
+    get() = mapOf(
+        OFFLINE to TaxiStatus.OFFLINE,
+        ONLINE to TaxiStatus.ONLINE,
+        ON_RIDE to TaxiStatus.ON_RIDE,
+    )
 
 fun List<TaxiDto>.toEntity() = map { it.toEntity() }
+
+private const val OFFLINE = 0
+private const val ONLINE = 1
+private const val ON_RIDE = 2
+
+private const val RED = 0
+private const val YELLOW = 1
+private const val GREEN = 2
+private const val BLUE = 3
+private const val WHITE = 4
+private const val GRAY = 5
+private const val BLACK = 6
