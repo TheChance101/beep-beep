@@ -24,6 +24,8 @@ ktor-version = "2.3.3"
 google-gson-version = "2.10.1"
 serialization_version = "1.6.0-RC"
 ktor-logging-version = "1.5.0"
+coroutine-version = "1.7.1"
+
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
@@ -61,6 +63,7 @@ koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "
 koin-ksp = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp" }
 koin-compiler = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koinKspVersion" }
 kotlin-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization_version" }
+kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutine-version"}
 
 [bundles]
 voyager = ["voyager-navigator", "voyager-koin", "voyager-transitions"]
