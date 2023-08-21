@@ -8,7 +8,7 @@ import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import org.koin.ktor.ext.inject
 import org.thechance.service_restaurant.api.models.OrderDto
-import org.thechance.service_restaurant.api.models.RestaurantInfo
+import org.thechance.service_restaurant.api.models.Restaurant
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.SocketHandler
@@ -65,15 +65,15 @@ fun Route.orderRoutes() {
             val order = call.receive<OrderDto>().copy(id = UUID.randomUUID().toString())
             val isOrderInserted = manageOrder.addOrder(order.toEntity())
             isOrderInserted.takeIf { it }.apply {
-                socketHandler.openedRestaurants[order.restaurantId]?.orders?.emit(order)
+                socketHandler.restaurants[order.restaurantId]?.orders?.emit(order)
                 call.respond(HttpStatusCode.Created, order)
             } ?: throw MultiErrorException(listOf(INSERT_ORDER_ERROR))
         }
 
         webSocket("/restaurant/{restaurantId}") {
             val restaurantId = call.parameters["restaurantId"]?.trim().orEmpty()
-            socketHandler.openedRestaurants[restaurantId] = RestaurantInfo(this)
-            socketHandler.broadcastOrder(incoming, restaurantId, manageOrder)
+            socketHandler.restaurants[restaurantId] = Restaurant(this)
+            socketHandler.broadcastOrder(restaurantId)
         }
 
     }
