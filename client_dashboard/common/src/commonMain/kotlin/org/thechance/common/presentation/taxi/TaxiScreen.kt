@@ -11,7 +11,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
-import com.beepbeep.designSystem.ui.composable.BpTextButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -58,12 +57,6 @@ object TaxiScreen : Screen, KoinComponent {
         ) {
             Box(Modifier.weight(1f)) {
                 Text(text = "Taxi Screen", color = Theme.colors.onPrimary)
-
-                BpTextButton(
-                    text = "Add Taxi",
-                    updateAddNewTaxiDialogVisibility,
-                    modifier = Modifier,
-                )
 
                 AddTaxiDialog(
                     modifier = Modifier,
