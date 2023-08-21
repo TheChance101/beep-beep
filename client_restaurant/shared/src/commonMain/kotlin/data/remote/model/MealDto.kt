@@ -7,6 +7,7 @@ data class MealDto(
     val restaurantId: String,
     val name: String? = null,
     val description: String? = null,
+    val imageUrl: String? = null,
     val price: Double? = null,
 )
 
@@ -18,5 +19,6 @@ fun MealDto.toEntity(): Meal {
         name = name ?: "",
         description = description ?: "",
         price = price ?: 0.0,
+        imageUrl = imageUrl ?: ""
     )
 }
