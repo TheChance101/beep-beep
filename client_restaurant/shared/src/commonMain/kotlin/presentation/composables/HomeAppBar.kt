@@ -2,6 +2,7 @@ package presentation.composables
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,53 +14,70 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.theme.Theme
 
+//ToDo: In progress
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeAppBar(
     onStateChange: () -> Unit,
     showDropDownMenu: () -> Unit,
+    onDismissRequest: () -> Unit,
     state: String,
+    expanded: Boolean,
     restaurantName: String,
     isMultipleRestaurants: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
 
-    Row(
-        modifier = modifier.fillMaxWidth().padding(Theme.dimens.space16),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+    Column {
+        Row(
+            modifier = modifier.fillMaxWidth().padding(Theme.dimens.space16),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
 
-        MultipleRestaurants(
-            restaurantName = restaurantName,
-            showDropDownMenu = showDropDownMenu,
-            isMultipleRestaurants = isMultipleRestaurants
-        )
+            MultipleRestaurants(
+                modifier = if (isMultipleRestaurants) {
+                    Modifier.clickable { showDropDownMenu() }
+                } else {
+                    Modifier
+                },
+                restaurantName = restaurantName,
+                isMultipleRestaurants = isMultipleRestaurants
+            )
 
-        BpButton(
-            onClick = onStateChange,
-            title = state
-        )
+            BpButton(
+                onClick = onStateChange,
+                title = state
+            )
+        }
+
+        BpDropdownMenu(
+            expanded = expanded,
+            offset = DpOffset(Theme.dimens.space16, 0.dp),
+            onDismissRequest = onDismissRequest
+        ) {
+
+            val modifier = Modifier.padding(20.dp)
+            Text("Option 1", modifier)
+            Text("Option 2", modifier)
+            Text("Option 3", modifier)
+        }
     }
+
 }
 
 
 @Composable
 private fun MultipleRestaurants(
     restaurantName: String,
-    showDropDownMenu: () -> Unit,
     modifier: Modifier = Modifier,
     isMultipleRestaurants: Boolean = false
 ) {
-
-    if (isMultipleRestaurants) {
-        modifier.clickable { showDropDownMenu() }
-    }
-
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
