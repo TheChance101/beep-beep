@@ -25,7 +25,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
                 OrderMealDto("ba9b9700-6d24-434b-8d67-e45e10636243", 3)
             ),
             totalPrice = 22.74,
-            createdAt = "Oct 2/2022 - 10:00",
+            createdAt = 1002656085967,
             orderStatus = 0
         ),
         OrderDto(
@@ -37,7 +37,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
                 OrderMealDto("2d5bbf8a-4854-49c6-99ed-ef09899c2d8e", 1)
             ),
             totalPrice = 28.48,
-            createdAt = "Oct 2/2022-12:30",
+            createdAt = 1000000000000,
             orderStatus = 0
         ),
         OrderDto(
@@ -48,7 +48,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
                 OrderMealDto("b39e9f1e-0dc7-43b7-90e2-0a075b818dc5", 1),
             ),
             totalPrice = 26.49,
-            createdAt = "Oct 2/2022-15:20",
+            createdAt = 1672656010258,
             orderStatus = 3
         ),
         OrderDto(
@@ -60,7 +60,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
                 OrderMealDto("ba9b9700-6d24-434b-8d67-daf9e45e1063", 2)
             ),
             totalPrice = 22.74,
-            createdAt = "Oct 2/2022-10:00",
+            createdAt = 1662067200000,
             orderStatus = 1
         ),
         OrderDto(
@@ -73,7 +73,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
                 OrderMealDto("2d5bbf8a-4854-49c6-99ed-ef098d549c62", 1)
             ),
             totalPrice = 28.48,
-            createdAt = "Oct 2/2022-12:30",
+            createdAt = 1672656000000,
             orderStatus = 1
         ),
         OrderDto(
@@ -85,7 +85,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
                 OrderMealDto("e772ad66-0251-412f-99a1-4a10435f9a07", 2)
             ),
             totalPrice = 26.49,
-            createdAt = "Oct 2/2022-15:20",
+            createdAt = 1672656000333,
             orderStatus = 1
         ),
         OrderDto(
@@ -98,7 +98,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
                 OrderMealDto("ba9b9700-6d24-434b-8d67-e45e10636243", 3)
             ),
             totalPrice = 20.73,
-            createdAt = "Oct 2/2022-10:00",
+            createdAt = 1672655550000,
             orderStatus = 3
         ),
         OrderDto(
@@ -111,7 +111,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
                 OrderMealDto("2d5bbf8a-4854-49c6-99ed-ef098d549c62", 1)
             ),
             totalPrice = 41.96,
-            createdAt = "Oct 2/2022-18:40",
+            createdAt = 1672656014782,
             orderStatus = 4
         ),
         OrderDto(
@@ -123,7 +123,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
                 OrderMealDto("e772ad66-0251-412f-99a1-4a10435f9a07", 1)
             ),
             totalPrice = 35.98,
-            createdAt = "Oct 2/2022-13:10",
+            createdAt = 1672656098210,
             orderStatus = 4
         ),
         OrderDto(
@@ -136,7 +136,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
                 OrderMealDto("ba9b9700-6d24-434b-8d67-e45e10636243", 3)
             ),
             totalPrice = 20.73,
-            createdAt = "Oct 2/2022 - 10:00",
+            createdAt = 1672656012409,
             orderStatus = 0
         ),
         OrderDto(
@@ -149,7 +149,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
                 OrderMealDto("2d5bbf8a-4854-49c6-99ed-ef098d549c62", 1)
             ),
             totalPrice = 41.96,
-            createdAt = "Oct 2/2022 - 18:40",
+            createdAt = 1672656025147,
             orderStatus = 0
         ),
         OrderDto(
@@ -161,7 +161,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
                 OrderMealDto("e772ad66-0251-412f-99a1-4a10435f9a07", 1)
             ),
             totalPrice = 35.98,
-            createdAt = "Oct 2/2022 - 13:10",
+            createdAt = 1672656098742,
             orderStatus = 0
         ),
         OrderDto(
@@ -173,7 +173,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
                 OrderMealDto("ba9b9700-6d24-434b-8d67-daf9e45e1063", 2)
             ),
             totalPrice = 28.45,
-            createdAt = "Nov 15/2022 - 14:30",
+            createdAt = 1672656012358,
             orderStatus = 1
         ),
         OrderDto(
@@ -185,7 +185,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
                 OrderMealDto("2d5bbf8a-4854-49c6-99ed-ef09899c2d8e", 1)
             ),
             totalPrice = 23.99,
-            createdAt = "Dec 5/2022 - 20:15",
+            createdAt = 1672125000000,
             orderStatus = 2
         ),
     )

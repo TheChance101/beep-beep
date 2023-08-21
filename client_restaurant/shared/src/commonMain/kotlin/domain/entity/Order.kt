@@ -6,6 +6,6 @@ data class Order(
     val restaurantId: String,
     val meals: List<OrderMeal>,
     val totalPrice: Double,
-    val createdAt: String,
+    val createdAt: Long,
     val orderStatus: Int
 )

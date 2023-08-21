@@ -9,7 +9,7 @@ data class OrderDto(
     val restaurantId: String,
     val meals: List<OrderMealDto>,
     val totalPrice: Double? = null,
-    val createdAt: String? = null,
+    val createdAt: Long? = null,
     var orderStatus: Int? = null
 )
 
@@ -22,7 +22,7 @@ fun OrderDto.toEntity(): Order {
         restaurantId = restaurantId,
         meals = meals.toEntity(),
         totalPrice = totalPrice ?: 0.0,
-        createdAt = createdAt ?: "",
+        createdAt = createdAt ?: 0,
         orderStatus = orderStatus ?: 0
     )
 }
