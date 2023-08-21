@@ -21,11 +21,7 @@ fun BPDashedDivider(
     dashWidth: Dp = 10.dp,
     spaceWidth: Dp = 5.dp,
 ) {
-    val diamondOffset = if (showDiamondIcon) {
-        40f
-    } else {
-        0f
-    }
+    val diamondOffset = if (showDiamondIcon) { 40f } else { 0f }
     Row(modifier = modifier) {
         Canvas(modifier = Modifier.fillMaxWidth()) {
             val pattern =
