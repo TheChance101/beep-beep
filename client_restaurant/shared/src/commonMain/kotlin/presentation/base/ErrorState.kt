@@ -1,3 +1,5 @@
+package presentation.base
+
 sealed interface ErrorState {
     object WifiDisabled : ErrorState
     object NoInternet : ErrorState

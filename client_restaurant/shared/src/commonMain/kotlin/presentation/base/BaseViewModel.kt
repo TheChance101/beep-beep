@@ -1,12 +1,5 @@
-package base
+package presentation.base
 
-import ClientSideException
-import ErrorState
-import NetworkNotSupportedException
-import NoInternetException
-import ServerSideException
-import UnAuthorizedException
-import WifiDisabledException
 import cafe.adriel.voyager.core.model.ScreenModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*

@@ -1,3 +1,5 @@
+package presentation.base
+
 open class BpException: Exception()
 open class InternetException: BpException()
 class WifiDisabledException: InternetException()
