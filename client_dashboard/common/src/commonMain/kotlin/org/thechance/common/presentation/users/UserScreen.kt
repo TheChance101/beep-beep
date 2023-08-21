@@ -47,6 +47,7 @@ object UserScreen : Screen, KoinComponent {
             onItemPerPageChanged = screenModel::onItemPerPageChanged,
             onPageClicked = screenModel::onPageClicked,
             onFilterPermissionClicked = screenModel::onFilterPermissionClicked,
+            onFilterCountryClicked = screenModel::onFilterCountryClicked,
         )
     }
 
@@ -57,6 +58,7 @@ object UserScreen : Screen, KoinComponent {
         onItemPerPageChanged: (String) -> Unit,
         onPageClicked: (Int) -> Unit,
         onFilterPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
+        onFilterCountryClicked: (UserScreenUiState.CountryUiState) -> Unit
     ) {
         Column(
             modifier = Modifier
@@ -70,10 +72,10 @@ object UserScreen : Screen, KoinComponent {
                 searchText = state.search,
                 allPermissions = state.allPermissions,
                 selectedPermissions = state.filter.permissions,
-                allCountries = state.allCountries,
-                selectedCountries = state.filter.countries,
+                countries = state.filter.countries,
                 onFilterPermissionClicked = onFilterPermissionClicked,
                 isFilterDropdownMenuExpanded = state.filter.show,
+                onFilterCountryClicked = onFilterCountryClicked,
             )
 
             UsersTable(
@@ -98,7 +100,7 @@ object UserScreen : Screen, KoinComponent {
     @Composable
     private fun UsersTable(
         users: List<UserScreenUiState.UserUiState>,
-        headers: List<UserScreenUiState.Header>,
+        headers: List<UserScreenUiState.HeaderItem>,
         pageCount: Int,
         selectedPage: Int,
         onEditUserClicked: (UserScreenUiState.UserUiState) -> Unit,
@@ -152,10 +154,10 @@ object UserScreen : Screen, KoinComponent {
     private fun UsersFilterDropdownMenu(
         isFilterDropdownMenuExpanded: Boolean,
         allPermissions: List<UserScreenUiState.PermissionUiState>,
-        allCountries: List<String>,
+        countries: List<UserScreenUiState.CountryUiState>,
         selectedPermissions: List<UserScreenUiState.PermissionUiState>,
-        selectedCountries: List<String>,
         onFilterPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
+        onFilterCountryClicked: (UserScreenUiState.CountryUiState) -> Unit,
     ) {
         Row {
             BpIconButton(
@@ -179,7 +181,7 @@ object UserScreen : Screen, KoinComponent {
                 DropdownMenuItem(
                     contentPadding = PaddingValues(0.dp),
                     modifier = Modifier.width(400.dp),
-                    onClick = screenModel::onDismissDropDownMenu,
+                    onClick = {},
                     text = {
                         Column(Modifier.fillMaxSize()) {
                             Text(
@@ -226,11 +228,11 @@ object UserScreen : Screen, KoinComponent {
                                     ),
                                 verticalArrangement = Arrangement.spacedBy(Theme.dimens.space16)
                             ) {
-                                allCountries.forEach { country ->
+                                countries.forEach { country ->
                                     BpCheckBox(
-                                        label = country,
-                                        onCheck = {},
-                                        isChecked = selectedCountries.contains(country)
+                                        label = country.name,
+                                        onCheck = { onFilterCountryClicked(country) },
+                                        isChecked = country.selected
                                     )
                                 }
                             }
@@ -263,11 +265,11 @@ object UserScreen : Screen, KoinComponent {
     fun UsersFilteredSearch(
         searchText: String,
         allPermissions: List<UserScreenUiState.PermissionUiState>,
-        allCountries: List<String>,
+        countries: List<UserScreenUiState.CountryUiState>,
         selectedPermissions: List<UserScreenUiState.PermissionUiState>,
-        selectedCountries: List<String>,
         isFilterDropdownMenuExpanded: Boolean,
         onFilterPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
+        onFilterCountryClicked: (UserScreenUiState.CountryUiState) -> Unit,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -285,11 +287,11 @@ object UserScreen : Screen, KoinComponent {
 
             UsersFilterDropdownMenu(
                 allPermissions = allPermissions,
-                allCountries = allCountries,
-                selectedCountries = selectedCountries,
+                countries = countries,
                 selectedPermissions = selectedPermissions,
                 isFilterDropdownMenuExpanded = isFilterDropdownMenuExpanded,
                 onFilterPermissionClicked = onFilterPermissionClicked,
+                onFilterCountryClicked = onFilterCountryClicked
             )
         }
     }

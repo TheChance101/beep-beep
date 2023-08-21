@@ -26,11 +26,22 @@ class UserScreenModel : StateScreenModel<UserScreenUiState>(UserScreenUiState())
     }
 
     fun onClickDropDownMenu() {
-        mutableState.update { it.copy(isFilterDropdownMenuExpanded = true) }
+        mutableState.update {
+            it.copy(
+                filter = UserScreenUiState.FilterUiState(
+                    show = !it.filter.show,
+                    permissions = it.allPermissions
+                )
+            )
+        }
     }
 
     fun onDismissDropDownMenu() {
-        mutableState.update { it.copy(isFilterDropdownMenuExpanded = false) }
+        mutableState.update {
+            it.copy(
+                filter = UserScreenUiState.FilterUiState(show = false)
+            )
+        }
     }
 
     fun showPermissionsDialog(user: UserScreenUiState.UserUiState) {
@@ -103,6 +114,27 @@ class UserScreenModel : StateScreenModel<UserScreenUiState>(UserScreenUiState())
                         userUiState
                     }
                 }
+            )
+        }
+    }
+
+    fun onEditUserClicked(user: UserScreenUiState.UserUiState) {}
+
+    fun onItemPerPageChanged(itemPerPage: String) {}
+
+    fun onPageClicked(page: Int) {}
+
+    fun onFilterPermissionClicked(permission: UserScreenUiState.PermissionUiState) {}
+
+    fun onFilterCountryClicked(country: UserScreenUiState.CountryUiState) {
+        mutableState.update { uiState ->
+            uiState.copy(
+                filter = uiState.filter.copy(
+                    countries = uiState.filter.countries.map {
+                        if (it.name == country.name) it.copy(selected = !country.selected)
+                        else it
+                    }
+                )
             )
         }
     }

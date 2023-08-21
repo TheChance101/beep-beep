@@ -3,12 +3,7 @@ package org.thechance.common.presentation.composables.table
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,7 +29,7 @@ import org.thechance.common.presentation.uistate.UserScreenUiState
 @Composable
 fun <T> BpTable(
     data: List<T>,
-    headers: List<UserScreenUiState.Header>,
+    headers: List<UserScreenUiState.HeaderItem>,
     modifier: Modifier = Modifier,
     key: ((item: T) -> Any)? = null,
     rowsCount: Int = 9,

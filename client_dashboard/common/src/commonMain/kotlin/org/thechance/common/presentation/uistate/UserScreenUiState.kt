@@ -5,21 +5,43 @@ import org.thechance.common.domain.entity.User
 
 data class UserScreenUiState(
     val users: List<UserUiState> = emptyList(),
-    val tableHeader: List<Header> = listOf(
-        Header("No.", 1f),
-        Header("Users", 3f),
-        Header("Username", 3f),
-        Header("Email", 3f),
-        Header("Country", 3f),
-        Header("Permission", 3f),
-        Header("", 1f),
+    val tableHeader: List<HeaderItem> = listOf(
+        HeaderItem("No.", 1f),
+        HeaderItem("Users", 3f),
+        HeaderItem("Username", 3f),
+        HeaderItem("Email", 3f),
+        HeaderItem("Country", 3f),
+        HeaderItem("Permission", 3f),
+        HeaderItem("", 1f),
     ),
     val numberOfUsers: Int = 0,
     val search: String = "",
-    val isFilterDropdownMenuExpanded: Boolean = false,
+//    val isFilterDropdownMenuExpanded: Boolean = false,
     val permissionsDialog: PermissionsDialogUiState = PermissionsDialogUiState(),
+    val selectedUser: String = "",
+    val selectedPage: Int = 1,
+    val numberItemInPage: Int = 3,
+    val pageCount: Int = 3,
+    val filter: FilterUiState = FilterUiState(),
+    val allPermissions: List<PermissionUiState> = listOf(
+        PermissionUiState.RESTAURANT_OWNER,
+        PermissionUiState.TAXI_DRIVER,
+        PermissionUiState.END_USER,
+        PermissionUiState.SUPPORT,
+        PermissionUiState.DELIVERY,
+        PermissionUiState.DASHBOARD_ADMIN,
+    ),
+//    val allCountries: List<String> = listOf(
+//        "Iraq",
+//        "Palestine",
+//        "Jordan",
+//        "Syria",
+//        "Egypt",
+//        "Other"
+//    )
+
 ) {
-    data class Header(val text: String, val weight: Float = 1f)
+    data class HeaderItem(val text: String, val weight: Float = 1f)
     data class UserUiState(
         val fullName: String = "",
         val username: String = "",
@@ -41,6 +63,38 @@ data class UserScreenUiState(
         val show: Boolean = false,
         val username: String = "",
         val permissions: List<PermissionUiState> = emptyList(),
+    )
+
+    data class FilterUiState(
+        val show: Boolean = false,
+        val permissions: List<PermissionUiState> = emptyList(),
+        val countries: List<CountryUiState> = listOf(
+            CountryUiState(
+                name = "Iraq",
+                selected = true,
+            ),
+            CountryUiState(
+                name = "Palestine",
+                selected = true,
+            ),
+            CountryUiState(
+                name = "Jordan",
+                selected = true,
+            ),
+            CountryUiState(
+                name = "Syria",
+                selected = true,
+            ),
+            CountryUiState(
+                name = "Egypt",
+                selected = true,
+            ),
+        )
+    )
+
+    data class CountryUiState(
+        val name: String = "",
+        val selected: Boolean = false
     )
 }
 
