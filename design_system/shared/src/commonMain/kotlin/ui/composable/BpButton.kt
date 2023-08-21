@@ -35,7 +35,7 @@ fun BpButton(
     textPadding: PaddingValues = PaddingValues(Theme.dimens.space16),
     shape: Shape = RoundedCornerShape(Theme.radius.medium),
     containerColor: Color = Theme.colors.primary,
-    contentColor: Color = Color.White,
+    contentColor: Color = Theme.colors.onPrimary,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Center
 ) {
     val buttonColor by animateColorAsState(
@@ -60,7 +60,7 @@ fun BpButton(
         ) {
             painter?.let {
                 Image(
-                    modifier = Modifier.size(24.dp).padding(end = 8.dp),
+                    modifier = Modifier.size(Theme.dimens.space24).padding(end =Theme.dimens.space8),
                     painter = painter,
                     contentDescription = null
                 )
