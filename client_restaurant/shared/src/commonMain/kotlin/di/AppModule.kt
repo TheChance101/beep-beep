@@ -8,6 +8,8 @@ import presentation.main.MainScreenModel
 fun appModule() = module {
     includes(
         screenModule,
+        GatewayModule,
+        UseCaseModule
     )
 }
 
