@@ -19,7 +19,7 @@ import org.koin.mp.KoinPlatform.getKoin
 abstract class BaseScreen<VM, S, E, I> : Screen
         where I : BaseInteractionListener, VM : BaseScreenModel<S, E>, VM : I {
     @Composable
-    protected fun initScreen(viewModel: VM) {
+    fun initScreen(viewModel: VM) {
         val state: S by viewModel.state.collectAsState()
         val effect: E? by viewModel.effect.collectAsState(null)
         val navigator = LocalNavigator.currentOrThrow
