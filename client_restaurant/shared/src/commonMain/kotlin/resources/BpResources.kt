@@ -8,7 +8,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import com.beepbeep.designSystem.ui.theme.BpTheme
 
 
-private val localImageResources = staticCompositionLocalOf { BpPainterLightResources }
+private val localPainterResources = staticCompositionLocalOf { BpPainterLightResources }
 private val localStringResources = staticCompositionLocalOf { StringResources() }
 
 @Composable
@@ -19,7 +19,7 @@ fun BpRestaurantTheme(
     val painterResources = if (useDarkTheme) BpPainterDarkResources else BpPainterLightResources
 
     CompositionLocalProvider(
-        localImageResources provides painterResources,
+        localPainterResources provides painterResources,
         localStringResources provides StringResources()
     ) {
         BpTheme {
@@ -33,7 +33,7 @@ object Resources {
     val images: PainterResources
         @Composable
         @ReadOnlyComposable
-        get() = localImageResources.current
+        get() = localPainterResources.current
 
     val strings: StringResources
         @Composable
