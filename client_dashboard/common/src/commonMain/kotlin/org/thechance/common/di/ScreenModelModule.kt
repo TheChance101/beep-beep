@@ -11,17 +11,10 @@ import org.thechance.common.presentation.users.UserScreenModel
 
 
 val ScreenModelModule = module {
-//    factory { LoginScreenModel() }
-//    factory { MainScreenModel() }
-//    factory { RestaurantScreenModel() }
-//    factory { OverviewScreenModel() }
-//    factory { TaxiScreenModel() }
-//    factory { UserScreenModel() }
     factoryOf(::OverviewScreenModel)
     factoryOf(::RestaurantScreenModel)
     factoryOf(::TaxiScreenModel)
     factoryOf(::MainScreenModel)
     factoryOf(::UserScreenModel)
     factoryOf(::LoginScreenModel)
-
 }

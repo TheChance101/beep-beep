@@ -1,19 +1,19 @@
 package org.thechance.common.data.remote.gateway
 
+import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.AdminDto
+import org.thechance.common.data.remote.model.TaxiDto
 import org.thechance.common.data.remote.model.UserDto
 import org.thechance.common.data.remote.model.toEntity
 import org.thechance.common.domain.entity.Admin
+import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.getway.IRemoteGateway
 
 
 class FakeRemoteGateway : IRemoteGateway {
-    override fun getUserData(): Admin {
-        return AdminDto(
-            fullName = "asia",
-        ).toEntity()
-    }
+    override fun getUserData(): Admin =
+         AdminDto(fullName = "asia",).toEntity()
 
     override fun getUsers(): List<User> {
         return listOf(
@@ -91,4 +91,90 @@ class FakeRemoteGateway : IRemoteGateway {
             ),
         ).toEntity()
     }
+
+    override fun getTaxis(): List<Taxi> {
+        return listOf(
+            TaxiDto(
+                id = "1",
+                plateNumber = "ABC123",
+                color = 1,
+                type = "Sedan",
+                seats = 4,
+                username = "john_doe",
+                status = 1,
+                trips = "10"
+            ),
+            TaxiDto(
+                id = "2",
+                plateNumber = "XYZ789",
+                color = 2,
+                type = "SUV",
+                seats = 6,
+                username = "jane_doe",
+                status = 2,
+                trips = "5"
+            ),
+            TaxiDto(
+                id = "3",
+                plateNumber = "DEF456",
+                color = 3,
+                type = "Hatchback",
+                seats = 4,
+                username = "james_smith",
+                status = 0,
+                trips = "2"
+            ),
+            TaxiDto(
+                id = "4",
+                plateNumber = "GHI789",
+                color = 4,
+                type = "Minivan",
+                seats = 6,
+                username = "mary_johnson",
+                status = 1,
+                trips = "15"
+            ),
+            TaxiDto(
+                id = "5",
+                plateNumber = "JKL012",
+                color = 1,
+                type = "Convertible",
+                seats = 4,
+                username = "robert_white",
+                status = 2,
+                trips = "3"
+            ),
+            TaxiDto(
+                id = "6",
+                plateNumber = "MNO345",
+                color = 2,
+                type = "Sedan",
+                seats = 4,
+                username = "linda_miller",
+                status = 0,
+                trips = "7"
+            ),
+            TaxiDto(
+                id = "7",
+                plateNumber = "PQR678",
+                color = 3,
+                type = "Hatchback",
+                seats = 4,
+                username = "david_jones",
+                status = 1,
+                trips = "12"
+            ),
+            TaxiDto(
+                id = "8",
+                plateNumber = "STU901",
+                color = 4,
+                type = "Minivan",
+                seats = 2,
+                username = "susan_anderson",
+                status = 2,
+                trips = "9"
+            ),
+        ).toEntity()
+    }
+
 }
