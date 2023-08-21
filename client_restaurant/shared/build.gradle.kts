@@ -40,10 +40,9 @@ kotlin {
                 implementation(libs.compose.components.resources)
 
                 implementation(libs.bundles.voyager)
-
+                implementation(libs.kotlin.coroutines)
                 api(libs.koin.core)
                 implementation(libs.koin.annotations)
-//                implementation(libs.koin.ksp)
                 implementation(libs.koin.compose)
                 implementation(project(":design_system:shared"))
             }
