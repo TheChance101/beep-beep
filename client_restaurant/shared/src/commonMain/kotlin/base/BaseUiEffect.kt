@@ -1,0 +1,3 @@
+package base
+
+interface BaseUiEffect
