@@ -1,11 +1,11 @@
 package domain.entity
 
 data class Order(
-    val id: String? = null,
-    val userId: String? = null,
-    val restaurantId: String? = null,
-    val meals: List<OrderMeal>? = null,
-    val totalPrice: Double? = null,
-    val createdAt: String? = null,
-    val orderStatus: Int = 0
+    val id: String,
+    val userId: String,
+    val restaurantId: String,
+    val meals: List<OrderMeal>,
+    val totalPrice: Double,
+    val createdAt: String,
+    val orderStatus: Int
 )

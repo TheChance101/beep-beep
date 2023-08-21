@@ -9,7 +9,7 @@ interface IRemoteGateWay {
 
     //region restaurant
     suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant>
-    suspend fun updateRestaurantInfo(restaurant: Restaurant): Restaurant
+    suspend fun updateRestaurantInfo(restaurant: Restaurant): Restaurant?
     suspend fun getRestaurantInfo(restaurantId: String): Restaurant?
     //endregion restaurant
 

@@ -1,14 +1,14 @@
 package domain.entity
 
 data class Restaurant(
-    val id: String? = null,
+    val id: String,
     val ownerId: String,
-    val name: String? = null,
-    val description: String? = null,
-    val priceLevel: String? = null,
-    val rate: Double? = null,
-    val phone: String? = null,
-    val openingTime: String? = null,
-    val closingTime: String? = null,
-    val address: Address? = null
+    val name: String,
+    val description: String,
+    val priceLevel: String,
+    val rate: Double,
+    val phone: String,
+    val openingTime: String,
+    val closingTime: String,
+    val address: Address
 )

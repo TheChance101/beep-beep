@@ -190,47 +190,115 @@ class FakeRemoteGateWay : IRemoteGateWay {
         ),
     )
 
+    private val meals = mutableListOf(
+        MealDto(
+            id = "e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a",
+            restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            name = "Hummus Platter",
+            description = "A delicious platter of hummus served with pita bread.",
+            price = 8.99
+        ),
+        MealDto(
+            id = "f8d21b6d-49d1-43eb-932c-5a30a5914d78",
+            restaurantId = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
+            name = "Spicy Tuna Roll",
+            description = "A spicy roll made with fresh tuna and spicy mayo.",
+            price = 12.49
+        ),
+        MealDto(
+            id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+            restaurantId = "91c2ae1f-8495-4c0c-bc47-7bf7ef77d907",
+            name = "Beignet Sampler",
+            description = "A delightful sampler of beignets with different toppings.",
+            price = 9.99
+        ),
+        MealDto(
+            id = "4d1c8f5e-7f24-4df3-9835-06f0d63f8eb1",
+            restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            name = "Falafel Wrap",
+            description = "A wrap filled with crispy falafel balls and fresh veggies.",
+            price = 7.95
+        ),
+        MealDto(
+            id = "8a2a4387-1cc2-4b68-9df1-3f497ddc94a2",
+            restaurantId = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
+            name = "Salmon Nigiri",
+            description = "Fresh salmon slices on bite-sized beds of seasoned rice.",
+            price = 10.99
+        ),
+        MealDto(
+            id = "a1ebe83d-617a-4e14-9e27-4d0367c4e0d2",
+            restaurantId = "91c2ae1f-8495-4c0c-bc47-7bf7ef77d907",
+            name = "Gumbo",
+            description = "A hearty stew with a mix of meats, seafood, and vegetables.",
+            price = 14.75
+        ),
+        MealDto(
+            id = "ba9b9700-6d24-434b-8d67-daf9e45e1063",
+            restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            name = "Shawarma Plate",
+            description = "A plate of mouthwatering shawarma served with garlic sauce.",
+            price = 13.75
+        ),
+        MealDto(
+            id = "2d5bbf8a-4854-49c6-99ed-ef09899c2d8e",
+            restaurantId = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
+            name = "Dragon Roll",
+            description = "An exquisite roll with eel, avocado, and a sweet soy glaze.",
+            price = 15.99
+        ),
+        MealDto(
+            id = "e772ad66-0251-412f-99a1-4a10435f9a07",
+            restaurantId = "91c2ae1f-8495-4c0c-bc47-7bf7ef77d907",
+            name = "Jambalaya",
+            description = "A spicy Cajun dish with rice, sausage, chicken, and shrimp.",
+            price = 16.50
+        )
+    )
+
+    private val restaurants = listOf(
+        RestaurantDto(
+            id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            name = "Zeko Tlawoth",
+            description = "It's a restaurant that is famous for preparing Arabian Foods",
+            rate = 4.5,
+            phone = "+9641324221423",
+            openingTime = "09:00",
+            closingTime = "22:00",
+            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+        ),
+        RestaurantDto(
+            id = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
+            ownerId = "8a430be2-15b7-47f5-9e06-3f236f8c25ec",
+            name = "Sushi Haven",
+            description = "A trendy sushi restaurant offering a variety of fresh sushi rolls and sashimi.",
+            rate = 3.5,
+            phone = "+1234567890",
+            openingTime = "11:30",
+            closingTime = "21:30",
+            address = AddressDto(latitude = 40.712776, longitude = -74.005974)
+        ),
+        RestaurantDto(
+            id = "91c2ae1f-8495-4c0c-bc47-7bf7ef77d907",
+            ownerId = "f26dab15-7193-4e8d-bf6e-f4d2ae8799af",
+            name = "Café du Monde",
+            description = "A historic café known for its beignets, coffee, and vibrant atmosphere.",
+            rate = 2.5,
+            phone = "+18005551234",
+            openingTime = "07:00",
+            closingTime = "23:00",
+            address = AddressDto(latitude = 29.9583507, longitude = -90.0656312)
+        )
+    )
+
     //region restaurant
     override suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant> {
-        return listOf(
-            RestaurantDto(
-                id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
-                ownerId = "550e8400-e29b-41d4-a716-446655440989",
-                name = "Zeko Tlawoth",
-                description = "It's a restaurant that is famous for preparing Arabian Foods",
-                rate = 4.5,
-                phone = "+9641324221423",
-                openingTime = "09:00",
-                closingTime = "22:00",
-                address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
-            ),
-            RestaurantDto(
-                id = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
-                ownerId = "8a430be2-15b7-47f5-9e06-3f236f8c25ec",
-                name = "Sushi Haven",
-                description = "A trendy sushi restaurant offering a variety of fresh sushi rolls and sashimi.",
-                rate = 3.5,
-                phone = "+1234567890",
-                openingTime = "11:30",
-                closingTime = "21:30",
-                address = AddressDto(latitude = 40.712776, longitude = -74.005974)
-            ),
-            RestaurantDto(
-                id = "91c2ae1f-8495-4c0c-bc47-7bf7ef77d907",
-                ownerId = "f26dab15-7193-4e8d-bf6e-f4d2ae8799af",
-                name = "Café du Monde",
-                description = "A historic café known for its beignets, coffee, and vibrant atmosphere.",
-                rate = 2.5,
-                phone = "+18005551234",
-                openingTime = "07:00",
-                closingTime = "23:00",
-                address = AddressDto(latitude = 29.9583507, longitude = -90.0656312)
-            )
-        ).toEntity()
-
+        return restaurants.toEntity()
     }
 
-    override suspend fun updateRestaurantInfo(restaurant: Restaurant): Restaurant {
+    override suspend fun updateRestaurantInfo(restaurant: Restaurant): Restaurant? {
+        // Just Kda W Kda 😉
         return restaurant
     }
 
@@ -241,72 +309,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
 
     //region meal
     override suspend fun getMealsByRestaurantId(restaurantId: String): List<Meal> {
-        return listOf(
-            MealDto(
-                id = "e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a",
-                restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
-                name = "Hummus Platter",
-                description = "A delicious platter of hummus served with pita bread.",
-                price = 8.99
-            ),
-            MealDto(
-                id = "f8d21b6d-49d1-43eb-932c-5a30a5914d78",
-                restaurantId = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
-                name = "Spicy Tuna Roll",
-                description = "A spicy roll made with fresh tuna and spicy mayo.",
-                price = 12.49
-            ),
-            MealDto(
-                id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                restaurantId = "91c2ae1f-8495-4c0c-bc47-7bf7ef77d907",
-                name = "Beignet Sampler",
-                description = "A delightful sampler of beignets with different toppings.",
-                price = 9.99
-            ),
-            MealDto(
-                id = "4d1c8f5e-7f24-4df3-9835-06f0d63f8eb1",
-                restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
-                name = "Falafel Wrap",
-                description = "A wrap filled with crispy falafel balls and fresh veggies.",
-                price = 7.95
-            ),
-            MealDto(
-                id = "8a2a4387-1cc2-4b68-9df1-3f497ddc94a2",
-                restaurantId = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
-                name = "Salmon Nigiri",
-                description = "Fresh salmon slices on bite-sized beds of seasoned rice.",
-                price = 10.99
-            ),
-            MealDto(
-                id = "a1ebe83d-617a-4e14-9e27-4d0367c4e0d2",
-                restaurantId = "91c2ae1f-8495-4c0c-bc47-7bf7ef77d907",
-                name = "Gumbo",
-                description = "A hearty stew with a mix of meats, seafood, and vegetables.",
-                price = 14.75
-            ),
-            MealDto(
-                id = "ba9b9700-6d24-434b-8d67-daf9e45e1063",
-                restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
-                name = "Shawarma Plate",
-                description = "A plate of mouthwatering shawarma served with garlic sauce.",
-                price = 13.75
-            ),
-            MealDto(
-                id = "2d5bbf8a-4854-49c6-99ed-ef09899c2d8e",
-                restaurantId = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
-                name = "Dragon Roll",
-                description = "An exquisite roll with eel, avocado, and a sweet soy glaze.",
-                price = 15.99
-            ),
-            MealDto(
-                id = "e772ad66-0251-412f-99a1-4a10435f9a07",
-                restaurantId = "91c2ae1f-8495-4c0c-bc47-7bf7ef77d907",
-                name = "Jambalaya",
-                description = "A spicy Cajun dish with rice, sausage, chicken, and shrimp.",
-                price = 16.50
-            )
-        ).toEntity()
-
+        return meals.toEntity()
     }
 
     override suspend fun getMealById(mealId: String): Meal? {
@@ -318,13 +321,14 @@ class FakeRemoteGateWay : IRemoteGateWay {
     }
 
     override suspend fun updateMeal(meal: Meal): Meal {
+        // Just Kda W Kda 😉
         return meal
     }
     //endregion meal
 
     //region order
     override suspend fun getCurrentOrders(restaurantId: String): List<Order> {
-        return orders.toEntity()
+        return orders.filter { it.orderStatus != 3 || it.orderStatus != 4 }.toEntity()
     }
 
     override suspend fun getOrdersHistory(restaurantId: String): List<Order> {

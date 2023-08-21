@@ -8,5 +8,8 @@ data class AddressDto(
 )
 
 fun AddressDto.toEntity(): Address {
-    return Address(latitude = latitude, longitude = longitude)
+    return Address(
+        latitude = latitude ?: 0.0,
+        longitude = longitude ?: 0.0
+    )
 }
