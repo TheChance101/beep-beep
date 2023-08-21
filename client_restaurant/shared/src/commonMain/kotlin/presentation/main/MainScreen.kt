@@ -9,9 +9,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.koin.compose.koinInject
 import presentation.base.BaseScreen
 
 class MainScreen :
@@ -19,7 +19,8 @@ class MainScreen :
 
     @Composable
     override fun Content() {
-        initScreen(koinInject ())
+        val screenModel = rememberScreenModel { MainScreenModel() }
+        initScreen(screenModel)
     }
 
     @Composable
