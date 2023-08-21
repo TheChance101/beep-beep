@@ -2,6 +2,7 @@ package presentation.base
 
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.core.model.ScreenModel
@@ -16,7 +17,7 @@ import org.koin.mp.KoinPlatform.getKoin
 
 @Suppress("BOUNDS_NOT_ALLOWED_IF_BOUNDED_BY_TYPE_PARAMETER")
 abstract class BaseScreen<VM, S, E, I> : Screen
-        where I: BaseInteractionListener, VM: BaseViewModel<S, E>, VM: I {
+        where I : BaseInteractionListener, VM : BaseScreenModel<S, E>, VM : I {
     @Composable
     protected fun initScreen(viewModel: VM) {
         val state: S by viewModel.state.collectAsState()
@@ -24,15 +25,22 @@ abstract class BaseScreen<VM, S, E, I> : Screen
         val navigator = LocalNavigator.currentOrThrow
 
         onRender(state, viewModel)
-//        effect?.Listen {
-//            onEffect(effect = it, navigator = navigator)
-//        }
+        effect?.Listen {
+            onEffect(effect = it, navigator = navigator)
+        }
     }
-
-    abstract fun onEffect(effect: E, navigator: Navigator)
 
     @Composable
     abstract fun onRender(state: S, listener: I)
+
+    @Composable
+    private fun E.Listen(function: (E) -> Unit) {
+        LaunchedEffect(this) {
+            function(this@Listen)
+        }
+    }
+
+    abstract fun onEffect(effect: E, navigator: Navigator)
 
     @Composable
     inline fun <reified T : ScreenModel> getScreenModel(
