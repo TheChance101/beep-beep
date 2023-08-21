@@ -20,13 +20,11 @@ class SocketHandler {
         val orders = restaurants[restaurantId]?.orders
 
         try {
-            while (true) {
-                orders
-                    ?.drop(1)
-                    ?.flowOn(Dispatchers.IO)
-                    ?.catch { throw MultiErrorException(listOf(RESTAURANT_CLOSED)) }
-                    ?.collect { order -> ownerSession?.send(order.toString()) }
-            }
+            orders
+                ?.drop(1)
+                ?.flowOn(Dispatchers.IO)
+                ?.catch { throw MultiErrorException(listOf(RESTAURANT_CLOSED)) }
+                ?.collect { order -> ownerSession?.send(order.toString()) }
         } catch (e: MultiErrorException) {
             ownerSession?.send(e.errorCodes.toString())
             ownerSession?.close()
