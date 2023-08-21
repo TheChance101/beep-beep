@@ -10,14 +10,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.beepbeep.designSystem.ui.composable.BpChip
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.presentation.uistate.UsersScreenUiState
+import org.thechance.common.presentation.uistate.UserScreenUiState
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun PermissionsFlowRow(
-    allPermissions: List<UsersScreenUiState.PermissionUiState>,
-    selectedPermissions: List<UsersScreenUiState.PermissionUiState>,
-    onPermissionClicked: (UsersScreenUiState.PermissionUiState) -> Unit,
+    allPermissions: List<UserScreenUiState.PermissionUiState>,
+    selectedPermissions: List<UserScreenUiState.PermissionUiState>,
+    onPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
 ) {
     FlowRow(
         modifier = Modifier
