@@ -32,6 +32,7 @@ import org.thechance.common.presentation.composables.BpDropdownMenu
 import org.thechance.common.presentation.composables.modifier.border
 import org.thechance.common.presentation.composables.modifier.circleLayout
 import org.thechance.common.presentation.composables.modifier.cursorHoverIconHand
+import org.thechance.common.presentation.util.kms
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -47,9 +48,9 @@ fun DashboardAppbar(
         animateFloatAsState(targetValue = if (isDropMenuExpanded) 180f else 0f)
 
     Row(
-        Modifier.height(96.dp).fillMaxWidth().background(Theme.colors.surface)
+        Modifier.height(96.kms).fillMaxWidth().background(Theme.colors.surface)
             .border(bottom = BorderStroke(width = 1.dp, color = Theme.colors.divider))
-            .padding(horizontal = 40.dp),
+            .padding(horizontal = Theme.dimens.space40),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {

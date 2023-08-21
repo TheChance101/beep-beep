@@ -2,7 +2,6 @@ package org.thechance.common.presentation.composables.scaffold
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -24,7 +23,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.onClick
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,21 +34,20 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
-import androidx.compose.ui.layout.boundsInParent
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BpToggleButton
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.presentation.composables.Logo
+import org.thechance.common.presentation.composables.BpLogo
 import org.thechance.common.presentation.composables.modifier.border
 import org.thechance.common.presentation.composables.modifier.centerItem
 import org.thechance.common.presentation.composables.modifier.cursorHoverIconHand
 import org.thechance.common.presentation.composables.pxToDp
+import org.thechance.common.presentation.util.kms
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -59,42 +56,42 @@ fun DashboardSideBar(
     darkTheme: Boolean = true,
     currentItem: Int,
     content: @Composable ColumnScope.(
-        sideBarWidth: Dp, mainMenuIsExpanded: Boolean,
+        mainMenuIsExpanded: Boolean,
         itemHeight: (itemHeight: Float) -> Unit
     ) -> Unit
 ) {
     val mainMenuItemHeight = remember { mutableStateOf(0f) }
     val mainMenuIsExpanded = remember { mutableStateOf(false) }
-    val sideBarWidth = remember { mutableStateOf(0f) }
+    val sideBarUnexpandedWidthInKms: Dp by remember { mutableStateOf(120.kms) }
+    val sideBarExpandedWidthInKms: Dp by remember { mutableStateOf(300.kms) }
 
     Column(
         Modifier.fillMaxHeight()
-            .fillMaxWidth(
-                animateFloatAsState(
-                    targetValue = if (mainMenuIsExpanded.value) .16f else .08f
+            .width(
+                animateDpAsState(
+                    targetValue = if (mainMenuIsExpanded.value) sideBarExpandedWidthInKms
+                    else sideBarUnexpandedWidthInKms
                 ).value
-            ).onGloballyPositioned { sideBarWidth.value = it.boundsInParent().width }
+            )
             .background(Theme.colors.background)
             .border(end = BorderStroke(width = 1.dp, color = Theme.colors.divider))
-            .padding(vertical = Theme.dimens.space40).onPointerEvent(PointerEventType.Enter) {
+            .padding(vertical = 40.kms).onPointerEvent(PointerEventType.Enter) {
                 mainMenuIsExpanded.value = true
             }
             .onPointerEvent(PointerEventType.Exit) { mainMenuIsExpanded.value = false },
     ) {
         //region logo
-        Logo(
+        BpLogo(
             expanded = mainMenuIsExpanded.value,
             modifier = Modifier.centerItem(
-                targetState = mainMenuIsExpanded.value,
-                parentWidth = sideBarWidth.value.pxToDp(),
-                itemWidth = 36f.pxToDp(),
-                tween = tween(600)
+                sideBarUnexpandedWidthInDp = sideBarUnexpandedWidthInKms,
+                itemWidth = 36f
             )
         )
         //endregion
         Spacer(Modifier.fillMaxHeight(.1f))
         //region main menu
-        Box(Modifier.height(200.dp)) {
+        Box(Modifier.height(sideBarExpandedWidthInKms)) {
             Column(Modifier.fillMaxSize()) {
                 Spacer(
                     Modifier.height(
@@ -105,8 +102,9 @@ fun DashboardSideBar(
                 )
                 Spacer(
                     Modifier.height(mainMenuItemHeight.value.pxToDp())
+                        .padding(vertical = Theme.dimens.space8)
                         .width(4.dp)
-                        .clip(RoundedCornerShape(Theme.radius.medium))
+                        .clip(RoundedCornerShape(Theme.dimens.space16))
                         .background(Color(0xffF53D47))
                 )
             }
@@ -115,7 +113,7 @@ fun DashboardSideBar(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxHeight()
             ) {
-                content(sideBarWidth.value.pxToDp(), mainMenuIsExpanded.value) { itemHeight ->
+                content(mainMenuIsExpanded.value) { itemHeight ->
                     mainMenuItemHeight.value = itemHeight
                 }
             }
@@ -124,23 +122,19 @@ fun DashboardSideBar(
         Spacer(Modifier.weight(1f))
         //region toggle theme button
         Row(
-            horizontalArrangement = Arrangement.spacedBy(32.dp),
-            verticalAlignment = Alignment.CenterVertically
+            horizontalArrangement = Arrangement.spacedBy(32.kms),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             BpToggleButton(
                 isDark = darkTheme,
                 onToggle = onSwitchTheme::invoke,
                 modifier = Modifier
-                    .centerItem(
-                        targetState = mainMenuIsExpanded.value,
-                        parentWidth = sideBarWidth.value.pxToDp(),
-                        tween = tween(600)
-                    )
+                    .centerItem(sideBarUnexpandedWidthInDp = sideBarUnexpandedWidthInKms)
             )
             AnimatedVisibility(
                 visible = mainMenuIsExpanded.value,
                 enter = fadeIn(tween(500)),
-                exit = fadeOut(tween(500))
+                exit = fadeOut()
             ) {
                 Text(
                     "Dark theme",
@@ -163,13 +157,12 @@ fun ColumnScope.BpSideBarItem(
     selectedIconResource: String,
     unSelectedIconResource: String,
     mainMenuIsExpanded: Boolean,
-    sideBarWidth: Dp,
     label: String,
     modifier: Modifier = Modifier,
 ) {
     val iconSize: Dp by remember { mutableStateOf(24.dp) }
     Row(
-        horizontalArrangement = Arrangement.spacedBy(iconSize + Theme.dimens.space16),
+        horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space16 + iconSize),
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier.weight(1f).fillMaxWidth().onClick(onClick = onClick)
             .cursorHoverIconHand()
@@ -178,16 +171,13 @@ fun ColumnScope.BpSideBarItem(
             painterResource(if (isSelected) selectedIconResource else unSelectedIconResource),
             contentDescription = null,
             tint = if (isSelected) Theme.colors.primary else Theme.colors.contentSecondary,
-            modifier = Modifier.size(iconSize)
-                .centerItem(
-                    targetState = mainMenuIsExpanded,
-                    parentWidth = sideBarWidth,
-                    tween = tween(600)
-                )
+            modifier = Modifier.size(iconSize).graphicsLayer {
+                translationX = (113.0f - iconSize.toPx()) / 2
+            }
         )
         AnimatedVisibility(
             visible = mainMenuIsExpanded,
-            enter = fadeIn(tween(800)),
+            enter = fadeIn(tween(500)),
             exit = fadeOut(),
             modifier = Modifier.padding(end = Theme.dimens.space16)
         ) {
@@ -195,7 +185,6 @@ fun ColumnScope.BpSideBarItem(
                 label,
                 style = Theme.typography.headline,
                 color = if (isSelected) Theme.colors.primary else Theme.colors.contentSecondary,
-                overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
             )
         }
