@@ -19,6 +19,7 @@ fun Application.configureJWTAuthentication() {
                 JWT.require(Algorithm.HMAC256(jwtSecret))
                     .withAudience(jwtAudience)
                     .withIssuer(jwtDomain)
+                    .withClaim("tokenType", TokenType.ACCESS_TOKEN.name)
                     .build()
             )
             validate { credential ->
@@ -35,6 +36,7 @@ fun Application.configureJWTAuthentication() {
                 JWT.require(Algorithm.HMAC256(jwtSecret))
                     .withAudience(jwtAudience)
                     .withIssuer(jwtDomain)
+                    .withClaim("tokenType", TokenType.REFRESH_TOKEN.name)
                     .build()
             )
             validate { credential ->
@@ -45,4 +47,9 @@ fun Application.configureJWTAuthentication() {
             }
         }
     }
+}
+
+enum class TokenType {
+    ACCESS_TOKEN,
+    REFRESH_TOKEN
 }

@@ -18,7 +18,7 @@ import java.util.*
  */
 fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
 
-    val userAccountManagementUseCase: IApiGateway by inject()
+    val gateway: IApiGateway by inject()
     val resourcesGateway: IResourcesGateway by inject()
 
     post("/signup") {
@@ -30,7 +30,7 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
 
         val (language, countryCode) = extractLocalizationHeader()
 
-        val result = userAccountManagementUseCase.createUser(
+        val result = gateway.createUser(
             fullName = fullName.toString(),
             username = username.toString(),
             password = password.toString(),
@@ -38,7 +38,7 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
             locale = Locale(language, countryCode)
         )
         val locale = Locale(language, countryCode)
-        val message = resourcesGateway.getLocalizedErrorMessage(errorCode = 1076, locale = locale)
+        val message = resourcesGateway.getLocalizedResponseMessage(code = 1076, locale = locale)
 
         respondWithResult(HttpStatusCode.Created, result,message)
     }
@@ -50,7 +50,7 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
 
         val (language, countryCode) = extractLocalizationHeader()
 
-        val token = userAccountManagementUseCase.loginUser(
+        val token = gateway.loginUser(
             userName,
             password,
             tokenConfiguration,
@@ -59,22 +59,23 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
         respondWithResult(HttpStatusCode.Created, token)
     }
 
-    post("/refresh-access-token") {
-        val params = call.receiveParameters()
-        val refreshToken = params["refreshToken"]?.trim().toString()
 
-        val (language, countryCode) = extractLocalizationHeader()
-        val locale = Locale(language, countryCode)
-        val token = userAccountManagementUseCase.refreshAccessToken(refreshToken, tokenConfiguration, locale)
-
-        respondWithResult(HttpStatusCode.Created, token)
-    }
 
     authenticate("auth-jwt") {
         get("/me") {
             val tokenClaim = call.principal<JWTPrincipal>()
             val id = tokenClaim?.payload?.getClaim("userId").toString()
             respondWithResult(HttpStatusCode.OK, id)
+        }
+    }
+
+    authenticate("refresh-jwt") {
+        post("/refresh-access-token") {
+            val tokenClaim = call.principal<JWTPrincipal>()
+            val userId = tokenClaim?.payload?.getClaim("userId").toString()
+            val userPermissions = tokenClaim?.payload?.getClaim("role")?.asList(Int::class.java) ?: emptyList()
+            val token = gateway.generateUserTokens(userId, userPermissions, tokenConfiguration)
+            respondWithResult(HttpStatusCode.Created, token)
         }
     }
 

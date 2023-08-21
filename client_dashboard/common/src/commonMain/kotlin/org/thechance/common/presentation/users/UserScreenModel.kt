@@ -33,4 +33,78 @@ class UserScreenModel(
     fun onDismissDropDownMenu() {
         mutableState.update { it.copy(isFilterDropdownMenuExpanded = false) }
     }
+
+    fun showPermissionsDialog(user: UserScreenUiState.UserUiState) {
+        mutableState.update {
+            it.copy(
+                permissionsDialog = it.permissionsDialog.copy(
+                    show = true,
+                    username = user.username,
+                    permissions = user.permissions
+                )
+            )
+        }
+    }
+
+    fun hidePermissionsDialog() {
+        mutableState.update {
+            it.copy(
+                permissionsDialog = it.permissionsDialog.copy(
+                    show = false,
+                    username = "",
+                    permissions = emptyList()
+                )
+            )
+        }
+    }
+
+    fun onPermissionDialogSave() {
+        val username = mutableState.value.permissionsDialog.username
+        val permissions = mutableState.value.permissionsDialog.permissions
+        updateUserPermissions(username, permissions)
+        hidePermissionsDialog()
+    }
+
+    fun togglePermission(permission: UserScreenUiState.PermissionUiState) {
+        val permissions = getUpdatedPermissions(
+            mutableState.value.permissionsDialog.permissions,
+            permission
+        )
+        mutableState.update {
+            it.copy(
+                permissionsDialog = it.permissionsDialog.copy(
+                    permissions = permissions
+                )
+            )
+        }
+    }
+
+    private fun getUpdatedPermissions(
+        permissions: List<UserScreenUiState.PermissionUiState>,
+        permissionUiState: UserScreenUiState.PermissionUiState
+    ): List<UserScreenUiState.PermissionUiState> {
+        return if (permissions.contains(permissionUiState)) {
+            if (permissionUiState == UserScreenUiState.PermissionUiState.END_USER) return permissions
+            permissions.filterNot { it == permissionUiState }
+        } else {
+            permissions.plus(permissionUiState)
+        }
+    }
+
+    private fun updateUserPermissions(
+        username: String,
+        permissions: List<UserScreenUiState.PermissionUiState>
+    ) {
+        mutableState.update {
+            it.copy(
+                users = it.users.map { userUiState ->
+                    if (userUiState.username == username) {
+                        userUiState.copy(permissions = permissions)
+                    } else {
+                        userUiState
+                    }
+                }
+            )
+        }
+    }
 }

@@ -24,9 +24,9 @@ class FakeRemoteGateway : IRemoteGateway {
                 email = "elzamalk@example.com",
                 country = "Egypt",
                 permissions = listOf(
+                    UserDto.PermissionDto(id = 3, permission = "END_USER"),
                     UserDto.PermissionDto(id = 1, permission = "RESTAURANT"),
                     UserDto.PermissionDto(id = 2, permission = "DRIVER"),
-                    UserDto.PermissionDto(id = 3, permission = "END_USER"),
                     UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                     UserDto.PermissionDto(id = 2, permission = "ADMIN")
                 )
@@ -38,8 +38,9 @@ class FakeRemoteGateway : IRemoteGateway {
                 email = "asia@example.com",
                 country = "Iraq",
                 permissions = listOf(
+                    UserDto.PermissionDto(id = 3, permission = "END_USER"),
                     UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
-                    UserDto.PermissionDto(id = 2, permission = "ADMIN")
+                    UserDto.PermissionDto(id = 2, permission = "ADMIN"),
                 )
             ),
             UserDto(
@@ -49,6 +50,7 @@ class FakeRemoteGateway : IRemoteGateway {
                 email = "ali_jamal@example.com",
                 country = "Iraq",
                 permissions = listOf(
+                    UserDto.PermissionDto(id = 3, permission = "END_USER"),
                     UserDto.PermissionDto(id = 1, permission = "ADMIN")
                 )
             ),
@@ -70,6 +72,7 @@ class FakeRemoteGateway : IRemoteGateway {
                 email = "sarah_ali_567@example.com",
                 country = "Palestine",
                 permissions = listOf(
+                    UserDto.PermissionDto(id = 3, permission = "END_USER"),
                     UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                     UserDto.PermissionDto(id = 2, permission = "ADMIN"),
                     UserDto.PermissionDto(id = 3, permission = "DELIVERY")

@@ -6,10 +6,10 @@ import java.util.*
 @Single
 class ResourcesGateway : IResourcesGateway {
 
-    override suspend fun getLocalizedErrorMessage(errorCode: Int, locale: Locale): Map<Int, String> {
-        val resourceBundle = ResourceBundle.getBundle("errors", locale)
-        val localizedMessage = resourceBundle.getString(errorCode.toString())
-        return mapOf(errorCode to localizedMessage)
+    override suspend fun getLocalizedResponseMessage(code: Int, locale: Locale): Map<Int, String> {
+        val resourceBundle = ResourceBundle.getBundle("response_messages", locale)
+        val localizedMessage = resourceBundle.getString(code.toString())
+        return mapOf(code to localizedMessage)
     }
 
 }
