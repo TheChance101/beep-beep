@@ -6,17 +6,17 @@ import io.ktor.server.response.*
 import io.ktor.util.pipeline.*
 
 suspend inline fun <reified T> PipelineContext<Unit, ApplicationCall>.respondWithResult(
-        statusCode: HttpStatusCode,
-        result: T,
-        message: Map<Int, String>? = null
+    statusCode: HttpStatusCode,
+    result: T,
+    message: String? = null
 ) {
     call.respond(statusCode, ServerResponse.success(result, message))
 }
 
 suspend fun respondWithError(
-        call: ApplicationCall,
-        statusCode: HttpStatusCode,
-        errorMessage: List<Map<Int, String>>
+    call: ApplicationCall,
+    statusCode: HttpStatusCode,
+    errorMessage: String? = null
 ) {
     call.respond(statusCode, ServerResponse.error(errorMessage, statusCode.value))
 }

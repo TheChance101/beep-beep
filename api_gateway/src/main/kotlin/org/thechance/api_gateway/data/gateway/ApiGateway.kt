@@ -8,6 +8,7 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.util.*
 import org.koin.core.annotation.Single
+import org.thechance.api_gateway.data.localized_messages.LocalizedMessagesFactory
 import org.thechance.api_gateway.data.mappers.toManagedUser
 import org.thechance.api_gateway.data.model.*
 import org.thechance.api_gateway.data.model.identity.UserManagementResource
@@ -21,8 +22,9 @@ import java.util.*
 class ApiGateway(
     private val client: HttpClient,
     private val attributes: Attributes,
-    private val resourcesGateway: IResourcesGateway,
-    private val tokenManagementService: ITokenService
+    private val tokenManagementService: ITokenService,
+    private val localizedMessagesFactory: LocalizedMessagesFactory,
+    private val errorHandler: ErrorHandler
 ) : IApiGateway {
 
 
@@ -34,7 +36,10 @@ class ApiGateway(
         email: String,
         locale: Locale
     ): Boolean {
-        return tryToExecute<Boolean>(APIS.IDENTITY_API, locale) {
+        return tryToExecute<Boolean>(
+            APIS.IDENTITY_API,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, locale) }
+        ) {
             submitForm("/user",
                 formParameters = parameters {
                     append("fullName", fullName)
@@ -53,7 +58,10 @@ class ApiGateway(
         tokenConfiguration: TokenConfiguration,
         locale: Locale
     ): UserTokens {
-        tryToExecute<Boolean>(APIS.IDENTITY_API, locale) {
+        tryToExecute<Boolean>(
+            api = APIS.IDENTITY_API,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, locale) }
+        ) {
             submitForm("/user/login",
                 formParameters = parameters {
                     append("username", userName)
@@ -74,7 +82,7 @@ class ApiGateway(
         searchTerm: String,
         locale: Locale
     ): List<UserManagementResource> {
-        return tryToExecute<List<UserManagementResource>>(APIS.IDENTITY_API, locale) {
+        return tryToExecute<List<UserManagementResource>>(APIS.IDENTITY_API) {
             get("/users") {
                 parameter("page", page)
                 parameter("limit", limit)
@@ -132,7 +140,7 @@ class ApiGateway(
 
     private suspend inline fun <reified T> tryToExecute(
         api: APIS,
-        locale: Locale = Locale.ENGLISH,
+        setErrorMessage: (errorCodes: List<Int>) -> String = { "" },
         method: HttpClient.() -> HttpResponse
     ): T {
         attributes.put(AttributeKey("API"), api.value)
@@ -141,10 +149,8 @@ class ApiGateway(
             return response.body<T>()
         } else {
             val errorResponse = response.body<List<Int>>()
-            val errorMessages = errorResponse.map {
-                resourcesGateway.getLocalizedResponseMessage(it, locale = locale)
-            }
-            throw MultiLocalizedMessageException(errorMessages)
+            val errorMessage = setErrorMessage(errorResponse)
+            throw LocalizedMessageException(errorMessage)
         }
     }
 }
