@@ -2,6 +2,7 @@ package org.thechance.common.presentation.taxi
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,12 +14,9 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -30,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -156,50 +155,22 @@ class TaxiScreen : Screen {
         firstColumnWeight: Float = 1f,
         otherColumnsWeight: Float = 3f,
     ) {
-        Text(
+
+        TitleField(
             text = position.toString(),
-            style = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
-            modifier = Modifier.weight(firstColumnWeight),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
-        Text(
-            taxi.plateNumber,
-            style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
-            overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(otherColumnsWeight),
-            maxLines = 1,
+            color = Theme.colors.contentTertiary
         )
-        Text(
-            taxi.username,
-            style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.weight(otherColumnsWeight),
-            maxLines = 1,
-        )
-        Text(
+        TitleField(text = taxi.plateNumber, modifier = Modifier.weight(otherColumnsWeight))
+        TitleField(text = taxi.username, modifier = Modifier.weight(otherColumnsWeight))
+        TitleField(text = taxi.statusText, modifier = Modifier.weight(otherColumnsWeight))
+        TitleField(
             text = taxi.statusText,
-            style = Theme.typography.titleMedium,
-            overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(otherColumnsWeight),
-            maxLines = 1,
             color = taxi.statusColor
         )
-        Text(
-            taxi.type,
-            style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.weight(otherColumnsWeight),
-            maxLines = 1,
-        )
-        Box(modifier = Modifier.weight(otherColumnsWeight)) {
-            Spacer(
-                modifier = Modifier.size(24.dp).background(
-                    color = taxi.color,
-                    shape = RoundedCornerShape(4.dp)
-                )
-            )
-        }
+        TitleField(text = taxi.type, modifier = Modifier.weight(otherColumnsWeight))
+        SquareColorField(modifier = Modifier.weight(otherColumnsWeight), color = taxi.color)
         FlowRow(
             modifier = Modifier.weight(otherColumnsWeight),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -214,13 +185,7 @@ class TaxiScreen : Screen {
                 )
             }
         }
-        Text(
-            taxi.trips,
-            style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.weight(otherColumnsWeight),
-            maxLines = 1,
-        )
+        TitleField(text = taxi.trips, modifier = Modifier.weight(otherColumnsWeight))
         Image(
             painter = painterResource("horizontal_dots.xml"),
             contentDescription = null,
@@ -228,5 +193,39 @@ class TaxiScreen : Screen {
                 .weight(firstColumnWeight),
             colorFilter = ColorFilter.tint(color = Theme.colors.contentPrimary)
         )
+    }
+
+    @Composable
+   private fun TitleField(
+        text: String,
+        modifier: Modifier = Modifier,
+        color: Color = Theme.colors.contentPrimary,
+    ) {
+        Text(
+            text = text,
+            style = Theme.typography.titleMedium,
+            overflow = TextOverflow.Ellipsis,
+            modifier = modifier,
+            maxLines = 1,
+            color = color
+        )
+    }
+
+    @Composable
+    private fun SquareColorField(modifier: Modifier = Modifier, color: Color) {
+        Box(modifier = modifier) {
+            Spacer(
+                modifier = Modifier.size(24.dp)
+                    .background(
+                        color = color,
+                        shape = RoundedCornerShape(Theme.radius.small),
+                    )
+                    .border(
+                        width = 1.dp,
+                        color = Theme.colors.contentBorder,
+                        shape = RoundedCornerShape(Theme.radius.small),
+                    )
+            )
+        }
     }
 }
