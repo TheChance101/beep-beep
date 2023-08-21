@@ -22,7 +22,7 @@ data class TaxiUiState(
         Header("Driver username", 3f),
         Header("Status", 3f),
         Header("Car model", 3f),
-        Header("car color", 3f),
+        Header("Car color", 3f),
         Header("Seats", 3f),
         Header("Trips", 3f),
         Header("", 1f),

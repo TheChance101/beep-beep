@@ -163,7 +163,6 @@ class TaxiScreen : Screen {
         )
         TitleField(text = taxi.plateNumber, modifier = Modifier.weight(otherColumnsWeight))
         TitleField(text = taxi.username, modifier = Modifier.weight(otherColumnsWeight))
-        TitleField(text = taxi.statusText, modifier = Modifier.weight(otherColumnsWeight))
         TitleField(
             text = taxi.statusText,
             modifier = Modifier.weight(otherColumnsWeight),
