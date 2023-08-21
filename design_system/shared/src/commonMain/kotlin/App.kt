@@ -25,13 +25,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.beepbeep.designSystem.ui.composable.BpAppBar
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpChip
 import com.beepbeep.designSystem.ui.composable.BpExpandableTextField
 import com.beepbeep.designSystem.ui.composable.BpNavigationBar
 import com.beepbeep.designSystem.ui.composable.BpNavigationBarItem
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
+import com.beepbeep.designSystem.ui.composable.BpPriceField
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
+import com.beepbeep.designSystem.ui.composable.BpTap
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.BpTheme
@@ -40,6 +43,7 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun DesignApp() {
     BpTheme {
