@@ -30,6 +30,8 @@ class SocketHandler {
         } catch (e: MultiErrorException) {
             ownerSession?.send(e.errorCodes.toString())
             ownerSession?.close()
+        } finally {
+            restaurants.remove(restaurantId)
         }
     }
 }
