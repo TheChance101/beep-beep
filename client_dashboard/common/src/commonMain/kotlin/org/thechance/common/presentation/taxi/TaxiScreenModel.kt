@@ -1,14 +1,14 @@
 package org.thechance.common.presentation.taxi
 
 import org.thechance.common.domain.entity.Taxi
-import org.thechance.common.domain.usecase.IFindTaxiByUserNameUseCase
+import org.thechance.common.domain.usecase.IFindTaxiByUsernameUseCase
 import org.thechance.common.domain.usecase.IGetTaxisUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
 class TaxiScreenModel(
     private val getTaxis: IGetTaxisUseCase,
-    private val getTaxiByUserName: IFindTaxiByUserNameUseCase
+    private val findTaxiByUsername: IFindTaxiByUsernameUseCase
 ) : BaseScreenModel<TaxiUiState, TaxiUiEffect>(TaxiUiState()), TaxiInteractionListener {
 
     init {
@@ -29,7 +29,7 @@ class TaxiScreenModel(
     }
 
     private fun findTaxiByUsername(username: String) {
-        tryToExecute({ getTaxiByUserName.findTaxiByUsername(username) }, ::onFindTaxiSuccessfully, ::onError)
+        tryToExecute({ findTaxiByUsername.findTaxiByUsername(username) }, ::onFindTaxiSuccessfully, ::onError)
     }
 
     private fun onFindTaxiSuccessfully(taxis: List<Taxi>) {
