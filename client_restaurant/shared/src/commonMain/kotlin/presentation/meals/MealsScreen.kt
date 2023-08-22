@@ -5,9 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -47,7 +47,7 @@ class MealsScreen :
     }
 
 
-    @OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun onRender(state: MealsScreenUIState, listener: MealScreenInteractionListener) {
         Scaffold(
@@ -78,6 +78,18 @@ class MealsScreen :
             Column(
                 modifier = Modifier.padding(it).fillMaxSize()
             ) {
+                LazyRow(
+                    contentPadding = PaddingValues(dimens.space16),
+                    horizontalArrangement = Arrangement.spacedBy(dimens.space8),
+                ) {
+                    items(state.cousin.size) { index ->
+                        BpChip(
+                            label = state.cousin[index].name,
+                            isSelected = state.cousin[index] == state.selectedCousin,
+                            onClick = { listener.onClickCousinType(state.cousin[index]) },
+                        )
+                    }
+                }
                 BpChip(
                     label = strings.allMeals,
                     isSelected = false,
