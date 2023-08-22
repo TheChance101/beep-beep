@@ -19,6 +19,7 @@ class GetNewOrdersUseCase(private val remoteGateWay: IRemoteGateWay) : IGetNewOr
 ////            }
 //    }
     override suspend fun getOrders(restaurantId: String): List<Order> {
+        println("LLLLLLLLLLLLL ${remoteGateWay.getCurrentOrders(restaurantId)}")
         return remoteGateWay.getCurrentOrders(restaurantId)
     }
 
