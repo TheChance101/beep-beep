@@ -1,5 +1,6 @@
 package presentation.meals
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,6 +11,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
@@ -17,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
@@ -76,8 +79,16 @@ class MealsScreen :
             floatingActionButtonPosition = FabPosition.End,
         ) {
             Column(
-                modifier = Modifier.padding(it).fillMaxSize()
+                modifier = Modifier.padding(it).fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
+                AnimatedVisibility(visible = state.isLoading){
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        color = colors.primary,
+                    )
+                }
+
                 LazyRow(
                     contentPadding = PaddingValues(dimens.space16),
                     horizontalArrangement = Arrangement.spacedBy(dimens.space8),
@@ -90,13 +101,6 @@ class MealsScreen :
                         )
                     }
                 }
-                BpChip(
-                    label = strings.allMeals,
-                    isSelected = false,
-                    modifier = Modifier.padding(dimens.space16),
-                    onClick = { listener.onClickBack() },
-
-                    )
                 LazyVerticalGrid(
                     contentPadding = PaddingValues(dimens.space16),
                     columns = GridCells.Adaptive(150.dp),

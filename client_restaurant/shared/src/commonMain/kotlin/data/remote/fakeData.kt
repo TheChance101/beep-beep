@@ -12,15 +12,15 @@ import data.remote.model.CousinDto
         name = "Main Course",
     ),
     CousinDto(
-        id = "ba9b9700-6d24-434b-8d67-daf9e45e1063",
+        id = "ba9b9700-6d24-434b-8d67-daf9e45e1064",
         name = "Burrito",
     ),
     CousinDto(
-        id = "ba9b9700-6d24-434b-8d67-daf9e45e1063",
+        id = "ba9b9700-6d24-434b-8d67-daf9e45e1065",
         name = "Pizza",
     ),
     CousinDto(
-        id = "ba9b9700-6d24-434b-8d67-daf9e45e1063",
+        id = "ba9b9700-6d24-434b-8d67-daf9e45e1066",
         name = "Dinner",
     ),
 )
