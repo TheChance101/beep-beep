@@ -2,7 +2,7 @@ package presentation.meals
 
 data class MealsScreenUIState(
     val cousin: List<CousinUIState> = emptyList(),
-    val meals: List<MealUIModel> = emptyList(),
+    val meals: List<MealUIState> = emptyList(),
     val selectedCousin: CousinUIState? = CousinUIState("", "All"),
     val isLoading: Boolean = false,
     val error: Throwable? = null,
@@ -12,7 +12,7 @@ data class MealsScreenUIState(
         val name: String,
         val isSelected: Boolean = false
     )
-    data class  MealUIModel(
+    data class  MealUIState(
         val id: String,
         val name: String,
         val price: Double,
