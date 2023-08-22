@@ -365,6 +365,10 @@ class FakeRemoteGateWay : IRemoteGateWay {
     override suspend fun getCousins(restaurantId: String): List<Cousin> {
         return cousins.toEntity()
     }
+
+    override suspend fun getMealsByCousinId(id: String): List<Meal> {
+        return meals.toEntity()
+    }
     //endregion category
 
 }

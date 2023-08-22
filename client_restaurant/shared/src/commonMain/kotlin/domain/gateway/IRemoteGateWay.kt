@@ -34,6 +34,8 @@ interface IRemoteGateWay {
     // region cousin
     suspend fun getCousins(restaurantId: String): List<Cousin>
 
+    suspend fun getMealsByCousinId(id: String): List<Meal>
+
     // endregion cousin
 
 }

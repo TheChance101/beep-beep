@@ -1,8 +1,7 @@
 package presentation.meals
 
-import data.remote.model.CousinDto
-import data.remote.model.toEntity
 import domain.entity.Cousin
+import domain.entity.Meal
 
 data class MealsScreenUIState(
     val cousin: List<CousinUIState> = emptyList(),
@@ -27,5 +26,14 @@ fun Cousin.toUIState(): MealsScreenUIState.CousinUIState {
     return MealsScreenUIState.CousinUIState(
         id = id,
         name = name,
+    )
+}
+fun List<Meal>.toUIState(): List<MealsScreenUIState.MealUIState > = map { it.toUIState() }
+fun Meal.toUIState(): MealsScreenUIState.MealUIState {
+    return MealsScreenUIState.MealUIState(
+        id = id,
+        name = name,
+        price = price,
+        imageUrl = imageUrl,
     )
 }
