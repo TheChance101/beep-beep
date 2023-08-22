@@ -3,29 +3,12 @@ package org.thechance.common.presentation.taxi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -47,7 +30,6 @@ import org.thechance.common.presentation.composables.table.BpTable
 import org.thechance.common.presentation.composables.table.TotalItemsIndicator
 
 class TaxiScreen : Screen {
-
     @Composable
     override fun Content() {
         val screenModel = getScreenModel<TaxiScreenModel>()
@@ -56,6 +38,7 @@ class TaxiScreen : Screen {
             state = state,
             onSearchInputChange = screenModel::onSearchInputChange,
             onTaxiNumberChange = screenModel::onTaxiNumberChange,
+            screenModel
         )
     }
 
@@ -65,10 +48,24 @@ class TaxiScreen : Screen {
         state: TaxiUiState,
         onSearchInputChange: (String) -> Unit,
         onTaxiNumberChange: (String) -> Unit,
+        interactionListener: TaxiScreenInteractionListener
     ) {
         var selectedTaxi by remember { mutableStateOf<String?>(null) }
         var selectedPage by remember { mutableStateOf(1) }
         val pageCount = 2
+
+        AddTaxiDialog(
+            modifier = Modifier,
+            onTaxiPlateNumberChange = interactionListener::onTaxiPlateNumberChange,
+            onCancelCreateTaxiClicked = interactionListener::onCancelCreateTaxiClicked,
+            isVisible = state.isAddNewTaxiDialogVisible,
+            onDriverUserNamChange = interactionListener::onDriverUserNamChange,
+            onCarModelChange = interactionListener::onCarModelChange,
+            onCarColorSelected = interactionListener::onCarColorSelected,
+            onSeatsSelected = interactionListener::onSeatsSelected,
+            state = state.addNewTaxiDialogUiState,
+            onCreateTaxiClicked = interactionListener::onCreateTaxiClicked
+        )
 
         Column(
             Modifier.background(Theme.colors.surface).fillMaxSize(),
@@ -105,7 +102,7 @@ class TaxiScreen : Screen {
                 )
                 BpButton(
                     title = "New Taxi",
-                    onClick = { /*TODO:  Show New Taxi Dialog */ },
+                    onClick = interactionListener::onAddNewTaxiClicked,
                     textPadding = PaddingValues(horizontal = Theme.dimens.space24),
                 )
             }
@@ -169,7 +166,7 @@ class TaxiScreen : Screen {
             color = taxi.statusColor
         )
         TitleField(text = taxi.type, modifier = Modifier.weight(otherColumnsWeight))
-        SquareColorField(modifier = Modifier.weight(otherColumnsWeight), color = taxi.color)
+        SquareColorField(modifier = Modifier.weight(otherColumnsWeight), color = Color(taxi.color.hexadecimal))
         FlowRow(
             modifier = Modifier.weight(otherColumnsWeight),
             horizontalArrangement = Arrangement.spacedBy(8.dp),

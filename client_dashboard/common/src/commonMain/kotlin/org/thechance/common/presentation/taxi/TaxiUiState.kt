@@ -9,16 +9,12 @@ import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.presentation.composables.table.Header
-import org.thechance.common.domain.entity.AddTaxi
-import org.thechance.common.domain.entity.CarColor
-
-
 
 data class TaxiUiState(
     val isLoading: Boolean = false,
     val error: String = "",
     val isAddNewTaxiDialogVisible: Boolean = false,
-    val addNewTaxiDialogUiState: AddTaxiDialogUiState = AddTaxiDialogUiState()
+    val addNewTaxiDialogUiState: AddTaxiDialogUiState = AddTaxiDialogUiState(),
     val taxis: List<TaxiDetailsUiState> = emptyList(),
     val searchQuery: String = "",
     val taxiNumberInPage: String = "3",
@@ -39,7 +35,7 @@ data class TaxiUiState(
 data class TaxiDetailsUiState(
     val id: String,
     val plateNumber: String,
-    val color: Color,
+    val color: CarColor,
     val type: String,
     val seats: Int = 4,
     val username: String = "",

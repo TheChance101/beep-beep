@@ -13,7 +13,6 @@ import org.thechance.common.domain.usecase.IGetTaxisUseCase
 class TaxiScreenModel(
     private val getTaxis: IGetTaxisUseCase,
     private val createNewTaxi: ICreateNewTaxiUseCase
-
 ) : StateScreenModel<TaxiUiState>(TaxiUiState()), TaxiScreenInteractionListener  {
 
     init {
@@ -29,9 +28,7 @@ class TaxiScreenModel(
     }
 
     private fun getDummyTaxiData() {
-        mutableState.update {
-            it.copy(taxis = getTaxis.getTaxis().toUiState(),)
-        }
+        mutableState.update { it.copy(taxis = getTaxis.getTaxis().toUiState()) }
     }
     override fun onCancelCreateTaxiClicked() {
         mutableState.update { it.copy(isAddNewTaxiDialogVisible = false) }
