@@ -19,16 +19,16 @@ class OrderScreenModel :
     }
 
     init {
-        println("LLLLLLLLLLLLLLLL")
         getNewOrders()
-        viewModelScope.launch {
-            println("LLLLLLLLLLLLLLLLLLLLLLLLLLLL ${getNewOrdersUseCase.getAllActiveOrders("aaaaa")}")
-        }
     }
 
     private fun getNewOrders() {
         tryToExecute(
-            { getNewOrdersUseCase.getAllActiveOrders("7c3d631e-6d49-48c9-9f91-9426ec559eb1").map { it.toOrderUiState() } },
+            {
+                getNewOrdersUseCase
+                    .getAllActiveOrders("7c3d631e-6d49-48c9-9f91-9426ec559eb1")
+                    .map { it.toOrderUiState() }
+            },
             ::onGetNewOrdersSuccess,
             ::onGetNewOrdersError
         )
@@ -36,11 +36,9 @@ class OrderScreenModel :
 
     private fun onGetNewOrdersSuccess(orders: List<OrderUiState>) {
         updateState { it.copy(orders = orders) }
-        println("AAAAAAAAAA ${state.value.orders}")
-
     }
 
     private fun onGetNewOrdersError(errorState: ErrorState) {
-        println("AAAAAAAAAAAAAA $errorState")
+        println("Error is $errorState")
     }
 }
