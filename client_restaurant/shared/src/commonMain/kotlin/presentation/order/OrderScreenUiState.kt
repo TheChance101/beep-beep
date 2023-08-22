@@ -29,7 +29,6 @@ fun OrderMeal.toOrderMealUiState(): OrderMealUiState {
     )
 }
 
-//fun List<OrderMeal>.toOrderMealUiState():List<OrderMealsUiState> = map { it.quantity = this }
 fun Order.toOrderUiState(): OrderUiState {
     return OrderUiState(
         orderMealUiStates = meals.map { it.toOrderMealUiState() }

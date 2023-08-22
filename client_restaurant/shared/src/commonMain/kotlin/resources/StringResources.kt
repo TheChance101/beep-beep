@@ -6,5 +6,7 @@ data class StringResources(
     val orderImageContentDescription: String = "order image",
     val quantity: String = "Qty",
     val dollarSign: String = "$",
-    val totalPrice: String = "Total price:"
+    val totalPrice: String = "Total price:",
+    val inCookingOrders: String = "In-Cooking Orders",
+    val requestedOrders:String = "Requested Orders"
 )

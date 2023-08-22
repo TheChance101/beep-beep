@@ -12,6 +12,7 @@ import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
 import domain.gateway.IRemoteGateWay
+import util.OrderState
 
 class FakeRemoteGateWay : IRemoteGateWay {
 
@@ -36,7 +37,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             ),
             totalPrice = 22.74,
             createdAt = 1002656085967,
-            orderStatus = 0
+            orderState = 0
         ),
         OrderDto(
             id = "4d7bdc9b-6233-44ef-80a0-6a09ef856862",
@@ -58,7 +59,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             ),
             totalPrice = 28.48,
             createdAt = 1000000000000,
-            orderStatus = 0
+            orderState = 0
         ),
         OrderDto(
             id = "891ecf91-62bf-4d91-96bf-8d4cc8271a81",
@@ -80,7 +81,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             ),
             totalPrice = 26.49,
             createdAt = 1672656010258,
-            orderStatus = 3
+            orderState = 3
         ),
         OrderDto(
             id = "f5c8b31e-5c4d-4c8a-babc-0e9463daad20",
@@ -102,7 +103,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             ),
             totalPrice = 22.74,
             createdAt = 1662067200000,
-            orderStatus = 1
+            orderState = 1
         ),
         OrderDto(
             id = "4d7bdc9b-6233-44ef-80a0-6a09ef856862",
@@ -124,7 +125,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             ),
             totalPrice = 28.48,
             createdAt = 1672656000000,
-            orderStatus = 1
+            orderState = 1
         ),
         OrderDto(
             id = "891ecf91-62bf-4d91-96bf-8d4cc8271a81",
@@ -146,7 +147,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             ),
             totalPrice = 26.49,
             createdAt = 1672656000333,
-            orderStatus = 1
+            orderState = 1
         ),
         OrderDto(
             id = "d59b00c3-923c-4cf4-bd0e-3a4c997a3156",
@@ -168,7 +169,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             ),
             totalPrice = 20.73,
             createdAt = 1672655550000,
-            orderStatus = 3
+            orderState = 3
         ),
         OrderDto(
             id = "9e94fdd9-9cbf-4b7e-a97e-8ea31c4876b2",
@@ -190,7 +191,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             ),
             totalPrice = 41.96,
             createdAt = 1672656014782,
-            orderStatus = 4
+            orderState = 4
         ),
         OrderDto(
             id = "c07d45e5-4c5d-4847-a518-8f21c66620f9",
@@ -212,7 +213,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             ),
             totalPrice = 35.98,
             createdAt = 1672656098210,
-            orderStatus = 4
+            orderState = 4
         ),
         OrderDto(
             id = "d59b00c3-923c-4cf4-bd0e-3a4c997a3156",
@@ -234,7 +235,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             ),
             totalPrice = 20.73,
             createdAt = 1672656012409,
-            orderStatus = 0
+            orderState = 0
         ),
         OrderDto(
             id = "9e94fdd9-9cbf-4b7e-a97e-8ea31c4876b2",
@@ -256,7 +257,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             ),
             totalPrice = 41.96,
             createdAt = 1672656025147,
-            orderStatus = 0
+            orderState = 0
         ),
         OrderDto(
             id = "c07d45e5-4c5d-4847-a518-8f21c66620f9",
@@ -278,7 +279,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             ),
             totalPrice = 35.98,
             createdAt = 1672656098742,
-            orderStatus = 0
+            orderState = 0
         ),
         OrderDto(
             id = "1a2b3c4d-5e6f-7a8b-9c0d-e1f2g3h4i5j6",
@@ -300,7 +301,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             ),
             totalPrice = 28.45,
             createdAt = 1672656012358,
-            orderStatus = 1
+            orderState = 1
         ),
         OrderDto(
             id = "2b3c4d5e-6f7a-8b9c-0d1e-2f3g4h5i6j7",
@@ -322,7 +323,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             ),
             totalPrice = 23.99,
             createdAt = 1672125000000,
-            orderStatus = 2
+            orderState = 2
         ),
     )
 
@@ -473,17 +474,19 @@ class FakeRemoteGateWay : IRemoteGateWay {
 
     //region order
     override suspend fun getCurrentOrders(restaurantId: String): List<Order> {
-//        return orders.filter { it.orderStatus != 3 || it.orderStatus != 4 }.toOrderEntity()
-        return orders.toOrderEntity()
+        return orders.filter {
+            it.orderState == OrderState.PENDING.statusCode ||
+                    it.orderState == OrderState.IN_COOKING.statusCode
+        }.toOrderEntity()
     }
 
     override suspend fun getOrdersHistory(restaurantId: String): List<Order> {
-        return orders.filter { it.orderStatus == 3 || it.orderStatus == 4 }.toOrderEntity()
+        return orders.filter { it.orderState == 3 || it.orderState == 4 }.toOrderEntity()
     }
 
     override suspend fun updateOrderState(orderId: String, orderState: Int): Order? {
         val order = orders.find { it.id == orderId }
-        orders.indexOf(order).also { orders[it].orderStatus = orderState }
+        orders.indexOf(order).also { orders[it].orderState = orderState }
         return order?.toEntity()
     }
     //endregion order

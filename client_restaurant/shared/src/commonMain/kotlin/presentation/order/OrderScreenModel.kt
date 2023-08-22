@@ -1,7 +1,7 @@
 package presentation.order
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.usecase.IGetNewOrdersUseCase
+import domain.usecase.IManageOrderUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
@@ -13,7 +13,7 @@ class OrderScreenModel :
     OrderScreenInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
 
-    private val getNewOrdersUseCase: IGetNewOrdersUseCase by inject()
+    private val getNewOrdersUseCase: IManageOrderUseCase by inject()
     override fun onClickBack() {
         sendNewEffect(OrderScreenUiEffect.Back)
     }
