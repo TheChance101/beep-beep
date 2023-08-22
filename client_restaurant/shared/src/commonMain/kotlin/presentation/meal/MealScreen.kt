@@ -102,6 +102,7 @@ class MealScreen :
     }
 
     override fun onEffect(effect: MealScreenUIEffect, navigator: Navigator) {
+
     }
 
 

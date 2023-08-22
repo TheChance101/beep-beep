@@ -16,3 +16,8 @@ data class CuisineUIState(
 )
 
 fun List<CuisineUIState>.toCuisinesString() = this.joinToString(", ") { it.name }
+
+
+fun MealScreenUIState.isValid(): Boolean {
+   return name.isNotEmpty() && description.isNotEmpty() && price.isNotEmpty() //&& cuisines.size in 1..3
+}
