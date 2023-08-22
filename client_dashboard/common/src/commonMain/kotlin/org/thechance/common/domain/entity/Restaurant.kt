@@ -2,7 +2,7 @@ package org.thechance.common.domain.entity
 
 data class Restaurant(
     val id: String,
-    val restaurantName: String,
+    val name: String,
     val ownerUsername: String,
     val phoneNumber: String,
     val rating: Double,

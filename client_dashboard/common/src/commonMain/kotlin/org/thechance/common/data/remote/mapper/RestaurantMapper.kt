@@ -5,7 +5,7 @@ import org.thechance.common.domain.entity.Restaurant
 
 fun RestaurantDto.toEntity() = Restaurant(
     id = id,
-    restaurantName = restaurantName,
+    name = name,
     ownerUsername = ownerUsername,
     phoneNumber = phoneNumber,
     rating = rating,
@@ -14,4 +14,4 @@ fun RestaurantDto.toEntity() = Restaurant(
 )
 
 
-fun List<RestaurantDto>.toEntity() = map { it.toEntity() }
+fun List<RestaurantDto>.toEntity() = map(RestaurantDto::toEntity)

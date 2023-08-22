@@ -184,7 +184,7 @@ class FakeRemoteGateway : IRemoteGateway {
         return listOf(
             RestaurantDto(
                 id = "8c90c4c6-1e69-47f3-aa59-2edcd6f0057b",
-                restaurantName = "Mujtaba Restaurant",
+                name = "Mujtaba Restaurant",
                 ownerUsername = "mujtaba",
                 phoneNumber = "0532465722",
                 rating = 0.4,
@@ -193,7 +193,7 @@ class FakeRemoteGateway : IRemoteGateway {
             ),
             RestaurantDto(
                 id = "6e21s4f-aw32-fs3e-fe43-aw56g4yr324",
-                restaurantName = "Karrar Restaurant",
+                name = "Karrar Restaurant",
                 ownerUsername = "karrar",
                 phoneNumber = "0535232154",
                 rating = 3.5,
@@ -202,7 +202,7 @@ class FakeRemoteGateway : IRemoteGateway {
             ),
             RestaurantDto(
                 id = "7a33sax-aw32-fs3e-12df-42ad6x352zse",
-                restaurantName = "Saif Restaurant",
+                name = "Saif Restaurant",
                 ownerUsername = "saif",
                 phoneNumber = "0554627893",
                 rating = 4.0,
@@ -211,7 +211,7 @@ class FakeRemoteGateway : IRemoteGateway {
             ),
             RestaurantDto(
                 id = "7y1z47c-s2df-76de-dwe2-42ad6x352zse",
-                restaurantName = "Nada Restaurant",
+                name = "Nada Restaurant",
                 ownerUsername = "nada",
                 phoneNumber = "0524242766",
                 rating = 3.4,
@@ -220,7 +220,7 @@ class FakeRemoteGateway : IRemoteGateway {
             ),
             RestaurantDto(
                 id = "3e1f5d4a-8317-4f13-aa89-2c094652e6a3",
-                restaurantName = "Asia Restaurant",
+                name = "Asia Restaurant",
                 ownerUsername = "asia",
                 phoneNumber = "0528242165",
                 rating = 2.9,
@@ -229,7 +229,7 @@ class FakeRemoteGateway : IRemoteGateway {
             ),
             RestaurantDto(
                 id = "7a1bfe39-4b2c-4f76-bde0-82da2eaf9e99",
-                restaurantName = "Kamel Restaurant",
+                name = "Kamel Restaurant",
                 ownerUsername = "kamel",
                 phoneNumber = "0528242235",
                 rating = 4.9,

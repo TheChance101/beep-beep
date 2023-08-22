@@ -13,11 +13,11 @@ class RestaurantScreenModel(
     RestaurantInteractionListener {
 
     init {
-        getRestaurant()
+        getRestaurants()
     }
 
-    private fun getRestaurant() {
-        tryToExecute(getRestaurants::getRestaurants, ::onGetRestaurantSuccessfully, ::onError)
+    private fun getRestaurants() {
+        tryToExecute(getRestaurants::invoke, ::onGetRestaurantSuccessfully, ::onError)
     }
 
     private fun onGetRestaurantSuccessfully(restaurant: List<Restaurant>) {

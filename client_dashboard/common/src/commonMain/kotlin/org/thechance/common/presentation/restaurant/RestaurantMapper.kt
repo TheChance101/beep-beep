@@ -4,7 +4,7 @@ import org.thechance.common.domain.entity.Restaurant
 
 fun Restaurant.toUiState(): RestaurantUiState.RestaurantDetailsUiState =
     RestaurantUiState.RestaurantDetailsUiState(
-        restaurantName = restaurantName,
+        name = name,
         ownerUsername = ownerUsername,
         phoneNumber = phoneNumber,
         rating = rating,
@@ -13,4 +13,4 @@ fun Restaurant.toUiState(): RestaurantUiState.RestaurantDetailsUiState =
     )
 
 
-fun List<Restaurant>.toUiState() = map { it.toUiState() }
+fun List<Restaurant>.toUiState() = map(Restaurant::toUiState)

@@ -124,7 +124,7 @@ class RestaurantScreen :
             }
             BpTable(
                 data = state.restaurants,
-                key = { it.restaurantName },
+                key = { it.name },
                 headers = state.tableHeader,
                 modifier = Modifier.fillMaxWidth(),
                 rowsCount = state.numberOfItemsInPage,
@@ -175,7 +175,7 @@ fun RowScope.RestaurantRow(
     )
 
     Text(
-        restaurant.restaurantName,
+        restaurant.name,
         style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
         overflow = TextOverflow.Ellipsis,
         modifier = Modifier.weight(otherColumnsWeight),
@@ -222,7 +222,7 @@ fun RowScope.RestaurantRow(
     Image(
         painter = painterResource("horizontal_dots.xml"),
         contentDescription = null,
-        modifier = Modifier.noRipple { onClickEditRestaurant(restaurant.restaurantName) }
+        modifier = Modifier.noRipple { onClickEditRestaurant(restaurant.name) }
             .weight(firstAndLastColumnWeight),
         colorFilter = ColorFilter.tint(color = Theme.colors.contentPrimary)
     )
