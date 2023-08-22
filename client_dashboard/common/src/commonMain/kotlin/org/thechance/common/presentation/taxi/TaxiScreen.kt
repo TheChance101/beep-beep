@@ -21,7 +21,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,37 +33,39 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpIconButton
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.di.getScreenModel
+import org.thechance.common.presentation.base.BaseScreen
 import org.thechance.common.presentation.composables.modifier.noRipple
 import org.thechance.common.presentation.composables.table.BpPager
 import org.thechance.common.presentation.composables.table.BpTable
 import org.thechance.common.presentation.composables.table.TotalItemsIndicator
+import org.thechance.common.presentation.login.LoginScreen
+import org.thechance.common.presentation.taxi.TaxiUiEffect.*
 
-class TaxiScreen : Screen {
+class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiInteractionListener>() {
 
     @Composable
     override fun Content() {
-        val screenModel = getScreenModel<TaxiScreenModel>()
-        val state by screenModel.state.collectAsState()
-        TaxiContent(
-            state = state,
-            onSearchInputChange = screenModel::onSearchInputChange,
-            onTaxiNumberChange = screenModel::onTaxiNumberChange,
-        )
+        Init(getScreenModel())
+    }
+
+    override fun onEffect(effect: TaxiUiEffect, navigator: Navigator) {
+        when (effect) {
+            //TODO: effects
+            else -> {}
+        }
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    private fun TaxiContent(
+    override fun OnRender(
         state: TaxiUiState,
-        onSearchInputChange: (String) -> Unit,
-        onTaxiNumberChange: (String) -> Unit,
+        listener: TaxiInteractionListener
     ) {
         var selectedTaxi by remember { mutableStateOf<String?>(null) }
         var selectedPage by remember { mutableStateOf(1) }
@@ -83,7 +84,7 @@ class TaxiScreen : Screen {
                 BpSimpleTextField(
                     modifier = Modifier.widthIn(max = 440.dp),
                     hint = "Search for Taxis",
-                    onValueChange = onSearchInputChange,
+                    onValueChange = listener::onSearchInputChange,
                     text = state.searchQuery,
                     keyboardType = KeyboardType.Text,
                     trailingPainter = painterResource("ic_search.svg")
@@ -135,7 +136,7 @@ class TaxiScreen : Screen {
                     totalItems = state.taxis.size,
                     itemType = "taxi",
                     numberItemInPage = state.taxiNumberInPage,
-                    onItemPerPageChange = onTaxiNumberChange
+                    onItemPerPageChange = listener::onTaxiNumberChange
                 )
                 BpPager(
                     maxPages = pageCount,
@@ -195,7 +196,7 @@ class TaxiScreen : Screen {
     }
 
     @Composable
-   private fun TitleField(
+    private fun TitleField(
         text: String,
         modifier: Modifier = Modifier,
         color: Color = Theme.colors.contentPrimary,
