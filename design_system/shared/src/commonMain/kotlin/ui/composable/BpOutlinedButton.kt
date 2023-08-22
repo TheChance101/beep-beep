@@ -14,11 +14,13 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 
@@ -29,6 +31,7 @@ fun BpOutlinedButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    textStyle: TextStyle = Theme.typography.titleLarge ,
     textPadding: PaddingValues = PaddingValues(Theme.dimens.space16),
     shape: Shape = RoundedCornerShape(Theme.radius.medium),
     contentColor: Color = Theme.colors.primary,
@@ -65,7 +68,8 @@ fun BpOutlinedButton(
         ) {
             Text(
                 text = title,
-                style = Theme.typography.titleLarge.copy(color = buttonContentColor),
+                style = textStyle,
+                color = buttonContentColor ,
                 modifier = Modifier.padding(textPadding)
             )
         }

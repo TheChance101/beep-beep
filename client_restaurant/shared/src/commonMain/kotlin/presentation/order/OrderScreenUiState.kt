@@ -6,9 +6,10 @@ import util.OrderState
 
 data class OrderScreenUiState(
     val orders: List<OrderUiState> = emptyList(),
+    val inCookingOrders: List<OrderUiState> = emptyList(),
+    val pendingOrders: List<OrderUiState> = emptyList(),
     val totalOrders: Int = 0,
 )
-
 data class OrderUiState(
     val orderMealUiStates: List<OrderMealUiState> = emptyList(),
     val totalPrice: Double = 0.0,

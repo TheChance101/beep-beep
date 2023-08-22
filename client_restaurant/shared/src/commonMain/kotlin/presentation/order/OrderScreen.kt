@@ -4,10 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -52,14 +55,42 @@ class OrderScreen :
                 header {
                     Text(
                         modifier = Modifier.padding(vertical = Theme.dimens.space8),
+                        text = Resources.strings.inCookingOrders,
+                        style = Theme.typography.titleLarge,
+                        color = Theme.colors.contentPrimary
+                    )
+                }
+                items(state.inCookingOrders) { order ->
+                    OrderCard(orders = order) {
+                        BpOutlinedButton(
+                            modifier = Modifier.width(70.dp).height(32.dp),
+                            title = "Finish",
+                            onClick = {},
+                            textStyle = Theme.typography.title,
+                            textPadding = PaddingValues(0.dp),
+                            shape = RoundedCornerShape(Theme.radius.small)
+                        )
+                    }
+                }
+
+                header {
+                    Text(
+                        modifier = Modifier.padding(vertical = Theme.dimens.space8),
                         text = Resources.strings.requestedOrders,
                         style = Theme.typography.titleLarge,
                         color = Theme.colors.contentPrimary
                     )
                 }
-                items(state.orders) { order ->
+                items(state.pendingOrders) { order ->
                     OrderCard(orders = order) {
-
+                        BpOutlinedButton(
+                            modifier = Modifier.width(70.dp).height(32.dp),
+                            title = "Approve",
+                            onClick = {},
+                            textStyle = Theme.typography.title,
+                            textPadding = PaddingValues(0.dp),
+                            shape = RoundedCornerShape(Theme.radius.small)
+                        )
                     }
                 }
 
