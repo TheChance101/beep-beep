@@ -2,6 +2,7 @@ package presentation.composables
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,33 +25,30 @@ import com.beepbeep.designSystem.ui.theme.Theme
 fun CustomBottomSheet(
     sheetContent: @Composable () -> Unit,
     sheetState: ModalBottomSheetState,
-    sheetBackgroundColor: Color = Color.White,
+    sheetBackgroundColor: Color = Theme.colors.background,
     sheetShape: RoundedCornerShape = RoundedCornerShape(
         topStart = Theme.radius.medium,
         topEnd = Theme.radius.medium
     ),
-    content: @Composable (PaddingValues) -> Unit
+    content: @Composable () -> Unit
 ) {
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        content(
-            PaddingValues(
-                bottom = animateDpAsState(
-                    if (sheetState.isVisible) sheetState.bottom else 0.dp
-                ).value
-            )
-        )
+    Box(modifier = Modifier.fillMaxSize()) {
+
+        content()
 
         if (sheetState.isVisible) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                Spacer(Modifier.fillMaxHeight().weight(1f))
+            Column(modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = .4f))) {
+
+                Box(Modifier.fillMaxHeight().weight(1f)) {
+                    Spacer(Modifier.fillMaxSize().clickable {
+                        if (sheetState.isVisible) {
+                            sheetState.dismiss()
+                        }
+                    })
+                }
 
                 Box(
-                    modifier = Modifier.background(
-                        shape = sheetShape,
-                        color = sheetBackgroundColor
-                    )
+                    modifier = Modifier.background(shape = sheetShape, color = sheetBackgroundColor)
                 ) {
                     sheetContent()
                 }
