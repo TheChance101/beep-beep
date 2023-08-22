@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
-import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpTextField
@@ -24,8 +23,7 @@ class LoginScreen :
 
     @Composable
     override fun Content() {
-        val screenModel = rememberScreenModel { LoginScreenModel() }
-        initScreen(screenModel)
+        initScreen(getScreenModel())
     }
 
     override fun onEffect(effect: LoginScreenUIEffect, navigator: Navigator) {
