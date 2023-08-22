@@ -7,6 +7,7 @@ data class MealUIState(
     val price: String = "",
     val currency: String = "USD",
     val isAddEnable: Boolean = false,
+    val selectedCuisines: List<CuisineUIState> = emptyList(),
     val cuisines: List<CuisineUIState> = emptyList()
 )
 

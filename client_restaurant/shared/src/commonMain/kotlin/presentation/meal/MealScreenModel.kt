@@ -36,7 +36,13 @@ class MealScreenModel : BaseScreenModel<MealUIState, MealScreenUIEffect>(MealUIS
     }
 
     private fun onGetCuisinesSuccess(cuisines: List<Cuisine>) {
-        updateState { it.copy(cuisines = cuisines.toCuisineUIState()) }
+        updateState { state ->
+            val selectedCuisineIds = state.selectedCuisines.map { it.id }
+            val updatedCuisines = cuisines.toCuisineUIState().map { cuisine ->
+                cuisine.copy(isSelected = cuisine.id in selectedCuisineIds)
+            }
+            state.copy(cuisines = updatedCuisines)
+        }
     }
 
     override fun onAddMeal() {
@@ -45,6 +51,19 @@ class MealScreenModel : BaseScreenModel<MealUIState, MealScreenUIEffect>(MealUIS
             ::onMealAddedSuccessfully,
             ::onAddMealError
         )
+    }
+
+    override fun onCuisineClick() {
+        updateState { state ->
+            val selectedCuisineIds = state.selectedCuisines.map { it.id }
+            val cuisines = state.cuisines.map {
+                if (it.id in selectedCuisineIds) {
+                    it.copy(isSelected = true)
+                }
+                it
+            }
+            state.copy(cuisines = cuisines)
+        }
     }
 
     private fun onMealAddedSuccessfully(result: Boolean) {
@@ -62,7 +81,7 @@ class MealScreenModel : BaseScreenModel<MealUIState, MealScreenUIEffect>(MealUIS
 
 
     override fun onSaveCuisineClick() {
-        TODO("Not yet implemented")
+        updateState { it.copy(selectedCuisines = it.cuisines.filter { it.isSelected }) }
     }
 
     override fun onCuisineSelected(id: String) {

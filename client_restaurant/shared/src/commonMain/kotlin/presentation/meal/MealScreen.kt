@@ -3,7 +3,6 @@ package presentation.meal
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,7 +17,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -26,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
@@ -45,6 +42,7 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.composables.CustomBottomSheet
 import presentation.composables.ModalBottomSheetState
+import presentation.composables.modifier.noRippleEffect
 import resources.Resources
 
 class MealScreen :
@@ -64,14 +62,21 @@ class MealScreen :
                 CuisineBottomSheetContent(
                     cuisines = state.cuisines,
                     onCancelClick = { sheetState.dismiss() },
-                    onSaveClick = listener::onSaveCuisineClick,
+                    onSaveClick = {
+                        listener.onSaveCuisineClick()
+                        sheetState.dismiss()
+                    },
                     onItemSelected = listener::onCuisineSelected
                 )
             },
             sheetBackgroundColor = Theme.colors.background,
             sheetState = sheetState,
         ) {
-            MealScreenContent(state, listener, onCuisineClick = { sheetState.show() })
+            MealScreenContent(
+                state,
+                listener,
+                sheetState,
+            )
         }
     }
 
@@ -84,10 +89,11 @@ class MealScreen :
     private fun MealScreenContent(
         state: MealUIState,
         listener: MealScreenInteractionListener,
-        onCuisineClick: () -> Unit
+        sheetState: ModalBottomSheetState,
+        modifier: Modifier = Modifier
     ) {
         Column(
-            Modifier.fillMaxSize().background(Theme.colors.surface).padding(16.dp)
+            modifier = modifier.fillMaxSize().background(Theme.colors.surface).padding(16.dp)
                 .widthIn(max = 300.dp),
             verticalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -126,9 +132,12 @@ class MealScreen :
             )
 
             CuisineTextField(
-                text = state.cuisines.toCuisinesString(),
+                text = state.selectedCuisines.toCuisinesString(),
                 label = Resources.strings.cuisines,
-                modifier = Modifier.fillMaxWidth().clickable { onCuisineClick() },
+                modifier = Modifier.fillMaxWidth().noRippleEffect {
+                    listener.onCuisineClick()
+                    sheetState.show()
+                },
             )
 
 
@@ -151,9 +160,7 @@ class MealScreen :
         modifier: Modifier = Modifier,
     ) {
         LazyColumn(
-            modifier = modifier.fillMaxWidth()
-                .heightIn(max = 320.dp)
-                .padding(Theme.dimens.space16)
+            modifier = modifier.fillMaxWidth().heightIn(max = 320.dp).padding(Theme.dimens.space16)
         ) {
 
             stickyHeader {
@@ -167,8 +174,7 @@ class MealScreen :
                     Spacer(Modifier.weight(1f))
 
                     BpTransparentButton(
-                        title = Resources.strings.cancel,
-                        onClick = onCancelClick
+                        title = Resources.strings.cancel, onClick = onCancelClick
                     )
 
                     BpOutlinedButton(
@@ -200,8 +206,7 @@ class MealScreen :
         modifier: Modifier = Modifier,
     ) {
         Column(
-            modifier = modifier,
-            horizontalAlignment = Alignment.Start
+            modifier = modifier, horizontalAlignment = Alignment.Start
         ) {
 
             Text(
@@ -212,14 +217,11 @@ class MealScreen :
             )
 
             Row(
-                modifier = Modifier
-                    .border(
+                modifier = Modifier.border(
                         width = 2.dp,
                         color = Theme.colors.divider,
                         shape = RoundedCornerShape(Theme.radius.medium)
-                    )
-                    .padding(horizontal = Theme.dimens.space16)
-                    .fillMaxWidth()
+                    ).padding(horizontal = Theme.dimens.space16).fillMaxWidth()
                     .heightIn(min = 56.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween

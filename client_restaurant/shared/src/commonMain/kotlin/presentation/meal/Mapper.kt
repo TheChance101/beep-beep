@@ -3,14 +3,16 @@ package presentation.meal
 import domain.entity.Cuisine
 import domain.entity.Meal
 
-fun Cuisine.toCuisineUIState(): CuisineUIState {
+fun Cuisine.toCuisineUIState(isSelected: Boolean): CuisineUIState {
     return CuisineUIState(
         id = id,
-        name = name
+        name = name,
+        isSelected = isSelected
     )
 }
 
-fun List<Cuisine>.toCuisineUIState() = map { it.toCuisineUIState() }
+fun List<Cuisine>.toCuisineUIState(isSelected: Boolean = false) =
+    map { it.toCuisineUIState(isSelected) }
 
 fun List<CuisineUIState>.toCuisinesString() = this.joinToString(", ") { it.name }
 
@@ -24,6 +26,6 @@ fun Meal.toMealUIState(): MealUIState {
         name = name,
         description = description,
         price = "$price",
-        cuisines = cuisines.toCuisineUIState()
+        selectedCuisines = cuisines.toCuisineUIState(true)
     )
 }
