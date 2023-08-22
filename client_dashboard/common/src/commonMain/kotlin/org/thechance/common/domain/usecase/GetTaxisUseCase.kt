@@ -5,13 +5,13 @@ import org.thechance.common.domain.getway.IRemoteGateway
 
 
 interface IGetTaxisUseCase {
-    fun getTaxis(): List<Taxi>
+    suspend fun getTaxis(): List<Taxi>
 }
 
 class GetTaxisUseCase(
     private val remoteGateway: IRemoteGateway,
 ) : IGetTaxisUseCase {
-    override fun getTaxis(): List<Taxi> {
+    override suspend fun getTaxis(): List<Taxi> {
         return remoteGateway.getTaxis()
     }
 }
