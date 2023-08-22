@@ -59,7 +59,7 @@ class OrderScreen :
                 }
                 items(state.orders) { order ->
                     OrderCard(orders = order) {
-                        BpOutlinedButton(title = state.)
+
                     }
                 }
 
