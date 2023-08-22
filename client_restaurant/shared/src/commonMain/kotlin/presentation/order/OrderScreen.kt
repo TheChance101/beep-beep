@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import presentation.base.BaseScreen
+import presentation.composables.OrderCard
 import presentation.login.LoginScreen
 
 class OrderScreen :
@@ -16,14 +17,15 @@ class OrderScreen :
     }
 
     override fun onEffect(effect: OrderScreenUiEffect, navigator: Navigator) {
-        when(effect){
+        when (effect) {
             is OrderScreenUiEffect.Back -> navigator.push(LoginScreen())
         }
     }
 
     @Composable
     override fun onRender(state: OrderScreenUiState, listener: OrderScreenInteractionListener) {
-        // my design should be here
+        OrderCard(items = state.orders[0].orderMeals, totalPrice = state.orders[0].totalPrice) {
+        }
     }
 
 
