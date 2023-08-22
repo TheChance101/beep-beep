@@ -13,6 +13,7 @@ data class MealUIState(
 
 data class CuisineUIState(
     val id: String = "",
-    val name: String = ""
+    val name: String = "",
+    val isSelected: Boolean = false
 )
 

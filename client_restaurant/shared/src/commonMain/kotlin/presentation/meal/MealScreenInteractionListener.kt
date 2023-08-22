@@ -3,11 +3,13 @@ package presentation.meal
 import presentation.base.BaseInteractionListener
 
 interface MealScreenInteractionListener : BaseInteractionListener {
-    fun onImageClicked()
-    fun onNameChanged(name: String)
-    fun onDescriptionChanged(description: String)
-    fun onPriceChanged(price: String)
-    fun onClickAddMeal()
-    fun onCuisineClick()
+    fun onImageClick()
+    fun onNameChange(name: String)
+    fun onDescriptionChange(description: String)
+    fun onPriceChange(price: String)
+    fun onAddMeal()
+    fun onSaveCuisineClick()
+    fun onCuisineSelected(id: String)
+
 }
 
