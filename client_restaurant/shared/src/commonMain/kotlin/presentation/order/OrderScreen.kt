@@ -24,6 +24,7 @@ import presentation.composables.OrderCard
 import presentation.composables.header
 import presentation.login.LoginScreen
 import resources.Resources
+import util.OrderState
 
 class OrderScreen :
     BaseScreen<OrderScreenModel, OrderScreenUiState, OrderScreenUiEffect, OrderScreenInteractionListener>() {
@@ -60,7 +61,7 @@ class OrderScreen :
                         color = Theme.colors.contentPrimary
                     )
                 }
-                items(state.inCookingOrders) { order ->
+                items(state.activeOrders.filter { it.orderState == OrderState.IN_COOKING.statusCode }) { order ->
                     OrderCard(orders = order) {
                         BpOutlinedButton(
                             modifier = Modifier.width(70.dp).height(32.dp),
@@ -81,7 +82,7 @@ class OrderScreen :
                         color = Theme.colors.contentPrimary
                     )
                 }
-                items(state.pendingOrders) { order ->
+                items(state.activeOrders.filter { it.orderState == OrderState.PENDING.statusCode }) { order ->
                     OrderCard(orders = order) {
                         BpOutlinedButton(
                             modifier = Modifier.width(70.dp).height(32.dp),

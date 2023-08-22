@@ -12,7 +12,6 @@ import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
 import domain.gateway.IRemoteGateWay
-import util.OrderState
 
 class FakeRemoteGateWay : IRemoteGateWay {
 
@@ -32,7 +31,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 2,
-                    mealName = "Pasta"
+                    mealName = "Breakfast burrito"
                 )
             ),
             totalPrice = 22.74,
@@ -47,15 +46,9 @@ class FakeRemoteGateWay : IRemoteGateWay {
                 OrderMealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
-                    quantity = 2,
-                    mealName = "Pasta"
+                    quantity = 4,
+                    mealName = "Pancake stack"
                 ),
-                OrderMealDto(
-                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
-                    quantity = 2,
-                    mealName = "Pasta"
-                )
             ),
             totalPrice = 28.48,
             createdAt = 1000000000000,
@@ -69,17 +62,23 @@ class FakeRemoteGateWay : IRemoteGateWay {
                 OrderMealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
-                    quantity = 2,
-                    mealName = "Pasta"
+                    quantity = 1,
+                    mealName = "Lunch salad"
                 ),
                 OrderMealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
-                    quantity = 2,
-                    mealName = "Pasta"
+                    quantity = 1,
+                    mealName = "Afternoon tea sandwich"
+                ),
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 3,
+                    mealName = "Dinner party"
                 )
             ),
-            totalPrice = 26.49,
+            totalPrice = 100.49,
             createdAt = 1672656010258,
             orderState = 3
         ),
@@ -91,15 +90,9 @@ class FakeRemoteGateWay : IRemoteGateWay {
                 OrderMealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
-                    quantity = 2,
-                    mealName = "Pasta"
+                    quantity = 3,
+                    mealName = "Supper club"
                 ),
-                OrderMealDto(
-                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
-                    quantity = 2,
-                    mealName = "Pasta"
-                )
             ),
             totalPrice = 22.74,
             createdAt = 1662067200000,
@@ -114,7 +107,19 @@ class FakeRemoteGateWay : IRemoteGateWay {
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 2,
-                    mealName = "Pasta"
+                    mealName = "Light snack"
+                ),
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 2,
+                    mealName = "Hors d'oeuvre platter"
+                ),
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 2,
+                    mealName = "Appetizer sampler"
                 ),
                 OrderMealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
@@ -123,7 +128,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
                     mealName = "Pasta"
                 )
             ),
-            totalPrice = 28.48,
+            totalPrice = 300.5,
             createdAt = 1672656000000,
             orderState = 1
         ),
@@ -142,7 +147,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 2,
-                    mealName = "Pasta"
+                    mealName = "Main course dish"
                 )
             ),
             totalPrice = 26.49,
@@ -158,7 +163,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 2,
-                    mealName = "Pasta"
+                    mealName = "Dessert pizza"
                 ),
                 OrderMealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
@@ -180,7 +185,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 2,
-                    mealName = "Pasta"
+                    mealName = "Digestif cocktail"
                 ),
                 OrderMealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
@@ -191,7 +196,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             ),
             totalPrice = 41.96,
             createdAt = 1672656014782,
-            orderState = 4
+            orderState = 1
         ),
         OrderDto(
             id = "c07d45e5-4c5d-4847-a518-8f21c66620f9",
@@ -202,18 +207,12 @@ class FakeRemoteGateWay : IRemoteGateWay {
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 2,
-                    mealName = "Pasta"
-                ),
-                OrderMealDto(
-                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
-                    quantity = 2,
-                    mealName = "Pasta"
+                    mealName = "Dinner party"
                 )
             ),
             totalPrice = 35.98,
             createdAt = 1672656098210,
-            orderState = 4
+            orderState = 0
         ),
         OrderDto(
             id = "d59b00c3-923c-4cf4-bd0e-3a4c997a3156",
@@ -230,7 +229,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 2,
-                    mealName = "Pasta"
+                    mealName = "Dinner party"
                 )
             ),
             totalPrice = 20.73,
@@ -246,18 +245,24 @@ class FakeRemoteGateWay : IRemoteGateWay {
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 2,
-                    mealName = "Pasta"
+                    mealName = "Supper club"
                 ),
                 OrderMealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 2,
                     mealName = "Pasta"
+                ),
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 2,
+                    mealName = "Appetizer sampler"
                 )
             ),
             totalPrice = 41.96,
             createdAt = 1672656025147,
-            orderState = 0
+            orderState = 1
         ),
         OrderDto(
             id = "c07d45e5-4c5d-4847-a518-8f21c66620f9",
@@ -279,7 +284,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             ),
             totalPrice = 35.98,
             createdAt = 1672656098742,
-            orderState = 0
+            orderState = 1
         ),
         OrderDto(
             id = "1a2b3c4d-5e6f-7a8b-9c0d-e1f2g3h4i5j6",
@@ -296,12 +301,12 @@ class FakeRemoteGateWay : IRemoteGateWay {
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 2,
-                    mealName = "Pasta"
+                    mealName = "Digestif cocktail"
                 )
             ),
             totalPrice = 28.45,
             createdAt = 1672656012358,
-            orderState = 1
+            orderState = 0
         ),
         OrderDto(
             id = "2b3c4d5e-6f7a-8b9c-0d1e-2f3g4h5i6j7",
@@ -323,7 +328,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             ),
             totalPrice = 23.99,
             createdAt = 1672125000000,
-            orderState = 2
+            orderState = 3
         ),
     )
 
@@ -474,10 +479,11 @@ class FakeRemoteGateWay : IRemoteGateWay {
 
     //region order
     override suspend fun getCurrentOrders(restaurantId: String): List<Order> {
-        return orders.filter {
-            it.orderState == OrderState.PENDING.statusCode ||
-                    it.orderState == OrderState.IN_COOKING.statusCode
-        }.toOrderEntity()
+        return orders.toOrderEntity()
+//        return orders.filter {
+//            it.orderState == OrderState.PENDING.statusCode &&
+//                    it.orderState == OrderState.IN_COOKING.statusCode
+//        }.toOrderEntity()
     }
 
     override suspend fun getOrdersHistory(restaurantId: String): List<Order> {
@@ -488,6 +494,10 @@ class FakeRemoteGateWay : IRemoteGateWay {
         val order = orders.find { it.id == orderId }
         orders.indexOf(order).also { orders[it].orderState = orderState }
         return order?.toEntity()
+    }
+
+    override suspend fun getOrderById(orderId: String): Order? {
+        return orders.find { it.id == orderId }?.toEntity()
     }
     //endregion order
 

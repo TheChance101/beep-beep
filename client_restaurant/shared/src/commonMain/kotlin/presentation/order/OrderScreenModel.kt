@@ -19,10 +19,29 @@ class OrderScreenModel :
 
     init {
         getAllActiveOrders("7c3d631e-6d49-48c9-9f91-9426ec559eb1")
+        /*
         getInCookingOrders("7c3d631e-6d49-48c9-9f91-9426ec559eb1")
         getPendingOrders("7c3d631e-6d49-48c9-9f91-9426ec559eb1")
+         */
     }
 
+    private fun getAllActiveOrders(restaurantId: String) {
+        tryToExecute(
+            { manageOrdersUseCase.getAllActiveOrders(restaurantId).map { it.toOrderUiState() } },
+            ::onGetActiveOrdersSuccess,
+            ::onGetActiveOrdersError
+        )
+    }
+
+    private fun onGetActiveOrdersSuccess(orders: List<OrderUiState>) {
+        updateState { it.copy(activeOrders = orders) }
+    }
+
+    private fun onGetActiveOrdersError(errorState: ErrorState) {
+        println("Error is $errorState")
+    }
+
+    /*
     private fun getPendingOrders(restaurantId: String) {
         tryToExecute(
             { manageOrdersUseCase.getPendingOrders(restaurantId).map { it.toOrderUiState() } },
@@ -55,19 +74,5 @@ class OrderScreenModel :
         println("Error is $errorState")
     }
 
-    private fun getAllActiveOrders(restaurantId: String) {
-        tryToExecute(
-            { manageOrdersUseCase.getAllActiveOrders(restaurantId).map { it.toOrderUiState() } },
-            ::onGetActiveOrdersSuccess,
-            ::onGetActiveOrdersError
-        )
-    }
-
-    private fun onGetActiveOrdersSuccess(orders: List<OrderUiState>) {
-        updateState { it.copy(orders = orders) }
-    }
-
-    private fun onGetActiveOrdersError(errorState: ErrorState) {
-        println("Error is $errorState")
-    }
+ */
 }
