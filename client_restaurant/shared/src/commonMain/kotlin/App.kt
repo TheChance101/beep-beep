@@ -4,6 +4,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import di.appModule
 import org.koin.compose.KoinApplication
+import org.koin.core.context.startKoin
 import presentation.login.LoginScreen
 import presentation.order.OrderScreen
 import resources.BpRestaurantTheme
@@ -11,9 +12,8 @@ import resources.BpRestaurantTheme
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun App() {
-    KoinApplication(application = {
-        modules(appModule())
-    }) {
+
+    KoinApplication(application = { modules(appModule()) }) {
         BpRestaurantTheme {
             Navigator(OrderScreen()) {
                 SlideTransition(it)

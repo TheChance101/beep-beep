@@ -1,6 +1,10 @@
 package presentation.order
 
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import presentation.base.BaseScreen
@@ -24,8 +28,20 @@ class OrderScreen :
 
     @Composable
     override fun onRender(state: OrderScreenUiState, listener: OrderScreenInteractionListener) {
-        OrderCard(items = state.orders[0].orderMeals, totalPrice = state.orders[0].totalPrice) {
+//        println("LLLLLL : ${state.orders}")
+        LazyVerticalGrid(columns = GridCells.Adaptive(minSize = 328.dp)) {
+
+            items(state.orders) { order ->
+                OrderCard(
+                    items = order.orderMealUiStates,
+                    totalPrice = order.totalPrice
+                ) {
+                }
+            }
+
         }
+
+
     }
 
 

@@ -24,13 +24,13 @@ import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import presentation.order.OrderScreenUiState.OrderUiState.OrderMeals
+import presentation.order.OrderMealUiState
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun OrderCard(
     modifier: Modifier = Modifier,
-    items: List<OrderMeals>,
+    items: List<OrderMealUiState>,
     totalPrice: Double,
     content: @Composable () -> Unit
 ) {
