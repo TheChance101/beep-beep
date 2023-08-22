@@ -6,18 +6,18 @@ import domain.gateway.IRemoteGateWay
 import presentation.base.ServerSideException
 
 interface IManageMealUseCase {
-    suspend fun addMeal(): Boolean
+    suspend fun addMeal(meal: Meal): Boolean
 
     suspend fun getMeal(mealId: String): Meal
 
-    suspend fun updateMeal(meal: Meal)
-
     suspend fun getCuisines(): List<Cuisine>
+
+    suspend fun isValidMeal(meal: Meal): Boolean
 
 }
 
 class ManageMealUseCase(private val remoteGateWay: IRemoteGateWay) : IManageMealUseCase {
-    override suspend fun addMeal(): Boolean {
+    override suspend fun addMeal(meal: Meal): Boolean {
         TODO("Not yet implemented")
     }
 
@@ -27,13 +27,12 @@ class ManageMealUseCase(private val remoteGateWay: IRemoteGateWay) : IManageMeal
         return meal.copy(cuisines = cuisine)
     }
 
-    override suspend fun updateMeal(meal: Meal) {
-        TODO("Not yet implemented")
-    }
 
     override suspend fun getCuisines(): List<Cuisine> {
         return remoteGateWay.getCuisines()
     }
 
-
+    override suspend fun isValidMeal(meal: Meal): Boolean {
+        TODO("Not yet implemented")
+    }
 }

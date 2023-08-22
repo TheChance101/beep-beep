@@ -81,7 +81,7 @@ class MealScreen :
     }
 
     override fun onEffect(effect: MealScreenUIEffect, navigator: Navigator) {
-
+        TODO("Not yet implemented")
     }
 
     @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
@@ -218,10 +218,10 @@ class MealScreen :
 
             Row(
                 modifier = Modifier.border(
-                        width = 2.dp,
-                        color = Theme.colors.divider,
-                        shape = RoundedCornerShape(Theme.radius.medium)
-                    ).padding(horizontal = Theme.dimens.space16).fillMaxWidth()
+                    width = 2.dp,
+                    color = Theme.colors.divider,
+                    shape = RoundedCornerShape(Theme.radius.medium)
+                ).padding(horizontal = Theme.dimens.space16).fillMaxWidth()
                     .heightIn(min = 56.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween

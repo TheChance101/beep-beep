@@ -14,10 +14,11 @@ fun Cuisine.toCuisineUIState(isSelected: Boolean): CuisineUIState {
 fun List<Cuisine>.toCuisineUIState(isSelected: Boolean = false) =
     map { it.toCuisineUIState(isSelected) }
 
-fun List<CuisineUIState>.toCuisinesString() = this.joinToString(", ") { it.name }
+fun List<CuisineUIState>.toCuisinesString() = joinToString(", ", transform = CuisineUIState::name)
+
 
 fun MealUIState.isValid(): Boolean {
-    return name.isNotEmpty() && description.isNotEmpty() && price.isNotEmpty() //&& cuisines.size in 1..3
+    return name.isNotEmpty() && description.isNotEmpty() && price.isNotEmpty() && cuisines.size in 1..3
 }
 
 fun Meal.toMealUIState(): MealUIState {
@@ -29,3 +30,17 @@ fun Meal.toMealUIState(): MealUIState {
         selectedCuisines = cuisines.toCuisineUIState(true)
     )
 }
+
+
+fun MealUIState.toMealEntity() = Meal(
+    id = id,
+    name = name,
+    imageUrl = "",
+    description = description,
+    price = price.toDoubleOrNull() ?: 0.0,
+    cuisines = selectedCuisines.toCuisineEntity()
+)
+
+
+fun CuisineUIState.toCuisineEntity() = Cuisine(id = id, name = name)
+fun List<CuisineUIState>.toCuisineEntity() = map { it.toCuisineEntity() }

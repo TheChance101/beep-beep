@@ -19,19 +19,12 @@ class MealScreenModel : BaseScreenModel<MealUIState, MealScreenUIEffect>(MealUIS
 
     private val mealId = ""//""e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a"
 
+
     init {
-        tryToExecute(
-            { manageMeal.getCuisines() },
-            ::onGetCuisinesSuccess,
-            ::onAddMealError
-        )
+        tryToExecute({ manageMeal.getCuisines() }, ::onGetCuisinesSuccess, ::onAddMealError)
 
         if (mealId.isNotEmpty()) {
-            tryToExecute(
-                { manageMeal.getMeal(mealId) },
-                ::onGetMealSuccess,
-                ::onAddMealError
-            )
+            tryToExecute({ manageMeal.getMeal(mealId) }, ::onGetMealSuccess, ::onAddMealError)
         }
     }
 
@@ -47,7 +40,7 @@ class MealScreenModel : BaseScreenModel<MealUIState, MealScreenUIEffect>(MealUIS
 
     override fun onAddMeal() {
         tryToExecute(
-            { manageMeal.addMeal() },
+            { manageMeal.addMeal(state.value.toMealEntity()) },
             ::onMealAddedSuccessfully,
             ::onAddMealError
         )
@@ -67,7 +60,7 @@ class MealScreenModel : BaseScreenModel<MealUIState, MealScreenUIEffect>(MealUIS
     }
 
     private fun onMealAddedSuccessfully(result: Boolean) {
-
+        TODO("Not yet implemented")
     }
 
 
@@ -76,7 +69,7 @@ class MealScreenModel : BaseScreenModel<MealUIState, MealScreenUIEffect>(MealUIS
     }
 
     private fun onAddMealError(error: ErrorState) {
-
+        TODO("Not yet implemented")
     }
 
 
@@ -85,16 +78,15 @@ class MealScreenModel : BaseScreenModel<MealUIState, MealScreenUIEffect>(MealUIS
     }
 
     override fun onCuisineSelected(id: String) {
-        updateState {
-            val updatedCuisines = it.cuisines.map { cuisine ->
+        updateState { state ->
+            val updatedCuisines = state.cuisines.map { cuisine ->
                 if (cuisine.id == id) {
                     cuisine.copy(isSelected = !cuisine.isSelected)
                 } else {
                     cuisine
                 }
             }
-
-            it.copy(cuisines = updatedCuisines)
+            state.copy(cuisines = updatedCuisines)
         }
     }
 
