@@ -7,7 +7,7 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import org.thechance.api_gateway.data.gateway.IResourcesGateway
+import org.thechance.api_gateway.data.localized_messages.LocalizedMessagesFactory
 import org.thechance.api_gateway.data.model.TokenConfiguration
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
 import org.thechance.api_gateway.endpoints.utils.respondWithResult
@@ -19,7 +19,8 @@ import java.util.*
 fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
 
     val gateway: IApiGateway by inject()
-    val resourcesGateway: IResourcesGateway by inject()
+    val localizedMessagesFactory by inject<LocalizedMessagesFactory>()
+
 
     post("/signup") {
         val params = call.receiveParameters()
@@ -38,9 +39,9 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
             locale = Locale(language, countryCode)
         )
         val locale = Locale(language, countryCode)
-        val message = resourcesGateway.getLocalizedResponseMessage(code = 1076, locale = locale)
+        val successMessage = localizedMessagesFactory.createLocalizedMessages(locale).userCreatedSuccessfully
 
-        respondWithResult(HttpStatusCode.Created, result,message)
+        respondWithResult(HttpStatusCode.Created, result, successMessage)
     }
 
     post("/login") {

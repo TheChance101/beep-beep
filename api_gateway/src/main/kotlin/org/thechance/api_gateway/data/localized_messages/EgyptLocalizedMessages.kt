@@ -1,4 +1,4 @@
-package org.thechance.api_gateway.data.localized_messages.error_codes
+package org.thechance.api_gateway.data.localized_messages
 
 class EgyptLocalizedMessages : LocalizedMessages {
     override val invalidRequestParameter: String = "مدخل بيانات غلط )\""
@@ -13,6 +13,6 @@ class EgyptLocalizedMessages : LocalizedMessages {
     override val invalidEmail: String = "الايميل يابشمهندس !!"
     override val notFound: String = "مش موجود ياعم"
     override val invalidCredentials: String = "امسك حرامي"
-    override val userCreatedSuccessfully: String = ""
-
+    override val userCreatedSuccessfully: String = "اعمل حفلة بقى عندك حساب يا ابن المحظوظة"
+    override val unknownError: String = "حصل ايرور لو كانت عارفه كنت هقولك"
 }
