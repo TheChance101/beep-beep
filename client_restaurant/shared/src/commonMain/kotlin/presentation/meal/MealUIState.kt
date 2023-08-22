@@ -1,6 +1,7 @@
 package presentation.meal
 
-data class MealScreenUIState(
+data class MealUIState(
+    val id: String = "",
     val name: String = "",
     val description: String = "",
     val price: String = "",
@@ -15,9 +16,3 @@ data class CuisineUIState(
     val name: String = ""
 )
 
-fun List<CuisineUIState>.toCuisinesString() = this.joinToString(", ") { it.name }
-
-
-fun MealScreenUIState.isValid(): Boolean {
-   return name.isNotEmpty() && description.isNotEmpty() && price.isNotEmpty() //&& cuisines.size in 1..3
-}

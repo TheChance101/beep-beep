@@ -19,6 +19,7 @@ fun MealDto.toEntity(): Meal {
         name = name ?: "",
         description = description ?: "",
         price = price ?: 0.0,
-        imageUrl = imageUrl ?: ""
+        imageUrl = imageUrl ?: "",
+        cuisines = emptyList()
     )
 }
