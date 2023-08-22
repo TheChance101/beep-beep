@@ -1,30 +1,37 @@
 package org.thechance.common.presentation.taxi
 
-import cafe.adriel.voyager.core.model.StateScreenModel
-import kotlinx.coroutines.flow.update
+import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.usecase.IGetTaxisUseCase
-
+import org.thechance.common.presentation.base.BaseScreenModel
+import org.thechance.common.presentation.util.ErrorState
 
 class TaxiScreenModel(
     private val getTaxis: IGetTaxisUseCase
-) : StateScreenModel<TaxiUiState>(TaxiUiState()) {
+) : BaseScreenModel<TaxiUiState, TaxiUiEffect>(TaxiUiState()), TaxiInteractionListener {
 
     init {
         getDummyTaxiData()
     }
 
-    fun onTaxiNumberChange(number: String) {
-        mutableState.update { it.copy(taxiNumberInPage = number) }
+    override fun onTaxiNumberChange(number: String) {
+        updateState { it.copy(taxiNumberInPage = number) }
     }
 
-    fun onSearchInputChange(searchQuery: String) {
-        mutableState.update { it.copy(searchQuery = searchQuery) }
+    override fun onSearchInputChange(searchQuery: String) {
+        updateState { it.copy(searchQuery = searchQuery) }
+
     }
 
     private fun getDummyTaxiData() {
-        mutableState.update {
-            it.copy(taxis = getTaxis.getTaxis().toUiState(),)
-        }
+        tryToExecute(getTaxis::getTaxis, ::onGetTaxiSuccessfully, ::onError)
+    }
+
+    private fun onGetTaxiSuccessfully(taxis: List<Taxi>) {
+        updateState { it.copy(taxis = taxis.toUiState(), isLoading = false) }
+    }
+
+    private fun onError(error: ErrorState) {
+        updateState { it.copy(error = error, isLoading = false) }
     }
 
 }
