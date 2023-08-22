@@ -7,19 +7,26 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
-import com.beepbeep.designSystem.ui.composable.BpAppBar
 import com.beepbeep.designSystem.ui.composable.BpChip
 import com.beepbeep.designSystem.ui.theme.Theme.colors
 import com.beepbeep.designSystem.ui.theme.Theme.dimens
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.base.BaseScreen
+import presentation.composables.BpAppBar
 import presentation.meals.Composable.MealCard
 import resources.Resources.strings
 
@@ -50,7 +57,23 @@ class MealsScreen :
                     title = strings.allMeals,
                     onNavigateUp = { listener.onClickBack() },
                 ) {}
-            }
+
+            },
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = {
+                    },
+                    containerColor = colors.primary,
+                    shape = shapes.medium,
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.Add,
+                        contentDescription = "Add FAB",
+                        tint = colors.onPrimary,
+                    )
+                }
+            },
+            floatingActionButtonPosition = FabPosition.End,
         ) {
             Column(
                 modifier = Modifier.padding(it).fillMaxSize()
@@ -72,6 +95,7 @@ class MealsScreen :
                         MealCard(onClick = { listener.onClickMeal() }, meal = state.meals[index])
                     }
                 }
+
             }
         }
     }

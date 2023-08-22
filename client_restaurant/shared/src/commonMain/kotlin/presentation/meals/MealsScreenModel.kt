@@ -4,7 +4,9 @@ import cafe.adriel.voyager.core.model.coroutineScope
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
 
-class MealsScreenModel : BaseScreenModel<MealsScreenUIState,MealsScreenUIEffect>(MealsScreenUIState()),MealScreenInteractionListener{
+class MealsScreenModel :
+    BaseScreenModel<MealsScreenUIState, MealsScreenUIEffect>(MealsScreenUIState()),
+    MealScreenInteractionListener {
 
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
@@ -17,7 +19,7 @@ class MealsScreenModel : BaseScreenModel<MealsScreenUIState,MealsScreenUIEffect>
         sendNewEffect(MealsScreenUIEffect.NavigateToMealDetails)
     }
 
-    override fun onClickCousinType(type:  MealsScreenUIState.CousinUIState) {
+    override fun onClickCousinType(type: MealsScreenUIState.CousinUIState) {
         updateState { it.copy(selectedCousin = type) }
     }
 
