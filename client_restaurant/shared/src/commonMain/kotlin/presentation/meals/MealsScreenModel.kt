@@ -68,6 +68,6 @@ class MealsScreenModel :
 
     override fun onClickCousinType(type: MealsScreenUIState.CousinUIState) {
         updateState { it.copy(selectedCousin = type) }
-        getMeals()
+        getMeals(type.id)
     }
 }
