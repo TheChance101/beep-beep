@@ -1,15 +1,19 @@
 package presentation.order
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
+import com.beepbeep.designSystem.ui.composable.BpAppBar
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.base.BaseScreen
@@ -41,17 +46,28 @@ class OrderScreen :
         }
     }
 
+    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     override fun onRender(state: OrderScreenUiState, listener: OrderScreenInteractionListener) {
 
-        Column(modifier = Modifier.background(Theme.colors.background)) {
+        Column(modifier = Modifier.fillMaxSize().background(Theme.colors.background)) {
 
-            LazyVerticalGrid(
+            BpAppBar(
+                modifier = Modifier.fillMaxWidth().background(Theme.colors.surface),
+                onNavigateUp = {},
+                title = Resources.strings.orders
+            ) {
+
+            }
+
+            LazyVerticalStaggeredGrid(
+                modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(Theme.dimens.space16),
-                columns = GridCells.Adaptive(minSize = 328.dp),
-                verticalArrangement = Arrangement.spacedBy(Theme.dimens.space8),
+                columns = StaggeredGridCells.Adaptive(minSize = 300.dp),
+                verticalItemSpacing = Theme.dimens.space8,
                 horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8)
             ) {
+
 
                 header {
                     Text(
@@ -61,11 +77,12 @@ class OrderScreen :
                         color = Theme.colors.contentPrimary
                     )
                 }
+
                 items(state.activeOrders.filter { it.orderState == OrderState.IN_COOKING.statusCode }) { order ->
                     OrderCard(orders = order) {
                         BpOutlinedButton(
                             modifier = Modifier.width(70.dp).height(32.dp),
-                            title = "Finish",
+                            title = Resources.strings.finish,
                             onClick = {},
                             textStyle = Theme.typography.title,
                             textPadding = PaddingValues(0.dp),
@@ -76,7 +93,10 @@ class OrderScreen :
 
                 header {
                     Text(
-                        modifier = Modifier.padding(vertical = Theme.dimens.space8),
+                        modifier = Modifier.padding(
+                            top = Theme.dimens.space24,
+                            bottom = Theme.dimens.space16
+                        ),
                         text = Resources.strings.requestedOrders,
                         style = Theme.typography.titleLarge,
                         color = Theme.colors.contentPrimary
@@ -86,7 +106,7 @@ class OrderScreen :
                     OrderCard(orders = order) {
                         BpOutlinedButton(
                             modifier = Modifier.width(70.dp).height(32.dp),
-                            title = "Approve",
+                            title = Resources.strings.approve,
                             onClick = {},
                             textStyle = Theme.typography.title,
                             textPadding = PaddingValues(0.dp),
