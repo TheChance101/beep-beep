@@ -35,8 +35,7 @@ import presentation.base.BaseScreen
 import resources.Resources
 
 class MealScreen :
-    BaseScreen<MealScreenModel, MealScreenUIState, MealScreenUIEffect, MealScreenInteractionListener>() {
-
+    BaseScreen<MealScreenModel, MealUIState, MealScreenUIEffect, MealScreenInteractionListener>() {
     @Composable
     override fun Content() {
         val screenModel = rememberScreenModel { MealScreenModel() }
@@ -45,7 +44,7 @@ class MealScreen :
 
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
     @Composable
-    override fun onRender(state: MealScreenUIState, listener: MealScreenInteractionListener) {
+    override fun onRender(state: MealUIState, listener: MealScreenInteractionListener) {
         Column(
             Modifier.fillMaxSize().background(Theme.colors.surface).padding(16.dp)
                 .widthIn(max = 300.dp),

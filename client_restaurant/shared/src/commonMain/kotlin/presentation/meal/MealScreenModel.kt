@@ -1,17 +1,52 @@
 package presentation.meal
 
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.entity.Meal
+import domain.usecase.IManageMealUseCase
 import kotlinx.coroutines.CoroutineScope
+import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
+import presentation.base.ErrorState
 
-class MealScreenModel : BaseScreenModel<MealScreenUIState, MealScreenUIEffect>(MealScreenUIState()),
+class MealScreenModel : BaseScreenModel<MealUIState, MealScreenUIEffect>(MealUIState()),
     MealScreenInteractionListener {
 
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
 
+    private val manageMeal: IManageMealUseCase by inject()
+
+    private val mealId = "e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a"
+
+    init {
+        if (mealId.isNotEmpty()) {
+            tryToExecute(
+                { manageMeal.getMeal(mealId) },
+                ::onGetMealSuccess,
+                ::onAddMealError
+            )
+        }
+    }
+
     override fun onClickAddMeal() {
-        TODO("Not yet implemented")
+        tryToExecute(
+            { manageMeal.addMeal() },
+            ::onMealAddedSuccessfully,
+            ::onAddMealError
+        )
+    }
+
+    private fun onMealAddedSuccessfully(result: Boolean) {
+
+    }
+
+
+    private fun onGetMealSuccess(meal: Meal) {
+        updateState { meal.toMealUIState() }
+    }
+
+    private fun onAddMealError(error: ErrorState) {
+
     }
 
     override fun onCuisineClick() {
