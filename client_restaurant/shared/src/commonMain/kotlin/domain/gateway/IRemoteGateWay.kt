@@ -1,6 +1,7 @@
 package domain.gateway
 
 import domain.entity.Category
+import domain.entity.Cousin
 import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
@@ -29,5 +30,10 @@ interface IRemoteGateWay {
     //region category
     suspend fun getCategoriesByRestaurantId(restaurantId: String): Category
     //endregion category
+
+    // region cousin
+    suspend fun getCousins(restaurantId: String): List<Cousin>
+
+    // endregion cousin
 
 }
