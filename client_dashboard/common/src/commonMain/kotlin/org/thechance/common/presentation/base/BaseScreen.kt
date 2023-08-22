@@ -1,5 +1,4 @@
-package presentation.base
-
+package org.thechance.common.presentation.base
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -15,23 +14,26 @@ import org.koin.core.parameter.ParametersDefinition
 import org.koin.core.qualifier.Qualifier
 import org.koin.mp.KoinPlatform
 
+interface BaseInteractionListener
+
 @Suppress("BOUNDS_NOT_ALLOWED_IF_BOUNDED_BY_TYPE_PARAMETER")
-abstract class BaseScreen<VM, S, E, I> : Screen
-        where I : BaseInteractionListener, VM : BaseScreenModel<S, E>, VM : I {
+abstract class BaseScreen<SM, E, S, I>
+    : Screen where  I : BaseInteractionListener, SM : BaseScreenModel<S, E>, SM : I {
+
     @Composable
-    fun initScreen(viewModel: VM) {
-        val state: S by viewModel.state.collectAsState()
-        val effect: E? by viewModel.effect.collectAsState(null)
+    protected fun Init(screenModel: SM) {
+        val state: S by screenModel.state.collectAsState()
+        val effect: E? by screenModel.effect.collectAsState(null)
         val navigator = LocalNavigator.currentOrThrow
 
-        onRender(state, viewModel)
-        effect?.Listen {
-            onEffect(effect = it, navigator = navigator)
-        }
+        OnRender(state, screenModel)
+        effect?.Listen { onEffect(it, navigator) }
     }
 
+    abstract fun onEffect(effect: E, navigator: Navigator)
+
     @Composable
-    abstract fun onRender(state: S, listener: I)
+    abstract fun OnRender(state: S, listener: I)
 
     @Composable
     private fun E.Listen(function: (E) -> Unit) {
@@ -40,11 +42,8 @@ abstract class BaseScreen<VM, S, E, I> : Screen
         }
     }
 
-    abstract fun onEffect(effect: E, navigator: Navigator)
-
-
     @Composable
-    inline fun <reified T : ScreenModel> getScreenModel(
+    protected inline fun <reified T : ScreenModel> getScreenModel(
         qualifier: Qualifier? = null,
         noinline parameters: ParametersDefinition? = null,
     ): T {
