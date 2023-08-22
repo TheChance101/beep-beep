@@ -7,11 +7,12 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.presentation.composables.table.Header
+import org.thechance.common.presentation.util.ErrorState
 
 
 data class TaxiUiState(
     val isLoading: Boolean = false,
-    val error: String = "",
+    val error: ErrorState = ErrorState.UnKnownError,
     val taxis: List<TaxiDetailsUiState> = emptyList(),
     val searchQuery: String = "",
     val taxiNumberInPage: String = "3",
@@ -52,17 +53,3 @@ data class TaxiDetailsUiState(
             TaxiStatus.ON_RIDE -> "On Ride"
         }
 }
-
-
-fun Taxi.toUiState(): TaxiDetailsUiState = TaxiDetailsUiState(
-    id = id,
-    plateNumber = plateNumber,
-    color = color,
-    type = type,
-    seats = seats,
-    username = username,
-    status = status,
-    trips = trips,
-)
-
-fun List<Taxi>.toUiState() = map { it.toUiState() }

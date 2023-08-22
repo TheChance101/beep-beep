@@ -2,6 +2,7 @@ package presentation.composables
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -9,6 +10,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 import com.beepbeep.designSystem.ui.theme.Theme.colors
 import com.beepbeep.designSystem.ui.theme.Theme.dimens
@@ -36,8 +39,8 @@ fun BpAppBar(
             Icon(
                 painter = painterResource(images.arrowLeft),
                 contentDescription = "",
-                modifier = Modifier.padding(start=dimens.space16).clickable { onNavigateUp() },
-                tint = colors.contentSecondary
+                modifier = Modifier.clickable { onNavigateUp() }.padding(start = dimens.space16),
+                tint = colors.contentSecondary,
             )
         },
         actions = {

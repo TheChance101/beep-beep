@@ -31,9 +31,7 @@ import com.beepbeep.designSystem.ui.composable.BpExpandableTextField
 import com.beepbeep.designSystem.ui.composable.BpNavigationBar
 import com.beepbeep.designSystem.ui.composable.BpNavigationBarItem
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
-import com.beepbeep.designSystem.ui.composable.BpPriceField
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
-import com.beepbeep.designSystem.ui.composable.BpTap
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.BpTheme
