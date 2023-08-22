@@ -10,10 +10,6 @@ class MealScreenModel : BaseScreenModel<MealScreenUIState, MealScreenUIEffect>(M
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
 
-    init {
-        //e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a
-    }
-
     override fun onClickAddMeal() {
         TODO("Not yet implemented")
     }
