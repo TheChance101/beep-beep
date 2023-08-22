@@ -16,7 +16,7 @@ suspend inline fun <reified T> PipelineContext<Unit, ApplicationCall>.respondWit
 suspend fun respondWithError(
     call: ApplicationCall,
     statusCode: HttpStatusCode,
-    errorMessage: String? = null
+    errorMessage: List<Map<Int, String>>? = null
 ) {
     call.respond(statusCode, ServerResponse.error(errorMessage, statusCode.value))
 }

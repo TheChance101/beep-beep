@@ -38,7 +38,9 @@ class ApiGateway(
     ): Boolean {
         return tryToExecute<Boolean>(
             APIS.IDENTITY_API,
-            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, locale) }
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+            }
         ) {
             submitForm("/user",
                 formParameters = parameters {
@@ -140,7 +142,7 @@ class ApiGateway(
 
     private suspend inline fun <reified T> tryToExecute(
         api: APIS,
-        setErrorMessage: (errorCodes: List<Int>) -> String = { "" },
+        setErrorMessage: (errorCodes: List<Int>) -> List<Map<Int, String>> = { emptyList() },
         method: HttpClient.() -> HttpResponse
     ): T {
         attributes.put(AttributeKey("API"), api.value)

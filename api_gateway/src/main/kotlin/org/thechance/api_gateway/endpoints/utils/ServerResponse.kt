@@ -12,7 +12,7 @@ data class ServerResponse<T>(
 
     companion object {
 
-        fun error(errorMessage: String?, code: Int): ServerResponse<String> {
+        fun error(errorMessage: List<Map<Int, String>>?, code: Int): ServerResponse<String> {
             return ServerResponse(
                 value = "",
                 isSuccess = false,
@@ -31,7 +31,7 @@ data class ServerResponse<T>(
 
     @Serializable
     data class ResponseStatus(
-        val errorMessages: String? = null,
+        val errorMessages: List<Map<Int, String>>? = null,
         val successMessage: String? = null,
         val code: Int?
     )

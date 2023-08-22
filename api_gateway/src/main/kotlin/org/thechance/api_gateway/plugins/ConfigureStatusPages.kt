@@ -15,7 +15,7 @@ fun Application.configureStatusPages() {
 private fun StatusPagesConfig.handleStatusPagesExceptions() {
 
     exception<LocalizedMessageException> { call, t ->
-        respondWithError(call, HttpStatusCode.BadRequest, t.message)
+        respondWithError(call, HttpStatusCode.BadRequest, t.errorMessages)
     }
 
 }
