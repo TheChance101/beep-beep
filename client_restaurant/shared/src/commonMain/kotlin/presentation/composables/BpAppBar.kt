@@ -1,4 +1,4 @@
-package com.beepbeep.designSystem.ui.composable
+package presentation.composables
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
@@ -14,8 +14,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 import com.beepbeep.designSystem.ui.theme.Theme.colors
+import com.beepbeep.designSystem.ui.theme.Theme.dimens
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import resources.Resources.images
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 @Composable
@@ -35,17 +37,17 @@ fun BpAppBar(
         },
         navigationIcon = {
             Icon(
-                painter = painterResource("arrow_left.xml"),
+                painter = painterResource(images.arrowLeft),
                 contentDescription = "",
-                modifier = Modifier.clickable { onNavigateUp() },
-                tint = colors.contentSecondary
+                modifier = Modifier.clickable { onNavigateUp() }.padding(start = dimens.space16),
+                tint = colors.contentSecondary,
             )
         },
         actions = {
             content()
         },
         colors= TopAppBarDefaults.smallTopAppBarColors(containerColor = colors.surface),
-        modifier = modifier.padding(horizontal = 16.dp),
+        modifier = modifier,
     )
 }
 
