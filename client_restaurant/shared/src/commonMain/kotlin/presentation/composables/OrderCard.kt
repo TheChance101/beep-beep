@@ -11,11 +11,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
@@ -24,32 +23,32 @@ import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import presentation.order.OrderMealUiState
+import presentation.order.OrderUiState
+import resources.Resources
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun OrderCard(
+    orders: OrderUiState,
     modifier: Modifier = Modifier,
-    items: List<OrderMealUiState>,
-    totalPrice: Double,
     content: @Composable () -> Unit
 ) {
     Column(
         modifier = modifier
-            .background(Theme.colors.surface)
             .clip(RoundedCornerShape(Theme.radius.medium))
-            .padding(Theme.dimens.space16)
+            .background(Theme.colors.surface)
+            .padding(Theme.dimens.space16),
+        verticalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
     ) {
-        LazyColumn {
-            items(items) {
-                OrderItem(
-                    painter = painterResource(it.mealImageUrl),
-                    mealName = it.mealName,
-                    quantity = it.quantity
-                )
-            }
+        orders.orderMealUiStates.forEach { order ->
+            OrderItem(
+                painter = painterResource(Resources.images.test),
+                mealName = order.mealName,
+                quantity = order.quantity
+            )
         }
-        BPDashedDivider(modifier = Modifier.padding(vertical = Theme.dimens.space16))
+
+        BPDashedDivider(showDiamondIcon = true)
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -57,12 +56,12 @@ fun OrderCard(
         ) {
             Column {
                 Text(
-                    text = "Total price:",
+                    text = Resources.strings.totalPrice,
                     style = Theme.typography.caption,
                     color = Theme.colors.contentTertiary
                 )
                 Text(
-                    text = "$ $totalPrice",
+                    text = "${Resources.strings.dollarSign} ${orders.totalPrice}",
                     style = Theme.typography.titleLarge,
                     color = Theme.colors.contentPrimary
                 )
@@ -88,11 +87,14 @@ private fun OrderItem(
                 .clip(RoundedCornerShape(Theme.radius.medium)),
             painter = painter,
             contentScale = ContentScale.Crop,
-            contentDescription = "order image"
+            contentDescription = Resources.strings.orderImageContentDescription
         )
         Column(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(Theme.dimens.space8),
+            verticalArrangement = Arrangement.spacedBy(
+                Theme.dimens.space8,
+                alignment = Alignment.CenterVertically
+            ),
         ) {
             Text(
                 text = mealName,
@@ -100,7 +102,7 @@ private fun OrderItem(
                 color = Theme.colors.contentPrimary
             )
             Text(
-                text = "Qty - $quantity",
+                text = "${Resources.strings.quantity} - $quantity",
                 style = Theme.typography.caption,
                 color = Theme.colors.contentTertiary
             )

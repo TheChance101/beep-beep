@@ -15,9 +15,9 @@ import resources.BpRestaurantTheme
 @Composable
 fun App() {
     startKoin { modules(appModule()) }
-        BpRestaurantTheme {
-            Navigator(LoginScreen()) {
-                SlideTransition(it)
-            }
+    BpRestaurantTheme {
+        Navigator(OrderScreen()) {
+            SlideTransition(it)
         }
+    }
 }
