@@ -14,19 +14,23 @@ class MealScreenModel : BaseScreenModel<MealScreenUIState, MealScreenUIEffect>(M
         TODO("Not yet implemented")
     }
 
+    override fun onCuisineClick() {
+        TODO("Not yet implemented")
+    }
+
     override fun onImageClicked() {
         TODO("Not yet implemented")
     }
 
     override fun onNameChanged(name: String) {
-        TODO("Not yet implemented")
+        updateState { it.copy(name = name) }
     }
 
     override fun onDescriptionChanged(description: String) {
-        TODO("Not yet implemented")
+        updateState { it.copy(description = description) }
     }
 
-    override fun onPriceChanged(description: String) {
-        TODO("Not yet implemented")
+    override fun onPriceChanged(price: String) {
+        updateState { it.copy(price = price ) }
     }
 }

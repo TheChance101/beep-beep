@@ -1,15 +1,20 @@
 package presentation.meal
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -71,8 +76,8 @@ class MealScreen :
             )
 
             BpPriceField(
-                text = "${state.price}",
-                onValueChange = listener::onDescriptionChanged,
+                text = state.price,
+                onValueChange = listener::onPriceChanged,
                 label = Resources.strings.price,
                 keyboardType = KeyboardType.Decimal,
                 currency = state.currency,
@@ -80,13 +85,12 @@ class MealScreen :
                 modifier = Modifier.fillMaxWidth(),
             )
 
-            //TODO: Fix to accept icon
-            BpTextField(
-                text = state.cuisines.toString(),
-                onValueChange = listener::onDescriptionChanged,
+            CuisineTextField(
+                text = state.cuisines.toCuisinesString(),
                 label = Resources.strings.cuisines,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().clickable { listener.onCuisineClick() },
             )
+
 
             BpButton(
                 onClick = listener::onClickAddMeal,
@@ -101,4 +105,48 @@ class MealScreen :
     }
 
 
+}
+
+
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+private fun CuisineTextField(
+    label: String,
+    text: String,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.Start
+    ) {
+
+        Text(
+            text = label,
+            modifier = Modifier.padding(bottom = Theme.dimens.space8),
+            style = Theme.typography.title,
+            color = Theme.colors.contentPrimary
+        )
+
+        Row(
+            modifier = Modifier
+                .border(
+                    width = 2.dp,
+                    color = Theme.colors.divider,
+                    shape = RoundedCornerShape(Theme.radius.medium)
+                )
+                .padding(horizontal = Theme.dimens.space16)
+                .fillMaxWidth()
+                .heightIn(min = 56.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = text,
+                maxLines = 1,
+                style = Theme.typography.body.copy(Theme.colors.contentPrimary)
+            )
+
+            Icon(painterResource(Resources.images.edit), contentDescription = null)
+        }
+    }
 }

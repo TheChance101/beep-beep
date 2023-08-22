@@ -7,7 +7,8 @@ data class PainterResources(
     val moonStars: String,
     val sort: String,
     val sun: String,
-    val galleryAdd: String
+    val galleryAdd: String,
+    val edit: String
 )
 
 val BpPainterLightResources = PainterResources(
@@ -17,7 +18,8 @@ val BpPainterLightResources = PainterResources(
     moonStars = "moon_stars.xml",
     sort = "sort.xml",
     sun = "sun.xml",
-    galleryAdd = "gallery_add.xml"
+    galleryAdd = "gallery_add.xml",
+    edit = "edit.xml"
 )
 
 val BpPainterDarkResources = PainterResources(
@@ -27,5 +29,6 @@ val BpPainterDarkResources = PainterResources(
     moonStars = "moon_stars.xml",
     sort = "sort.xml",
     sun = "sun.xml",
-    galleryAdd = "gallery_add.xml"
+    galleryAdd = "gallery_add.xml",
+    edit = "edit.xml"
 )
