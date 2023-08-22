@@ -17,7 +17,7 @@ class MealsScreenModel : BaseScreenModel<MealsScreenUIState,MealsScreenUIEffect>
         sendNewEffect(MealsScreenUIEffect.NavigateToMealDetails)
     }
 
-    override fun onClickCousinType(type: String) {
+    override fun onClickCousinType(type:  MealsScreenUIState.CousinUIState) {
         updateState { it.copy(selectedCousin = type) }
     }
 
