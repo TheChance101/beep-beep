@@ -7,5 +7,5 @@ data class Order(
     val meals: List<OrderMeal>,
     val totalPrice: Double,
     val createdAt: Long,
-    val orderStatus: Int
+    val orderState: Int
 )

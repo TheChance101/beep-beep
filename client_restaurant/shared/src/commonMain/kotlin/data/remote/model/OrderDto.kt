@@ -23,7 +23,7 @@ fun OrderDto.toEntity(): Order {
         meals = meals.toOrderMeaEntity(),
         totalPrice = totalPrice ?: 0.0,
         createdAt = createdAt ?: 0,
-        orderStatus = orderState ?: 0
+        orderState = orderState ?: 0
     )
 }
 

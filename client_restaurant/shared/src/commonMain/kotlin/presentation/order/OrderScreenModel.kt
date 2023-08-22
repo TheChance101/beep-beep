@@ -22,13 +22,13 @@ class OrderScreenModel :
         println("LLLLLLLLLLLLLLLL")
         getNewOrders()
         viewModelScope.launch {
-            println("LLLLLLLLLLLLLLLLLLLLLLLLLLLL ${getNewOrdersUseCase.getOrders("aaaaa")}")
+            println("LLLLLLLLLLLLLLLLLLLLLLLLLLLL ${getNewOrdersUseCase.getAllActiveOrders("aaaaa")}")
         }
     }
 
     private fun getNewOrders() {
         tryToExecute(
-            { getNewOrdersUseCase.getOrders("7c3d631e-6d49-48c9-9f91-9426ec559eb1").map { it.toOrderUiState() } },
+            { getNewOrdersUseCase.getAllActiveOrders("7c3d631e-6d49-48c9-9f91-9426ec559eb1").map { it.toOrderUiState() } },
             ::onGetNewOrdersSuccess,
             ::onGetNewOrdersError
         )
