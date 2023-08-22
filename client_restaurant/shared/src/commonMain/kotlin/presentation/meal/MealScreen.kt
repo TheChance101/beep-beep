@@ -160,7 +160,8 @@ class MealScreen :
         modifier: Modifier = Modifier,
     ) {
         LazyColumn(
-            modifier = modifier.fillMaxWidth().heightIn(max = 320.dp).padding(Theme.dimens.space16)
+            modifier = modifier.fillMaxWidth().heightIn(max = 320.dp)
+                .padding(top = Theme.dimens.space16).padding(horizontal = Theme.dimens.space16)
         ) {
 
             stickyHeader {
