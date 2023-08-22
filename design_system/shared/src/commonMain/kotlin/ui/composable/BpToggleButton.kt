@@ -37,7 +37,7 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun BpToggleButton(
     onToggle: () -> Unit,
-    modifier: Modifier= Modifier,
+    modifier: Modifier = Modifier,
     isDark: Boolean = isSystemInDarkTheme(),
 ) {
     val horizontalBias by animateFloatAsState(
@@ -47,21 +47,29 @@ fun BpToggleButton(
         },
         animationSpec = tween(500)
     )
-    val alignment = remember { derivedStateOf {
-        BiasAlignment(horizontalBias = horizontalBias, verticalBias = 0f)
-    } }
+    val alignment = remember {
+        derivedStateOf {
+            BiasAlignment(horizontalBias = horizontalBias, verticalBias = 0f)
+        }
+    }
     Box(
         modifier
-            .border(width = 1.dp, color = colors.contentBorder, shape = RoundedCornerShape(radius.small))
+            .border(
+                width = 1.dp,
+                color = colors.contentBorder,
+                shape = RoundedCornerShape(radius.small)
+            )
             .width(64.dp)
             .height(32.dp)
             .background(color = colors.background, shape = RoundedCornerShape(radius.small))
             .padding(2.dp)
             .clickable(
                 indication = null,
-                interactionSource = remember { MutableInteractionSource() })
-            { onToggle() }) {
+                interactionSource = remember { MutableInteractionSource() },
+                onClick = onToggle
+            )
 
+    ) {
         Card(
             modifier = Modifier
                 .width(28.dp)
@@ -70,7 +78,8 @@ fun BpToggleButton(
                 .align(alignment.value),
             shape = RoundedCornerShape(radius.small),
             colors = CardDefaults.cardColors(containerColor = colors.primary),
-            elevation = CardDefaults.elevatedCardElevation(0.dp),) {}
+            elevation = CardDefaults.elevatedCardElevation(0.dp),
+        ) {}
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,

@@ -1,7 +1,16 @@
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
-import com.beepbeep.designSystem.DesignApp
+import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.transitions.SlideTransition
+import presentation.login.LoginScreen
+import resources.BpRestaurantTheme
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun App() {
-    DesignApp()
+    BpRestaurantTheme {
+        Navigator(LoginScreen()) {
+            SlideTransition(it)
+        }
+    }
 }

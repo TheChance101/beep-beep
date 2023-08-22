@@ -7,6 +7,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.beepbeep.designSystem.ui.theme.Theme
 
 @Composable
 fun BpPager(
@@ -22,7 +23,7 @@ fun BpPager(
 
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ArrowIcon(
