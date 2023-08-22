@@ -13,7 +13,7 @@ import org.thechance.common.domain.getway.IRemoteGateway
 
 class FakeRemoteGateway : IRemoteGateway {
     override fun getUserData(): Admin =
-         AdminDto(fullName = "asia",).toEntity()
+        AdminDto(fullName = "asia").toEntity()
 
     override fun getUsers(): List<User> {
         return listOf(
@@ -175,6 +175,10 @@ class FakeRemoteGateway : IRemoteGateway {
                 trips = "9"
             ),
         ).toEntity()
+    }
+
+    override suspend fun findTaxiByUsername(username: String): List<Taxi> {
+        return getTaxis().filter { it.username.startsWith(username,true) }
     }
 
 }

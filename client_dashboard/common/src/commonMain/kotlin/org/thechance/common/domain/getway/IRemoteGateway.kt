@@ -6,7 +6,8 @@ import org.thechance.common.domain.entity.User
 
 
 interface IRemoteGateway {
-     fun getUserData(): Admin
-     fun getUsers():List<User>
-     suspend fun getTaxis():List<Taxi>
+    fun getUserData(): Admin
+    fun getUsers(): List<User>
+    suspend fun getTaxis(): List<Taxi>
+    suspend fun findTaxiByUsername(username: String): List<Taxi>
 }
