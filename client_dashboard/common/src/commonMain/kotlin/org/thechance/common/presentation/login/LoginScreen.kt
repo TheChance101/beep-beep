@@ -36,7 +36,7 @@ import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import org.thechance.common.presentation.composables.Logo
+import org.thechance.common.presentation.composables.BpLogo
 import org.thechance.common.presentation.main.MainContainer
 import org.thechance.common.presentation.uistate.LoginUiState
 
@@ -90,7 +90,7 @@ private fun LoginContent(
                     )
                     .clip(RoundedCornerShape(Theme.radius.large))
             )
-            Logo(
+            BpLogo(
                 expanded = true,
                 modifier = Modifier.align(Alignment.TopStart).padding(Theme.dimens.space32)
             )
