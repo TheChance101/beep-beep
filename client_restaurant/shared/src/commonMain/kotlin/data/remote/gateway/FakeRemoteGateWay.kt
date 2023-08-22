@@ -29,7 +29,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
                 ),
                 OrderMealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    mealImageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
                     quantity = 2,
                     mealName = "Breakfast burrito"
                 )
@@ -105,26 +105,26 @@ class FakeRemoteGateWay : IRemoteGateWay {
             meals = listOf(
                 OrderMealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
-                    quantity = 2,
+                    mealImageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
+                    quantity = 3,
                     mealName = "Light snack"
                 ),
                 OrderMealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
-                    quantity = 2,
+                    quantity = 1,
                     mealName = "Hors d'oeuvre platter"
                 ),
                 OrderMealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
-                    quantity = 2,
+                    mealImageUrl = "https://images.immediate.co.uk/production/volatile/sites/2/2017/09/OLI1017-Healthy_ChimmiChurriChicken_014545.jpg?quality=90&resize=700,466",
+                    quantity = 3,
                     mealName = "Appetizer sampler"
                 ),
                 OrderMealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
-                    quantity = 2,
+                    mealImageUrl = "https://ichef.bbci.co.uk/food/ic/food_16x9_832/recipes/sausage_and_lentil_stew_90967_16x9.jpg",
+                    quantity = 4,
                     mealName = "Pasta"
                 )
             ),
@@ -145,7 +145,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
                 ),
                 OrderMealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    mealImageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
                     quantity = 2,
                     mealName = "Main course dish"
                 )
@@ -183,14 +183,14 @@ class FakeRemoteGateWay : IRemoteGateWay {
             meals = listOf(
                 OrderMealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    mealImageUrl = "https://thecarefreekitchen.com/wp-content/uploads/2021/10/Buffalo-Chicken-Taquitos-1024x1024.jpg",
                     quantity = 2,
                     mealName = "Digestif cocktail"
                 ),
                 OrderMealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
-                    quantity = 2,
+                    mealImageUrl = "https://www.freshnlean.com/wp-content/uploads/2021/03/Meal-Plan-plate-protein.png",
+                    quantity = 1,
                     mealName = "Pasta"
                 )
             ),
@@ -221,7 +221,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             meals = listOf(
                 OrderMealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    mealImageUrl = "https://www.foodandwine.com/thmb/bRz199ONebY-5h5gcvpOcHRxAkA=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Web_4000-Trifecta-Chicken-Breast-Sweet-Potato-Mixed-Vegetable_04-72a24aaee5584c06a26451603daec5c9.jpg",
                     quantity = 2,
                     mealName = "Pasta"
                 ),
@@ -243,20 +243,20 @@ class FakeRemoteGateWay : IRemoteGateWay {
             meals = listOf(
                 OrderMealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
-                    quantity = 2,
+                    mealImageUrl = "https://cdn.apartmenttherapy.info/image/upload/v1558635037/k/archive/388e39a6ca67e257cb7bef6bde6a98aef1bcd434.jpg",
+                    quantity = 1,
                     mealName = "Supper club"
                 ),
                 OrderMealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    mealImageUrl = "https://images.immediate.co.uk/production/volatile/sites/30/2022/07/Fajita-style-pasta-f792c52.jpg?quality=90&resize=440,400",
                     quantity = 2,
                     mealName = "Pasta"
                 ),
                 OrderMealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
-                    quantity = 2,
+                    mealImageUrl = "https://www.thelazydish.com/wp-content/uploads/2022/05/cheap-easy-dinner-recipes-for-family-with-kids-from-the-lazy-dish.jpg",
+                    quantity = 3,
                     mealName = "Appetizer sampler"
                 )
             ),
@@ -271,7 +271,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             meals = listOf(
                 OrderMealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    mealImageUrl = "https://ichef.bbci.co.uk/food/ic/food_16x9_832/recipes/roast_chicken_for_one_41998_16x9.jpg",
                     quantity = 2,
                     mealName = "Pasta"
                 ),
@@ -299,7 +299,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
                 ),
                 OrderMealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    mealImageUrl = "https://ichef.bbci.co.uk/food/ic/food_16x9_832/recipes/roast_chicken_for_one_41998_16x9.jpg",
                     quantity = 2,
                     mealName = "Digestif cocktail"
                 )
@@ -321,7 +321,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
                 ),
                 OrderMealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
-                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    mealImageUrl = "https://www.deliciouslycleaneats.com.au/wp-content/uploads/2018/08/Meal-Plan-Spread1.jpg",
                     quantity = 2,
                     mealName = "Pasta"
                 )

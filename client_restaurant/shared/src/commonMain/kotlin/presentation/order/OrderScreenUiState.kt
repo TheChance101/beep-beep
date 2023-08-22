@@ -35,7 +35,7 @@ fun Order.toOrderUiState(): OrderUiState {
     return OrderUiState(
         orderMealUiStates = meals.map { it.toOrderMealUiState() },
         totalPrice = totalPrice,
-        orderState = orderState
+        orderState = orderState,
     )
 }
 

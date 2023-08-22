@@ -17,16 +17,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import com.seiko.imageloader.rememberAsyncImagePainter
 import presentation.order.OrderUiState
 import resources.Resources
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun OrderCard(
     orders: OrderUiState,
@@ -42,7 +39,7 @@ fun OrderCard(
     ) {
         orders.orderMealUiStates.forEach { order ->
             OrderItem(
-                painter = painterResource(Resources.images.test),
+                imageUrl = order.mealImageUrl,
                 mealName = order.mealName,
                 quantity = order.quantity
             )
@@ -74,7 +71,7 @@ fun OrderCard(
 
 @Composable
 private fun OrderItem(
-    painter: Painter,
+    imageUrl: String,
     mealName: String,
     quantity: Int,
     modifier: Modifier = Modifier,
@@ -86,10 +83,11 @@ private fun OrderItem(
         Image(
             modifier = Modifier.fillMaxHeight().width(80.dp)
                 .clip(RoundedCornerShape(Theme.radius.medium)),
-            painter = painter,
+            painter = rememberAsyncImagePainter(imageUrl),
             contentScale = ContentScale.Crop,
             contentDescription = Resources.strings.orderImageContentDescription
         )
+
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(
