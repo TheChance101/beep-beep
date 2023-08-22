@@ -1,6 +1,7 @@
 package org.thechance.common.presentation.base
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.core.model.ScreenModel
@@ -26,13 +27,20 @@ abstract class BaseScreen<SM, E, S, I>
         val navigator = LocalNavigator.currentOrThrow
 
         OnRender(state, screenModel)
-        effect?.let { onEffect(it, navigator) }
+        effect?.Listen { onEffect(it, navigator) }
     }
 
     abstract fun onEffect(effect: E, navigator: Navigator)
 
     @Composable
     abstract fun OnRender(state: S, listener: I)
+
+    @Composable
+    private fun E.Listen(function: (E) -> Unit) {
+        LaunchedEffect(this) {
+            function(this@Listen)
+        }
+    }
 
     @Composable
     protected inline fun <reified T : ScreenModel> getScreenModel(
