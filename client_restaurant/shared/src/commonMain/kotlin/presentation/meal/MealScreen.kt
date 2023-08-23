@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
@@ -40,9 +41,11 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
+import presentation.composables.BpAppBar
 import presentation.composables.CustomBottomSheet
 import presentation.composables.ModalBottomSheetState
 import presentation.composables.modifier.noRippleEffect
+import presentation.main.MainScreenUIEffect
 import resources.Resources
 
 class MealScreen :
@@ -56,33 +59,34 @@ class MealScreen :
     @Composable
     override fun onRender(state: MealUIState, listener: MealScreenInteractionListener) {
         val sheetState = remember { ModalBottomSheetState() }
-
-        CustomBottomSheet(
-            sheetContent = {
-                CuisineBottomSheetContent(
-                    cuisines = state.cuisines,
-                    onCancelClick = { sheetState.dismiss() },
-                    onSaveClick = {
-                        listener.onSaveCuisineClick()
-                        sheetState.dismiss()
-                    },
-                    onItemSelected = listener::onCuisineSelected
-                )
-            },
-            sheetBackgroundColor = Theme.colors.background,
-            sheetState = sheetState,
-        ) {
-            MealScreenContent(
-                state,
-                listener,
-                sheetState,
+        Column(modifier = Modifier.fillMaxSize()) {
+            BpAppBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Theme.colors.surface)
+                    .border(width = 1.dp, color = Theme.colors.divider, shape = RectangleShape),
+                onNavigateUp = { listener.onClickBack() },
+                title = Resources.strings.addNewMeal
             )
+
+            CustomBottomSheet(
+                sheetContent = {
+                    CuisineBottomSheetContent(
+                        cuisines = state.cuisines,
+                        onCancelClick = { sheetState.dismiss() },
+                        onSaveClick = {
+                            listener.onSaveCuisineClick()
+                            sheetState.dismiss()
+                        },
+                        onItemSelected = listener::onCuisineSelected
+                    )
+                },
+                sheetBackgroundColor = Theme.colors.background,
+                sheetState = sheetState,
+            ) { MealScreenContent(state, listener, sheetState) }
         }
     }
 
-    override fun onEffect(effect: MealScreenUIEffect, navigator: Navigator) {
-        TODO("Not yet implemented")
-    }
 
     @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
     @Composable
@@ -93,7 +97,8 @@ class MealScreen :
         modifier: Modifier = Modifier
     ) {
         Column(
-            modifier = modifier.fillMaxSize().background(Theme.colors.surface).padding(16.dp)
+            modifier = modifier.fillMaxSize().background(Theme.colors.background)
+                .padding(Theme.dimens.space16)
                 .widthIn(max = 300.dp),
             verticalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -127,7 +132,7 @@ class MealScreen :
                 label = Resources.strings.price,
                 keyboardType = KeyboardType.Decimal,
                 currency = state.currency,
-                flag = painterResource(Resources.images.sort),
+                flag = painterResource(Resources.images.flag),
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -139,7 +144,6 @@ class MealScreen :
                     sheetState.show()
                 },
             )
-
 
             BpButton(
                 onClick = listener::onAddMeal,
@@ -238,4 +242,9 @@ class MealScreen :
         }
     }
 
+    override fun onEffect(effect: MealScreenUIEffect, navigator: Navigator) {
+        when (effect) {
+            is MealScreenUIEffect.Back -> navigator.pop()
+        }
+    }
 }

@@ -12,5 +12,6 @@ interface MealScreenInteractionListener : BaseInteractionListener {
     fun onSaveCuisineClick()
     fun onCuisineSelected(id: String)
 
+    fun onClickBack()
 }
 

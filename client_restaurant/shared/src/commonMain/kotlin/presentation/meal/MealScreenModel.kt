@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineScope
 import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
+import presentation.main.MainScreenUIEffect
 
 class MealScreenModel : BaseScreenModel<MealUIState, MealScreenUIEffect>(MealUIState()),
     MealScreenInteractionListener {
@@ -88,6 +89,10 @@ class MealScreenModel : BaseScreenModel<MealUIState, MealScreenUIEffect>(MealUIS
             }
             state.copy(cuisines = updatedCuisines)
         }
+    }
+
+    override fun onClickBack() {
+        sendNewEffect(MealScreenUIEffect.Back)
     }
 
     override fun onImageClick() {
