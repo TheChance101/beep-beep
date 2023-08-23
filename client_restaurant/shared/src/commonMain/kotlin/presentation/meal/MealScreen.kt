@@ -45,6 +45,9 @@ import presentation.composables.BpAppBar
 import presentation.composables.CustomBottomSheet
 import presentation.composables.ModalBottomSheetState
 import presentation.composables.modifier.noRippleEffect
+import presentation.image.ImagePicker
+import presentation.image.ImagePickerFactory
+import presentation.image.rememberBitmapFromBytes
 import resources.Resources
 
 class MealScreen(private val mealId: String? = null) :
@@ -86,7 +89,9 @@ class MealScreen(private val mealId: String? = null) :
                 },
                 sheetBackgroundColor = Theme.colors.background,
                 sheetState = sheetState,
-            ) { MealScreenContent(state, listener, sheetState) }
+            ) {
+                MealScreenContent(state, listener, sheetState)
+            }
         }
     }
 
@@ -97,8 +102,11 @@ class MealScreen(private val mealId: String? = null) :
         state: MealUIState,
         listener: MealScreenInteractionListener,
         sheetState: ModalBottomSheetState,
-        modifier: Modifier = Modifier
+        imagePicker: ImagePicker = Picker.imagePicker,
+        modifier: Modifier = Modifier,
     ) {
+        imagePicker.registerPicker { listener.onImagePicked(it) }
+
         Column(
             modifier = modifier.fillMaxSize().background(Theme.colors.background)
                 .padding(Theme.dimens.space16)
@@ -109,8 +117,9 @@ class MealScreen(private val mealId: String? = null) :
 
             BpCircleImage(
                 modifier = Modifier.sizeIn(minHeight = 104.dp, minWidth = 104.dp),
-                painter = painterResource(Resources.images.galleryAdd),
-                onClick = listener::onImageClick
+                bitmap = rememberBitmapFromBytes(state.image),
+                placeholder = painterResource(Resources.images.galleryAdd),
+                onClick = { imagePicker.pickImage() }
             )
 
             BpTextField(
