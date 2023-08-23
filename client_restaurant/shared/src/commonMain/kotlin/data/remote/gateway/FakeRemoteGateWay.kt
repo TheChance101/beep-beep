@@ -270,6 +270,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
         RestaurantDto(
             id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
             ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            ownerUsername = "@Zeko",
             name = "Zeko Tlawoth",
             description = "It's a restaurant that is famous for preparing Arabian Foods",
             rate = 4.5,
@@ -281,6 +282,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
         RestaurantDto(
             id = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
             ownerId = "8a430be2-15b7-47f5-9e06-3f236f8c25ec",
+            ownerUsername = "@Uzumaki_Naruto",
             name = "Sushi Haven",
             description = "A trendy sushi restaurant offering a variety of fresh sushi rolls and sashimi.",
             rate = 3.5,
@@ -292,6 +294,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
         RestaurantDto(
             id = "91c2ae1f-8495-4c0c-bc47-7bf7ef77d907",
             ownerId = "f26dab15-7193-4e8d-bf6e-f4d2ae8799af",
+            ownerUsername = "@Victoria_Delacroix",
             name = "Café du Monde",
             description = "A historic café known for its beignets, coffee, and vibrant atmosphere.",
             rate = 2.5,
