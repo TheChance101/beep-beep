@@ -52,44 +52,44 @@ class TaxiScreenModel(
     }
 
     override fun onCancelCreateTaxiClicked() {
-        mutableState.update { it.copy(isAddNewTaxiDialogVisible = false) }
+        updateState {  it.copy(isAddNewTaxiDialogVisible = false) }
     }
 
     override fun onTaxiPlateNumberChange(number: String) {
-        mutableState.update {
+        updateState {
             it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(plateNumber = number))
         }
     }
 
     override fun onDriverUserNamChange(name: String) {
-        mutableState.update {
+        updateState {
             it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(driverUserName = name))
         }
     }
 
     override fun onCarModelChanged(model: String) {
-        mutableState.update { it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(carModel = model)) }
+        updateState {  it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(carModel = model)) }
     }
 
     override fun onCarColorSelected(color: CarColor) {
-        mutableState.update {
+        updateState {
             it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(selectedCarColor = color))
         }
     }
 
     override fun onSeatSelected(seats: Int) {
-        mutableState.update { it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(seats = seats)) }
+        updateState {  it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(seats = seats)) }
     }
 
     override fun onCreateTaxiClicked() {
         coroutineScope.launch(Dispatchers.IO) {
             createNewTaxi.createTaxi(mutableState.value.addNewTaxiDialogUiState.toEntity())
         }
-        mutableState.update { it.copy(isAddNewTaxiDialogVisible = false) }
+        updateState {  it.copy(isAddNewTaxiDialogVisible = false) }
     }
 
     override fun onAddNewTaxiClicked() {
-        mutableState.update { it.copy(isAddNewTaxiDialogVisible = true) }
+        updateState {  it.copy(isAddNewTaxiDialogVisible = true) }
     }
 
 }
