@@ -1,4 +1,4 @@
-package org.thechance.common.components
+package org.thechance.common.presentation.composables
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
