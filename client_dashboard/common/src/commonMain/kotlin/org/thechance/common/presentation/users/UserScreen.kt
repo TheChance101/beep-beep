@@ -405,14 +405,12 @@ object UserScreen : Screen, KoinComponent {
         user: UserScreenUiState.UserUiState,
         editUserMenu: UserScreenUiState.EditUserMenuUiState,
         onEditUserDismiss: () -> Unit,
-        modifier: Modifier = Modifier
     ) {
         BpDropdownMenu(
             expanded = user.username == editUserMenu.username,
             onDismissRequest = onEditUserDismiss,
             shape = RoundedCornerShape(Theme.radius.medium),
-            modifier = modifier,
-            offset = DpOffset.Zero.copy(x = (-100).dp)
+            offset = DpOffset.Zero.copy(x = -Theme.dimens.space100)
         ) {
             Column {
                 editUserMenu.items.forEach {

@@ -117,7 +117,17 @@ class UserScreenModel(
         }
     }
 
-    fun onEditUserClicked(userId: String) {}
+    fun onEditUserClicked(username: String) {
+        mutableState.update {
+            it.copy(editUserMenu = it.editUserMenu.copy(username = username))
+        }
+    }
+
+    fun onEditUserDismiss() {
+        mutableState.update {
+            it.copy(editUserMenu = it.editUserMenu.copy(username = ""))
+        }
+    }
 
     fun onItemPerPageChanged(itemPerPage: String) {
         if (itemPerPage.isNotEmpty() && itemPerPage.toInt() > 0) {
