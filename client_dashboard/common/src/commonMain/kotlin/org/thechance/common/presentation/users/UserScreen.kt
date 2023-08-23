@@ -75,6 +75,15 @@ object UserScreen : Screen, KoinComponent {
         onUserPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
         onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
     ) {
+        PermissionsDialog(
+            visible = state.permissionsDialog.show,
+            allPermissions = state.allPermissions,
+            selectedPermissions = state.permissionsDialog.permissions,
+            onUserPermissionClicked = onUserPermissionClicked,
+            onSaveUserPermissions = onSaveUserPermissions,
+            onCancelUserPermissionsDialog = onCancelUserPermissionsDialog,
+        )
+
         Column(
             modifier = Modifier
                 .background(Theme.colors.surface)
@@ -106,15 +115,6 @@ object UserScreen : Screen, KoinComponent {
                 onEditUserDismiss = hideUserMenu,
                 onEditUserMenuItemClicked = onEditUserMenuItemClicked,
                 onDeleteUserMenuItemClicked = onDeleteUserMenuItemClicked,
-            )
-
-            PermissionsDialog(
-                visible = state.permissionsDialog.show,
-                allPermissions = state.allPermissions,
-                selectedPermissions = state.permissionsDialog.permissions,
-                onUserPermissionClicked = onUserPermissionClicked,
-                onSaveUserPermissions = onSaveUserPermissions,
-                onCancelUserPermissionsDialog = onCancelUserPermissionsDialog,
             )
         }
     }

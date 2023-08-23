@@ -6,12 +6,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.uistate.UserScreenUiState
+import java.awt.Dimension
 
 @Composable
 fun PermissionsDialog(
@@ -29,6 +29,7 @@ fun PermissionsDialog(
         visible = visible,
         onCloseRequest = onCancelUserPermissionsDialog,
     ) {
+        this.window.minimumSize = Dimension(400, 340)
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -56,12 +57,12 @@ fun PermissionsDialog(
                 BpTransparentButton(
                     title = "Cancel",
                     onClick = onCancelUserPermissionsDialog,
-                    modifier = Modifier.weight(1f).height(36.dp)
+                    modifier = Modifier.weight(1f)
                 )
                 BpOutlinedButton(
                     title = "Save",
                     onClick = onSaveUserPermissions,
-                    modifier = Modifier.weight(3f).height(36.dp),
+                    modifier = Modifier.weight(3f),
                 )
             }
         }
