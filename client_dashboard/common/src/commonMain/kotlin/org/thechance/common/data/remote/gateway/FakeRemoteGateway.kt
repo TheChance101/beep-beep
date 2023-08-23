@@ -11,7 +11,6 @@ import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.getway.IRemoteGateway
 
-
 class FakeRemoteGateway : IRemoteGateway {
     override fun getUserData(): Admin =
          AdminDto(fullName = "asia",).toEntity()

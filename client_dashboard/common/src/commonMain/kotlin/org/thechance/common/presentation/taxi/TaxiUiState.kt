@@ -71,13 +71,12 @@ fun Taxi.toUiState(): TaxiDetailsUiState = TaxiDetailsUiState(
 fun List<Taxi>.toUiState() = map { it.toUiState() }
 
 data class AddTaxiDialogUiState(
-    val taxiPlateNumber: String = "",
+    val plateNumber: String = "",
     val driverUserName: String = "",
     val carModel: String = "",
     val selectedCarColor: CarColor = CarColor.WHITE,
     val seats: Int = 0
 )
 
-fun AddTaxiDialogUiState.toEntity(): AddTaxi {
-    return AddTaxi(taxiPlateNumber, driverUserName, carModel, selectedCarColor, seats)
-}
+fun AddTaxiDialogUiState.toEntity() = AddTaxi(plateNumber, driverUserName, carModel, selectedCarColor, seats)
+

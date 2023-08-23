@@ -169,7 +169,7 @@ class TaxiScreen : Screen {
         SquareColorField(modifier = Modifier.weight(otherColumnsWeight), color = Color(taxi.color.hexadecimal))
         FlowRow(
             modifier = Modifier.weight(otherColumnsWeight),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8),
             maxItemsInEachRow = 3,
         ) {
             repeat(taxi.seats) {
@@ -211,7 +211,7 @@ class TaxiScreen : Screen {
     private fun SquareColorField(modifier: Modifier = Modifier, color: Color) {
         Box(modifier = modifier) {
             Spacer(
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(Theme.dimens.space24)
                     .background(
                         color = color,
                         shape = RoundedCornerShape(Theme.radius.small),

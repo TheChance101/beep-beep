@@ -36,7 +36,7 @@ class TaxiScreenModel(
 
     override fun onTaxiPlateNumberChange(number: String) {
         mutableState.update {
-            it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(taxiPlateNumber = number))
+            it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(plateNumber = number))
         }
     }
 

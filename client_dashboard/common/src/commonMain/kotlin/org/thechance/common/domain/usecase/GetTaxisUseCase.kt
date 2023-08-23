@@ -3,7 +3,6 @@ package org.thechance.common.domain.usecase
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.getway.IRemoteGateway
 
-
 interface IGetTaxisUseCase {
     fun getTaxis(): List<Taxi>
 }

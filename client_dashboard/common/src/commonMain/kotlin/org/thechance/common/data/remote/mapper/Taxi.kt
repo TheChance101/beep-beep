@@ -32,6 +32,7 @@ fun getTaxiStatus(status: Int) =
         1 -> TaxiStatus.ONLINE
         else -> TaxiStatus.ON_RIDE
     }
-fun List<TaxiDto>.toEntity() = map { it.toEntity() }
+
+fun List<TaxiDto>.toEntity() = map(TaxiDto::toEntity)
 
 

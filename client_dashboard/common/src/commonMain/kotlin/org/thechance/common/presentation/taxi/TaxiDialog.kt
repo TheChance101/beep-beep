@@ -1,17 +1,14 @@
 package org.thechance.common.presentation.taxi
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -68,7 +65,7 @@ fun AddTaxiDialog(
                 modifier = Modifier.padding(top = Theme.dimens.space40),
                 label = "Taxi Plate Number",
                 onValueChange = onTaxiPlateNumberChange,
-                text = state.taxiPlateNumber
+                text = state.plateNumber
             )
 
             BpTextField(
@@ -92,7 +89,7 @@ fun AddTaxiDialog(
                 modifier = Modifier.padding(top = Theme.dimens.space24),
             )
 
-            Colors(
+            CarColors(
                 modifier = Modifier.padding(top = Theme.dimens.space16),
                 colors = CarColor.values().toList(),
                 onSelectColor = { onCarColorSelected(it) },
@@ -140,51 +137,3 @@ fun AddTaxiDialog(
         }
     }
 }
-
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-private fun Colors(
-    modifier: Modifier = Modifier,
-    colors: List<CarColor>,
-    onSelectColor: (CarColor) -> Unit,
-    selectedCarColor: CarColor
-) {
-    LazyRow(
-        modifier = modifier,
-        verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        items(colors) { carColor ->
-            val color = Color(carColor.hexadecimal)
-
-            val selectedModifier = if (selectedCarColor == carColor) {
-                Modifier.size(32.dp)
-                    .border(
-                        width = 2.dp,
-                        color = Theme.colors.contentSecondary,
-                        shape = RoundedCornerShape(4.dp)
-                    ).padding(4.dp)
-
-            } else {
-                Modifier.size(32.dp).padding(4.dp)
-            }
-            Box(
-                modifier = selectedModifier,
-                contentAlignment = Alignment.Center
-            ) {
-                Box(
-                    modifier = Modifier.size(20.dp)
-                        .background(color, shape = RoundedCornerShape(4.dp))
-                        .border(
-                            width = 2.dp,
-                            color = Color.Gray.copy(alpha = 0.5f),
-                            shape = RoundedCornerShape(4.dp)
-                        )
-                        .onClick { onSelectColor(carColor) }
-                )
-            }
-        }
-    }
-}
-

@@ -1,8 +1,6 @@
 package org.thechance.common.domain.entity
 
-
 import org.thechance.common.domain.util.TaxiStatus
-
 
 data class Taxi(
     val id: String,
