@@ -1,10 +1,14 @@
 package presentation.login
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -12,15 +16,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpButton
+import com.beepbeep.designSystem.ui.composable.BpExpandableTextField
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.base.BaseScreen
 import presentation.composables.CustomBottomSheet
 import presentation.composables.ModalBottomSheetState
 import presentation.main.MainScreen
+import resources.Resources
 
 class LoginScreen :
     BaseScreen<LoginScreenModel, LoginScreenUIState, LoginScreenUIEffect, LoginScreenInteractionListener>() {
@@ -30,13 +36,16 @@ class LoginScreen :
         initScreen(getScreenModel())
     }
 
-    override fun onEffect(effect: LoginScreenUIEffect, navigator: Navigator) {
+    override fun onEffect(
+        effect: LoginScreenUIEffect,
+        navigator: Navigator,
+    ) {
         when (effect) {
             is LoginScreenUIEffect.Login -> navigator.push(MainScreen())
+            is LoginScreenUIEffect.Permission -> navigator.push(MainScreen())
         }
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun onRender(state: LoginScreenUIState, listener: LoginScreenInteractionListener) {
         val sheetState = remember { ModalBottomSheetState() }
@@ -45,28 +54,27 @@ class LoginScreen :
             CustomBottomSheet(
                 sheetContent = {
                     PermissionBottomSheetContent(
-                        state = state.,
+                        state = state,
                         onCancelClick = { sheetState.dismiss() },
-                        onSaveClick = {
-                            listener.onSaveCuisineClick()
+                        onSubmit = {
+                            listener.onClickSubmit()
                             sheetState.dismiss()
                         },
-                        onItemSelected = listener::onCuisineSelected
+                        listener = listener,
                     )
                 },
                 sheetBackgroundColor = Theme.colors.background,
                 sheetState = sheetState,
-            ) { MealScreenContent(state, listener, sheetState) }
+            ) { LoginScreenContent(state, listener, sheetState) }
         }
     }
 
-    @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    private fun LoginScreenComponent(
+    private fun LoginScreenContent(
         state: LoginScreenUIState,
         listener: LoginScreenInteractionListener,
         sheetState: ModalBottomSheetState,
-        modifier: Modifier = Modifier
     ) {
         Column(
             Modifier.fillMaxSize().background(Theme.colors.secondary),
@@ -74,8 +82,10 @@ class LoginScreen :
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                "Login",
-                style = Theme.typography.headlineLarge,
+                text = "Ask for Permission",
+                modifier = Modifier.padding(bottom = Theme.dimens.space8),
+                style = Theme.typography.title,
+                color = Theme.colors.contentPrimary
             )
             BpTextField(
                 text = state.email,
@@ -94,52 +104,62 @@ class LoginScreen :
                 errorMessage = state.error,
             )
             BpButton(
-                onClick = listener::onClickLogin,
+                onClick = { sheetState.show() },
                 title = "Login",
                 modifier = Modifier.fillMaxWidth(),
             )
         }
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun PermissionBottomSheetContent(
-
+        state: LoginScreenUIState,
+        listener: LoginScreenInteractionListener,
+        onSubmit: () -> Unit,
+        onCancelClick: () -> Unit,
+        modifier: Modifier = Modifier,
     ) {
         Column(
-            Modifier.fillMaxSize().background(Theme.colors.secondary),
-            verticalArrangement = Arrangement.SpaceEvenly,
-            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier.wrapContentHeight()
+                .padding(top = Theme.dimens.space16).padding(horizontal = Theme.dimens.space16)
         ) {
             Text(
-                "Login",
+                "Ask for permission",
                 style = Theme.typography.headlineLarge,
             )
             BpTextField(
-                text = state.email,
-                onValueChange = listener::onEmailChanged,
-                label = "Username",
+                text = state.restaurantName,
+                onValueChange = listener::onNameChanged,
+                label = Resources.strings.name,
                 keyboardType = KeyboardType.Text,
                 modifier = Modifier.fillMaxWidth(),
-                errorMessage = state.error,
             )
             BpTextField(
-                text = state.password,
-                onValueChange = listener::onPasswordChanged,
-                label = "Password",
-                keyboardType = KeyboardType.Password,
-                modifier = Modifier.fillMaxWidth(),
-                errorMessage = state.error,
-            )
-            BpButton(
-                onClick = listener::onClickLogin,
-                title = "Login",
+                text = state.ownerEmail,
+                onValueChange = listener::onNameChanged,
+                label = Resources.strings.name,
+                keyboardType = KeyboardType.Text,
                 modifier = Modifier.fillMaxWidth(),
             )
+            BpExpandableTextField(
+                text = state.description,
+                onValueChange = listener::onDescriptionChanged,
+                label = Resources.strings.description,
+                keyboardType = KeyboardType.Text,
+                modifier = Modifier.fillMaxWidth(),
+            )
             BpButton(
-                onClick = listener::onClickCancel,
-                title = "Login",
+                onClick = onSubmit,
+                title = "Submit",
+                modifier = Modifier.fillMaxWidth(),
+            )
+            BpButton(
+                onClick = onCancelClick,
+                title = "Cancel",
                 modifier = Modifier.fillMaxWidth(),
             )
         }
     }
+
 }
