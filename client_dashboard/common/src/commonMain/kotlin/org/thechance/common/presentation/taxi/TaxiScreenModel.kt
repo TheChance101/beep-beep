@@ -8,14 +8,13 @@ import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.usecase.ICreateNewTaxiUseCase
 import org.thechance.common.domain.usecase.IFindTaxiByUsernameUseCase
-import org.thechance.common.domain.usecase.IFindTaxiByUsernameUseCase
 import org.thechance.common.domain.usecase.IGetTaxisUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
 class TaxiScreenModel(
     private val getTaxis: IGetTaxisUseCase,
-    private val createNewTaxi: ICreateNewTaxiUseCase
+    private val createNewTaxi: ICreateNewTaxiUseCase,
     private val findTaxiByUsername: IFindTaxiByUsernameUseCase
 ) : BaseScreenModel<TaxiUiState, TaxiUiEffect>(TaxiUiState()), TaxiScreenInteractionListener {
 

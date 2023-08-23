@@ -1,5 +1,6 @@
 package org.thechance.common.data.remote.gateway
 
+
 import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.AdminDto
 import org.thechance.common.data.remote.model.TaxiDto
@@ -173,7 +174,7 @@ class FakeRemoteGateway : IRemoteGateway {
                 username = "susan_anderson",
                 status = 2,
                 trips = "9"
-            ),
+            )
         ).toEntity()
     }
 
