@@ -2,5 +2,15 @@ package resources
 
 
 data class StringResources(
-    val beepBeep : String = "Beep Beep"
+    val beepBeep : String = "Beep Beep",
+    val ownerUsername: String = "Owner username",
+    val address: String = "Address",
+    val rating: String = "Rating",
+    val priceLevel: String = "Price level",
+    val restaurantName: String = "Restaurant name",
+    val phoneNumber: String = "Phone number",
+    val workingHours: String = "Working hours",
+    val description: String = "Description",
+    val save: String = "Save",
+    val logout: String = "Logout"
 )
