@@ -32,10 +32,9 @@ fun OrderCard(
 ) {
     Column(
         modifier = modifier
-            .padding(vertical = Theme.dimens.space4)
             .clip(RoundedCornerShape(Theme.radius.medium))
             .background(Theme.colors.surface)
-            .padding(Theme.dimens.space24),
+            .padding(Theme.dimens.space16),
         verticalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
     ) {
         order.orderMealUiStates.forEach { order ->

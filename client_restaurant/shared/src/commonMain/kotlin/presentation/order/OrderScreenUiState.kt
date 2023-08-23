@@ -5,7 +5,6 @@ import domain.entity.OrderMeal
 import util.OrderState
 
 data class OrderScreenUiState(
-    val activeOrders: List<OrderUiState> = emptyList(),
     val inCookingOrders: List<OrderUiState> = emptyList(),
     val pendingOrders: List<OrderUiState> = emptyList(),
     val totalOrders: Int = 0,
