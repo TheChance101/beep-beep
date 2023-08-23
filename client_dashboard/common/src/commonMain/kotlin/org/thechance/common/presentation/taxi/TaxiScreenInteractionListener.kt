@@ -1,8 +1,9 @@
 package org.thechance.common.presentation.taxi
 
 import org.thechance.common.domain.entity.CarColor
+import org.thechance.common.presentation.base.BaseInteractionListener
 
-interface TaxiScreenInteractionListener {
+interface TaxiScreenInteractionListener : BaseInteractionListener {
 
     fun onCancelCreateTaxiClicked()
 
@@ -10,14 +11,18 @@ interface TaxiScreenInteractionListener {
 
     fun onDriverUserNamChange(name: String)
 
-    fun onCarModelChange(model: String)
+    fun onCarModelChanged(model: String)
 
     fun onCarColorSelected(color: CarColor)
 
-    fun onSeatsSelected(seats: Int)
+    fun onSeatSelected(seats: Int)
 
     fun onCreateTaxiClicked()
 
     fun onAddNewTaxiClicked()
+
+    fun onTaxiNumberChange(number: String)
+
+    fun onSearchInputChange(searchQuery: String)
 
 }

@@ -8,12 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,10 +28,8 @@ import org.thechance.common.presentation.composables.modifier.noRipple
 import org.thechance.common.presentation.composables.table.BpPager
 import org.thechance.common.presentation.composables.table.BpTable
 import org.thechance.common.presentation.composables.table.TotalItemsIndicator
-import org.thechance.common.presentation.login.LoginScreen
-import org.thechance.common.presentation.taxi.TaxiUiEffect.*
 
-class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiInteractionListener>() {
+class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiScreenInteractionListener>() {
 
     @Composable
     override fun Content() {
@@ -54,7 +47,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiIn
     @Composable
     override fun OnRender(
         state: TaxiUiState,
-        listener: TaxiInteractionListener
+        interactionListener: TaxiScreenInteractionListener
     ) {
         var selectedTaxi by remember { mutableStateOf<String?>(null) }
         var selectedPage by remember { mutableStateOf(1) }
@@ -66,9 +59,9 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiIn
             onCancelCreateTaxiClicked = interactionListener::onCancelCreateTaxiClicked,
             isVisible = state.isAddNewTaxiDialogVisible,
             onDriverUserNamChange = interactionListener::onDriverUserNamChange,
-            onCarModelChange = interactionListener::onCarModelChange,
+            onCarModelChange = interactionListener::onCarModelChanged,
             onCarColorSelected = interactionListener::onCarColorSelected,
-            onSeatsSelected = interactionListener::onSeatsSelected,
+            onSeatsSelected = interactionListener::onSeatSelected,
             state = state.addNewTaxiDialogUiState,
             onCreateTaxiClicked = interactionListener::onCreateTaxiClicked
         )
@@ -86,7 +79,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiIn
                 BpSimpleTextField(
                     modifier = Modifier.widthIn(max = 440.dp),
                     hint = "Search for Taxis",
-                    onValueChange = listener::onSearchInputChange,
+                    onValueChange = interactionListener::onSearchInputChange,
                     text = state.searchQuery,
                     keyboardType = KeyboardType.Text,
                     trailingPainter = painterResource("ic_search.svg")
@@ -138,7 +131,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiIn
                     totalItems = state.taxis.size,
                     itemType = "taxi",
                     numberItemInPage = state.taxiNumberInPage,
-                    onItemPerPageChange = listener::onTaxiNumberChange
+                    onItemPerPageChange = interactionListener::onTaxiNumberChange
                 )
                 BpPager(
                     maxPages = pageCount,

@@ -14,7 +14,7 @@ import org.thechance.common.presentation.util.ErrorState
 class TaxiScreenModel(
     private val getTaxis: IGetTaxisUseCase,
     private val createNewTaxi: ICreateNewTaxiUseCase
-) : BaseScreenModel<TaxiUiState, TaxiUiEffect>(TaxiUiState()), TaxiInteractionListener {
+) : BaseScreenModel<TaxiUiState, TaxiUiEffect>(TaxiUiState()), TaxiScreenInteractionListener {
 
     init {
         getDummyTaxiData()
@@ -26,7 +26,6 @@ class TaxiScreenModel(
 
     override fun onSearchInputChange(searchQuery: String) {
         updateState { it.copy(searchQuery = searchQuery) }
-
     }
 
     private fun getDummyTaxiData() {
@@ -41,17 +40,6 @@ class TaxiScreenModel(
         updateState { it.copy(error = error, isLoading = false) }
     }
 
-    fun onTaxiNumberChange(number: String) {
-        mutableState.update { it.copy(taxiNumberInPage = number) }
-    }
-
-    fun onSearchInputChange(searchQuery: String) {
-        mutableState.update { it.copy(searchQuery = searchQuery) }
-    }
-
-    private fun getDummyTaxiData() {
-        mutableState.update { it.copy(taxis = getTaxis.getTaxis().toUiState()) }
-    }
     override fun onCancelCreateTaxiClicked() {
         mutableState.update { it.copy(isAddNewTaxiDialogVisible = false) }
     }
@@ -63,13 +51,13 @@ class TaxiScreenModel(
     }
 
     override fun onDriverUserNamChange(name: String) {
-        mutableState.update { it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(driverUserName = name)) }
-
+        mutableState.update {
+            it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(driverUserName = name))
+        }
     }
 
-    override fun onCarModelChange(model: String) {
+    override fun onCarModelChanged(model: String) {
         mutableState.update { it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(carModel = model)) }
-
     }
 
     override fun onCarColorSelected(color: CarColor) {
@@ -78,7 +66,7 @@ class TaxiScreenModel(
         }
     }
 
-    override fun onSeatsSelected(seats: Int) {
+    override fun onSeatSelected(seats: Int) {
         mutableState.update { it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(seats = seats)) }
     }
 
@@ -92,6 +80,5 @@ class TaxiScreenModel(
     override fun onAddNewTaxiClicked() {
         mutableState.update { it.copy(isAddNewTaxiDialogVisible = true) }
     }
-
 
 }
