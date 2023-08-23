@@ -3,28 +3,12 @@ package org.thechance.common.presentation.taxi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,10 +28,8 @@ import org.thechance.common.presentation.composables.modifier.noRipple
 import org.thechance.common.presentation.composables.table.BpPager
 import org.thechance.common.presentation.composables.table.BpTable
 import org.thechance.common.presentation.composables.table.TotalItemsIndicator
-import org.thechance.common.presentation.login.LoginScreen
-import org.thechance.common.presentation.taxi.TaxiUiEffect.*
 
-class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiInteractionListener>() {
+class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiScreenInteractionListener>() {
 
     @Composable
     override fun Content() {
@@ -65,11 +47,24 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiIn
     @Composable
     override fun OnRender(
         state: TaxiUiState,
-        listener: TaxiInteractionListener
+        interactionListener: TaxiScreenInteractionListener
     ) {
         var selectedTaxi by remember { mutableStateOf<String?>(null) }
         var selectedPage by remember { mutableStateOf(1) }
         val pageCount = 2
+
+        AddTaxiDialog(
+            modifier = Modifier,
+            onTaxiPlateNumberChange = interactionListener::onTaxiPlateNumberChange,
+            onCancelCreateTaxiClicked = interactionListener::onCancelCreateTaxiClicked,
+            isVisible = state.isAddNewTaxiDialogVisible,
+            onDriverUserNamChange = interactionListener::onDriverUserNamChange,
+            onCarModelChange = interactionListener::onCarModelChanged,
+            onCarColorSelected = interactionListener::onCarColorSelected,
+            onSeatsSelected = interactionListener::onSeatSelected,
+            state = state.addNewTaxiDialogUiState,
+            onCreateTaxiClicked = interactionListener::onCreateTaxiClicked
+        )
 
         Column(
             Modifier.background(Theme.colors.surface).fillMaxSize(),
@@ -84,7 +79,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiIn
                 BpSimpleTextField(
                     modifier = Modifier.widthIn(max = 440.dp),
                     hint = "Search for Taxis",
-                    onValueChange = listener::onSearchInputChange,
+                    onValueChange = interactionListener::onSearchInputChange,
                     text = state.searchQuery,
                     keyboardType = KeyboardType.Text,
                     trailingPainter = painterResource("ic_search.svg")
@@ -106,7 +101,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiIn
                 )
                 BpButton(
                     title = "New Taxi",
-                    onClick = { /*TODO:  Show New Taxi Dialog */ },
+                    onClick = interactionListener::onAddNewTaxiClicked,
                     textPadding = PaddingValues(horizontal = Theme.dimens.space24),
                 )
             }
@@ -136,7 +131,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiIn
                     totalItems = state.taxis.size,
                     itemType = "taxi",
                     numberItemInPage = state.taxiNumberInPage,
-                    onItemPerPageChange = listener::onTaxiNumberChange
+                    onItemPerPageChange = interactionListener::onTaxiNumberChange
                 )
                 BpPager(
                     maxPages = pageCount,
@@ -170,10 +165,10 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiIn
             color = taxi.statusColor
         )
         TitleField(text = taxi.type, modifier = Modifier.weight(otherColumnsWeight))
-        SquareColorField(modifier = Modifier.weight(otherColumnsWeight), color = taxi.color)
+        SquareColorField(modifier = Modifier.weight(otherColumnsWeight), color = Color(taxi.color.hexadecimal))
         FlowRow(
             modifier = Modifier.weight(otherColumnsWeight),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8),
             maxItemsInEachRow = 3,
         ) {
             repeat(taxi.seats) {
@@ -196,7 +191,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiIn
     }
 
     @Composable
-    private fun TitleField(
+   private fun TitleField(
         text: String,
         modifier: Modifier = Modifier,
         color: Color = Theme.colors.contentPrimary,
@@ -215,7 +210,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiIn
     private fun SquareColorField(modifier: Modifier = Modifier, color: Color) {
         Box(modifier = modifier) {
             Spacer(
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(Theme.dimens.space24)
                     .background(
                         color = color,
                         shape = RoundedCornerShape(Theme.radius.small),
