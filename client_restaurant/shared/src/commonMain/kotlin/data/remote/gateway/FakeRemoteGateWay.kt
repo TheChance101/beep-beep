@@ -328,7 +328,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             ),
             totalPrice = 23.99,
             createdAt = "2022-05-16T08:23",
-            orderState = 3
+            orderState = 4
         ),
     )
 

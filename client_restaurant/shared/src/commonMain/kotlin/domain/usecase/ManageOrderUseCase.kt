@@ -45,7 +45,7 @@ class ManageOrderUseCase(private val remoteGateWay: IRemoteGateWay) : IManageOrd
 
     override suspend fun getCanceledOrdersHistory(restaurantId: String): List<Order> {
         return remoteGateWay.getOrdersHistory(restaurantId)
-            .filter { it.orderState == OrderState.FINISHED.statusCode }
+            .filter { it.orderState == OrderState.CANCELED.statusCode }
     }
 
 }
