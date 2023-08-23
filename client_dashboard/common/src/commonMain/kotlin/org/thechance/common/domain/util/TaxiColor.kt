@@ -2,7 +2,6 @@ package org.thechance.common.domain.util
 
 import androidx.compose.ui.graphics.Color
 
-
 enum class TaxiColor(val color:Color) {
     RED(Color(0xFFF47373)),
     YELLOW(Color(0xFFF8EC7E)),

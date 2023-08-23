@@ -1,9 +1,10 @@
 package org.thechance.api_gateway.data.localized_messages
 
-import org.thechance.api_gateway.data.localized_messages.error_codes.*
+import org.koin.core.annotation.Single
 import java.util.*
 
-object LocalizedMessagesFactory {
+@Single
+class LocalizedMessagesFactory {
     fun createLocalizedMessages(locale: Locale): LocalizedMessages {
         return when (locale.language) {
             Language.ENGLISH.code -> EnglishLocalizedMessages()

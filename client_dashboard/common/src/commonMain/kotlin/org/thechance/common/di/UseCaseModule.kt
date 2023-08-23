@@ -12,10 +12,12 @@ import org.thechance.common.domain.usecase.IGetRestaurantsUseCase
 import org.thechance.common.domain.usecase.IGetUserInfoUseCase
 import org.thechance.common.domain.usecase.IGetUsersUseCase
 
+import org.thechance.common.domain.usecase.*
 
 val UseCaseModule = module {
     singleOf(::GetUserInfoUseCase) { bind<IGetUserInfoUseCase>() }
     singleOf(::GetUsersUseCase) { bind<IGetUsersUseCase>() }
     singleOf(::GetTaxisUseCase) { bind<IGetTaxisUseCase>() }
+    singleOf(::CreateNewTaxiUseCase) { bind<ICreateNewTaxiUseCase>() }
     singleOf(::GetRestaurantsUseCase) { bind<IGetRestaurantsUseCase>() }
 }

@@ -50,6 +50,7 @@ object LoginScreen : Screen, KoinComponent {
         val navigate = LocalNavigator.currentOrThrow
         val state by screenModel.state.collectAsState()
 
+
         LoginContent(
             state = state,
             onClickLogin = { navigate.push(MainContainer) },
@@ -58,6 +59,7 @@ object LoginScreen : Screen, KoinComponent {
         )
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LoginContent(

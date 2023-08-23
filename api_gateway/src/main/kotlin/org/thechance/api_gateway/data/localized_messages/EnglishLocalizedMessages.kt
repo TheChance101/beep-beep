@@ -1,4 +1,4 @@
-package org.thechance.api_gateway.data.localized_messages.error_codes
+package org.thechance.api_gateway.data.localized_messages
 
 import org.koin.core.annotation.Single
 
@@ -17,5 +17,5 @@ class EnglishLocalizedMessages : LocalizedMessages {
     override val notFound: String = "Not found"
     override val invalidCredentials: String = "Invalid credentials"
     override val userCreatedSuccessfully: String = "User created successfully 🎉"
-
+    override val unknownError: String = "Unknown error `¯\\_(ツ)_/¯`"
 }

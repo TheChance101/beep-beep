@@ -6,12 +6,12 @@ import org.thechance.common.data.remote.model.RestaurantDto
 import org.thechance.common.data.remote.model.TaxiDto
 import org.thechance.common.data.remote.model.UserDto
 import org.thechance.common.data.remote.model.toEntity
+import org.thechance.common.domain.entity.AddTaxi
 import org.thechance.common.domain.entity.Admin
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.getway.IRemoteGateway
-
 
 class FakeRemoteGateway : IRemoteGateway {
     override fun getUserData(): Admin =
@@ -177,6 +177,11 @@ class FakeRemoteGateway : IRemoteGateway {
                 trips = "9"
             ),
         ).toEntity()
+    }
+
+
+    override suspend fun createTaxi(taxi: AddTaxi) {
+
     }
 
 
