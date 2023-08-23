@@ -2,6 +2,7 @@ package presentation.order
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
@@ -53,7 +55,10 @@ class OrderScreen :
         Column(modifier = Modifier.fillMaxSize().background(Theme.colors.background)) {
 
             BpAppBar(
-                modifier = Modifier.fillMaxWidth().background(Theme.colors.surface),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Theme.colors.surface)
+                    .border(width = 1.dp, color = Theme.colors.divider, shape = RectangleShape),
                 onNavigateUp = {},
                 title = Resources.strings.orders
             ) {
