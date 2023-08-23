@@ -2,18 +2,20 @@ package org.thechance.common.data.remote.gateway
 
 import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.AdminDto
+import org.thechance.common.data.remote.model.RestaurantDto
 import org.thechance.common.data.remote.model.TaxiDto
 import org.thechance.common.data.remote.model.UserDto
 import org.thechance.common.data.remote.model.toEntity
 import org.thechance.common.domain.entity.AddTaxi
 import org.thechance.common.domain.entity.Admin
+import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.getway.IRemoteGateway
 
 class FakeRemoteGateway : IRemoteGateway {
     override fun getUserData(): Admin =
-         AdminDto(fullName = "asia",).toEntity()
+        AdminDto(fullName = "asia").toEntity()
 
     override fun getUsers(): List<User> {
         return listOf(
@@ -173,7 +175,7 @@ class FakeRemoteGateway : IRemoteGateway {
                 username = "susan_anderson",
                 status = 2,
                 trips = "9"
-            ),
+            )
         ).toEntity()
     }
 
@@ -182,4 +184,67 @@ class FakeRemoteGateway : IRemoteGateway {
 
     }
 
+    override suspend fun findTaxiByUsername(username: String): List<Taxi> {
+        return getTaxis().filter { it.username.startsWith(username,true) }
+    }
+
+
+    override suspend fun getRestaurants(): List<Restaurant> {
+        return listOf(
+            RestaurantDto(
+                id = "8c90c4c6-1e69-47f3-aa59-2edcd6f0057b",
+                name = "Mujtaba Restaurant",
+                ownerUsername = "mujtaba",
+                phoneNumber = "0532465722",
+                rating = 0.4,
+                priceLevel = 1,
+                workingHours = "06:30 - 22:30"
+            ),
+            RestaurantDto(
+                id = "6e21s4f-aw32-fs3e-fe43-aw56g4yr324",
+                name = "Karrar Restaurant",
+                ownerUsername = "karrar",
+                phoneNumber = "0535232154",
+                rating = 3.5,
+                priceLevel = 1,
+                workingHours = "12:00 - 23:00"
+            ),
+            RestaurantDto(
+                id = "7a33sax-aw32-fs3e-12df-42ad6x352zse",
+                name = "Saif Restaurant",
+                ownerUsername = "saif",
+                phoneNumber = "0554627893",
+                rating = 4.0,
+                priceLevel = 3,
+                workingHours = "09:00 - 23:00"
+            ),
+            RestaurantDto(
+                id = "7y1z47c-s2df-76de-dwe2-42ad6x352zse",
+                name = "Nada Restaurant",
+                ownerUsername = "nada",
+                phoneNumber = "0524242766",
+                rating = 3.4,
+                priceLevel = 2,
+                workingHours = "01:00 - 23:00"
+            ),
+            RestaurantDto(
+                id = "3e1f5d4a-8317-4f13-aa89-2c094652e6a3",
+                name = "Asia Restaurant",
+                ownerUsername = "asia",
+                phoneNumber = "0528242165",
+                rating = 2.9,
+                priceLevel = 1,
+                workingHours = "09:30 - 21:30"
+            ),
+            RestaurantDto(
+                id = "7a1bfe39-4b2c-4f76-bde0-82da2eaf9e99",
+                name = "Kamel Restaurant",
+                ownerUsername = "kamel",
+                phoneNumber = "0528242235",
+                rating = 4.9,
+                priceLevel = 3,
+                workingHours = "06:30 - 22:30"
+            ),
+        ).toEntity()
+    }
 }
