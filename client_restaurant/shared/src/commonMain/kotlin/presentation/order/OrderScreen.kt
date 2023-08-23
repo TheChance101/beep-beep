@@ -32,6 +32,7 @@ import com.beepbeep.designSystem.ui.composable.BpTextButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.base.BaseScreen
 import presentation.composables.OrderCard
+import presentation.composables.OrderTextButton
 import presentation.composables.header
 import presentation.login.LoginScreen
 import resources.Resources
@@ -131,6 +132,11 @@ class OrderScreen :
                 items(state.activeOrders.filter { it.orderState == OrderState.PENDING.statusCode }) { order ->
                     OrderCard(orders = order) {
                         Row(horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8)) {
+                            OrderTextButton(
+                                text = Resources.strings.cancel,
+                                onClick = {},
+                                textColor = Theme.colors.contentTertiary
+                            )
                             BpOutlinedButton(
                                 modifier = Modifier.width(70.dp).height(32.dp),
                                 title = Resources.strings.approve,
