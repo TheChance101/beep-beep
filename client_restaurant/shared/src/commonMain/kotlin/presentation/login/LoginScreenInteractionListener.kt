@@ -6,4 +6,5 @@ interface LoginScreenInteractionListener : BaseInteractionListener {
     fun onEmailChanged(email: String)
     fun onPasswordChanged(password: String)
     fun onClickLogin()
+    fun onClickCancel()
 }
