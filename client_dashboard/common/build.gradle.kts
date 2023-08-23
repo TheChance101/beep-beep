@@ -5,6 +5,9 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kotlinKsp)
+    id("io.realm.kotlin") version "1.10.2"
+//    id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
+    kotlin("plugin.serialization") version "1.8.10"
 }
 
 group = "org.thechance"
@@ -27,6 +30,20 @@ kotlin {
                 implementation(libs.voyager.tab.navigator)
                 implementation(libs.voyager.transitions)
                 implementation(libs.voyager.koin)
+
+                implementation(libs.kotlin.realm)
+                implementation(libs.kotlin.coroutines)
+
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.cio)
+                implementation(libs.ktor.json.serialization)
+                implementation(libs.kotlin.serialization)
+                implementation(libs.ktor.content.negotiation)
+                implementation(libs.ktor.logging)
+                implementation(libs.ktor.gson)
+
+                implementation(libs.ktor.client.cio)
+                implementation(libs.ktor.client.okhttp)
 
                 api(libs.koin.core)
                 implementation(libs.koin.annotations)
