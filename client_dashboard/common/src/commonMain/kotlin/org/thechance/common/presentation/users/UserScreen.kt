@@ -30,6 +30,7 @@ import org.thechance.common.presentation.composables.modifier.cursorHoverIconHan
 import org.thechance.common.presentation.composables.modifier.noRipple
 import org.thechance.common.presentation.composables.table.BpPager
 import org.thechance.common.presentation.composables.table.BpTable
+import org.thechance.common.presentation.composables.table.Header
 import org.thechance.common.presentation.composables.table.TotalItemsIndicator
 import org.thechance.common.presentation.uistate.UserScreenUiState
 
@@ -54,7 +55,7 @@ object UserScreen : Screen, KoinComponent {
     @Composable
     private fun UserContent(
         state: UserScreenUiState,
-        onEditUserClicked: (UserScreenUiState.UserUiState) -> Unit,
+        onEditUserClicked: (String) -> Unit,
         onItemPerPageChanged: (String) -> Unit,
         onPageClicked: (Int) -> Unit,
         onFilterPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
@@ -81,9 +82,9 @@ object UserScreen : Screen, KoinComponent {
             UsersTable(
                 users = state.users,
                 headers = state.tableHeader,
-                pageCount = state.pageCount,
                 selectedPage = state.selectedPage,
                 onEditUserClicked = onEditUserClicked,
+                numberItemInPage = state.numberItemInPage,
             )
 
             UsersTableFooter(
@@ -100,17 +101,18 @@ object UserScreen : Screen, KoinComponent {
     @Composable
     private fun UsersTable(
         users: List<UserScreenUiState.UserUiState>,
-        headers: List<UserScreenUiState.HeaderItem>,
-        pageCount: Int,
+        headers: List<Header>,
         selectedPage: Int,
-        onEditUserClicked: (UserScreenUiState.UserUiState) -> Unit,
-    ) {
+        onEditUserClicked: (String) -> Unit,
+        numberItemInPage: Int,
+
+        ) {
         BpTable(
             data = users,
             key = { it.username },
             headers = headers,
             modifier = Modifier.fillMaxWidth(),
-            rowsCount = pageCount,
+            rowsCount = numberItemInPage,
             offset = selectedPage - 1,
             rowContent = { user ->
                 UserRow(
@@ -137,7 +139,7 @@ object UserScreen : Screen, KoinComponent {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             TotalItemsIndicator(
-                numberItemInPage = numberItemInPage,
+                numberItemInPage = numberItemInPage.toString(),
                 totalItems = numberOfUsers,
                 itemType = "user",
                 onItemPerPageChange = onItemPerPageChanged
@@ -299,60 +301,36 @@ object UserScreen : Screen, KoinComponent {
     @OptIn(ExperimentalLayoutApi::class)
     @Composable
     fun RowScope.UserRow(
-        onClickEditUser: (UserScreenUiState.UserUiState) -> Unit,
+        onClickEditUser: (userId: String) -> Unit,
         position: Int,
         user: UserScreenUiState.UserUiState,
         firstColumnWeight: Float = 1f,
         otherColumnsWeight: Float = 3f,
     ) {
         Text(
-            position.toString(),
+            text = position.toString(),
             style = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
             modifier = Modifier.weight(firstColumnWeight),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
 
-        Row(Modifier.weight(otherColumnsWeight), verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            modifier = Modifier.weight(otherColumnsWeight),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Image(painter = painterResource("dummy_img.png"), contentDescription = null)
             Text(
-                user.fullName,
+                text = user.fullName,
                 style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
                 modifier = Modifier.padding(start = 16.dp),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
         }
-            BpTable(
-                data = state.users,
-                key = { it.username },
-                headers = state.tableHeader,
-                modifier = Modifier.fillMaxWidth(),
-                rowsCount = numberItemInPage,
-                offset = selectedPage - 1,
-                rowContent = { user ->
-                    UserRow(
-                        onClickEditUser = { selectedUser = it },
-                        user = user,
-                        position = state.users.indexOf(user) + 1,
-                    )
-                },
-            )
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                TotalItemsIndicator(
-                    numberItemInPage = numberItemInPage.toString(),
-                    totalItems = state.numberOfUsers,
-                    itemType = "user",
-                    onItemPerPageChange = { numberItemInPage = it.toIntOrNull() ?: 10 }
-                )
 
         Text(
-            user.username,
+            text = user.username,
             style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(otherColumnsWeight),
@@ -373,7 +351,7 @@ object UserScreen : Screen, KoinComponent {
             maxLines = 1,
         )
         FlowRow(
-            Modifier.weight(otherColumnsWeight),
+            modifier = Modifier.weight(otherColumnsWeight),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             user.permissions.forEach {
@@ -389,7 +367,8 @@ object UserScreen : Screen, KoinComponent {
         Image(
             painter = painterResource("horizontal_dots.xml"),
             contentDescription = null,
-            modifier = Modifier.noRipple { onClickEditUser(user) }
+            modifier = Modifier
+                .noRipple { onClickEditUser(user.fullName) }
                 .weight(firstColumnWeight),
             colorFilter = ColorFilter.tint(color = Theme.colors.contentPrimary)
         )
