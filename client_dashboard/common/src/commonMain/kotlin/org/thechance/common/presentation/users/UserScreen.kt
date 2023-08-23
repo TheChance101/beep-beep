@@ -85,13 +85,8 @@ object UserScreen : Screen, KoinComponent {
                 selectedPage = state.selectedPage,
                 onEditUserClicked = onEditUserClicked,
                 numberItemInPage = state.numberItemInPage,
-            )
-
-            UsersTableFooter(
-                numberItemInPage = state.users.size,
                 numberOfUsers = state.numberOfUsers,
                 pageCount = state.pageCount,
-                selectedPage = state.selectedPage,
                 onPageClicked = onPageClicked,
                 onItemPerPageChanged = onItemPerPageChanged,
             )
@@ -105,23 +100,36 @@ object UserScreen : Screen, KoinComponent {
         selectedPage: Int,
         onEditUserClicked: (String) -> Unit,
         numberItemInPage: Int,
-
-        ) {
-        BpTable(
-            data = users,
-            key = { it.username },
-            headers = headers,
-            modifier = Modifier.fillMaxWidth(),
-            rowsCount = numberItemInPage,
-            offset = selectedPage - 1,
-            rowContent = { user ->
-                UserRow(
-                    onClickEditUser = onEditUserClicked,
-                    user = user,
-                    position = users.indexOf(user) + 1,
-                )
-            },
-        )
+        numberOfUsers: Int,
+        pageCount: Int,
+        onPageClicked: (Int) -> Unit,
+        onItemPerPageChanged: (String) -> Unit,
+    ) {
+        Column {
+            BpTable(
+                data = users,
+                key = { it.username },
+                headers = headers,
+                modifier = Modifier.fillMaxWidth(),
+                rowsCount = numberItemInPage,
+                offset = selectedPage - 1,
+                rowContent = { user ->
+                    UserRow(
+                        onClickEditUser = onEditUserClicked,
+                        user = user,
+                        position = users.indexOf(user) + 1,
+                    )
+                },
+            )
+            UsersTableFooter(
+                numberItemInPage = users.size,
+                numberOfUsers = numberOfUsers,
+                pageCount = pageCount,
+                selectedPage = selectedPage,
+                onPageClicked = onPageClicked,
+                onItemPerPageChanged = onItemPerPageChanged,
+            )
+        }
     }
 
     @Composable
