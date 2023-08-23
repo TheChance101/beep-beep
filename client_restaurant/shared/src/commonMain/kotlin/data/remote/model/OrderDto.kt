@@ -2,6 +2,7 @@ package data.remote.model
 
 import domain.entity.Order
 import domain.entity.OrderMeal
+import domain.entity.OrderState
 
 data class OrderDto(
     val id: String,
@@ -22,8 +23,9 @@ fun OrderDto.toEntity(): Order {
         restaurantId = restaurantId,
         meals = meals.toOrderMeaEntity(),
         totalPrice = totalPrice ?: 0.0,
-        createdAt = createdAt ?: 0,
-        orderState = orderState ?: 0
+        createdAt = createdAt ?: 0L,
+        orderState = orderState?.let { OrderState.fromStatusCode(it) } ?: OrderState.PENDING
+
     )
 }
 

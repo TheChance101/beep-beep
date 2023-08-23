@@ -2,7 +2,7 @@ package presentation.order
 
 import domain.entity.Order
 import domain.entity.OrderMeal
-import util.OrderState
+import domain.entity.OrderState
 
 data class OrderScreenUiState(
     val inCookingOrders: List<OrderUiState> = emptyList(),
@@ -13,7 +13,7 @@ data class OrderScreenUiState(
 data class OrderUiState(
     val orderMealUiStates: List<OrderMealUiState> = emptyList(),
     val totalPrice: Double = 0.0,
-    val orderState: Int = OrderState.PENDING.statusCode,
+    val orderState: OrderState = OrderState.PENDING,
 )
 
 data class OrderMealUiState(
