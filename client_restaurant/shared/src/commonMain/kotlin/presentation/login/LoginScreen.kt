@@ -17,6 +17,7 @@ import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.base.BaseScreen
 import presentation.main.MainScreen
+import presentation.meal.MealScreen
 
 class LoginScreen :
     BaseScreen<LoginScreenModel, LoginScreenUIState, LoginScreenUIEffect, LoginScreenInteractionListener>() {
@@ -28,7 +29,7 @@ class LoginScreen :
 
     override fun onEffect(effect: LoginScreenUIEffect, navigator: Navigator) {
         when (effect) {
-            is LoginScreenUIEffect.Login -> navigator.push(MainScreen())
+            is LoginScreenUIEffect.Login -> navigator.push(MealScreen())
         }
     }
 

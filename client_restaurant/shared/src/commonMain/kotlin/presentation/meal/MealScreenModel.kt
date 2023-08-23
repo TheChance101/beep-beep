@@ -24,7 +24,6 @@ class MealScreenModel(private val mealId: String?) :
         mealId?.let {
             tryToExecute({ manageMeal.getMeal(mealId) }, ::onGetMealSuccess, ::onAddMealError)
         }
-
     }
 
     private fun onGetCuisinesSuccess(cuisines: List<Cuisine>) {
@@ -89,12 +88,12 @@ class MealScreenModel(private val mealId: String?) :
         }
     }
 
-    override fun onClickBack() {
-        sendNewEffect(MealScreenUIEffect.Back)
+    override fun onImagePicked(image: ByteArray) {
+        updateState { it.copy(image = image) }
     }
 
-    override fun onImageClick() {
-        TODO("Not yet implemented")
+    override fun onClickBack() {
+        sendNewEffect(MealScreenUIEffect.Back)
     }
 
     override fun onNameChange(name: String) {

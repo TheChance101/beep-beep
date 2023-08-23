@@ -5,6 +5,7 @@ import cafe.adriel.voyager.transitions.SlideTransition
 import presentation.login.LoginScreen
 import resources.BpRestaurantTheme
 
+
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun App() {
@@ -14,3 +15,4 @@ fun App() {
         }
     }
 }
+
