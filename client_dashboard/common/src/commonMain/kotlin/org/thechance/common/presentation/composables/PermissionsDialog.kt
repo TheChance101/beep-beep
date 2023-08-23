@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
@@ -14,46 +15,55 @@ import org.thechance.common.presentation.uistate.UserScreenUiState
 
 @Composable
 fun PermissionsDialog(
+    visible: Boolean,
     allPermissions: List<UserScreenUiState.PermissionUiState>,
     selectedPermissions: List<UserScreenUiState.PermissionUiState>,
-    togglePermission: (UserScreenUiState.PermissionUiState) -> Unit,
-    onSaveClick: () -> Unit,
-    onCancelClick: () -> Unit,
+    onUserPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
+    onSaveUserPermissions: () -> Unit,
+    onCancelUserPermissionsDialog: () -> Unit,
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Theme.colors.background)
+    Dialog(
+        transparent = true,
+        focusable = true,
+        undecorated = true,
+        visible = visible,
+        onCloseRequest = onCancelUserPermissionsDialog,
     ) {
-        Text(
-            "Permissions",
-            style = Theme.typography.headline.copy(color = Theme.colors.contentPrimary),
-            modifier = Modifier.padding(Theme.dimens.space24)
-        )
-
-        PermissionsFlowRow(
-            allPermissions = allPermissions,
-            selectedPermissions = selectedPermissions,
-            onPermissionClicked = togglePermission
-        )
-
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(Theme.dimens.space24),
-            horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8),
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxSize()
+                .background(Theme.colors.background)
         ) {
-            BpTransparentButton(
-                title = "Cancel",
-                onClick = onCancelClick,
-                modifier = Modifier.weight(1f).height(36.dp)
+            Text(
+                "Permissions",
+                style = Theme.typography.headline.copy(color = Theme.colors.contentPrimary),
+                modifier = Modifier.padding(Theme.dimens.space24)
             )
-            BpOutlinedButton(
-                title = "Save",
-                onClick = onSaveClick,
-                modifier = Modifier.weight(3f).height(36.dp),
+
+            PermissionsFlowRow(
+                allPermissions = allPermissions,
+                selectedPermissions = selectedPermissions,
+                onUserPermissionClicked = onUserPermissionClicked
             )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(Theme.dimens.space24),
+                horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                BpTransparentButton(
+                    title = "Cancel",
+                    onClick = onCancelUserPermissionsDialog,
+                    modifier = Modifier.weight(1f).height(36.dp)
+                )
+                BpOutlinedButton(
+                    title = "Save",
+                    onClick = onSaveUserPermissions,
+                    modifier = Modifier.weight(3f).height(36.dp),
+                )
+            }
         }
     }
 }

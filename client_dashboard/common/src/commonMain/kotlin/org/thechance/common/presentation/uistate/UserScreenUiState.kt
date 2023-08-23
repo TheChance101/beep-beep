@@ -31,7 +31,7 @@ data class UserScreenUiState(
         PermissionUiState.DELIVERY,
         PermissionUiState.DASHBOARD_ADMIN,
     ),
-    val editUserMenu: EditUserMenuUiState = EditUserMenuUiState(),
+    val userMenu: MenuUiState = MenuUiState(),
 ) {
     data class UserUiState(
         val fullName: String = "",
@@ -88,21 +88,21 @@ data class UserScreenUiState(
         val selected: Boolean = false
     )
 
-    data class EditUserMenuUiState(
+    data class MenuUiState(
         val username: String = "",
-        val items: List<EditUserMenuItemUiState> = listOf(
-            EditUserMenuItemUiState(
+        val items: List<MenuItemUiState> = listOf(
+            MenuItemUiState(
                 iconPath = "ic_edit.xml",
                 text = "Edit",
             ),
-            EditUserMenuItemUiState(
+            MenuItemUiState(
                 iconPath = "ic_delete.svg",
                 text = "Delete",
                 isSecondary = true,
             ),
         )
     ) {
-        data class EditUserMenuItemUiState(
+        data class MenuItemUiState(
             val iconPath: String = "",
             val text: String = "",
             val isSecondary: Boolean = false,

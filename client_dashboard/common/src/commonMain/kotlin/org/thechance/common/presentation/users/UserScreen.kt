@@ -26,6 +26,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.thechance.common.presentation.composables.BpDropdownMenu
 import org.thechance.common.presentation.composables.BpDropdownMenuItem
+import org.thechance.common.presentation.composables.PermissionsDialog
 import org.thechance.common.presentation.composables.PermissionsFlowRow
 import org.thechance.common.presentation.composables.modifier.cursorHoverIconHand
 import org.thechance.common.presentation.composables.modifier.noRipple
@@ -45,11 +46,17 @@ object UserScreen : Screen, KoinComponent {
         val state by screenModel.state.collectAsState()
         UserContent(
             state = state,
-            onEditUserClicked = screenModel::onEditUserClicked,
+            onEditUserClicked = screenModel::showUserMenu,
             onItemPerPageChanged = screenModel::onItemPerPageChanged,
             onPageClicked = screenModel::onPageClicked,
             onFilterPermissionClicked = screenModel::onFilterPermissionClicked,
             onFilterCountryClicked = screenModel::onFilterCountryClicked,
+            onEditUserMenuItemClicked = screenModel::onEditUserMenuItemClicked,
+            onSaveUserPermissions = screenModel::onSaveUserPermissions,
+            onCancelUserPermissionsDialog = screenModel::onCancelUserPermissionsDialog,
+            onUserPermissionClicked = screenModel::onUserPermissionClicked,
+            hideUserMenu = screenModel::hideUserMenu,
+            onDeleteUserMenuItemClicked = screenModel::onDeleteUserMenuItemClicked,
         )
     }
 
@@ -57,10 +64,16 @@ object UserScreen : Screen, KoinComponent {
     private fun UserContent(
         state: UserScreenUiState,
         onEditUserClicked: (String) -> Unit,
+        hideUserMenu: () -> Unit,
         onItemPerPageChanged: (String) -> Unit,
         onPageClicked: (Int) -> Unit,
         onFilterPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
-        onFilterCountryClicked: (UserScreenUiState.CountryUiState) -> Unit
+        onFilterCountryClicked: (UserScreenUiState.CountryUiState) -> Unit,
+        onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
+        onSaveUserPermissions: () -> Unit,
+        onCancelUserPermissionsDialog: () -> Unit,
+        onUserPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
+        onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
     ) {
         Column(
             modifier = Modifier
@@ -69,7 +82,6 @@ object UserScreen : Screen, KoinComponent {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
         ) {
-
             UsersFilteredSearch(
                 searchText = state.search,
                 allPermissions = state.allPermissions,
@@ -90,8 +102,19 @@ object UserScreen : Screen, KoinComponent {
                 pageCount = state.pageCount,
                 onPageClicked = onPageClicked,
                 onItemPerPageChanged = onItemPerPageChanged,
-                editUserMenu = state.editUserMenu,
-                onEditUserDismiss = screenModel::onEditUserDismiss,
+                editUserMenu = state.userMenu,
+                onEditUserDismiss = hideUserMenu,
+                onEditUserMenuItemClicked = onEditUserMenuItemClicked,
+                onDeleteUserMenuItemClicked = onDeleteUserMenuItemClicked,
+            )
+
+            PermissionsDialog(
+                visible = state.permissionsDialog.show,
+                allPermissions = state.allPermissions,
+                selectedPermissions = state.permissionsDialog.permissions,
+                onUserPermissionClicked = onUserPermissionClicked,
+                onSaveUserPermissions = onSaveUserPermissions,
+                onCancelUserPermissionsDialog = onCancelUserPermissionsDialog,
             )
         }
     }
@@ -107,8 +130,10 @@ object UserScreen : Screen, KoinComponent {
         pageCount: Int,
         onPageClicked: (Int) -> Unit,
         onItemPerPageChanged: (String) -> Unit,
-        editUserMenu: UserScreenUiState.EditUserMenuUiState,
+        editUserMenu: UserScreenUiState.MenuUiState,
         onEditUserDismiss: () -> Unit,
+        onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
+        onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
     ) {
         Column {
             BpTable(
@@ -125,6 +150,8 @@ object UserScreen : Screen, KoinComponent {
                     position = users.indexOf(user) + 1,
                     editUserMenu = editUserMenu,
                     onEditUserDismiss = onEditUserDismiss,
+                    onEditUserMenuItemClicked = onEditUserMenuItemClicked,
+                    onDeleteUserMenuItemClicked = onDeleteUserMenuItemClicked,
                 )
             }
             UsersTableFooter(
@@ -222,7 +249,7 @@ object UserScreen : Screen, KoinComponent {
                             PermissionsFlowRow(
                                 allPermissions = allPermissions,
                                 selectedPermissions = selectedPermissions,
-                                onPermissionClicked = onFilterPermissionClicked
+                                onUserPermissionClicked = onFilterPermissionClicked
                             )
                             Text(
                                 "Country",
@@ -278,7 +305,7 @@ object UserScreen : Screen, KoinComponent {
     }
 
     @Composable
-    fun UsersFilteredSearch(
+    private fun UsersFilteredSearch(
         searchText: String,
         allPermissions: List<UserScreenUiState.PermissionUiState>,
         countries: List<UserScreenUiState.CountryUiState>,
@@ -314,14 +341,16 @@ object UserScreen : Screen, KoinComponent {
 
     @OptIn(ExperimentalLayoutApi::class)
     @Composable
-    fun RowScope.UserRow(
+    private fun RowScope.UserRow(
         onClickEditUser: (userId: String) -> Unit,
         position: Int,
         user: UserScreenUiState.UserUiState,
         firstColumnWeight: Float = 1f,
         otherColumnsWeight: Float = 3f,
-        editUserMenu: UserScreenUiState.EditUserMenuUiState,
+        editUserMenu: UserScreenUiState.MenuUiState,
         onEditUserDismiss: () -> Unit,
+        onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
+        onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
     ) {
         Text(
             text = position.toString(),
@@ -396,6 +425,8 @@ object UserScreen : Screen, KoinComponent {
                 user = user,
                 editUserMenu = editUserMenu,
                 onEditUserDismiss = onEditUserDismiss,
+                onEditUserMenuItemClicked = onEditUserMenuItemClicked,
+                onDeleteUserMenuItemClicked = onDeleteUserMenuItemClicked,
             )
         }
     }
@@ -403,8 +434,10 @@ object UserScreen : Screen, KoinComponent {
     @Composable
     private fun EditUserDropdownMenu(
         user: UserScreenUiState.UserUiState,
-        editUserMenu: UserScreenUiState.EditUserMenuUiState,
+        editUserMenu: UserScreenUiState.MenuUiState,
         onEditUserDismiss: () -> Unit,
+        onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
+        onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
     ) {
         BpDropdownMenu(
             expanded = user.username == editUserMenu.username,
@@ -415,7 +448,12 @@ object UserScreen : Screen, KoinComponent {
             Column {
                 editUserMenu.items.forEach {
                     BpDropdownMenuItem(
-                        onClick = {},
+                        onClick = {
+                            when (it.text) {
+                                "Edit" -> onEditUserMenuItemClicked(user)
+                                "Delete" -> onDeleteUserMenuItemClicked(user)
+                            }
+                        },
                         text = it.text,
                         leadingIconPath = it.iconPath,
                         isSecondary = it.isSecondary,

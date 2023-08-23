@@ -17,7 +17,7 @@ import org.thechance.common.presentation.uistate.UserScreenUiState
 fun PermissionsFlowRow(
     allPermissions: List<UserScreenUiState.PermissionUiState>,
     selectedPermissions: List<UserScreenUiState.PermissionUiState>,
-    onPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
+    onUserPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
 ) {
     FlowRow(
         modifier = Modifier
@@ -29,7 +29,7 @@ fun PermissionsFlowRow(
             BpChip(
                 label = permission.name.lowercase().capitalizeWords(),
                 modifier = Modifier.padding(Theme.dimens.space8),
-                onClick = { onPermissionClicked(permission) },
+                onClick = { onUserPermissionClicked(permission) },
                 painter = painterResource(permission.iconPath),
                 isSelected = selectedPermissions.contains(permission)
             )

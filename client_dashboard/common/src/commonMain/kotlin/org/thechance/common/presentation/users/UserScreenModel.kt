@@ -43,7 +43,19 @@ class UserScreenModel(
         }
     }
 
-    fun showPermissionsDialog(user: UserScreenUiState.UserUiState) {
+    fun showUserMenu(username: String) {
+        mutableState.update {
+            it.copy(userMenu = it.userMenu.copy(username = username))
+        }
+    }
+
+    fun hideUserMenu() {
+        mutableState.update {
+            it.copy(userMenu = it.userMenu.copy(username = ""))
+        }
+    }
+
+    fun onEditUserMenuItemClicked(user: UserScreenUiState.UserUiState) {
         mutableState.update {
             it.copy(
                 permissionsDialog = it.permissionsDialog.copy(
@@ -55,26 +67,22 @@ class UserScreenModel(
         }
     }
 
-    fun hidePermissionsDialog() {
-        mutableState.update {
-            it.copy(
-                permissionsDialog = it.permissionsDialog.copy(
-                    show = false,
-                    username = "",
-                    permissions = emptyList()
-                )
-            )
-        }
+    fun onDeleteUserMenuItemClicked(user: UserScreenUiState.UserUiState) {
+        println("Delete user: ${user.username}")
     }
 
-    fun onPermissionDialogSave() {
+    fun onSaveUserPermissions() {
         val username = mutableState.value.permissionsDialog.username
         val permissions = mutableState.value.permissionsDialog.permissions
         updateUserPermissions(username, permissions)
-        hidePermissionsDialog()
+        hideUserPermissionsDialog()
     }
 
-    fun togglePermission(permission: UserScreenUiState.PermissionUiState) {
+    fun onCancelUserPermissionsDialog() {
+        hideUserPermissionsDialog()
+    }
+
+    fun onUserPermissionClicked(permission: UserScreenUiState.PermissionUiState) {
         val permissions = getUpdatedPermissions(
             mutableState.value.permissionsDialog.permissions,
             permission
@@ -83,6 +91,18 @@ class UserScreenModel(
             it.copy(
                 permissionsDialog = it.permissionsDialog.copy(
                     permissions = permissions
+                )
+            )
+        }
+    }
+
+    private fun hideUserPermissionsDialog() {
+        mutableState.update {
+            it.copy(
+                permissionsDialog = it.permissionsDialog.copy(
+                    show = false,
+                    username = "",
+                    permissions = emptyList()
                 )
             )
         }
@@ -114,18 +134,6 @@ class UserScreenModel(
                     }
                 }
             )
-        }
-    }
-
-    fun onEditUserClicked(username: String) {
-        mutableState.update {
-            it.copy(editUserMenu = it.editUserMenu.copy(username = username))
-        }
-    }
-
-    fun onEditUserDismiss() {
-        mutableState.update {
-            it.copy(editUserMenu = it.editUserMenu.copy(username = ""))
         }
     }
 
