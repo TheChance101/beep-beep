@@ -28,17 +28,16 @@ import java.awt.Dimension
 
 @Composable
 fun RestaurantDialog(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val c = remember { ComposeDialog() }
+    val dialog = remember { ComposeDialog() }
 
     Dialog(
         visible = true,
-        create = { c },
-        dispose = { c.dispose() }
+        create = { dialog },
+        dispose = { dialog.dispose() }
     ) {
         window.minimumSize = Dimension(1176, 700)
-
         Column(
             modifier
                 .clip(RectangleShape)
@@ -100,7 +99,7 @@ fun RestaurantDialog(
                 Box(Modifier.clip(RoundedCornerShape(24.dp)).fillMaxSize()) {
                     SwingPanel(
                         modifier = Modifier.matchParentSize(),
-                        factory = { SwingComponent5() },
+                        factory = { webViewFromLinkOpenStreetMap() },
                     )
                 }
             }

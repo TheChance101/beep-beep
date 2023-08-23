@@ -24,13 +24,13 @@ kotlin {
                 implementation(project(":design_system:shared"))
                 implementation(compose.desktop.currentOs)
                 implementation ("com.google.accompanist:accompanist-webview:0.30.1")
+                implementation("org.openjfx:javafx-web:16")
             }
         }
         val desktopMain by getting {
             dependencies {
                 api(libs.compose.preview)
             }
-
         }
     }
 }
