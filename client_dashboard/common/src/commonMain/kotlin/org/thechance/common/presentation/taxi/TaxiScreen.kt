@@ -154,17 +154,13 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
 
         TitleField(
             text = position.toString(),
-            modifier = Modifier.weight(otherColumnsWeight),
-            color = Theme.colors.contentTertiary
+            color = Theme.colors.contentTertiary,
+            weight = firstColumnWeight
         )
-        TitleField(text = taxi.plateNumber, modifier = Modifier.weight(otherColumnsWeight))
-        TitleField(text = taxi.username, modifier = Modifier.weight(otherColumnsWeight))
-        TitleField(
-            text = taxi.statusText,
-            modifier = Modifier.weight(otherColumnsWeight),
-            color = taxi.statusColor
-        )
-        TitleField(text = taxi.type, modifier = Modifier.weight(otherColumnsWeight))
+        TitleField(text = taxi.plateNumber)
+        TitleField(text = taxi.username)
+        TitleField(text = taxi.statusText, color = taxi.statusColor)
+        TitleField(text = taxi.type)
         SquareColorField(modifier = Modifier.weight(otherColumnsWeight), color = Color(taxi.color.hexadecimal))
         FlowRow(
             modifier = Modifier.weight(otherColumnsWeight),
@@ -180,7 +176,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
                 )
             }
         }
-        TitleField(text = taxi.trips, modifier = Modifier.weight(otherColumnsWeight))
+        TitleField(text = taxi.trips)
         Image(
             painter = painterResource("horizontal_dots.xml"),
             contentDescription = null,
@@ -191,16 +187,17 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
     }
 
     @Composable
-   private fun TitleField(
+   private fun RowScope.TitleField(
         text: String,
         modifier: Modifier = Modifier,
         color: Color = Theme.colors.contentPrimary,
+        weight: Float = 3f
     ) {
         Text(
             text = text,
             style = Theme.typography.titleMedium,
             overflow = TextOverflow.Ellipsis,
-            modifier = modifier,
+            modifier = modifier.weight(weight),
             maxLines = 1,
             color = color
         )

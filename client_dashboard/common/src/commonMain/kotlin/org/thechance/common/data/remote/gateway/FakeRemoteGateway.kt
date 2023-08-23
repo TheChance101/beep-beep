@@ -175,13 +175,17 @@ class FakeRemoteGateway : IRemoteGateway {
                 username = "susan_anderson",
                 status = 2,
                 trips = "9"
-            ),
+            )
         ).toEntity()
     }
 
 
     override suspend fun createTaxi(taxi: AddTaxi) {
 
+    }
+
+    override suspend fun findTaxiByUsername(username: String): List<Taxi> {
+        return getTaxis().filter { it.username.startsWith(username,true) }
     }
 
 

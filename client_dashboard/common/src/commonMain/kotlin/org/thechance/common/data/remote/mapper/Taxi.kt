@@ -15,6 +15,7 @@ fun TaxiDto.toEntity() = Taxi(
     username = username,
     trips = trips,
 )
+fun List<TaxiDto>.toEntity() = map(TaxiDto::toEntity)
 
 fun getCarColor(color: Int) =
     when (color) {
@@ -32,7 +33,3 @@ fun getTaxiStatus(status: Int) =
         1 -> TaxiStatus.ONLINE
         else -> TaxiStatus.ON_RIDE
     }
-
-fun List<TaxiDto>.toEntity() = map(TaxiDto::toEntity)
-
-
