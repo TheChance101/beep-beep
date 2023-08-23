@@ -1,5 +1,6 @@
 package org.thechance.common.data.remote.gateway
 
+
 import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.AdminDto
 import org.thechance.common.data.remote.model.TaxiDto
@@ -13,7 +14,7 @@ import org.thechance.common.domain.getway.IRemoteGateway
 
 class FakeRemoteGateway : IRemoteGateway {
     override fun getUserData(): Admin =
-         AdminDto(fullName = "asia",).toEntity()
+        AdminDto(fullName = "asia").toEntity()
 
     override fun getUsers(): List<User> {
         return listOf(
@@ -173,13 +174,17 @@ class FakeRemoteGateway : IRemoteGateway {
                 username = "susan_anderson",
                 status = 2,
                 trips = "9"
-            ),
+            )
         ).toEntity()
     }
 
 
     override suspend fun createTaxi(taxi: AddTaxi) {
 
+    }
+
+    override suspend fun findTaxiByUsername(username: String): List<Taxi> {
+        return getTaxis().filter { it.username.startsWith(username,true) }
     }
 
 }
