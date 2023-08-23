@@ -10,6 +10,6 @@ interface IRemoteGateway {
     fun getUserData(): Admin
     fun getUsers(): List<User>
     suspend fun getTaxis(): List<Taxi>
-    suspend fun createTaxi(taxi: AddTaxi)
+    suspend fun createTaxi(taxi: AddTaxi): Taxi
     suspend fun findTaxiByUsername(username: String): List<Taxi>
 }
