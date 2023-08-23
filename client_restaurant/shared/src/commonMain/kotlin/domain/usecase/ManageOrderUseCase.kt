@@ -2,7 +2,6 @@ package domain.usecase
 
 import domain.entity.Order
 import domain.gateway.IRemoteGateWay
-import presentation.base.ErrorState
 import util.OrderState
 
 interface IManageOrderUseCase {
@@ -10,6 +9,8 @@ interface IManageOrderUseCase {
     suspend fun getInCookingOrders(restaurantId: String): List<Order>
     suspend fun getPendingOrders(restaurantId: String): List<Order>
     suspend fun updateOrderState(orderId: String): Order
+    suspend fun getFinishedOrdersHistory(restaurantId: String): List<Order>
+    suspend fun getCanceledOrdersHistory(restaurantId: String): List<Order>
 }
 
 class ManageOrderUseCase(private val remoteGateWay: IRemoteGateWay) : IManageOrderUseCase {
@@ -35,6 +36,16 @@ class ManageOrderUseCase(private val remoteGateWay: IRemoteGateWay) : IManageOrd
             else -> OrderState.CANCELED.statusCode
         }
         return remoteGateWay.updateOrderState(orderId, newOrderState)!!
+    }
+
+    override suspend fun getFinishedOrdersHistory(restaurantId: String): List<Order> {
+        return remoteGateWay.getOrdersHistory(restaurantId)
+            .filter { it.orderState == OrderState.FINISHED.statusCode }
+    }
+
+    override suspend fun getCanceledOrdersHistory(restaurantId: String): List<Order> {
+        return remoteGateWay.getOrdersHistory(restaurantId)
+            .filter { it.orderState == OrderState.FINISHED.statusCode }
     }
 
 }

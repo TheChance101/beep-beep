@@ -68,6 +68,8 @@ kotlin-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-j
 kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutine-version" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin-version" }
 
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.4.0" }
+
 [bundles]
 voyager = ["voyager-navigator", "voyager-koin", "voyager-transitions"]
 

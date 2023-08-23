@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +26,7 @@ import resources.Resources
 
 @Composable
 fun OrderCard(
-    orders: OrderUiState,
+    order: OrderUiState,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
@@ -38,7 +37,7 @@ fun OrderCard(
             .padding(Theme.dimens.space16),
         verticalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
     ) {
-        orders.orderMealUiStates.forEach { order ->
+        order.orderMealUiStates.forEach { order ->
             OrderItem(
                 imageUrl = order.mealImageUrl,
                 mealName = order.mealName,
@@ -51,7 +50,7 @@ fun OrderCard(
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Bottom
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Column {
                 Text(
@@ -60,7 +59,7 @@ fun OrderCard(
                     color = Theme.colors.contentTertiary
                 )
                 Text(
-                    text = "${Resources.strings.dollarSign} ${orders.totalPrice}",
+                    text = "${Resources.strings.dollarSign} ${order.totalPrice}",
                     style = Theme.typography.titleLarge,
                     color = Theme.colors.contentPrimary
                 )

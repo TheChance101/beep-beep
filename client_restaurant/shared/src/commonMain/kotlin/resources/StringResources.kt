@@ -3,6 +3,7 @@ package resources
 
 data class StringResources(
     val beepBeep: String = "Beep Beep",
+    val orderHistory: String = "Order History",
     val orderImageContentDescription: String = "order image",
     val quantity: String = "Qty",
     val dollarSign: String = "$",

@@ -1,11 +1,13 @@
 package domain.entity
 
+import kotlinx.datetime.LocalDateTime
+
 data class Order(
     val id: String,
     val userId: String,
     val restaurantId: String,
     val meals: List<OrderMeal>,
     val totalPrice: Double,
-    val createdAt: Long,
+    val createdAt: LocalDateTime,
     val orderState: Int
 )

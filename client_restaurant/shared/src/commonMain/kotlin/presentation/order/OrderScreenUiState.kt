@@ -12,9 +12,11 @@ data class OrderScreenUiState(
 )
 
 data class OrderUiState(
+    val id: String = "",
     val orderMealUiStates: List<OrderMealUiState> = emptyList(),
     val totalPrice: Double = 0.0,
     val orderState: Int = OrderState.PENDING.statusCode,
+    val createdAt:String = "",
 )
 
 data class OrderMealUiState(

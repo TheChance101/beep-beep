@@ -22,9 +22,9 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
-import com.beepbeep.designSystem.ui.composable.BpAppBar
 import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.base.BaseScreen
+import presentation.composables.BpAppBar
 import presentation.composables.OrderCard
 import presentation.composables.OrderTextButton
 import presentation.composables.header
@@ -100,7 +100,7 @@ class OrderScreen :
                 }
 
                 items(state.activeOrders.filter { it.orderState == OrderState.IN_COOKING.statusCode }) { order ->
-                    OrderCard(orders = order) {
+                    OrderCard(order = order) {
                         OrderTextButton(
                             text = Resources.strings.finish,
                             onClick = {},
@@ -120,7 +120,7 @@ class OrderScreen :
                     )
                 }
                 items(state.activeOrders.filter { it.orderState == OrderState.PENDING.statusCode }) { order ->
-                    OrderCard(orders = order) {
+                    OrderCard(order = order) {
                         Row(horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8)) {
                             OrderTextButton(
                                 text = Resources.strings.cancel,
