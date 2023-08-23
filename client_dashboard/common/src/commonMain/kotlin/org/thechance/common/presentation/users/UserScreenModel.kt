@@ -119,9 +119,15 @@ class UserScreenModel(
 
     fun onEditUserClicked(userId: String) {}
 
-    fun onItemPerPageChanged(itemPerPage: String) {}
+    fun onItemPerPageChanged(itemPerPage: String) {
+        if (itemPerPage.isNotEmpty() && itemPerPage.toInt() > 0) {
+            mutableState.update { it.copy(numberItemInPage = itemPerPage.toInt()) }
+        }
+    }
 
-    fun onPageClicked(page: Int) {}
+    fun onPageClicked(page: Int) {
+        mutableState.update { it.copy(selectedPage = page) }
+    }
 
     fun onFilterPermissionClicked(permission: UserScreenUiState.PermissionUiState) {}
 

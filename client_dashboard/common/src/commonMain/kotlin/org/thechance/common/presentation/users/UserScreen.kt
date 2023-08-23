@@ -122,7 +122,7 @@ object UserScreen : Screen, KoinComponent {
                 },
             )
             UsersTableFooter(
-                numberItemInPage = users.size,
+                numberItemInPage = numberItemInPage,
                 numberOfUsers = numberOfUsers,
                 pageCount = pageCount,
                 selectedPage = selectedPage,
