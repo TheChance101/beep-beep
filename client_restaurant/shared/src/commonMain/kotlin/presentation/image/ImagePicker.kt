@@ -3,7 +3,8 @@ package presentation.image
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.ImageBitmap
 
-expect class ImagePickerFactory {
+expect class ImagePickerFactory(context: PlatformContext) {
+
 
     @Composable
     fun createPicker(): ImagePicker
@@ -20,3 +21,7 @@ expect class ImagePicker {
 expect fun rememberBitmapFromBytes(bytes: ByteArray?): ImageBitmap?
 
 
+expect class PlatformContext
+
+@Composable
+expect fun getPlatformContext(): PlatformContext

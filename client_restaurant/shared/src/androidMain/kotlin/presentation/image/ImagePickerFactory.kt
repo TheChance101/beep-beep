@@ -8,7 +8,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 
-actual class ImagePickerFactory {
+actual class ImagePickerFactory actual constructor(context: PlatformContext){
 
     @Composable
     actual fun createPicker(): ImagePicker {

@@ -47,6 +47,7 @@ import presentation.composables.ModalBottomSheetState
 import presentation.composables.modifier.noRippleEffect
 import presentation.image.ImagePicker
 import presentation.image.ImagePickerFactory
+import presentation.image.getPlatformContext
 import presentation.image.rememberBitmapFromBytes
 import resources.Resources
 
@@ -102,7 +103,7 @@ class MealScreen(private val mealId: String? = null) :
         state: MealUIState,
         listener: MealScreenInteractionListener,
         sheetState: ModalBottomSheetState,
-        imagePicker: ImagePicker = Picker.imagePicker,
+        imagePicker: ImagePicker = ImagePickerFactory(context = getPlatformContext()).createPicker(),
         modifier: Modifier = Modifier,
     ) {
         imagePicker.registerPicker { listener.onImagePicked(it) }

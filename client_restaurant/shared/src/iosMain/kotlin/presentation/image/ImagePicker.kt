@@ -1,6 +1,8 @@
 package presentation.image
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ProvidableCompositionLocal
+import androidx.compose.ui.interop.LocalUIViewController
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.refTo
 import platform.UIKit.UIImage
@@ -12,6 +14,7 @@ import platform.UIKit.UINavigationControllerDelegateProtocol
 import platform.UIKit.UIViewController
 import platform.darwin.NSObject
 import platform.posix.memcpy
+
 actual class ImagePicker(
     private val rootController: UIViewController
 ) {
@@ -56,3 +59,8 @@ actual class ImagePicker(
         }
     }
 }
+
+actual class PlatformContext (val iosController: ProvidableCompositionLocal<UIViewController>)
+
+@Composable
+actual fun getPlatformContext(): PlatformContext = PlatformContext(LocalUIViewController)
