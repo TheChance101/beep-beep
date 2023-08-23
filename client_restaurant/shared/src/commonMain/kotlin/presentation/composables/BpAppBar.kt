@@ -30,9 +30,10 @@ fun BpAppBar(
     TopAppBar(
         title = {
             Text(
+                modifier = Modifier.padding(start = Theme.dimens.space8) ,
                 text = title,
                 style =  Theme.typography.titleLarge,
-                color = colors.contentPrimary
+                color = colors.contentPrimary,
             )
         },
         navigationIcon = {
