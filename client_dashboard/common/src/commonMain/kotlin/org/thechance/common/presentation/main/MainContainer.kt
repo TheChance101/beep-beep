@@ -68,13 +68,13 @@ object MainContainer : Screen, KoinComponent {
             sideBar = {
                 DashboardSideBar(
                     currentItem = tabNavigator.current.options.index.toInt()
-                ) { sideBarWidth, mainMenuIsExpanded, itemHeight ->
+                ) { sideBarUnexpandedWidthInKms ,mainMenuIsExpanded, itemHeight ->
                     TabNavigationItem(
                         tab = OverviewTab,
                         selectedIconResource = "ic_overview_fill.svg",
                         unSelectedIconResource = "ic_overview_empty.svg",
-                        sideBarWidth = sideBarWidth,
                         mainMenuIsExpanded = mainMenuIsExpanded,
+                        sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
                         modifier = Modifier.onGloballyPositioned {
                             itemHeight(it.boundsInParent().height)
                         }
@@ -83,8 +83,8 @@ object MainContainer : Screen, KoinComponent {
                         tab = TaxisTab,
                         selectedIconResource = "ic_taxi_fill.svg",
                         unSelectedIconResource = "ic_taxi_empty.xml",
-                        sideBarWidth = sideBarWidth,
                         mainMenuIsExpanded = mainMenuIsExpanded,
+                        sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
                         modifier = Modifier.onGloballyPositioned {
                             itemHeight(it.boundsInParent().height)
                         }
@@ -93,8 +93,8 @@ object MainContainer : Screen, KoinComponent {
                         tab = RestaurantsTab,
                         selectedIconResource = "ic_restaurant_fill.svg",
                         unSelectedIconResource = "ic_restaurant_empty.svg",
-                        sideBarWidth = sideBarWidth,
                         mainMenuIsExpanded = mainMenuIsExpanded,
+                        sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
                         modifier = Modifier.onGloballyPositioned {
                             itemHeight(it.boundsInParent().height)
                         }
@@ -103,8 +103,8 @@ object MainContainer : Screen, KoinComponent {
                         tab = UsersTab,
                         selectedIconResource = "ic_users_fill.svg",
                         unSelectedIconResource = "ic_users_empty.svg",
-                        sideBarWidth = sideBarWidth,
                         mainMenuIsExpanded = mainMenuIsExpanded,
+                        sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
                         modifier = Modifier.onGloballyPositioned {
                             itemHeight(it.boundsInParent().height)
                         }
@@ -126,8 +126,8 @@ fun ColumnScope.TabNavigationItem(
     tab: Tab,
     selectedIconResource: String,
     unSelectedIconResource: String,
-    sideBarWidth: Dp,
     mainMenuIsExpanded: Boolean,
+    sideBarUnexpandedWidth: Dp,
     modifier: Modifier = Modifier,
 ) {
     val tabNavigator = LocalTabNavigator.current
@@ -137,8 +137,8 @@ fun ColumnScope.TabNavigationItem(
         label = tab.options.title,
         selectedIconResource = selectedIconResource,
         unSelectedIconResource = unSelectedIconResource,
-        sideBarWidth = sideBarWidth,
         mainMenuIsExpanded = mainMenuIsExpanded,
+        sideBarUnexpandedWidthInKms = sideBarUnexpandedWidth,
         modifier = modifier
     )
 }

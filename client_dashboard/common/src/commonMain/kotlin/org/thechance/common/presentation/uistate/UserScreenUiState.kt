@@ -1,18 +1,19 @@
 package org.thechance.common.presentation.uistate
 
 import org.thechance.common.domain.entity.User
+import org.thechance.common.presentation.composables.table.Header
 
 
 data class UserScreenUiState(
     val users: List<UserUiState> = emptyList(),
-    val tableHeader: List<HeaderItem> = listOf(
-        HeaderItem("No.", 1f),
-        HeaderItem("Users", 3f),
-        HeaderItem("Username", 3f),
-        HeaderItem("Email", 3f),
-        HeaderItem("Country", 3f),
-        HeaderItem("Permission", 3f),
-        HeaderItem("", 1f),
+    val tableHeader: List<Header> = listOf(
+        Header("No.", 1f),
+        Header("Users", 3f),
+        Header("Username", 3f),
+        Header("Email", 3f),
+        Header("Country", 3f),
+        Header("Permission", 3f),
+        Header("", 1f),
     ),
     val numberOfUsers: Int = 0,
     val search: String = "",
@@ -41,7 +42,6 @@ data class UserScreenUiState(
 //    )
 
 ) {
-    data class HeaderItem(val text: String, val weight: Float = 1f)
     data class UserUiState(
         val fullName: String = "",
         val username: String = "",

@@ -3,9 +3,11 @@ package com.beepbeep.designSystem.ui.composable
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,6 +29,7 @@ fun BpOutlinedButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    textPadding: PaddingValues = PaddingValues(Theme.dimens.space16),
     shape: Shape = RoundedCornerShape(Theme.radius.medium),
     contentColor: Color = Theme.colors.primary,
     border: BorderStroke = BorderStroke(1.dp, color = Theme.colors.primary),
@@ -60,7 +63,11 @@ fun BpOutlinedButton(
             horizontalArrangement = horizontalArrangement,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(text = title, style = Theme.typography.titleLarge.copy(color = buttonContentColor))
+            Text(
+                text = title,
+                style = Theme.typography.titleLarge.copy(color = buttonContentColor),
+                modifier = Modifier.padding(textPadding)
+            )
         }
     }
 }

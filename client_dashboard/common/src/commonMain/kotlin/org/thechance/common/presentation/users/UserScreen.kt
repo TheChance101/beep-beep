@@ -323,6 +323,33 @@ object UserScreen : Screen, KoinComponent {
                 overflow = TextOverflow.Ellipsis,
             )
         }
+            BpTable(
+                data = state.users,
+                key = { it.username },
+                headers = state.tableHeader,
+                modifier = Modifier.fillMaxWidth(),
+                rowsCount = numberItemInPage,
+                offset = selectedPage - 1,
+                rowContent = { user ->
+                    UserRow(
+                        onClickEditUser = { selectedUser = it },
+                        user = user,
+                        position = state.users.indexOf(user) + 1,
+                    )
+                },
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                TotalItemsIndicator(
+                    numberItemInPage = numberItemInPage.toString(),
+                    totalItems = state.numberOfUsers,
+                    itemType = "user",
+                    onItemPerPageChange = { numberItemInPage = it.toIntOrNull() ?: 10 }
+                )
 
         Text(
             user.username,
