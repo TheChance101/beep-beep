@@ -17,13 +17,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
+import com.seiko.imageloader.rememberAsyncImagePainter
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import presentation.meals.MealsScreenUIState
+import presentation.meals.MealsUIState.MealUIState
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun MealCard(onClick:()->Unit,meal: MealsScreenUIState.MealUIState,) {
+fun MealCard(onClick:()->Unit, meal: MealUIState,) {
 
     Column(modifier = Modifier.background(Theme.colors.surface, shape = MaterialTheme.shapes.medium)
         .clickable(
@@ -31,20 +32,20 @@ fun MealCard(onClick:()->Unit,meal: MealsScreenUIState.MealUIState,) {
             interactionSource = remember { MutableInteractionSource() }
         ) { onClick()}) {
         Image(
-            painter = painterResource("food.png"),
+            painter = rememberAsyncImagePainter(meal.imageUrl),
             contentDescription = "image description",
             contentScale = ContentScale.FillBounds,
             modifier = Modifier.fillMaxWidth().padding(Theme.dimens.space4)
                 .clip(shape = MaterialTheme.shapes.medium).height(104.dp)
         )
         Text(
-            text = "Tomato Spaghetti with ",
+            text = meal.name,
             style = Theme.typography.body,
             color = Theme.colors.contentPrimary,
             modifier = Modifier.padding(Theme.dimens.space4)
         )
         Text(
-            text = "\$ 30.0 ",
+            text = "\$ ${meal.price} ",
             style = Theme.typography.title,
             color = Theme.colors.contentPrimary,
             modifier = Modifier.padding(start=Theme.dimens.space4, bottom = Theme.dimens.space16)

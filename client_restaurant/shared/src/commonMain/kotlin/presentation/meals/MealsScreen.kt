@@ -31,6 +31,7 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.base.BaseScreen
 import presentation.composables.BpAppBar
 import presentation.meals.Composable.MealCard
+import presentation.meals.MealsUIState.MealsScreenUIState
 import resources.Resources.strings
 
 class MealsScreen :
@@ -82,16 +83,11 @@ class MealsScreen :
                 modifier = Modifier.padding(it).fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                AnimatedVisibility(visible = state.isLoading){
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        color = colors.primary,
-                    )
-                }
+
 
                 LazyRow(
                     contentPadding = PaddingValues(dimens.space16),
-                    horizontalArrangement = Arrangement.spacedBy(dimens.space8),
+                    horizontalArrangement = Arrangement.spacedBy(dimens.space16),
                 ) {
                     items(state.cousin.size) { index ->
                         BpChip(
@@ -101,15 +97,24 @@ class MealsScreen :
                         )
                     }
                 }
+                AnimatedVisibility(visible = state.isLoading){
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        color = colors.primary,
+                    )
+                }
                 LazyVerticalGrid(
+
                     contentPadding = PaddingValues(dimens.space16),
                     columns = GridCells.Adaptive(150.dp),
                     horizontalArrangement = Arrangement.spacedBy(dimens.space8),
                     verticalArrangement = Arrangement.spacedBy(dimens.space8),
+
                 ) {
                     items(state.meals.size) { index ->
                         MealCard(onClick = { listener.onClickMeal() }, meal = state.meals[index])
                     }
+
                 }
 
             }
