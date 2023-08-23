@@ -12,5 +12,7 @@ data class StringResources(
     val workingHours: String = "Working hours",
     val description: String = "Description",
     val save: String = "Save",
-    val logout: String = "Logout"
+    val logout: String = "Logout",
+    val restaurantNameErrorMessage: String = "restaurant name should be between 4 to 25 letters",
+    val descriptionErrorMessage : String = "description shouldn't be more than 255 letter"
 )

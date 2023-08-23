@@ -277,6 +277,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             phone = "+9641324221423",
             openingTime = "09:00",
             closingTime = "22:00",
+            priceLevel = "$$$",
             address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
         ),
         RestaurantDto(
@@ -289,7 +290,8 @@ class FakeRemoteGateWay : IRemoteGateWay {
             phone = "+1234567890",
             openingTime = "11:30",
             closingTime = "21:30",
-            address = AddressDto(latitude = 40.712776, longitude = -74.005974)
+            address = AddressDto(latitude = 40.712776, longitude = -74.005974),
+            priceLevel = "$$"
         ),
         RestaurantDto(
             id = "91c2ae1f-8495-4c0c-bc47-7bf7ef77d907",
@@ -301,7 +303,8 @@ class FakeRemoteGateWay : IRemoteGateWay {
             phone = "+18005551234",
             openingTime = "07:00",
             closingTime = "23:00",
-            address = AddressDto(latitude = 29.9583507, longitude = -90.0656312)
+            address = AddressDto(latitude = 29.9583507, longitude = -90.0656312),
+            priceLevel = "$$"
         )
     )
 
