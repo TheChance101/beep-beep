@@ -10,7 +10,7 @@ data class OrderDto(
     val meals: List<OrderMealDto>,
     val totalPrice: Double? = null,
     val createdAt: Long? = null,
-    var orderState: Int? = null
+    val orderState: Int? = null
 )
 
 fun List<OrderDto>.toOrderEntity(): List<Order> = map { it.toEntity() }

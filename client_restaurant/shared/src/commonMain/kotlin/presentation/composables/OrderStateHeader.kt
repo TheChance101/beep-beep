@@ -12,3 +12,10 @@ fun LazyStaggeredGridScope.header(
 ) {
     item(span = StaggeredGridItemSpan.FullLine, content = content)
 }
+
+/*
+fun LazyGridScope.header(
+    content: @Composable LazyGridItemScope.() -> Unit
+) {
+    item(span = { GridItemSpan(this.maxCurrentLineSpan) }, content = content)
+}*/

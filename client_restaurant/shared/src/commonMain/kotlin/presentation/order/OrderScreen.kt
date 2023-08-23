@@ -30,7 +30,6 @@ import presentation.composables.OrderTextButton
 import presentation.composables.header
 import presentation.login.LoginScreen
 import resources.Resources
-import util.OrderState
 
 class OrderScreen :
     BaseScreen<OrderScreenModel, OrderScreenUiState, OrderScreenUiEffect, OrderScreenInteractionListener>() {
@@ -75,7 +74,7 @@ class OrderScreen :
                         color = Theme.colors.contentSecondary
                     )
                     Text(
-                        text = state.activeOrders.size.toString(),
+                        text = state.totalOrders.toString(),
                         style = Theme.typography.titleLarge,
                         color = Theme.colors.contentPrimary
                     )
@@ -99,8 +98,8 @@ class OrderScreen :
                     )
                 }
 
-                items(state.activeOrders.filter { it.orderState == OrderState.IN_COOKING.statusCode }) { order ->
-                    OrderCard(orders = order) {
+                items(state.inCookingOrders) { order ->
+                    OrderCard(order = order) {
                         OrderTextButton(
                             text = Resources.strings.finish,
                             onClick = {},
@@ -119,8 +118,8 @@ class OrderScreen :
                         color = Theme.colors.contentPrimary
                     )
                 }
-                items(state.activeOrders.filter { it.orderState == OrderState.PENDING.statusCode }) { order ->
-                    OrderCard(orders = order) {
+                items(state.pendingOrders) { order ->
+                    OrderCard(order = order) {
                         Row(horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8)) {
                             OrderTextButton(
                                 text = Resources.strings.cancel,

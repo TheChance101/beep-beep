@@ -492,7 +492,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
 
     override suspend fun updateOrderState(orderId: String, orderState: Int): Order? {
         val order = orders.find { it.id == orderId }
-        orders.indexOf(order).also { orders[it].orderState = orderState }
+//        orders.indexOf(order).also { orders[it].orderState = orderState }
         return order?.toEntity()
     }
 
