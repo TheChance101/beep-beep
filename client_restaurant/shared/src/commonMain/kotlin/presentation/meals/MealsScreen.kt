@@ -86,7 +86,11 @@ class MealsScreen :
 
 
                 LazyRow(
-                    contentPadding = PaddingValues(dimens.space16),
+                    contentPadding = PaddingValues(
+                        start = dimens.space16,
+                        end = dimens.space16,
+                        top = dimens.space16
+                    ),
                     horizontalArrangement = Arrangement.spacedBy(dimens.space16),
                 ) {
                     items(state.cousin.size) { index ->
@@ -97,7 +101,7 @@ class MealsScreen :
                         )
                     }
                 }
-                AnimatedVisibility(visible = state.isLoading){
+                AnimatedVisibility(visible = state.isLoading) {
                     CircularProgressIndicator(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         color = colors.primary,
@@ -110,7 +114,7 @@ class MealsScreen :
                     horizontalArrangement = Arrangement.spacedBy(dimens.space8),
                     verticalArrangement = Arrangement.spacedBy(dimens.space8),
 
-                ) {
+                    ) {
                     items(state.meals.size) { index ->
                         MealCard(onClick = { listener.onClickMeal() }, meal = state.meals[index])
                     }
