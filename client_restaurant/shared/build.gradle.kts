@@ -53,6 +53,7 @@ kotlin {
                 api(libs.androidx.activity.compose)
                 api(libs.androidx.appcompat)
                 api(libs.androidx.core.ktx)
+                api(libs.koin.android)
             }
         }
         val iosX64Main by getting

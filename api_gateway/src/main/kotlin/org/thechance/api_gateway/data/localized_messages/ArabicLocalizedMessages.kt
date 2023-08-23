@@ -1,4 +1,4 @@
-package org.thechance.api_gateway.data.localized_messages.error_codes
+package org.thechance.api_gateway.data.localized_messages
 
 class ArabicLocalizedMessages : LocalizedMessages {
 
@@ -15,4 +15,5 @@ class ArabicLocalizedMessages : LocalizedMessages {
     override val notFound: String = "غير موجود"
     override val invalidCredentials: String = "البيانات خاطئة"
     override val userCreatedSuccessfully: String = ""
+    override val unknownError: String = "حصل خطأ زي حياتك يا 56"
 }

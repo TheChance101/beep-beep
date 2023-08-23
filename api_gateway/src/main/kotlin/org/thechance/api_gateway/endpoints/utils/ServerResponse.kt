@@ -12,28 +12,28 @@ data class ServerResponse<T>(
 
     companion object {
 
-        fun error(errorMessage: List<Map<Int, String>>, code: Int): ServerResponse<String> {
+        fun error(errorMessage: List<Map<Int, String>>?, code: Int): ServerResponse<String> {
             return ServerResponse(
-                    value = "",
-                    isSuccess = false,
-                    status = ResponseStatus(errorMessages = errorMessage, code = code)
+                value = "",
+                isSuccess = false,
+                status = ResponseStatus(errorMessages = errorMessage, code = code)
             )
         }
 
-        inline fun <reified T> success(result: T, successMessage: Map<Int, String>?): ServerResponse<T> {
+        inline fun <reified T> success(result: T, successMessage: String?): ServerResponse<T> {
             return ServerResponse(
-                    value = result,
-                    isSuccess = true,
-                    status = ResponseStatus(successMessage = successMessage, code = 200),
+                value = result,
+                isSuccess = true,
+                status = ResponseStatus(successMessage = successMessage, code = 200),
             )
         }
     }
 
     @Serializable
     data class ResponseStatus(
-            val errorMessages: List<Map<Int, String>>? = null,
-            val successMessage: Map<Int, String>? = null,
-            val code: Int?
+        val errorMessages: List<Map<Int, String>>? = null,
+        val successMessage: String? = null,
+        val code: Int?
     )
 
 }
