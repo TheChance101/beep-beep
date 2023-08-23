@@ -17,21 +17,22 @@ import com.beepbeep.designSystem.ui.theme.Theme.colors
 import com.beepbeep.designSystem.ui.theme.Theme.dimens
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import presentation.composables.modifier.noRippleEffect
 import resources.Resources.images
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 @Composable
 fun BpAppBar(
     onNavigateUp: () -> Unit,
-    title:String ="",
+    title: String = "",
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    content: (@Composable (() -> Unit))? = null
 ) {
     TopAppBar(
         title = {
             Text(
                 text = title,
-                style =  Theme.typography.titleLarge,
+                style = Theme.typography.titleLarge,
                 color = colors.contentPrimary
             )
         },
@@ -39,14 +40,15 @@ fun BpAppBar(
             Icon(
                 painter = painterResource(images.arrowLeft),
                 contentDescription = "",
-                modifier = Modifier.clickable { onNavigateUp() }.padding(start = dimens.space16),
+                modifier = Modifier.noRippleEffect { onNavigateUp() }
+                    .padding(start = dimens.space16, end = dimens.space8),
                 tint = colors.contentSecondary,
             )
         },
         actions = {
-            content()
+            content?.invoke()
         },
-        colors= TopAppBarDefaults.smallTopAppBarColors(containerColor = colors.surface),
+        colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = colors.surface),
         modifier = modifier,
     )
 }
