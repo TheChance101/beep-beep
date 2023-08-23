@@ -4,10 +4,15 @@ plugins {
     alias(libs.plugins.kotlin.native.cocoapods)
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.compose)
+    alias(libs.plugins.kotlinKsp)
 }
 
+group = "org.thechance"
+version = "1.0-SNAPSHOT"
+
+
 kotlin {
-    androidTarget()
+    android()
 
     iosX64()
     iosArm64()
@@ -33,6 +38,12 @@ kotlin {
                 implementation(libs.compose.foundation)
                 implementation(libs.compose.material3)
                 implementation(libs.compose.components.resources)
+
+                implementation(libs.bundles.voyager)
+                implementation(libs.kotlin.coroutines)
+                api(libs.koin.core)
+                implementation(libs.koin.annotations)
+                implementation(libs.koin.compose)
                 implementation(project(":design_system:shared"))
             }
         }
@@ -41,6 +52,7 @@ kotlin {
                 api(libs.androidx.activity.compose)
                 api(libs.androidx.appcompat)
                 api(libs.androidx.core.ktx)
+                api(libs.koin.android)
             }
         }
         val iosX64Main by getting

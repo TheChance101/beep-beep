@@ -1,6 +1,5 @@
 package org.thechance.service_identity.domain.gateway
 
-import org.thechance.service_identity.domain.entity.SaltedHash
 import org.thechance.service_identity.domain.entity.*
 
 interface IDataBaseGateway {
@@ -65,13 +64,6 @@ interface IDataBaseGateway {
 
     suspend fun getSaltedHash(username: String): SaltedHash
 
-    suspend fun saveUserTokens(
-        userId: String,
-        accessToken: String,
-        refreshToken: String,
-        expirationDate: Int
-    ): Boolean
-
     // endregion
 
     // region: user permission management
@@ -88,5 +80,7 @@ interface IDataBaseGateway {
     suspend fun getWalletBalance(userId: String): Double
 
     suspend fun addToWallet(userId: String, amount: Double): Boolean
+
+    suspend fun getUserByUsername(username: String): UserManagement
 
 }

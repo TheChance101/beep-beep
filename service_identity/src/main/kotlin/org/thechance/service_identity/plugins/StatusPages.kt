@@ -22,6 +22,10 @@ private fun StatusPagesConfig.handleStatusPagesExceptions() {
     respondWithErrorCodes<ResourceNotFoundException>(HttpStatusCode.NotFound)
 
     respondWithErrorCodes<InsufficientFundsException>(HttpStatusCode.UnprocessableEntity)
+
+    respondWithErrorCodes<InvalidCredentialsException>(HttpStatusCode.Unauthorized)
+
+    respondWithErrorCodes<InvalidLocationException>(HttpStatusCode.BadRequest)
 }
 
 private inline fun <reified T : Throwable> StatusPagesConfig.respondWithErrorCodes(

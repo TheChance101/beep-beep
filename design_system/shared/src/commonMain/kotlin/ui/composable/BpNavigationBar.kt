@@ -72,7 +72,7 @@ fun RowScope.BpNavigationBarItem(
 ) {
     val styledIcon = @Composable {
         val iconColor by animateColorAsState(
-            if (selected) Theme.colors.primary else Theme.colors.contentSecondary,
+            if (selected) Theme.colors.primary else Theme.colors.contentTertiary,
             tween(500)
         )
         icon(tint = iconColor)
@@ -80,7 +80,7 @@ fun RowScope.BpNavigationBarItem(
 
     val styledLabel = @Composable {
         val textColor by animateColorAsState(
-            if (selected) Theme.colors.primary else Theme.colors.contentSecondary,
+            if (selected) Theme.colors.primary else Theme.colors.contentTertiary,
             tween(500)
         )
         val style =

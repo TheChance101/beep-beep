@@ -1,13 +1,16 @@
 package org.thechance.service_identity.domain.usecases
 
 import org.koin.core.annotation.Single
-import org.thechance.service_identity.domain.security.HashingService
 import org.thechance.service_identity.domain.entity.InsufficientFundsException
+import org.thechance.service_identity.domain.entity.InvalidCredentialsException
 import org.thechance.service_identity.domain.entity.User
+import org.thechance.service_identity.domain.entity.UserManagement
 import org.thechance.service_identity.domain.gateway.IDataBaseGateway
+import org.thechance.service_identity.domain.security.HashingService
 import org.thechance.service_identity.domain.usecases.validation.IUserInfoValidationUseCase
 import org.thechance.service_identity.domain.usecases.validation.IWalletBalanceValidationUseCase
 import org.thechance.service_identity.domain.util.INSUFFICIENT_FUNDS
+import org.thechance.service_identity.domain.util.INVALID_CREDENTIALS
 
 interface IUserAccountManagementUseCase {
 
@@ -35,7 +38,10 @@ interface IUserAccountManagementUseCase {
 
     suspend fun login(username: String, password: String): Boolean
 
-    suspend fun saveUserTokens(userId: String, accessToken: String, refreshToken: String, expirationDate: Int): Boolean
+
+    suspend fun getUserByUsername(username: String): UserManagement
+
+
 }
 
 @Single
@@ -57,20 +63,15 @@ class UserAccountManagementUseCase(
         return dataBaseGateway.createUser(saltedHash, fullName, username, email)
     }
 
+    override suspend fun getUserByUsername(username: String): UserManagement {
+        return dataBaseGateway.getUserByUsername(username)
+    }
+
     override suspend fun login(username: String, password: String): Boolean {
         val saltedHash = dataBaseGateway.getSaltedHash(username)
-        return hashingService.verify(password, saltedHash)
+        return if(hashingService.verify(password, saltedHash)) true
+            else throw InvalidCredentialsException(INVALID_CREDENTIALS)
     }
-
-    override suspend fun saveUserTokens(
-        userId: String,
-        accessToken: String,
-        refreshToken: String,
-        expirationDate: Int
-    ): Boolean {
-        return dataBaseGateway.saveUserTokens(userId, accessToken, refreshToken, expirationDate)
-    }
-
 
     override suspend fun deleteUser(id: String): Boolean {
         return dataBaseGateway.deleteUser(id)
@@ -105,6 +106,5 @@ class UserAccountManagementUseCase(
         }
         return dataBaseGateway.subtractFromWallet(userId, amount)
     }
-
 
 }

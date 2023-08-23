@@ -31,7 +31,7 @@ fun BpIconButton(
     Surface(
         modifier = modifier
             .height(height.dp)
-            .border(width = 1.dp, color = Theme.colors.contentBorder, shape = RoundedCornerShape(
+            .border(width = 1.dp, color = Theme.colors.divider, shape = RoundedCornerShape(
                 Theme.radius.medium)
             )
             .padding(horizontal = Theme.dimens.space16, vertical = Theme.dimens.space8)

@@ -4,24 +4,23 @@ import com.mongodb.MongoWriteException
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.IndexOptions
 import com.mongodb.client.model.Indexes
-import com.mongodb.client.model.UpdateOptions
-import io.ktor.server.plugins.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.*
-import org.thechance.service_identity.data.mappers.*
-import org.thechance.service_identity.domain.entity.SaltedHash
+import org.thechance.service_identity.data.mappers.toCollection
+import org.thechance.service_identity.data.mappers.toEntity
+import org.thechance.service_identity.data.mappers.toManagedEntity
 import org.thechance.service_identity.data.util.USER_DETAILS_COLLECTION
 import org.thechance.service_identity.data.util.isUpdatedSuccessfully
 import org.thechance.service_identity.data.util.paginate
 import org.thechance.service_identity.domain.entity.*
 import org.thechance.service_identity.domain.gateway.IDataBaseGateway
+import org.thechance.service_identity.domain.util.INVALID_CREDENTIALS
 import org.thechance.service_identity.domain.util.NOT_FOUND
 import org.thechance.service_identity.domain.util.USER_ALREADY_EXISTS
 import java.util.*
@@ -46,9 +45,6 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
     private val walletCollection by lazy {
         dataBaseContainer.database.getCollection<WalletCollection>(WALLET_COLLECTION)
     }
-    private val tokensCollection by lazy {
-        dataBaseContainer.database.getCollection<TokenCollection>(TOKENS_COLLECTION)
-    }
 
     init {
         CoroutineScope(Dispatchers.IO).launch {
@@ -64,7 +60,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
             filter = UserDetailsCollection::userId eq UUID.fromString(userId),
             update = push(
                 UserDetailsCollection::addresses,
-                address.id
+                address.id.toString()
             )
         )
         return addressCollection.insertOne(address).wasAcknowledged()
@@ -72,8 +68,8 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
 
     override suspend fun deleteAddress(id: String): Boolean {
         userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::addresses contains UUID.fromString(id),
-            update = pull(UserDetailsCollection::addresses, UUID.fromString(id))
+            filter = UserDetailsCollection::addresses contains id,
+            update = pull(UserDetailsCollection::addresses, id)
         )
         return addressCollection.updateOne(
             filter = Filters.and(AddressCollection::id eq UUID.fromString(id), AddressCollection::isDeleted eq false),
@@ -83,7 +79,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
 
     override suspend fun updateAddress(id: String, location: Location): Boolean {
         return addressCollection.updateOneById(
-            ObjectId(id),
+            UUID.fromString(id),
             location,
             updateOnlyNotNullProperties = true
         ).isUpdatedSuccessfully()
@@ -119,7 +115,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
     override suspend fun deletePermission(permissionId: Int): Boolean {
         return permissionCollection.updateOne(
             filter = Filters.and(
-                PermissionCollection::_id eq permissionId,
+                PermissionCollection::id eq permissionId,
                 PermissionCollection::isDeleted eq false
             ),
             update = setValue(PermissionCollection::isDeleted, true)
@@ -161,6 +157,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
     }
 
     override suspend fun getUserById(id: String): User {
+
         val wallet = getWalletByUserId(id)
         val userAddresses = getUserAddresses(id)
         val userPermission = getUserPermissions(id)
@@ -213,9 +210,8 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
         )
 
         try {
-            val wallet = WalletCollection(userId = userDocument.id.toString())
+            val wallet = WalletCollection(userId = userDocument.id)
             createWallet(wallet)
-
             userDetailsCollection.insertOne(UserDetailsCollection(userId = userDocument.id))
             return userCollection.insertOne(userDocument).wasAcknowledged()
 
@@ -234,7 +230,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
 
         try {
             return userCollection.updateOneById(
-                ObjectId(id),
+                UUID.fromString(id),
                 set(
                     UserCollection::hashedPassword setTo saltedHash?.hash,
                     UserCollection::salt setTo saltedHash?.salt,
@@ -255,52 +251,59 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
             update = set(UserCollection::isDeleted setTo true)
         ).isUpdatedSuccessfully()
     }
-    //endregion
 
+    override suspend fun getUserByUsername(username: String): UserManagement {
+        return userCollection.findOne(
+            UserCollection::username eq username,
+            UserCollection::isDeleted eq false
+        )?.toManagedEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
+    }
+
+    //endregion
 
     // region: wallet
 
+
+
     private suspend fun getWalletByUserId(userId: String): WalletCollection {
         return walletCollection.findOne(
-            WalletCollection::userId eq userId
+            WalletCollection::userId eq UUID.fromString(userId)
         ) ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
-
-
     override suspend fun subtractFromWallet(userId: String, amount: Double): Boolean {
         return walletCollection.updateOne(
-            filter = WalletCollection::userId eq userId,
+            filter = WalletCollection::userId eq UUID.fromString(userId),
             update = inc(WalletCollection::walletBalance, -amount)
         ).isUpdatedSuccessfully()
     }
 
     override suspend fun getWalletBalance(userId: String): Double {
         return walletCollection.findOne(
-            WalletCollection::userId eq userId
+            WalletCollection::userId eq UUID.fromString(userId)
         )?.walletBalance ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
     override suspend fun addToWallet(userId: String, amount: Double): Boolean {
         return walletCollection.updateOne(
-            filter = WalletCollection::userId eq userId,
+            filter = WalletCollection::userId eq UUID.fromString(userId),
             update = inc(WalletCollection::walletBalance, amount)
         ).isUpdatedSuccessfully()
     }
-
     private suspend fun createWallet(wallet: WalletCollection): Boolean {
         userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::userId eq UUID.fromString(wallet.userId),
+            filter = UserDetailsCollection::userId eq wallet.userId,
             update = set(UserDetailsCollection::walletCollection setTo wallet)
         )
         return walletCollection.insertOne(wallet).wasAcknowledged()
     }
+
     // endregion: wallet
 
     // region: user permission management
 
     override suspend fun addPermissionToUser(userId: String, permissionId: Int): Boolean {
-        val permission = permissionCollection.findOne(PermissionCollection::_id eq permissionId)
+        val permission = permissionCollection.findOne(PermissionCollection::id eq permissionId)
             ?: throw ResourceNotFoundException(NOT_FOUND)
 
         return userCollection.updateOne(
@@ -312,39 +315,25 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
     override suspend fun removePermissionFromUser(userId: String, permissionId: Int): Boolean {
         return userCollection.updateOne(
             filter = UserCollection::id eq UUID.fromString(userId),
-            update = pullByFilter(UserCollection::permissions, PermissionCollection::_id eq permissionId)
+            update = pullByFilter(UserCollection::permissions, PermissionCollection::id eq permissionId)
         ).isUpdatedSuccessfully()
     }
 
     override suspend fun getUserPermissions(userId: String): List<Permission> {
-        return userCollection.findOneById(ObjectId(userId))?.permissions?.toEntity()
-            ?: throw ResourceNotFoundException(NOT_FOUND)
+        return userCollection.findOneById(UUID.fromString(userId))?.permissions?.toEntity()
+            ?: emptyList()
     }
 
-    // endregion: user permission management
 
+    // endregion: user permission management
 
     // region Token
 
     override suspend fun getSaltedHash(username: String): SaltedHash {
         val user = userCollection.findOne(
             UserCollection::username eq username
-        ) ?: throw NotFoundException(NOT_FOUND)
-        return SaltedHash(user.hashedPassword, user.salt)
-    }
-
-    override suspend fun saveUserTokens(userId: String, accessToken: String, refreshToken: String, expirationDate: Int): Boolean {
-        val tokens = TokenCollection(
-            UUID.fromString(userId),
-            refreshToken,
-            accessToken,
-            expirationDate
-        )
-        return tokensCollection.updateOne(
-            filter = TokenCollection::userId eq UUID.fromString(userId),
-            target = tokens,
-            options = UpdateOptions().upsert(true)
-        ).isUpdatedSuccessfully()
+        ) ?: throw InvalidCredentialsException(INVALID_CREDENTIALS)
+        return SaltedHash(user.hashedPassword!!, user.salt!!)
     }
 
     // endregion

@@ -1,23 +1,12 @@
 package org.thechance.service_restaurant.data.gateway
 
+import com.mongodb.client.model.FindOneAndUpdateOptions
+import com.mongodb.client.model.ReturnDocument
 import com.mongodb.client.model.Updates
-import org.litote.kmongo.addToSet
-import org.litote.kmongo.and
+import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
-import org.litote.kmongo.eq
-import org.litote.kmongo.`in`
-import org.litote.kmongo.lookup
-import org.litote.kmongo.match
-import org.litote.kmongo.project
-import org.litote.kmongo.pull
-import org.litote.kmongo.pullAll
-import org.litote.kmongo.set
-import org.litote.kmongo.setTo
 import org.thechance.service_restaurant.data.DataBaseContainer
-import org.thechance.service_restaurant.data.collection.CategoryCollection
-import org.thechance.service_restaurant.data.collection.CuisineCollection
-import org.thechance.service_restaurant.data.collection.MealCollection
-import org.thechance.service_restaurant.data.collection.RestaurantCollection
+import org.thechance.service_restaurant.data.collection.*
 import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.collection.relationModels.CategoryRestaurant
@@ -25,17 +14,14 @@ import org.thechance.service_restaurant.data.collection.relationModels.MealCuisi
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
 import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.data.utils.toUUIDs
-import org.thechance.service_restaurant.domain.entity.Category
-import org.thechance.service_restaurant.domain.entity.Cuisine
-import org.thechance.service_restaurant.domain.entity.Meal
-import org.thechance.service_restaurant.domain.entity.Restaurant
+import org.thechance.service_restaurant.domain.entity.*
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
+import org.thechance.service_restaurant.domain.utils.OrderStatus
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 import java.util.*
 
-class RestaurantOptionsGateway(private val container: DataBaseContainer) :
-    IRestaurantOptionsGateway {
+class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRestaurantOptionsGateway {
 
     //region Category
     override suspend fun getCategories(page: Int, limit: Int): List<Category> {
@@ -121,6 +107,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) :
         return container.categoryCollection.findOneAndUpdate(
             filter = CategoryCollection::id eq UUID.fromString(category.id),
             update = category.toCollection(),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toEntity() ?: throw MultiErrorException(listOf(NOT_FOUND))
     }
 
@@ -189,6 +176,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) :
         return container.cuisineCollection.findOneAndUpdate(
             CuisineCollection::id eq UUID.fromString(cuisine.id),
             cuisine.toCollection(),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toEntity() ?: throw MultiErrorException(listOf(NOT_FOUND))
     }
 
@@ -197,7 +185,47 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) :
             filter = CuisineCollection::id eq UUID.fromString(id),
             update = set(CuisineCollection::isDeleted setTo true),
         ).isSuccessfullyUpdated()
+    //endregion
 
+    //region Order
+    override suspend fun addOrder(order: Order) :Boolean {
+       return container.orderCollection.insertOne(order.toCollection()).wasAcknowledged()
+    }
+
+    override suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order> {
+        return  container.orderCollection.find(
+            OrderCollection::restaurantId
+                    eq UUID.fromString(restaurantId)).toList().toEntity()
+    }
+
+    override suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order> {
+        return container.orderCollection.find(
+            OrderCollection::restaurantId eq UUID.fromString(restaurantId),
+            OrderCollection::orderStatus ne OrderStatus.CANCELED.statusCode,
+            OrderCollection::orderStatus ne OrderStatus.DONE.statusCode
+        ).toList().toEntity()
+    }
+
+    override suspend fun getOrderById(orderId: String): Order? =
+        container.orderCollection.findOneById(UUID.fromString(orderId))?.toEntity()
+
+    override suspend fun updateOrderStatus(orderId: String, status: OrderStatus): Order? {
+        val updateOperation = setValue(OrderCollection::orderStatus, status.statusCode)
+        val updatedOrder = container.orderCollection.findOneAndUpdate(
+            filter = OrderCollection::id eq UUID.fromString(orderId),
+            update = updateOperation
+        )
+        return updatedOrder?.toEntity()
+    }
+
+    override suspend fun getOrdersHistory(restaurantId:String,page: Int, limit: Int): List<Order> {
+        return container.orderCollection
+            .find(OrderCollection::orderStatus eq OrderStatus.DONE.statusCode,
+                OrderCollection::orderStatus eq OrderStatus.CANCELED.statusCode,
+                OrderCollection::restaurantId eq UUID.fromString(restaurantId))
+            .sort(descending(OrderCollection::createdAt))
+            .paginate(page, limit).toList().toEntity()
+    }
     //endregion
 
 }

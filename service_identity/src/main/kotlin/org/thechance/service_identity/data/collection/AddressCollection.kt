@@ -13,12 +13,9 @@ data class AddressCollection(
     @BsonId
     @Contextual
     val id: UUID = UUID.randomUUID(),
-    @SerialName("user_id")
     @Contextual
     val userId: UUID,
-    @SerialName("location")
     val location: LocationCollection ,
-    @SerialName("is_deleted")
     val isDeleted: Boolean = false
 )
 

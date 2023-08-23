@@ -9,4 +9,8 @@ fun StatusPagesConfig.configureStatusPages() {
     exception<MultiErrorException>{ call, exception ->
         call.respond(HttpStatusCode.NotFound, exception.errorCodes)
     }
+
+    exception<Throwable> { call, throwable ->
+        call.respond(HttpStatusCode.BadRequest, throwable.message.toString())
+    }
 }
