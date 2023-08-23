@@ -13,7 +13,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import org.koin.core.parameter.ParametersDefinition
 import org.koin.core.qualifier.Qualifier
-import org.koin.mp.KoinPlatform.getKoin
+import org.koin.mp.KoinPlatform
 
 @Suppress("BOUNDS_NOT_ALLOWED_IF_BOUNDED_BY_TYPE_PARAMETER")
 abstract class BaseScreen<VM, S, E, I> : Screen
@@ -43,13 +43,12 @@ abstract class BaseScreen<VM, S, E, I> : Screen
     abstract fun onEffect(effect: E, navigator: Navigator)
 
 
-}
-
-@Composable
-inline fun <reified T : ScreenModel> Screen.getScreenModel(
-    qualifier: Qualifier? = null,
-    noinline parameters: ParametersDefinition? = null,
-): T {
-    val koin = getKoin()
-    return rememberScreenModel(tag = qualifier?.value) { koin.get(qualifier, parameters) }
+    @Composable
+    inline fun <reified T : ScreenModel> getScreenModel(
+        qualifier: Qualifier? = null,
+        noinline parameters: ParametersDefinition? = null,
+    ): T {
+        val koin = KoinPlatform.getKoin()
+        return rememberScreenModel(tag = qualifier?.value) { koin.get(qualifier, parameters) }
+    }
 }

@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 
 @Composable
-fun Logo(expanded: Boolean, modifier: Modifier = Modifier) {
+fun BpLogo(expanded: Boolean, modifier: Modifier = Modifier) {
     Box(modifier) {
         Crossfade(expanded) { targetState ->
             Image(

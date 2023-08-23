@@ -92,7 +92,7 @@ class FakeRemoteGateway : IRemoteGateway {
         ).toEntity()
     }
 
-    override fun getTaxis(): List<Taxi> {
+    override suspend fun getTaxis(): List<Taxi> {
         return listOf(
             TaxiDto(
                 id = "1",

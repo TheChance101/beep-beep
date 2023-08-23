@@ -6,6 +6,7 @@ import data.remote.model.OrderDto
 import data.remote.model.OrderMealDto
 import data.remote.model.RestaurantDto
 import data.remote.model.toEntity
+import data.remote.model.toOrderEntity
 import domain.entity.Category
 import domain.entity.Meal
 import domain.entity.Order
@@ -337,11 +338,11 @@ class FakeRemoteGateWay : IRemoteGateWay {
 
     //region order
     override suspend fun getCurrentOrders(restaurantId: String): List<Order> {
-        return orders.filter { it.orderStatus != 3 || it.orderStatus != 4 }.toEntity()
+        return orders.filter { it.orderStatus != 3 || it.orderStatus != 4 }.toOrderEntity()
     }
 
     override suspend fun getOrdersHistory(restaurantId: String): List<Order> {
-        return orders.filter { it.orderStatus == 3 || it.orderStatus == 4 }.toEntity()
+        return orders.filter { it.orderStatus == 3 || it.orderStatus == 4 }.toOrderEntity()
     }
 
     override suspend fun updateOrderState(orderId: String, orderState: Int): Order? {

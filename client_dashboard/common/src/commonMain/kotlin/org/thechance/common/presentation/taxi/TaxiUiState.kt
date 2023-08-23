@@ -9,10 +9,11 @@ import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.presentation.composables.table.Header
+import org.thechance.common.presentation.util.ErrorState
 
 data class TaxiUiState(
     val isLoading: Boolean = false,
-    val error: String = "",
+    val error: ErrorState = ErrorState.UnKnownError,
     val isAddNewTaxiDialogVisible: Boolean = false,
     val addNewTaxiDialogUiState: AddTaxiDialogUiState = AddTaxiDialogUiState(),
     val taxis: List<TaxiDetailsUiState> = emptyList(),
