@@ -17,7 +17,6 @@ data class UserScreenUiState(
     ),
     val numberOfUsers: Int = 0,
     val search: String = "",
-//    val isFilterDropdownMenuExpanded: Boolean = false,
     val permissionsDialog: PermissionsDialogUiState = PermissionsDialogUiState(),
     val selectedUser: String = "",
     val selectedPage: Int = 1,
@@ -31,16 +30,7 @@ data class UserScreenUiState(
         PermissionUiState.SUPPORT,
         PermissionUiState.DELIVERY,
         PermissionUiState.DASHBOARD_ADMIN,
-    ),
-//    val allCountries: List<String> = listOf(
-//        "Iraq",
-//        "Palestine",
-//        "Jordan",
-//        "Syria",
-//        "Egypt",
-//        "Other"
-//    )
-
+    )
 ) {
     data class UserUiState(
         val fullName: String = "",
