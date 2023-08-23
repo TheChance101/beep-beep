@@ -1,7 +1,5 @@
 package org.thechance.common.domain.getway
 
-import org.thechance.common.domain.entity.UserTokens
-
 
 interface ILocalGateway {
 
@@ -15,6 +13,6 @@ interface ILocalGateway {
 
      suspend fun clearTokens()
 
-     suspend fun loginUser(username: String, password: String): UserTokens
+     suspend fun shouldUserKeptLoggedIn(keepLoggedIn: Boolean)
 
 }

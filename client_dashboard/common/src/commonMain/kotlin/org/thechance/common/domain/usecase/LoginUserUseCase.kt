@@ -2,6 +2,7 @@ package org.thechance.common.domain.usecase
 
 import org.thechance.common.domain.entity.UserTokens
 import org.thechance.common.domain.getway.ILocalGateway
+import org.thechance.common.domain.getway.IRemoteGateway
 
 interface ILoginUserUseCase {
 
@@ -13,11 +14,14 @@ interface ILoginUserUseCase {
 
     suspend fun getRefreshToken(): String
 
-    suspend fun loginUser(username: String, password: String): UserTokens
+    suspend fun loginUser(username: String, password: String, keepLoggedIn: Boolean): UserTokens
 
 }
 
-class LoginUserUseCase(private val localGateway: ILocalGateway): ILoginUserUseCase {
+class LoginUserUseCase(
+    private val localGateway: ILocalGateway,
+    private val remoteGateway: IRemoteGateway
+) : ILoginUserUseCase {
 
     override suspend fun saveAccessToken(token: String) {
         localGateway.saveAccessToken(token)
@@ -35,8 +39,8 @@ class LoginUserUseCase(private val localGateway: ILocalGateway): ILoginUserUseCa
         return localGateway.getRefreshToken()
     }
 
-    override suspend fun loginUser(username: String, password: String): UserTokens {
-        return localGateway.loginUser(username, password)
+    override suspend fun loginUser(username: String, password: String, keepLoggedIn: Boolean): UserTokens {
+        return remoteGateway.loginUser(username, password, keepLoggedIn)
     }
 
 }
