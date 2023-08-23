@@ -45,14 +45,13 @@ import presentation.composables.BpAppBar
 import presentation.composables.CustomBottomSheet
 import presentation.composables.ModalBottomSheetState
 import presentation.composables.modifier.noRippleEffect
-import presentation.main.MainScreenUIEffect
 import resources.Resources
 
-class MealScreen :
+class MealScreen(private val mealId: String? = null) :
     BaseScreen<MealScreenModel, MealUIState, MealScreenUIEffect, MealScreenInteractionListener>() {
     @Composable
     override fun Content() {
-        val screenModel = rememberScreenModel { MealScreenModel() }
+        val screenModel = rememberScreenModel { MealScreenModel(mealId) }
         initScreen(screenModel)
     }
 
@@ -66,7 +65,11 @@ class MealScreen :
                     .background(Theme.colors.surface)
                     .border(width = 1.dp, color = Theme.colors.divider, shape = RectangleShape),
                 onNavigateUp = { listener.onClickBack() },
-                title = Resources.strings.addNewMeal
+                title = if (mealId == null) {
+                    Resources.strings.addNewMeal
+                } else {
+                    Resources.strings.editMeal
+                }
             )
 
             CustomBottomSheet(

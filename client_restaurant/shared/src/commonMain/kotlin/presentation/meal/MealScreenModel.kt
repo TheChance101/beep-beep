@@ -10,23 +10,21 @@ import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 import presentation.main.MainScreenUIEffect
 
-class MealScreenModel : BaseScreenModel<MealUIState, MealScreenUIEffect>(MealUIState()),
-    MealScreenInteractionListener {
+class MealScreenModel(private val mealId: String?) :
+    BaseScreenModel<MealUIState, MealScreenUIEffect>(MealUIState()), MealScreenInteractionListener {
 
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
 
     private val manageMeal: IManageMealUseCase by inject()
 
-    private val mealId = ""//""e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a"
-
-
     init {
         tryToExecute({ manageMeal.getCuisines() }, ::onGetCuisinesSuccess, ::onAddMealError)
 
-        if (mealId.isNotEmpty()) {
+        mealId?.let {
             tryToExecute({ manageMeal.getMeal(mealId) }, ::onGetMealSuccess, ::onAddMealError)
         }
+
     }
 
     private fun onGetCuisinesSuccess(cuisines: List<Cuisine>) {
