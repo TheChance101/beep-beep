@@ -25,6 +25,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.thechance.common.presentation.composables.BpDropdownMenu
+import org.thechance.common.presentation.composables.BpDropdownMenuItem
 import org.thechance.common.presentation.composables.PermissionsFlowRow
 import org.thechance.common.presentation.composables.modifier.cursorHoverIconHand
 import org.thechance.common.presentation.composables.modifier.noRipple
@@ -89,6 +90,8 @@ object UserScreen : Screen, KoinComponent {
                 pageCount = state.pageCount,
                 onPageClicked = onPageClicked,
                 onItemPerPageChanged = onItemPerPageChanged,
+                editUserMenu = state.editUserMenu,
+                onEditUserDismiss = screenModel::onEditUserDismiss,
             )
         }
     }
@@ -104,6 +107,8 @@ object UserScreen : Screen, KoinComponent {
         pageCount: Int,
         onPageClicked: (Int) -> Unit,
         onItemPerPageChanged: (String) -> Unit,
+        editUserMenu: UserScreenUiState.EditUserMenuUiState,
+        onEditUserDismiss: () -> Unit,
     ) {
         Column {
             BpTable(
@@ -113,14 +118,15 @@ object UserScreen : Screen, KoinComponent {
                 modifier = Modifier.fillMaxWidth(),
                 rowsCount = numberItemInPage,
                 offset = selectedPage - 1,
-                rowContent = { user ->
-                    UserRow(
-                        onClickEditUser = onEditUserClicked,
-                        user = user,
-                        position = users.indexOf(user) + 1,
-                    )
-                },
-            )
+            ) { user ->
+                UserRow(
+                    onClickEditUser = onEditUserClicked,
+                    user = user,
+                    position = users.indexOf(user) + 1,
+                    editUserMenu = editUserMenu,
+                    onEditUserDismiss = onEditUserDismiss,
+                )
+            }
             UsersTableFooter(
                 numberItemInPage = numberItemInPage,
                 numberOfUsers = numberOfUsers,
@@ -314,6 +320,8 @@ object UserScreen : Screen, KoinComponent {
         user: UserScreenUiState.UserUiState,
         firstColumnWeight: Float = 1f,
         otherColumnsWeight: Float = 3f,
+        editUserMenu: UserScreenUiState.EditUserMenuUiState,
+        onEditUserDismiss: () -> Unit,
     ) {
         Text(
             text = position.toString(),
@@ -344,6 +352,7 @@ object UserScreen : Screen, KoinComponent {
             modifier = Modifier.weight(otherColumnsWeight),
             maxLines = 1,
         )
+
         Text(
             user.email,
             style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
@@ -351,6 +360,7 @@ object UserScreen : Screen, KoinComponent {
             modifier = Modifier.weight(otherColumnsWeight),
             maxLines = 1,
         )
+
         Text(
             user.country,
             style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
@@ -358,6 +368,7 @@ object UserScreen : Screen, KoinComponent {
             modifier = Modifier.weight(otherColumnsWeight),
             maxLines = 1,
         )
+
         FlowRow(
             modifier = Modifier.weight(otherColumnsWeight),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -372,13 +383,48 @@ object UserScreen : Screen, KoinComponent {
             }
         }
 
-        Image(
-            painter = painterResource("horizontal_dots.xml"),
-            contentDescription = null,
-            modifier = Modifier
-                .noRipple { onClickEditUser(user.fullName) }
-                .weight(firstColumnWeight),
-            colorFilter = ColorFilter.tint(color = Theme.colors.contentPrimary)
-        )
+        Box(
+            modifier = Modifier.weight(firstColumnWeight),
+        ) {
+            Image(
+                painter = painterResource("horizontal_dots.xml"),
+                contentDescription = null,
+                modifier = Modifier.noRipple { onClickEditUser(user.username) },
+                colorFilter = ColorFilter.tint(color = Theme.colors.contentPrimary)
+            )
+            EditUserDropdownMenu(
+                user = user,
+                editUserMenu = editUserMenu,
+                onEditUserDismiss = onEditUserDismiss,
+            )
+        }
+    }
+
+    @Composable
+    private fun EditUserDropdownMenu(
+        user: UserScreenUiState.UserUiState,
+        editUserMenu: UserScreenUiState.EditUserMenuUiState,
+        onEditUserDismiss: () -> Unit,
+        modifier: Modifier = Modifier
+    ) {
+        BpDropdownMenu(
+            expanded = user.username == editUserMenu.username,
+            onDismissRequest = onEditUserDismiss,
+            shape = RoundedCornerShape(Theme.radius.medium),
+            modifier = modifier,
+            offset = DpOffset.Zero.copy(x = (-100).dp)
+        ) {
+            Column {
+                editUserMenu.items.forEach {
+                    BpDropdownMenuItem(
+                        onClick = {},
+                        text = it.text,
+                        leadingIconPath = it.iconPath,
+                        isSecondary = it.isSecondary,
+                        showBottomDivider = it != editUserMenu.items.last()
+                    )
+                }
+            }
+        }
     }
 }
