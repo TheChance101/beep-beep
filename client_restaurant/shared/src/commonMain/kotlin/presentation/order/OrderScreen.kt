@@ -68,7 +68,6 @@ class OrderScreen :
                 horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8)
             ) {
 
-
                 header {
                     Text(
                         modifier = Modifier.padding(vertical = Theme.dimens.space8),
