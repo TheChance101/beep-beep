@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.base.BaseScreen
@@ -29,12 +30,13 @@ import presentation.order.order_history.composables.AnimatedTabLayout
 import resources.Resources
 import util.capitalizeFirstLetter
 
-class OrdersHistoryScreen : BaseScreen<OrderHistoryScreenModel, OrderHistoryScreenUiState,
+class OrdersHistoryScreen(private val restaurantId: String) : BaseScreen<OrderHistoryScreenModel, OrderHistoryScreenUiState,
         OrderHistoryScreenUiEffect, OrderHistoryScreenInteractionListener>() {
 
     @Composable
     override fun Content() {
-        initScreen(getScreenModel())
+        val screenModel: OrderHistoryScreenModel = rememberScreenModel { OrderHistoryScreenModel(restaurantId) }
+        initScreen(screenModel)
     }
 
     @OptIn(ExperimentalFoundationApi::class)

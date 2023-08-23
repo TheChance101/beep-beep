@@ -14,12 +14,11 @@ import util.formatDateTime
 
 
 // todo: need to pass restaurantId from previous screen
-class OrderHistoryScreenModel :
+class OrderHistoryScreenModel(private val restaurantId: String) :
     BaseScreenModel<OrderHistoryScreenUiState, OrderHistoryScreenUiEffect>(OrderHistoryScreenUiState()),
     OrderHistoryScreenInteractionListener, KoinComponent {
     override val viewModelScope: CoroutineScope = coroutineScope
     private val manageOrderUseCase: IManageOrderUseCase by inject()
-    private val restaurantId = "7c3d631e-6d49-48c9-9f91-9426ec559eb1"
 
     init {
         getData()
