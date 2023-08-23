@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kotlinKsp)
+    id("io.realm.kotlin") version "1.10.0"
 }
 
 group = "org.thechance"
@@ -38,6 +39,9 @@ kotlin {
                 implementation(libs.compose.foundation)
                 implementation(libs.compose.material3)
                 implementation(libs.compose.components.resources)
+                implementation("io.realm.kotlin:library-base:1.10.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0")
+
 
                 implementation(libs.bundles.voyager)
                 implementation(libs.kotlin.coroutines)
