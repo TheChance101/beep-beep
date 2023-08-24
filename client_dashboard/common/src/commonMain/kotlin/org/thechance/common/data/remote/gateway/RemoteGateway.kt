@@ -83,13 +83,15 @@ class RemoteGateway(
     }
 
     private fun throwMatchingException(errorMessages: Map<String, String>) {
-        if (errorMessages.containsErrors(WRONG_PASSWORD)) {
-            throw InvalidCredentialsException(errorMessages.getOrEmpty(WRONG_PASSWORD))
-        } else {
-            if (errorMessages.containsErrors(USER_NOT_EXIST)) {
-                throw UserNotFoundException(errorMessages.getOrEmpty(USER_NOT_EXIST))
+        errorMessages.let{
+            if (it.containsErrors(WRONG_PASSWORD)) {
+                throw InvalidCredentialsException(it.getOrEmpty(WRONG_PASSWORD))
             } else {
-                throw UnknownErrorException()
+                if (it.containsErrors(USER_NOT_EXIST)) {
+                    throw UserNotFoundException(it.getOrEmpty(USER_NOT_EXIST))
+                } else {
+                    throw UnknownErrorException()
+                }
             }
         }
     }
