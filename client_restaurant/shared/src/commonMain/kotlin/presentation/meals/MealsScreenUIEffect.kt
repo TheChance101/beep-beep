@@ -4,7 +4,8 @@ sealed class MealsScreenUIEffect {
 
     object Back : MealsScreenUIEffect()
 
-    object NavigateToMealDetails : MealsScreenUIEffect()
+    class NavigateToMealDetails(val mealId: String) : MealsScreenUIEffect()
 
+    object NavigateToAddMeal : MealsScreenUIEffect()
 
 }

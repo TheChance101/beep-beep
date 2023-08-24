@@ -45,6 +45,10 @@ class RemoteGateway(
         return emptyList()
     }
 
+    override suspend fun searchRestaurantsByRestaurantName(restaurantName: String): List<Restaurant> {
+        return emptyList()
+    }
+
     override suspend fun loginUser(username: String, password: String): UserTokens {
         return tryToExecute<ServerResponse<UserTokensRemoteDto>> {
             submitForm(

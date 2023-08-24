@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.CircularProgressIndicator
@@ -27,11 +28,12 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpChip
 import com.beepbeep.designSystem.ui.theme.Theme.colors
 import com.beepbeep.designSystem.ui.theme.Theme.dimens
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.base.BaseScreen
 import presentation.composables.BpAppBar
+import presentation.info.RestaurantInfoScreen
+import presentation.meal.MealScreen
 import presentation.meals.Composable.MealCard
-import presentation.meals.MealsUIState.MealsScreenUIState
+import presentation.meals.state.MealsScreenUIState
 import resources.Resources.strings
 
 class MealsScreen :
@@ -46,7 +48,8 @@ class MealsScreen :
     override fun onEffect(effect: MealsScreenUIEffect, navigator: Navigator) {
         when (effect) {
             is MealsScreenUIEffect.Back -> navigator.pop()
-            is MealsScreenUIEffect.NavigateToMealDetails -> {}
+            is MealsScreenUIEffect.NavigateToMealDetails -> navigator.push(MealScreen(mealId = effect.mealId))
+            is MealsScreenUIEffect.NavigateToAddMeal -> navigator.push(MealScreen())
         }
     }
 
@@ -60,13 +63,11 @@ class MealsScreen :
                 BpAppBar(
                     title = strings.allMeals,
                     onNavigateUp = { listener.onClickBack() },
-                ) {}
-
+                )
             },
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = {
-                    },
+                    onClick = listener::onAddMeaClick,
                     containerColor = colors.primary,
                     shape = shapes.medium,
                 ) {
@@ -93,11 +94,11 @@ class MealsScreen :
                     ),
                     horizontalArrangement = Arrangement.spacedBy(dimens.space16),
                 ) {
-                    items(state.cousin.size) { index ->
+                    items(state.cuisine.size) { index ->
                         BpChip(
-                            label = state.cousin[index].name,
-                            isSelected = state.cousin[index] == state.selectedCousin,
-                            onClick = { listener.onClickCousinType(state.cousin[index]) },
+                            label = state.cuisine[index].name,
+                            isSelected = state.cuisine[index] == state.selectedCuisine,
+                            onClick = { listener.onClickCuisineType(state.cuisine[index]) },
                         )
                     }
                 }
@@ -108,7 +109,6 @@ class MealsScreen :
                     )
                 }
                 LazyVerticalGrid(
-
                     contentPadding = PaddingValues(dimens.space16),
                     columns = GridCells.Adaptive(150.dp),
                     horizontalArrangement = Arrangement.spacedBy(dimens.space8),
@@ -116,11 +116,13 @@ class MealsScreen :
 
                     ) {
                     items(state.meals.size) { index ->
-                        MealCard(onClick = { listener.onClickMeal() }, meal = state.meals[index])
+                        MealCard(onClick = {
+                            listener.onClickMeal(state.meals[index].id)
+                        }, meal = state.meals[index])
                     }
 
-                }
 
+                }
             }
         }
     }

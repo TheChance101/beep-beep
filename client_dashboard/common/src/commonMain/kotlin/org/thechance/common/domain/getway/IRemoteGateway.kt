@@ -17,6 +17,8 @@ interface IRemoteGateway {
 
     suspend fun getRestaurants(): List<Restaurant>
 
+    suspend fun searchRestaurantsByRestaurantName(restaurantName: String): List<Restaurant>
+
     suspend fun loginUser(username: String, password: String): UserTokens
 
 }
