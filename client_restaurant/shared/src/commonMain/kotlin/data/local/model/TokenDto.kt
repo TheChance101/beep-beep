@@ -1,4 +1,4 @@
-package data.remote.model
+package data.local.model
 
 import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.annotations.PrimaryKey
