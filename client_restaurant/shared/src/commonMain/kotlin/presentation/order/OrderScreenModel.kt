@@ -10,11 +10,24 @@ import presentation.base.ErrorState
 class OrderScreenModel :
     BaseScreenModel<OrderScreenUiState, OrderScreenUiEffect>(OrderScreenUiState()),
     OrderScreenInteractionListener {
+    private val manageOrdersUseCase: IManageOrderUseCase by inject()
+
     override val viewModelScope: CoroutineScope = coroutineScope
 
-    private val manageOrdersUseCase: IManageOrderUseCase by inject()
     override fun onClickBack() {
         sendNewEffect(OrderScreenUiEffect.Back)
+    }
+
+    override fun onClickFinishOrder() {
+        sendNewEffect(OrderScreenUiEffect.FinishOrder)
+    }
+
+    override fun onClickCancelOrder() {
+        sendNewEffect(OrderScreenUiEffect.CancelOrder)
+    }
+
+    override fun onClickApproveOrder() {
+        sendNewEffect(OrderScreenUiEffect.ApproveOrder)
     }
 
     init {
