@@ -7,4 +7,5 @@ data class StringResources(
     val pickWhichRestaurant : String = "Pick which restaurant you want to manage right now.",
     val open : String = "Open",
     val closed : String = "Closed",
+    val allMeals: String = "All meals"
 )
