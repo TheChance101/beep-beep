@@ -7,6 +7,7 @@ fun appModule() = module {
         screenModule,
         GatewayModule,
         UseCaseModule,
-        DatabaseModule
+        LocalStorageModule,
+        NetworkModule
     )
 }

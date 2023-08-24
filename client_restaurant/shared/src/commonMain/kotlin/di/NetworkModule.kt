@@ -12,7 +12,6 @@ import io.ktor.client.request.header
 import io.ktor.serialization.kotlinx.json.json
 import org.koin.dsl.module
 
-
 val NetworkModule = module {
     single {
         HttpClient(CIO) {

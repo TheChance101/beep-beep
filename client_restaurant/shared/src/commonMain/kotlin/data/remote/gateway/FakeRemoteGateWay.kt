@@ -11,6 +11,7 @@ import domain.entity.Category
 import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
+import domain.entity.UserToken
 import domain.gateway.IRemoteGateWay
 
 class FakeRemoteGateWay : IRemoteGateWay {
@@ -302,17 +303,10 @@ class FakeRemoteGateWay : IRemoteGateWay {
         )
     )
 
-    override suspend fun saveAccessToken(token: String) {}
-
-    override suspend fun getAccessToken(): String {
-        return ""
+    override suspend fun loginUser(userName: String, password: String): UserToken {
+        return UserToken("")
     }
 
-    override suspend fun saveRefreshToken(token: String) {}
-
-    override suspend fun getRefreshToken(): String {
-        return ""
-    }
 
     //region restaurant
     override suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant> {

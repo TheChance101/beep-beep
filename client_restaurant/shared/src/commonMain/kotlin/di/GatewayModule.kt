@@ -1,11 +1,16 @@
 package di
 
-import data.gateway.RestaurantGateWay
 import data.remote.gateway.FakeRemoteGateWay
+import data.remote.gateway.LocalGateWay
+import data.remote.gateway.RemoteGateWay
+import domain.gateway.ILocalGateWay
 import domain.gateway.IRemoteGateWay
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val GatewayModule = module {
-    single<IRemoteGateWay> { FakeRemoteGateWay() }
-    single<IRemoteGateWay> { RestaurantGateWay(get()) }
+    singleOf(::FakeRemoteGateWay) { bind<IRemoteGateWay>() }
+    singleOf(::RemoteGateWay) { bind<IRemoteGateWay>() }
+    singleOf(::LocalGateWay) { bind<ILocalGateWay>() }
 }

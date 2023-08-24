@@ -5,7 +5,7 @@ import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import org.koin.dsl.module
 
-val DatabaseModule = module {
+val LocalStorageModule = module {
     single {
         RealmConfiguration.Builder(
             schema = setOf(TokenDto::class)
