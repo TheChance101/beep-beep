@@ -11,6 +11,7 @@ data class OrderScreenUiState(
 )
 
 data class OrderUiState(
+    val id: String = "",
     val orderMealUiStates: List<OrderMealUiState> = emptyList(),
     val totalPrice: Double = 0.0,
     val orderState: OrderState = OrderState.PENDING,
@@ -32,6 +33,7 @@ fun OrderMeal.toOrderMealUiState(): OrderMealUiState {
 
 fun Order.toOrderUiState(): OrderUiState {
     return OrderUiState(
+        id = id,
         orderMealUiStates = meals.map { it.toOrderMealUiState() },
         totalPrice = totalPrice,
         orderState = orderState,

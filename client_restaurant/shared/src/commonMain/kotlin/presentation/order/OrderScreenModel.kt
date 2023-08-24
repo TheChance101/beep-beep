@@ -1,6 +1,7 @@
 package presentation.order
 
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.entity.OrderState
 import domain.usecase.IManageOrderUseCase
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.component.inject
@@ -35,6 +36,19 @@ class OrderScreenModel :
         getPendingOrders("7c3d631e-6d49-48c9-9f91-9426ec559eb1")
     }
 
+    private fun updateOrderState(orderId: String, orderState: OrderState) {
+        tryToExecute(
+            { manageOrdersUseCase.updateOrderState(orderId , orderState)?.toOrderUiState()},
+            ::onUpdateOrderStateSuccess,
+            ::onUpdateOrderStateError
+        )
+    }
+
+
+    private fun onUpdateOrderStateSuccess(order: OrderUiState?) {
+
+    }
+
     private fun getPendingOrders(restaurantId: String) {
         tryToExecute(
             { manageOrdersUseCase.getPendingOrders(restaurantId).map { it.toOrderUiState() } },
@@ -65,6 +79,10 @@ class OrderScreenModel :
     }
 
     private fun onGetOrdersError(errorState: ErrorState) {
+        println("Error is $errorState")
+    }
+
+    private fun onUpdateOrderStateError(errorState: ErrorState) {
         println("Error is $errorState")
     }
 

@@ -24,7 +24,9 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpAppBar
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
+import presentation.composables.BPSnackBar
 import presentation.login.LoginScreen
 import presentation.order.composables.OrderCard
 import presentation.order.composables.OrderTextButton
@@ -42,9 +44,9 @@ class OrderScreen :
     override fun onEffect(effect: OrderScreenUiEffect, navigator: Navigator) {
         when (effect) {
             is OrderScreenUiEffect.Back -> navigator.push(LoginScreen())
-            OrderScreenUiEffect.ApproveOrder -> TODO()
-            OrderScreenUiEffect.CancelOrder -> TODO()
-            OrderScreenUiEffect.FinishOrder -> TODO()
+            OrderScreenUiEffect.ApproveOrder -> {}
+            OrderScreenUiEffect.CancelOrder -> {}
+            OrderScreenUiEffect.FinishOrder -> {}
         }
     }
 
@@ -59,7 +61,7 @@ class OrderScreen :
                     .fillMaxWidth()
                     .background(Theme.colors.surface)
                     .border(width = 1.dp, color = Theme.colors.divider, shape = RectangleShape),
-                onNavigateUp = {},
+                onNavigateUp = listener::onClickBack,
                 title = Resources.strings.orders
             ) {
                 TotalOrders(text = Resources.strings.totalOrders, totalOrders = state.totalOrders)
@@ -76,15 +78,15 @@ class OrderScreen :
                 ActiveOrders(
                     title = Resources.strings.inCookingOrders,
                     inCookingOrders = state.inCookingOrders,
-                    onClickFinish = {}
+                    onClickFinish = listener::onClickFinishOrder
                 )
 
                 ActiveOrders(
                     modifier = Modifier.padding(0.dp),
                     title = Resources.strings.requestedOrders,
                     pendingOrders = state.pendingOrders,
-                    onClickCancel = {},
-                    onClickApprove = {}
+                    onClickCancel = listener::onClickCancelOrder,
+                    onClickApprove = listener::onClickApproveOrder
                 )
 
             }

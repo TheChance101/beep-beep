@@ -7,7 +7,7 @@ import domain.gateway.IRemoteGateWay
 interface IManageOrderUseCase {
     suspend fun getInCookingOrders(restaurantId: String): List<Order>
     suspend fun getPendingOrders(restaurantId: String): List<Order>
-    suspend fun updateOrderState(orderId: String): Order?
+    suspend fun updateOrderState(orderId: String , currentOrderState: OrderState): Order?
 }
 
 class ManageOrderUseCase(private val remoteGateWay: IRemoteGateWay) : IManageOrderUseCase {
@@ -22,16 +22,14 @@ class ManageOrderUseCase(private val remoteGateWay: IRemoteGateWay) : IManageOrd
             .filter { it.orderState.statusCode == OrderState.PENDING.statusCode }
     }
 
-    override suspend fun updateOrderState(orderId: String): Order? {
-
-        val newOrderState = when (remoteGateWay.getOrderById(orderId)?.orderState) {
+    override suspend fun updateOrderState(orderId: String, currentOrderState: OrderState): Order? {
+/*        val newOrderState = when (currentOrderState) {
             OrderState.PENDING -> OrderState.IN_COOKING.statusCode
             OrderState.IN_COOKING -> OrderState.FINISHED.statusCode
             OrderState.CANCELED -> OrderState.CANCELED.statusCode
             OrderState.FINISHED -> OrderState.FINISHED.statusCode
-            null -> OrderState.IN_COOKING.statusCode
-        }
-        return remoteGateWay.updateOrderState(orderId, newOrderState)
+        }*/
+        return remoteGateWay.updateOrderState(orderId, currentOrderState.statusCode)
     }
 
 }
