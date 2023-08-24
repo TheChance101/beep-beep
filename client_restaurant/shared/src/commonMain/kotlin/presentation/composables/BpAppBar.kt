@@ -14,6 +14,7 @@ import com.beepbeep.designSystem.ui.theme.Theme.colors
 import com.beepbeep.designSystem.ui.theme.Theme.dimens
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import presentation.composables.modifier.noRippleEffect
 import resources.Resources.images
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
@@ -36,7 +37,7 @@ fun BpAppBar(
             Icon(
                 painter = painterResource(images.arrowLeft),
                 contentDescription = "",
-                modifier = Modifier.clickable { onNavigateUp() }
+                modifier = Modifier.noRippleEffect { onNavigateUp() }
                     .padding(start = dimens.space16, end = dimens.space16),
                 tint = colors.contentSecondary,
             )

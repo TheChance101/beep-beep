@@ -2,21 +2,23 @@ package presentation.meals
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.usecase.IMangeCousinUseCase
+
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
-import presentation.meals.MealsUIState.CousinUIState
-import presentation.meals.MealsUIState.MealsScreenUIState
-import presentation.meals.MealsUIState.toCousinUIState
-import presentation.meals.MealsUIState.toUIState
+import presentation.meals.state.CousinUIState
+import presentation.meals.state.MealsScreenUIState
+import presentation.meals.state.toCousinUIState
+import presentation.meals.state.toUIState
 
 class MealsScreenModel :
     BaseScreenModel<MealsScreenUIState, MealsScreenUIEffect>(MealsScreenUIState()),
-    MealScreenInteractionListener  {
+    MealScreenInteractionListener {
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
 
     private val mangeCousin: IMangeCousinUseCase by inject()
+
 
     init {
         getCousin()
@@ -26,6 +28,7 @@ class MealsScreenModel :
         tryToExecute(
             function = {
                 mangeCousin.getCousins("1")
+
 
             },
             onSuccess = { value ->
@@ -59,10 +62,12 @@ class MealsScreenModel :
         )
     }
 
-
-
     override fun onClickBack() {
         sendNewEffect(MealsScreenUIEffect.Back)
+    }
+
+    override fun onAddMeaClick() {
+        sendNewEffect(MealsScreenUIEffect.NavigateToAddMeal)
     }
 
 

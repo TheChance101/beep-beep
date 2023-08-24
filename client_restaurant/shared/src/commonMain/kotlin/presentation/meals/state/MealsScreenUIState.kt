@@ -1,9 +1,4 @@
-package presentation.meals.MealsUIState
-
-import domain.entity.Cousin
-import domain.entity.Meal
-import presentation.meals.MealsUIState.CousinUIState
-import presentation.meals.MealsUIState.MealUIState
+package presentation.meals.state
 
 data class MealsScreenUIState(
     val cousin: List<CousinUIState> = emptyList(),

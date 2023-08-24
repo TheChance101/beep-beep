@@ -1,7 +1,7 @@
 package data.remote.gateway
 
 import data.remote.model.AddressDto
-import data.remote.model.CousinDto
+import data.remote.model.CuisineDto
 import data.remote.model.MealDto
 import data.remote.model.OrderDto
 import data.remote.model.OrderMealDto
@@ -9,7 +9,7 @@ import data.remote.model.RestaurantDto
 import data.remote.model.toEntity
 import data.remote.model.toOrderEntity
 import domain.entity.Category
-import domain.entity.Cousin
+import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
@@ -382,6 +382,23 @@ class FakeRemoteGateWay : IRemoteGateWay {
         ),
     )
 
+    private val cuisines = listOf(
+        CuisineDto(id = "ba9b9700-6d24-434b-8d67-daf9e45e1063", name = "Main Course"),
+        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3a", name = "Keto"),
+        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3b", name = "Pizza"),
+        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3c", name = "Chinese"),
+        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3d", name = "Italian"),
+        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3e", name = "Middle-East"),
+        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3f", name = "Indian"),
+        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3g", name = "French"),
+        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3h", name = "Japanese"),
+        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3i", name = "Spanish"),
+        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3j", name = "Greek"),
+        CuisineDto(id = "ba9b9700-6d24-434b-8d67-daf9e45e1064", name = "Burrito"),
+        CuisineDto(id = "ba9b9700-6d24-434b-8d67-daf9e45e1065", name = "Pizza"),
+        CuisineDto(id = "ba9b9700-6d24-434b-8d67-daf9e45e1066", name = "Dinner"),
+    )
+
     //region restaurant
     override suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant> {
         return restaurants.toEntity()
@@ -436,9 +453,19 @@ class FakeRemoteGateWay : IRemoteGateWay {
     override suspend fun getCategoriesByRestaurantId(restaurantId: String): Category {
         return Category(id = "8a-4854-49c6-99ed-ef09899c2", name = "Sea Food")
     }
+    //endregion category
 
-    override suspend fun getCousins(restaurantId: String): List<Cousin> {
-        return cousins.toEntity()
+    //region cuisines
+    override suspend fun getCuisines(): List<Cuisine> {
+        return cuisines.toEntity()
+    }
+
+    override suspend fun getCuisinesInMeal(mealId: String): List<Cuisine> {
+        return cuisines.subList(0, 3).toEntity()
+    }
+
+    override suspend fun getCousins(restaurantId: String): List<Cuisine> {
+        return cuisines.toEntity()
     }
 
     override suspend fun getMealsByCousinId(id: String): List<Meal> {
@@ -446,6 +473,6 @@ class FakeRemoteGateWay : IRemoteGateWay {
             meal.cousins?.find { it == id } != null
         }.toEntity()
     }
-    //endregion category
+    //endregion cuisines
 
 }
