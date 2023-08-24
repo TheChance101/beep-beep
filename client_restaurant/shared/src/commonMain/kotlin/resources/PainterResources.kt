@@ -4,7 +4,6 @@ data class PainterResources(
     val bpIcon: String,
     val bpLogo: String,
     val arrowLeft: String,
-    val arrowDown: String,
     val moonStars: String,
     val filledStar: String,
     val halfFilledStar: String,
