@@ -1,4 +1,4 @@
-package presentation.order.composables
+package presentation.order.composable
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues

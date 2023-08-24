@@ -26,8 +26,8 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.base.BaseScreen
 import presentation.composables.BpAppBar
 import presentation.login.LoginScreen
-import presentation.order.composables.OrderCard
-import presentation.order.composables.OrderTextButton
+import presentation.order.composable.OrderCard
+import presentation.order.composable.OrderTextButton
 import resources.Resources
 
 class OrderScreen :
