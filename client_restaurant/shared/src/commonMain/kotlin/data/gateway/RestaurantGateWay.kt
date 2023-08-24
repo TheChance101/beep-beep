@@ -10,11 +10,7 @@ class RestaurantGateWay (
 ): IRestaurantGateWay {
 
     override suspend fun saveAccessToken(token: String) {
-        realm.write {
-            copyToRealm(TokenDto().apply {
-                this.accessToken = token
-            })
-        }
+
     }
 
     override suspend fun saveRefreshToken(token: String) {
@@ -26,7 +22,7 @@ class RestaurantGateWay (
     }
 
     override suspend fun getAccessToken(): String {
-        return realm.query<TokenDto>().first().find()?.accessToken ?: throw Exception("Access Token not found")
+        return ""
     }
 
     override suspend fun getRefreshToken(): String {
