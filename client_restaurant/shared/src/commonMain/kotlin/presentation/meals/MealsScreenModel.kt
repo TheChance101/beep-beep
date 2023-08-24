@@ -1,23 +1,23 @@
 package presentation.meals
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.usecase.IGetCousinUseCase
+import domain.usecase.IGetCuisineUseCase
 import domain.usecase.IGetMealsByCousin
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
-import presentation.meals.MealsUIState.CousinUIState
-import presentation.meals.MealsUIState.MealsScreenUIState
-import presentation.meals.MealsUIState.toCousinUIState
-import presentation.meals.MealsUIState.toUIState
+import presentation.meals.state.CousinUIState
+import presentation.meals.state.MealsScreenUIState
+import presentation.meals.state.toCousinUIState
+import presentation.meals.state.toUIState
 
 class MealsScreenModel :
     BaseScreenModel<MealsScreenUIState, MealsScreenUIEffect>(MealsScreenUIState()),
-    MealScreenInteractionListener  {
+    MealScreenInteractionListener {
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
 
-    private val getCousinUse: IGetCousinUseCase by inject()
+    private val getCuisines: IGetCuisineUseCase by inject()
     private val getMealsUseCase: IGetMealsByCousin by inject()
 
     init {
@@ -27,7 +27,7 @@ class MealsScreenModel :
     private fun getCousin() {
         tryToExecute(
             function = {
-                getCousinUse("1")
+                getCuisines.getRestaurantCuisines("1")
 
             },
             onSuccess = { value ->
@@ -61,14 +61,16 @@ class MealsScreenModel :
         )
     }
 
-
-
     override fun onClickBack() {
         sendNewEffect(MealsScreenUIEffect.Back)
     }
 
-    override fun onClickMeal() {
-        sendNewEffect(MealsScreenUIEffect.NavigateToMealDetails)
+    override fun onClickMeal(mealId: String) {
+        sendNewEffect(MealsScreenUIEffect.NavigateToMealDetails(mealId))
+    }
+
+    override fun onAddMeaClick() {
+        sendNewEffect(MealsScreenUIEffect.NavigateToAddMeal)
     }
 
     override fun onClickCousinType(type: CousinUIState) {

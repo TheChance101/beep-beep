@@ -6,12 +6,14 @@ import presentation.login.LoginScreen
 import presentation.meals.MealsScreen
 import resources.BpRestaurantTheme
 
+
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun App() {
     BpRestaurantTheme {
-        Navigator(MealsScreen()) {
+        Navigator(LoginScreen()) {
             SlideTransition(it)
         }
     }
 }
+
