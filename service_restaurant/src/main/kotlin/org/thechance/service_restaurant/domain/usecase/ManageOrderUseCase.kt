@@ -1,8 +1,5 @@
 package org.thechance.service_restaurant.domain.usecase
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import org.thechance.service_restaurant.api.utils.isRestaurantOpen
 import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
@@ -37,8 +34,6 @@ class ManageOrderUseCase(
     private val orderValidationUseCase: IOrderValidationUseCase
 ) : IManageOrderUseCase {
 
-    private val scope = CoroutineScope(Dispatchers.IO)
-
     override suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order> {
         return optionsGateway.getOrdersByRestaurantId(restaurantId = restaurantId)
     }
@@ -51,8 +46,7 @@ class ManageOrderUseCase(
     }
 
     override suspend fun addOrder(order: Order): Boolean {
-        val isRestaurantOpen = scope.async { isRestaurantOpened(order.restaurantId) }
-        return if (isRestaurantOpen.await()) {
+        return if (isRestaurantOpened(order.restaurantId)) {
             optionsGateway.addOrder(order = order)
         } else {
             throw MultiErrorException(listOf(RESTAURANT_CLOSED))

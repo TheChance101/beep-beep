@@ -12,6 +12,7 @@ import org.thechance.service_restaurant.api.models.Restaurant
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.SocketHandler
+import org.thechance.service_restaurant.api.utils.currentTime
 import org.thechance.service_restaurant.domain.usecase.IManageOrderUseCase
 import org.thechance.service_restaurant.domain.utils.OrderStatus
 import org.thechance.service_restaurant.domain.utils.exceptions.INSERT_ORDER_ERROR
@@ -62,7 +63,7 @@ fun Route.orderRoutes() {
         }
 
         post {
-            val order = call.receive<OrderDto>().copy(id = UUID.randomUUID().toString())
+            val order = call.receive<OrderDto>().copy(id = UUID.randomUUID().toString(), createdAt = currentTime())
             val isOrderInserted = manageOrder.addOrder(order.toEntity())
             isOrderInserted.takeIf { it }.apply {
                 socketHandler.restaurants[order.restaurantId]?.orders?.emit(order)
