@@ -1,5 +1,6 @@
 package org.thechance.common.presentation.taxi
 
+import org.thechance.common.domain.entity.AddTaxi
 import org.thechance.common.domain.entity.Taxi
 
 fun Taxi.toUiState(): TaxiDetailsUiState = TaxiDetailsUiState(
@@ -14,3 +15,4 @@ fun Taxi.toUiState(): TaxiDetailsUiState = TaxiDetailsUiState(
 )
 
 fun List<Taxi>.toUiState() = map { it.toUiState() }
+fun AddTaxiDialogUiState.toEntity() = AddTaxi(plateNumber, driverUserName, carModel, selectedCarColor, seats)

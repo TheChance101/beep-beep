@@ -14,6 +14,7 @@ const val PASSWORD_CANNOT_BE_BLANK = "1007"
 const val INVALID_EMAIL = "1008"
 
 const val NOT_FOUND = "1041"
+const val USER_NOT_FOUND = "1043"
 
 const val AMOUNT_MUST_BE_POSITIVE = "1011"
 const val AMOUNT_MUST_BE_NUMERIC = "1012"
