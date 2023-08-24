@@ -44,6 +44,7 @@ kotlin {
                 api(libs.koin.core)
                 implementation(libs.koin.annotations)
                 implementation(libs.koin.compose)
+                implementation(libs.kotlinx.datetime)
                 implementation(project(":design_system:shared"))
             }
         }
