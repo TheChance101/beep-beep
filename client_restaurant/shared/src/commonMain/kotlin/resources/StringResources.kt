@@ -4,7 +4,7 @@ package resources
 data class StringResources(
     val beepBeep : String = "Beep Beep",
     val allMeals: String = "All meals",
-    val restaurantInfo: String = "Restaurant info",
+    val restaurantInfo: String = "Restaurant \ninfo",
     val orders: String = "Orders",
     val ordersHistory: String = "Orders history",
     val revenue: String = "Revenue",

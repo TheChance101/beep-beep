@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,17 +22,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun OptionCardItem(
     onClick: () -> Unit,
     title: String,
-    imagePainter: Painter,
+    imagePath: String,
     color: Color,
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(Theme.radius.medium),
@@ -44,7 +46,7 @@ fun OptionCardItem(
     val animatedFloat by animateFloatAsState(if (isPressed) 1.08f else 1f)
 
     Box(
-        modifier.width(160.dp).aspectRatio(1.11f).clip(shape).background(color)
+        modifier.widthIn(max = 170.dp).aspectRatio(1.11f).clip(shape).background(color)
             .clickable(interactionSource, null, onClick = onClick)
     ) {
         Text(
@@ -55,7 +57,7 @@ fun OptionCardItem(
                 .padding(top = Theme.dimens.space16, start = Theme.dimens.space16)
         )
         Image(
-            painter = imagePainter,
+            painter = painterResource(imagePath),
             contentDescription = title,
             modifier = Modifier.size(imageSize).align(Alignment.BottomEnd).scale(animatedFloat)
         )

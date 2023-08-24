@@ -21,16 +21,14 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import presentation.main.MainScreenUIState
+import presentation.main.ChartItemUiState
 import resources.Resources
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ChartItem(
     imagePainter: Painter,
     sign: Char? = null,
-    chartItemUiState: MainScreenUIState.ChartItemUiState,
+    chartItemUiState: ChartItemUiState,
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(Theme.radius.medium),
 ) {
