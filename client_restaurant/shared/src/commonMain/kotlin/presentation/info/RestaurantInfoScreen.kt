@@ -26,9 +26,9 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
-import presentation.composables.BpAppBar
-import presentation.composables.BpRating
-import presentation.composables.BpTitleWithContentSection
+import presentation.composable.BpAppBar
+import presentation.composable.BpRating
+import presentation.composable.BpTitleWithContentSection
 import presentation.login.LoginScreen
 import resources.Resources
 

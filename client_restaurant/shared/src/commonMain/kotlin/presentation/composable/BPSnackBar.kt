@@ -1,4 +1,4 @@
-package presentation.composables
+package presentation.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 @Composable
 fun BPSnackBar(

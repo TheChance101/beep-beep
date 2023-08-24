@@ -42,10 +42,10 @@ import com.seiko.imageloader.rememberAsyncImagePainter
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
-import presentation.composables.BpAppBar
-import presentation.composables.CustomBottomSheet
-import presentation.composables.ModalBottomSheetState
-import presentation.composables.modifier.noRippleEffect
+import presentation.composable.BpAppBar
+import presentation.composable.CustomBottomSheet
+import presentation.composable.ModalBottomSheetState
+import presentation.composable.modifier.noRippleEffect
 import util.ImagePicker
 import util.ImagePickerFactory
 import util.getPlatformContext
