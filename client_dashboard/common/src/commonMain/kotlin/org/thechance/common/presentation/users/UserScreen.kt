@@ -230,7 +230,7 @@ object UserScreen : Screen, KoinComponent {
                 onDismissRequest = onFilterMenuDismiss,
                 offset = DpOffset.Zero.copy(y = Theme.dimens.space16),
                 shape = RoundedCornerShape(Theme.radius.medium).copy(topStart = CornerSize(Theme.radius.small)),
-                modifier = Modifier.height(400.dp)
+                modifier = Modifier.height(450.dp)
             ) {
                 DropdownMenuItem(
                     contentPadding = PaddingValues(0.dp),
@@ -292,12 +292,12 @@ object UserScreen : Screen, KoinComponent {
                             }
                             Row(
                                 Modifier.padding(Theme.dimens.space24),
-                                horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space16)
+                                horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                BpTextButton(
+                                BpTransparentButton(
                                     "Cancel",
                                     onClick = onFilterMenuDismiss,
-                                    heightInDp = 40,
                                     modifier = Modifier.cursorHoverIconHand()
 
                                 )
@@ -305,7 +305,7 @@ object UserScreen : Screen, KoinComponent {
                                     title = "Save",
                                     onClick = onFilterMenuDismiss,
                                     shape = RoundedCornerShape(Theme.radius.small),
-                                    modifier = Modifier.height(40.dp).weight(1f)
+                                    modifier = Modifier.height(50.dp).weight(1f)
                                 )
                             }
                         }
