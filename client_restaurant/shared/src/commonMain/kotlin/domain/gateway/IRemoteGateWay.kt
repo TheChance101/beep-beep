@@ -7,6 +7,13 @@ import domain.entity.Restaurant
 
 interface IRemoteGateWay {
 
+    // region login
+    suspend fun saveAccessToken(token: String)
+    suspend fun getAccessToken(): String
+    suspend fun saveRefreshToken(token: String)
+    suspend fun getRefreshToken(): String
+    // endregion
+
     //region restaurant
     suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant>
     suspend fun updateRestaurantInfo(restaurant: Restaurant): Restaurant?
