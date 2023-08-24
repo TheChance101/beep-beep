@@ -30,6 +30,7 @@ import com.beepbeep.designSystem.ui.theme.Theme.colors
 import com.beepbeep.designSystem.ui.theme.Theme.dimens
 import presentation.base.BaseScreen
 import presentation.composables.BpAppBar
+import presentation.info.RestaurantInfoScreen
 import presentation.meal.MealScreen
 import presentation.meals.Composable.MealCard
 import presentation.meals.state.MealsScreenUIState
@@ -93,11 +94,11 @@ class MealsScreen :
                     ),
                     horizontalArrangement = Arrangement.spacedBy(dimens.space16),
                 ) {
-                    items(state.cousin.size) { index ->
+                    items(state.cuisine.size) { index ->
                         BpChip(
-                            label = state.cousin[index].name,
-                            isSelected = state.cousin[index] == state.selectedCousin,
-                            onClick = { listener.onClickCousinType(state.cousin[index]) },
+                            label = state.cuisine[index].name,
+                            isSelected = state.cuisine[index] == state.selectedCuisine,
+                            onClick = { listener.onClickCuisineType(state.cuisine[index]) },
                         )
                     }
                 }
@@ -112,12 +113,16 @@ class MealsScreen :
                     columns = GridCells.Adaptive(150.dp),
                     horizontalArrangement = Arrangement.spacedBy(dimens.space8),
                     verticalArrangement = Arrangement.spacedBy(dimens.space8),
-                ) {
-                    items(state.meals) { meal ->
-                        MealCard(onClick = { listener.onClickMeal(meal.id) }, meal = meal)
-                    }
-                }
 
+                    ) {
+                    items(state.meals.size) { index ->
+                        MealCard(onClick = {
+                            listener.onClickMeal(state.meals[index].id)
+                        }, meal = state.meals[index])
+                    }
+
+
+                }
             }
         }
     }

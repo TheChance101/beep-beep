@@ -32,7 +32,7 @@ import presentation.composables.BpTitleWithContentSection
 import presentation.login.LoginScreen
 import resources.Resources
 
-class RestaurantInfoScreen :
+class RestaurantInfoScreen() :
     BaseScreen<RestaurantInfoScreenModel, RestaurantInfoUiState, RestaurantInfoUiEffect, RestaurantInfoInteractionListener>() {
 
     @Composable

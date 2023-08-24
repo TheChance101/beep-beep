@@ -12,7 +12,7 @@ interface IGetCuisineUseCase {
 
 class GetCuisineUseCase(private val remoteGateWay: IRemoteGateWay) : IGetCuisineUseCase {
     override suspend fun getRestaurantCuisines(id: String): List<Cuisine> {
-        return remoteGateWay.getCousins(id)
+        return remoteGateWay.getCuisine(id)
     }
 
     override suspend fun getCuisines(): List<Cuisine> {

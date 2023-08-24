@@ -105,10 +105,16 @@ class RestaurantScreen :
                         modifier = Modifier.cursorHoverIconHand()
                     )
                     RestaurantFilterDropdownMenu(
-                        onClickRating = listener::onClickFilterRating,
-                        onClickPrice = listener::onClickFilterPrice,
+                        onClickRating = listener::onClickFilterRatingBar,
+                        onClickPrice = listener::onClickFilterPriceBar,
                         onDismissRequest = listener::onDismissDropDownMenu,
-                        onClickSave = { /* TODO: Filter table */ },
+                        onClickCancel = listener::onCancelFilterRestaurantsClicked,
+                        onClickSave = {
+                            listener.onSaveFilterRestaurantsClicked(
+                                state.filterRating,
+                                state.filterPriceLevel
+                            )
+                        },
                         expanded = state.isFilterDropdownMenuExpanded,
                         rating = state.filterRating,
                         priceLevel = state.filterPriceLevel
@@ -245,6 +251,7 @@ private fun RestaurantFilterDropdownMenu(
     onClickRating: (Double) -> Unit,
     onClickPrice: (Int) -> Unit,
     onDismissRequest: () -> Unit,
+    onClickCancel: () -> Unit,
     onClickSave: () -> Unit,
     expanded: Boolean,
     rating: Double,
@@ -328,14 +335,14 @@ private fun RestaurantFilterDropdownMenu(
             ) {
                 BpTransparentButton(
                     title = "Cancel",
-                    onClick = onDismissRequest,
+                    onClick = { onClickCancel(); onDismissRequest() },
                     modifier = Modifier.padding(end = Theme.dimens.space16)
                         .height(Theme.dimens.space32)
                         .weight(1f)
                 )
                 BpOutlinedButton(
                     title = "Save",
-                    onClick = onClickSave,
+                    onClick = { onClickSave(); onDismissRequest() },
                     modifier = Modifier.height(Theme.dimens.space32).weight(3f),
                     textPadding = PaddingValues(0.dp)
                 )

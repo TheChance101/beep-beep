@@ -251,7 +251,7 @@ class FakeRemoteGateway : IRemoteGateway {
                 ownerUsername = "asia",
                 phoneNumber = "0528242165",
                 rating = 2.9,
-                priceLevel = 1,
+                priceLevel = 2,
                 workingHours = "09:30 - 21:30"
             ),
             RestaurantDto(
@@ -264,5 +264,9 @@ class FakeRemoteGateway : IRemoteGateway {
                 workingHours = "06:30 - 22:30"
             ),
         ).toEntity()
+    }
+
+    override suspend fun searchRestaurantsByRestaurantName(restaurantName: String): List<Restaurant> {
+        return getRestaurants().filter { it.name.startsWith(restaurantName, true) }
     }
 }
