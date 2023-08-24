@@ -19,7 +19,7 @@ data class OrderCollection(
     val restaurantId: UUID,
     val meals: List<OrderMealCollection> = emptyList(),
     val totalPrice: Double,
-    val createdAt: String,
+    val createdAt: Long,
     val orderStatus: Int
 )
 

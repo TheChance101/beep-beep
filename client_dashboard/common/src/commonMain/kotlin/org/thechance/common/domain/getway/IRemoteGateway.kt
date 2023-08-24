@@ -17,11 +17,13 @@ interface IRemoteGateway {
     suspend fun getTaxis(): List<Taxi>
 
     suspend fun createTaxi(taxi: AddTaxi): Taxi
-  
+
     suspend fun findTaxiByUsername(username: String): List<Taxi>
 
     suspend fun getRestaurants(): List<Restaurant>
 
     suspend fun loginUser(username: String, password: String, keepLoggedIn: Boolean): UserTokens
+
+    suspend fun searchRestaurantsByRestaurantName(restaurantName: String): List<Restaurant>
 
 }

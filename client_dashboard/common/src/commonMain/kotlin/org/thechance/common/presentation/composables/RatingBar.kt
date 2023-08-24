@@ -32,11 +32,11 @@ fun RatingBar(
         modifier = modifier,
         horizontalArrangement = horizontalArrangement
     ) {
-        repeat(if (rating.rem(1) <= 0.4) floor(rating).toInt() else ceil(rating).toInt()) { position ->
+        repeat(if (rating.rem(1) < 0.5) floor(rating).toInt() else ceil(rating).toInt()) { position ->
             Image(
                 painter = when {
                     position < floor(rating) ||
-                            (position == floor(rating).toInt() && rating.rem(1) >= 0.9) -> selectedIcon
+                            (position == floor(rating).toInt() && rating.rem(1) > 0.89) -> selectedIcon
 
                     else -> halfSelectedIcon
                 },
