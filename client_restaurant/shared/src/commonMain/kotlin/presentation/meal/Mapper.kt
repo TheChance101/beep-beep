@@ -18,7 +18,7 @@ fun List<CuisineUIState>.toCuisinesString() = joinToString(", ", transform = Cui
 
 
 fun MealUIState.isValid(): Boolean {
-    return name.isNotEmpty() && description.isNotEmpty() && price.isNotEmpty() && cuisines.size in 1..3
+    return name.isNotEmpty() && description.isNotEmpty() && price.isNotEmpty() && selectedCuisines.size in 1..3
 }
 
 fun Meal.toMealUIState(): MealUIState {

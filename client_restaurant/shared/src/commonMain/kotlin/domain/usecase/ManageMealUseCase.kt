@@ -15,7 +15,12 @@ interface IManageMealUseCase {
 
 class ManageMealUseCase(private val remoteGateWay: IRemoteGateWay) : IManageMealUseCase {
     override suspend fun addMeal(meal: Meal): Boolean {
-        TODO("Not yet implemented")
+        val result = if (meal.id.isEmpty()) {
+            remoteGateWay.addMeal(meal)
+        } else {
+            remoteGateWay.updateMeal(meal)
+        }
+        return result != null
     }
 
     override suspend fun getMeal(mealId: String): Meal {

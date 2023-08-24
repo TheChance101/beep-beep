@@ -266,6 +266,7 @@ class MealScreen(private val mealId: String? = null) :
     override fun onEffect(effect: MealScreenUIEffect, navigator: Navigator) {
         when (effect) {
             is MealScreenUIEffect.Back -> navigator.pop()
+            is MealScreenUIEffect.MealResponseSuccessfully -> navigator.pop()
         }
     }
 }

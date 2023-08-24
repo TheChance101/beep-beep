@@ -59,12 +59,13 @@ class MealScreenModel(private val mealId: String?) :
     }
 
     private fun onMealAddedSuccessfully(result: Boolean) {
-        TODO("Not yet implemented")
+        sendNewEffect(MealScreenUIEffect.MealResponseSuccessfully)
     }
 
 
     private fun onGetMealSuccess(meal: Meal) {
         updateState { meal.toMealUIState() }
+        updateState { it.copy(isAddEnable = it.isValid()) }
     }
 
     private fun onAddMealError(error: ErrorState) {
@@ -74,6 +75,7 @@ class MealScreenModel(private val mealId: String?) :
 
     override fun onSaveCuisineClick() {
         updateState { it.copy(selectedCuisines = it.cuisines.filter { it.isSelected }) }
+        updateState { it.copy(isAddEnable = it.isValid()) }
     }
 
     override fun onCuisineSelected(id: String) {
