@@ -1,4 +1,4 @@
-package presentation.restaurant_selection
+package presentation.restaurantSelection
 
 import presentation.base.BaseInteractionListener
 

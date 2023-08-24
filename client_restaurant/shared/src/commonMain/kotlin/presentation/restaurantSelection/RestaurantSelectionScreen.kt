@@ -1,7 +1,6 @@
-package presentation.restaurant_selection
+package presentation.restaurantSelection
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -41,18 +40,18 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
-import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
+import presentation.composables.RestaurantInformation
 import presentation.composables.modifier.noRippleEffect
 import presentation.main.MainScreen
 import resources.Resources
 
 class RestaurantSelectionScreen(private val ownerId: String) : BaseScreen
 <RestaurantSelectionScreenModel,
-        RestaurantSelectionScreenUIState,
+        RestaurantScreenUIState,
         RestaurantSelectionScreenUIEffect,
         RestaurantSelectionScreenInteractionListener>() {
 
@@ -65,7 +64,7 @@ class RestaurantSelectionScreen(private val ownerId: String) : BaseScreen
     @OptIn(ExperimentalResourceApi::class, ExperimentalFoundationApi::class)
     @Composable
     override fun onRender(
-        state: RestaurantSelectionScreenUIState,
+        state: RestaurantScreenUIState,
         listener: RestaurantSelectionScreenInteractionListener
     ) {
 
@@ -153,41 +152,15 @@ class RestaurantSelectionScreen(private val ownerId: String) : BaseScreen
 
     @Composable
     private fun RestaurantSelectionItem(
-        item: RestaurantSelectionScreenUIState.Restaurant,
+        item: RestaurantUIState,
         listener: RestaurantSelectionScreenInteractionListener
     ) {
-
-        val buttonBackgroundColor by animateColorAsState(if (item.isOpen) Theme.colors.hover else Color.Transparent)
-        val buttonContentColor by animateColorAsState(if (item.isOpen) Theme.colors.primary else Theme.colors.disable)
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(80.dp)
-                .noRippleEffect { listener.onRestaurantItemClick(item.id) }
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column {
-                Text(
-                    text = item.restaurantName,
-                    style = Theme.typography.title.copy(Theme.colors.contentPrimary)
-                )
-                Text(
-                    modifier = Modifier.padding(top = 8.dp),
-                    text = item.restaurantNumber,
-                    style = Theme.typography.caption.copy(Theme.colors.contentTertiary)
-                )
-            }
-            BpTransparentButton(
-                modifier = Modifier.background(buttonBackgroundColor),
-                title = if (item.isOpen) Resources.strings.open else Resources.strings.closed,
-                enabled = false,
-                contentColor = buttonContentColor,
-                onClick = {}
-            )
-        }
+        RestaurantInformation(
+            onRestaurantClick = { listener.onRestaurantItemClick(item.id) },
+            restaurantName = item.restaurantName,
+            restaurantNumber = item.restaurantNumber,
+            isOpen = item.isOpen
+        )
     }
 
     private companion object {
@@ -196,3 +169,4 @@ class RestaurantSelectionScreen(private val ownerId: String) : BaseScreen
         const val SEVENTY_PERCENT_SCREEN = 0.7f
     }
 }
+
