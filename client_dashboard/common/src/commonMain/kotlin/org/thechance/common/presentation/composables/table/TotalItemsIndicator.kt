@@ -22,7 +22,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 fun TotalItemsIndicator(
     modifier: Modifier = Modifier,
     totalItems: Int,
-    numberItemInPage: String,
+    numberItemInPage: Int,
     onItemPerPageChange: (String) -> Unit,
     itemType: String,
 ) {
@@ -38,7 +38,7 @@ fun TotalItemsIndicator(
                     color = Theme.colors.contentBorder,
                     shape = RoundedCornerShape(Theme.radius.medium)
                 ).padding(vertical = Theme.dimens.space8).width(Theme.dimens.space40),
-            value = numberItemInPage,
+            value = numberItemInPage.toString(),
             onValueChange = onItemPerPageChange,
             textStyle = TextStyle(
                 textAlign = TextAlign.Center,

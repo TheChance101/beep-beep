@@ -81,7 +81,7 @@ fun DashboardSideBar(
                 )
             )
             //endregion
-            Spacer(Modifier.fillMaxHeight(.1f))
+            Spacer(Modifier.height(40.dp))
             //region main menu
             Box(Modifier.height(sideBarExpandedWidthInKms)) {
                 Column(Modifier.fillMaxSize()) {

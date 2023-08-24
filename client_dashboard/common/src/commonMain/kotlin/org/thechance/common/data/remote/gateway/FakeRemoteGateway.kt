@@ -2,21 +2,24 @@ package org.thechance.common.data.remote.gateway
 
 import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.AdminDto
+import org.thechance.common.data.remote.model.DataWrapperDto
 import org.thechance.common.data.remote.model.TaxiDto
 import org.thechance.common.data.remote.model.UserDto
 import org.thechance.common.data.remote.model.toEntity
 import org.thechance.common.domain.entity.Admin
+import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.getway.IRemoteGateway
+import kotlin.math.ceil
 
 
 class FakeRemoteGateway : IRemoteGateway {
     override fun getUserData(): Admin =
-         AdminDto(fullName = "asia",).toEntity()
+        AdminDto(fullName = "asia").toEntity()
 
-    override fun getUsers(): List<User> {
-        return listOf(
+    override fun getUsers(page: Int, numberOfUsers: Int): DataWrapper<User> {
+        val users = listOf(
             UserDto(
                 id = "c4425a0e-9f0a-4df1-bcc1-6dd96322a990",
                 fullName = "mohammed sayed",
@@ -90,6 +93,23 @@ class FakeRemoteGateway : IRemoteGateway {
                 )
             ),
         ).toEntity()
+        val startIndex = (page - 1) * numberOfUsers
+        val endIndex = startIndex + numberOfUsers
+        val numberOfPages = ceil(users.size / (numberOfUsers * 1.0)).toInt()
+        return try {
+            DataWrapperDto(
+                totalPages = numberOfPages,
+                result = users.subList(startIndex, endIndex.coerceAtMost(users.size)),
+                totalResult = users.size
+            ).toEntity()
+        } catch (e: Exception) {
+            DataWrapperDto(
+                totalPages = numberOfPages,
+                result = users,
+                totalResult = users.size
+            ).toEntity()
+        }
+
     }
 
     override suspend fun getTaxis(): List<Taxi> {

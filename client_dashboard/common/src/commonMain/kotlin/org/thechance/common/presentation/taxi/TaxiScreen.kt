@@ -116,8 +116,6 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiIn
                 key = { it.id },
                 headers = state.tabHeader,
                 modifier = Modifier.fillMaxWidth(),
-                rowsCount = state.taxiNumberInPage.toInt(),
-                offset = selectedPage - 1,
                 rowContent = { taxi ->
                     TaxiRow(
                         onClickEdit = { selectedTaxi = it },
@@ -135,7 +133,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiIn
                 TotalItemsIndicator(
                     totalItems = state.taxis.size,
                     itemType = "taxi",
-                    numberItemInPage = state.taxiNumberInPage,
+                    numberItemInPage = state.taxiNumberInPage.toInt(),
                     onItemPerPageChange = listener::onTaxiNumberChange
                 )
                 BpPager(

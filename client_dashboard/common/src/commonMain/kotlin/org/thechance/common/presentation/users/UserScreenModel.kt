@@ -2,8 +2,6 @@ package org.thechance.common.presentation.users
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import kotlinx.coroutines.flow.update
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import org.thechance.common.domain.usecase.IGetUsersUseCase
 import org.thechance.common.presentation.uistate.UserScreenUiState
 import org.thechance.common.presentation.uistate.toUiState
@@ -17,9 +15,20 @@ class UserScreenModel(
         updateUsers()
     }
 
+    fun updateCurrentPage(pageNumber: Int) {
+        mutableState.update { it.copy(currentPage = pageNumber) }
+        updateUsers()
+    }
+
+    fun updateSpecifiedUsers(numberOfUsers: Int) {
+        mutableState.update { it.copy(specifiedUsers = numberOfUsers) }
+        updateUsers()
+    }
+
     private fun updateUsers() {
-        mutableState.update { it.copy(users = getUsers().toUiState()) }
-        mutableState.update { it.copy(numberOfUsers = it.users.size) }
+        mutableState.update {
+            it.copy(pageInfo = getUsers(it.currentPage, it.specifiedUsers).toUiState())
+        }
     }
 
     fun onSearchChange(text: String) {
@@ -46,7 +55,7 @@ class UserScreenModel(
         }
     }
 
-    fun hidePermissionsDialog() {
+    private fun hidePermissionsDialog() {
         mutableState.update {
             it.copy(
                 permissionsDialog = it.permissionsDialog.copy(
@@ -97,13 +106,15 @@ class UserScreenModel(
     ) {
         mutableState.update {
             it.copy(
-                users = it.users.map { userUiState ->
-                    if (userUiState.username == username) {
-                        userUiState.copy(permissions = permissions)
-                    } else {
-                        userUiState
+                pageInfo = it.pageInfo.copy(
+                    data = it.pageInfo.data.map { userUiState ->
+                        if (userUiState.username == username) {
+                            userUiState.copy(permissions = permissions)
+                        } else {
+                            userUiState
+                        }
                     }
-                }
+                )
             )
         }
     }

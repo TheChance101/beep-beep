@@ -71,7 +71,6 @@ object UserScreen : Screen, KoinComponent {
         var selectedPage by remember { mutableStateOf(1) }
 
         var numberItemInPage by remember { mutableStateOf(3) }
-        val pageCount = 3
 
         Column(
             Modifier.background(Theme.colors.surface).fillMaxSize(),
@@ -273,17 +272,15 @@ object UserScreen : Screen, KoinComponent {
             }
 
             BpTable(
-                data = state.users,
+                data = state.pageInfo.data,
                 key = { it.username },
                 headers = state.tableHeader,
                 modifier = Modifier.fillMaxWidth(),
-                rowsCount = numberItemInPage,
-                offset = selectedPage - 1,
                 rowContent = { user ->
                     UserRow(
                         onClickEditUser = { selectedUser = it },
                         user = user,
-                        position = state.users.indexOf(user) + 1,
+                        position = state.pageInfo.data.indexOf(user) + 1,
                     )
                 },
             )
@@ -294,16 +291,16 @@ object UserScreen : Screen, KoinComponent {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 TotalItemsIndicator(
-                    numberItemInPage = numberItemInPage.toString(),
-                    totalItems = state.numberOfUsers,
+                    numberItemInPage = state.specifiedUsers,
+                    totalItems = state.pageInfo.numberOfUsers,
                     itemType = "user",
-                    onItemPerPageChange = { numberItemInPage = it.toIntOrNull() ?: 10 }
+                    onItemPerPageChange = { screenModel.updateSpecifiedUsers(it.toIntOrNull() ?: 10) }
                 )
 
                 BpPager(
-                    maxPages = pageCount,
-                    currentPage = selectedPage,
-                    onPageClicked = { selectedPage = it },
+                    maxPages = state.pageInfo.totalPages,
+                    currentPage = state.currentPage ,
+                    onPageClicked = screenModel::updateCurrentPage,
                 )
             }
         }
