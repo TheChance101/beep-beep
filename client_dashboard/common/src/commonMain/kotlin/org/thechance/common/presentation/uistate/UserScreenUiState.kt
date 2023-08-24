@@ -17,8 +17,21 @@ data class UserScreenUiState(
     ),
     val numberOfUsers: Int = 0,
     val search: String = "",
-    val isFilterDropdownMenuExpanded: Boolean = false,
     val permissionsDialog: PermissionsDialogUiState = PermissionsDialogUiState(),
+    val selectedUser: String = "",
+    val selectedPage: Int = 1,
+    val numberItemInPage: Int = 3,
+    val pageCount: Int = 3,
+    val filter: FilterUiState = FilterUiState(),
+    val allPermissions: List<PermissionUiState> = listOf(
+        PermissionUiState.RESTAURANT_OWNER,
+        PermissionUiState.TAXI_DRIVER,
+        PermissionUiState.END_USER,
+        PermissionUiState.SUPPORT,
+        PermissionUiState.DELIVERY,
+        PermissionUiState.DASHBOARD_ADMIN,
+    ),
+    val userMenu: MenuUiState = MenuUiState(),
 ) {
     data class UserUiState(
         val fullName: String = "",
@@ -42,6 +55,59 @@ data class UserScreenUiState(
         val username: String = "",
         val permissions: List<PermissionUiState> = emptyList(),
     )
+
+    data class FilterUiState(
+        val show: Boolean = false,
+        val permissions: List<PermissionUiState> = emptyList(),
+        val countries: List<CountryUiState> = listOf(
+            CountryUiState(
+                name = "Iraq",
+                selected = true,
+            ),
+            CountryUiState(
+                name = "Palestine",
+                selected = true,
+            ),
+            CountryUiState(
+                name = "Jordan",
+                selected = true,
+            ),
+            CountryUiState(
+                name = "Syria",
+                selected = true,
+            ),
+            CountryUiState(
+                name = "Egypt",
+                selected = true,
+            ),
+        )
+    )
+
+    data class CountryUiState(
+        val name: String = "",
+        val selected: Boolean = false
+    )
+
+    data class MenuUiState(
+        val username: String = "",
+        val items: List<MenuItemUiState> = listOf(
+            MenuItemUiState(
+                iconPath = "ic_edit.xml",
+                text = "Edit",
+            ),
+            MenuItemUiState(
+                iconPath = "ic_delete.svg",
+                text = "Delete",
+                isSecondary = true,
+            ),
+        )
+    ) {
+        data class MenuItemUiState(
+            val iconPath: String = "",
+            val text: String = "",
+            val isSecondary: Boolean = false,
+        )
+    }
 }
 
 fun List<User>.toUiState(): List<UserScreenUiState.UserUiState> {
@@ -60,6 +126,7 @@ fun List<User>.toUiState(): List<UserScreenUiState.UserUiState> {
                     User.Permission.DELIVERY -> UserScreenUiState.PermissionUiState.DELIVERY
                     User.Permission.ADMIN -> UserScreenUiState.PermissionUiState.DASHBOARD_ADMIN
                 }
-            })
+            },
+        )
     }
 }

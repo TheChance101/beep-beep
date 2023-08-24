@@ -19,8 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 import com.seiko.imageloader.rememberAsyncImagePainter
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
-import presentation.meals.MealsUIState.MealUIState
+import presentation.meals.state.MealUIState
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable

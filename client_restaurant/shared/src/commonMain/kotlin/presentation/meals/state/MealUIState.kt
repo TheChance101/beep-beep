@@ -1,4 +1,4 @@
-package presentation.meals.MealsUIState
+package presentation.meals.state
 
 import domain.entity.Meal
 

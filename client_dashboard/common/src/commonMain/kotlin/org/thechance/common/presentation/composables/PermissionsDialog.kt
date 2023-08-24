@@ -6,69 +6,65 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import com.beepbeep.designSystem.ui.composable.BpChip
+import androidx.compose.ui.window.Dialog
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.uistate.UserScreenUiState
+import java.awt.Dimension
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun PermissionsDialog(
-    dialogUiState: UserScreenUiState.PermissionsDialogUiState,
-    togglePermission: (UserScreenUiState.PermissionUiState) -> Unit,
-    onSaveClick: () -> Unit,
-    onCancelClick: () -> Unit,
+    visible: Boolean,
+    allPermissions: List<UserScreenUiState.PermissionUiState>,
+    selectedPermissions: List<UserScreenUiState.PermissionUiState>,
+    onUserPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
+    onSaveUserPermissions: () -> Unit,
+    onCancelUserPermissionsDialog: () -> Unit,
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Theme.colors.background)
+    Dialog(
+        transparent = true,
+        focusable = true,
+        undecorated = true,
+        visible = visible,
+        onCloseRequest = onCancelUserPermissionsDialog,
     ) {
-        Text(
-            "Permission",
-            style = Theme.typography.headline.copy(color = Theme.colors.contentPrimary),
-            modifier = Modifier.padding(Theme.dimens.space24)
-        )
-
-        FlowRow(
+        this.window.minimumSize = Dimension(400, 340)
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .background(Theme.colors.background)
-                .padding(Theme.dimens.space8)
         ) {
-            UserScreenUiState.PermissionUiState.values().forEach { permission ->
-                BpChip(
-                    label = permission.name.lowercase().capitalizeWords(),
-                    modifier = Modifier.padding(Theme.dimens.space8),
-                    onClick = { togglePermission(permission) },
-                    painter = painterResource(permission.iconPath),
-                    isSelected = dialogUiState.permissions.contains(permission)
+            Text(
+                "Permissions",
+                style = Theme.typography.headline.copy(color = Theme.colors.contentPrimary),
+                modifier = Modifier.padding(Theme.dimens.space24)
+            )
+
+            PermissionsFlowRow(
+                allPermissions = allPermissions,
+                selectedPermissions = selectedPermissions,
+                onUserPermissionClicked = onUserPermissionClicked
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(Theme.dimens.space24),
+                horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                BpTransparentButton(
+                    title = "Cancel",
+                    onClick = onCancelUserPermissionsDialog,
+                    modifier = Modifier.weight(1f)
+                )
+                BpOutlinedButton(
+                    title = "Save",
+                    onClick = onSaveUserPermissions,
+                    modifier = Modifier.weight(3f),
                 )
             }
         }
-
-        Row(
-            Modifier.fillMaxWidth().padding(Theme.dimens.space24),
-            horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            BpTransparentButton(
-                title = "Cancel",
-                onClick = onCancelClick,
-                modifier = Modifier.weight(1f).height(36.dp)
-            )
-            BpOutlinedButton(
-                title = "Save",
-                onClick = onSaveClick,
-                modifier = Modifier.weight(3f).height(36.dp),
-            )
-        }
     }
 }
-
-private fun String.capitalizeWords(): String = split(" ")
-    .joinToString(" ") { it.replaceFirstChar { char -> char.uppercase() } }
-    .replace("_", " ")

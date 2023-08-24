@@ -1,13 +1,18 @@
 package presentation.main
 
 import androidx.compose.ui.graphics.Color
+import presentation.restaurantSelection.RestaurantUIState
 
 data class MainScreenUIState(
-    val restaurantName: String = "",
-    val isOpen:Boolean = true,
-    val isDropdownMenuOpen:Boolean = false,
     val charts: List<ChartItemUiState> = emptyList(),
+    val expanded: Boolean = false,
+    val isDropdownMenuOpen: Boolean = false,
+    val isOpen: Boolean = true,
+    val restaurantName: String = "",
+    val restaurants: List<RestaurantUIState> = emptyList()
 )
+
+
 
 data class OptionItemUiState(
     val title: String,
