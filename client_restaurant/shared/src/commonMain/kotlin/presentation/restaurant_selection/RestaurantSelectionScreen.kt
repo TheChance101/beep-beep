@@ -8,7 +8,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,6 +46,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
+import presentation.composables.modifier.noRippleEffect
 import presentation.main.MainScreen
 import resources.Resources
 
@@ -164,7 +164,8 @@ class RestaurantSelectionScreen(private val ownerId: String) : BaseScreen
             modifier = Modifier
                 .fillMaxWidth()
                 .height(80.dp)
-                .clickable { listener.onRestaurantItemClick(item.id) },
+                .noRippleEffect { listener.onRestaurantItemClick(item.id) }
+                .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
