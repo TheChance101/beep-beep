@@ -1,14 +1,14 @@
 package presentation.meals
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.usecase.IGetCuisineUseCase
-import domain.usecase.IGetMealsByCousin
+import domain.usecase.IMangeCousinUseCase
+
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
-import presentation.meals.state.CousinUIState
+
+import presentation.meals.state.CuisineUIState
 import presentation.meals.state.MealsScreenUIState
-import presentation.meals.state.toCousinUIState
 import presentation.meals.state.toUIState
 
 class MealsScreenModel :
@@ -17,24 +17,25 @@ class MealsScreenModel :
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
 
-    private val getCuisines: IGetCuisineUseCase by inject()
-    private val getMealsUseCase: IGetMealsByCousin by inject()
+    private val mangeCousin: IMangeCousinUseCase by inject()
+
 
     init {
-        getCousin()
+        getCuisine()
     }
 
-    private fun getCousin() {
+    private fun getCuisine() {
         tryToExecute(
             function = {
-                getCuisines.getRestaurantCuisines("1")
+                mangeCousin.getCuisine("1")
+
 
             },
             onSuccess = { value ->
                 updateState {
                     it.copy(
-                        cousin = value.toCousinUIState(),
-                        selectedCousin = value[0].toCousinUIState(),
+                        cuisine = value.toUIState(),
+                        selectedCuisine = value[0].toUIState(),
                     )
                 }
                 getMeals(value[0].id)
@@ -50,7 +51,7 @@ class MealsScreenModel :
         updateState { it.copy(isLoading = true) }
         tryToExecute(
             function = {
-                getMealsUseCase(id)
+                mangeCousin.getMealsByCuisineId(id)
             },
             onSuccess = { value ->
                 updateState { it.copy(meals = value.toUIState(), isLoading = false) }
@@ -73,8 +74,9 @@ class MealsScreenModel :
         sendNewEffect(MealsScreenUIEffect.NavigateToAddMeal)
     }
 
-    override fun onClickCousinType(type: CousinUIState) {
-        updateState { it.copy(selectedCousin = type) }
+
+    override fun onClickCuisineType(type: CuisineUIState) {
+        updateState { it.copy(selectedCuisine = type) }
         getMeals(type.id)
     }
 }
