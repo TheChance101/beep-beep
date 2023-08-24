@@ -38,6 +38,7 @@ import com.beepbeep.designSystem.ui.composable.BpPriceField
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
+import com.seiko.imageloader.rememberAsyncImagePainter
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
@@ -116,12 +117,21 @@ class MealScreen(private val mealId: String? = null) :
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
 
-            BpCircleImage(
-                modifier = Modifier.sizeIn(minHeight = 104.dp, minWidth = 104.dp),
-                bitmap = rememberBitmapFromBytes(state.image),
-                placeholder = painterResource(Resources.images.galleryAdd),
-                onClick = { imagePicker.pickImage() }
-            )
+            if (state.imageUrl.isEmpty()) {
+                BpCircleImage(
+                    modifier = Modifier.sizeIn(minHeight = 104.dp, minWidth = 104.dp),
+                    bitmap = rememberBitmapFromBytes(state.image),
+                    placeholder = painterResource(Resources.images.galleryAdd),
+                    onClick = { imagePicker.pickImage() }
+                )
+            } else {
+                BpCircleImage(
+                    imageSize = 104.dp,
+                    modifier = Modifier.sizeIn(minHeight = 104.dp, minWidth = 104.dp),
+                    painter = rememberAsyncImagePainter(state.imageUrl),
+                    onClick = { imagePicker.pickImage() }
+                )
+            }
 
             BpTextField(
                 text = state.name,
@@ -160,7 +170,7 @@ class MealScreen(private val mealId: String? = null) :
 
             BpButton(
                 onClick = listener::onAddMeal,
-                title = Resources.strings.add,
+                title = mealId?.let { Resources.strings.save } ?: Resources.strings.add,
                 enabled = state.isAddEnable,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -191,9 +201,7 @@ class MealScreen(private val mealId: String? = null) :
 
                     Spacer(Modifier.weight(1f))
 
-                    BpTransparentButton(
-                        title = Resources.strings.cancel, onClick = onCancelClick
-                    )
+                    BpTransparentButton(title = Resources.strings.cancel, onClick = onCancelClick)
 
                     BpOutlinedButton(
                         title = Resources.strings.save,

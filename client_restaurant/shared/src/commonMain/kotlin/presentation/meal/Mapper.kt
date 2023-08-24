@@ -36,7 +36,7 @@ fun Meal.toMealUIState(): MealUIState {
 fun MealUIState.toMealEntity() = Meal(
     id = id,
     name = name,
-    imageUrl = "",
+    imageUrl = imageUrl,
     description = description,
     price = price.toDoubleOrNull() ?: 0.0,
     cuisines = selectedCuisines.toCuisineEntity(),

@@ -355,6 +355,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
     )
 
     private val cuisines = listOf(
+        CuisineDto(id = "ba9b9700-6d24-434b-8d67-daf9e45e1063", name = "Main Course"),
         CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3a", name = "Keto"),
         CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3b", name = "Pizza"),
         CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3c", name = "Chinese"),
@@ -365,7 +366,6 @@ class FakeRemoteGateWay : IRemoteGateWay {
         CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3h", name = "Japanese"),
         CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3i", name = "Spanish"),
         CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3j", name = "Greek"),
-        CuisineDto(id = "ba9b9700-6d24-434b-8d67-daf9e45e1063", name = "Main Course"),
         CuisineDto(id = "ba9b9700-6d24-434b-8d67-daf9e45e1064", name = "Burrito"),
         CuisineDto(id = "ba9b9700-6d24-434b-8d67-daf9e45e1065", name = "Pizza"),
         CuisineDto(id = "ba9b9700-6d24-434b-8d67-daf9e45e1066", name = "Dinner"),
