@@ -15,4 +15,5 @@ class EgyptLocalizedMessages : LocalizedMessages {
     override val invalidCredentials: String = "امسك حرامي"
     override val userCreatedSuccessfully: String = "اعمل حفلة بقى عندك حساب يا ابن المحظوظة"
     override val unknownError: String = "حصل ايرور لو كانت عارفه كنت هقولك"
+    override val userNotFound: String = "مش لاقينك ياعم"
 }
