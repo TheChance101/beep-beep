@@ -1,19 +1,19 @@
 package presentation.order
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,6 +28,7 @@ import presentation.composables.BpAppBar
 import presentation.login.LoginScreen
 import presentation.order.composable.OrderCard
 import presentation.order.composable.OrderTextButton
+import presentation.order.composable.header
 import resources.Resources
 
 class OrderScreen :
@@ -46,7 +47,7 @@ class OrderScreen :
         }
     }
 
-    @OptIn(ExperimentalLayoutApi::class)
+    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     override fun onRender(state: OrderScreenUiState, listener: OrderScreenInteractionListener) {
 
@@ -67,30 +68,75 @@ class OrderScreen :
                 )
             }
 
-            FlowRow(
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .padding(Theme.dimens.space16),
-                maxItemsInEachRow = 2,
-                horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8),
+
+            LazyVerticalStaggeredGrid(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(Theme.dimens.space16),
+                columns = StaggeredGridCells.Adaptive(minSize = 360.dp),
+                verticalItemSpacing = Theme.dimens.space8,
+                horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8)
             ) {
 
-                ActiveOrders(
-                    title = Resources.strings.inCookingOrders,
-                    inCookingOrders = state.inCookingOrders,
-                    onClickFinish = listener::onClickFinishOrder
-                )
+                header {
+                    OrdersHeader(
+                        text = Resources.strings.inCookingOrders,
+                        modifier = Modifier.padding(bottom = Theme.dimens.space8)
+                    )
+                }
 
-                ActiveOrders(
-                    modifier = Modifier.padding(0.dp),
-                    title = Resources.strings.requestedOrders,
-                    pendingOrders = state.pendingOrders,
-                    onClickCancel = listener::onClickCancelOrder,
-                    onClickApprove = listener::onClickApproveOrder
-                )
+                items(state.inCookingOrders) { order ->
+                    OrderCard(order = order) {
+                        OrderTextButton(
+                            text = Resources.strings.finish,
+                            onClick = {
+                                listener.onClickFinishOrder(order.id, OrderStateType.FINISH)
+                            }
+                        )
+                    }
+                }
 
+                header {
+                    OrdersHeader(
+                        text = Resources.strings.requestedOrders,
+                        modifier = Modifier.padding(
+                            top = Theme.dimens.space16,
+                            bottom = Theme.dimens.space8
+                        )
+                    )
+                }
+
+                items(state.pendingOrders) { order ->
+                    OrderCard(order = order) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8)) {
+                            OrderTextButton(
+                                text = Resources.strings.cancel,
+                                onClick = {
+                                    listener.onClickCancelOrder(order.id, OrderStateType.CANCEL)
+                                },
+                                textColor = Theme.colors.contentTertiary,
+                                border = BorderStroke(0.dp, color = Theme.colors.surface)
+                            )
+                            OrderTextButton(
+                                text = Resources.strings.approve,
+                                onClick = {
+                                    listener.onClickCancelOrder(order.id, OrderStateType.APPROVE)
+                                },
+                            )
+                        }
+                    }
+                }
             }
         }
+    }
+
+    @Composable
+    private fun OrdersHeader(text: String, modifier: Modifier = Modifier) {
+        Text(
+            modifier = modifier,
+            text = text,
+            style = Theme.typography.titleLarge,
+            color = Theme.colors.contentPrimary
+        )
     }
 
     @Composable
@@ -117,62 +163,6 @@ class OrderScreen :
                 style = Theme.typography.titleLarge,
                 color = Theme.colors.contentPrimary
             )
-        }
-    }
-
-    @Composable
-    private fun ActiveOrders(
-        title: String,
-        modifier: Modifier = Modifier,
-        inCookingOrders: List<OrderUiState>? = null,
-        pendingOrders: List<OrderUiState>? = null,
-        onClickFinish: ((orderId: String, orderStateType: OrderStateType) -> Unit)? = null,
-        onClickCancel: ((orderId: String, orderStateType: OrderStateType) -> Unit)? = null,
-        onClickApprove: ((orderId: String, orderStateType: OrderStateType) -> Unit)? = null,
-        verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(Theme.dimens.space8)
-    ) {
-        Column(
-            modifier = modifier
-                .widthIn(max = 360.dp)
-                .padding(bottom = Theme.dimens.space16),
-            verticalArrangement = verticalArrangement,
-        ) {
-            Text(
-                modifier = Modifier.padding(vertical = Theme.dimens.space8),
-                text = title,
-                style = Theme.typography.titleLarge,
-                color = Theme.colors.contentPrimary
-            )
-
-            inCookingOrders?.let {
-                it.forEach { order ->
-                    OrderCard(order = order) {
-                        OrderTextButton(
-                            text = Resources.strings.finish,
-                            onClick = { onClickFinish?.let { it(order.id, OrderStateType.FINISH) } }
-                        )
-                    }
-                }
-            }
-
-            pendingOrders?.let {
-                it.forEach { order ->
-                    OrderCard(order = order) {
-                        Row(horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8)) {
-                            OrderTextButton(
-                                text = Resources.strings.cancel,
-                                onClick = {onClickCancel?.let { it(order.id, OrderStateType.CANCEL) }},
-                                textColor = Theme.colors.contentTertiary,
-                                border = BorderStroke(0.dp, color = Theme.colors.surface)
-                            )
-                            OrderTextButton(
-                                text = Resources.strings.approve,
-                                onClick = {onClickApprove?.let { it(order.id, OrderStateType.APPROVE) }},
-                            )
-                        }
-                    }
-                }
-            }
         }
     }
 }
