@@ -108,8 +108,6 @@ data class UserScreenUiState(
             val isSecondary: Boolean = false,
         )
     }
-
-
 }
 
 fun List<User>.toUiState(): List<UserScreenUiState.UserUiState> {

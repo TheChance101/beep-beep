@@ -16,8 +16,12 @@ class UserScreenModel(
     }
 
     private fun updateUsers() {
-        mutableState.update { it.copy(users = getUsers().toUiState()) }
-        mutableState.update { it.copy(numberOfUsers = it.users.size) }
+        mutableState.update {
+            it.copy(
+                users = getUsers().toUiState(),
+                numberOfUsers = getUsers().size
+            )
+        }
     }
 
     fun onSearchInputChange(text: String) {
