@@ -233,7 +233,7 @@ class FakeRemoteGateway : IRemoteGateway {
                 ownerUsername = "asia",
                 phoneNumber = "0528242165",
                 rating = 2.9,
-                priceLevel = 1,
+                priceLevel = 2,
                 workingHours = "09:30 - 21:30"
             ),
             RestaurantDto(

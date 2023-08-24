@@ -14,9 +14,9 @@ interface RestaurantInteractionListener : BaseInteractionListener {
 
     fun onClickFilterPriceBar(priceLevel: Int)
 
-    fun onFilterRestaurants(rating: Double, priceLevel: Int)
+    fun onSaveFilterRestaurantsClicked(rating: Double, priceLevel: Int)
 
-    fun onCancelFilterRestaurants()
+    fun onCancelFilterRestaurantsClicked()
 
     fun onPageClicked(pageNumber: Int)
 

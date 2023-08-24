@@ -26,6 +26,7 @@ data class RestaurantUiState(
     val maxPageCount: Int = 1,
     val selectedPageNumber: Int = 1,
     val numberOfItemsInPage: Int = 10,
+    val isFiltered: Boolean = false,
 ) {
     data class RestaurantDetailsUiState(
         val name: String,

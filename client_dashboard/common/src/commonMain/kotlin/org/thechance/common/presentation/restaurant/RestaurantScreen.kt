@@ -97,9 +97,9 @@ class RestaurantScreen :
                         onClickRating = listener::onClickFilterRatingBar,
                         onClickPrice = listener::onClickFilterPriceBar,
                         onDismissRequest = listener::onDismissDropDownMenu,
-                        onClickCancel = listener::onCancelFilterRestaurants,
+                        onClickCancel = listener::onCancelFilterRestaurantsClicked,
                         onClickSave = {
-                            listener.onFilterRestaurants(
+                            listener.onSaveFilterRestaurantsClicked(
                                 state.filterRating,
                                 state.filterPriceLevel
                             )

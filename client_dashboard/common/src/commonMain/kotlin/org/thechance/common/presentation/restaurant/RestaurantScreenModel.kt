@@ -41,28 +41,46 @@ class RestaurantScreenModel(
         )
     }
 
-    private fun onError(error: ErrorState) {
-        updateState { it.copy(error = error, isLoading = false) }
-    }
-
-
-    override fun onFilterRestaurants(rating: Double, priceLevel: Int) {
+    private fun filterRestaurants(rating: Double, priceLevel: Int) {
         tryToExecute(
-            { filterRestaurants.invoke(rating, priceLevel) },
+            { filterRestaurants.filterRestaurants(rating, priceLevel) },
             ::onGetRestaurantSuccessfully,
             ::onError
         )
     }
 
-    override fun onCancelFilterRestaurants() {
-        updateState { it.copy(filterRating = 0.0, filterPriceLevel = 0) }
+    private fun searchFilterRestaurants(restaurantName: String, rating: Double, priceLevel: Int) {
+        tryToExecute(
+            { filterRestaurants.searchFilterRestaurants(restaurantName, rating, priceLevel) },
+            ::onGetRestaurantSuccessfully,
+            ::onError
+        )
+    }
+
+    private fun onError(error: ErrorState) {
+        updateState { it.copy(error = error, isLoading = false) }
+    }
+
+
+    override fun onSaveFilterRestaurantsClicked(rating: Double, priceLevel: Int) {
+        updateState { it.copy(isFiltered = true) }
+        filterRestaurants(rating = rating, priceLevel = priceLevel)
+    }
+
+    override fun onCancelFilterRestaurantsClicked() {
+        updateState { it.copy(filterRating = 0.0, filterPriceLevel = 0, isFiltered = false) }
         getRestaurants()
     }
 
 
     override fun onSearchChange(restaurantName: String) {
         updateState { it.copy(search = restaurantName) }
-        searchRestaurants(restaurantName)
+        if (state.value.isFiltered) searchFilterRestaurants(
+            restaurantName = restaurantName,
+            rating = state.value.filterRating,
+            priceLevel = state.value.filterPriceLevel
+        ) else searchRestaurants(restaurantName)
+
     }
 
     override fun onClickDropDownMenu() {
