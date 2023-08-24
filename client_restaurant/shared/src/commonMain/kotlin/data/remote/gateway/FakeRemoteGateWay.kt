@@ -323,35 +323,41 @@ class FakeRemoteGateWay : IRemoteGateWay {
         RestaurantDto(
             id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
             ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            ownerUsername = "@Zeko",
             name = "Zeko Tlawoth",
             description = "It's a restaurant that is famous for preparing Arabian Foods",
             rate = 4.5,
             phone = "+9641324221423",
             openingTime = "09:00",
             closingTime = "22:00",
+            priceLevel = "$$$",
             address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
         ),
         RestaurantDto(
             id = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
             ownerId = "8a430be2-15b7-47f5-9e06-3f236f8c25ec",
+            ownerUsername = "@Uzumaki_Naruto",
             name = "Sushi Haven",
             description = "A trendy sushi restaurant offering a variety of fresh sushi rolls and sashimi.",
             rate = 3.5,
             phone = "+1234567890",
             openingTime = "11:30",
             closingTime = "21:30",
-            address = AddressDto(latitude = 40.712776, longitude = -74.005974)
+            address = AddressDto(latitude = 40.712776, longitude = -74.005974),
+            priceLevel = "$$"
         ),
         RestaurantDto(
             id = "91c2ae1f-8495-4c0c-bc47-7bf7ef77d907",
             ownerId = "f26dab15-7193-4e8d-bf6e-f4d2ae8799af",
+            ownerUsername = "@Victoria_Delacroix",
             name = "Café du Monde",
             description = "A historic café known for its beignets, coffee, and vibrant atmosphere.",
             rate = 2.5,
             phone = "+18005551234",
             openingTime = "07:00",
             closingTime = "23:00",
-            address = AddressDto(latitude = 29.9583507, longitude = -90.0656312)
+            address = AddressDto(latitude = 29.9583507, longitude = -90.0656312),
+            priceLevel = "$$"
         )
     )
 
