@@ -18,6 +18,7 @@ data class StringResources(
     val addNewMeal: String = "Add New Meal",
     val editMeal: String = "Edit Meal",
     val allMeals: String = "All meals",
+    val restaurantInfoInSingleLine: String = "Restaurant info",
     val restaurantInfo: String = "Restaurant \ninfo",
     val orders: String = "Orders",
     val ordersHistory: String = "Orders history",
