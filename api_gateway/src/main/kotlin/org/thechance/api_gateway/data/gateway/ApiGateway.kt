@@ -13,7 +13,7 @@ import org.thechance.api_gateway.data.mappers.toManagedUser
 import org.thechance.api_gateway.data.model.*
 import org.thechance.api_gateway.data.model.identity.UserManagementResource
 import org.thechance.api_gateway.endpoints.IApiGateway
-import org.thechance.api_gateway.plugins.TokenType
+import org.thechance.api_gateway.data.model.TokenType
 import org.thechance.api_gateway.util.APIS
 import java.util.*
 
@@ -142,7 +142,7 @@ class ApiGateway(
 
     private suspend inline fun <reified T> tryToExecute(
         api: APIS,
-        setErrorMessage: (errorCodes: List<Int>) -> List<Map<Int, String>> = { emptyList() },
+        setErrorMessage: (errorCodes: List<Int>) -> Map<Int, String> = { emptyMap() },
         method: HttpClient.() -> HttpResponse
     ): T {
         attributes.put(AttributeKey("API"), api.value)

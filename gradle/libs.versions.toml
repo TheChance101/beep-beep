@@ -26,6 +26,8 @@ serialization_version = "1.6.0-RC"
 ktor-logging-version = "1.5.0"
 coroutine-version = "1.7.1"
 image-loader = "1.2.8"
+kotlin-realm = "1.10.0"
+
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
@@ -51,10 +53,14 @@ voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", vers
 voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager-version" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor-version" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor-version" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp-jvm", version.ref = "ktor-version" }
 google-code-gson = { module = "com.google.code.gson:gson", version.ref = "google-gson-version" }
 ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor-version" }
 ktor-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor-version" }
 ktor-json-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor-version" }
+ktor-gson = { module = "io.ktor:ktor-serialization-gson", version.ref = "ktor-version" }
+kotlin-realm = { module = "io.realm.kotlin:library-base", version.ref = "kotlin-realm" }
+
 
 compose-image-loader = { module = "io.github.qdsfdhvh:image-loader", version.ref = "image-loader" }
 voyager-androidx = { module = "cafe.adriel.voyager:voyager-androidx", version.ref = "voyager-version" }

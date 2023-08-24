@@ -3,22 +3,7 @@ package org.thechance.common.di
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import org.thechance.common.domain.usecase.CreateNewTaxiUseCase
-import org.thechance.common.domain.usecase.FilterRestaurantsUseCase
-import org.thechance.common.domain.usecase.FindTaxiByUserNameUseCase
-import org.thechance.common.domain.usecase.GetRestaurantsUseCase
-import org.thechance.common.domain.usecase.GetTaxisUseCase
-import org.thechance.common.domain.usecase.GetUserInfoUseCase
-import org.thechance.common.domain.usecase.GetUsersUseCase
-import org.thechance.common.domain.usecase.ICreateNewTaxiUseCase
-import org.thechance.common.domain.usecase.IFilterRestaurantsUseCase
-import org.thechance.common.domain.usecase.IFindTaxiByUsernameUseCase
-import org.thechance.common.domain.usecase.IGetRestaurantsUseCase
-import org.thechance.common.domain.usecase.IGetTaxisUseCase
-import org.thechance.common.domain.usecase.IGetUserInfoUseCase
-import org.thechance.common.domain.usecase.IGetUsersUseCase
-import org.thechance.common.domain.usecase.ISearchRestaurantsByRestaurantNameUseCase
-import org.thechance.common.domain.usecase.SearchRestaurantsByRestaurantNameUseCase
+import org.thechance.common.domain.usecase.*
 
 val UseCaseModule = module {
     singleOf(::GetUserInfoUseCase) { bind<IGetUserInfoUseCase>() }
@@ -29,4 +14,5 @@ val UseCaseModule = module {
     singleOf(::GetRestaurantsUseCase) { bind<IGetRestaurantsUseCase>() }
     singleOf(::SearchRestaurantsByRestaurantNameUseCase) { bind<ISearchRestaurantsByRestaurantNameUseCase>() }
     singleOf(::FilterRestaurantsUseCase) { bind<IFilterRestaurantsUseCase>() }
+    singleOf(::LoginUserUseCase) { bind<ILoginUserUseCase>() }
 }
