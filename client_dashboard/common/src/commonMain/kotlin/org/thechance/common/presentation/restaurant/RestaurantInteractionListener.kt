@@ -4,7 +4,7 @@ import org.thechance.common.presentation.base.BaseInteractionListener
 
 interface RestaurantInteractionListener : BaseInteractionListener {
 
-    fun onSearchChange(text: String)
+    fun onSearchChange(restaurantName: String)
 
     fun onClickDropDownMenu()
 

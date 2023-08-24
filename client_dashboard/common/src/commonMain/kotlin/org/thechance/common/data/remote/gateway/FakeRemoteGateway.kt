@@ -185,7 +185,7 @@ class FakeRemoteGateway : IRemoteGateway {
     }
 
     override suspend fun findTaxiByUsername(username: String): List<Taxi> {
-        return getTaxis().filter { it.username.startsWith(username,true) }
+        return getTaxis().filter { it.username.startsWith(username, true) }
     }
 
 
@@ -246,5 +246,9 @@ class FakeRemoteGateway : IRemoteGateway {
                 workingHours = "06:30 - 22:30"
             ),
         ).toEntity()
+    }
+
+    override suspend fun searchRestaurantsByRestaurantName(restaurantName: String): List<Restaurant> {
+        return getRestaurants().filter { it.name.startsWith(restaurantName, true) }
     }
 }

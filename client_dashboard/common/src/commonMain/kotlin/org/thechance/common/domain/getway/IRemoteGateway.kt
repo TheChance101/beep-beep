@@ -14,4 +14,5 @@ interface IRemoteGateway {
     suspend fun createTaxi(taxi: AddTaxi)
     suspend fun findTaxiByUsername(username: String): List<Taxi>
     suspend fun getRestaurants(): List<Restaurant>
+    suspend fun searchRestaurantsByRestaurantName(restaurantName: String): List<Restaurant>
 }

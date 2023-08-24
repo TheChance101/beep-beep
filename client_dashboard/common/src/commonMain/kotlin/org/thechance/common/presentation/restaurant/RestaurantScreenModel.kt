@@ -2,13 +2,15 @@ package org.thechance.common.presentation.restaurant
 
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.usecase.IGetRestaurantsUseCase
+import org.thechance.common.domain.usecase.SearchRestaurantsByRestaurantNameUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 import kotlin.math.ceil
 
 
 class RestaurantScreenModel(
-    private val getRestaurants: IGetRestaurantsUseCase
+    private val getRestaurants: IGetRestaurantsUseCase,
+    private val searchRestaurants: SearchRestaurantsByRestaurantNameUseCase
 ) : BaseScreenModel<RestaurantUiState, RestaurantUIEffect>(RestaurantUiState()),
     RestaurantInteractionListener {
 
@@ -31,13 +33,21 @@ class RestaurantScreenModel(
         }
     }
 
+    private fun searchRestaurants(restaurantName: String) {
+        tryToExecute(
+            { searchRestaurants.invoke(restaurantName) }, ::onGetRestaurantSuccessfully, ::onError
+        )
+    }
+
+
     private fun onError(error: ErrorState) {
         updateState { it.copy(error = error, isLoading = false) }
     }
 
 
-    override fun onSearchChange(text: String) {
-        updateState { it.copy(search = text) }
+    override fun onSearchChange(restaurantName: String) {
+        updateState { it.copy(search = restaurantName) }
+        searchRestaurants(restaurantName)
     }
 
     override fun onClickDropDownMenu() {
