@@ -64,5 +64,4 @@ data class AddTaxiDialogUiState(
     val seats: Int = 0
 )
 
-fun AddTaxiDialogUiState.toEntity() = AddTaxi(plateNumber, driverUserName, carModel, selectedCarColor, seats)
 
