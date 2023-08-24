@@ -1,8 +1,7 @@
 package presentation.meals
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.usecase.IGetCousinUseCase
-import domain.usecase.IGetMealsByCousin
+import domain.usecase.IMangeCousinUseCase
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
@@ -17,8 +16,7 @@ class MealsScreenModel :
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
 
-    private val getCousinUse: IGetCousinUseCase by inject()
-    private val getMealsUseCase: IGetMealsByCousin by inject()
+    private val mangeCousin: IMangeCousinUseCase by inject()
 
     init {
         getCousin()
@@ -27,7 +25,7 @@ class MealsScreenModel :
     private fun getCousin() {
         tryToExecute(
             function = {
-                getCousinUse("1")
+                mangeCousin.getCousins("1")
 
             },
             onSuccess = { value ->
@@ -50,7 +48,7 @@ class MealsScreenModel :
         updateState { it.copy(isLoading = true) }
         tryToExecute(
             function = {
-                getMealsUseCase(id)
+                mangeCousin.getMealsByCousinId(id)
             },
             onSuccess = { value ->
                 updateState { it.copy(meals = value.toUIState(), isLoading = false) }
