@@ -9,7 +9,7 @@ data class MealDto(
     val description: String? = null,
     val imageUrl: String? = null,
     val price: Double? = null,
-    val cousins : List<String>? = null
+    val cuisines : List<String>? = null
 )
 
 fun List<MealDto>.toEntity(): List<Meal> = map { it.toEntity() }

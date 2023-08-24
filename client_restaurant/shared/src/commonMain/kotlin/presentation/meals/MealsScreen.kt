@@ -94,11 +94,11 @@ class MealsScreen :
                     ),
                     horizontalArrangement = Arrangement.spacedBy(dimens.space16),
                 ) {
-                    items(state.cousin.size) { index ->
+                    items(state.cuisine.size) { index ->
                         BpChip(
-                            label = state.cousin[index].name,
-                            isSelected = state.cousin[index] == state.selectedCousin,
-                            onClick = { listener.onClickCousinType(state.cousin[index]) },
+                            label = state.cuisine[index].name,
+                            isSelected = state.cuisine[index] == state.selectedCuisine,
+                            onClick = { listener.onClickCuisineType(state.cuisine[index]) },
                         )
                     }
                 }
@@ -120,6 +120,7 @@ class MealsScreen :
                     }
 
 
+                }
             }
         }
     }
