@@ -9,43 +9,46 @@ class ErrorHandler(
     private val localizedMessagesFactory: LocalizedMessagesFactory
 ) {
 
-    fun getLocalizedErrorMessage(errorCodes: List<Int>, locale: Locale): List<Map<Int, String>> {
+    fun getLocalizedErrorMessage(errorCodes: List<Int>, locale: Locale): Map<Int, String> {
         val localizedMessages = localizedMessagesFactory.createLocalizedMessages(locale)
 
-        val errors = mutableListOf<Map<Int, String>>()
+        val errors = mutableMapOf<Int, String>()
 
         if (errorCodes.contains(1002))
-            errors.add(mapOf(1002 to localizedMessages.userAlreadyExist))
+            errors[1002] = localizedMessages.userAlreadyExist
 
         if (errorCodes.contains(1003))
-            errors.add(mapOf(1003 to localizedMessages.invalidUsername))
+            errors[1003] = localizedMessages.invalidUsername
 
         if (errorCodes.contains(1004))
-            errors.add(mapOf(1004 to localizedMessages.invalidFullName))
+            errors[1004] = localizedMessages.invalidFullName
 
         if (errorCodes.contains(1005))
-            errors.add(mapOf(1005 to localizedMessages.passwordCannotBeLessThan8Characters))
+            errors[1005] = localizedMessages.passwordCannotBeLessThan8Characters
 
         if (errorCodes.contains(1006))
-            errors.add(mapOf(1006 to localizedMessages.usernameCannotBeBlank))
+            errors[1006] = localizedMessages.usernameCannotBeBlank
 
         if (errorCodes.contains(1007))
-            errors.add(mapOf(1007 to localizedMessages.passwordCannotBeBlank))
+            errors[1007] = localizedMessages.passwordCannotBeBlank
 
         if (errorCodes.contains(1008))
-            errors.add(mapOf(1008 to localizedMessages.invalidEmail))
+            errors[1008] = localizedMessages.invalidEmail
 
         if (errorCodes.contains(1013))
-            errors.add(mapOf(1013 to localizedMessages.invalidCredentials))
+            errors[1013] = localizedMessages.invalidCredentials
 
         if (errorCodes.contains(1041))
-            errors.add(mapOf(1041 to localizedMessages.notFound))
+            errors[1041] = localizedMessages.notFound
 
         if (errorCodes.contains(1042))
-            errors.add(mapOf(1042 to localizedMessages.invalidRequestParameter))
+            errors[1042] = localizedMessages.invalidRequestParameter
+
+        if (errorCodes.contains(1043))
+            errors[1043] = localizedMessages.userNotFound
 
         if (errorCodes.contains(1045))
-            errors.add(mapOf(1045 to localizedMessages.invalidAddressLocation))
+            errors[1045] = localizedMessages.invalidAddressLocation
 
         return errors
     }

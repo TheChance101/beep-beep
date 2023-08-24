@@ -7,6 +7,5 @@ fun appModule() = module {
         screenModule,
         GatewayModule,
         UseCaseModule,
-
     )
 }

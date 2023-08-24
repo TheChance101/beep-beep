@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.thechance.common.domain.entity.*
 import org.thechance.common.presentation.util.ErrorState
 
 abstract class BaseScreenModel<S, E>(initialState: S) : StateScreenModel<S>(initialState),
@@ -51,7 +52,12 @@ abstract class BaseScreenModel<S, E>(initialState: S) : StateScreenModel<S>(init
             try {
                 callee()
             } catch (exception: Exception) {
-                onError(ErrorState.UnKnownError)
+                when(exception){
+                    is InvalidCredentialsException -> onError(ErrorState.InvalidCredentials(exception.message.toString()))
+                    is UserNotFoundException -> onError(ErrorState.UserNotExist(exception.message.toString()))
+                    is NoInternetException -> onError(ErrorState.NoConnection)
+                    else -> onError(ErrorState.UnKnownError)
+                }
             }
         }
     }

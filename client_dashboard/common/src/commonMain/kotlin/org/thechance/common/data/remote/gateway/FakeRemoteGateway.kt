@@ -3,18 +3,10 @@ package org.thechance.common.data.remote.gateway
 
 import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
-import org.thechance.common.data.remote.model.AdminDto
-import org.thechance.common.data.remote.model.RestaurantDto
-import org.thechance.common.data.remote.model.TaxiDto
-import org.thechance.common.data.remote.model.UserDto
-import org.thechance.common.data.remote.model.toEntity
-import org.thechance.common.domain.entity.AddTaxi
-import org.thechance.common.domain.entity.Admin
-import org.thechance.common.domain.entity.Restaurant
-import org.thechance.common.domain.entity.Taxi
-import org.thechance.common.domain.entity.User
+import org.thechance.common.data.remote.model.*
+import org.thechance.common.domain.entity.*
 import org.thechance.common.domain.getway.IRemoteGateway
-import java.util.UUID
+import java.util.*
 
 class FakeRemoteGateway : IRemoteGateway {
 
@@ -269,4 +261,9 @@ class FakeRemoteGateway : IRemoteGateway {
     override suspend fun searchRestaurantsByRestaurantName(restaurantName: String): List<Restaurant> {
         return getRestaurants().filter { it.name.startsWith(restaurantName, true) }
     }
+
+    override suspend fun loginUser(username: String, password: String): UserTokens {
+        return UserTokens("", "")
+    }
+
 }

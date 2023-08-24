@@ -28,7 +28,7 @@ fun App() {
     CompositionLocalProvider(LocalScreenSize provides size) {
         Box(Modifier.onSizeChanged { size = it.toSize() }) {
             BpTheme {
-                Navigator(LoginScreen) {
+                Navigator(LoginScreen()) {
                     SlideTransition(it)
                 }
             }

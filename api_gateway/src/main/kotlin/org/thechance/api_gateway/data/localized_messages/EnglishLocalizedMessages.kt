@@ -18,4 +18,5 @@ class EnglishLocalizedMessages : LocalizedMessages {
     override val invalidCredentials: String = "Invalid credentials"
     override val userCreatedSuccessfully: String = "User created successfully 🎉"
     override val unknownError: String = "Unknown error `¯\\_(ツ)_/¯`"
+    override val userNotFound: String = "User not found"
 }
