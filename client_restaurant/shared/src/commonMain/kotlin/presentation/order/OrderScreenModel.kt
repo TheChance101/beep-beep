@@ -1,12 +1,12 @@
 package presentation.order
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.entity.OrderState
 import domain.usecase.IManageOrderUseCase
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
+import presentation.base.RequestException
 
 class OrderScreenModel :
     BaseScreenModel<OrderScreenUiState, OrderScreenUiEffect>(OrderScreenUiState()),
@@ -19,16 +19,16 @@ class OrderScreenModel :
         sendNewEffect(OrderScreenUiEffect.Back)
     }
 
-    override fun onClickFinishOrder() {
-        sendNewEffect(OrderScreenUiEffect.FinishOrder)
+    override fun onClickFinishOrder(orderId: String, orderStateType: OrderStateType) {
+        updateOrderState(orderId, orderStateType)
     }
 
-    override fun onClickCancelOrder() {
-        sendNewEffect(OrderScreenUiEffect.CancelOrder)
+    override fun onClickCancelOrder(orderId: String, orderStateType: OrderStateType) {
+        updateOrderState(orderId, orderStateType)
     }
 
-    override fun onClickApproveOrder() {
-        sendNewEffect(OrderScreenUiEffect.ApproveOrder)
+    override fun onClickApproveOrder(orderId: String, orderStateType: OrderStateType) {
+        updateOrderState(orderId, orderStateType)
     }
 
     init {
@@ -36,17 +36,25 @@ class OrderScreenModel :
         getPendingOrders("7c3d631e-6d49-48c9-9f91-9426ec559eb1")
     }
 
-    private fun updateOrderState(orderId: String, orderState: OrderState) {
+    private fun updateOrderState(orderId: String, orderState: OrderStateType) {
         tryToExecute(
-            { manageOrdersUseCase.updateOrderState(orderId , orderState)?.toOrderUiState()},
-            ::onUpdateOrderStateSuccess,
+            { manageOrdersUseCase.updateOrderState(orderId, orderState) },
+            { onUpdateOrderStateSuccess(it, orderState) },
             ::onUpdateOrderStateError
         )
     }
 
 
-    private fun onUpdateOrderStateSuccess(order: OrderUiState?) {
-
+    private fun onUpdateOrderStateSuccess(isOrderUpdated: Boolean, orderState: OrderStateType) {
+        if (orderState == OrderStateType.FINISH && isOrderUpdated) {
+            sendNewEffect(OrderScreenUiEffect.FinishOrder)
+        } else if (orderState == OrderStateType.APPROVE && isOrderUpdated) {
+            sendNewEffect(OrderScreenUiEffect.ApproveOrder)
+        } else if (orderState == OrderStateType.CANCEL && isOrderUpdated) {
+            sendNewEffect(OrderScreenUiEffect.CancelOrder)
+        } else {
+            throw RequestException()
+        }
     }
 
     private fun getPendingOrders(restaurantId: String) {

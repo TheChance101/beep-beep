@@ -24,9 +24,7 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpAppBar
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
-import presentation.composables.BPSnackBar
 import presentation.login.LoginScreen
 import presentation.order.composables.OrderCard
 import presentation.order.composables.OrderTextButton
@@ -126,9 +124,9 @@ class OrderScreen :
         modifier: Modifier = Modifier,
         inCookingOrders: List<OrderUiState>? = null,
         pendingOrders: List<OrderUiState>? = null,
-        onClickFinish: () -> Unit = {},
-        onClickCancel: () -> Unit = {},
-        onClickApprove: () -> Unit = {},
+        onClickFinish: ((orderId: String, orderStateType: OrderStateType) -> Unit)? = null,
+        onClickCancel: ((orderId: String, orderStateType: OrderStateType) -> Unit)? = null,
+        onClickApprove: ((orderId: String, orderStateType: OrderStateType) -> Unit)? = null,
         verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(Theme.dimens.space8)
     ) {
         Column(
@@ -147,7 +145,10 @@ class OrderScreen :
             inCookingOrders?.let {
                 it.forEach { order ->
                     OrderCard(order = order) {
-                        OrderTextButton(text = Resources.strings.finish, onClick = onClickFinish)
+                        OrderTextButton(
+                            text = Resources.strings.finish,
+                            onClick = { onClickFinish?.let { it(order.id, OrderStateType.FINISH) } }
+                        )
                     }
                 }
             }
@@ -158,13 +159,13 @@ class OrderScreen :
                         Row(horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8)) {
                             OrderTextButton(
                                 text = Resources.strings.cancel,
-                                onClick = onClickCancel,
+                                onClick = {onClickCancel?.let { it(order.id, OrderStateType.CANCEL) }},
                                 textColor = Theme.colors.contentTertiary,
                                 border = BorderStroke(0.dp, color = Theme.colors.surface)
                             )
                             OrderTextButton(
                                 text = Resources.strings.approve,
-                                onClick = onClickApprove,
+                                onClick = {onClickApprove?.let { it(order.id, OrderStateType.APPROVE) }},
                             )
                         }
                     }

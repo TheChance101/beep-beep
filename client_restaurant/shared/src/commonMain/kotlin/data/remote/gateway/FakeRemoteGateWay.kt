@@ -490,10 +490,9 @@ class FakeRemoteGateWay : IRemoteGateWay {
         return orders.filter { it.orderState == 3 || it.orderState == 4 }.toOrderEntity()
     }
 
-    override suspend fun updateOrderState(orderId: String, orderState: Int): Order? {
+    override suspend fun updateOrderState(orderId: String, orderState: Int): Boolean {
         val order = orders.find { it.id == orderId }
-//        orders.indexOf(order).also { orders[it].orderState = orderState }
-        return order?.toEntity()
+        return order != null
     }
 
     override suspend fun getOrderById(orderId: String): Order? {
