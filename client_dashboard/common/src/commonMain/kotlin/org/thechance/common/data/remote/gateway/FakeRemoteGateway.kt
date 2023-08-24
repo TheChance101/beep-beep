@@ -13,6 +13,7 @@ import org.thechance.common.domain.entity.Admin
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.entity.User
+import org.thechance.common.domain.entity.UserTokens
 import org.thechance.common.domain.getway.IRemoteGateway
 import java.util.UUID
 
@@ -265,4 +266,9 @@ class FakeRemoteGateway : IRemoteGateway {
             ),
         ).toEntity()
     }
+
+    override suspend fun loginUser(username: String, password: String, keepLoggedIn: Boolean): UserTokens {
+        return UserTokens("", "")
+    }
+
 }
