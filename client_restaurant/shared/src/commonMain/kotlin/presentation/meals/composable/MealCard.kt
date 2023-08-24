@@ -1,4 +1,4 @@
-package presentation.meals.Composable
+package presentation.meals.composable
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

@@ -1,4 +1,4 @@
-package presentation.composables.modifier
+package presentation.composable.modifier
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
