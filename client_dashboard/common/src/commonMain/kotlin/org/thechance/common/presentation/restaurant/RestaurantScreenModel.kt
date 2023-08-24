@@ -1,6 +1,7 @@
 package org.thechance.common.presentation.restaurant
 
 import org.thechance.common.domain.entity.Restaurant
+import org.thechance.common.domain.usecase.FilterRestaurantsUseCase
 import org.thechance.common.domain.usecase.IGetRestaurantsUseCase
 import org.thechance.common.domain.usecase.SearchRestaurantsByRestaurantNameUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
@@ -10,7 +11,8 @@ import kotlin.math.ceil
 
 class RestaurantScreenModel(
     private val getRestaurants: IGetRestaurantsUseCase,
-    private val searchRestaurants: SearchRestaurantsByRestaurantNameUseCase
+    private val searchRestaurants: SearchRestaurantsByRestaurantNameUseCase,
+    private val filterRestaurants: FilterRestaurantsUseCase
 ) : BaseScreenModel<RestaurantUiState, RestaurantUIEffect>(RestaurantUiState()),
     RestaurantInteractionListener {
 
@@ -39,9 +41,22 @@ class RestaurantScreenModel(
         )
     }
 
-
     private fun onError(error: ErrorState) {
         updateState { it.copy(error = error, isLoading = false) }
+    }
+
+
+    override fun onFilterRestaurants(rating: Double, priceLevel: Int) {
+        tryToExecute(
+            { filterRestaurants.invoke(rating, priceLevel) },
+            ::onGetRestaurantSuccessfully,
+            ::onError
+        )
+    }
+
+    override fun onCancelFilterRestaurants() {
+        updateState { it.copy(filterRating = 0.0, filterPriceLevel = 0) }
+        getRestaurants()
     }
 
 
@@ -58,11 +73,11 @@ class RestaurantScreenModel(
         updateState { it.copy(isFilterDropdownMenuExpanded = false) }
     }
 
-    override fun onClickFilterRating(rating: Double) {
+    override fun onClickFilterRatingBar(rating: Double) {
         updateState { it.copy(filterRating = rating) }
     }
 
-    override fun onClickFilterPrice(priceLevel: Int) {
+    override fun onClickFilterPriceBar(priceLevel: Int) {
         updateState { it.copy(filterPriceLevel = priceLevel) }
     }
 

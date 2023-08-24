@@ -10,9 +10,13 @@ interface RestaurantInteractionListener : BaseInteractionListener {
 
     fun onDismissDropDownMenu()
 
-    fun onClickFilterRating(rating: Double)
+    fun onClickFilterRatingBar(rating: Double)
 
-    fun onClickFilterPrice(priceLevel: Int)
+    fun onClickFilterPriceBar(priceLevel: Int)
+
+    fun onFilterRestaurants(rating: Double, priceLevel: Int)
+
+    fun onCancelFilterRestaurants()
 
     fun onPageClicked(pageNumber: Int)
 
