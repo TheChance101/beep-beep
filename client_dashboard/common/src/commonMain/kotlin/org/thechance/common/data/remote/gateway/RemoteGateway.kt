@@ -83,16 +83,25 @@ class RemoteGateway(
     }
 
     private fun throwMatchingException(errorMessages: Map<String, String>) {
-        if (errorMessages.containsErrors("1013")) {
-            throw InvalidCredentialsException(errorMessages["1013"] ?: "")
-        } else if (errorMessages.containsErrors("1043")) {
-            throw UserNotFoundException(errorMessages["1043"] ?: "")
+        if (errorMessages.containsErrors(WRONG_PASSWORD)) {
+            throw InvalidCredentialsException(errorMessages.getOrEmpty(WRONG_PASSWORD))
         } else {
-            throw UnknownErrorException()
+            if (errorMessages.containsErrors(USER_NOT_EXIST)) {
+                throw UserNotFoundException(errorMessages.getOrEmpty(USER_NOT_EXIST))
+            } else {
+                throw UnknownErrorException()
+            }
         }
     }
 
     private fun Map<String, String>.containsErrors(vararg errorCodes: String): Boolean =
         keys.containsAll(errorCodes.toList())
+
+    private fun Map<String, String>.getOrEmpty(key: String): String = get(key) ?: ""
+
+    companion object {
+        const val WRONG_PASSWORD = "1013"
+        const val USER_NOT_EXIST = "1043"
+    }
 
 }
