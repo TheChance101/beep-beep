@@ -59,7 +59,7 @@ ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor-ver
 ktor-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor-version" }
 ktor-json-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor-version" }
 #realm
-#realm-library-base = { module = "io.realm.kotlin:library-base:1.10.0", version.ref = "realm-version" }
+realm-library-base = { module = "io.realm.kotlin:library-base", version.ref = "realm-version" }
 
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin-version" }
 koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koinKspVersion" }

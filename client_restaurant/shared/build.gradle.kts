@@ -47,8 +47,7 @@ kotlin {
                 implementation(libs.koin.compose)
                 implementation(project(":design_system:shared"))
                 //realm db
-                implementation("io.realm.kotlin:library-base:1.10.0")
-               // implementation(libs.realm.library.base)
+                implementation(libs.realm.library.base)
                 //ktor-client
                 implementation(libs.ktor.client.core)
                 implementation(libs.ktor.json.serialization)
