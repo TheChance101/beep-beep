@@ -20,11 +20,11 @@ class UserScreenModel(
         mutableState.update { it.copy(numberOfUsers = it.users.size) }
     }
 
-    fun onSearchChange(text: String) {
+    fun onSearchInputChange(text: String) {
         mutableState.update { it.copy(search = text) }
     }
 
-    fun onClickDropDownMenu() {
+    fun showFilterMenu() {
         mutableState.update {
             it.copy(
                 filter = UserScreenUiState.FilterUiState(
@@ -35,7 +35,7 @@ class UserScreenModel(
         }
     }
 
-    fun onDismissDropDownMenu() {
+    fun hideFilterMenu() {
         mutableState.update {
             it.copy(
                 filter = UserScreenUiState.FilterUiState(show = false)
@@ -64,11 +64,11 @@ class UserScreenModel(
                     permissions = user.permissions
                 )
             )
-        }
+        }.also { hideUserMenu() }
     }
 
     fun onDeleteUserMenuItemClicked(user: UserScreenUiState.UserUiState) {
-        println("Delete user: ${user.username}")
+        println("Delete user: ${user.username}").also { hideUserMenu() }
     }
 
     fun onSaveUserPermissions() {
@@ -105,7 +105,7 @@ class UserScreenModel(
                     permissions = emptyList()
                 )
             )
-        }
+        }.also { hideUserMenu() }
     }
 
     private fun getUpdatedPermissions(

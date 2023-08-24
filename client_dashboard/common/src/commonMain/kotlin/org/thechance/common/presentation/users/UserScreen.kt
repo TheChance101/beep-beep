@@ -46,34 +46,40 @@ object UserScreen : Screen, KoinComponent {
         val state by screenModel.state.collectAsState()
         UserContent(
             state = state,
-            onEditUserClicked = screenModel::showUserMenu,
             onItemPerPageChanged = screenModel::onItemPerPageChanged,
             onPageClicked = screenModel::onPageClicked,
             onFilterPermissionClicked = screenModel::onFilterPermissionClicked,
             onFilterCountryClicked = screenModel::onFilterCountryClicked,
+            onUserMenuClicked = screenModel::showUserMenu,
             onEditUserMenuItemClicked = screenModel::onEditUserMenuItemClicked,
             onSaveUserPermissions = screenModel::onSaveUserPermissions,
             onCancelUserPermissionsDialog = screenModel::onCancelUserPermissionsDialog,
             onUserPermissionClicked = screenModel::onUserPermissionClicked,
             hideUserMenu = screenModel::hideUserMenu,
             onDeleteUserMenuItemClicked = screenModel::onDeleteUserMenuItemClicked,
+            onSearchInputChanged = screenModel::onSearchInputChange,
+            onFilterMenuClicked = screenModel::showFilterMenu,
+            onFilterMenuDismiss = screenModel::hideFilterMenu,
         )
     }
 
     @Composable
     private fun UserContent(
         state: UserScreenUiState,
-        onEditUserClicked: (String) -> Unit,
         hideUserMenu: () -> Unit,
         onItemPerPageChanged: (String) -> Unit,
         onPageClicked: (Int) -> Unit,
         onFilterPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
         onFilterCountryClicked: (UserScreenUiState.CountryUiState) -> Unit,
+        onUserMenuClicked: (String) -> Unit,
         onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
         onSaveUserPermissions: () -> Unit,
         onCancelUserPermissionsDialog: () -> Unit,
         onUserPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
         onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
+        onSearchInputChanged: (String) -> Unit,
+        onFilterMenuClicked: () -> Unit,
+        onFilterMenuDismiss: () -> Unit,
     ) {
         PermissionsDialog(
             visible = state.permissionsDialog.show,
@@ -99,13 +105,16 @@ object UserScreen : Screen, KoinComponent {
                 onFilterPermissionClicked = onFilterPermissionClicked,
                 isFilterDropdownMenuExpanded = state.filter.show,
                 onFilterCountryClicked = onFilterCountryClicked,
+                onSearchInputChanged = onSearchInputChanged,
+                onFilterMenuClicked = onFilterMenuClicked,
+                onFilterMenuDismiss = onFilterMenuDismiss,
             )
 
             UsersTable(
                 users = state.users,
                 headers = state.tableHeader,
                 selectedPage = state.selectedPage,
-                onEditUserClicked = onEditUserClicked,
+                onUserMenuClicked = onUserMenuClicked,
                 numberItemInPage = state.numberItemInPage,
                 numberOfUsers = state.numberOfUsers,
                 pageCount = state.pageCount,
@@ -124,7 +133,7 @@ object UserScreen : Screen, KoinComponent {
         users: List<UserScreenUiState.UserUiState>,
         headers: List<Header>,
         selectedPage: Int,
-        onEditUserClicked: (String) -> Unit,
+        onUserMenuClicked: (String) -> Unit,
         numberItemInPage: Int,
         numberOfUsers: Int,
         pageCount: Int,
@@ -145,7 +154,7 @@ object UserScreen : Screen, KoinComponent {
                 offset = selectedPage - 1,
             ) { user ->
                 UserRow(
-                    onClickEditUser = onEditUserClicked,
+                    onUserMenuClicked = onUserMenuClicked,
                     user = user,
                     position = users.indexOf(user) + 1,
                     editUserMenu = editUserMenu,
@@ -201,6 +210,8 @@ object UserScreen : Screen, KoinComponent {
         selectedPermissions: List<UserScreenUiState.PermissionUiState>,
         onFilterPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
         onFilterCountryClicked: (UserScreenUiState.CountryUiState) -> Unit,
+        onFilterMenuClicked: () -> Unit,
+        onFilterMenuDismiss: () -> Unit,
     ) {
         Row {
             BpIconButton(
@@ -210,13 +221,13 @@ object UserScreen : Screen, KoinComponent {
                         style = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
                     )
                 },
-                onClick = screenModel::onClickDropDownMenu,
+                onClick = onFilterMenuClicked,
                 painter = painterResource("ic_filter.svg"),
                 modifier = Modifier.cursorHoverIconHand()
             )
             BpDropdownMenu(
                 expanded = isFilterDropdownMenuExpanded,
-                onDismissRequest = screenModel::onDismissDropDownMenu,
+                onDismissRequest = onFilterMenuDismiss,
                 offset = DpOffset.Zero.copy(y = Theme.dimens.space16),
                 shape = RoundedCornerShape(Theme.radius.medium).copy(topStart = CornerSize(Theme.radius.small)),
                 modifier = Modifier.height(400.dp)
@@ -285,14 +296,14 @@ object UserScreen : Screen, KoinComponent {
                             ) {
                                 BpTextButton(
                                     "Cancel",
-                                    onClick = screenModel::onDismissDropDownMenu,
+                                    onClick = onFilterMenuDismiss,
                                     heightInDp = 40,
                                     modifier = Modifier.cursorHoverIconHand()
 
                                 )
                                 BpOutlinedButton(
                                     title = "Save",
-                                    onClick = screenModel::onDismissDropDownMenu,
+                                    onClick = onFilterMenuDismiss,
                                     shape = RoundedCornerShape(Theme.radius.small),
                                     modifier = Modifier.height(40.dp).weight(1f)
                                 )
@@ -313,6 +324,9 @@ object UserScreen : Screen, KoinComponent {
         isFilterDropdownMenuExpanded: Boolean,
         onFilterPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
         onFilterCountryClicked: (UserScreenUiState.CountryUiState) -> Unit,
+        onSearchInputChanged: (String) -> Unit,
+        onFilterMenuClicked: () -> Unit,
+        onFilterMenuDismiss: () -> Unit,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -322,7 +336,7 @@ object UserScreen : Screen, KoinComponent {
             BpSimpleTextField(
                 modifier = Modifier.widthIn(max = 440.dp),
                 hint = "Search for users",
-                onValueChange = screenModel::onSearchChange,
+                onValueChange = onSearchInputChanged,
                 text = searchText,
                 keyboardType = KeyboardType.Text,
                 trailingPainter = painterResource("ic_search.svg")
@@ -334,7 +348,9 @@ object UserScreen : Screen, KoinComponent {
                 selectedPermissions = selectedPermissions,
                 isFilterDropdownMenuExpanded = isFilterDropdownMenuExpanded,
                 onFilterPermissionClicked = onFilterPermissionClicked,
-                onFilterCountryClicked = onFilterCountryClicked
+                onFilterCountryClicked = onFilterCountryClicked,
+                onFilterMenuClicked = onFilterMenuClicked,
+                onFilterMenuDismiss = onFilterMenuDismiss,
             )
         }
     }
@@ -342,7 +358,7 @@ object UserScreen : Screen, KoinComponent {
     @OptIn(ExperimentalLayoutApi::class)
     @Composable
     private fun RowScope.UserRow(
-        onClickEditUser: (userId: String) -> Unit,
+        onUserMenuClicked: (String) -> Unit,
         position: Int,
         user: UserScreenUiState.UserUiState,
         firstColumnWeight: Float = 1f,
@@ -418,7 +434,7 @@ object UserScreen : Screen, KoinComponent {
             Image(
                 painter = painterResource("horizontal_dots.xml"),
                 contentDescription = null,
-                modifier = Modifier.noRipple { onClickEditUser(user.username) },
+                modifier = Modifier.noRipple { onUserMenuClicked(user.username) },
                 colorFilter = ColorFilter.tint(color = Theme.colors.contentPrimary)
             )
             EditUserDropdownMenu(
