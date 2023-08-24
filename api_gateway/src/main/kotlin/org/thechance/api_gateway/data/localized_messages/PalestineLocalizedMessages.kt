@@ -1,4 +1,4 @@
-package org.thechance.api_gateway.data.localized_messages.error_codes
+package org.thechance.api_gateway.data.localized_messages
 
 import org.koin.core.annotation.Single
 
@@ -12,5 +12,10 @@ class PalestineLocalizedMessages : LocalizedMessages {
     override val invalidEmail: String = "دا مش ايميل يا 56"
     override val invalidCredentials: String = "امسك 56"
     override val notFound: String = "شفاف 404"
+    override val invalidRequestParameter: String = "الباراميتر دا مش موجود يا 56"
     override val invalidAddressLocation: String = "اللوكيشن في مثلث برمودا"
+    override val userAlreadyExist: String = "اليوزر دا موجود من قبل يا 56"
+    override val invalidInformation: String = "البيانات دي مش صح يا 56"
+    override val unknownError: String = "حدث خطأ غير معروف"
+    override val userCreatedSuccessfully: String = "شرفتنا يا 56"
 }
