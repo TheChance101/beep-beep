@@ -25,8 +25,8 @@ import com.beepbeep.designSystem.ui.composable.BpAnimatedTabLayout
 import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.base.BaseScreen
 import presentation.composables.BpAppBar
-import presentation.composables.OrderCard
-import presentation.composables.header
+import presentation.order.composable.OrderCard
+import presentation.order.composable.header
 import resources.Resources
 import util.capitalizeFirstLetter
 
@@ -106,6 +106,7 @@ class OrdersHistoryScreen(private val restaurantId: String) : BaseScreen<OrderHi
     override fun onEffect(effect: OrderHistoryScreenUiEffect, navigator: Navigator) {
         when (effect) {
             is OrderHistoryScreenUiEffect.Back -> navigator.pop()
+            else -> {}
         }
     }
 }

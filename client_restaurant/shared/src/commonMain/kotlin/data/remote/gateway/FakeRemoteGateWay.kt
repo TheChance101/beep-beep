@@ -56,7 +56,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             ),
             totalPrice = 28.48,
             createdAt = "2022-05-16T08:23",
-            orderState = 0
+            orderState = 2
         ),
         OrderDto(
             id = "891ecf91-62bf-4d91-96bf-8d4cc8271a81",
@@ -178,7 +178,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             ),
             totalPrice = 20.73,
             createdAt = "2022-05-16T08:23",
-            orderState = 3
+            orderState = 2
         ),
         OrderDto(
             id = "9e94fdd9-9cbf-4b7e-a97e-8ea31c4876b2",
@@ -655,7 +655,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
     }
 
     override suspend fun getOrdersHistory(restaurantId: String): List<Order> {
-        return orders.filter { it.orderState == 3 || it.orderState == 4 }.toOrderEntity()
+        return orders.filter { it.orderState == 2 || it.orderState == 3 }.toOrderEntity()
     }
 
     override suspend fun updateOrderState(orderId: String, orderState: Int): Order {
