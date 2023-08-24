@@ -1,4 +1,4 @@
-package presentation.composables
+package presentation.order.composables
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,6 +21,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 import com.seiko.imageloader.rememberAsyncImagePainter
+import presentation.composables.BPDashedDivider
 import presentation.order.OrderUiState
 import resources.Resources
 
