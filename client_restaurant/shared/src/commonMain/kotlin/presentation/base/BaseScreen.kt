@@ -11,9 +11,12 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import org.koin.core.parameter.ParametersDefinition
 import org.koin.core.qualifier.Qualifier
-import org.koin.mp.KoinPlatform.getKoin
+import org.koin.mp.KoinPlatform
 
 @Suppress("BOUNDS_NOT_ALLOWED_IF_BOUNDED_BY_TYPE_PARAMETER")
 abstract class BaseScreen<VM, S, E, I> : Screen
@@ -21,11 +24,10 @@ abstract class BaseScreen<VM, S, E, I> : Screen
     @Composable
     fun initScreen(viewModel: VM) {
         val state: S by viewModel.state.collectAsState()
-        val effect: E? by viewModel.effect.collectAsState(null)
         val navigator = LocalNavigator.currentOrThrow
 
         onRender(state, viewModel)
-        effect?.Listen {
+        Listen(viewModel.effect){
             onEffect(effect = it, navigator = navigator)
         }
     }
@@ -34,22 +36,23 @@ abstract class BaseScreen<VM, S, E, I> : Screen
     abstract fun onRender(state: S, listener: I)
 
     @Composable
-    private fun E.Listen(function: (E) -> Unit) {
-        LaunchedEffect(this) {
-            function(this@Listen)
+    private fun Listen(effect: Flow<E>, function: (E) -> Unit, ) {
+        LaunchedEffect(Unit) {
+            effect.collectLatest {
+                it?.let { function(it) }
+            }
         }
     }
 
     abstract fun onEffect(effect: E, navigator: Navigator)
 
 
-}
-
-@Composable
-inline fun <reified T : ScreenModel> Screen.getScreenModel(
-    qualifier: Qualifier? = null,
-    noinline parameters: ParametersDefinition? = null,
-): T {
-    val koin = getKoin()
-    return rememberScreenModel(tag = qualifier?.value) { koin.get(qualifier, parameters) }
+    @Composable
+    inline fun <reified T : ScreenModel> getScreenModel(
+        qualifier: Qualifier? = null,
+        noinline parameters: ParametersDefinition? = null,
+    ): T {
+        val koin = KoinPlatform.getKoin()
+        return rememberScreenModel(tag = qualifier?.value) { koin.get(qualifier, parameters) }
+    }
 }

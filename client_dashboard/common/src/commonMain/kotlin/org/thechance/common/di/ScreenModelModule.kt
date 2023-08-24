@@ -9,7 +9,6 @@ import org.thechance.common.presentation.restaurant.RestaurantScreenModel
 import org.thechance.common.presentation.taxi.TaxiScreenModel
 import org.thechance.common.presentation.users.UserScreenModel
 
-
 val ScreenModelModule = module {
     factoryOf(::OverviewScreenModel)
     factoryOf(::RestaurantScreenModel)

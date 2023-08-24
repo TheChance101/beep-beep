@@ -6,9 +6,13 @@ import presentation.login.LoginScreenModel
 import presentation.main.MainScreenModel
 import presentation.order.OrderScreen
 import presentation.order.OrderScreenModel
+import presentation.info.RestaurantInfoScreenModel
+import presentation.meals.MealsScreenModel
 
 val screenModule = module {
     factoryOf(::LoginScreenModel)
     factoryOf(::MainScreenModel)
     factoryOf(::OrderScreenModel)
+    factoryOf(::RestaurantInfoScreenModel)
+    factoryOf(::MealsScreenModel)
 }

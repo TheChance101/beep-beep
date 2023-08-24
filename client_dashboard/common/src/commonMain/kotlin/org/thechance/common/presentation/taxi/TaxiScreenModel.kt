@@ -1,30 +1,102 @@
 package org.thechance.common.presentation.taxi
 
-import cafe.adriel.voyager.core.model.StateScreenModel
-import kotlinx.coroutines.flow.update
+import org.thechance.common.domain.entity.CarColor
+import org.thechance.common.domain.entity.Taxi
+import org.thechance.common.domain.usecase.ICreateNewTaxiUseCase
+import org.thechance.common.domain.usecase.IFindTaxiByUsernameUseCase
 import org.thechance.common.domain.usecase.IGetTaxisUseCase
-
+import org.thechance.common.presentation.base.BaseScreenModel
+import org.thechance.common.presentation.util.ErrorState
 
 class TaxiScreenModel(
-    private val getTaxis: IGetTaxisUseCase
-) : StateScreenModel<TaxiUiState>(TaxiUiState()) {
+    private val getTaxis: IGetTaxisUseCase,
+    private val createNewTaxi: ICreateNewTaxiUseCase,
+    private val findTaxiByUsername: IFindTaxiByUsernameUseCase
+) : BaseScreenModel<TaxiUiState, TaxiUiEffect>(TaxiUiState()), TaxiScreenInteractionListener {
 
     init {
         getDummyTaxiData()
     }
 
-    fun onTaxiNumberChange(number: String) {
-        mutableState.update { it.copy(taxiNumberInPage = number) }
+    override fun onTaxiNumberChange(number: String) {
+        updateState { it.copy(taxiNumberInPage = number) }
     }
 
-    fun onSearchInputChange(searchQuery: String) {
-        mutableState.update { it.copy(searchQuery = searchQuery) }
+    override fun onSearchInputChange(searchQuery: String) {
+        updateState { it.copy(searchQuery = searchQuery) }
+        findTaxiByUsername(searchQuery)
     }
 
     private fun getDummyTaxiData() {
-        mutableState.update {
-            it.copy(taxis = getTaxis.getTaxis().toUiState(),)
+        tryToExecute(getTaxis::getTaxis, ::onGetTaxisSuccessfully, ::onError)
+    }
+
+    private fun findTaxiByUsername(username: String) {
+        tryToExecute(
+            { findTaxiByUsername.findTaxiByUsername(username) },
+            ::onFindTaxiSuccessfully,
+            ::onError
+        )
+    }
+
+    private fun onFindTaxiSuccessfully(taxis: List<Taxi>) {
+        updateState { it.copy(taxis = taxis.toUiState(), isLoading = false) }
+    }
+
+    private fun onGetTaxisSuccessfully(taxis: List<Taxi>) {
+        updateState { it.copy(taxis = taxis.toUiState(), isLoading = false) }
+    }
+
+    private fun onError(error: ErrorState) {
+        updateState { it.copy(error = error, isLoading = false) }
+    }
+
+    override fun onCancelCreateTaxiClicked() {
+        updateState { it.copy(isAddNewTaxiDialogVisible = false) }
+    }
+
+    override fun onTaxiPlateNumberChange(number: String) {
+        updateState {
+            it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(plateNumber = number))
         }
+    }
+
+    override fun onDriverUserNamChange(name: String) {
+        updateState {
+            it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(driverUserName = name))
+        }
+    }
+
+    override fun onCarModelChanged(model: String) {
+        updateState { it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(carModel = model)) }
+    }
+
+    override fun onCarColorSelected(color: CarColor) {
+        updateState {
+            it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(selectedCarColor = color))
+        }
+    }
+
+    override fun onSeatSelected(seats: Int) {
+        updateState { it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(seats = seats)) }
+    }
+
+    override fun onCreateTaxiClicked() {
+        updateState { it.copy(isAddNewTaxiDialogVisible = false) }
+        tryToExecute(
+            { createNewTaxi.createTaxi(mutableState.value.addNewTaxiDialogUiState.toEntity()) },
+            ::onCreateTaxiSuccessfully,
+            ::onError
+        )
+    }
+
+    private fun onCreateTaxiSuccessfully(taxi: Taxi) {
+        val newTaxi = mutableState.value.taxis.toMutableList().apply { add(taxi.toUiState()) }
+        updateState { it.copy(taxis = newTaxi, isLoading = false) }
+    }
+
+    override fun onAddNewTaxiClicked() {
+        updateState { it.copy(isAddNewTaxiDialogVisible = true) }
     }
 
 }
