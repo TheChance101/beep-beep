@@ -6,8 +6,6 @@ import kotlinx.coroutines.CoroutineScope
 import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
-import presentation.base.InternetException
-import presentation.base.RequestException
 
 class OrderScreenModel :
     BaseScreenModel<OrderScreenUiState, OrderScreenUiEffect>(OrderScreenUiState()),
@@ -44,7 +42,6 @@ class OrderScreenModel :
             ::onUpdateOrderStateError
         )
     }
-
 
     private fun onUpdateOrderStateSuccess(updatedOrder: OrderUiState) {
         sendNewEffect(OrderScreenUiEffect.UpdateOrder(updatedOrder))
@@ -86,5 +83,4 @@ class OrderScreenModel :
     private fun onUpdateOrderStateError(errorState: ErrorState) {
         println("Error is $errorState")
     }
-
 }
