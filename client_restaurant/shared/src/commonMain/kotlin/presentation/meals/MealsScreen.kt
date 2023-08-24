@@ -47,8 +47,6 @@ class MealsScreen :
     override fun onEffect(effect: MealsScreenUIEffect, navigator: Navigator) {
         when (effect) {
             is MealsScreenUIEffect.Back -> navigator.pop()
-            is MealsScreenUIEffect.NavigateToMealDetails -> {
-            }
         }
     }
 
@@ -118,7 +116,7 @@ class MealsScreen :
 
                     ) {
                     items(state.meals.size) { index ->
-                        MealCard(onClick = { listener.onClickMeal() }, meal = state.meals[index])
+                        MealCard(onClick = { }, meal = state.meals[index])
                     }
 
                 }
