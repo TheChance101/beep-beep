@@ -4,12 +4,12 @@ import domain.entity.Category
 import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
-import domain.entity.UserToken
+import domain.entity.UserTokens
 
 interface IRemoteGateWay {
 
     //region login
-    suspend fun loginUser(userName:String,password:String):UserToken
+    suspend fun loginUser(userName:String,password:String):UserTokens
 
     // endregion
 

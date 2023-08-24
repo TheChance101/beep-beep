@@ -1,31 +1,40 @@
 package data.remote.gateway
 
+import data.remote.model.BaseResponse
 import domain.entity.Category
 import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
-import domain.entity.UserToken
+import domain.entity.UserTokens
 import domain.gateway.IRemoteGateWay
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.isSuccess
 import io.ktor.http.parameters
+import presentation.base.InternetException
+import presentation.base.InvalidCredentialsException
+import presentation.base.NoInternetException
+import presentation.base.UnknownErrorException
+import presentation.base.UserNotFoundException
 
 class RemoteGateWay(private val client: HttpClient) : IRemoteGateWay {
 
     //region login
-    override suspend fun loginUser(userName: String, password: String): UserToken {
-        tryToExecute<Boolean>() {
+    override suspend fun loginUser(userName: String, password: String): UserTokens {
+        tryToExecute<BaseResponse<UserTokens>>() {
             submitForm("/user/login",
                 formParameters = parameters {
                     append("username", userName)
                     append("password", password)
                 }
+
             )
         }
-        return UserToken("","")
+
+        return UserTokens("","")
     }
     // endregion
 
@@ -83,18 +92,32 @@ class RemoteGateWay(private val client: HttpClient) : IRemoteGateWay {
     //endregion category
 
     private suspend inline fun <reified T> tryToExecute(
-        setErrorMessage: (errorCodes: List<Int>) -> List<Map<Int, String>> = { emptyList() },
         method: HttpClient.() -> HttpResponse
     ): T {
 
-        val response = client.method()
-        if (response.status.isSuccess()) {
-            return response.body<T>()
-        } else {
-            val errorResponse = response.body<List<Int>>()
-            val errorMessage = setErrorMessage(errorResponse)
-            throw response.body()
+         try {
+            return client.method().body<T>()
+        } catch (e: ClientRequestException) {
+            val errorMessages = e.response.body<BaseResponse<*>>().status.errorMessages
+            errorMessages?.let { throwMatchingException(it) }
+            throw UnknownErrorException()
+        } catch (e: InternetException) {
+            throw NoInternetException()
+        } catch (e: Exception) {
+            throw UnknownErrorException()
         }
     }
+
+ private fun throwMatchingException(errorMessages: Map<String, String>) {
+        if (errorMessages.containsErrors("1013")) {
+            throw InvalidCredentialsException(errorMessages["1013"] ?: "")
+        } else if (errorMessages.containsErrors("1043")) {
+            throw UserNotFoundException(errorMessages["1043"] ?: "")
+        } else {
+            throw UnknownErrorException()
+        }
+    }
+      private fun Map<String, String>.containsErrors(vararg errorCodes: String): Boolean =
+        keys.containsAll(errorCodes.toList())
 
 }

@@ -1,6 +1,6 @@
 package data.remote.model
 
-import domain.entity.UserToken
+import domain.entity.UserTokens
 import kotlinx.serialization.Serializable
 
 
@@ -12,7 +12,7 @@ data class UserTokensDto(
     val refreshToken: String
 )
 
-fun UserTokensDto.toTokenEntity() = UserToken(
+fun UserTokensDto.toTokenEntity() = UserTokens(
     accessToken = accessToken,
     refreshToken = refreshToken
 )

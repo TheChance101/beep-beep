@@ -1,6 +1,6 @@
 package domain.usecase
 
-import domain.entity.UserToken
+import domain.entity.UserTokens
 import domain.gateway.ILocalGateWay
 import domain.gateway.IRemoteGateWay
 
@@ -9,7 +9,7 @@ import domain.gateway.IRemoteGateWay
  */
 interface ILoginUserUseCase {
 
-    suspend fun loginUser(userName: String, password: String): UserToken
+    suspend fun loginUser(userName: String, password: String): UserTokens
     suspend fun saveAccessToken(token: String)
     suspend fun getAccessToken(): String
     suspend fun saveRefreshToken(token: String)
@@ -23,7 +23,7 @@ class LoginUserUseCase(
     private val localGateWay: ILocalGateWay
 ) : ILoginUserUseCase {
 
-    override suspend fun loginUser(userName: String, password: String): UserToken =
+    override suspend fun loginUser(userName: String, password: String): UserTokens =
         remoteGateWay.loginUser(userName, password)
 
 

@@ -11,7 +11,7 @@ import domain.entity.Category
 import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
-import domain.entity.UserToken
+import domain.entity.UserTokens
 import domain.gateway.IRemoteGateWay
 
 class FakeRemoteGateWay : IRemoteGateWay {
@@ -303,8 +303,8 @@ class FakeRemoteGateWay : IRemoteGateWay {
         )
     )
 
-    override suspend fun loginUser(userName: String, password: String): UserToken {
-        return UserToken("","")
+    override suspend fun loginUser(userName: String, password: String): UserTokens {
+        return UserTokens("","")
     }
 
 
