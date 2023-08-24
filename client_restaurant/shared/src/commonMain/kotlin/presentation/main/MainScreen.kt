@@ -25,13 +25,13 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
-import presentation.composables.HomeAppBar
+import presentation.composable.HomeAppBar
 import presentation.info.RestaurantInfoScreen
 import presentation.main.composables.ChartItem
 import presentation.main.composables.OptionCardItem
 import presentation.meals.MealsScreen
 import presentation.order.OrderScreen
-import presentation.order.order_history.OrdersHistoryScreen
+import presentation.order.orderHistory.OrdersHistoryScreen
 import resources.Resources
 
 class MainScreen(private val restaurantId: String) :
