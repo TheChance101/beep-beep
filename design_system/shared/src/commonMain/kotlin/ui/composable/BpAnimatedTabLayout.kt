@@ -1,4 +1,4 @@
-package presentation.order.order_history.composables
+package com.beepbeep.designSystem.ui.composable
 
 import androidx.compose.animation.core.animateOffsetAsState
 import androidx.compose.foundation.BorderStroke
@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.toSize
 import com.beepbeep.designSystem.ui.theme.Theme
 
 @Composable
-fun <E : Enum<*>> AnimatedTabLayout(
+fun <E : Enum<*>> BpAnimatedTabLayout(
     tabItems: List<E>,
     selectedTab: E,
     onTabSelected: (E) -> Unit,

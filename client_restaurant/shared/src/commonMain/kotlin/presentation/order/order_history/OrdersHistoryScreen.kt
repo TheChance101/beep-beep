@@ -21,12 +21,12 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
+import com.beepbeep.designSystem.ui.composable.BpAnimatedTabLayout
 import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.base.BaseScreen
 import presentation.composables.BpAppBar
 import presentation.composables.OrderCard
 import presentation.composables.header
-import presentation.order.order_history.composables.AnimatedTabLayout
 import resources.Resources
 import util.capitalizeFirstLetter
 
@@ -62,7 +62,7 @@ class OrdersHistoryScreen(private val restaurantId: String) : BaseScreen<OrderHi
                 modifier = Modifier.fillMaxSize()
             ) {
                 header {
-                    AnimatedTabLayout(
+                    BpAnimatedTabLayout(
                         tabItems = OrderHistoryScreenUiState.OrderSelectType.values().toList(),
                         selectedTab = state.selectedType,
                         onTabSelected = { listener.onClickTab(it) },
