@@ -1,4 +1,4 @@
-package presentation.composables
+package presentation.composable
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background

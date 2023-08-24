@@ -42,7 +42,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
-import presentation.composables.RestaurantInformation
+import presentation.composable.RestaurantInformation
 import presentation.main.MainScreen
 import resources.Resources
 

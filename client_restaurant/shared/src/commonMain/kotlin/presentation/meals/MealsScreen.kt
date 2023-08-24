@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.CircularProgressIndicator
@@ -29,10 +28,9 @@ import com.beepbeep.designSystem.ui.composable.BpChip
 import com.beepbeep.designSystem.ui.theme.Theme.colors
 import com.beepbeep.designSystem.ui.theme.Theme.dimens
 import presentation.base.BaseScreen
-import presentation.composables.BpAppBar
-import presentation.info.RestaurantInfoScreen
+import presentation.composable.BpAppBar
+import presentation.composable.MealCard
 import presentation.meal.MealScreen
-import presentation.meals.Composable.MealCard
 import presentation.meals.state.MealsScreenUIState
 import resources.Resources.strings
 

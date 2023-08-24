@@ -1,7 +1,7 @@
 package presentation.meals
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.usecase.IMangeCousinUseCase
+import domain.usecase.IMangeCuisineUseCase
 
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.component.inject
@@ -17,7 +17,7 @@ class MealsScreenModel() :
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
 
-    private val mangeCousin: IMangeCousinUseCase by inject()
+    private val mangeCousin: IMangeCuisineUseCase by inject()
 
 
     init {

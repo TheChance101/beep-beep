@@ -1,4 +1,4 @@
-package presentation.composables
+package presentation.composable
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Row

@@ -1,4 +1,4 @@
-package presentation.composables
+package presentation.composable
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

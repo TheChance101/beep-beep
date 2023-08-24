@@ -24,7 +24,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpAnimatedTabLayout
 import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.base.BaseScreen
-import presentation.composables.BpAppBar
+import presentation.composable.BpAppBar
 import presentation.order.composable.OrderCard
 import presentation.order.composable.header
 import resources.Resources
