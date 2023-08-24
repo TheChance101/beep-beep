@@ -1,9 +1,7 @@
 package presentation.login
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.usecase.IAuthenticationUseCase
 import kotlinx.coroutines.CoroutineScope
-import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
 
 class LoginScreenModel :

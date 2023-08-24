@@ -1,36 +1,33 @@
-package data.gateway
+package data.remote.gateway
 
-import data.remote.model.TokenDto
 import domain.entity.Category
 import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
+import domain.entity.UserToken
 import domain.gateway.IRemoteGateWay
-import io.realm.kotlin.Realm
-import io.realm.kotlin.ext.query
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.forms.submitForm
+import io.ktor.client.statement.HttpResponse
+import io.ktor.http.isSuccess
+import io.ktor.http.parameters
 
-class RestaurantGateWay(
-    private val realm: Realm
-) : IRemoteGateWay {
+class RemoteGateWay(private val client: HttpClient) : IRemoteGateWay {
 
-    override suspend fun saveAccessToken(token: String) {
-
-    }
-    override suspend fun getAccessToken(): String {
-        return ""
-    }
-    override suspend fun saveRefreshToken(token: String) {
-        realm.write {
-            copyToRealm(TokenDto().apply {
-                this.refreshToken = token
-            })
+    //region login
+    override suspend fun loginUser(userName: String, password: String): UserToken {
+        tryToExecute<Boolean>() {
+            submitForm("/user/login",
+                formParameters = parameters {
+                    append("username", userName)
+                    append("password", password)
+                }
+            )
         }
+        return UserToken("")
     }
-
-    override suspend fun getRefreshToken(): String {
-        return realm.query<TokenDto>().first().find()?.refreshToken
-            ?: throw Exception("Refresh Token not found")
-    }
+    // endregion
 
     //region restaurant
     override suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant> {
@@ -84,5 +81,20 @@ class RestaurantGateWay(
         return Category(id = "8a-4854-49c6-99ed-ef09899c2", name = "Sea Food")
     }
     //endregion category
+
+    private suspend inline fun <reified T> tryToExecute(
+        setErrorMessage: (errorCodes: List<Int>) -> List<Map<Int, String>> = { emptyList() },
+        method: HttpClient.() -> HttpResponse
+    ): T {
+
+        val response = client.method()
+        if (response.status.isSuccess()) {
+            return response.body<T>()
+        } else {
+            val errorResponse = response.body<List<Int>>()
+            val errorMessage = setErrorMessage(errorResponse)
+            throw response.body()
+        }
+    }
 
 }
