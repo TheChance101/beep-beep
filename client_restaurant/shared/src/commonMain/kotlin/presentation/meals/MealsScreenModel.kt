@@ -66,6 +66,10 @@ class MealsScreenModel :
         sendNewEffect(MealsScreenUIEffect.Back)
     }
 
+    override fun onClickMeal(mealId: String) {
+        sendNewEffect(MealsScreenUIEffect.NavigateToMealDetails(mealId))
+    }
+
     override fun onAddMeaClick() {
         sendNewEffect(MealsScreenUIEffect.NavigateToAddMeal)
     }
