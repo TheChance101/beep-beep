@@ -1,6 +1,5 @@
 package data.remote.gateway
 
-import data.remote.cousins
 import data.remote.model.AddressDto
 import data.remote.model.CousinDto
 import data.remote.model.MealDto
@@ -360,6 +359,28 @@ class FakeRemoteGateWay : IRemoteGateWay {
             priceLevel = "$$"
         )
     )
+    private val cousins = mutableListOf(
+        CousinDto(
+            id = "e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a",
+            name = "All",
+        ),
+        CousinDto(
+            id = "ba9b9700-6d24-434b-8d67-daf9e45e1063",
+            name = "Main Course",
+        ),
+        CousinDto(
+            id = "ba9b9700-6d24-434b-8d67-daf9e45e1064",
+            name = "Burrito",
+        ),
+        CousinDto(
+            id = "ba9b9700-6d24-434b-8d67-daf9e45e1065",
+            name = "Pizza",
+        ),
+        CousinDto(
+            id = "ba9b9700-6d24-434b-8d67-daf9e45e1066",
+            name = "Dinner",
+        ),
+    )
 
     //region restaurant
     override suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant> {
@@ -421,8 +442,8 @@ class FakeRemoteGateWay : IRemoteGateWay {
     }
 
     override suspend fun getMealsByCousinId(id: String): List<Meal> {
-        return  meals.filter { meal ->
-          meal.cousins?.find { it == id } != null
+        return meals.filter { meal ->
+            meal.cousins?.find { it == id } != null
         }.toEntity()
     }
     //endregion category
