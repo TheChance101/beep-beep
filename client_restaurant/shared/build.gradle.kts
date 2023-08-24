@@ -33,6 +33,7 @@ kotlin {
     }
 
     sourceSets {
+        val ktorVersion = "2.3.3"
         val commonMain by getting {
             dependencies {
                 implementation(libs.compose.runtime)
@@ -47,7 +48,15 @@ kotlin {
                 implementation(project(":design_system:shared"))
                 //realm db
                 implementation("io.realm.kotlin:library-base:1.10.0")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0")
+               // implementation(libs.realm.library.base)
+                //ktor-client
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.json.serialization)
+                implementation(libs.ktor.content.negotiation)
+                implementation(libs.ktor.logging)
+                implementation(libs.ktor.client.cio)
+                implementation("io.ktor:ktor-client-serialization:$ktorVersion")
+                //implementation("io.ktor:ktor-serialization-gson:ktorVersion")
 
             }
         }
@@ -57,6 +66,7 @@ kotlin {
                 api(libs.androidx.appcompat)
                 api(libs.androidx.core.ktx)
                 api(libs.koin.android)
+                implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
             }
         }
         val iosX64Main by getting
