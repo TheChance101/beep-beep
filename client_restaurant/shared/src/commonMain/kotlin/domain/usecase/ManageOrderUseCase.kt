@@ -8,7 +8,7 @@ import presentation.order.OrderStateType
 interface IManageOrderUseCase {
     suspend fun getInCookingOrders(restaurantId: String): List<Order>
     suspend fun getPendingOrders(restaurantId: String): List<Order>
-    suspend fun updateOrderState(orderId: String, orderState: OrderStateType): Boolean
+    suspend fun updateOrderState(orderId: String, orderState: OrderStateType): Order
 }
 
 class ManageOrderUseCase(private val remoteGateWay: IRemoteGateWay) : IManageOrderUseCase {
@@ -23,7 +23,7 @@ class ManageOrderUseCase(private val remoteGateWay: IRemoteGateWay) : IManageOrd
             .filter { it.orderState.statusCode == OrderState.PENDING.statusCode }
     }
 
-    override suspend fun updateOrderState(orderId: String, orderState: OrderStateType): Boolean {
+    override suspend fun updateOrderState(orderId: String, orderState: OrderStateType): Order {
         val newOrderState = when (orderState) {
             OrderStateType.APPROVE -> OrderState.IN_COOKING.statusCode
             OrderStateType.CANCEL -> OrderState.CANCELED.statusCode

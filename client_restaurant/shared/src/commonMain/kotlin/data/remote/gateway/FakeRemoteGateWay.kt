@@ -12,6 +12,7 @@ import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
 import domain.gateway.IRemoteGateWay
+import presentation.base.RequestException
 
 class FakeRemoteGateWay : IRemoteGateWay {
 
@@ -490,9 +491,9 @@ class FakeRemoteGateWay : IRemoteGateWay {
         return orders.filter { it.orderState == 3 || it.orderState == 4 }.toOrderEntity()
     }
 
-    override suspend fun updateOrderState(orderId: String, orderState: Int): Boolean {
+    override suspend fun updateOrderState(orderId: String, orderState: Int): Order {
         val order = orders.find { it.id == orderId }
-        return order != null
+        return order?.toEntity() ?: throw RequestException()
     }
 
     override suspend fun getOrderById(orderId: String): Order? {

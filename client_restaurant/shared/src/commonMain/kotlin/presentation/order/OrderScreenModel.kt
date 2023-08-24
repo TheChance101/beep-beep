@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
+import presentation.base.InternetException
 import presentation.base.RequestException
 
 class OrderScreenModel :
@@ -38,23 +39,15 @@ class OrderScreenModel :
 
     private fun updateOrderState(orderId: String, orderState: OrderStateType) {
         tryToExecute(
-            { manageOrdersUseCase.updateOrderState(orderId, orderState) },
-            { onUpdateOrderStateSuccess(it, orderState) },
+            { manageOrdersUseCase.updateOrderState(orderId, orderState).toOrderUiState() },
+            ::onUpdateOrderStateSuccess,
             ::onUpdateOrderStateError
         )
     }
 
 
-    private fun onUpdateOrderStateSuccess(isOrderUpdated: Boolean, orderState: OrderStateType) {
-        if (orderState == OrderStateType.FINISH && isOrderUpdated) {
-            sendNewEffect(OrderScreenUiEffect.FinishOrder)
-        } else if (orderState == OrderStateType.APPROVE && isOrderUpdated) {
-            sendNewEffect(OrderScreenUiEffect.ApproveOrder)
-        } else if (orderState == OrderStateType.CANCEL && isOrderUpdated) {
-            sendNewEffect(OrderScreenUiEffect.CancelOrder)
-        } else {
-            throw RequestException()
-        }
+    private fun onUpdateOrderStateSuccess(updatedOrder: OrderUiState) {
+        sendNewEffect(OrderScreenUiEffect.UpdateOrder(updatedOrder))
     }
 
     private fun getPendingOrders(restaurantId: String) {
