@@ -1,5 +1,8 @@
 package org.thechance.service_restaurant.domain.usecase
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import org.thechance.service_restaurant.api.utils.isRestaurantOpen
 import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
@@ -10,6 +13,7 @@ import org.thechance.service_restaurant.domain.utils.OrderStatus
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
+import org.thechance.service_restaurant.domain.utils.exceptions.RESTAURANT_CLOSED
 
 interface IManageOrderUseCase {
     suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order>
@@ -24,10 +28,6 @@ interface IManageOrderUseCase {
 
     suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order>
 
-
-    suspend fun isRestaurantOpened(restaurantId: String): Boolean
-
-
 }
 
 class ManageOrderUseCase(
@@ -36,6 +36,9 @@ class ManageOrderUseCase(
     private val basicValidation: IValidation,
     private val orderValidationUseCase: IOrderValidationUseCase
 ) : IManageOrderUseCase {
+
+    private val scope = CoroutineScope(Dispatchers.IO)
+
     override suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order> {
         return optionsGateway.getOrdersByRestaurantId(restaurantId = restaurantId)
     }
@@ -48,7 +51,12 @@ class ManageOrderUseCase(
     }
 
     override suspend fun addOrder(order: Order): Boolean {
-        return optionsGateway.addOrder(order = order)
+        val isRestaurantOpen = scope.async { isRestaurantOpened(order.restaurantId) }
+        return if (isRestaurantOpen.await()) {
+            optionsGateway.addOrder(order = order)
+        } else {
+            throw MultiErrorException(listOf(RESTAURANT_CLOSED))
+        }
     }
 
     override suspend fun updateOrderStatus(orderId: String, state: OrderStatus): Order {
@@ -67,10 +75,10 @@ class ManageOrderUseCase(
         return optionsGateway.getActiveOrdersByRestaurantId(restaurantId = restaurantId)
     }
 
-    override suspend fun isRestaurantOpened(restaurantId: String): Boolean {
+    private suspend fun isRestaurantOpened(restaurantId: String): Boolean {
         val restaurant = restaurantGateway.getRestaurant(id = restaurantId)
         return restaurant?.let {
-           isRestaurantOpen(openTime = restaurant.openingTime, closeTime = restaurant.closingTime)
+            isRestaurantOpen(openTime = it.openingTime, closeTime = it.closingTime)
         } ?: throw MultiErrorException(listOf(NOT_FOUND))
     }
 

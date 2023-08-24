@@ -12,9 +12,9 @@ fun Parameters.extractInt(key: String): Int? {
     return this[key]?.toIntOrNull()
 }
 
-fun currentTime(): LocalDateTime {
+fun currentTime(): Long {
     val currentMoment: Instant = Clock.System.now()
-    return currentMoment.toLocalDateTime(TimeZone.UTC)
+    return currentMoment.toEpochMilliseconds()
 }
 
 fun isRestaurantOpen(openTime: String, closeTime: String): Boolean {

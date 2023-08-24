@@ -28,7 +28,7 @@ fun Order.toDto(): OrderDto {
         restaurantId = restaurantId,
         meals = meals.map { it.toDto() },
         totalPrice = totalPrice,
-        createdAt = createdAt.toString(),
+        createdAt = createdAt,
         orderStatus = status
     )
 }
