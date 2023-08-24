@@ -9,13 +9,14 @@ import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 import presentation.restaurantSelection.toUiState
 
-class MainScreenModel : BaseScreenModel<MainScreenUIState, MainScreenUIEffect>(MainScreenUIState()),
+class MainScreenModel(private val restaurantId: String) : BaseScreenModel<MainScreenUIState, MainScreenUIEffect>(MainScreenUIState()),
     MainScreenInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
 
     private val getOwnerRestaurantsInformationUseCase: IGetOwnerRestaurantsInformationUseCase by inject()
 
     init {
+        updateState { it.copy(selectedRestaurantId = restaurantId) }
         getData()
     }
 
@@ -89,6 +90,16 @@ class MainScreenModel : BaseScreenModel<MainScreenUIState, MainScreenUIEffect>(M
     }
 
     override fun onRestaurantClick(restaurantId: String) {
-        TODO("Not yet implemented")
+        updateState { it.copy(selectedRestaurantId = restaurantId) }
+    }
+
+    override fun onCardClick(cardIndex: Int) {
+        val restaurantId = state.value.selectedRestaurantId
+        when(cardIndex) {
+            0 -> sendNewEffect(MainScreenUIEffect.NavigateToAllMeals(restaurantId))
+            1 -> sendNewEffect(MainScreenUIEffect.NavigateToOrders(restaurantId))
+            2 -> sendNewEffect(MainScreenUIEffect.NavigateToRestaurantInfo(restaurantId))
+            3 -> sendNewEffect(MainScreenUIEffect.NavigateToOrdersHistory(restaurantId))
+        }
     }
 }

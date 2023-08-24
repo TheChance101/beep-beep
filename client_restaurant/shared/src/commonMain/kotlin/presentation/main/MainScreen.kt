@@ -14,29 +14,33 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.composables.HomeAppBar
+import presentation.info.RestaurantInfoScreen
 import presentation.main.composables.ChartItem
 import presentation.main.composables.OptionCardItem
+import presentation.meals.MealsScreen
+import presentation.order.OrderScreen
+import presentation.order.order_history.OrdersHistoryScreen
 import resources.Resources
 
-class MainScreen :
+class MainScreen(private val restaurantId: String) :
     BaseScreen<MainScreenModel, MainScreenUIState, MainScreenUIEffect, MainScreenInteractionListener>() {
 
     @Composable
     override fun Content() {
-        initScreen(getScreenModel())
+        val screenModel = rememberScreenModel{ MainScreenModel(restaurantId) }
+        initScreen(screenModel)
     }
 
     @OptIn(ExperimentalLayoutApi::class)
@@ -74,7 +78,7 @@ class MainScreen :
                     ) {
                         options.forEach { option ->
                             OptionCardItem(
-                                onClick = {},
+                                onClick = { listener.onCardClick(option.index) },
                                 title = option.title,
                                 imagePath = option.imagePath,
                                 color = option.color,
@@ -98,6 +102,15 @@ class MainScreen :
     override fun onEffect(effect: MainScreenUIEffect, navigator: Navigator) {
         when (effect) {
             is MainScreenUIEffect.Back -> navigator.pop()
+            is MainScreenUIEffect.NavigateToAllMeals -> navigator.push(MealsScreen())
+            is MainScreenUIEffect.NavigateToOrders -> navigator.push(OrderScreen())
+            is MainScreenUIEffect.NavigateToOrdersHistory -> navigator.push(
+                OrdersHistoryScreen(
+                    effect.restaurantId
+                )
+            )
+
+            is MainScreenUIEffect.NavigateToRestaurantInfo -> navigator.push(RestaurantInfoScreen())
         }
     }
 

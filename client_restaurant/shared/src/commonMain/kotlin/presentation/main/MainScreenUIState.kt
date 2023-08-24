@@ -9,7 +9,8 @@ data class MainScreenUIState(
     val isDropdownMenuOpen: Boolean = false,
     val isOpen: Boolean = true,
     val restaurantName: String = "",
-    val restaurants: List<RestaurantUIState> = emptyList()
+    val restaurants: List<RestaurantUIState> = emptyList(),
+    val selectedRestaurantId: String = "",
 )
 
 

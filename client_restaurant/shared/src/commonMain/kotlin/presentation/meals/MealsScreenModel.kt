@@ -11,7 +11,7 @@ import presentation.meals.state.CuisineUIState
 import presentation.meals.state.MealsScreenUIState
 import presentation.meals.state.toUIState
 
-class MealsScreenModel :
+class MealsScreenModel() :
     BaseScreenModel<MealsScreenUIState, MealsScreenUIEffect>(MealsScreenUIState()),
     MealScreenInteractionListener {
     override val viewModelScope: CoroutineScope

@@ -7,11 +7,9 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -45,7 +43,6 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.composables.RestaurantInformation
-import presentation.composables.modifier.noRippleEffect
 import presentation.main.MainScreen
 import resources.Resources
 
@@ -146,7 +143,7 @@ class RestaurantSelectionScreen(private val ownerId: String) : BaseScreen
 
     override fun onEffect(effect: RestaurantSelectionScreenUIEffect, navigator: Navigator) {
         when (effect) {
-            is RestaurantSelectionScreenUIEffect.SelectRestaurant -> navigator.push(MainScreen())
+            is RestaurantSelectionScreenUIEffect.SelectRestaurant -> navigator.push(MainScreen(effect.restaurantId))
         }
     }
 
