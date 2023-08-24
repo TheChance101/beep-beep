@@ -27,11 +27,11 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpChip
 import com.beepbeep.designSystem.ui.theme.Theme.colors
 import com.beepbeep.designSystem.ui.theme.Theme.dimens
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.base.BaseScreen
 import presentation.composables.BpAppBar
+import presentation.meal.MealScreen
 import presentation.meals.Composable.MealCard
-import presentation.meals.MealsUIState.MealsScreenUIState
+import presentation.meals.state.MealsScreenUIState
 import resources.Resources.strings
 
 class MealsScreen :
@@ -47,6 +47,7 @@ class MealsScreen :
         when (effect) {
             is MealsScreenUIEffect.Back -> navigator.pop()
             is MealsScreenUIEffect.NavigateToMealDetails -> {}
+            is MealsScreenUIEffect.NavigateToAddMeal -> navigator.push(MealScreen())
         }
     }
 
@@ -60,13 +61,11 @@ class MealsScreen :
                 BpAppBar(
                     title = strings.allMeals,
                     onNavigateUp = { listener.onClickBack() },
-                ) {}
-
+                )
             },
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = {
-                    },
+                    onClick = listener::onAddMeaClick,
                     containerColor = colors.primary,
                     shape = shapes.medium,
                 ) {
@@ -118,7 +117,6 @@ class MealsScreen :
                     items(state.meals.size) { index ->
                         MealCard(onClick = { listener.onClickMeal() }, meal = state.meals[index])
                     }
-
                 }
 
             }

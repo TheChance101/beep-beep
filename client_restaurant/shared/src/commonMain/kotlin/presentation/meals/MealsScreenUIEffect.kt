@@ -6,5 +6,6 @@ sealed class MealsScreenUIEffect {
 
     object NavigateToMealDetails : MealsScreenUIEffect()
 
+    object NavigateToAddMeal : MealsScreenUIEffect()
 
 }

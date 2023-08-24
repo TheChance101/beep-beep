@@ -27,7 +27,7 @@ fun Meal.toMealUIState(): MealUIState {
         name = name,
         description = description,
         price = "$price",
-        imageUrl= imageUrl,
+        imageUrl = imageUrl,
         selectedCuisines = cuisines.toCuisineUIState(true)
     )
 }
@@ -39,7 +39,8 @@ fun MealUIState.toMealEntity() = Meal(
     imageUrl = "",
     description = description,
     price = price.toDoubleOrNull() ?: 0.0,
-    cuisines = selectedCuisines.toCuisineEntity()
+    cuisines = selectedCuisines.toCuisineEntity(),
+    restaurantId = ""
 )
 
 

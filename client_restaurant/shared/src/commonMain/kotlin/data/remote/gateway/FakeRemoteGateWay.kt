@@ -1,8 +1,6 @@
 package data.remote.gateway
 
-import data.remote.cousins
 import data.remote.model.AddressDto
-import data.remote.model.CousinDto
 import data.remote.model.CuisineDto
 import data.remote.model.MealDto
 import data.remote.model.OrderDto
@@ -11,7 +9,6 @@ import data.remote.model.RestaurantDto
 import data.remote.model.toEntity
 import data.remote.model.toOrderEntity
 import domain.entity.Category
-import domain.entity.Cousin
 import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.entity.Order
@@ -367,7 +364,11 @@ class FakeRemoteGateWay : IRemoteGateWay {
         CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3g", name = "French"),
         CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3h", name = "Japanese"),
         CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3i", name = "Spanish"),
-        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3j", name = "Greek")
+        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3j", name = "Greek"),
+        CuisineDto(id = "ba9b9700-6d24-434b-8d67-daf9e45e1063", name = "Main Course"),
+        CuisineDto(id = "ba9b9700-6d24-434b-8d67-daf9e45e1064", name = "Burrito"),
+        CuisineDto(id = "ba9b9700-6d24-434b-8d67-daf9e45e1065", name = "Pizza"),
+        CuisineDto(id = "ba9b9700-6d24-434b-8d67-daf9e45e1066", name = "Dinner"),
     )
 
     //region restaurant
@@ -424,16 +425,6 @@ class FakeRemoteGateWay : IRemoteGateWay {
     override suspend fun getCategoriesByRestaurantId(restaurantId: String): Category {
         return Category(id = "8a-4854-49c6-99ed-ef09899c2", name = "Sea Food")
     }
-
-    override suspend fun getCousins(restaurantId: String): List<Cousin> {
-        return cousins.toEntity()
-    }
-
-    override suspend fun getMealsByCousinId(id: String): List<Meal> {
-        return  meals.filter { meal ->
-          meal.cousins?.find { it == id } != null
-        }.toEntity()
-    }
     //endregion category
 
     //region cuisines
@@ -445,6 +436,15 @@ class FakeRemoteGateWay : IRemoteGateWay {
         return cuisines.subList(0, 3).toEntity()
     }
 
+    override suspend fun getCousins(restaurantId: String): List<Cuisine> {
+        return cuisines.toEntity()
+    }
+
+    override suspend fun getMealsByCousinId(id: String): List<Meal> {
+        return meals.filter { meal ->
+            meal.cousins?.find { it == id } != null
+        }.toEntity()
+    }
     //endregion cuisines
 
 }

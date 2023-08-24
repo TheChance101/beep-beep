@@ -8,5 +8,4 @@ data class Meal(
     val description: String,
     val price: Double,
     val cuisines: List<Cuisine>
-    val cousins : List<String>? = null
 )

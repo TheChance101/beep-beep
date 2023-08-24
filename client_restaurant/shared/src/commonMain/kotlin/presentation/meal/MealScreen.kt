@@ -45,10 +45,10 @@ import presentation.composables.BpAppBar
 import presentation.composables.CustomBottomSheet
 import presentation.composables.ModalBottomSheetState
 import presentation.composables.modifier.noRippleEffect
-import presentation.image.ImagePicker
-import presentation.image.ImagePickerFactory
-import presentation.image.getPlatformContext
-import presentation.image.rememberBitmapFromBytes
+import util.ImagePicker
+import util.ImagePickerFactory
+import util.getPlatformContext
+import util.rememberBitmapFromBytes
 import resources.Resources
 
 class MealScreen(private val mealId: String? = null) :

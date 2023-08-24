@@ -1,7 +1,7 @@
 package presentation.meals
 
 import presentation.base.BaseInteractionListener
-import presentation.meals.MealsUIState.CousinUIState
+import presentation.meals.state.CousinUIState
 
 interface MealScreenInteractionListener : BaseInteractionListener {
     fun onClickBack()
@@ -9,4 +9,6 @@ interface MealScreenInteractionListener : BaseInteractionListener {
     fun onClickMeal()
 
     fun onClickCousinType(type: CousinUIState)
+
+    fun onAddMeaClick()
 }

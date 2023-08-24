@@ -3,12 +3,12 @@ package presentation.meal
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Cuisine
 import domain.entity.Meal
+import domain.usecase.IGetCuisineUseCase
 import domain.usecase.IManageMealUseCase
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
-import presentation.main.MainScreenUIEffect
 
 class MealScreenModel(private val mealId: String?) :
     BaseScreenModel<MealUIState, MealScreenUIEffect>(MealUIState()), MealScreenInteractionListener {
@@ -17,9 +17,10 @@ class MealScreenModel(private val mealId: String?) :
         get() = coroutineScope
 
     private val manageMeal: IManageMealUseCase by inject()
+    private val cuisines: IGetCuisineUseCase by inject()
 
     init {
-        tryToExecute({ manageMeal.getCuisines() }, ::onGetCuisinesSuccess, ::onAddMealError)
+        tryToExecute({ cuisines.getCuisines() }, ::onGetCuisinesSuccess, ::onAddMealError)
 
         mealId?.let {
             tryToExecute({ manageMeal.getMeal(mealId) }, ::onGetMealSuccess, ::onAddMealError)

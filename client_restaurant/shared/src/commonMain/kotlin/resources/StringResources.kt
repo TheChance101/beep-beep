@@ -12,6 +12,6 @@ data class StringResources(
     val save: String = "Save",
     val cancel: String = "Cancel",
     val addNewMeal: String = "Add New Meal",
-    val editMeal: String = "Edit Meal"
+    val editMeal: String = "Edit Meal",
     val allMeals: String = "All meals"
 )
