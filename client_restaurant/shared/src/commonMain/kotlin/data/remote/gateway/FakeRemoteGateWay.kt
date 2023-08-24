@@ -302,6 +302,18 @@ class FakeRemoteGateWay : IRemoteGateWay {
         )
     )
 
+    override suspend fun saveAccessToken(token: String) {}
+
+    override suspend fun getAccessToken(): String {
+        return ""
+    }
+
+    override suspend fun saveRefreshToken(token: String) {}
+
+    override suspend fun getRefreshToken(): String {
+        return ""
+    }
+
     //region restaurant
     override suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant> {
         return restaurants.toEntity()

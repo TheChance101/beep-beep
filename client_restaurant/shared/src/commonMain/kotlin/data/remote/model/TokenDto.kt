@@ -6,7 +6,7 @@ import org.mongodb.kbson.ObjectId
 
 class TokenDto : RealmObject {
     @PrimaryKey
-    var _id: ObjectId = ObjectId()
+    private var _id: ObjectId = ObjectId()
     var accessToken: String = ""
     var refreshToken: String = ""
 }

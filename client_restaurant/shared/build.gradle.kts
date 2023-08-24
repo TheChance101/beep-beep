@@ -39,16 +39,16 @@ kotlin {
                 implementation(libs.compose.foundation)
                 implementation(libs.compose.material3)
                 implementation(libs.compose.components.resources)
-                implementation("io.realm.kotlin:library-base:1.10.0")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0")
-
-
                 implementation(libs.bundles.voyager)
                 implementation(libs.kotlin.coroutines)
                 api(libs.koin.core)
                 implementation(libs.koin.annotations)
                 implementation(libs.koin.compose)
                 implementation(project(":design_system:shared"))
+                //realm db
+                implementation("io.realm.kotlin:library-base:1.10.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0")
+
             }
         }
         val androidMain by getting {
