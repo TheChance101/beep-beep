@@ -1,7 +1,22 @@
 package resources
 
+
 data class StringResources(
     val beepBeep : String = "Beep Beep",
+    val chooseYourRestaurant : String = "Choose your restaurant",
+    val pickWhichRestaurant : String = "Pick which restaurant you want to manage right now.",
+    val open : String = "Open",
+    val closed : String = "Closed",
+    val add: String = "Add",
+    val name: String = "Name",
+    val description: String = "Description",
+    val price: String = "Price",
+    val cuisines: String = "Cuisines",
+    val chooseCuisine: String = "Choose cuisine",
+    val save: String = "Save",
+    val cancel: String = "Cancel",
+    val addNewMeal: String = "Add New Meal",
+    val editMeal: String = "Edit Meal",
     val allMeals: String = "All meals",
     val restaurantInfo: String = "Restaurant info",
     val ownerUsername: String = "Owner username",

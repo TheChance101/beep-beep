@@ -1,8 +1,7 @@
 package data.remote.gateway
 
-import data.remote.cousins
 import data.remote.model.AddressDto
-import data.remote.model.CousinDto
+import data.remote.model.CuisineDto
 import data.remote.model.MealDto
 import data.remote.model.OrderDto
 import data.remote.model.OrderMealDto
@@ -10,7 +9,7 @@ import data.remote.model.RestaurantDto
 import data.remote.model.toEntity
 import data.remote.model.toOrderEntity
 import domain.entity.Category
-import domain.entity.Cousin
+import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
@@ -345,10 +344,11 @@ class FakeRemoteGateWay : IRemoteGateWay {
             imageUrl = "https://www.deliciouslycleaneats.com.au/wp-content/uploads/2018/08/Meal-Plan-Spread1.jpg",
             description = "A delicious platter of hummus served with pita bread.",
             price = 8.99,
-            cousins = listOf(
+            cuisines = listOf(
                 "e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a",
                 "ba9b9700-6d24-434b-8d67-daf9e45e1063",
-                "ba9b9700-6d24-434b-8d67-daf9e45e1065"
+                "ba9b9700-6d24-434b-8d67-daf9e45e1065",
+                "6ab493b4-4b8d-410a-a13e-780346243f3a"
             )
 
         ),
@@ -359,10 +359,11 @@ class FakeRemoteGateWay : IRemoteGateWay {
             imageUrl = "https://ichef.bbci.co.uk/food/ic/food_16x9_832/recipes/roast_chicken_for_one_41998_16x9.jpg",
             description = "A spicy roll made with fresh tuna and spicy mayo.",
             price = 12.49,
-            cousins = listOf(
+            cuisines = listOf(
                 "e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a",
                 "ba9b9700-6d24-434b-8d67-daf9e45e1064",
-                "ba9b9700-6d24-434b-8d67-daf9e45e1066"
+                "ba9b9700-6d24-434b-8d67-daf9e45e1066",
+                "6ab493b4-4b8d-410a-a13e-780346243f3a"
             )
         ),
         MealDto(
@@ -372,7 +373,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             imageUrl = "https://realfood.tesco.com/media/images/472x310-Teriyaki-glazed-sausages-6c3c4a03-b353-49c9-85a3-978f326ba592-0-472x310.jpg",
             description = "A delightful sampler of beignets with different toppings.",
             price = 9.99,
-            cousins = listOf(
+            cuisines = listOf(
                 "e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a",
                 "ba9b9700-6d24-434b-8d67-daf9e45e1063",
                 "ba9b9700-6d24-434b-8d67-daf9e45e1065",
@@ -386,10 +387,11 @@ class FakeRemoteGateWay : IRemoteGateWay {
             imageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
             description = "A wrap filled with crispy falafel balls and fresh veggies.",
             price = 7.95,
-            cousins = listOf(
+            cuisines = listOf(
                 "e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a",
                 "ba9b9700-6d24-434b-8d67-daf9e45e1064",
-                "ba9b9700-6d24-434b-8d67-daf9e45e1065"
+                "ba9b9700-6d24-434b-8d67-daf9e45e1065",
+                "6ab493b4-4b8d-410a-a13e-780346243f3a"
             )
         ),
         MealDto(
@@ -399,9 +401,10 @@ class FakeRemoteGateWay : IRemoteGateWay {
             imageUrl = "https://i.pinimg.com/1200x/b8/7b/c7/b87bc72f970fe00c115e3d1471956c4d.jpg",
             description = "Fresh salmon slices on bite-sized beds of seasoned rice.",
             price = 10.99,
-            cousins = listOf(
+            cuisines = listOf(
                 "e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a",
                 "ba9b9700-6d24-434b-8d67-daf9e45e1063",
+                "6ab493b4-4b8d-410a-a13e-780346243f3c",
                 "ba9b9700-6d24-434b-8d67-daf9e45e1066"
             )
         ),
@@ -412,9 +415,10 @@ class FakeRemoteGateWay : IRemoteGateWay {
             imageUrl = "https://www.southernliving.com/thmb/iL2CEgCAMqC4cpp6taRqwYQI1gs=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/27162_FGFsuperbowl_0359_16x9-2000-5dd253dc23044ee78aacd9673f5befbc.jpg",
             description = "A hearty stew with a mix of meats, seafood, and vegetables.",
             price = 14.75,
-            cousins = listOf(
+            cuisines = listOf(
                 "e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a",
                 "ba9b9700-6d24-434b-8d67-daf9e45e1064",
+                "6ab493b4-4b8d-410a-a13e-780346243f3c",
                 "ba9b9700-6d24-434b-8d67-daf9e45e1065",
                 "ba9b9700-6d24-434b-8d67-daf9e45e1066"
             )
@@ -426,9 +430,10 @@ class FakeRemoteGateWay : IRemoteGateWay {
             imageUrl = "https://media.theeverygirl.com/wp-content/uploads/2022/05/healthy-meal-prep-dinners-teg-new-gallery.jpeg",
             description = "A plate of mouthwatering shawarma served with garlic sauce.",
             price = 13.75,
-            cousins = listOf(
+            cuisines = listOf(
                 "e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a",
                 "ba9b9700-6d24-434b-8d67-daf9e45e1063",
+                "6ab493b4-4b8d-410a-a13e-780346243f3c",
                 "ba9b9700-6d24-434b-8d67-daf9e45e1065",
                 "ba9b9700-6d24-434b-8d67-daf9e45e1066"
             )
@@ -440,7 +445,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             imageUrl = "https://www.foodandwine.com/thmb/bRz199ONebY-5h5gcvpOcHRxAkA=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Web_4000-Trifecta-Chicken-Breast-Sweet-Potato-Mixed-Vegetable_04-72a24aaee5584c06a26451603daec5c9.jpg",
             description = "An exquisite roll with eel, avocado, and a sweet soy glaze.",
             price = 15.99,
-            cousins = listOf(
+            cuisines = listOf(
                 "e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a",
                 "ba9b9700-6d24-434b-8d67-daf9e45e1064",
                 "ba9b9700-6d24-434b-8d67-daf9e45e1066"
@@ -453,8 +458,9 @@ class FakeRemoteGateWay : IRemoteGateWay {
             imageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
             description = "A spicy Cajun dish with rice, sausage, chicken, and shrimp.",
             price = 16.50,
-            cousins = listOf(
+            cuisines = listOf(
                 "e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a",
+                "6ab493b4-4b8d-410a-a13e-780346243f3c",
                 "ba9b9700-6d24-434b-8d67-daf9e45e1063",
                 "ba9b9700-6d24-434b-8d67-daf9e45e1065"
             )
@@ -473,6 +479,89 @@ class FakeRemoteGateWay : IRemoteGateWay {
             openingTime = "09:00",
             closingTime = "22:00",
             priceLevel = "$$$",
+            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+        ),
+        RestaurantDto(
+            id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            name = "Zeko Tlawoth",
+            description = "It's a restaurant that is famous for preparing Arabian Foods",
+            rate = 4.5,
+            phone = "+9641324221423",
+            openingTime = "09:00",
+            closingTime = "22:00",
+            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+        ), RestaurantDto(
+            id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            name = "Zeko Tlawoth",
+            description = "It's a restaurant that is famous for preparing Arabian Foods",
+            rate = 4.5,
+            phone = "+9641324221423",
+            openingTime = "09:00",
+            closingTime = "22:00",
+            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+        ),
+        RestaurantDto(
+            id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            name = "Zeko Tlawoth",
+            description = "It's a restaurant that is famous for preparing Arabian Foods",
+            rate = 4.5,
+            phone = "+9641324221423",
+            openingTime = "09:00",
+            closingTime = "22:00",
+            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+        ), RestaurantDto(
+            id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            name = "Zeko Tlawoth",
+            description = "It's a restaurant that is famous for preparing Arabian Foods",
+            rate = 4.5,
+            phone = "+9641324221423",
+            openingTime = "09:00",
+            closingTime = "22:00",
+            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+        ), RestaurantDto(
+            id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            name = "Zeko Tlawoth",
+            description = "It's a restaurant that is famous for preparing Arabian Foods",
+            rate = 4.5,
+            phone = "+9641324221423",
+            openingTime = "09:00",
+            closingTime = "22:00",
+            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+        ), RestaurantDto(
+            id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            name = "Zeko Tlawoth",
+            description = "It's a restaurant that is famous for preparing Arabian Foods",
+            rate = 4.5,
+            phone = "+9641324221423",
+            openingTime = "09:00",
+            closingTime = "22:00",
+            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+        ), RestaurantDto(
+            id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            name = "Zeko Tlawoth",
+            description = "It's a restaurant that is famous for preparing Arabian Foods",
+            rate = 4.5,
+            phone = "+9641324221423",
+            openingTime = "09:00",
+            closingTime = "22:00",
+            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+        ),
+        RestaurantDto(
+            id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            name = "Zeko Tlawoth",
+            description = "It's a restaurant that is famous for preparing Arabian Foods",
+            rate = 4.5,
+            phone = "+9641324221423",
+            openingTime = "09:00",
+            closingTime = "22:00",
             address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
         ),
         RestaurantDto(
@@ -501,6 +590,25 @@ class FakeRemoteGateWay : IRemoteGateWay {
             address = AddressDto(latitude = 29.9583507, longitude = -90.0656312),
             priceLevel = "$$"
         )
+    )
+
+
+    private val cuisines = listOf(
+        CuisineDto(id = "e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a", name = "All",),
+        CuisineDto(id = "ba9b9700-6d24-434b-8d67-daf9e45e1063", name = "Main Course"),
+        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3a", name = "Keto"),
+        CuisineDto(id = "ba9b9700-6d24-434b-8d67-daf9e45e1065", name = "Pizza"),
+        CuisineDto(id = "ba9b9700-6d24-434b-8d67-daf9e45e1066", name = "Dinner"),
+        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3c", name = "Chinese"),
+        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3d", name = "Italian"),
+        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3e", name = "Middle-East"),
+        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3f", name = "Indian"),
+        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3g", name = "French"),
+        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3h", name = "Japanese"),
+        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3i", name = "Spanish"),
+        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3j", name = "Greek"),
+        CuisineDto(id ="ba9b9700-6d24-434b-8d67-daf9e45e1064", name = "Burrito"),
+
     )
 
     //region restaurant
@@ -564,16 +672,28 @@ class FakeRemoteGateWay : IRemoteGateWay {
     override suspend fun getCategoriesByRestaurantId(restaurantId: String): Category {
         return Category(id = "8a-4854-49c6-99ed-ef09899c2", name = "Sea Food")
     }
+    //endregion category
 
-    override suspend fun getCousins(restaurantId: String): List<Cousin> {
-        return cousins.toEntity()
+    //region cuisines
+    override suspend fun getCuisines(): List<Cuisine> {
+        return cuisines.toEntity()
     }
 
-    override suspend fun getMealsByCousinId(id: String): List<Meal> {
-        return  meals.filter { meal ->
-          meal.cousins?.find { it == id } != null
+    override suspend fun getCuisinesInMeal(mealId: String): List<Cuisine> {
+        return cuisines.subList(0, 3).toEntity()
+    }
+
+    override suspend fun getCuisine(restaurantId: String): List<Cuisine> {
+        return cuisines.toEntity()
+    }
+
+    override suspend fun getMealsByCuisineId(id: String): List<Meal> {
+        return meals.filter { meal ->
+            meal.cuisines?.find { it == id } != null
         }.toEntity()
     }
-    //endregion category
+
+
+    //endregion cuisines
 
 }
