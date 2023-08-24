@@ -1,6 +1,6 @@
 package di
 
-import data.remote.model.TokenDto
+import data.local.model.TokenDto
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import org.koin.dsl.module

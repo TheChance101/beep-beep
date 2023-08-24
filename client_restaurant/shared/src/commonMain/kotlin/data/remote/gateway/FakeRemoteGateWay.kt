@@ -304,7 +304,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
     )
 
     override suspend fun loginUser(userName: String, password: String): UserToken {
-        return UserToken("")
+        return UserToken("","")
     }
 
 

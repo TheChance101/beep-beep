@@ -1,7 +1,5 @@
 package presentation.login
 
-import data.gateway.RestaurantGateWay
-
 data class LoginScreenUIState(
     val restaurantName: String = "",
     val description: String = "",

@@ -1,7 +1,7 @@
-package data.remote.gateway
+package data.local.gateway
 
-import data.remote.model.FlagDto
-import data.remote.model.TokenDto
+import data.local.model.FlagDto
+import data.local.model.TokenDto
 import domain.gateway.ILocalGateWay
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query

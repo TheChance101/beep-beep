@@ -25,7 +25,7 @@ class RemoteGateWay(private val client: HttpClient) : IRemoteGateWay {
                 }
             )
         }
-        return UserToken("")
+        return UserToken("","")
     }
     // endregion
 

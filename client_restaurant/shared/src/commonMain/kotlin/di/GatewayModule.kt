@@ -1,7 +1,7 @@
 package di
 
 import data.remote.gateway.FakeRemoteGateWay
-import data.remote.gateway.LocalGateWay
+import data.local.gateway.LocalGateWay
 import data.remote.gateway.RemoteGateWay
 import domain.gateway.ILocalGateWay
 import domain.gateway.IRemoteGateWay
