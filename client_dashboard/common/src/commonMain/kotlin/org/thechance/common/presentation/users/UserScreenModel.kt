@@ -42,7 +42,7 @@ class UserScreenModel(
     fun hideFilterMenu() {
         mutableState.update {
             it.copy(
-                filter = UserScreenUiState.FilterUiState(show = false)
+                filter = it.filter.copy(show = false)
             )
         }
     }
@@ -151,18 +151,28 @@ class UserScreenModel(
         mutableState.update { it.copy(selectedPage = page) }
     }
 
-    fun onFilterPermissionClicked(permission: UserScreenUiState.PermissionUiState) {}
+    fun onFilterPermissionClicked(permission: UserScreenUiState.PermissionUiState) {
+        val permissions = getUpdatedPermissions(
+            mutableState.value.filter.permissions,
+            permission
+        )
+        mutableState.update {
+            it.copy(
+                filter = it.filter.copy(permissions = permissions)
+            )
+        }
+        updateUsers() // TODO: Update users with filter by permission
+    }
 
     fun onFilterCountryClicked(country: UserScreenUiState.CountryUiState) {
         mutableState.update { uiState ->
-            uiState.copy(
-                filter = uiState.filter.copy(
-                    countries = uiState.filter.countries.map {
-                        if (it.name == country.name) it.copy(selected = !country.selected)
-                        else it
-                    }
-                )
-            )
+            val updatedCountries = uiState.filter.countries.map {
+                if (it.name == country.name) it.copy(selected = !country.selected)
+                else it
+            }
+            uiState.copy(filter = uiState.filter.copy(countries = updatedCountries))
         }
+        updateUsers() // TODO : Update users with filter by country
     }
+
 }
