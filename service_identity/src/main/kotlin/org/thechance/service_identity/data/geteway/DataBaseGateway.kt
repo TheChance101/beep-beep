@@ -23,6 +23,7 @@ import org.thechance.service_identity.domain.gateway.IDataBaseGateway
 import org.thechance.service_identity.domain.util.INVALID_CREDENTIALS
 import org.thechance.service_identity.domain.util.NOT_FOUND
 import org.thechance.service_identity.domain.util.USER_ALREADY_EXISTS
+import org.thechance.service_identity.domain.util.USER_NOT_FOUND
 import java.util.*
 
 @Single
@@ -264,7 +265,6 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
     // region: wallet
 
 
-
     private suspend fun getWalletByUserId(userId: String): WalletCollection {
         return walletCollection.findOne(
             WalletCollection::userId eq UUID.fromString(userId)
@@ -290,6 +290,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
             update = inc(WalletCollection::walletBalance, amount)
         ).isUpdatedSuccessfully()
     }
+
     private suspend fun createWallet(wallet: WalletCollection): Boolean {
         userDetailsCollection.updateOne(
             filter = UserDetailsCollection::userId eq wallet.userId,
@@ -332,7 +333,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
     override suspend fun getSaltedHash(username: String): SaltedHash {
         val user = userCollection.findOne(
             UserCollection::username eq username
-        ) ?: throw InvalidCredentialsException(INVALID_CREDENTIALS)
+        ) ?: throw ResourceNotFoundException(USER_NOT_FOUND)
         return SaltedHash(user.hashedPassword!!, user.salt!!)
     }
 
