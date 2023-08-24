@@ -2,12 +2,17 @@ package presentation.restaurant_selection
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,12 +22,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -52,14 +62,28 @@ class RestaurantSelectionScreen(private val ownerId: String) : BaseScreen
         initScreen(screenModel)
     }
 
-    @OptIn(ExperimentalResourceApi::class)
+    @OptIn(ExperimentalResourceApi::class, ExperimentalFoundationApi::class)
     @Composable
     override fun onRender(
         state: RestaurantSelectionScreenUIState,
         listener: RestaurantSelectionScreenInteractionListener
     ) {
-        Column(modifier = Modifier.fillMaxSize().background(Theme.colors.primary)) {
-            Box(modifier = Modifier.fillMaxWidth().fillMaxHeight(.3f)) {
+
+        val lazyListState = rememberLazyListState()
+        var isExpanding by remember { mutableStateOf(false) }
+        val bottomSheetSize by animateFloatAsState(
+            if (isExpanding) FULL_SCREEN else SEVENTY_PERCENT_SCREEN, tween(200)
+        )
+        val roundedCornerShape by animateDpAsState(if (isExpanding) 0.dp else 8.dp)
+
+        LaunchedEffect(lazyListState.isScrollInProgress) {
+            isExpanding = lazyListState.canScrollBackward
+        }
+
+        Box(modifier = Modifier.fillMaxSize().background(Theme.colors.primary)) {
+
+            // region header
+            Box(modifier = Modifier.fillMaxWidth().fillMaxHeight(THIRTY_PERCENT_SCREEN)) {
                 Image(
                     modifier = Modifier.fillMaxSize(),
                     painter = painterResource(Resources.images.backgroundPattern),
@@ -73,35 +97,51 @@ class RestaurantSelectionScreen(private val ownerId: String) : BaseScreen
                     contentDescription = null
                 )
             }
+            // endregion
+
+            // region bottom sheet
             Box(
-                modifier = Modifier.fillMaxWidth().fillMaxHeight()
-                    .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
-                    .background(Theme.colors.surface)
+                modifier = Modifier.fillMaxWidth().fillMaxHeight(bottomSheetSize)
+                    .clip(
+                        RoundedCornerShape(
+                            topStart = roundedCornerShape,
+                            topEnd = roundedCornerShape
+                        )
+                    )
+                    .background(Theme.colors.surface).align(Alignment.BottomCenter),
             ) {
-                Column(
-                    modifier = Modifier.fillMaxSize().padding(vertical = 40.dp, horizontal = 16.dp)
+                LazyColumn(
+                    state = lazyListState,
+                    contentPadding = PaddingValues(
+                        top = 24.dp,
+                        start = 16.dp,
+                        end = 16.dp,
+                        bottom = 16.dp
+                    )
                 ) {
-                    Text(
-                        text = Resources.strings.chooseYourRestaurant,
-                        style = Theme.typography.headline.copy(color = Theme.colors.contentPrimary)
-                    )
+                    stickyHeader {
+                        Column(modifier = Modifier.fillMaxSize().background(Theme.colors.surface)) {
+                            Text(
+                                text = Resources.strings.chooseYourRestaurant,
+                                style = Theme.typography.headline.copy(color = Theme.colors.contentPrimary)
+                            )
 
-                    Text(
-                        modifier = Modifier.padding(top = 8.dp),
-                        text = Resources.strings.pickWhichRestaurant,
-                        style = Theme.typography.body.copy(color = Theme.colors.contentTertiary)
-                    )
-
-                    LazyColumn(modifier = Modifier.padding(top = 24.dp)) {
-                        itemsIndexed(state.restaurants) { index, item ->
-                            RestaurantSelectionItem(item, listener)
-                            AnimatedVisibility(index != state.restaurants.size - 1) {
-                                Divider(Modifier.background(Theme.colors.divider).alpha(0.8f))
-                            }
+                            Text(
+                                modifier = Modifier.padding(top = 8.dp, bottom = 8.dp),
+                                text = Resources.strings.pickWhichRestaurant,
+                                style = Theme.typography.body.copy(color = Theme.colors.contentTertiary)
+                            )
+                        }
+                    }
+                    itemsIndexed(state.restaurants) { index, item ->
+                        RestaurantSelectionItem(item, listener)
+                        AnimatedVisibility(index != state.restaurants.size - 1) {
+                            Divider(Modifier.background(Theme.colors.divider).alpha(0.8f))
                         }
                     }
                 }
             }
+            //endregion
         }
     }
 
@@ -147,5 +187,11 @@ class RestaurantSelectionScreen(private val ownerId: String) : BaseScreen
                 onClick = {}
             )
         }
+    }
+
+    private companion object {
+        const val FULL_SCREEN = 1f
+        const val THIRTY_PERCENT_SCREEN = 0.3f
+        const val SEVENTY_PERCENT_SCREEN = 0.7f
     }
 }
