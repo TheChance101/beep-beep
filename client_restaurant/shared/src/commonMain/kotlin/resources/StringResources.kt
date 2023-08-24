@@ -1,6 +1,5 @@
 package resources
 
-
 data class StringResources(
     val beepBeep : String = "Beep Beep",
     val allMeals: String = "All meals",
@@ -16,8 +15,7 @@ data class StringResources(
     val save: String = "Save",
     val logout: String = "Logout",
     val restaurantNameErrorMessage: String = "restaurant name should be between 4 to 25 letters",
-    val descriptionErrorMessage : String = "description shouldn't be more than 255 letter"
-    val beepBeep: String = "Beep Beep",
+    val descriptionErrorMessage : String = "description shouldn't be more than 255 letter",
     val orderImageContentDescription: String = "order image",
     val quantity: String = "Qty",
     val dollarSign: String = "$",

@@ -22,9 +22,9 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
-import com.beepbeep.designSystem.ui.composable.BpAppBar
 import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.base.BaseScreen
+import presentation.composables.BpAppBar
 import presentation.login.LoginScreen
 import presentation.order.composables.OrderCard
 import presentation.order.composables.OrderTextButton
@@ -60,7 +60,11 @@ class OrderScreen :
                 onNavigateUp = listener::onClickBack,
                 title = Resources.strings.orders
             ) {
-                TotalOrders(text = Resources.strings.totalOrders, totalOrders = state.totalOrders)
+                TotalOrders(
+                    text = Resources.strings.totalOrders,
+                    totalOrders = state.totalOrders,
+                    modifier = Modifier.padding(end = Theme.dimens.space16)
+                )
             }
 
             FlowRow(
