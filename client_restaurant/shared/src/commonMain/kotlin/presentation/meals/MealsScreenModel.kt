@@ -13,7 +13,7 @@ import presentation.meals.state.toUIState
 
 class MealsScreenModel :
     BaseScreenModel<MealsScreenUIState, MealsScreenUIEffect>(MealsScreenUIState()),
-    MealScreenInteractionListener  {
+    MealScreenInteractionListener {
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
 
@@ -65,8 +65,8 @@ class MealsScreenModel :
         sendNewEffect(MealsScreenUIEffect.Back)
     }
 
-    override fun onClickMeal() {
-        sendNewEffect(MealsScreenUIEffect.NavigateToMealDetails)
+    override fun onClickMeal(mealId: String) {
+        sendNewEffect(MealsScreenUIEffect.NavigateToMealDetails(mealId))
     }
 
     override fun onAddMeaClick() {
