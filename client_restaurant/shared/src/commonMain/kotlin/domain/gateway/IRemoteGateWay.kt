@@ -1,7 +1,7 @@
 package domain.gateway
 
 import domain.entity.Category
-import domain.entity.Cousin
+import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
@@ -17,8 +17,8 @@ interface IRemoteGateWay {
     //region meal
     suspend fun getMealsByRestaurantId(restaurantId: String): List<Meal>
     suspend fun getMealById(mealId: String): Meal?
-    suspend fun addMeal(meal: Meal): Meal
-    suspend fun updateMeal(meal: Meal): Meal
+    suspend fun addMeal(meal: Meal): Meal?
+    suspend fun updateMeal(meal: Meal): Meal?
     //endregion meal
 
     //region order
@@ -31,11 +31,14 @@ interface IRemoteGateWay {
     suspend fun getCategoriesByRestaurantId(restaurantId: String): Category
     //endregion category
 
-    // region cousin
-    suspend fun getCousins(restaurantId: String): List<Cousin>
+    //region Cuisine
+    suspend fun getCuisines(): List<Cuisine>
 
-    suspend fun getMealsByCousinId(id: String): List<Meal>
+    suspend fun getCuisinesInMeal(mealId: String): List<Cuisine>
 
-    // endregion cousin
+    suspend fun getCuisine(restaurantId: String): List<Cuisine>
+
+    suspend fun getMealsByCuisineId(id: String): List<Meal>
+    //endregion Cuisine
 
 }
