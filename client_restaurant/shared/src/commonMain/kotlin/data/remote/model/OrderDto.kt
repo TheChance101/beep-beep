@@ -2,6 +2,10 @@ package data.remote.model
 
 import domain.entity.Order
 import domain.entity.OrderMeal
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import domain.entity.OrderState
 
 data class OrderDto(
@@ -10,7 +14,7 @@ data class OrderDto(
     val restaurantId: String,
     val meals: List<OrderMealDto>,
     val totalPrice: Double? = null,
-    val createdAt: Long? = null,
+    val createdAt: String? = null,
     val orderState: Int? = null
 )
 
@@ -23,9 +27,9 @@ fun OrderDto.toEntity(): Order {
         restaurantId = restaurantId,
         meals = meals.toOrderMeaEntity(),
         totalPrice = totalPrice ?: 0.0,
-        createdAt = createdAt ?: 0L,
+        createdAt = createdAt?.let { LocalDateTime.parse(it) } ?: Clock.System.now()
+            .toLocalDateTime(TimeZone.currentSystemDefault()),
         orderState = orderState?.let { OrderState.fromStatusCode(it) } ?: OrderState.PENDING
-
     )
 }
 

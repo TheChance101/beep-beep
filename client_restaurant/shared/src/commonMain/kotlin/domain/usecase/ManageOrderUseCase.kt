@@ -9,6 +9,8 @@ interface IManageOrderUseCase {
     suspend fun getInCookingOrders(restaurantId: String): List<Order>
     suspend fun getPendingOrders(restaurantId: String): List<Order>
     suspend fun updateOrderState(orderId: String, orderState: OrderStateType): Order
+    suspend fun getFinishedOrdersHistory(restaurantId: String): List<Order>
+    suspend fun getCanceledOrdersHistory(restaurantId: String): List<Order>
 }
 
 class ManageOrderUseCase(private val remoteGateWay: IRemoteGateWay) : IManageOrderUseCase {
@@ -30,6 +32,16 @@ class ManageOrderUseCase(private val remoteGateWay: IRemoteGateWay) : IManageOrd
             OrderStateType.FINISH -> OrderState.FINISHED.statusCode
         }
         return remoteGateWay.updateOrderState(orderId, newOrderState)
+    }
+
+    override suspend fun getFinishedOrdersHistory(restaurantId: String): List<Order> {
+        return remoteGateWay.getOrdersHistory(restaurantId)
+            .filter { it.orderState == OrderState.FINISHED }
+    }
+
+    override suspend fun getCanceledOrdersHistory(restaurantId: String): List<Order> {
+        return remoteGateWay.getOrdersHistory(restaurantId)
+            .filter { it.orderState == OrderState.CANCELED }
     }
 
 }

@@ -15,6 +15,7 @@ data class OrderUiState(
     val orderMealUiStates: List<OrderMealUiState> = emptyList(),
     val totalPrice: Double = 0.0,
     val orderState: OrderState = OrderState.PENDING,
+    val createdAt:String = "",
 )
 
 data class OrderMealUiState(
