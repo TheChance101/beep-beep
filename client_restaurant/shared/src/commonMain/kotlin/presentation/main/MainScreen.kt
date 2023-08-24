@@ -14,6 +14,8 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +26,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
+import presentation.composables.HomeAppBar
 import presentation.main.composables.ChartItem
 import presentation.main.composables.OptionCardItem
 import resources.Resources
@@ -42,12 +45,17 @@ class MainScreen :
         val options = rememberOptions()
         val charts = rememberChartData(state.charts)
 
-        Column(
-            Modifier.fillMaxSize().background(Theme.colors.background),
-        ) {
-//            HomeAppBar({}, {}, {}, state.restaurantName, state.isOpen, state.restaurantName,
-//                state.isDropdownMenuOpen
-//            )
+        Column(Modifier.fillMaxSize().background(Theme.colors.background)) {
+            HomeAppBar(
+                onRestaurantSelect = listener::onRestaurantClick,
+                onShowMenu = listener::onShowMenu,
+                onDismissMenu = listener::onDismissMenu,
+                restaurantName = state.restaurantName,
+                state = state.isOpen,
+                expanded = state.expanded,
+                restaurants = state.restaurants
+            )
+
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(300.dp),
                 modifier = Modifier.fillMaxSize(),

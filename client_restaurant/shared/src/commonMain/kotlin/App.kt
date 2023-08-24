@@ -2,7 +2,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
-import presentation.restaurant_selection.RestaurantSelectionScreen
+import presentation.restaurantSelection.RestaurantSelectionScreen
 import resources.BpRestaurantTheme
 
 @OptIn(ExperimentalAnimationApi::class)
