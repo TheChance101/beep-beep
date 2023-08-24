@@ -1,4 +1,4 @@
-4package org.thechance.service_restaurant.plugins
+package org.thechance.service_restaurant.plugins
 
 import io.ktor.server.application.*
 import io.ktor.server.plugins.statuspages.*
