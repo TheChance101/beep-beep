@@ -11,26 +11,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
-import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.base.BaseScreen
 import presentation.main.MainScreen
+import presentation.meal.MealScreen
+import presentation.meals.MealsScreen
 
 class LoginScreen :
     BaseScreen<LoginScreenModel, LoginScreenUIState, LoginScreenUIEffect, LoginScreenInteractionListener>() {
 
     @Composable
     override fun Content() {
-        val screenModel = rememberScreenModel { LoginScreenModel() }
-        initScreen(screenModel)
+        initScreen(getScreenModel())
     }
 
     override fun onEffect(effect: LoginScreenUIEffect, navigator: Navigator) {
         when (effect) {
-            is LoginScreenUIEffect.Login -> navigator.push(MainScreen())
+            is LoginScreenUIEffect.Login -> navigator.push(MealsScreen())
+            else -> {}
         }
     }
 

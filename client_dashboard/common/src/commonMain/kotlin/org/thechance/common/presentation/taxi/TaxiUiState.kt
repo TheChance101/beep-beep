@@ -4,15 +4,17 @@ package org.thechance.common.presentation.taxi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.domain.entity.Taxi
+import org.thechance.common.domain.entity.AddTaxi
+import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.presentation.composables.table.Header
 import org.thechance.common.presentation.util.ErrorState
 
-
 data class TaxiUiState(
     val isLoading: Boolean = false,
     val error: ErrorState = ErrorState.UnKnownError,
+    val isAddNewTaxiDialogVisible: Boolean = false,
+    val addNewTaxiDialogUiState: AddTaxiDialogUiState = AddTaxiDialogUiState(),
     val taxis: List<TaxiDetailsUiState> = emptyList(),
     val searchQuery: String = "",
     val taxiNumberInPage: String = "3",
@@ -33,7 +35,7 @@ data class TaxiUiState(
 data class TaxiDetailsUiState(
     val id: String,
     val plateNumber: String,
-    val color: Color,
+    val color: CarColor,
     val type: String,
     val seats: Int = 4,
     val username: String = "",
@@ -53,3 +55,13 @@ data class TaxiDetailsUiState(
             TaxiStatus.ON_RIDE -> "On Ride"
         }
 }
+
+data class AddTaxiDialogUiState(
+    val plateNumber: String = "",
+    val driverUserName: String = "",
+    val carModel: String = "",
+    val selectedCarColor: CarColor = CarColor.WHITE,
+    val seats: Int = 0
+)
+
+

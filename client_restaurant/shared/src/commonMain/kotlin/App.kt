@@ -1,23 +1,16 @@
-
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
-import di.appModule
-import org.koin.compose.KoinApplication
-import presentation.login.LoginScreen
+import presentation.restaurant_selection.RestaurantSelectionScreen
 import resources.BpRestaurantTheme
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun App() {
-    KoinApplication(application = {
-        modules(appModule())
-    }) {
-        BpRestaurantTheme {
-            Navigator(LoginScreen()){
-                SlideTransition(it)
-            }
+    BpRestaurantTheme {
+        Navigator(RestaurantSelectionScreen("550e8400-e29b-41d4-a716-446655440989")) {
+            SlideTransition(it)
         }
     }
 }

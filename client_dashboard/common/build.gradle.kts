@@ -2,16 +2,17 @@
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kotlinKsp)
+    id("io.realm.kotlin") version "1.10.2"
+//    id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
+    kotlin("plugin.serialization") version "1.8.10"
 }
 
 group = "org.thechance"
 version = "1.0-SNAPSHOT"
 
 kotlin {
-    android()
     jvm("desktop") {
         jvmToolchain(libs.versions.jvmToolchain.get().toInt())
     }
@@ -28,6 +29,20 @@ kotlin {
                 implementation(libs.voyager.transitions)
                 implementation(libs.voyager.koin)
 
+                implementation(libs.kotlin.realm)
+                implementation(libs.kotlin.coroutines)
+
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.cio)
+                implementation(libs.ktor.json.serialization)
+                implementation(libs.kotlin.serialization)
+                implementation(libs.ktor.content.negotiation)
+                implementation(libs.ktor.logging)
+                implementation(libs.ktor.gson)
+
+                implementation(libs.ktor.client.cio)
+                implementation(libs.ktor.client.okhttp)
+
                 api(libs.koin.core)
                 implementation(libs.koin.annotations)
                 implementation(libs.koin.ksp)
@@ -39,18 +54,5 @@ kotlin {
                 api(libs.compose.preview)
             }
         }
-    }
-}
-
-android {
-    compileSdkVersion(libs.versions.compileSdk.get().toInt())
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-    defaultConfig {
-        minSdkVersion(libs.versions.minSdk.get().toInt())
-        targetSdkVersion(libs.versions.targetSdk.get().toInt())
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
     }
 }

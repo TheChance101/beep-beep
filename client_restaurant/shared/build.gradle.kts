@@ -37,13 +37,15 @@ kotlin {
                 implementation(libs.compose.runtime)
                 implementation(libs.compose.foundation)
                 implementation(libs.compose.material3)
-                implementation(libs.compose.components.resources)
+                api(libs.compose.image.loader)
 
+                implementation(libs.compose.components.resources)
                 implementation(libs.bundles.voyager)
                 implementation(libs.kotlin.coroutines)
                 api(libs.koin.core)
                 implementation(libs.koin.annotations)
                 implementation(libs.koin.compose)
+                implementation(libs.kotlinx.datetime)
                 implementation(project(":design_system:shared"))
             }
         }
@@ -52,6 +54,7 @@ kotlin {
                 api(libs.androidx.activity.compose)
                 api(libs.androidx.appcompat)
                 api(libs.androidx.core.ktx)
+                api(libs.koin.android)
             }
         }
         val iosX64Main by getting
