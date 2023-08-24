@@ -1,6 +1,5 @@
 package org.thechance.service_restaurant.data.collection.mapper
 
-import kotlinx.datetime.LocalDateTime
 import org.thechance.service_restaurant.data.collection.OrderCollection
 import org.thechance.service_restaurant.data.collection.OrderMealCollection
 import org.thechance.service_restaurant.data.utils.toUUID
@@ -15,7 +14,7 @@ fun Order.toCollection(): OrderCollection {
         restaurantId = restaurantId.toUUID(),
         meals = meals.map { it.toCollection() },
         totalPrice = totalPrice,
-        createdAt = createdAt.toString(),
+        createdAt = createdAt,
         orderStatus = status
     )
 }
@@ -27,7 +26,7 @@ fun OrderCollection.toEntity(): Order {
         restaurantId = restaurantId.toString(),
         meals = meals.map { it.toEntity() },
         totalPrice = totalPrice,
-        createdAt = createdAt.let { LocalDateTime.parse(it) },
+        createdAt = createdAt,
         status = orderStatus
     )
 }

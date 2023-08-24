@@ -50,9 +50,9 @@ fun EditableRatingBar(
                 painter = when {
                     iconPosition < floor(editableRating.value) ||
                             (iconPosition == floor(editableRating.value).toInt()
-                                    && editableRating.value.rem(1) >= 0.9) -> selectedIcon
+                                    && editableRating.value.rem(1) > 0.89) -> selectedIcon
 
-                    iconPosition < editableRating.value && editableRating.value.rem(1) in 0.5..0.9 -> halfSelectedIcon
+                    iconPosition < editableRating.value && editableRating.value.rem(1) in 0.5..0.89 -> halfSelectedIcon
                     else -> notSelectedIcon
                 },
                 contentDescription = null,
@@ -61,9 +61,9 @@ fun EditableRatingBar(
                         mousePosition.value = currentEvent.changes[0].position.x.toDouble()
                         editableRating.value = when {
 
-                            (mousePosition.value / size.width) >= 0.9 -> iconPosition + 1.0
+                            (mousePosition.value / size.width) > 0.89 -> iconPosition + 1.0
 
-                            (mousePosition.value / size.width) in (0.5..0.9) -> iconPosition + 0.5
+                            (mousePosition.value / size.width) in (0.5..0.89) -> iconPosition + 0.5
 
                             else -> iconPosition.toDouble()
                         }

@@ -7,4 +7,5 @@ data class Meal(
     val imageUrl: String,
     val description: String,
     val price: Double,
+    val cuisines: List<Cuisine>
 )

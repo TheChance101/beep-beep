@@ -5,6 +5,7 @@ import domain.entity.Restaurant
 data class RestaurantDto(
     val id: String,
     val ownerId: String,
+    val ownerUsername: String? = null,
     val name: String? = null,
     val description: String? = null,
     val priceLevel: String? = null,
@@ -21,6 +22,7 @@ fun RestaurantDto.toEntity(): Restaurant {
     return Restaurant(
         id = id,
         ownerId = ownerId,
+        ownerUsername = ownerUsername ?: "",
         name = name ?: "",
         description = description ?: "",
         priceLevel = priceLevel ?: "",
