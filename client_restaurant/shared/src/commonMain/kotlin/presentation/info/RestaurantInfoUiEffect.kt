@@ -5,4 +5,5 @@ sealed class RestaurantInfoUiEffect {
     data class ShowErrorMessage(val message: String): RestaurantInfoUiEffect()
     data class ShowSaveInfoSuccess(val message: String): RestaurantInfoUiEffect()
     object NavigateToLogin: RestaurantInfoUiEffect()
+    object NavigateUp: RestaurantInfoUiEffect()
 }

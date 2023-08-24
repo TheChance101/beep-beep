@@ -88,4 +88,8 @@ class RestaurantInfoScreenModel :
     override fun onClickLogout() {
         sendNewEffect(RestaurantInfoUiEffect.NavigateToLogin)
     }
+
+    override fun onClickBackArrow() {
+        sendNewEffect(RestaurantInfoUiEffect.NavigateUp)
+    }
 }

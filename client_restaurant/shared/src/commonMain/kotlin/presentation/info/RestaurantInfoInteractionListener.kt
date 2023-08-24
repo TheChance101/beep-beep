@@ -10,4 +10,5 @@ interface RestaurantInfoInteractionListener: BaseInteractionListener {
     fun onDescriptionChanged(description: String)
     fun onClickSave()
     fun onClickLogout()
+    fun onClickBackArrow()
 }
