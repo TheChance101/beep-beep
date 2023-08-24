@@ -109,7 +109,6 @@ class FakeRemoteGateway : IRemoteGateway {
                 totalResult = users.size
             ).toEntity()
         }
-
     }
 
     override suspend fun getTaxis(): List<Taxi> {

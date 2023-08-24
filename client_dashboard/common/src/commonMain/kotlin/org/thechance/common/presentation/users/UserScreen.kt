@@ -66,11 +66,8 @@ object UserScreen : Screen, KoinComponent {
     private fun UserContent(
         state: UserScreenUiState,
     ) {
-        //This need to change to get it from state
         var selectedUser by remember { mutableStateOf<String?>(null) }
-        var selectedPage by remember { mutableStateOf(1) }
 
-        var numberItemInPage by remember { mutableStateOf(3) }
 
         Column(
             Modifier.background(Theme.colors.surface).fillMaxSize(),
