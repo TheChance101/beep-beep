@@ -95,7 +95,7 @@ class RestaurantSelectionScreen(private val ownerId: String) : BaseScreen
                     LazyColumn(modifier = Modifier.padding(top = 24.dp)) {
                         itemsIndexed(state.restaurants) { index, item ->
                             RestaurantSelectionItem(item, listener)
-                            AnimatedVisibility(index != 2) {
+                            AnimatedVisibility(index != state.restaurants.size - 1) {
                                 Divider(Modifier.background(Theme.colors.divider).alpha(0.8f))
                             }
                         }

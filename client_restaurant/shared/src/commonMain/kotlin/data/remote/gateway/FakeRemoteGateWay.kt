@@ -2,7 +2,6 @@ package data.remote.gateway
 
 import data.remote.cousins
 import data.remote.model.AddressDto
-import data.remote.model.CousinDto
 import data.remote.model.MealDto
 import data.remote.model.OrderDto
 import data.remote.model.OrderMealDto
@@ -331,6 +330,89 @@ class FakeRemoteGateWay : IRemoteGateWay {
             openingTime = "09:00",
             closingTime = "22:00",
             priceLevel = "$$$",
+            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+        ),
+        RestaurantDto(
+            id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            name = "Zeko Tlawoth",
+            description = "It's a restaurant that is famous for preparing Arabian Foods",
+            rate = 4.5,
+            phone = "+9641324221423",
+            openingTime = "09:00",
+            closingTime = "22:00",
+            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+        ), RestaurantDto(
+            id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            name = "Zeko Tlawoth",
+            description = "It's a restaurant that is famous for preparing Arabian Foods",
+            rate = 4.5,
+            phone = "+9641324221423",
+            openingTime = "09:00",
+            closingTime = "22:00",
+            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+        ),
+        RestaurantDto(
+            id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            name = "Zeko Tlawoth",
+            description = "It's a restaurant that is famous for preparing Arabian Foods",
+            rate = 4.5,
+            phone = "+9641324221423",
+            openingTime = "09:00",
+            closingTime = "22:00",
+            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+        ), RestaurantDto(
+            id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            name = "Zeko Tlawoth",
+            description = "It's a restaurant that is famous for preparing Arabian Foods",
+            rate = 4.5,
+            phone = "+9641324221423",
+            openingTime = "09:00",
+            closingTime = "22:00",
+            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+        ), RestaurantDto(
+            id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            name = "Zeko Tlawoth",
+            description = "It's a restaurant that is famous for preparing Arabian Foods",
+            rate = 4.5,
+            phone = "+9641324221423",
+            openingTime = "09:00",
+            closingTime = "22:00",
+            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+        ), RestaurantDto(
+            id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            name = "Zeko Tlawoth",
+            description = "It's a restaurant that is famous for preparing Arabian Foods",
+            rate = 4.5,
+            phone = "+9641324221423",
+            openingTime = "09:00",
+            closingTime = "22:00",
+            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+        ), RestaurantDto(
+            id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            name = "Zeko Tlawoth",
+            description = "It's a restaurant that is famous for preparing Arabian Foods",
+            rate = 4.5,
+            phone = "+9641324221423",
+            openingTime = "09:00",
+            closingTime = "22:00",
+            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+        ),
+        RestaurantDto(
+            id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            name = "Zeko Tlawoth",
+            description = "It's a restaurant that is famous for preparing Arabian Foods",
+            rate = 4.5,
+            phone = "+9641324221423",
+            openingTime = "09:00",
+            closingTime = "22:00",
             address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
         ),
         RestaurantDto(
