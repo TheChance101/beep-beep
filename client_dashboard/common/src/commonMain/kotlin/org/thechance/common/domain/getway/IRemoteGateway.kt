@@ -1,11 +1,6 @@
 package org.thechance.common.domain.getway
 
-import org.thechance.common.domain.entity.AddTaxi
-import org.thechance.common.domain.entity.Admin
-import org.thechance.common.domain.entity.Restaurant
-import org.thechance.common.domain.entity.Taxi
-import org.thechance.common.domain.entity.User
-import org.thechance.common.domain.entity.UserTokens
+import org.thechance.common.domain.entity.*
 
 
 interface IRemoteGateway {
@@ -22,6 +17,6 @@ interface IRemoteGateway {
 
     suspend fun getRestaurants(): List<Restaurant>
 
-    suspend fun loginUser(username: String, password: String, keepLoggedIn: Boolean): UserTokens
+    suspend fun loginUser(username: String, password: String): UserTokens
 
 }

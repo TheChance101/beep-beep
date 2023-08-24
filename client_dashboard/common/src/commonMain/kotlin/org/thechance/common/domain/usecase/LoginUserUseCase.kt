@@ -12,8 +12,6 @@ interface ILoginUserUseCase {
 
     suspend fun getAccessToken(): String
 
-    suspend fun getRefreshToken(): String
-
     suspend fun loginUser(username: String, password: String, keepLoggedIn: Boolean): UserTokens
 
 }
@@ -35,12 +33,9 @@ class LoginUserUseCase(
         return localGateway.getAccessToken()
     }
 
-    override suspend fun getRefreshToken(): String {
-        return localGateway.getRefreshToken()
-    }
-
     override suspend fun loginUser(username: String, password: String, keepLoggedIn: Boolean): UserTokens {
-        return remoteGateway.loginUser(username, password, keepLoggedIn)
+        localGateway.shouldUserKeptLoggedIn(keepLoggedIn)
+        return remoteGateway.loginUser(username, password)
     }
 
 }

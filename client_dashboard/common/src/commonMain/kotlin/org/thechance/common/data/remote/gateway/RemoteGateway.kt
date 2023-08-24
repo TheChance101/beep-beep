@@ -45,7 +45,7 @@ class RemoteGateway(
         return emptyList()
     }
 
-    override suspend fun loginUser(username: String, password: String, keepLoggedIn: Boolean): UserTokens {
+    override suspend fun loginUser(username: String, password: String): UserTokens {
         return tryToExecute<ServerResponse<UserTokensRemoteDto>> {
             submitForm(
                 formParameters = Parameters.build {
