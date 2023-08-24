@@ -4,9 +4,6 @@ package di
 
 import domain.usecase.GetNewOrdersUseCase
 import domain.usecase.GetOwnerRestaurantsInformationUseCase
-import domain.usecase.IGetCousinUseCase
-import domain.usecase.IGetMealsByCousin
-
 import domain.usecase.IGetNewOrdersUseCase
 import domain.usecase.IGetOwnerRestaurantsInformationUseCase
 import domain.usecase.IManageRestaurantInfoUseCase
@@ -23,7 +20,4 @@ val UseCaseModule = module {
     single<IManageRestaurantInfoUseCase> { ManageRestaurantInfoUseCase(get()) }
     single<IMangeCousinUseCase> { MangeCousinUseCase(get()) }
     single<IManageMealUseCase> { ManageMealUseCase(get()) }
-
-    single<IGetCousinUseCase> { GetCousinUseCase(get()) }
-    single<IGetMealsByCousin> { GetMealsByCousin(get()) }
 }
