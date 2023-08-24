@@ -8,7 +8,7 @@ import kotlin.math.ceil
 
 
 class RestaurantScreenModel(
-    private val getRestaurants: IGetRestaurantsUseCase
+    private val getRestaurants: IGetRestaurantsUseCase,
 ) : BaseScreenModel<RestaurantUiState, RestaurantUIEffect>(RestaurantUiState()),
     RestaurantInteractionListener {
 
@@ -71,6 +71,54 @@ class RestaurantScreenModel(
             it.copy(
                 numberOfItemsInPage = numberOfItems,
                 maxPageCount = ceil(it.numberOfRestaurants.toDouble() / numberOfItems).toInt()
+            )
+        }
+    }
+
+    override fun onAddNewRestaurantClicked() {
+        updateState { it.copy(isAddNewRestaurantDialogVisible = true) }
+    }
+
+    override fun onCancelCreateRestaurantClicked() {
+        updateState { it.copy(isAddNewRestaurantDialogVisible = false) }
+    }
+
+    override fun onRestaurantNameChange(name: String) {
+        updateState {
+            it.copy(
+                addNewRestaurantDialogUiState = it.addNewRestaurantDialogUiState.copy(
+                    name = name
+                )
+            )
+        }
+    }
+
+    override fun onOwnerUserNameChange(name: String) {
+        updateState {
+            it.copy(
+                addNewRestaurantDialogUiState = it.addNewRestaurantDialogUiState.copy(
+                    ownerUsername = name
+                )
+            )
+        }
+    }
+
+    override fun onPhoneNumberChange(number: String) {
+        updateState {
+            it.copy(
+                addNewRestaurantDialogUiState = it.addNewRestaurantDialogUiState.copy(
+                    phoneNumber = number
+                )
+            )
+        }
+    }
+
+    override fun onWorkingHourChange(hour: String) {
+        updateState {
+            it.copy(
+                addNewRestaurantDialogUiState = it.addNewRestaurantDialogUiState.copy(
+                    workingHours = hour
+                )
             )
         }
     }

@@ -38,6 +38,7 @@ import org.thechance.common.presentation.composables.EditablePriceBar
 import org.thechance.common.presentation.composables.EditableRatingBar
 import org.thechance.common.presentation.composables.PriceBar
 import org.thechance.common.presentation.composables.RatingBar
+import org.thechance.common.presentation.composables.RestaurantDialog
 import org.thechance.common.presentation.composables.modifier.cursorHoverIconHand
 import org.thechance.common.presentation.composables.modifier.noRipple
 import org.thechance.common.presentation.composables.table.BpPager
@@ -54,7 +55,6 @@ class RestaurantScreen :
 
     override fun onEffect(effect: RestaurantUIEffect, navigator: Navigator) {
         when (effect) {
-            //TODO: effects
             else -> {}
         }
     }
@@ -62,6 +62,17 @@ class RestaurantScreen :
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun OnRender(state: RestaurantUiState, listener: RestaurantInteractionListener) {
+        RestaurantDialog(
+            modifier = Modifier,
+            onRestaurantNameChange = listener::onRestaurantNameChange,
+            onCancelClicked = listener::onCancelCreateRestaurantClicked,
+            isVisible = state.isAddNewRestaurantDialogVisible,
+            onOwnerUserNameChange = listener::onOwnerUserNameChange,
+            onPhoneNumberChange = listener::onPhoneNumberChange,
+            onWorkingHourChange = listener::onWorkingHourChange,
+            state = state.addNewRestaurantDialogUiState,
+            onCreateClicked = {},
+        )
         Column(
             Modifier.background(Theme.colors.surface).fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -118,7 +129,7 @@ class RestaurantScreen :
                 )
                 BpButton(
                     title = "New Restaurant",
-                    onClick = { /*TODO:  Show New Restaurant Dialog */ },
+                    onClick = listener::onAddNewRestaurantClicked,
                     textPadding = PaddingValues(horizontal = Theme.dimens.space24),
                 )
             }
@@ -237,7 +248,7 @@ private fun RestaurantFilterDropdownMenu(
     onClickSave: () -> Unit,
     expanded: Boolean,
     rating: Double,
-    priceLevel: Int
+    priceLevel: Int,
 ) {
     BpDropdownMenu(
         onDismissRequest = onDismissRequest,

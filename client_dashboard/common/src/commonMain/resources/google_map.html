@@ -1,14 +1,3 @@
-<!--<!DOCTYPE html>-->
-<!--<html>-->
-<!--<head>-->
-<!--    <title>Open Google Maps</title>-->
-<!--</head>-->
-<!--<body>-->
-<!--<a href="https://www.openstreetmap.org/#map=6/41.451/-114.269" target="_blank">Open Google Maps</a>-->
-<!--</body>-->
-
-<!--</html>-->
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,15 +12,11 @@
         #map {
             height: 400px;
         }
-
-
     </style>
 </head>
 <body>
 <div id="map"></div>
-
 <script>
-
     // Initialize the map
     var map = L.map('map', {
         center: [51.505, -0.09],
@@ -39,7 +24,6 @@
         dragging: true, // Enable dragging to move the map
         tap: true // Disable touch-based panning for this example
     });
-
         L.tileLayer('https://tile.thunderforest.com/atlas/{z}/{x}/{y}.png?apikey=192edc9c6a234e869be48be7059e5529', { }).addTo(map);
 
         var marker = L.marker([51.5, -0.09]).addTo(map)

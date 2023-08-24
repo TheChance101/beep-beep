@@ -1,23 +1,21 @@
-package org.thechance.common.ui.resturant
+package org.thechance.common.presentation.composables
 
 import javafx.application.Platform
 import javafx.embed.swing.JFXPanel
 import javafx.scene.Scene
-import javafx.scene.web.WebEngine
 import javafx.scene.web.WebView
-import org.thechance.common.Testttt
+import org.thechance.common.presentation.util.ContentType
 import java.awt.BorderLayout
-import java.awt.event.FocusEvent
 import javax.swing.JPanel
 import javax.swing.SwingUtilities
 import javax.swing.border.EmptyBorder
 
 private fun createWebViewComponent(
-    resource: String,
-    resourceType: ResourceType,
-    onLocationChange: (String) -> Unit = {},
+    content: String,
+    contentType: ContentType,
     onError: (String) -> Unit,
     onAlert: (String) -> Unit = {},
+    onLocationChange: (String) -> Unit = {},
 ): JFXPanel {
     val jfxPanel = JFXPanel()
     Platform.runLater {
@@ -25,10 +23,10 @@ private fun createWebViewComponent(
         val webEngine = webView.engine
         val scene = Scene(webView)
         jfxPanel.scene = scene
-        when (resourceType) {
-            ResourceType.LINK -> webEngine.load(resource)
-            ResourceType.SCRIPT -> webEngine.executeScript(resource)
-            ResourceType.CONTENT -> webEngine.loadContent(getResourceContent(resource))
+        when (contentType) {
+            ContentType.LINK -> webEngine.load(content)
+            ContentType.SCRIPT -> webEngine.executeScript(content)
+            ContentType.CONTENT -> webEngine.loadContent(getResourceContent(content))
         }
         webEngine.javaScriptEnabledProperty().set(true)
         webEngine.setOnError { error ->
@@ -44,33 +42,22 @@ private fun createWebViewComponent(
     return jfxPanel
 }
 
-fun webViewFromLink(link:String): JPanel {
-    val jPanel = JPanel().apply {
-        border = EmptyBorder(20, 20, 20, 20)
-        layout = BorderLayout()
-        val webViewPanel = createWebViewComponent(
-            resource = "https://www.google.com/maps/@30.063854,31.3789053,15z?entry=ttu",
-            resourceType = ResourceType.LINK,
-            onError = { println(it) }
-        )
-        add(webViewPanel, BorderLayout.CENTER)
-    }
-    SwingUtilities.invokeLater {
-        jPanel.revalidate()
-        jPanel.repaint()
-    }
-    return jPanel
-}
 
-fun webViewFromLinkOpenStreetMap(): JPanel {
+private const val MAP = "#map="
+
+fun webViewFromLink(): JPanel {
     val jPanel = JPanel().apply {
         border = EmptyBorder(20, 20, 20, 20)
         layout = BorderLayout()
         val webViewPanel = createWebViewComponent(
-            resource = "https://www.openstreetmap.org/#map=15/33.2901/44.4034",
-            resourceType = ResourceType.LINK,
+            content = "https://www.openstreetmap.org/#map=15/33.2901/44.4034",
+            contentType = ContentType.LINK,
             onError = { println(it) },
-            onLocationChange = { println("Location: ${it.split("#map=")[1].substringBefore("#map=")}") }
+            onLocationChange = {
+                println(
+                    "Location: ${it.split(MAP)[1].substringBefore(MAP)}"
+                )
+            }
         )
         add(webViewPanel, BorderLayout.CENTER)
     }
@@ -81,29 +68,18 @@ fun webViewFromLinkOpenStreetMap(): JPanel {
     return jPanel
 }
 
-fun SwingComponent4(): JPanel {
+
+fun webViewFromContent(): JPanel {
     val jPanel = JPanel().apply {
         border = EmptyBorder(20, 20, 20, 20)
         layout = BorderLayout()
-
-        val jfxPanel = JFXPanel()
-        add(jfxPanel, BorderLayout.CENTER)
-
-        jfxPanel.requestFocusInWindow(FocusEvent.Cause.MOUSE_EVENT)
-        Platform.runLater {
-            val webView = WebView()
-            val webEngine: WebEngine = webView.engine
-            val scene = Scene(webView)
-            jfxPanel.scene = scene
-
-            val htmlResource = Testttt::class.java.getResource("/testweb.html")
-            val htmlContent = htmlResource?.readText()?.trimIndent()
-
-            webEngine.loadContent(htmlContent)
-            webEngine.javaScriptEnabledProperty().set(true)
-
-        }
-
+        val webViewPanel = createWebViewComponent(
+            content = getResourceContent("/google_map.html"),
+            contentType = ContentType.CONTENT,
+            onError = { println(it) },
+            onAlert = { println(it) }
+        )
+        add(webViewPanel, BorderLayout.CENTER)
     }
     SwingUtilities.invokeLater {
         jPanel.revalidate()
@@ -111,7 +87,6 @@ fun SwingComponent4(): JPanel {
     }
     return jPanel
 }
-
 
 private fun getResourceContent(resourcePath: String): String {
     val inputStream = object {}.javaClass.getResourceAsStream(resourcePath)
