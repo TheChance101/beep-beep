@@ -37,6 +37,8 @@ kotlin {
                 implementation(libs.compose.runtime)
                 implementation(libs.compose.foundation)
                 implementation(libs.compose.material3)
+                api(libs.compose.image.loader)
+
                 implementation(libs.compose.components.resources)
                 api(libs.compose.image.loader)
                 implementation(libs.kotlinx.datetime)

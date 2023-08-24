@@ -6,6 +6,6 @@ fun appModule() = module {
     includes(
         screenModule,
         GatewayModule,
-        UseCaseModule
+        UseCaseModule,
     )
 }

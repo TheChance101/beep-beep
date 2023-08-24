@@ -13,7 +13,7 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
     val state = _state.asStateFlow()
 
     private val _effect = MutableSharedFlow<E?>()
-    val effect = _effect.debounce(500).filterNot { it == null }
+    val effect = _effect.asSharedFlow().debounce(500).mapNotNull { it }
 
     protected fun <T> tryToExecute(
         function: suspend () -> T,

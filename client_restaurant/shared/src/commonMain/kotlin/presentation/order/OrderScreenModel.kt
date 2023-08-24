@@ -10,69 +10,77 @@ import presentation.base.ErrorState
 class OrderScreenModel :
     BaseScreenModel<OrderScreenUiState, OrderScreenUiEffect>(OrderScreenUiState()),
     OrderScreenInteractionListener {
+    private val manageOrdersUseCase: IManageOrderUseCase by inject()
+
     override val viewModelScope: CoroutineScope = coroutineScope
 
-    private val manageOrdersUseCase: IManageOrderUseCase by inject()
     override fun onClickBack() {
         sendNewEffect(OrderScreenUiEffect.Back)
     }
 
-    init {
-        getAllActiveOrders("7c3d631e-6d49-48c9-9f91-9426ec559eb1")
-        /*
-        getInCookingOrders("7c3d631e-6d49-48c9-9f91-9426ec559eb1")
-        getPendingOrders("7c3d631e-6d49-48c9-9f91-9426ec559eb1")
-         */
+    override fun onClickFinishOrder(orderId: String, orderStateType: OrderStateType) {
+        updateOrderState(orderId, orderStateType)
     }
 
-    private fun getAllActiveOrders(restaurantId: String) {
+    override fun onClickCancelOrder(orderId: String, orderStateType: OrderStateType) {
+        updateOrderState(orderId, orderStateType)
+    }
+
+    override fun onClickApproveOrder(orderId: String, orderStateType: OrderStateType) {
+        updateOrderState(orderId, orderStateType)
+    }
+
+    init {
+        getInCookingOrders("7c3d631e-6d49-48c9-9f91-9426ec559eb1")
+        getPendingOrders("7c3d631e-6d49-48c9-9f91-9426ec559eb1")
+    }
+
+    private fun updateOrderState(orderId: String, orderState: OrderStateType) {
         tryToExecute(
-            { manageOrdersUseCase.getAllActiveOrders(restaurantId).map { it.toOrderUiState() } },
-            ::onGetActiveOrdersSuccess,
-            ::onGetActiveOrdersError
+            { manageOrdersUseCase.updateOrderState(orderId, orderState).toOrderUiState() },
+            ::onUpdateOrderStateSuccess,
+            ::onUpdateOrderStateError
         )
     }
 
-    private fun onGetActiveOrdersSuccess(orders: List<OrderUiState>) {
-        updateState { it.copy(activeOrders = orders) }
+    private fun onUpdateOrderStateSuccess(updatedOrder: OrderUiState) {
+        sendNewEffect(OrderScreenUiEffect.UpdateOrder(updatedOrder))
     }
 
-    private fun onGetActiveOrdersError(errorState: ErrorState) {
-        println("Error is $errorState")
-    }
-
-    /*
     private fun getPendingOrders(restaurantId: String) {
         tryToExecute(
             { manageOrdersUseCase.getPendingOrders(restaurantId).map { it.toOrderUiState() } },
             ::onGetPendingOrdersSuccess,
-            ::onGetPendingOrdersError
+            ::onGetOrdersError
         )
-    }
-
-    private fun onGetPendingOrdersSuccess(pendingOrders: List<OrderUiState>) {
-        updateState { it.copy(inCookingOrders = pendingOrders) }
-    }
-
-    private fun onGetPendingOrdersError(errorState: ErrorState) {
-        println("Error is $errorState")
     }
 
     private fun getInCookingOrders(restaurantId: String) {
         tryToExecute(
             { manageOrdersUseCase.getInCookingOrders(restaurantId).map { it.toOrderUiState() } },
             ::onGetCookingSuccess,
-            ::onGetCookingError
+            ::onGetOrdersError
         )
     }
 
-    private fun onGetCookingSuccess(inCookingOrders: List<OrderUiState>) {
-        updateState { it.copy(inCookingOrders = inCookingOrders) }
+    private fun onGetPendingOrdersSuccess(pendingOrders: List<OrderUiState>) {
+        val totalOrders = state.value.totalOrders
+        val newTotalOrders = totalOrders + pendingOrders.size
+
+        updateState { it.copy(pendingOrders = pendingOrders, totalOrders = newTotalOrders) }
     }
 
-    private fun onGetCookingError(errorState: ErrorState) {
+    private fun onGetCookingSuccess(inCookingOrders: List<OrderUiState>) {
+        val totalOrders = state.value.totalOrders
+        val newTotalOrders = totalOrders + inCookingOrders.size
+        updateState { it.copy(inCookingOrders = inCookingOrders, totalOrders = newTotalOrders) }
+    }
+
+    private fun onGetOrdersError(errorState: ErrorState) {
         println("Error is $errorState")
     }
 
- */
+    private fun onUpdateOrderStateError(errorState: ErrorState) {
+        println("Error is $errorState")
+    }
 }

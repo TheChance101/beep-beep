@@ -48,9 +48,10 @@ object RestaurantsTab : Tab {
 
     @Composable
     override fun Content() {
-       Navigator(screen = RestaurantScreen)
+        Navigator(screen = RestaurantScreen())
     }
 }
+
 object UsersTab : Tab {
     override val options: TabOptions
     @Composable get() {

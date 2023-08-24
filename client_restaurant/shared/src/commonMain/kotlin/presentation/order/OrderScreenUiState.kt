@@ -2,10 +2,9 @@ package presentation.order
 
 import domain.entity.Order
 import domain.entity.OrderMeal
-import util.OrderState
+import domain.entity.OrderState
 
 data class OrderScreenUiState(
-    val activeOrders: List<OrderUiState> = emptyList(),
     val inCookingOrders: List<OrderUiState> = emptyList(),
     val pendingOrders: List<OrderUiState> = emptyList(),
     val totalOrders: Int = 0,
@@ -15,7 +14,7 @@ data class OrderUiState(
     val id: String = "",
     val orderMealUiStates: List<OrderMealUiState> = emptyList(),
     val totalPrice: Double = 0.0,
-    val orderState: Int = OrderState.PENDING.statusCode,
+    val orderState: OrderState = OrderState.PENDING,
     val createdAt:String = "",
 )
 
@@ -35,6 +34,7 @@ fun OrderMeal.toOrderMealUiState(): OrderMealUiState {
 
 fun Order.toOrderUiState(): OrderUiState {
     return OrderUiState(
+        id = id,
         orderMealUiStates = meals.map { it.toOrderMealUiState() },
         totalPrice = totalPrice,
         orderState = orderState,

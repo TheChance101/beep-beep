@@ -1,9 +1,35 @@
 package resources
 
-
 data class StringResources(
     val beepBeep: String = "Beep Beep",
     val orderHistory: String = "Order History",
+    val beepBeep : String = "Beep Beep",
+    val chooseYourRestaurant : String = "Choose your restaurant",
+    val pickWhichRestaurant : String = "Pick which restaurant you want to manage right now.",
+    val open : String = "Open",
+    val closed : String = "Closed",
+    val add: String = "Add",
+    val name: String = "Name",
+    val description: String = "Description",
+    val price: String = "Price",
+    val cuisines: String = "Cuisines",
+    val chooseCuisine: String = "Choose cuisine",
+    val save: String = "Save",
+    val cancel: String = "Cancel",
+    val addNewMeal: String = "Add New Meal",
+    val editMeal: String = "Edit Meal",
+    val allMeals: String = "All meals",
+    val restaurantInfo: String = "Restaurant info",
+    val ownerUsername: String = "Owner username",
+    val address: String = "Address",
+    val rating: String = "Rating",
+    val priceLevel: String = "Price level",
+    val restaurantName: String = "Restaurant name",
+    val phoneNumber: String = "Phone number",
+    val workingHours: String = "Working hours",
+    val logout: String = "Logout",
+    val restaurantNameErrorMessage: String = "restaurant name should be between 4 to 25 letters",
+    val descriptionErrorMessage : String = "description shouldn't be more than 255 letter",
     val orderImageContentDescription: String = "order image",
     val quantity: String = "Qty",
     val dollarSign: String = "$",
@@ -14,5 +40,4 @@ data class StringResources(
     val approve: String = "Approve",
     val orders: String = "Orders",
     val totalOrders: String = "Total Orders",
-    val cancel: String = "Cancel"
 )

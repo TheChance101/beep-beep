@@ -25,12 +25,12 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.base.BaseScreen
 import presentation.composables.BpAppBar
-import presentation.composables.OrderCard
-import presentation.composables.OrderTextButton
-import presentation.composables.header
+import presentation.composables.BpAppBar
 import presentation.login.LoginScreen
+import presentation.order.composable.OrderCard
+import presentation.order.composable.OrderTextButton
+import presentation.order.composable.header
 import resources.Resources
-import util.OrderState
 
 class OrderScreen :
     BaseScreen<OrderScreenModel, OrderScreenUiState, OrderScreenUiEffect, OrderScreenInteractionListener>() {
@@ -44,6 +44,7 @@ class OrderScreen :
     override fun onEffect(effect: OrderScreenUiEffect, navigator: Navigator) {
         when (effect) {
             is OrderScreenUiEffect.Back -> navigator.push(LoginScreen())
+            is OrderScreenUiEffect.UpdateOrder -> {}
         }
     }
 
@@ -58,86 +59,111 @@ class OrderScreen :
                     .fillMaxWidth()
                     .background(Theme.colors.surface)
                     .border(width = 1.dp, color = Theme.colors.divider, shape = RectangleShape),
-                onNavigateUp = {},
+                onNavigateUp = listener::onClickBack,
                 title = Resources.strings.orders
             ) {
-                Column(
-                    modifier = Modifier,
-                    verticalArrangement = Arrangement.spacedBy(
-                        Theme.dimens.space4,
-                        alignment = Alignment.CenterVertically
-                    ),
-                    horizontalAlignment = Alignment.End
-                ) {
-                    Text(
-                        text = Resources.strings.totalOrders,
-                        style = Theme.typography.caption,
-                        color = Theme.colors.contentSecondary
-                    )
-                    Text(
-                        text = state.activeOrders.size.toString(),
-                        style = Theme.typography.titleLarge,
-                        color = Theme.colors.contentPrimary
-                    )
-                }
+                TotalOrders(
+                    text = Resources.strings.totalOrders,
+                    totalOrders = state.totalOrders,
+                    modifier = Modifier.padding(end = Theme.dimens.space16)
+                )
             }
+
 
             LazyVerticalStaggeredGrid(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(Theme.dimens.space16),
-                columns = StaggeredGridCells.Adaptive(minSize = 300.dp),
+                columns = StaggeredGridCells.Adaptive(minSize = 360.dp),
                 verticalItemSpacing = Theme.dimens.space8,
                 horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8)
             ) {
 
                 header {
-                    Text(
-                        modifier = Modifier.padding(vertical = Theme.dimens.space8),
+                    OrdersHeader(
                         text = Resources.strings.inCookingOrders,
-                        style = Theme.typography.titleLarge,
-                        color = Theme.colors.contentPrimary
+                        modifier = Modifier.padding(bottom = Theme.dimens.space8)
                     )
                 }
 
-                items(state.activeOrders.filter { it.orderState == OrderState.IN_COOKING.statusCode }) { order ->
+                items(state.inCookingOrders) { order ->
                     OrderCard(order = order) {
                         OrderTextButton(
                             text = Resources.strings.finish,
-                            onClick = {},
+                            onClick = {
+                                listener.onClickFinishOrder(order.id, OrderStateType.FINISH)
+                            }
                         )
                     }
                 }
 
                 header {
-                    Text(
-                        modifier = Modifier.padding(
-                            top = Theme.dimens.space24,
-                            bottom = Theme.dimens.space16
-                        ),
+                    OrdersHeader(
                         text = Resources.strings.requestedOrders,
-                        style = Theme.typography.titleLarge,
-                        color = Theme.colors.contentPrimary
+                        modifier = Modifier.padding(
+                            top = Theme.dimens.space16,
+                            bottom = Theme.dimens.space8
+                        )
                     )
                 }
-                items(state.activeOrders.filter { it.orderState == OrderState.PENDING.statusCode }) { order ->
+
+                items(state.pendingOrders) { order ->
                     OrderCard(order = order) {
                         Row(horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8)) {
                             OrderTextButton(
                                 text = Resources.strings.cancel,
-                                onClick = {},
+                                onClick = {
+                                    listener.onClickCancelOrder(order.id, OrderStateType.CANCEL)
+                                },
                                 textColor = Theme.colors.contentTertiary,
                                 border = BorderStroke(0.dp, color = Theme.colors.surface)
                             )
                             OrderTextButton(
                                 text = Resources.strings.approve,
-                                onClick = {},
+                                onClick = {
+                                    listener.onClickCancelOrder(order.id, OrderStateType.APPROVE)
+                                },
                             )
                         }
                     }
                 }
-
             }
+        }
+    }
 
+    @Composable
+    private fun OrdersHeader(text: String, modifier: Modifier = Modifier) {
+        Text(
+            modifier = modifier,
+            text = text,
+            style = Theme.typography.titleLarge,
+            color = Theme.colors.contentPrimary
+        )
+    }
+
+    @Composable
+    private fun TotalOrders(
+        text: String,
+        totalOrders: Int,
+        modifier: Modifier = Modifier,
+    ) {
+        Column(
+            modifier = modifier,
+            verticalArrangement = Arrangement.spacedBy(
+                Theme.dimens.space4,
+                alignment = Alignment.CenterVertically
+            ),
+            horizontalAlignment = Alignment.End
+        ) {
+            Text(
+                text = text,
+                style = Theme.typography.caption,
+                color = Theme.colors.contentSecondary
+            )
+            Text(
+                text = totalOrders.toString(),
+                style = Theme.typography.titleLarge,
+                color = Theme.colors.contentPrimary
+            )
         }
     }
 }
