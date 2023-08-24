@@ -10,5 +10,7 @@ val UseCaseModule = module {
     singleOf(::GetUsersUseCase) { bind<IGetUsersUseCase>() }
     singleOf(::GetTaxisUseCase) { bind<IGetTaxisUseCase>() }
     singleOf(::CreateNewTaxiUseCase) { bind<ICreateNewTaxiUseCase>() }
+    singleOf(::FindTaxiByUserNameUseCase) { bind<IFindTaxiByUsernameUseCase>() }
+    singleOf(::GetRestaurantsUseCase) { bind<IGetRestaurantsUseCase>() }
     singleOf(::LoginUserUseCase) { bind<ILoginUserUseCase>() }
 }
