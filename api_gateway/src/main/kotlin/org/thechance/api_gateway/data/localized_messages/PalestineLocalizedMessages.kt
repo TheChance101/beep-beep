@@ -17,5 +17,6 @@ class PalestineLocalizedMessages : LocalizedMessages {
     override val userAlreadyExist: String = "اليوزر دا موجود من قبل يا 56"
     override val invalidInformation: String = "البيانات دي مش صح يا 56"
     override val unknownError: String = "حدث خطأ غير معروف"
+    override val userNotFound: String = "اليوزر دا مش موجود يا 56"
     override val userCreatedSuccessfully: String = "شرفتنا يا 56"
 }
