@@ -25,8 +25,6 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.base.BaseScreen
 import presentation.composables.BpAppBar
-import presentation.composables.BpAppBar
-import presentation.login.LoginScreen
 import presentation.order.composable.OrderCard
 import presentation.order.composable.OrderTextButton
 import presentation.order.composable.header
@@ -43,7 +41,7 @@ class OrderScreen :
 
     override fun onEffect(effect: OrderScreenUiEffect, navigator: Navigator) {
         when (effect) {
-            is OrderScreenUiEffect.Back -> navigator.push(LoginScreen())
+            is OrderScreenUiEffect.Back -> navigator.pop()
             is OrderScreenUiEffect.UpdateOrder -> {}
         }
     }
