@@ -5,6 +5,10 @@ data class StringResources(
     val beepBeep : String = "Beep Beep",
     val allMeals: String = "All meals",
     val restaurantInfo: String = "Restaurant info",
+    val orders: String = "Orders",
+    val ordersHistory: String = "Orders history",
+    val revenue: String = "Revenue",
+    val thisWeek: String = "This week",
     val ownerUsername: String = "Owner username",
     val address: String = "Address",
     val rating: String = "Rating",
@@ -16,5 +20,5 @@ data class StringResources(
     val save: String = "Save",
     val logout: String = "Logout",
     val restaurantNameErrorMessage: String = "restaurant name should be between 4 to 25 letters",
-    val descriptionErrorMessage : String = "description shouldn't be more than 255 letter"
+    val descriptionErrorMessage : String = "description shouldn't be more than 255 letter",
 )

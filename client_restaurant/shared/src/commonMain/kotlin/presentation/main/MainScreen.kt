@@ -29,7 +29,7 @@ class MainScreen :
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                state.welcomeMessage,
+                "state.welcomeMessage",
                 style = Theme.typography.headlineLarge,
                 modifier = Modifier.clickable { listener.onClickBack() }
             )

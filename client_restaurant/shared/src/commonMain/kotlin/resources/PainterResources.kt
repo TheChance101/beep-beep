@@ -10,7 +10,13 @@ data class PainterResources(
     val halfFilledStar: String,
     val sort: String,
     val sun: String,
-    val logout: String
+    val logout: String,
+    val info: String,
+    val meals:String,
+    val orders:String,
+    val ordersBig:String,
+    val ordersHistory:String,
+    val revenue:String,
 )
 
 val BpPainterLightResources = PainterResources(
@@ -23,7 +29,13 @@ val BpPainterLightResources = PainterResources(
     sort = "sort.xml",
     sun = "sun.xml",
     arrowDown = "arrowdown.svg",
-    logout = "ic_logout.xml"
+    logout = "ic_logout.xml",
+    info = "info.png",
+    meals = "meals.png",
+    orders = "orders.png",
+    ordersBig = "orders_big.png",
+    ordersHistory = "orders_history.png",
+    revenue = "revenue.png",
 )
 
 val BpPainterDarkResources = PainterResources(
@@ -36,5 +48,11 @@ val BpPainterDarkResources = PainterResources(
     sort = "sort.xml",
     sun = "sun.xml",
     arrowDown = "arrowdown.svg",
-    logout = "ic_logout.xml"
+    logout = "ic_logout.xml",
+    info = "info.png",
+    meals = "meals.png",
+    orders = "orders.png",
+    ordersBig = "orders_big.png",
+    ordersHistory = "orders_history.png",
+    revenue = "revenue.png",
 )
