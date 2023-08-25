@@ -22,4 +22,13 @@ interface IRemoteGateway {
     suspend fun searchRestaurantsByRestaurantName(restaurantName: String): List<Restaurant>
 
     suspend fun loginUser(username: String, password: String): UserTokens
+
+    suspend fun filterRestaurants(rating: Double, priceLevel: Int): List<Restaurant>
+
+    suspend fun searchFilterRestaurants(
+        restaurantName: String,
+        rating: Double,
+        priceLevel: Int
+    ): List<Restaurant>
+
 }

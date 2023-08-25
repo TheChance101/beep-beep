@@ -10,6 +10,13 @@ import org.thechance.common.data.remote.model.RestaurantDto
 import org.thechance.common.data.remote.model.TaxiDto
 import org.thechance.common.data.remote.model.UserDto
 import org.thechance.common.data.remote.model.toEntity
+import org.thechance.common.domain.entity.AddTaxi
+import org.thechance.common.domain.entity.Admin
+import org.thechance.common.domain.entity.DataWrapper
+import org.thechance.common.domain.entity.Restaurant
+import org.thechance.common.domain.entity.Taxi
+import org.thechance.common.domain.entity.User
+import org.thechance.common.domain.entity.UserTokens
 import org.thechance.common.data.service.IFakeService
 import org.thechance.common.domain.entity.AddTaxi
 import org.thechance.common.domain.entity.Admin
@@ -21,6 +28,7 @@ import org.thechance.common.domain.entity.UserTokens
 import org.thechance.common.domain.getway.IRemoteGateway
 import java.util.UUID
 import kotlin.math.ceil
+import kotlin.math.floor
 
 
 class FakeRemoteGateway(
@@ -158,8 +166,40 @@ class FakeRemoteGateway(
         return fakeService.searchRestaurantsByRestaurantName(restaurantName).toEntity()
     }
 
+    override suspend fun filterRestaurants(rating: Double, priceLevel: Int): List<Restaurant> {
+        return filterRestaurants(getRestaurants(), rating, priceLevel)
+    }
+
+    override suspend fun searchFilterRestaurants(
+        restaurantName: String,
+        rating: Double,
+        priceLevel: Int
+    ): List<Restaurant> {
+        return filterRestaurants(
+            searchRestaurantsByRestaurantName(restaurantName),
+            rating,
+            priceLevel
+        )
+    }
+
     override suspend fun loginUser(username: String, password: String): UserTokens {
         return UserTokens("", "")
+    }
+
+    private fun filterRestaurants(
+        restaurants: List<Restaurant>,
+        rating: Double,
+        priceLevel: Int
+    ): List<Restaurant> {
+        return restaurants.filter {
+            it.priceLevel == priceLevel &&
+                    when {
+                        rating.rem(1) > 0.89 || rating.rem(1) == 0.0 || rating.rem(1) > 0.5
+                        -> it.rating in floor(rating) - 0.1..0.49 + floor(rating)
+
+                        else -> it.rating in 0.5 + floor(rating)..0.89 + floor(rating)
+                    }
+        }
     }
 
 }
