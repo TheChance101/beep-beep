@@ -12,12 +12,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
+import presentation.composable.modifier.noRippleEffect
 
 @Composable
 fun CustomBottomSheet(
@@ -38,11 +40,7 @@ fun CustomBottomSheet(
             Column(modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = .4f))) {
 
                 Box(Modifier.fillMaxHeight().weight(1f)) {
-                    Spacer(Modifier.fillMaxSize().clickable {
-                        if (sheetState.isVisible) {
-                            sheetState.dismiss()
-                        }
-                    })
+                    Spacer(Modifier.fillMaxSize().noRippleEffect { null })
                 }
 
                 Box(

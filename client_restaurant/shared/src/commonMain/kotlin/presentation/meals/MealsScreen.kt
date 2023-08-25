@@ -29,8 +29,9 @@ import com.beepbeep.designSystem.ui.theme.Theme.colors
 import com.beepbeep.designSystem.ui.theme.Theme.dimens
 import presentation.base.BaseScreen
 import presentation.composable.BpAppBar
-import presentation.meal.MealScreen
-import presentation.meals.composable.MealCard
+import presentation.composable.MealCard
+import presentation.mealManagement.mealCreation.MealCreationScreen
+import presentation.mealManagement.mealEditor.MealEditorScreen
 import presentation.meals.state.MealsScreenUIState
 import resources.Resources.strings
 
@@ -46,8 +47,9 @@ class MealsScreen :
     override fun onEffect(effect: MealsScreenUIEffect, navigator: Navigator) {
         when (effect) {
             is MealsScreenUIEffect.Back -> navigator.pop()
-            is MealsScreenUIEffect.NavigateToMealDetails -> navigator.push(MealScreen(mealId = effect.mealId))
-            is MealsScreenUIEffect.NavigateToAddMeal -> navigator.push(MealScreen())
+            is MealsScreenUIEffect.NavigateToMealDetails ->
+                navigator.push(MealEditorScreen(mealId = effect.mealId))
+            is MealsScreenUIEffect.NavigateToAddMeal -> navigator.push(MealCreationScreen())
         }
     }
 
@@ -83,7 +85,6 @@ class MealsScreen :
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
 
-
                 LazyRow(
                     contentPadding = PaddingValues(
                         start = dimens.space16,
@@ -118,8 +119,6 @@ class MealsScreen :
                             listener.onClickMeal(state.meals[index].id)
                         }, meal = state.meals[index])
                     }
-
-
                 }
             }
         }

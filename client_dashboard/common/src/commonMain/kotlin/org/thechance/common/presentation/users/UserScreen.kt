@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.*
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.thechance.common.LocalDimensions
 import org.thechance.common.presentation.base.BaseScreen
 import org.thechance.common.presentation.composables.BpDropdownMenu
 import org.thechance.common.presentation.composables.BpDropdownMenuItem
@@ -84,7 +85,7 @@ class UserScreen :
                 .background(Theme.colors.surface)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
+            verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16),
         ) {
             UsersFilteredSearch(
                 searchText = state.search,
@@ -215,7 +216,7 @@ class UserScreen :
             BpDropdownMenu(
                 expanded = isFilterDropdownMenuExpanded,
                 onDismissRequest = onFilterMenuDismiss,
-                offset = DpOffset.Zero.copy(y = Theme.dimens.space16),
+                offset = DpOffset.Zero.copy(y = LocalDimensions.current.space16),
                 shape = RoundedCornerShape(Theme.radius.medium).copy(topStart = CornerSize(Theme.radius.small)),
                 modifier = Modifier.height(450.dp)
             ) {
@@ -230,8 +231,8 @@ class UserScreen :
                                 style = Theme.typography.headline,
                                 color = Theme.colors.contentPrimary,
                                 modifier = Modifier.padding(
-                                    start = Theme.dimens.space24,
-                                    top = Theme.dimens.space24
+                                    start = LocalDimensions.current.space24,
+                                    top = LocalDimensions.current.space24
                                 )
                             )
                             Text(
@@ -239,9 +240,9 @@ class UserScreen :
                                 style = Theme.typography.titleLarge,
                                 color = Theme.colors.contentPrimary,
                                 modifier = Modifier.padding(
-                                    start = Theme.dimens.space24,
-                                    top = Theme.dimens.space40,
-                                    bottom = Theme.dimens.space16
+                                    start = LocalDimensions.current.space24,
+                                    top = LocalDimensions.current.space40,
+                                    bottom = LocalDimensions.current.space16
                                 ),
                             )
                             PermissionsFlowRow(
@@ -254,9 +255,9 @@ class UserScreen :
                                 style = Theme.typography.titleLarge,
                                 color = Theme.colors.contentPrimary,
                                 modifier = Modifier.padding(
-                                    start = Theme.dimens.space24,
-                                    top = Theme.dimens.space32,
-                                    bottom = Theme.dimens.space16
+                                    start = LocalDimensions.current.space24,
+                                    top = LocalDimensions.current.space32,
+                                    bottom = LocalDimensions.current.space16
                                 )
                             )
                             Column(
@@ -264,10 +265,10 @@ class UserScreen :
                                     .fillMaxWidth()
                                     .background(Theme.colors.background)
                                     .padding(
-                                        horizontal = Theme.dimens.space24,
-                                        vertical = Theme.dimens.space16
+                                        horizontal = LocalDimensions.current.space24,
+                                        vertical = LocalDimensions.current.space16
                                     ),
-                                verticalArrangement = Arrangement.spacedBy(Theme.dimens.space16)
+                                verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16)
                             ) {
                                 countries.forEach { country ->
                                     BpCheckBox(
@@ -278,8 +279,8 @@ class UserScreen :
                                 }
                             }
                             Row(
-                                Modifier.padding(Theme.dimens.space24),
-                                horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
+                                Modifier.padding(LocalDimensions.current.space24),
+                                horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 BpTransparentButton(
@@ -316,7 +317,7 @@ class UserScreen :
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
+            horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16),
             verticalAlignment = Alignment.Top
         ) {
             BpSimpleTextField(
@@ -445,7 +446,7 @@ class UserScreen :
             expanded = user.username == editUserMenu.username,
             onDismissRequest = onEditUserDismiss,
             shape = RoundedCornerShape(Theme.radius.medium),
-            offset = DpOffset.Zero.copy(x = -Theme.dimens.space100)
+            offset = DpOffset.Zero.copy(x = -LocalDimensions.current.space100)
         ) {
             Column {
                 editUserMenu.items.forEach {

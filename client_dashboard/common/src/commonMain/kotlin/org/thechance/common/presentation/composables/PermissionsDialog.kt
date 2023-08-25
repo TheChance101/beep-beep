@@ -10,6 +10,7 @@ import androidx.compose.ui.window.Dialog
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.thechance.common.LocalDimensions
 import org.thechance.common.presentation.users.UserScreenUiState
 import java.awt.Dimension
 
@@ -38,7 +39,7 @@ fun PermissionsDialog(
             Text(
                 "Permissions",
                 style = Theme.typography.headline.copy(color = Theme.colors.contentPrimary),
-                modifier = Modifier.padding(Theme.dimens.space24)
+                modifier = Modifier.padding(LocalDimensions.current.space24)
             )
 
             PermissionsFlowRow(
@@ -50,8 +51,8 @@ fun PermissionsDialog(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(Theme.dimens.space24),
-                horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8),
+                    .padding(LocalDimensions.current.space24),
+                horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space8),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 BpTransparentButton(

@@ -16,6 +16,7 @@ import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.thechance.common.LocalDimensions
 import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.presentation.composables.SeatsBar
 import java.awt.Dimension
@@ -49,10 +50,10 @@ fun AddTaxiDialog(
 
         Column(
             modifier = modifier
-                .padding(top = Theme.dimens.space16, start = Theme.dimens.space16, end = Theme.dimens.space16)
+                .padding(top = LocalDimensions.current.space16, start = LocalDimensions.current.space16, end = LocalDimensions.current.space16)
                 .shadow(elevation = 5.dp)
-                .background(Theme.colors.surface, RoundedCornerShape(Theme.dimens.space8))
-                .padding(Theme.dimens.space24)
+                .background(Theme.colors.surface, RoundedCornerShape(LocalDimensions.current.space8))
+                .padding(LocalDimensions.current.space24)
         ) {
 
             Text(
@@ -62,21 +63,21 @@ fun AddTaxiDialog(
             )
 
             BpTextField(
-                modifier = Modifier.padding(top = Theme.dimens.space40),
+                modifier = Modifier.padding(top = LocalDimensions.current.space40),
                 label = "Taxi Plate Number",
                 onValueChange = onTaxiPlateNumberChange,
                 text = state.plateNumber
             )
 
             BpTextField(
-                modifier = Modifier.padding(top = Theme.dimens.space24),
+                modifier = Modifier.padding(top = LocalDimensions.current.space24),
                 label = "Driver Username",
                 onValueChange = onDriverUserNamChange,
                 text = state.driverUserName
             )
 
             BpTextField(
-                modifier = Modifier.padding(top = Theme.dimens.space24),
+                modifier = Modifier.padding(top = LocalDimensions.current.space24),
                 label = "Car Model",
                 onValueChange = onCarModelChange,
                 text = state.carModel
@@ -86,11 +87,11 @@ fun AddTaxiDialog(
                 "Car Color",
                 style = Theme.typography.title,
                 color = Theme.colors.contentPrimary,
-                modifier = Modifier.padding(top = Theme.dimens.space24),
+                modifier = Modifier.padding(top = LocalDimensions.current.space24),
             )
 
             CarColors(
-                modifier = Modifier.padding(top = Theme.dimens.space16),
+                modifier = Modifier.padding(top = LocalDimensions.current.space16),
                 colors = CarColor.values().toList(),
                 onSelectColor = { onCarColorSelected(it) },
                 selectedCarColor = state.selectedCarColor
@@ -100,7 +101,7 @@ fun AddTaxiDialog(
                 "Seats",
                 style = Theme.typography.title,
                 color = Theme.colors.contentPrimary,
-                modifier = Modifier.padding(top = Theme.dimens.space24),
+                modifier = Modifier.padding(top = LocalDimensions.current.space24),
             )
 
             SeatsBar(
@@ -112,15 +113,15 @@ fun AddTaxiDialog(
                 notSelectedIcon = painterResource(
                     if (isSystemInDarkTheme()) "ic_outlined_seat_dark.svg" else "ic_outlined_seat_light.svg"
                 ),
-                iconsSize = Theme.dimens.space24,
-                iconsPadding = PaddingValues(horizontal = Theme.dimens.space8),
-                modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
+                iconsSize = LocalDimensions.current.space24,
+                iconsPadding = PaddingValues(horizontal = LocalDimensions.current.space8),
+                modifier = Modifier.fillMaxWidth().padding(top = LocalDimensions.current.space16),
                 onClick = { onSeatsSelected(it) }
             )
 
             Row(
-                modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space40),
-                horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space16)
+                modifier = Modifier.fillMaxWidth().padding(top = LocalDimensions.current.space40),
+                horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16)
             ) {
 
                 BpOutlinedButton(

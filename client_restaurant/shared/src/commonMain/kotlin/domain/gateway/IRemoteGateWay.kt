@@ -46,6 +46,7 @@ interface IRemoteGateWay {
     suspend fun getCuisine(restaurantId: String): List<Cuisine>
 
     suspend fun getMealsByCuisineId(id: String): List<Meal>
+
     //endregion Cuisine
 
 }

@@ -1,7 +1,7 @@
-package presentation.meal
+package presentation.mealManagement
 
-data class MealUIState(
-    val id: String = "",
+
+data class MealDetails(
     val name: String = "",
     val description: String = "",
     val price: String = "",
@@ -9,15 +9,13 @@ data class MealUIState(
     val flag: String = "",
     val image: ByteArray? = null,
     val imageUrl: String = "",
-    val isAddEnable: Boolean = false,
-    val selectedCuisines: List<CuisineUIState> = emptyList(),
-    val cuisines: List<CuisineUIState> = emptyList()
+    val mealCuisines: List<CuisineUIState> = emptyList(),
 )
 
 
 data class CuisineUIState(
     val id: String = "",
     val name: String = "",
-    val isSelected: Boolean = false
+    val isSelected: Boolean = false,
 )
 

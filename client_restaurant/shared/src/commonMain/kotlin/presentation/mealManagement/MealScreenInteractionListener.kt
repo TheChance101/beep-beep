@@ -1,4 +1,4 @@
-package presentation.meal
+package presentation.mealManagement
 
 import presentation.base.BaseInteractionListener
 
@@ -12,5 +12,6 @@ interface MealScreenInteractionListener : BaseInteractionListener {
     fun onCuisineSelected(id: String)
     fun onImagePicked(image: ByteArray)
     fun onClickBack()
+    fun onCuisinesCancel()
 }
 

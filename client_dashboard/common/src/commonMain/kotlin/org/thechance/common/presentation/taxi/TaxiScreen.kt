@@ -23,6 +23,7 @@ import com.beepbeep.designSystem.ui.composable.BpIconButton
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.thechance.common.LocalDimensions
 import org.thechance.common.presentation.base.BaseScreen
 import org.thechance.common.presentation.composables.modifier.noRipple
 import org.thechance.common.presentation.composables.table.BpPager
@@ -69,7 +70,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
         Column(
             Modifier.background(Theme.colors.surface).fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
+            verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -97,12 +98,12 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
                 BpOutlinedButton(
                     title = "Export",
                     onClick = { /* TODO: Export */ },
-                    textPadding = PaddingValues(horizontal = Theme.dimens.space24),
+                    textPadding = PaddingValues(horizontal = LocalDimensions.current.space24),
                 )
                 BpButton(
                     title = "New Taxi",
                     onClick = listener::onAddNewTaxiClicked,
-                    textPadding = PaddingValues(horizontal = Theme.dimens.space24),
+                    textPadding = PaddingValues(horizontal = LocalDimensions.current.space24),
                 )
             }
 
@@ -162,7 +163,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
         SquareColorField(modifier = Modifier.weight(otherColumnsWeight), color = Color(taxi.color.hexadecimal))
         FlowRow(
             modifier = Modifier.weight(otherColumnsWeight),
-            horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8),
+            horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space8),
             maxItemsInEachRow = 3,
         ) {
             repeat(taxi.seats) {
@@ -205,7 +206,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
     private fun SquareColorField(modifier: Modifier = Modifier, color: Color) {
         Box(modifier = modifier) {
             Spacer(
-                modifier = Modifier.size(Theme.dimens.space24)
+                modifier = Modifier.size(LocalDimensions.current.space24)
                     .background(
                         color = color,
                         shape = RoundedCornerShape(Theme.radius.small),
