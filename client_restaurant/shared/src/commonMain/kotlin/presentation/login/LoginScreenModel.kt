@@ -4,13 +4,15 @@ import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.UserTokens
 import domain.usecase.ILoginUserUseCase
 import kotlinx.coroutines.CoroutineScope
+import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
-class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
+class LoginScreenModel:
     BaseScreenModel<LoginScreenUIState, LoginScreenUIEffect>(LoginScreenUIState()),
     LoginScreenInteractionListener {
 
+    private val loginUserUseCase: ILoginUserUseCase by inject()
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
 

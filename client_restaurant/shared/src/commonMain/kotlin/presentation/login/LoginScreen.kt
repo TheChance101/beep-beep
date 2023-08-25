@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpCheckBox
@@ -37,8 +38,8 @@ class LoginScreen :
 
     @Composable
     override fun Content() {
-        // val screenModel = rememberScreenModel { LoginScreenModel() }
-        initScreen(getScreenModel())
+       val screenModel = rememberScreenModel { LoginScreenModel() }
+        initScreen(screenModel)
     }
 
     override fun onEffect(
@@ -55,22 +56,24 @@ class LoginScreen :
 
         Column(modifier = Modifier.fillMaxSize()) {
 
-            CustomBottomSheet(
-                sheetContent = {
-                    if (state.showPermissionSheet) {
-                        PermissionBottomSheetContent(
-                            listener = listener,
-                            state = state
-                        )
-                    } else {
-                        WrongPermissionBottomSheet(
-                            listener = listener
-                        )
-                    }
-                },
-                sheetBackgroundColor = Theme.colors.background,
-                sheetState = state.sheetState!!,
-            ) { LoginScreenContent(state, listener) }
+            state.sheetState?.let {
+                CustomBottomSheet(
+                    sheetContent = {
+                        if (state.showPermissionSheet) {
+                            PermissionBottomSheetContent(
+                                listener = listener,
+                                state = state
+                            )
+                        } else {
+                            WrongPermissionBottomSheet(
+                                listener = listener
+                            )
+                        }
+                    },
+                    sheetBackgroundColor = Theme.colors.background,
+                    sheetState = it,
+                ) { LoginScreenContent(state, listener) }
+            }
         }
     }
 
