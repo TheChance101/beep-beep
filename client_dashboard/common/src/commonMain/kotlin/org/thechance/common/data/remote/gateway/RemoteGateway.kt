@@ -57,6 +57,10 @@ class RemoteGateway(
         return emptyList()
     }
 
+    override suspend fun getPdfTaxiReport() {
+        //todo
+    }
+
     override suspend fun getRestaurants(): List<Restaurant> {
         return emptyList()
     }

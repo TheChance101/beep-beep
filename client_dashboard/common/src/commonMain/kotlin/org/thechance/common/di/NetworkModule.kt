@@ -7,10 +7,15 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.serialization.gson.*
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+import org.thechance.common.data.service.FakeService
+import org.thechance.common.data.service.IFakeService
 
 
 val NetworkModule = module {
+    singleOf(::FakeService) { bind<IFakeService>() }
     single {
         HttpClient(OkHttp) {
 

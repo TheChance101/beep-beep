@@ -7,8 +7,13 @@ import org.thechance.common.data.local.local_dto.KeepUserLoggedInLocalDto
 import org.thechance.common.data.local.local_dto.TokenLocalDto
 import org.thechance.common.data.local.local_dto.TokenType
 import org.thechance.common.domain.getway.ILocalGateway
+import java.io.File
 
 class LocalGateway(private val realm: Realm) : ILocalGateway {
+
+    override suspend fun saveTaxiReport(file: File) {
+        //todo save file
+    }
 
     override suspend fun saveAccessToken(token: String) {
         realm.write {

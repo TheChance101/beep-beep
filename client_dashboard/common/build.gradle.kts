@@ -46,6 +46,8 @@ kotlin {
                 api(libs.koin.core)
                 implementation(libs.koin.annotations)
                 implementation(libs.koin.ksp)
+                implementation("org.apache.pdfbox:pdfbox:2.0.26")
+
                 implementation(project(":design_system:shared"))
             }
         }

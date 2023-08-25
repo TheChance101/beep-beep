@@ -16,3 +16,17 @@ fun Taxi.toUiState(): TaxiDetailsUiState = TaxiDetailsUiState(
 
 fun List<Taxi>.toUiState() = map { it.toUiState() }
 fun AddTaxiDialogUiState.toEntity() = AddTaxi(plateNumber, driverUserName, carModel, selectedCarColor, seats)
+
+fun TaxiDetailsUiState.toEntity(): Taxi = Taxi(
+    id = id,
+    plateNumber = plateNumber,
+    color = color,
+    type = type,
+    seats = seats,
+    username = username,
+    status = status,
+    trips = trips,
+)
+
+fun List<TaxiDetailsUiState>.toEntity() = map { it.toEntity() }
+
