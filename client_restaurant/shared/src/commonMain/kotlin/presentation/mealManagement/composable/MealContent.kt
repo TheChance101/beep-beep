@@ -172,7 +172,7 @@ private fun CuisineTextField(
             Icon(
                 painterResource(Resources.images.edit),
                 contentDescription = null,
-                tint = Theme.colors.onPrimary
+                tint = Theme.colors.contentPrimary
             )
         }
     }

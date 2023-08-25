@@ -105,7 +105,7 @@ private fun MultipleRestaurants(
             Icon(
                 painter = painterResource(Resources.images.arrowDown),
                 contentDescription = null,
-                tint = Theme.colors.onPrimary
+                tint = Theme.colors.contentPrimary
             )
         }
 
