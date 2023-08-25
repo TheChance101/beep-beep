@@ -18,7 +18,6 @@ import presentation.base.RequestException
 
 class FakeRemoteGateWay : IRemoteGateWay {
 
-
     private val orders = mutableListOf(
         OrderDto(
             id = "f5c8b31e-5c4d-4c8a-babc-0e9463daad20",
@@ -336,6 +335,22 @@ class FakeRemoteGateWay : IRemoteGateWay {
         ),
     )
 
+    private val cuisines = listOf(
+        CuisineDto(id = "za9b9700-6d24-434b-8d67-daf9e45e1063", name = "Main Course"),
+        CuisineDto(id = "xab493b4-4b8d-410a-a13e-780346243f3a", name = "Keto"),
+        CuisineDto(id = "ya9b9700-6d24-434b-8d67-daf9e45e1065", name = "Pizza"),
+        CuisineDto(id = "ha9b9700-6d24-434b-8d67-daf9e45e1066", name = "Dinner"),
+        CuisineDto(id = "iab493b4-4b8d-410a-a13e-780346243f3c", name = "Chinese"),
+        CuisineDto(id = "gab493b4-4b8d-410a-a13e-780346243f3d", name = "Italian"),
+        CuisineDto(id = "kab493b4-4b8d-410a-a13e-780346243f3e", name = "Middle-East"),
+        CuisineDto(id = "lab493b4-4b8d-410a-a13e-780346243f3f", name = "Indian"),
+        CuisineDto(id = "mab493b4-4b8d-410a-a13e-780346243f3g", name = "French"),
+        CuisineDto(id = "nab493b4-4b8d-410a-a13e-780346243f3h", name = "Japanese"),
+        CuisineDto(id = "oab493b4-4b8d-410a-a13e-780346243f3i", name = "Spanish"),
+        CuisineDto(id = "pab493b4-4b8d-410a-a13e-780346243f3j", name = "Greek"),
+        CuisineDto(id = "qa9b9700-6d24-434b-8d67-daf9e45e1064", name = "Burrito"),
+    )
+
     private val meals = mutableListOf(
         MealDto(
             id = "e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a",
@@ -344,12 +359,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             imageUrl = "https://www.deliciouslycleaneats.com.au/wp-content/uploads/2018/08/Meal-Plan-Spread1.jpg",
             description = "A delicious platter of hummus served with pita bread.",
             price = 8.99,
-            cuisines = listOf(
-                "e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a",
-                "ba9b9700-6d24-434b-8d67-daf9e45e1063",
-                "ba9b9700-6d24-434b-8d67-daf9e45e1065",
-                "6ab493b4-4b8d-410a-a13e-780346243f3a"
-            )
+            cuisines = cuisines.subList(0, 3).map { it.id }
 
         ),
         MealDto(
@@ -359,12 +369,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             imageUrl = "https://ichef.bbci.co.uk/food/ic/food_16x9_832/recipes/roast_chicken_for_one_41998_16x9.jpg",
             description = "A spicy roll made with fresh tuna and spicy mayo.",
             price = 12.49,
-            cuisines = listOf(
-                "e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a",
-                "ba9b9700-6d24-434b-8d67-daf9e45e1064",
-                "ba9b9700-6d24-434b-8d67-daf9e45e1066",
-                "6ab493b4-4b8d-410a-a13e-780346243f3a"
-            )
+            cuisines = cuisines.subList(0, 3).map { it.id }
         ),
         MealDto(
             id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
@@ -373,12 +378,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             imageUrl = "https://realfood.tesco.com/media/images/472x310-Teriyaki-glazed-sausages-6c3c4a03-b353-49c9-85a3-978f326ba592-0-472x310.jpg",
             description = "A delightful sampler of beignets with different toppings.",
             price = 9.99,
-            cuisines = listOf(
-                "e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a",
-                "ba9b9700-6d24-434b-8d67-daf9e45e1063",
-                "ba9b9700-6d24-434b-8d67-daf9e45e1065",
-                "ba9b9700-6d24-434b-8d67-daf9e45e1066"
-            )
+            cuisines = cuisines.subList(0, 4).map { it.id }
         ),
         MealDto(
             id = "4d1c8f5e-7f24-4df3-9835-06f0d63f8eb1",
@@ -387,12 +387,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             imageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
             description = "A wrap filled with crispy falafel balls and fresh veggies.",
             price = 7.95,
-            cuisines = listOf(
-                "e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a",
-                "ba9b9700-6d24-434b-8d67-daf9e45e1064",
-                "ba9b9700-6d24-434b-8d67-daf9e45e1065",
-                "6ab493b4-4b8d-410a-a13e-780346243f3a"
-            )
+            cuisines = cuisines.subList(4, 6).map { it.id }
         ),
         MealDto(
             id = "8a2a4387-1cc2-4b68-9df1-3f497ddc94a2",
@@ -401,12 +396,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             imageUrl = "https://i.pinimg.com/1200x/b8/7b/c7/b87bc72f970fe00c115e3d1471956c4d.jpg",
             description = "Fresh salmon slices on bite-sized beds of seasoned rice.",
             price = 10.99,
-            cuisines = listOf(
-                "e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a",
-                "ba9b9700-6d24-434b-8d67-daf9e45e1063",
-                "6ab493b4-4b8d-410a-a13e-780346243f3c",
-                "ba9b9700-6d24-434b-8d67-daf9e45e1066"
-            )
+            cuisines = cuisines.subList(4, 6).map { it.id }
         ),
         MealDto(
             id = "a1ebe83d-617a-4e14-9e27-4d0367c4e0d2",
@@ -415,13 +405,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             imageUrl = "https://www.southernliving.com/thmb/iL2CEgCAMqC4cpp6taRqwYQI1gs=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/27162_FGFsuperbowl_0359_16x9-2000-5dd253dc23044ee78aacd9673f5befbc.jpg",
             description = "A hearty stew with a mix of meats, seafood, and vegetables.",
             price = 14.75,
-            cuisines = listOf(
-                "e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a",
-                "ba9b9700-6d24-434b-8d67-daf9e45e1064",
-                "6ab493b4-4b8d-410a-a13e-780346243f3c",
-                "ba9b9700-6d24-434b-8d67-daf9e45e1065",
-                "ba9b9700-6d24-434b-8d67-daf9e45e1066"
-            )
+            cuisines = cuisines.subList(4, 10).map { it.id }
         ),
         MealDto(
             id = "ba9b9700-6d24-434b-8d67-daf9e45e1063",
@@ -430,13 +414,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             imageUrl = "https://media.theeverygirl.com/wp-content/uploads/2022/05/healthy-meal-prep-dinners-teg-new-gallery.jpeg",
             description = "A plate of mouthwatering shawarma served with garlic sauce.",
             price = 13.75,
-            cuisines = listOf(
-                "e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a",
-                "ba9b9700-6d24-434b-8d67-daf9e45e1063",
-                "6ab493b4-4b8d-410a-a13e-780346243f3c",
-                "ba9b9700-6d24-434b-8d67-daf9e45e1065",
-                "ba9b9700-6d24-434b-8d67-daf9e45e1066"
-            )
+            cuisines = cuisines.subList(4, 10).map { it.id }
         ),
         MealDto(
             id = "2d5bbf8a-4854-49c6-99ed-ef09899c2d8e",
@@ -445,11 +423,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             imageUrl = "https://www.foodandwine.com/thmb/bRz199ONebY-5h5gcvpOcHRxAkA=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Web_4000-Trifecta-Chicken-Breast-Sweet-Potato-Mixed-Vegetable_04-72a24aaee5584c06a26451603daec5c9.jpg",
             description = "An exquisite roll with eel, avocado, and a sweet soy glaze.",
             price = 15.99,
-            cuisines = listOf(
-                "e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a",
-                "ba9b9700-6d24-434b-8d67-daf9e45e1064",
-                "ba9b9700-6d24-434b-8d67-daf9e45e1066"
-            )
+            cuisines = cuisines.subList(4, 10).map { it.id }
         ),
         MealDto(
             id = "e772ad66-0251-412f-99a1-4a10435f9a07",
@@ -458,12 +432,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             imageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
             description = "A spicy Cajun dish with rice, sausage, chicken, and shrimp.",
             price = 16.50,
-            cuisines = listOf(
-                "e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a",
-                "6ab493b4-4b8d-410a-a13e-780346243f3c",
-                "ba9b9700-6d24-434b-8d67-daf9e45e1063",
-                "ba9b9700-6d24-434b-8d67-daf9e45e1065"
-            )
+            cuisines = cuisines.subList(4, 10).map { it.id }
         )
     )
 
@@ -593,24 +562,6 @@ class FakeRemoteGateWay : IRemoteGateWay {
     )
 
 
-    private val cuisines = listOf(
-        CuisineDto(id = "e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a", name = "All",),
-        CuisineDto(id = "ba9b9700-6d24-434b-8d67-daf9e45e1063", name = "Main Course"),
-        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3a", name = "Keto"),
-        CuisineDto(id = "ba9b9700-6d24-434b-8d67-daf9e45e1065", name = "Pizza"),
-        CuisineDto(id = "ba9b9700-6d24-434b-8d67-daf9e45e1066", name = "Dinner"),
-        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3c", name = "Chinese"),
-        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3d", name = "Italian"),
-        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3e", name = "Middle-East"),
-        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3f", name = "Indian"),
-        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3g", name = "French"),
-        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3h", name = "Japanese"),
-        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3i", name = "Spanish"),
-        CuisineDto(id = "6ab493b4-4b8d-410a-a13e-780346243f3j", name = "Greek"),
-        CuisineDto(id ="ba9b9700-6d24-434b-8d67-daf9e45e1064", name = "Burrito"),
-
-    )
-
     //region restaurant
     override suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant> {
         return restaurants.toEntity()
@@ -680,7 +631,13 @@ class FakeRemoteGateWay : IRemoteGateWay {
     }
 
     override suspend fun getCuisinesInMeal(mealId: String): List<Cuisine> {
-        return cuisines.subList(0, 3).toEntity()
+        val mealCuisines = meals.find { it.id == mealId }?.cuisines
+        return if (mealCuisines != null) {
+            val cuisines = cuisines.filter { it.id in mealCuisines }
+            cuisines.toEntity()
+        } else {
+            throw Throwable()
+        }
     }
 
     override suspend fun getCuisine(restaurantId: String): List<Cuisine> {
