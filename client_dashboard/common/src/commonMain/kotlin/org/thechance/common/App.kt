@@ -17,6 +17,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import com.beepbeep.designSystem.ui.theme.BpTheme
 import org.thechance.common.presentation.login.LoginScreen
+import org.thechance.common.presentation.main.MainContainer
 
 val LocalScreenSize = compositionLocalOf<Size> { error("provide") }
 
@@ -28,7 +29,7 @@ fun App() {
     CompositionLocalProvider(LocalScreenSize provides size) {
         Box(Modifier.onSizeChanged { size = it.toSize() }) {
             BpTheme {
-                Navigator(LoginScreen) {
+                Navigator(MainContainer) {
                     SlideTransition(it)
                 }
             }

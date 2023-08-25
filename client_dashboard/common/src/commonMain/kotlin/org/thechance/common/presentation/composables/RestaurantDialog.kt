@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -18,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.awt.SwingPanel
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.beepbeep.designSystem.ui.composable.BpTextField
@@ -102,12 +102,7 @@ fun RestaurantDialog(
                         hint = ""
                     )
                 }
-                Box(Modifier.clip(RoundedCornerShape(24.dp)).fillMaxSize()) {
-                    SwingPanel(
-                        modifier = Modifier.matchParentSize(),
-                        factory = { webViewFromLink() },
-                    )
-                }
+                GoogleMap()
             }
         }
     }

@@ -47,7 +47,6 @@ private const val MAP = "#map="
 
 fun webViewFromLink(): JPanel {
     val jPanel = JPanel().apply {
-        border = EmptyBorder(20, 20, 20, 20)
         layout = BorderLayout()
         val webViewPanel = createWebViewComponent(
             content = "https://www.openstreetmap.org/#map=15/33.2901/44.4034",
