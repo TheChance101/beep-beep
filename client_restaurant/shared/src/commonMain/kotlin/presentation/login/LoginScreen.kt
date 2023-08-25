@@ -37,7 +37,6 @@ import resources.Resources
 class LoginScreen :
     BaseScreen<LoginScreenModel, LoginScreenUIState, LoginScreenUIEffect, LoginScreenInteractionListener>() {
 
-
     @Composable
     override fun Content() {
         val screenModel = rememberScreenModel { LoginScreenModel() }
@@ -143,8 +142,6 @@ private fun LoginScreenContent(
                 modifier = Modifier.fillMaxWidth(),
             )
         }
-
     }
-
 }
 
