@@ -18,6 +18,7 @@ import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpCheckBox
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.thechance.common.LocalDimensions
 import org.thechance.common.presentation.base.BaseScreen
 import org.thechance.common.presentation.composables.BpLogo
 import org.thechance.common.presentation.main.MainContainer
@@ -42,9 +43,9 @@ class LoginScreen : BaseScreen<LoginScreenScreenModel, LoginUIEffect, LoginUISta
         Row(
             Modifier.background(Theme.colors.surface).fillMaxSize()
                 .padding(
-                    top = Theme.dimens.space40,
-                    start = Theme.dimens.space40,
-                    bottom = Theme.dimens.space40
+                    top = LocalDimensions.current.space40,
+                    start = LocalDimensions.current.space40,
+                    bottom = LocalDimensions.current.space40
                 ),
             horizontalArrangement = Arrangement.Center
         ) {
@@ -65,7 +66,7 @@ class LoginScreen : BaseScreen<LoginScreenScreenModel, LoginUIEffect, LoginUISta
                 )
                 BpLogo(
                     expanded = true,
-                    modifier = Modifier.align(Alignment.TopStart).padding(Theme.dimens.space32)
+                    modifier = Modifier.align(Alignment.TopStart).padding(LocalDimensions.current.space32)
                 )
             }
             Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
@@ -82,7 +83,7 @@ class LoginScreen : BaseScreen<LoginScreenScreenModel, LoginUIEffect, LoginUISta
                         Resources.Strings.loginTitle,
                         style = Theme.typography.titleMedium,
                         color = Theme.colors.contentTertiary,
-                        modifier = Modifier.padding(top = Theme.dimens.space8)
+                        modifier = Modifier.padding(top = LocalDimensions.current.space8)
                     )
                     BpTextField(
                         onValueChange = { listener.onUsernameChange(it) },
@@ -90,7 +91,7 @@ class LoginScreen : BaseScreen<LoginScreenScreenModel, LoginUIEffect, LoginUISta
                         label = Resources.Strings.loginUsername,
                         errorMessage = state.usernameError,
                         isError = state.isUsernameError,
-                        modifier = Modifier.padding(top = Theme.dimens.space40),
+                        modifier = Modifier.padding(top = LocalDimensions.current.space40),
                         hint = ""
                     )
                     BpTextField(
@@ -100,19 +101,19 @@ class LoginScreen : BaseScreen<LoginScreenScreenModel, LoginUIEffect, LoginUISta
                         errorMessage = state.passwordError,
                         isError = state.isPasswordError,
                         keyboardType = KeyboardType.Password,
-                        modifier = Modifier.padding(top = Theme.dimens.space16),
+                        modifier = Modifier.padding(top = LocalDimensions.current.space16),
                         hint = ""
                     )
                     BpCheckBox(
                         label = Resources.Strings.loginKeepMeLoggedIn,
                         isChecked = state.keepLoggedIn,
                         onCheck = { listener.onKeepLoggedInClicked() },
-                        modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16)
+                        modifier = Modifier.fillMaxWidth().padding(top = LocalDimensions.current.space16)
                     )
                     BpButton(
                         title = Resources.Strings.loginButton,
                         onClick = { listener.onLoginClicked() },
-                        modifier = Modifier.padding(top = Theme.dimens.space24).fillMaxWidth()
+                        modifier = Modifier.padding(top = LocalDimensions.current.space24).fillMaxWidth()
                     )
                 }
             }
