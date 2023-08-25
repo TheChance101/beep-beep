@@ -13,6 +13,7 @@ class LocalGateway(private val realm: Realm) : ILocalGateway {
     override suspend fun saveAccessToken(token: String) {
         realm.write {
             copyToRealm(TokenLocalDto().apply {
+                id = ACCESS_TOKEN_ID
                 this.token = token
                 this.type = TokenType.ACCESS_TOKEN.name
             })
@@ -22,6 +23,7 @@ class LocalGateway(private val realm: Realm) : ILocalGateway {
     override suspend fun saveRefreshToken(token: String) {
         realm.write {
             copyToRealm(TokenLocalDto().apply {
+                id = REFRESH_TOKEN_ID
                 this.token = token
                 this.type = TokenType.REFRESH_TOKEN.name
             })
@@ -30,16 +32,14 @@ class LocalGateway(private val realm: Realm) : ILocalGateway {
 
     override suspend fun getAccessToken(): String {
         return realm.query<TokenLocalDto>(
-            "type == ${TokenType.ACCESS_TOKEN.name}"
-        ).first().find()?.token
-            ?: throw Exception("Token not found")
+            "$TOKEN_TYPE == ${TokenType.ACCESS_TOKEN.name} AND $TOKEN_ID == $ACCESS_TOKEN_ID",
+        ).first().find()?.token!!
     }
 
     override suspend fun getRefreshToken(): String {
         return realm.query<TokenLocalDto>(
-            "type == ${TokenType.REFRESH_TOKEN.name}"
-        ).first().find()?.token
-            ?: throw Exception("Token not found")
+            "$TOKEN_TYPE == ${TokenType.REFRESH_TOKEN.name} AND $TOKEN_ID == $REFRESH_TOKEN_ID",
+        ).first().find()?.token!!
     }
 
     override suspend fun clearTokens() {
@@ -47,7 +47,25 @@ class LocalGateway(private val realm: Realm) : ILocalGateway {
     }
 
     override suspend fun shouldUserKeptLoggedIn(keepLoggedIn: Boolean) {
-        realm.write { KeepUserLoggedInLocalDto().apply { this.keepLoggedIn = keepLoggedIn } }
+        realm.write { KeepUserLoggedInLocalDto().apply {
+            id = KEEP_USER_LOGGED_IN_ID
+            this.keepLoggedIn = keepLoggedIn }
+        }
+    }
+
+    override suspend fun isUserKeptLoggedIn(): Boolean {
+        return realm.query<KeepUserLoggedInLocalDto>(
+            "$LOGIN_FLAG_ID == $KEEP_USER_LOGGED_IN_ID"
+        ).first().find()?.keepLoggedIn ?: false
+    }
+
+    companion object{
+        const val TOKEN_ID = "id"
+        const val LOGIN_FLAG_ID = "id"
+        const val TOKEN_TYPE = "type"
+        const val REFRESH_TOKEN_ID = 0
+        const val ACCESS_TOKEN_ID = 1
+        const val KEEP_USER_LOGGED_IN_ID = 0
     }
 
 }

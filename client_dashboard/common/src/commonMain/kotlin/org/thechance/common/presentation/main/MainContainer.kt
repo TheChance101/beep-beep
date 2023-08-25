@@ -25,7 +25,6 @@ import org.thechance.common.presentation.composables.scaffold.BpSideBarItem
 import org.thechance.common.presentation.composables.scaffold.DashBoardScaffold
 import org.thechance.common.presentation.composables.scaffold.DashboardAppbar
 import org.thechance.common.presentation.composables.scaffold.DashboardSideBar
-import org.thechance.common.presentation.uistate.MainUiState
 
 object MainContainer : Screen, KoinComponent {
 
