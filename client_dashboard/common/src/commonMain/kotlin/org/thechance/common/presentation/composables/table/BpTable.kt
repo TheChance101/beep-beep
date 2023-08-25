@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.thechance.common.LocalDimensions
 
 /**
  * @param rowsCount number of rows in the table without header row
@@ -77,7 +78,7 @@ fun <T> BpTable(
                 Modifier.fillMaxWidth().background(rowsColor).padding(rowPadding)
                     .heightIn(max = maxHeight),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
+                horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16),
             ){
                 rowContent(it)
             }
