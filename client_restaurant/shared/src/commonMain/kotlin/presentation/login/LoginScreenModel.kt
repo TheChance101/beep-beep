@@ -25,7 +25,7 @@ class LoginScreenModel:
     }
 
     override fun onKeepLoggedInClicked() {
-        updateState { it.copy(keepLoggedIn = it.keepLoggedIn) }
+        updateState { it.copy(keepLoggedIn = !it.keepLoggedIn) }
     }
 
     override fun onClickLogin(

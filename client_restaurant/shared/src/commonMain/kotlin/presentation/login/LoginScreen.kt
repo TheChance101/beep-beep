@@ -139,7 +139,7 @@ private fun LoginScreenContent(
                     )
                 },
                 title = Resources.strings.login,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
             )
         }
     }
