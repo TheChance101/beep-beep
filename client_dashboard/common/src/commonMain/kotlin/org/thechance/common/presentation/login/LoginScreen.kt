@@ -1,19 +1,7 @@
 package org.thechance.common.presentation.login
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -34,6 +22,7 @@ import org.thechance.common.LocalDimensions
 import org.thechance.common.presentation.base.BaseScreen
 import org.thechance.common.presentation.composables.BpLogo
 import org.thechance.common.presentation.main.MainContainer
+import org.thechance.common.presentation.resources.Resources
 
 
 class LoginScreen : BaseScreen<LoginScreenScreenModel, LoginUIEffect, LoginUIState, LoginScreenInteractionListener>() {
@@ -63,7 +52,7 @@ class LoginScreen : BaseScreen<LoginScreenScreenModel, LoginUIEffect, LoginUISta
             Box(Modifier.weight(1f)) {
                 Image(
                     painter = painterResource(
-                        if (isSystemInDarkTheme()) "login_image_dark.png" else "login_image_light.png"
+                        if (isSystemInDarkTheme()) Resources.Strings.loginImageDark else Resources.Strings.loginImageLight
                     ),
                     contentDescription = null,
                     alignment = Alignment.CenterStart,
@@ -86,12 +75,12 @@ class LoginScreen : BaseScreen<LoginScreenScreenModel, LoginUIEffect, LoginUISta
                     verticalArrangement = Arrangement.Center,
                 ) {
                     Text(
-                        "Login",
+                        Resources.Strings.login,
                         style = Theme.typography.headlineLarge,
                         color = Theme.colors.contentPrimary
                     )
                     Text(
-                        "Use admin account to login",
+                        Resources.Strings.loginTitle,
                         style = Theme.typography.titleMedium,
                         color = Theme.colors.contentTertiary,
                         modifier = Modifier.padding(top = LocalDimensions.current.space8)
@@ -99,7 +88,7 @@ class LoginScreen : BaseScreen<LoginScreenScreenModel, LoginUIEffect, LoginUISta
                     BpTextField(
                         onValueChange = { listener.onUsernameChange(it) },
                         text = state.username,
-                        label = "Username",
+                        label = Resources.Strings.loginUsername,
                         errorMessage = state.usernameError,
                         isError = state.isUsernameError,
                         modifier = Modifier.padding(top = LocalDimensions.current.space40),
@@ -108,7 +97,7 @@ class LoginScreen : BaseScreen<LoginScreenScreenModel, LoginUIEffect, LoginUISta
                     BpTextField(
                         onValueChange = { listener.onPasswordChange(it) },
                         text = state.password,
-                        label = "Password",
+                        label = Resources.Strings.loginPassword,
                         errorMessage = state.passwordError,
                         isError = state.isPasswordError,
                         keyboardType = KeyboardType.Password,
@@ -116,13 +105,13 @@ class LoginScreen : BaseScreen<LoginScreenScreenModel, LoginUIEffect, LoginUISta
                         hint = ""
                     )
                     BpCheckBox(
-                        label = "Keep me logged in",
+                        label = Resources.Strings.loginKeepMeLoggedIn,
                         isChecked = state.keepLoggedIn,
                         onCheck = { listener.onKeepLoggedInClicked() },
                         modifier = Modifier.fillMaxWidth().padding(top = LocalDimensions.current.space16)
                     )
                     BpButton(
-                        title = "Login",
+                        title = Resources.Strings.loginButton,
                         onClick = { listener.onLoginClicked() },
                         modifier = Modifier.padding(top = LocalDimensions.current.space24).fillMaxWidth()
                     )
