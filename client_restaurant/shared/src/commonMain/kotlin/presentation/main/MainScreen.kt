@@ -1,6 +1,7 @@
 package presentation.main
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -17,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
@@ -39,7 +41,7 @@ class MainScreen(private val restaurantId: String) :
 
     @Composable
     override fun Content() {
-        val screenModel = rememberScreenModel{ MainScreenModel(restaurantId) }
+        val screenModel = rememberScreenModel { MainScreenModel(restaurantId) }
         initScreen(screenModel)
     }
 
@@ -57,7 +59,9 @@ class MainScreen(private val restaurantId: String) :
                 restaurantName = state.restaurantName,
                 state = state.isOpen,
                 expanded = state.expanded,
-                restaurants = state.restaurants
+                restaurants = state.restaurants,
+                modifier = Modifier.background(Theme.colors.surface)
+                    .border(width = 1.dp, color = Theme.colors.divider, shape = RectangleShape),
             )
 
             LazyVerticalGrid(
