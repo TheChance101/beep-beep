@@ -1,4 +1,4 @@
-package data.local.gateway
+package data.gateway
 
 import data.local.model.FlagDto
 import data.local.model.TokenDto
@@ -6,7 +6,7 @@ import domain.gateway.ILocalGateWay
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
 
-class LocalGateWay( private val realm: Realm):ILocalGateWay {
+class LocalGateway(private val realm: Realm):ILocalGateWay {
 
       override suspend fun saveAccessToken(token: String) {
         realm.write {

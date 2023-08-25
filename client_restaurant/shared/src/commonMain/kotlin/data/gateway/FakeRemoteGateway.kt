@@ -1,13 +1,13 @@
-package data.remote.gateway
+package data.gateway
 
+import data.remote.mapper.toEntity
+import data.remote.mapper.toOrderEntity
 import data.remote.model.AddressDto
 import data.remote.model.CuisineDto
 import data.remote.model.MealDto
 import data.remote.model.OrderDto
 import data.remote.model.OrderMealDto
 import data.remote.model.RestaurantDto
-import data.remote.model.toEntity
-import data.remote.model.toOrderEntity
 import domain.entity.Category
 import domain.entity.Cuisine
 import domain.entity.Meal
@@ -17,7 +17,7 @@ import domain.entity.UserTokens
 import domain.gateway.IRemoteGateWay
 import presentation.base.RequestException
 
-class FakeRemoteGateWay : IRemoteGateWay {
+class FakeRemoteGateway : IRemoteGateWay {
 
 
     private val orders = mutableListOf(

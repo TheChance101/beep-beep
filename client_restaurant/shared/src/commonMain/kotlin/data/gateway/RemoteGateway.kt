@@ -1,8 +1,8 @@
-package data.remote.gateway
+package data.gateway
 
+import data.remote.mapper.toEntity
 import data.remote.model.BaseResponse
 import data.remote.model.UserTokensDto
-import data.remote.model.toEntity
 import domain.entity.Category
 import domain.entity.Cuisine
 import domain.entity.Meal
@@ -25,7 +25,7 @@ import presentation.base.UnknownErrorException
 import presentation.base.UserNotFoundException
 
 
-class RemoteGateWay(private val client: HttpClient) : IRemoteGateWay {
+class RemoteGateway(private val client: HttpClient) : IRemoteGateWay {
 
     //region login
     override suspend fun loginUser(userName: String, password: String): UserTokens {
