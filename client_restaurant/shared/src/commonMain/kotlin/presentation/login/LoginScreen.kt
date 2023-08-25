@@ -1,6 +1,5 @@
 package presentation.login
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -20,13 +20,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpButton
+import com.beepbeep.designSystem.ui.composable.BpCheckBox
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -45,8 +43,8 @@ class LoginScreen :
 
     @Composable
     override fun Content() {
-        val screenModel = rememberScreenModel { LoginScreenModel() }
-        initScreen(screenModel)
+        // val screenModel = rememberScreenModel { LoginScreenModel() }
+        initScreen(getScreenModel())
     }
 
     override fun onEffect(
@@ -101,7 +99,7 @@ class LoginScreen :
                 },
                 sheetBackgroundColor = Theme.colors.background,
                 sheetState = sheetState,
-            ) { LoginScreenContent(state, listener, sheetState) }
+            ) { LoginScreenContent(state, listener) }
         }
     }
 
@@ -109,34 +107,33 @@ class LoginScreen :
     @Composable
     private fun LoginScreenContent(
         state: LoginScreenUIState,
-        listener: LoginScreenInteractionListener,
-        sheetState: ModalBottomSheetState,
+        listener: LoginScreenInteractionListener
     ) {
         Column(
-            Modifier.fillMaxSize().background(Theme.colors.secondary),
-            verticalArrangement = Arrangement.SpaceEvenly,
+            Modifier.fillMaxSize().padding(horizontal = 16.dp).background(Theme.colors.background),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            // region header
+
             Box(modifier = Modifier.fillMaxWidth().fillMaxHeight(0.3f)) {
-                Image(
+                Icon(
                     modifier = Modifier.fillMaxSize(),
+                    tint = Theme.colors.primary,
                     painter = painterResource(Resources.images.backgroundPattern),
                     contentDescription = null,
-                    contentScale = ContentScale.Crop
+                    //contentScale = ContentScale.Crop
                 )
                 Icon(
                     modifier = Modifier.height(44.dp).width(97.dp).align(Alignment.Center),
-                    tint = Color.Red,
+                    tint = Theme.colors.primary,
                     painter = painterResource(Resources.images.bpLogo),
                     contentDescription = null
                 )
             }
-
             BpTextField(
-                text = state.email,
-                onValueChange = listener::onEmailChanged,
-                label = "Username",
+                text = state.userName,
+                onValueChange = listener::onUserNameChanged,
+                label = Resources.strings.username,
                 keyboardType = KeyboardType.Text,
                 modifier = Modifier.fillMaxWidth(),
                 errorMessage = state.error,
@@ -144,20 +141,27 @@ class LoginScreen :
             BpTextField(
                 text = state.password,
                 onValueChange = listener::onPasswordChanged,
-                label = "Password",
+                label = Resources.strings.password,
                 keyboardType = KeyboardType.Password,
                 modifier = Modifier.fillMaxWidth(),
                 errorMessage = state.error,
             )
+            BpCheckBox(
+                label = Resources.strings.keepMeLoggedIn,
+                isChecked = state.keepLoggedIn,
+                onCheck = { listener.onKeepLoggedInClicked() },
+                modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16)
+                    .background(Theme.colors.background)
+            )
             BpButton(
                 onClick = {
-                    if (state.hasPermission) {
-                        sheetState.show()
-                    } else {
-                        listener.onClickLogin()
-                    }
+                    listener.onClickLogin(
+                        state.userName,
+                        state.password,
+                        state.keepLoggedIn
+                    )
                 },
-                title = "Login",
+                title = Resources.strings.login,
                 modifier = Modifier.fillMaxWidth(),
             )
         }
