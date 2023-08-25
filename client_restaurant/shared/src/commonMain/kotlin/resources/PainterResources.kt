@@ -20,7 +20,8 @@ data class PainterResources(
     val ordersBig: String,
     val ordersHistory: String,
     val revenue: String,
-    val arrowDown: String
+    val arrowDown: String,
+    val errorIcon: String
 )
 
 val BpPainterLightResources = PainterResources(
@@ -43,7 +44,8 @@ val BpPainterLightResources = PainterResources(
     ordersBig = "orders_big.png",
     ordersHistory = "orders_history.png",
     revenue = "revenue.png",
-    arrowDown = "arrow_down.xml"
+    arrowDown = "arrow_down.xml",
+    errorIcon = "ic_error_icon.xml"
 )
 
 val BpPainterDarkResources = PainterResources(
@@ -66,5 +68,6 @@ val BpPainterDarkResources = PainterResources(
     ordersBig = "orders_big.png",
     ordersHistory = "orders_history.png",
     revenue = "revenue.png",
-    arrowDown = "arrow_down.xml"
+    arrowDown = "arrow_down.xml",
+    errorIcon = "ic_error_icon.xml"
 )
