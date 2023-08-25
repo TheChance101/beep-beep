@@ -8,8 +8,9 @@ import org.thechance.common.data.remote.gateway.FakeRemoteGateway
 import org.thechance.common.domain.getway.ILocalGateway
 import org.thechance.common.domain.getway.IRemoteGateway
 
-val GatewayModule = module {
+val GatewayModule=  module {
+    //TODO remove comment when finish testing
 //    singleOf(::RemoteGateway) { bind<IRemoteGateway>() }
-    singleOf(::FakeRemoteGateway) { bind<IRemoteGateway>() }
     singleOf(::LocalGateway) { bind<ILocalGateway>() }
+    singleOf(::FakeRemoteGateway) { bind<IRemoteGateway>() }
 }

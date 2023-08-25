@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -67,7 +68,7 @@ fun DashboardSideBar(
                         else sideBarUnexpandedWidthInKms
                     ).value
                 )
-                .padding(vertical = 40.kms).onPointerEvent(PointerEventType.Enter) {
+                .padding(vertical = Theme.dimens.space40).onPointerEvent(PointerEventType.Enter) {
                     mainMenuIsExpanded.value = true
                 }
                 .onPointerEvent(PointerEventType.Exit) { mainMenuIsExpanded.value = false },
@@ -81,7 +82,7 @@ fun DashboardSideBar(
                 )
             )
             //endregion
-            Spacer(Modifier.fillMaxHeight(.1f))
+            Spacer(Modifier.height(Theme.dimens.space40))
             //region main menu
             Box(Modifier.height(sideBarExpandedWidthInKms)) {
                 Column(Modifier.fillMaxSize()) {
@@ -114,7 +115,7 @@ fun DashboardSideBar(
             Spacer(Modifier.weight(1f))
             //region toggle theme button
             Row(
-                horizontalArrangement = Arrangement.spacedBy(32.kms),
+                horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space32),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 BpToggleButton(
@@ -146,7 +147,7 @@ fun DashboardSideBar(
             color = Theme.colors.divider,
             modifier = Modifier
                 .fillMaxHeight()
-                .width(1.kms)
+                .width(DividerDefaults.Thickness)
         )
         //endregion
     }

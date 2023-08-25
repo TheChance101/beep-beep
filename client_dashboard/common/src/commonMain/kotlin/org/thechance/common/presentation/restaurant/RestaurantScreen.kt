@@ -60,6 +60,7 @@ class RestaurantScreen :
         }
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun OnRender(state: RestaurantUiState, listener: RestaurantInteractionListener) {
         Column(
@@ -158,8 +159,6 @@ class RestaurantScreen :
                 key = { it.name },
                 headers = state.tableHeader,
                 modifier = Modifier.fillMaxWidth(),
-                rowsCount = state.numberOfItemsInPage,
-                offset = state.selectedPageNumber - 1,
                 rowContent = { restaurant ->
                     RestaurantRow(
                         onClickEditRestaurant = { /* TODO: Show Edit Restaurant DropdownMenu */ },
