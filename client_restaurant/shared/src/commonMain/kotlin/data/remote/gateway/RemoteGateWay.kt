@@ -7,7 +7,6 @@ import domain.entity.Category
 import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.entity.Order
-import domain.entity.OrderState
 import domain.entity.Restaurant
 import domain.entity.UserTokens
 import domain.gateway.IRemoteGateWay
@@ -19,13 +18,12 @@ import io.ktor.client.request.header
 import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.Parameters
-import io.ktor.http.parameters
-import kotlinx.atomicfu.TraceBase.None.append
 import presentation.base.InternetException
 import presentation.base.InvalidCredentialsException
 import presentation.base.NoInternetException
 import presentation.base.UnknownErrorException
 import presentation.base.UserNotFoundException
+
 
 class RemoteGateWay(private val client: HttpClient) : IRemoteGateWay {
 
@@ -88,7 +86,7 @@ class RemoteGateWay(private val client: HttpClient) : IRemoteGateWay {
     }
 
     override suspend fun updateOrderState(orderId: String, orderState: Int): Order {
-        return Order("", "", "", emptyList(), 0.0, "", OrderState.CANCELED)
+        TODO()
     }
 
     override suspend fun getOrderById(orderId: String): Order? {

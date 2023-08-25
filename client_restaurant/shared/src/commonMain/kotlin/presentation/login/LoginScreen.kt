@@ -16,16 +16,20 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.KeyboardType
+import cafe.adriel.voyager.core.model.rememberScreenModel
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpButton
-import com.beepbeep.designSystem.ui.composable.BpExpandableTextField
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -35,13 +39,20 @@ import presentation.composables.CustomBottomSheet
 import presentation.composables.ModalBottomSheetState
 import presentation.main.MainScreen
 import resources.Resources
+import presentation.composable.CustomBottomSheet
+import presentation.composable.ModalBottomSheetState
+import presentation.login.composable.PermissionBottomSheetContent
+import presentation.login.composable.WrongPermissionBottomSheet
+import presentation.restaurantSelection.RestaurantSelectionScreen
 
 class LoginScreen :
     BaseScreen<LoginScreenModel, LoginScreenUIState, LoginScreenUIEffect, LoginScreenInteractionListener>() {
 
+
     @Composable
     override fun Content() {
-        initScreen(getScreenModel())
+        val screenModel = rememberScreenModel { LoginScreenModel() }
+        initScreen(screenModel)
     }
 
     override fun onEffect(
@@ -57,20 +68,43 @@ class LoginScreen :
 
     @Composable
     override fun onRender(state: LoginScreenUIState, listener: LoginScreenInteractionListener) {
+
+        var showPermissionSheet by remember { mutableStateOf(false) }
         val sheetState = remember { ModalBottomSheetState() }
+
         Column(modifier = Modifier.fillMaxSize()) {
+
+            LaunchedEffect(sheetState.isVisible) {
+                if (!sheetState.isVisible) {
+                    showPermissionSheet = false
+                }
+            }
 
             CustomBottomSheet(
                 sheetContent = {
-                    PermissionBottomSheetContent(
-                        state = state,
-                        onCancelClick = { sheetState.dismiss() },
-                        onSubmit = {
-                            listener.onClickSubmit()
-                            sheetState.dismiss()
-                        },
-                        listener = listener,
-                    )
+                    if (showPermissionSheet) {
+                        PermissionBottomSheetContent(
+                            onCancelClick = {
+                                showPermissionSheet = false
+                                sheetState.dismiss()
+                            },
+                            onSubmit = {
+                                showPermissionSheet = false
+                                listener.onClickSubmit()
+                                sheetState.dismiss()
+                            },
+                            listener = listener,
+                            state = state
+                        )
+                    } else {
+                        WrongPermissionBottomSheet(
+                            onRequestPermissionClick = {
+                                showPermissionSheet = true
+                                listener.onClickSubmit()
+                            },
+                            onCancelClick = { sheetState.dismiss() },
+                        )
+                    }
                 },
                 sheetBackgroundColor = Theme.colors.background,
                 sheetState = sheetState,
@@ -123,7 +157,13 @@ class LoginScreen :
                 errorMessage = state.error,
             )
             BpButton(
-                onClick = { sheetState.show() },
+                onClick = {
+                    if (state.hasPermission) {
+                        sheetState.show()
+                    } else {
+                        listener.onClickLogin()
+                    }
+                },
                 title = "Login",
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -131,57 +171,5 @@ class LoginScreen :
 
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    private fun PermissionBottomSheetContent(
-        state: LoginScreenUIState,
-        listener: LoginScreenInteractionListener,
-        onSubmit: () -> Unit,
-        onCancelClick: () -> Unit,
-        modifier: Modifier = Modifier,
-    ) {
 
-        Column(
-            modifier = modifier.wrapContentHeight()
-                .padding(top = Theme.dimens.space16).padding(horizontal = Theme.dimens.space16)
-        ) {
-            Text(
-                "Ask for permission",
-                style = Theme.typography.headlineLarge,
-            )
-            BpTextField(
-                text = state.restaurantName,
-                onValueChange = listener::onNameChanged,
-                label = Resources.strings.name,
-                keyboardType = KeyboardType.Text,
-                modifier = Modifier.fillMaxWidth(),
-            )
-            BpTextField(
-                text = state.ownerEmail,
-                onValueChange = listener::onNameChanged,
-                label = Resources.strings.name,
-                keyboardType = KeyboardType.Text,
-                modifier = Modifier.fillMaxWidth(),
-            )
-            BpExpandableTextField(
-                text = state.description,
-                onValueChange = listener::onDescriptionChanged,
-                label = Resources.strings.description,
-                keyboardType = KeyboardType.Text,
-                modifier = Modifier.fillMaxWidth(),
-            )
-            BpButton(
-                onClick = onSubmit,
-                title = "Submit",
-                modifier = Modifier.fillMaxWidth(),
-            )
-            BpButton(
-                onClick = onCancelClick,
-                title = "Cancel",
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
-    }
-    }
-
-
+}

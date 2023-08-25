@@ -25,6 +25,9 @@ data class StringResources(
     val revenue: String = "Revenue",
     val thisWeek: String = "This week",
     val ownerUsername: String = "Owner username",
+    val ownerEmail: String = "Owner Email",
+    val requestAPermission: String = "Request a permission",
+    val submit:String = "submit",
     val address: String = "Address",
     val rating: String = "Rating",
     val priceLevel: String = "Price level",
@@ -34,6 +37,8 @@ data class StringResources(
     val logout: String = "Logout",
     val restaurantNameErrorMessage: String = "restaurant name should be between 4 to 25 letters",
     val descriptionErrorMessage: String = "description shouldn't be more than 255 letter",
+    val wrongPermissionMessage: String = "Looks like your account isn't assigned as a restaurant owner, ask for permission?",
+    val wrongPermission: String = "Wrong permission",
     val orderImageContentDescription: String = "order image",
     val quantity: String = "Qty",
     val dollarSign: String = "$",
@@ -43,7 +48,5 @@ data class StringResources(
     val finish: String = "Finish",
     val approve: String = "Approve",
     val totalOrders: String = "Total Orders",
-    val beepBeep : String = "Beep Beep",
-    val name: String = "Restaurant Name",
-    val description: String = "Description"
+    val askForPermission: String = "Ask for permission"
 )
