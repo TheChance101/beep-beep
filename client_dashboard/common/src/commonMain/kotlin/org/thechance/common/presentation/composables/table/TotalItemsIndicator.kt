@@ -11,6 +11,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
@@ -18,12 +19,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun TotalItemsIndicator(
     modifier: Modifier = Modifier,
     totalItems: Int,
     numberItemInPage: Int,
-    onItemPerPageChange: (String) -> Unit,
+    onItemPerPageChange: (Int) -> Unit,
     itemType: String,
 ) {
     Row(
@@ -39,7 +41,9 @@ fun TotalItemsIndicator(
                     shape = RoundedCornerShape(Theme.radius.medium)
                 ).padding(vertical = Theme.dimens.space8).width(Theme.dimens.space40),
             value = numberItemInPage.toString(),
-            onValueChange = onItemPerPageChange,
+            onValueChange = {
+                runCatching { onItemPerPageChange(if (it.toInt() >= 100) 100 else it.toInt()) }
+            },
             textStyle = TextStyle(
                 textAlign = TextAlign.Center,
                 color = Theme.colors.contentPrimary,

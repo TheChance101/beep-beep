@@ -20,10 +20,6 @@ data class UserScreenUiState(
     val currentPage: Int = 1,
     val search: String = "",
     val permissionsDialog: PermissionsDialogUiState = PermissionsDialogUiState(),
-    val selectedUser: String = "",
-    val selectedPage: Int = 1,
-    val numberItemInPage: Int = 3,
-    val pageCount: Int = 3,
     val filter: FilterUiState = FilterUiState(),
     val allPermissions: List<PermissionUiState> = listOf(
         PermissionUiState.RESTAURANT_OWNER,

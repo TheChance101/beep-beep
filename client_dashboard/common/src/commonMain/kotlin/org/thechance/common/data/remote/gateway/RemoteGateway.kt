@@ -1,16 +1,28 @@
 package org.thechance.common.data.remote.gateway
 
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.plugins.*
-import io.ktor.client.request.*
-import io.ktor.client.request.forms.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.request.forms.submitForm
+import io.ktor.client.request.header
+import io.ktor.client.request.url
+import io.ktor.client.statement.HttpResponse
+import io.ktor.http.Parameters
 import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.ServerResponse
 import org.thechance.common.data.remote.model.UserTokensRemoteDto
-import org.thechance.common.domain.entity.*
+import org.thechance.common.domain.entity.AddTaxi
+import org.thechance.common.domain.entity.Admin
+import org.thechance.common.domain.entity.CarColor
+import org.thechance.common.domain.entity.DataWrapper
+import org.thechance.common.domain.entity.InvalidCredentialsException
+import org.thechance.common.domain.entity.NoInternetException
+import org.thechance.common.domain.entity.Restaurant
+import org.thechance.common.domain.entity.Taxi
+import org.thechance.common.domain.entity.UnknownErrorException
+import org.thechance.common.domain.entity.User
+import org.thechance.common.domain.entity.UserNotFoundException
+import org.thechance.common.domain.entity.UserTokens
 import org.thechance.common.domain.getway.IRemoteGateway
 import org.thechance.common.domain.util.TaxiStatus
 import java.net.ConnectException
@@ -24,8 +36,12 @@ class RemoteGateway(
         return Admin("aaaa")
     }
 
-    override fun getUsers(): List<User> {
-        return emptyList()
+    override fun getUsers(page: Int, numberOfUsers: Int): DataWrapper<User> {
+        return DataWrapper(
+            totalPages = 0,
+            numberOfResult = 0,
+            result = emptyList(),
+        )
     }
 
     override suspend fun getTaxis(): List<Taxi> {
@@ -58,7 +74,7 @@ class RemoteGateway(
                 }
             ) {
                 url("login")
-                //left until complete get user preferences
+                //TODO left until complete get user preferences
                 header("Accept-Language", "ar")
                 header("Country-Code", "EG")
             }
@@ -70,7 +86,7 @@ class RemoteGateway(
         method: HttpClient.() -> HttpResponse
     ): T {
         try {
-            return client.method().body<T>()
+            return client.method().body()
         } catch (e: ClientRequestException) {
             val errorMessages = e.response.body<ServerResponse<*>>().status.errorMessages
             errorMessages?.let { throwMatchingException(it) }
@@ -83,7 +99,7 @@ class RemoteGateway(
     }
 
     private fun throwMatchingException(errorMessages: Map<String, String>) {
-        errorMessages.let{
+        errorMessages.let {
             if (it.containsErrors(WRONG_PASSWORD)) {
                 throw InvalidCredentialsException(it.getOrEmpty(WRONG_PASSWORD))
             } else {
