@@ -48,5 +48,9 @@ data class StringResources(
     val finish: String = "Finish",
     val approve: String = "Approve",
     val totalOrders: String = "Total Orders",
-    val askForPermission: String = "Ask for permission"
+    val askForPermission: String = "Ask for permission",
+    val password: String = "Password",
+    val username: String = "Username",
+    val login: String = "Login",
+    val keepMeLoggedIn: String = "Keep me logged in"
 )

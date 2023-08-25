@@ -43,14 +43,14 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.composable.BpAppBar
-import presentation.composable.CustomBottomSheet
-import presentation.composable.ModalBottomSheetState
 import presentation.composable.modifier.noRippleEffect
+import presentation.composables.CustomBottomSheet
+import presentation.composables.ModalBottomSheetState
+import resources.Resources
 import util.ImagePicker
 import util.ImagePickerFactory
 import util.getPlatformContext
 import util.rememberBitmapFromBytes
-import resources.Resources
 
 class MealScreen(private val mealId: String? = null) :
     BaseScreen<MealScreenModel, MealUIState, MealScreenUIEffect, MealScreenInteractionListener>() {

@@ -3,11 +3,17 @@ package presentation.login
 import presentation.base.BaseInteractionListener
 
 interface LoginScreenInteractionListener : BaseInteractionListener {
-    fun onEmailChanged(email: String)
-    fun onOwnerEmailChanged(ownerEmail: String)
+    //login
+    fun onUserNameChanged(userName: String)
     fun onPasswordChanged(password: String)
+    fun onKeepLoggedInClicked()
+    fun onClickLogin(userName: String, password: String, isKeepMeLoggedInChecked: Boolean)
+
+    //permission will move
+    fun onOwnerEmailChanged(ownerEmail: String)
     fun onNameChanged(restaurantName: String)
     fun onDescriptionChanged(description: String)
-    fun onClickLogin()
     fun onClickSubmit()
+
+
 }
