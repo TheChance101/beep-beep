@@ -37,9 +37,7 @@ class LoginUserUseCase(
         TODO("Not yet implemented")
     }
 
-    override suspend fun getRefreshToken(): String {
-        TODO("Not yet implemented")
-    }
+    override suspend fun getRefreshToken(): String = localGateWay.getRefreshToken()
 
     override suspend fun saveLoggedInFlag(isChecked: Boolean) {
         localGateWay.saveLoggedInFlag(isChecked)
