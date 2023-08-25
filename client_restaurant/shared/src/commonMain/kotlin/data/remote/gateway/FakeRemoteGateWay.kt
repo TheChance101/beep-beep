@@ -13,10 +13,12 @@ import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
+import domain.entity.UserTokens
 import domain.gateway.IRemoteGateWay
 import presentation.base.RequestException
 
 class FakeRemoteGateWay : IRemoteGateWay {
+
 
     private val orders = mutableListOf(
         OrderDto(
@@ -560,6 +562,10 @@ class FakeRemoteGateWay : IRemoteGateWay {
             priceLevel = "$$"
         )
     )
+
+    override suspend fun loginUser(userName: String, password: String): UserTokens {
+        return UserTokens(accessToken = "", refreshToken = "")
+    }
 
 
     //region restaurant
