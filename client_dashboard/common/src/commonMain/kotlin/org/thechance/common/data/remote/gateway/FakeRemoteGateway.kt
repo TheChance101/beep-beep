@@ -10,12 +10,22 @@ import org.thechance.common.data.remote.model.TaxiDto
 import org.thechance.common.data.remote.model.UserDto
 import org.thechance.common.data.remote.model.toEntity
 import org.thechance.common.data.service.IFakeService
+import org.thechance.common.domain.entity.AddTaxi
+import org.thechance.common.domain.entity.Admin
+import org.thechance.common.domain.entity.DataWrapper
+import org.thechance.common.domain.entity.Restaurant
+import org.thechance.common.domain.entity.Taxi
+import org.thechance.common.domain.entity.User
+import org.thechance.common.domain.entity.UserTokens
+import org.thechance.common.data.remote.model.TaxiDto
+import org.thechance.common.data.remote.model.UserDto
+import org.thechance.common.data.remote.model.toEntity
+import org.thechance.common.data.service.IFakeService
 import org.thechance.common.domain.entity.*
 import org.thechance.common.domain.getway.IRemoteGateway
 import java.util.UUID
 import kotlin.math.ceil
 import kotlin.math.floor
-
 
 class FakeRemoteGateway(
     private val fakeService: IFakeService,
@@ -647,4 +657,19 @@ class FakeRemoteGateway(
         }
     }
 
+    override suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant {
+        return Restaurant(
+            id = "7",
+            name = restaurant.name,
+            ownerUsername = restaurant.ownerUsername,
+            phoneNumber = restaurant.phoneNumber,
+            workingHours = restaurant.workingHours,
+            rating = 3.0,
+            priceLevel = 1
+        )
+    }
+
+    override suspend fun getCurrentLocation(): Location {
+        return Location(location = "30.044420,31.235712")
+    }
 }

@@ -3,6 +3,7 @@ package org.thechance.common.di
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+import org.thechance.common.domain.usecase.*
 import org.thechance.common.domain.usecase.CreateNewTaxiUseCase
 import org.thechance.common.domain.usecase.FilterRestaurantsUseCase
 import org.thechance.common.domain.usecase.FindTaxiByUserNameUseCase
@@ -34,11 +35,12 @@ val UseCaseModule = module {
     singleOf(::GetTaxisUseCase) { bind<IGetTaxisUseCase>() }
     singleOf(::CreateNewTaxiUseCase) { bind<ICreateNewTaxiUseCase>() }
     singleOf(::FindTaxiByUserNameUseCase) { bind<IFindTaxiByUsernameUseCase>() }
-    singleOf(::GetRestaurantsUseCase) { bind<IGetRestaurantsUseCase>() }
     singleOf(::SearchRestaurantsByRestaurantNameUseCase) { bind<ISearchRestaurantsByRestaurantNameUseCase>() }
     singleOf(::FilterRestaurantsUseCase) { bind<IFilterRestaurantsUseCase>() }
     singleOf(::SearchFilterRestaurantsUseCase) { bind<ISearchFilterRestaurantsUseCase>() }
     singleOf(::LoginUserUseCase) { bind<ILoginUserUseCase>() }
+    singleOf(::ManageRestaurantUseCase) { bind<IManageRestaurantUseCase>() }
+    singleOf(::HandleLocationUseCase) { bind<IHandleLocationUseCase>() }
     singleOf(::GetUserTokensUseCase) { bind<IGetUserTokensUseCase>() }
     singleOf(::GetTaxiReportUseCase) { bind<IGetTaxiReportUseCase>() }
 }

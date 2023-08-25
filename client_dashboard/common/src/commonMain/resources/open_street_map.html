@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leaflet Map Example</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    <style>
+        #map {
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+    // Initialize the map
+    var map = L.map('map', {
+        center: [51.505, -0.09],
+        zoom: 13,
+        dragging: true, // Enable dragging to move the map
+        tap: true // Disable touch-based panning for this example
+    });
+        L.tileLayer('https://tile.thunderforest.com/atlas/{z}/{x}/{y}.png?apikey=192edc9c6a234e869be48be7059e5529', { }).addTo(map);
+
+        var marker = L.marker([51.5, -0.09]).addTo(map)
+            .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
+            .openPopup();
+
+        map.on('dblclick', function(e) {
+            var newLatLng = e.latlng;
+            marker.setLatLng(newLatLng)
+                .bindPopup('New marker position: ' + newLatLng.toString())
+                .openPopup();
+        });
+    </script>
+</body>
+</html>
+

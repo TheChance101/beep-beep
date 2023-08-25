@@ -1,5 +1,6 @@
 package org.thechance.common.presentation.restaurant
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -40,6 +41,7 @@ import org.thechance.common.presentation.composables.EditablePriceBar
 import org.thechance.common.presentation.composables.EditableRatingBar
 import org.thechance.common.presentation.composables.PriceBar
 import org.thechance.common.presentation.composables.RatingBar
+import org.thechance.common.presentation.composables.RestaurantDialog
 import org.thechance.common.presentation.composables.modifier.cursorHoverIconHand
 import org.thechance.common.presentation.composables.modifier.noRipple
 import org.thechance.common.presentation.composables.table.BpPager
@@ -56,7 +58,6 @@ class RestaurantScreen :
 
     override fun onEffect(effect: RestaurantUIEffect, navigator: Navigator) {
         when (effect) {
-            //TODO: effects
             else -> {}
         }
     }
@@ -64,6 +65,23 @@ class RestaurantScreen :
 
     @Composable
     override fun OnRender(state: RestaurantUiState, listener: RestaurantInteractionListener) {
+        AnimatedVisibility(state.isAddNewRestaurantDialogVisible) {
+            RestaurantDialog(
+                modifier = Modifier,
+                onRestaurantNameChange = listener::onRestaurantNameChange,
+                isVisible = state.isAddNewRestaurantDialogVisible,
+                onCancelClicked = listener::onCancelCreateRestaurantClicked,
+                onOwnerUserNameChange = listener::onOwnerUserNameChange,
+                onPhoneNumberChange = listener::onPhoneNumberChange,
+                onWorkingStartHourChange = listener::onWorkingStartHourChange,
+                onWorkingEndHourChange = listener::onWorkingEndHourChange,
+                state = state.addNewRestaurantDialogUiState,
+                onCreateClicked = listener::onCreateNewRestaurantClicked,
+                onAddressChange = listener::onAddressChange,
+                currentLocation = state.addNewRestaurantDialogUiState.currentLocation,
+            )
+        }
+
         Column(
             Modifier.background(Theme.colors.surface).fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -115,7 +133,7 @@ class RestaurantScreen :
             )
             BpButton(
                 title = "New Restaurant",
-                onClick = { /*TODO:  Show New Restaurant Dialog */ },
+                onClick = listener::onAddNewRestaurantClicked,
                 textPadding = PaddingValues(horizontal = LocalDimensions.current.space24),
                 modifier = Modifier.cursorHoverIconHand()
             )
@@ -281,7 +299,7 @@ class RestaurantScreen :
         onClickSave: () -> Unit,
         expanded: Boolean,
         rating: Double,
-        priceLevel: Int
+        priceLevel: Int,
     ) {
         BpDropdownMenu(
             onDismissRequest = onDismissRequest,

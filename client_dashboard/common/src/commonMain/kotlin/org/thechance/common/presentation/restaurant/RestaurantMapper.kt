@@ -1,5 +1,6 @@
 package org.thechance.common.presentation.restaurant
 
+import org.thechance.common.domain.entity.AddRestaurant
 import org.thechance.common.domain.entity.Restaurant
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -21,3 +22,14 @@ private fun getWorkingHours(workingHours: Pair<Date, Date>): String {
     val secondDate = SimpleDateFormat("HH:mm").format(workingHours.second)
     return "$firstDate - $secondDate"
 }
+
+fun AddRestaurantDialogUiState.toEntity() = AddRestaurant(
+    name = name,
+    ownerUsername = ownerUsername,
+    phoneNumber = phoneNumber,
+    location = location,
+    workingHours = Pair(
+        SimpleDateFormat("HH:mm").parse(startTime),
+        SimpleDateFormat("HH:mm").parse(endTime)
+    ),
+)
