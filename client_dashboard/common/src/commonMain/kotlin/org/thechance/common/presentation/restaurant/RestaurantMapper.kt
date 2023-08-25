@@ -28,5 +28,8 @@ fun AddRestaurantDialogUiState.toEntity() = AddRestaurant(
     ownerUsername = ownerUsername,
     phoneNumber = phoneNumber,
     location = location,
-    workingHours = workingHours,
+    workingHours = Pair(
+        SimpleDateFormat("HH:mm").parse(startTime),
+        SimpleDateFormat("HH:mm").parse(endTime)
+    ),
 )

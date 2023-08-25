@@ -10,9 +10,9 @@ interface ICreateNewRestaurantUseCase {
 
 }
 
-class CreateNewRestaurantUseCase(private val remoteGateway: IRemoteGateway) :
+class CreateNewRestaurantUseCase(private val fakeGateway: IRemoteGateway) :
     ICreateNewRestaurantUseCase {
     override suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant {
-        return remoteGateway.createRestaurant(restaurant)
+        return fakeGateway.createRestaurant(restaurant)
     }
 }

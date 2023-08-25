@@ -9,7 +9,6 @@ import org.thechance.common.domain.usecase.IHandleLocationUseCase
 import org.thechance.common.domain.usecase.SearchRestaurantsByRestaurantNameUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
-import java.util.Date
 import kotlin.math.ceil
 
 
@@ -182,11 +181,21 @@ class RestaurantScreenModel(
         }
     }
 
-    override fun onWorkingHourChange(hour: String) {
+    override fun onWorkingStartHourChange(hour: String) {
         updateState {
             it.copy(
                 addNewRestaurantDialogUiState = it.addNewRestaurantDialogUiState.copy(
-                    workingHours = Pair(Date(hour.toLong()), Date(hour.toLong()))
+                    startTime = hour
+                )
+            )
+        }
+    }
+
+    override fun onWorkingEndHourChange(hour: String) {
+        updateState {
+            it.copy(
+                addNewRestaurantDialogUiState = it.addNewRestaurantDialogUiState.copy(
+                    endTime = hour
                 )
             )
         }

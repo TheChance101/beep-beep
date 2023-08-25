@@ -32,9 +32,10 @@ interface RestaurantInteractionListener : BaseInteractionListener {
 
     fun onPhoneNumberChange(number: String)
 
-    fun onWorkingHourChange(hour: String)
+    fun onWorkingStartHourChange(hour: String)
+    fun onWorkingEndHourChange(hour: String)
 
     fun onCreateNewRestaurantClicked()
 
-    fun onAddressChange(address:String)
+    fun onAddressChange(address: String)
 }

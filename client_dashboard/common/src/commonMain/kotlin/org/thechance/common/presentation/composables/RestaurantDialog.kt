@@ -36,7 +36,8 @@ fun RestaurantDialog(
     onRestaurantNameChange: (String) -> Unit,
     onOwnerUserNameChange: (String) -> Unit,
     onPhoneNumberChange: (String) -> Unit,
-    onWorkingHourChange: (String) -> Unit,
+    onWorkingStartHourChange: (String) -> Unit,
+    onWorkingEndHourChange: (String) -> Unit,
     onAddressChange: (String) -> Unit,
 ) {
     Dialog(
@@ -89,15 +90,15 @@ fun RestaurantDialog(
                         horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8),
                     ) {
                         BpTextField(
-                            onValueChange = onWorkingHourChange,
-                            text = state.workingHours.first.toString(),
+                            onValueChange = onWorkingStartHourChange,
+                            text = state.startTime,
                             modifier = Modifier.weight(1f),
                             label = "Working hours",
                             hint = "1:00"
                         )
                         BpTextField(
-                            onValueChange = onWorkingHourChange,
-                            text = state.workingHours.second.toString(),
+                            onValueChange = onWorkingEndHourChange,
+                            text = state.endTime,
                             modifier = Modifier.weight(1f),
                             label = "",
                             hint = "24:00"
