@@ -78,7 +78,7 @@ class RestaurantInfoScreen() :
                                     end = Theme.dimens.space16,
                                     bottom = Theme.dimens.space16
                                 ),
-                                style = Theme.typography.body
+                                style = Theme.typography.body.copy(color = Theme.colors.contentPrimary)
                             )
                         }
                         BpTitleWithContentSection(title = Resources.strings.address) {
@@ -89,7 +89,7 @@ class RestaurantInfoScreen() :
                                     end = Theme.dimens.space16,
                                     bottom = Theme.dimens.space16
                                 ),
-                                style = Theme.typography.body
+                                style = Theme.typography.body.copy(color = Theme.colors.contentPrimary)
                             )
                         }
                         BpTitleWithContentSection(title = Resources.strings.rating) {
