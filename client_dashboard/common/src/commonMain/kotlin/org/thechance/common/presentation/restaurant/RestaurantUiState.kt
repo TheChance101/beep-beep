@@ -2,11 +2,14 @@ package org.thechance.common.presentation.restaurant
 
 import org.thechance.common.presentation.composables.table.Header
 import org.thechance.common.presentation.util.ErrorState
+import java.util.Date
 
 
 data class RestaurantUiState(
     val isLoading: Boolean = false,
     val error: ErrorState = ErrorState.UnKnownError,
+    val isAddNewRestaurantDialogVisible: Boolean = false,
+    val addNewRestaurantDialogUiState: AddRestaurantDialogUiState = AddRestaurantDialogUiState(),
     val restaurants: List<RestaurantDetailsUiState> = emptyList(),
     val tableHeader: List<Header> = listOf(
         Header("No.", 1f),
@@ -37,3 +40,13 @@ data class RestaurantUiState(
         val workingHours: String,
     )
 }
+
+data class AddRestaurantDialogUiState(
+    val name: String = "",
+    val ownerUsername: String = "",
+    val phoneNumber: String = "",
+    val startTime: String = "",
+    val endTime: String = "",
+    val location: String = "",
+    val currentLocation: String = "",
+)

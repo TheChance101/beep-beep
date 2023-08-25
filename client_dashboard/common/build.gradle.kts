@@ -4,8 +4,8 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kotlinKsp)
+    id("org.openjfx.javafxplugin") version "0.0.14"
     id("io.realm.kotlin") version "1.10.2"
-//    id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
     kotlin("plugin.serialization") version "1.8.10"
 }
 
@@ -14,8 +14,10 @@ version = "1.0-SNAPSHOT"
 
 kotlin {
     jvm("desktop") {
+        withJava()
         jvmToolchain(libs.versions.jvmToolchain.get().toInt())
     }
+
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -49,6 +51,9 @@ kotlin {
                 implementation("org.apache.pdfbox:pdfbox:2.0.26")
 
                 implementation(project(":design_system:shared"))
+                implementation(compose.desktop.currentOs)
+                implementation("com.google.accompanist:accompanist-webview:0.30.1")
+                implementation("org.openjfx:javafx-web:17")
             }
         }
         val desktopMain by getting {
@@ -57,4 +62,9 @@ kotlin {
             }
         }
     }
+}
+
+javafx {
+    version = "17"
+    modules = listOf("javafx.controls", "javafx.swing", "javafx.web", "javafx.graphics")
 }

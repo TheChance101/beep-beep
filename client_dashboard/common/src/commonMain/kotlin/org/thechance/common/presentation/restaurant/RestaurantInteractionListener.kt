@@ -21,4 +21,21 @@ interface RestaurantInteractionListener : BaseInteractionListener {
     fun onPageClicked(pageNumber: Int)
 
     fun onItemPerPageChange(numberOfItemsInPage: Int)
+
+    fun onAddNewRestaurantClicked()
+
+    fun onCancelCreateRestaurantClicked()
+
+    fun onRestaurantNameChange(name: String)
+
+    fun onOwnerUserNameChange(name: String)
+
+    fun onPhoneNumberChange(number: String)
+
+    fun onWorkingStartHourChange(hour: String)
+    fun onWorkingEndHourChange(hour: String)
+
+    fun onCreateNewRestaurantClicked()
+
+    fun onAddressChange(address: String)
 }

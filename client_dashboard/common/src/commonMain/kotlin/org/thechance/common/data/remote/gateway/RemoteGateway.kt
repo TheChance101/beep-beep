@@ -1,5 +1,6 @@
 package org.thechance.common.data.remote.gateway
 
+import com.google.gson.Gson
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
@@ -11,25 +12,15 @@ import io.ktor.http.Parameters
 import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.ServerResponse
 import org.thechance.common.data.remote.model.UserTokensRemoteDto
-import org.thechance.common.domain.entity.AddTaxi
-import org.thechance.common.domain.entity.Admin
-import org.thechance.common.domain.entity.CarColor
-import org.thechance.common.domain.entity.DataWrapper
-import org.thechance.common.domain.entity.InvalidCredentialsException
-import org.thechance.common.domain.entity.NoInternetException
-import org.thechance.common.domain.entity.Restaurant
-import org.thechance.common.domain.entity.Taxi
-import org.thechance.common.domain.entity.UnknownErrorException
-import org.thechance.common.domain.entity.User
-import org.thechance.common.domain.entity.UserNotFoundException
-import org.thechance.common.domain.entity.UserTokens
+import org.thechance.common.domain.entity.*
 import org.thechance.common.domain.getway.IRemoteGateway
 import org.thechance.common.domain.util.TaxiStatus
 import java.net.ConnectException
+import java.net.URL
 
 
 class RemoteGateway(
-    private val client: HttpClient
+    private val client: HttpClient,
 ) : IRemoteGateway {
 
     override fun getUserData(): Admin {
@@ -97,9 +88,29 @@ class RemoteGateway(
         return emptyList()
     }
 
+    override suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant {
+        return Restaurant(
+            id = "1",
+            name = restaurant.name,
+            ownerUsername = restaurant.ownerUsername,
+            phoneNumber = restaurant.phoneNumber,
+            workingHours = restaurant.workingHours,
+            rating = 0.0,
+            priceLevel = 0
+        )
+    }
+
+    override suspend fun getCurrentLocation(): Location {
+        val url = URL("https://ipinfo.io/json")
+        val json = url.readText()
+        val data = Gson().fromJson(json, Location::class.java)
+        val location = data.location
+        return Location(location = location)
+    }
+
 
     private suspend inline fun <reified T> tryToExecute(
-        method: HttpClient.() -> HttpResponse
+        method: HttpClient.() -> HttpResponse,
     ): T {
         try {
             return client.method().body()

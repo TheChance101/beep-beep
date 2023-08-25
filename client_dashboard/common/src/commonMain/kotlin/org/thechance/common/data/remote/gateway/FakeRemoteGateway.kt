@@ -22,7 +22,6 @@ import java.util.UUID
 import kotlin.math.ceil
 import kotlin.math.floor
 
-
 class FakeRemoteGateway(
     private val fakeService: IFakeService,
     private val localGateway: LocalGateway
@@ -742,4 +741,19 @@ class FakeRemoteGateway(
         }
     }
 
+    override suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant {
+        return Restaurant(
+            id = "7",
+            name = restaurant.name,
+            ownerUsername = restaurant.ownerUsername,
+            phoneNumber = restaurant.phoneNumber,
+            workingHours = restaurant.workingHours,
+            rating = 3.0,
+            priceLevel = 1
+        )
+    }
+
+    override suspend fun getCurrentLocation(): Location {
+        return Location(location = "30.044420,31.235712")
+    }
 }
