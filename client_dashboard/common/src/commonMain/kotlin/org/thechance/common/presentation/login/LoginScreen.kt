@@ -1,19 +1,7 @@
 package org.thechance.common.presentation.login
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -38,6 +26,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.thechance.common.presentation.composables.BpLogo
 import org.thechance.common.presentation.main.MainContainer
+import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.uistate.LoginUiState
 
 
@@ -80,7 +69,7 @@ private fun LoginContent(
         Box(Modifier.weight(1f)) {
             Image(
                 painter = painterResource(
-                    if (isSystemInDarkTheme()) "login_image_dark.png" else "login_image_light.png"
+                    if (isSystemInDarkTheme()) Resources.Strings.loginImageDark else Resources.Strings.loginImageLight
                 ),
                 contentDescription = null,
                 alignment = Alignment.CenterStart,
@@ -103,12 +92,12 @@ private fun LoginContent(
                 verticalArrangement = Arrangement.Center,
             ) {
                 Text(
-                    "Login",
+                    Resources.Strings.login,
                     style = Theme.typography.headlineLarge,
                     color = Theme.colors.contentPrimary
                 )
                 Text(
-                    "Use admin account to login",
+                    Resources.Strings.loginTitle,
                     style = Theme.typography.titleMedium,
                     color = Theme.colors.contentTertiary,
                     modifier = Modifier.padding(top = Theme.dimens.space8)
@@ -116,26 +105,26 @@ private fun LoginContent(
                 BpTextField(
                     onValueChange = onUserNameChanged,
                     text = state.username,
-                    label = "Username",
+                    label = Resources.Strings.loginUsername,
                     modifier = Modifier.padding(top = Theme.dimens.space40),
                     hint = ""
                 )
                 BpTextField(
                     onValueChange = onPasswordChanged,
                     text = state.password,
-                    label = "Password",
+                    label = Resources.Strings.loginPassword,
                     keyboardType = KeyboardType.Password,
                     modifier = Modifier.padding(top = Theme.dimens.space16),
                     hint = ""
                 )
                 BpCheckBox(
-                    label = "Keep me logged in",
+                    label = Resources.Strings.loginKeepMeLoggedIn,
                     isChecked = false,
                     onCheck = {},
                     modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16)
                 )
                 BpButton(
-                    title = "Login",
+                    title = Resources.Strings.loginButton,
                     onClick = onClickLogin,
                     modifier = Modifier.padding(top = Theme.dimens.space24).fillMaxWidth()
                 )
