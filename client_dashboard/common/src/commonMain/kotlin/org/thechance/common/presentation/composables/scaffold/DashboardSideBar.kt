@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BpToggleButton
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.thechance.common.LocalDimensions
 import org.thechance.common.presentation.composables.BpLogo
 import org.thechance.common.presentation.composables.modifier.centerItem
 import org.thechance.common.presentation.composables.pxToDp
@@ -68,7 +69,7 @@ fun DashboardSideBar(
                         else sideBarUnexpandedWidthInKms
                     ).value
                 )
-                .padding(vertical = Theme.dimens.space40).onPointerEvent(PointerEventType.Enter) {
+                .padding(vertical = LocalDimensions.current.space40).onPointerEvent(PointerEventType.Enter) {
                     mainMenuIsExpanded.value = true
                 }
                 .onPointerEvent(PointerEventType.Exit) { mainMenuIsExpanded.value = false },
@@ -82,7 +83,7 @@ fun DashboardSideBar(
                 )
             )
             //endregion
-            Spacer(Modifier.height(Theme.dimens.space40))
+            Spacer(Modifier.height(LocalDimensions.current.space40))
             //region main menu
             Box(Modifier.height(sideBarExpandedWidthInKms)) {
                 Column(Modifier.fillMaxSize()) {
@@ -95,9 +96,9 @@ fun DashboardSideBar(
                     )
                     Spacer(
                         Modifier.height(mainMenuItemHeight.value.pxToDp())
-                            .padding(vertical = Theme.dimens.space8)
+                            .padding(vertical = LocalDimensions.current.space8)
                             .width(4.dp)
-                            .clip(RoundedCornerShape(Theme.dimens.space16))
+                            .clip(RoundedCornerShape(LocalDimensions.current.space16))
                             .background(Color(0xffF53D47))
                     )
                 }
@@ -115,7 +116,7 @@ fun DashboardSideBar(
             Spacer(Modifier.weight(1f))
             //region toggle theme button
             Row(
-                horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space32),
+                horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space32),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 BpToggleButton(

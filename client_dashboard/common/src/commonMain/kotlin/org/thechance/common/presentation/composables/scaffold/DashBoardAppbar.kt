@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.thechance.common.LocalDimensions
 import org.thechance.common.presentation.composables.BpDropdownMenu
 import org.thechance.common.presentation.composables.modifier.circleLayout
 import org.thechance.common.presentation.composables.modifier.cursorHoverIconHand
@@ -50,7 +51,7 @@ fun DashboardAppbar(
     Column(Modifier.background(Theme.colors.surface)) {
         Row(
             Modifier.height(96.kms).fillMaxWidth()
-                .padding(horizontal = Theme.dimens.space40),
+                .padding(horizontal = LocalDimensions.current.space40),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -66,7 +67,7 @@ fun DashboardAppbar(
                     modifier = Modifier.onClick(onClick = onClickDropDownMenu).cursorHoverIconHand()
                 ) {
                     Text(
-                        modifier = Modifier.circleLayout().padding(Theme.dimens.space8),
+                        modifier = Modifier.circleLayout().padding(LocalDimensions.current.space8),
                         style = Theme.typography.titleMedium,
                         text = username.first().uppercase(),
                         color = Color.White
@@ -89,7 +90,7 @@ fun DashboardAppbar(
                     BpDropdownMenu(
                         expanded = isDropMenuExpanded,
                         onDismissRequest = onDismissDropDownMenu,
-                        offset = DpOffset.Zero.copy(y = Theme.dimens.space24),
+                        offset = DpOffset.Zero.copy(y = LocalDimensions.current.space24),
                         shape = RoundedCornerShape(Theme.radius.medium)
                             .copy(topEnd = CornerSize(Theme.radius.small)),
                     ) {

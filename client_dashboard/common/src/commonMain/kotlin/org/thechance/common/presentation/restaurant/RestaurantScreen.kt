@@ -32,6 +32,7 @@ import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.thechance.common.LocalDimensions
 import org.thechance.common.presentation.base.BaseScreen
 import org.thechance.common.presentation.composables.BpDropdownMenu
 import org.thechance.common.presentation.composables.EditablePriceBar
@@ -65,11 +66,11 @@ class RestaurantScreen :
         Column(
             Modifier.background(Theme.colors.surface).fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
+            verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
+                horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16),
                 verticalAlignment = Alignment.Top
             ) {
                 BpSimpleTextField(
@@ -115,17 +116,17 @@ class RestaurantScreen :
                 BpOutlinedButton(
                     title = "Export",
                     onClick = { /* TODO: Export */ },
-                    textPadding = PaddingValues(horizontal = Theme.dimens.space24),
+                    textPadding = PaddingValues(horizontal = LocalDimensions.current.space24),
                 )
                 BpOutlinedButton(
                     title = "Add cuisine",
                     onClick = { /* TODO: Show Add cuisine DropdownMenu */ },
-                    textPadding = PaddingValues(horizontal = Theme.dimens.space24),
+                    textPadding = PaddingValues(horizontal = LocalDimensions.current.space24),
                 )
                 BpButton(
                     title = "New Restaurant",
                     onClick = { /*TODO:  Show New Restaurant Dialog */ },
-                    textPadding = PaddingValues(horizontal = Theme.dimens.space24),
+                    textPadding = PaddingValues(horizontal = LocalDimensions.current.space24),
                 )
             }
             BpTable(
@@ -205,14 +206,14 @@ fun RowScope.RestaurantRow(
         selectedIcon = painterResource(if (isSystemInDarkTheme()) "ic_filled_star_dark.svg" else "ic_filled_star_light.svg"),
         halfSelectedIcon = painterResource(if (isSystemInDarkTheme()) "ic_half_filled_star_dark.svg" else "ic_half_filled_star_light.svg"),
         modifier = Modifier.weight(otherColumnsWeight),
-        iconsSize = Theme.dimens.space16
+        iconsSize = LocalDimensions.current.space16
     )
     PriceBar(
         priceLevel = restaurant.priceLevel,
         icon = painterResource("ic_dollar_sign.svg"),
         iconColor = Theme.colors.success,
         modifier = Modifier.weight(otherColumnsWeight),
-        iconsSize = Theme.dimens.space16
+        iconsSize = LocalDimensions.current.space16
     )
 
     Text(
@@ -247,12 +248,12 @@ private fun RestaurantFilterDropdownMenu(
     BpDropdownMenu(
         onDismissRequest = onDismissRequest,
         expanded = expanded,
-        shape = RoundedCornerShape(Theme.dimens.space8)
+        shape = RoundedCornerShape(LocalDimensions.current.space8)
     ) {
         Column(
             modifier = Modifier.background(
                 color = Theme.colors.surface,
-                shape = RoundedCornerShape(Theme.dimens.space8)
+                shape = RoundedCornerShape(LocalDimensions.current.space8)
             )
         ) {
             Text(
@@ -260,8 +261,8 @@ private fun RestaurantFilterDropdownMenu(
                 style = Theme.typography.headline,
                 color = Theme.colors.contentPrimary,
                 modifier = Modifier.padding(
-                    start = Theme.dimens.space24,
-                    top = Theme.dimens.space24
+                    start = LocalDimensions.current.space24,
+                    top = LocalDimensions.current.space24
                 )
             )
             Text(
@@ -269,8 +270,8 @@ private fun RestaurantFilterDropdownMenu(
                 style = Theme.typography.title,
                 color = Theme.colors.contentPrimary,
                 modifier = Modifier.padding(
-                    start = Theme.dimens.space24,
-                    top = Theme.dimens.space40
+                    start = LocalDimensions.current.space24,
+                    top = LocalDimensions.current.space40
                 )
             )
             EditableRatingBar(
@@ -285,11 +286,11 @@ private fun RestaurantFilterDropdownMenu(
                 notSelectedIcon = painterResource(
                     if (isSystemInDarkTheme()) "ic_star_dark.svg" else "ic_star_light.svg"
                 ),
-                iconsSize = Theme.dimens.space24,
-                iconsPadding = PaddingValues(horizontal = Theme.dimens.space8),
-                modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16)
+                iconsSize = LocalDimensions.current.space24,
+                iconsPadding = PaddingValues(horizontal = LocalDimensions.current.space8),
+                modifier = Modifier.fillMaxWidth().padding(top = LocalDimensions.current.space16)
                     .background(color = Theme.colors.background)
-                    .padding(horizontal = Theme.dimens.space24, vertical = Theme.dimens.space16),
+                    .padding(horizontal = LocalDimensions.current.space24, vertical = LocalDimensions.current.space16),
                 onClick = { onClickRating(it) }
             )
 
@@ -298,8 +299,8 @@ private fun RestaurantFilterDropdownMenu(
                 style = Theme.typography.title,
                 color = Theme.colors.contentPrimary,
                 modifier = Modifier.padding(
-                    start = Theme.dimens.space24,
-                    top = Theme.dimens.space32
+                    start = LocalDimensions.current.space24,
+                    top = LocalDimensions.current.space32
                 )
             )
             EditablePriceBar(
@@ -308,29 +309,29 @@ private fun RestaurantFilterDropdownMenu(
                 icon = painterResource("ic_dollar_sign.svg"),
                 enabledIconsColor = Theme.colors.success,
                 disabledIconsColor = Theme.colors.disable,
-                iconsPadding = PaddingValues(horizontal = Theme.dimens.space8),
-                iconsSize = Theme.dimens.space16,
-                modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16)
+                iconsPadding = PaddingValues(horizontal = LocalDimensions.current.space8),
+                iconsSize = LocalDimensions.current.space16,
+                modifier = Modifier.fillMaxWidth().padding(top = LocalDimensions.current.space16)
                     .background(color = Theme.colors.background)
-                    .padding(horizontal = Theme.dimens.space24, vertical = Theme.dimens.space16),
+                    .padding(horizontal = LocalDimensions.current.space24, vertical = LocalDimensions.current.space16),
                 onClick = { onClickPrice(it) }
             )
 
             Row(
-                Modifier.fillMaxWidth().padding(Theme.dimens.space24),
+                Modifier.fillMaxWidth().padding(LocalDimensions.current.space24),
                 horizontalArrangement = Arrangement.Center
             ) {
                 BpTransparentButton(
                     title = "Cancel",
                     onClick = { onClickCancel(); onDismissRequest() },
-                    modifier = Modifier.padding(end = Theme.dimens.space16)
-                        .height(Theme.dimens.space32)
+                    modifier = Modifier.padding(end = LocalDimensions.current.space16)
+                        .height(LocalDimensions.current.space32)
                         .weight(1f)
                 )
                 BpOutlinedButton(
                     title = "Save",
                     onClick = { onClickSave(); onDismissRequest() },
-                    modifier = Modifier.height(Theme.dimens.space32).weight(3f),
+                    modifier = Modifier.height(LocalDimensions.current.space32).weight(3f),
                     textPadding = PaddingValues(0.dp)
                 )
             }
