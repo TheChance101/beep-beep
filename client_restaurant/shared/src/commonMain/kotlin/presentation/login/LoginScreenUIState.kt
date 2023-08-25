@@ -1,5 +1,7 @@
 package presentation.login
 
+import presentation.composables.ModalBottomSheetState
+
 data class LoginScreenUIState(
     val userName: String = "",
     val password: String = "",
@@ -15,5 +17,6 @@ data class LoginScreenUIState(
     val description: String = "",
     val ownerEmail: String = "",
     val hasPermission: Boolean = false,
-
+    val showPermissionSheet: Boolean =false,
+    val sheetState: ModalBottomSheetState?=null
     )

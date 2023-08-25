@@ -38,10 +38,18 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
         updateState { it.copy(description = description) }
     }
 
-    override fun onClickLogin(userName: String, password: String,isKeepMeLoggedInChecked:Boolean) {
+    override fun onRequestPermissionClick() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onClickLogin(
+        userName: String,
+        password: String,
+        isKeepMeLoggedInChecked: Boolean
+    ) {
 
         tryToExecute(
-            { loginUserUseCase.loginUser(userName, password,isKeepMeLoggedInChecked) },
+            { loginUserUseCase.loginUser(userName, password, isKeepMeLoggedInChecked) },
             this::onLoginSuccess,
             this::onLoginFailed
         )
@@ -50,7 +58,7 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
     private fun onLoginSuccess(result: UserTokens) {
         println("token${result.accessToken}")
         updateState { it.copy(isLoading = false, error = "null") }
-        sendNewEffect(LoginScreenUIEffect.Login(""))
+        sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
     }
 
     private fun onLoginFailed(error: ErrorState) {
@@ -70,5 +78,9 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
 
     override fun onClickSubmit() {
         // TODO: send permission request
+    }
+
+    override fun onCancelClick() {
+        TODO("Not yet implemented")
     }
 }

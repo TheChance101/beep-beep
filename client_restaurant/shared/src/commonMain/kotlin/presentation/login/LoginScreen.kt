@@ -28,6 +28,7 @@ import presentation.base.BaseScreen
 import presentation.composables.CustomBottomSheet
 import presentation.login.composable.PermissionBottomSheetContent
 import presentation.login.composable.WrongPermissionBottomSheet
+import presentation.restaurantSelection.RestaurantSelectionScreen
 import resources.Resources
 
 class LoginScreen :
@@ -68,7 +69,7 @@ class LoginScreen :
                     }
                 },
                 sheetBackgroundColor = Theme.colors.background,
-                sheetState = state.sheetState,
+                sheetState = state.sheetState!!,
             ) { LoginScreenContent(state, listener) }
         }
     }
