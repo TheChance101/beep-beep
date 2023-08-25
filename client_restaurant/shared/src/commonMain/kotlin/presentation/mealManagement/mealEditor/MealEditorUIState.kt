@@ -1,12 +1,13 @@
-package presentation.mealManagement.mealCreation
+package presentation.mealManagement.mealEditor
 
 import presentation.mealManagement.CuisineUIState
 import presentation.mealManagement.MealDetails
 
-data class MealCreationUIState(
+data class MealEditorUIState(
+    val id: String = "",
     val meal: MealDetails = MealDetails(),
     val cuisines: List<CuisineUIState> = emptyList(),
     val isLoading: Boolean = false,
     val error: String = "",
-    val isCuisinesShow:Boolean= false
+    val isCuisinesShow: Boolean = false
 )

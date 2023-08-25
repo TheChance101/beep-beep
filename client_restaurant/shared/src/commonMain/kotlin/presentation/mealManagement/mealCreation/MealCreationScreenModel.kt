@@ -1,23 +1,20 @@
-package presentation.mealManagement.mealEditor
+package presentation.mealManagement.mealCreation
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Cuisine
-import domain.entity.Meal
 import domain.usecase.IGetCuisineUseCase
 import domain.usecase.IManageMealUseCase
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
-import presentation.mealManagement.CuisineUIState
 import presentation.mealManagement.MealScreenInteractionListener
 import presentation.mealManagement.MealScreenUIEffect
 import presentation.mealManagement.toMealAddition
 import presentation.mealManagement.toUIState
 
-
-class MealEditorScreenModel(private val mealId: String) :
-    BaseScreenModel<MealEditorUIState, MealScreenUIEffect>(MealEditorUIState()),
+class MealCreationScreenModel :
+    BaseScreenModel<MealCreationUIState, MealScreenUIEffect>(MealCreationUIState()),
     MealScreenInteractionListener {
 
     override val viewModelScope: CoroutineScope
@@ -27,48 +24,23 @@ class MealEditorScreenModel(private val mealId: String) :
     private val cuisines: IGetCuisineUseCase by inject()
 
     init {
-        getMeal()
+        getCuisines()
     }
 
-
-    private fun getMeal() {
-        updateState { it.copy(id = mealId, isLoading = true) }
-        tryToExecute({ manageMeal.getMeal(mealId) }, ::onGetMealSuccess, ::onError)
-    }
-
-    private fun onGetMealSuccess(meal: Meal) {
-        updateState { it.copy(isLoading = false, meal = meal.toUIState()) }
-        tryToExecute({ cuisines.getCuisines() }, ::onGetCuisinesSuccess, ::onError)
+    private fun getCuisines() {
+        updateState { it.copy(isLoading = true) }
+        tryToExecute({ cuisines.getCuisines() }, ::onGetCuisinesSuccess, ::onAddMealError)
     }
 
     private fun onGetCuisinesSuccess(cuisines: List<Cuisine>) {
-        val mealCuisineIds = state.value.meal.mealCuisines.map { it.id }
-        val cuisinesUi = cuisines.toUIState().onUpdateCuisineSelection(mealCuisineIds)
-        val mealCuisines = cuisinesUi.filter { it.id in mealCuisineIds }
-        updateState {
-            it.copy(
-                cuisines = cuisinesUi,
-                isLoading = false,
-                meal = it.meal.copy(mealCuisines = mealCuisines)
-            )
-        }
-    }
-
-    private fun List<CuisineUIState>.onUpdateCuisineSelection(cuisineIds: List<String>): List<CuisineUIState> {
-        return this.map {
-            if (it.id in cuisineIds) {
-                it.copy(isSelected = true)
-            } else {
-                it
-            }
-        }
+        updateState { it.copy(cuisines = cuisines.toUIState(), isLoading = false) }
     }
 
     override fun onAddMeal() {
         tryToExecute(
             { manageMeal.addMeal(state.value.meal.toMealAddition()) },
             ::onMealAddedSuccessfully,
-            ::onError
+            ::onAddMealError
         )
     }
 
@@ -81,10 +53,11 @@ class MealEditorScreenModel(private val mealId: String) :
     }
 
 
-    private fun onError(error: ErrorState) {
+    private fun onAddMealError(error: ErrorState) {
         updateState { it.copy(isLoading = false, error = error.toString()) }
         sendNewEffect(MealScreenUIEffect.MealResponseFailed(error.toString()))
     }
+
 
     override fun onSaveCuisineClick() {
         val mealCuisines = state.value.cuisines.filter { it.isSelected }
@@ -97,7 +70,16 @@ class MealEditorScreenModel(private val mealId: String) :
     }
 
     override fun onCuisineSelected(id: String) {
-        updateState { it.copy(cuisines = it.cuisines.onUpdateCuisineSelection(listOf(id))) }
+        updateState { state ->
+            val updatedCuisines = state.cuisines.map { cuisine ->
+                if (cuisine.id == id) {
+                    cuisine.copy(isSelected = !cuisine.isSelected)
+                } else {
+                    cuisine
+                }
+            }
+            state.copy(cuisines = updatedCuisines)
+        }
     }
 
     override fun onImagePicked(image: ByteArray) {

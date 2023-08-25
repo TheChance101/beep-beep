@@ -1,12 +1,13 @@
 package domain.usecase
 
 import domain.entity.Meal
+import domain.entity.MealAddition
 import domain.gateway.IRemoteGateWay
 import presentation.base.ServerSideException
 
 interface IManageMealUseCase {
-    suspend fun addMeal(meal: Meal): Boolean
-
+    suspend fun addMeal(meal: MealAddition): Boolean
+    suspend fun updateMeal(meal: Meal): Boolean
     suspend fun getMeal(mealId: String): Meal
 
     suspend fun isValidMeal(meal: Meal): Boolean
@@ -14,13 +15,12 @@ interface IManageMealUseCase {
 }
 
 class ManageMealUseCase(private val remoteGateWay: IRemoteGateWay) : IManageMealUseCase {
-    override suspend fun addMeal(meal: Meal): Boolean {
-        val result = if (meal.id.isEmpty()) {
-            remoteGateWay.addMeal(meal)
-        } else {
-            remoteGateWay.updateMeal(meal)
-        }
-        return result != null
+    override suspend fun addMeal(meal: MealAddition): Boolean {
+        return remoteGateWay.addMeal(meal as Meal) != null
+    }
+
+    override suspend fun updateMeal(meal: Meal): Boolean {
+        return remoteGateWay.updateMeal(meal) != null
     }
 
     override suspend fun getMeal(mealId: String): Meal {

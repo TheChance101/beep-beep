@@ -33,19 +33,17 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.composable.BpAppBar
 import presentation.composable.modifier.noRippleEffect
 import presentation.mealManagement.MealScreenInteractionListener
-import presentation.mealManagement.MealUIState
+import presentation.mealManagement.MealDetails
 import presentation.mealManagement.isValid
 import presentation.mealManagement.toCuisinesString
 import resources.Resources
 import util.ImagePicker
-import util.ImagePickerFactory
-import util.getPlatformContext
 import util.rememberBitmapFromBytes
 
 @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MealContent(
-    meal: MealUIState,
+    meal: MealDetails,
     listener: MealScreenInteractionListener,
     buttonTitle: String,
     imagePicker: ImagePicker,
