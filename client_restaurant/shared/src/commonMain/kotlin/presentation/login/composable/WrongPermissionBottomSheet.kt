@@ -12,9 +12,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.beepbeep.designSystem.ui.composable.BpButton
+import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import presentation.login.LoginScreenInteractionListener
 import resources.Resources
 
 @OptIn(
@@ -23,8 +25,7 @@ import resources.Resources
 )
 @Composable
 fun WrongPermissionBottomSheet(
-    onRequestPermissionClick: () -> Unit,
-    onCancelClick: () -> Unit,
+    listener: LoginScreenInteractionListener,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -54,12 +55,12 @@ fun WrongPermissionBottomSheet(
         )
 
         BpButton(
-            onClick = onRequestPermissionClick,
+            onClick = listener::onRequestPermissionClick,
             title = Resources.strings.requestAPermission,
             modifier = Modifier.fillMaxWidth().padding(bottom = Theme.dimens.space16),
         )
-        BpButton(
-            onClick = onCancelClick,
+        BpTransparentButton(
+            onClick = listener::onCancelClick,
             title = Resources.strings.cancel,
             modifier = Modifier.fillMaxWidth(),
         )

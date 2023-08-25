@@ -1,6 +1,5 @@
 package presentation.login
 
 sealed class LoginScreenUIEffect {
-    data class Login(val ownerId: String) : LoginScreenUIEffect()
-    object Permission: LoginScreenUIEffect()
+    data class LoginEffect(val ownerId: String) : LoginScreenUIEffect()
 }
