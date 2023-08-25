@@ -16,7 +16,7 @@ data class UserScreenUiState(
         Header("", 1f),
     ),
     val pageInfo: UserPageInfoUiState = UserPageInfoUiState(),
-    val specifiedUsers: Int = 1,
+    val specifiedUsers: Int = 10,
     val currentPage: Int = 1,
     val search: String = "",
     val permissionsDialog: PermissionsDialogUiState = PermissionsDialogUiState(),
