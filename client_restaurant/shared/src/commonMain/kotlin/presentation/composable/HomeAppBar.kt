@@ -1,39 +1,46 @@
 package presentation.composable
 
-import androidx.compose.foundation.clickable
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import com.beepbeep.designSystem.ui.composable.BpButton
+import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
+import presentation.composable.modifier.noRippleEffect
+import presentation.restaurantSelection.RestaurantUIState
+import resources.Resources
 
-//ToDo: In progress
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeAppBar(
-    onStateChange: () -> Unit,
-    showDropDownMenu: () -> Unit,
-    onDismissRequest: () -> Unit,
-    state: String,
-    expanded: Boolean,
+    onRestaurantSelect: (String) -> Unit,
+    onShowMenu: () -> Unit,
+    onDismissMenu: () -> Unit,
+    state: Boolean,
     restaurantName: String,
-    isMultipleRestaurants: Boolean = false,
+    expanded: Boolean,
+    restaurants: List<RestaurantUIState>,
     modifier: Modifier = Modifier,
 ) {
+    val buttonBackgroundColor by animateColorAsState(if (state) Theme.colors.hover else Color.Transparent)
+    val buttonContentColor by animateColorAsState(if (state) Theme.colors.primary else Theme.colors.disable)
 
-    Column {
+    Column(modifier = modifier.fillMaxWidth()) {
         Row(
             modifier = modifier.fillMaxWidth().padding(Theme.dimens.space16),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -41,45 +48,50 @@ fun HomeAppBar(
         ) {
 
             MultipleRestaurants(
-                modifier = if (isMultipleRestaurants) {
-                    Modifier.clickable { showDropDownMenu() }
-                } else {
-                    Modifier
-                },
+                onClick = onShowMenu,
                 restaurantName = restaurantName,
-                isMultipleRestaurants = isMultipleRestaurants
+                isMultipleRestaurants = restaurants.isNotEmpty()
             )
 
-            BpButton(
-                onClick = onStateChange,
-                title = state
+            BpTransparentButton(
+                modifier = Modifier.background(buttonBackgroundColor),
+                title = if (state) Resources.strings.open else Resources.strings.closed,
+                enabled = false,
+                contentColor = buttonContentColor,
+                onClick = {}
             )
         }
 
         BpDropdownMenu(
             expanded = expanded,
+            modifier = Modifier.heightIn(max = 350.dp)
+                .widthIn(min = 260.dp),
             offset = DpOffset(Theme.dimens.space16, 0.dp),
-            onDismissRequest = onDismissRequest
+            onDismissRequest = onDismissMenu
         ) {
-
-            val modifier = Modifier.padding(20.dp)
-            Text("Option 1", modifier)
-            Text("Option 2", modifier)
-            Text("Option 3", modifier)
+            restaurants.forEach { restaurant ->
+                RestaurantInformation(
+                    onRestaurantClick = { onRestaurantSelect(restaurant.id) },
+                    restaurantName = restaurant.restaurantName,
+                    restaurantNumber = restaurant.restaurantNumber,
+                    isOpen = restaurant.isOpen
+                )
+            }
         }
     }
-
 }
 
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 private fun MultipleRestaurants(
+    onClick: () -> Unit,
     restaurantName: String,
     modifier: Modifier = Modifier,
-    isMultipleRestaurants: Boolean = false
+    isMultipleRestaurants: Boolean
 ) {
     Row(
-        modifier = modifier,
+        modifier = modifier.noRippleEffect(onClick),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -91,11 +103,11 @@ private fun MultipleRestaurants(
 
         if (isMultipleRestaurants) {
             Icon(
-//                painter = painterResource("drawable/arrowdown.svg"),
-                imageVector = Icons.Default.Home,
+                painter = painterResource(Resources.images.arrowDown),
                 contentDescription = null
             )
         }
 
     }
 }
+

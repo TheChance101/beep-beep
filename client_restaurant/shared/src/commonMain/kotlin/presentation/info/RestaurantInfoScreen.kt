@@ -51,7 +51,7 @@ class RestaurantInfoScreen() :
         Column {
             BpAppBar(
                 onNavigateUp = { listener.onClickBackArrow() },
-                title = Resources.strings.restaurantInfo,
+                title = Resources.strings.restaurantInfoInSingleLine,
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Theme.colors.surface)
@@ -226,7 +226,7 @@ class RestaurantInfoScreen() :
 
     override fun onEffect(effect: RestaurantInfoUiEffect, navigator: Navigator) {
         when (effect) {
-            is RestaurantInfoUiEffect.NavigateToLogin -> navigator.push(LoginScreen())
+            is RestaurantInfoUiEffect.NavigateToLogin -> navigator.replaceAll(LoginScreen())
             is RestaurantInfoUiEffect.ShowErrorMessage -> println("hello, ${effect.message}")
             is RestaurantInfoUiEffect.ShowNoDataPlaceholder -> println("hello, no data placeholder")
             is RestaurantInfoUiEffect.ShowSaveInfoSuccess -> println("hello, ${effect.message}")

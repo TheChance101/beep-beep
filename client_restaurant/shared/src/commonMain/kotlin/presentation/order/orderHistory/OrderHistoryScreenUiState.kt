@@ -1,4 +1,4 @@
-package presentation.order.order_history
+package presentation.order.orderHistory
 
 import presentation.base.ErrorState
 import presentation.order.OrderUiState
