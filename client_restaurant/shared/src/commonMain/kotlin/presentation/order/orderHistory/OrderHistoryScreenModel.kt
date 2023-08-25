@@ -4,18 +4,16 @@ import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Order
 import domain.usecase.IManageOrderUseCase
 import kotlinx.coroutines.CoroutineScope
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
 
-// todo: need to pass restaurantId from previous screen
-class OrderHistoryScreenModel(private val restaurantId: String) :
-    BaseScreenModel<OrderHistoryScreenUiState, OrderHistoryScreenUiEffect>(OrderHistoryScreenUiState()),
-    OrderHistoryScreenInteractionListener, KoinComponent {
+class OrderHistoryScreenModel(
+    private val restaurantId: String,
+    private val ordersManagement: IManageOrderUseCase
+) : BaseScreenModel<OrderHistoryScreenUiState, OrderHistoryScreenUiEffect>(OrderHistoryScreenUiState()),
+    OrderHistoryScreenInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
-    private val manageOrderUseCase: IManageOrderUseCase by inject()
 
     init {
         getData()
@@ -32,10 +30,11 @@ class OrderHistoryScreenModel(private val restaurantId: String) :
     private suspend fun getSelectedOrders(): List<Order> {
         return when (state.value.selectedType) {
             OrderHistoryScreenUiState.OrderSelectType.FINISHED -> {
-                manageOrderUseCase.getFinishedOrdersHistory(restaurantId)
+                ordersManagement.getFinishedOrdersHistory(restaurantId)
             }
+
             OrderHistoryScreenUiState.OrderSelectType.CANCELLED -> {
-                manageOrderUseCase.getCanceledOrdersHistory(restaurantId)
+                ordersManagement.getCanceledOrdersHistory(restaurantId)
             }
         }
     }

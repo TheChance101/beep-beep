@@ -4,17 +4,16 @@ import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Restaurant
 import domain.usecase.IGetOwnerRestaurantsInformationUseCase
 import kotlinx.coroutines.CoroutineScope
-import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 import presentation.restaurantSelection.toUiState
 
-class MainScreenModel(private val restaurantId: String) :
-    BaseScreenModel<MainScreenUIState, MainScreenUIEffect>(MainScreenUIState()),
+class MainScreenModel(
+    private val restaurantId: String,
+    private val getRestaurantsInformation: IGetOwnerRestaurantsInformationUseCase
+) : BaseScreenModel<MainScreenUIState, MainScreenUIEffect>(MainScreenUIState()),
     MainScreenInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
-
-    private val getOwnerRestaurantsInformationUseCase: IGetOwnerRestaurantsInformationUseCase by inject()
 
     init {
         updateState { it.copy(selectedRestaurantId = restaurantId) }
@@ -26,7 +25,7 @@ class MainScreenModel(private val restaurantId: String) :
     }
 
     private suspend fun callee(): List<Restaurant> {
-        return getOwnerRestaurantsInformationUseCase("")
+        return getRestaurantsInformation("")
     }
 
     private fun onSuccess(restaurants: List<Restaurant>) {

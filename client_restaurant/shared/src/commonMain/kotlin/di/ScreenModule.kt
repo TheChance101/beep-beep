@@ -12,10 +12,10 @@ import presentation.order.orderHistory.OrderHistoryScreenModel
 
 val screenModule = module {
     factoryOf(::LoginScreenModel)
-    factory { (restaurantId: String) -> MainScreenModel(restaurantId) }
+    factory { (restaurantId: String) -> MainScreenModel(restaurantId, get()) }
     factoryOf(::MealCreationScreenModel)
     factoryOf(::OrderScreenModel)
     factoryOf(::RestaurantInfoScreenModel)
     factoryOf(::MealsScreenModel)
-    factory { (restaurantId: String) -> OrderHistoryScreenModel(restaurantId) }
+    factory { (restaurantId: String) -> OrderHistoryScreenModel(restaurantId, get()) }
 }
