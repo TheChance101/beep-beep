@@ -3,6 +3,7 @@ package org.thechance.common.presentation.restaurant
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.usecase.FilterRestaurantsUseCase
 import org.thechance.common.domain.usecase.IGetRestaurantsUseCase
+import org.thechance.common.domain.usecase.SearchFilterRestaurantsUseCase
 import org.thechance.common.domain.usecase.SearchRestaurantsByRestaurantNameUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
@@ -12,7 +13,8 @@ import kotlin.math.ceil
 class RestaurantScreenModel(
     private val getRestaurants: IGetRestaurantsUseCase,
     private val searchRestaurants: SearchRestaurantsByRestaurantNameUseCase,
-    private val filterRestaurants: FilterRestaurantsUseCase
+    private val filterRestaurants: FilterRestaurantsUseCase,
+    private val searchFilterRestaurants: SearchFilterRestaurantsUseCase
 ) : BaseScreenModel<RestaurantUiState, RestaurantUIEffect>(RestaurantUiState()),
     RestaurantInteractionListener {
 
@@ -43,7 +45,7 @@ class RestaurantScreenModel(
 
     private fun filterRestaurants(rating: Double, priceLevel: Int) {
         tryToExecute(
-            { filterRestaurants.filterRestaurants(rating, priceLevel) },
+            { filterRestaurants.invoke(rating, priceLevel) },
             ::onGetRestaurantSuccessfully,
             ::onError
         )
@@ -51,7 +53,7 @@ class RestaurantScreenModel(
 
     private fun searchFilterRestaurants(restaurantName: String, rating: Double, priceLevel: Int) {
         tryToExecute(
-            { filterRestaurants.searchFilterRestaurants(restaurantName, rating, priceLevel) },
+            { searchFilterRestaurants.invoke(restaurantName, rating, priceLevel) },
             ::onGetRestaurantSuccessfully,
             ::onError
         )
