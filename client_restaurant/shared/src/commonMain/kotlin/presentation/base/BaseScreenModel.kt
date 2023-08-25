@@ -73,6 +73,10 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
                 onError(ErrorState.RequestFailed)
             } catch (e: ServerSideException) {
                 onError(ErrorState.RequestFailed)
+            } catch (e: InvalidCredentialsException) {
+                onError(ErrorState.InvalidCredentials(e.errorMessage.toString()))
+            } catch (e: UserNotFoundException) {
+                onError(ErrorState.UserNotExist(e.errorMessage.toString()))
             } catch (e: Exception) {
                 onError(ErrorState.RequestFailed)
             }

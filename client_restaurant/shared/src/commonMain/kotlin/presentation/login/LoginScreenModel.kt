@@ -42,14 +42,13 @@ class LoginScreenModel:
 
     private fun onLoginSuccess(result: UserTokens) {
         println("token${result.accessToken}")
-        updateState { it.copy(isLoading = false, error = "null") }
+        updateState { it.copy(isLoading = false) }
         sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
     }
 
     private fun onLoginFailed(error: ErrorState) {
-        state.value.sheetState.show()
         handleErrorState(error)
-        updateState { it.copy(isLoading = false, error = "error") }
+        updateState { it.copy(isLoading = false, error = error) }
     }
 
     private fun handleErrorState(error: ErrorState) {
@@ -59,9 +58,17 @@ class LoginScreenModel:
             ErrorState.RequestFailed -> "ops"
             ErrorState.UnAuthorized -> "ops3"
             ErrorState.WifiDisabled -> {
-                state.value.sheetState.show()
-            }      // just for testing
+                state.value.sheetState.show()  // just for testing
+            }
+
             ErrorState.HasNoPermission -> "ops4"    // do nothing for now
+            is ErrorState.InvalidCredentials -> {
+                updateState { it.copy(error = error, isPasswordError = true) }
+            }
+
+            is ErrorState.UserNotExist -> {
+                updateState { it.copy(error = error, isUsernameError = true) }
+            }
         }
     }
 

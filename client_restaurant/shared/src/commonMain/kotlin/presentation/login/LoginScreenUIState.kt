@@ -1,5 +1,6 @@
 package presentation.login
 
+import presentation.base.ErrorState
 import presentation.composables.ModalBottomSheetState
 
 data class LoginScreenUIState(
@@ -7,7 +8,7 @@ data class LoginScreenUIState(
     val password: String = "",
     val keepLoggedIn: Boolean = false,
     val isLoading: Boolean = false,
-    val error: String = "",
+    val error: ErrorState? = null,
     val usernameError: String = "",
     val isUsernameError: Boolean = false,
     val passwordError: String = "",
