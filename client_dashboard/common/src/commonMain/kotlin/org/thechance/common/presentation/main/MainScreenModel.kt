@@ -2,11 +2,7 @@ package org.thechance.common.presentation.main
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import kotlinx.coroutines.flow.update
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import org.thechance.common.domain.usecase.IGetUserInfoUseCase
-import org.thechance.common.presentation.uistate.MainUiState
-import org.thechance.common.presentation.uistate.toUiState
 
 
 class MainScreenModel(

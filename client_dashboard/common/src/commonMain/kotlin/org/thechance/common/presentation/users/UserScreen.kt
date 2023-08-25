@@ -9,8 +9,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -19,11 +17,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.*
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import org.thechance.common.presentation.base.BaseScreen
 import org.thechance.common.presentation.composables.BpDropdownMenu
 import org.thechance.common.presentation.composables.BpDropdownMenuItem
 import org.thechance.common.presentation.composables.PermissionsDialog
@@ -34,60 +31,52 @@ import org.thechance.common.presentation.composables.table.BpPager
 import org.thechance.common.presentation.composables.table.BpTable
 import org.thechance.common.presentation.composables.table.Header
 import org.thechance.common.presentation.composables.table.TotalItemsIndicator
-import org.thechance.common.presentation.uistate.UserScreenUiState
 
+sealed interface UserUiEffect
 
-object UserScreen : Screen, KoinComponent {
+class UserScreen :
+    BaseScreen<UserScreenModel, UserUiEffect,
+            UserScreenUiState, UserScreenInteractionListener>() {
+    override fun onEffect(effect: UserUiEffect, navigator: Navigator) {
+        TODO("Not yet implemented")
+    }
 
-    private val screenModel: UserScreenModel by inject()
+    @Composable
+    override fun OnRender(
+        state: UserScreenUiState,
+        listener: UserScreenInteractionListener
+    ) {
+        UserContent(
+            state = state,
+            pageListener  = listener,
+            editMenuListener = listener,
+            onDeleteUserMenuItemClicked = listener::onDeleteUserMenu,
+            onSearchInputChanged = listener::onSearchInputChange,
+            filterMenuListener = listener
+        )
+    }
 
     @Composable
     override fun Content() {
-        val state by screenModel.state.collectAsState()
-        UserContent(
-            state = state,
-            onItemPerPageChanged = screenModel::onItemPerPageChanged,
-            onPageClicked = screenModel::onPageClicked,
-            onFilterPermissionClicked = screenModel::onFilterPermissionClicked,
-            onFilterCountryClicked = screenModel::onFilterCountryClicked,
-            onUserMenuClicked = screenModel::showUserMenu,
-            onEditUserMenuItemClicked = screenModel::onEditUserMenuItemClicked,
-            onSaveUserPermissions = screenModel::onSaveUserPermissions,
-            onCancelUserPermissionsDialog = screenModel::onCancelUserPermissionsDialog,
-            onUserPermissionClicked = screenModel::onUserPermissionClicked,
-            hideUserMenu = screenModel::hideUserMenu,
-            onDeleteUserMenuItemClicked = screenModel::onDeleteUserMenuItemClicked,
-            onSearchInputChanged = screenModel::onSearchInputChange,
-            onFilterMenuClicked = screenModel::showFilterMenu,
-            onFilterMenuDismiss = screenModel::hideFilterMenu,
-        )
+        Init(getScreenModel())
     }
 
     @Composable
     private fun UserContent(
         state: UserScreenUiState,
-        hideUserMenu: () -> Unit,
-        onItemPerPageChanged: (String) -> Unit,
-        onPageClicked: (Int) -> Unit,
-        onFilterPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
-        onFilterCountryClicked: (UserScreenUiState.CountryUiState) -> Unit,
-        onUserMenuClicked: (String) -> Unit,
-        onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
-        onSaveUserPermissions: () -> Unit,
-        onCancelUserPermissionsDialog: () -> Unit,
-        onUserPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
+        pageListener:PageListener,
+        editMenuListener: EditUserMenuListener,
         onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
         onSearchInputChanged: (String) -> Unit,
-        onFilterMenuClicked: () -> Unit,
-        onFilterMenuDismiss: () -> Unit,
+        filterMenuListener: FilterMenuListener
     ) {
         PermissionsDialog(
             visible = state.permissionsDialog.show,
             allPermissions = state.allPermissions,
             selectedPermissions = state.permissionsDialog.permissions,
-            onUserPermissionClicked = onUserPermissionClicked,
-            onSaveUserPermissions = onSaveUserPermissions,
-            onCancelUserPermissionsDialog = onCancelUserPermissionsDialog,
+            onUserPermissionClicked = editMenuListener::onEditUserMenuPermissionClick,
+            onSaveUserPermissions = editMenuListener::onSaveEditUserMenu,
+            onCancelUserPermissionsDialog = editMenuListener::onCancelEditUserMenu,
         )
 
         Column(
@@ -102,27 +91,27 @@ object UserScreen : Screen, KoinComponent {
                 allPermissions = state.allPermissions,
                 selectedPermissions = state.filter.permissions,
                 countries = state.filter.countries,
-                onFilterPermissionClicked = onFilterPermissionClicked,
+                onFilterPermissionClicked = filterMenuListener::onFilterMenuPermissionClick,
                 isFilterDropdownMenuExpanded = state.filter.show,
-                onFilterCountryClicked = onFilterCountryClicked,
+                onFilterCountryClicked = filterMenuListener::onFilterMenuCountryClick,
                 onSearchInputChanged = onSearchInputChanged,
-                onFilterMenuClicked = onFilterMenuClicked,
-                onFilterMenuDismiss = onFilterMenuDismiss,
+                onFilterMenuClicked = filterMenuListener::showFilterMenu,
+                onFilterMenuDismiss = filterMenuListener::hideFilterMenu,
             )
 
             UsersTable(
-                users = state.users,
+                users = state.pageInfo.data,
                 headers = state.tableHeader,
-                selectedPage = state.selectedPage,
-                onUserMenuClicked = onUserMenuClicked,
-                numberItemInPage = state.numberItemInPage,
-                numberOfUsers = state.numberOfUsers,
-                pageCount = state.pageCount,
-                onPageClicked = onPageClicked,
-                onItemPerPageChanged = onItemPerPageChanged,
+                selectedPage = state.currentPage,
+                onUserMenuClicked = editMenuListener::showEditUserMenu,
+                numberItemInPage = state.specifiedUsers,
+                numberOfUsers = state.pageInfo.numberOfUsers,
+                pageCount = state.pageInfo.totalPages,
+                onPageClicked = pageListener::onPageClick,
+                onItemPerPageChanged = pageListener::onItemsIndicatorChange,
                 editUserMenu = state.userMenu,
-                onEditUserDismiss = hideUserMenu,
-                onEditUserMenuItemClicked = onEditUserMenuItemClicked,
+                onEditUserDismiss = editMenuListener::hideEditUserMenu,
+                onEditUserMenuItemClicked = editMenuListener::onEditUserMenuItemClicked,
                 onDeleteUserMenuItemClicked = onDeleteUserMenuItemClicked,
             )
         }
@@ -138,7 +127,7 @@ object UserScreen : Screen, KoinComponent {
         numberOfUsers: Int,
         pageCount: Int,
         onPageClicked: (Int) -> Unit,
-        onItemPerPageChanged: (String) -> Unit,
+        onItemPerPageChanged: (Int) -> Unit,
         editUserMenu: UserScreenUiState.MenuUiState,
         onEditUserDismiss: () -> Unit,
         onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
@@ -147,12 +136,10 @@ object UserScreen : Screen, KoinComponent {
         Column {
             BpTable(
                 data = users,
-                key = { it.username },
+                key = UserScreenUiState.UserUiState::username,
                 headers = headers,
                 modifier = Modifier.fillMaxWidth(),
-                rowsCount = numberItemInPage,
-                offset = selectedPage - 1,
-            ) { user ->
+                ) { user ->
                 UserRow(
                     onUserMenuClicked = onUserMenuClicked,
                     user = user,
@@ -181,7 +168,7 @@ object UserScreen : Screen, KoinComponent {
         pageCount: Int,
         selectedPage: Int,
         onPageClicked: (Int) -> Unit,
-        onItemPerPageChanged: (String) -> Unit,
+        onItemPerPageChanged: (Int) -> Unit,
     ) {
         Row(
             modifier = Modifier.fillMaxSize(),
@@ -189,7 +176,7 @@ object UserScreen : Screen, KoinComponent {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             TotalItemsIndicator(
-                numberItemInPage = numberItemInPage.toString(),
+                numberItemInPage = numberItemInPage,
                 totalItems = numberOfUsers,
                 itemType = "user",
                 onItemPerPageChange = onItemPerPageChanged
@@ -314,7 +301,6 @@ object UserScreen : Screen, KoinComponent {
             }
         }
     }
-
     @Composable
     private fun UsersFilteredSearch(
         searchText: String,

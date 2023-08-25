@@ -1,11 +1,11 @@
-package org.thechance.common.presentation.uistate
+package org.thechance.common.presentation.users
 
+import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.User
 import org.thechance.common.presentation.composables.table.Header
-
+import org.thechance.common.presentation.util.ErrorState
 
 data class UserScreenUiState(
-    val users: List<UserUiState> = emptyList(),
     val tableHeader: List<Header> = listOf(
         Header("No.", 1f),
         Header("Users", 3f),
@@ -15,13 +15,11 @@ data class UserScreenUiState(
         Header("Permission", 3f),
         Header("", 1f),
     ),
-    val numberOfUsers: Int = 0,
+    val pageInfo: UserPageInfoUiState = UserPageInfoUiState(),
+    val specifiedUsers: Int = 1,
+    val currentPage: Int = 1,
     val search: String = "",
     val permissionsDialog: PermissionsDialogUiState = PermissionsDialogUiState(),
-    val selectedUser: String = "",
-    val selectedPage: Int = 1,
-    val numberItemInPage: Int = 3,
-    val pageCount: Int = 3,
     val filter: FilterUiState = FilterUiState(),
     val allPermissions: List<PermissionUiState> = listOf(
         PermissionUiState.RESTAURANT_OWNER,
@@ -31,8 +29,16 @@ data class UserScreenUiState(
         PermissionUiState.DELIVERY,
         PermissionUiState.DASHBOARD_ADMIN,
     ),
+    val error: ErrorState = ErrorState.UnKnownError,
+    val isLoading: Boolean = true,
     val userMenu: MenuUiState = MenuUiState(),
 ) {
+    data class UserPageInfoUiState(
+        val data: List<UserUiState> = emptyList(),
+        val numberOfUsers: Int = 0,
+        val totalPages: Int = 0,
+    )
+
     data class UserUiState(
         val fullName: String = "",
         val username: String = "",
@@ -129,4 +135,12 @@ fun List<User>.toUiState(): List<UserScreenUiState.UserUiState> {
             },
         )
     }
+}
+
+fun DataWrapper<User>.toUiState(): UserScreenUiState.UserPageInfoUiState {
+    return UserScreenUiState.UserPageInfoUiState(
+        data = result.toUiState(),
+        totalPages = totalPages,
+        numberOfUsers = numberOfResult
+    )
 }
