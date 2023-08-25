@@ -22,7 +22,9 @@ fun BpAppBar(
     onNavigateUp: () -> Unit,
     title: String = "",
     modifier: Modifier = Modifier,
-    content: (@Composable (() -> Unit))? = null
+    isBackIconVisible: Boolean = true,
+    leading: (@Composable (() -> Unit))? = null,
+    actions: (@Composable (() -> Unit))? = null
 ) {
     TopAppBar(
         title = {
@@ -33,16 +35,21 @@ fun BpAppBar(
             )
         },
         navigationIcon = {
-            Icon(
-                painter = painterResource(images.arrowLeft),
-                contentDescription = "",
-                modifier = Modifier.noRippleEffect { onNavigateUp() }
-                    .padding(start = dimens.space16, end = dimens.space16),
-                tint = colors.contentSecondary,
-            )
+            if (isBackIconVisible) {
+                Icon(
+                    painter = painterResource(images.arrowLeft),
+                    contentDescription = "",
+                    modifier = Modifier.noRippleEffect { onNavigateUp() }
+                        .padding(start = dimens.space16, end = dimens.space16),
+                    tint = colors.contentSecondary,
+                )
+            } else {
+                leading?.invoke()
+            }
+
         },
         actions = {
-            content?.invoke()
+            actions?.invoke()
         },
         colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = colors.surface),
         modifier = modifier,
