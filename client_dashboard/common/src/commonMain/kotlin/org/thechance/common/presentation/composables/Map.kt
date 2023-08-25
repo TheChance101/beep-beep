@@ -19,18 +19,6 @@ private fun createWebViewComponent(
         val webView = WebView()
         val webEngine = webView.engine
         val scene = Scene(webView)
-//        webEngine.loadWorker.stateProperty().addListener { _, _, newState ->
-//            if (newState == Worker.State.SUCCEEDED) {
-//                try {
-////                    val latlng = currentLocation.split(",")
-////                    val lat = latlng[0]
-////                    val lng = latlng[1]
-//                    webEngine.executeScript("initMap()")
-//                } catch (e: Exception) {
-//                    println(e.message)
-//                }
-//            }
-//        }
 
         jfxPanel.scene = scene
         webEngine.loadContent(getResourceContent(content))
