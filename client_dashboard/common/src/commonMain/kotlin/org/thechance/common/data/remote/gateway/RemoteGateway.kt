@@ -65,6 +65,18 @@ class RemoteGateway(
         }.value?.toEntity() ?: throw Exception()
     }
 
+    override suspend fun filterRestaurants(rating: Double, priceLevel: Int): List<Restaurant> {
+        return emptyList()
+    }
+
+    override suspend fun searchFilterRestaurants(
+        restaurantName: String,
+        rating: Double,
+        priceLevel: Int
+    ): List<Restaurant> {
+        return emptyList()
+    }
+
 
     private suspend inline fun <reified T> tryToExecute(
         method: HttpClient.() -> HttpResponse
