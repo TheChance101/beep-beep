@@ -38,7 +38,7 @@ fun App() {
     ) {
         Box(Modifier.onSizeChanged { size = it.toSize() }) {
             BpTheme {
-                Navigator(MainContainer) {
+                Navigator(LoginScreen()) {
                     SlideTransition(it)
                 }
             }

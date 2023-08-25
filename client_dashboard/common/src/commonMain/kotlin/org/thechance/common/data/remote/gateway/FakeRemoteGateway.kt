@@ -10,9 +10,11 @@ import org.thechance.common.data.remote.model.TaxiDto
 import org.thechance.common.data.remote.model.UserDto
 import org.thechance.common.data.remote.model.toEntity
 import org.thechance.common.data.service.IFakeService
+import org.thechance.common.domain.entity.AddRestaurant
 import org.thechance.common.domain.entity.AddTaxi
 import org.thechance.common.domain.entity.Admin
 import org.thechance.common.domain.entity.DataWrapper
+import org.thechance.common.domain.entity.Location
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.entity.User
