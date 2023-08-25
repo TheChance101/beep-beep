@@ -1,25 +1,40 @@
 package org.thechance.common.presentation.users
 
 import kotlinx.coroutines.flow.update
+import org.thechance.common.domain.entity.DataWrapper
+import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.usecase.IGetUsersUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.uistate.UserScreenUiState
 import org.thechance.common.presentation.uistate.toUiState
+import org.thechance.common.presentation.util.ErrorState
 
 
 class UserScreenModel(
     private val getUsers: IGetUsersUseCase
-) : BaseScreenModel<UserScreenUiState,UserUiEffect>(UserScreenUiState()),UserScreenInteractionListener
-{
+) : BaseScreenModel<UserScreenUiState, UserUiEffect>(UserScreenUiState()),
+    UserScreenInteractionListener {
 
     init {
-        updateUsers()
+        getUsers()
     }
 
-    private fun updateUsers() {
-        mutableState.update {
-            it.copy(pageInfo = getUsers(it.currentPage, it.specifiedUsers).toUiState())
+    private fun getUsers() {
+        tryToExecute(
+            { getUsers(state.value.currentPage, state.value.specifiedUsers) },
+            ::onGetUsersSuccessfully,
+            ::onError
+        )
+    }
+
+    private fun onGetUsersSuccessfully(users: DataWrapper<User>) {
+        updateState {
+            it.copy(pageInfo = users.toUiState(), isLoading = false)
         }
+    }
+
+    private fun onError(error: ErrorState) {
+        updateState { it.copy(error = error, isLoading = false) }
     }
 
     override fun onSearchInputChange(text: String) {
@@ -143,12 +158,12 @@ class UserScreenModel(
 
     override fun onItemsIndicatorChange(itemPerPage: Int) {
         mutableState.update { it.copy(specifiedUsers = itemPerPage) }
-        updateUsers()
+        getUsers()
     }
 
     override fun onPageClick(pageNumber: Int) {
         mutableState.update { it.copy(currentPage = pageNumber) }
-        updateUsers()
+        getUsers()
     }
 
     override fun onFilterMenuPermissionClick(permission: UserScreenUiState.PermissionUiState) {
@@ -161,7 +176,7 @@ class UserScreenModel(
                 filter = it.filter.copy(permissions = permissions)
             )
         }
-        updateUsers() // TODO: Update users with filter by permission
+        getUsers() // TODO: Update users with filter by permission
     }
 
     override fun onFilterMenuCountryClick(country: UserScreenUiState.CountryUiState) {
@@ -172,7 +187,7 @@ class UserScreenModel(
             }
             uiState.copy(filter = uiState.filter.copy(countries = updatedCountries))
         }
-        updateUsers() // TODO : Update users with filter by country
+        getUsers() // TODO : Update users with filter by country
     }
 
 }

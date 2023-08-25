@@ -5,11 +5,11 @@ import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.User
 
 interface IGetUsersUseCase {
-    operator fun invoke(page:Int,numberOfUsers:Int): DataWrapper<User>
+    suspend operator fun invoke(page:Int, numberOfUsers:Int): DataWrapper<User>
 }
 
 class GetUsersUseCase(private val fakeRemoteGateway: FakeRemoteGateway) : IGetUsersUseCase {
-    override fun invoke(page:Int,numberOfUsers: Int): DataWrapper<User> {
+    override suspend operator fun invoke(page:Int,numberOfUsers: Int): DataWrapper<User> {
         return fakeRemoteGateway.getUsers(page,numberOfUsers)
     }
 }

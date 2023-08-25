@@ -3,6 +3,7 @@ package org.thechance.common.presentation.uistate
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.User
 import org.thechance.common.presentation.composables.table.Header
+import org.thechance.common.presentation.util.ErrorState
 
 
 data class UserScreenUiState(
@@ -29,6 +30,8 @@ data class UserScreenUiState(
         PermissionUiState.DELIVERY,
         PermissionUiState.DASHBOARD_ADMIN,
     ),
+    val error: ErrorState = ErrorState.UnKnownError,
+    val isLoading: Boolean = true,
     val userMenu: MenuUiState = MenuUiState(),
 ) {
     data class UserPageInfoUiState(
