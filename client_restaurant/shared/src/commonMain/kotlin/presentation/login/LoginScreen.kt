@@ -9,11 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
@@ -24,7 +19,6 @@ import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.base.BaseScreen
 import presentation.composable.CustomBottomSheet
-import presentation.composable.ModalBottomSheetState
 import presentation.login.composable.PermissionBottomSheetContent
 import presentation.login.composable.WrongPermissionBottomSheet
 import presentation.restaurantSelection.RestaurantSelectionScreen
@@ -44,53 +38,31 @@ class LoginScreen :
         navigator: Navigator,
     ) {
         when (effect) {
-            is LoginScreenUIEffect.Login -> navigator.push(RestaurantSelectionScreen(ownerId = ""))
+            is LoginScreenUIEffect.LoginEffect -> navigator.push(RestaurantSelectionScreen(ownerId = ""))
         }
     }
 
     @Composable
     override fun onRender(state: LoginScreenUIState, listener: LoginScreenInteractionListener) {
 
-        var showPermissionSheet by remember { mutableStateOf(false) }
-        val sheetState = remember { ModalBottomSheetState() }
-
         Column(modifier = Modifier.fillMaxSize()) {
-
-            LaunchedEffect(sheetState.isVisible) {
-                if (!sheetState.isVisible) {
-                    showPermissionSheet = false
-                }
-            }
 
             CustomBottomSheet(
                 sheetContent = {
-                    if (showPermissionSheet) {
+                    if (state.showPermissionSheet) {
                         PermissionBottomSheetContent(
-                            onCancelClick = {
-                                showPermissionSheet = false
-                                sheetState.dismiss()
-                            },
-                            onSubmit = {
-                                showPermissionSheet = false
-                                listener.onClickSubmit()
-                                sheetState.dismiss()
-                            },
                             listener = listener,
                             state = state
                         )
                     } else {
                         WrongPermissionBottomSheet(
-                            onRequestPermissionClick = {
-                                showPermissionSheet = true
-                                listener.onClickSubmit()
-                            },
-                            onCancelClick = { sheetState.dismiss() },
+                            listener = listener
                         )
                     }
                 },
                 sheetBackgroundColor = Theme.colors.background,
-                sheetState = sheetState,
-            ) { LoginScreenContent(state, listener, sheetState) }
+                sheetState = state.sheetState,
+            ) { LoginScreenContent(state, listener) }
         }
     }
 
@@ -99,7 +71,6 @@ class LoginScreen :
     private fun LoginScreenContent(
         state: LoginScreenUIState,
         listener: LoginScreenInteractionListener,
-        sheetState: ModalBottomSheetState,
     ) {
         Column(
             Modifier.fillMaxSize().background(Theme.colors.secondary),
@@ -130,11 +101,7 @@ class LoginScreen :
             )
             BpButton(
                 onClick = {
-                    if (state.hasPermission) {
-                        sheetState.show()
-                    } else {
-                        listener.onClickLogin()
-                    }
+                    listener.onClickLogin("")
                 },
                 title = "Login",
                 modifier = Modifier.fillMaxWidth(),

@@ -12,6 +12,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpExpandableTextField
 import com.beepbeep.designSystem.ui.composable.BpTextField
+import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.login.LoginScreenInteractionListener
 import presentation.login.LoginScreenUIState
@@ -22,8 +23,6 @@ import resources.Resources
 @Composable
 fun PermissionBottomSheetContent(
     listener: LoginScreenInteractionListener,
-    onSubmit: () -> Unit,
-    onCancelClick: () -> Unit,
     modifier: Modifier = Modifier,
     state: LoginScreenUIState
 ) {
@@ -58,12 +57,12 @@ fun PermissionBottomSheetContent(
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
         )
         BpButton(
-            onClick = onSubmit,
+            onClick = listener::onClickSubmit,
             title = Resources.strings.submit,
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
         )
-        BpButton(
-            onClick = onCancelClick,
+        BpTransparentButton(
+            onClick = listener::onCancelClick,
             title = Resources.strings.cancel,
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
         )

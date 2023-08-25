@@ -31,12 +31,32 @@ class LoginScreenModel :
         updateState { it.copy(description = description) }
     }
 
-    override fun onClickLogin() {
-//        sendNewEffect(LoginScreenUIEffect.Login(ownerId))
+    override fun onClickLogin(ownerId: String) {
+        tryToExecute(
+            onSuccess = {
+//                 sendNewEffect(LoginScreenUIEffect.LoginEffect(ownerId))
+            },
+            onError = {
+                state.value.sheetState.show()
+            },
+            function = {}
+        )
+    }
+
+    override fun onRequestPermissionClick() {
+        updateState { it.copy(showPermissionSheet = true) }
     }
 
     override fun onClickSubmit() {
         // TODO: send permission request
+        state.value.sheetState.dismiss()
+        updateState { it.copy(showPermissionSheet = false) }
     }
+
+    override fun onCancelClick() {
+        updateState { it.copy(showPermissionSheet = false) }
+        state.value.sheetState.dismiss()
+    }
+
 
 }

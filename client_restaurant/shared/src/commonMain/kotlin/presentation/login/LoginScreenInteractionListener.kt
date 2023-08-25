@@ -8,6 +8,8 @@ interface LoginScreenInteractionListener : BaseInteractionListener {
     fun onPasswordChanged(password: String)
     fun onNameChanged(restaurantName: String)
     fun onDescriptionChanged(description: String)
-    fun onClickLogin()
+    fun onClickLogin(ownerId: String)
+    fun onRequestPermissionClick()
     fun onClickSubmit()
+    fun onCancelClick()
 }
