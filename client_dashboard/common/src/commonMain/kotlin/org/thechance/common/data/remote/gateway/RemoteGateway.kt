@@ -88,8 +88,8 @@ class RemoteGateway(
         val url = URL("https://ipinfo.io/json")
         val json = url.readText()
         val data = Gson().fromJson(json, Location::class.java)
-        val location = data.loc
-        return Location(loc = location)
+        val location = data.location
+        return Location(location = location)
     }
 
 

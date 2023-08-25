@@ -44,7 +44,10 @@ var svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="49"
                 var marker = new google.maps.Marker({
                 position: userLocation,
                 map: map,
-
+                 icon: {
+                    url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svgContent),
+                    scaledSize: new google.maps.Size(32, 32)
+                },
                 title: 'Marker Title',
                 draggable: true,
                 animation: google.maps.Animation.DROP,
@@ -68,6 +71,9 @@ var svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="49"
                         alert(marker.position);
                     });
         }
+
+
+
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1kFbtDfzI3bXkfkCEjb0LKtC8PTz-YZU&callback=initMap"
         defer

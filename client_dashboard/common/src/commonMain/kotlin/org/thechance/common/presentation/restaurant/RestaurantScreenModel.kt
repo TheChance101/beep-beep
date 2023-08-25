@@ -3,9 +3,8 @@ package org.thechance.common.presentation.restaurant
 import org.thechance.common.domain.entity.Location
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.usecase.FilterRestaurantsUseCase
-import org.thechance.common.domain.usecase.ICreateNewRestaurantUseCase
-import org.thechance.common.domain.usecase.IGetRestaurantsUseCase
 import org.thechance.common.domain.usecase.IHandleLocationUseCase
+import org.thechance.common.domain.usecase.IManageRestaurantUseCase
 import org.thechance.common.domain.usecase.SearchRestaurantsByRestaurantNameUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
@@ -13,9 +12,8 @@ import kotlin.math.ceil
 
 
 class RestaurantScreenModel(
-    private val getRestaurants: IGetRestaurantsUseCase,
-    private val createNewRestaurant: ICreateNewRestaurantUseCase,
-    private val handleLocationUseCase: IHandleLocationUseCase,
+    private val manageRestaurant: IManageRestaurantUseCase,
+    private val handleLocation: IHandleLocationUseCase,
     private val searchRestaurants: SearchRestaurantsByRestaurantNameUseCase,
     private val filterRestaurants: FilterRestaurantsUseCase,
 ) : BaseScreenModel<RestaurantUiState, RestaurantUIEffect>(RestaurantUiState()),
@@ -26,7 +24,7 @@ class RestaurantScreenModel(
     }
 
     private fun getRestaurants() {
-        tryToExecute(getRestaurants::invoke, ::onGetRestaurantSuccessfully, ::onError)
+        tryToExecute(manageRestaurant::getRestaurant, ::onGetRestaurantSuccessfully, ::onError)
     }
 
     private fun onGetRestaurantSuccessfully(restaurant: List<Restaurant>) {
@@ -131,7 +129,7 @@ class RestaurantScreenModel(
 
     private fun getCurrentLocation() {
         tryToExecute(
-            callee = { handleLocationUseCase.getCurrentLocation() },
+            callee = { handleLocation.getCurrentLocation() },
             onSuccess = ::onGetCurrentLocationSuccess,
             onError = ::onError,
         )
@@ -141,7 +139,7 @@ class RestaurantScreenModel(
         updateState {
             it.copy(
                 addNewRestaurantDialogUiState = it.addNewRestaurantDialogUiState.copy(
-                    currentLocation = location.loc
+                    currentLocation = location.location
                 )
             )
         }
@@ -201,14 +199,6 @@ class RestaurantScreenModel(
         }
     }
 
-    override fun onCreateNewRestaurantClicked() {
-        tryToExecute(
-            callee = { createNewRestaurant.createRestaurant(mutableState.value.addNewRestaurantDialogUiState.toEntity()) },
-            onSuccess = ::onCreateRestaurantSuccessfully,
-            onError = ::onError,
-        )
-    }
-
     override fun onAddressChange(address: String) {
         updateState {
             it.copy(
@@ -217,6 +207,14 @@ class RestaurantScreenModel(
                 )
             )
         }
+    }
+
+    override fun onCreateNewRestaurantClicked() {
+        tryToExecute(
+            callee = { manageRestaurant.createRestaurant(mutableState.value.addNewRestaurantDialogUiState.toEntity()) },
+            onSuccess = ::onCreateRestaurantSuccessfully,
+            onError = ::onError,
+        )
     }
 
     private fun onCreateRestaurantSuccessfully(restaurant: Restaurant) {

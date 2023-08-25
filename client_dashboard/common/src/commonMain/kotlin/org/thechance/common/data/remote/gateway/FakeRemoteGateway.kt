@@ -312,6 +312,6 @@ class FakeRemoteGateway : IRemoteGateway {
     }
 
     override suspend fun getCurrentLocation(): Location {
-        return Location(loc = "30.044420,31.235712")
+        return Location(location = "30.044420,31.235712")
     }
 }
