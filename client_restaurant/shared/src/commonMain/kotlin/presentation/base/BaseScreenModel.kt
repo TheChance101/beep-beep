@@ -67,6 +67,8 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
                 onError(ErrorState.NetworkNotSupported)
             } catch (e: UnAuthorizedException) {
                 onError(ErrorState.UnAuthorized)
+            } catch (e: PermissionDenied) {
+                onError(ErrorState.HasNoPermission)
             } catch (e: ClientSideException) {
                 onError(ErrorState.RequestFailed)
             } catch (e: ServerSideException) {

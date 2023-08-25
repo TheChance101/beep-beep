@@ -1,5 +1,6 @@
 package presentation.login
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,6 +16,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
@@ -38,7 +40,7 @@ class LoginScreen :
 
     @Composable
     override fun Content() {
-       val screenModel = rememberScreenModel { LoginScreenModel() }
+        val screenModel = rememberScreenModel { LoginScreenModel() }
         initScreen(screenModel)
     }
 
@@ -48,6 +50,7 @@ class LoginScreen :
     ) {
         when (effect) {
             is LoginScreenUIEffect.LoginEffect -> navigator.push(RestaurantSelectionScreen(ownerId = ""))
+            is LoginScreenUIEffect.HasPermission -> navigator.push(RestaurantSelectionScreen(ownerId = ""))
         }
     }
 
@@ -56,54 +59,55 @@ class LoginScreen :
 
         Column(modifier = Modifier.fillMaxSize()) {
 
-            state.sheetState?.let {
-                CustomBottomSheet(
-                    sheetContent = {
-                        if (state.showPermissionSheet) {
-                            PermissionBottomSheetContent(
-                                listener = listener,
-                                state = state
-                            )
-                        } else {
-                            WrongPermissionBottomSheet(
-                                listener = listener
-                            )
-                        }
-                    },
-                    sheetBackgroundColor = Theme.colors.background,
-                    sheetState = it,
-                ) { LoginScreenContent(state, listener) }
-            }
+            CustomBottomSheet(
+                sheetContent = {
+                    if (state.showPermissionSheet) {
+                        PermissionBottomSheetContent(
+                            listener = listener,
+                            state = state
+                        )
+                    } else {
+                        WrongPermissionBottomSheet(
+                            listener = listener
+                        )
+                    }
+                },
+                sheetBackgroundColor = Theme.colors.background,
+                sheetState = state.sheetState,
+            ) { LoginScreenContent(state, listener) }
         }
     }
+}
 
-    @OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
-    @Composable
-    private fun LoginScreenContent(
-        state: LoginScreenUIState,
-        listener: LoginScreenInteractionListener
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
+@Composable
+private fun LoginScreenContent(
+    state: LoginScreenUIState,
+    listener: LoginScreenInteractionListener
+) {
+    Column(
+        Modifier.fillMaxSize().background(Theme.colors.background),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Column(
-            Modifier.fillMaxSize().padding(horizontal = 16.dp).background(Theme.colors.background),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
 
-            Box(modifier = Modifier.fillMaxWidth().fillMaxHeight(0.3f)) {
-                Icon(
-                    modifier = Modifier.fillMaxSize(),
-                    tint = Theme.colors.primary,
-                    painter = painterResource(Resources.images.backgroundPattern),
-                    contentDescription = null,
-                    //contentScale = ContentScale.Crop
-                )
-                Icon(
-                    modifier = Modifier.height(44.dp).width(97.dp).align(Alignment.Center),
-                    tint = Theme.colors.primary,
-                    painter = painterResource(Resources.images.bpLogo),
-                    contentDescription = null
-                )
-            }
+        Box(modifier = Modifier.fillMaxWidth().fillMaxHeight(0.3f)) {
+            Image(
+                modifier = Modifier.fillMaxSize(),
+                painter = painterResource(Resources.images.backgroundPattern),
+                contentDescription = null,
+                contentScale = ContentScale.Crop
+            )
+            Icon(
+                modifier = Modifier.height(44.dp).width(97.dp).align(Alignment.Center),
+                tint = Theme.colors.primary,
+                painter = painterResource(Resources.images.bpLogo),
+                contentDescription = null
+            )
+        }
+        Column(
+            Modifier.padding(horizontal = Theme.dimens.space16),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
             BpTextField(
                 text = state.userName,
                 onValueChange = listener::onUserNameChanged,
@@ -141,4 +145,6 @@ class LoginScreen :
         }
 
     }
+
 }
+

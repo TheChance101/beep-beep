@@ -6,4 +6,5 @@ sealed interface ErrorState {
     object NetworkNotSupported : ErrorState
     object UnAuthorized : ErrorState
     object RequestFailed : ErrorState
+    object HasNoPermission : ErrorState
 }

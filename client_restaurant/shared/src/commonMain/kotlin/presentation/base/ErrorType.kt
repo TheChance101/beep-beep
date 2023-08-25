@@ -9,7 +9,8 @@ class NoInternetException: InternetException()
 class NetworkNotSupportedException: InternetException()
 //endregion
 open class AuthorizationException: BpException()
-class UnAuthorizedException: AuthorizationException()
+class UnAuthorizedException : AuthorizationException()
+class PermissionDenied : AuthorizationException()
 
 open class RequestException: BpException()
 class ClientSideException: RequestException()
