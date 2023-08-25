@@ -10,16 +10,25 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
@@ -50,8 +59,14 @@ class MainScreen(private val restaurantId: String) :
     override fun onRender(state: MainScreenUIState, listener: MainScreenInteractionListener) {
         val options = rememberOptions()
         val charts = rememberChartData(state.charts)
+        val gridState = rememberLazyGridState()
+        var size by remember { mutableStateOf(IntSize.Zero) }
+        var rowSize by remember { mutableStateOf(IntSize.Zero) }
+        val isPortrait = size.height > size.width
 
-        Column(Modifier.fillMaxSize().background(Theme.colors.background)) {
+        Column(
+            Modifier.fillMaxSize().background(Theme.colors.background).onSizeChanged { size = it }
+        ) {
             HomeAppBar(
                 onRestaurantSelect = listener::onRestaurantClick,
                 onShowMenu = listener::onShowMenu,
@@ -73,20 +88,24 @@ class MainScreen(private val restaurantId: String) :
                     end = Theme.dimens.space16,
                     bottom = Theme.dimens.space16,
                 ),
+                state = gridState,
                 verticalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
             ) {
                 item(span = { GridItemSpan(maxLineSpan) }) {
                     FlowRow(
-                        Modifier.fillMaxWidth().align(Alignment.CenterHorizontally),
+                        Modifier.fillMaxWidth().align(Alignment.CenterHorizontally)
+                            .onSizeChanged { rowSize = it },
                         horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8),
                     ) {
+                        val rowWith = with(LocalDensity.current) { rowSize.width.toDp() }
                         options.forEach { option ->
                             OptionCardItem(
                                 onClick = { listener.onCardClick(option.index) },
                                 title = option.title,
                                 imagePath = option.imagePath,
                                 color = option.color,
-                                modifier = Modifier.padding(top = Theme.dimens.space8),
+                                modifier = Modifier.width(if (isPortrait) (rowWith / 2 - Theme.dimens.space8) else 170.dp)
+                                    .padding(top = Theme.dimens.space8),
                             )
                         }
                     }
