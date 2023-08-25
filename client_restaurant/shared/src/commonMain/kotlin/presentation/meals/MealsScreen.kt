@@ -32,9 +32,6 @@ import presentation.composable.BpAppBar
 import presentation.composable.MealCard
 import presentation.mealManagement.mealCreation.MealCreationScreen
 import presentation.mealManagement.mealEditor.MealEditorScreen
-import presentation.composables.BpAppBar
-import presentation.meal.MealScreen
-import presentation.meals.composable.MealCard
 import presentation.meals.state.MealsScreenUIState
 import resources.Resources.strings
 
