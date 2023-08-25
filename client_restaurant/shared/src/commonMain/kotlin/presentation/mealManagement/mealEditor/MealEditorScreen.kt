@@ -7,8 +7,8 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.base.BaseScreen
-import presentation.composable.CustomBottomSheet
-import presentation.composable.ModalBottomSheetState
+import presentation.composables.CustomBottomSheet
+import presentation.composables.ModalBottomSheetState
 import presentation.mealManagement.MealScreenInteractionListener
 import presentation.mealManagement.MealScreenUIEffect
 import presentation.mealManagement.composable.CuisineBottomSheet

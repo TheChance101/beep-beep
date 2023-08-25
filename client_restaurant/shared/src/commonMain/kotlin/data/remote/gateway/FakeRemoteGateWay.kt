@@ -563,6 +563,10 @@ class FakeRemoteGateWay : IRemoteGateWay {
         )
     )
 
+    override suspend fun loginUser(userName: String, password: String): UserTokens {
+        return UserTokens(accessToken = "", refreshToken = "")
+    }
+
 
     //region restaurant
     override suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant> {
