@@ -4,7 +4,7 @@ import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.getway.IRemoteGateway
 
 interface ISearchFilterRestaurantsUseCase {
-    suspend fun invoke(
+    suspend operator fun invoke(
         restaurantName: String,
         rating: Double,
         priceLevel: Int
@@ -14,7 +14,7 @@ interface ISearchFilterRestaurantsUseCase {
 class SearchFilterRestaurantsUseCase(
     private val remoteGateway: IRemoteGateway,
 ) : ISearchFilterRestaurantsUseCase {
-    override suspend fun invoke(
+    override suspend operator fun invoke(
         restaurantName: String,
         rating: Double,
         priceLevel: Int

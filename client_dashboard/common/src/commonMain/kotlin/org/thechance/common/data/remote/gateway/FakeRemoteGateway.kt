@@ -4,29 +4,27 @@ package org.thechance.common.data.remote.gateway
 import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.AdminDto
+import org.thechance.common.data.remote.model.DataWrapperDto
 import org.thechance.common.data.remote.model.RestaurantDto
 import org.thechance.common.data.remote.model.TaxiDto
 import org.thechance.common.data.remote.model.UserDto
 import org.thechance.common.data.remote.model.toEntity
 import org.thechance.common.domain.entity.AddTaxi
 import org.thechance.common.domain.entity.Admin
+import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.entity.UserTokens
-import org.thechance.common.data.remote.model.*
-import org.thechance.common.data.remote.model.toEntity
-import org.thechance.common.domain.entity.*
 import org.thechance.common.domain.getway.IRemoteGateway
 import java.util.UUID
-import kotlin.math.floor
-import java.util.*
 import kotlin.math.ceil
+import kotlin.math.floor
 
 
 class FakeRemoteGateway : IRemoteGateway {
     override fun getUserData(): Admin =
-         AdminDto(fullName = "asia",).toEntity()
+        AdminDto(fullName = "asia").toEntity()
 
     override fun getUsers(page: Int, numberOfUsers: Int): DataWrapper<User> {
         val users = listOf(
@@ -299,15 +297,7 @@ class FakeRemoteGateway : IRemoteGateway {
     }
 
     override suspend fun filterRestaurants(rating: Double, priceLevel: Int): List<Restaurant> {
-        return getRestaurants().filter {
-            it.priceLevel == priceLevel &&
-                    when {
-                        rating.rem(1) > 0.89 || rating.rem(1) == 0.0 || rating.rem(1) > 0.5
-                        -> it.rating in floor(rating) - 0.1..0.49 + floor(rating)
-
-                        else -> it.rating in 0.5 + floor(rating)..0.89 + floor(rating)
-                    }
-        }
+        return filterRestaurants(getRestaurants(), rating, priceLevel)
     }
 
     override suspend fun searchFilterRestaurants(
@@ -315,7 +305,23 @@ class FakeRemoteGateway : IRemoteGateway {
         rating: Double,
         priceLevel: Int
     ): List<Restaurant> {
-        return searchRestaurantsByRestaurantName(restaurantName).filter {
+        return filterRestaurants(
+            searchRestaurantsByRestaurantName(restaurantName),
+            rating,
+            priceLevel
+        )
+    }
+
+    override suspend fun loginUser(username: String, password: String): UserTokens {
+        return UserTokens("", "")
+    }
+
+    private fun filterRestaurants(
+        restaurants: List<Restaurant>,
+        rating: Double,
+        priceLevel: Int
+    ): List<Restaurant> {
+        return restaurants.filter {
             it.priceLevel == priceLevel &&
                     when {
                         rating.rem(1) > 0.89 || rating.rem(1) == 0.0 || rating.rem(1) > 0.5
@@ -324,10 +330,6 @@ class FakeRemoteGateway : IRemoteGateway {
                         else -> it.rating in 0.5 + floor(rating)..0.89 + floor(rating)
                     }
         }
-    }
-
-    override suspend fun loginUser(username: String, password: String): UserTokens {
-        return UserTokens("", "")
     }
 
 }

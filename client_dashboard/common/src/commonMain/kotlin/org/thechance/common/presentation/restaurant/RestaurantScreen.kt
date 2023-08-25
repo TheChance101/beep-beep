@@ -96,35 +96,8 @@ class RestaurantScreen :
                 keyboardType = KeyboardType.Text,
                 trailingPainter = painterResource("ic_search.svg")
             )
-            Column {
-                BpIconButton(
-                    content = {
-                        Text(
-                            "Filter",
-                            style = Theme.typography.titleMedium
-                                .copy(color = Theme.colors.contentTertiary),
-                        )
-                    },
-                    onClick = listener::onClickDropDownMenu,
-                    painter = painterResource("ic_filter.svg"),
-                    modifier = Modifier.cursorHoverIconHand()
-                )
-                RestaurantFilterDropdownMenu(
-                    onClickRating = listener::onClickFilterRatingBar,
-                    onClickPrice = listener::onClickFilterPriceBar,
-                    onDismissRequest = listener::onDismissDropDownMenu,
-                    onClickCancel = listener::onCancelFilterRestaurantsClicked,
-                    onClickSave = {
-                        listener.onSaveFilterRestaurantsClicked(
-                            state.filterRating,
-                            state.filterPriceLevel
-                        )
-                    },
-                    expanded = state.isFilterDropdownMenuExpanded,
-                    rating = state.filterRating,
-                    priceLevel = state.filterPriceLevel,
-                )
-            }
+
+            RestaurantFilterRow(state, listener)
 
             Spacer(modifier = Modifier.weight(1f))
 
@@ -265,6 +238,39 @@ class RestaurantScreen :
         )
     }
 
+    @Composable
+    fun RestaurantFilterRow(state: RestaurantUiState, listener: RestaurantInteractionListener) {
+        Column {
+            BpIconButton(
+                content = {
+                    Text(
+                        "Filter",
+                        style = Theme.typography.titleMedium
+                            .copy(color = Theme.colors.contentTertiary),
+                    )
+                },
+                onClick = listener::onClickDropDownMenu,
+                painter = painterResource("ic_filter.svg"),
+                modifier = Modifier.cursorHoverIconHand()
+            )
+            RestaurantFilterDropdownMenu(
+                onClickRating = listener::onClickFilterRatingBar,
+                onClickPrice = listener::onClickFilterPriceBar,
+                onDismissRequest = listener::onDismissDropDownMenu,
+                onClickCancel = listener::onCancelFilterRestaurantsClicked,
+                onClickSave = {
+                    listener.onSaveFilterRestaurantsClicked(
+                        state.filterRating,
+                        state.filterPriceLevel
+                    )
+                },
+                expanded = state.isFilterDropdownMenuExpanded,
+                rating = state.filterRating,
+                priceLevel = state.filterPriceLevel,
+            )
+        }
+    }
+
 
     @Composable
     private fun RestaurantFilterDropdownMenu(
@@ -320,7 +326,8 @@ class RestaurantScreen :
                     ),
                     iconsSize = LocalDimensions.current.space24,
                     iconsPadding = PaddingValues(horizontal = LocalDimensions.current.space8),
-                    modifier = Modifier.fillMaxWidth().padding(top = LocalDimensions.current.space16)
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(top = LocalDimensions.current.space16)
                         .background(color = Theme.colors.background)
                         .padding(
                             horizontal = LocalDimensions.current.space24,
@@ -346,7 +353,8 @@ class RestaurantScreen :
                     disabledIconsColor = Theme.colors.disable,
                     iconsPadding = PaddingValues(horizontal = LocalDimensions.current.space8),
                     iconsSize = LocalDimensions.current.space16,
-                    modifier = Modifier.fillMaxWidth().padding(top = LocalDimensions.current.space16)
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(top = LocalDimensions.current.space16)
                         .background(color = Theme.colors.background)
                         .padding(
                             horizontal = LocalDimensions.current.space24,

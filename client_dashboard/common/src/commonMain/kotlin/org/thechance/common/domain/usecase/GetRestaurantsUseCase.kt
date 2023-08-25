@@ -4,11 +4,11 @@ import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.getway.IRemoteGateway
 
 interface IGetRestaurantsUseCase {
-    suspend fun invoke(): List<Restaurant>
+    suspend operator fun invoke(): List<Restaurant>
 }
 
 class GetRestaurantsUseCase(private val remoteGateway: IRemoteGateway) : IGetRestaurantsUseCase {
-    override suspend fun invoke(): List<Restaurant> {
+    override suspend operator fun invoke(): List<Restaurant> {
         return remoteGateway.getRestaurants()
     }
 }
