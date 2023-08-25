@@ -20,6 +20,10 @@ data class Colors(
     val warning: Color,
     val warningContainer: Color,
     val surfaceTint: Color,
+    val orange: Color,
+    val pink: Color,
+    val blue: Color,
+    val green: Color,
 )
 
 val LightColors = Colors(
@@ -40,6 +44,10 @@ val LightColors = Colors(
     warning = Color(0xFFF2BD00),
     warningContainer = Color(0xFFFFFCEB),
     surfaceTint = Color(0x081F0000),
+    orange  = Color(0xFFFFE8CC),
+    pink = Color(0xFFFFD0CC),
+    blue = Color(0xFFC6E1F7),
+    green = Color(0xFFECF6C4),
 )
 
 val DarkColors = Colors(
@@ -60,4 +68,8 @@ val DarkColors = Colors(
     warning = Color(0xFFCBB567),
     warningContainer = Color(0x14FFFCEB),
     surfaceTint = Color(0x081F0000),
+    orange  = Color(0xFF26231F),
+    pink = Color(0xFF261F1F),
+    blue = Color(0xFF1F2326),
+    green = Color(0xFF25261E),
 )

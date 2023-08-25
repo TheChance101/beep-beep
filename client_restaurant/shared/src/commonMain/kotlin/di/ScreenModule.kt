@@ -8,7 +8,7 @@ import presentation.main.MainScreenModel
 import presentation.meals.MealsScreenModel
 import presentation.meal.MealScreenModel
 import presentation.order.OrderScreenModel
-import presentation.order.order_history.OrderHistoryScreenModel
+import presentation.order.orderHistory.OrderHistoryScreenModel
 
 val screenModule = module {
     factoryOf(::LoginScreenModel)

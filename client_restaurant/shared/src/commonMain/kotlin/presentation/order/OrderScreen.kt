@@ -42,7 +42,7 @@ class OrderScreen :
 
     override fun onEffect(effect: OrderScreenUiEffect, navigator: Navigator) {
         when (effect) {
-            is OrderScreenUiEffect.Back -> navigator.push(LoginScreen())
+            is OrderScreenUiEffect.Back -> navigator.pop()
             is OrderScreenUiEffect.UpdateOrder -> {}
         }
     }
