@@ -51,7 +51,10 @@ fun MealContent(
     modifier: Modifier = Modifier,
 ) {
     imagePicker.registerPicker { listener.onImagePicked(it) }
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         BpAppBar(
             modifier = Modifier
                 .fillMaxWidth()
@@ -62,9 +65,10 @@ fun MealContent(
         )
 
         Column(
-            modifier = modifier.fillMaxSize().background(Theme.colors.background)
+            modifier = modifier
                 .padding(Theme.dimens.space16)
-                .widthIn(max = 300.dp),
+                .background(Theme.colors.surface, shape = RoundedCornerShape(Theme.radius.medium))
+                .padding(Theme.dimens.space16),
             verticalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
