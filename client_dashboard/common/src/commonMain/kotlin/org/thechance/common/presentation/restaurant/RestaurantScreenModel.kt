@@ -5,6 +5,7 @@ import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.usecase.FilterRestaurantsUseCase
 import org.thechance.common.domain.usecase.IHandleLocationUseCase
 import org.thechance.common.domain.usecase.IManageRestaurantUseCase
+import org.thechance.common.domain.usecase.SearchFilterRestaurantsUseCase
 import org.thechance.common.domain.usecase.SearchRestaurantsByRestaurantNameUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
@@ -15,6 +16,7 @@ class RestaurantScreenModel(
     private val manageRestaurant: IManageRestaurantUseCase,
     private val handleLocation: IHandleLocationUseCase,
     private val searchRestaurants: SearchRestaurantsByRestaurantNameUseCase,
+    private val searchFilterRestaurants: SearchFilterRestaurantsUseCase,
     private val filterRestaurants: FilterRestaurantsUseCase,
 ) : BaseScreenModel<RestaurantUiState, RestaurantUIEffect>(RestaurantUiState()),
     RestaurantInteractionListener {
@@ -52,9 +54,9 @@ class RestaurantScreenModel(
         )
     }
 
-    private fun searchFilterRestaurants(restaurantName: String) {
+    private fun searchFilterRestaurants(restaurantName: String, rating: Double, priceLevel: Int) {
         tryToExecute(
-            { searchRestaurants.invoke(restaurantName) },
+            { searchFilterRestaurants.invoke(restaurantName, rating, priceLevel) },
             ::onGetRestaurantSuccessfully,
             ::onError
         )
@@ -80,6 +82,8 @@ class RestaurantScreenModel(
         updateState { it.copy(search = restaurantName) }
         if (state.value.isFiltered) searchFilterRestaurants(
             restaurantName = restaurantName,
+            rating = state.value.filterRating,
+            priceLevel = state.value.filterPriceLevel
         ) else searchRestaurants(restaurantName)
 
     }
