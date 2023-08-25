@@ -32,15 +32,11 @@ class LoginScreenModel :
     }
 
     override fun onClickLogin() {
-
-        sendNewEffect(LoginScreenUIEffect.Login)
+//        sendNewEffect(LoginScreenUIEffect.Login(ownerId))
     }
 
     override fun onClickSubmit() {
-        sendNewEffect(LoginScreenUIEffect.Permission)
+        // TODO: send permission request
     }
 
-    override fun onClickCancel() {
-        TODO("Not yet implemented")
-    }
 }

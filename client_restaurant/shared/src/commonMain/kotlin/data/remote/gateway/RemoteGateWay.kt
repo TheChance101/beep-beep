@@ -44,7 +44,7 @@ class RemoteGateWay(private val client: HttpClient) : IRemoteGateWay {
         return emptyList()
     }
 
-    override suspend fun updateRestaurantInfo(restaurant: Restaurant): Restaurant {
+    override suspend fun updateRestaurantInfo(restaurant: Restaurant): Restaurant? {
         return restaurant
     }
 
