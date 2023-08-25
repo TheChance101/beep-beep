@@ -18,7 +18,7 @@ class TaxiScreenModel(
         getDummyTaxiData()
     }
 
-    override fun onTaxiNumberChange(number: String) {
+    override fun onTaxiNumberChange(number: Int) {
         updateState { it.copy(taxiNumberInPage = number) }
     }
 
