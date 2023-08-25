@@ -20,7 +20,8 @@ fun BpTitleWithContentSection(
             top = Theme.dimens.space16,
             bottom = Theme.dimens.space8
         ),
-        style = Theme.typography.caption.copy(color = Theme.colors.contentTertiary),
+        style = Theme.typography.caption,
+        color = Theme.colors.contentTertiary
     )
     Row(content = content)
 }
