@@ -24,14 +24,11 @@ fun BpRestaurantTheme(
 
     CompositionLocalProvider(
         localPainterResources provides painterResources,
-        localStringResources provides StringResources()
+        localStringResources provides StringResources(),
+        LocalImageLoader provides remember { generateImageLoader(context) }
     ) {
-        CompositionLocalProvider(
-            LocalImageLoader provides remember { generateImageLoader(context) },
-        ) {
-            BpTheme {
-                content()
-            }
+        BpTheme {
+            content()
         }
     }
 }
