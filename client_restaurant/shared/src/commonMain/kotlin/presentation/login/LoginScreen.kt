@@ -9,12 +9,9 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -26,8 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.KeyboardType
-import cafe.adriel.voyager.core.model.rememberScreenModel
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpTextField
@@ -37,13 +34,10 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.composables.CustomBottomSheet
 import presentation.composables.ModalBottomSheetState
-import presentation.main.MainScreen
-import resources.Resources
-import presentation.composable.CustomBottomSheet
-import presentation.composable.ModalBottomSheetState
 import presentation.login.composable.PermissionBottomSheetContent
 import presentation.login.composable.WrongPermissionBottomSheet
-import presentation.restaurantSelection.RestaurantSelectionScreen
+import presentation.main.MainScreen
+import resources.Resources
 
 class LoginScreen :
     BaseScreen<LoginScreenModel, LoginScreenUIState, LoginScreenUIEffect, LoginScreenInteractionListener>() {
@@ -60,9 +54,8 @@ class LoginScreen :
         navigator: Navigator,
     ) {
         when (effect) {
-            is LoginScreenUIEffect.Login -> navigator.push(MainScreen())
-            is LoginScreenUIEffect.Permission -> navigator.push(MainScreen())
-            else -> {}
+            is LoginScreenUIEffect.Login -> navigator.push(MainScreen(""))
+            is LoginScreenUIEffect.Permission -> navigator.push(MainScreen(""))
         }
     }
 
@@ -170,6 +163,4 @@ class LoginScreen :
         }
 
     }
-
-
 }
