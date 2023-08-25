@@ -1,17 +1,22 @@
 package org.thechance.common.data.remote.gateway
 
 
+import org.thechance.common.data.local.LocalGateway
 import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.*
 import org.thechance.common.data.remote.model.toEntity
+import org.thechance.common.data.service.IFakeService
 import org.thechance.common.domain.entity.*
 import org.thechance.common.domain.getway.IRemoteGateway
 import java.util.*
 import kotlin.math.ceil
 
 
-class FakeRemoteGateway : IRemoteGateway {
+class FakeRemoteGateway(
+    private val fakeService: IFakeService,
+    private val localGateway: LocalGateway
+) : IRemoteGateway {
     override fun getUserData(): Admin =
          AdminDto(fullName = "asia",).toEntity()
 
@@ -214,6 +219,11 @@ class FakeRemoteGateway : IRemoteGateway {
 
     override suspend fun findTaxiByUsername(username: String): List<Taxi> {
         return getTaxis().filter { it.username.startsWith(username, true) }
+    }
+
+    override suspend fun getPdfTaxiReport() {
+        val taxiReportFile = fakeService.getTaxiPDFReport()
+        localGateway.saveTaxiReport(taxiReportFile)
     }
 
     override suspend fun getRestaurants(): List<Restaurant> {
