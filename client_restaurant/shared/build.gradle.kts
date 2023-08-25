@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kotlinKsp)
+    id("io.realm.kotlin") version "1.10.0"
 }
 
 group = "org.thechance"
@@ -32,6 +33,7 @@ kotlin {
     }
 
     sourceSets {
+        val ktorVersion = "2.3.3"
         val commonMain by getting {
             dependencies {
                 implementation(libs.compose.runtime)
@@ -49,6 +51,17 @@ kotlin {
                 implementation(libs.koin.annotations)
                 implementation(libs.koin.compose)
                 implementation(project(":design_system:shared"))
+                //realm db
+                implementation(libs.realm.library.base)
+                //ktor-client
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.json.serialization)
+                implementation(libs.ktor.content.negotiation)
+                implementation(libs.ktor.logging)
+                implementation(libs.ktor.client.cio)
+                implementation("io.ktor:ktor-client-serialization:$ktorVersion")
+                //implementation("io.ktor:ktor-serialization-gson:ktorVersion")
+
             }
         }
         val androidMain by getting {
@@ -57,6 +70,7 @@ kotlin {
                 api(libs.androidx.appcompat)
                 api(libs.androidx.core.ktx)
                 api(libs.koin.android)
+                implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
             }
         }
         val iosX64Main by getting

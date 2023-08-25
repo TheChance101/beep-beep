@@ -15,7 +15,6 @@ fun DashBoardScaffold(
     sideBar: @Composable () -> Unit,
     content: @Composable (Dp) -> Unit,
 ) {
-    BpTheme {
         Row(Modifier.fillMaxSize()) {
             sideBar()
             Column {
@@ -23,6 +22,4 @@ fun DashBoardScaffold(
                 content(40.dp)
             }
         }
-    }
-
 }
