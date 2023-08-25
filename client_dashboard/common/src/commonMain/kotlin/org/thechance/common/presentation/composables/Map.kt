@@ -77,14 +77,16 @@ fun webViewFromLink(): JPanel {
 }
 
 
-fun webViewFromContent(): JPanel {
+fun webViewFromContent(
+    onGetAddress: (String) -> Unit,
+): JPanel {
     val jPanel = JPanel().apply {
         layout = BorderLayout()
         val webViewPanel = createWebViewComponent(
             content = "/google_map.html",
             contentType = ContentType.CONTENT,
             onError = { println(it) },
-            onAlert = { println(it) }
+            onAlert = { onGetAddress(it) }
         )
         add(webViewPanel, BorderLayout.CENTER)
     }

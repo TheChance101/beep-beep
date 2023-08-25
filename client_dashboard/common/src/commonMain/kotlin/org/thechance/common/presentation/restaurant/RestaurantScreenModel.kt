@@ -177,6 +177,16 @@ class RestaurantScreenModel(
         )
     }
 
+    override fun onAddressChange(address: String) {
+        updateState {
+            it.copy(
+                addNewRestaurantDialogUiState = it.addNewRestaurantDialogUiState.copy(
+                    location = address
+                )
+            )
+        }
+    }
+
     private fun onCreateRestaurantSuccessfully(restaurant: Restaurant) {
         val newRestaurant =
             mutableState.value.restaurants.toMutableList().apply { add(restaurant.toUiState()) }

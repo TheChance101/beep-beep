@@ -35,6 +35,7 @@ fun RestaurantDialog(
     onOwnerUserNameChange: (String) -> Unit,
     onPhoneNumberChange: (String) -> Unit,
     onWorkingHourChange: (String) -> Unit,
+    onAddressChange: (String) -> Unit,
 ) {
     Dialog(
         visible = isVisible,
@@ -112,7 +113,9 @@ fun RestaurantDialog(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.End,
                 ) {
-                    GoogleMap()
+                    GoogleMap { address ->
+                        onAddressChange(address)
+                    }
                     Row(
                         modifier = Modifier.fillMaxWidth(0.5f).padding(top = Theme.dimens.space24),
                         horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
