@@ -3,74 +3,79 @@ package org.thechance.common.data.local
 
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
-import org.thechance.common.data.local.local_dto.KeepUserLoggedInLocalDto
-import org.thechance.common.data.local.local_dto.TokenLocalDto
-import org.thechance.common.data.local.local_dto.TokenType
+import org.thechance.common.data.local.local_dto.ConfigurationCollection
 import org.thechance.common.domain.getway.ILocalGateway
 import java.io.File
 
 class LocalGateway(private val realm: Realm) : ILocalGateway {
 
+    init {
+        createUserConfiguration()
+    }
+
     override suspend fun saveTaxiReport(file: File) {
         //todo save file
     }
 
+    private fun createUserConfiguration() {
+        realm.writeBlocking {
+            copyToRealm(ConfigurationCollection().apply {
+                id = CONFIGURATION_ID
+            })
+        }
+    }
+
+    override suspend fun getAllConfiguration() {
+        val x = realm.query<ConfigurationCollection>(
+            "$ID == $CONFIGURATION_ID"
+        ).first().find()
+
+        println("getAllConfiguration: ${x?.id} ${x?.accessToken} ${x?.refreshToken} ${x?.keepLoggedIn}")
+    }
+
     override suspend fun saveAccessToken(token: String) {
         realm.write {
-            copyToRealm(TokenLocalDto().apply {
-                id = ACCESS_TOKEN_ID
-                this.token = token
-                this.type = TokenType.ACCESS_TOKEN.name
-            })
+            query<ConfigurationCollection>("$ID == $CONFIGURATION_ID").first().find()?.accessToken = token
         }
     }
 
     override suspend fun saveRefreshToken(token: String) {
         realm.write {
-            copyToRealm(TokenLocalDto().apply {
-                id = REFRESH_TOKEN_ID
-                this.token = token
-                this.type = TokenType.REFRESH_TOKEN.name
-            })
+            query<ConfigurationCollection>("$ID == $CONFIGURATION_ID").first().find()?.refreshToken = token
         }
     }
 
     override suspend fun getAccessToken(): String {
-        return realm.query<TokenLocalDto>(
-            "$TOKEN_TYPE == ${TokenType.ACCESS_TOKEN.name} AND $TOKEN_ID == $ACCESS_TOKEN_ID",
-        ).first().find()?.token!!
+        return realm.query<ConfigurationCollection>(
+            "$ID == $CONFIGURATION_ID"
+        ).first().find()?.accessToken ?: ""
     }
 
     override suspend fun getRefreshToken(): String {
-        return realm.query<TokenLocalDto>(
-            "$TOKEN_TYPE == ${TokenType.REFRESH_TOKEN.name} AND $TOKEN_ID == $REFRESH_TOKEN_ID",
-        ).first().find()?.token!!
+        return realm.query<ConfigurationCollection>(
+            "$ID == $CONFIGURATION_ID"
+        ).first().find()?.refreshToken ?: ""
     }
 
     override suspend fun clearTokens() {
-        realm.write { delete(query<TokenLocalDto>()) }
+        realm.write { delete(query<ConfigurationCollection>()) }
     }
 
     override suspend fun shouldUserKeptLoggedIn(keepLoggedIn: Boolean) {
-        realm.write { KeepUserLoggedInLocalDto().apply {
-            id = KEEP_USER_LOGGED_IN_ID
-            this.keepLoggedIn = keepLoggedIn }
+        realm.write {
+            query<ConfigurationCollection>("$ID == $CONFIGURATION_ID").first().find()?.keepLoggedIn = keepLoggedIn
         }
     }
 
     override suspend fun isUserKeptLoggedIn(): Boolean {
-        return realm.query<KeepUserLoggedInLocalDto>(
-            "$LOGIN_FLAG_ID == $KEEP_USER_LOGGED_IN_ID"
+        return realm.query<ConfigurationCollection>(
+            "$ID == $CONFIGURATION_ID"
         ).first().find()?.keepLoggedIn ?: false
     }
 
-    companion object{
-        const val TOKEN_ID = "id"
-        const val LOGIN_FLAG_ID = "id"
-        const val TOKEN_TYPE = "type"
-        const val REFRESH_TOKEN_ID = 0
-        const val ACCESS_TOKEN_ID = 1
-        const val KEEP_USER_LOGGED_IN_ID = 0
+    companion object {
+        private const val CONFIGURATION_ID = 0
+        private const val ID = "id"
     }
 
 }

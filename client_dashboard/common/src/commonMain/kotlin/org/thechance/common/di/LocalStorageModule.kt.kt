@@ -3,13 +3,13 @@ package org.thechance.common.di
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import org.koin.dsl.module
-import org.thechance.common.data.local.local_dto.TokenLocalDto
+import org.thechance.common.data.local.local_dto.ConfigurationCollection
 
 
 val LocalStorageModule = module {
     single<RealmConfiguration> {
         RealmConfiguration
-            .Builder(setOf(TokenLocalDto::class))
+            .Builder(setOf(ConfigurationCollection::class))
             .deleteRealmIfMigrationNeeded().build()
     }
     single<Realm> { Realm.open(get<RealmConfiguration>()) }

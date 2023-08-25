@@ -4,6 +4,7 @@ import java.io.File
 
 
 interface ILocalGateway {
+
      suspend fun saveTaxiReport(file: File)
 
      suspend fun saveAccessToken(token: String)
@@ -19,5 +20,7 @@ interface ILocalGateway {
      suspend fun shouldUserKeptLoggedIn(keepLoggedIn: Boolean)
 
     suspend fun isUserKeptLoggedIn(): Boolean
+
+    suspend fun getAllConfiguration()
 
 }
