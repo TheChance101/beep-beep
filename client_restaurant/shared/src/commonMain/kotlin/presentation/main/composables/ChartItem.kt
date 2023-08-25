@@ -27,7 +27,6 @@ import resources.Resources
 @Composable
 fun ChartItem(
     imagePainter: Painter,
-    sign: Char? = null,
     chartItemUiState: ChartItemUiState,
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(Theme.radius.medium),
