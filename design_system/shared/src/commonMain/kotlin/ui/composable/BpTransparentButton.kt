@@ -23,6 +23,7 @@ fun BpTransparentButton(
     title: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled : Boolean = true,
     shape: Shape = RoundedCornerShape(8.dp),
     contentColor: Color = Theme.colors.contentTertiary,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Center
@@ -32,6 +33,7 @@ fun BpTransparentButton(
         modifier = modifier.height(32.dp),
         onClick = onClick,
         shape = shape,
+        enabled = enabled,
         color = Color.Transparent,
         contentColor = contentColor,
     ) {

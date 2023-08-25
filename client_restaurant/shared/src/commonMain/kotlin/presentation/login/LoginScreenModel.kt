@@ -32,6 +32,7 @@ class LoginScreenModel :
     }
 
     override fun onClickLogin() {
+        sendNewEffect(LoginScreenUIEffect.Login("1"))
 
         sendNewEffect(LoginScreenUIEffect.Login)
     }

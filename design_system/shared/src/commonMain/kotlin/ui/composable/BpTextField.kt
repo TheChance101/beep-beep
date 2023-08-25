@@ -41,9 +41,11 @@ fun BpTextField(
     text: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    textFieldModifier: Modifier =  Modifier.fillMaxWidth().height(56.dp),
     hint: String = "",
     keyboardType: KeyboardType = KeyboardType.Text,
     shapeRadius: Shape = RoundedCornerShape(radius.medium),
+    singleLine: Boolean = true,
     errorMessage: String = "",
     correctValidation: Boolean = false,
     isError: Boolean = errorMessage.isNotEmpty(),
@@ -62,7 +64,7 @@ fun BpTextField(
         )
 
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth().height(56.dp),
+            modifier = textFieldModifier,
             value = text,
             placeholder = {
                 Text(
@@ -74,7 +76,7 @@ fun BpTextField(
             onValueChange = onValueChange,
             shape = shapeRadius,
             textStyle = typography.body.copy(colors.contentPrimary),
-            singleLine = true,
+            singleLine = singleLine,
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
             trailingIcon = {
                 TrailingIcon(keyboardType, isError, showPassword) {
