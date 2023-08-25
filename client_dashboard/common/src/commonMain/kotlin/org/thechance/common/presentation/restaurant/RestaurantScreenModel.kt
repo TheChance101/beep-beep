@@ -126,7 +126,8 @@ class RestaurantScreenModel(
 
     override fun onAddNewRestaurantClicked() {
         updateState { it.copy(isAddNewRestaurantDialogVisible = true) }
-        getCurrentLocation()
+        if (state.value.addNewRestaurantDialogUiState.currentLocation.isEmpty())
+            getCurrentLocation()
     }
 
     private fun getCurrentLocation() {

@@ -20,18 +20,23 @@ private fun createWebViewComponent(
         val webView = WebView()
         val webEngine = webView.engine
         val scene = Scene(webView)
-        jfxPanel.scene = scene
-
-        webEngine.loadContent(getResourceContent(content))
 
         webEngine.loadWorker.stateProperty().addListener { _, _, newState ->
             if (newState == Worker.State.SUCCEEDED) {
-                val latlng = currentLocation.split(",")
-                val lat = latlng[0]
-                val lng = latlng[1]
-                webEngine.executeScript("updateLocation($lat, $lng)")
+                try {
+                    val latlng = currentLocation.split(",")
+                    val lat = latlng[0]
+                    val lng = latlng[1]
+                    webEngine.executeScript("updateLocation($lat, $lng)")
+                } catch (e: Exception) {
+                    println(e.message)
+                }
             }
         }
+
+        jfxPanel.scene = scene
+
+        webEngine.loadContent(getResourceContent(content))
 
         webEngine.javaScriptEnabledProperty().set(true)
 

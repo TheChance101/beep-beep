@@ -1,5 +1,6 @@
 package org.thechance.common.presentation.composables
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -114,9 +115,12 @@ fun RestaurantDialog(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.End,
                 ) {
-                    GoogleMap(currentLocation = currentLocation) { address ->
-                        onAddressChange(address)
+                    AnimatedVisibility(currentLocation.isNotEmpty()) {
+                        GoogleMap(currentLocation = currentLocation) { address ->
+                            onAddressChange(address)
+                        }
                     }
+
                     Row(
                         modifier = Modifier.fillMaxWidth(0.5f).padding(top = Theme.dimens.space24),
                         horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
