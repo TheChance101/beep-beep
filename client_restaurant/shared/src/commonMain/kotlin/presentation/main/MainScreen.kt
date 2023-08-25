@@ -58,12 +58,12 @@ class MainScreen(private val restaurantId: String) :
     override fun onRender(state: MainScreenUIState, listener: MainScreenInteractionListener) {
         val options = rememberOptions()
         val charts = rememberChartData(state.charts)
-        var size by remember { mutableStateOf(IntSize.Zero) }
         var rowSize by remember { mutableStateOf(IntSize.Zero) }
-        val isPortrait = size.height > size.width
+        var screenSize by remember { mutableStateOf(IntSize.Zero) }
+        val isPortrait = screenSize.height > screenSize.width
 
         Column(
-            Modifier.fillMaxSize().background(Theme.colors.background).onSizeChanged { size = it }
+            Modifier.fillMaxSize().background(Theme.colors.background).onSizeChanged { screenSize = it }
         ) {
             HomeAppBar(
                 onRestaurantSelect = listener::onRestaurantClick,
