@@ -15,7 +15,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -59,7 +58,6 @@ class MainScreen(private val restaurantId: String) :
     override fun onRender(state: MainScreenUIState, listener: MainScreenInteractionListener) {
         val options = rememberOptions()
         val charts = rememberChartData(state.charts)
-        val gridState = rememberLazyGridState()
         var size by remember { mutableStateOf(IntSize.Zero) }
         var rowSize by remember { mutableStateOf(IntSize.Zero) }
         val isPortrait = size.height > size.width
@@ -88,7 +86,6 @@ class MainScreen(private val restaurantId: String) :
                     end = Theme.dimens.space16,
                     bottom = Theme.dimens.space16,
                 ),
-                state = gridState,
                 verticalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
             ) {
                 item(span = { GridItemSpan(maxLineSpan) }) {
