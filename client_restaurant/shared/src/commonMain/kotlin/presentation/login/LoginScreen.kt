@@ -1,26 +1,36 @@
 package presentation.login
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpExpandableTextField
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
-import presentation.restaurantSelection.RestaurantSelectionScreen
 import presentation.composables.CustomBottomSheet
 import presentation.composables.ModalBottomSheetState
 import presentation.main.MainScreen
@@ -41,6 +51,7 @@ class LoginScreen :
         when (effect) {
             is LoginScreenUIEffect.Login -> navigator.push(MainScreen())
             is LoginScreenUIEffect.Permission -> navigator.push(MainScreen())
+            else -> {}
         }
     }
 
@@ -67,7 +78,7 @@ class LoginScreen :
         }
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
     @Composable
     private fun LoginScreenContent(
         state: LoginScreenUIState,
@@ -79,12 +90,22 @@ class LoginScreen :
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(
-                text = "Ask for Permission",
-                modifier = Modifier.padding(bottom = Theme.dimens.space8),
-                style = Theme.typography.title,
-                color = Theme.colors.contentPrimary
-            )
+            // region header
+            Box(modifier = Modifier.fillMaxWidth().fillMaxHeight(0.3f)) {
+                Image(
+                    modifier = Modifier.fillMaxSize(),
+                    painter = painterResource(Resources.images.backgroundPattern),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop
+                )
+                Icon(
+                    modifier = Modifier.height(44.dp).width(97.dp).align(Alignment.Center),
+                    tint = Color.Red,
+                    painter = painterResource(Resources.images.bpLogo),
+                    contentDescription = null
+                )
+            }
+
             BpTextField(
                 text = state.email,
                 onValueChange = listener::onEmailChanged,
@@ -107,6 +128,7 @@ class LoginScreen :
                 modifier = Modifier.fillMaxWidth(),
             )
         }
+
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -118,6 +140,7 @@ class LoginScreen :
         onCancelClick: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
+
         Column(
             modifier = modifier.wrapContentHeight()
                 .padding(top = Theme.dimens.space16).padding(horizontal = Theme.dimens.space16)
@@ -159,5 +182,6 @@ class LoginScreen :
             )
         }
     }
+    }
 
-}
+
