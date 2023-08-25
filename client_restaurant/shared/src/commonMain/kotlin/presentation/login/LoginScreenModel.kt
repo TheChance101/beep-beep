@@ -91,7 +91,6 @@ class LoginScreenModel:
 
     override fun onClickSubmit() {
         state.value.sheetState.dismiss()
-        sendNewEffect(LoginScreenUIEffect.HasPermission)
         updateState { it.copy(showPermissionSheet = false) }
     }
 

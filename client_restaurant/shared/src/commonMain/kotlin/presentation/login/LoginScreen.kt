@@ -50,7 +50,6 @@ class LoginScreen :
     ) {
         when (effect) {
             is LoginScreenUIEffect.LoginEffect -> navigator.push(RestaurantSelectionScreen(ownerId = ""))
-            is LoginScreenUIEffect.HasPermission -> navigator.push(RestaurantSelectionScreen(ownerId = ""))
         }
     }
 
