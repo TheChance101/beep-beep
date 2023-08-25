@@ -33,8 +33,8 @@ fun ChartItem(
 ) {
     Column(
         modifier.widthIn(max = 328.dp).clip(shape).background(Theme.colors.surface)
-            .padding(Theme.dimens.space16),
-        verticalArrangement = Arrangement.spacedBy(Theme.dimens.space24),
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
         with(chartItemUiState) {
             Row(
@@ -43,7 +43,7 @@ fun ChartItem(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Image(painter = imagePainter, contentDescription = null, Modifier.size(24.dp))
@@ -53,7 +53,7 @@ fun ChartItem(
                     )
                 }
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(Theme.dimens.space4),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
                     horizontalAlignment = Alignment.End
                 ) {
                     Text(
