@@ -14,6 +14,7 @@ import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
 import domain.gateway.IRemoteGateWay
+import presentation.base.RequestException
 
 class FakeRemoteGateWay : IRemoteGateWay {
 
@@ -24,173 +25,314 @@ class FakeRemoteGateWay : IRemoteGateWay {
             userId = "550e8400-e29b-41d4-a716-446655440989",
             restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
             meals = listOf(
-                OrderMealDto("e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a", 1),
-                OrderMealDto("ba9b9700-6d24-434b-8d67-daf9e45e1063", 2),
-                OrderMealDto("ba9b9700-6d24-434b-8d67-e45e10636243", 3)
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 2,
+                    mealName = "Pasta"
+                ),
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
+                    quantity = 2,
+                    mealName = "Breakfast burrito"
+                )
             ),
             totalPrice = 22.74,
-            createdAt = 1002656085967,
-            orderStatus = 0
+            createdAt = "2022-05-16T08:23",
+            orderState = 0
         ),
         OrderDto(
             id = "4d7bdc9b-6233-44ef-80a0-6a09ef856862",
             userId = "8a430be2-15b7-47f5-9e06-3f236f8c25ec",
             restaurantId = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
             meals = listOf(
-                OrderMealDto("f8d21b6d-49d1-43eb-932c-5a30a5914d78", 3),
-                OrderMealDto("2d5bbf8a-4854-49c6-99ed-ef09899c2d8e", 1)
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 4,
+                    mealName = "Pancake stack"
+                ),
             ),
             totalPrice = 28.48,
-            createdAt = 1000000000000,
-            orderStatus = 0
+            createdAt = "2022-05-16T08:23",
+            orderState = 2
         ),
         OrderDto(
             id = "891ecf91-62bf-4d91-96bf-8d4cc8271a81",
             userId = "f26dab15-7193-4e8d-bf6e-f4d2ae8799af",
             restaurantId = "91c2ae1f-8495-4c0c-bc47-7bf7ef77d907",
             meals = listOf(
-                OrderMealDto("b39e9f1e-0dc7-43b7-90e2-0a075b818dc5", 1),
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 1,
+                    mealName = "Lunch salad"
+                ),
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 1,
+                    mealName = "Afternoon tea sandwich"
+                ),
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 3,
+                    mealName = "Dinner party"
+                )
             ),
-            totalPrice = 26.49,
-            createdAt = 1672656010258,
-            orderStatus = 3
+            totalPrice = 100.49,
+            createdAt = "2022-05-16T08:23",
+            orderState = 3
         ),
         OrderDto(
             id = "f5c8b31e-5c4d-4c8a-babc-0e9463daad20",
             userId = "550e8400-e29b-41d4-a716-446655440989",
             restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
             meals = listOf(
-                OrderMealDto("e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a", 1),
-                OrderMealDto("ba9b9700-6d24-434b-8d67-daf9e45e1063", 2)
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 3,
+                    mealName = "Supper club"
+                ),
             ),
             totalPrice = 22.74,
-            createdAt = 1662067200000,
-            orderStatus = 1
+            createdAt = "2022-05-16T08:23",
+            orderState = 1
         ),
         OrderDto(
             id = "4d7bdc9b-6233-44ef-80a0-6a09ef856862",
             userId = "8a430be2-15b7-47f5-9e06-3f236f8c25ec",
             restaurantId = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
             meals = listOf(
-                OrderMealDto("f8d21b6d-49d1-43eb-932c-5a30a5914d78", 3),
-                OrderMealDto("2d5bbf8a-4854-49c6-99ed-ef09899c2d8e", 1),
-                OrderMealDto("2d5bbf8a-4854-49c6-99ed-ef098d549c62", 1)
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
+                    quantity = 3,
+                    mealName = "Light snack"
+                ),
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 1,
+                    mealName = "Hors d'oeuvre platter"
+                ),
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://images.immediate.co.uk/production/volatile/sites/2/2017/09/OLI1017-Healthy_ChimmiChurriChicken_014545.jpg?quality=90&resize=700,466",
+                    quantity = 3,
+                    mealName = "Appetizer sampler"
+                ),
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://ichef.bbci.co.uk/food/ic/food_16x9_832/recipes/sausage_and_lentil_stew_90967_16x9.jpg",
+                    quantity = 4,
+                    mealName = "Pasta"
+                )
             ),
-            totalPrice = 28.48,
-            createdAt = 1672656000000,
-            orderStatus = 1
+            totalPrice = 300.5,
+            createdAt = "2022-05-16T08:23",
+            orderState = 1
         ),
         OrderDto(
             id = "891ecf91-62bf-4d91-96bf-8d4cc8271a81",
             userId = "f26dab15-7193-4e8d-bf6e-f4d2ae8799af",
             restaurantId = "91c2ae1f-8495-4c0c-bc47-7bf7ef77d907",
             meals = listOf(
-                OrderMealDto("b39e9f1e-0dc7-43b7-90e2-0a075b818dc5", 1),
-                OrderMealDto("e772ad66-0251-412f-99a1-4a10435f9a07", 2)
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 2,
+                    mealName = "Pasta"
+                ),
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
+                    quantity = 2,
+                    mealName = "Main course dish"
+                )
             ),
             totalPrice = 26.49,
-            createdAt = 1672656000333,
-            orderStatus = 1
+            createdAt = "2022-05-16T08:23",
+            orderState = 1
         ),
         OrderDto(
             id = "d59b00c3-923c-4cf4-bd0e-3a4c997a3156",
             userId = "550e8400-e29b-41d4-a716-446655440989",
             restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
             meals = listOf(
-                OrderMealDto("e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a", 2),
-                OrderMealDto("ba9b9700-6d24-434b-8d67-daf9e45e1063", 1),
-                OrderMealDto("ba9b9700-6d24-434b-8d67-e45e10636243", 3)
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 2,
+                    mealName = "Dessert pizza"
+                ),
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 2,
+                    mealName = "Pasta"
+                )
             ),
             totalPrice = 20.73,
-            createdAt = 1672655550000,
-            orderStatus = 3
+            createdAt = "2022-05-16T08:23",
+            orderState = 2
         ),
         OrderDto(
             id = "9e94fdd9-9cbf-4b7e-a97e-8ea31c4876b2",
             userId = "8a430be2-15b7-47f5-9e06-3f236f8c25ec",
             restaurantId = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
             meals = listOf(
-                OrderMealDto("f8d21b6d-49d1-43eb-932c-5a30a5914d78", 2),
-                OrderMealDto("2d5bbf8a-4854-49c6-99ed-ef09899c2d8e", 2),
-                OrderMealDto("2d5bbf8a-4854-49c6-99ed-ef098d549c62", 1)
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://thecarefreekitchen.com/wp-content/uploads/2021/10/Buffalo-Chicken-Taquitos-1024x1024.jpg",
+                    quantity = 2,
+                    mealName = "Digestif cocktail"
+                ),
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://www.freshnlean.com/wp-content/uploads/2021/03/Meal-Plan-plate-protein.png",
+                    quantity = 1,
+                    mealName = "Pasta"
+                )
             ),
             totalPrice = 41.96,
-            createdAt = 1672656014782,
-            orderStatus = 4
+            createdAt = "2022-05-16T08:23",
+            orderState = 1
         ),
         OrderDto(
             id = "c07d45e5-4c5d-4847-a518-8f21c66620f9",
             userId = "f26dab15-7193-4e8d-bf6e-f4d2ae8799af",
             restaurantId = "91c2ae1f-8495-4c0c-bc47-7bf7ef77d907",
             meals = listOf(
-                OrderMealDto("b39e9f1e-0dc7-43b7-90e2-0a075b818dc5", 2),
-                OrderMealDto("e772ad66-0251-412f-99a1-4a10435f9a07", 1)
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 2,
+                    mealName = "Dinner party"
+                )
             ),
             totalPrice = 35.98,
-            createdAt = 1672656098210,
-            orderStatus = 4
+            createdAt = "2022-05-16T08:23",
+            orderState = 0
         ),
         OrderDto(
             id = "d59b00c3-923c-4cf4-bd0e-3a4c997a3156",
             userId = "550e8400-e29b-41d4-a716-446655440989",
             restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
             meals = listOf(
-                OrderMealDto("e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a", 2),
-                OrderMealDto("ba9b9700-6d24-434b-8d67-daf9e45e1063", 1),
-                OrderMealDto("ba9b9700-6d24-434b-8d67-e45e10636243", 3)
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://www.foodandwine.com/thmb/bRz199ONebY-5h5gcvpOcHRxAkA=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Web_4000-Trifecta-Chicken-Breast-Sweet-Potato-Mixed-Vegetable_04-72a24aaee5584c06a26451603daec5c9.jpg",
+                    quantity = 2,
+                    mealName = "Pasta"
+                ),
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 2,
+                    mealName = "Dinner party"
+                )
             ),
             totalPrice = 20.73,
-            createdAt = 1672656012409,
-            orderStatus = 0
+            createdAt = "2022-05-16T08:23",
+            orderState = 0
         ),
         OrderDto(
             id = "9e94fdd9-9cbf-4b7e-a97e-8ea31c4876b2",
             userId = "8a430be2-15b7-47f5-9e06-3f236f8c25ec",
             restaurantId = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
             meals = listOf(
-                OrderMealDto("f8d21b6d-49d1-43eb-932c-5a30a5914d78", 2),
-                OrderMealDto("2d5bbf8a-4854-49c6-99ed-ef09899c2d8e", 2),
-                OrderMealDto("2d5bbf8a-4854-49c6-99ed-ef098d549c62", 1)
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://cdn.apartmenttherapy.info/image/upload/v1558635037/k/archive/388e39a6ca67e257cb7bef6bde6a98aef1bcd434.jpg",
+                    quantity = 1,
+                    mealName = "Supper club"
+                ),
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://images.immediate.co.uk/production/volatile/sites/30/2022/07/Fajita-style-pasta-f792c52.jpg?quality=90&resize=440,400",
+                    quantity = 2,
+                    mealName = "Pasta"
+                ),
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://www.thelazydish.com/wp-content/uploads/2022/05/cheap-easy-dinner-recipes-for-family-with-kids-from-the-lazy-dish.jpg",
+                    quantity = 3,
+                    mealName = "Appetizer sampler"
+                )
             ),
             totalPrice = 41.96,
-            createdAt = 1672656025147,
-            orderStatus = 0
+            createdAt = "2022-05-16T08:23",
+            orderState = 1
         ),
         OrderDto(
             id = "c07d45e5-4c5d-4847-a518-8f21c66620f9",
             userId = "f26dab15-7193-4e8d-bf6e-f4d2ae8799af",
             restaurantId = "91c2ae1f-8495-4c0c-bc47-7bf7ef77d907",
             meals = listOf(
-                OrderMealDto("b39e9f1e-0dc7-43b7-90e2-0a075b818dc5", 2),
-                OrderMealDto("e772ad66-0251-412f-99a1-4a10435f9a07", 1)
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://ichef.bbci.co.uk/food/ic/food_16x9_832/recipes/roast_chicken_for_one_41998_16x9.jpg",
+                    quantity = 2,
+                    mealName = "Pasta"
+                ),
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 2,
+                    mealName = "Pasta"
+                )
             ),
             totalPrice = 35.98,
-            createdAt = 1672656098742,
-            orderStatus = 0
+            createdAt = "2022-05-16T08:23",
+            orderState = 1
         ),
         OrderDto(
             id = "1a2b3c4d-5e6f-7a8b-9c0d-e1f2g3h4i5j6",
             userId = "550e8400-e29b-41d4-a716-446655440989",
             restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
             meals = listOf(
-                OrderMealDto("e5b1a329-6f3a-4d63-bb7f-895f1e1c2f9a", 3),
-                OrderMealDto("ba9b9700-6d24-434b-8d67-daf9e45e1063", 2)
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 2,
+                    mealName = "Pasta"
+                ),
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://ichef.bbci.co.uk/food/ic/food_16x9_832/recipes/roast_chicken_for_one_41998_16x9.jpg",
+                    quantity = 2,
+                    mealName = "Digestif cocktail"
+                )
             ),
             totalPrice = 28.45,
-            createdAt = 1672656012358,
-            orderStatus = 1
+            createdAt = "2022-05-16T08:23",
+            orderState = 0
         ),
         OrderDto(
             id = "2b3c4d5e-6f7a-8b9c-0d1e-2f3g4h5i6j7",
             userId = "8a430be2-15b7-47f5-9e06-3f236f8c25ec",
             restaurantId = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
             meals = listOf(
-                OrderMealDto("f8d21b6d-49d1-43eb-932c-5a30a5914d78", 1),
-                OrderMealDto("2d5bbf8a-4854-49c6-99ed-ef09899c2d8e", 1)
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
+                    quantity = 2,
+                    mealName = "Pasta"
+                ),
+                OrderMealDto(
+                    id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
+                    mealImageUrl = "https://www.deliciouslycleaneats.com.au/wp-content/uploads/2018/08/Meal-Plan-Spread1.jpg",
+                    quantity = 2,
+                    mealName = "Pasta"
+                )
             ),
             totalPrice = 23.99,
-            createdAt = 1672125000000,
-            orderStatus = 2
+            createdAt = "2022-05-16T08:23",
+            orderState = 4
         ),
     )
 
@@ -340,6 +482,89 @@ class FakeRemoteGateWay : IRemoteGateWay {
             address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
         ),
         RestaurantDto(
+            id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            name = "Zeko Tlawoth",
+            description = "It's a restaurant that is famous for preparing Arabian Foods",
+            rate = 4.5,
+            phone = "+9641324221423",
+            openingTime = "09:00",
+            closingTime = "22:00",
+            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+        ), RestaurantDto(
+            id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            name = "Zeko Tlawoth",
+            description = "It's a restaurant that is famous for preparing Arabian Foods",
+            rate = 4.5,
+            phone = "+9641324221423",
+            openingTime = "09:00",
+            closingTime = "22:00",
+            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+        ),
+        RestaurantDto(
+            id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            name = "Zeko Tlawoth",
+            description = "It's a restaurant that is famous for preparing Arabian Foods",
+            rate = 4.5,
+            phone = "+9641324221423",
+            openingTime = "09:00",
+            closingTime = "22:00",
+            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+        ), RestaurantDto(
+            id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            name = "Zeko Tlawoth",
+            description = "It's a restaurant that is famous for preparing Arabian Foods",
+            rate = 4.5,
+            phone = "+9641324221423",
+            openingTime = "09:00",
+            closingTime = "22:00",
+            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+        ), RestaurantDto(
+            id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            name = "Zeko Tlawoth",
+            description = "It's a restaurant that is famous for preparing Arabian Foods",
+            rate = 4.5,
+            phone = "+9641324221423",
+            openingTime = "09:00",
+            closingTime = "22:00",
+            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+        ), RestaurantDto(
+            id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            name = "Zeko Tlawoth",
+            description = "It's a restaurant that is famous for preparing Arabian Foods",
+            rate = 4.5,
+            phone = "+9641324221423",
+            openingTime = "09:00",
+            closingTime = "22:00",
+            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+        ), RestaurantDto(
+            id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            name = "Zeko Tlawoth",
+            description = "It's a restaurant that is famous for preparing Arabian Foods",
+            rate = 4.5,
+            phone = "+9641324221423",
+            openingTime = "09:00",
+            closingTime = "22:00",
+            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+        ),
+        RestaurantDto(
+            id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
+            ownerId = "550e8400-e29b-41d4-a716-446655440989",
+            name = "Zeko Tlawoth",
+            description = "It's a restaurant that is famous for preparing Arabian Foods",
+            rate = 4.5,
+            phone = "+9641324221423",
+            openingTime = "09:00",
+            closingTime = "22:00",
+            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+        ),
+        RestaurantDto(
             id = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
             ownerId = "8a430be2-15b7-47f5-9e06-3f236f8c25ec",
             ownerUsername = "@Uzumaki_Naruto",
@@ -422,17 +647,24 @@ class FakeRemoteGateWay : IRemoteGateWay {
 
     //region order
     override suspend fun getCurrentOrders(restaurantId: String): List<Order> {
-        return orders.filter { it.orderStatus != 3 || it.orderStatus != 4 }.toOrderEntity()
+        return orders.toOrderEntity()
+//        return orders.filter {
+//            it.orderState == OrderState.PENDING.statusCode &&
+//                    it.orderState == OrderState.IN_COOKING.statusCode
+//        }.toOrderEntity()
     }
 
     override suspend fun getOrdersHistory(restaurantId: String): List<Order> {
-        return orders.filter { it.orderStatus == 3 || it.orderStatus == 4 }.toOrderEntity()
+        return orders.filter { it.orderState == 2 || it.orderState == 3 }.toOrderEntity()
     }
 
-    override suspend fun updateOrderState(orderId: String, orderState: Int): Order? {
+    override suspend fun updateOrderState(orderId: String, orderState: Int): Order {
         val order = orders.find { it.id == orderId }
-        orders.indexOf(order).also { orders[it].orderStatus = orderState }
-        return order?.toEntity()
+        return order?.toEntity() ?: throw RequestException()
+    }
+
+    override suspend fun getOrderById(orderId: String): Order? {
+        return orders.find { it.id == orderId }?.toEntity()
     }
     //endregion order
 

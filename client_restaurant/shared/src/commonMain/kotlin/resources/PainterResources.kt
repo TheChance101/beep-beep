@@ -12,6 +12,7 @@ data class PainterResources(
     val galleryAdd: String,
     val edit: String,
     val flag: String,
+    val backgroundPattern: String,
     val logout: String
 )
 
@@ -24,6 +25,7 @@ val BpPainterLightResources = PainterResources(
     halfFilledStar = "ic_half_filled_star_light.xml",
     sort = "sort.xml",
     sun = "sun.xml",
+    backgroundPattern = "background_pattern.png",
     galleryAdd = "gallery_add.xml",
     edit = "edit.xml",
     flag = "flag.xml",
@@ -39,6 +41,7 @@ val BpPainterDarkResources = PainterResources(
     halfFilledStar = "ic_half_filled_star_dark.xml",
     sort = "sort.xml",
     sun = "sun.xml",
+    backgroundPattern = "background_pattern.png",
     galleryAdd = "gallery_add.xml",
     edit = "edit.xml",
     flag = "flag.xml",

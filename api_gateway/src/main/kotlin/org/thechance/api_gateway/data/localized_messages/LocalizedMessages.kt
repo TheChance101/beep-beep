@@ -29,4 +29,6 @@ interface LocalizedMessages {
     val userCreatedSuccessfully: String
 
     val unknownError: String
+
+    val userNotFound: String
 }

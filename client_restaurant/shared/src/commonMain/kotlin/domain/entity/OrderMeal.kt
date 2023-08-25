@@ -1,6 +1,8 @@
 package domain.entity
 
 data class OrderMeal(
-    val mealId: String,
-    val quantity: Int
+    val id: String,
+    val mealImageUrl: String,
+    val mealName: String,
+    val quantity: Int,
 )

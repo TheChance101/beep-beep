@@ -40,6 +40,9 @@ kotlin {
                 api(libs.compose.image.loader)
 
                 implementation(libs.compose.components.resources)
+                api(libs.compose.image.loader)
+                implementation(libs.kotlinx.datetime)
+
                 implementation(libs.bundles.voyager)
                 implementation(libs.kotlin.coroutines)
                 api(libs.koin.core)
