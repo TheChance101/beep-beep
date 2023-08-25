@@ -14,10 +14,10 @@ import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
 import domain.entity.UserTokens
-import domain.gateway.IRemoteGateWay
+import domain.gateway.IFakeGateWay
 import presentation.base.RequestException
 
-class FakeRemoteGateWay : IRemoteGateWay {
+class FakeRemoteGateWay : IFakeGateWay {
 
 
     private val orders = mutableListOf(

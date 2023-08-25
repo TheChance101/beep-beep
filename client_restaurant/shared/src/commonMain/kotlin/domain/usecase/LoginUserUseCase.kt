@@ -1,8 +1,8 @@
 package domain.usecase
 
 import domain.entity.UserTokens
+import domain.gateway.IFakeGateWay
 import domain.gateway.ILocalGateWay
-import domain.gateway.IRemoteGateWay
 
 interface ILoginUserUseCase {
 
@@ -21,7 +21,7 @@ interface ILoginUserUseCase {
 }
 
 class LoginUserUseCase(
-    private val remoteGateWay: IRemoteGateWay,
+    private val remoteGateWay: IFakeGateWay,
     private val localGateWay: ILocalGateWay
 ) : ILoginUserUseCase {
 
@@ -30,7 +30,7 @@ class LoginUserUseCase(
         password: String,
         isKeepMeLoggedInChecked: Boolean
     ): UserTokens {
-        localGateWay.saveKeepMeLoggedInFlag(isKeepMeLoggedInChecked)
+//        localGateWay.saveKeepMeLoggedInFlag(isKeepMeLoggedInChecked)
         return remoteGateWay.loginUser(userName, password)
     }
 
