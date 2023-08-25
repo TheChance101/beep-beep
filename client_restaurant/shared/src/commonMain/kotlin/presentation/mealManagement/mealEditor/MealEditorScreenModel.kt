@@ -44,7 +44,7 @@ class MealEditorScreenModel(private val mealId: String) :
     private fun onGetCuisinesSuccess(cuisines: List<Cuisine>) {
         val mealCuisineIds = state.value.meal.mealCuisines.map { it.id }
         val cuisinesUi = cuisines.toUIState().onUpdateCuisineSelection(mealCuisineIds)
-        val mealCuisines = cuisinesUi.filter { it.id in mealCuisineIds }
+        val mealCuisines = cuisinesUi.filter { it.isSelected }
         updateState {
             it.copy(
                 cuisines = cuisinesUi,
@@ -55,9 +55,11 @@ class MealEditorScreenModel(private val mealId: String) :
     }
 
     private fun List<CuisineUIState>.onUpdateCuisineSelection(cuisineIds: List<String>): List<CuisineUIState> {
-        return this.map {
+        return map {
             if (it.id in cuisineIds) {
-                it.copy(isSelected = true)
+               val x= it.copy(isSelected = true)
+                println("TEST $x")
+                x
             } else {
                 it
             }

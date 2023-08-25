@@ -38,5 +38,5 @@ fun Meal.toUIState() = MealDetails(
     description = description,
     imageUrl = imageUrl,
     price = "$price",
-    mealCuisines = cuisines.map { CuisineUIState(id = id) }
+    mealCuisines = cuisines.toUIState()
 )
