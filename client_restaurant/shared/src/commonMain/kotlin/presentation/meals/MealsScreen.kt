@@ -85,7 +85,6 @@ class MealsScreen :
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
 
-
                 LazyRow(
                     contentPadding = PaddingValues(
                         start = dimens.space16,
@@ -120,8 +119,6 @@ class MealsScreen :
                             listener.onClickMeal(state.meals[index].id)
                         }, meal = state.meals[index])
                     }
-
-
                 }
             }
         }
