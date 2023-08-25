@@ -13,6 +13,7 @@ import com.beepbeep.designSystem.ui.theme.BpTheme
 import com.beepbeep.designSystem.ui.theme.Dimens
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.login.LoginScreen
+import org.thechance.common.presentation.util.kms
 
 val LocalScreenSize = compositionLocalOf<Size> { error("provide") }
 val LocalDimensions = compositionLocalOf<Dimens> { error("provide") }
@@ -36,3 +37,16 @@ fun App() {
     }
 }
 
+@Composable
+fun Dimens.toKms(): Dimens {
+    return copy(
+        space1 = 1.kms,
+        space4 = 4.kms,
+        space8 = 8.kms,
+        space16 = 16.kms,
+        space24 = 24.kms,
+        space32 = 32.kms,
+        space40 = 40.kms,
+        space100 = 100.kms,
+    )
+}
