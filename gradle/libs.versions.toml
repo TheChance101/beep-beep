@@ -69,8 +69,9 @@ koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "
 koin-ksp = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp" }
 koin-compiler = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koinKspVersion" }
 kotlin-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization_version" }
-kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutine-version"}
+kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutine-version" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin-version" }
+
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.4.0" }
 
 [bundles]

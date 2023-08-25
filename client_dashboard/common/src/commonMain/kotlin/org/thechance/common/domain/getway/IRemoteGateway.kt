@@ -1,12 +1,6 @@
 package org.thechance.common.domain.getway
 
-import org.thechance.common.domain.entity.AddTaxi
-import org.thechance.common.domain.entity.Admin
-import org.thechance.common.domain.entity.DataWrapper
-import org.thechance.common.domain.entity.Restaurant
-import org.thechance.common.domain.entity.Taxi
-import org.thechance.common.domain.entity.User
-import org.thechance.common.domain.entity.UserTokens
+import org.thechance.common.domain.entity.*
 
 
 interface IRemoteGateway {
