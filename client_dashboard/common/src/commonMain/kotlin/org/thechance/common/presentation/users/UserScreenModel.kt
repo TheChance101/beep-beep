@@ -5,10 +5,7 @@ import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.usecase.IGetUsersUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
-import org.thechance.common.presentation.uistate.UserScreenUiState
-import org.thechance.common.presentation.uistate.toUiState
 import org.thechance.common.presentation.util.ErrorState
-
 
 class UserScreenModel(
     private val getUsers: IGetUsersUseCase

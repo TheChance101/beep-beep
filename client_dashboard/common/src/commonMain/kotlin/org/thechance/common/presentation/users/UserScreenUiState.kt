@@ -5,7 +5,6 @@ import org.thechance.common.domain.entity.User
 import org.thechance.common.presentation.composables.table.Header
 import org.thechance.common.presentation.util.ErrorState
 
-
 data class UserScreenUiState(
     val tableHeader: List<Header> = listOf(
         Header("No.", 1f),
