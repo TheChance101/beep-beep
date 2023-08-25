@@ -34,4 +34,5 @@ interface RestaurantInteractionListener : BaseInteractionListener {
 
     fun onWorkingHourChange(hour: String)
 
+    fun onCreateNewRestaurantClicked()
 }

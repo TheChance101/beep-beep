@@ -2,6 +2,7 @@ package org.thechance.common.presentation.restaurant
 
 import org.thechance.common.presentation.composables.table.Header
 import org.thechance.common.presentation.util.ErrorState
+import java.util.Date
 
 
 data class RestaurantUiState(
@@ -44,6 +45,6 @@ data class AddRestaurantDialogUiState(
     val name: String = "",
     val ownerUsername: String = "",
     val phoneNumber: String = "",
-    val workingHours: String = "",
+    val workingHours: Pair<Date, Date> = Pair(Date(), Date()),
     val location: String = "",
 )

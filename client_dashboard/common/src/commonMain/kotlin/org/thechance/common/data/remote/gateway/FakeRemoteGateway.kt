@@ -9,8 +9,6 @@ import org.thechance.common.domain.getway.IRemoteGateway
 import java.util.*
 
 class FakeRemoteGateway : IRemoteGateway {
-
-
     private val taxis = mutableListOf<TaxiDto>()
     init {
         taxis.addAll(listOf(
@@ -264,6 +262,10 @@ class FakeRemoteGateway : IRemoteGateway {
 
     override suspend fun loginUser(username: String, password: String): UserTokens {
         return UserTokens("", "")
+    }
+
+    override suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant {
+        TODO("Not yet implemented")
     }
 
 }

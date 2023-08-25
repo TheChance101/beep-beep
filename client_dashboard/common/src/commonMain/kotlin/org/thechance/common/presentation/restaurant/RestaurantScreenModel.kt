@@ -2,17 +2,20 @@ package org.thechance.common.presentation.restaurant
 
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.usecase.FilterRestaurantsUseCase
+import org.thechance.common.domain.usecase.ICreateNewRestaurantUseCase
 import org.thechance.common.domain.usecase.IGetRestaurantsUseCase
 import org.thechance.common.domain.usecase.SearchRestaurantsByRestaurantNameUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
+import java.util.Date
 import kotlin.math.ceil
 
 
 class RestaurantScreenModel(
     private val getRestaurants: IGetRestaurantsUseCase,
+    private val createNewRestaurant: ICreateNewRestaurantUseCase,
     private val searchRestaurants: SearchRestaurantsByRestaurantNameUseCase,
-    private val filterRestaurants: FilterRestaurantsUseCase
+    private val filterRestaurants: FilterRestaurantsUseCase,
 ) : BaseScreenModel<RestaurantUiState, RestaurantUIEffect>(RestaurantUiState()),
     RestaurantInteractionListener {
 
@@ -160,8 +163,28 @@ class RestaurantScreenModel(
         updateState {
             it.copy(
                 addNewRestaurantDialogUiState = it.addNewRestaurantDialogUiState.copy(
-                    workingHours = hour
+                    workingHours = Pair(Date(hour.toLong()), Date(hour.toLong()))
                 )
+            )
+        }
+    }
+
+    override fun onCreateNewRestaurantClicked() {
+        tryToExecute(
+            callee = { createNewRestaurant.createRestaurant(mutableState.value.addNewRestaurantDialogUiState.toEntity()) },
+            onSuccess = ::onCreateRestaurantSuccessfully,
+            onError = ::onError,
+        )
+    }
+
+    private fun onCreateRestaurantSuccessfully(restaurant: Restaurant) {
+        val newRestaurant =
+            mutableState.value.restaurants.toMutableList().apply { add(restaurant.toUiState()) }
+        updateState {
+            it.copy(
+                restaurants = newRestaurant,
+                isLoading = false,
+                isAddNewRestaurantDialogVisible = false
             )
         }
     }

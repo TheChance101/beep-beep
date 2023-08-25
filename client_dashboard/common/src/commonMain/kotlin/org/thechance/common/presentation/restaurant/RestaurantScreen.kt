@@ -71,7 +71,7 @@ class RestaurantScreen :
             onPhoneNumberChange = listener::onPhoneNumberChange,
             onWorkingHourChange = listener::onWorkingHourChange,
             state = state.addNewRestaurantDialogUiState,
-            onCreateClicked = {},
+            onCreateClicked = listener::onCreateNewRestaurantClicked,
         )
         Column(
             Modifier.background(Theme.colors.surface).fillMaxSize(),

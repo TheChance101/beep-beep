@@ -14,8 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.beepbeep.designSystem.ui.composable.BpButton
@@ -89,14 +87,14 @@ fun RestaurantDialog(
                     ) {
                         BpTextField(
                             onValueChange = onWorkingHourChange,
-                            text = state.workingHours,
+                            text = state.workingHours.first.toString(),
                             modifier = Modifier.weight(1f),
                             label = "Working hours",
                             hint = "1:00"
                         )
                         BpTextField(
                             onValueChange = onWorkingHourChange,
-                            text = state.workingHours,
+                            text = state.workingHours.second.toString(),
                             modifier = Modifier.weight(1f),
                             label = "",
                             hint = "24:00"
