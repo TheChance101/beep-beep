@@ -41,12 +41,12 @@ class LoginScreenModel:
     }
 
     private fun onLoginSuccess(result: UserTokens) {
-        println("token${result.accessToken}")
-        updateState { it.copy(isLoading = false) }
+        updateState { it.copy(isLoading = false, isSuccess = true) }
         sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
     }
 
     private fun onLoginFailed(error: ErrorState) {
+        state.value.sheetState.show()
         handleErrorState(error)
         updateState { it.copy(isLoading = false, error = error) }
     }

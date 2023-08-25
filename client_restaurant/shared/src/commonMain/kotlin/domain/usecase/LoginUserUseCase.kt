@@ -30,10 +30,8 @@ class LoginUserUseCase(
         password: String,
         isKeepMeLoggedInChecked: Boolean
     ): UserTokens {
-//        localGateWay.saveKeepMeLoggedInFlag(isKeepMeLoggedInChecked)
-        return remoteGateWay.loginUser(userName, password)
+            return remoteGateWay.loginUser(userName, password)
     }
-
 
     override suspend fun saveAccessToken(token: String) = localGateWay.saveAccessToken(token)
 

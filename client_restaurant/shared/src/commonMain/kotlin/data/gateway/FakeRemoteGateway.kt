@@ -19,7 +19,6 @@ import presentation.base.RequestException
 
 class FakeRemoteGateway : IRemoteGateWay {
 
-
     private val orders = mutableListOf(
         OrderDto(
             id = "f5c8b31e-5c4d-4c8a-babc-0e9463daad20",
@@ -564,9 +563,11 @@ class FakeRemoteGateway : IRemoteGateWay {
     )
 
     override suspend fun loginUser(userName: String, password: String): UserTokens {
-        return UserTokens(accessToken = "", refreshToken = "")
+        return if (userName == "theChance" && password == "theChance23")
+            UserTokens(accessToken = "wertqyhgt", refreshToken = "qazswxza")
+        else
+            throw RequestException()
     }
-
 
     //region restaurant
     override suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant> {
