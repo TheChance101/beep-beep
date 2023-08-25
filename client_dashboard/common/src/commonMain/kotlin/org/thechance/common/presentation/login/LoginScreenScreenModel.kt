@@ -1,7 +1,6 @@
 package org.thechance.common.presentation.login
 
-import kotlinx.coroutines.flow.*
-import org.thechance.common.domain.entity.UserTokens
+import kotlinx.coroutines.flow.update
 import org.thechance.common.domain.usecase.ILoginUserUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
@@ -47,7 +46,7 @@ class LoginScreenScreenModel(
         updateState { it.copy(keepLoggedIn = !it.keepLoggedIn) }
     }
 
-    private fun onLoginSuccess(result: UserTokens) {
+    private fun onLoginSuccess(unit: Unit) {
         updateState { it.copy(isLoading = false, error = null) }
         sendNewEffect(LoginUIEffect.LoginUISuccess)
     }
