@@ -5,6 +5,8 @@ import org.thechance.common.presentation.base.BaseInteractionListener
 
 interface TaxiScreenInteractionListener : BaseInteractionListener {
 
+    fun onExportReportClicked()
+    fun onDismissExportReportSnackBar()
     fun onCancelCreateTaxiClicked()
 
     fun onTaxiPlateNumberChange(number: String)
