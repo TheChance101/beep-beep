@@ -104,7 +104,8 @@ private fun MultipleRestaurants(
         if (isMultipleRestaurants) {
             Icon(
                 painter = painterResource(Resources.images.arrowDown),
-                contentDescription = null
+                contentDescription = null,
+                tint = Theme.colors.contentPrimary
             )
         }
 

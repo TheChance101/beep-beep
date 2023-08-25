@@ -20,7 +20,8 @@ data class PainterResources(
     val ordersBig: String,
     val ordersHistory: String,
     val revenue: String,
-    val arrowDown: String
+    val arrowDown: String,
+    val errorIcon: String
 )
 
 val BpPainterLightResources = PainterResources(
@@ -32,7 +33,7 @@ val BpPainterLightResources = PainterResources(
     halfFilledStar = "ic_half_filled_star_light.xml",
     sort = "sort.xml",
     sun = "sun.xml",
-    backgroundPattern = "background_pattern.png",
+    backgroundPattern = "background_pattern_light.png",
     galleryAdd = "gallery_add.xml",
     edit = "edit.xml",
     flag = "flag.xml",
@@ -43,7 +44,8 @@ val BpPainterLightResources = PainterResources(
     ordersBig = "orders_big.png",
     ordersHistory = "orders_history.png",
     revenue = "revenue.png",
-    arrowDown = "arrow_down.xml"
+    arrowDown = "arrow_down.xml",
+    errorIcon = "ic_error_icon.xml"
 )
 
 val BpPainterDarkResources = PainterResources(
@@ -55,7 +57,7 @@ val BpPainterDarkResources = PainterResources(
     halfFilledStar = "ic_half_filled_star_dark.xml",
     sort = "sort.xml",
     sun = "sun.xml",
-    backgroundPattern = "background_pattern.png",
+    backgroundPattern = "background_pattern_dark.png",
     galleryAdd = "gallery_add.xml",
     edit = "edit.xml",
     flag = "flag.xml",
@@ -66,5 +68,6 @@ val BpPainterDarkResources = PainterResources(
     ordersBig = "orders_big.png",
     ordersHistory = "orders_history.png",
     revenue = "revenue.png",
-    arrowDown = "arrow_down.xml"
+    arrowDown = "arrow_down.xml",
+    errorIcon = "ic_error_icon.xml"
 )
