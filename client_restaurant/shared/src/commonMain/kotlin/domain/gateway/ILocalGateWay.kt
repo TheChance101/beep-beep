@@ -10,7 +10,7 @@ interface ILocalGateWay {
     suspend fun getAccessToken(): String
     suspend fun saveRefreshToken(token: String)
     suspend fun getRefreshToken(): String
-    suspend fun saveLoggedInFlag(isChecked: Boolean)
-    suspend fun getLoggedInFlag(): Boolean
+    suspend fun saveKeepMeLoggedInFlag(isChecked: Boolean)
+    suspend fun getKeepMeLoggedInFlag(): Boolean
 
 }

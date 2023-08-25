@@ -39,7 +39,7 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
     }
 
     override fun onRequestPermissionClick() {
-        TODO("Not yet implemented")
+
     }
 
     override fun onClickLogin(
@@ -69,18 +69,18 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
     private fun handleErrorState(error: ErrorState) {
         when (error) {
             ErrorState.NoInternet -> {}
-            ErrorState.NetworkNotSupported -> TODO()
-            ErrorState.RequestFailed -> TODO()
-            ErrorState.UnAuthorized -> TODO()
-            ErrorState.WifiDisabled -> TODO()
+            ErrorState.NetworkNotSupported -> "opsops"
+            ErrorState.RequestFailed -> "ops"
+            ErrorState.UnAuthorized -> "ops"
+            ErrorState.WifiDisabled -> "ops2"
         }
     }
 
     override fun onClickSubmit() {
-        // TODO: send permission request
+
     }
 
     override fun onCancelClick() {
-        TODO("Not yet implemented")
+
     }
 }

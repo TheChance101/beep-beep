@@ -4,9 +4,6 @@ import domain.entity.UserTokens
 import domain.gateway.ILocalGateWay
 import domain.gateway.IRemoteGateWay
 
-/**
- * Created by Aziza Helmy on 8/24/2023.
- */
 interface ILoginUserUseCase {
 
     suspend fun loginUser(
@@ -33,7 +30,7 @@ class LoginUserUseCase(
         password: String,
         isKeepMeLoggedInChecked: Boolean
     ): UserTokens {
-        localGateWay.saveLoggedInFlag(isKeepMeLoggedInChecked)
+        localGateWay.saveKeepMeLoggedInFlag(isKeepMeLoggedInChecked)
         return remoteGateWay.loginUser(userName, password)
     }
 
@@ -51,9 +48,9 @@ class LoginUserUseCase(
     override suspend fun getRefreshToken(): String = localGateWay.getRefreshToken()
 
     override suspend fun saveLoggedInFlag(isChecked: Boolean) {
-        localGateWay.saveLoggedInFlag(isChecked)
+        localGateWay.saveKeepMeLoggedInFlag(isChecked)
     }
 
-    override suspend fun getLoggedInFlag(): Boolean = localGateWay.getLoggedInFlag()
+    override suspend fun getLoggedInFlag(): Boolean = localGateWay.getKeepMeLoggedInFlag()
 
 }
