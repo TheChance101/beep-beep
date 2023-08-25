@@ -30,7 +30,7 @@ class LoginUserUseCase(
         password: String,
         isKeepMeLoggedInChecked: Boolean
     ): UserTokens {
-        localGateWay.saveKeepMeLoggedInFlag(isKeepMeLoggedInChecked)
+//        localGateWay.saveKeepMeLoggedInFlag(isKeepMeLoggedInChecked)
         return remoteGateWay.loginUser(userName, password)
     }
 
