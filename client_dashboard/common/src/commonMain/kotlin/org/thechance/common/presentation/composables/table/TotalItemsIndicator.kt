@@ -18,12 +18,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.thechance.common.presentation.util.Constants
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun TotalItemsIndicator(
     modifier: Modifier = Modifier,
     totalItems: Int,
+    maxNumberOfItems: Int = Constants.PAGE_MAX_NUMBER_OF_ITEMS,
     numberItemInPage: Int,
     onItemPerPageChange: (Int) -> Unit,
     itemType: String,
@@ -42,7 +44,11 @@ fun TotalItemsIndicator(
                 ).padding(vertical = Theme.dimens.space8).width(Theme.dimens.space40),
             value = numberItemInPage.toString(),
             onValueChange = {
-                runCatching { onItemPerPageChange(if (it.toInt() >= 100) 100 else it.toInt()) }
+                runCatching {
+                    onItemPerPageChange(
+                        if (it.toInt() >= maxNumberOfItems) maxNumberOfItems else it.toInt()
+                    )
+                }
             },
             textStyle = TextStyle(
                 textAlign = TextAlign.Center,
