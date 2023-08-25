@@ -182,10 +182,10 @@ class RestaurantScreen :
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             TotalItemsIndicator(
-                numberItemInPage = state.numberOfItemsInPage.toString(),
+                numberItemInPage = state.numberOfItemsInPage,
                 totalItems = state.numberOfRestaurants,
                 itemType = "restaurant",
-                onItemPerPageChange = { listener.onItemPerPageChange(it.toInt()) }
+                onItemPerPageChange = listener::onItemPerPageChange
             )
             BpPager(
                 maxPages = state.maxPageCount,
