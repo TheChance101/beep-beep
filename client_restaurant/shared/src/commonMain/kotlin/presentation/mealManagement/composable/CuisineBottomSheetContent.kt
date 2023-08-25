@@ -43,7 +43,11 @@ fun CuisineBottomSheet(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text(Resources.strings.chooseCuisine, style = Theme.typography.titleLarge)
+                Text(
+                    Resources.strings.chooseCuisine,
+                    style = Theme.typography.titleLarge,
+                    color = Theme.colors.contentPrimary
+                )
 
                 Spacer(Modifier.weight(1f))
 
