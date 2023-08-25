@@ -22,7 +22,7 @@ fun App() {
     Box(Modifier.onSizeChanged { size = it.toSize() }) {
         BpTheme {
             ProvideResources {
-                Navigator(LoginScreen) {
+                Navigator(LoginScreen()) {
                     SlideTransition(it)
                 }
             }

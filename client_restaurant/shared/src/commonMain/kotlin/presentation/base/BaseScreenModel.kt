@@ -6,14 +6,14 @@ import kotlinx.coroutines.flow.*
 import org.koin.core.component.KoinComponent
 
 @OptIn(FlowPreview::class)
-abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel {
+abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinComponent {
 
     abstract val viewModelScope: CoroutineScope
     private val _state = MutableStateFlow(initialState)
     val state = _state.asStateFlow()
 
     private val _effect = MutableSharedFlow<E?>()
-    val effect = _effect.debounce(500).filterNot { it == null }
+    val effect = _effect.asSharedFlow().debounce(500).mapNotNull { it }
 
     protected fun <T> tryToExecute(
         function: suspend () -> T,
@@ -41,9 +41,7 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel {
     }
 
     protected fun updateState(updater: (S) -> S) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _state.update(updater)
-        }
+        _state.update(updater)
     }
 
     protected fun sendNewEffect(newEffect: E) {
@@ -55,7 +53,7 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel {
     private fun runWithErrorCheck(
         onError: (ErrorState) -> Unit,
         inScope: CoroutineScope = viewModelScope,
-        dispatcher: CoroutineDispatcher = Dispatchers.IO,
+        dispatcher: CoroutineDispatcher = Dispatchers.Unconfined,
         function: suspend () -> Unit
     ): Job {
         return inScope.launch(dispatcher) {

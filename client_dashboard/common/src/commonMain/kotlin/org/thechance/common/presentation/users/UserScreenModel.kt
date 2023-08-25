@@ -1,40 +1,78 @@
 package org.thechance.common.presentation.users
 
-import cafe.adriel.voyager.core.model.StateScreenModel
 import kotlinx.coroutines.flow.update
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import org.thechance.common.domain.entity.DataWrapper
+import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.usecase.IGetUsersUseCase
+import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.uistate.UserScreenUiState
 import org.thechance.common.presentation.uistate.toUiState
+import org.thechance.common.presentation.util.ErrorState
 
 
 class UserScreenModel(
     private val getUsers: IGetUsersUseCase
-) : StateScreenModel<UserScreenUiState>(UserScreenUiState()) {
+) : BaseScreenModel<UserScreenUiState, UserUiEffect>(UserScreenUiState()),
+    UserScreenInteractionListener {
 
     init {
-        updateUsers()
+        getUsers()
     }
 
-    private fun updateUsers() {
-        mutableState.update { it.copy(users = getUsers().toUiState()) }
-        mutableState.update { it.copy(numberOfUsers = it.users.size) }
+    private fun getUsers() {
+        tryToExecute(
+            { getUsers(state.value.currentPage, state.value.specifiedUsers) },
+            ::onGetUsersSuccessfully,
+            ::onError
+        )
     }
 
-    fun onSearchChange(text: String) {
+    private fun onGetUsersSuccessfully(users: DataWrapper<User>) {
+        updateState {
+            it.copy(pageInfo = users.toUiState(), isLoading = false)
+        }
+    }
+
+    private fun onError(error: ErrorState) {
+        updateState { it.copy(error = error, isLoading = false) }
+    }
+
+    override fun onSearchInputChange(text: String) {
         mutableState.update { it.copy(search = text) }
     }
 
-    fun onClickDropDownMenu() {
-        mutableState.update { it.copy(isFilterDropdownMenuExpanded = true) }
+    override fun showFilterMenu() {
+        mutableState.update {
+            it.copy(
+                filter = UserScreenUiState.FilterUiState(
+                    show = !it.filter.show,
+                    permissions = it.allPermissions
+                )
+            )
+        }
     }
 
-    fun onDismissDropDownMenu() {
-        mutableState.update { it.copy(isFilterDropdownMenuExpanded = false) }
+    override fun hideFilterMenu() {
+        mutableState.update {
+            it.copy(
+                filter = it.filter.copy(show = false)
+            )
+        }
     }
 
-    fun showPermissionsDialog(user: UserScreenUiState.UserUiState) {
+    override fun showEditUserMenu(username: String) {
+        mutableState.update {
+            it.copy(userMenu = it.userMenu.copy(username = username))
+        }
+    }
+
+    override fun hideEditUserMenu() {
+        mutableState.update {
+            it.copy(userMenu = it.userMenu.copy(username = ""))
+        }
+    }
+
+    override fun onEditUserMenuItemClicked(user: UserScreenUiState.UserUiState) {
         mutableState.update {
             it.copy(
                 permissionsDialog = it.permissionsDialog.copy(
@@ -43,29 +81,25 @@ class UserScreenModel(
                     permissions = user.permissions
                 )
             )
-        }
+        }.also { hideEditUserMenu() }
     }
 
-    fun hidePermissionsDialog() {
-        mutableState.update {
-            it.copy(
-                permissionsDialog = it.permissionsDialog.copy(
-                    show = false,
-                    username = "",
-                    permissions = emptyList()
-                )
-            )
-        }
+    override fun onDeleteUserMenu(user: UserScreenUiState.UserUiState) {
+        println("Delete user: ${user.username}").also { hideEditUserMenu() }
     }
 
-    fun onPermissionDialogSave() {
+    override fun onSaveEditUserMenu() {
         val username = mutableState.value.permissionsDialog.username
         val permissions = mutableState.value.permissionsDialog.permissions
         updateUserPermissions(username, permissions)
-        hidePermissionsDialog()
+        hideUserPermissionsDialog()
     }
 
-    fun togglePermission(permission: UserScreenUiState.PermissionUiState) {
+    override fun onCancelEditUserMenu() {
+        hideUserPermissionsDialog()
+    }
+
+    override fun onEditUserMenuPermissionClick(permission: UserScreenUiState.PermissionUiState) {
         val permissions = getUpdatedPermissions(
             mutableState.value.permissionsDialog.permissions,
             permission
@@ -77,6 +111,18 @@ class UserScreenModel(
                 )
             )
         }
+    }
+
+    private fun hideUserPermissionsDialog() {
+        mutableState.update {
+            it.copy(
+                permissionsDialog = it.permissionsDialog.copy(
+                    show = false,
+                    username = "",
+                    permissions = emptyList()
+                )
+            )
+        }.also { hideEditUserMenu() }
     }
 
     private fun getUpdatedPermissions(
@@ -97,14 +143,51 @@ class UserScreenModel(
     ) {
         mutableState.update {
             it.copy(
-                users = it.users.map { userUiState ->
-                    if (userUiState.username == username) {
-                        userUiState.copy(permissions = permissions)
-                    } else {
-                        userUiState
+                pageInfo = it.pageInfo.copy(
+                    data = it.pageInfo.data.map { userUiState ->
+                        if (userUiState.username == username) {
+                            userUiState.copy(permissions = permissions)
+                        } else {
+                            userUiState
+                        }
                     }
-                }
+                )
             )
         }
     }
+
+    override fun onItemsIndicatorChange(itemPerPage: Int) {
+        mutableState.update { it.copy(specifiedUsers = itemPerPage) }
+        getUsers()
+    }
+
+    override fun onPageClick(pageNumber: Int) {
+        mutableState.update { it.copy(currentPage = pageNumber) }
+        getUsers()
+    }
+
+    override fun onFilterMenuPermissionClick(permission: UserScreenUiState.PermissionUiState) {
+        val permissions = getUpdatedPermissions(
+            mutableState.value.filter.permissions,
+            permission
+        )
+        mutableState.update {
+            it.copy(
+                filter = it.filter.copy(permissions = permissions)
+            )
+        }
+        getUsers() // TODO: Update users with filter by permission
+    }
+
+    override fun onFilterMenuCountryClick(country: UserScreenUiState.CountryUiState) {
+        mutableState.update { uiState ->
+            val updatedCountries = uiState.filter.countries.map {
+                if (it.name == country.name) it.copy(selected = !country.selected)
+                else it
+            }
+            uiState.copy(filter = uiState.filter.copy(countries = updatedCountries))
+        }
+        getUsers() // TODO : Update users with filter by country
+    }
+
 }

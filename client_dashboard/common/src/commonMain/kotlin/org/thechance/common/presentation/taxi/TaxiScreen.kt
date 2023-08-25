@@ -47,7 +47,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
     @Composable
     override fun OnRender(
         state: TaxiUiState,
-        interactionListener: TaxiScreenInteractionListener
+        listener: TaxiScreenInteractionListener
     ) {
         var selectedTaxi by remember { mutableStateOf<String?>(null) }
         var selectedPage by remember { mutableStateOf(1) }
@@ -55,15 +55,15 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
 
         AddTaxiDialog(
             modifier = Modifier,
-            onTaxiPlateNumberChange = interactionListener::onTaxiPlateNumberChange,
-            onCancelCreateTaxiClicked = interactionListener::onCancelCreateTaxiClicked,
+            onTaxiPlateNumberChange = listener::onTaxiPlateNumberChange,
+            onCancelCreateTaxiClicked = listener::onCancelCreateTaxiClicked,
             isVisible = state.isAddNewTaxiDialogVisible,
-            onDriverUserNamChange = interactionListener::onDriverUserNamChange,
-            onCarModelChange = interactionListener::onCarModelChanged,
-            onCarColorSelected = interactionListener::onCarColorSelected,
-            onSeatsSelected = interactionListener::onSeatSelected,
+            onDriverUserNamChange = listener::onDriverUserNamChange,
+            onCarModelChange = listener::onCarModelChanged,
+            onCarColorSelected = listener::onCarColorSelected,
+            onSeatsSelected = listener::onSeatSelected,
             state = state.addNewTaxiDialogUiState,
-            onCreateTaxiClicked = interactionListener::onCreateTaxiClicked
+            onCreateTaxiClicked = listener::onCreateTaxiClicked
         )
 
         Column(
@@ -79,7 +79,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
                 BpSimpleTextField(
                     modifier = Modifier.widthIn(max = 440.dp),
                     hint = "Search for Taxis",
-                    onValueChange = interactionListener::onSearchInputChange,
+                    onValueChange = listener::onSearchInputChange,
                     text = state.searchQuery,
                     keyboardType = KeyboardType.Text,
                     trailingPainter = painterResource("ic_search.svg")
@@ -101,7 +101,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
                 )
                 BpButton(
                     title = "New Taxi",
-                    onClick = interactionListener::onAddNewTaxiClicked,
+                    onClick = listener::onAddNewTaxiClicked,
                     textPadding = PaddingValues(horizontal = Theme.dimens.space24),
                 )
             }
@@ -111,8 +111,6 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
                 key = { it.id },
                 headers = state.tabHeader,
                 modifier = Modifier.fillMaxWidth(),
-                rowsCount = state.taxiNumberInPage.toInt(),
-                offset = selectedPage - 1,
                 rowContent = { taxi ->
                     TaxiRow(
                         onClickEdit = { selectedTaxi = it },
@@ -131,7 +129,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
                     totalItems = state.taxis.size,
                     itemType = "taxi",
                     numberItemInPage = state.taxiNumberInPage,
-                    onItemPerPageChange = interactionListener::onTaxiNumberChange
+                    onItemPerPageChange = listener::onTaxiNumberChange
                 )
                 BpPager(
                     maxPages = pageCount,
@@ -154,17 +152,13 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
 
         TitleField(
             text = position.toString(),
-            modifier = Modifier.weight(otherColumnsWeight),
-            color = Theme.colors.contentTertiary
+            color = Theme.colors.contentTertiary,
+            weight = firstColumnWeight
         )
-        TitleField(text = taxi.plateNumber, modifier = Modifier.weight(otherColumnsWeight))
-        TitleField(text = taxi.username, modifier = Modifier.weight(otherColumnsWeight))
-        TitleField(
-            text = taxi.statusText,
-            modifier = Modifier.weight(otherColumnsWeight),
-            color = taxi.statusColor
-        )
-        TitleField(text = taxi.type, modifier = Modifier.weight(otherColumnsWeight))
+        TitleField(text = taxi.plateNumber)
+        TitleField(text = taxi.username)
+        TitleField(text = taxi.statusText, color = taxi.statusColor)
+        TitleField(text = taxi.type)
         SquareColorField(modifier = Modifier.weight(otherColumnsWeight), color = Color(taxi.color.hexadecimal))
         FlowRow(
             modifier = Modifier.weight(otherColumnsWeight),
@@ -180,7 +174,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
                 )
             }
         }
-        TitleField(text = taxi.trips, modifier = Modifier.weight(otherColumnsWeight))
+        TitleField(text = taxi.trips)
         Image(
             painter = painterResource("horizontal_dots.xml"),
             contentDescription = null,
@@ -191,16 +185,17 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
     }
 
     @Composable
-   private fun TitleField(
+   private fun RowScope.TitleField(
         text: String,
         modifier: Modifier = Modifier,
         color: Color = Theme.colors.contentPrimary,
+        weight: Float = 3f
     ) {
         Text(
             text = text,
             style = Theme.typography.titleMedium,
             overflow = TextOverflow.Ellipsis,
-            modifier = modifier,
+            modifier = modifier.weight(weight),
             maxLines = 1,
             color = color
         )

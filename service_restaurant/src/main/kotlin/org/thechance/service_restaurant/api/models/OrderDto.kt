@@ -9,6 +9,6 @@ data class OrderDto(
     val restaurantId: String? = null,
     val meals: List<OrderMealDto>? = null,
     val totalPrice: Double? = null,
-    val createdAt: String? = null,
+    val createdAt: Long? = null,
     val orderStatus: Int = 0
 )
