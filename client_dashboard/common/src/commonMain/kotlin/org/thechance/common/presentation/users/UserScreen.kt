@@ -49,7 +49,7 @@ class UserScreen :
     ) {
         UserContent(
             state = state,
-            pageListener  = listener,
+            pageListener = listener,
             editMenuListener = listener,
             onDeleteUserMenuItemClicked = listener::onDeleteUserMenu,
             onSearchInputChanged = listener::onSearchInputChange,
@@ -65,7 +65,7 @@ class UserScreen :
     @Composable
     private fun UserContent(
         state: UserScreenUiState,
-        pageListener:PageListener,
+        pageListener: PageListener,
         editMenuListener: EditUserMenuListener,
         onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
         onSearchInputChanged: (String) -> Unit,
@@ -79,47 +79,45 @@ class UserScreen :
             onSaveUserPermissions = editMenuListener::onSaveEditUserMenu,
             onCancelUserPermissionsDialog = editMenuListener::onCancelEditUserMenu,
         )
-
-        Column(
-            modifier = Modifier
-                .background(Theme.colors.surface)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16),
+        Box(
+            modifier = Modifier.background(Theme.colors.surface).fillMaxSize(),
+            contentAlignment = Alignment.BottomCenter
         ) {
-            UsersFilteredSearch(
-                searchText = state.search,
-                allPermissions = state.allPermissions,
-                selectedPermissions = state.filter.permissions,
-                countries = state.filter.countries,
-                onFilterPermissionClicked = filterMenuListener::onFilterMenuPermissionClick,
-                isFilterDropdownMenuExpanded = state.filter.show,
-                onFilterCountryClicked = filterMenuListener::onFilterMenuCountryClick,
-                onSearchInputChanged = onSearchInputChanged,
-                onFilterMenuClicked = filterMenuListener::showFilterMenu,
-                onFilterMenuDismiss = filterMenuListener::hideFilterMenu,
-            )
+            Column(modifier = Modifier.fillMaxSize().align(Alignment.TopCenter)) {
+                UsersFilteredSearch(
+                    searchText = state.search,
+                    allPermissions = state.allPermissions,
+                    selectedPermissions = state.filter.permissions,
+                    countries = state.filter.countries,
+                    onFilterPermissionClicked = filterMenuListener::onFilterMenuPermissionClick,
+                    isFilterDropdownMenuExpanded = state.filter.show,
+                    onFilterCountryClicked = filterMenuListener::onFilterMenuCountryClick,
+                    onSearchInputChanged = onSearchInputChanged,
+                    onFilterMenuClicked = filterMenuListener::showFilterMenu,
+                    onFilterMenuDismiss = filterMenuListener::hideFilterMenu,
+                )
 
-            UsersTable(
-                users = state.pageInfo.data,
-                headers = state.tableHeader,
-                selectedPage = state.currentPage,
-                onUserMenuClicked = editMenuListener::showEditUserMenu,
-                numberItemInPage = state.specifiedUsers,
-                numberOfUsers = state.pageInfo.numberOfUsers,
-                pageCount = state.pageInfo.totalPages,
-                onPageClicked = pageListener::onPageClick,
-                onItemPerPageChanged = pageListener::onItemsIndicatorChange,
-                editUserMenu = state.userMenu,
-                onEditUserDismiss = editMenuListener::hideEditUserMenu,
-                onEditUserMenuItemClicked = editMenuListener::onEditUserMenuItemClicked,
-                onDeleteUserMenuItemClicked = onDeleteUserMenuItemClicked,
-            )
+                UsersTable(
+                    users = state.pageInfo.data,
+                    headers = state.tableHeader,
+                    selectedPage = state.currentPage,
+                    onUserMenuClicked = editMenuListener::showEditUserMenu,
+                    numberItemInPage = state.specifiedUsers,
+                    numberOfUsers = state.pageInfo.numberOfUsers,
+                    pageCount = state.pageInfo.totalPages,
+                    onPageClicked = pageListener::onPageClick,
+                    onItemPerPageChanged = pageListener::onItemsIndicatorChange,
+                    editUserMenu = state.userMenu,
+                    onEditUserDismiss = editMenuListener::hideEditUserMenu,
+                    onEditUserMenuItemClicked = editMenuListener::onEditUserMenuItemClicked,
+                    onDeleteUserMenuItemClicked = onDeleteUserMenuItemClicked,
+                )
+            }
         }
     }
 
     @Composable
-    private fun UsersTable(
+    private fun ColumnScope.UsersTable(
         users: List<UserScreenUiState.UserUiState>,
         headers: List<Header>,
         selectedPage: Int,
@@ -134,13 +132,13 @@ class UserScreen :
         onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
         onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
     ) {
-        Column {
+        Box(modifier = Modifier.weight(1f).padding(bottom = LocalDimensions.current.space16)) {
             BpTable(
                 data = users,
                 key = UserScreenUiState.UserUiState::username,
                 headers = headers,
-                modifier = Modifier.fillMaxWidth().fillMaxHeight(.85f),
-                ) { user ->
+                modifier = Modifier.fillMaxWidth(),
+            ) { user ->
                 UserRow(
                     onUserMenuClicked = onUserMenuClicked,
                     user = user,
@@ -151,16 +149,18 @@ class UserScreen :
                     onDeleteUserMenuItemClicked = onDeleteUserMenuItemClicked,
                 )
             }
-            UsersTableFooter(
-                numberItemInPage = numberItemInPage,
-                numberOfUsers = numberOfUsers,
-                pageCount = pageCount,
-                selectedPage = selectedPage,
-                onPageClicked = onPageClicked,
-                onItemPerPageChanged = onItemPerPageChanged,
-            )
         }
+
+        UsersTableFooter(
+            numberItemInPage = numberItemInPage,
+            numberOfUsers = numberOfUsers,
+            pageCount = pageCount,
+            selectedPage = selectedPage,
+            onPageClicked = onPageClicked,
+            onItemPerPageChanged = onItemPerPageChanged,
+        )
     }
+
 
     @Composable
     private fun UsersTableFooter(
@@ -172,7 +172,7 @@ class UserScreen :
         onItemPerPageChanged: (Int) -> Unit,
     ) {
         Row(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxWidth().background(color = Theme.colors.surface),
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -302,6 +302,7 @@ class UserScreen :
             }
         }
     }
+
     @Composable
     private fun UsersFilteredSearch(
         searchText: String,
@@ -316,8 +317,8 @@ class UserScreen :
         onFilterMenuDismiss: () -> Unit,
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16),
+            modifier = Modifier.fillMaxWidth().padding(bottom = LocalDimensions.current.space16),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.Top
         ) {
             BpSimpleTextField(
