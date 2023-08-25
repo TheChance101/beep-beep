@@ -20,10 +20,6 @@ class LoginScreenModel:
         updateState { it.copy(userName = userName) }
     }
 
-    override fun onOwnerEmailChanged(ownerEmail: String) {
-        updateState { it.copy(ownerEmail = ownerEmail) }
-    }
-
     override fun onPasswordChanged(password: String) {
         updateState { it.copy(password = password) }
     }
@@ -32,17 +28,7 @@ class LoginScreenModel:
         updateState { it.copy(keepLoggedIn = it.keepLoggedIn) }
     }
 
-    override fun onNameChanged(restaurantName: String) {
-        updateState { it.copy(restaurantName = restaurantName) }
-    }
 
-    override fun onDescriptionChanged(description: String) {
-        updateState { it.copy(description = description) }
-    }
-
-    override fun onRequestPermissionClick() {
-
-    }
 
     override fun onClickLogin(
         userName: String,
@@ -64,7 +50,9 @@ class LoginScreenModel:
     }
 
     private fun onLoginFailed(error: ErrorState) {
+        state.value.sheetState.show()
         handleErrorState(error)
+
         updateState { it.copy(isLoading = false, error = "error") }
     }
 
@@ -73,16 +61,44 @@ class LoginScreenModel:
             ErrorState.NoInternet -> {}
             ErrorState.NetworkNotSupported -> "opsops"
             ErrorState.RequestFailed -> "ops"
-            ErrorState.UnAuthorized -> "ops"
-            ErrorState.WifiDisabled -> "ops2"
+            ErrorState.UnAuthorized -> "ops3"
+            ErrorState.WifiDisabled -> {
+                state.value.sheetState.show()
+            }      // just for testing
+            ErrorState.HasNoPermission -> "ops4"    // do nothing for now
         }
     }
 
-    override fun onClickSubmit() {
+    // region permission
+    override fun onRestaurantNameChanged(restaurantName: String) {
+        updateState { it.copy(restaurantName = restaurantName) }
+    }
 
+    override fun onOwnerEmailChanged(ownerEmail: String) {
+        updateState { it.copy(ownerEmail = ownerEmail) }
+    }
+
+
+    override fun onDescriptionChanged(description: String) {
+        updateState { it.copy(description = description) }
+    }
+
+
+    override fun onRequestPermissionClick() {
+        updateState { it.copy(showPermissionSheet = true) }
+    }
+
+
+    override fun onClickSubmit() {
+        state.value.sheetState.dismiss()
+        sendNewEffect(LoginScreenUIEffect.HasPermission)
+        updateState { it.copy(showPermissionSheet = false) }
     }
 
     override fun onCancelClick() {
-
+        state.value.sheetState.dismiss()
+        updateState { it.copy(showPermissionSheet = false) }
     }
+
+    // endregion
 }

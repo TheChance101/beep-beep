@@ -11,7 +11,7 @@ interface LoginScreenInteractionListener : BaseInteractionListener {
 
     //permission will move
     fun onOwnerEmailChanged(ownerEmail: String)
-    fun onNameChanged(restaurantName: String)
+    fun onRestaurantNameChanged(restaurantName: String)
     fun onDescriptionChanged(description: String)
     fun onRequestPermissionClick()
     fun onClickSubmit()
