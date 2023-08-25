@@ -29,6 +29,15 @@ interface IRemoteGateway {
 
     suspend fun loginUser(username: String, password: String): UserTokens
 
+    suspend fun filterRestaurants(rating: Double, priceLevel: Int): List<Restaurant>
+
+    suspend fun searchFilterRestaurants(
+        restaurantName: String,
+        rating: Double,
+        priceLevel: Int
+    ): List<Restaurant>
+
+
     suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant
 
     suspend fun getCurrentLocation(): Location
