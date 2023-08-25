@@ -1,9 +1,11 @@
 package org.thechance.common.presentation.restaurant
 
+import org.thechance.common.domain.entity.Location
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.usecase.FilterRestaurantsUseCase
 import org.thechance.common.domain.usecase.ICreateNewRestaurantUseCase
 import org.thechance.common.domain.usecase.IGetRestaurantsUseCase
+import org.thechance.common.domain.usecase.IHandleLocationUseCase
 import org.thechance.common.domain.usecase.SearchRestaurantsByRestaurantNameUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
@@ -14,6 +16,7 @@ import kotlin.math.ceil
 class RestaurantScreenModel(
     private val getRestaurants: IGetRestaurantsUseCase,
     private val createNewRestaurant: ICreateNewRestaurantUseCase,
+    private val handleLocationUseCase: IHandleLocationUseCase,
     private val searchRestaurants: SearchRestaurantsByRestaurantNameUseCase,
     private val filterRestaurants: FilterRestaurantsUseCase,
 ) : BaseScreenModel<RestaurantUiState, RestaurantUIEffect>(RestaurantUiState()),
@@ -123,6 +126,25 @@ class RestaurantScreenModel(
 
     override fun onAddNewRestaurantClicked() {
         updateState { it.copy(isAddNewRestaurantDialogVisible = true) }
+        getCurrentLocation()
+    }
+
+    private fun getCurrentLocation() {
+        tryToExecute(
+            callee = { handleLocationUseCase.getCurrentLocation() },
+            onSuccess = ::onGetCurrentLocationSuccess,
+            onError = ::onError,
+        )
+    }
+
+    private fun onGetCurrentLocationSuccess(location: Location) {
+        updateState {
+            it.copy(
+                addNewRestaurantDialogUiState = it.addNewRestaurantDialogUiState.copy(
+                    currentLocation = location.loc
+                )
+            )
+        }
     }
 
     override fun onCancelCreateRestaurantClicked() {

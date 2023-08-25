@@ -1,5 +1,6 @@
 package org.thechance.common.data.remote.gateway
 
+import com.google.gson.Gson
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
@@ -16,6 +17,7 @@ import org.thechance.common.domain.entity.AddTaxi
 import org.thechance.common.domain.entity.Admin
 import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.domain.entity.InvalidCredentialsException
+import org.thechance.common.domain.entity.Location
 import org.thechance.common.domain.entity.NoInternetException
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.entity.Taxi
@@ -26,6 +28,7 @@ import org.thechance.common.domain.entity.UserTokens
 import org.thechance.common.domain.getway.IRemoteGateway
 import org.thechance.common.domain.util.TaxiStatus
 import java.net.ConnectException
+import java.net.URL
 
 
 class RemoteGateway(
@@ -87,6 +90,14 @@ class RemoteGateway(
             rating = 0.0,
             priceLevel = 0
         )
+    }
+
+    override suspend fun getCurrentLocation(): Location {
+        val url = URL("https://ipinfo.io/json")
+        val json = url.readText()
+        val data = Gson().fromJson(json, Location::class.java)
+        val location = data.loc
+        return Location(loc = location)
     }
 
 

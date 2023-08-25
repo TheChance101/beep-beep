@@ -3,15 +3,28 @@ package org.thechance.common.data.remote.gateway
 
 import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
-import org.thechance.common.data.remote.model.*
-import org.thechance.common.domain.entity.*
+import org.thechance.common.data.remote.model.AdminDto
+import org.thechance.common.data.remote.model.RestaurantDto
+import org.thechance.common.data.remote.model.TaxiDto
+import org.thechance.common.data.remote.model.UserDto
+import org.thechance.common.data.remote.model.toEntity
+import org.thechance.common.domain.entity.AddRestaurant
+import org.thechance.common.domain.entity.AddTaxi
+import org.thechance.common.domain.entity.Admin
+import org.thechance.common.domain.entity.Location
+import org.thechance.common.domain.entity.Restaurant
+import org.thechance.common.domain.entity.Taxi
+import org.thechance.common.domain.entity.User
+import org.thechance.common.domain.entity.UserTokens
 import org.thechance.common.domain.getway.IRemoteGateway
-import java.util.*
+import java.util.UUID
 
 class FakeRemoteGateway : IRemoteGateway {
     private val taxis = mutableListOf<TaxiDto>()
+
     init {
-        taxis.addAll(listOf(
+        taxis.addAll(
+            listOf(
                 TaxiDto(
                     id = "1",
                     plateNumber = "ABC123",
@@ -92,8 +105,10 @@ class FakeRemoteGateway : IRemoteGateway {
                     status = 2,
                     trips = "9"
                 )
-            ))
+            )
+        )
     }
+
     override fun getUserData(): Admin =
         AdminDto(fullName = "asia").toEntity()
 
@@ -180,15 +195,17 @@ class FakeRemoteGateway : IRemoteGateway {
 
 
     override suspend fun createTaxi(taxi: AddTaxi): Taxi {
-        val taxiDto =taxi.toDto()
-        taxis.add(TaxiDto(
-            id = UUID.randomUUID().toString(),
-            plateNumber = taxiDto.plateNumber,
-            color = taxiDto.color,
-            type = taxiDto.type,
-            seats = taxiDto.seats,
-            username = taxiDto.username,
-        ))
+        val taxiDto = taxi.toDto()
+        taxis.add(
+            TaxiDto(
+                id = UUID.randomUUID().toString(),
+                plateNumber = taxiDto.plateNumber,
+                color = taxiDto.color,
+                type = taxiDto.type,
+                seats = taxiDto.seats,
+                username = taxiDto.username,
+            )
+        )
         return taxis.last().toEntity()
     }
 
@@ -265,6 +282,10 @@ class FakeRemoteGateway : IRemoteGateway {
     }
 
     override suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getCurrentLocation(): Location {
         TODO("Not yet implemented")
     }
 

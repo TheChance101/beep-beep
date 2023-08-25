@@ -47,4 +47,5 @@ data class AddRestaurantDialogUiState(
     val phoneNumber: String = "",
     val workingHours: Pair<Date, Date> = Pair(Date(), Date()),
     val location: String = "",
+    val currentLocation:String="",
 )

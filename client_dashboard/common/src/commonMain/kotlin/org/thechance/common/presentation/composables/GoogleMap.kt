@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun GoogleMap(
     modifier: Modifier = Modifier,
+    currentLocation: String,
     onGetAddress: (String) -> Unit,
 ) {
     Box(
@@ -20,7 +21,12 @@ fun GoogleMap(
     ) {
         SwingPanel(
             modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(8.dp)),
-            factory = { webViewFromContent(onGetAddress) },
+            factory = {
+                webViewFromContent(
+                    currentLocation = currentLocation,
+                    onGetAddress = onGetAddress
+                )
+            },
         )
     }
 }

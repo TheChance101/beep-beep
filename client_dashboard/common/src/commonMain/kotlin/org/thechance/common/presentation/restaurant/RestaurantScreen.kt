@@ -1,5 +1,6 @@
 package org.thechance.common.presentation.restaurant
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -62,18 +63,22 @@ class RestaurantScreen :
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun OnRender(state: RestaurantUiState, listener: RestaurantInteractionListener) {
-        RestaurantDialog(
-            modifier = Modifier,
-            onRestaurantNameChange = listener::onRestaurantNameChange,
-            onCancelClicked = listener::onCancelCreateRestaurantClicked,
-            isVisible = state.isAddNewRestaurantDialogVisible,
-            onOwnerUserNameChange = listener::onOwnerUserNameChange,
-            onPhoneNumberChange = listener::onPhoneNumberChange,
-            onWorkingHourChange = listener::onWorkingHourChange,
-            state = state.addNewRestaurantDialogUiState,
-            onCreateClicked = listener::onCreateNewRestaurantClicked,
-            onAddressChange = listener::onAddressChange,
-        )
+        AnimatedVisibility(state.isAddNewRestaurantDialogVisible) {
+            RestaurantDialog(
+                modifier = Modifier,
+                onRestaurantNameChange = listener::onRestaurantNameChange,
+                onCancelClicked = listener::onCancelCreateRestaurantClicked,
+                isVisible = state.isAddNewRestaurantDialogVisible,
+                onOwnerUserNameChange = listener::onOwnerUserNameChange,
+                onPhoneNumberChange = listener::onPhoneNumberChange,
+                onWorkingHourChange = listener::onWorkingHourChange,
+                state = state.addNewRestaurantDialogUiState,
+                onCreateClicked = listener::onCreateNewRestaurantClicked,
+                onAddressChange = listener::onAddressChange,
+                currentLocation = state.addNewRestaurantDialogUiState.currentLocation,
+            )
+        }
+
         Column(
             Modifier.background(Theme.colors.surface).fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,

@@ -29,6 +29,7 @@ fun RestaurantDialog(
     modifier: Modifier = Modifier,
     state: AddRestaurantDialogUiState,
     isVisible: Boolean,
+    currentLocation: String,
     onCreateClicked: () -> Unit,
     onCancelClicked: () -> Unit,
     onRestaurantNameChange: (String) -> Unit,
@@ -113,7 +114,7 @@ fun RestaurantDialog(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.End,
                 ) {
-                    GoogleMap { address ->
+                    GoogleMap(currentLocation = currentLocation) { address ->
                         onAddressChange(address)
                     }
                     Row(

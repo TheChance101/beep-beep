@@ -3,6 +3,7 @@ package org.thechance.common.domain.getway
 import org.thechance.common.domain.entity.AddRestaurant
 import org.thechance.common.domain.entity.AddTaxi
 import org.thechance.common.domain.entity.Admin
+import org.thechance.common.domain.entity.Location
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.entity.User
@@ -28,5 +29,7 @@ interface IRemoteGateway {
     suspend fun loginUser(username: String, password: String): UserTokens
 
     suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant
+
+    suspend fun getCurrentLocation(): Location
 
 }

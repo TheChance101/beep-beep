@@ -11,6 +11,7 @@ import org.thechance.common.domain.usecase.GetRestaurantsUseCase
 import org.thechance.common.domain.usecase.GetTaxisUseCase
 import org.thechance.common.domain.usecase.GetUserInfoUseCase
 import org.thechance.common.domain.usecase.GetUsersUseCase
+import org.thechance.common.domain.usecase.HandleLocationUseCase
 import org.thechance.common.domain.usecase.ICreateNewRestaurantUseCase
 import org.thechance.common.domain.usecase.ICreateNewTaxiUseCase
 import org.thechance.common.domain.usecase.IFilterRestaurantsUseCase
@@ -19,6 +20,7 @@ import org.thechance.common.domain.usecase.IGetRestaurantsUseCase
 import org.thechance.common.domain.usecase.IGetTaxisUseCase
 import org.thechance.common.domain.usecase.IGetUserInfoUseCase
 import org.thechance.common.domain.usecase.IGetUsersUseCase
+import org.thechance.common.domain.usecase.IHandleLocationUseCase
 import org.thechance.common.domain.usecase.ILoginUserUseCase
 import org.thechance.common.domain.usecase.ISearchRestaurantsByRestaurantNameUseCase
 import org.thechance.common.domain.usecase.LoginUserUseCase
@@ -35,4 +37,5 @@ val UseCaseModule = module {
     singleOf(::FilterRestaurantsUseCase) { bind<IFilterRestaurantsUseCase>() }
     singleOf(::LoginUserUseCase) { bind<ILoginUserUseCase>() }
     singleOf(::CreateNewRestaurantUseCase) { bind<ICreateNewRestaurantUseCase>() }
+    singleOf(::HandleLocationUseCase) { bind<IHandleLocationUseCase>() }
 }
