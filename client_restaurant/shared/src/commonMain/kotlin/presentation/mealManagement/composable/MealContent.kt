@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -52,7 +54,8 @@ fun MealContent(
 ) {
     imagePicker.registerPicker { listener.onImagePicked(it) }
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().background(Theme.colors.background)
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         BpAppBar(
@@ -166,7 +169,11 @@ private fun CuisineTextField(
                 style = Theme.typography.body.copy(Theme.colors.contentPrimary)
             )
 
-            Icon(painterResource(Resources.images.edit), contentDescription = null)
+            Icon(
+                painterResource(Resources.images.edit),
+                contentDescription = null,
+                tint = Theme.colors.onPrimary
+            )
         }
     }
 }
