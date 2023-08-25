@@ -57,6 +57,10 @@ class RemoteGateway(
         return emptyList()
     }
 
+    override suspend fun getPdfTaxiReport() {
+        //todo
+    }
+
     override suspend fun getRestaurants(): List<Restaurant> {
         return emptyList()
     }
@@ -79,6 +83,18 @@ class RemoteGateway(
                 header("Country-Code", "EG")
             }
         }.value?.toEntity() ?: throw Exception()
+    }
+
+    override suspend fun filterRestaurants(rating: Double, priceLevel: Int): List<Restaurant> {
+        return emptyList()
+    }
+
+    override suspend fun searchFilterRestaurants(
+        restaurantName: String,
+        rating: Double,
+        priceLevel: Int
+    ): List<Restaurant> {
+        return emptyList()
     }
 
 

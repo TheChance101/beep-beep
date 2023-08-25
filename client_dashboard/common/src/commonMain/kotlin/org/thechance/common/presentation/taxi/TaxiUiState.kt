@@ -17,6 +17,7 @@ data class TaxiUiState(
     val taxis: List<TaxiDetailsUiState> = emptyList(),
     val searchQuery: String = "",
     val taxiNumberInPage: Int = 3,
+    val isExportReportSuccessfully: Boolean = false,
 ) {
     val tabHeader = listOf(
         Header("No.", 1f),
