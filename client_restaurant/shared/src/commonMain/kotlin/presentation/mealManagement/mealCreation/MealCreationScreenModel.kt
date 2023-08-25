@@ -2,8 +2,8 @@ package presentation.mealManagement.mealCreation
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Cuisine
-import domain.usecase.IGetCuisineUseCase
 import domain.usecase.IManageMealUseCase
+import domain.usecase.IMangeCuisineUseCase
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
@@ -21,7 +21,7 @@ class MealCreationScreenModel :
         get() = coroutineScope
 
     private val manageMeal: IManageMealUseCase by inject()
-    private val cuisines: IGetCuisineUseCase by inject()
+    private val cuisines: IMangeCuisineUseCase by inject()
 
     init {
         getCuisines()
