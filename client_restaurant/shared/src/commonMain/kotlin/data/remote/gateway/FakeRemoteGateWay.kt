@@ -13,6 +13,7 @@ import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
+import domain.entity.UserTokens
 import domain.gateway.IRemoteGateWay
 import presentation.base.RequestException
 
@@ -610,6 +611,11 @@ class FakeRemoteGateWay : IRemoteGateWay {
         CuisineDto(id ="ba9b9700-6d24-434b-8d67-daf9e45e1064", name = "Burrito"),
 
     )
+
+    override suspend fun loginUser(userName: String, password: String): UserTokens {
+        return UserTokens("","")
+    }
+
 
     //region restaurant
     override suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant> {

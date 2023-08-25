@@ -5,8 +5,14 @@ import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
+import domain.entity.UserTokens
 
 interface IRemoteGateWay {
+
+    //region login
+    suspend fun loginUser(userName:String,password:String):UserTokens
+
+    // endregion
 
     //region restaurant
     suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant>

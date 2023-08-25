@@ -15,11 +15,32 @@ class LoginScreenModel :
         updateState { it.copy(email = email) }
     }
 
+    override fun onOwnerEmailChanged(ownerEmail: String) {
+        updateState { it.copy(ownerEmail = ownerEmail) }
+    }
+
     override fun onPasswordChanged(password: String) {
         updateState { it.copy(password = password) }
     }
 
+    override fun onNameChanged(restaurantName: String) {
+        updateState { it.copy(restaurantName = restaurantName) }
+    }
+
+    override fun onDescriptionChanged(description: String) {
+        updateState { it.copy(description = description) }
+    }
+
     override fun onClickLogin() {
-        sendNewEffect(LoginScreenUIEffect.Login("1"))
+
+        sendNewEffect(LoginScreenUIEffect.Login)
+    }
+
+    override fun onClickSubmit() {
+        sendNewEffect(LoginScreenUIEffect.Permission)
+    }
+
+    override fun onClickCancel() {
+        TODO("Not yet implemented")
     }
 }
