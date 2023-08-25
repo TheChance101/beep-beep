@@ -139,7 +139,7 @@ class UserScreen :
                 data = users,
                 key = UserScreenUiState.UserUiState::username,
                 headers = headers,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().fillMaxHeight(.85f),
                 ) { user ->
                 UserRow(
                     onUserMenuClicked = onUserMenuClicked,
