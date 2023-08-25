@@ -28,6 +28,7 @@ import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import kotlinx.coroutines.delay
+import org.thechance.common.LocalDimensions
 import org.thechance.common.presentation.base.BaseScreen
 import org.thechance.common.presentation.composables.SnackBar
 import org.thechance.common.presentation.composables.modifier.noRipple
@@ -55,6 +56,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
         state: TaxiUiState,
         listener: TaxiScreenInteractionListener
     ) {
+        //todo move to state
         var selectedTaxi by remember { mutableStateOf<String?>(null) }
         var selectedPage by remember { mutableStateOf(1) }
         val pageCount = 2
@@ -79,7 +81,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
 
             Column(modifier = Modifier.fillMaxSize().align(Alignment.TopCenter)) {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(bottom = Theme.dimens.space16),
+                    modifier = Modifier.fillMaxWidth().padding(bottom = LocalDimensions.current.space16),
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalAlignment = Alignment.Top
                 ) {
@@ -104,16 +106,16 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
                     BpOutlinedButton(
                         title = "Export",
                         onClick = listener::onExportReportClicked,
-                        textPadding = PaddingValues(horizontal = Theme.dimens.space24),
+                        textPadding = PaddingValues(horizontal = LocalDimensions.current.space24),
                     )
                     BpButton(
                         title = "New Taxi",
                         onClick = listener::onAddNewTaxiClicked,
-                        textPadding = PaddingValues(horizontal = Theme.dimens.space24),
+                        textPadding = PaddingValues(horizontal = LocalDimensions.current.space24),
                     )
                 }
 
-                Box(modifier = Modifier.weight(1f).padding(bottom = Theme.dimens.space16)) {
+                Box(modifier = Modifier.weight(1f).padding(bottom = LocalDimensions.current.space16)) {
                     BpTable(
                         data = state.taxis,
                         key = { it.id },
@@ -160,7 +162,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
                         painter = painterResource("ic_download_mark.svg"),
                         contentDescription = null,
                         colorFilter = ColorFilter.tint(color = Theme.colors.success),
-                        modifier = Modifier.padding(Theme.dimens.space16)
+                        modifier = Modifier.padding(LocalDimensions.current.space16)
                     )
                     Text(
                         text = "Your file download was successful.",
@@ -201,7 +203,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
         SquareColorField(modifier = Modifier.weight(otherColumnsWeight), color = Color(taxi.color.hexadecimal))
         FlowRow(
             modifier = Modifier.weight(otherColumnsWeight),
-            horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8),
+            horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space8),
             maxItemsInEachRow = 3,
         ) {
             repeat(taxi.seats) {
@@ -244,7 +246,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
     private fun SquareColorField(modifier: Modifier = Modifier, color: Color) {
         Box(modifier = modifier) {
             Spacer(
-                modifier = Modifier.size(Theme.dimens.space24)
+                modifier = Modifier.size(LocalDimensions.current.space24)
                     .background(
                         color = color,
                         shape = RoundedCornerShape(Theme.radius.small),
