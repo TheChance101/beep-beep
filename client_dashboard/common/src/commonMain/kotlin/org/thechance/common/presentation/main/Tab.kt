@@ -60,6 +60,6 @@ object UsersTab : Tab {
         }
 
     @Composable override fun Content() {
-       Navigator(screen = UserScreen)
+       Navigator(screen = UserScreen())
     }
 }

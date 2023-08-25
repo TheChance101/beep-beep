@@ -1,4 +1,4 @@
-package org.thechance.common.presentation.uistate
+package org.thechance.common.presentation.overview
 
 
 data class OverviewUiState(
