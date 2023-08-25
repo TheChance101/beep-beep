@@ -13,7 +13,14 @@ data class PainterResources(
     val edit: String,
     val flag: String,
     val backgroundPattern: String,
-    val logout: String
+    val logout: String,
+    val info: String,
+    val meals: String,
+    val orders: String,
+    val ordersBig: String,
+    val ordersHistory: String,
+    val revenue: String,
+    val arrowDown: String
 )
 
 val BpPainterLightResources = PainterResources(
@@ -29,7 +36,14 @@ val BpPainterLightResources = PainterResources(
     galleryAdd = "gallery_add.xml",
     edit = "edit.xml",
     flag = "flag.xml",
-    logout = "ic_logout.xml"
+    logout = "ic_logout.xml",
+    info = "info.png",
+    meals = "meals.png",
+    orders = "orders.png",
+    ordersBig = "orders_big.png",
+    ordersHistory = "orders_history.png",
+    revenue = "revenue.png",
+    arrowDown = "arrow_down.xml"
 )
 
 val BpPainterDarkResources = PainterResources(
@@ -45,5 +59,12 @@ val BpPainterDarkResources = PainterResources(
     galleryAdd = "gallery_add.xml",
     edit = "edit.xml",
     flag = "flag.xml",
-    logout = "ic_logout.xml"
+    logout = "ic_logout.xml",
+    info = "info.png",
+    meals = "meals.png",
+    orders = "orders.png",
+    ordersBig = "orders_big.png",
+    ordersHistory = "orders_history.png",
+    revenue = "revenue.png",
+    arrowDown = "arrow_down.xml"
 )

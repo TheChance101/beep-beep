@@ -3,11 +3,10 @@ package presentation.base
 import cafe.adriel.voyager.core.model.ScreenModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import org.koin.android.annotation.KoinViewModel
 import org.koin.core.component.KoinComponent
 
 @OptIn(FlowPreview::class)
-abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel , KoinComponent {
+abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinComponent {
 
     abstract val viewModelScope: CoroutineScope
     private val _state = MutableStateFlow(initialState)
@@ -54,7 +53,7 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel , KoinCompon
     private fun runWithErrorCheck(
         onError: (ErrorState) -> Unit,
         inScope: CoroutineScope = viewModelScope,
-        dispatcher: CoroutineDispatcher = Dispatchers.IO,
+        dispatcher: CoroutineDispatcher = Dispatchers.Unconfined,
         function: suspend () -> Unit
     ): Job {
         return inScope.launch(dispatcher) {

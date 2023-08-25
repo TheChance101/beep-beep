@@ -21,7 +21,7 @@ interface TaxiScreenInteractionListener : BaseInteractionListener {
 
     fun onAddNewTaxiClicked()
 
-    fun onTaxiNumberChange(number: String)
+    fun onTaxiNumberChange(number: Int)
 
     fun onSearchInputChange(searchQuery: String)
 
