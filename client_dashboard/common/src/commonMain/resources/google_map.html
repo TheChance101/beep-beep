@@ -12,6 +12,8 @@
             width: 100%;
         }
 
+
+
     </style>
 </head>
 <body>
@@ -26,13 +28,13 @@ var svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="49"
                          '</g>' +
                          '</g>' +
                          '</svg>';
- function updateLocation(lat, lng) {
-           initMap(lat,lng);
-        }
-        function initMap(lat,lng) {
+<!-- function updateLocation(lat, lng) {-->
+<!--           initMap(lat,lng);-->
+<!--        }-->
+        function initMap() {
                     var userLocation = {
-                        lat: lat,
-                        lng: lng
+                        lat: 30.044420,
+                        lng: 31.235712
                     };
                 var map = new google.maps.Map(document.getElementById('map'), {
                 center: userLocation,
@@ -42,18 +44,13 @@ var svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="49"
                 var marker = new google.maps.Marker({
                 position: userLocation,
                 map: map,
-                 icon: {
-                    url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svgContent),
-                    scaledSize: new google.maps.Size(32, 32)
-                },
+
                 title: 'Marker Title',
                 draggable: true,
-                optimized: true,
                 animation: google.maps.Animation.DROP,
             });
               var infoWindow = new google.maps.InfoWindow({
                         content:marker.position.toString(),
-                        backgroundColor:'black',
                     });
                      map.addListener('click', function(event) {
                 marker.setPosition(event.latLng);
@@ -71,10 +68,9 @@ var svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="49"
                         alert(marker.position);
                     });
         }
-
 </script>
-<script async
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1kFbtDfzI3bXkfkCEjb0LKtC8PTz-YZU"
-        ></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1kFbtDfzI3bXkfkCEjb0LKtC8PTz-YZU&callback=initMap"
+        defer
+></script>
 </body>
 </html>

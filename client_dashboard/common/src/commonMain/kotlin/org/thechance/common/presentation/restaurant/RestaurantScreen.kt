@@ -67,8 +67,8 @@ class RestaurantScreen :
             RestaurantDialog(
                 modifier = Modifier,
                 onRestaurantNameChange = listener::onRestaurantNameChange,
-                onCancelClicked = listener::onCancelCreateRestaurantClicked,
                 isVisible = state.isAddNewRestaurantDialogVisible,
+                onCancelClicked = listener::onCancelCreateRestaurantClicked,
                 onOwnerUserNameChange = listener::onOwnerUserNameChange,
                 onPhoneNumberChange = listener::onPhoneNumberChange,
                 onWorkingHourChange = listener::onWorkingHourChange,

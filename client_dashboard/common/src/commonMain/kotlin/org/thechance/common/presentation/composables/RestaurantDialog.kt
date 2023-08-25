@@ -29,8 +29,8 @@ import java.awt.Dimension
 fun RestaurantDialog(
     modifier: Modifier = Modifier,
     state: AddRestaurantDialogUiState,
-    isVisible: Boolean,
     currentLocation: String,
+    isVisible: Boolean,
     onCreateClicked: () -> Unit,
     onCancelClicked: () -> Unit,
     onRestaurantNameChange: (String) -> Unit,

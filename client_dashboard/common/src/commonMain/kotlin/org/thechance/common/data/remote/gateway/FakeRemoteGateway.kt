@@ -4,27 +4,27 @@ package org.thechance.common.data.remote.gateway
 import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.AdminDto
+import org.thechance.common.data.remote.model.DataWrapperDto
 import org.thechance.common.data.remote.model.RestaurantDto
 import org.thechance.common.data.remote.model.TaxiDto
 import org.thechance.common.data.remote.model.UserDto
 import org.thechance.common.data.remote.model.toEntity
-import org.thechance.common.data.remote.model.toEntity
 import org.thechance.common.domain.entity.AddRestaurant
 import org.thechance.common.domain.entity.AddTaxi
 import org.thechance.common.domain.entity.Admin
+import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Location
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.entity.UserTokens
 import org.thechance.common.domain.getway.IRemoteGateway
-import java.util.*
-import kotlin.math.ceil
 import java.util.UUID
+import kotlin.math.ceil
 
 class FakeRemoteGateway : IRemoteGateway {
     override fun getUserData(): Admin =
-         AdminDto(fullName = "asia",).toEntity()
+        AdminDto(fullName = "asia").toEntity()
 
     override fun getUsers(page: Int, numberOfUsers: Int): DataWrapper<User> {
         val users = listOf(
@@ -300,11 +300,18 @@ class FakeRemoteGateway : IRemoteGateway {
     }
 
     override suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant {
-        TODO("Not yet implemented")
+        return Restaurant(
+            id = "7",
+            name = restaurant.name,
+            ownerUsername = restaurant.ownerUsername,
+            phoneNumber = restaurant.phoneNumber,
+            workingHours = restaurant.workingHours,
+            rating = 3.0,
+            priceLevel = 1
+        )
     }
 
     override suspend fun getCurrentLocation(): Location {
-        TODO("Not yet implemented")
+        return Location(loc = "30.044420,31.235712")
     }
-
 }
