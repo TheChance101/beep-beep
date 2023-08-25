@@ -12,7 +12,7 @@ data class UserTokensDto(
     val refreshToken: String
 )
 
-fun UserTokensDto.toTokenEntity() = UserTokens(
+fun UserTokensDto.toEntity() = UserTokens(
     accessToken = accessToken,
     refreshToken = refreshToken
 )
