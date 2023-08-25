@@ -2,6 +2,7 @@ package data.remote.gateway
 
 import data.remote.model.BaseResponse
 import domain.entity.Category
+import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
@@ -12,13 +13,13 @@ import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.statement.HttpResponse
-import io.ktor.http.isSuccess
 import io.ktor.http.parameters
 import presentation.base.InternetException
 import presentation.base.InvalidCredentialsException
 import presentation.base.NoInternetException
 import presentation.base.UnknownErrorException
 import presentation.base.UserNotFoundException
+
 
 class RemoteGateWay(private val client: HttpClient) : IRemoteGateWay {
 
@@ -43,7 +44,7 @@ class RemoteGateWay(private val client: HttpClient) : IRemoteGateWay {
         return emptyList()
     }
 
-    override suspend fun updateRestaurantInfo(restaurant: Restaurant): Restaurant? {
+    override suspend fun updateRestaurantInfo(restaurant: Restaurant): Restaurant {
         return restaurant
     }
 
@@ -79,15 +80,34 @@ class RemoteGateWay(private val client: HttpClient) : IRemoteGateWay {
         return emptyList()
     }
 
-    override suspend fun updateOrderState(orderId: String, orderState: Int): Order? {
+    override suspend fun updateOrderState(orderId: String, orderState: Int):  Order {
+        TODO()
+    }
 
-        return null
+    override suspend fun getOrderById(orderId: String): Order? {
+        TODO("Not yet implemented")
     }
     //endregion order
 
     //region category
     override suspend fun getCategoriesByRestaurantId(restaurantId: String): Category {
         return Category(id = "8a-4854-49c6-99ed-ef09899c2", name = "Sea Food")
+    }
+
+    override suspend fun getCuisines(): List<Cuisine> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getCuisinesInMeal(mealId: String): List<Cuisine> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getCuisine(restaurantId: String): List<Cuisine> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getMealsByCuisineId(id: String): List<Meal> {
+        TODO("Not yet implemented")
     }
     //endregion category
 
