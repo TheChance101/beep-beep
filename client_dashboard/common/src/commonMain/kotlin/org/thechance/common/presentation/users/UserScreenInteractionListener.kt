@@ -1,7 +1,6 @@
 package org.thechance.common.presentation.users
 
 import org.thechance.common.presentation.base.BaseInteractionListener
-import org.thechance.common.presentation.uistate.UserScreenUiState
 
 interface UserScreenInteractionListener : BaseInteractionListener, FilterMenuListener,
     EditUserMenuListener, PageListener {

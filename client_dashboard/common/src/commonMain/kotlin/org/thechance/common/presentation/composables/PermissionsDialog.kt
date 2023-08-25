@@ -10,7 +10,7 @@ import androidx.compose.ui.window.Dialog
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.presentation.uistate.UserScreenUiState
+import org.thechance.common.presentation.users.UserScreenUiState
 import java.awt.Dimension
 
 @Composable
