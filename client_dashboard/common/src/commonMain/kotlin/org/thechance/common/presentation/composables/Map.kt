@@ -1,6 +1,7 @@
 package org.thechance.common.presentation.composables
 
 import javafx.application.Platform
+import javafx.concurrent.Worker
 import javafx.embed.swing.JFXPanel
 import javafx.scene.Scene
 import javafx.scene.web.WebView
@@ -8,7 +9,6 @@ import org.thechance.common.presentation.util.ContentType
 import java.awt.BorderLayout
 import javax.swing.JPanel
 import javax.swing.SwingUtilities
-import javax.swing.border.EmptyBorder
 
 private fun createWebViewComponent(
     content: String,
@@ -29,6 +29,15 @@ private fun createWebViewComponent(
             ContentType.CONTENT -> webEngine.loadContent(getResourceContent(content))
         }
         webEngine.javaScriptEnabledProperty().set(true)
+
+        webEngine.loadWorker.stateProperty().addListener { _, _, newState ->
+            if (newState == Worker.State.SUCCEEDED) {
+                val lat = 40.712776
+                val lng = -74.005974
+                webEngine.executeScript("updateLocation($lat, $lng)")
+            }
+        }
+
         webEngine.setOnError { error ->
             onError(error.message)
         }
@@ -70,10 +79,9 @@ fun webViewFromLink(): JPanel {
 
 fun webViewFromContent(): JPanel {
     val jPanel = JPanel().apply {
-        border = EmptyBorder(20, 20, 20, 20)
         layout = BorderLayout()
         val webViewPanel = createWebViewComponent(
-            content = getResourceContent("/google_map.html"),
+            content = "/google_map.html",
             contentType = ContentType.CONTENT,
             onError = { println(it) },
             onAlert = { println(it) }
@@ -87,8 +95,8 @@ fun webViewFromContent(): JPanel {
     return jPanel
 }
 
-private fun getResourceContent(resourcePath: String): String {
-    val inputStream = object {}.javaClass.getResourceAsStream(resourcePath)
-    return inputStream?.bufferedReader().use { it?.readText().toString() }
+private fun getResourceContent(resourcePath: String): String? {
+    val contentResource = object {}.javaClass.getResource(resourcePath)
+    return contentResource?.readText()?.trimIndent()
 }
 
