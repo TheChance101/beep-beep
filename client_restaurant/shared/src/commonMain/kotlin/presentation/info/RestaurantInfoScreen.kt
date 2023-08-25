@@ -32,7 +32,7 @@ import presentation.composable.BpTitleWithContentSection
 import presentation.login.LoginScreen
 import resources.Resources
 
-class RestaurantInfoScreen() :
+class RestaurantInfoScreen :
     BaseScreen<RestaurantInfoScreenModel, RestaurantInfoUiState, RestaurantInfoUiEffect, RestaurantInfoInteractionListener>() {
 
     @Composable
@@ -78,7 +78,8 @@ class RestaurantInfoScreen() :
                                     end = Theme.dimens.space16,
                                     bottom = Theme.dimens.space16
                                 ),
-                                style = Theme.typography.body.copy(color = Theme.colors.contentPrimary)
+                                style = Theme.typography.body,
+                                color = Theme.colors.contentPrimary
                             )
                         }
                         BpTitleWithContentSection(title = Resources.strings.address) {
@@ -89,7 +90,8 @@ class RestaurantInfoScreen() :
                                     end = Theme.dimens.space16,
                                     bottom = Theme.dimens.space16
                                 ),
-                                style = Theme.typography.body.copy(color = Theme.colors.contentPrimary)
+                                style = Theme.typography.body,
+                                color = Theme.colors.contentPrimary
                             )
                         }
                         BpTitleWithContentSection(title = Resources.strings.rating) {
@@ -113,7 +115,8 @@ class RestaurantInfoScreen() :
                                     end = Theme.dimens.space16,
                                     bottom = Theme.dimens.space16
                                 ),
-                                style = Theme.typography.titleMedium.copy(color = Theme.colors.success)
+                                style = Theme.typography.titleMedium,
+                                color = Theme.colors.success
                             )
                         }
                     }
