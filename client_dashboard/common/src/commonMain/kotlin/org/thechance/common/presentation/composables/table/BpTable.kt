@@ -3,6 +3,7 @@ package org.thechance.common.presentation.composables.table
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -25,7 +26,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.presentation.uistate.UserScreenUiState
 
 /**
  * @param rowsCount number of rows in the table without header row
@@ -40,8 +40,6 @@ fun <T> BpTable(
     headers: List<Header>,
     modifier: Modifier = Modifier,
     key: ((item: T) -> Any)? = null,
-    rowsCount: Int = 9,
-    offset: Int = 0,
     shape: Shape = RoundedCornerShape(Theme.radius.medium),
     headerTextStyle: TextStyle = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
     rowPadding: PaddingValues = PaddingValues(16.dp),
@@ -73,14 +71,16 @@ fun <T> BpTable(
             }
             Divider(Modifier.fillMaxWidth(), thickness = border, color = borderColor)
         }
-        val paginatedData =
-            data.filterIndexed { index, _ -> index in (offset * rowsCount) until (offset * rowsCount) + rowsCount }
-        items(paginatedData, key = key) {
+
+        items(data, key = key) {
             Row(
                 Modifier.fillMaxWidth().background(rowsColor).padding(rowPadding)
                     .heightIn(max = maxHeight),
-                verticalAlignment = Alignment.CenterVertically
-            ) { rowContent(it) }
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
+            ){
+                rowContent(it)
+            }
             Divider(Modifier.fillMaxWidth(), thickness = border, color = borderColor)
         }
     }

@@ -150,8 +150,6 @@ class RestaurantScreen :
                 key = { it.name },
                 headers = state.tableHeader,
                 modifier = Modifier.fillMaxWidth(),
-                rowsCount = state.numberOfItemsInPage,
-                offset = state.selectedPageNumber - 1,
                 rowContent = { restaurant ->
                     RestaurantRow(
                         onClickEditRestaurant = { /* TODO: Show Edit Restaurant DropdownMenu */ },
@@ -166,10 +164,10 @@ class RestaurantScreen :
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 TotalItemsIndicator(
-                    numberItemInPage = state.numberOfItemsInPage.toString(),
+                    numberItemInPage = state.numberOfItemsInPage,
                     totalItems = state.numberOfRestaurants,
                     itemType = "restaurant",
-                    onItemPerPageChange = { listener.onItemPerPageChange(it.toInt()) }
+                    onItemPerPageChange = { listener.onItemPerPageChange(it) }
                 )
                 BpPager(
                     maxPages = state.maxPageCount,

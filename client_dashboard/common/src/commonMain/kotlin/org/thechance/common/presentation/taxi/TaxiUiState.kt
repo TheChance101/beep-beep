@@ -4,7 +4,6 @@ package org.thechance.common.presentation.taxi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.domain.entity.AddTaxi
 import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.presentation.composables.table.Header
@@ -17,7 +16,7 @@ data class TaxiUiState(
     val addNewTaxiDialogUiState: AddTaxiDialogUiState = AddTaxiDialogUiState(),
     val taxis: List<TaxiDetailsUiState> = emptyList(),
     val searchQuery: String = "",
-    val taxiNumberInPage: String = "3",
+    val taxiNumberInPage: Int = 3,
 ) {
     val tabHeader = listOf(
         Header("No.", 1f),
