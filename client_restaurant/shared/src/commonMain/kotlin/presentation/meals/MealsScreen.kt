@@ -28,7 +28,7 @@ import com.beepbeep.designSystem.ui.composable.BpChip
 import com.beepbeep.designSystem.ui.theme.Theme.colors
 import com.beepbeep.designSystem.ui.theme.Theme.dimens
 import presentation.base.BaseScreen
-import presentation.composables.BpAppBar
+import presentation.composable.BpAppBar
 import presentation.meal.MealScreen
 import presentation.meals.composable.MealCard
 import presentation.meals.state.MealsScreenUIState

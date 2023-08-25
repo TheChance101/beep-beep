@@ -6,7 +6,6 @@ import domain.gateway.ILocalGateWay
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
 
-//TODO add selectRestaurant screen opened flag and logout flag and review logic of exception
 class LocalGateWay( private val realm: Realm):ILocalGateWay {
 
       override suspend fun saveAccessToken(token: String) {
@@ -37,13 +36,13 @@ class LocalGateWay( private val realm: Realm):ILocalGateWay {
     override suspend fun saveKeepMeLoggedInFlag(isChecked: Boolean) {
         realm.write {
             copyToRealm(FlagDto().apply {
-                this.isRememberMeChecked = isChecked
+                this.isKeepMeLoggedInMeChecked = isChecked
             })
         }
     }
 
     override suspend fun getKeepMeLoggedInFlag(): Boolean {
-        return realm.query<FlagDto>().first().find()?.isRememberMeChecked
+        return realm.query<FlagDto>().first().find()?.isKeepMeLoggedInMeChecked
             ?: throw Exception("Nothing ..")
     }
 

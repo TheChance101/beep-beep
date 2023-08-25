@@ -16,8 +16,8 @@ interface ILoginUserUseCase {
     suspend fun getAccessToken(): String
     suspend fun saveRefreshToken(token: String)
     suspend fun getRefreshToken(): String
-    suspend fun saveLoggedInFlag(isChecked: Boolean)
-    suspend fun getLoggedInFlag(): Boolean
+    suspend fun saveKeepMeLoggedInFlag(isChecked: Boolean)
+    suspend fun getKeepMeLoggedInFlag(): Boolean
 }
 
 class LoginUserUseCase(
@@ -41,16 +41,14 @@ class LoginUserUseCase(
     override suspend fun getAccessToken(): String = localGateWay.getAccessToken()
 
 
-    override suspend fun saveRefreshToken(token: String) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun saveRefreshToken(token: String) = localGateWay.saveRefreshToken(token)
 
     override suspend fun getRefreshToken(): String = localGateWay.getRefreshToken()
 
-    override suspend fun saveLoggedInFlag(isChecked: Boolean) {
+    override suspend fun saveKeepMeLoggedInFlag(isChecked: Boolean) =
         localGateWay.saveKeepMeLoggedInFlag(isChecked)
-    }
 
-    override suspend fun getLoggedInFlag(): Boolean = localGateWay.getKeepMeLoggedInFlag()
+
+    override suspend fun getKeepMeLoggedInFlag(): Boolean = localGateWay.getKeepMeLoggedInFlag()
 
 }

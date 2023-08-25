@@ -25,17 +25,14 @@ class LoginScreenModel:
     }
 
     override fun onKeepLoggedInClicked() {
-        updateState { it.copy(keepLoggedIn = it.keepLoggedIn) }
+        updateState { it.copy(keepLoggedIn = !it.keepLoggedIn) }
     }
-
-
 
     override fun onClickLogin(
         userName: String,
         password: String,
         isKeepMeLoggedInChecked: Boolean
     ) {
-
         tryToExecute(
             { loginUserUseCase.loginUser(userName, password, isKeepMeLoggedInChecked) },
             this::onLoginSuccess,
@@ -52,14 +49,13 @@ class LoginScreenModel:
     private fun onLoginFailed(error: ErrorState) {
         state.value.sheetState.show()
         handleErrorState(error)
-
         updateState { it.copy(isLoading = false, error = "error") }
     }
 
     private fun handleErrorState(error: ErrorState) {
         when (error) {
             ErrorState.NoInternet -> {}
-            ErrorState.NetworkNotSupported -> "opsops"
+            ErrorState.NetworkNotSupported -> "ops"
             ErrorState.RequestFailed -> "ops"
             ErrorState.UnAuthorized -> "ops3"
             ErrorState.WifiDisabled -> {
@@ -78,16 +74,13 @@ class LoginScreenModel:
         updateState { it.copy(ownerEmail = ownerEmail) }
     }
 
-
     override fun onDescriptionChanged(description: String) {
         updateState { it.copy(description = description) }
     }
 
-
     override fun onRequestPermissionClick() {
         updateState { it.copy(showPermissionSheet = true) }
     }
-
 
     override fun onClickSubmit() {
         state.value.sheetState.dismiss()
@@ -98,6 +91,5 @@ class LoginScreenModel:
         state.value.sheetState.dismiss()
         updateState { it.copy(showPermissionSheet = false) }
     }
-
     // endregion
 }
