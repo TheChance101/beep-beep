@@ -3,8 +3,6 @@ package org.thechance.common.presentation.users
 import cafe.adriel.voyager.core.model.StateScreenModel
 import kotlinx.coroutines.flow.update
 import org.thechance.common.domain.usecase.IGetUsersUseCase
-import org.thechance.common.presentation.uistate.UserScreenUiState
-import org.thechance.common.presentation.uistate.toUiState
 
 
 class UserScreenModel(

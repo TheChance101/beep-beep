@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.beepbeep.designSystem.ui.composable.BpChip
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.presentation.uistate.UserScreenUiState
+import org.thechance.common.presentation.users.UserScreenUiState
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable

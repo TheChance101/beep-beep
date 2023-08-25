@@ -1,4 +1,4 @@
-package org.thechance.common.presentation.uistate
+package org.thechance.common.presentation.users
 
 import org.thechance.common.domain.entity.User
 import org.thechance.common.presentation.composables.table.Header
