@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.beepbeep.designSystem.ui.theme.BpTheme
 
 @Composable
 fun DashBoardScaffold(
@@ -15,11 +14,11 @@ fun DashBoardScaffold(
     sideBar: @Composable () -> Unit,
     content: @Composable (Dp) -> Unit,
 ) {
-        Row(Modifier.fillMaxSize()) {
-            sideBar()
-            Column {
-                appbar()
-                content(40.dp)
-            }
+    Row(Modifier.fillMaxSize()) {
+        sideBar()
+        Column {
+            appbar()
+            content(40.dp)
         }
+    }
 }

@@ -36,7 +36,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BpToggleButton
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.LocalDimensions
 import org.thechance.common.presentation.composables.BpLogo
 import org.thechance.common.presentation.composables.modifier.centerItem
 import org.thechance.common.presentation.composables.pxToDp
@@ -49,7 +48,7 @@ fun DashboardSideBar(
     darkTheme: Boolean = true,
     currentItem: Int,
     content: @Composable ColumnScope.(
-        sideBarUnexpandedWidthInKms:Dp,
+        sideBarUnexpandedWidthInKms: Dp,
         mainMenuIsExpanded: Boolean,
         itemHeight: (itemHeight: Float) -> Unit
     ) -> Unit
@@ -69,7 +68,7 @@ fun DashboardSideBar(
                         else sideBarUnexpandedWidthInKms
                     ).value
                 )
-                .padding(vertical = LocalDimensions.current.space40).onPointerEvent(PointerEventType.Enter) {
+                .padding(vertical = 40.kms).onPointerEvent(PointerEventType.Enter) {
                     mainMenuIsExpanded.value = true
                 }
                 .onPointerEvent(PointerEventType.Exit) { mainMenuIsExpanded.value = false },
@@ -83,7 +82,7 @@ fun DashboardSideBar(
                 )
             )
             //endregion
-            Spacer(Modifier.height(LocalDimensions.current.space40))
+            Spacer(Modifier.height(40.kms))
             //region main menu
             Box(Modifier.height(sideBarExpandedWidthInKms)) {
                 Column(Modifier.fillMaxSize()) {
@@ -96,9 +95,9 @@ fun DashboardSideBar(
                     )
                     Spacer(
                         Modifier.height(mainMenuItemHeight.value.pxToDp())
-                            .padding(vertical = LocalDimensions.current.space8)
+                            .padding(vertical = 8.kms)
                             .width(4.dp)
-                            .clip(RoundedCornerShape(LocalDimensions.current.space16))
+                            .clip(RoundedCornerShape(16.kms))
                             .background(Color(0xffF53D47))
                     )
                 }
@@ -107,7 +106,7 @@ fun DashboardSideBar(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxHeight()
                 ) {
-                    content(sideBarUnexpandedWidthInKms,mainMenuIsExpanded.value) { itemHeight ->
+                    content(sideBarUnexpandedWidthInKms, mainMenuIsExpanded.value) { itemHeight ->
                         mainMenuItemHeight.value = itemHeight
                     }
                 }
@@ -116,7 +115,7 @@ fun DashboardSideBar(
             Spacer(Modifier.weight(1f))
             //region toggle theme button
             Row(
-                horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space32),
+                horizontalArrangement = Arrangement.spacedBy(32.kms),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 BpToggleButton(

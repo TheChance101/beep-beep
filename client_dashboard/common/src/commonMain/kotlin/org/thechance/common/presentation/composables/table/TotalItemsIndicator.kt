@@ -18,8 +18,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.LocalDimensions
 import org.thechance.common.presentation.util.Constants
+import org.thechance.common.presentation.util.kms
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -34,7 +34,7 @@ fun TotalItemsIndicator(
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16)
+        horizontalArrangement = Arrangement.spacedBy(16.kms)
     ) {
         BasicTextField(
             modifier = Modifier
@@ -42,7 +42,7 @@ fun TotalItemsIndicator(
                     width = 1.dp,
                     color = Theme.colors.contentBorder,
                     shape = RoundedCornerShape(Theme.radius.medium)
-                ).padding(vertical = LocalDimensions.current.space8).width(LocalDimensions.current.space40),
+                ).padding(vertical = 8.kms).width(40.kms),
             value = numberItemInPage.toString(),
             onValueChange = {
                 runCatching {

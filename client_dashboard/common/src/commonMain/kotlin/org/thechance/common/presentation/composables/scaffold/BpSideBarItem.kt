@@ -24,9 +24,10 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.LocalDimensions
 import org.thechance.common.presentation.composables.modifier.cursorHoverIconHand
+import org.thechance.common.presentation.util.kms
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -40,10 +41,10 @@ fun ColumnScope.BpSideBarItem(
     label: String,
     modifier: Modifier = Modifier,
 ) {
-    val iconSize: Dp by remember { mutableStateOf(24.dp) }
+    val iconSize: Dp by remember { mutableStateOf(24.kms) }
     Row(
         horizontalArrangement = Arrangement
-            .spacedBy(LocalDimensions.current.space16 + iconSize),
+            .spacedBy(32.kms + iconSize),
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier.weight(1f).fillMaxWidth().onClick(onClick = onClick)
             .cursorHoverIconHand()
@@ -60,7 +61,6 @@ fun ColumnScope.BpSideBarItem(
             visible = mainMenuIsExpanded,
             enter = fadeIn(tween(500)),
             exit = fadeOut(),
-            modifier = Modifier.padding(end = LocalDimensions.current.space16)
         ) {
             Text(
                 label,

@@ -15,17 +15,19 @@ class MainScreenModel(
     }
 
     private fun getUserInfo() {
-            val user = getUserInfo.getUserInfo().toUiState()
-            mutableState.update { it.copy(username = user.fullName) }
+        val user = getUserInfo.getUserInfo().toUiState()
+        mutableState.update { it.copy(username = user.fullName) }
     }
 
     fun logout() {
         mutableState.update { it.copy(isLogin = false) }
     }
-    fun onClickDropDownMenu(){
+
+    fun onClickDropDownMenu() {
         mutableState.update { it.copy(isDropMenuExpanded = true) }
     }
-    fun onDismissDropDownMenu(){
+
+    fun onDismissDropDownMenu() {
         mutableState.update { it.copy(isDropMenuExpanded = false) }
     }
 }

@@ -1,6 +1,6 @@
 package org.thechance.common.presentation.login
 
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.update
 import org.thechance.common.domain.entity.UserTokens
 import org.thechance.common.domain.usecase.ILoginUserUseCase
 import org.thechance.common.presentation.base.BaseScreenModel

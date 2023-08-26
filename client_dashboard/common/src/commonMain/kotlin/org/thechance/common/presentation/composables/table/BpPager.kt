@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import org.thechance.common.LocalDimensions
+import org.thechance.common.presentation.util.kms
 
 @Composable
 fun BpPager(
@@ -22,7 +22,7 @@ fun BpPager(
 
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space8),
+        horizontalArrangement = Arrangement.spacedBy(8.kms),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ArrowIcon(
