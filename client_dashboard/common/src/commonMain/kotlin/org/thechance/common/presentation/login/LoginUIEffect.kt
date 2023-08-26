@@ -2,8 +2,8 @@ package org.thechance.common.presentation.login
 
 sealed interface LoginUIEffect {
 
-    object LoginUISuccess : LoginUIEffect
+    object LoginSuccess : LoginUIEffect
 
-    object LoginUIFailed : LoginUIEffect
+    class LoginFailed(val errorMessage: String) : LoginUIEffect
 
 }
