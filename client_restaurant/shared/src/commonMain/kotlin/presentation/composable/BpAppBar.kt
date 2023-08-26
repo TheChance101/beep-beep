@@ -8,6 +8,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 import com.beepbeep.designSystem.ui.theme.Theme.colors
 import com.beepbeep.designSystem.ui.theme.Theme.dimens
@@ -40,7 +41,7 @@ fun BpAppBar(
                     painter = painterResource(images.arrowLeft),
                     contentDescription = "",
                     modifier = Modifier.noRippleEffect { onNavigateUp() }
-                        .padding(start = dimens.space16, end = dimens.space16),
+                        .padding(start = 16.dp, end = 16.dp),
                     tint = colors.contentSecondary,
                 )
             } else {

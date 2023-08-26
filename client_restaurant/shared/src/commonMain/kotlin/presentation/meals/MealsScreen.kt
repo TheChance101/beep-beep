@@ -27,6 +27,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpChip
 import com.beepbeep.designSystem.ui.theme.Theme.colors
 import com.beepbeep.designSystem.ui.theme.Theme.dimens
+import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.BpAppBar
 import presentation.composable.MealCard
@@ -35,13 +36,12 @@ import presentation.mealManagement.mealEditor.MealEditorScreen
 import presentation.meals.state.MealsScreenUIState
 import resources.Resources.strings
 
-class MealsScreen :
+class MealsScreen(private val restaurantId: String) :
     BaseScreen<MealsScreenModel, MealsScreenUIState, MealsScreenUIEffect, MealScreenInteractionListener>() {
 
     @Composable
     override fun Content() {
-        val screenModel = rememberScreenModel { MealsScreenModel() }
-        initScreen(screenModel)
+        initScreen(getScreenModel { parametersOf(restaurantId) })
     }
 
     override fun onEffect(effect: MealsScreenUIEffect, navigator: Navigator) {
@@ -49,6 +49,7 @@ class MealsScreen :
             is MealsScreenUIEffect.Back -> navigator.pop()
             is MealsScreenUIEffect.NavigateToMealDetails ->
                 navigator.push(MealEditorScreen(mealId = effect.mealId))
+
             is MealsScreenUIEffect.NavigateToAddMeal -> navigator.push(MealCreationScreen())
         }
     }
@@ -87,11 +88,11 @@ class MealsScreen :
 
                 LazyRow(
                     contentPadding = PaddingValues(
-                        start = dimens.space16,
-                        end = dimens.space16,
-                        top = dimens.space16
+                        start = 16.dp,
+                        end = 16.dp,
+                        top = 16.dp
                     ),
-                    horizontalArrangement = Arrangement.spacedBy(dimens.space16),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     items(state.cuisine.size) { index ->
                         BpChip(
@@ -110,8 +111,8 @@ class MealsScreen :
                 LazyVerticalGrid(
                     contentPadding = PaddingValues(dimens.space16),
                     columns = GridCells.Adaptive(150.dp),
-                    horizontalArrangement = Arrangement.spacedBy(dimens.space8),
-                    verticalArrangement = Arrangement.spacedBy(dimens.space8),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
 
                     ) {
                     items(state.meals.size) { index ->
