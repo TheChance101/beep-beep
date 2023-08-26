@@ -21,7 +21,6 @@ import com.seiko.imageloader.rememberAsyncImagePainter
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.meals.state.MealUIState
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun MealCard(onClick:()->Unit, meal: MealUIState,) {
 
@@ -32,7 +31,7 @@ fun MealCard(onClick:()->Unit, meal: MealUIState,) {
         ) { onClick()}) {
         Image(
             painter = rememberAsyncImagePainter(meal.imageUrl),
-            contentDescription = "image description",
+            contentDescription = "${meal.name} Picture",
             contentScale = ContentScale.FillBounds,
             modifier = Modifier.fillMaxWidth().padding(Theme.dimens.space4)
                 .clip(shape = MaterialTheme.shapes.medium).height(104.dp)
@@ -44,7 +43,7 @@ fun MealCard(onClick:()->Unit, meal: MealUIState,) {
             modifier = Modifier.padding(Theme.dimens.space4)
         )
         Text(
-            text = "\$ ${meal.price} ",
+            text = meal.price,
             style = Theme.typography.title,
             color = Theme.colors.contentPrimary,
             modifier = Modifier.padding(start=Theme.dimens.space4, bottom = Theme.dimens.space16)
