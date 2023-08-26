@@ -34,7 +34,6 @@ class MealsScreenModel() :
                 updateState {
                     it.copy(cuisine = value.toUIState(), selectedCuisine =value.toUIState().first())
                 }
-                getMeals(state.value.selectedCuisine.id)
             },
             onError = { updateState { it.copy(error = it.error) } }
         )
@@ -45,11 +44,7 @@ class MealsScreenModel() :
         updateState { it.copy(isLoading = true) }
         tryToExecute(
             function = {
-//                if (cuisineId.isEmpty()) {
-//                    mangeMeal.getAllMeals()
-//                } else {
-//                    mangeCousin.getMealsByCuisineId(cuisineId)
-//                }
+
             },
             onSuccess = { value ->
                 updateState { it.copy(meals = value.toUIState(), isLoading = false) }
@@ -68,9 +63,7 @@ class MealsScreenModel() :
         sendNewEffect(MealsScreenUIEffect.NavigateToMealDetails(mealId))
     }
 
-    override fun onAddMeaClick() {
-        sendNewEffect(MealsScreenUIEffect.NavigateToAddMeal)
-    }
+
 
     override fun onClickCuisineType(type: CuisineUIState) {
         updateState { it.copy(selectedCuisine = type) }
