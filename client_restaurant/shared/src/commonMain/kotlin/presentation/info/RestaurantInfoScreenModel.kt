@@ -66,18 +66,17 @@ class RestaurantInfoScreenModel :
     override fun onClickSave() {
         val restaurant = state.value.toRestaurant()
         updateState { it.copy(isLoading = true) }
-        if (manageRestaurantInfoUseCase.validateRestaurantInfo(restaurant)) {
-            tryToExecute(
-                { manageRestaurantInfoUseCase.updateRestaurantInfo(restaurant) },
-                ::onUpdateRestaurantInfoSuccess,
-                ::onUpdateRestaurantInfoError
-            )
-        }
+        tryToExecute(
+            { manageRestaurantInfoUseCase.updateRestaurantInfo(restaurant) },
+            ::onUpdateRestaurantInfoSuccess,
+            ::onUpdateRestaurantInfoError
+        )
     }
 
-    private fun onUpdateRestaurantInfoSuccess(restaurant: Restaurant) {
+    private fun onUpdateRestaurantInfoSuccess(result: Boolean) {
         updateState { it.copy(isLoading = false) }
         sendNewEffect(RestaurantInfoUiEffect.ShowSaveInfoSuccess("Info saved successfully"))
+        println(result)
     }
 
     private fun onUpdateRestaurantInfoError(e: ErrorState) {

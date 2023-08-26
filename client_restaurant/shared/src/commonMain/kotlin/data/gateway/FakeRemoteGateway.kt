@@ -9,6 +9,7 @@ import data.remote.model.OrderDto
 import data.remote.model.RestaurantDto
 import domain.entity.Category
 import domain.entity.Cuisine
+import domain.entity.Location
 import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
@@ -590,13 +591,27 @@ class FakeRemoteGateWay : IRemoteGateway {
         return restaurants.toEntity()
     }
 
-    override suspend fun updateRestaurantInfo(restaurant: Restaurant): Restaurant {
+    override suspend fun updateRestaurantInfo(restaurant: Restaurant): Boolean {
         // Just Kda W Kda 😉
-        return restaurant
+        return true
     }
 
-    override suspend fun getRestaurantInfo(restaurantId: String): Restaurant? {
+    override suspend fun getRestaurantInfo(restaurantId: String): Restaurant {
         return getRestaurantsByOwnerId("7bf7ef77d907").find { it.id == restaurantId }
+            ?: Restaurant(
+                id  = "",
+                ownerId = "",
+                address = "",
+                location = Location(0.0,0.0),
+                phone = "",
+                openingTime = "",
+                closingTime = "",
+                rate = 0.0,
+                priceLevel = "",
+                description = "",
+                ownerUsername = "",
+                name = ""
+            )
     }
     //endregion restaurant
 
