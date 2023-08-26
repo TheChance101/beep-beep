@@ -13,7 +13,7 @@ class MainScreenModel(private val restaurantId: String) : BaseScreenModel<MainSc
     MainScreenInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
 
-    private val iGetOwnerRestaurantsUseCase: IGetOwnerRestaurantsUseCase by inject()
+    private val getOwnerRestaurantsInformationUseCase: IGetOwnerRestaurantsUseCase by inject()
 
     init {
         updateState { it.copy(selectedRestaurantId = restaurantId) }
@@ -25,7 +25,7 @@ class MainScreenModel(private val restaurantId: String) : BaseScreenModel<MainSc
     }
 
     private suspend fun callee(): List<Restaurant> {
-        return iGetOwnerRestaurantsUseCase.getOwnerRestaurants("")
+        return getOwnerRestaurantsInformationUseCase.getOwnerRestaurants("")
     }
 
     private fun onSuccess(restaurants: List<Restaurant>) {

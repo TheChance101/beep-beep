@@ -2,46 +2,38 @@ package domain.usecase
 
 import domain.entity.Order
 import domain.entity.OrderState
-import domain.gateway.IFakeRemoteGateWay
-import domain.gateway.IRemoteOrderGateway
-import presentation.order.OrderStateType
+import domain.gateway.IRemoteGateway
+import domain.utils.Constant
+import presentation.base.RequestException
 
 interface IManageOrderUseCase {
-    suspend fun getInCookingOrders(restaurantId: String): List<Order>
-    suspend fun getPendingOrders(restaurantId: String): List<Order>
-    suspend fun updateOrderState(orderId: String, orderState: OrderStateType): Order
+    suspend fun getCurrentOrders(): List<Order>
+    suspend fun updateOrderState(orderId: String, orderState: OrderState): Order
     suspend fun getFinishedOrdersHistory(restaurantId: String): List<Order>
     suspend fun getCanceledOrdersHistory(restaurantId: String): List<Order>
 }
 
-class ManageOrderUseCase(private val remoteOrderGateway: IFakeRemoteGateWay) : IManageOrderUseCase {
-
-    override suspend fun getInCookingOrders(restaurantId: String): List<Order> {
-        return remoteOrderGateway.getCurrentOrders(restaurantId)
-            .filter { it.orderState.statusCode == OrderState.IN_COOKING.statusCode }
+class ManageOrderUseCase(private val remoteGateWay: IRemoteGateway) : IManageOrderUseCase {
+    override suspend fun getCurrentOrders(): List<Order> {
+        return remoteGateWay.getCurrentOrders()
     }
-
-    override suspend fun getPendingOrders(restaurantId: String): List<Order> {
-        return remoteOrderGateway.getCurrentOrders(restaurantId)
-            .filter { it.orderState.statusCode == OrderState.PENDING.statusCode }
-    }
-
-    override suspend fun updateOrderState(orderId: String, orderState: OrderStateType): Order {
+    override suspend fun updateOrderState(orderId: String, orderState: OrderState): Order {
         val newOrderState = when (orderState) {
-            OrderStateType.APPROVE -> OrderState.IN_COOKING.statusCode
-            OrderStateType.CANCEL -> OrderState.CANCELED.statusCode
-            OrderStateType.FINISH -> OrderState.FINISHED.statusCode
+            OrderState.PENDING -> Constant.IN_COOKING_ORDER
+            OrderState.IN_COOKING -> Constant.FINISHED_ORDER
+            OrderState.CANCELED -> Constant.CANCELED_ORDER
+            else -> throw RequestException()
         }
-        return remoteOrderGateway.updateOrderState(orderId, newOrderState)
+        return remoteGateWay.updateOrderState(orderId, newOrderState)
     }
 
     override suspend fun getFinishedOrdersHistory(restaurantId: String): List<Order> {
-        return remoteOrderGateway.getOrdersHistory(restaurantId)
+        return remoteGateWay.getOrdersHistory(restaurantId)
             .filter { it.orderState == OrderState.FINISHED }
     }
 
     override suspend fun getCanceledOrdersHistory(restaurantId: String): List<Order> {
-        return remoteOrderGateway.getOrdersHistory(restaurantId)
+        return remoteGateWay.getOrdersHistory(restaurantId)
             .filter { it.orderState == OrderState.CANCELED }
     }
 
