@@ -1,4 +1,4 @@
-package org.thechance.common.di
+package di
 
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration

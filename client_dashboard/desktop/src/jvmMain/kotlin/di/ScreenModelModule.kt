@@ -1,4 +1,4 @@
-package org.thechance.common.di
+package di
 
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
