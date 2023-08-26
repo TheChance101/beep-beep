@@ -1,9 +1,7 @@
-package data.gateway
+package data.remote.gateway
 
-import data.local.mapper.toEntity
 import data.remote.model.BaseResponse
 import data.remote.model.UserTokensDto
-import domain.entity.UserTokens
 import domain.gateway.IRemoteIdentityGateway
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -14,16 +12,16 @@ import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.Parameters
 import presentation.base.InternetException
-import presentation.base.InvalidCredentialsException
+import presentation.base.InvalidPasswordException
+import presentation.base.InvalidUserNameException
 import presentation.base.NoInternetException
 import presentation.base.UnknownErrorException
-import presentation.base.UserNotFoundException
 
 
 class RemoteIdentityGateway(private val client: HttpClient) : IRemoteIdentityGateway {
 
-    override suspend fun loginUser(userName: String, password: String): UserTokens {
-        return tryToExecute<BaseResponse<UserTokensDto>>() {
+    override suspend fun loginUser(userName: String, password: String): Pair<String, String> {
+        val result = tryToExecute<BaseResponse<UserTokensDto>> {
             submitForm(
                 formParameters = Parameters.build {
                     append("username", userName)
@@ -34,7 +32,9 @@ class RemoteIdentityGateway(private val client: HttpClient) : IRemoteIdentityGat
                 header("Accept-Language", "ar")
                 header("Country-Code", "EG")
             }
-        }.value?.toEntity() ?: throw Exception()
+        }.value
+
+        return Pair(result?.accessToken ?: "", result?.refreshToken ?: "")
     }
 
     private suspend inline fun <reified T> tryToExecute(
@@ -42,7 +42,7 @@ class RemoteIdentityGateway(private val client: HttpClient) : IRemoteIdentityGat
     ): T {
 
         try {
-            return client.method().body<T>()
+            return client.method().body()
         } catch (e: ClientRequestException) {
             val errorMessages = e.response.body<BaseResponse<*>>().status.errorMessages
             errorMessages?.let { throwMatchingException(it) }
@@ -55,16 +55,26 @@ class RemoteIdentityGateway(private val client: HttpClient) : IRemoteIdentityGat
     }
 
     private fun throwMatchingException(errorMessages: Map<String, String>) {
-        if (errorMessages.containsErrors("1013")) {
-            throw InvalidCredentialsException()
-        } else if (errorMessages.containsErrors("1043")) {
-            throw UserNotFoundException(errorMessages["1043"] ?: "")
-        } else {
-            throw UnknownErrorException()
+        errorMessages.let {
+            if (it.containsErrors(WRONG_PASSWORD)) {
+                throw InvalidPasswordException(it.getOrEmpty(WRONG_PASSWORD))
+            } else {
+                if (it.containsErrors(USER_NOT_EXIST)) {
+                    throw InvalidUserNameException(it.getOrEmpty(USER_NOT_EXIST))
+                } else {
+                    throw UnknownErrorException()
+                }
+            }
         }
     }
 
     private fun Map<String, String>.containsErrors(vararg errorCodes: String): Boolean =
         keys.containsAll(errorCodes.toList())
 
+    private fun Map<String, String>.getOrEmpty(key: String): String = get(key) ?: ""
+
+    companion object {
+        const val WRONG_PASSWORD = "1013"
+        const val USER_NOT_EXIST = "1043"
+    }
 }
