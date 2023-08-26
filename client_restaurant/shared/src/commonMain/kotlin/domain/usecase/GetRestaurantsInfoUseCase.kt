@@ -1,18 +1,18 @@
 package domain.usecase
 
 import domain.entity.Restaurant
-import domain.gateway.IRemoteGateWay
+import domain.gateway.IRemoteRestaurantGateway
 import util.isRestaurantOpen
 
-interface IGetOwnerRestaurantsInformationUseCase {
+interface IGetRestaurantsInfoUseCase {
     suspend operator fun invoke(ownerId: String): List<Restaurant>
 }
 
-class GetOwnerRestaurantsInformationUseCase(private val remoteGateWay: IRemoteGateWay) :
-    IGetOwnerRestaurantsInformationUseCase {
+class GetRestaurantsInfoUseCase(private val remoteRestaurantGateway: IRemoteRestaurantGateway) :
+    IGetRestaurantsInfoUseCase {
 
     override suspend fun invoke(ownerId: String): List<Restaurant> {
-        return remoteGateWay.getRestaurantsByOwnerId(ownerId)
+        return remoteRestaurantGateway.getRestaurantsByOwnerId(ownerId)
             .sortedByDescending { isRestaurantOpen(it.openingTime, it.closingTime) }
     }
 
