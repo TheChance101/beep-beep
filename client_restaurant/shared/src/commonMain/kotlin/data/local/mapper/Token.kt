@@ -1,4 +1,4 @@
-package data.remote.mapper
+package data.local.mapper
 
 import data.remote.model.UserTokensDto
 import domain.entity.UserTokens
