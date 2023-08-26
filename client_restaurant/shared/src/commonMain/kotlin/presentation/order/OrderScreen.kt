@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
+import domain.entity.OrderState
 import presentation.base.BaseScreen
 import presentation.composable.BpAppBar
 import presentation.login.LoginScreen
@@ -89,7 +90,7 @@ class OrderScreen :
                         OrderTextButton(
                             text = Resources.strings.finish,
                             onClick = {
-                                listener.onClickFinishOrder(order.id, OrderStateType.FINISH)
+                                listener.onClickFinishOrder(order.id, order.orderState)
                             }
                         )
                     }
@@ -111,7 +112,7 @@ class OrderScreen :
                             OrderTextButton(
                                 text = Resources.strings.cancel,
                                 onClick = {
-                                    listener.onClickCancelOrder(order.id, OrderStateType.CANCEL)
+                                    listener.onClickCancelOrder(order.id , OrderState.CANCELED)
                                 },
                                 textColor = Theme.colors.contentTertiary,
                                 border = BorderStroke(0.dp, color = Theme.colors.surface)
@@ -119,7 +120,7 @@ class OrderScreen :
                             OrderTextButton(
                                 text = Resources.strings.approve,
                                 onClick = {
-                                    listener.onClickCancelOrder(order.id, OrderStateType.APPROVE)
+                                    listener.onClickCancelOrder(order.id, order.orderState)
                                 },
                             )
                         }

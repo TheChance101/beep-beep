@@ -28,7 +28,7 @@ interface IRemoteGateWay {
     //endregion meal
 
     //region order
-    suspend fun getCurrentOrders(restaurantId: String): List<Order>
+    suspend fun getCurrentOrders(): List<Order>
     suspend fun getOrdersHistory(restaurantId: String): List<Order>
     suspend fun updateOrderState(orderId: String, orderState: Int): Order
     suspend fun getOrderById(orderId: String): Order?

@@ -3,33 +3,27 @@ package domain.usecase
 import domain.entity.Order
 import domain.entity.OrderState
 import domain.gateway.IRemoteGateWay
-import presentation.order.OrderStateType
+import domain.utils.Constant
+import presentation.base.RequestException
+import presentation.base.UnknownErrorException
 
 interface IManageOrderUseCase {
-    suspend fun getInCookingOrders(restaurantId: String): List<Order>
-    suspend fun getPendingOrders(restaurantId: String): List<Order>
-    suspend fun updateOrderState(orderId: String, orderState: OrderStateType): Order
+    suspend fun getCurrentOrders(): List<Order>
+    suspend fun updateOrderState(orderId: String, orderState: OrderState): Order
     suspend fun getFinishedOrdersHistory(restaurantId: String): List<Order>
     suspend fun getCanceledOrdersHistory(restaurantId: String): List<Order>
 }
 
 class ManageOrderUseCase(private val remoteGateWay: IRemoteGateWay) : IManageOrderUseCase {
-
-    override suspend fun getInCookingOrders(restaurantId: String): List<Order> {
-        return remoteGateWay.getCurrentOrders(restaurantId)
-            .filter { it.orderState.statusCode == OrderState.IN_COOKING.statusCode }
+    override suspend fun getCurrentOrders(): List<Order> {
+        return remoteGateWay.getCurrentOrders()
     }
-
-    override suspend fun getPendingOrders(restaurantId: String): List<Order> {
-        return remoteGateWay.getCurrentOrders(restaurantId)
-            .filter { it.orderState.statusCode == OrderState.PENDING.statusCode }
-    }
-
-    override suspend fun updateOrderState(orderId: String, orderState: OrderStateType): Order {
+    override suspend fun updateOrderState(orderId: String, orderState: OrderState): Order {
         val newOrderState = when (orderState) {
-            OrderStateType.APPROVE -> OrderState.IN_COOKING.statusCode
-            OrderStateType.CANCEL -> OrderState.CANCELED.statusCode
-            OrderStateType.FINISH -> OrderState.FINISHED.statusCode
+            OrderState.PENDING -> Constant.IN_COOKING_ORDER
+            OrderState.IN_COOKING -> Constant.FINISHED_ORDER
+            OrderState.CANCELED -> Constant.CANCELED_ORDER
+            else -> throw RequestException()
         }
         return remoteGateWay.updateOrderState(orderId, newOrderState)
     }
