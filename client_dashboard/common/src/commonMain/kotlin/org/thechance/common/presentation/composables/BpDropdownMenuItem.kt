@@ -25,8 +25,8 @@ fun BpDropdownMenuItem(
 ) {
     Column(modifier = modifier) {
         DropdownMenuItem(
+            modifier= Modifier.padding(horizontal = LocalDimensions.current.space8),
             onClick = onClick,
-            contentPadding = PaddingValues(horizontal = LocalDimensions.current.space8),
             text = {
                 Text(
                     text = text,
@@ -40,7 +40,7 @@ fun BpDropdownMenuItem(
                         painter = painterResource(leadingIconPath),
                         contentDescription = null,
                         tint = if (isSecondary) Theme.colors.contentSecondary else Theme.colors.contentPrimary,
-                        modifier = Modifier.size(LocalDimensions.current.space16)
+                        modifier = Modifier.size(LocalDimensions.current.space24)
                     )
                 }
             } else null,

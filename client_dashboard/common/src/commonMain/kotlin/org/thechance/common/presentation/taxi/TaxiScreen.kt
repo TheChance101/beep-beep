@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import cafe.adriel.voyager.navigator.Navigator
@@ -30,13 +31,17 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import kotlinx.coroutines.delay
 import org.thechance.common.LocalDimensions
 import org.thechance.common.presentation.base.BaseScreen
+import org.thechance.common.presentation.composables.BpDropdownMenu
+import org.thechance.common.presentation.composables.BpDropdownMenuItem
 import org.thechance.common.presentation.composables.SnackBar
 import org.thechance.common.presentation.composables.modifier.noRipple
 import org.thechance.common.presentation.composables.table.BpPager
 import org.thechance.common.presentation.composables.table.BpTable
 import org.thechance.common.presentation.composables.table.TotalItemsIndicator
+import org.thechance.common.presentation.users.UserScreenUiState
 
-class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiScreenInteractionListener>() {
+class TaxiScreen :
+    BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiScreenInteractionListener>() {
 
     @Composable
     override fun Content() {
@@ -56,10 +61,6 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
         state: TaxiUiState,
         listener: TaxiScreenInteractionListener
     ) {
-        //todo move to state
-        var selectedTaxi by remember { mutableStateOf<String?>(null) }
-        var selectedPage by remember { mutableStateOf(1) }
-        val pageCount = 2
 
         AddTaxiDialog(
             modifier = Modifier,
@@ -78,10 +79,12 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
             modifier = Modifier.background(Theme.colors.surface).fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
+            //region Table Footer
 
             Column(modifier = Modifier.fillMaxSize().align(Alignment.TopCenter)) {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(bottom = LocalDimensions.current.space16),
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(bottom = LocalDimensions.current.space16),
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalAlignment = Alignment.Top
                 ) {
@@ -115,38 +118,35 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
                     )
                 }
 
-                Box(modifier = Modifier.weight(1f).padding(bottom = LocalDimensions.current.space16)) {
+                Box(
+                    modifier = Modifier.weight(1f).padding(bottom = LocalDimensions.current.space16)
+                ) {
                     BpTable(
                         data = state.taxis,
-                        key = { it.id },
+                        key = { it.username },
                         headers = state.tabHeader,
                         modifier = Modifier.fillMaxWidth(),
                         rowContent = { taxi ->
                             TaxiRow(
-                                onClickEdit = { selectedTaxi = it },
                                 taxi = taxi,
                                 position = state.taxis.indexOf(taxi) + 1,
+                                onDropdownMenuClicked = listener::showTaxiMenu,
+                                onDropdownMenuDismiss = listener::hideTaxiMenu,
+                                onEditTaxiClicked = listener::onEditTaxiClicked,
+                                onDeleteTaxiClicked = listener::onDeleteTaxiClicked,
+                                editTaxiMenu = state.taxiMenu,
                             )
                         },
                     )
                 }
-                Row(
-                    modifier = Modifier.fillMaxWidth().background(color = Theme.colors.surface),
-                    verticalAlignment = Alignment.Bottom,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    TotalItemsIndicator(
-                        totalItems = state.taxis.size,
-                        itemType = "taxi",
-                        numberItemInPage = state.taxiNumberInPage,
-                        onItemPerPageChange = listener::onTaxiNumberChange
-                    )
-                    BpPager(
-                        maxPages = pageCount,
-                        currentPage = selectedPage,
-                        onPageClicked = { selectedPage = it },
-                    )
-                }
+                TaxisTableFooter(
+                    selectedPage = state.currentPage,
+                    numberItemInPage = state.specifiedUsers,
+                    numberOfTaxis = state.pageInfo.numberOfUsers,
+                    pageCount = state.pageInfo.totalPages,
+                    onPageClicked = listener::onPageClick,
+                    onItemPerPageChanged = listener::onItemsIndicatorChange,
+                )
             }
 
             AnimatedVisibility(
@@ -178,19 +178,53 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
                     listener.onDismissExportReportSnackBar()
                 }
             }
+            //endregion
+        }
+    }
+
+    //region Init
+    @Composable
+    private fun TaxisTableFooter(
+        numberItemInPage: Int,
+        numberOfTaxis: Int,
+        pageCount: Int,
+        selectedPage: Int,
+        onPageClicked: (Int) -> Unit,
+        onItemPerPageChanged: (Int) -> Unit,
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().background(color = Theme.colors.surface),
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            TotalItemsIndicator(
+                numberItemInPage = numberItemInPage,
+                totalItems = numberOfTaxis,
+                itemType = "taxi",
+                onItemPerPageChange = onItemPerPageChanged
+            )
+            BpPager(
+                maxPages = pageCount,
+                currentPage = selectedPage,
+                onPageClicked = onPageClicked,
+            )
         }
     }
 
     @OptIn(ExperimentalLayoutApi::class)
     @Composable
     private fun RowScope.TaxiRow(
-        onClickEdit: (id: String) -> Unit,
         position: Int,
         taxi: TaxiDetailsUiState,
         firstColumnWeight: Float = 1f,
         otherColumnsWeight: Float = 3f,
+        onDropdownMenuClicked: (String) -> Unit,
+        editTaxiMenu: MenuUiState,
+        onDropdownMenuDismiss: () -> Unit,
+        onEditTaxiClicked: (TaxiDetailsUiState) -> Unit,
+        onDeleteTaxiClicked: (TaxiDetailsUiState) -> Unit,
     ) {
-
+        //region Taxi Row
         TitleField(
             text = position.toString(),
             color = Theme.colors.contentTertiary,
@@ -200,7 +234,10 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
         TitleField(text = taxi.username)
         TitleField(text = taxi.statusText, color = taxi.statusColor)
         TitleField(text = taxi.type)
-        SquareColorField(modifier = Modifier.weight(otherColumnsWeight), color = Color(taxi.color.hexadecimal))
+        SquareColorField(
+            modifier = Modifier.weight(otherColumnsWeight),
+            color = Color(taxi.color.hexadecimal)
+        )
         FlowRow(
             modifier = Modifier.weight(otherColumnsWeight),
             horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space8),
@@ -216,17 +253,59 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
             }
         }
         TitleField(text = taxi.trips)
-        Image(
-            painter = painterResource("horizontal_dots.xml"),
-            contentDescription = null,
-            modifier = Modifier.noRipple { onClickEdit(taxi.id) }
-                .weight(firstColumnWeight),
-            colorFilter = ColorFilter.tint(color = Theme.colors.contentPrimary)
-        )
+        //endregion
+        Box(modifier = Modifier.weight(firstColumnWeight)) {
+            Image(
+                painter = painterResource("horizontal_dots.xml"),
+                contentDescription = null,
+                modifier = Modifier.noRipple { onDropdownMenuClicked(taxi.username) },
+                colorFilter = ColorFilter.tint(color = Theme.colors.contentPrimary)
+            )
+            EditTaxiDropdownMenu(
+                taxi = taxi,
+                editTaxiMenu = editTaxiMenu,
+                onDropdownMenuDismiss = onDropdownMenuDismiss,
+                onEditTaxiClicked = onEditTaxiClicked,
+                onDeleteTaxiClicked = onDeleteTaxiClicked,
+            )
+        }
     }
 
     @Composable
-   private fun RowScope.TitleField(
+    private fun EditTaxiDropdownMenu(
+        taxi: TaxiDetailsUiState,
+        onDropdownMenuDismiss: () -> Unit,
+        editTaxiMenu: MenuUiState,
+        onEditTaxiClicked: (TaxiDetailsUiState) -> Unit,
+        onDeleteTaxiClicked: (TaxiDetailsUiState) -> Unit,
+    ) {
+        BpDropdownMenu(
+            expanded =  taxi.username == editTaxiMenu.username,
+            onDismissRequest = onDropdownMenuDismiss,
+            shape = RoundedCornerShape(Theme.radius.medium),
+            offset = DpOffset.Zero.copy(x = -LocalDimensions.current.space100)
+        ) {
+            Column {
+                editTaxiMenu.items.forEach {
+                    BpDropdownMenuItem(
+                        onClick = {
+                            when (it.text) {
+                                "Edit" ->  onEditTaxiClicked(taxi)
+                                "Delete" ->onDeleteTaxiClicked(taxi)
+                            }
+                        },
+                        text = it.text,
+                        leadingIconPath = it.iconPath,
+                        isSecondary = it.isSecondary,
+                        showBottomDivider = it != editTaxiMenu.items.last()
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun RowScope.TitleField(
         text: String,
         modifier: Modifier = Modifier,
         color: Color = Theme.colors.contentPrimary,
@@ -259,4 +338,5 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
             )
         }
     }
+    //endregion
 }

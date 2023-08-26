@@ -4,9 +4,10 @@ package org.thechance.common.presentation.taxi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.domain.entity.CarColor
+import org.thechance.common.domain.entity.*
 import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.presentation.composables.table.Header
+import org.thechance.common.presentation.users.UserScreenUiState
 import org.thechance.common.presentation.util.ErrorState
 
 data class TaxiUiState(
@@ -18,7 +19,12 @@ data class TaxiUiState(
     val searchQuery: String = "",
     val taxiNumberInPage: Int = 3,
     val isExportReportSuccessfully: Boolean = false,
-) {
+    val pageInfo: UserScreenUiState.UserPageInfoUiState = UserScreenUiState.UserPageInfoUiState(),
+    val specifiedUsers: Int = 10,
+    val currentPage: Int = 1,
+    val taxiMenu: MenuUiState = MenuUiState(),
+
+    ) {
     val tabHeader = listOf(
         Header("No.", 1f),
         Header("Plate number", 3f),
@@ -54,8 +60,13 @@ data class TaxiDetailsUiState(
             TaxiStatus.ONLINE -> "Online"
             TaxiStatus.ON_RIDE -> "On Ride"
         }
-}
 
+}
+data class TaxiPageInfoUiState(
+    val data: List<TaxiDetailsUiState> = emptyList(),
+    val numberOfTaxis: Int = 0,
+    val totalPages: Int = 0,
+)
 data class AddTaxiDialogUiState(
     val plateNumber: String = "",
     val driverUserName: String = "",
@@ -63,5 +74,58 @@ data class AddTaxiDialogUiState(
     val selectedCarColor: CarColor = CarColor.WHITE,
     val seats: Int = 0
 )
+data class MenuUiState(
+    val username: String = "",
+    val items: List<MenuItemUiState> = listOf(
+        MenuItemUiState(
+            iconPath = "ic_edit.xml",
+            text = "Edit",
+        ),
+        MenuItemUiState(
+            iconPath = "ic_delete.svg",
+            text = "Delete",
+            isSecondary = true,
+        ),
+    )
+) {
+    data class MenuItemUiState(
+        val iconPath: String = "",
+        val text: String = "",
+        val isSecondary: Boolean = false,
+    )
+}
+fun DataWrapper<Taxi>.toUiState(): TaxiPageInfoUiState {
+    return TaxiPageInfoUiState(
+        data = result.toUiState(),
+        totalPages = totalPages,
+        numberOfTaxis = numberOfResult
+    )
+}
 
+fun Taxi.toUiState(): TaxiDetailsUiState = TaxiDetailsUiState(
+    id = id,
+    plateNumber = plateNumber,
+    color = color,
+    type = type,
+    seats = seats,
+    username = username,
+    status = status,
+    trips = trips,
+)
+
+fun List<Taxi>.toUiState() = map { it.toUiState() }
+fun AddTaxiDialogUiState.toEntity() = AddTaxi(plateNumber, driverUserName, carModel, selectedCarColor, seats)
+
+fun TaxiDetailsUiState.toEntity(): Taxi = Taxi(
+    id = id,
+    plateNumber = plateNumber,
+    color = color,
+    type = type,
+    seats = seats,
+    username = username,
+    status = status,
+    trips = trips,
+)
+
+fun List<TaxiDetailsUiState>.toEntity() = map { it.toEntity() }
 
