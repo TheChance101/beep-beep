@@ -33,7 +33,8 @@ fun PermissionBottomSheetContent(
     ) {
         Text(
             text = Resources.strings.askForPermission,
-            style = Theme.typography.headlineLarge,
+            color = Theme.colors.contentPrimary,
+            style = Theme.typography.headline,
         )
         BpTextField(
             text = state.restaurantName,
