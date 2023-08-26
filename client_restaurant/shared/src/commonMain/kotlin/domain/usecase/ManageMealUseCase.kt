@@ -1,5 +1,6 @@
 package domain.usecase
 
+import data.remote.gateway.FakeRemoteGateWay
 import domain.entity.Meal
 import domain.entity.MealAddition
 import domain.gateway.IRemoteGateWay
@@ -13,7 +14,7 @@ interface IManageMealUseCase {
     suspend fun getAllMeals():List<Meal>
 }
 
-class ManageMealUseCase(private val remoteGateWay: IRemoteGateWay) : IManageMealUseCase {
+class ManageMealUseCase(private val remoteGateWay: FakeRemoteGateWay) : IManageMealUseCase {
     override suspend fun addMeal(meal: MealAddition): Boolean {
         return remoteGateWay.addMeal(meal as Meal) != null
     }
