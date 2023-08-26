@@ -1,6 +1,5 @@
 package org.thechance.common.presentation.login
 
-import kotlinx.coroutines.flow.update
 import org.thechance.common.domain.usecase.ILoginUserUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
@@ -11,24 +10,16 @@ class LoginScreenScreenModel(
 ) : BaseScreenModel<LoginUIState, LoginUIEffect>(LoginUIState()), LoginScreenInteractionListener {
 
     override fun onPasswordChange(password: String) {
-        mutableState.update { it.copy(password = password) }
+        updateState { it.copy(password = password) }
     }
 
     override fun onUsernameChange(username: String) {
-        mutableState.update { it.copy(username = username) }
+        updateState { it.copy(username = username) }
     }
 
     override fun onLoginClicked() {
-        updateState {
-            it.copy(
-                error = null,
-                usernameError = "",
-                isUsernameError = false,
-                passwordError = "",
-                isPasswordError = false,
-            )
-        }
         val currentState = mutableState.value
+        clearErrorState()
         tryToExecute(
             {
                 loginUseCase.loginUser(
@@ -37,7 +28,7 @@ class LoginScreenScreenModel(
                     keepLoggedIn = currentState.keepLoggedIn
                 )
             },
-            onSuccess = ::onLoginSuccess,
+            onSuccess = { onLoginSuccess() },
             onError = ::onLoginError
         )
     }
@@ -46,25 +37,26 @@ class LoginScreenScreenModel(
         updateState { it.copy(keepLoggedIn = !it.keepLoggedIn) }
     }
 
-    private fun onLoginSuccess(unit: Unit) {
+    private fun onLoginSuccess() {
         updateState { it.copy(isLoading = false, error = null) }
-        sendNewEffect(LoginUIEffect.LoginUISuccess)
+        sendNewEffect(LoginUIEffect.LoginSuccess)
     }
 
     private fun onLoginError(error: ErrorState) {
-        handleErrorState(error)
-        sendNewEffect(LoginUIEffect.LoginUIFailed)
         updateState { it.copy(isLoading = false, error = error) }
+        handleErrorState(error)
     }
 
     private fun handleErrorState(error: ErrorState) {
         when (error) {
             is ErrorState.InvalidCredentials -> {
                 updateState { it.copy(passwordError = error.errorMessage, isPasswordError = true) }
+                sendNewEffect(LoginUIEffect.LoginFailed(error.errorMessage))
             }
 
             is ErrorState.UserNotExist -> {
                 updateState { it.copy(usernameError = error.errorMessage, isUsernameError = true) }
+                sendNewEffect(LoginUIEffect.LoginFailed(error.errorMessage))
             }
 
             ErrorState.NoConnection -> {
@@ -76,5 +68,17 @@ class LoginScreenScreenModel(
             }
         }
     }
+
+    private fun clearErrorState() =
+        updateState {
+            it.copy(
+                error = null,
+                usernameError = "",
+                isUsernameError = false,
+                passwordError = "",
+                isPasswordError = false,
+                isLoading = false
+            )
+        }
 
 }
