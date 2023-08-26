@@ -57,12 +57,12 @@ fun PermissionBottomSheetContent(
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
         )
         BpButton(
-            onClick = listener::onClickSubmit,
+            onClick = listener::onSubmitClicked,
             title = Resources.strings.submit,
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
         )
         BpTransparentButton(
-            onClick = listener::onCancelClick,
+            onClick = listener::onCancelClicked,
             title = Resources.strings.cancel,
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
         )
