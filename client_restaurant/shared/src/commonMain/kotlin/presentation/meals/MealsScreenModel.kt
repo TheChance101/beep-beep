@@ -68,8 +68,8 @@ class MealsScreenModel(
         updateState { it.copy(meals = meals.toUIState(), isLoading = false) }
     }
 
-    private fun onError(e: ErrorState) {
-        updateState { it.copy(error = e, isLoading = false) }
+    private fun onError(error: ErrorState) {
+        updateState { it.copy(error = error, isLoading = false) }
     }
 
 
