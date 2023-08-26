@@ -1,6 +1,7 @@
 package domain.entity
 
 import kotlinx.datetime.LocalDateTime
+import presentation.base.RequestException
 
 data class Order(
     val id: String,
@@ -16,7 +17,13 @@ data class Order(
         val mealImageUrl: String,
         val mealName: String,
         val quantity: Int,
-    )
+    ) {
+        init {
+            if (quantity < 0) {
+                throw IllegalArgumentException()
+            }
+        }
+    }
 }
 
 enum class OrderState {
@@ -25,15 +32,3 @@ enum class OrderState {
     CANCELED,
     FINISHED;
 }
-
-//enum class OrderState(val statusCode: Int) {
-//    PENDING(0),
-//    IN_COOKING(1),
-//    CANCELED(2),
-//    FINISHED(3);
-//
-//    companion object {
-//        private val map = values().associateBy(OrderState::statusCode)
-//        fun fromStatusCode(code: Int) = map[code] ?: PENDING
-//    }
-//}
