@@ -9,6 +9,7 @@ import domain.usecase.IMangeCuisineUseCase
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
+import presentation.base.ErrorState
 
 import presentation.meals.state.CuisineUIState
 import presentation.meals.state.MealsScreenUIState
@@ -29,15 +30,15 @@ class MealsScreenModel(private val restaurantId: String) :
 
     private fun getCuisine() {
         tryToExecute(
-            function = { mangeCousin.getCuisineByResturantId(
-                restaurantId
-            ) },
+            function = {
+                mangeCousin.getCuisineByResturantId(
+                    restaurantId
+                )
+            },
             ::onGetCuisineSuccessfully,
-            onError = { updateState { it.copy(error = it.error) } }
+            ::onError
         )
     }
-
-
 
 
     private fun getMeals(cuisineId: String) {
@@ -51,19 +52,23 @@ class MealsScreenModel(private val restaurantId: String) :
                 }
             },
             ::onGetMealSuccessfully,
-            onError = {
-                updateState { it.copy(error = it.error, isLoading = false) }
-            }
+            ::onError
         )
     }
-    private fun onGetCuisineSuccessfully(cuisines : List<Cuisine>) {
+
+    private fun onGetCuisineSuccessfully(cuisines: List<Cuisine>) {
         updateState {
-            it.copy(cuisine = cuisines.toUIState(), selectedCuisine =cuisines.toUIState().first())
+            it.copy(cuisine = cuisines.toUIState(), selectedCuisine = cuisines.toUIState().first())
         }
         getMeals(state.value.selectedCuisine.id)
     }
-    private fun onGetMealSuccessfully(meals : List<Meal>) {
+
+    private fun onGetMealSuccessfully(meals: List<Meal>) {
         updateState { it.copy(meals = meals.toUIState(), isLoading = false) }
+    }
+
+    private fun onError(e: ErrorState) {
+        updateState { it.copy(error = e, isLoading = false) }
     }
 
 
