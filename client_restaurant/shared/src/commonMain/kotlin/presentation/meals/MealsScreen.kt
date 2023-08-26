@@ -27,6 +27,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpChip
 import com.beepbeep.designSystem.ui.theme.Theme.colors
 import com.beepbeep.designSystem.ui.theme.Theme.dimens
+import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.BpAppBar
 import presentation.composable.MealCard
@@ -40,8 +41,7 @@ class MealsScreen (private val restaurantId: String):
 
     @Composable
     override fun Content() {
-        val screenModel = rememberScreenModel { MealsScreenModel(restaurantId) }
-        initScreen(screenModel)
+        initScreen(getScreenModel { parametersOf(restaurantId) })
     }
 
     override fun onEffect(effect: MealsScreenUIEffect, navigator: Navigator) {
