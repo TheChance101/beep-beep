@@ -14,7 +14,7 @@ interface IManageMealUseCase {
     suspend fun getAllMeals():List<Meal>
 }
 
-class ManageMealUseCase(private val remoteGateWay: FakeRemoteGateWay) : IManageMealUseCase {
+class ManageMealUseCase(private val remoteGateWay: IRemoteGateWay) : IManageMealUseCase {
     override suspend fun addMeal(meal: MealAddition): Boolean {
         return remoteGateWay.addMeal(meal as Meal) != null
     }
