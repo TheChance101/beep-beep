@@ -35,12 +35,12 @@ import presentation.mealManagement.mealEditor.MealEditorScreen
 import presentation.meals.state.MealsScreenUIState
 import resources.Resources.strings
 
-class MealsScreen :
+class MealsScreen (private val restaurantId: String):
     BaseScreen<MealsScreenModel, MealsScreenUIState, MealsScreenUIEffect, MealScreenInteractionListener>() {
 
     @Composable
     override fun Content() {
-        val screenModel = rememberScreenModel { MealsScreenModel() }
+        val screenModel = rememberScreenModel { MealsScreenModel(restaurantId) }
         initScreen(screenModel)
     }
 

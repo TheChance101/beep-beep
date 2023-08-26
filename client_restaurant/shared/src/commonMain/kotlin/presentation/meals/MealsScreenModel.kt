@@ -13,7 +13,7 @@ import presentation.meals.state.CuisineUIState
 import presentation.meals.state.MealsScreenUIState
 import presentation.meals.state.toUIState
 
-class MealsScreenModel() :
+class MealsScreenModel(private val restaurantId: String) :
     BaseScreenModel<MealsScreenUIState, MealsScreenUIEffect>(MealsScreenUIState()),
     MealScreenInteractionListener {
     override val viewModelScope: CoroutineScope
@@ -30,7 +30,7 @@ class MealsScreenModel() :
     private fun getCuisine() {
         tryToExecute(
             function = { mangeCousin.getCuisineByResturantId(
-                "1"
+                restaurantId
             ) },
             onSuccess = {value->
                 updateState {
