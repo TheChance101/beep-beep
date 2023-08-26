@@ -31,7 +31,7 @@ class MealsScreenModel(private val restaurantId: String) :
     private fun getCuisine() {
         tryToExecute(
             function = {
-                mangeCousin.getCuisineByResturantId(
+                mangeCousin.getCuisineByRestaurantId(
                     restaurantId
                 )
             },
