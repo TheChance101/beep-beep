@@ -52,7 +52,7 @@ class OrdersHistoryScreen(private val restaurantId: String) : BaseScreen<OrderHi
                 modifier = Modifier.fillMaxWidth()
                     .background(Theme.colors.surface)
                     .border(width = 1.dp, color = Theme.colors.divider, shape = RectangleShape),
-                content = {}
+                actions = {}
             )
             LazyVerticalStaggeredGrid(
                 columns = StaggeredGridCells.Adaptive(300.dp),
