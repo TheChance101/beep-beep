@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.*
 import kotlinx.datetime.Clock
 import org.koin.core.component.KoinComponent
 
-@OptIn(FlowPreview::class)
 abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinComponent {
 
     abstract val viewModelScope: CoroutineScope
