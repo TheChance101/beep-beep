@@ -1,8 +1,20 @@
 package presentation.base
 
 import cafe.adriel.voyager.core.model.ScreenModel
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import org.koin.core.component.KoinComponent
 
@@ -74,7 +86,7 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
             } catch (e: ServerSideException) {
                 onError(ErrorState.RequestFailed)
             } catch (e: UserNotFoundException) {
-                onError(ErrorState.UserNotExist(e.errorMessage))
+              onError(ErrorState.UserNotFound(e.errorMessage))
             } catch (e: InvalidUserNameException) {
                 onError(ErrorState.InvalidUserName(e.errorMessage))
             } catch (e: InvalidPasswordException) {

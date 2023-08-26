@@ -1,4 +1,4 @@
-package data.gateway
+package data.fake
 
 import data.remote.mapper.toEntity
 import data.remote.mapper.toOrderEntity
@@ -623,7 +623,7 @@ class FakeRemoteGateway : IFakeRemoteGateWay {
 
     override suspend fun updateOrderState(orderId: String, orderState: Int): Order {
         val order = orders.find { it.id == orderId }
-        return order?.toEntity() ?: throw RequestException()
+        return order?.toEntity() ?: throw RequestException("")
     }
 
     override suspend fun getOrderById(orderId: String): Order? {

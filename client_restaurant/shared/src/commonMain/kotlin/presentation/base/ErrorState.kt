@@ -8,6 +8,7 @@ sealed interface ErrorState {
     object RequestFailed : ErrorState
     object HasNoPermission : ErrorState
     object InvalidCredentials : ErrorState
+    data class UserNotFound(val errorMessage: String) : ErrorState
     data class InvalidUserName(val errorMessage: String) : ErrorState
     data class InvalidPassword(val errorMessage: String) : ErrorState
 }

@@ -49,6 +49,9 @@ class LoginScreen :
     ) {
         when (effect) {
             is LoginScreenUIEffect.LoginEffect -> navigator.push(RestaurantSelectionScreen(ownerId = "f5c8b31e-5c4d-4c8a-babc-0e9463daad20"))
+            LoginScreenUIEffect.LoginUIFailed -> {
+
+            }
         }
     }
 
@@ -113,6 +116,7 @@ private fun LoginScreenContent(
                 keyboardType = KeyboardType.Text,
                 modifier = Modifier.fillMaxWidth(),
                 errorMessage = state.usernameErrorMsg,
+                isError = state.isUsernameError,
             )
             BpTextField(
                 text = state.password,
@@ -121,6 +125,7 @@ private fun LoginScreenContent(
                 keyboardType = KeyboardType.Password,
                 modifier = Modifier.fillMaxWidth(),
                 errorMessage = state.passwordErrorMsg,
+                isError = state.isPasswordError
             )
             BpCheckBox(
                 label = Resources.strings.keepMeLoggedIn,
@@ -131,7 +136,7 @@ private fun LoginScreenContent(
             )
             BpButton(
                 onClick = {
-                    listener.onClickLogin(
+                    listener.onLoginClicked(
                         state.userName,
                         state.password,
                         state.keepLoggedIn

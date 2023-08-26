@@ -7,13 +7,13 @@ interface LoginScreenInteractionListener : BaseInteractionListener {
     fun onUserNameChanged(userName: String)
     fun onPasswordChanged(password: String)
     fun onKeepLoggedInClicked()
-    fun onClickLogin(userName: String, password: String, isKeepMeLoggedInChecked: Boolean)
+    fun onLoginClicked(userName: String, password: String, isKeepMeLoggedInChecked: Boolean)
 
     //permission will move
     fun onOwnerEmailChanged(ownerEmail: String)
     fun onRestaurantNameChanged(restaurantName: String)
     fun onDescriptionChanged(description: String)
-    fun onRequestPermissionClick()
-    fun onClickSubmit()
-    fun onCancelClick()
+    fun onRequestPermissionClicked()
+    fun onSubmitClicked()
+    fun onCancelClicked()
 }
