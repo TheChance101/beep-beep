@@ -122,7 +122,7 @@ class MainScreen(private val restaurantId: String) :
     override fun onEffect(effect: MainScreenUIEffect, navigator: Navigator) {
         when (effect) {
             is MainScreenUIEffect.Back -> navigator.pop()
-            is MainScreenUIEffect.NavigateToAllMeals -> navigator.push(MealsScreen())
+            is MainScreenUIEffect.NavigateToAllMeals -> navigator.push(MealsScreen(effect.restaurantId))
             is MainScreenUIEffect.NavigateToOrders -> navigator.push(OrderScreen())
             is MainScreenUIEffect.NavigateToOrdersHistory -> navigator.push(
                 OrdersHistoryScreen(

@@ -3,8 +3,7 @@ package domain.usecase
 import domain.entity.Meal
 import domain.entity.MealAddition
 import domain.gateway.IFakeRemoteGateWay
-import domain.gateway.IRemoteCuisineGateway
-import domain.gateway.IRemoteMealGateway
+
 import presentation.base.ServerSideException
 
 interface IManageMealUseCase {
