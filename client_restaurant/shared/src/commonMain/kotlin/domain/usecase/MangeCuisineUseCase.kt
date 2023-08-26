@@ -11,7 +11,7 @@ interface IMangeCuisineUseCase {
     suspend fun getMealsByCuisineId(id: String): List<Meal>
 }
 
-class MangeCuisineUseCase(private val remoteGateWay: FakeRemoteGateWay) : IMangeCuisineUseCase {
+class MangeCuisineUseCase(private val remoteGateWay: IRemoteGateWay) : IMangeCuisineUseCase {
     override suspend fun getCuisineByResturantId(id: String): List<Cuisine> {
         return remoteGateWay.getCuisineByRestaurantId(id)
     }
