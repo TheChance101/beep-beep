@@ -1,6 +1,6 @@
 package presentation.info
 
-import domain.entity.Address
+import domain.entity.Location
 import domain.entity.Restaurant
 
 data class RestaurantInfoUiState(
@@ -35,7 +35,7 @@ fun Restaurant.toUiState(): RestaurantInfoUiState = RestaurantInfoUiState(
 fun RestaurantInfoUiState.toRestaurant() = Restaurant(
     id = id,
     ownerId = ownerId,
-    address = Address(0.0, 0.0),
+    location = Location(0.0, 0.0),
     ownerUsername = ownerUsername,
     rate = rating,
     priceLevel = priceLevel,
@@ -43,5 +43,6 @@ fun RestaurantInfoUiState.toRestaurant() = Restaurant(
     phone = phoneNumber,
     openingTime = openingTime,
     closingTime = closingTime,
-    description = description
+    description = description,
+    address = address
 )

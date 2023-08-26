@@ -2,7 +2,7 @@ package data.gateway
 
 import data.remote.mapper.toEntity
 import data.remote.mapper.toOrderEntity
-import data.remote.model.AddressDto
+import data.remote.model.LocationDto
 import data.remote.model.CuisineDto
 import data.remote.model.MealDto
 import data.remote.model.OrderDto
@@ -450,7 +450,8 @@ class FakeRemoteGateWay : IRemoteGateway {
             openingTime = "09:00",
             closingTime = "22:00",
             priceLevel = "$$$",
-            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+            address = "paris, 123 street",
+            location = LocationDto(latitude = 31.0285807, longitude = 38.2588888)
         ),
         RestaurantDto(
             id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
@@ -461,7 +462,8 @@ class FakeRemoteGateWay : IRemoteGateway {
             phone = "+9641324221423",
             openingTime = "09:00",
             closingTime = "22:00",
-            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+            address = "paris, 123 street",
+            location = LocationDto(latitude = 31.0285807, longitude = 38.2588888)
         ), RestaurantDto(
             id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
             ownerId = "550e8400-e29b-41d4-a716-446655440989",
@@ -471,7 +473,8 @@ class FakeRemoteGateWay : IRemoteGateway {
             phone = "+9641324221423",
             openingTime = "09:00",
             closingTime = "22:00",
-            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+            address = "paris, 123 street",
+            location = LocationDto(latitude = 31.0285807, longitude = 38.2588888)
         ),
         RestaurantDto(
             id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
@@ -482,7 +485,8 @@ class FakeRemoteGateWay : IRemoteGateway {
             phone = "+9641324221423",
             openingTime = "09:00",
             closingTime = "22:00",
-            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+            address = "paris, 123 street",
+            location = LocationDto(latitude = 31.0285807, longitude = 38.2588888)
         ), RestaurantDto(
             id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
             ownerId = "550e8400-e29b-41d4-a716-446655440989",
@@ -492,7 +496,8 @@ class FakeRemoteGateWay : IRemoteGateway {
             phone = "+9641324221423",
             openingTime = "09:00",
             closingTime = "22:00",
-            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+            address = "paris, 123 street",
+            location = LocationDto(latitude = 31.0285807, longitude = 38.2588888)
         ), RestaurantDto(
             id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
             ownerId = "550e8400-e29b-41d4-a716-446655440989",
@@ -502,7 +507,8 @@ class FakeRemoteGateWay : IRemoteGateway {
             phone = "+9641324221423",
             openingTime = "09:00",
             closingTime = "22:00",
-            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+            address = "paris, 123 street",
+            location = LocationDto(latitude = 31.0285807, longitude = 38.2588888)
         ), RestaurantDto(
             id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
             ownerId = "550e8400-e29b-41d4-a716-446655440989",
@@ -512,7 +518,8 @@ class FakeRemoteGateWay : IRemoteGateway {
             phone = "+9641324221423",
             openingTime = "09:00",
             closingTime = "22:00",
-            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+            address = "paris, 123 street",
+            location = LocationDto(latitude = 31.0285807, longitude = 38.2588888)
         ), RestaurantDto(
             id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
             ownerId = "550e8400-e29b-41d4-a716-446655440989",
@@ -522,7 +529,8 @@ class FakeRemoteGateWay : IRemoteGateway {
             phone = "+9641324221423",
             openingTime = "09:00",
             closingTime = "22:00",
-            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+            address = "paris, 123 street",
+            location = LocationDto(latitude = 31.0285807, longitude = 38.2588888)
         ),
         RestaurantDto(
             id = "6ab493b4-4b8d-410a-a13e-780346243f3a",
@@ -533,7 +541,8 @@ class FakeRemoteGateWay : IRemoteGateway {
             phone = "+9641324221423",
             openingTime = "09:00",
             closingTime = "22:00",
-            address = AddressDto(latitude = 31.0285807, longitude = 38.2588888)
+            address = "paris, 123 street",
+            location = LocationDto(latitude = 31.0285807, longitude = 38.2588888)
         ),
         RestaurantDto(
             id = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
@@ -545,7 +554,8 @@ class FakeRemoteGateWay : IRemoteGateway {
             phone = "+1234567890",
             openingTime = "11:30",
             closingTime = "21:30",
-            address = AddressDto(latitude = 40.712776, longitude = -74.005974),
+            address = "paris, 123 street",
+            location = LocationDto(latitude = 40.712776, longitude = -74.005974),
             priceLevel = "$$"
         ),
         RestaurantDto(
@@ -558,7 +568,8 @@ class FakeRemoteGateWay : IRemoteGateway {
             phone = "+18005551234",
             openingTime = "07:00",
             closingTime = "23:00",
-            address = AddressDto(latitude = 29.9583507, longitude = -90.0656312),
+            address = "paris, 123 street",
+            location = LocationDto(latitude = 29.9583507, longitude = -90.0656312),
             priceLevel = "$$"
         )
     )
@@ -579,7 +590,7 @@ class FakeRemoteGateWay : IRemoteGateway {
         return restaurants.toEntity()
     }
 
-    override suspend fun updateRestaurantInfo(restaurant: Restaurant): Restaurant? {
+    override suspend fun updateRestaurantInfo(restaurant: Restaurant): Restaurant {
         // Just Kda W Kda 😉
         return restaurant
     }
