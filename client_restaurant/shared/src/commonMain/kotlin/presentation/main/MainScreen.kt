@@ -14,26 +14,23 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.HomeAppBar
 import presentation.info.RestaurantInfoScreen
@@ -49,15 +46,12 @@ class MainScreen(private val restaurantId: String) :
 
     @Composable
     override fun Content() {
-        val screenModel = rememberScreenModel { MainScreenModel(restaurantId) }
-        initScreen(screenModel)
+        initScreen(getScreenModel { parametersOf(restaurantId) })
     }
 
-    @OptIn(ExperimentalLayoutApi::class)
+    @OptIn(ExperimentalLayoutApi::class, ExperimentalResourceApi::class)
     @Composable
     override fun onRender(state: MainScreenUIState, listener: MainScreenInteractionListener) {
-        val options = rememberOptions()
-        val charts = rememberChartData(state.charts)
         var rowSize by remember { mutableStateOf(IntSize.Zero) }
         var screenSize by remember { mutableStateOf(IntSize.Zero) }
         val isPortrait = screenSize.height > screenSize.width
@@ -66,11 +60,11 @@ class MainScreen(private val restaurantId: String) :
             Modifier.fillMaxSize().background(Theme.colors.background).onSizeChanged { screenSize = it }
         ) {
             HomeAppBar(
-                onRestaurantSelect = listener::onRestaurantClick,
+                onRestaurantSelect = listener::onRestaurantClicked,
                 onShowMenu = listener::onShowMenu,
                 onDismissMenu = listener::onDismissMenu,
-                restaurantName = state.restaurantName,
-                state = state.isOpen,
+                restaurantName = state.selectedRestaurant.restaurantName,
+                state = state.selectedRestaurant.isOpen,
                 expanded = state.expanded,
                 restaurants = state.restaurants,
                 modifier = Modifier.background(Theme.colors.surface)
@@ -81,38 +75,62 @@ class MainScreen(private val restaurantId: String) :
                 columns = GridCells.Adaptive(300.dp),
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(
-                    top = Theme.dimens.space8,
-                    start = Theme.dimens.space16,
-                    end = Theme.dimens.space16,
-                    bottom = Theme.dimens.space16,
+                    top = 8.dp,
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp,
                 ),
-                verticalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 item(span = { GridItemSpan(maxLineSpan) }) {
                     FlowRow(
                         Modifier.fillMaxWidth().align(Alignment.CenterHorizontally)
                             .onSizeChanged { rowSize = it },
-                        horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        val rowWith = with(LocalDensity.current) { rowSize.width.toDp() }
-                        options.forEach { option ->
-                            OptionCardItem(
-                                onClick = { listener.onCardClick(option.index) },
-                                title = option.title,
-                                imagePath = option.imagePath,
-                                color = option.color,
-                                modifier = Modifier.width(if (isPortrait) (rowWith / 2 - Theme.dimens.space8) else 170.dp)
-                                    .padding(top = Theme.dimens.space8),
-                            )
-                        }
+                        val rowWidth = with(LocalDensity.current) { rowSize.width.toDp() }
+                        val cardSize = if (isPortrait) (rowWidth / 2 - 4.dp) else 170.dp
+                        OptionCardItem(
+                            onClick = listener::onAllMealsCardClicked,
+                            title = Resources.strings.allMeals,
+                            imagePath = Resources.images.meals,
+                            color = Theme.colors.orange,
+                            modifier = Modifier.width(cardSize).padding(top = 8.dp),
+                        )
+                        OptionCardItem(
+                            onClick = listener::onOrdersCardClicked,
+                            title = Resources.strings.orders,
+                            imagePath = Resources.images.ordersBig,
+                            color = Theme.colors.pink,
+                            modifier = Modifier.width(cardSize).padding(top = 8.dp),
+                        )
+                        OptionCardItem(
+                            onClick = listener::onRestaurantInfoCardClicked,
+                            title = Resources.strings.restaurantInfo,
+                            imagePath = Resources.images.info,
+                            color = Theme.colors.blue,
+                            modifier = Modifier.width(cardSize).padding(top = 8.dp),
+                        )
+                        OptionCardItem(
+                            onClick = listener::onOrdersHistoryCardClicked,
+                            title = Resources.strings.ordersHistory,
+                            imagePath = Resources.images.ordersHistory,
+                            color = Theme.colors.green,
+                            modifier = Modifier.width(cardSize).padding(top = 8.dp),
+                        )
                     }
                 }
 
-                items(charts) { chart ->
+                item {
                     ChartItem(
-                        imagePainter = chart.first,
-                        chartItemUiState = chart.second,
-                        sign = chart.second.sign,
+                        imagePainter = painterResource(Resources.images.revenue),
+                        chartItemUiState = state.revenueChart,
+                    )
+                }
+                item {
+                    ChartItem(
+                        imagePainter = painterResource(Resources.images.orders),
+                        chartItemUiState = state.ordersChart,
                     )
                 }
             }
@@ -124,65 +142,10 @@ class MainScreen(private val restaurantId: String) :
             is MainScreenUIEffect.Back -> navigator.pop()
             is MainScreenUIEffect.NavigateToAllMeals -> navigator.push(MealsScreen(effect.restaurantId))
             is MainScreenUIEffect.NavigateToOrders -> navigator.push(OrderScreen())
-            is MainScreenUIEffect.NavigateToOrdersHistory -> navigator.push(
-                OrdersHistoryScreen(
-                    effect.restaurantId
-                )
-            )
-
             is MainScreenUIEffect.NavigateToRestaurantInfo -> navigator.push(RestaurantInfoScreen())
-        }
-    }
-
-    @Composable
-    private fun rememberOptions(): List<OptionItemUiState> {
-        val strings = Resources.strings
-        val images = Resources.images
-        val colors = Theme.colors
-
-        return rememberSaveable {
-            listOf(
-                OptionItemUiState(
-                    title = strings.allMeals,
-                    imagePath = images.meals,
-                    color = colors.orange,
-                    index = 0,
-                ),
-                OptionItemUiState(
-                    title = strings.orders,
-                    imagePath = images.ordersBig,
-                    color = colors.pink,
-                    index = 1,
-                ),
-                OptionItemUiState(
-                    title = strings.restaurantInfo,
-                    imagePath = images.info,
-                    color = colors.blue,
-                    index = 2,
-                ),
-                OptionItemUiState(
-                    title = strings.ordersHistory,
-                    imagePath = images.ordersHistory,
-                    color = colors.green,
-                    index = 3,
-                ),
+            is MainScreenUIEffect.NavigateToOrdersHistory -> navigator.push(
+                OrdersHistoryScreen(effect.restaurantId)
             )
-        }
-    }
-
-    @OptIn(ExperimentalResourceApi::class)
-    @Composable
-    private fun rememberChartData(charts: List<ChartItemUiState>): List<Pair<Painter, ChartItemUiState>> {
-        val revenuePainterResource = painterResource(Resources.images.revenue)
-        val ordersPainterResource = painterResource(Resources.images.orders)
-
-        return rememberSaveable {
-            charts.map { chartData ->
-                Pair(
-                    if (chartData.isRevenue) revenuePainterResource else ordersPainterResource,
-                    chartData
-                )
-            }
         }
     }
 }

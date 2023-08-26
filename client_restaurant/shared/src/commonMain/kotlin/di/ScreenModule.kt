@@ -5,21 +5,19 @@ import org.koin.dsl.module
 import presentation.info.RestaurantInfoScreenModel
 import presentation.login.LoginScreenModel
 import presentation.main.MainScreenModel
-import presentation.meals.MealsScreenModel
 import presentation.mealManagement.mealCreation.MealCreationScreenModel
+import presentation.meals.MealsScreenModel
 import presentation.order.OrderScreenModel
 import presentation.order.orderHistory.OrderHistoryScreenModel
 import presentation.restaurantSelection.RestaurantSelectionScreenModel
 
 val screenModule = module {
     factoryOf(::LoginScreenModel)
-    factoryOf(::MainScreenModel)
+    factory { (restaurantId: String) -> MainScreenModel(restaurantId, get()) }
     factoryOf(::MealCreationScreenModel)
     factoryOf(::OrderScreenModel)
     factoryOf(::RestaurantInfoScreenModel)
-    factory{(restaurantId: String) ->
-        MealsScreenModel(restaurantId,get(),get())
-    }
-    factoryOf(::OrderHistoryScreenModel)
-    factory { (ownerId: String) -> RestaurantSelectionScreenModel(ownerId, get()) }
+    factory { (restaurantId: String) -> MealsScreenModel(restaurantId, get(), get()) }
+    factoryOf(::RestaurantSelectionScreenModel)
+    factory { (restaurantId: String) -> OrderHistoryScreenModel(restaurantId, get()) }
 }

@@ -4,21 +4,16 @@ import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Order
 import domain.usecase.IManageOrderUseCase
 import kotlinx.coroutines.CoroutineScope
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
-import presentation.order.OrderUiState
-import presentation.order.toOrderMealUiState
-import util.formatDateTime
 
 
-// todo: need to pass restaurantId from previous screen
-class OrderHistoryScreenModel(private val restaurantId: String) :
-    BaseScreenModel<OrderHistoryScreenUiState, OrderHistoryScreenUiEffect>(OrderHistoryScreenUiState()),
-    OrderHistoryScreenInteractionListener, KoinComponent {
+class OrderHistoryScreenModel(
+    private val restaurantId: String,
+    private val ordersManagement: IManageOrderUseCase
+) : BaseScreenModel<OrderHistoryScreenUiState, OrderHistoryScreenUiEffect>(OrderHistoryScreenUiState()),
+    OrderHistoryScreenInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
-    private val manageOrderUseCase: IManageOrderUseCase by inject()
 
     init {
         getData()
@@ -26,24 +21,25 @@ class OrderHistoryScreenModel(private val restaurantId: String) :
 
     private fun getData() {
         tryToExecute(
-            ::callApi,
-            ::onSuccess,
+            ::getSelectedOrders,
+            ::onOrdersSuccess,
             ::onError
         )
     }
 
-    private suspend fun callApi(): List<Order> {
+    private suspend fun getSelectedOrders(): List<Order> {
         return when (state.value.selectedType) {
             OrderHistoryScreenUiState.OrderSelectType.FINISHED -> {
-                manageOrderUseCase.getFinishedOrdersHistory(restaurantId)
+                ordersManagement.getFinishedOrdersHistory(restaurantId)
             }
+
             OrderHistoryScreenUiState.OrderSelectType.CANCELLED -> {
-                manageOrderUseCase.getCanceledOrdersHistory(restaurantId)
+                ordersManagement.getCanceledOrdersHistory(restaurantId)
             }
         }
     }
 
-    private fun onSuccess(orders: List<Order>) {
+    private fun onOrdersSuccess(orders: List<Order>) {
         updateState {
             it.copy(
                 errorState = null,
@@ -64,15 +60,6 @@ class OrderHistoryScreenModel(private val restaurantId: String) :
         updateState { it.copy(selectedType = type) }
         getData()
     }
-}
-
-private fun Order.toOrderHistoryUiState(): OrderUiState {
-    return OrderUiState(
-        id = id,
-        orderMealUiStates = meals.map { it.toOrderMealUiState() },
-        totalPrice = totalPrice,
-        createdAt = createdAt.formatDateTime(),
-    )
 }
 
 

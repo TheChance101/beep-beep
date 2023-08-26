@@ -19,10 +19,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpAnimatedTabLayout
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.BpAppBar
 import presentation.order.composable.OrderCard
@@ -30,13 +30,13 @@ import presentation.order.composable.header
 import resources.Resources
 import util.capitalizeFirstLetter
 
-class OrdersHistoryScreen(private val restaurantId: String) : BaseScreen<OrderHistoryScreenModel, OrderHistoryScreenUiState,
-        OrderHistoryScreenUiEffect, OrderHistoryScreenInteractionListener>() {
+class OrdersHistoryScreen(private val restaurantId: String) :
+    BaseScreen<OrderHistoryScreenModel, OrderHistoryScreenUiState,
+            OrderHistoryScreenUiEffect, OrderHistoryScreenInteractionListener>() {
 
     @Composable
     override fun Content() {
-        val screenModel: OrderHistoryScreenModel = rememberScreenModel { OrderHistoryScreenModel(restaurantId) }
-        initScreen(screenModel)
+        initScreen(getScreenModel { parametersOf(restaurantId) })
     }
 
     @OptIn(ExperimentalFoundationApi::class)
@@ -56,9 +56,9 @@ class OrdersHistoryScreen(private val restaurantId: String) : BaseScreen<OrderHi
             )
             LazyVerticalStaggeredGrid(
                 columns = StaggeredGridCells.Adaptive(300.dp),
-                contentPadding = PaddingValues(Theme.dimens.space16),
-                verticalItemSpacing = Theme.dimens.space8,
-                horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8),
+                contentPadding = PaddingValues(16.dp),
+                verticalItemSpacing = 8.dp,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.fillMaxSize()
             ) {
                 header {
@@ -67,7 +67,7 @@ class OrdersHistoryScreen(private val restaurantId: String) : BaseScreen<OrderHi
                         selectedTab = state.selectedType,
                         onTabSelected = { listener.onClickTab(it) },
                         modifier = Modifier.height(40.dp).fillMaxWidth(),
-                        horizontalPadding =  Theme.dimens.space4,
+                        horizontalPadding = 4.dp,
                     ) { type ->
                         Text(
                             text = type.name.capitalizeFirstLetter(),
@@ -76,7 +76,7 @@ class OrdersHistoryScreen(private val restaurantId: String) : BaseScreen<OrderHi
                                 if (type == state.selectedType) Theme.colors.onPrimary
                                 else Theme.colors.contentTertiary
                             ).value,
-                            modifier = Modifier.padding(Theme.dimens.space4)
+                            modifier = Modifier.padding(4.dp)
                         )
                     }
                 }
@@ -97,7 +97,10 @@ class OrdersHistoryScreen(private val restaurantId: String) : BaseScreen<OrderHi
                     order = it,
                     modifier = Modifier
                 ) {
-                    Text(it.createdAt)
+                    Text(
+                        it.createdAt,
+                        style = Theme.typography.caption.copy(color = Theme.colors.contentTertiary)
+                    )
                 }
             }
         }
