@@ -11,7 +11,7 @@ import com.seiko.imageloader.LocalImageLoader
 import util.generateImageLoader
 import util.getPlatformContext
 
-private val localPainterResources = staticCompositionLocalOf { BpPainterLightResources }
+private val localDrawableResources = staticCompositionLocalOf { DrawableResources() }
 private val localStringResources = staticCompositionLocalOf { StringResources() }
 
 @Composable
@@ -19,11 +19,11 @@ fun BpRestaurantTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
-    val painterResources = if (useDarkTheme) BpPainterDarkResources else BpPainterLightResources
+    val drawableResources = if (useDarkTheme) BpDrawableDarkResources else DrawableResources()
     val context = getPlatformContext()
 
     CompositionLocalProvider(
-        localPainterResources provides painterResources,
+        localDrawableResources provides drawableResources,
         localStringResources provides StringResources(),
         LocalImageLoader provides remember { generateImageLoader(context) }
     ) {
@@ -34,10 +34,10 @@ fun BpRestaurantTheme(
 }
 
 object Resources {
-    val images: PainterResources
+    val images: DrawableResources
         @Composable
         @ReadOnlyComposable
-        get() = localPainterResources.current
+        get() = localDrawableResources.current
 
     val strings: StringResources
         @Composable
