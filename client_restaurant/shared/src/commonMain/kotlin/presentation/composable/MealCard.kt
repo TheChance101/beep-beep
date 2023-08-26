@@ -40,13 +40,13 @@ fun MealCard(onClick:()->Unit, meal: MealUIState,) {
             text = meal.name,
             style = Theme.typography.body,
             color = Theme.colors.contentPrimary,
-            modifier = Modifier.padding(Theme.dimens.space4)
+            modifier = Modifier.padding(4.dp)
         )
         Text(
             text = meal.price,
             style = Theme.typography.title,
             color = Theme.colors.contentPrimary,
-            modifier = Modifier.padding(start=Theme.dimens.space4, bottom = Theme.dimens.space16)
+            modifier = Modifier.padding(start=4.dp, bottom = 16.dp)
         )
     }
 }
