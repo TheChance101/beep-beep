@@ -23,17 +23,7 @@ class MealsScreenModel() :
     private val mangeMeal: IManageMealUseCase by inject()
 
 
-    init {
-        getCuisine()
-    }
 
-    private fun getCuisine() {
-        tryToExecute(
-            mangeCousin::getCuisines,
-            ::onGetCuisineSuccess,
-            onError = { updateState { it.copy(error = it.error) } }
-        )
-    }
 
     private fun onGetCuisineSuccess(cuisines: List<Cuisine>) {
         updateState {
@@ -46,11 +36,7 @@ class MealsScreenModel() :
         updateState { it.copy(isLoading = true) }
         tryToExecute(
             function = {
-                if (cuisineId.isEmpty()) {
-                    mangeMeal.getAllMeals()
-                } else {
-                    mangeCousin.getMealsByCuisineId(cuisineId)
-                }
+
             },
             onSuccess = { value ->
                 updateState { it.copy(meals = value.toUIState(), isLoading = false) }
