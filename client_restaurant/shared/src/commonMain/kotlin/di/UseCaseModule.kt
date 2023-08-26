@@ -4,11 +4,13 @@ package di
 import domain.usecase.GetOwnerRestaurantsUseCase
 import domain.usecase.IGetOwnerRestaurantsUseCase
 import domain.usecase.ILoginUserUseCase
+import domain.usecase.ILogoutUserUseCase
 import domain.usecase.IManageMealUseCase
 import domain.usecase.IManageOrderUseCase
 import domain.usecase.IManageRestaurantInfoUseCase
 import domain.usecase.IMangeCuisineUseCase
 import domain.usecase.LoginUserUseCase
+import domain.usecase.LogoutUserUseCase
 import domain.usecase.ManageMealUseCase
 import domain.usecase.ManageOrderUseCase
 import domain.usecase.ManageRestaurantInfoUseCase
@@ -24,4 +26,5 @@ val UseCaseModule = module {
     singleOf(::GetOwnerRestaurantsUseCase) { bind<IGetOwnerRestaurantsUseCase>() }
     singleOf(::ManageMealUseCase) { bind<IManageMealUseCase>() }
     singleOf(::LoginUserUseCase) { bind<ILoginUserUseCase>() }
+    singleOf(::LogoutUserUseCase) { bind<ILogoutUserUseCase>() }
 }
