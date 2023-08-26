@@ -30,7 +30,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import org.koin.core.parameter.parameterArrayOf
+import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.HomeAppBar
 import presentation.info.RestaurantInfoScreen
@@ -46,7 +46,7 @@ class MainScreen(private val restaurantId: String) :
 
     @Composable
     override fun Content() {
-        initScreen(getScreenModel { parameterArrayOf(restaurantId) })
+        initScreen(getScreenModel { parametersOf(restaurantId) })
     }
 
     @OptIn(ExperimentalLayoutApi::class, ExperimentalResourceApi::class)

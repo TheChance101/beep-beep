@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpAnimatedTabLayout
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.koin.core.parameter.parameterArrayOf
+import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.BpAppBar
 import presentation.order.composable.OrderCard
@@ -36,7 +36,7 @@ class OrdersHistoryScreen(private val restaurantId: String) :
 
     @Composable
     override fun Content() {
-        initScreen(getScreenModel { parameterArrayOf(restaurantId) })
+        initScreen(getScreenModel { parametersOf(restaurantId) })
     }
 
     @OptIn(ExperimentalFoundationApi::class)
