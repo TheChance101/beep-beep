@@ -24,7 +24,6 @@ import presentation.base.NoInternetException
 import presentation.base.UnknownErrorException
 import presentation.base.UserNotFoundException
 
-
 class RemoteGateWay(private val client: HttpClient) : IRemoteGateWay {
 
     //region login
@@ -77,7 +76,7 @@ class RemoteGateWay(private val client: HttpClient) : IRemoteGateWay {
     //endregion meal
 
     //region order
-    override suspend fun getCurrentOrders(restaurantId: String): List<Order> {
+    override suspend fun getCurrentOrders(): List<Order> {
         return emptyList()
     }
 

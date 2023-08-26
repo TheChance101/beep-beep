@@ -18,7 +18,6 @@ import presentation.base.RequestException
 
 class FakeRemoteGateWay : IRemoteGateWay {
 
-
     private val orders = mutableListOf(
         OrderDto(
             id = "f5c8b31e-5c4d-4c8a-babc-0e9463daad20",
@@ -603,7 +602,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
 
     //region order
     override suspend fun getCurrentOrders(): List<Order> {
-        return orders.filter { it.orderState == 0 && it.orderState == 1 }.toOrderEntity()
+        return orders.filter { it.orderState == 0 || it.orderState == 1 }.toOrderEntity()
     }
 
     override suspend fun getOrdersHistory(restaurantId: String): List<Order> {

@@ -44,10 +44,6 @@ class OrderScreenModel :
         )
     }
 
-    private fun onUpdateOrderStateSuccess(updatedOrder: OrderUiState) {
-        sendNewEffect(OrderScreenUiEffect.UpdateOrder(updatedOrder))
-    }
-
     private fun getPendingOrders() {
         tryToExecute(
             {
@@ -83,6 +79,10 @@ class OrderScreenModel :
         val totalOrders = state.value.totalOrders
         val newTotalOrders = totalOrders + inCookingOrders.size
         updateState { it.copy(inCookingOrders = inCookingOrders, totalOrders = newTotalOrders) }
+    }
+
+    private fun onUpdateOrderStateSuccess(updatedOrder: OrderUiState) {
+        sendNewEffect(OrderScreenUiEffect.UpdateOrder(updatedOrder))
     }
 
     private fun onGetOrdersError(errorState: ErrorState) {
