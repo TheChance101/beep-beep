@@ -15,13 +15,14 @@ import presentation.meals.state.CuisineUIState
 import presentation.meals.state.MealsScreenUIState
 import presentation.meals.state.toUIState
 
-class MealsScreenModel(private val restaurantId: String) :
+class MealsScreenModel(
+    private val restaurantId: String,
+    private val mangeCousin: IMangeCuisineUseCase,
+    private val mangeMeal: IManageMealUseCase
+) :
     BaseScreenModel<MealsScreenUIState, MealsScreenUIEffect>(MealsScreenUIState()),
     MealScreenInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
-
-    private val mangeCousin: IMangeCuisineUseCase by inject()
-    private val mangeMeal: IManageMealUseCase by inject()
 
 
     init {
