@@ -1,6 +1,6 @@
 package presentation.restaurantSelection
 
-import util.isRestaurantOpen
+
 
 
 data class RestaurantScreenUIState(
@@ -20,7 +20,7 @@ fun domain.entity.Restaurant.toUiState() = RestaurantUIState(
     id = id,
     restaurantName = name,
     restaurantNumber = phone,
-    isOpen = isRestaurantOpen(this.openingTime, this.closingTime)
+    isOpen = isRestaurantOpen()
 )
 
 
