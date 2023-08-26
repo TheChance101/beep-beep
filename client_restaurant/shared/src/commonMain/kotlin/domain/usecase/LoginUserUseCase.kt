@@ -2,7 +2,7 @@ package domain.usecase
 
 import domain.entity.UserTokens
 import domain.gateway.ILocalConfigurationGateway
-import domain.gateway.IFakeRemoteGateWay
+import domain.gateway.IRemoteGateway
 
 interface ILoginUserUseCase {
 
@@ -21,7 +21,7 @@ interface ILoginUserUseCase {
 }
 
 class LoginUserUseCase(
-    private val remoteGateway :IFakeRemoteGateWay,
+    private val remoteGateway :IRemoteGateway,
     private val localGateWay: ILocalConfigurationGateway
 ) : ILoginUserUseCase {
 

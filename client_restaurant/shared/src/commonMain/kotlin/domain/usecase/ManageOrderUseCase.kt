@@ -2,10 +2,9 @@ package domain.usecase
 
 import domain.entity.Order
 import domain.entity.OrderState
-import domain.gateway.IRemoteGateWay
+import domain.gateway.IRemoteGateway
 import domain.utils.Constant
 import presentation.base.RequestException
-import presentation.base.UnknownErrorException
 
 interface IManageOrderUseCase {
     suspend fun getCurrentOrders(): List<Order>
@@ -14,7 +13,7 @@ interface IManageOrderUseCase {
     suspend fun getCanceledOrdersHistory(restaurantId: String): List<Order>
 }
 
-class ManageOrderUseCase(private val remoteGateWay: IRemoteGateWay) : IManageOrderUseCase {
+class ManageOrderUseCase(private val remoteGateWay: IRemoteGateway) : IManageOrderUseCase {
     override suspend fun getCurrentOrders(): List<Order> {
         return remoteGateWay.getCurrentOrders()
     }

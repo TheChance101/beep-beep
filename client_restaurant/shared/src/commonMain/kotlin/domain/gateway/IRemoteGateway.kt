@@ -7,7 +7,7 @@ import domain.entity.Order
 import domain.entity.Restaurant
 import domain.entity.UserTokens
 
-interface IFakeRemoteGateWay {
+interface IRemoteGateway {
 
     //region login
     suspend fun loginUser(userName:String,password:String):UserTokens
