@@ -20,7 +20,7 @@ class MealsScreenModel() :
         get() = coroutineScope
 
     private val mangeCousin: IMangeCuisineUseCase by inject()
-
+    private val mangeMeal: IManageMealUseCase by inject()
 
 
     init {
@@ -33,7 +33,8 @@ class MealsScreenModel() :
                 "1"
             ) },
             onSuccess = {value->
-                updateState { it.copy(cuisine = value.toUIState(), selectedCuisine =value.toUIState().first())
+                updateState {
+                    it.copy(cuisine = value.toUIState(), selectedCuisine =value.toUIState().first())
                 }
                 getMeals(state.value.selectedCuisine.id)
             },
