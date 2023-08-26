@@ -65,23 +65,23 @@ class OrderScreen :
                 TotalOrders(
                     text = Resources.strings.totalOrders,
                     totalOrders = state.totalOrders,
-                    modifier = Modifier.padding(end = Theme.dimens.space16)
+                    modifier = Modifier.padding(end = 16.dp)
                 )
             }
 
 
             LazyVerticalStaggeredGrid(
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(Theme.dimens.space16),
+                contentPadding = PaddingValues(16.dp),
                 columns = StaggeredGridCells.Adaptive(minSize = 360.dp),
-                verticalItemSpacing = Theme.dimens.space8,
-                horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8)
+                verticalItemSpacing = 8.dp,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
 
                 header {
                     OrdersHeader(
                         text = Resources.strings.inCookingOrders,
-                        modifier = Modifier.padding(bottom = Theme.dimens.space8)
+                        modifier = Modifier.padding(bottom = 8.dp)
                     )
                 }
 
@@ -99,10 +99,7 @@ class OrderScreen :
                 header {
                     OrdersHeader(
                         text = Resources.strings.requestedOrders,
-                        modifier = Modifier.padding(
-                            top = Theme.dimens.space16,
-                            bottom = Theme.dimens.space8
-                        )
+                        modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
                     )
                 }
 
@@ -148,10 +145,7 @@ class OrderScreen :
     ) {
         Column(
             modifier = modifier,
-            verticalArrangement = Arrangement.spacedBy(
-                Theme.dimens.space4,
-                alignment = Alignment.CenterVertically
-            ),
+            verticalArrangement = Arrangement.spacedBy(4.dp, alignment = Alignment.CenterVertically),
             horizontalAlignment = Alignment.End
         ) {
             Text(
