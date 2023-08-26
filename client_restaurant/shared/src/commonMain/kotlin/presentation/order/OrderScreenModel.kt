@@ -8,10 +8,9 @@ import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
-class OrderScreenModel :
+class OrderScreenModel(private val manageOrders: IManageOrderUseCase) :
     BaseScreenModel<OrderScreenUiState, OrderScreenUiEffect>(OrderScreenUiState()),
     OrderScreenInteractionListener {
-    private val manageOrders: IManageOrderUseCase by inject()
 
     override val viewModelScope: CoroutineScope = coroutineScope
 

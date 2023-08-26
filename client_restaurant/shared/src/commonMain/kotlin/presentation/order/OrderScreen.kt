@@ -24,6 +24,8 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
 import domain.entity.OrderState
+import org.koin.core.parameter.parameterArrayOf
+import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.BpAppBar
 import presentation.login.LoginScreen
@@ -37,8 +39,7 @@ class OrderScreen :
 
     @Composable
     override fun Content() {
-        val screenModel = rememberScreenModel { OrderScreenModel() }
-        initScreen(screenModel)
+        initScreen(getScreenModel())
     }
 
     override fun onEffect(effect: OrderScreenUiEffect, navigator: Navigator) {
