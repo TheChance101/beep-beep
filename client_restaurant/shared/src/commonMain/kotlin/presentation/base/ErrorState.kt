@@ -10,5 +10,4 @@ sealed interface ErrorState {
     object InvalidCredentials : ErrorState
     data class InvalidUserName(val errorMessage: String) : ErrorState
     data class InvalidPassword(val errorMessage: String) : ErrorState
-    data class UserNotExist(val errorMessage: String) : ErrorState
 }
