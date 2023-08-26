@@ -9,6 +9,7 @@ import presentation.meals.MealsScreenModel
 import presentation.mealManagement.mealCreation.MealCreationScreenModel
 import presentation.order.OrderScreenModel
 import presentation.order.orderHistory.OrderHistoryScreenModel
+import presentation.restaurantSelection.RestaurantSelectionScreenModel
 
 val screenModule = module {
     factoryOf(::LoginScreenModel)
@@ -18,4 +19,5 @@ val screenModule = module {
     factoryOf(::RestaurantInfoScreenModel)
     factoryOf(::MealsScreenModel)
     factoryOf(::OrderHistoryScreenModel)
+    factory { (ownerId: String) -> RestaurantSelectionScreenModel(ownerId, get()) }
 }
