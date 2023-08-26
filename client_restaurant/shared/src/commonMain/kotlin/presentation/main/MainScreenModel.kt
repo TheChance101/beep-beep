@@ -2,7 +2,7 @@ package presentation.main
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Restaurant
-import domain.usecase.IGetOwnerRestaurantsInformationUseCase
+import domain.usecase.IGetRestaurantsInfoUseCase
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState

@@ -4,23 +4,11 @@ package org.thechance.common.data.remote.gateway
 import org.thechance.common.data.local.LocalGateway
 import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
-import org.thechance.common.data.remote.model.AdminDto
-import org.thechance.common.data.remote.model.DataWrapperDto
-import org.thechance.common.data.remote.model.TaxiDto
-import org.thechance.common.data.remote.model.UserDto
-import org.thechance.common.data.remote.model.toEntity
+import org.thechance.common.data.remote.model.*
 import org.thechance.common.data.service.IFakeService
-import org.thechance.common.domain.entity.AddRestaurant
-import org.thechance.common.domain.entity.AddTaxi
-import org.thechance.common.domain.entity.Admin
-import org.thechance.common.domain.entity.DataWrapper
-import org.thechance.common.domain.entity.Location
-import org.thechance.common.domain.entity.Restaurant
-import org.thechance.common.domain.entity.Taxi
-import org.thechance.common.domain.entity.User
-import org.thechance.common.domain.entity.UserTokens
+import org.thechance.common.domain.entity.*
 import org.thechance.common.domain.getway.IRemoteGateway
-import java.util.UUID
+import java.util.*
 import kotlin.math.ceil
 import kotlin.math.floor
 
@@ -634,8 +622,8 @@ class FakeRemoteGateway(
         )
     }
 
-    override suspend fun loginUser(username: String, password: String): UserTokens {
-        return UserTokens("", "")
+    override suspend fun loginUser(username: String, password: String): Pair<String, String> {
+        return Pair("token", "refreshToken")
     }
 
     private fun filterRestaurants(

@@ -1,4 +1,4 @@
-package org.thechance.common.di
+package di
 
 import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*

@@ -1,24 +1,25 @@
-package data.remote.gateway
+package data.gateway
 
+import data.remote.mapper.toEntity
+import data.remote.mapper.toOrderEntity
 import data.remote.model.AddressDto
 import data.remote.model.CuisineDto
 import data.remote.model.MealDto
 import data.remote.model.OrderDto
 import data.remote.model.OrderMealDto
 import data.remote.model.RestaurantDto
-import data.remote.model.toEntity
-import data.remote.model.toOrderEntity
 import domain.entity.Category
 import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
 import domain.entity.UserTokens
-import domain.gateway.IRemoteGateWay
+import domain.gateway.IFakeRemoteGateWay
+import presentation.base.InvalidPasswordException
+import presentation.base.InvalidUserNameException
 import presentation.base.RequestException
 
-class FakeRemoteGateWay : IRemoteGateWay {
-
+class FakeRemoteGateway : IFakeRemoteGateWay {
 
     private val orders = mutableListOf(
         OrderDto(
@@ -564,9 +565,14 @@ class FakeRemoteGateWay : IRemoteGateWay {
     )
 
     override suspend fun loginUser(userName: String, password: String): UserTokens {
-        return UserTokens(accessToken = "", refreshToken = "")
+        if (userName != "theChance") {
+            throw InvalidUserNameException("Invalid UserName")
+        }
+        if (password != "theChance23") {
+            throw InvalidPasswordException("Invalid Password")
+        }
+        return UserTokens(accessToken = "wertqyhgt", refreshToken = "qazswxza")
     }
-
 
     //region restaurant
     override suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant> {
