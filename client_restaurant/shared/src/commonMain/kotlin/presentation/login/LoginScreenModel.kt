@@ -41,33 +41,56 @@ class LoginScreenModel:
     }
 
     private fun onLoginSuccess(result: UserTokens) {
-        updateState { it.copy(isLoading = false, isSuccess = true) }
+        updateState {
+            it.copy(
+                isLoading = false,
+                isSuccess = true,
+                usernameErrorMsg = "",
+                passwordErrorMsg = ""
+            )
+        }
         sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
     }
 
     private fun onLoginFailed(error: ErrorState) {
         state.value.sheetState.show()
         handleErrorState(error)
-        updateState { it.copy(isLoading = false, error = error) }
     }
 
     private fun handleErrorState(error: ErrorState) {
         when (error) {
             ErrorState.NoInternet -> {}
-            ErrorState.NetworkNotSupported -> "ops"
-            ErrorState.RequestFailed -> "ops"
-            ErrorState.UnAuthorized -> "ops3"
-            ErrorState.WifiDisabled -> {
-                state.value.sheetState.show()  // just for testing
-            }
-
-            ErrorState.HasNoPermission -> "ops4"    // do nothing for now
+            ErrorState.NetworkNotSupported -> {}
+            ErrorState.RequestFailed -> {}
+            ErrorState.UnAuthorized -> {}
+            ErrorState.WifiDisabled -> {}
+            ErrorState.HasNoPermission -> {}
             is ErrorState.InvalidCredentials -> {
-                updateState { it.copy(error = error, isPasswordError = true) }
+                updateState {
+                    it.copy(
+                        error = ErrorState.InvalidCredentials
+                    )
+                }
             }
 
             is ErrorState.UserNotExist -> {
-                updateState { it.copy(error = error, isUsernameError = true) }
+                updateState {
+                    it.copy(
+                        error = ErrorState.UserNotExist("UserNotExist")
+                    )
+                }
+            }
+
+            is ErrorState.InvalidPassword -> updateState {
+                it.copy(
+                    passwordErrorMsg = "Invalid Password!"
+                )
+            }
+
+            is ErrorState.InvalidUserName -> updateState {
+                it.copy(
+                    usernameErrorMsg = "Invalid UserName!"
+                )
             }
         }
     }

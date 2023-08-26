@@ -135,7 +135,7 @@ class RemoteGateway(private val client: HttpClient) : IRemoteGateWay {
 
  private fun throwMatchingException(errorMessages: Map<String, String>) {
         if (errorMessages.containsErrors("1013")) {
-            throw InvalidCredentialsException(errorMessages["1013"] ?: "")
+            throw InvalidCredentialsException()
         } else if (errorMessages.containsErrors("1043")) {
             throw UserNotFoundException(errorMessages["1043"] ?: "")
         } else {

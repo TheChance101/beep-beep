@@ -112,7 +112,7 @@ private fun LoginScreenContent(
                 label = Resources.strings.username,
                 keyboardType = KeyboardType.Text,
                 modifier = Modifier.fillMaxWidth(),
-//                errorMessage = state.error.toString(),
+                errorMessage = state.usernameErrorMsg,
             )
             BpTextField(
                 text = state.password,
@@ -120,7 +120,7 @@ private fun LoginScreenContent(
                 label = Resources.strings.password,
                 keyboardType = KeyboardType.Password,
                 modifier = Modifier.fillMaxWidth(),
-//                errorMessage = state.error.toString(),
+                errorMessage = state.passwordErrorMsg,
             )
             BpCheckBox(
                 label = Resources.strings.keepMeLoggedIn,
