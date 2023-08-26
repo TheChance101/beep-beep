@@ -11,8 +11,7 @@ class GetOwnerRestaurantsUseCase(private val remoteGateWay: IRemoteGateWay) :
     IGetOwnerRestaurantsUseCase {
 
     override suspend fun getOwnerRestaurants(ownerId: String): List<Restaurant> {
-        return remoteGateWay.getRestaurantsByOwnerId(ownerId)
-            .sortedByDescending { it.isRestaurantOpen() }
+        return remoteGateWay.getRestaurantsByOwnerId(ownerId).sortedByDescending { it.isRestaurantOpen() }
     }
 
 }
