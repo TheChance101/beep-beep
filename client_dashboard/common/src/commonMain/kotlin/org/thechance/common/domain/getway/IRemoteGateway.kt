@@ -17,11 +17,11 @@ interface IRemoteGateway {
 
     fun getUsers(page: Int, numberOfUsers: Int): DataWrapper<User>
 
-    suspend fun getTaxis(): List<Taxi>
+    suspend fun getTaxis(page: Int, numberOfUsers: Int): DataWrapper<Taxi>
 
     suspend fun createTaxi(taxi: AddTaxi): Taxi
 
-    suspend fun findTaxiByUsername(username: String): List<Taxi>
+    suspend fun findTaxiByUsername(username: String, page: Int, offset:Int): DataWrapper<Taxi>
 
     suspend fun getPdfTaxiReport()
 

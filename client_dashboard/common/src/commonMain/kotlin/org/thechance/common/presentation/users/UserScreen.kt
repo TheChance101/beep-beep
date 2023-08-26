@@ -101,10 +101,10 @@ class UserScreen :
                     users = state.pageInfo.data,
                     headers = state.tableHeader,
                     selectedPage = state.currentPage,
-                    onUserMenuClicked = editMenuListener::showEditUserMenu,
                     numberItemInPage = state.specifiedUsers,
                     numberOfUsers = state.pageInfo.numberOfUsers,
                     pageCount = state.pageInfo.totalPages,
+                    onUserMenuClicked = editMenuListener::showEditUserMenu,
                     onPageClicked = pageListener::onPageClick,
                     onItemPerPageChanged = pageListener::onItemsIndicatorChange,
                     editUserMenu = state.userMenu,
@@ -152,10 +152,10 @@ class UserScreen :
         }
 
         UsersTableFooter(
+            selectedPage = selectedPage,
             numberItemInPage = numberItemInPage,
             numberOfUsers = numberOfUsers,
             pageCount = pageCount,
-            selectedPage = selectedPage,
             onPageClicked = onPageClicked,
             onItemPerPageChanged = onItemPerPageChanged,
         )

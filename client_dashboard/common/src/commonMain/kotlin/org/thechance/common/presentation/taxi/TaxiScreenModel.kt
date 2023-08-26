@@ -1,6 +1,7 @@
 package org.thechance.common.presentation.taxi
 
 import org.thechance.common.domain.entity.CarColor
+import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.usecase.ICreateNewTaxiUseCase
 import org.thechance.common.domain.usecase.IFindTaxiByUsernameUseCase
@@ -90,7 +91,7 @@ class TaxiScreenModel(
     //region paging
 
     override fun onItemsIndicatorChange(itemPerPage: Int) {
-       updateState{ it.copy(specifiedUsers = itemPerPage) }
+        updateState { it.copy(specifiedTaxis = itemPerPage) }
         getDummyTaxiData()
     }
 
@@ -108,23 +109,29 @@ class TaxiScreenModel(
 
     //region function new taxi
     private fun getDummyTaxiData() {
-        tryToExecute(getTaxis::getTaxis, ::onGetTaxisSuccessfully, ::onError)
+        tryToExecute(
+            { getTaxis.getTaxis(state.value.currentPage,state.value.specifiedTaxis) },
+            ::onGetTaxisSuccessfully, ::onError)
     }
 
     private fun findTaxiByUsername(username: String) {
         tryToExecute(
-            { findTaxiByUsername.findTaxiByUsername(username) },
+            { findTaxiByUsername.findTaxiByUsername(username,state.value.currentPage,state.value.specifiedTaxis) },
             ::onFindTaxiSuccessfully,
             ::onError
         )
     }
 
-    private fun onFindTaxiSuccessfully(taxis: List<Taxi>) {
-        updateState { it.copy(taxis = taxis.toUiState(), isLoading = false) }
+    private fun onGetTaxisSuccessfully(taxis: DataWrapper<Taxi>) {
+        updateState { it.copy(pageInfo = taxis.toUiState(), isLoading = false) }
+        println("get taxis successfully: ${taxis}")
     }
 
-    private fun onGetTaxisSuccessfully(taxis: List<Taxi>) {
-        updateState { it.copy(taxis = taxis.toUiState(), isLoading = false) }
+    private fun onFindTaxiSuccessfully(taxis: DataWrapper<Taxi>) {
+        updateState {
+            it.copy(pageInfo = taxis.toUiState(), isLoading = false)
+        }
+        println("find taxi successfully: ${taxis}")
     }
 
     private fun onError(error: ErrorState) {

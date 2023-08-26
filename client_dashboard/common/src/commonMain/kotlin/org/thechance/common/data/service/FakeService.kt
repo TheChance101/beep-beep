@@ -160,26 +160,6 @@ class FakeService : IFakeService {
             ))
     }
 
-    override fun getTaxis(): List<TaxiDto> {
-        return taxis
-    }
-    override fun getRestaurants(): List<RestaurantDto> {
-        return restaurant
-    }
-
-    override fun addTaxi(taxiDto: TaxiDto): TaxiDto {
-        taxis.add(taxiDto)
-        return getTaxis().last()
-    }
-
-    override fun findTaxisByUsername(username: String): List<TaxiDto> {
-        return getTaxis().filter { it.username.startsWith(username, true) }
-    }
-    override fun searchRestaurantsByRestaurantName(restaurantName: String): List<RestaurantDto> {
-        return getRestaurants().filter { it.name.startsWith(restaurantName, true) }
-    }
-
-
     override fun getTaxiPDFReport(): File {
         val title = "Taxi Details Report"
         val columnNames =

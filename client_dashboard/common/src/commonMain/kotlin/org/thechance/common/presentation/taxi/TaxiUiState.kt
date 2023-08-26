@@ -7,7 +7,6 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.domain.entity.*
 import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.presentation.composables.table.Header
-import org.thechance.common.presentation.users.UserScreenUiState
 import org.thechance.common.presentation.util.ErrorState
 
 data class TaxiUiState(
@@ -19,8 +18,8 @@ data class TaxiUiState(
     val searchQuery: String = "",
     val taxiNumberInPage: Int = 3,
     val isExportReportSuccessfully: Boolean = false,
-    val pageInfo: UserScreenUiState.UserPageInfoUiState = UserScreenUiState.UserPageInfoUiState(),
-    val specifiedUsers: Int = 10,
+    val pageInfo: TaxiPageInfoUiState = TaxiPageInfoUiState(),
+    val specifiedTaxis: Int = 10,
     val currentPage: Int = 1,
     val taxiMenu: MenuUiState = MenuUiState(),
 

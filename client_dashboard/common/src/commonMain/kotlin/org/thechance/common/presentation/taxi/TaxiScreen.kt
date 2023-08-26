@@ -38,7 +38,6 @@ import org.thechance.common.presentation.composables.modifier.noRipple
 import org.thechance.common.presentation.composables.table.BpPager
 import org.thechance.common.presentation.composables.table.BpTable
 import org.thechance.common.presentation.composables.table.TotalItemsIndicator
-import org.thechance.common.presentation.users.UserScreenUiState
 
 class TaxiScreen :
     BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiScreenInteractionListener>() {
@@ -122,14 +121,14 @@ class TaxiScreen :
                     modifier = Modifier.weight(1f).padding(bottom = LocalDimensions.current.space16)
                 ) {
                     BpTable(
-                        data = state.taxis,
+                        data = state.pageInfo.data,
                         key = { it.username },
                         headers = state.tabHeader,
                         modifier = Modifier.fillMaxWidth(),
                         rowContent = { taxi ->
                             TaxiRow(
                                 taxi = taxi,
-                                position = state.taxis.indexOf(taxi) + 1,
+                                position = state.pageInfo.data.indexOf(taxi) + 1,
                                 onDropdownMenuClicked = listener::showTaxiMenu,
                                 onDropdownMenuDismiss = listener::hideTaxiMenu,
                                 onEditTaxiClicked = listener::onEditTaxiClicked,
@@ -141,8 +140,8 @@ class TaxiScreen :
                 }
                 TaxisTableFooter(
                     selectedPage = state.currentPage,
-                    numberItemInPage = state.specifiedUsers,
-                    numberOfTaxis = state.pageInfo.numberOfUsers,
+                    numberItemInPage = state.specifiedTaxis,
+                    numberOfTaxis = state.pageInfo.numberOfTaxis,
                     pageCount = state.pageInfo.totalPages,
                     onPageClicked = listener::onPageClick,
                     onItemPerPageChanged = listener::onItemsIndicatorChange,
