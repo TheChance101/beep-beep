@@ -4,6 +4,7 @@ import data.remote.model.AddressDto
 import data.remote.model.CuisineDto
 import data.remote.model.MealDto
 import data.remote.model.OrderDto
+import data.remote.model.OrderMealDto
 import data.remote.model.RestaurantDto
 import data.remote.model.toEntity
 import data.remote.model.toOrderEntity
@@ -562,7 +563,13 @@ class FakeRemoteGateWay : IRemoteGateWay {
     )
 
     override suspend fun loginUser(userName: String, password: String): UserTokens {
-        return UserTokens(accessToken = "", refreshToken = "")
+        if (userName != "theChance") {
+            throw InvalidUserNameException("Invalid UserName")
+        }
+        if (password != "theChance23") {
+            throw InvalidPasswordException("Invalid Password")
+        }
+        return UserTokens(accessToken = "wertqyhgt", refreshToken = "qazswxza")
     }
 
 

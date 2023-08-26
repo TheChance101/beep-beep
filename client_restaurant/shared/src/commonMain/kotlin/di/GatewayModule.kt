@@ -11,5 +11,6 @@ import org.koin.dsl.module
 
 val GatewayModule = module {
     singleOf(::FakeRemoteGateWay){ bind<IRemoteGateWay>()}
-    singleOf(::LocalGateWay) { bind<ILocalGateWay>() }
+    singleOf(::RemoteGateWay) { bind<IRemoteGateWay>() }
+    singleOf(::LocalConfigurationGateway) { bind<ILocalConfigurationGateway>() }
 }
