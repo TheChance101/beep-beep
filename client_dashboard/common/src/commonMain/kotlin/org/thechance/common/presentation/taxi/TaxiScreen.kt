@@ -35,6 +35,7 @@ import org.thechance.common.presentation.composables.modifier.noRipple
 import org.thechance.common.presentation.composables.table.BpPager
 import org.thechance.common.presentation.composables.table.BpTable
 import org.thechance.common.presentation.composables.table.TotalItemsIndicator
+import org.thechance.common.presentation.resources.Resources
 
 class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiScreenInteractionListener>() {
 
@@ -87,29 +88,29 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
                 ) {
                     BpSimpleTextField(
                         modifier = Modifier.widthIn(max = 440.dp),
-                        hint = "Search for Taxis",
+                        hint = Resources.Strings.searchForTaxis,
                         onValueChange = listener::onSearchInputChange,
                         text = state.searchQuery,
                         keyboardType = KeyboardType.Text,
-                        trailingPainter = painterResource("ic_search.svg")
+                        trailingPainter = painterResource(Resources.Strings.searchIcon),
                     )
                     BpIconButton(
                         onClick = { /* TODO: Show Taxi Filter Dialog */ },
-                        painter = painterResource("ic_filter.svg"),
+                        painter = painterResource(Resources.Strings.filterIcon),
                     ) {
                         Text(
-                            text = "Filter",
+                            text = Resources.Strings.filter,
                             style = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
                         )
                     }
                     Spacer(modifier = Modifier.weight(1f))
                     BpOutlinedButton(
-                        title = "Export",
+                        title = Resources.Strings.export,
                         onClick = listener::onExportReportClicked,
                         textPadding = PaddingValues(horizontal = LocalDimensions.current.space24),
                     )
                     BpButton(
-                        title = "New Taxi",
+                        title = Resources.Strings.newTaxi,
                         onClick = listener::onAddNewTaxiClicked,
                         textPadding = PaddingValues(horizontal = LocalDimensions.current.space24),
                     )
@@ -137,7 +138,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
                 ) {
                     TotalItemsIndicator(
                         totalItems = state.taxis.size,
-                        itemType = "taxi",
+                        itemType = Resources.Strings.taxi,
                         numberItemInPage = state.taxiNumberInPage,
                         onItemPerPageChange = listener::onTaxiNumberChange
                     )
@@ -159,13 +160,13 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
                     onDismiss = listener::onDismissExportReportSnackBar
                 ) {
                     Image(
-                        painter = painterResource("ic_download_mark.svg"),
+                        painter = painterResource(Resources.Strings.iconDownloadMark),
                         contentDescription = null,
                         colorFilter = ColorFilter.tint(color = Theme.colors.success),
                         modifier = Modifier.padding(LocalDimensions.current.space16)
                     )
                     Text(
-                        text = "Your file download was successful.",
+                        text = Resources.Strings.downloadSuccessMessage,
                         style = Theme.typography.titleMedium,
                         color = Theme.colors.success,
                     )
@@ -208,7 +209,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
         ) {
             repeat(taxi.seats) {
                 Icon(
-                    painter = painterResource("outline_seat.xml"),
+                    painter = painterResource(Resources.Strings.seat),
                     contentDescription = null,
                     tint = Theme.colors.contentPrimary.copy(alpha = 0.87f),
                     modifier = Modifier.size(24.dp)
@@ -217,7 +218,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
         }
         TitleField(text = taxi.trips)
         Image(
-            painter = painterResource("horizontal_dots.xml"),
+            painter = painterResource(Resources.Strings.dots),
             contentDescription = null,
             modifier = Modifier.noRipple { onClickEdit(taxi.id) }
                 .weight(firstColumnWeight),
@@ -226,7 +227,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
     }
 
     @Composable
-   private fun RowScope.TitleField(
+    private fun RowScope.TitleField(
         text: String,
         modifier: Modifier = Modifier,
         color: Color = Theme.colors.contentPrimary,
