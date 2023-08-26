@@ -8,10 +8,8 @@ import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
 class RestaurantSelectionScreenModel(
-    private val ownerId: String,
     private val ownerRestaurants : IGetOwnerRestaurantsUseCase
-) :
-    BaseScreenModel<RestaurantScreenUIState, RestaurantSelectionScreenUIEffect>
+) : BaseScreenModel<RestaurantScreenUIState, RestaurantSelectionScreenUIEffect>
         (RestaurantScreenUIState()), RestaurantSelectionScreenInteractionListener {
 
     override val viewModelScope: CoroutineScope = coroutineScope
@@ -26,7 +24,7 @@ class RestaurantSelectionScreenModel(
     }
 
     private suspend fun callee(): List<Restaurant> {
-        return ownerRestaurants.getOwnerRestaurants(ownerId)
+        return ownerRestaurants.getOwnerRestaurants()
     }
 
     private fun onSuccess(restaurants: List<Restaurant>) {

@@ -31,7 +31,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -40,13 +39,12 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.RestaurantInformation
 import presentation.main.MainScreen
 import resources.Resources
 
-class RestaurantSelectionScreen(private val ownerId: String) : BaseScreen
+class RestaurantSelectionScreen : BaseScreen
 <RestaurantSelectionScreenModel,
         RestaurantScreenUIState,
         RestaurantSelectionScreenUIEffect,
@@ -54,7 +52,7 @@ class RestaurantSelectionScreen(private val ownerId: String) : BaseScreen
 
     @Composable
     override fun Content() {
-        initScreen(getScreenModel { parametersOf(ownerId) })
+        initScreen(getScreenModel())
     }
 
     @OptIn(ExperimentalResourceApi::class, ExperimentalFoundationApi::class)
@@ -108,7 +106,7 @@ class RestaurantSelectionScreen(private val ownerId: String) : BaseScreen
                 itemsIndexed(state.restaurants) { index, item ->
                     RestaurantSelectionItem(item, listener)
                     AnimatedVisibility(index != state.restaurants.size - 1) {
-                        Divider(Modifier.background(Theme.colors.divider).alpha(0.8f))
+                        Divider(Modifier.background(Theme.colors.divider))
                     }
                 }
             }

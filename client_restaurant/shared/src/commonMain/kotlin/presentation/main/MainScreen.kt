@@ -63,8 +63,8 @@ class MainScreen(private val restaurantId: String) :
                 onRestaurantSelect = listener::onRestaurantClicked,
                 onShowMenu = listener::onShowMenu,
                 onDismissMenu = listener::onDismissMenu,
-                restaurantName = state.restaurantName,
-                state = state.isOpen,
+                restaurantName = state.selectedRestaurant.restaurantName,
+                state = state.selectedRestaurant.isOpen,
                 expanded = state.expanded,
                 restaurants = state.restaurants,
                 modifier = Modifier.background(Theme.colors.surface)
