@@ -1,14 +1,10 @@
-import androidx.compose.ui.window.ComposeUIViewController
+import platform.UIKit.UIViewController
+import util.statusbar.WindowInsetsUIViewController
 
-fun MainViewController() = ComposeUIViewController {
-    App()
+fun MainViewController(): UIViewController {
+    return WindowInsetsUIViewController {
+        App()
+    }
 }
-
-// todo should run this after complete WindowInsetsUIViewController
-//fun MainViewController(): UIViewController {
-//    return WindowInsetsUIViewController {
-//        App()
-//    }
-//}
 
 

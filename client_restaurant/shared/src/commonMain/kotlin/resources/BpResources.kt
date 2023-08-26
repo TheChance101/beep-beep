@@ -28,8 +28,6 @@ fun BpRestaurantTheme(
 
     val windowInsetsController = rememberWindowInsetsController()
     LaunchedEffect(useDarkTheme) {
-        windowInsetsController?.setStatusBarContentColor(useDarkTheme)
-        windowInsetsController?.setNavigationBarsContentColor(useDarkTheme)
         windowInsetsController?.setIsNavigationBarsVisible(navigationBarsVisible)
         windowInsetsController?.setIsStatusBarsVisible(statusBarsVisible)
         windowInsetsController?.setSystemBarsBehavior(util.statusbar.SystemBarsBehavior.Immersive)

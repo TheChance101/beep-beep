@@ -1,13 +1,19 @@
 package util.statusbar
 
-actual class SystemBarsBehavior {
+import platform.UIKit.UIRectEdge
+
+actual class SystemBarsBehavior private constructor(
+    internal val preferredScreenEdgesDeferringSystemGesturesWhenHidden: UIRectEdge,
+) {
     actual companion object {
-        private val instance = SystemBarsBehavior()
+
+        actual val Default: SystemBarsBehavior = SystemBarsBehavior(
+            UIRectEdgeValue.None
+        )
 
 
-        actual val Default: SystemBarsBehavior = instance
-
-
-        actual val Immersive: SystemBarsBehavior = instance
+        actual val Immersive: SystemBarsBehavior = SystemBarsBehavior(
+            UIRectEdgeValue.All
+        )
     }
 }
