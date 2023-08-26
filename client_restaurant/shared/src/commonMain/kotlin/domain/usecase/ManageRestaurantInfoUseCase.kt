@@ -1,8 +1,7 @@
 package domain.usecase
 
 import domain.entity.Restaurant
-import domain.gateway.IRemoteGateway
-import domain.gateway.IRemoteRestaurantGateway
+import domain.gateway.IFakeRemoteGateway
 import presentation.base.ServerSideException
 
 interface IManageRestaurantInfoUseCase {
@@ -13,7 +12,7 @@ interface IManageRestaurantInfoUseCase {
     fun validateRestaurantDescription(description: String): Boolean
 }
 
-class ManageRestaurantInfoUseCase(private val remoteRestaurantGateway: IRemoteGateway) :
+class ManageRestaurantInfoUseCase(private val remoteRestaurantGateway: IFakeRemoteGateway) :
     IManageRestaurantInfoUseCase {
     override suspend fun getRestaurantInfo(restaurantId: String): Restaurant {
         return remoteRestaurantGateway.getRestaurantInfo(restaurantId)

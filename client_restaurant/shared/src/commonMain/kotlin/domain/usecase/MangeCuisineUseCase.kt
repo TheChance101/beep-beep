@@ -2,7 +2,7 @@ package domain.usecase
 
 import domain.entity.Cuisine
 import domain.entity.Meal
-import domain.gateway.IRemoteGateway
+import domain.gateway.IFakeRemoteGateway
 
 interface IMangeCuisineUseCase {
     suspend fun getCuisineByRestaurantId(id: String): List<Cuisine>
@@ -10,7 +10,7 @@ interface IMangeCuisineUseCase {
     suspend fun getMealsByCuisineId(id: String): List<Meal>
 }
 
-class MangeCuisineUseCase(private val remoteCuisineGateway: IRemoteGateway) :
+class MangeCuisineUseCase(private val remoteCuisineGateway: IFakeRemoteGateway) :
     IMangeCuisineUseCase {
     override suspend fun getCuisineByRestaurantId(id: String): List<Cuisine> {
         return remoteCuisineGateway.getCuisineByRestaurantId(id)
