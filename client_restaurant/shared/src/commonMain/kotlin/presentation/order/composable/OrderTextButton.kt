@@ -28,10 +28,7 @@ fun OrderTextButton(
         modifier = modifier.height(height),
         shape = shape,
         border = border,
-        contentPadding = PaddingValues(
-            vertical = Theme.dimens.space8,
-            horizontal = Theme.dimens.space16
-        )
+        contentPadding = PaddingValues(vertical = 8.dp, horizontal = 16.dp)
     ) {
         Text(text = text, style = Theme.typography.title, color = textColor)
     }

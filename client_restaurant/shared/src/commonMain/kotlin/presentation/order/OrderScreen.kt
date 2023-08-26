@@ -20,12 +20,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
+import domain.entity.OrderState
 import presentation.base.BaseScreen
 import presentation.composable.BpAppBar
-import presentation.login.LoginScreen
 import presentation.order.composable.OrderCard
 import presentation.order.composable.OrderTextButton
 import presentation.order.composable.header
@@ -36,8 +35,7 @@ class OrderScreen :
 
     @Composable
     override fun Content() {
-        val screenModel = rememberScreenModel { OrderScreenModel() }
-        initScreen(screenModel)
+        initScreen(getScreenModel())
     }
 
     override fun onEffect(effect: OrderScreenUiEffect, navigator: Navigator) {
@@ -64,23 +62,23 @@ class OrderScreen :
                 TotalOrders(
                     text = Resources.strings.totalOrders,
                     totalOrders = state.totalOrders,
-                    modifier = Modifier.padding(end = Theme.dimens.space16)
+                    modifier = Modifier.padding(end = 16.dp)
                 )
             }
 
 
             LazyVerticalStaggeredGrid(
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(Theme.dimens.space16),
+                contentPadding = PaddingValues(16.dp),
                 columns = StaggeredGridCells.Adaptive(minSize = 360.dp),
-                verticalItemSpacing = Theme.dimens.space8,
-                horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8)
+                verticalItemSpacing = 8.dp,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
 
                 header {
                     OrdersHeader(
                         text = Resources.strings.inCookingOrders,
-                        modifier = Modifier.padding(bottom = Theme.dimens.space8)
+                        modifier = Modifier.padding(bottom = 8.dp)
                     )
                 }
 
@@ -89,7 +87,7 @@ class OrderScreen :
                         OrderTextButton(
                             text = Resources.strings.finish,
                             onClick = {
-                                listener.onClickFinishOrder(order.id, OrderStateType.FINISH)
+                                listener.onClickFinishOrder(order.id, order.orderState)
                             }
                         )
                     }
@@ -98,10 +96,7 @@ class OrderScreen :
                 header {
                     OrdersHeader(
                         text = Resources.strings.requestedOrders,
-                        modifier = Modifier.padding(
-                            top = Theme.dimens.space16,
-                            bottom = Theme.dimens.space8
-                        )
+                        modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
                     )
                 }
 
@@ -111,7 +106,7 @@ class OrderScreen :
                             OrderTextButton(
                                 text = Resources.strings.cancel,
                                 onClick = {
-                                    listener.onClickCancelOrder(order.id, OrderStateType.CANCEL)
+                                    listener.onClickCancelOrder(order.id, OrderState.CANCELED)
                                 },
                                 textColor = Theme.colors.contentTertiary,
                                 border = BorderStroke(0.dp, color = Theme.colors.surface)
@@ -119,7 +114,7 @@ class OrderScreen :
                             OrderTextButton(
                                 text = Resources.strings.approve,
                                 onClick = {
-                                    listener.onClickCancelOrder(order.id, OrderStateType.APPROVE)
+                                    listener.onClickCancelOrder(order.id, order.orderState)
                                 },
                             )
                         }
@@ -148,7 +143,7 @@ class OrderScreen :
         Column(
             modifier = modifier,
             verticalArrangement = Arrangement.spacedBy(
-                Theme.dimens.space4,
+                4.dp,
                 alignment = Alignment.CenterVertically
             ),
             horizontalAlignment = Alignment.End
