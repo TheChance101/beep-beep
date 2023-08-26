@@ -652,7 +652,7 @@ class FakeRemoteGateway : IFakeRemoteGateWay {
         }
     }
 
-    override suspend fun getCuisine(restaurantId: String): List<Cuisine> {
+    override suspend fun getCuisineByRestaurantId(restaurantId: String): List<Cuisine> {
         return cuisines.toEntity()
     }
 

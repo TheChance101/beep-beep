@@ -2,7 +2,7 @@ package presentation.main
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Restaurant
-import domain.usecase.IGetRestaurantsInfoUseCase
+import domain.usecase.IGetOwnerRestaurantsUseCase
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
@@ -15,6 +15,8 @@ class MainScreenModel(
     MainScreenInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
 
+    private val iGetOwnerRestaurantsUseCase: IGetOwnerRestaurantsUseCase by inject()
+
     init {
         updateState { it.copy(selectedRestaurantId = restaurantId) }
         getData()
@@ -25,7 +27,7 @@ class MainScreenModel(
     }
 
     private suspend fun callee(): List<Restaurant> {
-        return getRestaurantsInformation("")
+        return iGetOwnerRestaurantsUseCase.getOwnerRestaurants("")
     }
 
     private fun onSuccess(restaurants: List<Restaurant>) {
