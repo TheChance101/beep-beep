@@ -2,7 +2,7 @@ package presentation.restaurantSelection
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Restaurant
-import domain.usecase.IGetOwnerRestaurantsInformationUseCase
+import domain.usecase.IGetRestaurantsInfoUseCase
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -15,7 +15,7 @@ class RestaurantSelectionScreenModel(private val ownerId: String) :
     RestaurantSelectionScreenInteractionListener, KoinComponent {
 
     override val viewModelScope: CoroutineScope = coroutineScope
-    private val getOwnerRestaurantsInformationUseCase: IGetOwnerRestaurantsInformationUseCase by inject()
+    private val getOwnerRestaurantsInformationUseCase: IGetRestaurantsInfoUseCase by inject()
 
     init {
         getData()
