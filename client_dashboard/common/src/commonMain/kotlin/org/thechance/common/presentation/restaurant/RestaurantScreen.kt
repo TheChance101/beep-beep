@@ -316,8 +316,8 @@ class RestaurantScreen :
                     selectedIcon = painterResource(Resources.Drawable.starFilled),
                     halfSelectedIcon = painterResource(Resources.Drawable.starHalfFilled),
                     notSelectedIcon = painterResource(Resources.Drawable.starOutlined),
-                    iconsSize = LocalDimensions.current.space24,
-                    iconsPadding = PaddingValues(horizontal = LocalDimensions.current.space8),
+                    iconsSize = 24.kms,
+                    iconsPadding = PaddingValues(horizontal = 8.kms),
                     modifier = Modifier.fillMaxWidth()
                         .padding(top = 16.kms)
                         .background(color = Theme.colors.background)

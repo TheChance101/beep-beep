@@ -6,8 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import org.thechance.common.LocalDimensions
 import org.thechance.common.presentation.resources.Resources
+import org.thechance.common.presentation.util.kms
 
 @Composable
 fun BpPager(

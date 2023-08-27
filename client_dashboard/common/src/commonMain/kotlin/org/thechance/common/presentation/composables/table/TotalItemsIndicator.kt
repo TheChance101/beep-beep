@@ -11,18 +11,14 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.LocalDimensions
 import org.thechance.common.presentation.resources.Resources
-import org.thechance.common.presentation.util.Constants
 import org.thechance.common.presentation.util.kms
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun TotalItemsIndicator(
     modifier: Modifier = Modifier,
