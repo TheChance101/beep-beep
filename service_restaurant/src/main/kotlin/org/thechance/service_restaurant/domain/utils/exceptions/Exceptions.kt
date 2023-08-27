@@ -24,6 +24,8 @@ const val INVALID_CUISINE_LIMIT = 2016
 
 const val INVALID_ADDRESS = 2017
 
+const val INVALID_EMAIL = 2018
+
 const val INVALID_REQUEST_PARAMETER = 2100
 const val NOT_FOUND = 2404
 const val ERROR_ADD = 2405

@@ -19,4 +19,5 @@ val UseCasesModule = module {
     single<IManageRestaurantDetailsUseCase> { ManageRestaurantDetailsUseCase(get(), get(), get(), get()) }
     single<IOrderValidationUseCase> { OrderValidationUseCase(get()) }
     single<IManageOrderUseCase> { ManageOrderUseCase(get(), get(), get() , get()) }
+    single<IManageRestaurantRequestUseCase> { ManageRestaurantRequestUseCase(get(), get()) }
 }

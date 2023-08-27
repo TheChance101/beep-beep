@@ -5,7 +5,7 @@ import org.thechance.service_restaurant.domain.entity.*
 interface IRestaurantGateway {
     //region request
     suspend fun getRestaurantPermissionRequests(): List<RestaurantPermissionRequest>
-    suspend fun createRestaurantPermissionRequest(request: RestaurantPermissionRequest): RestaurantPermissionRequest
+    suspend fun createRestaurantPermissionRequest(restaurantName: String, ownerEmail: String, cause: String): RestaurantPermissionRequest
     //endregion
 
     //region Get

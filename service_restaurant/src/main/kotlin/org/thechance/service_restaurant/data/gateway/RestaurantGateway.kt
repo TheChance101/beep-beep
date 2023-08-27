@@ -33,8 +33,16 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
         ).toList().toEntity()
     }
 
-    override suspend fun createRestaurantPermissionRequest(request: RestaurantPermissionRequest): RestaurantPermissionRequest {
-        val addedRequest = request.toCollection()
+    override suspend fun createRestaurantPermissionRequest(
+        restaurantName: String,
+        ownerEmail: String,
+        cause: String
+    ): RestaurantPermissionRequest {
+        val addedRequest = RestaurantPermissionRequestCollection(
+            restaurantName = restaurantName,
+            ownerEmail = ownerEmail,
+            cause = cause
+        )
         container.restaurantPermissionRequestCollection.insertOne(addedRequest)
         return addedRequest.toEntity()
     }
