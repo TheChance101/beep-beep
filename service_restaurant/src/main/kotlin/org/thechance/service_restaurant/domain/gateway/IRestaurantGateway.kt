@@ -3,13 +3,16 @@ package org.thechance.service_restaurant.domain.gateway
 import org.thechance.service_restaurant.domain.entity.*
 
 interface IRestaurantGateway {
+    //region request
+    suspend fun getRestaurantPermissionRequests(): List<RestaurantPermissionRequest>
+    suspend fun createRestaurantPermissionRequest(request: RestaurantPermissionRequest): RestaurantPermissionRequest
+    //endregion
 
     //region Get
     suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant>
     suspend fun getRestaurant(id: String): Restaurant?
     suspend fun getRestaurantIds(): List<String>
     suspend fun getCuisineInRestaurant(restaurantId: String): List<Cuisine>
-
     //endregion
 
     //region Add
@@ -37,5 +40,5 @@ interface IRestaurantGateway {
     suspend fun updateMeal(meal: MealDetails): Meal
     suspend fun deleteMealById(id: String): Boolean
     suspend fun deleteCuisineFromMeal(mealId: String, cuisineId: String): Boolean
-//endregion
+    //endregion
 }

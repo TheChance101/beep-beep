@@ -4,41 +4,41 @@ import com.mongodb.client.model.Accumulators
 import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.client.model.ReturnDocument
 import com.mongodb.client.model.Updates
-import org.litote.kmongo.addToSet
-import org.litote.kmongo.and
+import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
-import org.litote.kmongo.eq
-import org.litote.kmongo.group
-import org.litote.kmongo.`in`
-import org.litote.kmongo.lookup
-import org.litote.kmongo.match
-import org.litote.kmongo.pull
-import org.litote.kmongo.pullAll
-import org.litote.kmongo.set
-import org.litote.kmongo.setTo
-import org.litote.kmongo.unwind
 import org.thechance.service_restaurant.data.DataBaseContainer
-import org.thechance.service_restaurant.data.collection.CategoryCollection
-import org.thechance.service_restaurant.data.collection.CuisineCollection
-import org.thechance.service_restaurant.data.collection.MealCollection
-import org.thechance.service_restaurant.data.collection.RestaurantCollection
+import org.thechance.service_restaurant.data.collection.*
 import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.collection.relationModels.MealCuisines
 import org.thechance.service_restaurant.data.collection.relationModels.MealWithCuisines
 import org.thechance.service_restaurant.data.collection.relationModels.RestaurantCuisine
-import org.thechance.service_restaurant.data.utils.*
-import org.thechance.service_restaurant.domain.entity.Cuisine
-import org.thechance.service_restaurant.domain.entity.Meal
-import org.thechance.service_restaurant.domain.entity.MealDetails
-import org.thechance.service_restaurant.domain.entity.Restaurant
+import org.thechance.service_restaurant.data.utils.getNonEmptyFieldsMap
+import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
+import org.thechance.service_restaurant.data.utils.paginate
+import org.thechance.service_restaurant.data.utils.toUUIDs
+import org.thechance.service_restaurant.domain.entity.*
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.utils.exceptions.ERROR_ADD
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
-import java.util.UUID
+import java.util.*
 
 class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantGateway {
+
+    //region restaurant permission request
+    override suspend fun getRestaurantPermissionRequests(): List<RestaurantPermissionRequest> {
+        return container.restaurantPermissionRequestCollection.find(
+            RestaurantPermissionRequestCollection::isDeleted ne true
+        ).toList().toEntity()
+    }
+
+    override suspend fun createRestaurantPermissionRequest(request: RestaurantPermissionRequest): RestaurantPermissionRequest {
+        val addedRequest = request.toCollection()
+        container.restaurantPermissionRequestCollection.insertOne(addedRequest)
+        return addedRequest.toEntity()
+    }
+    //endregion
 
     //region Restaurant
     override suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant> {
