@@ -6,7 +6,6 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import org.thechance.service_restaurant.api.models.RestaurantPermissionRequestDto
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.domain.usecase.IManageRestaurantRequestUseCase
 
@@ -20,12 +19,11 @@ fun Route.restaurantPermissionRequestRoutes() {
         }
 
         post {
-            val restaurantPermissionRequest = call.receive<RestaurantPermissionRequestDto>()
-            val result = manageRestaurantRequestUseCase.createRestaurantRequest(
-                restaurantPermissionRequest.restaurantName.toString(),
-                restaurantPermissionRequest.ownerEmail.toString(),
-                restaurantPermissionRequest.cause.toString()
-            )
+            val params = call.receiveParameters()
+            val restaurantName = params["restaurantName"]?.trim().toString()
+            val ownerEmail = params["ownerEmail"]?.trim().toString()
+            val cause = params["cause"]?.trim().toString()
+            val result = manageRestaurantRequestUseCase.createRestaurantRequest(restaurantName, ownerEmail, cause)
             call.respond(HttpStatusCode.Created, result.toDto())
         }
     }
