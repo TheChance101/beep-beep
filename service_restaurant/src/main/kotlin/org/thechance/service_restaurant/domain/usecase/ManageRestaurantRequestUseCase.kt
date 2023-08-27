@@ -9,7 +9,12 @@ import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorExcept
 import org.thechance.service_restaurant.domain.utils.nullIfTrue
 
 interface IManageRestaurantRequestUseCase {
-    suspend fun createRestaurantRequest(restaurantName: String, ownerEmail: String, cause: String)
+    suspend fun createRestaurantRequest(
+        restaurantName: String,
+        ownerEmail: String,
+        cause: String
+    ): RestaurantPermissionRequest
+
     suspend fun getRestaurantRequests(): List<RestaurantPermissionRequest>
 }
 
@@ -17,13 +22,17 @@ class ManageRestaurantRequestUseCase(
     private val restaurantGateway: IRestaurantGateway,
     private val validations: IValidation
 ) : IManageRestaurantRequestUseCase {
-    override suspend fun createRestaurantRequest(restaurantName: String, ownerEmail: String, cause: String) {
+    override suspend fun createRestaurantRequest(
+        restaurantName: String,
+        ownerEmail: String,
+        cause: String
+    ): RestaurantPermissionRequest {
         validations.isValidName(restaurantName).nullIfTrue() ?: throw MultiErrorException(listOf(INVALID_NAME))
         validations.isValidEmail(ownerEmail).nullIfTrue() ?: throw MultiErrorException(listOf(INVALID_EMAIL))
-        restaurantGateway.createRestaurantPermissionRequest(restaurantName, ownerEmail, cause)
+        return restaurantGateway.createRestaurantPermissionRequest(restaurantName, ownerEmail, cause)
     }
 
-    override suspend fun getRestaurantRequests() : List<RestaurantPermissionRequest> {
+    override suspend fun getRestaurantRequests(): List<RestaurantPermissionRequest> {
         return restaurantGateway.getRestaurantPermissionRequests()
     }
 }
