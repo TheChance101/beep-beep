@@ -8,13 +8,12 @@ import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
-class RestaurantInfoScreenModel :
+class RestaurantInfoScreenModel(private val manageRestaurantInfo: IManageRestaurantInfoUseCase) :
     BaseScreenModel<RestaurantInfoUiState, RestaurantInfoUiEffect>(RestaurantInfoUiState()),
     RestaurantInfoInteractionListener {
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
 
-    private val manageRestaurantInfoUseCase: IManageRestaurantInfoUseCase by inject()
 
     init {
         getRestaurantInfo()
@@ -24,7 +23,7 @@ class RestaurantInfoScreenModel :
         updateState { it.copy(isLoading = true) }
         tryToExecute(
             {
-                manageRestaurantInfoUseCase
+                manageRestaurantInfo
                     .getRestaurantInfo()
             },
             ::onGetRestaurantInfoSuccess,
@@ -72,7 +71,7 @@ class RestaurantInfoScreenModel :
         val restaurant = state.value.restaurant.toRestaurant()
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            { manageRestaurantInfoUseCase.updateRestaurantInfo(restaurant) },
+            { manageRestaurantInfo.updateRestaurantInfo(restaurant) },
             ::onUpdateRestaurantInfoSuccess,
             ::onUpdateRestaurantInfoError
         )
