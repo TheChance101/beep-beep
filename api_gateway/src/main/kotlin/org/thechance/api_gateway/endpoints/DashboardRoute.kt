@@ -12,8 +12,10 @@ import org.thechance.api_gateway.endpoints.utils.respondWithResult
 fun Route.dashboardRoutes() {
     val restaurantGateway: IRestaurantGateway by inject()
 
-    authenticate("auth-jwt") {
-        route("/dashboard") {
+
+    route("/dashboard") {
+
+        authenticate("auth-jwt") {
             get("/restaurant-permission-request") {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
