@@ -26,9 +26,8 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.LocalDimensions
+import org.thechance.common.presentation.util.kms
 
 /**
  * @param rowsCount number of rows in the table without header row
@@ -45,9 +44,9 @@ fun <T> ColumnScope.BpTable(
     key: ((item: T) -> Any)? = null,
     shape: Shape = RoundedCornerShape(Theme.radius.medium),
     headerTextStyle: TextStyle = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
-    rowPadding: PaddingValues = PaddingValues(16.dp),
-    maxHeight: Dp = 72.dp,
-    border: Dp = 1.dp,
+    rowPadding: PaddingValues = PaddingValues(16.kms),
+    maxHeight: Dp = 72.kms,
+    border: Dp = 1.kms,
     borderColor: Color = Theme.colors.contentBorder,
     headerColor: Color = Theme.colors.background,
     rowsColor: Color = Theme.colors.surface,
@@ -81,7 +80,7 @@ fun <T> ColumnScope.BpTable(
                     Modifier.fillMaxWidth().background(rowsColor).padding(rowPadding)
                         .heightIn(max = maxHeight),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16),
+                    horizontalArrangement = Arrangement.spacedBy(16.kms),
                 ) {
                     rowContent(it)
                 }

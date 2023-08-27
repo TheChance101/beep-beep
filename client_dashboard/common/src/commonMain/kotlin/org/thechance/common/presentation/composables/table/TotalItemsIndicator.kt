@@ -16,17 +16,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.LocalDimensions
-import org.thechance.common.presentation.util.Constants
+import org.thechance.common.presentation.util.kms
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun TotalItemsIndicator(
     modifier: Modifier = Modifier,
     totalItems: Int,
-    maxNumberOfItems: Int = Constants.PAGE_MAX_NUMBER_OF_ITEMS,
+    maxNumberOfItems: Int = 50,
     numberItemInPage: Int,
     onItemPerPageChange: (Int) -> Unit,
     itemType: String,
@@ -34,20 +32,25 @@ fun TotalItemsIndicator(
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16)
+        horizontalArrangement = Arrangement.spacedBy(16.kms)
     ) {
         BasicTextField(
             modifier = Modifier
                 .border(
-                    width = 1.dp,
+                    width = 1.kms,
                     color = Theme.colors.contentBorder,
                     shape = RoundedCornerShape(Theme.radius.medium)
-                ).padding(vertical = LocalDimensions.current.space8).width(LocalDimensions.current.space40),
+                ).padding(vertical = 8.kms).width(40.kms),
             value = numberItemInPage.toString(),
             onValueChange = {
+
                 runCatching {
                     onItemPerPageChange(
-                        if (it.toInt() >= maxNumberOfItems) maxNumberOfItems else it.toInt()
+                        when {
+                            it.toInt() >= maxNumberOfItems -> maxNumberOfItems
+                            it.toInt() <= 0 -> 1
+                            else -> it.toInt()
+                        }
                     )
                 }
             },

@@ -3,13 +3,16 @@ package org.thechance.api_gateway.data.security
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import org.koin.core.annotation.Single
-import org.thechance.api_gateway.data.gateway.ITokenService
 import org.thechance.api_gateway.data.model.TokenClaim
 import org.thechance.api_gateway.data.model.TokenConfiguration
 import java.util.*
 
+interface ITokenService {
+    fun generateToken(tokenConfig: TokenConfiguration, vararg tokenClaim: TokenClaim): String
+}
+
 @Single(binds = [ITokenService::class])
-class ITokenServiceImpl : ITokenService {
+class TokenService : ITokenService {
 
     override fun generateToken(
         tokenConfig: TokenConfiguration,

@@ -67,7 +67,7 @@ object MainContainer : Screen, KoinComponent {
             sideBar = {
                 DashboardSideBar(
                     currentItem = tabNavigator.current.options.index.toInt()
-                ) { sideBarUnexpandedWidthInKms ,mainMenuIsExpanded, itemHeight ->
+                ) { sideBarUnexpandedWidthInKms, mainMenuIsExpanded, itemHeight ->
                     TabNavigationItem(
                         tab = OverviewTab,
                         selectedIconResource = "ic_overview_fill.svg",

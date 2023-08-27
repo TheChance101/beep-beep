@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.LocalDimensions
+import org.thechance.common.presentation.util.kms
 
 @Composable
 fun BpDropdownMenuItem(
@@ -27,6 +27,7 @@ fun BpDropdownMenuItem(
         DropdownMenuItem(
             modifier= Modifier.padding(horizontal = LocalDimensions.current.space8),
             onClick = onClick,
+            contentPadding = PaddingValues(horizontal = 8.kms),
             text = {
                 Text(
                     text = text,
@@ -40,16 +41,16 @@ fun BpDropdownMenuItem(
                         painter = painterResource(leadingIconPath),
                         contentDescription = null,
                         tint = if (isSecondary) Theme.colors.contentSecondary else Theme.colors.contentPrimary,
-                        modifier = Modifier.size(LocalDimensions.current.space24)
+                        modifier = Modifier.size(16.kms)
                     )
                 }
             } else null,
         )
         if (showBottomDivider) {
             Divider(
-                thickness = LocalDimensions.current.space1,
+                thickness = 1.kms,
                 color = Theme.colors.divider,
-                modifier = Modifier.padding(horizontal = LocalDimensions.current.space8)
+                modifier = Modifier.padding(horizontal = 8.kms)
             )
         }
     }

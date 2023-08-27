@@ -54,12 +54,13 @@ object RestaurantsTab : Tab {
 
 object UsersTab : Tab {
     override val options: TabOptions
-    @Composable get() {
+        @Composable get() {
             val title = "Users"
             return remember { TabOptions(index = 3u, title = title) }
         }
 
-    @Composable override fun Content() {
-       Navigator(screen = UserScreen())
+    @Composable
+    override fun Content() {
+        Navigator(screen = UserScreen())
     }
 }

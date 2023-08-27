@@ -34,7 +34,6 @@ import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.LocalDimensions
 import org.thechance.common.presentation.base.BaseScreen
 import org.thechance.common.presentation.composables.BpDropdownMenu
 import org.thechance.common.presentation.composables.EditablePriceBar
@@ -47,6 +46,7 @@ import org.thechance.common.presentation.composables.modifier.noRipple
 import org.thechance.common.presentation.composables.table.BpPager
 import org.thechance.common.presentation.composables.table.BpTable
 import org.thechance.common.presentation.composables.table.TotalItemsIndicator
+import org.thechance.common.presentation.util.kms
 
 class RestaurantScreen :
     BaseScreen<RestaurantScreenModel, RestaurantUIEffect, RestaurantUiState, RestaurantInteractionListener>() {
@@ -85,7 +85,7 @@ class RestaurantScreen :
         Column(
             Modifier.background(Theme.colors.surface).fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16),
+            verticalArrangement = Arrangement.spacedBy(16.kms),
         ) {
             RestaurantScreenTopRow(state = state, listener = listener)
 
@@ -103,11 +103,11 @@ class RestaurantScreen :
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16),
+            horizontalArrangement = Arrangement.spacedBy(16.kms),
             verticalAlignment = Alignment.Top
         ) {
             BpSimpleTextField(
-                modifier = Modifier.widthIn(min = 340.dp, max = 440.dp),
+                modifier = Modifier.widthIn(min = 340.kms, max = 440.kms),
                 hint = "Search for restaurants",
                 onValueChange = listener::onSearchChange,
                 text = state.search,
@@ -122,19 +122,19 @@ class RestaurantScreen :
             BpOutlinedButton(
                 title = "Export",
                 onClick = { /* TODO: Export */ },
-                textPadding = PaddingValues(horizontal = LocalDimensions.current.space24),
+                textPadding = PaddingValues(horizontal = 24.kms),
                 modifier = Modifier.cursorHoverIconHand()
             )
             BpOutlinedButton(
                 title = "Add cuisine",
                 onClick = { /* TODO: Show Add cuisine DropdownMenu */ },
-                textPadding = PaddingValues(horizontal = LocalDimensions.current.space24),
+                textPadding = PaddingValues(horizontal = 24.kms),
                 modifier = Modifier.cursorHoverIconHand()
             )
             BpButton(
                 title = "New Restaurant",
                 onClick = listener::onAddNewRestaurantClicked,
-                textPadding = PaddingValues(horizontal = LocalDimensions.current.space24),
+                textPadding = PaddingValues(horizontal = 24.kms),
                 modifier = Modifier.cursorHoverIconHand()
             )
         }
@@ -228,14 +228,14 @@ class RestaurantScreen :
             selectedIcon = painterResource(if (isSystemInDarkTheme()) "ic_filled_star_dark.svg" else "ic_filled_star_light.svg"),
             halfSelectedIcon = painterResource(if (isSystemInDarkTheme()) "ic_half_filled_star_dark.svg" else "ic_half_filled_star_light.svg"),
             modifier = Modifier.weight(otherColumnsWeight),
-            iconsSize = LocalDimensions.current.space16
+            iconsSize = 16.kms
         )
         PriceBar(
             priceLevel = restaurant.priceLevel,
             icon = painterResource("ic_dollar_sign.svg"),
             iconColor = Theme.colors.success,
             modifier = Modifier.weight(otherColumnsWeight),
-            iconsSize = LocalDimensions.current.space16
+            iconsSize = 16.kms
         )
 
         Text(
@@ -303,12 +303,12 @@ class RestaurantScreen :
         BpDropdownMenu(
             onDismissRequest = onDismissRequest,
             expanded = expanded,
-            shape = RoundedCornerShape(LocalDimensions.current.space8),
+            shape = RoundedCornerShape(8.kms),
         ) {
             Column(
                 modifier = Modifier.background(
                     color = Theme.colors.surface,
-                    shape = RoundedCornerShape(LocalDimensions.current.space8)
+                    shape = RoundedCornerShape(8.kms)
                 )
             ) {
                 Text(
@@ -316,8 +316,8 @@ class RestaurantScreen :
                     style = Theme.typography.headline,
                     color = Theme.colors.contentPrimary,
                     modifier = Modifier.padding(
-                        start = LocalDimensions.current.space24,
-                        top = LocalDimensions.current.space24
+                        start = 24.kms,
+                        top = 24.kms
                     )
                 )
                 Text(
@@ -325,8 +325,8 @@ class RestaurantScreen :
                     style = Theme.typography.title,
                     color = Theme.colors.contentPrimary,
                     modifier = Modifier.padding(
-                        start = LocalDimensions.current.space24,
-                        top = LocalDimensions.current.space40
+                        start = 24.kms,
+                        top = 40.kms
                     )
                 )
                 EditableRatingBar(
@@ -341,14 +341,14 @@ class RestaurantScreen :
                     notSelectedIcon = painterResource(
                         if (isSystemInDarkTheme()) "ic_star_dark.svg" else "ic_star_light.svg"
                     ),
-                    iconsSize = LocalDimensions.current.space24,
-                    iconsPadding = PaddingValues(horizontal = LocalDimensions.current.space8),
+                    iconsSize = 24.kms,
+                    iconsPadding = PaddingValues(horizontal = 8.kms),
                     modifier = Modifier.fillMaxWidth()
-                        .padding(top = LocalDimensions.current.space16)
+                        .padding(top = 16.kms)
                         .background(color = Theme.colors.background)
                         .padding(
-                            horizontal = LocalDimensions.current.space24,
-                            vertical = LocalDimensions.current.space16
+                            horizontal = 24.kms,
+                            vertical = 16.kms
                         ),
                     onClick = { onClickRating(it) }
                 )
@@ -358,8 +358,8 @@ class RestaurantScreen :
                     style = Theme.typography.title,
                     color = Theme.colors.contentPrimary,
                     modifier = Modifier.padding(
-                        start = LocalDimensions.current.space24,
-                        top = LocalDimensions.current.space32
+                        start = 24.kms,
+                        top = 32.kms
                     )
                 )
                 EditablePriceBar(
@@ -368,33 +368,33 @@ class RestaurantScreen :
                     icon = painterResource("ic_dollar_sign.svg"),
                     enabledIconsColor = Theme.colors.success,
                     disabledIconsColor = Theme.colors.disable,
-                    iconsPadding = PaddingValues(horizontal = LocalDimensions.current.space8),
-                    iconsSize = LocalDimensions.current.space16,
+                    iconsPadding = PaddingValues(horizontal = 8.kms),
+                    iconsSize = 16.kms,
                     modifier = Modifier.fillMaxWidth()
-                        .padding(top = LocalDimensions.current.space16)
+                        .padding(top = 16.kms)
                         .background(color = Theme.colors.background)
                         .padding(
-                            horizontal = LocalDimensions.current.space24,
-                            vertical = LocalDimensions.current.space16
+                            horizontal = 24.kms,
+                            vertical = 16.kms
                         ),
                     onClick = { onClickPrice(it) }
                 )
 
                 Row(
-                    Modifier.fillMaxWidth().padding(LocalDimensions.current.space24),
+                    Modifier.fillMaxWidth().padding(24.kms),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     BpTransparentButton(
                         title = "Cancel",
                         onClick = { onClickCancel(); onDismissRequest() },
-                        modifier = Modifier.padding(end = LocalDimensions.current.space16)
-                            .height(LocalDimensions.current.space32)
+                        modifier = Modifier.padding(end = 16.kms)
+                            .height(32.kms)
                             .weight(1f)
                     )
                     BpOutlinedButton(
                         title = "Save",
                         onClick = { onClickSave(); onDismissRequest() },
-                        modifier = Modifier.height(LocalDimensions.current.space32).weight(3f),
+                        modifier = Modifier.height(32.kms).weight(3f),
                         textPadding = PaddingValues(0.dp)
                     )
                 }

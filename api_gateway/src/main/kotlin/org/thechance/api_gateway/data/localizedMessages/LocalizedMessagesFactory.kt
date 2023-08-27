@@ -1,6 +1,11 @@
-package org.thechance.api_gateway.data.localized_messages
+package org.thechance.api_gateway.data.localizedMessages
 
 import org.koin.core.annotation.Single
+import org.thechance.api_gateway.data.localizedMessages.languages.ArabicLocalizedMessages
+import org.thechance.api_gateway.data.localizedMessages.languages.EgyptLocalizedMessages
+import org.thechance.api_gateway.data.localizedMessages.languages.EnglishLocalizedMessages
+import org.thechance.api_gateway.data.localizedMessages.languages.LocalizedMessages
+import org.thechance.api_gateway.data.localizedMessages.languages.PalestineLocalizedMessages
 import java.util.*
 
 @Single

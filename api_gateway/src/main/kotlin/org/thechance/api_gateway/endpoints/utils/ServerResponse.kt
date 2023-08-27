@@ -4,11 +4,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ServerResponse<T>(
-        val value: T?,
-        val isSuccess: Boolean = true,
-        val status: ResponseStatus,
-
-        ) {
+    val value: T?,
+    val isSuccess: Boolean = true,
+    val status: ResponseStatus,
+) {
 
     companion object {
 
@@ -35,5 +34,4 @@ data class ServerResponse<T>(
         val successMessage: String? = null,
         val code: Int?
     )
-
 }
