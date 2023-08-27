@@ -1,4 +1,4 @@
-package org.thechance.api_gateway.endpoints
+package org.thechance.api_gateway.endpoints.gateway
 
 import org.thechance.api_gateway.data.model.TokenConfiguration
 import org.thechance.api_gateway.data.model.UserManagement
@@ -6,11 +6,7 @@ import org.thechance.api_gateway.data.model.UserTokens
 import org.thechance.api_gateway.data.model.identity.UserManagementResource
 import java.util.*
 
-interface IApiGateway {
-
-    // region identity
-
-    // region User
+interface IIdentityGateway {
     suspend fun createUser(
         fullName: String,
         username: String,
@@ -34,10 +30,6 @@ interface IApiGateway {
     ): List<UserManagementResource>
 
     suspend fun getUserByUsername(username: String): UserManagement
-
-    // endregion: user
-
-
 
     suspend fun generateUserTokens(
         userId: String,
