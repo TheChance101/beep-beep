@@ -740,7 +740,7 @@ class FakeRemoteGateway(
     }
 
 
-    override suspend fun createTaxi(taxi: AddTaxi): Taxi {
+    override suspend fun createTaxi(taxi: NewTaxiInfo): Taxi {
         val taxiDto = taxi.toDto()
         taxis.add(TaxiDto(
                 id = UUID.randomUUID().toString(),

@@ -34,7 +34,7 @@ fun AddTaxiDialog(
     onCarColorSelected: (CarColor) -> Unit,
     onDriverUserNamChange: (String) -> Unit,
     onTaxiPlateNumberChange: (String) -> Unit,
-    state: AddTaxiDialogUiState,
+    state: NewTaxiInfoUiState,
     modifier: Modifier = Modifier,
 ) {
 

@@ -14,7 +14,7 @@ data class TaxiUiState(
     val isLoading: Boolean = false,
     val error: ErrorState = ErrorState.UnKnownError,
     val isAddNewTaxiDialogVisible: Boolean = false,
-    val addNewTaxiDialogUiState: AddTaxiDialogUiState = AddTaxiDialogUiState(),
+    val newTaxiInfo: NewTaxiInfoUiState = NewTaxiInfoUiState(),
     val taxiFilterUiState: TaxiFilterUiState = TaxiFilterUiState(),
     val taxis: List<TaxiDetailsUiState> = emptyList(),
     val searchQuery: String = "",
@@ -75,7 +75,7 @@ data class TaxiPageInfoUiState(
     val numberOfTaxis: Int = 0,
     val totalPages: Int = 0,
 )
-data class AddTaxiDialogUiState(
+data class NewTaxiInfoUiState(
     val plateNumber: String = "",
     val driverUserName: String = "",
     val carModel: String = "",
@@ -122,7 +122,7 @@ fun Taxi.toUiState(): TaxiDetailsUiState = TaxiDetailsUiState(
 )
 
 fun List<Taxi>.toUiState() = map { it.toUiState() }
-fun AddTaxiDialogUiState.toEntity() = AddTaxi(plateNumber, driverUserName, carModel, selectedCarColor, seats)
+fun NewTaxiInfoUiState.toEntity() = NewTaxiInfo(plateNumber, driverUserName, carModel, selectedCarColor, seats)
 
 fun TaxiDetailsUiState.toEntity(): Taxi = Taxi(
     id = id,

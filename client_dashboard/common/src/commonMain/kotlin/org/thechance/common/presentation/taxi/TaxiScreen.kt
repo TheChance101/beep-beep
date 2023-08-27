@@ -80,7 +80,7 @@ class TaxiScreen :
             onCarModelChange = listener::onCarModelChanged,
             onCarColorSelected = listener::onCarColorSelected,
             onSeatsSelected = listener::onSeatSelected,
-            state = state.addNewTaxiDialogUiState,
+            state = state.newTaxiInfo,
             onCreateTaxiClicked = listener::onCreateTaxiClicked
         )
 

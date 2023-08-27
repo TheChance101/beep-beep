@@ -104,34 +104,34 @@ class TaxiScreenModel(
 
     override fun onTaxiPlateNumberChange(number: String) {
         updateState {
-            it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(plateNumber = number))
+            it.copy(newTaxiInfo = it.newTaxiInfo.copy(plateNumber = number))
         }
     }
 
     override fun onDriverUserNamChange(name: String) {
         updateState {
-            it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(driverUserName = name))
+            it.copy(newTaxiInfo = it.newTaxiInfo.copy(driverUserName = name))
         }
     }
 
     override fun onCarModelChanged(model: String) {
-        updateState { it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(carModel = model)) }
+        updateState { it.copy(newTaxiInfo = it.newTaxiInfo.copy(carModel = model)) }
     }
 
     override fun onCarColorSelected(color: CarColor) {
         updateState {
-            it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(selectedCarColor = color))
+            it.copy(newTaxiInfo = it.newTaxiInfo.copy(selectedCarColor = color))
         }
     }
 
     override fun onSeatSelected(seats: Int) {
-        updateState { it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(seats = seats)) }
+        updateState { it.copy(newTaxiInfo = it.newTaxiInfo.copy(seats = seats)) }
     }
 
     override fun onCreateTaxiClicked() {
         updateState { it.copy(isAddNewTaxiDialogVisible = false) }
         tryToExecute(
-            { createNewTaxi.createTaxi(mutableState.value.addNewTaxiDialogUiState.toEntity()) },
+            { createNewTaxi.createTaxi(mutableState.value.newTaxiInfo.toEntity()) },
             ::onCreateTaxiSuccessfully,
             ::onError
         )

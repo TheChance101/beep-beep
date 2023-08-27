@@ -11,7 +11,7 @@ interface IRemoteGateway {
 
     suspend fun getTaxis(page: Int, numberOfUsers: Int): DataWrapper<Taxi>
 
-    suspend fun createTaxi(taxi: AddTaxi): Taxi
+    suspend fun createTaxi(taxi: NewTaxiInfo): Taxi
 
     suspend fun findTaxiByUsername(username: String, page: Int, offset:Int): DataWrapper<Taxi>
 
