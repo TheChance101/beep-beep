@@ -52,7 +52,7 @@ fun <T> ColumnScope.BpTable(
     rowsColor: Color = Theme.colors.surface,
     rowContent: @Composable RowScope.(T) -> Unit,
 ) {
-    Box(modifier = Modifier.weight(1f).padding(bottom = LocalDimensions.current.space16)) {
+    Box(modifier = Modifier.weight(1f).padding(bottom = 16.kms)) {
         LazyColumn(
             modifier = modifier.clip(shape = shape).border(border, borderColor, shape),
         ) {

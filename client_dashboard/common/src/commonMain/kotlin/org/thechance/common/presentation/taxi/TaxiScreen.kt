@@ -29,11 +29,15 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.*
 import com.beepbeep.designSystem.ui.theme.Theme
 import kotlinx.coroutines.delay
-import org.thechance.common.LocalDimensions
 import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.presentation.base.BaseScreen
 import org.thechance.common.presentation.composables.*
+import org.thechance.common.presentation.composables.modifier.cursorHoverIconHand
+import org.thechance.common.presentation.composables.modifier.noRipple
+import org.thechance.common.presentation.composables.table.BpPager
+import org.thechance.common.presentation.composables.table.BpTable
+import org.thechance.common.presentation.composables.table.TotalItemsIndicator
 import org.thechance.common.presentation.util.kms
 
 class TaxiScreen :
@@ -198,7 +202,7 @@ class TaxiScreen :
         BpDropdownMenu(
             expanded = isFilterDropdownMenuExpanded,
             onDismissRequest = onFilterMenuDismiss,
-            offset = DpOffset.Zero.copy(y = LocalDimensions.current.space16),
+            offset = DpOffset.Zero.copy(y = 16.kms),
             shape = RoundedCornerShape(Theme.radius.medium).copy(topStart = CornerSize(Theme.radius.small)),
             modifier = Modifier.width(400.dp),
         ) {
@@ -221,7 +225,7 @@ class TaxiScreen :
                             modifier = Modifier
                                 .padding(
                                     horizontal =  24.kms,
-                                    vertical = LocalDimensions.current.space16
+                                    vertical = 16.kms
                                 ),
                         )
                         CarStatus(
@@ -240,14 +244,14 @@ class TaxiScreen :
                             color = Theme.colors.contentPrimary,
                             modifier = Modifier.padding(
                                 horizontal =  24.kms,
-                                vertical = LocalDimensions.current.space16
+                                vertical = 16.kms
                             ),
                         )
                         CarColors(
                             modifier = Modifier.fillMaxWidth()
                                 .background(color = Theme.colors.background).padding(
                                     horizontal =  24.kms,
-                                    vertical = LocalDimensions.current.space16
+                                    vertical = 16.kms
                                 ),
                             colors = CarColor.values().toList(),
                             onSelectColor = onCarColorSelected,
@@ -259,7 +263,7 @@ class TaxiScreen :
                             color = Theme.colors.contentPrimary,
                             modifier = Modifier.padding(
                                 horizontal =  24.kms,
-                                vertical = LocalDimensions.current.space16
+                                vertical = 16.kms
                             )
                         )
                         SeatsBar(
@@ -272,17 +276,17 @@ class TaxiScreen :
                                 if (isSystemInDarkTheme()) "ic_outlined_seat_dark.svg" else "ic_outlined_seat_light.svg"
                             ),
                             iconsSize =  24.kms,
-                            iconsPadding = PaddingValues(horizontal = LocalDimensions.current.space8),
+                            iconsPadding = PaddingValues(horizontal = 8.kms),
                             modifier = Modifier.fillMaxWidth()
                                 .background(color = Theme.colors.background).padding(
                                     horizontal =  24.kms,
-                                    vertical = LocalDimensions.current.space16
+                                    vertical = 16.kms
                                 ),
                             onClick = onSeatsSelected
                         )
                         Row(
                             Modifier.padding( 24.kms),
-                            horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16),
+                            horizontalArrangement = Arrangement.spacedBy(16.kms),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             BpTransparentButton(
@@ -402,7 +406,7 @@ class TaxiScreen :
             expanded = taxi.username == editTaxiMenu.username,
             onDismissRequest = onDropdownMenuDismiss,
             shape = RoundedCornerShape(Theme.radius.medium),
-            offset = DpOffset.Zero.copy(x = -LocalDimensions.current.space100)
+            offset = DpOffset.Zero.copy(x = (-100).kms)
         ) {
             Column {
                 editTaxiMenu.items.forEach {
@@ -469,11 +473,11 @@ class TaxiScreen :
         Row(
             modifier = modifier,
             verticalAlignment = Alignment.Top,
-            horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16)
+            horizontalArrangement = Arrangement.spacedBy(16.kms)
         ) {
             status.forEach { status ->
                 BpChip(
-                    modifier = Modifier.height(LocalDimensions.current.space32),
+                    modifier = Modifier.height(32.kms),
                     label = status.getStatusName(),
                     onClick = { onSelectState(status) },
                     isSelected = selectedStatus == status,
