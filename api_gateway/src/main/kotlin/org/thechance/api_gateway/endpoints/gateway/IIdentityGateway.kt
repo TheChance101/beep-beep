@@ -1,7 +1,6 @@
 package org.thechance.api_gateway.endpoints.gateway
 
 import org.thechance.api_gateway.data.model.TokenConfiguration
-import org.thechance.api_gateway.data.model.UserManagement
 import org.thechance.api_gateway.data.model.UserTokens
 import org.thechance.api_gateway.data.model.identity.UserManagementResource
 import java.util.*
@@ -13,7 +12,7 @@ interface IIdentityGateway {
         password: String,
         email: String,
         locale: Locale
-    ): Boolean
+    ): UserManagementResource
 
     suspend fun loginUser(
         userName: String,
@@ -29,7 +28,7 @@ interface IIdentityGateway {
         locale: Locale
     ): List<UserManagementResource>
 
-    suspend fun getUserByUsername(username: String): UserManagement
+    suspend fun getUserByUsername(username: String): UserManagementResource
 
     suspend fun generateUserTokens(
         userId: String,
