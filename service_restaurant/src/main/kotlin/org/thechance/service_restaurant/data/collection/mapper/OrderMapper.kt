@@ -1,5 +1,6 @@
 package org.thechance.service_restaurant.data.collection.mapper
 
+import org.bson.types.ObjectId
 import org.thechance.service_restaurant.data.collection.OrderCollection
 import org.thechance.service_restaurant.data.collection.OrderMealCollection
 import org.thechance.service_restaurant.data.utils.toUUID
@@ -9,9 +10,9 @@ import org.thechance.service_restaurant.domain.entity.OrderMeal
 
 fun Order.toCollection(): OrderCollection {
     return OrderCollection(
-        id = id.toUUID(),
-        userId = userId.toUUID(),
-        restaurantId = restaurantId.toUUID(),
+        id = ObjectId(id),
+        userId = ObjectId(userId),
+        restaurantId = ObjectId(restaurantId),
         meals = meals.map { it.toCollection() },
         totalPrice = totalPrice,
         createdAt = createdAt,
@@ -40,7 +41,7 @@ fun OrderMealCollection.toEntity(): OrderMeal {
 
 fun OrderMeal.toCollection(): OrderMealCollection {
     return OrderMealCollection(
-        mealId = meadId.toUUID(),
+        mealId = ObjectId(meadId),
         quantity = quantity
     )
 }

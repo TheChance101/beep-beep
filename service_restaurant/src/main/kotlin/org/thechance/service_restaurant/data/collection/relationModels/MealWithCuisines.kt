@@ -10,16 +10,16 @@ import java.util.*
 
 @Serializable
 data class MealWithCuisines(
+    @SerialName("_id")
     @BsonId
     @Contextual
-    @SerialName("_id")
-    val id: UUID = UUID.randomUUID(),
+    val id: ObjectId = ObjectId(),
     val name: String,
     val description: String,
     val isDeleted: Boolean = false,
     val price: Double,
     val currency:String,
     @Contextual
-    val restaurantId: UUID = UUID.randomUUID(),
+    val restaurantId: ObjectId,
     val cuisines: List<CuisineCollection>,
 )
