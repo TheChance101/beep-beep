@@ -73,11 +73,11 @@ class TaxiScreenModel(
     }
 
     private fun onExportTaxisReportSuccessfully() {
-        updateState { it.copy(isExportReportSuccessfully = true) }
+        updateState { it.copy(isReportExportedSuccessfully = true) }
     }
 
     override fun onDismissExportReportSnackBar() {
-        updateState { it.copy(isExportReportSuccessfully = false) }
+        updateState { it.copy(isReportExportedSuccessfully = false) }
     }
 
     //endregion

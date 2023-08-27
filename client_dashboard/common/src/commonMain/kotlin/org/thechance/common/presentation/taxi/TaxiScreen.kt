@@ -167,7 +167,7 @@ class TaxiScreen :
             }
 
             AnimatedVisibility(
-                visible = state.isExportReportSuccessfully,
+                visible = state.isReportExportedSuccessfully,
                 enter = fadeIn(initialAlpha = 0.3f),
                 exit = fadeOut(targetAlpha = 0.3f)
             ) {
@@ -189,8 +189,8 @@ class TaxiScreen :
                 }
             }
 
-            LaunchedEffect(state.isExportReportSuccessfully) {
-                if (state.isExportReportSuccessfully) {
+            LaunchedEffect(state.isReportExportedSuccessfully) {
+                if (state.isReportExportedSuccessfully) {
                     delay(2000)
                     listener.onDismissExportReportSnackBar()
                 }

@@ -2,14 +2,14 @@ package org.thechance.common.data.remote.gateway
 
 
 import org.thechance.common.data.local.LocalGateway
-import org.thechance.common.data.remote.mapper.*
+import org.thechance.common.data.remote.mapper.toDto
+import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.*
 import org.thechance.common.data.service.IFakeService
 import org.thechance.common.domain.entity.*
 import org.thechance.common.domain.getway.IRemoteGateway
 import java.util.*
-import kotlin.math.ceil
-import kotlin.math.floor
+import kotlin.math.*
 
 class FakeRemoteGateway(
     private val fakeService: IFakeService,

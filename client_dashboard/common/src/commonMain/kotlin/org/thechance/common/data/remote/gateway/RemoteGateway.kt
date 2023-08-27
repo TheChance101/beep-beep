@@ -1,28 +1,17 @@
 package org.thechance.common.data.remote.gateway
 
 import com.google.gson.Gson
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.plugins.*
-import io.ktor.client.request.*
-import io.ktor.client.request.forms.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.request.forms.submitForm
+import io.ktor.client.request.header
+import io.ktor.client.request.url
+import io.ktor.client.statement.HttpResponse
+import io.ktor.http.Parameters
 import org.thechance.common.data.remote.model.ServerResponse
 import org.thechance.common.data.remote.model.UserTokensRemoteDto
-import org.thechance.common.domain.entity.AddRestaurant
-import org.thechance.common.domain.entity.NewTaxiInfo
-import org.thechance.common.domain.entity.Admin
-import org.thechance.common.domain.entity.CarColor
-import org.thechance.common.domain.entity.DataWrapper
-import org.thechance.common.domain.entity.InvalidCredentialsException
-import org.thechance.common.domain.entity.Location
-import org.thechance.common.domain.entity.NoInternetException
-import org.thechance.common.domain.entity.Restaurant
-import org.thechance.common.domain.entity.Taxi
-import org.thechance.common.domain.entity.UnknownErrorException
-import org.thechance.common.domain.entity.User
-import org.thechance.common.domain.entity.UserNotFoundException
+import org.thechance.common.domain.entity.*
 import org.thechance.common.domain.getway.IRemoteGateway
 import org.thechance.common.domain.util.TaxiStatus
 import java.net.ConnectException
@@ -38,38 +27,33 @@ class RemoteGateway(
     }
 
     override fun getUsers(page: Int, numberOfUsers: Int): DataWrapper<User> {
-        return DataWrapper(
-            totalPages = 0,
-            numberOfResult = 0,
-            result = emptyList(),
-        )
+        return DataWrapper(totalPages = 0, numberOfResult = 0, result = emptyList(),)
     }
 
     override suspend fun getTaxis(page: Int, numberOfUsers: Int): DataWrapper<Taxi> {
-        return DataWrapper(
-            totalPages = 0,
-            numberOfResult = 0,
-            result = emptyList(),
-        )
+        return DataWrapper(totalPages = 0, numberOfResult = 0, result = emptyList(),)
     }
 
 
     override suspend fun createTaxi(taxi: NewTaxiInfo): Taxi {
-        println("createTaxi: $taxi")
-        return Taxi("1", "1", CarColor.BLACK, "1", 4, "1", TaxiStatus.OFFLINE, "1")
+        return Taxi(
+            "1",
+            "1",
+            CarColor.BLACK,
+            "1",
+            4,
+            "1",
+            TaxiStatus.OFFLINE,
+            "1")
     }
 
-    override suspend fun findTaxiByUsername(username: String, page: Int, offset: Int): DataWrapper<Taxi> {
-        return DataWrapper(
-            totalPages = 0,
-            numberOfResult = 0,
-            result = emptyList(),
-        )
+    override suspend fun findTaxiByUsername(username: String, page: Int, offset: Int
+    ): DataWrapper<Taxi> {
+        return DataWrapper(totalPages = 0, numberOfResult = 0, result = emptyList(),)
     }
-
 
     override suspend fun getPdfTaxiReport() {
-        //todo
+        //todo get pdf by download it
     }
 
     override suspend fun getRestaurants(): List<Restaurant> {
