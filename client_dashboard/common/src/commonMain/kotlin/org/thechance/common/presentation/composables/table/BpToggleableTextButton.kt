@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.BpTheme
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.thechance.common.presentation.util.kms
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -38,7 +39,7 @@ fun BpToggleableTextButton(
     text: String,
     onSelectChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
-    size: Dp = 32.dp,
+    size: Dp = 32.kms,
     selected: Boolean = false,
     textStyle: TextStyle = Theme.typography.body,
     shape: Shape = RoundedCornerShape(Theme.radius.small),
@@ -53,7 +54,7 @@ fun BpToggleableTextButton(
             text = text,
             style = textStyle.copy(if (it) Theme.colors.onPrimary else Theme.colors.contentTertiary),
             modifier = Modifier.size(size).clip(shape)
-                .background(if (it) Theme.colors.primary else Color.Transparent).padding(top = 4.dp)
+                .background(if (it) Theme.colors.primary else Color.Transparent).padding(top = 4.kms)
                 .clickable(interactionSource, null) { onSelectChange(!selected) },
             textAlign = TextAlign.Center,
         )

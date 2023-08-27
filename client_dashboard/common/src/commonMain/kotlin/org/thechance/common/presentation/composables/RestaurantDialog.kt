@@ -21,6 +21,7 @@ import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.restaurant.AddRestaurantDialogUiState
+import org.thechance.common.presentation.util.kms
 import java.awt.Dimension
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,7 +50,7 @@ fun RestaurantDialog(
             modifier
                 .background(Theme.colors.surface)
                 .fillMaxSize()
-                .padding(24.dp)
+                .padding(24.kms)
         ) {
             Text(
                 text = "New Restaurant",
@@ -58,9 +59,9 @@ fun RestaurantDialog(
             )
             Row(
                 modifier = Modifier.fillMaxSize().padding(top = Theme.dimens.space40),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(16.kms)
             ) {
-                Column(modifier = Modifier.fillMaxHeight().width(350.dp)) {
+                Column(modifier = Modifier.fillMaxHeight().width(350.kms)) {
                     BpTextField(
                         onValueChange = onRestaurantNameChange,
                         text = state.name,
@@ -126,12 +127,12 @@ fun RestaurantDialog(
                         BpOutlinedButton(
                             title = "Cancel",
                             onClick = { onCancelClicked() },
-                            modifier = Modifier.width(120.dp)
+                            modifier = Modifier.width(120.kms)
                         )
                         BpButton(
                             title = "Create",
                             onClick = { onCreateClicked() },
-                            modifier = Modifier.width(240.dp)
+                            modifier = Modifier.width(240.kms)
                         )
                     }
                 }

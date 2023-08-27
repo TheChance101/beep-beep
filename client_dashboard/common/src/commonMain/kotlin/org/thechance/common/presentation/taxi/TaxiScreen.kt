@@ -83,11 +83,11 @@ class TaxiScreen :
             Column(modifier = Modifier.fillMaxSize().align(Alignment.TopCenter)) {
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(bottom = 16.kms),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.kms),
                     verticalAlignment = Alignment.Top
                 ) {
                     BpSimpleTextField(
-                        modifier = Modifier.widthIn(max = 440.dp),
+                        modifier = Modifier.widthIn(max = 440.kms),
                         hint = "Search for Taxis",
                         onValueChange = listener::onSearchInputChange,
                         text = state.searchQuery,
@@ -215,7 +215,7 @@ class TaxiScreen :
                     painter = painterResource("outline_seat.xml"),
                     contentDescription = null,
                     tint = Theme.colors.contentPrimary.copy(alpha = 0.87f),
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.kms)
                 )
             }
         }
@@ -256,7 +256,7 @@ class TaxiScreen :
                         shape = RoundedCornerShape(Theme.radius.small),
                     )
                     .border(
-                        width = 1.dp,
+                        width = 1.kms,
                         color = Theme.colors.contentBorder,
                         shape = RoundedCornerShape(Theme.radius.small),
                     )

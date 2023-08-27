@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.util.Constants
 import org.thechance.common.presentation.util.kms
@@ -39,15 +38,20 @@ fun TotalItemsIndicator(
         BasicTextField(
             modifier = Modifier
                 .border(
-                    width = 1.dp,
+                    width = 1.kms,
                     color = Theme.colors.contentBorder,
                     shape = RoundedCornerShape(Theme.radius.medium)
                 ).padding(vertical = 8.kms).width(40.kms),
             value = numberItemInPage.toString(),
             onValueChange = {
+
                 runCatching {
                     onItemPerPageChange(
-                        if (it.toInt() >= maxNumberOfItems) maxNumberOfItems else it.toInt()
+                        when {
+                            it.toInt() >= maxNumberOfItems -> maxNumberOfItems
+                            it.toInt() <= 0 -> 1
+                            else -> it.toInt()
+                        }
                     )
                 }
             },

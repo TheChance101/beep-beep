@@ -107,7 +107,7 @@ class RestaurantScreen :
             verticalAlignment = Alignment.Top
         ) {
             BpSimpleTextField(
-                modifier = Modifier.widthIn(min = 340.dp, max = 440.dp),
+                modifier = Modifier.widthIn(min = 340.kms, max = 440.kms),
                 hint = "Search for restaurants",
                 onValueChange = listener::onSearchChange,
                 text = state.search,

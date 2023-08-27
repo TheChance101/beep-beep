@@ -51,7 +51,7 @@ fun AddTaxiDialog(
         Column(
             modifier = modifier
                 .padding(top = 16.kms, start = 16.kms, end = 16.kms)
-                .shadow(elevation = 5.dp)
+                .shadow(elevation = 5.kms)
                 .background(Theme.colors.surface, RoundedCornerShape(8.kms))
                 .padding(24.kms)
         ) {
@@ -127,7 +127,7 @@ fun AddTaxiDialog(
                 BpOutlinedButton(
                     "Cancel",
                     onClick = onCancelCreateTaxiClicked,
-                    modifier = Modifier.width(120.dp)
+                    modifier = Modifier.width(120.kms)
                 )
                 BpButton(
                     title = "Create",

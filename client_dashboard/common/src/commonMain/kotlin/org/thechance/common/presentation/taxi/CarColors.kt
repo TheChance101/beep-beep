@@ -39,7 +39,7 @@ fun CarColors(
             val selectedModifier = if (selectedCarColor == carColor) {
                 Modifier.size(32.kms)
                     .border(
-                        width = 2.dp,
+                        width = 2.kms,
                         color = Theme.colors.contentSecondary,
                         shape = RoundedCornerShape(4.kms)
                     ).padding(4.kms)
@@ -52,10 +52,10 @@ fun CarColors(
                 contentAlignment = Alignment.Center
             ) {
                 Box(
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(20.kms)
                         .background(color, shape = RoundedCornerShape(4.kms))
                         .border(
-                            width = 2.dp,
+                            width = 2.kms,
                             color = Color.Gray.copy(alpha = 0.5f),
                             shape = RoundedCornerShape(4.kms)
                         )

@@ -96,7 +96,7 @@ fun DashboardSideBar(
                     Spacer(
                         Modifier.height(mainMenuItemHeight.value.pxToDp())
                             .padding(vertical = 8.kms)
-                            .width(4.dp)
+                            .width(4.kms)
                             .clip(RoundedCornerShape(16.kms))
                             .background(Color(0xffF53D47))
                     )

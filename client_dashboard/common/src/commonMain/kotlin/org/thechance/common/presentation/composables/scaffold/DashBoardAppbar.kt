@@ -62,7 +62,7 @@ fun DashboardAppbar(
             Box(contentAlignment = Alignment.CenterEnd) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.kms),
                     modifier = Modifier.onClick(onClick = onClickDropDownMenu).cursorHoverIconHand()
                 ) {
                     Text(
@@ -89,7 +89,7 @@ fun DashboardAppbar(
                     BpDropdownMenu(
                         expanded = isDropMenuExpanded,
                         onDismissRequest = onDismissDropDownMenu,
-                        offset = DpOffset.Zero.copy(y = 24.kms),
+                        offset = DpOffset.Zero.copy(y = 32.kms),
                         shape = RoundedCornerShape(Theme.radius.medium)
                             .copy(topEnd = CornerSize(Theme.radius.small)),
                     ) {
@@ -103,7 +103,7 @@ fun DashboardAppbar(
                             text = {
                                 Row(
                                     modifier = Modifier.fillMaxSize(),
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(8.kms),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Image(

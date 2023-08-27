@@ -218,11 +218,11 @@ class UserScreen :
                 onDismissRequest = onFilterMenuDismiss,
                 offset = DpOffset.Zero.copy(y = 16.kms),
                 shape = RoundedCornerShape(Theme.radius.medium).copy(topStart = CornerSize(Theme.radius.small)),
-                modifier = Modifier.height(450.dp)
+                modifier = Modifier.height(450.kms)
             ) {
                 DropdownMenuItem(
                     contentPadding = PaddingValues(0.dp),
-                    modifier = Modifier.width(400.dp),
+                    modifier = Modifier.width(400.kms),
                     onClick = {},
                     text = {
                         Column(Modifier.fillMaxSize()) {
@@ -293,7 +293,7 @@ class UserScreen :
                                     title = "Save",
                                     onClick = onFilterMenuDismiss,
                                     shape = RoundedCornerShape(Theme.radius.small),
-                                    modifier = Modifier.height(50.dp).weight(1f)
+                                    modifier = Modifier.height(50.kms).weight(1f)
                                 )
                             }
                         }
@@ -318,11 +318,11 @@ class UserScreen :
     ) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.kms),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.kms),
             verticalAlignment = Alignment.Top
         ) {
             BpSimpleTextField(
-                modifier = Modifier.widthIn(max = 440.dp),
+                modifier = Modifier.widthIn(max = 440.kms),
                 hint = "Search for users",
                 onValueChange = onSearchInputChanged,
                 text = searchText,
@@ -372,7 +372,7 @@ class UserScreen :
             Text(
                 text = user.fullName,
                 style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
-                modifier = Modifier.padding(start = 16.dp),
+                modifier = Modifier.padding(start = 16.kms),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -404,14 +404,14 @@ class UserScreen :
 
         FlowRow(
             modifier = Modifier.weight(otherColumnsWeight),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.kms)
         ) {
             user.permissions.forEach {
                 Icon(
                     painter = painterResource(it.iconPath),
                     contentDescription = null,
                     tint = Theme.colors.contentPrimary.copy(alpha = 0.87f),
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.kms)
                 )
             }
         }

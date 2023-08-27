@@ -39,28 +39,13 @@ import org.thechance.common.presentation.util.kms
 
 
 val LocalScreenSize = compositionLocalOf<Size> { error("provide") }
-private val localTypography = compositionLocalOf { Typography() }
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun App() {
-    val typography = Typography(
-        headlineLarge = headlineLarge(),
-        headline = TextStyle(
-            fontSize = 20.sp * 0.75,
-            fontFamily = FontFamily(fontResources("roboto_medium")),
-            fontWeight = FontWeight.W600,
-        ),
-        titleLarge = titleLarge(),
-        title = title(),
-        titleMedium = titleMedium(),
-        body = body(),
-        caption = caption(),
-    )
     var size by remember { mutableStateOf(Size.Zero) }
 
-    CompositionLocalProvider(LocalScreenSize provides size,
-        localTypography provides typography,) {
+    CompositionLocalProvider(LocalScreenSize provides size,) {
         Box(Modifier.onSizeChanged { size = it.toSize() }) {
             BpTheme {
                 Navigator(LoginScreen()) {

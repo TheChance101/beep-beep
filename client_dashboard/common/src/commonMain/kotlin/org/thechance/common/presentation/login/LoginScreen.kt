@@ -60,7 +60,7 @@ class LoginScreen :
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
                         .border(
-                            BorderStroke(width = 1.dp, color = Theme.colors.divider),
+                            BorderStroke(width = 1.kms, color = Theme.colors.divider),
                             shape = RoundedCornerShape(Theme.radius.large)
                         )
                         .clip(RoundedCornerShape(Theme.radius.large))
@@ -72,7 +72,7 @@ class LoginScreen :
             }
             Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
                 Column(
-                    Modifier.fillMaxHeight().width(350.dp),
+                    Modifier.fillMaxHeight().width(450.kms),
                     verticalArrangement = Arrangement.Center,
                 ) {
                     Text(

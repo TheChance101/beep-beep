@@ -24,7 +24,6 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.util.kms
 
@@ -43,9 +42,9 @@ fun <T> BpTable(
     key: ((item: T) -> Any)? = null,
     shape: Shape = RoundedCornerShape(Theme.radius.medium),
     headerTextStyle: TextStyle = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
-    rowPadding: PaddingValues = PaddingValues(16.dp),
-    maxHeight: Dp = 72.dp,
-    border: Dp = 1.dp,
+    rowPadding: PaddingValues = PaddingValues(16.kms),
+    maxHeight: Dp = 72.kms,
+    border: Dp = 1.kms,
     borderColor: Color = Theme.colors.contentBorder,
     headerColor: Color = Theme.colors.background,
     rowsColor: Color = Theme.colors.surface,

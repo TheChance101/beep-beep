@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.thechance.common.presentation.util.kms
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -21,7 +22,7 @@ fun ArrowIcon(
     Icon(
         painter = painter,
         contentDescription = contentDescription,
-        modifier = Modifier.size(24.dp).onClick {
+        modifier = Modifier.size(24.kms).onClick {
             if (enable) {
                 onClick()
             }

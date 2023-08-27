@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import org.thechance.common.presentation.util.kms
 
 @Composable
 fun DashBoardScaffold(
@@ -18,7 +19,7 @@ fun DashBoardScaffold(
         sideBar()
         Column {
             appbar()
-            content(40.dp)
+            content(40.kms)
         }
     }
 }
