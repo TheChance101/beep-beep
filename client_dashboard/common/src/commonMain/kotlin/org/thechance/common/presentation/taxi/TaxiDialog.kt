@@ -10,15 +10,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.LocalDimensions
 import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.presentation.composables.SeatsBar
+import org.thechance.common.presentation.util.kms
 import java.awt.Dimension
 
 
@@ -50,10 +49,10 @@ fun AddTaxiDialog(
 
         Column(
             modifier = modifier
-                .padding(top = LocalDimensions.current.space16, start = LocalDimensions.current.space16, end = LocalDimensions.current.space16)
-                .shadow(elevation = 5.dp)
-                .background(Theme.colors.surface, RoundedCornerShape(LocalDimensions.current.space8))
-                .padding(LocalDimensions.current.space24)
+                .padding(top = 16.kms, start = 16.kms, end = 16.kms)
+                .shadow(elevation = 5.kms)
+                .background(Theme.colors.surface, RoundedCornerShape(8.kms))
+                .padding(24.kms)
         ) {
 
             Text(
@@ -63,21 +62,21 @@ fun AddTaxiDialog(
             )
 
             BpTextField(
-                modifier = Modifier.padding(top = LocalDimensions.current.space40),
+                modifier = Modifier.padding(top = 40.kms),
                 label = "Taxi Plate Number",
                 onValueChange = onTaxiPlateNumberChange,
                 text = state.plateNumber
             )
 
             BpTextField(
-                modifier = Modifier.padding(top = LocalDimensions.current.space24),
+                modifier = Modifier.padding(top = 24.kms),
                 label = "Driver Username",
                 onValueChange = onDriverUserNamChange,
                 text = state.driverUserName
             )
 
             BpTextField(
-                modifier = Modifier.padding(top = LocalDimensions.current.space24),
+                modifier = Modifier.padding(top = 24.kms),
                 label = "Car Model",
                 onValueChange = onCarModelChange,
                 text = state.carModel
@@ -87,11 +86,11 @@ fun AddTaxiDialog(
                 "Car Color",
                 style = Theme.typography.title,
                 color = Theme.colors.contentPrimary,
-                modifier = Modifier.padding(top = LocalDimensions.current.space24),
+                modifier = Modifier.padding(top = 24.kms),
             )
 
             CarColors(
-                modifier = Modifier.padding(top = LocalDimensions.current.space16),
+                modifier = Modifier.padding(top = 16.kms),
                 colors = CarColor.values().toList(),
                 onSelectColor = { onCarColorSelected(it) },
                 selectedCarColor = state.selectedCarColor
@@ -101,7 +100,7 @@ fun AddTaxiDialog(
                 "Seats",
                 style = Theme.typography.title,
                 color = Theme.colors.contentPrimary,
-                modifier = Modifier.padding(top = LocalDimensions.current.space24),
+                modifier = Modifier.padding(top = 24.kms),
             )
 
             SeatsBar(
@@ -113,21 +112,21 @@ fun AddTaxiDialog(
                 notSelectedIcon = painterResource(
                     if (isSystemInDarkTheme()) "ic_outlined_seat_dark.svg" else "ic_outlined_seat_light.svg"
                 ),
-                iconsSize = LocalDimensions.current.space24,
-                iconsPadding = PaddingValues(horizontal = LocalDimensions.current.space8),
-                modifier = Modifier.fillMaxWidth().padding(top = LocalDimensions.current.space16),
+                iconsSize = 24.kms,
+                iconsPadding = PaddingValues(horizontal = 8.kms),
+                modifier = Modifier.fillMaxWidth().padding(top = 16.kms),
                 onClick = { onSeatsSelected(it) }
             )
 
             Row(
-                modifier = Modifier.fillMaxWidth().padding(top = LocalDimensions.current.space40),
-                horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16)
+                modifier = Modifier.fillMaxWidth().padding(top = 40.kms),
+                horizontalArrangement = Arrangement.spacedBy(16.kms)
             ) {
 
                 BpOutlinedButton(
                     "Cancel",
                     onClick = onCancelCreateTaxiClicked,
-                    modifier = Modifier.width(120.dp)
+                    modifier = Modifier.width(120.kms)
                 )
                 BpButton(
                     title = "Create",

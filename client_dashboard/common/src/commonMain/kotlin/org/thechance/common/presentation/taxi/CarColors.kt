@@ -15,10 +15,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.LocalDimensions
 import org.thechance.common.domain.entity.CarColor
+import org.thechance.common.presentation.util.kms
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -31,33 +30,33 @@ fun CarColors(
     LazyRow(
         modifier = modifier,
         verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space8)
+        horizontalArrangement = Arrangement.spacedBy(8.kms)
     ) {
         items(colors) { carColor ->
             val color = Color(carColor.hexadecimal)
 
             val selectedModifier = if (selectedCarColor == carColor) {
-                Modifier.size(LocalDimensions.current.space32)
+                Modifier.size(32.kms)
                     .border(
-                        width = 2.dp,
+                        width = 2.kms,
                         color = Theme.colors.contentSecondary,
-                        shape = RoundedCornerShape(LocalDimensions.current.space4)
-                    ).padding(LocalDimensions.current.space4)
+                        shape = RoundedCornerShape(4.kms)
+                    ).padding(4.kms)
 
             } else {
-                Modifier.size(LocalDimensions.current.space32).padding(LocalDimensions.current.space4)
+                Modifier.size(32.kms).padding(4.kms)
             }
             Box(
                 modifier = selectedModifier,
                 contentAlignment = Alignment.Center
             ) {
                 Box(
-                    modifier = Modifier.size(20.dp)
-                        .background(color, shape = RoundedCornerShape(LocalDimensions.current.space4))
+                    modifier = Modifier.size(20.kms)
+                        .background(color, shape = RoundedCornerShape(4.kms))
                         .border(
-                            width = 2.dp,
+                            width = 2.kms,
                             color = Color.Gray.copy(alpha = 0.5f),
-                            shape = RoundedCornerShape(LocalDimensions.current.space4)
+                            shape = RoundedCornerShape(4.kms)
                         )
                         .onClick { onSelectColor(carColor) }
                 )
