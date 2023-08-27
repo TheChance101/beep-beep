@@ -10,6 +10,7 @@ import java.util.*
 
 @Serializable
 data class MealWithCuisines(
+    @BsonId
     @Contextual
     @SerialName("_id")
     val id: UUID = UUID.randomUUID(),

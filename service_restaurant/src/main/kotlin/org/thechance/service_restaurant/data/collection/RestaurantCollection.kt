@@ -22,6 +22,7 @@ data class RestaurantCollection(
     val location: LocationCollection,
     val currency:String
 ) {
+    @BsonId
     @Contextual
     @SerialName("_id")
     val id: UUID = UUID.randomUUID()
