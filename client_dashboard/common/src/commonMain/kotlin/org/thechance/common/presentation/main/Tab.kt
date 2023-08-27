@@ -6,6 +6,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import org.thechance.common.presentation.overview.OverviewScreen
+import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.restaurant.RestaurantScreen
 import org.thechance.common.presentation.taxi.TaxiScreen
 import org.thechance.common.presentation.users.UserScreen
@@ -14,7 +15,7 @@ object OverviewTab : Tab {
 
     override val options: TabOptions
         @Composable get() {
-            val title = "Overview"
+            val title = Resources.Strings.overview
             return remember { TabOptions(index = 0u, title = title) }
         }
 
@@ -29,7 +30,7 @@ object TaxisTab : Tab {
 
     override val options: TabOptions
         @Composable get() {
-            val title = "Taxis"
+            val title = Resources.Strings.taxis
             return remember { TabOptions(index = 1u, title = title) }
         }
 
@@ -42,7 +43,7 @@ object TaxisTab : Tab {
 object RestaurantsTab : Tab {
     override val options: TabOptions
         @Composable get() {
-            val title = "Restaurants"
+            val title = Resources.Strings.restaurants
             return remember { TabOptions(index = 2u, title = title) }
         }
 
@@ -55,7 +56,7 @@ object RestaurantsTab : Tab {
 object UsersTab : Tab {
     override val options: TabOptions
         @Composable get() {
-            val title = "Users"
+            val title = Resources.Strings.users
             return remember { TabOptions(index = 3u, title = title) }
         }
 

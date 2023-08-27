@@ -1,6 +1,9 @@
 package org.thechance.common.presentation.login
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -53,9 +56,7 @@ class LoginScreen :
         ) {
             Box(Modifier.weight(1f)) {
                 Image(
-                    painter = painterResource(
-                        if (isSystemInDarkTheme()) Resources.Strings.loginImageDark else Resources.Strings.loginImageLight
-                    ),
+                    painter = painterResource(Resources.Drawable.login),
                     contentDescription = null,
                     alignment = Alignment.CenterStart,
                     contentScale = ContentScale.Crop,

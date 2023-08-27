@@ -1,12 +1,7 @@
 package org.thechance.common.presentation.composables
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,6 +10,7 @@ import androidx.compose.ui.window.Dialog
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.users.UserScreenUiState
 import org.thechance.common.presentation.util.kms
 import java.awt.Dimension
@@ -42,7 +38,7 @@ fun PermissionsDialog(
                 .background(Theme.colors.background)
         ) {
             Text(
-                "Permissions",
+                text = Resources.Strings.permissions,
                 style = Theme.typography.headline.copy(color = Theme.colors.contentPrimary),
                 modifier = Modifier.padding(24.kms)
             )
@@ -61,12 +57,12 @@ fun PermissionsDialog(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 BpTransparentButton(
-                    title = "Cancel",
+                    title = Resources.Strings.cancel,
                     onClick = onCancelUserPermissionsDialog,
                     modifier = Modifier.weight(1f)
                 )
                 BpOutlinedButton(
-                    title = "Save",
+                    title = Resources.Strings.save,
                     onClick = onSaveUserPermissions,
                     modifier = Modifier.weight(3f),
                 )
