@@ -17,6 +17,7 @@ import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import org.thechance.common.presentation.util.kms
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -28,7 +29,7 @@ fun EditablePriceBar(
     onClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
     priceLevel: Int = 0,
-    iconsSize: Dp = 32.dp,
+    iconsSize: Dp = 32.kms,
     iconsPadding: PaddingValues = PaddingValues(0.dp),
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
 ) {

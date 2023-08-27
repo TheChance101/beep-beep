@@ -6,7 +6,7 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import org.thechance.api_gateway.data.model.TokenType
-import org.thechance.api_gateway.plugins.utils.respondUnauthorized
+import io.ktor.server.response.*
 
 fun Application.configureJWTAuthentication() {
     val jwtSecret = environment.config.property("jwt.secret").getString()
@@ -51,5 +51,11 @@ fun Application.configureJWTAuthentication() {
 
             respondUnauthorized()
         }
+    }
+}
+
+private fun JWTAuthenticationProvider.Config.respondUnauthorized() {
+    challenge { _, _ ->
+        call.respond(UnauthorizedResponse())
     }
 }

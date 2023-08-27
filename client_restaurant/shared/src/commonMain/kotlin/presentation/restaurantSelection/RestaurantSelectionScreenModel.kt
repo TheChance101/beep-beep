@@ -2,20 +2,18 @@ package presentation.restaurantSelection
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Restaurant
-import domain.usecase.IGetOwnerRestaurantsInformationUseCase
+import domain.usecase.IGetOwnerRestaurantsUseCase
 import kotlinx.coroutines.CoroutineScope
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
-class RestaurantSelectionScreenModel(private val ownerId: String) :
-    BaseScreenModel<RestaurantScreenUIState, RestaurantSelectionScreenUIEffect>
-        (RestaurantScreenUIState()),
-    RestaurantSelectionScreenInteractionListener, KoinComponent {
+class RestaurantSelectionScreenModel(
+    private val ownerRestaurants : IGetOwnerRestaurantsUseCase
+) : BaseScreenModel<RestaurantScreenUIState, RestaurantSelectionScreenUIEffect>
+        (RestaurantScreenUIState()), RestaurantSelectionScreenInteractionListener {
 
     override val viewModelScope: CoroutineScope = coroutineScope
-    private val getOwnerRestaurantsInformationUseCase: IGetOwnerRestaurantsInformationUseCase by inject()
+
 
     init {
         getData()
@@ -26,7 +24,7 @@ class RestaurantSelectionScreenModel(private val ownerId: String) :
     }
 
     private suspend fun callee(): List<Restaurant> {
-        return getOwnerRestaurantsInformationUseCase(ownerId)
+        return ownerRestaurants.getOwnerRestaurants()
     }
 
     private fun onSuccess(restaurants: List<Restaurant>) {
@@ -37,7 +35,7 @@ class RestaurantSelectionScreenModel(private val ownerId: String) :
 
     }
 
-    override fun onRestaurantItemClick(restaurantId: String) {
+    override fun onClickRestaurant(restaurantId: String) {
         sendNewEffect(RestaurantSelectionScreenUIEffect.SelectRestaurant(restaurantId))
     }
 

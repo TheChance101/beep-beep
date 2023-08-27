@@ -52,9 +52,7 @@ fun OptionCardItem(
         Text(
             text = title,
             style = textStyle,
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(top = Theme.dimens.space16, start = Theme.dimens.space16)
+            modifier = Modifier.align(Alignment.TopStart).padding(top = 16.dp, start = 16.dp)
         )
         Image(
             painter = painterResource(imagePath),

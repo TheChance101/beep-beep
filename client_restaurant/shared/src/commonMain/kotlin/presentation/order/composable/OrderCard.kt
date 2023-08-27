@@ -35,8 +35,8 @@ fun OrderCard(
         modifier = modifier
             .clip(RoundedCornerShape(Theme.radius.medium))
             .background(Theme.colors.surface)
-            .padding(Theme.dimens.space16),
-        verticalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         order.orderMealUiStates.forEach { order ->
             OrderItem(
@@ -79,7 +79,7 @@ private fun OrderItem(
 ) {
     Row(
         modifier = modifier.fillMaxWidth().height(56.dp),
-        horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Image(
             modifier = Modifier.fillMaxHeight().width(80.dp)
@@ -91,10 +91,7 @@ private fun OrderItem(
 
         Column(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(
-                Theme.dimens.space8,
-                alignment = Alignment.CenterVertically
-            ),
+            verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterVertically),
         ) {
             Text(
                 text = mealName,

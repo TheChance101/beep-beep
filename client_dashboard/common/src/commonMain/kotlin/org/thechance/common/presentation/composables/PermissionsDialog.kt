@@ -1,7 +1,12 @@
 package org.thechance.common.presentation.composables
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,6 +18,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.LocalDimensions
 import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.users.UserScreenUiState
+import org.thechance.common.presentation.util.kms
 import java.awt.Dimension
 
 @Composable
@@ -40,7 +46,7 @@ fun PermissionsDialog(
             Text(
                 text = Resources.Strings.permissions,
                 style = Theme.typography.headline.copy(color = Theme.colors.contentPrimary),
-                modifier = Modifier.padding(LocalDimensions.current.space24)
+                modifier = Modifier.padding(24.kms)
             )
 
             PermissionsFlowRow(
@@ -52,8 +58,8 @@ fun PermissionsDialog(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(LocalDimensions.current.space24),
-                horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space8),
+                    .padding(24.kms),
+                horizontalArrangement = Arrangement.spacedBy(8.kms),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 BpTransparentButton(

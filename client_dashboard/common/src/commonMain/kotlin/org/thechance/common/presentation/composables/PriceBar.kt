@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import org.thechance.common.presentation.util.kms
 
 @Composable
 fun PriceBar(
@@ -17,7 +17,7 @@ fun PriceBar(
     icon: Painter,
     iconColor: Color,
     modifier: Modifier = Modifier,
-    iconsSize: Dp = 32.dp,
+    iconsSize: Dp = 32.kms,
 ) {
     when {
         (priceLevel < 0) -> throw Exception("price level is smaller than 0")

@@ -7,8 +7,10 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import org.thechance.api_gateway.data.localized_messages.LocalizedMessagesFactory
+import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
+import org.thechance.api_gateway.data.mappers.toManagedUser
 import org.thechance.api_gateway.data.model.TokenConfiguration
+import org.thechance.api_gateway.endpoints.gateway.IIdentityGateway
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
 import org.thechance.api_gateway.endpoints.utils.respondWithResult
 import java.util.*
@@ -17,10 +19,8 @@ import java.util.*
  * Created by Aziza Helmy on 8/14/2023.
  */
 fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
-
-    val gateway: IApiGateway by inject()
+    val gateway: IIdentityGateway by inject()
     val localizedMessagesFactory by inject<LocalizedMessagesFactory>()
-
 
     post("/signup") {
         val params = call.receiveParameters()
@@ -41,7 +41,7 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
         val locale = Locale(language, countryCode)
         val successMessage = localizedMessagesFactory.createLocalizedMessages(locale).userCreatedSuccessfully
 
-        respondWithResult(HttpStatusCode.Created, result, successMessage)
+        respondWithResult(HttpStatusCode.Created, result.toManagedUser(), successMessage)
     }
 
     post("/login") {
@@ -61,7 +61,6 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
     }
 
 
-
     authenticate("auth-jwt") {
         get("/me") {
             val tokenClaim = call.principal<JWTPrincipal>()
@@ -79,6 +78,5 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
             respondWithResult(HttpStatusCode.Created, token)
         }
     }
-
 }
 

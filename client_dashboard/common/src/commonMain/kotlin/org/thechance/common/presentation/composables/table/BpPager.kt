@@ -23,7 +23,7 @@ fun BpPager(
 
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space8),
+        horizontalArrangement = Arrangement.spacedBy(8.kms),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ArrowIcon(

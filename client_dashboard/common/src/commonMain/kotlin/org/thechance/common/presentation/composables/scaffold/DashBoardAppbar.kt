@@ -20,9 +20,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
-import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.LocalDimensions
 import org.thechance.common.presentation.composables.BpDropdownMenu
 import org.thechance.common.presentation.composables.modifier.circleLayout
 import org.thechance.common.presentation.composables.modifier.cursorHoverIconHand
@@ -45,7 +43,7 @@ fun DashboardAppbar(
     Column(Modifier.background(Theme.colors.surface)) {
         Row(
             Modifier.height(96.kms).fillMaxWidth()
-                .padding(horizontal = LocalDimensions.current.space40),
+                .padding(horizontal = 40.kms),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -57,11 +55,11 @@ fun DashboardAppbar(
             Box(contentAlignment = Alignment.CenterEnd) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.kms),
                     modifier = Modifier.onClick(onClick = onClickDropDownMenu).cursorHoverIconHand()
                 ) {
                     Text(
-                        modifier = Modifier.circleLayout().padding(LocalDimensions.current.space8),
+                        modifier = Modifier.circleLayout().padding(8.kms),
                         style = Theme.typography.titleMedium,
                         text = username.first().uppercase(),
                         color = Color.White
@@ -84,7 +82,7 @@ fun DashboardAppbar(
                     BpDropdownMenu(
                         expanded = isDropMenuExpanded,
                         onDismissRequest = onDismissDropDownMenu,
-                        offset = DpOffset.Zero.copy(y = LocalDimensions.current.space24),
+                        offset = DpOffset.Zero.copy(y = 32.kms),
                         shape = RoundedCornerShape(Theme.radius.medium)
                             .copy(topEnd = CornerSize(Theme.radius.small)),
                     ) {
@@ -98,7 +96,7 @@ fun DashboardAppbar(
                             text = {
                                 Row(
                                     modifier = Modifier.fillMaxSize(),
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(8.kms),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Image(

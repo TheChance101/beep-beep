@@ -31,12 +31,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -46,7 +44,7 @@ import presentation.composable.RestaurantInformation
 import presentation.main.MainScreen
 import resources.Resources
 
-class RestaurantSelectionScreen(private val ownerId: String) : BaseScreen
+class RestaurantSelectionScreen : BaseScreen
 <RestaurantSelectionScreenModel,
         RestaurantScreenUIState,
         RestaurantSelectionScreenUIEffect,
@@ -54,8 +52,7 @@ class RestaurantSelectionScreen(private val ownerId: String) : BaseScreen
 
     @Composable
     override fun Content() {
-        val screenModel = rememberScreenModel { RestaurantSelectionScreenModel(ownerId) }
-        initScreen(screenModel)
+        initScreen(getScreenModel())
     }
 
     @OptIn(ExperimentalResourceApi::class, ExperimentalFoundationApi::class)
@@ -96,54 +93,32 @@ class RestaurantSelectionScreen(private val ownerId: String) : BaseScreen
             // endregion
 
             // region bottom sheet
-            Box(
+            LazyColumn(
                 modifier = Modifier.fillMaxWidth().fillMaxHeight(bottomSheetSize)
-                    .clip(
-                        RoundedCornerShape(
-                            topStart = roundedCornerShape,
-                            topEnd = roundedCornerShape
-                        )
-                    )
+                    .clip(RoundedCornerShape(topStart = roundedCornerShape, topEnd = roundedCornerShape))
                     .background(Theme.colors.surface).align(Alignment.BottomCenter),
+                state = lazyListState,
+                contentPadding = PaddingValues(top = 24.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
-                LazyColumn(
-                    state = lazyListState,
-                    contentPadding = PaddingValues(
-                        top = 24.dp,
-                        start = 16.dp,
-                        end = 16.dp,
-                        bottom = 16.dp
-                    )
-                ) {
-                    stickyHeader {
-                        Column(modifier = Modifier.fillMaxSize().background(Theme.colors.surface)) {
-                            Text(
-                                text = Resources.strings.chooseYourRestaurant,
-                                style = Theme.typography.headline.copy(color = Theme.colors.contentPrimary)
-                            )
-
-                            Text(
-                                modifier = Modifier.padding(top = 8.dp, bottom = 8.dp),
-                                text = Resources.strings.pickWhichRestaurant,
-                                style = Theme.typography.body.copy(color = Theme.colors.contentTertiary)
-                            )
-                        }
-                    }
-                    itemsIndexed(state.restaurants) { index, item ->
-                        RestaurantSelectionItem(item, listener)
-                        AnimatedVisibility(index != state.restaurants.size - 1) {
-                            Divider(Modifier.background(Theme.colors.divider).alpha(0.8f))
-                        }
+                stickyHeader {
+                    HeaderTitles()
+                }
+                itemsIndexed(state.restaurants) { index, item ->
+                    RestaurantSelectionItem(item, listener)
+                    AnimatedVisibility(index != state.restaurants.size - 1) {
+                        Divider(Modifier.background(Theme.colors.divider))
                     }
                 }
             }
-            //endregion
         }
+        //endregion
     }
 
     override fun onEffect(effect: RestaurantSelectionScreenUIEffect, navigator: Navigator) {
         when (effect) {
-            is RestaurantSelectionScreenUIEffect.SelectRestaurant -> navigator.push(MainScreen(effect.restaurantId))
+            is RestaurantSelectionScreenUIEffect.SelectRestaurant -> navigator.push(
+                MainScreen(effect.restaurantId)
+            )
         }
     }
 
@@ -153,11 +128,28 @@ class RestaurantSelectionScreen(private val ownerId: String) : BaseScreen
         listener: RestaurantSelectionScreenInteractionListener
     ) {
         RestaurantInformation(
-            onRestaurantClick = { listener.onRestaurantItemClick(item.id) },
+            onRestaurantClick = { listener.onClickRestaurant(item.id) },
             restaurantName = item.restaurantName,
             restaurantNumber = item.restaurantNumber,
             isOpen = item.isOpen
         )
+    }
+
+
+    @Composable
+    private fun HeaderTitles() {
+        Column(modifier = Modifier.fillMaxSize().background(Theme.colors.surface)) {
+            Text(
+                text = Resources.strings.chooseYourRestaurant,
+                style = Theme.typography.headline.copy(color = Theme.colors.contentPrimary)
+            )
+
+            Text(
+                modifier = Modifier.padding(top = 8.dp, bottom = 8.dp),
+                text = Resources.strings.pickWhichRestaurant,
+                style = Theme.typography.body.copy(color = Theme.colors.contentTertiary)
+            )
+        }
     }
 
     private companion object {

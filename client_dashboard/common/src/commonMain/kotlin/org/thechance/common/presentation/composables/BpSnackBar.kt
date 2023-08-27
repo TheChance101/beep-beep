@@ -11,8 +11,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.thechance.common.presentation.util.kms
 import org.thechance.common.presentation.resources.Resources
 
 @Composable
@@ -26,9 +26,9 @@ fun SnackBar(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .background(color = Theme.colors.surface)
-            .width(512.dp)
+            .width(512.kms)
             .border(
-                width = 1.dp, color = Theme.colors.divider,
+                width = 1.kms, color = Theme.colors.divider,
                 shape = RoundedCornerShape(Theme.radius.medium),
             )
     ) {
