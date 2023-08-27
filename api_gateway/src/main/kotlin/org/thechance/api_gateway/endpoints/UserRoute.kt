@@ -8,6 +8,7 @@ import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
+import org.thechance.api_gateway.data.mappers.toManagedUser
 import org.thechance.api_gateway.data.model.TokenConfiguration
 import org.thechance.api_gateway.endpoints.gateway.IIdentityGateway
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
@@ -40,7 +41,7 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
         val locale = Locale(language, countryCode)
         val successMessage = localizedMessagesFactory.createLocalizedMessages(locale).userCreatedSuccessfully
 
-        respondWithResult(HttpStatusCode.Created, result, successMessage)
+        respondWithResult(HttpStatusCode.Created, result.toManagedUser(), successMessage)
     }
 
     post("/login") {

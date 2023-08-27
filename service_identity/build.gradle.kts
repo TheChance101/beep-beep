@@ -39,7 +39,6 @@ repositories {
 
 dependencies {
     implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
-    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor_version")
 
     implementation("io.ktor:ktor-server-call-logging-jvm:$ktor_version")
@@ -69,8 +68,6 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:2.2.4")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
 
-    //kotlinx-datetime
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
 
     // Status pages error handler
     implementation("io.ktor:ktor-server-status-pages-jvm:$status_pages")

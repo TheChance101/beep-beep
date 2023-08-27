@@ -46,7 +46,7 @@ interface IDataBaseGateway {
         fullName: String,
         username: String,
         email: String
-    ): Boolean
+    ): UserManagement
 
     suspend fun updateUser(
         id: String,

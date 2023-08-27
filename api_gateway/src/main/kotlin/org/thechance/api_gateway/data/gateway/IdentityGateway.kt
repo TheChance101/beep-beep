@@ -6,13 +6,14 @@ import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import io.ktor.util.*
 import org.koin.core.annotation.Single
-import org.thechance.api_gateway.data.utils.ErrorHandler
-import org.thechance.api_gateway.data.mappers.toManagedUser
-import org.thechance.api_gateway.data.model.*
-import org.thechance.api_gateway.data.model.identity.UserManagementResource
-import org.thechance.api_gateway.endpoints.gateway.IIdentityGateway
+import org.thechance.api_gateway.data.model.TokenClaim
+import org.thechance.api_gateway.data.model.TokenConfiguration
 import org.thechance.api_gateway.data.model.TokenType
+import org.thechance.api_gateway.data.model.UserTokens
+import org.thechance.api_gateway.data.model.identity.UserManagementResource
 import org.thechance.api_gateway.data.security.ITokenService
+import org.thechance.api_gateway.data.utils.ErrorHandler
+import org.thechance.api_gateway.endpoints.gateway.IIdentityGateway
 import org.thechance.api_gateway.util.APIs
 import java.util.*
 
@@ -30,8 +31,8 @@ class IdentityGateway(
         password: String,
         email: String,
         locale: Locale
-    ): Boolean {
-        return tryToExecute<Boolean>(
+    ): UserManagementResource {
+        return tryToExecute<UserManagementResource>(
             APIs.IDENTITY_API,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
@@ -93,55 +94,46 @@ class IdentityGateway(
         }
     }
 
-    override suspend fun getUserByUsername(username: String): UserManagement {
+    override suspend fun getUserByUsername(username: String): UserManagementResource {
         return tryToExecute<UserManagementResource>(APIs.IDENTITY_API) {
             get("user/get-user") {
                 parameter("username", username)
             }
-        }.toManagedUser()
+        }
     }
 
     override suspend fun generateUserTokens(
         userId: String,
         userPermissions: List<Int>,
-        tokenConfiguration: TokenConfiguration,
+        tokenConfiguration: TokenConfiguration
     ): UserTokens {
 
-        val accessTokenExpirationDate =
-            getExpirationDate(tokenConfiguration.accessTokenExpirationTimestamp)
-        val refreshTokenExpirationDate =
-            getExpirationDate(tokenConfiguration.refreshTokenExpirationTimestamp)
+        val accessTokenExpirationDate = getExpirationDate(tokenConfiguration.accessTokenExpirationTimestamp)
+        val refreshTokenExpirationDate = getExpirationDate(tokenConfiguration.refreshTokenExpirationTimestamp)
 
-        val refreshToken =
-            generateUserToken(userId, userPermissions, tokenConfiguration, TokenType.REFRESH_TOKEN)
-        val accessToken =
-            generateUserToken(userId, userPermissions, tokenConfiguration, TokenType.ACCESS_TOKEN)
+        val refreshToken = generateToken(userId, userPermissions, tokenConfiguration, TokenType.REFRESH_TOKEN)
+        val accessToken = generateToken(userId, userPermissions, tokenConfiguration, TokenType.ACCESS_TOKEN)
 
-        return UserTokens(
-            accessTokenExpirationDate.time,
-            refreshTokenExpirationDate.time,
-            accessToken,
-            refreshToken
-        )
+        return UserTokens(accessTokenExpirationDate.time, refreshTokenExpirationDate.time, accessToken, refreshToken)
     }
 
-    private suspend fun getExpirationDate(timestamp: Long): Date {
+    private fun getExpirationDate(timestamp: Long): Date {
         return Date(System.currentTimeMillis() + timestamp)
     }
 
-    private suspend fun generateUserToken(
+    private fun generateToken(
         userId: String,
         userPermissions: List<Int>,
         tokenConfiguration: TokenConfiguration,
         tokenType: TokenType
     ): String {
         val userIdClaim = TokenClaim("userId", userId)
-        val claims = userPermissions.map { TokenClaim("role", it.toString()) }
+        val rolesClaim = TokenClaim("permissions", userPermissions.joinToString(","))
         val accessTokenClaim = TokenClaim("tokenType", tokenType.name)
         return tokenManagementService.generateToken(
             tokenConfiguration,
             userIdClaim,
-            *claims.toTypedArray(),
+            rolesClaim,
             accessTokenClaim
         )
     }
