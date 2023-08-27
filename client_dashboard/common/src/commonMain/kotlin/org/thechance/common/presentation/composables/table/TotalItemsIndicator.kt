@@ -17,7 +17,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.presentation.util.Constants
 import org.thechance.common.presentation.util.kms
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -25,7 +24,7 @@ import org.thechance.common.presentation.util.kms
 fun TotalItemsIndicator(
     modifier: Modifier = Modifier,
     totalItems: Int,
-    maxNumberOfItems: Int = Constants.PAGE_MAX_NUMBER_OF_ITEMS,
+    maxNumberOfItems: Int = 50,
     numberItemInPage: Int,
     onItemPerPageChange: (Int) -> Unit,
     itemType: String,
