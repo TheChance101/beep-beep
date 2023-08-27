@@ -4,13 +4,11 @@ import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.presentation.base.BaseInteractionListener
 
-interface TaxiScreenInteractionListener : BaseInteractionListener, FilterMenuListener,
+interface TaxiInteractionListener : BaseInteractionListener, FilterMenuListener,
     TaxiMenuListener, PageListener, TaxiDialogListener {
 
     fun onExportReportClicked()
     fun onDismissExportReportSnackBar()
-
-    fun onTaxiNumberChange(number: Int)
 
     fun onSearchInputChange(searchQuery: String)
     fun onAddNewTaxiClicked()

@@ -18,7 +18,6 @@ data class TaxiUiState(
     val taxiFilterUiState: TaxiFilterUiState = TaxiFilterUiState(),
     val taxis: List<TaxiDetailsUiState> = emptyList(),
     val searchQuery: String = "",
-    val taxiNumberInPage: Int = 3,
     val isExportReportSuccessfully: Boolean = false,
     val pageInfo: TaxiPageInfoUiState = TaxiPageInfoUiState(),
     val specifiedTaxis: Int = 10,

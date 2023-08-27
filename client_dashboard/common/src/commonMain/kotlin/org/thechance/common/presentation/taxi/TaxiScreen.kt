@@ -50,7 +50,7 @@ import org.thechance.common.presentation.composables.table.BpTable
 import org.thechance.common.presentation.composables.table.TotalItemsIndicator
 
 class TaxiScreen :
-    BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiScreenInteractionListener>() {
+    BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiInteractionListener>() {
 
     @Composable
     override fun Content() {
@@ -68,7 +68,7 @@ class TaxiScreen :
     @Composable
     override fun OnRender(
         state: TaxiUiState,
-        listener: TaxiScreenInteractionListener
+        listener: TaxiInteractionListener
     ) {
 
         AddTaxiDialog(
@@ -105,35 +105,38 @@ class TaxiScreen :
                         trailingPainter = painterResource("ic_search.svg")
                     )
 
-                    BpIconButton(
-                        onClick = listener::onFilterMenuClicked,
-                        painter = painterResource("ic_filter.svg"),
-                    ) {
-                        Text(
-                            text = "Filter",
-                            style = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
+                    Column {
+                        BpIconButton(
+                            onClick = listener::onFilterMenuClicked,
+                            painter = painterResource("ic_filter.svg"),
+                            modifier = Modifier.cursorHoverIconHand()
+                        ) {
+                            Text(
+                                text = "Filter",
+                                style = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
+                            )
+                        }
+                        TaxiFilterDropdownMenu(
+                            onFilterMenuDismiss = listener::onFilterMenuDismiss,
+                            isFilterDropdownMenuExpanded = state.isFilterDropdownMenuExpanded,
+                            taxi = state.taxiFilterUiState,
+                            onCarColorSelected = listener::onSelectedCarColor,
+                            onSeatsSelected = listener::onSelectedSeat,
+                            onStatusSelected = listener::onSelectedStatus,
                         )
                     }
-                    TaxiFilterDropdownMenu(
-                        onFilterMenuDismiss = listener::onFilterMenuDismiss,
-                        isFilterDropdownMenuExpanded = state.isFilterDropdownMenuExpanded,
-                        taxi = state.taxiFilterUiState,
-                        onCarColorSelected = listener::onSelectedCarColor,
-                        onSeatsSelected = listener::onSelectedSeat,
-                        onStatusSelected = listener::onSelectedStatus,
-                    )
-
-
                     Spacer(modifier = Modifier.weight(1f))
                     BpOutlinedButton(
                         title = "Export",
                         onClick = listener::onExportReportClicked,
                         textPadding = PaddingValues(horizontal = LocalDimensions.current.space24),
+                        modifier = Modifier.cursorHoverIconHand()
                     )
                     BpButton(
                         title = "New Taxi",
                         onClick = listener::onAddNewTaxiClicked,
                         textPadding = PaddingValues(horizontal = LocalDimensions.current.space24),
+                        modifier = Modifier.cursorHoverIconHand()
                     )
                 }
                 BpTable(
