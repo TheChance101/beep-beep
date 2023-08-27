@@ -1,34 +1,29 @@
 package org.thechance.api_gateway.data.gateway
 
 import io.ktor.client.*
-import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
-import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.util.*
 import org.koin.core.annotation.Single
-import org.thechance.api_gateway.data.localized_messages.LocalizedMessagesFactory
+import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.mappers.toManagedUser
 import org.thechance.api_gateway.data.model.*
 import org.thechance.api_gateway.data.model.identity.UserManagementResource
-import org.thechance.api_gateway.endpoints.IApiGateway
+import org.thechance.api_gateway.endpoints.gateway.IIdentityGateway
 import org.thechance.api_gateway.data.model.TokenType
-import org.thechance.api_gateway.util.APIS
+import org.thechance.api_gateway.data.security.ITokenService
+import org.thechance.api_gateway.util.APIs
 import java.util.*
 
 
-@Single(binds = [IApiGateway::class])
-class ApiGateway(
-    private val client: HttpClient,
-    private val attributes: Attributes,
+@Single(binds = [IIdentityGateway::class])
+class IdentityGateway(
+    client: HttpClient,
+    attributes: Attributes,
     private val tokenManagementService: ITokenService,
-    private val localizedMessagesFactory: LocalizedMessagesFactory,
     private val errorHandler: ErrorHandler
-) : IApiGateway {
-
-
-    // region identity
+) : BaseGateway(client = client, attributes = attributes), IIdentityGateway {
     override suspend fun createUser(
         fullName: String,
         username: String,
@@ -37,7 +32,7 @@ class ApiGateway(
         locale: Locale
     ): Boolean {
         return tryToExecute<Boolean>(
-            APIS.IDENTITY_API,
+            APIs.IDENTITY_API,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
@@ -61,8 +56,13 @@ class ApiGateway(
         locale: Locale
     ): UserTokens {
         tryToExecute<Boolean>(
-            api = APIS.IDENTITY_API,
-            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, locale) }
+            api = APIs.IDENTITY_API,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(
+                    errorCodes,
+                    locale
+                )
+            }
         ) {
             submitForm("/user/login",
                 formParameters = parameters {
@@ -84,7 +84,7 @@ class ApiGateway(
         searchTerm: String,
         locale: Locale
     ): List<UserManagementResource> {
-        return tryToExecute<List<UserManagementResource>>(APIS.IDENTITY_API) {
+        return tryToExecute<List<UserManagementResource>>(APIs.IDENTITY_API) {
             get("/users") {
                 parameter("page", page)
                 parameter("limit", limit)
@@ -94,15 +94,12 @@ class ApiGateway(
     }
 
     override suspend fun getUserByUsername(username: String): UserManagement {
-        return tryToExecute<UserManagementResource>(APIS.IDENTITY_API) {
+        return tryToExecute<UserManagementResource>(APIs.IDENTITY_API) {
             get("user/get-user") {
                 parameter("username", username)
             }
         }.toManagedUser()
     }
-
-
-    // endregion
 
     override suspend fun generateUserTokens(
         userId: String,
@@ -110,13 +107,22 @@ class ApiGateway(
         tokenConfiguration: TokenConfiguration,
     ): UserTokens {
 
-        val accessTokenExpirationDate = getExpirationDate(tokenConfiguration.accessTokenExpirationTimestamp)
-        val refreshTokenExpirationDate = getExpirationDate(tokenConfiguration.refreshTokenExpirationTimestamp)
+        val accessTokenExpirationDate =
+            getExpirationDate(tokenConfiguration.accessTokenExpirationTimestamp)
+        val refreshTokenExpirationDate =
+            getExpirationDate(tokenConfiguration.refreshTokenExpirationTimestamp)
 
-        val refreshToken = generateUserToken(userId, userPermissions, tokenConfiguration, TokenType.REFRESH_TOKEN)
-        val accessToken = generateUserToken(userId, userPermissions, tokenConfiguration, TokenType.ACCESS_TOKEN)
+        val refreshToken =
+            generateUserToken(userId, userPermissions, tokenConfiguration, TokenType.REFRESH_TOKEN)
+        val accessToken =
+            generateUserToken(userId, userPermissions, tokenConfiguration, TokenType.ACCESS_TOKEN)
 
-        return UserTokens(accessTokenExpirationDate.time, refreshTokenExpirationDate.time, accessToken, refreshToken)
+        return UserTokens(
+            accessTokenExpirationDate.time,
+            refreshTokenExpirationDate.time,
+            accessToken,
+            refreshToken
+        )
     }
 
     private suspend fun getExpirationDate(timestamp: Long): Date {
@@ -138,21 +144,5 @@ class ApiGateway(
             *claims.toTypedArray(),
             accessTokenClaim
         )
-    }
-
-    private suspend inline fun <reified T> tryToExecute(
-        api: APIS,
-        setErrorMessage: (errorCodes: List<Int>) -> Map<Int, String> = { emptyMap() },
-        method: HttpClient.() -> HttpResponse
-    ): T {
-        attributes.put(AttributeKey("API"), api.value)
-        val response = client.method()
-        if (response.status.isSuccess()) {
-            return response.body<T>()
-        } else {
-            val errorResponse = response.body<List<Int>>()
-            val errorMessage = setErrorMessage(errorResponse)
-            throw LocalizedMessageException(errorMessage)
-        }
     }
 }

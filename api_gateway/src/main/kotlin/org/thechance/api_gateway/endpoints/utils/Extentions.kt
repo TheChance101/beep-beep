@@ -20,3 +20,10 @@ suspend fun respondWithError(
 ) {
     call.respond(statusCode, ServerResponse.error(errorMessage, statusCode.value))
 }
+
+fun PipelineContext<Unit, ApplicationCall>.extractLocalizationHeader(): Pair<String?, String?> {
+    val headers = call.request.headers
+    val language = headers["Accept-Language"]?.trim()
+    val countryCode = headers["Country-Code"]?.trim()
+    return Pair(language, countryCode)
+}

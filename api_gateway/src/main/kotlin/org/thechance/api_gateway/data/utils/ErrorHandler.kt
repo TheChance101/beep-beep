@@ -1,7 +1,7 @@
-package org.thechance.api_gateway.data.gateway
+package org.thechance.api_gateway.data.utils
 
 import org.koin.core.annotation.Single
-import org.thechance.api_gateway.data.localized_messages.LocalizedMessagesFactory
+import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
 import java.util.*
 
 @Single

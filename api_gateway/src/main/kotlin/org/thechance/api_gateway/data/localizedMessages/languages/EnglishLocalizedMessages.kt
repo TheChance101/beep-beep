@@ -1,4 +1,4 @@
-package org.thechance.api_gateway.data.localized_messages
+package org.thechance.api_gateway.data.localizedMessages.languages
 
 import org.koin.core.annotation.Single
 
