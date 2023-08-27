@@ -15,6 +15,7 @@ fun RestaurantDto.toEntity() = Restaurant(
     openingTime = openingTime ?: "",
     closingTime = closingTime ?: "",
     address = address ?: "",
+    currency = currency ?: "",
     location = location.toEntity()
 )
 
@@ -26,6 +27,7 @@ fun Restaurant.toDto() = RestaurantDto(
     priceLevel = priceLevel,
     rate = rate,
     phone = phone,
+    currency = currency,
     openingTime = openingTime,
     closingTime = closingTime,
     address = address,

@@ -27,10 +27,7 @@ import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.collection.relationModels.MealCuisines
 import org.thechance.service_restaurant.data.collection.relationModels.MealWithCuisines
 import org.thechance.service_restaurant.data.collection.relationModels.RestaurantCuisine
-import org.thechance.service_restaurant.data.utils.getNonEmptyFieldsMap
-import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
-import org.thechance.service_restaurant.data.utils.paginate
-import org.thechance.service_restaurant.data.utils.toUUIDs
+import org.thechance.service_restaurant.data.utils.*
 import org.thechance.service_restaurant.domain.entity.Cuisine
 import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.entity.MealDetails
@@ -215,7 +212,6 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
     override suspend fun addMeal(meal: MealDetails): Meal {
         val mealDocument = meal.toCollection()
         val addedMeal = container.mealCollection.insertOne(mealDocument).wasAcknowledged()
-
         val addedMealToCuisine = container.cuisineCollection.updateMany(
             CuisineCollection::id `in` meal.cuisines.map { it.id }.toUUIDs(),
             addToSet(CuisineCollection::meals, mealDocument.id)
@@ -226,7 +222,6 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
         } else {
             throw MultiErrorException(listOf(ERROR_ADD))
         }
-
     }
 
     override suspend fun addCuisinesToMeal(mealId: String, cuisineIds: List<String>): Boolean {

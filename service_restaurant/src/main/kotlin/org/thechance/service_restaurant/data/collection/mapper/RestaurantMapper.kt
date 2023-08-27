@@ -16,6 +16,7 @@ fun RestaurantCollection.toEntity() = Restaurant(
     openingTime = openingTime,
     closingTime = closingTime,
     address = address,
+    currency = currency,
     location = location.toEntity()
 )
 
@@ -32,6 +33,7 @@ fun Restaurant.toCollection() = RestaurantCollection(
     openingTime = openingTime,
     closingTime = closingTime,
     address = address,
+    currency = currency,
     location = location.toCollection()
 )
 
