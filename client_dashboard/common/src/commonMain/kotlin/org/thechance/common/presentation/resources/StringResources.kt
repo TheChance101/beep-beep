@@ -30,6 +30,7 @@ data class StringResources(
     val create: String = "Create",
     val workStartHourHint: String = "1:00",
     val workEndHourHint: String = "24:00",
+    val restaurants: String = "Restaurants",
     //endregion Restaurant
 
     //region Taxi
@@ -37,6 +38,13 @@ data class StringResources(
     val newTaxi: String = "New Taxi",
     val taxi: String = "taxi",
     val downloadSuccessMessage: String = "Your file download was successful.",
+    val seats: String = "Seats",
+    val carModel: String = "Car Model",
+    val carColor: String = "Car Color",
+    val driverUsername: String = "Driver Username",
+    val taxiPlateNumber: String = "Taxi Plate Number",
+    val createNewTaxi: String = "Create new Taxi",
+    val taxis: String = "Taxis",
     //endregion Taxi
 
     //region User
@@ -47,6 +55,7 @@ data class StringResources(
     val edit: String = "Edit",
     val delete: String = "Delete",
     val permissions: String = "Permissions",
+    val users: String = "Users",
     //endregion User
 
     //region scaffold
@@ -58,7 +67,12 @@ data class StringResources(
     //region table
     val outOf: String = "out of",
     val pluralLetter: String = "s",
-)
+    //endregion table
+
+    //region overview
+    val overview: String = "Overview",
+
+    )
 
 val Strings = StringResources()
 

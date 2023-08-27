@@ -25,6 +25,7 @@ import org.thechance.common.presentation.composables.scaffold.BpSideBarItem
 import org.thechance.common.presentation.composables.scaffold.DashBoardScaffold
 import org.thechance.common.presentation.composables.scaffold.DashboardAppbar
 import org.thechance.common.presentation.composables.scaffold.DashboardSideBar
+import org.thechance.common.presentation.resources.Resources
 
 object MainContainer : Screen, KoinComponent {
 
@@ -70,8 +71,8 @@ object MainContainer : Screen, KoinComponent {
                 ) { sideBarUnexpandedWidthInKms ,mainMenuIsExpanded, itemHeight ->
                     TabNavigationItem(
                         tab = OverviewTab,
-                        selectedIconResource = "ic_overview_fill.svg",
-                        unSelectedIconResource = "ic_overview_outlined_light.svg",
+                        selectedIconResource = Resources.Drawable.overviewFilled,
+                        unSelectedIconResource = Resources.Drawable.overviewOutlined,
                         mainMenuIsExpanded = mainMenuIsExpanded,
                         sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
                         modifier = Modifier.onGloballyPositioned {
@@ -80,8 +81,8 @@ object MainContainer : Screen, KoinComponent {
                     )
                     TabNavigationItem(
                         tab = TaxisTab,
-                        selectedIconResource = "ic_taxi_fill.svg",
-                        unSelectedIconResource = "ic_taxi_outlined_light.xml",
+                        selectedIconResource = Resources.Drawable.taxiFilled,
+                        unSelectedIconResource = Resources.Drawable.taxiOutlined,
                         mainMenuIsExpanded = mainMenuIsExpanded,
                         sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
                         modifier = Modifier.onGloballyPositioned {
@@ -90,8 +91,8 @@ object MainContainer : Screen, KoinComponent {
                     )
                     TabNavigationItem(
                         tab = RestaurantsTab,
-                        selectedIconResource = "ic_restaurant_fill.svg",
-                        unSelectedIconResource = "ic_restaurant_outlined_light.svg",
+                        selectedIconResource = Resources.Drawable.restaurantFilled,
+                        unSelectedIconResource = Resources.Drawable.restaurantOutlined,
                         mainMenuIsExpanded = mainMenuIsExpanded,
                         sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
                         modifier = Modifier.onGloballyPositioned {
@@ -100,8 +101,8 @@ object MainContainer : Screen, KoinComponent {
                     )
                     TabNavigationItem(
                         tab = UsersTab,
-                        selectedIconResource = "ic_users_fill.svg",
-                        unSelectedIconResource = "ic_users_outlined_light.svg",
+                        selectedIconResource = Resources.Drawable.usersFilled,
+                        unSelectedIconResource = Resources.Drawable.usersOutlined,
                         mainMenuIsExpanded = mainMenuIsExpanded,
                         sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
                         modifier = Modifier.onGloballyPositioned {
