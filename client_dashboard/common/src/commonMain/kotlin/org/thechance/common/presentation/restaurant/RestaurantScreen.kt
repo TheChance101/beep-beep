@@ -3,7 +3,6 @@ package org.thechance.common.presentation.restaurant
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -89,11 +88,11 @@ class RestaurantScreen :
         ) {
             BpSimpleTextField(
                 modifier = Modifier.widthIn(min = 340.dp, max = 440.dp),
-                hint = Resources.Strings.search,
+                hint = Resources.Strings.searchForRestaurants,
                 onValueChange = listener::onSearchChange,
                 text = state.search,
                 keyboardType = KeyboardType.Text,
-                trailingPainter = painterResource(Resources.Strings.search)
+                trailingPainter = painterResource(Resources.Drawable.search)
             )
 
 
@@ -208,20 +207,14 @@ class RestaurantScreen :
         )
         RatingBar(
             rating = restaurant.rating,
-            selectedIcon = painterResource(
-                if (isSystemInDarkTheme())
-                    Resources.Strings.filledStarDark else Resources.Strings.filledStarLight
-            ),
-            halfSelectedIcon = painterResource(
-                if (isSystemInDarkTheme())
-                    Resources.Strings.halfFilledStarDark else Resources.Strings.halfFilledStarLight
-            ),
+            selectedIcon = painterResource(Resources.Drawable.starFilled),
+            halfSelectedIcon = painterResource(Resources.Drawable.starHalfFilled),
             modifier = Modifier.weight(otherColumnsWeight),
             iconsSize = LocalDimensions.current.space16
         )
         PriceBar(
             priceLevel = restaurant.priceLevel,
-            icon = painterResource(Resources.Strings.dollarSign),
+            icon = painterResource(Resources.Drawable.dollarSign),
             iconColor = Theme.colors.success,
             modifier = Modifier.weight(otherColumnsWeight),
             iconsSize = LocalDimensions.current.space16
@@ -236,7 +229,7 @@ class RestaurantScreen :
         )
 
         Image(
-            painter = painterResource(Resources.Strings.dots),
+            painter = painterResource(Resources.Drawable.dots),
             contentDescription = null,
             modifier = Modifier.noRipple { onClickEditRestaurant(restaurant.name) }
                 .weight(firstAndLastColumnWeight),
@@ -256,7 +249,7 @@ class RestaurantScreen :
                     )
                 },
                 onClick = listener::onClickDropDownMenu,
-                painter = painterResource(Resources.Strings.filterIcon),
+                painter = painterResource(Resources.Drawable.filter),
                 modifier = Modifier.cursorHoverIconHand()
             )
             RestaurantFilterDropdownMenu(
@@ -321,17 +314,9 @@ class RestaurantScreen :
                 EditableRatingBar(
                     rating = rating,
                     count = 5,
-                    selectedIcon = painterResource(
-                        if (isSystemInDarkTheme())
-                            Resources.Strings.filledStarDark else Resources.Strings.filledStarLight
-                    ),
-                    halfSelectedIcon = painterResource(
-                        if (isSystemInDarkTheme())
-                            Resources.Strings.halfFilledStarDark else Resources.Strings.halfFilledStarLight
-                    ),
-                    notSelectedIcon = painterResource(
-                        if (isSystemInDarkTheme()) Resources.Strings.starDark else Resources.Strings.starLight
-                    ),
+                    selectedIcon = painterResource(Resources.Drawable.starFilled),
+                    halfSelectedIcon = painterResource(Resources.Drawable.starHalfFilled),
+                    notSelectedIcon = painterResource(Resources.Drawable.starOutlined),
                     iconsSize = LocalDimensions.current.space24,
                     iconsPadding = PaddingValues(horizontal = LocalDimensions.current.space8),
                     modifier = Modifier.fillMaxWidth()
@@ -356,7 +341,7 @@ class RestaurantScreen :
                 EditablePriceBar(
                     priceLevel = priceLevel,
                     count = 3,
-                    icon = painterResource(Resources.Strings.dollarSign),
+                    icon = painterResource(Resources.Drawable.dollarSign),
                     enabledIconsColor = Theme.colors.success,
                     disabledIconsColor = Theme.colors.disable,
                     iconsPadding = PaddingValues(horizontal = LocalDimensions.current.space8),

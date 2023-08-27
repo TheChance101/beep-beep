@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.LocalDimensions
+import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.Constants
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -61,7 +62,7 @@ fun TotalItemsIndicator(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
         )
         Text(
-            "$itemType out of $totalItems ${itemType}s",
+            "$itemType ${Resources.Strings.outOf} $totalItems ${itemType} ${Resources.Strings.pluralLetter}",
             style = Theme.typography.body,
             color = Theme.colors.contentSecondary
         )

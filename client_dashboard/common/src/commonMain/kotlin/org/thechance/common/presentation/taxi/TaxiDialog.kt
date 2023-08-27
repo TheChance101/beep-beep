@@ -108,10 +108,10 @@ fun AddTaxiDialog(
                 selectedSeatsCount = state.seats,
                 count = 6,
                 selectedIcon = painterResource(
-                    if (isSystemInDarkTheme()) "ic_filled_seat_dark.svg" else "ic_filled_seat_light.svg"
+                    if (isSystemInDarkTheme()) "ic_seat_filled_dark.svg" else "ic_seat_filled_light.svg"
                 ),
                 notSelectedIcon = painterResource(
-                    if (isSystemInDarkTheme()) "ic_outlined_seat_dark.svg" else "ic_outlined_seat_light.svg"
+                    if (isSystemInDarkTheme()) "ic_seat_outlined_dark.svg" else "ic_seat_outlined_light.svg"
                 ),
                 iconsSize = LocalDimensions.current.space24,
                 iconsPadding = PaddingValues(horizontal = LocalDimensions.current.space8),

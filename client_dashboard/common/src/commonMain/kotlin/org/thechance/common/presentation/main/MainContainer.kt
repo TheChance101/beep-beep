@@ -71,7 +71,7 @@ object MainContainer : Screen, KoinComponent {
                     TabNavigationItem(
                         tab = OverviewTab,
                         selectedIconResource = "ic_overview_fill.svg",
-                        unSelectedIconResource = "ic_overview_empty.svg",
+                        unSelectedIconResource = "ic_overview_outlined_light.svg",
                         mainMenuIsExpanded = mainMenuIsExpanded,
                         sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
                         modifier = Modifier.onGloballyPositioned {
@@ -81,7 +81,7 @@ object MainContainer : Screen, KoinComponent {
                     TabNavigationItem(
                         tab = TaxisTab,
                         selectedIconResource = "ic_taxi_fill.svg",
-                        unSelectedIconResource = "ic_taxi_empty.xml",
+                        unSelectedIconResource = "ic_taxi_outlined_light.xml",
                         mainMenuIsExpanded = mainMenuIsExpanded,
                         sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
                         modifier = Modifier.onGloballyPositioned {
@@ -91,7 +91,7 @@ object MainContainer : Screen, KoinComponent {
                     TabNavigationItem(
                         tab = RestaurantsTab,
                         selectedIconResource = "ic_restaurant_fill.svg",
-                        unSelectedIconResource = "ic_restaurant_empty.svg",
+                        unSelectedIconResource = "ic_restaurant_outlined_light.svg",
                         mainMenuIsExpanded = mainMenuIsExpanded,
                         sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
                         modifier = Modifier.onGloballyPositioned {
@@ -101,7 +101,7 @@ object MainContainer : Screen, KoinComponent {
                     TabNavigationItem(
                         tab = UsersTab,
                         selectedIconResource = "ic_users_fill.svg",
-                        unSelectedIconResource = "ic_users_empty.svg",
+                        unSelectedIconResource = "ic_users_outlined_light.svg",
                         mainMenuIsExpanded = mainMenuIsExpanded,
                         sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
                         modifier = Modifier.onGloballyPositioned {

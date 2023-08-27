@@ -1,14 +1,7 @@
 package org.thechance.common.presentation.composables
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +13,7 @@ import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.restaurant.AddRestaurantDialogUiState
 import java.awt.Dimension
 
@@ -52,7 +46,7 @@ fun RestaurantDialog(
                 .padding(24.dp)
         ) {
             Text(
-                text = "New Restaurant",
+                text = Resources.Strings.newRestaurant,
                 style = Theme.typography.headlineLarge,
                 color = Theme.colors.contentPrimary
             )
@@ -64,7 +58,7 @@ fun RestaurantDialog(
                     BpTextField(
                         onValueChange = onRestaurantNameChange,
                         text = state.name,
-                        label = "Restaurant name",
+                        label = Resources.Strings.restaurantName,
                         modifier = Modifier.padding(top = Theme.dimens.space16),
                         hint = ""
                     )
@@ -72,7 +66,7 @@ fun RestaurantDialog(
                     BpTextField(
                         onValueChange = onOwnerUserNameChange,
                         text = state.ownerUsername,
-                        label = "Owner username",
+                        label = Resources.Strings.ownerUsername,
                         modifier = Modifier.padding(top = Theme.dimens.space16),
                         hint = ""
                     )
@@ -80,7 +74,7 @@ fun RestaurantDialog(
                     BpTextField(
                         onValueChange = onPhoneNumberChange,
                         text = state.phoneNumber,
-                        label = "Phone number",
+                        label = Resources.Strings.phoneNumber,
                         modifier = Modifier.padding(top = Theme.dimens.space16),
                         hint = ""
                     )
@@ -92,21 +86,21 @@ fun RestaurantDialog(
                             onValueChange = onWorkingStartHourChange,
                             text = state.startTime,
                             modifier = Modifier.weight(1f),
-                            label = "Working hours",
-                            hint = "1:00"
+                            label = Resources.Strings.workingHours,
+                            hint = Resources.Strings.workStartHourHint
                         )
                         BpTextField(
                             onValueChange = onWorkingEndHourChange,
                             text = state.endTime,
                             modifier = Modifier.weight(1f),
                             label = "",
-                            hint = "24:00"
+                            hint = Resources.Strings.workEndHourHint
                         )
                     }
                     BpTextField(
                         onValueChange = { },
                         text = state.location,
-                        label = "Location",
+                        label = Resources.Strings.location,
                         modifier = Modifier.padding(top = Theme.dimens.space16),
                         hint = ""
                     )
@@ -124,12 +118,12 @@ fun RestaurantDialog(
                         horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
                     ) {
                         BpOutlinedButton(
-                            title = "Cancel",
+                            title = Resources.Strings.cancel,
                             onClick = { onCancelClicked() },
                             modifier = Modifier.width(120.dp)
                         )
                         BpButton(
-                            title = "Create",
+                            title = Resources.Strings.create,
                             onClick = { onCreateClicked() },
                             modifier = Modifier.width(240.dp)
                         )

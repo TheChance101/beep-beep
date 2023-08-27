@@ -92,11 +92,11 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
                         onValueChange = listener::onSearchInputChange,
                         text = state.searchQuery,
                         keyboardType = KeyboardType.Text,
-                        trailingPainter = painterResource(Resources.Strings.searchIcon),
+                        trailingPainter = painterResource(Resources.Drawable.search),
                     )
                     BpIconButton(
                         onClick = { /* TODO: Show Taxi Filter Dialog */ },
-                        painter = painterResource(Resources.Strings.filterIcon),
+                        painter = painterResource(Resources.Drawable.filter),
                     ) {
                         Text(
                             text = Resources.Strings.filter,
@@ -160,7 +160,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
                     onDismiss = listener::onDismissExportReportSnackBar
                 ) {
                     Image(
-                        painter = painterResource(Resources.Strings.iconDownloadMark),
+                        painter = painterResource(Resources.Drawable.downloadMark),
                         contentDescription = null,
                         colorFilter = ColorFilter.tint(color = Theme.colors.success),
                         modifier = Modifier.padding(LocalDimensions.current.space16)
@@ -209,7 +209,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
         ) {
             repeat(taxi.seats) {
                 Icon(
-                    painter = painterResource(Resources.Strings.seat),
+                    painter = painterResource(Resources.Drawable.seatOutlined),
                     contentDescription = null,
                     tint = Theme.colors.contentPrimary.copy(alpha = 0.87f),
                     modifier = Modifier.size(24.dp)
@@ -218,7 +218,7 @@ class TaxiScreen : BaseScreen<TaxiScreenModel, TaxiUiEffect, TaxiUiState, TaxiSc
         }
         TitleField(text = taxi.trips)
         Image(
-            painter = painterResource(Resources.Strings.dots),
+            painter = painterResource(Resources.Drawable.dots),
             contentDescription = null,
             modifier = Modifier.noRipple { onClickEdit(taxi.id) }
                 .weight(firstColumnWeight),

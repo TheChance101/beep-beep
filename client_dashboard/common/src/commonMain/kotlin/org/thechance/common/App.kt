@@ -2,13 +2,7 @@ package org.thechance.common
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Box
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.layout.onSizeChanged
@@ -18,7 +12,6 @@ import cafe.adriel.voyager.transitions.SlideTransition
 import com.beepbeep.designSystem.ui.theme.BpTheme
 import com.beepbeep.designSystem.ui.theme.Dimens
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.presentation.login.LoginScreen
 import org.thechance.common.presentation.main.MainContainer
 import org.thechance.common.presentation.resources.ProvideResources
 import org.thechance.common.presentation.util.kms
@@ -38,8 +31,10 @@ fun App() {
     ) {
         Box(Modifier.onSizeChanged { size = it.toSize() }) {
             BpTheme {
-                Navigator(LoginScreen()) {
-                    SlideTransition(it)
+                ProvideResources {
+                    Navigator(MainContainer) {
+                        SlideTransition(it)
+                    }
                 }
             }
         }

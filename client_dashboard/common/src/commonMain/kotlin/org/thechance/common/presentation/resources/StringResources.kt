@@ -22,6 +22,14 @@ data class StringResources(
     val priceLevel: String = "Price level",
     val rating: String = "Rating",
     val filter: String = "Filter",
+    val restaurantName: String = "Restaurant name",
+    val ownerUsername: String = "Owner username",
+    val phoneNumber: String = "Phone number",
+    val workingHours: String = "Working hours",
+    val location: String = "Location",
+    val create: String = "Create",
+    val workStartHourHint: String = "1:00",
+    val workEndHourHint: String = "24:00",
     //endregion Restaurant
 
     //region Taxi
@@ -38,6 +46,7 @@ data class StringResources(
     val searchForUsers: String = "Search for users",
     val edit: String = "Edit",
     val delete: String = "Delete",
+    val permissions: String = "Permissions",
     //endregion User
 
     //region scaffold

@@ -211,7 +211,7 @@ class UserScreen :
                     )
                 },
                 onClick = onFilterMenuClicked,
-                painter = painterResource(Resources.Strings.filterIcon),
+                painter = painterResource(Resources.Drawable.filter),
                 modifier = Modifier.cursorHoverIconHand()
             )
             BpDropdownMenu(
@@ -328,7 +328,7 @@ class UserScreen :
                 onValueChange = onSearchInputChanged,
                 text = searchText,
                 keyboardType = KeyboardType.Text,
-                trailingPainter = painterResource(Resources.Strings.searchIcon)
+                trailingPainter = painterResource(Resources.Drawable.search)
             )
 
             UsersFilterDropdownMenu(
@@ -369,7 +369,7 @@ class UserScreen :
             modifier = Modifier.weight(otherColumnsWeight),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(painter = painterResource(Resources.Strings.dummyImg), contentDescription = null)
+            Image(painter = painterResource(Resources.Drawable.dummyImg), contentDescription = null)
             Text(
                 text = user.fullName,
                 style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
@@ -421,7 +421,7 @@ class UserScreen :
             modifier = Modifier.weight(firstColumnWeight),
         ) {
             Image(
-                painter = painterResource(Resources.Strings.dots),
+                painter = painterResource(Resources.Drawable.dots),
                 contentDescription = null,
                 modifier = Modifier.noRipple { onUserMenuClicked(user.username) },
                 colorFilter = ColorFilter.tint(color = Theme.colors.contentPrimary)
@@ -455,8 +455,8 @@ class UserScreen :
                     BpDropdownMenuItem(
                         onClick = {
                             when (it.text) {
-                                Resources.Strings.edit -> onEditUserMenuItemClicked(user)
-                                Resources.Strings.delete -> onDeleteUserMenuItemClicked(user)
+                                "Edit" -> onEditUserMenuItemClicked(user)
+                                "Delete" -> onDeleteUserMenuItemClicked(user)
                             }
                         },
                         text = it.text,

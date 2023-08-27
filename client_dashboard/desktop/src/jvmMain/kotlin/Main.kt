@@ -13,7 +13,7 @@ fun main() {
         Window(
             onCloseRequest = ::exitApplication,
             title = "BeepBeep Dashboard",
-            icon = painterResource("/ic_beep_beep_icon.xml"),
+            icon = painterResource("ic_beepbeep_logo.svg"),
         ) {
             window.minimumSize = Dimension(1200, 600)
             App()

@@ -3,12 +3,12 @@ package org.thechance.common.presentation.resources
 data class DrawableResources(
     val login: String = "img_login_light.png",
     val dollarSign: String = "ic_dollar_sign.svg",
-    val starLight: String = "ic_star_light.svg",
+    val starOutlined: String = "ic_star_light.svg",
     val starHalfFilled: String = "ic_star_half_filled_light.svg",
     val starFilled: String = "ic_star_filled_light.svg",
     val filter: String = "ic_filter_light.svg",
     val dots: String = "horizontal_dots.xml",
-    val search: String = "ic_search.svg",
+    val search: String = "ic_search_light.svg",
     val downloadMark: String = "ic_download_mark.svg",
     val seatOutlined: String = "ic_seat_outlined_light.svg",
     val seatFilled: String = "ic_seat_filled_light.svg",
@@ -32,7 +32,7 @@ data class DrawableResources(
 
 val darkDrawableResource = DrawableResources(
     login = "img_login_dark.png",
-    starLight = "ic_star_dark.svg",
+    starOutlined = "ic_star_dark.svg",
     starHalfFilled = "ic_star_half_filled_dark.svg",
     starFilled = "ic_star_filled_dark.svg",
     seatOutlined = "ic_seat_outlined_dark.svg",
@@ -45,6 +45,7 @@ val darkDrawableResource = DrawableResources(
     usersOutlined = "ic_users_outlined_dark.svg",
     filter = "ic_filter_dark.svg",
     dropDownArrow = "ic_drop_down_arrow_dark.svg",
+    search = "ic_search_dark.svg",
 )
 
 val lightDrawableResource = DrawableResources()
