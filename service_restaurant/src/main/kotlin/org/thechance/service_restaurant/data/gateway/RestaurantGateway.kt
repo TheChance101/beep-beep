@@ -106,9 +106,9 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
 
     override suspend fun updateRestaurant(restaurant: Restaurant): Restaurant {
         val fieldsToUpdate = getNonEmptyFieldsMap(restaurant.copy(id = "", ownerId = ""))
-        if (restaurant.address.latitude != -1.0 && restaurant.address.longitude != -1.0) {
-            val addressUpdateFields = getNonEmptyFieldsMap(restaurant.address)
-            fieldsToUpdate[RestaurantCollection::address.name] = addressUpdateFields
+        if (restaurant.location.latitude != -1.0 && restaurant.location.longitude != -1.0) {
+            val addressUpdateFields = getNonEmptyFieldsMap(restaurant.location)
+            fieldsToUpdate[RestaurantCollection::location.name] = addressUpdateFields
         }
         return container.restaurantCollection.findOneAndUpdate(
             filter = RestaurantCollection::id eq UUID.fromString(restaurant.id),

@@ -12,5 +12,6 @@ data class RestaurantDetailsDto(
     val phone: String,
     val openingTime: String,
     val closingTime: String,
-    val address: AddressDto,
+    val address: String,
+    val location: LocationDto,
 )
