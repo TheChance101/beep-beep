@@ -2,25 +2,27 @@ package presentation.meals
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Cuisine
+import domain.entity.Meal
 import domain.usecase.IManageMealUseCase
 import domain.usecase.IMangeCuisineUseCase
 
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
+import presentation.base.ErrorState
 
 import presentation.meals.state.CuisineUIState
 import presentation.meals.state.MealsScreenUIState
 import presentation.meals.state.toUIState
 
-class MealsScreenModel() :
+class MealsScreenModel(
+    private val restaurantId: String,
+    private val mangeCousin: IMangeCuisineUseCase,
+    private val mangeMeal: IManageMealUseCase
+) :
     BaseScreenModel<MealsScreenUIState, MealsScreenUIEffect>(MealsScreenUIState()),
     MealScreenInteractionListener {
-    override val viewModelScope: CoroutineScope
-        get() = coroutineScope
-
-    private val mangeCousin: IMangeCuisineUseCase by inject()
-    private val mangeMeal: IManageMealUseCase by inject()
+    override val viewModelScope: CoroutineScope = coroutineScope
 
 
     init {
@@ -29,18 +31,16 @@ class MealsScreenModel() :
 
     private fun getCuisine() {
         tryToExecute(
-            mangeCousin::getCuisines,
-            ::onGetCuisineSuccess,
-            onError = { updateState { it.copy(error = it.error) } }
+            function = {
+                mangeCousin.getCuisineByRestaurantId(
+                    restaurantId
+                )
+            },
+            ::onGetCuisineSuccessfully,
+            ::onError
         )
     }
 
-    private fun onGetCuisineSuccess(cuisines: List<Cuisine>) {
-        updateState {
-            it.copy(cuisine = cuisines.toUIState(), selectedCuisine = cuisines.toUIState().first())
-        }
-        getMeals(state.value.selectedCuisine.id)
-    }
 
     private fun getMeals(cuisineId: String) {
         updateState { it.copy(isLoading = true) }
@@ -52,14 +52,26 @@ class MealsScreenModel() :
                     mangeCousin.getMealsByCuisineId(cuisineId)
                 }
             },
-            onSuccess = { value ->
-                updateState { it.copy(meals = value.toUIState(), isLoading = false) }
-            },
-            onError = {
-                updateState { it.copy(error = it.error, isLoading = false) }
-            }
+            ::onGetMealSuccessfully,
+            ::onError
         )
     }
+
+    private fun onGetCuisineSuccessfully(cuisines: List<Cuisine>) {
+        updateState {
+            it.copy(cuisine = cuisines.toUIState(), selectedCuisine = cuisines.toUIState().first())
+        }
+        getMeals(state.value.selectedCuisine.id)
+    }
+
+    private fun onGetMealSuccessfully(meals: List<Meal>) {
+        updateState { it.copy(meals = meals.toUIState(), isLoading = false) }
+    }
+
+    private fun onError(error: ErrorState) {
+        updateState { it.copy(error = error, isLoading = false) }
+    }
+
 
     override fun onClickBack() {
         sendNewEffect(MealsScreenUIEffect.Back)

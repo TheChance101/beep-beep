@@ -3,32 +3,7 @@ package di
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import org.thechance.common.domain.usecase.CreateNewTaxiUseCase
-import org.thechance.common.domain.usecase.FilterRestaurantsUseCase
-import org.thechance.common.domain.usecase.FindTaxiByUserNameUseCase
-import org.thechance.common.domain.usecase.GetTaxiReportUseCase
-import org.thechance.common.domain.usecase.GetTaxisUseCase
-import org.thechance.common.domain.usecase.GetUserInfoUseCase
-import org.thechance.common.domain.usecase.GetUserTokensUseCase
-import org.thechance.common.domain.usecase.GetUsersUseCase
-import org.thechance.common.domain.usecase.HandleLocationUseCase
-import org.thechance.common.domain.usecase.ICreateNewTaxiUseCase
-import org.thechance.common.domain.usecase.IFilterRestaurantsUseCase
-import org.thechance.common.domain.usecase.IFindTaxiByUsernameUseCase
-import org.thechance.common.domain.usecase.IGetTaxiReportUseCase
-import org.thechance.common.domain.usecase.IGetTaxisUseCase
-import org.thechance.common.domain.usecase.IGetUserInfoUseCase
-import org.thechance.common.domain.usecase.IGetUserTokensUseCase
-import org.thechance.common.domain.usecase.IGetUsersUseCase
-import org.thechance.common.domain.usecase.IHandleLocationUseCase
-import org.thechance.common.domain.usecase.ILoginUserUseCase
-import org.thechance.common.domain.usecase.IManageRestaurantUseCase
-import org.thechance.common.domain.usecase.ISearchFilterRestaurantsUseCase
-import org.thechance.common.domain.usecase.ISearchRestaurantsByRestaurantNameUseCase
-import org.thechance.common.domain.usecase.LoginUserUseCase
-import org.thechance.common.domain.usecase.ManageRestaurantUseCase
-import org.thechance.common.domain.usecase.SearchFilterRestaurantsUseCase
-import org.thechance.common.domain.usecase.SearchRestaurantsByRestaurantNameUseCase
+import org.thechance.common.domain.usecase.*
 
 val UseCaseModule = module {
     singleOf(::GetUserInfoUseCase) { bind<IGetUserInfoUseCase>() }
@@ -42,6 +17,5 @@ val UseCaseModule = module {
     singleOf(::LoginUserUseCase) { bind<ILoginUserUseCase>() }
     singleOf(::ManageRestaurantUseCase) { bind<IManageRestaurantUseCase>() }
     singleOf(::HandleLocationUseCase) { bind<IHandleLocationUseCase>() }
-    singleOf(::GetUserTokensUseCase) { bind<IGetUserTokensUseCase>() }
     singleOf(::GetTaxiReportUseCase) { bind<IGetTaxiReportUseCase>() }
 }

@@ -42,7 +42,7 @@ fun <E : Enum<*>> BpAnimatedTabLayout(
     selectedTab: E,
     onTabSelected: (E) -> Unit,
     modifier: Modifier = Modifier,
-    horizontalPadding: Dp = Theme.dimens.space4,
+    horizontalPadding: Dp = 4.dp,
     selectedTabColor: Color = Theme.colors.primary,
     containerColor: Color = Theme.colors.surface,
     shape: Shape = RoundedCornerShape(Theme.radius.medium),

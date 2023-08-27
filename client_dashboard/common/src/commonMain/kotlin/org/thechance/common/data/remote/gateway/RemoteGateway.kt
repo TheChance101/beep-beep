@@ -1,15 +1,13 @@
 package org.thechance.common.data.remote.gateway
 
 import com.google.gson.Gson
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.plugins.ClientRequestException
-import io.ktor.client.request.forms.submitForm
-import io.ktor.client.request.header
-import io.ktor.client.request.url
-import io.ktor.client.statement.HttpResponse
-import io.ktor.http.Parameters
-import org.thechance.common.data.remote.mapper.toEntity
+import io.ktor.client.*
+import io.ktor.client.call.*
+import io.ktor.client.plugins.*
+import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
+import io.ktor.client.statement.*
+import io.ktor.http.*
 import org.thechance.common.data.remote.model.ServerResponse
 import org.thechance.common.data.remote.model.UserTokensRemoteDto
 import org.thechance.common.domain.entity.*
@@ -60,8 +58,8 @@ class RemoteGateway(
         return emptyList()
     }
 
-    override suspend fun loginUser(username: String, password: String): UserTokens {
-        return tryToExecute<ServerResponse<UserTokensRemoteDto>> {
+    override suspend fun loginUser(username: String, password: String): Pair<String, String> {
+        val result = tryToExecute<ServerResponse<UserTokensRemoteDto>> {
             submitForm(
                 formParameters = Parameters.build {
                     append("username", username)
@@ -73,7 +71,9 @@ class RemoteGateway(
                 header("Accept-Language", "ar")
                 header("Country-Code", "EG")
             }
-        }.value?.toEntity() ?: throw Exception()
+        }.value
+
+        return Pair(result?.accessToken ?: "", result?.refreshToken ?: "")
     }
 
     override suspend fun filterRestaurants(rating: Double, priceLevel: Int): List<Restaurant> {
