@@ -72,7 +72,7 @@ class RestaurantInfoScreen :
 
                         BpTitleWithContentSection(title = Resources.strings.ownerUsername) {
                             Text(
-                                state.ownerUsername,
+                                state.restaurant.ownerUsername,
                                 modifier = Modifier.padding(
                                     start = Theme.dimens.space16,
                                     end = Theme.dimens.space16,
@@ -84,7 +84,7 @@ class RestaurantInfoScreen :
                         }
                         BpTitleWithContentSection(title = Resources.strings.address) {
                             Text(
-                                state.address,
+                                state.restaurant.address,
                                 modifier = Modifier.padding(
                                     start = Theme.dimens.space16,
                                     end = Theme.dimens.space16,
@@ -96,7 +96,7 @@ class RestaurantInfoScreen :
                         }
                         BpTitleWithContentSection(title = Resources.strings.rating) {
                             BpRating(
-                                state.rating,
+                                state.restaurant.rating,
                                 selectedIcon = painterResource(Resources.images.filledStar),
                                 halfSelectedIcon = painterResource(Resources.images.halfFilledStar),
                                 modifier = Modifier.padding(
@@ -109,7 +109,7 @@ class RestaurantInfoScreen :
                         }
                         BpTitleWithContentSection(title = Resources.strings.priceLevel) {
                             Text(
-                                state.priceLevel,
+                                state.restaurant.priceLevel,
                                 modifier = Modifier.padding(
                                     start = Theme.dimens.space16,
                                     end = Theme.dimens.space16,
@@ -130,18 +130,18 @@ class RestaurantInfoScreen :
                     ) {
                         BpTextField(
                             label = Resources.strings.restaurantName,
-                            text = state.restaurantName,
+                            text = state.restaurant.restaurantName,
                             onValueChange = { listener.onRestaurantNameChange(it) },
                             modifier = Modifier.padding(
                                 horizontal = Theme.dimens.space16,
                                 vertical = Theme.dimens.space16
                             ),
                             errorMessage = Resources.strings.restaurantNameErrorMessage,
-                            isError = state.restaurantName.length !in 4..25
+                            isError = state.restaurant.restaurantName.length !in 4..25
                         )
                         BpTextField(
                             label = Resources.strings.phoneNumber,
-                            text = state.phoneNumber,
+                            text = state.restaurant.phoneNumber,
                             onValueChange = { listener.onPhoneNumberChange(it) },
                             modifier = Modifier.padding(
                                 start = Theme.dimens.space16,
@@ -152,7 +152,7 @@ class RestaurantInfoScreen :
                         Row(modifier = Modifier.padding(bottom = Theme.dimens.space16)) {
                             BpTextField(
                                 label = Resources.strings.workingHours,
-                                text = state.openingTime,
+                                text = state.restaurant.openingTime,
                                 onValueChange = { listener.onOpeningTimeChange(it) },
                                 modifier = Modifier.padding(
                                     start = Theme.dimens.space16,
@@ -161,7 +161,7 @@ class RestaurantInfoScreen :
                             )
                             BpTextField(
                                 label = "",
-                                text = state.closingTime,
+                                text = state.restaurant.closingTime,
                                 onValueChange = { listener.onClosingTimeChange(it) },
                                 modifier = Modifier.padding(
                                     start = Theme.dimens.space4,
@@ -171,7 +171,7 @@ class RestaurantInfoScreen :
                         }
                         BpTextField(
                             label = Resources.strings.description,
-                            text = state.description,
+                            text = state.restaurant.description,
                             onValueChange = { listener.onDescriptionChanged(it) },
                             modifier = Modifier.padding(
                                 start = Theme.dimens.space16,
@@ -179,15 +179,15 @@ class RestaurantInfoScreen :
                                 bottom = Theme.dimens.space24
                             ),
                             errorMessage = Resources.strings.descriptionErrorMessage,
-                            isError = state.description.length > 255,
+                            isError = state.restaurant.description.length > 255,
                             singleLine = false,
                             textFieldModifier = Modifier.fillMaxWidth().height(104.dp)
                         )
                         BpButton(
                             title = Resources.strings.save,
                             onClick = { listener.onClickSave() },
-                            enabled = state.restaurantName.isNotEmpty() && state.phoneNumber.isNotEmpty()
-                                    && state.openingTime.isNotEmpty() && state.closingTime.isNotEmpty(),
+                            enabled = state.restaurant.restaurantName.isNotEmpty() && state.restaurant.phoneNumber.isNotEmpty()
+                                    && state.restaurant.openingTime.isNotEmpty() && state.restaurant.closingTime.isNotEmpty(),
                             modifier = Modifier.fillMaxWidth().padding(
                                 start = Theme.dimens.space16,
                                 end = Theme.dimens.space16,
@@ -230,9 +230,6 @@ class RestaurantInfoScreen :
     override fun onEffect(effect: RestaurantInfoUiEffect, navigator: Navigator) {
         when (effect) {
             is RestaurantInfoUiEffect.NavigateToLogin -> navigator.replaceAll(LoginScreen())
-            is RestaurantInfoUiEffect.ShowErrorMessage -> println("hello, ${effect.message}")
-            is RestaurantInfoUiEffect.ShowNoDataPlaceholder -> println("hello, no data placeholder")
-            is RestaurantInfoUiEffect.ShowSaveInfoSuccess -> println("hello, ${effect.message}")
             is RestaurantInfoUiEffect.NavigateUp -> navigator.pop()
         }
     }

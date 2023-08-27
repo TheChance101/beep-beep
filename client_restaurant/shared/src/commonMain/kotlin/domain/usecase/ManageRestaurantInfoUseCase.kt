@@ -2,19 +2,17 @@ package domain.usecase
 
 import domain.entity.Restaurant
 import domain.gateway.IRemoteGateway
-import domain.gateway.IRemoteRestaurantGateway
-import presentation.base.ServerSideException
 
 interface IManageRestaurantInfoUseCase {
-    suspend fun getRestaurantInfo(restaurantId: String): Restaurant
+    suspend fun getRestaurantInfo(): Restaurant
     suspend fun updateRestaurantInfo(restaurant: Restaurant): Boolean
 
 }
 
 class ManageRestaurantInfoUseCase(private val remoteRestaurantGateway: IRemoteGateway) :
     IManageRestaurantInfoUseCase {
-    override suspend fun getRestaurantInfo(restaurantId: String): Restaurant {
-        return remoteRestaurantGateway.getRestaurantInfo(restaurantId)
+    override suspend fun getRestaurantInfo(): Restaurant {
+        return remoteRestaurantGateway.getRestaurantInfo("7c3d631e-6d49-48c9-9f91-9426ec559eb1")
     }
 
     override suspend fun updateRestaurantInfo(restaurant: Restaurant): Boolean {

@@ -25,7 +25,7 @@ class RestaurantInfoScreenModel :
         tryToExecute(
             {
                 manageRestaurantInfoUseCase
-                    .getRestaurantInfo("7c3d631e-6d49-48c9-9f91-9426ec559eb1")
+                    .getRestaurantInfo()
             },
             ::onGetRestaurantInfoSuccess,
             ::onGetRestaurantInfoError
@@ -34,37 +34,42 @@ class RestaurantInfoScreenModel :
 
     private fun onGetRestaurantInfoSuccess(restaurant: Restaurant) {
         val result = restaurant.toUiState()
-        updateState { result.copy(isLoading = false) }
+        updateState {
+            it.copy(
+                restaurant = result,
+                isLoading = false,
+                error = null
+            )
+        }
     }
 
     private fun onGetRestaurantInfoError(e: ErrorState) {
-        updateState { it.copy(isLoading = false) }
-        sendNewEffect(RestaurantInfoUiEffect.ShowNoDataPlaceholder)
+        updateState { it.copy(isLoading = false, error = e) }
     }
 
     override fun onRestaurantNameChange(name: String) {
-        updateState { it.copy(restaurantName = name) }
+        updateState { it.copy(restaurant = it.restaurant.copy(restaurantName = name)) }
     }
 
     override fun onPhoneNumberChange(phoneNum: String) {
-        updateState { it.copy(phoneNumber = phoneNum) }
+        updateState { it.copy(restaurant = it.restaurant.copy(phoneNumber = phoneNum)) }
     }
 
     override fun onOpeningTimeChange(openingTime: String) {
-        updateState { it.copy(openingTime = openingTime) }
+        updateState { it.copy(restaurant = it.restaurant.copy(openingTime = openingTime)) }
     }
 
     override fun onClosingTimeChange(closingTime: String) {
-        updateState { it.copy(closingTime = closingTime) }
+        updateState { it.copy(restaurant = it.restaurant.copy(closingTime = closingTime)) }
     }
 
     override fun onDescriptionChanged(description: String) {
-        updateState { it.copy(description = description) }
+        updateState { it.copy(restaurant = it.restaurant.copy(description = description)) }
     }
 
 
     override fun onClickSave() {
-        val restaurant = state.value.toRestaurant()
+        val restaurant = state.value.restaurant.toRestaurant()
         updateState { it.copy(isLoading = true) }
         tryToExecute(
             { manageRestaurantInfoUseCase.updateRestaurantInfo(restaurant) },
@@ -75,13 +80,11 @@ class RestaurantInfoScreenModel :
 
     private fun onUpdateRestaurantInfoSuccess(result: Boolean) {
         updateState { it.copy(isLoading = false) }
-        sendNewEffect(RestaurantInfoUiEffect.ShowSaveInfoSuccess("Info saved successfully"))
         println(result)
     }
 
     private fun onUpdateRestaurantInfoError(e: ErrorState) {
-        updateState { it.copy(isLoading = false) }
-        sendNewEffect(RestaurantInfoUiEffect.ShowErrorMessage("Error in update restaurantInfo $e"))
+        updateState { it.copy(isLoading = false, error = e) }
     }
 
     override fun onClickLogout() {
