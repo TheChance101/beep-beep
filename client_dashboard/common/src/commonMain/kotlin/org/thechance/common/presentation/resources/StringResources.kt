@@ -3,113 +3,54 @@ package org.thechance.common.presentation.resources
 
 data class StringResources(
     //region Login
-    val login: String,
-    val loginTitle: String,
-    val loginUsername: String,
-    val loginPassword: String,
-    val loginButton: String,
-    val loginKeepMeLoggedIn: String,
-    val loginImageDark: String,
-    val loginImageLight: String,
+    val login: String = "Login",
+    val loginTitle: String = "Use Admin account to login",
+    val loginUsername: String = "Username",
+    val loginPassword: String = "Password",
+    val loginButton: String = "Login",
+    val loginKeepMeLoggedIn: String = "Keep me logged in",
     //endregion Login
 
     //region Restaurant
-    val search: String,
-    val export: String,
-    val addCuisine: String,
-    val newRestaurant: String,
-    val restaurant: String,
-    val save: String,
-    val cancel: String,
-    val dollarSign: String,
-    val priceLevel: String,
-    val starLight: String,
-    val starDark: String,
-    val halfFilledStarDark: String,
-    val halfFilledStarLight: String,
-    val filledStarDark: String,
-    val filledStarLight: String,
-    val rating: String,
-    val filter: String,
-    val filterIcon: String,
-    val filterTitle: String,
-    val dots: String,
+    val searchForRestaurants: String = "Search for restaurants",
+    val export: String = "Export",
+    val addCuisine: String = "Add cuisine",
+    val newRestaurant: String = "New Restaurant",
+    val restaurant: String = "restaurant",
+    val save: String = "Save",
+    val cancel: String = "Cancel",
+    val priceLevel: String = "Price level",
+    val rating: String = "Rating",
+    val filter: String = "Filter",
     //endregion Restaurant
 
     //region Taxi
-    val searchForTaxis: String,
-    val searchIcon: String,
-    val newTaxi: String,
-    val taxi: String,
-    val iconDownloadMark: String,
-    val downloadSuccessMessage: String,
-    val seat: String,
+    val searchForTaxis: String = "Search for Taxis",
+    val newTaxi: String = "New Taxi",
+    val taxi: String = "taxi",
+    val downloadSuccessMessage: String = "Your file download was successful.",
     //endregion Taxi
 
     //region User
-    val user: String,
-    val permission: String,
-    val country: String,
-    val searchForUsers: String,
-    val dummyImg: String,
-    val edit: String,
-    val delete: String
+    val user: String = "user",
+    val permission: String = "Permission",
+    val country: String = "Country",
+    val searchForUsers: String = "Search for users",
+    val edit: String = "Edit",
+    val delete: String = "Delete",
     //endregion User
+
+    //region scaffold
+    val logout: String = "Logout",
+    val darkTheme: String = "Dark theme",
+    val dropDownMenu: String = "DropDownMenu",
+    //endregion scaffold
+
+    //region table
+    val outOf: String = "out of",
+    val pluralLetter: String = "s",
 )
 
-val Strings = StringResources(
-    //region Login
-    login = "Login",
-    loginTitle = "Use Admin account to login",
-    loginUsername = "Username",
-    loginPassword = "Password",
-    loginButton = "Login",
-    loginKeepMeLoggedIn = "Keep me logged in",
-    loginImageDark = "login_image_dark.png",
-    loginImageLight = "login_image_light.png",
-    //endregion Login
+val Strings = StringResources()
 
-    //region Restaurant
-    search = "Search for restaurants",
-    export = "Export",
-    addCuisine = "Add cuisine",
-    newRestaurant = "New Restaurant",
-    restaurant = "restaurant",
-    save = "Save",
-    cancel = "Cancel",
-    dollarSign = "ic_dollar_sign.svg",
-    priceLevel = "Price level",
-    starLight = "ic_star_light.svg",
-    starDark = "ic_star_dark.svg",
-    halfFilledStarDark = "ic_half_filled_star_dark.svg",
-    halfFilledStarLight = "ic_half_filled_star_light.svg",
-    filledStarDark = "ic_filled_star_dark.svg",
-    filledStarLight = "ic_filled_star_light.svg",
-    rating = "Rating",
-    filter = "Filter",
-    filterIcon = "ic_filter.svg",
-    filterTitle = "Filter",
-    dots = "horizontal_dots.xml",
-    //endregion Restaurant
-
-    //region Taxi
-    searchForTaxis = "Search for Taxis",
-    searchIcon = "ic_search.svg",
-    newTaxi = "New Taxi",
-    taxi = "taxi",
-    iconDownloadMark = "ic_download_mark.svg",
-    downloadSuccessMessage = "Your file download was successful.",
-    seat = "outline_seat.xml",
-    //endregion Taxi
-
-    //region User
-    user = "user",
-    permission = "Permission",
-    country = "Country",
-    searchForUsers = "Search for users",
-    dummyImg = "dummy_img.png",
-    edit = "Edit",
-    delete = "Delete"
-    //endregion User
-)
 
