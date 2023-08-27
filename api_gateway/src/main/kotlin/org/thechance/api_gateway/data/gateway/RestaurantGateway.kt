@@ -1,6 +1,5 @@
 package org.thechance.api_gateway.data.gateway
 
-
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
@@ -44,7 +43,12 @@ class RestaurantGateway(
         }
     }
 
-    override suspend fun getAllRequestPermission(): List<RestaurantRequestPermission> {
+    override suspend fun getAllRequestPermission(permissions: List<Int>): List<RestaurantRequestPermission> {
+        // todo: implement check permissions logic correctly
+        if (!permissions.contains(1)) {
+            throw SecurityException("You don't have permission to access this resource")
+        }
+
         return tryToExecute(
             api = APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
