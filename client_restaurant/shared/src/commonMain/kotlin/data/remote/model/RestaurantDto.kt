@@ -1,7 +1,5 @@
 package data.remote.model
 
-import domain.entity.Restaurant
-
 data class RestaurantDto(
     val id: String,
     val ownerId: String,
@@ -16,20 +14,3 @@ data class RestaurantDto(
     val address: AddressDto
 )
 
-fun List<RestaurantDto>.toEntity():List<Restaurant> = map { it.toEntity() }
-
-fun RestaurantDto.toEntity(): Restaurant {
-    return Restaurant(
-        id = id,
-        ownerId = ownerId,
-        ownerUsername = ownerUsername ?: "",
-        name = name ?: "",
-        description = description ?: "",
-        priceLevel = priceLevel ?: "",
-        rate = rate ?: 0.0,
-        phone = phone ?: "",
-        openingTime = openingTime ?: "",
-        closingTime = closingTime ?: "",
-        address = address.toEntity()
-    )
-}

@@ -5,14 +5,11 @@ import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
-import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.RestaurantDto
 import org.thechance.common.data.remote.model.TaxiDto
-import org.thechance.common.domain.entity.Restaurant
-import org.thechance.common.domain.entity.Taxi
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.*
 
 
 class FakeService : IFakeService {

@@ -1,24 +1,24 @@
-package data.remote.gateway
+package data.gateway
 
+import data.remote.mapper.toEntity
+import data.remote.mapper.toOrderEntity
 import data.remote.model.AddressDto
 import data.remote.model.CuisineDto
 import data.remote.model.MealDto
 import data.remote.model.OrderDto
-import data.remote.model.OrderMealDto
 import data.remote.model.RestaurantDto
-import data.remote.model.toEntity
-import data.remote.model.toOrderEntity
 import domain.entity.Category
 import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
 import domain.entity.UserTokens
-import domain.gateway.IRemoteGateWay
+import domain.gateway.IRemoteGateway
+import presentation.base.InvalidPasswordException
+import presentation.base.InvalidUserNameException
 import presentation.base.RequestException
 
-class FakeRemoteGateWay : IRemoteGateWay {
-
+class FakeRemoteGateWay : IRemoteGateway {
 
     private val orders = mutableListOf(
         OrderDto(
@@ -26,13 +26,13 @@ class FakeRemoteGateWay : IRemoteGateWay {
             userId = "550e8400-e29b-41d4-a716-446655440989",
             restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
             meals = listOf(
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 2,
                     mealName = "Pasta"
                 ),
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
                     quantity = 2,
@@ -48,7 +48,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             userId = "8a430be2-15b7-47f5-9e06-3f236f8c25ec",
             restaurantId = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
             meals = listOf(
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 4,
@@ -64,19 +64,19 @@ class FakeRemoteGateWay : IRemoteGateWay {
             userId = "f26dab15-7193-4e8d-bf6e-f4d2ae8799af",
             restaurantId = "91c2ae1f-8495-4c0c-bc47-7bf7ef77d907",
             meals = listOf(
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 1,
                     mealName = "Lunch salad"
                 ),
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 1,
                     mealName = "Afternoon tea sandwich"
                 ),
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 3,
@@ -92,7 +92,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             userId = "550e8400-e29b-41d4-a716-446655440989",
             restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
             meals = listOf(
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 3,
@@ -108,25 +108,25 @@ class FakeRemoteGateWay : IRemoteGateWay {
             userId = "8a430be2-15b7-47f5-9e06-3f236f8c25ec",
             restaurantId = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
             meals = listOf(
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
                     quantity = 3,
                     mealName = "Light snack"
                 ),
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 1,
                     mealName = "Hors d'oeuvre platter"
                 ),
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://images.immediate.co.uk/production/volatile/sites/2/2017/09/OLI1017-Healthy_ChimmiChurriChicken_014545.jpg?quality=90&resize=700,466",
                     quantity = 3,
                     mealName = "Appetizer sampler"
                 ),
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://ichef.bbci.co.uk/food/ic/food_16x9_832/recipes/sausage_and_lentil_stew_90967_16x9.jpg",
                     quantity = 4,
@@ -142,13 +142,13 @@ class FakeRemoteGateWay : IRemoteGateWay {
             userId = "f26dab15-7193-4e8d-bf6e-f4d2ae8799af",
             restaurantId = "91c2ae1f-8495-4c0c-bc47-7bf7ef77d907",
             meals = listOf(
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 2,
                     mealName = "Pasta"
                 ),
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
                     quantity = 2,
@@ -164,13 +164,13 @@ class FakeRemoteGateWay : IRemoteGateWay {
             userId = "550e8400-e29b-41d4-a716-446655440989",
             restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
             meals = listOf(
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 2,
                     mealName = "Dessert pizza"
                 ),
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 2,
@@ -186,13 +186,13 @@ class FakeRemoteGateWay : IRemoteGateWay {
             userId = "8a430be2-15b7-47f5-9e06-3f236f8c25ec",
             restaurantId = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
             meals = listOf(
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://thecarefreekitchen.com/wp-content/uploads/2021/10/Buffalo-Chicken-Taquitos-1024x1024.jpg",
                     quantity = 2,
                     mealName = "Digestif cocktail"
                 ),
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://www.freshnlean.com/wp-content/uploads/2021/03/Meal-Plan-plate-protein.png",
                     quantity = 1,
@@ -208,7 +208,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
             userId = "f26dab15-7193-4e8d-bf6e-f4d2ae8799af",
             restaurantId = "91c2ae1f-8495-4c0c-bc47-7bf7ef77d907",
             meals = listOf(
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 2,
@@ -224,13 +224,13 @@ class FakeRemoteGateWay : IRemoteGateWay {
             userId = "550e8400-e29b-41d4-a716-446655440989",
             restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
             meals = listOf(
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://www.foodandwine.com/thmb/bRz199ONebY-5h5gcvpOcHRxAkA=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Web_4000-Trifecta-Chicken-Breast-Sweet-Potato-Mixed-Vegetable_04-72a24aaee5584c06a26451603daec5c9.jpg",
                     quantity = 2,
                     mealName = "Pasta"
                 ),
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 2,
@@ -246,19 +246,19 @@ class FakeRemoteGateWay : IRemoteGateWay {
             userId = "8a430be2-15b7-47f5-9e06-3f236f8c25ec",
             restaurantId = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
             meals = listOf(
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://cdn.apartmenttherapy.info/image/upload/v1558635037/k/archive/388e39a6ca67e257cb7bef6bde6a98aef1bcd434.jpg",
                     quantity = 1,
                     mealName = "Supper club"
                 ),
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://images.immediate.co.uk/production/volatile/sites/30/2022/07/Fajita-style-pasta-f792c52.jpg?quality=90&resize=440,400",
                     quantity = 2,
                     mealName = "Pasta"
                 ),
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://www.thelazydish.com/wp-content/uploads/2022/05/cheap-easy-dinner-recipes-for-family-with-kids-from-the-lazy-dish.jpg",
                     quantity = 3,
@@ -274,13 +274,13 @@ class FakeRemoteGateWay : IRemoteGateWay {
             userId = "f26dab15-7193-4e8d-bf6e-f4d2ae8799af",
             restaurantId = "91c2ae1f-8495-4c0c-bc47-7bf7ef77d907",
             meals = listOf(
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://ichef.bbci.co.uk/food/ic/food_16x9_832/recipes/roast_chicken_for_one_41998_16x9.jpg",
                     quantity = 2,
                     mealName = "Pasta"
                 ),
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 2,
@@ -296,13 +296,13 @@ class FakeRemoteGateWay : IRemoteGateWay {
             userId = "550e8400-e29b-41d4-a716-446655440989",
             restaurantId = "6ab493b4-4b8d-410a-a13e-780346243f3a",
             meals = listOf(
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 2,
                     mealName = "Pasta"
                 ),
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://ichef.bbci.co.uk/food/ic/food_16x9_832/recipes/roast_chicken_for_one_41998_16x9.jpg",
                     quantity = 2,
@@ -318,13 +318,13 @@ class FakeRemoteGateWay : IRemoteGateWay {
             userId = "8a430be2-15b7-47f5-9e06-3f236f8c25ec",
             restaurantId = "7c3d631e-6d49-48c9-9f91-9426ec559eb1",
             meals = listOf(
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                     quantity = 2,
                     mealName = "Pasta"
                 ),
-                OrderMealDto(
+                OrderDto.MealDto(
                     id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
                     mealImageUrl = "https://www.deliciouslycleaneats.com.au/wp-content/uploads/2018/08/Meal-Plan-Spread1.jpg",
                     quantity = 2,
@@ -564,7 +564,13 @@ class FakeRemoteGateWay : IRemoteGateWay {
     )
 
     override suspend fun loginUser(userName: String, password: String): UserTokens {
-        return UserTokens(accessToken = "", refreshToken = "")
+        if (userName != "theChance") {
+            throw InvalidUserNameException("Invalid UserName")
+        }
+        if (password != "theChance23") {
+            throw InvalidPasswordException("Invalid Password")
+        }
+        return UserTokens(accessToken = "wertqyhgt", refreshToken = "qazswxza")
     }
 
 
@@ -603,12 +609,8 @@ class FakeRemoteGateWay : IRemoteGateWay {
     //endregion meal
 
     //region order
-    override suspend fun getCurrentOrders(restaurantId: String): List<Order> {
-        return orders.toOrderEntity()
-//        return orders.filter {
-//            it.orderState == OrderState.PENDING.statusCode &&
-//                    it.orderState == OrderState.IN_COOKING.statusCode
-//        }.toOrderEntity()
+    override suspend fun getCurrentOrders(): List<Order> {
+        return orders.filter { it.orderState == 0 || it.orderState == 1 }.toOrderEntity()
     }
 
     override suspend fun getOrdersHistory(restaurantId: String): List<Order> {
@@ -646,7 +648,7 @@ class FakeRemoteGateWay : IRemoteGateWay {
         }
     }
 
-    override suspend fun getCuisine(restaurantId: String): List<Cuisine> {
+    override suspend fun getCuisineByRestaurantId(restaurantId: String): List<Cuisine> {
         return cuisines.toEntity()
     }
 

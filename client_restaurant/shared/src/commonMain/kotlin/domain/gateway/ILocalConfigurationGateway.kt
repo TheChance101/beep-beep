@@ -4,7 +4,7 @@ package domain.gateway
  * Created by Aziza Helmy on 8/24/2023.
  */
 
-interface ILocalGateWay {
+interface ILocalConfigurationGateway {
 
     suspend fun saveAccessToken(token: String)
     suspend fun getAccessToken(): String
@@ -12,5 +12,6 @@ interface ILocalGateWay {
     suspend fun getRefreshToken(): String
     suspend fun saveKeepMeLoggedInFlag(isChecked: Boolean)
     suspend fun getKeepMeLoggedInFlag(): Boolean
+    suspend fun clearTokens()
 
 }

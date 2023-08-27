@@ -7,7 +7,7 @@ import domain.entity.Order
 import domain.entity.Restaurant
 import domain.entity.UserTokens
 
-interface IRemoteGateWay {
+interface IRemoteGateway {
 
     //region login
     suspend fun loginUser(userName:String,password:String):UserTokens
@@ -28,7 +28,7 @@ interface IRemoteGateWay {
     //endregion meal
 
     //region order
-    suspend fun getCurrentOrders(restaurantId: String): List<Order>
+    suspend fun getCurrentOrders(): List<Order>
     suspend fun getOrdersHistory(restaurantId: String): List<Order>
     suspend fun updateOrderState(orderId: String, orderState: Int): Order
     suspend fun getOrderById(orderId: String): Order?
@@ -43,7 +43,7 @@ interface IRemoteGateWay {
 
     suspend fun getCuisinesInMeal(mealId: String): List<Cuisine>
 
-    suspend fun getCuisine(restaurantId: String): List<Cuisine>
+    suspend fun getCuisineByRestaurantId (restaurantId: String): List<Cuisine>
 
     suspend fun getMealsByCuisineId(id: String): List<Meal>
 
