@@ -7,6 +7,7 @@ import org.thechance.common.domain.usecase.ICreateNewTaxiUseCase
 import org.thechance.common.domain.usecase.IFindTaxiByUsernameUseCase
 import org.thechance.common.domain.usecase.IGetTaxiReportUseCase
 import org.thechance.common.domain.usecase.IGetTaxisUseCase
+import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
@@ -33,14 +34,22 @@ class TaxiScreenModel(
     }
 
     override fun showTaxiMenu(username: String) {
-        println("show taxi menu")
         updateState { it.copy(taxiMenu = it.taxiMenu.copy(username = username)) }
     }
 
     override fun hideTaxiMenu() {
-        println("hide taxi menu")
         updateState { it.copy(taxiMenu = it.taxiMenu.copy(username = "")) }
     }
+
+    override fun onSaveEditTaxiMenu() {
+        println("save button, update taxi")
+    }
+
+    override fun onCancelEditTaxiMenu() {
+        println("cancel button")
+//        updateState { it.copy(isEditTaxiMenuVisible = false) }
+    }
+
 //endregion
 
     //region export button
@@ -68,26 +77,6 @@ class TaxiScreenModel(
     }
 
 
-    //region filter dialog
-    override fun showFilterMenu() {
-        println("show filter")
-    }
-
-    override fun hideFilterMenu() {
-        println("hide filter")
-    }
-
-    override fun onSaveEditTaxiMenu() {
-        println("save button, update taxi")
-    }
-
-    override fun onCancelEditTaxiMenu() {
-        println("cancel button")
-//        updateState { it.copy(isEditTaxiMenuVisible = false) }
-    }
-
-    //endregion
-
     //region paging
 
     override fun onItemsIndicatorChange(itemPerPage: Int) {
@@ -110,13 +99,20 @@ class TaxiScreenModel(
     //region function new taxi
     private fun getDummyTaxiData() {
         tryToExecute(
-            { getTaxis.getTaxis(state.value.currentPage,state.value.specifiedTaxis) },
-            ::onGetTaxisSuccessfully, ::onError)
+            { getTaxis.getTaxis(state.value.currentPage, state.value.specifiedTaxis) },
+            ::onGetTaxisSuccessfully, ::onError
+        )
     }
 
     private fun findTaxiByUsername(username: String) {
         tryToExecute(
-            { findTaxiByUsername.findTaxiByUsername(username,state.value.currentPage,state.value.specifiedTaxis) },
+            {
+                findTaxiByUsername.findTaxiByUsername(
+                    username,
+                    state.value.currentPage,
+                    state.value.specifiedTaxis
+                )
+            },
             ::onFindTaxiSuccessfully,
             ::onError
         )
@@ -138,6 +134,7 @@ class TaxiScreenModel(
         updateState { it.copy(error = error, isLoading = false) }
     }
 
+    //region add new taxi
     override fun onCancelCreateTaxiClicked() {
         updateState { it.copy(isAddNewTaxiDialogVisible = false) }
     }
@@ -186,5 +183,31 @@ class TaxiScreenModel(
         updateState { it.copy(isAddNewTaxiDialogVisible = true) }
     }
     //endregion
+
+    override fun onFilterMenuDismiss() {
+        updateState { it.copy(isFilterDropdownMenuExpanded = false) }
+    }
+
+    override fun onFilterMenuClicked() {
+        updateState { it.copy(isFilterDropdownMenuExpanded = true) }
+    }
+
+    override fun onSelectedCarColor(color: CarColor) {
+        updateState {
+            it.copy(taxiFilterUiState = it.taxiFilterUiState.copy(carColor = color))
+        }
+    }
+
+    override fun onSelectedSeat(seats: Int) {
+        updateState {
+            it.copy(taxiFilterUiState = it.taxiFilterUiState.copy(seats = seats))
+        }
+    }
+
+    override fun onSelectedStatus(status: TaxiStatus) {
+        updateState {
+            it.copy(taxiFilterUiState = it.taxiFilterUiState.copy(status = status))
+        }
+    }
 
 }

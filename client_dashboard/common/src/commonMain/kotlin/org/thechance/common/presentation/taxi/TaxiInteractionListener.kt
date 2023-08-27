@@ -1,22 +1,21 @@
 package org.thechance.common.presentation.taxi
 
 import org.thechance.common.domain.entity.CarColor
+import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.presentation.base.BaseInteractionListener
 
-interface TaxiScreenInteractionListener : BaseInteractionListener
-, FilterMenuListener, TaxiMenuListener, PageListener,TaxiDialogListener{
+interface TaxiScreenInteractionListener : BaseInteractionListener, FilterMenuListener,
+    TaxiMenuListener, PageListener, TaxiDialogListener {
 
     fun onExportReportClicked()
     fun onDismissExportReportSnackBar()
-
 
     fun onTaxiNumberChange(number: Int)
 
     fun onSearchInputChange(searchQuery: String)
     fun onAddNewTaxiClicked()
-
-
 }
+
 interface TaxiDialogListener {
     fun onCancelCreateTaxiClicked()
 
@@ -33,6 +32,7 @@ interface TaxiDialogListener {
     fun onCreateTaxiClicked()
 
 }
+
 interface TaxiMenuListener {
     fun showTaxiMenu(username: String)
     fun hideTaxiMenu()
@@ -41,10 +41,18 @@ interface TaxiMenuListener {
     fun onSaveEditTaxiMenu()
     fun onCancelEditTaxiMenu()
 }
+
 interface FilterMenuListener {
-    fun showFilterMenu()
-    fun hideFilterMenu()
+
+    fun onFilterMenuDismiss()
+    fun onFilterMenuClicked()
+
+    fun onSelectedCarColor(color: CarColor)
+
+    fun onSelectedSeat(seats: Int)
+    fun onSelectedStatus(status: TaxiStatus)
 }
+
 interface PageListener {
     fun onItemsIndicatorChange(itemPerPage: Int)
     fun onPageClick(pageNumber: Int)

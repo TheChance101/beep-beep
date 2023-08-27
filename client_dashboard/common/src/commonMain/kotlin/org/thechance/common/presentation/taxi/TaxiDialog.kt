@@ -18,6 +18,7 @@ import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.LocalDimensions
 import org.thechance.common.domain.entity.CarColor
+import org.thechance.common.presentation.composables.CarColors
 import org.thechance.common.presentation.composables.SeatsBar
 import java.awt.Dimension
 

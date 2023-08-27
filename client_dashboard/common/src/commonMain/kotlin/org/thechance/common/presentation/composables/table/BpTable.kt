@@ -4,6 +4,8 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -36,7 +38,7 @@ data class Header(val text: String, val weight: Float = 1f)
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun <T> BpTable(
+fun <T> ColumnScope.BpTable(
     data: List<T>,
     headers: List<Header>,
     modifier: Modifier = Modifier,
@@ -51,38 +53,40 @@ fun <T> BpTable(
     rowsColor: Color = Theme.colors.surface,
     rowContent: @Composable RowScope.(T) -> Unit,
 ) {
-    LazyColumn(
-        modifier = modifier.clip(shape = shape).border(border, borderColor, shape),
-    ) {
-        stickyHeader {
-            Row(
-                Modifier.fillMaxWidth().background(headerColor).padding(rowPadding)
-                    .heightIn(max = maxHeight),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                headers.forEach { header ->
-                    Text(
-                        header.text,
-                        style = headerTextStyle,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(header.weight)
-                    )
+    Box(modifier = Modifier.weight(1f).padding(bottom = LocalDimensions.current.space16)) {
+        LazyColumn(
+            modifier = modifier.clip(shape = shape).border(border, borderColor, shape),
+        ) {
+            stickyHeader {
+                Row(
+                    Modifier.fillMaxWidth().background(headerColor).padding(rowPadding)
+                        .heightIn(max = maxHeight),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    headers.forEach { header ->
+                        Text(
+                            header.text,
+                            style = headerTextStyle,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(header.weight)
+                        )
+                    }
                 }
+                Divider(Modifier.fillMaxWidth(), thickness = border, color = borderColor)
             }
-            Divider(Modifier.fillMaxWidth(), thickness = border, color = borderColor)
-        }
 
-        items(data, key = key) {
-            Row(
-                Modifier.fillMaxWidth().background(rowsColor).padding(rowPadding)
-                    .heightIn(max = maxHeight),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16),
-            ){
-                rowContent(it)
+            items(data, key = key) {
+                Row(
+                    Modifier.fillMaxWidth().background(rowsColor).padding(rowPadding)
+                        .heightIn(max = maxHeight),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16),
+                ) {
+                    rowContent(it)
+                }
+                Divider(Modifier.fillMaxWidth(), thickness = border, color = borderColor)
             }
-            Divider(Modifier.fillMaxWidth(), thickness = border, color = borderColor)
         }
     }
 }

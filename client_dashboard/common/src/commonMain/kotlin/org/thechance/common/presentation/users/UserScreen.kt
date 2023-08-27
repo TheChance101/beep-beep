@@ -116,6 +116,7 @@ class UserScreen :
         }
     }
 
+    //region UserTable
     @Composable
     private fun ColumnScope.UsersTable(
         users: List<UserScreenUiState.UserUiState>,
@@ -132,23 +133,21 @@ class UserScreen :
         onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
         onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
     ) {
-        Box(modifier = Modifier.weight(1f).padding(bottom = LocalDimensions.current.space16)) {
-            BpTable(
-                data = users,
-                key = UserScreenUiState.UserUiState::username,
-                headers = headers,
-                modifier = Modifier.fillMaxWidth(),
-            ) { user ->
-                UserRow(
-                    onUserMenuClicked = onUserMenuClicked,
-                    user = user,
-                    position = users.indexOf(user) + 1,
-                    editUserMenu = editUserMenu,
-                    onEditUserDismiss = onEditUserDismiss,
-                    onEditUserMenuItemClicked = onEditUserMenuItemClicked,
-                    onDeleteUserMenuItemClicked = onDeleteUserMenuItemClicked,
-                )
-            }
+        BpTable(
+            data = users,
+            key = UserScreenUiState.UserUiState::username,
+            headers = headers,
+            modifier = Modifier.fillMaxWidth(),
+        ) { user ->
+            UserRow(
+                onUserMenuClicked = onUserMenuClicked,
+                user = user,
+                position = users.indexOf(user) + 1,
+                editUserMenu = editUserMenu,
+                onEditUserDismiss = onEditUserDismiss,
+                onEditUserMenuItemClicked = onEditUserMenuItemClicked,
+                onDeleteUserMenuItemClicked = onDeleteUserMenuItemClicked,
+            )
         }
 
         UsersTableFooter(
@@ -186,159 +185,6 @@ class UserScreen :
                 maxPages = pageCount,
                 currentPage = selectedPage,
                 onPageClicked = onPageClicked,
-            )
-        }
-    }
-
-    @Composable
-    private fun UsersFilterDropdownMenu(
-        isFilterDropdownMenuExpanded: Boolean,
-        allPermissions: List<UserScreenUiState.PermissionUiState>,
-        countries: List<UserScreenUiState.CountryUiState>,
-        selectedPermissions: List<UserScreenUiState.PermissionUiState>,
-        onFilterPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
-        onFilterCountryClicked: (UserScreenUiState.CountryUiState) -> Unit,
-        onFilterMenuClicked: () -> Unit,
-        onFilterMenuDismiss: () -> Unit,
-    ) {
-        Row {
-            BpIconButton(
-                content = {
-                    Text(
-                        "Filter",
-                        style = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
-                    )
-                },
-                onClick = onFilterMenuClicked,
-                painter = painterResource("ic_filter.svg"),
-                modifier = Modifier.cursorHoverIconHand()
-            )
-            BpDropdownMenu(
-                expanded = isFilterDropdownMenuExpanded,
-                onDismissRequest = onFilterMenuDismiss,
-                offset = DpOffset.Zero.copy(y = LocalDimensions.current.space16),
-                shape = RoundedCornerShape(Theme.radius.medium).copy(topStart = CornerSize(Theme.radius.small)),
-                modifier = Modifier.height(450.dp)
-            ) {
-                DropdownMenuItem(
-                    contentPadding = PaddingValues(0.dp),
-                    modifier = Modifier.width(400.dp),
-                    onClick = {},
-                    text = {
-                        Column(Modifier.fillMaxSize()) {
-                            Text(
-                                "Filter",
-                                style = Theme.typography.headline,
-                                color = Theme.colors.contentPrimary,
-                                modifier = Modifier.padding(
-                                    start = LocalDimensions.current.space24,
-                                    top = LocalDimensions.current.space24
-                                )
-                            )
-                            Text(
-                                "Permission",
-                                style = Theme.typography.titleLarge,
-                                color = Theme.colors.contentPrimary,
-                                modifier = Modifier.padding(
-                                    start = LocalDimensions.current.space24,
-                                    top = LocalDimensions.current.space40,
-                                    bottom = LocalDimensions.current.space16
-                                ),
-                            )
-                            PermissionsFlowRow(
-                                allPermissions = allPermissions,
-                                selectedPermissions = selectedPermissions,
-                                onUserPermissionClicked = onFilterPermissionClicked
-                            )
-                            Text(
-                                "Country",
-                                style = Theme.typography.titleLarge,
-                                color = Theme.colors.contentPrimary,
-                                modifier = Modifier.padding(
-                                    start = LocalDimensions.current.space24,
-                                    top = LocalDimensions.current.space32,
-                                    bottom = LocalDimensions.current.space16
-                                )
-                            )
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .background(Theme.colors.background)
-                                    .padding(
-                                        horizontal = LocalDimensions.current.space24,
-                                        vertical = LocalDimensions.current.space16
-                                    ),
-                                verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16)
-                            ) {
-                                countries.forEach { country ->
-                                    BpCheckBox(
-                                        label = country.name,
-                                        onCheck = { onFilterCountryClicked(country) },
-                                        isChecked = country.selected
-                                    )
-                                }
-                            }
-                            Row(
-                                Modifier.padding(LocalDimensions.current.space24),
-                                horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                BpTransparentButton(
-                                    "Cancel",
-                                    onClick = onFilterMenuDismiss,
-                                    modifier = Modifier.cursorHoverIconHand()
-
-                                )
-                                BpOutlinedButton(
-                                    title = "Save",
-                                    onClick = onFilterMenuDismiss,
-                                    shape = RoundedCornerShape(Theme.radius.small),
-                                    modifier = Modifier.height(50.dp).weight(1f)
-                                )
-                            }
-                        }
-                    }
-                )
-            }
-        }
-    }
-
-    @Composable
-    private fun UsersFilteredSearch(
-        searchText: String,
-        allPermissions: List<UserScreenUiState.PermissionUiState>,
-        countries: List<UserScreenUiState.CountryUiState>,
-        selectedPermissions: List<UserScreenUiState.PermissionUiState>,
-        isFilterDropdownMenuExpanded: Boolean,
-        onFilterPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
-        onFilterCountryClicked: (UserScreenUiState.CountryUiState) -> Unit,
-        onSearchInputChanged: (String) -> Unit,
-        onFilterMenuClicked: () -> Unit,
-        onFilterMenuDismiss: () -> Unit,
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(bottom = LocalDimensions.current.space16),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.Top
-        ) {
-            BpSimpleTextField(
-                modifier = Modifier.widthIn(max = 440.dp),
-                hint = "Search for users",
-                onValueChange = onSearchInputChanged,
-                text = searchText,
-                keyboardType = KeyboardType.Text,
-                trailingPainter = painterResource("ic_search.svg")
-            )
-
-            UsersFilterDropdownMenu(
-                allPermissions = allPermissions,
-                countries = countries,
-                selectedPermissions = selectedPermissions,
-                isFilterDropdownMenuExpanded = isFilterDropdownMenuExpanded,
-                onFilterPermissionClicked = onFilterPermissionClicked,
-                onFilterCountryClicked = onFilterCountryClicked,
-                onFilterMenuClicked = onFilterMenuClicked,
-                onFilterMenuDismiss = onFilterMenuDismiss,
             )
         }
     }
@@ -464,6 +310,161 @@ class UserScreen :
                         showBottomDivider = it != editUserMenu.items.last()
                     )
                 }
+            }
+        }
+    }
+
+    //endregion
+
+    @Composable
+    private fun UsersFilteredSearch(
+        searchText: String,
+        allPermissions: List<UserScreenUiState.PermissionUiState>,
+        countries: List<UserScreenUiState.CountryUiState>,
+        selectedPermissions: List<UserScreenUiState.PermissionUiState>,
+        isFilterDropdownMenuExpanded: Boolean,
+        onFilterPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
+        onFilterCountryClicked: (UserScreenUiState.CountryUiState) -> Unit,
+        onSearchInputChanged: (String) -> Unit,
+        onFilterMenuClicked: () -> Unit,
+        onFilterMenuDismiss: () -> Unit,
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(bottom = LocalDimensions.current.space16),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.Top
+        ) {
+            BpSimpleTextField(
+                modifier = Modifier.widthIn(max = 440.dp),
+                hint = "Search for users",
+                onValueChange = onSearchInputChanged,
+                text = searchText,
+                keyboardType = KeyboardType.Text,
+                trailingPainter = painterResource("ic_search.svg")
+            )
+
+            UsersFilterDropdownMenu(
+                allPermissions = allPermissions,
+                countries = countries,
+                selectedPermissions = selectedPermissions,
+                isFilterDropdownMenuExpanded = isFilterDropdownMenuExpanded,
+                onFilterPermissionClicked = onFilterPermissionClicked,
+                onFilterCountryClicked = onFilterCountryClicked,
+                onFilterMenuClicked = onFilterMenuClicked,
+                onFilterMenuDismiss = onFilterMenuDismiss,
+            )
+        }
+    }
+
+    @Composable
+    private fun UsersFilterDropdownMenu(
+        isFilterDropdownMenuExpanded: Boolean,
+        allPermissions: List<UserScreenUiState.PermissionUiState>,
+        countries: List<UserScreenUiState.CountryUiState>,
+        selectedPermissions: List<UserScreenUiState.PermissionUiState>,
+        onFilterPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
+        onFilterCountryClicked: (UserScreenUiState.CountryUiState) -> Unit,
+        onFilterMenuClicked: () -> Unit,
+        onFilterMenuDismiss: () -> Unit,
+    ) {
+        Row {
+            BpIconButton(
+                content = {
+                    Text(
+                        "Filter",
+                        style = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
+                    )
+                },
+                onClick = onFilterMenuClicked,
+                painter = painterResource("ic_filter.svg"),
+                modifier = Modifier.cursorHoverIconHand()
+            )
+            BpDropdownMenu(
+                expanded = isFilterDropdownMenuExpanded,
+                onDismissRequest = onFilterMenuDismiss,
+                offset = DpOffset.Zero.copy(y = LocalDimensions.current.space16),
+                shape = RoundedCornerShape(Theme.radius.medium).copy(topStart = CornerSize(Theme.radius.small)),
+                modifier = Modifier.height(450.dp)
+            ) {
+                DropdownMenuItem(
+                    contentPadding = PaddingValues(0.dp),
+                    modifier = Modifier.width(400.dp),
+                    onClick = {},
+                    text = {
+                        Column(Modifier.fillMaxSize()) {
+                            Text(
+                                "Filter",
+                                style = Theme.typography.headline,
+                                color = Theme.colors.contentPrimary,
+                                modifier = Modifier.padding(
+                                    start = LocalDimensions.current.space24,
+                                    top = LocalDimensions.current.space24
+                                )
+                            )
+                            Text(
+                                "Permission",
+                                style = Theme.typography.titleLarge,
+                                color = Theme.colors.contentPrimary,
+                                modifier = Modifier.padding(
+                                    start = LocalDimensions.current.space24,
+                                    top = LocalDimensions.current.space40,
+                                    bottom = LocalDimensions.current.space16
+                                ),
+                            )
+                            PermissionsFlowRow(
+                                allPermissions = allPermissions,
+                                selectedPermissions = selectedPermissions,
+                                onUserPermissionClicked = onFilterPermissionClicked
+                            )
+                            Text(
+                                "Country",
+                                style = Theme.typography.titleLarge,
+                                color = Theme.colors.contentPrimary,
+                                modifier = Modifier.padding(
+                                    start = LocalDimensions.current.space24,
+                                    top = LocalDimensions.current.space32,
+                                    bottom = LocalDimensions.current.space16
+                                )
+                            )
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(Theme.colors.background)
+                                    .padding(
+                                        horizontal = LocalDimensions.current.space24,
+                                        vertical = LocalDimensions.current.space16
+                                    ),
+                                verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16)
+                            ) {
+                                countries.forEach { country ->
+                                    BpCheckBox(
+                                        label = country.name,
+                                        onCheck = { onFilterCountryClicked(country) },
+                                        isChecked = country.selected
+                                    )
+                                }
+                            }
+                            Row(
+                                Modifier.padding(LocalDimensions.current.space24),
+                                horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                BpTransparentButton(
+                                    "Cancel",
+                                    onClick = onFilterMenuDismiss,
+                                    modifier = Modifier.cursorHoverIconHand()
+
+                                )
+                                BpOutlinedButton(
+                                    title = "Save",
+                                    onClick = onFilterMenuDismiss,
+                                    shape = RoundedCornerShape(Theme.radius.small),
+                                    modifier = Modifier.height(50.dp).weight(1f)
+                                )
+                            }
+                        }
+                    }
+                )
             }
         }
     }

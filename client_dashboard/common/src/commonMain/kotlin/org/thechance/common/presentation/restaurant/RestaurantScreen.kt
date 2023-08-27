@@ -5,8 +5,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -141,26 +141,25 @@ class RestaurantScreen :
     }
 
     @Composable
-    private fun RestaurantTable(
+    private fun ColumnScope.RestaurantTable(
         state: RestaurantUiState,
         listener: RestaurantInteractionListener
     ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
-            BpTable(
-                data = state.restaurants,
-                key = { it.name },
-                headers = state.tableHeader,
-                modifier = Modifier.fillMaxWidth(),
-                rowContent = { restaurant ->
-                    RestaurantRow(
-                        onClickEditRestaurant = { /* TODO: Show Edit Restaurant DropdownMenu */ },
-                        position = state.restaurants.indexOf(restaurant) + 1,
-                        restaurant = restaurant,
-                    )
-                },
-            )
-        }
+        BpTable(
+            data = state.restaurants,
+            key = { it.name },
+            headers = state.tableHeader,
+            modifier = Modifier.fillMaxWidth(),
+            rowContent = { restaurant ->
+                RestaurantRow(
+                    onClickEditRestaurant = { /* TODO: Show Edit Restaurant DropdownMenu */ },
+                    position = state.restaurants.indexOf(restaurant) + 1,
+                    restaurant = restaurant,
+                )
+            },
+        )
     }
+
 
     @Composable
     private fun RestaurantPagingRow(
@@ -168,7 +167,7 @@ class RestaurantScreen :
         listener: RestaurantInteractionListener
     ) {
         Row(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxWidth().background(color = Theme.colors.surface),
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {

@@ -6,8 +6,11 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -24,16 +27,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpButton
+import com.beepbeep.designSystem.ui.composable.BpChip
 import com.beepbeep.designSystem.ui.composable.BpIconButton
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
+import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import kotlinx.coroutines.delay
 import org.thechance.common.LocalDimensions
+import org.thechance.common.domain.entity.CarColor
+import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.presentation.base.BaseScreen
 import org.thechance.common.presentation.composables.BpDropdownMenu
 import org.thechance.common.presentation.composables.BpDropdownMenuItem
+import org.thechance.common.presentation.composables.CarColors
+import org.thechance.common.presentation.composables.SeatsBar
 import org.thechance.common.presentation.composables.SnackBar
+import org.thechance.common.presentation.composables.modifier.cursorHoverIconHand
 import org.thechance.common.presentation.composables.modifier.noRipple
 import org.thechance.common.presentation.composables.table.BpPager
 import org.thechance.common.presentation.composables.table.BpTable
@@ -78,7 +88,6 @@ class TaxiScreen :
             modifier = Modifier.background(Theme.colors.surface).fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
-            //region Table Footer
 
             Column(modifier = Modifier.fillMaxSize().align(Alignment.TopCenter)) {
                 Row(
@@ -95,8 +104,9 @@ class TaxiScreen :
                         keyboardType = KeyboardType.Text,
                         trailingPainter = painterResource("ic_search.svg")
                     )
+
                     BpIconButton(
-                        onClick = { /* TODO: Show Taxi Filter Dialog */ },
+                        onClick = listener::onFilterMenuClicked,
                         painter = painterResource("ic_filter.svg"),
                     ) {
                         Text(
@@ -104,6 +114,16 @@ class TaxiScreen :
                             style = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
                         )
                     }
+                    TaxiFilterDropdownMenu(
+                        onFilterMenuDismiss = listener::onFilterMenuDismiss,
+                        isFilterDropdownMenuExpanded = state.isFilterDropdownMenuExpanded,
+                        taxi = state.taxiFilterUiState,
+                        onCarColorSelected = listener::onSelectedCarColor,
+                        onSeatsSelected = listener::onSelectedSeat,
+                        onStatusSelected = listener::onSelectedStatus,
+                    )
+
+
                     Spacer(modifier = Modifier.weight(1f))
                     BpOutlinedButton(
                         title = "Export",
@@ -116,28 +136,23 @@ class TaxiScreen :
                         textPadding = PaddingValues(horizontal = LocalDimensions.current.space24),
                     )
                 }
-
-                Box(
-                    modifier = Modifier.weight(1f).padding(bottom = LocalDimensions.current.space16)
-                ) {
-                    BpTable(
-                        data = state.pageInfo.data,
-                        key = { it.username },
-                        headers = state.tabHeader,
-                        modifier = Modifier.fillMaxWidth(),
-                        rowContent = { taxi ->
-                            TaxiRow(
-                                taxi = taxi,
-                                position = state.pageInfo.data.indexOf(taxi) + 1,
-                                onDropdownMenuClicked = listener::showTaxiMenu,
-                                onDropdownMenuDismiss = listener::hideTaxiMenu,
-                                onEditTaxiClicked = listener::onEditTaxiClicked,
-                                onDeleteTaxiClicked = listener::onDeleteTaxiClicked,
-                                editTaxiMenu = state.taxiMenu,
-                            )
-                        },
-                    )
-                }
+                BpTable(
+                    data = state.pageInfo.data,
+                    key = { it.username },
+                    headers = state.tabHeader,
+                    modifier = Modifier.fillMaxWidth(),
+                    rowContent = { taxi ->
+                        TaxiRow(
+                            taxi = taxi,
+                            position = state.pageInfo.data.indexOf(taxi) + 1,
+                            onDropdownMenuClicked = listener::showTaxiMenu,
+                            onDropdownMenuDismiss = listener::hideTaxiMenu,
+                            onEditTaxiClicked = listener::onEditTaxiClicked,
+                            onDeleteTaxiClicked = listener::onDeleteTaxiClicked,
+                            editTaxiMenu = state.taxiMenu,
+                        )
+                    },
+                )
                 TaxisTableFooter(
                     selectedPage = state.currentPage,
                     numberItemInPage = state.specifiedTaxis,
@@ -177,11 +192,128 @@ class TaxiScreen :
                     listener.onDismissExportReportSnackBar()
                 }
             }
-            //endregion
+        }
+    }
+    //region components
+
+    @Composable
+    private fun TaxiFilterDropdownMenu(
+        isFilterDropdownMenuExpanded: Boolean = false,
+        onFilterMenuDismiss: () -> Unit = {},
+        taxi: TaxiFilterUiState,
+        onSeatsSelected: (Int) -> Unit,
+        onCarColorSelected: (CarColor) -> Unit,
+        onStatusSelected: (TaxiStatus) -> Unit,
+    ) {
+        BpDropdownMenu(
+            expanded = isFilterDropdownMenuExpanded,
+            onDismissRequest = onFilterMenuDismiss,
+            offset = DpOffset.Zero.copy(y = LocalDimensions.current.space16),
+            shape = RoundedCornerShape(Theme.radius.medium).copy(topStart = CornerSize(Theme.radius.small)),
+            modifier = Modifier.width(400.dp),
+        ) {
+            DropdownMenuItem(
+                contentPadding = PaddingValues(0.dp),
+                modifier = Modifier.width(500.dp),
+                onClick = {},
+                text = {
+                    Column(Modifier.fillMaxSize()) {
+                        Text(
+                            "Filter",
+                            style = Theme.typography.headline,
+                            color = Theme.colors.contentPrimary,
+                            modifier = Modifier.padding(LocalDimensions.current.space24)
+                        )
+                        Text(
+                            "Status",
+                            style = Theme.typography.titleLarge,
+                            color = Theme.colors.contentPrimary,
+                            modifier = Modifier
+                                .padding(
+                                    horizontal = LocalDimensions.current.space24,
+                                    vertical = LocalDimensions.current.space16
+                                ),
+                        )
+                        CarStatus(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(color = Theme.colors.background)
+                                .padding(LocalDimensions.current.space24),
+                            status = TaxiStatus.values().toList(),
+                            onSelectState = onStatusSelected,
+                            selectedStatus = taxi.status,
+                        )
+
+                        Text(
+                            "Car Color",
+                            style = Theme.typography.titleLarge,
+                            color = Theme.colors.contentPrimary,
+                            modifier = Modifier.padding(
+                                horizontal = LocalDimensions.current.space24,
+                                vertical = LocalDimensions.current.space16
+                            ),
+                        )
+                        CarColors(
+                            modifier = Modifier.fillMaxWidth()
+                                .background(color = Theme.colors.background).padding(
+                                    horizontal = LocalDimensions.current.space24,
+                                    vertical = LocalDimensions.current.space16
+                                ),
+                            colors = CarColor.values().toList(),
+                            onSelectColor = onCarColorSelected,
+                            selectedCarColor = taxi.carColor
+                        )
+                        Text(
+                            "Seats",
+                            style = Theme.typography.titleLarge,
+                            color = Theme.colors.contentPrimary,
+                            modifier = Modifier.padding(
+                                horizontal = LocalDimensions.current.space24,
+                                vertical = LocalDimensions.current.space16
+                            )
+                        )
+                        SeatsBar(
+                            selectedSeatsCount = taxi.seats,
+                            count = 6,
+                            selectedIcon = painterResource(
+                                if (isSystemInDarkTheme()) "ic_filled_seat_dark.svg" else "ic_filled_seat_light.svg"
+                            ),
+                            notSelectedIcon = painterResource(
+                                if (isSystemInDarkTheme()) "ic_outlined_seat_dark.svg" else "ic_outlined_seat_light.svg"
+                            ),
+                            iconsSize = LocalDimensions.current.space24,
+                            iconsPadding = PaddingValues(horizontal = LocalDimensions.current.space8),
+                            modifier = Modifier.fillMaxWidth()
+                                .background(color = Theme.colors.background).padding(
+                                    horizontal = LocalDimensions.current.space24,
+                                    vertical = LocalDimensions.current.space16
+                                ),
+                            onClick = onSeatsSelected
+                        )
+                        Row(
+                            Modifier.padding(LocalDimensions.current.space24),
+                            horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            BpTransparentButton(
+                                "Cancel",
+                                onClick = onFilterMenuDismiss,
+                                modifier = Modifier.cursorHoverIconHand()
+
+                            )
+                            BpOutlinedButton(
+                                title = "Save",
+                                onClick = onFilterMenuDismiss,
+                                shape = RoundedCornerShape(Theme.radius.small),
+                                modifier = Modifier.height(50.dp).weight(1f)
+                            )
+                        }
+                    }
+                }
+            )
         }
     }
 
-    //region Init
     @Composable
     private fun TaxisTableFooter(
         numberItemInPage: Int,
@@ -223,7 +355,6 @@ class TaxiScreen :
         onEditTaxiClicked: (TaxiDetailsUiState) -> Unit,
         onDeleteTaxiClicked: (TaxiDetailsUiState) -> Unit,
     ) {
-        //region Taxi Row
         TitleField(
             text = position.toString(),
             color = Theme.colors.contentTertiary,
@@ -231,7 +362,7 @@ class TaxiScreen :
         )
         TitleField(text = taxi.plateNumber)
         TitleField(text = taxi.username)
-        TitleField(text = taxi.statusText, color = taxi.statusColor)
+        TitleField(text = taxi.status.getStatusName(), color = taxi.statusColor)
         TitleField(text = taxi.type)
         SquareColorField(
             modifier = Modifier.weight(otherColumnsWeight),
@@ -252,7 +383,6 @@ class TaxiScreen :
             }
         }
         TitleField(text = taxi.trips)
-        //endregion
         Box(modifier = Modifier.weight(firstColumnWeight)) {
             Image(
                 painter = painterResource("horizontal_dots.xml"),
@@ -279,7 +409,7 @@ class TaxiScreen :
         onDeleteTaxiClicked: (TaxiDetailsUiState) -> Unit,
     ) {
         BpDropdownMenu(
-            expanded =  taxi.username == editTaxiMenu.username,
+            expanded = taxi.username == editTaxiMenu.username,
             onDismissRequest = onDropdownMenuDismiss,
             shape = RoundedCornerShape(Theme.radius.medium),
             offset = DpOffset.Zero.copy(x = -LocalDimensions.current.space100)
@@ -289,8 +419,8 @@ class TaxiScreen :
                     BpDropdownMenuItem(
                         onClick = {
                             when (it.text) {
-                                "Edit" ->  onEditTaxiClicked(taxi)
-                                "Delete" ->onDeleteTaxiClicked(taxi)
+                                "Edit" -> onEditTaxiClicked(taxi)
+                                "Delete" -> onDeleteTaxiClicked(taxi)
                             }
                         },
                         text = it.text,
@@ -335,6 +465,30 @@ class TaxiScreen :
                         shape = RoundedCornerShape(Theme.radius.small),
                     )
             )
+        }
+    }
+
+    @Composable
+    fun CarStatus(
+        modifier: Modifier = Modifier,
+        status: List<TaxiStatus>,
+        onSelectState: (TaxiStatus) -> Unit,
+        selectedStatus: TaxiStatus,
+    ) {
+
+        Row(
+            modifier = modifier,
+            verticalAlignment = Alignment.Top,
+            horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16)
+        ) {
+            status.forEach { status ->
+                BpChip(
+                    modifier = Modifier.height(LocalDimensions.current.space32),
+                    label = status.getStatusName(),
+                    onClick = { onSelectState(status) },
+                    isSelected = selectedStatus == status,
+                )
+            }
         }
     }
     //endregion
