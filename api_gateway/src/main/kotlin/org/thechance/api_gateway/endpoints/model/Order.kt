@@ -10,7 +10,7 @@ data class Order(
     val meals: List<Meal>,
     val totalPrice: Double,
     val createdAt: Long,
-    val orderStatus: Int,
+    val orderStatus: Int = 0,
 ){
     @Serializable
     data class Meal(
