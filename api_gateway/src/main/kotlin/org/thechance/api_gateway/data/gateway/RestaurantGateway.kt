@@ -118,8 +118,6 @@ class RestaurantGateway(
 
     }
 
-
-
     @OptIn(InternalAPI::class)
     override suspend fun updateOrderStatus(
         orderId: String,
