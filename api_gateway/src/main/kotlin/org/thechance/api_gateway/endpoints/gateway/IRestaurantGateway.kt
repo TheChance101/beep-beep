@@ -11,6 +11,6 @@ interface IRestaurantGateway {
         locale: Locale
     ): RestaurantRequestPermission
 
-    suspend fun getAllRequestPermission(permissions: List<Int>): List<RestaurantRequestPermission>
+    suspend fun getAllRequestPermission(permissions: List<Int>, locale: Locale): List<RestaurantRequestPermission>
 }
 

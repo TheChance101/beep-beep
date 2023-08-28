@@ -8,6 +8,9 @@ import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.endpoints.gateway.IRestaurantGateway
 import org.thechance.api_gateway.endpoints.utils.respondWithResult
+import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
+import java.util.*
+
 
 fun Route.dashboardRoutes() {
     val restaurantGateway: IRestaurantGateway by inject()
@@ -19,7 +22,8 @@ fun Route.dashboardRoutes() {
             get("/restaurant-permission-request") {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
-                val result = restaurantGateway.getAllRequestPermission(permissions)
+                val (language, countryCode) = extractLocalizationHeader()
+                val result = restaurantGateway.getAllRequestPermission(permissions, Locale(language, countryCode))
 
                 respondWithResult(HttpStatusCode.OK, result)
             }

@@ -7,6 +7,7 @@ import io.ktor.http.*
 import io.ktor.util.*
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.utils.ErrorHandler
+import org.thechance.api_gateway.data.utils.LocalizedMessageException
 import org.thechance.api_gateway.endpoints.gateway.IRestaurantGateway
 import org.thechance.api_gateway.endpoints.model.RestaurantRequestPermission
 import org.thechance.api_gateway.util.APIs
@@ -43,10 +44,10 @@ class RestaurantGateway(
         }
     }
 
-    override suspend fun getAllRequestPermission(permissions: List<Int>): List<RestaurantRequestPermission> {
+    override suspend fun getAllRequestPermission(permissions: List<Int>, locale: Locale): List<RestaurantRequestPermission> {
         // todo: implement check permissions logic correctly
         if (!permissions.contains(1)) {
-            throw SecurityException("You don't have permission to access this resource")
+            throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
         }
 
         return tryToExecute(
@@ -54,7 +55,7 @@ class RestaurantGateway(
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(
                     errorCodes,
-                    Locale.ENGLISH
+                    locale
                 )
             }
         ) {
