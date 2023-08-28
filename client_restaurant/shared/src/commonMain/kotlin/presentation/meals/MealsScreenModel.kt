@@ -7,7 +7,6 @@ import domain.usecase.IManageMealUseCase
 import domain.usecase.IMangeCuisineUseCase
 
 import kotlinx.coroutines.CoroutineScope
-import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 

@@ -49,11 +49,11 @@ class LoginScreenModel:
                 passwordErrorMsg = ""
             )
         }
-        sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
+
     }
 
     private fun onLoginFailed(error: ErrorState) {
-        state.value.sheetState.show()
+        sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
         handleErrorState(error)
     }
 

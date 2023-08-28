@@ -1,7 +1,4 @@
-package presentation.mealManagement.mealEditor
-
-import presentation.mealManagement.CuisineUIState
-import presentation.mealManagement.MealDetails
+package presentation.mealManagement
 
 data class MealEditorUIState(
     val id: String = "",

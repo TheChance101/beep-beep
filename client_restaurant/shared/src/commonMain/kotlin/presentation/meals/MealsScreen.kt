@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpChip
 import com.beepbeep.designSystem.ui.theme.Theme.colors
@@ -31,8 +30,8 @@ import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.BpAppBar
 import presentation.composable.MealCard
-import presentation.mealManagement.mealCreation.MealCreationScreen
-import presentation.mealManagement.mealEditor.MealEditorScreen
+import presentation.mealManagement.MealScreen
+import presentation.mealManagement.ScreenMode
 import presentation.meals.state.MealsScreenUIState
 import resources.Resources.strings
 
@@ -48,9 +47,9 @@ class MealsScreen(private val restaurantId: String) :
         when (effect) {
             is MealsScreenUIEffect.Back -> navigator.pop()
             is MealsScreenUIEffect.NavigateToMealDetails ->
-                navigator.push(MealEditorScreen(mealId = effect.mealId))
+                navigator.push(MealScreen(ScreenMode.EDIT, effect.mealId))
 
-            is MealsScreenUIEffect.NavigateToAddMeal -> navigator.push(MealCreationScreen())
+            is MealsScreenUIEffect.NavigateToAddMeal -> navigator.push(MealScreen(ScreenMode.CREATION))
         }
     }
 
