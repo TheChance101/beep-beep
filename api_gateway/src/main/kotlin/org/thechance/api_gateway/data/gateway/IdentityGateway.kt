@@ -26,11 +26,7 @@ class IdentityGateway(
     private val errorHandler: ErrorHandler
 ) : BaseGateway(client = client, attributes = attributes), IIdentityGateway {
     override suspend fun createUser(
-        fullName: String,
-        username: String,
-        password: String,
-        email: String,
-        locale: Locale
+        fullName: String, username: String, password: String, email: String, locale: Locale
     ): UserManagementResource {
         return tryToExecute<UserManagementResource>(
             APIs.IDENTITY_API,
@@ -51,18 +47,12 @@ class IdentityGateway(
     }
 
     override suspend fun loginUser(
-        userName: String,
-        password: String,
-        tokenConfiguration: TokenConfiguration,
-        locale: Locale
+        userName: String, password: String, tokenConfiguration: TokenConfiguration, locale: Locale
     ): UserTokens {
         tryToExecute<Boolean>(
             api = APIs.IDENTITY_API,
             setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(
-                    errorCodes,
-                    locale
-                )
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
         ) {
             submitForm("/user/login",
@@ -72,18 +62,13 @@ class IdentityGateway(
                 }
             )
         }
-
         val user = getUserByUsername(userName)
-
         return generateUserTokens(user.id, user.permissions.map { it.id }, tokenConfiguration)
     }
 
 
     override suspend fun getUsers(
-        page: Int,
-        limit: Int,
-        searchTerm: String,
-        locale: Locale
+        page: Int, limit: Int, searchTerm: String, locale: Locale
     ): List<UserManagementResource> {
         return tryToExecute<List<UserManagementResource>>(APIs.IDENTITY_API) {
             get("/users") {
@@ -103,9 +88,7 @@ class IdentityGateway(
     }
 
     override suspend fun generateUserTokens(
-        userId: String,
-        userPermissions: List<Int>,
-        tokenConfiguration: TokenConfiguration
+        userId: String, userPermissions: List<Int>, tokenConfiguration: TokenConfiguration
     ): UserTokens {
 
         val accessTokenExpirationDate = getExpirationDate(tokenConfiguration.accessTokenExpirationTimestamp)
@@ -122,19 +105,12 @@ class IdentityGateway(
     }
 
     private fun generateToken(
-        userId: String,
-        userPermissions: List<Int>,
-        tokenConfiguration: TokenConfiguration,
-        tokenType: TokenType
+        userId: String, userPermissions: List<Int>, tokenConfiguration: TokenConfiguration, tokenType: TokenType
     ): String {
         val userIdClaim = TokenClaim("userId", userId)
         val rolesClaim = TokenClaim("permissions", userPermissions.joinToString(","))
         val accessTokenClaim = TokenClaim("tokenType", tokenType.name)
-        return tokenManagementService.generateToken(
-            tokenConfiguration,
-            userIdClaim,
-            rolesClaim,
-            accessTokenClaim
-        )
+        return tokenManagementService.generateToken(tokenConfiguration, userIdClaim, rolesClaim, accessTokenClaim)
     }
+
 }

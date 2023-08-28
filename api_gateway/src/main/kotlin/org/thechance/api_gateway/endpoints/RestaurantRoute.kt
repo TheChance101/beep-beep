@@ -14,6 +14,14 @@ fun Route.restaurantRoutes() {
     val restaurantGateway: IRestaurantGateway by inject()
 
     route("/restaurant") {
+        get {
+            val (language, countryCode) = extractLocalizationHeader()
+            val page = call.parameters["page"]?.toInt() ?: 1
+            val limit = call.parameters["limit"]?.toInt() ?: 20
+            val restaurants = restaurantGateway.getRestaurants(page, limit, locale = Locale(language, countryCode))
+            respondWithResult(HttpStatusCode.OK, restaurants)
+        }
+
         get("/{id}") {
             val (language, countryCode) = extractLocalizationHeader()
             val restaurantId = call.parameters["id"]?.trim().toString()
@@ -21,5 +29,6 @@ fun Route.restaurantRoutes() {
                 restaurantGateway.getRestaurantInfo(locale = Locale(language, countryCode), id = restaurantId)
             respondWithResult(HttpStatusCode.OK, restaurant.toRestaurant())
         }
+
     }
 }
