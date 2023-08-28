@@ -1,7 +1,6 @@
 package org.thechance.common.presentation.taxi
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -18,6 +17,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.presentation.composables.SeatsBar
 import org.thechance.common.presentation.util.kms
+import org.thechance.common.presentation.resources.Resources
 import java.awt.Dimension
 
 
@@ -56,34 +56,34 @@ fun AddTaxiDialog(
         ) {
 
             Text(
-                "Create new Taxi",
+                text = Resources.Strings.createNewTaxi,
                 style = Theme.typography.headlineLarge,
                 color = Theme.colors.contentPrimary,
             )
 
             BpTextField(
                 modifier = Modifier.padding(top = 40.kms),
-                label = "Taxi Plate Number",
+                label = Resources.Strings.taxiPlateNumber,
                 onValueChange = onTaxiPlateNumberChange,
                 text = state.plateNumber
             )
 
             BpTextField(
                 modifier = Modifier.padding(top = 24.kms),
-                label = "Driver Username",
+                label = Resources.Strings.driverUsername,
                 onValueChange = onDriverUserNamChange,
                 text = state.driverUserName
             )
 
             BpTextField(
                 modifier = Modifier.padding(top = 24.kms),
-                label = "Car Model",
+                label = Resources.Strings.carModel,
                 onValueChange = onCarModelChange,
                 text = state.carModel
             )
 
             Text(
-                "Car Color",
+                text = Resources.Strings.carColor,
                 style = Theme.typography.title,
                 color = Theme.colors.contentPrimary,
                 modifier = Modifier.padding(top = 24.kms),
@@ -97,7 +97,7 @@ fun AddTaxiDialog(
             )
 
             Text(
-                "Seats",
+                Resources.Strings.seats,
                 style = Theme.typography.title,
                 color = Theme.colors.contentPrimary,
                 modifier = Modifier.padding(top = 24.kms),
@@ -106,12 +106,8 @@ fun AddTaxiDialog(
             SeatsBar(
                 selectedSeatsCount = state.seats,
                 count = 6,
-                selectedIcon = painterResource(
-                    if (isSystemInDarkTheme()) "ic_filled_seat_dark.svg" else "ic_filled_seat_light.svg"
-                ),
-                notSelectedIcon = painterResource(
-                    if (isSystemInDarkTheme()) "ic_outlined_seat_dark.svg" else "ic_outlined_seat_light.svg"
-                ),
+                selectedIcon = painterResource(Resources.Drawable.seatFilled),
+                notSelectedIcon = painterResource(Resources.Drawable.seatOutlined),
                 iconsSize = 24.kms,
                 iconsPadding = PaddingValues(horizontal = 8.kms),
                 modifier = Modifier.fillMaxWidth().padding(top = 16.kms),
@@ -124,12 +120,12 @@ fun AddTaxiDialog(
             ) {
 
                 BpOutlinedButton(
-                    "Cancel",
+                    Resources.Strings.cancel,
                     onClick = onCancelCreateTaxiClicked,
                     modifier = Modifier.width(120.kms)
                 )
                 BpButton(
-                    title = "Create",
+                    title = Resources.Strings.create,
                     onClick = onCreateTaxiClicked,
                     modifier = Modifier.fillMaxWidth()
                 )

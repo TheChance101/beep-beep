@@ -19,6 +19,5 @@ class EnglishLocalizedMessages : LocalizedMessages {
     override val userCreatedSuccessfully: String = "User created successfully 🎉"
     override val unknownError: String = "Unknown error `¯\\_(ツ)_/¯`"
     override val userNotFound: String = "User not found"
-    override val invalidPermission: String = "invalid Permission"
-
+    override val invalidPermission: String = "Invalid permission"
 }

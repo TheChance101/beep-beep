@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.kms
 
 @Composable
@@ -26,7 +27,7 @@ fun BpPager(
         verticalAlignment = Alignment.CenterVertically
     ) {
         ArrowIcon(
-            painter = painterResource("left_arrow.svg"),
+            painter = painterResource(Resources.Drawable.arrowLeft),
             onClick = { onPageClicked(currentPage - 1) },
             enable = currentPage != 1
         )
@@ -56,7 +57,7 @@ fun BpPager(
         }
 
         ArrowIcon(
-            painter = painterResource("right_arrow.svg"),
+            painter = painterResource(Resources.Drawable.arrowRight),
             onClick = { onPageClicked(currentPage + 1) },
             enable = currentPage != maxPages
         )

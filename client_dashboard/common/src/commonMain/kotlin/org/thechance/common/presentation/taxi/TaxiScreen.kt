@@ -33,6 +33,7 @@ import org.thechance.common.presentation.composables.modifier.noRipple
 import org.thechance.common.presentation.composables.table.BpPager
 import org.thechance.common.presentation.composables.table.BpTable
 import org.thechance.common.presentation.composables.table.TotalItemsIndicator
+import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.kms
 
 class TaxiScreen :
@@ -87,29 +88,29 @@ class TaxiScreen :
                 ) {
                     BpSimpleTextField(
                         modifier = Modifier.widthIn(max = 440.kms),
-                        hint = "Search for Taxis",
+                        hint = Resources.Strings.searchForTaxis,
                         onValueChange = listener::onSearchInputChange,
                         text = state.searchQuery,
                         keyboardType = KeyboardType.Text,
-                        trailingPainter = painterResource("ic_search.svg")
+                        trailingPainter = painterResource(Resources.Drawable.search),
                     )
                     BpIconButton(
                         onClick = { /* TODO: Show Taxi Filter Dialog */ },
-                        painter = painterResource("ic_filter.svg"),
+                        painter = painterResource(Resources.Drawable.filter),
                     ) {
                         Text(
-                            text = "Filter",
+                            text = Resources.Strings.filter,
                             style = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
                         )
                     }
                     Spacer(modifier = Modifier.weight(1f))
                     BpOutlinedButton(
-                        title = "Export",
+                        title = Resources.Strings.export,
                         onClick = listener::onExportReportClicked,
                         textPadding = PaddingValues(horizontal = 24.kms),
                     )
                     BpButton(
-                        title = "New Taxi",
+                        title = Resources.Strings.newTaxi,
                         onClick = listener::onAddNewTaxiClicked,
                         textPadding = PaddingValues(horizontal = 24.kms),
                     )
@@ -137,7 +138,7 @@ class TaxiScreen :
                 ) {
                     TotalItemsIndicator(
                         totalItems = state.taxis.size,
-                        itemType = "taxi",
+                        itemType = Resources.Strings.taxi,
                         numberItemInPage = state.taxiNumberInPage,
                         onItemPerPageChange = listener::onTaxiNumberChange
                     )
@@ -159,13 +160,13 @@ class TaxiScreen :
                     onDismiss = listener::onDismissExportReportSnackBar
                 ) {
                     Image(
-                        painter = painterResource("ic_download_mark.svg"),
+                        painter = painterResource(Resources.Drawable.downloadMark),
                         contentDescription = null,
                         colorFilter = ColorFilter.tint(color = Theme.colors.success),
                         modifier = Modifier.padding(16.kms)
                     )
                     Text(
-                        text = "Your file download was successful.",
+                        text = Resources.Strings.downloadSuccessMessage,
                         style = Theme.typography.titleMedium,
                         color = Theme.colors.success,
                     )
@@ -211,7 +212,7 @@ class TaxiScreen :
         ) {
             repeat(taxi.seats) {
                 Icon(
-                    painter = painterResource("outline_seat.xml"),
+                    painter = painterResource(Resources.Drawable.seatOutlined),
                     contentDescription = null,
                     tint = Theme.colors.contentPrimary.copy(alpha = 0.87f),
                     modifier = Modifier.size(24.kms)
@@ -220,7 +221,7 @@ class TaxiScreen :
         }
         TitleField(text = taxi.trips)
         Image(
-            painter = painterResource("horizontal_dots.xml"),
+            painter = painterResource(Resources.Drawable.dots),
             contentDescription = null,
             modifier = Modifier.noRipple { onClickEdit(taxi.id) }
                 .weight(firstColumnWeight),

@@ -4,14 +4,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.onClick
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,6 +24,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.composables.BpDropdownMenu
 import org.thechance.common.presentation.composables.modifier.circleLayout
 import org.thechance.common.presentation.composables.modifier.cursorHoverIconHand
+import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.kms
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -76,7 +70,7 @@ fun DashboardAppbar(
                         color = Theme.colors.contentPrimary
                     )
                     Image(
-                        painter = painterResource("ic_drop_down_arrow.svg"),
+                        painter = painterResource(Resources.Drawable.dropDownArrow),
                         contentDescription = null,
                         colorFilter = ColorFilter.tint(Theme.colors.contentPrimary),
                         modifier = Modifier.graphicsLayer {
@@ -106,11 +100,11 @@ fun DashboardAppbar(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Image(
-                                        painterResource("ic_logout.svg"),
+                                        painterResource(Resources.Drawable.logout),
                                         contentDescription = null
                                     )
                                     Text(
-                                        text = "Logout",
+                                        text = Resources.Strings.logout,
                                         textAlign = TextAlign.Center,
                                         style = Theme.typography.titleMedium,
                                         color = Theme.colors.primary

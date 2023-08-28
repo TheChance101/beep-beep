@@ -19,6 +19,9 @@ interface IValidation {
     fun isValidLocation(latitude: Double, longitude: Double): Boolean
     fun isValidTime(time: String?): Boolean
     fun checkIsValidIds(id: String, listIds: List<String>)
+
+    fun isValidAddress(address: String): Boolean
+    fun isValidEmail(ownerEmail: String): Boolean
 }
 
 class Validation : IValidation {
@@ -80,6 +83,15 @@ class Validation : IValidation {
 
     override fun isValidLocation(latitude: Double, longitude: Double): Boolean {
         return isValidLatitude(latitude) && isValidLongitude(longitude)
+    }
+
+    override fun isValidAddress(address: String): Boolean {
+        val regex = Regex("[0-9]+ [a-zA-Z]+ [a-zA-Z]+") // Example pattern: "123 Main Street"
+        return regex.matches(address)
+    }
+
+    override fun isValidEmail(ownerEmail: String): Boolean{
+        return "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$".toRegex().matches(ownerEmail)
     }
 
     override fun isValidTime(time: String?): Boolean {
