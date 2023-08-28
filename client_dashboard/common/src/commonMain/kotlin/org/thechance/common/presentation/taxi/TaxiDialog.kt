@@ -15,6 +15,7 @@ import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.domain.entity.CarColor
+import org.thechance.common.presentation.composables.CarColors
 import org.thechance.common.presentation.composables.SeatsBar
 import org.thechance.common.presentation.util.kms
 import org.thechance.common.presentation.resources.Resources
@@ -32,7 +33,7 @@ fun AddTaxiDialog(
     onCarColorSelected: (CarColor) -> Unit,
     onDriverUserNamChange: (String) -> Unit,
     onTaxiPlateNumberChange: (String) -> Unit,
-    state: AddTaxiDialogUiState,
+    state: NewTaxiInfoUiState,
     modifier: Modifier = Modifier,
 ) {
 
