@@ -4,7 +4,6 @@ import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
-import org.bson.types.ObjectId
 import java.util.*
 
 
@@ -18,8 +17,9 @@ data class MealCollection(
     val description: String,
     val isDeleted: Boolean = false,
     val price: Double,
+    val currency: String,
     @Contextual
-    val restaurantId:UUID = UUID.randomUUID(),
+    val restaurantId: UUID = UUID.randomUUID(),
     val cuisines: List<@Contextual UUID>,
 )
 

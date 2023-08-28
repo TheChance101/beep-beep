@@ -3,7 +3,7 @@ package org.thechance.service_restaurant.data.collection
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AddressCollection(
+data class LocationCollection(
     val latitude: Double,
     val longitude: Double,
 )
