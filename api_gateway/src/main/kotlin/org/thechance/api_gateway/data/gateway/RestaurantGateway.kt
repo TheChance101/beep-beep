@@ -5,7 +5,9 @@ import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import io.ktor.util.*
+import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
+import org.thechance.api_gateway.data.model.CuisineResource
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.LocalizedMessageException
 import org.thechance.api_gateway.endpoints.gateway.IRestaurantGateway
@@ -44,10 +46,18 @@ class RestaurantGateway(
         }
     }
 
-    override suspend fun getAllRequestPermission(permissions: List<Int>, locale: Locale): List<RestaurantRequestPermission> {
+    override suspend fun getAllRequestPermission(
+        permissions: List<Int>,
+        locale: Locale
+    ): List<RestaurantRequestPermission> {
         // todo: implement check permissions logic correctly
         if (!permissions.contains(1)) {
-            throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
+            throw LocalizedMessageException(
+                errorHandler.getLocalizedErrorMessage(
+                    listOf(8000),
+                    locale
+                )
+            )
         }
 
         return tryToExecute(
@@ -62,4 +72,49 @@ class RestaurantGateway(
             get("/restaurant-permission-request")
         }
     }
+
+    @OptIn(InternalAPI::class)
+    override suspend fun addCuisine(
+        name: String, permissions: List<Int>, locale: Locale
+    ): CuisineResource {
+        //TODO()  need to change 1
+        val ADMIN = 1
+        return if (ADMIN in permissions) {
+            tryToExecute<CuisineResource>(
+                APIs.RESTAURANT_API,
+                setErrorMessage = { errorCodes ->
+                    errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+                }
+            ) {
+                post("/cuisine") {
+                    body = Json.encodeToString(
+                        CuisineResource.serializer(),
+                        CuisineResource(name = name)
+                    )
+                }
+            }
+        } else {
+            throw LocalizedMessageException(
+                errorHandler.getLocalizedErrorMessage(
+                    listOf(8000),
+                    locale
+                )
+            )
+        }
+    }
+
+    override suspend fun getCuisines(locale: Locale): CuisineResource {
+
+        return tryToExecute<CuisineResource>(
+            APIs.RESTAURANT_API,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+            }
+        ) {
+            get("/cuisine")
+        }
+
+    }
+
+
 }

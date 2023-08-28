@@ -1,5 +1,6 @@
 package org.thechance.service_restaurant.domain.usecase
 
+import org.thechance.service_restaurant.domain.utils.getCurrencyForLocation
 import org.thechance.service_restaurant.domain.entity.Cuisine
 import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.entity.MealDetails
@@ -30,15 +31,12 @@ class ManageMealUseCase(
 
     override suspend fun addMealToRestaurant(meal: MealDetails): Meal {
         mealValidation.validateAddMeal(meal)
-        restaurantGateway.getRestaurant(meal.restaurantId) ?: throw MultiErrorException(
-            listOf(
-                NOT_FOUND
-            )
-        )
+        val restaurant =
+            restaurantGateway.getRestaurant(meal.restaurantId) ?: throw MultiErrorException(listOf(NOT_FOUND))
         val cuisineIds = meal.cuisines.map { it.id }
         if (!optionsGateway.areCuisinesExist(cuisineIds)) throw MultiErrorException(listOf(NOT_FOUND))
         restaurantGateway.addCuisineToRestaurant(meal.restaurantId, cuisineIds)
-        return restaurantGateway.addMeal(meal)
+        return restaurantGateway.addMeal(meal.copy(currency = restaurant.currency))
     }
 
     override suspend fun updateMealToRestaurant(meal: MealDetails): Meal {

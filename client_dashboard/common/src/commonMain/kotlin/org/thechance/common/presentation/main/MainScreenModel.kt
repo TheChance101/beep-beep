@@ -15,8 +15,8 @@ class MainScreenModel(
     }
 
     private fun getUserInfo() {
-        val user = getUserInfo.getUserInfo().toUiState()
-        mutableState.update { it.copy(username = user.fullName) }
+        val user = getUserInfo.getUserInfo()
+        mutableState.update { it.copy(username = user) }
     }
 
     fun logout() {

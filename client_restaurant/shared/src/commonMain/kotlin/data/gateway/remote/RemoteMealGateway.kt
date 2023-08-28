@@ -1,7 +1,7 @@
-package data.gateway
+package data.gateway.remote
 
 import domain.entity.Meal
-import domain.gateway.IRemoteMealGateway
+import domain.gateway.remote.IRemoteMealGateway
 import io.ktor.client.HttpClient
 
 
