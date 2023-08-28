@@ -1,5 +1,7 @@
 package org.thechance.common.domain.getway
 
+import org.thechance.common.domain.entity.ThemeMode
+
 interface IIdentityGateway {
 
     suspend fun saveAccessToken(token: String)
@@ -15,5 +17,9 @@ interface IIdentityGateway {
     suspend fun shouldUserKeptLoggedIn(keepLoggedIn: Boolean)
 
     suspend fun isUserKeptLoggedIn(): Boolean
+
+    suspend fun getThemeMode(): ThemeMode
+
+    suspend fun updateThemeMode(mode: ThemeMode)
 
 }
