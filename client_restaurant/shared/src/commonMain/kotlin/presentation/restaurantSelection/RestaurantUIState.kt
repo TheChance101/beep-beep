@@ -1,8 +1,5 @@
 package presentation.restaurantSelection
 
-
-
-
 data class RestaurantScreenUIState(
     val isLoading: Boolean = false,
     val error: String = "",

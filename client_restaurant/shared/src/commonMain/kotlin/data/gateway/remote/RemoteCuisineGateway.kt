@@ -1,26 +1,19 @@
 package data.gateway.remote
 
+import data.remote.mapper.toEntity
+import data.remote.model.CuisineDto
 import domain.entity.Cuisine
-import domain.entity.Meal
 import domain.gateway.remote.IRemoteCuisineGateway
 import io.ktor.client.HttpClient
+import io.ktor.client.request.get
 
 
-class RemoteCuisineGateway(private val client: HttpClient) : IRemoteCuisineGateway {
+class RemoteCuisineGateway(client: HttpClient) : IRemoteCuisineGateway,
+    BaseRemoteGateway(client = client) {
 
-      override suspend fun getCuisines(): List<Cuisine> {
-        return emptyList()
+    override suspend fun getCuisinesByRestaurantId(restaurantId: String): List<Cuisine> {
+        return tryToExecute<List<CuisineDto>> {
+            get("/cuisines/$restaurantId")
+        }.map { it.toEntity() }
     }
-
-    override suspend fun getCuisinesInMeal(mealId: String): List<Cuisine> {
-        return emptyList()
-    }
-
-    override suspend fun getCuisine(restaurantId: String): List<Cuisine> {
-        return emptyList()
-    }
-
-    override suspend fun getMealsByCuisineId(id: String): List<Meal> {
-        return emptyList()
-    }
-    }
+}
