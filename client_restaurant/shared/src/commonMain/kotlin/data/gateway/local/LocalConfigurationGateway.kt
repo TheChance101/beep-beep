@@ -1,7 +1,7 @@
 package data.gateway.local
 
 import data.local.model.UserConfigurationCollection
-import domain.gateway.ILocalConfigurationGateway
+import domain.gateway.local.ILocalConfigurationGateway
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
 

@@ -1,7 +1,7 @@
 package data.gateway.remote
 
 import domain.entity.Category
-import domain.gateway.IRemoteCategoryGateway
+import domain.gateway.remote.IRemoteCategoryGateway
 import io.ktor.client.HttpClient
 
 

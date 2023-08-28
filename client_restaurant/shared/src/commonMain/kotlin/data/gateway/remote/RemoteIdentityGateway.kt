@@ -4,7 +4,7 @@ import data.local.mapper.toEntity
 import data.remote.model.BaseResponse
 import data.remote.model.UserTokensDto
 import domain.entity.UserTokens
-import domain.gateway.IRemoteIdentityGateway
+import domain.gateway.remote.IRemoteIdentityGateway
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException

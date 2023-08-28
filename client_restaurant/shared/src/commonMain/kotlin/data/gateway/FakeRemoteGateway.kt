@@ -1,4 +1,4 @@
-package data.gateway.remote
+package data.gateway
 
 import data.remote.mapper.toEntity
 import data.remote.mapper.toOrderEntity
@@ -14,12 +14,12 @@ import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
 import domain.entity.UserTokens
-import domain.gateway.IRemoteGateway
+import domain.gateway.IFakeRemoteGateway
 import presentation.base.InvalidPasswordException
 import presentation.base.InvalidUserNameException
 import presentation.base.RequestException
 
-class FakeRemoteGateWay : IRemoteGateway {
+class FakeRemoteGateWay : IFakeRemoteGateway {
 
     private val orders = mutableListOf(
         OrderDto(

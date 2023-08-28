@@ -2,7 +2,7 @@ package data.gateway.remote
 
 import domain.entity.Cuisine
 import domain.entity.Meal
-import domain.gateway.IRemoteCuisineGateway
+import domain.gateway.remote.IRemoteCuisineGateway
 import io.ktor.client.HttpClient
 
 
