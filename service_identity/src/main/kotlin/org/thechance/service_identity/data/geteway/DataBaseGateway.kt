@@ -20,7 +20,6 @@ import org.thechance.service_identity.data.util.isUpdatedSuccessfully
 import org.thechance.service_identity.data.util.paginate
 import org.thechance.service_identity.domain.entity.*
 import org.thechance.service_identity.domain.gateway.IDataBaseGateway
-import org.thechance.service_identity.domain.util.INVALID_CREDENTIALS
 import org.thechance.service_identity.domain.util.NOT_FOUND
 import org.thechance.service_identity.domain.util.USER_ALREADY_EXISTS
 import org.thechance.service_identity.domain.util.USER_NOT_FOUND
@@ -200,7 +199,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
         fullName: String,
         username: String,
         email: String
-    ): Boolean {
+    ): UserManagement {
 
         val userDocument = UserCollection(
             hashedPassword = saltedHash.hash,
@@ -214,8 +213,8 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
             val wallet = WalletCollection(userId = userDocument.id)
             createWallet(wallet)
             userDetailsCollection.insertOne(UserDetailsCollection(userId = userDocument.id))
-            return userCollection.insertOne(userDocument).wasAcknowledged()
-
+            userCollection.insertOne(userDocument)
+            return userDocument.toManagedEntity()
         } catch (exception: MongoWriteException) {
             throw UserAlreadyExistsException(USER_ALREADY_EXISTS)
         }

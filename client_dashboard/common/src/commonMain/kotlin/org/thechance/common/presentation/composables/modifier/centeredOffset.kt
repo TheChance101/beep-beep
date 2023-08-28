@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.toSize
 
 @Composable
 fun Modifier.centerItem(
-    sideBarUnexpandedWidthInDp:Dp,
+    sideBarUnexpandedWidthInDp: Dp,
     itemWidth: Float? = null
 ): Modifier {
     val positionedItemWidth = remember { mutableStateOf(0f) }
@@ -19,7 +19,7 @@ fun Modifier.centerItem(
         onGloballyPositioned {
             positionedItemWidth.value = itemWidth ?: it.size.toSize().width
         }.graphicsLayer {
-            translationX = (sideBarUnexpandedWidthInDp.toPx() - positionedItemWidth.value)/2
+            translationX = (sideBarUnexpandedWidthInDp.toPx() - positionedItemWidth.value) / 2
         }
     )
 }

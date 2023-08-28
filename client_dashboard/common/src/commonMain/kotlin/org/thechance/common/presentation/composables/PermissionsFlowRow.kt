@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.beepbeep.designSystem.ui.composable.BpChip
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.LocalDimensions
 import org.thechance.common.presentation.users.UserScreenUiState
+import org.thechance.common.presentation.util.kms
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -24,12 +24,12 @@ fun PermissionsFlowRow(
         modifier = Modifier
             .fillMaxWidth()
             .background(Theme.colors.background)
-            .padding(LocalDimensions.current.space8)
+            .padding(8.kms)
     ) {
         allPermissions.forEach { permission ->
             BpChip(
                 label = permission.name.lowercase().capitalizeWords(),
-                modifier = Modifier.padding(LocalDimensions.current.space8),
+                modifier = Modifier.padding(8.kms),
                 onClick = { onUserPermissionClicked(permission) },
                 painter = painterResource(permission.iconPath),
                 isSelected = selectedPermissions.contains(permission)

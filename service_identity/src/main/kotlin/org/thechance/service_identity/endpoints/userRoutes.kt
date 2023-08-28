@@ -37,7 +37,7 @@ fun Route.userRoutes() {
                 password = password.toString(),
                 email = email.toString()
             )
-            call.respond(HttpStatusCode.Created, result)
+            call.respond(HttpStatusCode.Created, result.toDto())
         }
 
         put("/{id}") {
