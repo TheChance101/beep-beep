@@ -17,7 +17,7 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
         method: HttpClient.() -> HttpResponse
     ): T {
         try {
-            return client.method().body<T>()
+            return client.method().body()
         } catch (e: ClientRequestException) {
             val errorMessages = e.response.body<BaseResponse<*>>().status.errorMessages
             errorMessages?.let { throwMatchingException(it) }
