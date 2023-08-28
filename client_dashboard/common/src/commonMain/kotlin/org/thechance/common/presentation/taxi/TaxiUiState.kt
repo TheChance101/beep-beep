@@ -8,6 +8,7 @@ import org.thechance.common.domain.entity.*
 import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.domain.util.TaxiStatus.ONLINE
 import org.thechance.common.presentation.composables.table.Header
+import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.ErrorState
 
 data class TaxiUiState(
@@ -58,15 +59,16 @@ data class TaxiDetailsUiState(
 }
 data class TaxiFilterUiState(
     val carColor: CarColor = CarColor.WHITE,
-    val seats: Int = 0,
+    val seats: Int = 1,
     val status: TaxiStatus = ONLINE,
 )
 
+@Composable
 fun TaxiStatus.getStatusName():String{
     return when (this) {
-        TaxiStatus.OFFLINE -> "Offline"
-        TaxiStatus.ONLINE -> "Online"
-        TaxiStatus.ON_RIDE -> "On Ride"
+        TaxiStatus.OFFLINE -> Resources.Strings.offline
+        TaxiStatus.ONLINE -> Resources.Strings.online
+        TaxiStatus.ON_RIDE -> Resources.Strings.onRide
     }
 }
 

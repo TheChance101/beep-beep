@@ -183,7 +183,7 @@ class TaxiScreen :
 
             LaunchedEffect(state.isReportExportedSuccessfully) {
                 if (state.isReportExportedSuccessfully) {
-                    delay(2000)
+                    delay(1500)
                     listener.onDismissExportReportSnackBar()
                 }
             }
@@ -214,13 +214,13 @@ class TaxiScreen :
                 text = {
                     Column(Modifier.fillMaxSize()) {
                         Text(
-                            "Filter",
+                            Resources.Strings.filter,
                             style = Theme.typography.headline,
                             color = Theme.colors.contentPrimary,
                             modifier = Modifier.padding(24.kms)
                         )
                         Text(
-                            "Status",
+                            Resources.Strings.status,
                             style = Theme.typography.titleLarge,
                             color = Theme.colors.contentPrimary,
                             modifier = Modifier
@@ -240,7 +240,7 @@ class TaxiScreen :
                         )
 
                         Text(
-                            "Car Color",
+                            Resources.Strings.carColor,
                             style = Theme.typography.titleLarge,
                             color = Theme.colors.contentPrimary,
                             modifier = Modifier.padding(
@@ -259,7 +259,7 @@ class TaxiScreen :
                             selectedCarColor = taxi.carColor
                         )
                         Text(
-                            "Seats",
+                            Resources.Strings.seats,
                             style = Theme.typography.titleLarge,
                             color = Theme.colors.contentPrimary,
                             modifier = Modifier.padding(
@@ -270,19 +270,11 @@ class TaxiScreen :
                         SeatsBar(
                             selectedSeatsCount = taxi.seats,
                             count = 6,
-                            selectedIcon = painterResource(
-                                if (isSystemInDarkTheme()) "ic_filled_seat_dark.svg" else "ic_filled_seat_light.svg"
-                            ),
-                            notSelectedIcon = painterResource(
-                                if (isSystemInDarkTheme()) "ic_outlined_seat_dark.svg" else "ic_outlined_seat_light.svg"
-                            ),
+                            selectedIcon = painterResource(Resources.Drawable.seatFilled),
+                            notSelectedIcon = painterResource(Resources.Drawable.seatOutlined),
                             iconsSize = 24.kms,
                             iconsPadding = PaddingValues(horizontal = 8.kms),
-                            modifier = Modifier.fillMaxWidth()
-                                .background(color = Theme.colors.background).padding(
-                                    horizontal = 24.kms,
-                                    vertical = 16.kms
-                                ),
+                            modifier = Modifier.fillMaxWidth().padding(top = 16.kms),
                             onClick = onSeatsSelected
                         )
                         Row(
@@ -291,13 +283,13 @@ class TaxiScreen :
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             BpTransparentButton(
-                                "Cancel",
+                                title = Resources.Strings.cancel,
                                 onClick = onFilterMenuDismiss,
                                 modifier = Modifier.cursorHoverIconHand()
 
                             )
                             BpOutlinedButton(
-                                title = "Save",
+                                title =Resources.Strings.save,
                                 onClick = onFilterMenuDismiss,
                                 shape = RoundedCornerShape(Theme.radius.small),
                                 modifier = Modifier.height(50.dp).weight(1f)
