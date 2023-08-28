@@ -20,22 +20,21 @@ fun Route.cuisineRoute() {
     val dashboardGetaway: IDashboardGetaway by inject()
 
     route("/cuisine") {
-//        authenticate("auth-jwt") {
+        authenticate("auth-jwt") {
             post {
-//                val tokenClaim = call.principal<JWTPrincipal>()
-//                val userId = tokenClaim?.payload?.getClaim(USER_ID).toString()
-//                val permissions = tokenClaim?.payload?.getClaim(ROLE)?.asList(Int::class.java) ?: emptyList()
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val permissions = tokenClaim?.payload?.getClaim(ROLE)?.asList(Int::class.java) ?: emptyList()
 
                 val params = call.receiveParameters()
                 val name = params["name"]?.trim().toString()
                 val (language, countryCode) = extractLocalizationHeader()
 
                val cuisine=  dashboardGetaway.addCuisine(
-                    name = name, id = "userId", permissions = listOf(2), locale = Locale(language, countryCode)
+                    name = name, permissions = permissions, locale = Locale(language, countryCode)
                 )
                 respondWithResult(HttpStatusCode.Created, cuisine )
             }
-//        }
+        }
 
     }
 }

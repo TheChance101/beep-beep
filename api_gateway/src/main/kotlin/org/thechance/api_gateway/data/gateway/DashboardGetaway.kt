@@ -2,7 +2,6 @@ package org.thechance.api_gateway.data.gateway
 
 import io.ktor.client.*
 import io.ktor.client.request.*
-import io.ktor.http.*
 import io.ktor.util.*
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
@@ -12,7 +11,6 @@ import org.thechance.api_gateway.data.utils.LocalizedMessageException
 import org.thechance.api_gateway.endpoints.gateway.IDashboardGetaway
 import org.thechance.api_gateway.util.APIs
 import java.util.*
-import java.util.logging.ErrorManager
 
 
 @Single(binds = [IDashboardGetaway::class])
@@ -23,7 +21,7 @@ class DashboardGetaway(
 ) : BaseGateway(client = client, attributes = attributes), IDashboardGetaway {
     @OptIn(InternalAPI::class)
     override suspend fun addCuisine(
-        name: String, id: String, permissions: List<Int>, locale: Locale
+        name: String, permissions: List<Int>, locale: Locale
     ): Cuisine {
         //TODO()  need to change 1
         val ADMIN = 1
