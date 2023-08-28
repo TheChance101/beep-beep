@@ -2,8 +2,8 @@ package org.thechance.common.data.remote.gateway
 
 
 import org.thechance.common.data.local.LocalGateway
-import org.thechance.common.data.remote.mapper.toDto
-import org.thechance.common.data.remote.mapper.toEntity
+import org.thechance.common.data.mapper.toDto
+import org.thechance.common.data.mapper.toEntity
 import org.thechance.common.data.remote.model.DataWrapperDto
 import org.thechance.common.data.remote.model.TaxiDto
 import org.thechance.common.data.remote.model.UserDto

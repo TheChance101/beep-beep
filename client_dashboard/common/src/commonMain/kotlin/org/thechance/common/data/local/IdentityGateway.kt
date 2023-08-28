@@ -3,6 +3,9 @@ package org.thechance.common.data.local
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
 import org.thechance.common.data.local.local_dto.ConfigurationCollection
+import org.thechance.common.data.mapper.isDarkMode
+import org.thechance.common.data.mapper.toThemeMode
+import org.thechance.common.domain.entity.ThemeMode
 import org.thechance.common.domain.getway.IIdentityGateway
 
 class IdentityGateway(private val realm: Realm) : IIdentityGateway {
@@ -49,6 +52,20 @@ class IdentityGateway(private val realm: Realm) : IIdentityGateway {
         return realm.query<ConfigurationCollection>(
             "$ID == $CONFIGURATION_ID"
         ).first().find()?.keepLoggedIn ?: false
+    }
+
+    override suspend fun getThemeMode(): ThemeMode {
+        val isDarkMode = realm.query<ConfigurationCollection>(
+            "$ID == $CONFIGURATION_ID"
+        ).first().find()?.isDarkMode ?: false
+        return toThemeMode(isDarkMode)
+    }
+
+    override suspend fun updateThemeMode(mode: ThemeMode) {
+        val isDarkMode = isDarkMode(mode)
+        realm.write {
+            query<ConfigurationCollection>("$ID == $CONFIGURATION_ID").first().find()?.isDarkMode = isDarkMode
+        }
     }
 
     companion object {
