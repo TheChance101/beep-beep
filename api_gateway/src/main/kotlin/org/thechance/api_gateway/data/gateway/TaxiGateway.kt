@@ -106,45 +106,6 @@ class TaxiGateway(
         }
     }
 
-    override suspend fun updateTaxi(
-        id: String,
-        plateNumber: String,
-        color: Int,
-        type: String,
-        driverId: String,
-        seats: Int,
-        permissions: List<Int>,
-        locale: Locale
-    ): TaxiResource {
-        if (!permissions.contains(1)) {
-            throw LocalizedMessageException(
-                errorHandler.getLocalizedErrorMessage(
-                    listOf(8000),
-                    locale
-                )
-            )
-        }
-        return tryToExecute(
-            api = APIs.TAXI_API,
-            setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(
-                    errorCodes,
-                    locale
-                )
-            }
-        ) {
-            submitForm("/taxi/$id",
-                formParameters = parameters {
-                    append("plateNumber", plateNumber)
-                    append("color", color.toString())
-                    append("type", type)
-                    append("driverId", driverId)
-                    append("seats", seats.toString())
-                }
-            )
-        }
-    }
-
     override suspend fun deleteTaxi(
         id: String,
         permissions: List<Int>,

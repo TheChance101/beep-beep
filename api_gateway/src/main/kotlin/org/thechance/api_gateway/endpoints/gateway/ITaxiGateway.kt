@@ -20,16 +20,6 @@ interface ITaxiGateway {
         locale: Locale
     ): TaxiResource
 
-    suspend fun updateTaxi(
-        id: String,
-        plateNumber: String,
-        color: Int,
-        type: String,
-        driverId: String,
-        seats: Int,
-        permissions: List<Int>,
-        locale: Locale
-    ): TaxiResource
 
     suspend fun deleteTaxi(id: String, permissions: List<Int>, locale: Locale): TaxiResource
 }

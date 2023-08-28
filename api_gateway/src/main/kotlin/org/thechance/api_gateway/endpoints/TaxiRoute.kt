@@ -84,34 +84,6 @@ fun Route.taxiRoutes() {
                 respondWithResult(HttpStatusCode.OK, result.toTaxi())
             }
 
-            put("/{id}") {
-                val tokenClaim = call.principal<JWTPrincipal>()
-                val permissions =
-                    tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java)
-                        ?: emptyList()
-                val (language, countryCode) = extractLocalizationHeader()
-                val params = call.receiveParameters()
-                val id = params["id"] ?: ""
-                val plateNumber = params["plateNumber"] ?: ""
-                val color = params["color"]?.toInt() ?: 0
-                val type = params["type"] ?: ""
-                val driverId = params["driverId"] ?: ""
-                val seats = params["seats"]?.toInt() ?: 0
-                val local = Locale(language, countryCode)
-                val result = taxiGateway.updateTaxi(
-                    id,
-                    plateNumber,
-                    color,
-                    type,
-                    driverId,
-                    seats,
-                    permissions,
-                    local
-                )
-                val successMessage =
-                    localizedMessagesFactory.createLocalizedMessages(local).taxiCreatedSuccessfully
-                respondWithResult(HttpStatusCode.OK, result.toTaxi(),successMessage)
-            }
 
             delete("/{id}"){
                 val tokenClaim = call.principal<JWTPrincipal>()
