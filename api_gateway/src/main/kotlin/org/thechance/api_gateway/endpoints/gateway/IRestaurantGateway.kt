@@ -1,6 +1,8 @@
 package org.thechance.api_gateway.endpoints.gateway
 
 import kotlinx.coroutines.flow.Flow
+import org.thechance.api_gateway.data.model.CuisineResource
+import org.thechance.api_gateway.data.model.restaurant.RestaurantResource
 import org.thechance.api_gateway.endpoints.model.Order
 import org.thechance.api_gateway.endpoints.model.RestaurantRequestPermission
 import java.util.*

@@ -7,6 +7,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import org.koin.ktor.ext.inject
+import org.thechance.api_gateway.data.mappers.toRestaurant
 import org.thechance.api_gateway.endpoints.gateway.IRestaurantGateway
 import org.thechance.api_gateway.endpoints.utils.*
 import java.util.*
@@ -17,6 +18,13 @@ fun Route.restaurantRoutes() {
 
 
     route("/restaurant") {
+
+        get("/{id}") {
+            val (language, countryCode) = extractLocalizationHeader()
+            val restaurantId = call.parameters["id"]?.trim().toString()
+            val restaurant = restaurantGateway.getRestaurantInfo(locale = Locale(language, countryCode), id = restaurantId)
+            respondWithResult(HttpStatusCode.OK, restaurant.toRestaurant())
+        }
 
         authenticate("auth-jwt") {
 
