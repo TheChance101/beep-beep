@@ -31,4 +31,6 @@ interface LocalizedMessages {
     val unknownError: String
 
     val userNotFound: String
+
+    val invalidPermission: String
 }
