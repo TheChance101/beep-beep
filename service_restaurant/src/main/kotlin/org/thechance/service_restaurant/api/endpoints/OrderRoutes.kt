@@ -8,7 +8,7 @@ import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import org.koin.ktor.ext.inject
 import org.thechance.service_restaurant.api.models.OrderDto
-import org.thechance.service_restaurant.api.models.Restaurant
+import org.thechance.service_restaurant.api.models.WebSocketRestaurant
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.SocketHandler
@@ -70,7 +70,7 @@ fun Route.orderRoutes() {
 
         webSocket("/restaurant/{restaurantId}") {
             val restaurantId = call.parameters["restaurantId"]?.trim().orEmpty()
-            socketHandler.restaurants[restaurantId] = Restaurant(this)
+            socketHandler.restaurants[restaurantId] = WebSocketRestaurant(this)
             socketHandler.broadcastOrder(restaurantId)
         }
 
