@@ -1,8 +1,8 @@
-package data.gateway
+package data.gateway.remote
 
 import domain.entity.Location
 import domain.entity.Restaurant
-import domain.gateway.IRemoteRestaurantGateway
+import domain.gateway.remote.IRemoteRestaurantGateway
 import io.ktor.client.HttpClient
 
 
