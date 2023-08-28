@@ -1,8 +1,7 @@
 package domain.usecase
 
-import domain.entity.UserTokens
 import domain.gateway.local.ILocalConfigurationGateway
-import domain.gateway.IFakeRemoteGateway
+import domain.gateway.remote.IRemoteIdentityGateway
 
 interface ILoginUserUseCase {
 
@@ -10,18 +9,12 @@ interface ILoginUserUseCase {
         userName: String,
         password: String,
         isKeepMeLoggedInChecked: Boolean
-    ): UserTokens
+    )
 
-    suspend fun saveAccessToken(token: String)
-    suspend fun getAccessToken(): String
-    suspend fun saveRefreshToken(token: String)
-    suspend fun getRefreshToken(): String
-    suspend fun saveKeepMeLoggedInFlag(isChecked: Boolean)
-    suspend fun getKeepMeLoggedInFlag(): Boolean
 }
 
 class LoginUserUseCase(
-    private val remoteGateway :IFakeRemoteGateway,
+    private val remoteGateway: IRemoteIdentityGateway,
     private val localGateWay: ILocalConfigurationGateway
 ) : ILoginUserUseCase {
 
@@ -29,24 +22,11 @@ class LoginUserUseCase(
         userName: String,
         password: String,
         isKeepMeLoggedInChecked: Boolean
-    ): UserTokens {
-            return remoteGateway.loginUser(userName, password)
+    ) {
+        val userTokens = remoteGateway.loginUser(userName, password)
+        localGateWay.saveAccessToken(userTokens.first)
+        localGateWay.saveRefreshToken(userTokens.second)
+        localGateWay.saveKeepMeLoggedInFlag(isKeepMeLoggedInChecked)
     }
-
-    override suspend fun saveAccessToken(token: String) = localGateWay.saveAccessToken(token)
-
-
-    override suspend fun getAccessToken(): String = localGateWay.getAccessToken()
-
-
-    override suspend fun saveRefreshToken(token: String) = localGateWay.saveRefreshToken(token)
-
-    override suspend fun getRefreshToken(): String = localGateWay.getRefreshToken()
-
-    override suspend fun saveKeepMeLoggedInFlag(isChecked: Boolean) =
-        localGateWay.saveKeepMeLoggedInFlag(isChecked)
-
-
-    override suspend fun getKeepMeLoggedInFlag(): Boolean = localGateWay.getKeepMeLoggedInFlag()
 
 }

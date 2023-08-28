@@ -10,6 +10,8 @@ data class LoginScreenUIState(
     val isLoading: Boolean = false,
     val isSuccess: Boolean = false,
     val error: ErrorState = ErrorState.InvalidCredentials,
+    val isUsernameError: Boolean = false,
+    val isPasswordError: Boolean = false,
     val usernameErrorMsg: String = "",
     val passwordErrorMsg: String = "",
     //permission
