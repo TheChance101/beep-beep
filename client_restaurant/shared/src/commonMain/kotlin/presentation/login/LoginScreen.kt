@@ -48,7 +48,7 @@ class LoginScreen :
         navigator: Navigator,
     ) {
         when (effect) {
-            is LoginScreenUIEffect.LoginEffect -> navigator.push(RestaurantSelectionScreen(ownerId = "f5c8b31e-5c4d-4c8a-babc-0e9463daad20"))
+            is LoginScreenUIEffect.LoginEffect -> navigator.push(RestaurantSelectionScreen())
         }
     }
 

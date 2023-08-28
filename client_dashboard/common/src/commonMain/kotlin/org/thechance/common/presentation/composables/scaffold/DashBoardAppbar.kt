@@ -4,14 +4,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.onClick
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,12 +20,11 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
-import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.LocalDimensions
 import org.thechance.common.presentation.composables.BpDropdownMenu
 import org.thechance.common.presentation.composables.modifier.circleLayout
 import org.thechance.common.presentation.composables.modifier.cursorHoverIconHand
+import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.kms
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -51,7 +43,7 @@ fun DashboardAppbar(
     Column(Modifier.background(Theme.colors.surface)) {
         Row(
             Modifier.height(96.kms).fillMaxWidth()
-                .padding(horizontal = LocalDimensions.current.space40),
+                .padding(horizontal = 40.kms),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -63,11 +55,11 @@ fun DashboardAppbar(
             Box(contentAlignment = Alignment.CenterEnd) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.kms),
                     modifier = Modifier.onClick(onClick = onClickDropDownMenu).cursorHoverIconHand()
                 ) {
                     Text(
-                        modifier = Modifier.circleLayout().padding(LocalDimensions.current.space8),
+                        modifier = Modifier.circleLayout().padding(8.kms),
                         style = Theme.typography.titleMedium,
                         text = username.first().uppercase(),
                         color = Color.White
@@ -78,7 +70,7 @@ fun DashboardAppbar(
                         color = Theme.colors.contentPrimary
                     )
                     Image(
-                        painter = painterResource("ic_drop_down_arrow.svg"),
+                        painter = painterResource(Resources.Drawable.dropDownArrow),
                         contentDescription = null,
                         colorFilter = ColorFilter.tint(Theme.colors.contentPrimary),
                         modifier = Modifier.graphicsLayer {
@@ -90,7 +82,7 @@ fun DashboardAppbar(
                     BpDropdownMenu(
                         expanded = isDropMenuExpanded,
                         onDismissRequest = onDismissDropDownMenu,
-                        offset = DpOffset.Zero.copy(y = LocalDimensions.current.space24),
+                        offset = DpOffset.Zero.copy(y = 32.kms),
                         shape = RoundedCornerShape(Theme.radius.medium)
                             .copy(topEnd = CornerSize(Theme.radius.small)),
                     ) {
@@ -104,15 +96,15 @@ fun DashboardAppbar(
                             text = {
                                 Row(
                                     modifier = Modifier.fillMaxSize(),
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(8.kms),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Image(
-                                        painterResource("ic_logout.svg"),
+                                        painterResource(Resources.Drawable.logout),
                                         contentDescription = null
                                     )
                                     Text(
-                                        text = "Logout",
+                                        text = Resources.Strings.logout,
                                         textAlign = TextAlign.Center,
                                         style = Theme.typography.titleMedium,
                                         color = Theme.colors.primary

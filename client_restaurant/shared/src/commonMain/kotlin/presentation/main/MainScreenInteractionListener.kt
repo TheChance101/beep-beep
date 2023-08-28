@@ -6,6 +6,9 @@ interface MainScreenInteractionListener : BaseInteractionListener {
     fun onClickBack()
     fun onShowMenu()
     fun onDismissMenu()
-    fun onRestaurantClick(restaurantId: String)
-    fun onCardClick(cardIndex: Int)
+    fun onRestaurantClicked(restaurantId: String)
+    fun onAllMealsCardClicked()
+    fun onRestaurantInfoCardClicked()
+    fun onOrdersCardClicked()
+    fun onOrdersHistoryCardClicked()
 }

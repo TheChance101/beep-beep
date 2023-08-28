@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import org.thechance.common.presentation.util.kms
 import kotlin.math.ceil
 import kotlin.math.floor
 
@@ -21,7 +22,7 @@ fun RatingBar(
     selectedIcon: Painter,
     halfSelectedIcon: Painter,
     modifier: Modifier = Modifier,
-    iconsSize: Dp = 24.dp,
+    iconsSize: Dp = 24.kms,
     iconsPadding: PaddingValues = PaddingValues(0.dp),
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
 ) {

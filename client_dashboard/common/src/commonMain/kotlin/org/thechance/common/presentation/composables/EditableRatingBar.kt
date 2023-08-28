@@ -16,6 +16,7 @@ import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import org.thechance.common.presentation.util.kms
 import kotlin.math.floor
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -28,7 +29,7 @@ fun EditableRatingBar(
     onClick: (Double) -> Unit,
     modifier: Modifier = Modifier,
     rating: Double = 0.0,
-    iconsSize: Dp = 24.dp,
+    iconsSize: Dp = 24.kms,
     iconsPadding: PaddingValues = PaddingValues(0.dp),
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
 ) {

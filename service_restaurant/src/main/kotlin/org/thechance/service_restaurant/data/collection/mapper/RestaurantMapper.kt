@@ -1,6 +1,5 @@
 package org.thechance.service_restaurant.data.collection.mapper
 
-import org.bson.types.ObjectId
 import org.thechance.service_restaurant.data.collection.RestaurantCollection
 import org.thechance.service_restaurant.domain.entity.Restaurant
 import java.util.*
@@ -16,7 +15,9 @@ fun RestaurantCollection.toEntity() = Restaurant(
     phone = phone,
     openingTime = openingTime,
     closingTime = closingTime,
-    address = address.toEntity()
+    address = address,
+    currency = currency,
+    location = location.toEntity()
 )
 
 fun List<RestaurantCollection>.toEntity(): List<Restaurant> = map { it.toEntity() }
@@ -31,6 +32,8 @@ fun Restaurant.toCollection() = RestaurantCollection(
     phone = phone,
     openingTime = openingTime,
     closingTime = closingTime,
-    address = address.toCollection()
+    address = address,
+    currency = currency,
+    location = location.toCollection()
 )
 
