@@ -1,6 +1,6 @@
 package org.thechance.api_gateway.endpoints.gateway
 
-import org.thechance.api_gateway.data.model.Cuisine
+import org.thechance.api_gateway.data.model.CuisineResource
 import org.thechance.api_gateway.endpoints.model.RestaurantRequestPermission
 import java.util.*
 
@@ -11,8 +11,8 @@ interface IRestaurantGateway {
 
     suspend fun getAllRequestPermission(permissions: List<Int>, locale: Locale): List<RestaurantRequestPermission>
 
-    suspend fun addCuisine(name: String, permissions: List<Int>, locale: Locale): Cuisine
+    suspend fun addCuisine(name: String, permissions: List<Int>, locale: Locale): CuisineResource
 
-    suspend fun getCuisines()
+    suspend fun getCuisines(locale: Locale): CuisineResource
 }
 
