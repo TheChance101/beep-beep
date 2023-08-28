@@ -8,9 +8,11 @@ import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.Cuisine
 import org.thechance.api_gateway.data.utils.ErrorHandler
+import org.thechance.api_gateway.data.utils.LocalizedMessageException
 import org.thechance.api_gateway.endpoints.gateway.IDashboardGetaway
 import org.thechance.api_gateway.util.APIs
 import java.util.*
+import java.util.logging.ErrorManager
 
 
 @Single(binds = [IDashboardGetaway::class])
@@ -21,19 +23,25 @@ class DashboardGetaway(
 ) : BaseGateway(client = client, attributes = attributes), IDashboardGetaway {
     @OptIn(InternalAPI::class)
     override suspend fun addCuisine(
-        name: String, id: String, permissions: List<String>, locale: Locale
-    ) = tryToExecute<Cuisine>(
-        APIs.RESTAURANT_API,
-        setErrorMessage = { errorCodes ->
-            errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+        name: String, id: String, permissions: List<Int>, locale: Locale
+    ): Cuisine {
+        //TODO()  need to change 1
+        val ADMIN = 1
+        return if (ADMIN in permissions) {
+            tryToExecute<Cuisine>(
+                APIs.RESTAURANT_API,
+                setErrorMessage = { errorCodes ->
+                    errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+                }
+            ) {
+                post("/cuisine") {
+                    body = Json.encodeToString(Cuisine.serializer(), Cuisine(name = name))
+                }
+            }
+        } else {
+            throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
         }
-    ) {
-        request("/cuisine") {
-            method = HttpMethod.Post
-            val jsonPayload =
-                Json.encodeToString(Cuisine.serializer(), Cuisine(name = name))
-            body = jsonPayload
-        }
+
     }
 
 

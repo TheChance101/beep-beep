@@ -4,7 +4,7 @@ import org.thechance.api_gateway.data.model.Cuisine
 import java.util.*
 
 interface IDashboardGetaway {
-    suspend fun addCuisine(name: String, id: String, permissions: List<String>, locale: Locale): Cuisine
+    suspend fun addCuisine(name: String, id: String, permissions: List<Int>, locale: Locale): Cuisine
 
     suspend fun getCuisines()
 }

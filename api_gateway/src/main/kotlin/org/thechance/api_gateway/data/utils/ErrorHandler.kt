@@ -50,6 +50,9 @@ class ErrorHandler(
         if (errorCodes.contains(1045))
             errors[1045] = localizedMessages.invalidAddressLocation
 
+
+        if (errorCodes.contains(8000))
+            errors[8000] = localizedMessages.invalidPermission
         return errors
     }
 
