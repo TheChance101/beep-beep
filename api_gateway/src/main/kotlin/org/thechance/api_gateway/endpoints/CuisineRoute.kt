@@ -7,11 +7,11 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
+import org.thechance.api_gateway.data.mappers.toCuisine
 import org.thechance.api_gateway.endpoints.gateway.IDashboardGetaway
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
 import org.thechance.api_gateway.endpoints.utils.respondWithResult
 import org.thechance.api_gateway.util.Constants.ROLE
-import org.thechance.api_gateway.util.Constants.USER_ID
 import java.util.*
 
 
@@ -34,17 +34,18 @@ fun Route.cuisineRoute() {
                 )
                 respondWithResult(HttpStatusCode.Created, cuisine )
             }
-            get {
-                val tokenClaim = call.principal<JWTPrincipal>()
-                val permissions = tokenClaim?.payload?.getClaim(ROLE)?.asList(Int::class.java) ?: emptyList()
-                val (language, countryCode) = extractLocalizationHeader()
-
-                val cuisines = dashboardGetaway.getCuisines(permissions, Locale(language, countryCode))
-                respondWithResult(HttpStatusCode.OK, cuisines)
-            }
         }
 
 
+    }
+    route("/cuisines") {
+        get {
+
+            val (language, countryCode) = extractLocalizationHeader()
+            val cuisines = dashboardGetaway.getCuisines( locale = Locale(language, countryCode))
+
+            respondWithResult(HttpStatusCode.OK, cuisines.toCuisine())
+        }
     }
 }
 
