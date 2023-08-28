@@ -19,7 +19,7 @@ data class MealCollection(
     val price: Double,
     val currency: String,
     @Contextual
-    val restaurantId: UUID = UUID.randomUUID(),
+    val restaurantId: UUID,
     val cuisines: List<@Contextual UUID>,
 )
 
