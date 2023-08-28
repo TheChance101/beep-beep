@@ -5,7 +5,7 @@ import io.ktor.client.request.*
 import io.ktor.util.*
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
-import org.thechance.api_gateway.data.model.Cuisine
+import org.thechance.api_gateway.data.model.CuisineResource
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.LocalizedMessageException
 import org.thechance.api_gateway.endpoints.gateway.IDashboardGetaway
@@ -22,18 +22,18 @@ class DashboardGetaway(
     @OptIn(InternalAPI::class)
     override suspend fun addCuisine(
         name: String, permissions: List<Int>, locale: Locale
-    ): Cuisine {
+    ): CuisineResource {
         //TODO()  need to change 1
         val ADMIN = 1
         return if (ADMIN in permissions) {
-            tryToExecute<Cuisine>(
+            tryToExecute<CuisineResource>(
                 APIs.RESTAURANT_API,
                 setErrorMessage = { errorCodes ->
                     errorHandler.getLocalizedErrorMessage(errorCodes, locale)
                 }
             ) {
                 post("/cuisine") {
-                    body = Json.encodeToString(Cuisine.serializer(), Cuisine(name = name))
+                    body = Json.encodeToString(CuisineResource.serializer(), CuisineResource(name = name))
                 }
             }
         } else {
@@ -41,6 +41,18 @@ class DashboardGetaway(
         }
 
     }
+
+    override suspend fun getCuisines(locale: Locale):CuisineResource {
+
+           return tryToExecute<CuisineResource>(
+                APIs.RESTAURANT_API,
+                setErrorMessage = { errorCodes ->
+                    errorHandler.getLocalizedErrorMessage(errorCodes,  locale)
+                }
+            ) {
+                get("/cuisine")
+            }
+        }
 
 
 }

@@ -1,10 +1,10 @@
 package org.thechance.api_gateway.endpoints.gateway
 
-import org.thechance.api_gateway.data.model.Cuisine
+import org.thechance.api_gateway.data.model.CuisineResource
 import java.util.*
 
 interface IDashboardGetaway {
-    suspend fun addCuisine(name: String,  permissions: List<Int>, locale: Locale): Cuisine
+    suspend fun addCuisine(name: String,  permissions: List<Int>, locale: Locale): CuisineResource
 
-    suspend fun getCuisines()
+    suspend fun getCuisines(locale: Locale):CuisineResource
 }
