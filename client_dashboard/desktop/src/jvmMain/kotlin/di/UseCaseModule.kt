@@ -18,4 +18,5 @@ val UseCaseModule = module {
     singleOf(::ManageRestaurantUseCase) { bind<IManageRestaurantUseCase>() }
     singleOf(::HandleLocationUseCase) { bind<IHandleLocationUseCase>() }
     singleOf(::GetTaxiReportUseCase) { bind<IGetTaxiReportUseCase>() }
+    singleOf(::ThemeManagementUseCase) { bind<IThemeManagementUseCase>() }
 }
