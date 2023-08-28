@@ -40,10 +40,7 @@ fun Route.orderRoutes() {
             val status = call.receiveParameters()["status"]?.toInt() ?: throw MultiErrorException(
                 listOf(INVALID_REQUEST_PARAMETER)
             )
-            val result = manageOrder.updateOrderStatus(
-                orderId = id,
-                state = OrderStatus.getOrderStatus(status)
-            )
+            val result = manageOrder.updateOrderStatus(orderId = id, state = OrderStatus.getOrderStatus(status))
             call.respond(HttpStatusCode.OK, result)
         }
 

@@ -7,6 +7,7 @@ import org.thechance.service_restaurant.domain.utils.IValidation
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
+import org.thechance.service_restaurant.domain.utils.getCurrencyForLocation
 
 interface IControlRestaurantsUseCase {
     suspend fun createRestaurant(restaurant: Restaurant): Restaurant
@@ -22,8 +23,8 @@ class ControlRestaurantsUseCase(
 ) : IControlRestaurantsUseCase {
 
     override suspend fun createRestaurant(restaurant: Restaurant): Restaurant {
-        restaurantValidation. validateAddRestaurant(restaurant)
-        return restaurantGateway.addRestaurant(restaurant)
+        restaurantValidation.validateAddRestaurant(restaurant)
+        return restaurantGateway.addRestaurant(restaurant.copy(currency = getCurrencyForLocation(restaurant.location)))
     }
 
     override suspend fun getAllRestaurants(page: Int, limit: Int): List<Restaurant> {
