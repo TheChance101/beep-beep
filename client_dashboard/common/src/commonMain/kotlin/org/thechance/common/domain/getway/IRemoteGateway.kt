@@ -5,7 +5,7 @@ import org.thechance.common.domain.entity.*
 
 interface IRemoteGateway {
 
-    fun getUserData(): Admin
+    fun getUserData(): String
 
     fun getUsers(page: Int, numberOfUsers: Int): DataWrapper<User>
 

@@ -22,9 +22,7 @@ class RemoteGateway(
     private val client: HttpClient,
 ) : IRemoteGateway {
 
-    override fun getUserData(): Admin {
-        return Admin("aaaa")
-    }
+    override fun getUserData(): String = "aaaa"
 
     override fun getUsers(page: Int, numberOfUsers: Int): DataWrapper<User> {
         return DataWrapper(totalPages = 0, numberOfResult = 0, result = emptyList(),)

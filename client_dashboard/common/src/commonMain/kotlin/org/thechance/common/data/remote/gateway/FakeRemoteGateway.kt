@@ -169,8 +169,7 @@ class FakeRemoteGateway(
         )
     }
 
-    override fun getUserData(): Admin =
-        AdminDto(fullName = "asia").toEntity()
+    override fun getUserData() = "asia"
 
     override fun getUsers(page: Int, numberOfUsers: Int): DataWrapper<User> {
         val users = listOf(
