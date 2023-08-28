@@ -1,5 +1,7 @@
 package org.thechance.api_gateway.data.model.restaurant
 
+import org.thechance.api_gateway.data.model.CuisineResource
+
 data class RestaurantResource(
     val id: String,
     val ownerId: String,

@@ -16,6 +16,6 @@ fun RestaurantResource.toRestaurant(): Restaurant {
         closingTime = this.closingTime,
         address = this.address,
         location = this.location.toLocation(),
-        cuisines = cuisines.map { it.toCuisine() }
+        cuisines = cuisines.map { it.toCuisine()}
     )
 }
