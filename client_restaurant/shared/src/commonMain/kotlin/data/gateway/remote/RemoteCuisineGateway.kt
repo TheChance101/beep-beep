@@ -1,14 +1,22 @@
 package data.gateway.remote
 
 import domain.entity.Cuisine
-import domain.entity.Meal
 import domain.gateway.remote.IRemoteCuisineGateway
 import io.ktor.client.HttpClient
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 
 
-class RemoteCuisineGateway(private val client: HttpClient) : IRemoteCuisineGateway {
+class RemoteCuisineGateway(client: HttpClient) : IRemoteCuisineGateway,
+    BaseRemoteGateway(client = client) {
 
     override suspend fun getCuisinesByRestaurantId(restaurantId: String): List<Cuisine> {
-       return emptyList()
+        return tryToExecute<List<Cuisine>> {
+            get("/cuisines") {
+                parameter("page", 1)
+//                parameter("limit", limit)
+//                parameter("searchTerm", searchTerm)
+            }
+        }
     }
 }
