@@ -7,6 +7,7 @@ import io.ktor.http.*
 import io.ktor.util.*
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
+import org.thechance.api_gateway.data.model.restaurant.RestaurantResource
 import org.thechance.api_gateway.data.model.CuisineResource
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.LocalizedMessageException
@@ -72,6 +73,19 @@ class RestaurantGateway(
             get("/restaurant-permission-request")
         }
     }
+
+    override suspend fun getRestaurantInfo(locale: Locale, id: String): RestaurantResource {
+        return tryToExecute<RestaurantResource>(
+            APIs.RESTAURANT_API,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes,  locale)
+            }
+        ) {
+            get("/restaurant/$id")
+        }
+    }
+
+
 
     @OptIn(InternalAPI::class)
     override suspend fun addCuisine(
