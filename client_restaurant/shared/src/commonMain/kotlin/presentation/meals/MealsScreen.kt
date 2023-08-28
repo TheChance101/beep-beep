@@ -93,11 +93,11 @@ class MealsScreen(private val restaurantId: String) :
                     ),
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    items(state.cuisine.size) { index ->
+                    items(state.cuisines.size) { index ->
                         BpChip(
-                            label = state.cuisine[index].name,
-                            isSelected = state.cuisine[index] == state.selectedCuisine,
-                            onClick = { listener.onClickCuisineType(state.cuisine[index]) },
+                            label = state.cuisines[index].name,
+                            isSelected = state.cuisines[index] == state.selectedCuisine,
+                            onClick = { listener.onClickCuisineType(state.cuisines[index]) },
                         )
                     }
                 }

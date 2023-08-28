@@ -40,7 +40,6 @@ class MealsScreenModel(
         )
     }
 
-
     private fun getMeals(cuisineId: String) {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
@@ -58,7 +57,7 @@ class MealsScreenModel(
 
     private fun onGetCuisineSuccessfully(cuisines: List<Cuisine>) {
         updateState {
-            it.copy(cuisine = cuisines.toUIState(), selectedCuisine = cuisines.toUIState().first())
+            it.copy(cuisines = cuisines.toUIState(), selectedCuisine = cuisines.toUIState().first())
         }
         getMeals(state.value.selectedCuisine.id)
     }
