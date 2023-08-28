@@ -47,7 +47,10 @@ class RestaurantGateway(
         }
     }
 
-    override suspend fun getAllRequestPermission(permissions: List<Int>, locale: Locale): List<RestaurantRequestPermission> {
+    override suspend fun getAllRequestPermission(
+        permissions: List<Int>,
+        locale: Locale
+    ): List<RestaurantRequestPermission> {
         // todo: implement check permissions logic correctly
         if (!permissions.contains(1)) {
             throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
@@ -88,9 +91,35 @@ class RestaurantGateway(
                 )
             }
         ) {
-            post("/order/$orderId/status"){
+            post("/order/$orderId/status") {
                 body = Json.encodeToString(status.toString())
             }
+        }
+    }
+
+    override suspend fun getOrdersHistory(
+        restaurantId: String,
+        permissions: List<Int>,
+        page: Int,
+        limit: Int,
+        locale: Locale
+    ): List<Order> {
+        // todo: implement check permissions logic correctly
+        val RESTAURANT_MANAGER = 2
+        if (!permissions.contains(RESTAURANT_MANAGER)) {
+            throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
+        }
+
+        return tryToExecute(
+            api = APIs.RESTAURANT_API,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(
+                    errorCodes,
+                    locale
+                )
+            }
+        ) {
+            get("/order/history/$restaurantId?page=$page&limit=$limit")
         }
     }
 }
