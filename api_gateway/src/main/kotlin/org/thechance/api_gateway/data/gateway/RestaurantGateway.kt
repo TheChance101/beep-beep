@@ -52,7 +52,12 @@ class RestaurantGateway(
     ): List<RestaurantRequestPermission> {
         // todo: implement check permissions logic correctly
         if (!permissions.contains(1)) {
-            throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
+            throw LocalizedMessageException(
+                errorHandler.getLocalizedErrorMessage(
+                    listOf(8000),
+                    locale
+                )
+            )
         }
 
         return tryToExecute(
@@ -82,14 +87,34 @@ class RestaurantGateway(
                 }
             ) {
                 post("/cuisine") {
-                    body = Json.encodeToString(CuisineResource.serializer(), CuisineResource(name = name))
+                    body = Json.encodeToString(
+                        CuisineResource.serializer(),
+                        CuisineResource(name = name)
+                    )
                 }
             }
         } else {
-            throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
+            throw LocalizedMessageException(
+                errorHandler.getLocalizedErrorMessage(
+                    listOf(8000),
+                    locale
+                )
+            )
         }
     }
 
+    override suspend fun getCuisines(locale: Locale): CuisineResource {
+
+        return tryToExecute<CuisineResource>(
+            APIs.RESTAURANT_API,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+            }
+        ) {
+            get("/cuisine")
+        }
+
+    }
 
 
 }
