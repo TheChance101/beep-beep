@@ -29,7 +29,7 @@ class MealScreen(
 
     @Composable
     override fun Content() {
-        val screenModel = rememberScreenModel { mealScreenModelFactory.create(screenMode) }
+        val screenModel = rememberScreenModel { mealScreenModelFactory.create(screenMode, mealId) }
         initScreen(screenModel)
     }
 
