@@ -43,7 +43,4 @@ class DashboardGetaway(
     }
 
 
-    override suspend fun getCuisines() {
-        TODO("Not yet implemented")
-    }
 }

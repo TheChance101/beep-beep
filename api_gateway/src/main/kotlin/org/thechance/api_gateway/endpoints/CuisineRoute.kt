@@ -34,7 +34,16 @@ fun Route.cuisineRoute() {
                 )
                 respondWithResult(HttpStatusCode.Created, cuisine )
             }
+            get {
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val permissions = tokenClaim?.payload?.getClaim(ROLE)?.asList(Int::class.java) ?: emptyList()
+                val (language, countryCode) = extractLocalizationHeader()
+
+                val cuisines = dashboardGetaway.getCuisines(permissions, Locale(language, countryCode))
+                respondWithResult(HttpStatusCode.OK, cuisines)
+            }
         }
+
 
     }
 }
