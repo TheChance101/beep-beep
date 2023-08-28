@@ -3,7 +3,6 @@ package org.thechance.service_restaurant.data.collection.mapper
 import org.bson.types.ObjectId
 import org.thechance.service_restaurant.data.collection.OrderCollection
 import org.thechance.service_restaurant.data.collection.OrderMealCollection
-import org.thechance.service_restaurant.data.utils.toUUID
 import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.entity.OrderMeal
 
