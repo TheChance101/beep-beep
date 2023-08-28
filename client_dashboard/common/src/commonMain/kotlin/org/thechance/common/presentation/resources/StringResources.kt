@@ -74,6 +74,6 @@ data class StringResources(
 
     )
 
-val Strings = StringResources()
+val englishStrings = StringResources()
 
 
