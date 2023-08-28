@@ -23,7 +23,6 @@ fun Route.restaurantRoutes() {
                 val ownerId = tokenClaim?.payload?.subject?.trim().toString()
                 val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java)
                     ?: emptyList()
-//                val ownerId = call.parameters["ownerId"]?.trim().toString()
                 val (language, countryCode) = extractLocalizationHeader()
                 val result = restaurantGateway.getRestaurantsByOwnerId(
                     ownerId = ownerId,
