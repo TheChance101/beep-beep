@@ -5,6 +5,7 @@ import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import io.ktor.util.*
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.restaurant.RestaurantResource
@@ -12,6 +13,7 @@ import org.thechance.api_gateway.data.model.CuisineResource
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.LocalizedMessageException
 import org.thechance.api_gateway.endpoints.gateway.IRestaurantGateway
+import org.thechance.api_gateway.endpoints.model.Order
 import org.thechance.api_gateway.endpoints.model.RestaurantRequestPermission
 import org.thechance.api_gateway.util.APIs
 import java.util.*
@@ -130,5 +132,57 @@ class RestaurantGateway(
 
     }
 
+    @OptIn(InternalAPI::class)
+    override suspend fun updateOrderStatus(
+        orderId: String,
+        permissions: List<Int>,
+        status: Int,
+        locale: Locale
+    ): Order {
+        // todo: implement check permissions logic correctly
+        val RESTAURANT_MANAGER = 2
+        if (!permissions.contains(RESTAURANT_MANAGER)) {
+            throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
+        }
 
+        return tryToExecute<Order>(
+            api = APIs.RESTAURANT_API,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(
+                    errorCodes,
+                    locale
+                )
+            }
+        ) {
+            post("/order/$orderId/status") {
+                body = Json.encodeToString(status.toString())
+            }
+        }
+    }
+
+    override suspend fun getOrdersHistory(
+        restaurantId: String,
+        permissions: List<Int>,
+        page: Int,
+        limit: Int,
+        locale: Locale
+    ): List<Order> {
+        // todo: implement check permissions logic correctly
+        val RESTAURANT_MANAGER = 2
+        if (!permissions.contains(RESTAURANT_MANAGER)) {
+            throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
+        }
+
+        return tryToExecute(
+            api = APIs.RESTAURANT_API,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(
+                    errorCodes,
+                    locale
+                )
+            }
+        ) {
+            get("/order/history/$restaurantId?page=$page&limit=$limit")
+        }
+    }
 }
