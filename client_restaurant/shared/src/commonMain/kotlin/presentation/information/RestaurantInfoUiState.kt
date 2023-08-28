@@ -1,7 +1,8 @@
-package presentation.info
+package presentation.information
 
 import domain.entity.Location
 import domain.entity.Restaurant
+import domain.entity.Time
 import presentation.base.ErrorState
 
 data class RestaurantInfoUiState(
@@ -32,8 +33,8 @@ fun Restaurant.toUiState(): RestaurantUiState = RestaurantUiState(
     priceLevel = priceLevel,
     restaurantName = name,
     phoneNumber = phone,
-    openingTime = openingTime,
-    closingTime = closingTime,
+    openingTime = openingTime.toString(),
+    closingTime = closingTime.toString(),
     description = description
 )
 
@@ -46,8 +47,8 @@ fun RestaurantUiState.toRestaurant() = Restaurant(
     priceLevel = priceLevel,
     name = restaurantName,
     phone = phoneNumber,
-    openingTime = openingTime,
-    closingTime = closingTime,
+    openingTime = Time.fromString(openingTime),
+    closingTime = Time.fromString(closingTime),
     description = description,
     address = address
 )
