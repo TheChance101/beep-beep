@@ -4,6 +4,7 @@ import org.thechance.common.data.remote.model.TaxiDto
 import org.thechance.common.domain.entity.NewTaxiInfo
 import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.domain.entity.Taxi
+import org.thechance.common.domain.entity.TaxiFiltered
 import org.thechance.common.domain.util.TaxiStatus
 
 fun TaxiDto.toEntity() = Taxi(
@@ -26,6 +27,20 @@ fun NewTaxiInfo.toDto(): TaxiDto {
         username = driverUserName,
     )
 }
+
+fun TaxiFiltered.toDto():TaxiFilteredDto{
+    return TaxiFilteredDto(
+        color = setCarColo(carColor),
+        seats = seats,
+        status = setTaxiStatus(status),
+    )
+}
+
+data class TaxiFilteredDto(
+    val color: Int,
+    val seats: Int,
+    val status: Int,
+)
 fun List<TaxiDto>.toEntity() = map(TaxiDto::toEntity)
 
 fun getCarColor(color: Int) =
@@ -52,4 +67,10 @@ fun getTaxiStatus(status: Int) =
         0 -> TaxiStatus.OFFLINE
         1 -> TaxiStatus.ONLINE
         else -> TaxiStatus.ON_RIDE
+    }
+fun setTaxiStatus(status: TaxiStatus) =
+    when (status) {
+        TaxiStatus.OFFLINE -> 0
+        TaxiStatus.ONLINE -> 1
+        else -> 2
     }

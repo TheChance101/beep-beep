@@ -15,6 +15,8 @@ interface IRemoteGateway {
 
     suspend fun findTaxisByUsername(username: String, page: Int, offset:Int): DataWrapper<Taxi>
 
+    suspend fun filterTaxis(taxi: TaxiFiltered, page: Int, numberOfTaxis: Int): DataWrapper<Taxi>
+
     suspend fun getPdfTaxiReport()
 
     suspend fun getRestaurants(): List<Restaurant>

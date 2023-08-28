@@ -50,6 +50,14 @@ class RemoteGateway(
         return DataWrapper(totalPages = 0, numberOfResult = 0, result = emptyList(),)
     }
 
+    override suspend fun filterTaxis(
+        taxi: TaxiFiltered,
+        page: Int,
+        numberOfTaxis: Int
+    ): DataWrapper<Taxi> {
+        return DataWrapper(totalPages = 0, numberOfResult = 0, result = emptyList(),)
+    }
+
     override suspend fun getPdfTaxiReport() {
         //todo get pdf by download it
     }
