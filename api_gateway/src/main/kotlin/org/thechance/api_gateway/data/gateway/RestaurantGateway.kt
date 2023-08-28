@@ -10,7 +10,7 @@ import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.LocalizedMessageException
 import org.thechance.api_gateway.endpoints.gateway.IRestaurantGateway
-import org.thechance.api_gateway.endpoints.model.OrderDto
+import org.thechance.api_gateway.endpoints.model.Order
 import org.thechance.api_gateway.endpoints.model.RestaurantRequestPermission
 import org.thechance.api_gateway.util.APIs
 import java.util.*
@@ -65,8 +65,8 @@ class RestaurantGateway(
         }
     }
 
-    override suspend fun restaurantOrders(permissions: List<Int>, restaurantId: String, locale: Locale): Flow<OrderDto> {
+    override suspend fun restaurantOrders(permissions: List<Int>, restaurantId: String, locale: Locale): Flow<Order> {
         // todo check of permission and handel error
-        return tryToExecuteFromWebSocket<OrderDto>(api = APIs.RESTAURANT_API, path = "/order/restaurant/$restaurantId")
+        return tryToExecuteFromWebSocket<Order>(api = APIs.RESTAURANT_API, path = "/order/restaurant/$restaurantId")
     }
 }
