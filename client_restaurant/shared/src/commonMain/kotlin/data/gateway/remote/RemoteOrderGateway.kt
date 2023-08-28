@@ -1,7 +1,7 @@
-package data.gateway
+package data.gateway.remote
 
 import domain.entity.Order
-import domain.gateway.IRemoteOrderGateway
+import domain.gateway.remote.IRemoteOrderGateway
 import io.ktor.client.HttpClient
 
 

@@ -1,4 +1,4 @@
-package domain.gateway
+package domain.gateway.remote
 
 import domain.entity.Restaurant
 
