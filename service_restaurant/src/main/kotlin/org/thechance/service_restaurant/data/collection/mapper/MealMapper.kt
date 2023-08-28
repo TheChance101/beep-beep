@@ -1,6 +1,5 @@
 package org.thechance.service_restaurant.data.collection.mapper
 
-import org.bson.types.ObjectId
 import org.thechance.service_restaurant.data.collection.MealCollection
 import org.thechance.service_restaurant.data.collection.relationModels.MealWithCuisines
 import org.thechance.service_restaurant.domain.entity.Meal
@@ -13,6 +12,7 @@ fun MealDetails.toCollection(): MealCollection =
         restaurantId = UUID.fromString(restaurantId),
         description = description,
         price = price,
+        currency = currency,
         cuisines = cuisines.map { cuisine ->
             UUID.fromString(cuisine.id)
         }
@@ -23,7 +23,8 @@ fun MealCollection.toEntity() = Meal(
     restaurantId = restaurantId.toString(),
     name = name,
     description = description,
-    price = price
+    price = price,
+    currency = currency
 )
 
 fun MealWithCuisines.toEntity() = MealDetails(
@@ -32,6 +33,7 @@ fun MealWithCuisines.toEntity() = MealDetails(
     name = name,
     description = description,
     price = price,
+    currency = currency,
     cuisines = cuisines.toEntity()
 )
 

@@ -28,7 +28,7 @@ class RestaurantValidationUseCase(
         if (!basicValidation.isValidId(restaurant.ownerId)) {
             validationErrors.add(INVALID_ID)
         }
-        if (!basicValidation.isValidLocation(restaurant.address.longitude, restaurant.address.latitude)) {
+        if (!basicValidation.isValidLocation(restaurant.location.longitude, restaurant.location.latitude)) {
             validationErrors.add(INVALID_LOCATION)
         }
         if (!(restaurant.description.isNullOrBlank() || basicValidation.isValidDescription(restaurant.description))) {
@@ -69,8 +69,8 @@ class RestaurantValidationUseCase(
             restaurant.phone.isEmpty() &&
             restaurant.closingTime.isEmpty() &&
             restaurant.openingTime.isEmpty() &&
-            restaurant.address.latitude == Validation.NULL_DOUBLE &&
-            restaurant.address.longitude == Validation.NULL_DOUBLE
+            restaurant.location.latitude == Validation.NULL_DOUBLE &&
+            restaurant.location.longitude == Validation.NULL_DOUBLE
         ) {
             validationErrors.add(INVALID_UPDATE_PARAMETER)
         } else {
@@ -101,14 +101,15 @@ class RestaurantValidationUseCase(
             if (restaurant.openingTime.isNotEmpty() && !basicValidation.isValidTime(restaurant.openingTime)) {
                 validationErrors.add(INVALID_TIME)
             }
-            if (restaurant.address.longitude != Validation.NULL_DOUBLE && !basicValidation.isValidLongitude(
-                    restaurant.address.longitude
+
+            if (restaurant.location.longitude != Validation.NULL_DOUBLE && !basicValidation.isValidLongitude(
+                    restaurant.location.longitude
                 )
             ) {
                 validationErrors.add(INVALID_LOCATION)
             }
-            if (restaurant.address.latitude != Validation.NULL_DOUBLE && !basicValidation.isValidLatitude(
-                    restaurant.address.latitude
+            if (restaurant.location.latitude != Validation.NULL_DOUBLE && !basicValidation.isValidLatitude(
+                    restaurant.location.latitude
                 )
             ) {
                 validationErrors.add(INVALID_LOCATION)
@@ -126,7 +127,7 @@ class RestaurantValidationUseCase(
             validationErrors.add(INVALID_ID)
         }
 
-        if (restaurant.address.longitude != Validation.NULL_DOUBLE || restaurant.address.latitude != Validation.NULL_DOUBLE) {
+        if (restaurant.location.longitude != Validation.NULL_DOUBLE || restaurant.location.latitude != Validation.NULL_DOUBLE) {
             validationErrors.add(INVALID_PERMISSION_UPDATE_LOCATION)
         }
 
@@ -135,6 +136,7 @@ class RestaurantValidationUseCase(
             restaurant.priceLevel.isNullOrEmpty() &&
             restaurant.rate == null &&
             restaurant.phone.isEmpty() &&
+            restaurant.address.isEmpty() &&
             restaurant.closingTime.isEmpty() &&
             restaurant.openingTime.isEmpty()
         ) {
@@ -167,6 +169,9 @@ class RestaurantValidationUseCase(
             }
             if (restaurant.openingTime.isNotEmpty() && !basicValidation.isValidTime(restaurant.openingTime)) {
                 validationErrors.add(INVALID_TIME)
+            }
+            if (restaurant.address.isNotEmpty() && !basicValidation.isValidAddress(restaurant.address)) {
+                validationErrors.add(INVALID_ADDRESS)
             }
         }
         if (validationErrors.isNotEmpty()) {

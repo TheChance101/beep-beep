@@ -18,6 +18,7 @@ data class MealWithCuisines(
     val description: String,
     val isDeleted: Boolean = false,
     val price: Double,
+    val currency:String,
     @Contextual
     val restaurantId: UUID = UUID.randomUUID(),
     val cuisines: List<CuisineCollection>,
