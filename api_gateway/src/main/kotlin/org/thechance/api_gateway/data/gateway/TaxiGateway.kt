@@ -17,11 +17,13 @@ import org.thechance.api_gateway.data.utils.ErrorHandler
 class TaxiGateway(
     client: HttpClient,
     attributes: Attributes,
+
     private val errorHandler: ErrorHandler
 ) : BaseGateway(client = client, attributes = attributes), ITaxiGateway {
-    override suspend fun getAllTaxiDrivers(
+    override suspend fun getAllTaxi(
         permissions: List<Int>,
-        locale: Locale
+        locale: Locale,
+        page: Int, limit: Int
     ): List<TaxiResource> {
         if (!permissions.contains(1)) {
             throw LocalizedMessageException(
@@ -41,11 +43,14 @@ class TaxiGateway(
                 )
             }
         ) {
-            get("/taxi")
+            get("/taxi"){
+                parameter("page", page)
+                parameter("limit", limit)
+            }
         }
     }
 
-    override suspend fun getTaxiDriverById(
+    override suspend fun getTaxiById(
         id: String,
         permissions: List<Int>,
         locale: Locale
@@ -63,7 +68,7 @@ class TaxiGateway(
         }
     }
 
-    override suspend fun createTaxiDriver(
+    override suspend fun createTaxi(
         plateNumber: String,
         color: Int,
         type: String,
@@ -101,7 +106,7 @@ class TaxiGateway(
         }
     }
 
-    override suspend fun updateTaxiDriver(
+    override suspend fun updateTaxi(
         id: String,
         plateNumber: String,
         color: Int,
@@ -140,7 +145,7 @@ class TaxiGateway(
         }
     }
 
-    override suspend fun deleteTaxiDriver(
+    override suspend fun deleteTaxi(
         id: String,
         permissions: List<Int>,
         locale: Locale
