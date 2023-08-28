@@ -1,4 +1,4 @@
-package data.gateway
+package data.gateway.remote
 
 import data.remote.mapper.toEntity
 import data.remote.mapper.toOrderEntity

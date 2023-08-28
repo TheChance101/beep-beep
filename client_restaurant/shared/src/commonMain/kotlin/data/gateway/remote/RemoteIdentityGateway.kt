@@ -1,4 +1,4 @@
-package data.gateway
+package data.gateway.remote
 
 import data.local.mapper.toEntity
 import data.remote.model.BaseResponse
@@ -20,7 +20,7 @@ import presentation.base.UnknownErrorException
 import presentation.base.UserNotFoundException
 
 
-class RemoteIdentityGateway(private val client: HttpClient) : IRemoteIdentityGateway {
+class RemoteIdentityGateway(val client: HttpClient) : IRemoteIdentityGateway {
 
     override suspend fun loginUser(userName: String, password: String): UserTokens {
         return tryToExecute<BaseResponse<UserTokensDto>>() {
@@ -37,10 +37,9 @@ class RemoteIdentityGateway(private val client: HttpClient) : IRemoteIdentityGat
         }.value?.toEntity() ?: throw Exception()
     }
 
-    private suspend inline fun <reified T> tryToExecute(
+     suspend inline fun <reified T> tryToExecute(
         method: HttpClient.() -> HttpResponse
     ): T {
-
         try {
             return client.method().body<T>()
         } catch (e: ClientRequestException) {
@@ -54,7 +53,7 @@ class RemoteIdentityGateway(private val client: HttpClient) : IRemoteIdentityGat
         }
     }
 
-    private fun throwMatchingException(errorMessages: Map<String, String>) {
+    fun throwMatchingException(errorMessages: Map<String, String>) {
         if (errorMessages.containsErrors("1013")) {
             throw InvalidCredentialsException()
         } else if (errorMessages.containsErrors("1043")) {

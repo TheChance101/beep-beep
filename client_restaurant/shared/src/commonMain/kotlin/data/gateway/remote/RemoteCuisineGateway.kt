@@ -1,4 +1,4 @@
-package data.gateway
+package data.gateway.remote
 
 import domain.entity.Cuisine
 import domain.entity.Meal

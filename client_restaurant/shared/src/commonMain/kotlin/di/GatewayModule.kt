@@ -1,7 +1,7 @@
 package di
 
-import data.gateway.FakeRemoteGateWay
-import data.gateway.LocalConfigurationGateway
+import data.gateway.remote.FakeRemoteGateWay
+import data.gateway.local.LocalConfigurationGateway
 import domain.gateway.ILocalConfigurationGateway
 import domain.gateway.IRemoteGateway
 import org.koin.core.module.dsl.bind

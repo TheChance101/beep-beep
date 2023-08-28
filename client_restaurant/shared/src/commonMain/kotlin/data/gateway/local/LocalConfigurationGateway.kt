@@ -1,4 +1,4 @@
-package data.gateway
+package data.gateway.local
 
 import data.local.model.UserConfigurationCollection
 import domain.gateway.ILocalConfigurationGateway

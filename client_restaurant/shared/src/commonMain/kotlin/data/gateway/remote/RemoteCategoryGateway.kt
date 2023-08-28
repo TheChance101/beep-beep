@@ -1,4 +1,4 @@
-package data.gateway
+package data.gateway.remote
 
 import domain.entity.Category
 import domain.gateway.IRemoteCategoryGateway
