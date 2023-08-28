@@ -10,15 +10,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpTextField
@@ -27,6 +26,7 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.composable.BpAppBar
+import presentation.composable.BpCard
 import presentation.composable.BpRating
 import presentation.composable.BpTitleWithContentSection
 import presentation.login.LoginScreen
@@ -37,12 +37,10 @@ class RestaurantInfoScreen :
 
     @Composable
     override fun Content() {
-        val screenModel =
-            rememberScreenModel { RestaurantInfoScreenModel() }
-        initScreen(screenModel)
+        initScreen(getScreenModel())
     }
 
-    @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
+
     @Composable
     override fun onRender(
         state: RestaurantInfoUiState,
@@ -59,169 +57,25 @@ class RestaurantInfoScreen :
             )
             LazyColumn(Modifier.fillMaxSize().background(Theme.colors.background)) {
                 item {
-                    Column(
-                        modifier = Modifier.fillMaxWidth().padding(
-                            start = Theme.dimens.space16,
-                            end = Theme.dimens.space16,
-                            top = Theme.dimens.space16
-                        ).background(
-                            color = Theme.colors.surface,
-                            shape = RoundedCornerShape(Theme.radius.medium)
-                        )
-                    ) {
-
-                        BpTitleWithContentSection(title = Resources.strings.ownerUsername) {
-                            Text(
-                                state.ownerUsername,
-                                modifier = Modifier.padding(
-                                    start = Theme.dimens.space16,
-                                    end = Theme.dimens.space16,
-                                    bottom = Theme.dimens.space16
-                                ),
-                                style = Theme.typography.body,
-                                color = Theme.colors.contentPrimary
-                            )
-                        }
-                        BpTitleWithContentSection(title = Resources.strings.address) {
-                            Text(
-                                state.address,
-                                modifier = Modifier.padding(
-                                    start = Theme.dimens.space16,
-                                    end = Theme.dimens.space16,
-                                    bottom = Theme.dimens.space16
-                                ),
-                                style = Theme.typography.body,
-                                color = Theme.colors.contentPrimary
-                            )
-                        }
-                        BpTitleWithContentSection(title = Resources.strings.rating) {
-                            BpRating(
-                                state.rating,
-                                selectedIcon = painterResource(Resources.images.filledStar),
-                                halfSelectedIcon = painterResource(Resources.images.halfFilledStar),
-                                modifier = Modifier.padding(
-                                    start = Theme.dimens.space16,
-                                    end = Theme.dimens.space16,
-                                    bottom = Theme.dimens.space16
-                                ),
-                                iconsSize = Theme.dimens.space16
-                            )
-                        }
-                        BpTitleWithContentSection(title = Resources.strings.priceLevel) {
-                            Text(
-                                state.priceLevel,
-                                modifier = Modifier.padding(
-                                    start = Theme.dimens.space16,
-                                    end = Theme.dimens.space16,
-                                    bottom = Theme.dimens.space16
-                                ),
-                                style = Theme.typography.titleMedium,
-                                color = Theme.colors.success
-                            )
-                        }
-                    }
+                    RestaurantInfoCard(
+                        state.restaurant.ownerUsername,
+                        state.restaurant.address,
+                        state.restaurant.rating,
+                        state.restaurant.priceLevel
+                    )
                 }
                 item {
-                    Column(
-                        modifier = Modifier.fillMaxWidth().padding(Theme.dimens.space16).background(
-                            color = Theme.colors.surface,
-                            shape = RoundedCornerShape(Theme.radius.medium)
-                        )
-                    ) {
-                        BpTextField(
-                            label = Resources.strings.restaurantName,
-                            text = state.restaurantName,
-                            onValueChange = { listener.onRestaurantNameChange(it) },
-                            modifier = Modifier.padding(
-                                horizontal = Theme.dimens.space16,
-                                vertical = Theme.dimens.space16
-                            ),
-                            errorMessage = Resources.strings.restaurantNameErrorMessage,
-                            isError = state.restaurantName.length !in 4..25
-                        )
-                        BpTextField(
-                            label = Resources.strings.phoneNumber,
-                            text = state.phoneNumber,
-                            onValueChange = { listener.onPhoneNumberChange(it) },
-                            modifier = Modifier.padding(
-                                start = Theme.dimens.space16,
-                                end = Theme.dimens.space16,
-                                bottom = Theme.dimens.space16
-                            )
-                        )
-                        Row(modifier = Modifier.padding(bottom = Theme.dimens.space16)) {
-                            BpTextField(
-                                label = Resources.strings.workingHours,
-                                text = state.openingTime,
-                                onValueChange = { listener.onOpeningTimeChange(it) },
-                                modifier = Modifier.padding(
-                                    start = Theme.dimens.space16,
-                                    end = Theme.dimens.space4
-                                ).weight(1f)
-                            )
-                            BpTextField(
-                                label = "",
-                                text = state.closingTime,
-                                onValueChange = { listener.onClosingTimeChange(it) },
-                                modifier = Modifier.padding(
-                                    start = Theme.dimens.space4,
-                                    end = Theme.dimens.space16
-                                ).weight(1f)
-                            )
-                        }
-                        BpTextField(
-                            label = Resources.strings.description,
-                            text = state.description,
-                            onValueChange = { listener.onDescriptionChanged(it) },
-                            modifier = Modifier.padding(
-                                start = Theme.dimens.space16,
-                                end = Theme.dimens.space16,
-                                bottom = Theme.dimens.space24
-                            ),
-                            errorMessage = Resources.strings.descriptionErrorMessage,
-                            isError = state.description.length > 255,
-                            singleLine = false,
-                            textFieldModifier = Modifier.fillMaxWidth().height(104.dp)
-                        )
-                        BpButton(
-                            title = Resources.strings.save,
-                            onClick = { listener.onClickSave() },
-                            enabled = state.restaurantName.isNotEmpty() && state.phoneNumber.isNotEmpty()
-                                    && state.openingTime.isNotEmpty() && state.closingTime.isNotEmpty(),
-                            modifier = Modifier.fillMaxWidth().padding(
-                                start = Theme.dimens.space16,
-                                end = Theme.dimens.space16,
-                                bottom = Theme.dimens.space16
-                            )
-                        )
-                    }
+                    RestaurantUpdateInfoCard(
+                        state.restaurant.restaurantName,
+                        state.restaurant.openingTime,
+                        state.restaurant.closingTime,
+                        state.restaurant.description,
+                        state.restaurant.phoneNumber,
+                        listener
+                    )
                 }
                 item {
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(
-                            start = Theme.dimens.space16,
-                            end = Theme.dimens.space16,
-                            bottom = Theme.dimens.space16
-                        ).background(
-                            color = Theme.colors.surface,
-                            shape = RoundedCornerShape(Theme.radius.medium)
-                        ).clickable { listener.onClickLogout() }
-                    ) {
-                        Icon(
-                            painterResource(Resources.images.logout), modifier = Modifier.padding(
-                                start = Theme.dimens.space16,
-                                top = Theme.dimens.space16,
-                                bottom = Theme.dimens.space16,
-                                end = Theme.dimens.space8
-                            ), contentDescription = null,
-                            tint = Theme.colors.primary
-                        )
-                        Text(
-                            Resources.strings.logout,
-                            style = Theme.typography.title.copy(color = Theme.colors.primary),
-                            modifier = Modifier.padding(vertical = Theme.dimens.space16)
-                        )
-                    }
+                    LogoutCard(listener)
                 }
             }
         }
@@ -230,10 +84,185 @@ class RestaurantInfoScreen :
     override fun onEffect(effect: RestaurantInfoUiEffect, navigator: Navigator) {
         when (effect) {
             is RestaurantInfoUiEffect.NavigateToLogin -> navigator.replaceAll(LoginScreen())
-            is RestaurantInfoUiEffect.ShowErrorMessage -> println("hello, ${effect.message}")
-            is RestaurantInfoUiEffect.ShowNoDataPlaceholder -> println("hello, no data placeholder")
-            is RestaurantInfoUiEffect.ShowSaveInfoSuccess -> println("hello, ${effect.message}")
             is RestaurantInfoUiEffect.NavigateUp -> navigator.pop()
+        }
+    }
+
+    @OptIn(ExperimentalResourceApi::class)
+    @Composable
+    private fun RestaurantInfoCard(
+        ownerUsername: String,
+        address: String,
+        rating: Double,
+        priceLevel: String
+    ) {
+        BpCard(
+            modifier = Modifier.fillMaxWidth().padding(
+                start = Theme.dimens.space16,
+                end = Theme.dimens.space16,
+                top = Theme.dimens.space16
+            )
+        ) {
+
+            BpTitleWithContentSection(title = Resources.strings.ownerUsername) {
+                Text(
+                    ownerUsername,
+                    modifier = Modifier.padding(
+                        start = Theme.dimens.space16,
+                        end = Theme.dimens.space16,
+                        bottom = Theme.dimens.space16
+                    ),
+                    style = Theme.typography.body,
+                    color = Theme.colors.contentPrimary
+                )
+            }
+            BpTitleWithContentSection(title = Resources.strings.address) {
+                Text(
+                    address,
+                    modifier = Modifier.padding(
+                        start = Theme.dimens.space16,
+                        end = Theme.dimens.space16,
+                        bottom = Theme.dimens.space16
+                    ),
+                    style = Theme.typography.body,
+                    color = Theme.colors.contentPrimary
+                )
+            }
+            BpTitleWithContentSection(title = Resources.strings.rating) {
+                BpRating(
+                    rating,
+                    selectedIcon = painterResource(Resources.images.filledStar),
+                    halfSelectedIcon = painterResource(Resources.images.halfFilledStar),
+                    modifier = Modifier.padding(
+                        start = Theme.dimens.space16,
+                        end = Theme.dimens.space16,
+                        bottom = Theme.dimens.space16
+                    ),
+                    iconsSize = Theme.dimens.space16
+                )
+            }
+            BpTitleWithContentSection(title = Resources.strings.priceLevel) {
+                Text(
+                    priceLevel,
+                    modifier = Modifier.padding(
+                        start = Theme.dimens.space16,
+                        end = Theme.dimens.space16,
+                        bottom = Theme.dimens.space16
+                    ),
+                    style = Theme.typography.titleMedium,
+                    color = Theme.colors.success
+                )
+            }
+        }
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    private fun RestaurantUpdateInfoCard(
+        restaurantName: String,
+        openingTime: String,
+        closingTime: String,
+        description: String,
+        phoneNumber: String,
+        listener: RestaurantInfoInteractionListener
+    ) {
+        BpCard(
+            modifier = Modifier.fillMaxWidth().padding(Theme.dimens.space16)
+        ) {
+            BpTextField(
+                label = Resources.strings.restaurantName,
+                text = restaurantName,
+                onValueChange = { listener.onRestaurantNameChange(it) },
+                modifier = Modifier.padding(
+                    horizontal = Theme.dimens.space16,
+                    vertical = Theme.dimens.space16
+                ),
+                errorMessage = Resources.strings.restaurantNameErrorMessage,
+                isError = restaurantName.length !in 4..25
+            )
+            BpTextField(
+                label = Resources.strings.phoneNumber,
+                text = phoneNumber,
+                onValueChange = { listener.onPhoneNumberChange(it) },
+                modifier = Modifier.padding(
+                    start = Theme.dimens.space16,
+                    end = Theme.dimens.space16,
+                    bottom = Theme.dimens.space16
+                )
+            )
+            Row(modifier = Modifier.padding(bottom = Theme.dimens.space16)) {
+                BpTextField(
+                    label = Resources.strings.workingHours,
+                    text = openingTime,
+                    onValueChange = { listener.onOpeningTimeChange(it) },
+                    modifier = Modifier.padding(
+                        start = Theme.dimens.space16,
+                        end = Theme.dimens.space4
+                    ).weight(1f)
+                )
+                BpTextField(
+                    label = "",
+                    text = closingTime,
+                    onValueChange = { listener.onClosingTimeChange(it) },
+                    modifier = Modifier.padding(
+                        start = Theme.dimens.space4,
+                        end = Theme.dimens.space16
+                    ).weight(1f)
+                )
+            }
+            BpTextField(
+                label = Resources.strings.description,
+                text = description,
+                onValueChange = { listener.onDescriptionChanged(it) },
+                modifier = Modifier.padding(
+                    start = Theme.dimens.space16,
+                    end = Theme.dimens.space16,
+                    bottom = Theme.dimens.space24
+                ),
+                errorMessage = Resources.strings.descriptionErrorMessage,
+                isError = description.length > 255,
+                singleLine = false,
+                textFieldModifier = Modifier.fillMaxWidth().height(104.dp)
+            )
+            BpButton(
+                title = Resources.strings.save,
+                onClick = { listener.onClickSave() },
+                enabled = restaurantName.isNotEmpty() && phoneNumber.isNotEmpty()
+                        && openingTime.isNotEmpty() && closingTime.isNotEmpty(),
+                modifier = Modifier.fillMaxWidth().padding(
+                    start = Theme.dimens.space16,
+                    end = Theme.dimens.space16,
+                    bottom = Theme.dimens.space16
+                )
+            )
+        }
+    }
+
+    @OptIn(ExperimentalResourceApi::class)
+    @Composable
+    private fun LogoutCard(listener: RestaurantInfoInteractionListener) {
+        BpCard(modifier = Modifier.fillMaxWidth().padding(
+            start = Theme.dimens.space16,
+            end = Theme.dimens.space16,
+            bottom = Theme.dimens.space16
+        ).clickable { listener.onClickLogout() }
+        ) {
+            Row {
+                Icon(
+                    painterResource(Resources.images.logout), modifier = Modifier.padding(
+                        start = Theme.dimens.space16,
+                        top = Theme.dimens.space16,
+                        bottom = Theme.dimens.space16,
+                        end = Theme.dimens.space8
+                    ), contentDescription = null,
+                    tint = Theme.colors.primary
+                )
+                Text(
+                    Resources.strings.logout,
+                    style = Theme.typography.title.copy(color = Theme.colors.primary),
+                    modifier = Modifier.padding(vertical = Theme.dimens.space16)
+                )
+            }
         }
     }
 }

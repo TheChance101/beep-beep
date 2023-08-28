@@ -2,9 +2,7 @@ package domain.usecase
 
 import domain.entity.Meal
 import domain.entity.MealAddition
-import domain.gateway.IRemoteGateway
-import domain.gateway.IRemoteCuisineGateway
-import domain.gateway.IRemoteMealGateway
+import domain.gateway.IFakeRemoteGateway
 import presentation.base.ServerSideException
 
 interface IManageMealUseCase {
@@ -16,8 +14,8 @@ interface IManageMealUseCase {
 }
 
 class ManageMealUseCase(
-    private val remoteMealGateway: IRemoteGateway,
-    private val remoteCuisineGateway: IRemoteGateway
+    private val remoteMealGateway: IFakeRemoteGateway,
+    private val remoteCuisineGateway: IFakeRemoteGateway
 ) : IManageMealUseCase {
     override suspend fun addMeal(meal: MealAddition): Boolean {
         return remoteMealGateway.addMeal(meal as Meal) != null

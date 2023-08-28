@@ -11,15 +11,14 @@ import io.ktor.util.*
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
-import org.thechance.api_gateway.util.APIS
-
+import org.thechance.api_gateway.util.APIs
 
 @Module
 class ApiClientModule {
 
     @Single
     fun provideHttpClientAttribute(): Attributes {
-       return  Attributes(true)
+        return Attributes(true)
     }
 
     @Single
@@ -27,34 +26,30 @@ class ApiClientModule {
         clientAttributes: Attributes
     ): HttpClient {
         return HttpClient(OkHttp) {
-
-
             install(Logging) {
                 logger = Logger.DEFAULT
                 level = LogLevel.ALL
             }
-
             defaultRequest {
-
                 header("Content-Type", "application/json")
-
                 when (clientAttributes[AttributeKey<String>("API")]) {
-                    APIS.IDENTITY_API.value -> {
-                        url("http://127.0.0.5:8088")
+                    APIs.IDENTITY_API.value -> {
+//                        url("http://127.0.0.5:8088")
+                        url("http://0.0.0.0:8088")
                     }
 
-                    APIS.RESTAURANT_API.value -> {
-                        url("http://127.0.0.2:8080")
+                    APIs.RESTAURANT_API.value -> {
+//                        url("http://127.0.0.2:8080")
+                        url("http://0.0.0.0:8081")
                     }
 
-                    APIS.TAXI_API.value -> {
+                    APIs.TAXI_API.value -> {
                         url("http://127.0.0.3:8080")
                     }
 
-                    APIS.NOTIFICATION_API.value -> {
+                    APIs.NOTIFICATION_API.value -> {
                         url("http://127.0.0.4:8080")
                     }
-
                 }
             }
 
@@ -67,7 +62,5 @@ class ApiClientModule {
                 )
             }
         }
-
     }
-
 }

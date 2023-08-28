@@ -3,19 +3,7 @@ package org.thechance.common.presentation.restaurant
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -28,25 +16,17 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
-import com.beepbeep.designSystem.ui.composable.BpButton
-import com.beepbeep.designSystem.ui.composable.BpIconButton
-import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
-import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
-import com.beepbeep.designSystem.ui.composable.BpTransparentButton
+import com.beepbeep.designSystem.ui.composable.*
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.LocalDimensions
 import org.thechance.common.presentation.base.BaseScreen
-import org.thechance.common.presentation.composables.BpDropdownMenu
-import org.thechance.common.presentation.composables.EditablePriceBar
-import org.thechance.common.presentation.composables.EditableRatingBar
-import org.thechance.common.presentation.composables.PriceBar
-import org.thechance.common.presentation.composables.RatingBar
-import org.thechance.common.presentation.composables.RestaurantDialog
+import org.thechance.common.presentation.composables.*
 import org.thechance.common.presentation.composables.modifier.cursorHoverIconHand
 import org.thechance.common.presentation.composables.modifier.noRipple
 import org.thechance.common.presentation.composables.table.BpPager
 import org.thechance.common.presentation.composables.table.BpTable
 import org.thechance.common.presentation.composables.table.TotalItemsIndicator
+import org.thechance.common.presentation.resources.Resources
+import org.thechance.common.presentation.util.kms
 
 class RestaurantScreen :
     BaseScreen<RestaurantScreenModel, RestaurantUIEffect, RestaurantUiState, RestaurantInteractionListener>() {
@@ -85,7 +65,7 @@ class RestaurantScreen :
         Column(
             Modifier.background(Theme.colors.surface).fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16),
+            verticalArrangement = Arrangement.spacedBy(16.kms),
         ) {
             RestaurantScreenTopRow(state = state, listener = listener)
 
@@ -103,16 +83,16 @@ class RestaurantScreen :
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(LocalDimensions.current.space16),
+            horizontalArrangement = Arrangement.spacedBy(16.kms),
             verticalAlignment = Alignment.Top
         ) {
             BpSimpleTextField(
-                modifier = Modifier.widthIn(min = 340.dp, max = 440.dp),
-                hint = "Search for restaurants",
+                modifier = Modifier.widthIn(min = 340.kms, max = 440.kms),
+                hint = Resources.Strings.searchForRestaurants,
                 onValueChange = listener::onSearchChange,
                 text = state.search,
                 keyboardType = KeyboardType.Text,
-                trailingPainter = painterResource("ic_search.svg")
+                trailingPainter = painterResource(Resources.Drawable.search)
             )
 
             RestaurantFilterRow(state, listener)
@@ -120,47 +100,46 @@ class RestaurantScreen :
             Spacer(modifier = Modifier.weight(1f))
 
             BpOutlinedButton(
-                title = "Export",
+                title = Resources.Strings.export,
                 onClick = { /* TODO: Export */ },
-                textPadding = PaddingValues(horizontal = LocalDimensions.current.space24),
+                textPadding = PaddingValues(horizontal = 24.kms),
                 modifier = Modifier.cursorHoverIconHand()
             )
             BpOutlinedButton(
-                title = "Add cuisine",
+                title = Resources.Strings.addCuisine,
                 onClick = { /* TODO: Show Add cuisine DropdownMenu */ },
-                textPadding = PaddingValues(horizontal = LocalDimensions.current.space24),
+                textPadding = PaddingValues(horizontal = 24.kms),
                 modifier = Modifier.cursorHoverIconHand()
             )
             BpButton(
-                title = "New Restaurant",
+                title = Resources.Strings.newRestaurant,
                 onClick = listener::onAddNewRestaurantClicked,
-                textPadding = PaddingValues(horizontal = LocalDimensions.current.space24),
+                textPadding = PaddingValues(horizontal = 24.kms),
                 modifier = Modifier.cursorHoverIconHand()
             )
         }
     }
 
     @Composable
-    private fun RestaurantTable(
+    private fun ColumnScope.RestaurantTable(
         state: RestaurantUiState,
         listener: RestaurantInteractionListener
     ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
-            BpTable(
-                data = state.restaurants,
-                key = { it.name },
-                headers = state.tableHeader,
-                modifier = Modifier.fillMaxWidth(),
-                rowContent = { restaurant ->
-                    RestaurantRow(
-                        onClickEditRestaurant = { /* TODO: Show Edit Restaurant DropdownMenu */ },
-                        position = state.restaurants.indexOf(restaurant) + 1,
-                        restaurant = restaurant,
-                    )
-                },
-            )
-        }
+        BpTable(
+            data = state.restaurants,
+            key = { it.name },
+            headers = state.tableHeader,
+            modifier = Modifier.fillMaxWidth(),
+            rowContent = { restaurant ->
+                RestaurantRow(
+                    onClickEditRestaurant = { /* TODO: Show Edit Restaurant DropdownMenu */ },
+                    position = state.restaurants.indexOf(restaurant) + 1,
+                    restaurant = restaurant,
+                )
+            },
+        )
     }
+
 
     @Composable
     private fun RestaurantPagingRow(
@@ -168,14 +147,14 @@ class RestaurantScreen :
         listener: RestaurantInteractionListener
     ) {
         Row(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxWidth().background(color = Theme.colors.surface),
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             TotalItemsIndicator(
                 numberItemInPage = state.numberOfItemsInPage,
                 totalItems = state.numberOfRestaurants,
-                itemType = "restaurant",
+                itemType = Resources.Strings.restaurant,
                 onItemPerPageChange = listener::onItemPerPageChange
             )
             BpPager(
@@ -226,17 +205,17 @@ class RestaurantScreen :
         )
         RatingBar(
             rating = restaurant.rating,
-            selectedIcon = painterResource(if (isSystemInDarkTheme()) "ic_filled_star_dark.svg" else "ic_filled_star_light.svg"),
-            halfSelectedIcon = painterResource(if (isSystemInDarkTheme()) "ic_half_filled_star_dark.svg" else "ic_half_filled_star_light.svg"),
+            selectedIcon = painterResource(Resources.Drawable.starFilled),
+            halfSelectedIcon = painterResource(Resources.Drawable.starHalfFilled),
             modifier = Modifier.weight(otherColumnsWeight),
-            iconsSize = LocalDimensions.current.space16
+            iconsSize = 16.kms
         )
         PriceBar(
             priceLevel = restaurant.priceLevel,
-            icon = painterResource("ic_dollar_sign.svg"),
+            icon = painterResource(Resources.Drawable.dollarSign),
             iconColor = Theme.colors.success,
             modifier = Modifier.weight(otherColumnsWeight),
-            iconsSize = LocalDimensions.current.space16
+            iconsSize = 16.kms
         )
 
         Text(
@@ -248,7 +227,7 @@ class RestaurantScreen :
         )
 
         Image(
-            painter = painterResource("horizontal_dots.xml"),
+            painter = painterResource(Resources.Drawable.dots),
             contentDescription = null,
             modifier = Modifier.noRipple { onClickEditRestaurant(restaurant.name) }
                 .weight(firstAndLastColumnWeight),
@@ -262,13 +241,13 @@ class RestaurantScreen :
             BpIconButton(
                 content = {
                     Text(
-                        "Filter",
+                        text = Resources.Strings.filter,
                         style = Theme.typography.titleMedium
                             .copy(color = Theme.colors.contentTertiary),
                     )
                 },
                 onClick = listener::onClickDropDownMenu,
-                painter = painterResource("ic_filter.svg"),
+                painter = painterResource(Resources.Drawable.filter),
                 modifier = Modifier.cursorHoverIconHand()
             )
             RestaurantFilterDropdownMenu(
@@ -304,98 +283,92 @@ class RestaurantScreen :
         BpDropdownMenu(
             onDismissRequest = onDismissRequest,
             expanded = expanded,
-            shape = RoundedCornerShape(LocalDimensions.current.space8),
+            shape = RoundedCornerShape(8.kms),
         ) {
             Column(
                 modifier = Modifier.background(
                     color = Theme.colors.surface,
-                    shape = RoundedCornerShape(LocalDimensions.current.space8)
+                    shape = RoundedCornerShape(8.kms)
                 )
             ) {
                 Text(
-                    text = "Filter",
+                    text = Resources.Strings.filter,
                     style = Theme.typography.headline,
                     color = Theme.colors.contentPrimary,
                     modifier = Modifier.padding(
-                        start = LocalDimensions.current.space24,
-                        top = LocalDimensions.current.space24
+                        start = 24.kms,
+                        top = 24.kms
                     )
                 )
                 Text(
-                    text = "Rating",
+                    text = Resources.Strings.rating,
                     style = Theme.typography.title,
                     color = Theme.colors.contentPrimary,
                     modifier = Modifier.padding(
-                        start = LocalDimensions.current.space24,
-                        top = LocalDimensions.current.space40
+                        start = 24.kms,
+                        top = 40.kms
                     )
                 )
                 EditableRatingBar(
                     rating = rating,
                     count = 5,
-                    selectedIcon = painterResource(
-                        if (isSystemInDarkTheme()) "ic_filled_star_dark.svg" else "ic_filled_star_light.svg"
-                    ),
-                    halfSelectedIcon = painterResource(
-                        if (isSystemInDarkTheme()) "ic_half_filled_star_dark.svg" else "ic_half_filled_star_light.svg"
-                    ),
-                    notSelectedIcon = painterResource(
-                        if (isSystemInDarkTheme()) "ic_star_dark.svg" else "ic_star_light.svg"
-                    ),
-                    iconsSize = LocalDimensions.current.space24,
-                    iconsPadding = PaddingValues(horizontal = LocalDimensions.current.space8),
+                    selectedIcon = painterResource(Resources.Drawable.starFilled),
+                    halfSelectedIcon = painterResource(Resources.Drawable.starHalfFilled),
+                    notSelectedIcon = painterResource(Resources.Drawable.starOutlined),
+                    iconsSize = 24.kms,
+                    iconsPadding = PaddingValues(horizontal = 8.kms),
                     modifier = Modifier.fillMaxWidth()
-                        .padding(top = LocalDimensions.current.space16)
+                        .padding(top = 16.kms)
                         .background(color = Theme.colors.background)
                         .padding(
-                            horizontal = LocalDimensions.current.space24,
-                            vertical = LocalDimensions.current.space16
+                            horizontal = 24.kms,
+                            vertical = 16.kms
                         ),
                     onClick = { onClickRating(it) }
                 )
 
                 Text(
-                    text = "Price level",
+                    text = Resources.Strings.priceLevel,
                     style = Theme.typography.title,
                     color = Theme.colors.contentPrimary,
                     modifier = Modifier.padding(
-                        start = LocalDimensions.current.space24,
-                        top = LocalDimensions.current.space32
+                        start = 24.kms,
+                        top = 32.kms
                     )
                 )
                 EditablePriceBar(
                     priceLevel = priceLevel,
                     count = 3,
-                    icon = painterResource("ic_dollar_sign.svg"),
+                    icon = painterResource(Resources.Drawable.dollarSign),
                     enabledIconsColor = Theme.colors.success,
                     disabledIconsColor = Theme.colors.disable,
-                    iconsPadding = PaddingValues(horizontal = LocalDimensions.current.space8),
-                    iconsSize = LocalDimensions.current.space16,
+                    iconsPadding = PaddingValues(horizontal = 8.kms),
+                    iconsSize = 16.kms,
                     modifier = Modifier.fillMaxWidth()
-                        .padding(top = LocalDimensions.current.space16)
+                        .padding(top = 16.kms)
                         .background(color = Theme.colors.background)
                         .padding(
-                            horizontal = LocalDimensions.current.space24,
-                            vertical = LocalDimensions.current.space16
+                            horizontal = 24.kms,
+                            vertical = 16.kms
                         ),
                     onClick = { onClickPrice(it) }
                 )
 
                 Row(
-                    Modifier.fillMaxWidth().padding(LocalDimensions.current.space24),
+                    Modifier.fillMaxWidth().padding(24.kms),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     BpTransparentButton(
-                        title = "Cancel",
+                        title = Resources.Strings.cancel,
                         onClick = { onClickCancel(); onDismissRequest() },
-                        modifier = Modifier.padding(end = LocalDimensions.current.space16)
-                            .height(LocalDimensions.current.space32)
+                        modifier = Modifier.padding(end = 16.kms)
+                            .height(32.kms)
                             .weight(1f)
                     )
                     BpOutlinedButton(
-                        title = "Save",
+                        title = Resources.Strings.save,
                         onClick = { onClickSave(); onDismissRequest() },
-                        modifier = Modifier.height(LocalDimensions.current.space32).weight(3f),
+                        modifier = Modifier.height(32.kms).weight(3f),
                         textPadding = PaddingValues(0.dp)
                     )
                 }

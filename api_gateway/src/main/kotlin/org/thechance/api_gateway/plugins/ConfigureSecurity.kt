@@ -5,14 +5,21 @@ import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
+import io.ktor.server.config.*
 import org.thechance.api_gateway.data.model.TokenType
-import org.thechance.api_gateway.plugins.utils.respondUnauthorized
+import io.ktor.server.response.*
 
 fun Application.configureJWTAuthentication() {
     val jwtSecret = environment.config.property("jwt.secret").getString()
     val jwtDomain = environment.config.property("jwt.issuer").getString()
     val jwtAudience = environment.config.property("jwt.audience").getString()
     val jwtRealm = environment.config.property("jwt.realm").getString()
+
+
+//    val jwtSecret = ApplicationConfig("jwt.secret").toString()
+//    val jwtDomain = ApplicationConfig("jwt.issuer").toString()
+//    val jwtAudience = ApplicationConfig("jwt.audience").toString()
+//    val jwtRealm = ApplicationConfig("jwt.realm").toString()
 
     authentication {
         jwt("auth-jwt") {
@@ -51,5 +58,11 @@ fun Application.configureJWTAuthentication() {
 
             respondUnauthorized()
         }
+    }
+}
+
+private fun JWTAuthenticationProvider.Config.respondUnauthorized() {
+    challenge { _, _ ->
+        call.respond(UnauthorizedResponse())
     }
 }

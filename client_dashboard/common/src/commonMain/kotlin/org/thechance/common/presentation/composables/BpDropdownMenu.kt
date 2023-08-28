@@ -43,7 +43,7 @@ fun BpDropdownMenu(
     onDismissRequest: () -> Unit,
     expanded: Boolean,
     modifier: Modifier = Modifier,
-    offset: DpOffset = DpOffset(0.dp, 0.dp),
+    offset: DpOffset = DpOffset.Zero,
     focusable: Boolean = true,
     shape: Shape,
     content: @Composable ColumnScope.() -> Unit

@@ -1,13 +1,13 @@
 package domain.usecase
 
 import domain.entity.Restaurant
-import domain.gateway.IRemoteGateway
+import domain.gateway.IFakeRemoteGateway
 
 interface IGetOwnerRestaurantsUseCase {
     suspend fun getOwnerRestaurants(): List<Restaurant>
 }
 
-class GetOwnerRestaurantsUseCase(private val remoteGateWay: IRemoteGateway) :
+class GetOwnerRestaurantsUseCase(private val remoteGateWay: IFakeRemoteGateway) :
     IGetOwnerRestaurantsUseCase {
 
     override suspend fun getOwnerRestaurants(): List<Restaurant> {
