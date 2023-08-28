@@ -19,7 +19,7 @@ fun Route.restaurantRoutes() {
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 20
             val restaurants = restaurantGateway.getRestaurants(page, limit, locale = Locale(language, countryCode))
-            respondWithResult(HttpStatusCode.OK, restaurants)
+            respondWithResult(HttpStatusCode.OK, restaurants.toRestaurant())
         }
 
         get("/{id}") {
@@ -27,7 +27,7 @@ fun Route.restaurantRoutes() {
             val restaurantId = call.parameters["id"]?.trim().toString()
             val restaurant =
                 restaurantGateway.getRestaurantInfo(locale = Locale(language, countryCode), id = restaurantId)
-            respondWithResult(HttpStatusCode.OK, restaurant.toRestaurant())
+            respondWithResult(HttpStatusCode.OK, restaurant)
         }
 
     }

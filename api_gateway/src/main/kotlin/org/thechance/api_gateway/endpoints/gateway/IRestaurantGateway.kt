@@ -16,11 +16,11 @@ interface IRestaurantGateway {
 
     suspend fun addCuisine(name: String, permissions: List<Int>, locale: Locale): CuisineResource
 
-    suspend fun getCuisines(locale: Locale): CuisineResource
+    suspend fun getCuisines(locale: Locale): List<CuisineResource>
 
     suspend fun getRestaurantInfo(locale: Locale, id: String): RestaurantResource
 
-    suspend fun getRestaurants(page: Int, limit: Int, locale: Locale): List<Restaurant>
+    suspend fun getRestaurants(page: Int, limit: Int, locale: Locale): List<RestaurantResource>
 
     // region Order
     suspend fun updateOrderStatus(orderId: String, permissions: List<Int>, status: Int, locale: Locale): Order

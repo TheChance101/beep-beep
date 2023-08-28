@@ -72,13 +72,13 @@ class RestaurantGateway(
         }
     }
 
-    override suspend fun getRestaurants(page: Int, limit: Int, locale: Locale) = tryToExecute<List<Restaurant>>(
+    override suspend fun getRestaurants(page: Int, limit: Int, locale: Locale) = tryToExecute<List<RestaurantResource>>(
         APIs.RESTAURANT_API,
         setErrorMessage = { errorCodes ->
             errorHandler.getLocalizedErrorMessage(errorCodes, locale)
         }
     ) {
-        get("/restaurant"){
+        get("/restaurants"){
             parameter("page", page)
             parameter("limit", limit)
         }
@@ -107,15 +107,14 @@ class RestaurantGateway(
         }
     }
 
-    override suspend fun getCuisines(locale: Locale): CuisineResource {
-
-        return tryToExecute<CuisineResource>(
+    override suspend fun getCuisines(locale: Locale): List<CuisineResource> {
+        return tryToExecute<List<CuisineResource>>(
             APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
         ) {
-            get("/cuisine")
+            get("/cuisines")
         }
     }
 

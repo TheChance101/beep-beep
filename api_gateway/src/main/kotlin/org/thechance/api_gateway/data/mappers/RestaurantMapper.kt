@@ -9,12 +9,13 @@ fun RestaurantResource.toRestaurant() = Restaurant(
     name = this.name,
     description = this.description ?: "",
     priceLevel = this.priceLevel ?: "",
-    rate = this.rate ?: 0.0,
+    rate = this.rate,
     phone = this.phone,
     openingTime = this.openingTime,
     closingTime = this.closingTime,
     address = this.address,
     location = this.location.toLocation(),
-    cuisines = cuisines.map { it.toCuisine() }
 )
+
+fun List<RestaurantResource>.toRestaurant() = map{it.toRestaurant()}
 
