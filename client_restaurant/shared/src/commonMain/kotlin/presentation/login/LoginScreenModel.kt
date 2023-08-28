@@ -1,7 +1,6 @@
 package presentation.login
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.entity.UserTokens
 import domain.usecase.ILoginUserUseCase
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.component.inject
@@ -35,12 +34,12 @@ class LoginScreenModel:
     ) {
         tryToExecute(
             { loginUserUseCase.loginUser(userName, password, isKeepMeLoggedInChecked) },
-            this::onLoginSuccess,
+            { onLoginSuccess() },
             this::onLoginFailed
         )
     }
 
-    private fun onLoginSuccess(result: UserTokens) {
+    private fun onLoginSuccess() {
         updateState {
             it.copy(
                 isLoading = false,
@@ -53,7 +52,7 @@ class LoginScreenModel:
     }
 
     private fun onLoginFailed(error: ErrorState) {
-        state.value.sheetState.show()
+        sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
         handleErrorState(error)
     }
 
@@ -65,10 +64,26 @@ class LoginScreenModel:
             ErrorState.UnAuthorized -> {}
             ErrorState.WifiDisabled -> {}
             ErrorState.HasNoPermission -> {}
-            is ErrorState.InvalidCredentials -> {
+            ErrorState.InvalidCredentials -> {
                 updateState {
                     it.copy(
-                        error = ErrorState.InvalidCredentials
+                        error = error
+                    )
+                }
+            }
+
+            is ErrorState.InvalidPassword -> updateState {
+                it.copy(
+                    passwordErrorMsg = "error.errorMessage",
+                    isPasswordError = true
+                )
+            }
+
+            is ErrorState.InvalidUserName -> {
+                updateState {
+                    it.copy(
+                        usernameErrorMsg = error.errorMessage,
+                        isUsernameError = true
                     )
                 }
             }
@@ -76,21 +91,10 @@ class LoginScreenModel:
             is ErrorState.UserNotExist -> {
                 updateState {
                     it.copy(
-                        error = ErrorState.UserNotExist("UserNotExist")
+                        usernameErrorMsg = error.errorMessage,
+                        isUsernameError = true
                     )
                 }
-            }
-
-            is ErrorState.InvalidPassword -> updateState {
-                it.copy(
-                    passwordErrorMsg = "Invalid Password!"
-                )
-            }
-
-            is ErrorState.InvalidUserName -> updateState {
-                it.copy(
-                    usernameErrorMsg = "Invalid UserName!"
-                )
             }
         }
     }
@@ -108,16 +112,16 @@ class LoginScreenModel:
         updateState { it.copy(description = description) }
     }
 
-    override fun onRequestPermissionClick() {
+    override fun onRequestPermissionClicked() {
         updateState { it.copy(showPermissionSheet = true) }
     }
 
-    override fun onClickSubmit() {
+    override fun onSubmitClicked() {
         state.value.sheetState.dismiss()
         updateState { it.copy(showPermissionSheet = false) }
     }
 
-    override fun onCancelClick() {
+    override fun onCancelClicked() {
         state.value.sheetState.dismiss()
         updateState { it.copy(showPermissionSheet = false) }
     }
