@@ -1,5 +1,6 @@
 package org.thechance.api_gateway.endpoints.gateway
 
+import org.thechance.api_gateway.data.model.restaurant.RestaurantResource
 import org.thechance.api_gateway.endpoints.model.RestaurantRequestPermission
 import java.util.*
 
@@ -12,5 +13,7 @@ interface IRestaurantGateway {
     ): RestaurantRequestPermission
 
     suspend fun getAllRequestPermission(permissions: List<Int>, locale: Locale): List<RestaurantRequestPermission>
+
+    suspend fun getRestaurantInfo(locale: Locale, id: String): RestaurantResource
 }
 
