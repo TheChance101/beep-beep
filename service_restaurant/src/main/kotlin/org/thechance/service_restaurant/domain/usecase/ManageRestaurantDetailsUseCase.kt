@@ -45,8 +45,7 @@ class ManageRestaurantDetailsUseCase(
     }
 
     override suspend fun deleteCategoriesInRestaurant(
-        restaurantId: String,
-        categoryIds: List<String>
+        restaurantId: String, categoryIds: List<String>
     ): Boolean {
         basicValidation.checkIsValidIds(restaurantId, categoryIds)
         val validationErrors = mutableListOf<Int>()
