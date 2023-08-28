@@ -14,13 +14,12 @@ import org.thechance.service_restaurant.data.collection.relationModels.CategoryR
 import org.thechance.service_restaurant.data.collection.relationModels.MealCuisines
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
 import org.thechance.service_restaurant.data.utils.paginate
-import org.thechance.service_restaurant.data.utils.toUUIDs
+import org.thechance.service_restaurant.data.utils.toObjectIds
 import org.thechance.service_restaurant.domain.entity.*
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
 import org.thechance.service_restaurant.domain.utils.OrderStatus
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
-import java.util.*
 
 class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRestaurantOptionsGateway {
 
@@ -58,7 +57,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         val categoryObjects =
             container.categoryCollection.find(
                 and(
-                    CategoryCollection::id `in` categoryIds.toUUIDs(),
+                    CategoryCollection::id `in` categoryIds.toObjectIds(),
                     CategoryCollection::isDeleted eq false
                 )
             ).toList()
@@ -89,7 +88,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         categoryIds: List<String>
     ): Boolean {
         val resultAddToCategory = container.categoryCollection.updateMany(
-            CategoryCollection::id `in` categoryIds.toUUIDs(),
+            CategoryCollection::id `in` categoryIds.toObjectIds(),
             addToSet(CategoryCollection::restaurantIds, ObjectId(restaurantId))
         ).isSuccessfullyUpdated()
 
@@ -97,7 +96,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
             ObjectId(restaurantId),
             update = Updates.addEachToSet(
                 RestaurantCollection::categoryIds.name,
-                categoryIds.toUUIDs()
+                categoryIds.toObjectIds()
             )
         ).isSuccessfullyUpdated()
 
@@ -124,13 +123,13 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         restaurantIds: List<String>
     ): Boolean {
         val resultDeleteFromRestaurant = container.restaurantCollection.updateMany(
-            RestaurantCollection::id `in` restaurantIds.toUUIDs(),
+            RestaurantCollection::id `in` restaurantIds.toObjectIds(),
             pull(RestaurantCollection::categoryIds, ObjectId(categoryId))
         ).isSuccessfullyUpdated()
 
         val resultDeleteFromCategory = container.categoryCollection.updateOneById(
             ObjectId(categoryId),
-            pullAll(CategoryCollection::restaurantIds, restaurantIds.toUUIDs())
+            pullAll(CategoryCollection::restaurantIds, restaurantIds.toObjectIds())
         ).isSuccessfullyUpdated()
         return resultDeleteFromRestaurant and resultDeleteFromCategory
     }
@@ -165,7 +164,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
     override suspend fun areCuisinesExist(cuisineIds: List<String>): Boolean {
         val cuisines = container.cuisineCollection.find(
             and(
-                CuisineCollection::id `in` cuisineIds.toUUIDs(),
+                CuisineCollection::id `in` cuisineIds.toObjectIds(),
                 CuisineCollection::isDeleted eq false
             )
         ).toList()
