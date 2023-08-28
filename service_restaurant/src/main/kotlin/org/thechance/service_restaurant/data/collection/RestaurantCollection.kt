@@ -4,13 +4,13 @@ import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
-import java.util.UUID
+import org.bson.types.ObjectId
 
 
 @Serializable
 data class RestaurantCollection(
     @Contextual
-    val ownerId: UUID = UUID.randomUUID(),
+    val ownerId: ObjectId = ObjectId(),
     val name: String,
     val description: String?,
     val priceLevel: String?,
@@ -25,9 +25,9 @@ data class RestaurantCollection(
     @BsonId
     @Contextual
     @SerialName("_id")
-    val id: UUID = UUID.randomUUID()
+    val id: ObjectId = ObjectId()
     val isDeleted: Boolean = false
-    val categoryIds: MutableList<@Contextual UUID> = mutableListOf()
-    val cuisineIds: MutableList<@Contextual UUID> = mutableListOf()
-    val mealIds: MutableList<@Contextual UUID> = mutableListOf()
+    val categoryIds: MutableList<@Contextual ObjectId> = mutableListOf()
+    val cuisineIds: MutableList<@Contextual ObjectId> = mutableListOf()
+    val mealIds: MutableList<@Contextual ObjectId> = mutableListOf()
 }
