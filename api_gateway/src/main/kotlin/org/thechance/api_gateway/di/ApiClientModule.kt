@@ -5,7 +5,9 @@ import io.ktor.client.engine.okhttp.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
+import io.ktor.client.plugins.websocket.*
 import io.ktor.client.request.*
+import io.ktor.serialization.kotlinx.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.util.*
 import kotlinx.serialization.json.Json
@@ -30,6 +32,11 @@ class ApiClientModule {
                 logger = Logger.DEFAULT
                 level = LogLevel.ALL
             }
+
+            install(WebSockets) {
+                contentConverter = KotlinxWebsocketSerializationConverter(Json)
+            }
+
             defaultRequest {
                 header("Content-Type", "application/json")
                 when (clientAttributes[AttributeKey<String>("API")]) {

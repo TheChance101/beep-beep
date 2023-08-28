@@ -5,10 +5,12 @@ import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import io.ktor.util.*
+import kotlinx.coroutines.flow.Flow
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.LocalizedMessageException
 import org.thechance.api_gateway.endpoints.gateway.IRestaurantGateway
+import org.thechance.api_gateway.endpoints.model.OrderDto
 import org.thechance.api_gateway.endpoints.model.RestaurantRequestPermission
 import org.thechance.api_gateway.util.APIs
 import java.util.*
@@ -61,5 +63,10 @@ class RestaurantGateway(
         ) {
             get("/restaurant-permission-request")
         }
+    }
+
+    override suspend fun restaurantOrders(permissions: List<Int>, restaurantId: String, locale: Locale): Flow<OrderDto> {
+        // todo check of permission and handel error
+        return tryToExecuteFromWebSocket<OrderDto>(api = APIs.RESTAURANT_API, path = "/order/restaurant/$restaurantId")
     }
 }

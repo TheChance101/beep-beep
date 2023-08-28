@@ -1,11 +1,13 @@
 package org.thechance.api_gateway.data.gateway
 
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.statement.HttpResponse
-import io.ktor.http.isSuccess
-import io.ktor.util.AttributeKey
-import io.ktor.util.Attributes
+import io.ktor.client.*
+import io.ktor.client.call.*
+import io.ktor.client.plugins.websocket.*
+import io.ktor.client.statement.*
+import io.ktor.http.*
+import io.ktor.util.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 import org.thechance.api_gateway.data.utils.LocalizedMessageException
 import org.thechance.api_gateway.util.APIs
 
@@ -29,4 +31,14 @@ abstract class BaseGateway(
             throw LocalizedMessageException(errorMessage)
         }
     }
+
+    protected suspend inline fun <reified T> tryToExecuteFromWebSocket(api: APIs, path: String): Flow<T> {
+        attributes.put(AttributeKey("API"), api.value)
+        return flow {
+            client.webSocket(path = path) {
+                emit(receiveDeserialized<T>())
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
 }
