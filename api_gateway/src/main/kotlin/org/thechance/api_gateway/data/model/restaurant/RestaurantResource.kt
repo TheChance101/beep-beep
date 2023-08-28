@@ -10,6 +10,7 @@ data class RestaurantResource(
     val priceLevel: String? = null,
     val rate: Double? = null,
     val phone: String,
+    val currency: String,
     val openingTime: String,
     val closingTime: String,
     val location: LocationResource,
