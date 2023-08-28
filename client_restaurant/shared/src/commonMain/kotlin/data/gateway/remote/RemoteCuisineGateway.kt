@@ -14,6 +14,6 @@ class RemoteCuisineGateway(client: HttpClient) : IRemoteCuisineGateway,
     override suspend fun getCuisinesByRestaurantId(restaurantId: String): List<Cuisine> {
         return tryToExecute<List<CuisineDto>> {
             get("/cuisines/$restaurantId")
-        }.map { it.toEntity() }
+        }.toEntity()
     }
 }
