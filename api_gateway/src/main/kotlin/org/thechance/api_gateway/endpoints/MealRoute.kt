@@ -17,52 +17,52 @@ fun Route.mealRoute() {
     val restaurantGateway: IRestaurantGateway by inject()
 
     route("meal") {
-        post {
-            val tokenClaim = call.principal<JWTPrincipal>()
-            val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
-            val (language, countryCode) = extractLocalizationHeader()
-            val params = call.receiveParameters()
-            val restaurantId = params["restaurantId"]?.trim().toString()
-            val name = params["name"]?.trim().toString()
-            val description = params["description"]?.trim().toString()
-            val price = params["price"]?.toDoubleOrNull()
-            val cuisines = params.getAll("cuisines")
+        authenticate("auth-jwt") {
+            post {
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
+                val (language, countryCode) = extractLocalizationHeader()
+                val params = call.receiveParameters()
+                val restaurantId = params["restaurantId"]?.trim().toString()
+                val name = params["name"]?.trim().toString()
+                val description = params["description"]?.trim().toString()
+                val price = params["price"]?.toDoubleOrNull()
+                val cuisines = params.getAll("cuisines")
 
-            val createdMeal = restaurantGateway.addMeal(
-                restaurantId,
-                name,
-                description,
-                price!!,
-                cuisines!!,
-                permissions,
-                Locale(language, countryCode)
-            )
+                val createdMeal = restaurantGateway.addMeal(
+                    restaurantId,
+                    name,
+                    description,
+                    price!!,
+                    cuisines!!,
+                    permissions,
+                    Locale(language, countryCode)
+                )
+                respondWithResult(HttpStatusCode.Created, createdMeal.toMeal())
+            }
 
-            respondWithResult(HttpStatusCode.Created, createdMeal.toMeal())
+            put {
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
+                val (language, countryCode) = extractLocalizationHeader()
+                val params = call.receiveParameters()
+                val restaurantId = params["restaurantId"]?.trim().toString()
+                val name = params["name"]?.trim().toString()
+                val description = params["description"]?.trim().toString()
+                val price = params["price"]?.toDoubleOrNull()
+                val cuisines = params.getAll("cuisines")
 
-        }
-
-        put {
-            val tokenClaim = call.principal<JWTPrincipal>()
-            val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
-            val (language, countryCode) = extractLocalizationHeader()
-            val params = call.receiveParameters()
-            val restaurantId = params["restaurantId"]?.trim().toString()
-            val name = params["name"]?.trim().toString()
-            val description = params["description"]?.trim().toString()
-            val price = params["price"]?.toDoubleOrNull()
-            val cuisines = params.getAll("cuisines")
-
-            val updatedMeal = restaurantGateway.updateMeal(
-                restaurantId,
-                name,
-                description,
-                price!!,
-                cuisines!!,
-                permissions,
-                Locale(language, countryCode)
-            )
-            respondWithResult(HttpStatusCode.OK, updatedMeal.toMeal())
+                val updatedMeal = restaurantGateway.updateMeal(
+                    restaurantId,
+                    name,
+                    description,
+                    price!!,
+                    cuisines!!,
+                    permissions,
+                    Locale(language, countryCode)
+                )
+                respondWithResult(HttpStatusCode.OK, updatedMeal.toMeal())
+            }
         }
     }
 
