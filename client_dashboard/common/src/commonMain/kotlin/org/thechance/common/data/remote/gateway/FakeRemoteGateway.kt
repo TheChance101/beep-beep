@@ -4,11 +4,22 @@ package org.thechance.common.data.remote.gateway
 import org.thechance.common.data.local.LocalGateway
 import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
-import org.thechance.common.data.remote.model.*
+import org.thechance.common.data.remote.model.AdminDto
+import org.thechance.common.data.remote.model.DataWrapperDto
+import org.thechance.common.data.remote.model.TaxiDto
+import org.thechance.common.data.remote.model.UserDto
+import org.thechance.common.data.remote.model.toEntity
 import org.thechance.common.data.service.IFakeService
-import org.thechance.common.domain.entity.*
+import org.thechance.common.domain.entity.AddRestaurant
+import org.thechance.common.domain.entity.AddTaxi
+import org.thechance.common.domain.entity.Admin
+import org.thechance.common.domain.entity.DataWrapper
+import org.thechance.common.domain.entity.Location
+import org.thechance.common.domain.entity.Restaurant
+import org.thechance.common.domain.entity.Taxi
+import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.getway.IRemoteGateway
-import java.util.*
+import java.util.UUID
 import kotlin.math.ceil
 import kotlin.math.floor
 
@@ -578,7 +589,8 @@ class FakeRemoteGateway(
 
     override suspend fun createTaxi(taxi: AddTaxi): Taxi {
         val taxiDto = taxi.toDto()
-       return fakeService.addTaxi(TaxiDto(
+        return fakeService.addTaxi(
+            TaxiDto(
                 id = UUID.randomUUID().toString(),
                 plateNumber = taxiDto.plateNumber,
                 color = taxiDto.color,
@@ -598,25 +610,76 @@ class FakeRemoteGateway(
         localGateway.saveTaxiReport(taxiReportFile)
     }
 
-    override suspend fun getRestaurants(): List<Restaurant> {
-        return fakeService.getRestaurants().toEntity()
+    override suspend fun getRestaurants(
+        pageNumber: Int,
+        numberOfRestaurantsInPage: Int
+    ): DataWrapper<Restaurant> {
+        val restaurants = fakeService.getRestaurants().toEntity()
+        val startIndex = (pageNumber - 1) * numberOfRestaurantsInPage
+        val endIndex = startIndex + numberOfRestaurantsInPage
+        val numberOfPages = ceil(restaurants.size / (numberOfRestaurantsInPage * 1.0)).toInt()
+        return try {
+            DataWrapperDto(
+                totalPages = numberOfPages,
+                result = restaurants.subList(startIndex, endIndex.coerceAtMost(restaurants.size)),
+                totalResult = restaurants.size
+            ).toEntity()
+        } catch (e: Exception) {
+            DataWrapperDto(
+                totalPages = numberOfPages,
+                result = restaurants,
+                totalResult = restaurants.size
+            ).toEntity()
+        }
     }
 
-    override suspend fun searchRestaurantsByRestaurantName(restaurantName: String): List<Restaurant> {
-        return fakeService.searchRestaurantsByRestaurantName(restaurantName).toEntity()
+
+    override suspend fun searchRestaurantsByRestaurantName(
+        restaurantName: String,
+        pageNumber: Int,
+        numberOfRestaurantsInPage: Int
+    ): DataWrapper<Restaurant> {
+        val restaurants = fakeService.searchRestaurantsByRestaurantName(restaurantName).toEntity()
+        val startIndex = (pageNumber - 1) * numberOfRestaurantsInPage
+        val endIndex = startIndex + numberOfRestaurantsInPage
+        val numberOfPages = ceil(restaurants.size / (numberOfRestaurantsInPage * 1.0)).toInt()
+        return try {
+            DataWrapperDto(
+                totalPages = numberOfPages,
+                result = restaurants.subList(startIndex, endIndex.coerceAtMost(restaurants.size)),
+                totalResult = restaurants.size
+            ).toEntity()
+        } catch (e: Exception) {
+            DataWrapperDto(
+                totalPages = numberOfPages,
+                result = restaurants,
+                totalResult = restaurants.size
+            ).toEntity()
+        }
     }
 
-    override suspend fun filterRestaurants(rating: Double, priceLevel: Int): List<Restaurant> {
-        return filterRestaurants(getRestaurants(), rating, priceLevel)
+    override suspend fun filterRestaurants(
+        rating: Double,
+        priceLevel: Int,
+        pageNumber: Int,
+        numberOfRestaurantsInPage: Int
+    ): DataWrapper<Restaurant> {
+        return filterRestaurants(
+            getRestaurants(pageNumber, numberOfRestaurantsInPage),
+            rating,
+            priceLevel
+        )
     }
 
-    override suspend fun searchFilterRestaurants(
+    override suspend fun searchFilteredRestaurantsByName(
         restaurantName: String,
         rating: Double,
-        priceLevel: Int
-    ): List<Restaurant> {
+        priceLevel: Int,
+        pageNumber: Int,
+        numberOfRestaurantsInPage: Int
+    ): DataWrapper<Restaurant> {
         return filterRestaurants(
-            searchRestaurantsByRestaurantName(restaurantName),
+            searchRestaurantsByRestaurantName(restaurantName,pageNumber, numberOfRestaurantsInPage),
             rating,
             priceLevel
         )
@@ -627,11 +690,11 @@ class FakeRemoteGateway(
     }
 
     private fun filterRestaurants(
-        restaurants: List<Restaurant>,
+        restaurants: DataWrapper<Restaurant>,
         rating: Double,
         priceLevel: Int
-    ): List<Restaurant> {
-        return restaurants.filter {
+    ): DataWrapper<Restaurant> {
+        val result = restaurants.result.filter {
             it.priceLevel == priceLevel &&
                     when {
                         rating.rem(1) > 0.89 || rating.rem(1) == 0.0 || rating.rem(1) > 0.5
@@ -640,6 +703,7 @@ class FakeRemoteGateway(
                         else -> it.rating in 0.5 + floor(rating)..0.89 + floor(rating)
                     }
         }
+        return restaurants.copy(result = result)
     }
 
     override suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant {

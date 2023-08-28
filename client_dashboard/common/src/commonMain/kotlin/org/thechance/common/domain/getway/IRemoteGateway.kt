@@ -1,6 +1,13 @@
 package org.thechance.common.domain.getway
 
-import org.thechance.common.domain.entity.*
+import org.thechance.common.domain.entity.AddRestaurant
+import org.thechance.common.domain.entity.AddTaxi
+import org.thechance.common.domain.entity.Admin
+import org.thechance.common.domain.entity.DataWrapper
+import org.thechance.common.domain.entity.Location
+import org.thechance.common.domain.entity.Restaurant
+import org.thechance.common.domain.entity.Taxi
+import org.thechance.common.domain.entity.User
 
 
 interface IRemoteGateway {
@@ -17,19 +24,33 @@ interface IRemoteGateway {
 
     suspend fun getPdfTaxiReport()
 
-    suspend fun getRestaurants(): List<Restaurant>
+    suspend fun getRestaurants(
+        pageNumber: Int,
+        numberOfRestaurantsInPage: Int
+    ): DataWrapper<Restaurant>
 
-    suspend fun searchRestaurantsByRestaurantName(restaurantName: String): List<Restaurant>
+    suspend fun searchRestaurantsByRestaurantName(
+        restaurantName: String,
+        pageNumber: Int,
+        numberOfRestaurantsInPage: Int
+    ): DataWrapper<Restaurant>
 
     suspend fun loginUser(username: String, password: String): Pair<String, String>
 
-    suspend fun filterRestaurants(rating: Double, priceLevel: Int): List<Restaurant>
+    suspend fun filterRestaurants(
+        rating: Double,
+        priceLevel: Int,
+        pageNumber: Int,
+        numberOfRestaurantsInPage: Int
+    ): DataWrapper<Restaurant>
 
-    suspend fun searchFilterRestaurants(
+    suspend fun searchFilteredRestaurantsByName(
         restaurantName: String,
         rating: Double,
-        priceLevel: Int
-    ): List<Restaurant>
+        priceLevel: Int,
+        pageNumber: Int,
+        numberOfRestaurantsInPage: Int
+    ): DataWrapper<Restaurant>
 
 
     suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant

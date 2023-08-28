@@ -173,7 +173,7 @@ class RestaurantScreen :
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             TotalItemsIndicator(
-                numberItemInPage = state.numberOfItemsInPage,
+                numberItemInPage = state.numberOfRestaurantInPage,
                 totalItems = state.numberOfRestaurants,
                 itemType = "restaurant",
                 onItemPerPageChange = listener::onItemPerPageChange

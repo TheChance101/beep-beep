@@ -2,7 +2,6 @@ package org.thechance.common.presentation.restaurant
 
 import org.thechance.common.presentation.composables.table.Header
 import org.thechance.common.presentation.util.ErrorState
-import java.util.Date
 
 
 data class RestaurantUiState(
@@ -28,8 +27,9 @@ data class RestaurantUiState(
     val filterPriceLevel: Int = 0,
     val maxPageCount: Int = 1,
     val selectedPageNumber: Int = 1,
-    val numberOfItemsInPage: Int = 10,
+    val numberOfRestaurantInPage: Int = 10,
     val isFiltered: Boolean = false,
+    val isSearch: Boolean = false,
 ) {
     data class RestaurantDetailsUiState(
         val name: String,
