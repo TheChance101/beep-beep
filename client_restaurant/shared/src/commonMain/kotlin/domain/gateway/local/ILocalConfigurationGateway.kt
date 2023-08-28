@@ -1,4 +1,4 @@
-package domain.gateway
+package domain.gateway.local
 
 /**
  * Created by Aziza Helmy on 8/24/2023.
