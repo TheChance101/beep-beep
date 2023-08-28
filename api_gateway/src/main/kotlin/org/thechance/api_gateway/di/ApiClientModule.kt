@@ -34,11 +34,13 @@ class ApiClientModule {
                 header("Content-Type", "application/json")
                 when (clientAttributes[AttributeKey<String>("API")]) {
                     APIs.IDENTITY_API.value -> {
-                        url("http://127.0.0.5:8088")
+//                        url("http://127.0.0.5:8088")
+                        url("http://0.0.0.0:8088")
                     }
 
                     APIs.RESTAURANT_API.value -> {
-                        url("http://127.0.0.2:8080")
+//                        url("http://127.0.0.2:8080")
+                        url("http://0.0.0.0:8081")
                     }
 
                     APIs.TAXI_API.value -> {

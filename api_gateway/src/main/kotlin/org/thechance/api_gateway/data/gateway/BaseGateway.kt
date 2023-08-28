@@ -2,6 +2,7 @@ package org.thechance.api_gateway.data.gateway
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.*
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.isSuccess
 import io.ktor.util.AttributeKey
@@ -29,4 +30,6 @@ abstract class BaseGateway(
             throw LocalizedMessageException(errorMessage)
         }
     }
+
+
 }
