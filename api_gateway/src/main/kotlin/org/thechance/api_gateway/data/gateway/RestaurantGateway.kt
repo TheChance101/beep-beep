@@ -14,7 +14,6 @@ import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.LocalizedMessageException
 import org.thechance.api_gateway.endpoints.gateway.IRestaurantGateway
 import org.thechance.api_gateway.endpoints.model.Order
-import org.thechance.api_gateway.endpoints.model.Restaurant
 import org.thechance.api_gateway.endpoints.model.RestaurantRequestPermission
 import org.thechance.api_gateway.util.APIs
 import java.util.*
@@ -61,14 +60,14 @@ class RestaurantGateway(
         }
     }
 
-    override suspend fun getRestaurantInfo(locale: Locale, id: String): RestaurantResource {
+    override suspend fun getRestaurantInfo(locale: Locale, restaurantId: String): RestaurantResource {
         return tryToExecute<RestaurantResource>(
             APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
         ) {
-            get("/restaurant/$id")
+            get("/restaurant/$restaurantId")
         }
     }
 

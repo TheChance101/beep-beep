@@ -12,11 +12,9 @@ data class RestaurantResource(
     val priceLevel: String? = null,
     val rate: Double? = null,
     val phone: String,
-    val currency: String,
     val openingTime: String,
     val closingTime: String,
     val location: LocationResource,
     val address: String,
-    val currency: String? = null,
     val cuisines: List<CuisineResource> = emptyList()
 )
