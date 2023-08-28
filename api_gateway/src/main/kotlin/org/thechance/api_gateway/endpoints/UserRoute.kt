@@ -8,8 +8,10 @@ import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
+import org.thechance.api_gateway.data.mappers.toManagedUser
 import org.thechance.api_gateway.data.model.TokenConfiguration
 import org.thechance.api_gateway.endpoints.gateway.IIdentityGateway
+import org.thechance.api_gateway.endpoints.gateway.IRestaurantGateway
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
 import org.thechance.api_gateway.endpoints.utils.respondWithResult
 import java.util.*
@@ -19,6 +21,7 @@ import java.util.*
  */
 fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
     val gateway: IIdentityGateway by inject()
+    val restaurantGateway: IRestaurantGateway by inject()
     val localizedMessagesFactory by inject<LocalizedMessagesFactory>()
 
     post("/signup") {
@@ -40,7 +43,7 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
         val locale = Locale(language, countryCode)
         val successMessage = localizedMessagesFactory.createLocalizedMessages(locale).userCreatedSuccessfully
 
-        respondWithResult(HttpStatusCode.Created, result, successMessage)
+        respondWithResult(HttpStatusCode.Created, result.toManagedUser(), successMessage)
     }
 
     post("/login") {
@@ -57,6 +60,21 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
             Locale(language, countryCode)
         )
         respondWithResult(HttpStatusCode.Created, token)
+    }
+
+    post("restaurant/permission") {
+        val params = call.receiveParameters()
+        val restaurantName = params["restaurantName"]?.trim().toString()
+        val ownerEmail = params["ownerEmail"]?.trim().toString()
+        val cause = params["cause"]?.trim().toString()
+        val (language, countryCode) = extractLocalizationHeader()
+        val result = restaurantGateway.createRequestPermission(
+            restaurantName,
+            ownerEmail,
+            cause,
+            Locale(language, countryCode)
+        )
+        respondWithResult(HttpStatusCode.Created, result)
     }
 
 

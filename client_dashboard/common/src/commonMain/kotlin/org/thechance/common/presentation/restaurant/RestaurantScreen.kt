@@ -3,19 +3,7 @@ package org.thechance.common.presentation.restaurant
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -28,24 +16,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
-import com.beepbeep.designSystem.ui.composable.BpButton
-import com.beepbeep.designSystem.ui.composable.BpIconButton
-import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
-import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
-import com.beepbeep.designSystem.ui.composable.BpTransparentButton
+import com.beepbeep.designSystem.ui.composable.*
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.base.BaseScreen
-import org.thechance.common.presentation.composables.BpDropdownMenu
-import org.thechance.common.presentation.composables.EditablePriceBar
-import org.thechance.common.presentation.composables.EditableRatingBar
-import org.thechance.common.presentation.composables.PriceBar
-import org.thechance.common.presentation.composables.RatingBar
-import org.thechance.common.presentation.composables.RestaurantDialog
+import org.thechance.common.presentation.composables.*
 import org.thechance.common.presentation.composables.modifier.cursorHoverIconHand
 import org.thechance.common.presentation.composables.modifier.noRipple
 import org.thechance.common.presentation.composables.table.BpPager
 import org.thechance.common.presentation.composables.table.BpTable
 import org.thechance.common.presentation.composables.table.TotalItemsIndicator
+import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.kms
 
 class RestaurantScreen :
@@ -108,11 +88,11 @@ class RestaurantScreen :
         ) {
             BpSimpleTextField(
                 modifier = Modifier.widthIn(min = 340.kms, max = 440.kms),
-                hint = "Search for restaurants",
+                hint = Resources.Strings.searchForRestaurants,
                 onValueChange = listener::onSearchChange,
                 text = state.search,
                 keyboardType = KeyboardType.Text,
-                trailingPainter = painterResource("ic_search.svg")
+                trailingPainter = painterResource(Resources.Drawable.search)
             )
 
             RestaurantFilterRow(state, listener)
@@ -120,19 +100,19 @@ class RestaurantScreen :
             Spacer(modifier = Modifier.weight(1f))
 
             BpOutlinedButton(
-                title = "Export",
+                title = Resources.Strings.export,
                 onClick = { /* TODO: Export */ },
                 textPadding = PaddingValues(horizontal = 24.kms),
                 modifier = Modifier.cursorHoverIconHand()
             )
             BpOutlinedButton(
-                title = "Add cuisine",
+                title = Resources.Strings.addCuisine,
                 onClick = { /* TODO: Show Add cuisine DropdownMenu */ },
                 textPadding = PaddingValues(horizontal = 24.kms),
                 modifier = Modifier.cursorHoverIconHand()
             )
             BpButton(
-                title = "New Restaurant",
+                title = Resources.Strings.newRestaurant,
                 onClick = listener::onAddNewRestaurantClicked,
                 textPadding = PaddingValues(horizontal = 24.kms),
                 modifier = Modifier.cursorHoverIconHand()
@@ -174,7 +154,7 @@ class RestaurantScreen :
             TotalItemsIndicator(
                 numberItemInPage = state.numberOfItemsInPage,
                 totalItems = state.numberOfRestaurants,
-                itemType = "restaurant",
+                itemType = Resources.Strings.restaurant,
                 onItemPerPageChange = listener::onItemPerPageChange
             )
             BpPager(
@@ -225,14 +205,14 @@ class RestaurantScreen :
         )
         RatingBar(
             rating = restaurant.rating,
-            selectedIcon = painterResource(if (isSystemInDarkTheme()) "ic_filled_star_dark.svg" else "ic_filled_star_light.svg"),
-            halfSelectedIcon = painterResource(if (isSystemInDarkTheme()) "ic_half_filled_star_dark.svg" else "ic_half_filled_star_light.svg"),
+            selectedIcon = painterResource(Resources.Drawable.starFilled),
+            halfSelectedIcon = painterResource(Resources.Drawable.starHalfFilled),
             modifier = Modifier.weight(otherColumnsWeight),
             iconsSize = 16.kms
         )
         PriceBar(
             priceLevel = restaurant.priceLevel,
-            icon = painterResource("ic_dollar_sign.svg"),
+            icon = painterResource(Resources.Drawable.dollarSign),
             iconColor = Theme.colors.success,
             modifier = Modifier.weight(otherColumnsWeight),
             iconsSize = 16.kms
@@ -247,7 +227,7 @@ class RestaurantScreen :
         )
 
         Image(
-            painter = painterResource("horizontal_dots.xml"),
+            painter = painterResource(Resources.Drawable.dots),
             contentDescription = null,
             modifier = Modifier.noRipple { onClickEditRestaurant(restaurant.name) }
                 .weight(firstAndLastColumnWeight),
@@ -261,13 +241,13 @@ class RestaurantScreen :
             BpIconButton(
                 content = {
                     Text(
-                        "Filter",
+                        text = Resources.Strings.filter,
                         style = Theme.typography.titleMedium
                             .copy(color = Theme.colors.contentTertiary),
                     )
                 },
                 onClick = listener::onClickDropDownMenu,
-                painter = painterResource("ic_filter.svg"),
+                painter = painterResource(Resources.Drawable.filter),
                 modifier = Modifier.cursorHoverIconHand()
             )
             RestaurantFilterDropdownMenu(
@@ -312,7 +292,7 @@ class RestaurantScreen :
                 )
             ) {
                 Text(
-                    text = "Filter",
+                    text = Resources.Strings.filter,
                     style = Theme.typography.headline,
                     color = Theme.colors.contentPrimary,
                     modifier = Modifier.padding(
@@ -321,7 +301,7 @@ class RestaurantScreen :
                     )
                 )
                 Text(
-                    text = "Rating",
+                    text = Resources.Strings.rating,
                     style = Theme.typography.title,
                     color = Theme.colors.contentPrimary,
                     modifier = Modifier.padding(
@@ -332,15 +312,9 @@ class RestaurantScreen :
                 EditableRatingBar(
                     rating = rating,
                     count = 5,
-                    selectedIcon = painterResource(
-                        if (isSystemInDarkTheme()) "ic_filled_star_dark.svg" else "ic_filled_star_light.svg"
-                    ),
-                    halfSelectedIcon = painterResource(
-                        if (isSystemInDarkTheme()) "ic_half_filled_star_dark.svg" else "ic_half_filled_star_light.svg"
-                    ),
-                    notSelectedIcon = painterResource(
-                        if (isSystemInDarkTheme()) "ic_star_dark.svg" else "ic_star_light.svg"
-                    ),
+                    selectedIcon = painterResource(Resources.Drawable.starFilled),
+                    halfSelectedIcon = painterResource(Resources.Drawable.starHalfFilled),
+                    notSelectedIcon = painterResource(Resources.Drawable.starOutlined),
                     iconsSize = 24.kms,
                     iconsPadding = PaddingValues(horizontal = 8.kms),
                     modifier = Modifier.fillMaxWidth()
@@ -354,7 +328,7 @@ class RestaurantScreen :
                 )
 
                 Text(
-                    text = "Price level",
+                    text = Resources.Strings.priceLevel,
                     style = Theme.typography.title,
                     color = Theme.colors.contentPrimary,
                     modifier = Modifier.padding(
@@ -365,7 +339,7 @@ class RestaurantScreen :
                 EditablePriceBar(
                     priceLevel = priceLevel,
                     count = 3,
-                    icon = painterResource("ic_dollar_sign.svg"),
+                    icon = painterResource(Resources.Drawable.dollarSign),
                     enabledIconsColor = Theme.colors.success,
                     disabledIconsColor = Theme.colors.disable,
                     iconsPadding = PaddingValues(horizontal = 8.kms),
@@ -385,14 +359,14 @@ class RestaurantScreen :
                     horizontalArrangement = Arrangement.Center
                 ) {
                     BpTransparentButton(
-                        title = "Cancel",
+                        title = Resources.Strings.cancel,
                         onClick = { onClickCancel(); onDismissRequest() },
                         modifier = Modifier.padding(end = 16.kms)
                             .height(32.kms)
                             .weight(1f)
                     )
                     BpOutlinedButton(
-                        title = "Save",
+                        title = Resources.Strings.save,
                         onClick = { onClickSave(); onDismissRequest() },
                         modifier = Modifier.height(32.kms).weight(3f),
                         textPadding = PaddingValues(0.dp)

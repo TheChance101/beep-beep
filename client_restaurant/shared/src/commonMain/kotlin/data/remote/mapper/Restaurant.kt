@@ -17,6 +17,7 @@ fun RestaurantDto.toEntity(): Restaurant {
         phone = phone ?: "",
         openingTime = openingTime ?: "",
         closingTime = closingTime ?: "",
-        address = address.toEntity()
+        location = location.toEntity(),
+        address = address ?: ""
     )
 }

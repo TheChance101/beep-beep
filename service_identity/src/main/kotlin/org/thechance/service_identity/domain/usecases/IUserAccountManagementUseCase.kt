@@ -19,7 +19,7 @@ interface IUserAccountManagementUseCase {
         username: String,
         password: String,
         email: String,
-    ): Boolean
+    ): UserManagement
 
     suspend fun deleteUser(id: String): Boolean
 
@@ -57,10 +57,13 @@ class UserAccountManagementUseCase(
         username: String,
         password: String,
         email: String,
-    ): Boolean {
+    ): UserManagement {
         userInfoValidationUseCase.validateUserInformation(fullName, username, password, email)
         val saltedHash = hashingService.generateSaltedHash(password)
-        return dataBaseGateway.createUser(saltedHash, fullName, username, email)
+        val user = dataBaseGateway.createUser(saltedHash, fullName, username, email)
+        dataBaseGateway.addPermissionToUser(userId = user.id, permissionId = END_USER)
+        val permission = dataBaseGateway.getPermission(END_USER)
+        return user.copy(permissions = listOf(permission))
     }
 
     override suspend fun getUserByUsername(username: String): UserManagement {
@@ -69,8 +72,8 @@ class UserAccountManagementUseCase(
 
     override suspend fun login(username: String, password: String): Boolean {
         val saltedHash = dataBaseGateway.getSaltedHash(username)
-        return if(hashingService.verify(password, saltedHash)) true
-            else throw InvalidCredentialsException(INVALID_CREDENTIALS)
+        return if (hashingService.verify(password, saltedHash)) true
+        else throw InvalidCredentialsException(INVALID_CREDENTIALS)
     }
 
     override suspend fun deleteUser(id: String): Boolean {
@@ -105,6 +108,10 @@ class UserAccountManagementUseCase(
             throw InsufficientFundsException(INSUFFICIENT_FUNDS)
         }
         return dataBaseGateway.subtractFromWallet(userId, amount)
+    }
+
+    private companion object {
+        const val END_USER = 1
     }
 
 }

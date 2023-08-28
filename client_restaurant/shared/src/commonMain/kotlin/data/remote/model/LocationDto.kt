@@ -1,6 +1,6 @@
 package data.remote.model
 
-data class AddressDto(
+data class LocationDto(
     val latitude: Double? = null,
     val longitude: Double? = null,
 )

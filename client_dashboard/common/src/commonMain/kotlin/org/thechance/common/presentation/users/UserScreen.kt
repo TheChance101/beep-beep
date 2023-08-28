@@ -31,6 +31,7 @@ import org.thechance.common.presentation.composables.table.BpPager
 import org.thechance.common.presentation.composables.table.BpTable
 import org.thechance.common.presentation.composables.table.Header
 import org.thechance.common.presentation.composables.table.TotalItemsIndicator
+import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.kms
 
 sealed interface UserUiEffect
@@ -178,7 +179,7 @@ class UserScreen :
             TotalItemsIndicator(
                 numberItemInPage = numberItemInPage,
                 totalItems = numberOfUsers,
-                itemType = "user",
+                itemType = Resources.Strings.user,
                 onItemPerPageChange = onItemPerPageChanged
             )
             BpPager(
@@ -214,7 +215,7 @@ class UserScreen :
             modifier = Modifier.weight(otherColumnsWeight),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(painter = painterResource("dummy_img.png"), contentDescription = null)
+            Image(painter = painterResource(Resources.Drawable.dummyImg), contentDescription = null)
             Text(
                 text = user.fullName,
                 style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
@@ -266,7 +267,7 @@ class UserScreen :
             modifier = Modifier.weight(firstColumnWeight),
         ) {
             Image(
-                painter = painterResource("horizontal_dots.xml"),
+                painter = painterResource(Resources.Drawable.dots),
                 contentDescription = null,
                 modifier = Modifier.noRipple { onUserMenuClicked(user.username) },
                 colorFilter = ColorFilter.tint(color = Theme.colors.contentPrimary)
@@ -314,7 +315,6 @@ class UserScreen :
         }
     }
     //endregion
-
     @Composable
     private fun UsersFilterDropdownMenu(
         isFilterDropdownMenuExpanded: Boolean,
@@ -330,12 +330,12 @@ class UserScreen :
             BpIconButton(
                 content = {
                     Text(
-                        "Filter",
+                        text = Resources.Strings.filter,
                         style = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
                     )
                 },
                 onClick = onFilterMenuClicked,
-                painter = painterResource("ic_filter.svg"),
+                painter = painterResource(Resources.Drawable.filter),
                 modifier = Modifier.cursorHoverIconHand()
             )
             BpDropdownMenu(
@@ -352,7 +352,7 @@ class UserScreen :
                     text = {
                         Column(Modifier.fillMaxSize()) {
                             Text(
-                                "Filter",
+                                text = Resources.Strings.filter,
                                 style = Theme.typography.headline,
                                 color = Theme.colors.contentPrimary,
                                 modifier = Modifier.padding(
@@ -361,7 +361,7 @@ class UserScreen :
                                 )
                             )
                             Text(
-                                "Permission",
+                                text = Resources.Strings.permission,
                                 style = Theme.typography.titleLarge,
                                 color = Theme.colors.contentPrimary,
                                 modifier = Modifier.padding(
@@ -376,7 +376,7 @@ class UserScreen :
                                 onUserPermissionClicked = onFilterPermissionClicked
                             )
                             Text(
-                                "Country",
+                                text = Resources.Strings.country,
                                 style = Theme.typography.titleLarge,
                                 color = Theme.colors.contentPrimary,
                                 modifier = Modifier.padding(
@@ -409,13 +409,13 @@ class UserScreen :
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 BpTransparentButton(
-                                    "Cancel",
+                                    title = Resources.Strings.cancel,
                                     onClick = onFilterMenuDismiss,
                                     modifier = Modifier.cursorHoverIconHand()
 
                                 )
                                 BpOutlinedButton(
-                                    title = "Save",
+                                    title = Resources.Strings.save,
                                     onClick = onFilterMenuDismiss,
                                     shape = RoundedCornerShape(Theme.radius.small),
                                     modifier = Modifier.height(50.kms).weight(1f)
@@ -448,11 +448,11 @@ class UserScreen :
         ) {
             BpSimpleTextField(
                 modifier = Modifier.widthIn(max = 440.kms),
-                hint = "Search for users",
+                hint = Resources.Strings.searchForUsers,
                 onValueChange = onSearchInputChanged,
                 text = searchText,
                 keyboardType = KeyboardType.Text,
-                trailingPainter = painterResource("ic_search.svg")
+                trailingPainter = painterResource(Resources.Drawable.search)
             )
 
             UsersFilterDropdownMenu(

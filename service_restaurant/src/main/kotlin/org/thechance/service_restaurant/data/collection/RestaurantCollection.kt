@@ -18,7 +18,9 @@ data class RestaurantCollection(
     val phone: String,
     val openingTime: String,
     val closingTime: String,
-    val address: AddressCollection
+    val address: String,
+    val location: LocationCollection,
+    val currency:String
 ) {
     @BsonId
     @Contextual
