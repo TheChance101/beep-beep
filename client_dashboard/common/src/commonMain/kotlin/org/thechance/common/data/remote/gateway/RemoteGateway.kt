@@ -45,7 +45,7 @@ class RemoteGateway(
             "1")
     }
 
-    override suspend fun findTaxiByUsername(username: String, page: Int, offset: Int
+    override suspend fun findTaxisByUsername(username: String, page: Int, offset: Int
     ): DataWrapper<Taxi> {
         return DataWrapper(totalPages = 0, numberOfResult = 0, result = emptyList(),)
     }

@@ -4,7 +4,7 @@ import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.usecase.ICreateNewTaxiUseCase
-import org.thechance.common.domain.usecase.IFindTaxiByUsernameUseCase
+import org.thechance.common.domain.usecase.IFindTaxisByUsernameUseCase
 import org.thechance.common.domain.usecase.IGetTaxiReportUseCase
 import org.thechance.common.domain.usecase.IGetTaxisUseCase
 import org.thechance.common.domain.util.TaxiStatus
@@ -14,7 +14,7 @@ import org.thechance.common.presentation.util.ErrorState
 class TaxiScreenModel(
     private val getTaxis: IGetTaxisUseCase,
     private val createNewTaxi: ICreateNewTaxiUseCase,
-    private val findTaxiByUsername: IFindTaxiByUsernameUseCase,
+    private val findTaxisByUsername: IFindTaxisByUsernameUseCase,
     private val getTaxiReport: IGetTaxiReportUseCase
 ) : BaseScreenModel<TaxiUiState, TaxiUiEffect>(TaxiUiState()), TaxiInteractionListener {
 
@@ -24,7 +24,7 @@ class TaxiScreenModel(
 
     override fun onSearchInputChange(searchQuery: String) {
         updateState { it.copy(searchQuery = searchQuery) }
-        findTaxiByUsername(searchQuery)
+        findTaxisByUsername(searchQuery)
     }
 
     private fun getDummyTaxiData() {
@@ -38,10 +38,10 @@ class TaxiScreenModel(
         updateState { it.copy(pageInfo = taxis.toUiState(), isLoading = false) }
     }
 
-    private fun findTaxiByUsername(username: String) {
+    private fun findTaxisByUsername(username: String) {
         tryToExecute(
             {
-                findTaxiByUsername.findTaxiByUsername(
+                findTaxisByUsername.findTaxisByUsername(
                     username,
                     state.value.currentPage,
                     state.value.specifiedTaxis
@@ -92,7 +92,6 @@ class TaxiScreenModel(
     override fun onPageClick(pageNumber: Int) {
         updateState { it.copy(currentPage = pageNumber) }
         getDummyTaxiData()
-        println("page clicked:$pageNumber")
     }
 
     //endregion
