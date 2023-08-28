@@ -33,6 +33,10 @@ interface IRestaurantGateway {
         locale: Locale
     ): List<Order>
     // endregion
+  
+    suspend fun getRestaurantInfo(locale: Locale, id: String): RestaurantResource
+
+    suspend fun getRestaurantsByOwnerId(ownerId: String, locale: Locale, permissions: List<Int>): List<RestaurantResource>
 
 }
 

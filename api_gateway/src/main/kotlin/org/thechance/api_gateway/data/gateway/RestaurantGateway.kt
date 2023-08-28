@@ -83,6 +83,26 @@ class RestaurantGateway(
             parameter("limit", limit)
         }
     }
+    override suspend fun getRestaurantsByOwnerId(
+        ownerId: String,
+        locale: Locale,
+        permissions: List<Int>
+    ): List<RestaurantResource> {
+
+        val RESTAURANT_MANAGER_PERMISSION = 2
+        if (RESTAURANT_MANAGER_PERMISSION in permissions) {
+            return tryToExecute(
+                api = APIs.RESTAURANT_API,
+                setErrorMessage = { errorCodes ->
+                    errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+                }
+            ) {
+                get("/restaurants/$ownerId")
+            }
+        } else {
+            throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
+        }
+    }
 
 
     @OptIn(InternalAPI::class)
