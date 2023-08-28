@@ -6,7 +6,7 @@ import presentation.info.RestaurantInfoScreenModel
 import presentation.login.LoginScreenModel
 import presentation.main.MainScreenModel
 import presentation.mealManagement.MealScreenModelFactory
-import presentation.mealManagement.model.MealCreationScreenModel
+import presentation.mealManagement.model.IMealCreationScreenModel
 import presentation.meals.MealsScreenModel
 import presentation.order.OrderScreenModel
 import presentation.order.orderHistory.OrderHistoryScreenModel
@@ -15,7 +15,7 @@ import presentation.restaurantSelection.RestaurantSelectionScreenModel
 val screenModule = module {
     factoryOf(::LoginScreenModel)
     factory { (restaurantId: String) -> MainScreenModel(restaurantId, get()) }
-    factoryOf(::MealCreationScreenModel)
+    factoryOf(::IMealCreationScreenModel)
     factoryOf(::OrderScreenModel)
     factoryOf(::RestaurantInfoScreenModel)
     factory { (restaurantId: String) -> MealsScreenModel(restaurantId, get(), get()) }

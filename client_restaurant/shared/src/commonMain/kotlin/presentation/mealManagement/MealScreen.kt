@@ -21,7 +21,7 @@ class MealScreen(
     private val screenMode: ScreenMode,
     private val mealId: String = "",
 ) :
-    BaseScreen<MealBehavior, MealEditorUIState, MealScreenUIEffect, MealScreenInteractionListener>(),
+    BaseScreen<IMealBehavior, MealEditorUIState, MealScreenUIEffect, MealScreenInteractionListener>(),
     KoinComponent {
 
 

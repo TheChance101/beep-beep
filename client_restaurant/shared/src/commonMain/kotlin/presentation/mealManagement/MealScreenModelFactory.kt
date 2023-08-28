@@ -1,15 +1,15 @@
 package presentation.mealManagement
 
-import presentation.mealManagement.model.MealCreationScreenModel
-import presentation.mealManagement.model.MealEditorScreenModel
+import presentation.mealManagement.model.IMealCreationScreenModel
+import presentation.mealManagement.model.IMealEditorScreenModel
 
 
 // todo add to a module for injection
 class MealScreenModelFactory {
-    fun create(screenMode: ScreenMode, mealId: String): MealBehavior {
+    fun create(screenMode: ScreenMode, mealId: String): IMealBehavior {
         return when (screenMode) {
-            ScreenMode.CREATION -> MealCreationScreenModel()
-            ScreenMode.EDIT -> MealEditorScreenModel(mealId)
+            ScreenMode.CREATION -> IMealCreationScreenModel()
+            ScreenMode.EDIT -> IMealEditorScreenModel(mealId)
         }
     }
 }
