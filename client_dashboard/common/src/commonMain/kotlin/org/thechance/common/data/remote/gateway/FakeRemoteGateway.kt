@@ -4,7 +4,10 @@ package org.thechance.common.data.remote.gateway
 import org.thechance.common.data.local.LocalGateway
 import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
-import org.thechance.common.data.remote.model.*
+import org.thechance.common.data.remote.model.DataWrapperDto
+import org.thechance.common.data.remote.model.TaxiDto
+import org.thechance.common.data.remote.model.UserDto
+import org.thechance.common.data.remote.model.toEntity
 import org.thechance.common.data.service.IFakeService
 import org.thechance.common.domain.entity.*
 import org.thechance.common.domain.getway.IRemoteGateway
@@ -16,8 +19,7 @@ class FakeRemoteGateway(
     private val fakeService: IFakeService,
     private val localGateway: LocalGateway
 ) : IRemoteGateway {
-    override fun getUserData(): Admin =
-        AdminDto(fullName = "asia").toEntity()
+    override fun getUserData() = "asia"
 
     override fun getUsers(page: Int, numberOfUsers: Int): DataWrapper<User> {
         val users = listOf(
@@ -578,7 +580,8 @@ class FakeRemoteGateway(
 
     override suspend fun createTaxi(taxi: AddTaxi): Taxi {
         val taxiDto = taxi.toDto()
-       return fakeService.addTaxi(TaxiDto(
+        return fakeService.addTaxi(
+            TaxiDto(
                 id = UUID.randomUUID().toString(),
                 plateNumber = taxiDto.plateNumber,
                 color = taxiDto.color,
