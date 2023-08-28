@@ -21,23 +21,15 @@ import java.util.*
 
 @Single(binds = [IRestaurantGateway::class])
 class RestaurantGateway(
-    client: HttpClient,
-    attributes: Attributes,
-    private val errorHandler: ErrorHandler
+    client: HttpClient, attributes: Attributes, private val errorHandler: ErrorHandler
 ) : BaseGateway(client = client, attributes = attributes), IRestaurantGateway {
     override suspend fun createRequestPermission(
-        restaurantName: String,
-        ownerEmail: String,
-        cause: String,
-        locale: Locale
+        restaurantName: String, ownerEmail: String, cause: String, locale: Locale
     ): RestaurantRequestPermission {
         return tryToExecute(
             api = APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(
-                    errorCodes,
-                    locale
-                )
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
         ) {
             submitForm("/restaurant-permission-request",
@@ -56,38 +48,41 @@ class RestaurantGateway(
     ): List<RestaurantRequestPermission> {
         // todo: implement check permissions logic correctly
         if (!permissions.contains(1)) {
-            throw LocalizedMessageException(
-                errorHandler.getLocalizedErrorMessage(
-                    listOf(8000),
-                    locale
-                )
-            )
+            throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
         }
 
         return tryToExecute(
             api = APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(
-                    errorCodes,
-                    locale
-                )
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
         ) {
             get("/restaurant-permission-request")
         }
     }
 
-    override suspend fun getRestaurantInfo(locale: Locale, id: String): RestaurantResource {
+    override suspend fun getRestaurantInfo(locale: Locale, restaurantId: String): RestaurantResource {
         return tryToExecute<RestaurantResource>(
             APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
         ) {
-            get("/restaurant/$id")
+            get("/restaurant/$restaurantId")
         }
     }
 
+    override suspend fun getRestaurants(page: Int, limit: Int, locale: Locale) = tryToExecute<List<RestaurantResource>>(
+        APIs.RESTAURANT_API,
+        setErrorMessage = { errorCodes ->
+            errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+        }
+    ) {
+        get("/restaurants"){
+            parameter("page", page)
+            parameter("limit", limit)
+        }
+    }
     override suspend fun getRestaurantsByOwnerId(
         ownerId: String,
         locale: Locale,
@@ -184,9 +179,7 @@ class RestaurantGateway(
     }
 
     @OptIn(InternalAPI::class)
-    override suspend fun addCuisine(
-        name: String, permissions: List<Int>, locale: Locale
-    ): CuisineResource {
+    override suspend fun addCuisine(name: String, permissions: List<Int>, locale: Locale): CuisineResource {
         //TODO()  need to change 1
         val ADMIN = 1
         return if (ADMIN in permissions) {
@@ -197,41 +190,30 @@ class RestaurantGateway(
                 }
             ) {
                 post("/cuisine") {
-                    body = Json.encodeToString(
-                        CuisineResource.serializer(),
-                        CuisineResource(name = name)
-                    )
+                    body = Json.encodeToString(CuisineResource.serializer(), CuisineResource(name = name))
                 }
             }
         } else {
             throw LocalizedMessageException(
-                errorHandler.getLocalizedErrorMessage(
-                    listOf(8000),
-                    locale
-                )
+                errorHandler.getLocalizedErrorMessage(listOf(8000), locale)
             )
         }
     }
 
-    override suspend fun getCuisines(locale: Locale): CuisineResource {
-
-        return tryToExecute<CuisineResource>(
+    override suspend fun getCuisines(locale: Locale): List<CuisineResource> {
+        return tryToExecute<List<CuisineResource>>(
             APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
         ) {
-            get("/cuisine")
+            get("/cuisines")
         }
-
     }
 
     @OptIn(InternalAPI::class)
     override suspend fun updateOrderStatus(
-        orderId: String,
-        permissions: List<Int>,
-        status: Int,
-        locale: Locale
+        orderId: String, permissions: List<Int>, status: Int, locale: Locale
     ): Order {
         // todo: implement check permissions logic correctly
         val RESTAURANT_MANAGER = 2
@@ -242,10 +224,7 @@ class RestaurantGateway(
         return tryToExecute<Order>(
             api = APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(
-                    errorCodes,
-                    locale
-                )
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
         ) {
             post("/order/$orderId/status") {
@@ -255,11 +234,7 @@ class RestaurantGateway(
     }
 
     override suspend fun getOrdersHistory(
-        restaurantId: String,
-        permissions: List<Int>,
-        page: Int,
-        limit: Int,
-        locale: Locale
+        restaurantId: String, permissions: List<Int>, page: Int, limit: Int, locale: Locale
     ): List<Order> {
         // todo: implement check permissions logic correctly
         val RESTAURANT_MANAGER = 2
@@ -270,13 +245,11 @@ class RestaurantGateway(
         return tryToExecute(
             api = APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(
-                    errorCodes,
-                    locale
-                )
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
         ) {
             get("/order/history/$restaurantId?page=$page&limit=$limit")
         }
     }
+
 }

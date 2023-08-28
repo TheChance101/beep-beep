@@ -1,7 +1,9 @@
 package org.thechance.api_gateway.data.model.restaurant
 
+import kotlinx.serialization.Serializable
 import org.thechance.api_gateway.data.model.CuisineResource
 
+@Serializable
 data class RestaurantResource(
     val id: String,
     val ownerId: String,
@@ -10,7 +12,6 @@ data class RestaurantResource(
     val priceLevel: String? = null,
     val rate: Double? = null,
     val phone: String,
-    val currency: String,
     val openingTime: String,
     val closingTime: String,
     val location: LocationResource,

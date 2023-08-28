@@ -16,7 +16,9 @@ interface IRestaurantGateway {
 
     suspend fun addCuisine(name: String, permissions: List<Int>, locale: Locale): CuisineResource
 
-    suspend fun getCuisines(locale: Locale): CuisineResource
+    suspend fun getCuisines(locale: Locale): List<CuisineResource>
+
+    suspend fun getRestaurants(page: Int, limit: Int, locale: Locale): List<RestaurantResource>
 
     // region Order
     suspend fun updateOrderStatus(orderId: String, permissions: List<Int>, status: Int, locale: Locale): Order
@@ -29,14 +31,10 @@ interface IRestaurantGateway {
         locale: Locale
     ): List<Order>
     // endregion
+  
+    suspend fun getRestaurantInfo(locale: Locale, restaurantId: String): RestaurantResource
 
-    suspend fun getRestaurantInfo(locale: Locale, id: String): RestaurantResource
-
-    suspend fun getRestaurantsByOwnerId(
-        ownerId: String,
-        locale: Locale,
-        permissions: List<Int>
-    ): List<RestaurantResource>
+    suspend fun getRestaurantsByOwnerId(ownerId: String, locale: Locale, permissions: List<Int>): List<RestaurantResource>
 
     suspend fun addMeal(
         restaurantId: String,
@@ -59,6 +57,3 @@ interface IRestaurantGateway {
     ): MealResource
 
 }
-
-
-
