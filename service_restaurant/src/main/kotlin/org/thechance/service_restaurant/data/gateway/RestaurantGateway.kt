@@ -53,7 +53,7 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
         return container.restaurantCollection.aggregate<RestaurantCollection>(
             match(
                 and(
-                    RestaurantCollection::ownerId eq UUID.fromString(ownerId),
+                    RestaurantCollection::ownerId eq ObjectId(ownerId),
                     RestaurantCollection::isDeleted eq false
                 )
             ),
