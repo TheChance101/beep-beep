@@ -10,6 +10,7 @@ import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.restaurant.RestaurantResource
 import org.thechance.api_gateway.data.model.CuisineResource
+import org.thechance.api_gateway.data.model.restaurant.MealResource
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.LocalizedMessageException
 import org.thechance.api_gateway.endpoints.gateway.IRestaurantGateway
@@ -108,6 +109,79 @@ class RestaurantGateway(
         }
     }
 
+    @OptIn(InternalAPI::class)
+    override suspend fun addMeal(
+        restaurantId: String,
+        name: String,
+        description: String,
+        price: Double,
+        cuisines: List<String>,
+        permissions: List<Int>,
+        locale: Locale
+    ): MealResource {
+        val RESTAURANT_MANAGER_PERMISSION = 2
+        if (RESTAURANT_MANAGER_PERMISSION in permissions) {
+            return tryToExecute(
+                api = APIs.RESTAURANT_API,
+                setErrorMessage = { errorCodes ->
+                    errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+                }
+            ) {
+                post("/meal") {
+                    body = Json.encodeToString(
+                        MealResource.serializer(),
+                        MealResource(
+                            restaurantId = restaurantId,
+                            name = name,
+                            description = description,
+                            price = price,
+                            cuisines = cuisines
+                        )
+                    )
+                }
+
+            }
+        } else {
+            throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
+        }
+    }
+
+    @OptIn(InternalAPI::class)
+    override suspend fun updateMeal(
+        restaurantId: String,
+        name: String,
+        description: String,
+        price: Double,
+        cuisines: List<String>,
+        permissions: List<Int>,
+        locale: Locale
+    ): MealResource {
+        val RESTAURANT_MANAGER_PERMISSION = 2
+        if (RESTAURANT_MANAGER_PERMISSION in permissions) {
+            return tryToExecute(
+                api = APIs.RESTAURANT_API,
+                setErrorMessage = { errorCodes ->
+                    errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+                }
+            ) {
+                put("/meal") {
+                    body = Json.encodeToString(
+                        MealResource.serializer(),
+                        MealResource(
+                            restaurantId = restaurantId,
+                            name = name,
+                            description = description,
+                            price = price,
+                            cuisines = cuisines
+                        )
+                    )
+                }
+
+            }
+        } else {
+            throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
+        }
+    }
 
     @OptIn(InternalAPI::class)
     override suspend fun addCuisine(
