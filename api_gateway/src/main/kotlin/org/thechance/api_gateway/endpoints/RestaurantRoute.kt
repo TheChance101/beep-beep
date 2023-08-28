@@ -1,13 +1,14 @@
 package org.thechance.api_gateway.endpoints
 
 
+import io.ktor.http.*
+import io.ktor.server.application.*
 import io.ktor.server.auth.*
-import io.ktor.server.auth.jwt.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.endpoints.gateway.IRestaurantGateway
-import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeaderFromWebSocket
+import org.thechance.api_gateway.endpoints.utils.*
 import java.util.*
 
 fun Route.restaurantRoutes() {
@@ -19,15 +20,25 @@ fun Route.restaurantRoutes() {
 
         authenticate("auth-jwt") {
 
-            webSocket("/orders/{restaurantId}") {
-                val tokenClaim = call.principal<JWTPrincipal>()
-                val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
-                val restaurantId = call.parameters["restaurantId"]?.trim().orEmpty()
-                val (language, countryCode) = extractLocalizationHeaderFromWebSocket()
-                val result = restaurantGateway.restaurantOrders(permissions, restaurantId, Locale(language, countryCode))
-                result.collect { this.sendSerialized(it) }
-            }
+            route("/orders") {
 
+                webSocket("/{restaurantId}") {
+                    val restaurantId = call.parameters["restaurantId"]?.trim().orEmpty()
+                    val permissions = extractPermissionsFromWebSocket()
+                    val (language, countryCode) = extractLocalizationHeaderFromWebSocket()
+                    val orders = restaurantGateway.restaurantOrders(permissions, restaurantId, Locale(language, countryCode))
+                    orders.collect { this.sendSerialized(it) }
+                }
+
+                get("/{restaurantId}") {
+                    val restaurantId = call.parameters["restaurantId"]?.trim().orEmpty()
+                    val permissions = extractPermissions()
+                    val (language, countryCode) = extractLocalizationHeader()
+                    val result = restaurantGateway.getActiveOrders(permissions, restaurantId, Locale(language, countryCode))
+                    respondWithResult(HttpStatusCode.OK, result)
+                }
+
+            }
         }
     }
 }

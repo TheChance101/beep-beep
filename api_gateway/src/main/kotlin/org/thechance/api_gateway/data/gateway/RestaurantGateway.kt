@@ -69,4 +69,18 @@ class RestaurantGateway(
         // todo check of permission and handel error
         return tryToExecuteFromWebSocket<Order>(api = APIs.RESTAURANT_API, path = "/order/restaurant/$restaurantId")
     }
+
+    override suspend fun getActiveOrders(permissions: List<Int>, restaurantId: String, locale: Locale): List<Order> {
+        return tryToExecute<List<Order>>(
+            api = APIs.RESTAURANT_API,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(
+                    errorCodes,
+                    locale
+                )
+            }
+        ){
+            get("/order/$restaurantId/orders")
+        }
+    }
 }
