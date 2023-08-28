@@ -21,6 +21,7 @@ import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.thechance.common.presentation.app.ThemeScreenModel
 import org.thechance.common.presentation.composables.scaffold.BpSideBarItem
 import org.thechance.common.presentation.composables.scaffold.DashBoardScaffold
 import org.thechance.common.presentation.composables.scaffold.DashboardAppbar
@@ -28,13 +29,17 @@ import org.thechance.common.presentation.composables.scaffold.DashboardSideBar
 import org.thechance.common.presentation.resources.Resources
 
 object MainContainer : Screen, KoinComponent {
+    private fun readResolve(): Any = MainContainer
 
     private val screenModel: MainScreenModel by inject()
+    val themeScreenModel by inject<ThemeScreenModel>()
 
     @Composable
     override fun Content() {
+        println("themeScreenModel ${themeScreenModel.state}")
         val state by screenModel.state.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
+        val isDarkMode = themeScreenModel.state.collectAsState().value
 
         TabNavigator(OverviewTab) {
             MainContent(
@@ -42,15 +47,19 @@ object MainContainer : Screen, KoinComponent {
                 onClickLogout = {
                     screenModel.logout()
                     navigator.popUntilRoot()
-                }
+                },
+                onSwitchTheme = themeScreenModel::onSwitchTheme,
+                isDarkMode = isDarkMode
             )
         }
     }
 
     @Composable
     private fun MainContent(
-        state: MainUiState,
         onClickLogout: () -> Unit,
+        onSwitchTheme: () -> Unit,
+        state: MainUiState,
+        isDarkMode: Boolean
     ) {
         val tabNavigator = LocalTabNavigator.current
 
@@ -67,7 +76,9 @@ object MainContainer : Screen, KoinComponent {
             },
             sideBar = {
                 DashboardSideBar(
-                    currentItem = tabNavigator.current.options.index.toInt()
+                    currentItem = tabNavigator.current.options.index.toInt(),
+                    onSwitchTheme = onSwitchTheme,
+                    darkTheme = isDarkMode,
                 ) { sideBarUnexpandedWidthInKms, mainMenuIsExpanded, itemHeight ->
                     TabNavigationItem(
                         tab = OverviewTab,

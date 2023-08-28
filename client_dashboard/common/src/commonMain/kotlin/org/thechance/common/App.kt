@@ -10,6 +10,8 @@ import androidx.compose.ui.unit.toSize
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import com.beepbeep.designSystem.ui.theme.BpTheme
+import org.koin.java.KoinJavaComponent.inject
+import org.thechance.common.presentation.app.ThemeScreenModel
 import org.thechance.common.presentation.main.MainContainer
 import org.thechance.common.presentation.resources.ProvideResources
 
@@ -20,10 +22,11 @@ val LocalScreenSize = compositionLocalOf<Size> { error("provide") }
 @Composable
 fun App() {
     var size by remember { mutableStateOf(Size.Zero) }
-
-    CompositionLocalProvider(LocalScreenSize provides size,) {
+    val themeScreenModel by inject<ThemeScreenModel>(ThemeScreenModel::class.java)
+    val themeMode by themeScreenModel.state.collectAsState()
+    CompositionLocalProvider(LocalScreenSize provides size) {
         Box(Modifier.onSizeChanged { size = it.toSize() }) {
-            BpTheme {
+            BpTheme(useDarkTheme = themeMode) {
                 ProvideResources {
                     Navigator(MainContainer) {
                         SlideTransition(it)
