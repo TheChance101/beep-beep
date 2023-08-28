@@ -16,6 +16,10 @@ interface IRestaurantGateway {
 
     suspend fun getCuisines(locale: Locale): CuisineResource
 
+    // region Order
     suspend fun updateOrderStatus(orderId: String, permissions: List<Int>, status: Int, locale: Locale): Order
+
+    suspend fun getOrdersHistory(restaurantId: String, permissions: List<Int>, page: Int, limit: Int, locale: Locale): List<Order>
+    // endregion
 }
 
