@@ -43,7 +43,6 @@ kotlin {
                 api(libs.ktor.gson)
 
                 api(libs.ktor.client.cio)
-                api(libs.ktor.client.okhttp)
 
                 api(libs.koin.core)
                 implementation(libs.koin.annotations)
