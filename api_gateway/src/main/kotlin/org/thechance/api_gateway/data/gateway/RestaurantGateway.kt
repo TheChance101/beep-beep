@@ -76,6 +76,74 @@ class RestaurantGateway(
         }
     }
 
+    @OptIn(InternalAPI::class)
+    override suspend fun updateRestaurantForAdmin(
+        restaurantId: String,
+        restaurantName: String,
+        phone: String,
+        description: String,
+        openingTime: String,
+        closingTime: String,
+        permissions: List<Int>,
+        locale: Locale
+    ): RestaurantResource {
+        val RESTAURANT_ADMIN_PERMISSION = 1
+
+        if (RESTAURANT_ADMIN_PERMISSION in permissions) {
+            return tryToExecute(
+                api = APIs.RESTAURANT_API,
+                setErrorMessage = { errorCodes ->
+                    errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+                }
+            ) {
+                put("/restaurant") {
+                    body = Json.encodeToString(
+                        RestaurantResource.serializer(),
+                        RestaurantResource(
+                            id = restaurantId,
+                            name = restaurantName,
+                            phone = phone,
+                            description = description,
+                            openingTime = openingTime,
+                            closingTime = closingTime
+                        )
+                    )
+                }
+
+            }
+        } else {
+            throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
+        }
+    }
+
+    @OptIn(InternalAPI::class)
+    override suspend fun updateRestaurant(
+        locale: Locale,
+        restaurant: RestaurantResource,
+        permissions: List<Int>
+    ): RestaurantResource {
+        val RESTAURANT_MANAGER_PERMISSION = 2
+
+        if (RESTAURANT_MANAGER_PERMISSION in permissions) {
+            return tryToExecute(
+                api = APIs.RESTAURANT_API,
+                setErrorMessage = { errorCodes ->
+                    errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+                }
+            ) {
+                put("/restaurant/details") {
+                    body = Json.encodeToString(
+                        RestaurantResource.serializer(),
+                        restaurant
+                    )
+                }
+
+            }
+        } else {
+            throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
+        }
+    }
+
     override suspend fun getRestaurants(page: Int, limit: Int, locale: Locale) = tryToExecute<List<RestaurantResource>>(
         APIs.RESTAURANT_API,
         setErrorMessage = { errorCodes ->

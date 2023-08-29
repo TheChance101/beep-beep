@@ -1,8 +1,8 @@
 package org.thechance.api_gateway.endpoints.gateway
 
-import org.thechance.api_gateway.data.model.restaurant.RestaurantResource
 import org.thechance.api_gateway.data.model.CuisineResource
 import org.thechance.api_gateway.data.model.restaurant.MealResource
+import org.thechance.api_gateway.data.model.restaurant.RestaurantResource
 import org.thechance.api_gateway.endpoints.model.Order
 import org.thechance.api_gateway.endpoints.model.RestaurantRequestPermission
 import java.util.*
@@ -35,6 +35,22 @@ interface IRestaurantGateway {
     ): List<RestaurantResource>
 
     suspend fun deleteRestaurant(restaurantId: String, permissions: List<Int>, locale: Locale): Boolean
+    suspend fun updateRestaurantForAdmin(
+        restaurantId: String,
+        restaurantName: String,
+        phone: String,
+        description: String,
+        openingTime: String,
+        closingTime: String,
+        permissions: List<Int>,
+        locale: Locale
+    ): RestaurantResource
+
+    suspend fun updateRestaurant(
+        locale: Locale, restaurant: RestaurantResource,
+        permissions: List<Int>
+    ): RestaurantResource
+
 
     suspend fun addMeal(
         restaurantId: String,
