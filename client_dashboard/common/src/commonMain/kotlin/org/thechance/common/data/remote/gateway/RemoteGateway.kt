@@ -24,11 +24,7 @@ class RemoteGateway(
     override fun getUserData(): String = "aaaa"
 
     override fun getUsers(page: Int, numberOfUsers: Int): DataWrapper<User> {
-        return DataWrapper(
-            totalPages = 0,
-            numberOfResult = 0,
-            result = emptyList(),
-        )
+        TODO("Not yet implemented")
     }
 
     override suspend fun getTaxis(): List<Taxi> {
