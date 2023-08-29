@@ -15,8 +15,8 @@ interface IRestaurantInformationValidationUseCase {
         name: String,
         openingTime: String,
         closingTime: String,
-        description: String,
-        phoneNumber: String
+        phoneNumber: String,
+        description: String
     ): Boolean
 
 }
@@ -44,13 +44,12 @@ class RestaurantInformationValidationUseCase : IRestaurantInformationValidationU
         name: String,
         openingTime: String,
         closingTime: String,
-        description: String,
-        phoneNumber: String
+        phoneNumber: String,
+        description: String
     ): Boolean {
         return isRestaurantNameValid(name) &&
                 isTimeValid(openingTime) &&
                 isTimeValid(closingTime) &&
-                isDescriptionLengthValid(description) &&
                 isPhoneNumberValid(phoneNumber) &&
                 isDescriptionLengthValid(description)
     }
