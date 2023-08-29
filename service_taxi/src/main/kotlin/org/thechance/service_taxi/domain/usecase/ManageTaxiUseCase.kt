@@ -19,6 +19,8 @@ interface IManageTaxiUseCase {
     suspend fun deleteTaxi(taxiId: String): Taxi
     suspend fun getAllTaxi(page: Int, limit: Int): List<Taxi>
     suspend fun getTaxi(taxiId: String): Taxi
+
+    suspend fun editTaxi(taxi: Taxi): Taxi
 }
 
 class ManageTaxiUseCase(
@@ -43,6 +45,11 @@ class ManageTaxiUseCase(
 
     override suspend fun getTaxi(taxiId: String): Taxi {
         return taxiGateway.getTaxiById(taxiId) ?: throw ResourceNotFoundException
+    }
+
+    override suspend fun editTaxi(taxi: Taxi): Taxi {
+        validationTaxi(taxi)
+        return taxiGateway.editTaxi(taxi)
     }
 
     private fun validationTaxi(taxi: Taxi) {
