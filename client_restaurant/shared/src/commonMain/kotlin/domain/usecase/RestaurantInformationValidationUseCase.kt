@@ -9,8 +9,6 @@ interface IRestaurantInformationValidationUseCase {
 
     fun isClosingTimeValid(time: String): Boolean
 
-    fun isDescriptionValid(description: String): Boolean
-
     fun isPhoneNumberValid(phoneNumber: String): Boolean
 
     fun isDescriptionLengthValid(description: String): Boolean
@@ -32,15 +30,13 @@ class RestaurantInformationValidationUseCase : IRestaurantInformationValidationU
     }
 
     override fun isOpeningTimeValid(time: String): Boolean {
-        return time.isNotEmpty()
+        val regex = Regex("^([0-1][0-9]|2[0-3]):([0-5][0-9])$")
+        return regex.matches(time)
     }
 
     override fun isClosingTimeValid(time: String): Boolean {
-        return time.isNotEmpty()
-    }
-
-    override fun isDescriptionValid(description: String): Boolean {
-        return description.isNotEmpty()
+        val regex = Regex("^([0-1][0-9]|2[0-3]):([0-5][0-9])$")
+        return regex.matches(time)
     }
 
     override fun isPhoneNumberValid(phoneNumber: String): Boolean {
@@ -48,7 +44,7 @@ class RestaurantInformationValidationUseCase : IRestaurantInformationValidationU
     }
 
     override fun isDescriptionLengthValid(description: String): Boolean {
-        return description.length <= 255
+        return description.length < 255
     }
 
     override fun isRestaurantInformationValid(
@@ -58,12 +54,12 @@ class RestaurantInformationValidationUseCase : IRestaurantInformationValidationU
         description: String,
         phoneNumber: String
     ): Boolean {
-        return isDescriptionLengthValid(description) &&
-                isRestaurantNameValid(name) &&
+        return isRestaurantNameValid(name) &&
                 isOpeningTimeValid(openingTime) &&
                 isClosingTimeValid(closingTime) &&
-                isDescriptionValid(description) &&
-                isPhoneNumberValid(phoneNumber)
+                isDescriptionLengthValid(description) &&
+                isPhoneNumberValid(phoneNumber) &&
+                isDescriptionLengthValid(description)
     }
 
 }

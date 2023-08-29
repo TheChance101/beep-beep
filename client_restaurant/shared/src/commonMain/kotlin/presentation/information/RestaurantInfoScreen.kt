@@ -197,7 +197,9 @@ class RestaurantInfoScreen : BaseScreen<
                     modifier = Modifier.padding(
                         start = Theme.dimens.space16,
                         end = Theme.dimens.space4
-                    ).weight(1f)
+                    ).weight(1f),
+                    isError = state.restaurant.isOpeningTimeError,
+                    errorMessage = Resources.strings.openingTimeErrorMessage
                 )
                 BpTextField(
                     label = "",
@@ -206,7 +208,9 @@ class RestaurantInfoScreen : BaseScreen<
                     modifier = Modifier.padding(
                         start = Theme.dimens.space4,
                         end = Theme.dimens.space16
-                    ).weight(1f)
+                    ).weight(1f),
+                    isError = state.restaurant.isClosingTimeError,
+                    errorMessage = Resources.strings.closingTimeErrorMessage
                 )
             }
             BpTextField(

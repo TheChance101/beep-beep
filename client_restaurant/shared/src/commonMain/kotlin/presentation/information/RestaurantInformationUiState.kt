@@ -2,10 +2,9 @@ package presentation.information
 
 import domain.entity.Location
 import domain.entity.Restaurant
-import domain.entity.Time
 import presentation.base.ErrorState
 
-data class RestaurantInfoUiState(
+data class RestaurantInformationUiState(
     val restaurant: RestaurantUiState = RestaurantUiState(),
     val isLoading: Boolean = false,
     val error: ErrorState? = null
@@ -21,7 +20,13 @@ data class RestaurantUiState(
     val phoneNumber: String = "",
     val openingTime: String = "",
     val closingTime: String = "",
-    val description: String = ""
+    val description: String = "",
+    val isRestaurantNameError: Boolean = false,
+    val isDescriptionLengthError: Boolean = false,
+    val isPhoneNumberError: Boolean = false,
+    val isOpeningTimeError: Boolean = false,
+    val isClosingTimeError: Boolean = false,
+    val isSaveButtonEnabled: Boolean = true,
 )
 
 fun Restaurant.toUiState(): RestaurantUiState = RestaurantUiState(
@@ -33,8 +38,8 @@ fun Restaurant.toUiState(): RestaurantUiState = RestaurantUiState(
     priceLevel = priceLevel,
     restaurantName = name,
     phoneNumber = phone,
-    openingTime = openingTime.toString(),
-    closingTime = closingTime.toString(),
+    openingTime = openingTime,
+    closingTime = closingTime,
     description = description
 )
 
@@ -47,8 +52,8 @@ fun RestaurantUiState.toRestaurant() = Restaurant(
     priceLevel = priceLevel,
     name = restaurantName,
     phone = phoneNumber,
-    openingTime = Time.fromString(openingTime),
-    closingTime = Time.fromString(closingTime),
+    openingTime = openingTime,
+    closingTime = closingTime,
     description = description,
     address = address
 )

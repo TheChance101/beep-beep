@@ -33,7 +33,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.HomeAppBar
-import presentation.info.RestaurantInfoScreen
+import presentation.information.RestaurantInfoScreen
 import presentation.main.composables.ChartItem
 import presentation.main.composables.OptionCardItem
 import presentation.meals.MealsScreen
