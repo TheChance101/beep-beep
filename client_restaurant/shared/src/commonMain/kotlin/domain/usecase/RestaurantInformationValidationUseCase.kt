@@ -5,9 +5,7 @@ interface IRestaurantInformationValidationUseCase {
 
     fun isRestaurantNameValid(name: String): Boolean
 
-    fun isOpeningTimeValid(time: String): Boolean
-
-    fun isClosingTimeValid(time: String): Boolean
+    fun isTimeValid(time: String): Boolean
 
     fun isPhoneNumberValid(phoneNumber: String): Boolean
 
@@ -29,12 +27,7 @@ class RestaurantInformationValidationUseCase : IRestaurantInformationValidationU
         return name.length in 4..25
     }
 
-    override fun isOpeningTimeValid(time: String): Boolean {
-        val regex = Regex("^([0-1][0-9]|2[0-3]):([0-5][0-9])$")
-        return regex.matches(time)
-    }
-
-    override fun isClosingTimeValid(time: String): Boolean {
+    override fun isTimeValid(time: String): Boolean {
         val regex = Regex("^([0-1][0-9]|2[0-3]):([0-5][0-9])$")
         return regex.matches(time)
     }
@@ -55,8 +48,8 @@ class RestaurantInformationValidationUseCase : IRestaurantInformationValidationU
         phoneNumber: String
     ): Boolean {
         return isRestaurantNameValid(name) &&
-                isOpeningTimeValid(openingTime) &&
-                isClosingTimeValid(closingTime) &&
+                isTimeValid(openingTime) &&
+                isTimeValid(closingTime) &&
                 isDescriptionLengthValid(description) &&
                 isPhoneNumberValid(phoneNumber) &&
                 isDescriptionLengthValid(description)

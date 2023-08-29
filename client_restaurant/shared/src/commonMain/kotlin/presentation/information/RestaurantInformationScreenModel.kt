@@ -75,7 +75,7 @@ class RestaurantInformationScreenModel(
     }
 
     override fun onOpeningTimeChange(openingTime: String) {
-        val validationResult = restaurantInformationValidation.isOpeningTimeValid(openingTime)
+        val validationResult = restaurantInformationValidation.isTimeValid(openingTime)
         updateState {
             it.copy(
                 restaurant = it.restaurant.copy(
@@ -88,7 +88,7 @@ class RestaurantInformationScreenModel(
     }
 
     override fun onClosingTimeChange(closingTime: String) {
-        val validationResult = restaurantInformationValidation.isClosingTimeValid(closingTime)
+        val validationResult = restaurantInformationValidation.isTimeValid(closingTime)
         updateState {
             it.copy(
                 restaurant = it.restaurant.copy(
@@ -102,7 +102,6 @@ class RestaurantInformationScreenModel(
 
     override fun onDescriptionChanged(description: String) {
         val validationResult = restaurantInformationValidation.isDescriptionLengthValid(description)
-        onUpdateRestaurantInformation()
         updateState {
             it.copy(
                 restaurant = it.restaurant.copy(
@@ -111,6 +110,7 @@ class RestaurantInformationScreenModel(
                 )
             )
         }
+        onUpdateRestaurantInformation()
     }
 
 
