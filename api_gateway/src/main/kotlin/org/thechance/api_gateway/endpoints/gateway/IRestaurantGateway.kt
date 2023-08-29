@@ -10,7 +10,10 @@ import java.util.*
 
 interface IRestaurantGateway {
     suspend fun createRequestPermission(
-        restaurantName: String, ownerEmail: String, cause: String, locale: Locale
+        restaurantName: String,
+        ownerEmail: String,
+        cause: String,
+        locale: Locale
     ): RestaurantRequestPermission
 
     suspend fun getAllRequestPermission(permissions: List<Int>, locale: Locale): List<RestaurantRequestPermission>
@@ -25,7 +28,11 @@ interface IRestaurantGateway {
     suspend fun updateOrderStatus(orderId: String, permissions: List<Int>, status: Int, locale: Locale): Order
 
     suspend fun getOrdersHistory(
-        restaurantId: String, permissions: List<Int>, page: Int, limit: Int, locale: Locale
+        restaurantId: String,
+        permissions: List<Int>,
+        page: Int,
+        limit: Int,
+        locale: Locale
     ): List<Order>
 
     suspend fun getOrdersCountByDaysBefore(
@@ -39,42 +46,23 @@ interface IRestaurantGateway {
     suspend fun getRestaurantInfo(locale: Locale, restaurantId: String): RestaurantResource
 
     suspend fun getRestaurantsByOwnerId(
-        ownerId: String, locale: Locale, permissions: List<Int>
+        ownerId: String,
+        locale: Locale,
+        permissions: List<Int>
     ): List<RestaurantResource>
 
     suspend fun deleteRestaurant(restaurantId: String, permissions: List<Int>, locale: Locale): Boolean
 
-    suspend fun addMeal(
-        restaurantId: String,
-        name: String,
-        description: String,
-        price: Double,
-        cuisines: List<String>,
-        permissions: List<Int>,
-        locale: Locale
-    ): MealResource
+    suspend fun addMeal(meal: MealResource, permissions: List<Int>, locale: Locale): MealResource
 
-    suspend fun updateMeal(
-        restaurantId: String,
-        name: String,
-        description: String, price: Double,
-        cuisines: List<String>, permissions: List<Int>, locale: Locale
-    ): MealResource
+    suspend fun updateMeal(meal: MealResource, permissions: List<Int>, locale: Locale): MealResource
 
-    suspend fun restaurantOrders(permissions: List<Int>, restaurantId: String, locale: Locale) : Flow<Order>
+    suspend fun restaurantOrders(permissions: List<Int>, restaurantId: String, locale: Locale): Flow<Order>
 
     suspend fun getActiveOrders(permissions: List<Int>, restaurantId: String, locale: Locale): List<Order>
-  
-    suspend fun getMealsByRestaurantId(
-        restaurantId: String,
-        page: Int,
-        limit: Int,
-        locale: Locale
-    ): List<MealResource>
 
-    suspend fun getMealsByCuisineId(
-        cuisineId: String,
-        locale: Locale
-    ): List<MealResource>
+    suspend fun getMealsByRestaurantId(restaurantId: String, page: Int, limit: Int, locale: Locale): List<MealResource>
+
+    suspend fun getMealsByCuisineId(cuisineId: String, locale: Locale): List<MealResource>
 
 }

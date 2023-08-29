@@ -48,7 +48,7 @@ class ApiClientModule {
                     }
 
                     APIs.RESTAURANT_API.value -> {
-                        url("http://127.0.0.1:8083")
+                        url("http://127.0.0.1:8080")
 //                        url("http://0.0.0.0:8083")
                     }
 
