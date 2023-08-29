@@ -1,4 +1,4 @@
-package org.thechance.service_restaurant.plugins
+package org.thechance.api_gateway.plugins
 
 import io.ktor.serialization.kotlinx.*
 import io.ktor.server.application.*
@@ -8,7 +8,7 @@ import java.time.Duration
 
 fun Application.configureSockets() {
     install(WebSockets) {
-        contentConverter = KotlinxWebsocketSerializationConverter(Json)
+        contentConverter =  KotlinxWebsocketSerializationConverter(Json)
         pingPeriod = Duration.ofSeconds(15)
         timeout = Duration.ofSeconds(15)
         maxFrameSize = Long.MAX_VALUE

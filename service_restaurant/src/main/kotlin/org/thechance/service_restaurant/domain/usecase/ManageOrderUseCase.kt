@@ -1,6 +1,6 @@
 package org.thechance.service_restaurant.domain.usecase
 
-import org.thechance.service_restaurant.api.utils.isRestaurantOpen
+
 import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
@@ -71,9 +71,7 @@ class ManageOrderUseCase(
 
     private suspend fun isRestaurantOpened(restaurantId: String): Boolean {
         val restaurant = restaurantGateway.getRestaurant(id = restaurantId)
-        return restaurant?.let {
-            isRestaurantOpen(openTime = it.openingTime, closeTime = it.closingTime)
-        } ?: throw MultiErrorException(listOf(NOT_FOUND))
+        return restaurant?.isRestaurantOpen() ?: throw MultiErrorException(listOf(NOT_FOUND))
     }
 
 }
