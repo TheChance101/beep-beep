@@ -4,10 +4,7 @@ open class BpException(message: String) : Exception(message)
 
 //region InternetException
 open class InternetException(message: String) : BpException(message)
-class WifiDisabledException : InternetException("wifi disabled")
 class NoInternetException : InternetException("No internet connection")
-class NetworkNotSupportedException : InternetException("Network Not Supported")
-
 //endregion
 open class AuthorizationException : BpException("")
 class UnAuthorizedException : AuthorizationException()

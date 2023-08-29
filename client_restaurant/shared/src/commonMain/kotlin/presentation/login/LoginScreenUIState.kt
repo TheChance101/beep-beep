@@ -9,7 +9,7 @@ data class LoginScreenUIState(
     val keepLoggedIn: Boolean = false,
     val isLoading: Boolean = false,
     val isSuccess: Boolean = false,
-    val error: ErrorState = ErrorState.InvalidCredentials,
+    val error: ErrorState? = null,
     val isUsernameError: Boolean = false,
     val isPasswordError: Boolean = false,
     val usernameErrorMsg: String = "",

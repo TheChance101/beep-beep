@@ -56,44 +56,25 @@ class LoginScreenModel:
 
     private fun onLoginFailed(error: ErrorState) {
 //        sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
-        state.value.sheetState.show()
+        updateState { it.copy(isLoading = false, error = error) }
         handleErrorState(error)
     }
 
     private fun handleErrorState(error: ErrorState) {
         when (error) {
             ErrorState.NoInternet -> {}
-            ErrorState.NetworkNotSupported -> {}
-            ErrorState.RequestFailed -> {
-                updateState {
-                    it.copy(
-                        usernameErrorMsg = "Request failed",
-                        isUsernameError = true,
-                        passwordErrorMsg = "Request failed",
-                        isPasswordError = true
-                    )
-                }
-            }
-
+            ErrorState.RequestFailed -> {}
             ErrorState.UnAuthorized -> {}
-            ErrorState.WifiDisabled -> {}
             ErrorState.HasNoPermission -> {}
-            ErrorState.InvalidCredentials -> {}
-
-            is ErrorState.InvalidPassword -> updateState {
-                it.copy(
-                    passwordErrorMsg = error.errorMessage,
-                    isPasswordError = true,
-                )
-            }
-
-            is ErrorState.InvalidUserName -> {
+            ErrorState.UnknownError -> {}
+            is ErrorState.InvalidCredentials -> {
                 updateState {
                     it.copy(
-                        usernameErrorMsg = error.errorMessage,
-                        isUsernameError = true
+                        passwordErrorMsg = error.errorMessage,
+                        isPasswordError = true,
                     )
                 }
+
             }
 
             is ErrorState.UserNotExist -> {
