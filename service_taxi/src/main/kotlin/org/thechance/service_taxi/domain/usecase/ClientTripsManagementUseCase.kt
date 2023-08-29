@@ -8,7 +8,7 @@ import org.thechance.service_taxi.domain.exceptions.INVALID_PRICE
 import org.thechance.service_taxi.domain.exceptions.INVALID_RATE
 import org.thechance.service_taxi.domain.exceptions.MultiErrorException
 import org.thechance.service_taxi.domain.exceptions.ResourceNotFoundException
-import org.thechance.service_taxi.domain.gateway.DataBaseGateway
+import org.thechance.service_taxi.domain.gateway.ITaxiGateway
 import org.thechance.service_taxi.domain.usecase.utils.IValidations
 
 interface IClientTripsManagementUseCase {
@@ -18,7 +18,7 @@ interface IClientTripsManagementUseCase {
 }
 
 class ClientTripsManagementUseCase(
-    private val dataBaseGateway: DataBaseGateway,
+    private val ITaxiGateway: ITaxiGateway,
     private val validations: IValidations
 ) : IClientTripsManagementUseCase {
 
@@ -27,18 +27,18 @@ class ClientTripsManagementUseCase(
         page: Int,
         limit: Int
     ): List<Trip> {
-        return dataBaseGateway.getClientTripsHistory(clientId, page, limit)
+        return ITaxiGateway.getClientTripsHistory(clientId, page, limit)
     }
 
     override suspend fun rateTrip(tripId: String, rate: Double): Trip {
-        dataBaseGateway.getTripById(tripId) ?: throw ResourceNotFoundException
+        ITaxiGateway.getTripById(tripId) ?: throw ResourceNotFoundException
         if (!validations.isValidRate(rate)) throw MultiErrorException(listOf(INVALID_RATE))
-        return dataBaseGateway.rateTrip(tripId, rate) ?: throw ResourceNotFoundException
+        return ITaxiGateway.rateTrip(tripId, rate) ?: throw ResourceNotFoundException
     }
 
     override suspend fun createTrip(trip: Trip): Trip {
         validationTrip(trip)
-        return dataBaseGateway.addTrip(trip) ?: throw ResourceNotFoundException
+        return ITaxiGateway.addTrip(trip) ?: throw ResourceNotFoundException
     }
 
     private fun validationTrip(trip: Trip) {

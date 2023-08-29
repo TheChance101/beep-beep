@@ -7,10 +7,10 @@ import org.thechance.service_taxi.domain.entity.Color
 import org.thechance.service_taxi.domain.entity.Location
 import org.thechance.service_taxi.domain.entity.Taxi
 import org.thechance.service_taxi.domain.entity.Trip
-import org.thechance.service_taxi.domain.gateway.DataBaseGateway
+import org.thechance.service_taxi.domain.gateway.ITaxiGateway
 
 
-object FakeGateway : DataBaseGateway {
+object FakeGateway : ITaxiGateway {
     var taxes = mutableListOf(
         Taxi(
             id = "64d111a60f294c4b8f718973",
