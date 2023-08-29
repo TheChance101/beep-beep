@@ -1,16 +1,15 @@
 package org.thechance.service_restaurant.data.utils
 
 import com.mongodb.client.result.UpdateResult
+import org.bson.types.ObjectId
 import org.litote.kmongo.coroutine.CoroutineFindPublisher
 import org.thechance.service_restaurant.domain.utils.Validation.Companion.NULL_DOUBLE
-import java.util.*
 import kotlin.reflect.full.memberProperties
 
 fun <T : Any> CoroutineFindPublisher<T>.paginate(page: Int, limit: Int) = this.skip((page - 1) * limit).limit(limit)
 
-fun List<String>.toUUIDs() = map { UUID.fromString(it) }
+fun List<String>.toObjectIds() = map { ObjectId(it) }
 
-fun String.toUUID() =  UUID.fromString(this)
 
 fun UpdateResult.isSuccessfullyUpdated(): Boolean {
     return this.modifiedCount > 0L

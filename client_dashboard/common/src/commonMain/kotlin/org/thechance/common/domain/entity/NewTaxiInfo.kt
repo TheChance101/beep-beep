@@ -1,6 +1,6 @@
 package org.thechance.common.domain.entity
 
-data class AddTaxi(
+data class NewTaxiInfo(
     val plateNumber: String,
     val driverUserName: String,
     val carModel: String,

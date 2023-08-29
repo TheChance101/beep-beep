@@ -24,11 +24,21 @@ fun Route.restaurantRoutes() {
     val manageRestaurantDetails: IManageRestaurantDetailsUseCase by inject()
     val discoverRestaurant: IDiscoverRestaurantUseCase by inject()
 
-    get("/restaurants") {
-        val page = call.parameters.extractInt("page") ?: 1
-        val limit = call.parameters.extractInt("limit") ?: 10
-        val restaurants = discoverRestaurant.getRestaurants(page, limit).toDto()
-        call.respond(HttpStatusCode.OK, restaurants)
+    route("restaurants") {
+
+        get {
+            val page = call.parameters.extractInt("page") ?: 1
+            val limit = call.parameters.extractInt("limit") ?: 10
+            val restaurants = discoverRestaurant.getRestaurants(page, limit).toDto()
+            call.respond(HttpStatusCode.OK, restaurants)
+        }
+
+        get("/{id}") {
+            val ownerId = call.parameters["id"] ?: throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER))
+            val restaurants = discoverRestaurant.getRestaurantsByOwnerId(ownerId)
+            call.respond(HttpStatusCode.OK, restaurants.toDto())
+        }
+
     }
 
     route("/restaurant") {
