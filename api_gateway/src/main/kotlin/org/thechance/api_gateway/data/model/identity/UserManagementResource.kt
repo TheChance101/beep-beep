@@ -12,5 +12,5 @@ data class UserManagementResource(
     val fullName: String,
     val username: String,
     val email: String,
-    val permissions: Int
+    val permission: Int
 )

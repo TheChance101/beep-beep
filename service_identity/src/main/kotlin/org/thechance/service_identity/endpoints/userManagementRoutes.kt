@@ -27,7 +27,7 @@ fun Route.userManagementRoutes() {
         }
 
         post("/{userId}/permission") {
-            val userId = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            val userId = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val permission = call.receiveParameters()["permission"]?.toInt()
                 ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val result = userManagement.addPermissionToUser(userId, permission)

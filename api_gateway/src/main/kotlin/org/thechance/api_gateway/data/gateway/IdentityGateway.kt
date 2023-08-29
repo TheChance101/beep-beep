@@ -64,7 +64,7 @@ class IdentityGateway(
             )
         }
         val user = getUserByUsername(userName)
-        return generateUserTokens(user.id, user.permissions, tokenConfiguration)
+        return generateUserTokens(user.id, user.permission, tokenConfiguration)
     }
 
 
