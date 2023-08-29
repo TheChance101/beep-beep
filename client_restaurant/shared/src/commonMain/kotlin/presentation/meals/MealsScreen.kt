@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpChip
 import com.beepbeep.designSystem.ui.theme.Theme.colors
@@ -94,11 +93,11 @@ class MealsScreen(private val restaurantId: String) :
                     ),
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    items(state.cuisine.size) { index ->
+                    items(state.cuisines.size) { index ->
                         BpChip(
-                            label = state.cuisine[index].name,
-                            isSelected = state.cuisine[index] == state.selectedCuisine,
-                            onClick = { listener.onClickCuisineType(state.cuisine[index]) },
+                            label = state.cuisines[index].name,
+                            isSelected = state.cuisines[index] == state.selectedCuisine,
+                            onClick = { listener.onClickCuisineType(state.cuisines[index]) },
                         )
                     }
                 }

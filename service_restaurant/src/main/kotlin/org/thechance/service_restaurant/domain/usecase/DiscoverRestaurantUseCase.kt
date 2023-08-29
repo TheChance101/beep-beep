@@ -14,6 +14,7 @@ import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 
 interface IDiscoverRestaurantUseCase {
     suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant>
+    suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant>
     suspend fun getRestaurantDetails(restaurantId: String): Restaurant
     suspend fun getMealsByCuisine(cuisineId: String): List<Meal>
     suspend fun getMealDetails(mealId: String): MealDetails
@@ -29,6 +30,11 @@ class DiscoverRestaurantUseCase(
     override suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant> {
         basicValidation.validatePagination(page,limit)
         return restaurantGateway.getRestaurants(page, limit)
+    }
+
+    override suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant> {
+        basicValidation.isValidId(ownerId)
+        return restaurantGateway.getRestaurantsByOwnerId(ownerId)
     }
 
     override suspend fun getCategories(page: Int, limit: Int): List<Category> {

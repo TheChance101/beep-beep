@@ -7,12 +7,12 @@ import io.ktor.client.HttpClient
 
 class RemoteMealGateway (private val client: HttpClient) : IRemoteMealGateway {
 
-     override suspend fun getMealsByRestaurantId(restaurantId: String): List<Meal> {
+     override suspend fun getAllMealsByRestaurantId(restaurantId: String): List<Meal> {
         return emptyList()
     }
 
-    override suspend fun getMealById(mealId: String): Meal? {
-        return getMealsByRestaurantId("ef77d90").find { it.id == mealId }
+    override suspend fun getMealsByCuisineId(mealId: String): List<Meal> {
+        return emptyList()
     }
 
     override suspend fun addMeal(meal: Meal): Meal {

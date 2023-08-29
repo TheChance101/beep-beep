@@ -1,24 +1,68 @@
 package org.thechance.common.presentation.taxi
 
 import org.thechance.common.domain.entity.CarColor
+import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.usecase.ICreateNewTaxiUseCase
-import org.thechance.common.domain.usecase.IFindTaxiByUsernameUseCase
+import org.thechance.common.domain.usecase.IFindTaxisByUsernameUseCase
 import org.thechance.common.domain.usecase.IGetTaxiReportUseCase
 import org.thechance.common.domain.usecase.IGetTaxisUseCase
+import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
 class TaxiScreenModel(
     private val getTaxis: IGetTaxisUseCase,
     private val createNewTaxi: ICreateNewTaxiUseCase,
-    private val findTaxiByUsername: IFindTaxiByUsernameUseCase,
+    private val findTaxisByUsername: IFindTaxisByUsernameUseCase,
     private val getTaxiReport: IGetTaxiReportUseCase
-) : BaseScreenModel<TaxiUiState, TaxiUiEffect>(TaxiUiState()), TaxiScreenInteractionListener {
+) : BaseScreenModel<TaxiUiState, TaxiUiEffect>(TaxiUiState()), TaxiInteractionListener {
 
     init {
         getDummyTaxiData()
     }
+
+    override fun onSearchInputChange(searchQuery: String) {
+        updateState { it.copy(searchQuery = searchQuery) }
+        findTaxisByUsername(searchQuery)
+    }
+
+    private fun getDummyTaxiData() {
+        tryToExecute(
+            { getTaxis.getTaxis(state.value.currentPage, state.value.specifiedTaxis) },
+            ::onGetTaxisSuccessfully, ::onError
+        )
+    }
+
+    private fun onGetTaxisSuccessfully(taxis: DataWrapper<Taxi>) {
+        updateState { it.copy(pageInfo = taxis.toUiState(), isLoading = false) }
+    }
+
+    private fun findTaxisByUsername(username: String) {
+        tryToExecute(
+            {
+                findTaxisByUsername.findTaxisByUsername(
+                    username,
+                    state.value.currentPage,
+                    state.value.specifiedTaxis
+                )
+            },
+            ::onFindTaxiSuccessfully,
+            ::onError
+        )
+    }
+
+    private fun onFindTaxiSuccessfully(taxis: DataWrapper<Taxi>) {
+        updateState {
+            it.copy(pageInfo = taxis.toUiState(), isLoading = false)
+        }
+    }
+
+    private fun onError(error: ErrorState) {
+        updateState { it.copy(error = error, isLoading = false) }
+    }
+
+    //region export listener
 
     override fun onExportReportClicked() {
         tryToExecute(
@@ -28,81 +72,65 @@ class TaxiScreenModel(
         )
     }
 
-    override fun onDismissExportReportSnackBar() {
-        updateState { it.copy(isExportReportSuccessfully = false) }
-    }
-
     private fun onExportTaxisReportSuccessfully() {
-        updateState { it.copy(isExportReportSuccessfully = true) }
+        updateState { it.copy(isReportExportedSuccessfully = true) }
     }
 
-    override fun onTaxiNumberChange(number: Int) {
-        updateState { it.copy(taxiNumberInPage = number) }
+    override fun onDismissExportReportSnackBar() {
+        updateState { it.copy(isReportExportedSuccessfully = false) }
     }
 
-    override fun onSearchInputChange(searchQuery: String) {
-        updateState { it.copy(searchQuery = searchQuery) }
-        findTaxiByUsername(searchQuery)
+    //endregion
+
+    //region paging listener
+
+    override fun onItemsIndicatorChange(itemPerPage: Int) {
+        updateState { it.copy(specifiedTaxis = itemPerPage) }
+        getDummyTaxiData()
     }
 
-    private fun getDummyTaxiData() {
-        tryToExecute(getTaxis::getTaxis, ::onGetTaxisSuccessfully, ::onError)
+    override fun onPageClick(pageNumber: Int) {
+        updateState { it.copy(currentPage = pageNumber) }
+        getDummyTaxiData()
     }
 
-    private fun findTaxiByUsername(username: String) {
-        tryToExecute(
-            { findTaxiByUsername.findTaxiByUsername(username) },
-            ::onFindTaxiSuccessfully,
-            ::onError
-        )
-    }
+    //endregion
 
-    private fun onFindTaxiSuccessfully(taxis: List<Taxi>) {
-        updateState { it.copy(taxis = taxis.toUiState(), isLoading = false) }
-    }
-
-    private fun onGetTaxisSuccessfully(taxis: List<Taxi>) {
-        updateState { it.copy(taxis = taxis.toUiState(), isLoading = false) }
-    }
-
-    private fun onError(error: ErrorState) {
-        updateState { it.copy(error = error, isLoading = false) }
-    }
-
+    //region add new taxi listener
     override fun onCancelCreateTaxiClicked() {
         updateState { it.copy(isAddNewTaxiDialogVisible = false) }
     }
 
     override fun onTaxiPlateNumberChange(number: String) {
         updateState {
-            it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(plateNumber = number))
+            it.copy(newTaxiInfo = it.newTaxiInfo.copy(plateNumber = number))
         }
     }
 
     override fun onDriverUserNamChange(name: String) {
         updateState {
-            it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(driverUserName = name))
+            it.copy(newTaxiInfo = it.newTaxiInfo.copy(driverUserName = name))
         }
     }
 
     override fun onCarModelChanged(model: String) {
-        updateState { it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(carModel = model)) }
+        updateState { it.copy(newTaxiInfo = it.newTaxiInfo.copy(carModel = model)) }
     }
 
     override fun onCarColorSelected(color: CarColor) {
         updateState {
-            it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(selectedCarColor = color))
+            it.copy(newTaxiInfo = it.newTaxiInfo.copy(selectedCarColor = color))
         }
     }
 
     override fun onSeatSelected(seats: Int) {
-        updateState { it.copy(addNewTaxiDialogUiState = it.addNewTaxiDialogUiState.copy(seats = seats)) }
+        updateState { it.copy(newTaxiInfo = it.newTaxiInfo.copy(seats = seats)) }
     }
 
     override fun onCreateTaxiClicked() {
         updateState { it.copy(isAddNewTaxiDialogVisible = false) }
         tryToExecute(
-            { createNewTaxi.createTaxi(mutableState.value.addNewTaxiDialogUiState.toEntity()) },
+            { createNewTaxi.createTaxi(mutableState.value.newTaxiInfo.toEntity()) },
             ::onCreateTaxiSuccessfully,
             ::onError
         )
@@ -116,5 +144,64 @@ class TaxiScreenModel(
     override fun onAddNewTaxiClicked() {
         updateState { it.copy(isAddNewTaxiDialogVisible = true) }
     }
+    //endregion
+
+    //region filter menu listener
+
+    override fun onFilterMenuDismiss() {
+        updateState { it.copy(isFilterDropdownMenuExpanded = false) }
+    }
+
+    override fun onFilterMenuClicked() {
+        updateState { it.copy(isFilterDropdownMenuExpanded = true) }
+    }
+
+    override fun onSelectedCarColor(color: CarColor) {
+        updateState {
+            it.copy(taxiFilterUiState = it.taxiFilterUiState.copy(carColor = color))
+        }
+    }
+
+    override fun onSelectedSeat(seats: Int) {
+        updateState {
+            it.copy(taxiFilterUiState = it.taxiFilterUiState.copy(seats = seats))
+        }
+    }
+
+    override fun onSelectedStatus(status: TaxiStatus) {
+        updateState {
+            it.copy(taxiFilterUiState = it.taxiFilterUiState.copy(status = status))
+        }
+    }
+    //endregion
+
+    //region taxi menu listener
+    override fun showTaxiMenu(username: String) {
+        updateState { it.copy(taxiMenu = it.taxiMenu.copy(username = username)) }
+    }
+
+    override fun hideTaxiMenu() {
+        updateState { it.copy(taxiMenu = it.taxiMenu.copy(username = "")) }
+    }
+    override fun onDeleteTaxiClicked(taxi: TaxiDetailsUiState) {
+        println("delete taxi")
+        //todo: delete taxi
+    }
+
+    override fun onEditTaxiClicked(taxi: TaxiDetailsUiState) {
+        //todo: edit taxi show dialog
+        println("on click edit taxi")
+    }
+    override fun onSaveEditTaxiMenu() {
+        //todo: save taxi
+        println("save button, update taxi")
+    }
+
+    override fun onCancelEditTaxiMenu() {
+        //todo: cancel edit taxi
+        println("cancel button")
+    }
+
+//endregion
 
 }
