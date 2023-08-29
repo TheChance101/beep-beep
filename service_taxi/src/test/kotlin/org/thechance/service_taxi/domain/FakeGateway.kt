@@ -42,6 +42,12 @@ object FakeGateway : ITaxiGateway {
         return taxes.find { it.id == taxiId }
     }
 
+    override suspend fun editTaxi(taxiId: String, taxi: Taxi): Taxi {
+        val index = taxes.indexOf(getTaxiById(taxiId))
+        taxes[index] = taxi
+        return taxes[index]
+    }
+
     override suspend fun getAllTaxes(page: Int, limit: Int): List<Taxi> {
         return taxes.toList()
     }

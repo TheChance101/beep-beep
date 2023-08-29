@@ -8,6 +8,7 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
+import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 import org.koin.ktor.ext.inject
 import org.thechance.service_taxi.api.dto.taxi.TaxiDto
@@ -30,6 +31,13 @@ fun Route.taxiRoutes() {
         get("/{taxiId}") {
             val id = call.parameters["taxiId"] ?: throw MissingParameterException
             val result = manageTaxiUseCase.getTaxi(id)
+            call.respond(HttpStatusCode.OK, result.toDto())
+        }
+
+        put ("/{taxiId}") {
+            val taxiId = call.parameters["taxiId"] ?: throw MissingParameterException
+            val taxi = call.receive<TaxiDto>()
+            val result = manageTaxiUseCase.editTaxi(taxiId, taxi.toEntity())
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 

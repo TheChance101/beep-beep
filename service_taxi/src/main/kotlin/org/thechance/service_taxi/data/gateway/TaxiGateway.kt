@@ -35,10 +35,10 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
             ?.takeIf { !it.isDeleted }?.toEntity()
     }
 
-    override suspend fun editTaxi(taxi: Taxi): Taxi {
+    override suspend fun editTaxi(taxiId: String,taxi: Taxi): Taxi {
         val taxiCollection = taxi.toCollection()
         container.taxiCollection.updateOne(
-            filter = TaxiCollection::id eq UUID.fromString(taxi.id),
+            filter = TaxiCollection::id eq UUID.fromString(taxiId),
             update = Updates.combine(
                 set(TaxiCollection::plateNumber setTo taxiCollection.plateNumber),
                 set(TaxiCollection::color setTo taxiCollection.color),

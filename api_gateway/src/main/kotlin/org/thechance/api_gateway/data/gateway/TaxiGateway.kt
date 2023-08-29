@@ -11,6 +11,7 @@ import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import io.ktor.util.*
+import okhttp3.internal.platform.Jdk9Platform.Companion.isAvailable
 import org.thechance.api_gateway.data.utils.ErrorHandler
 
 @Single(binds = [ITaxiGateway::class])
@@ -66,6 +67,7 @@ class TaxiGateway(
         type: String,
         driverId: String,
         seats: Int,
+        isAvailable: Boolean,
         permissions: List<Int>,
         locale: Locale
     ): TaxiResource {
@@ -86,6 +88,7 @@ class TaxiGateway(
                     append("color", color.toString())
                     append("type", type)
                     append("driverId", driverId)
+                    append("isAvailable",isAvailable.toString())
                     append("seats", seats.toString())
                 }
             )

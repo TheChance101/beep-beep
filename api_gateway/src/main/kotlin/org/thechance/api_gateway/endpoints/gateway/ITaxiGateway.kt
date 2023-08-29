@@ -15,6 +15,7 @@ interface ITaxiGateway {
         type: String,
         driverId: String,
         seats: Int,
+        isAvailable: Boolean,
         permissions: List<Int>,
         locale: Locale
     ): TaxiResource
