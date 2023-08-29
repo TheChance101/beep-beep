@@ -2,7 +2,7 @@ package org.thechance.service_taxi.domain.usecase
 
 import org.thechance.service_taxi.domain.entity.Trip
 import org.thechance.service_taxi.domain.exceptions.ResourceNotFoundException
-import org.thechance.service_taxi.domain.gateway.DataBaseGateway
+import org.thechance.service_taxi.domain.gateway.ITaxiGateway
 
 interface IDriverTripsManagementUseCase {
     suspend fun getTripsByDriverId(driverId: String, page: Int, limit: Int): List<Trip> // driver
@@ -11,16 +11,16 @@ interface IDriverTripsManagementUseCase {
 }
 
 class DriverTripsManagementUseCase(
-    private val dataBaseGateway: DataBaseGateway,
+    private val ITaxiGateway: ITaxiGateway,
 ) : IDriverTripsManagementUseCase {
     override suspend fun approveTrip(driverId: String, taxiId: String, tripId: String): Trip {
-        dataBaseGateway.getTripById(tripId) ?: throw ResourceNotFoundException
-        return dataBaseGateway.approveTrip(tripId, taxiId, driverId) ?: throw ResourceNotFoundException
+        ITaxiGateway.getTripById(tripId) ?: throw ResourceNotFoundException
+        return ITaxiGateway.approveTrip(tripId, taxiId, driverId) ?: throw ResourceNotFoundException
     }
 
     override suspend fun finishTrip(driverId: String, tripId: String): Trip {
-        dataBaseGateway.getTripById(tripId) ?: throw ResourceNotFoundException
-        return dataBaseGateway.finishTrip(tripId, driverId) ?: throw ResourceNotFoundException
+        ITaxiGateway.getTripById(tripId) ?: throw ResourceNotFoundException
+        return ITaxiGateway.finishTrip(tripId, driverId) ?: throw ResourceNotFoundException
     }
 
     override suspend fun getTripsByDriverId(
@@ -28,7 +28,7 @@ class DriverTripsManagementUseCase(
         page: Int,
         limit: Int
     ): List<Trip> {
-        return dataBaseGateway.getDriverTripsHistory(driverId, page, limit)
+        return ITaxiGateway.getDriverTripsHistory(driverId, page, limit)
     }
 
 

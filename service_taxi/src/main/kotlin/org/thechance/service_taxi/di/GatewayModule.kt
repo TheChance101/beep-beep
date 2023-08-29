@@ -1,9 +1,9 @@
 package org.thechance.service_taxi.di
 
 import org.koin.dsl.module
-import org.thechance.service_taxi.data.gateway.DataBaseGatewayImpl
-import org.thechance.service_taxi.domain.gateway.DataBaseGateway
+import org.thechance.service_taxi.data.gateway.TaxiGateway
+import org.thechance.service_taxi.domain.gateway.ITaxiGateway
 
 val GatewayModule = module {
-    single<DataBaseGateway> { DataBaseGatewayImpl(get()) }
+    single<ITaxiGateway> { TaxiGateway(get()) }
 }
