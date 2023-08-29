@@ -1,13 +1,14 @@
 package org.thechance.common.data.remote.gateway
 
 import com.google.gson.Gson
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.plugins.*
-import io.ktor.client.request.*
-import io.ktor.client.request.forms.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.request.forms.submitForm
+import io.ktor.client.request.header
+import io.ktor.client.request.url
+import io.ktor.client.statement.HttpResponse
+import io.ktor.http.Parameters
 import org.thechance.common.data.remote.model.ServerResponse
 import org.thechance.common.data.remote.model.UserTokensRemoteDto
 import org.thechance.common.domain.entity.*
@@ -24,28 +25,41 @@ class RemoteGateway(
     override fun getUserData(): String = "aaaa"
 
     override fun getUsers(page: Int, numberOfUsers: Int): DataWrapper<User> {
-        return DataWrapper(
-            totalPages = 0,
-            numberOfResult = 0,
-            result = emptyList(),
-        )
+        return DataWrapper(totalPages = 0, numberOfResult = 0, result = emptyList(),)
     }
 
-    override suspend fun getTaxis(): List<Taxi> {
-        return emptyList()
+    override suspend fun getTaxis(page: Int, numberOfUsers: Int): DataWrapper<Taxi> {
+        return DataWrapper(totalPages = 0, numberOfResult = 0, result = emptyList(),)
     }
 
-    override suspend fun createTaxi(taxi: AddTaxi): Taxi {
-        println("createTaxi: $taxi")
-        return Taxi("1", "1", CarColor.BLACK, "1", 4, "1", TaxiStatus.OFFLINE, "1")
+
+    override suspend fun createTaxi(taxi: NewTaxiInfo): Taxi {
+        return Taxi(
+            "1",
+            "1",
+            CarColor.BLACK,
+            "1",
+            4,
+            "1",
+            TaxiStatus.OFFLINE,
+            "1")
     }
 
-    override suspend fun findTaxiByUsername(username: String): List<Taxi> {
-        return emptyList()
+    override suspend fun findTaxisByUsername(username: String, page: Int, offset: Int
+    ): DataWrapper<Taxi> {
+        return DataWrapper(totalPages = 0, numberOfResult = 0, result = emptyList(),)
+    }
+
+    override suspend fun filterTaxis(
+        taxi: TaxiFiltration,
+        page: Int,
+        numberOfTaxis: Int
+    ): DataWrapper<Taxi> {
+        return DataWrapper(totalPages = 0, numberOfResult = 0, result = emptyList(),)
     }
 
     override suspend fun getPdfTaxiReport() {
-        //todo
+        //todo get pdf by download it
     }
 
     override suspend fun getRestaurants(): List<Restaurant> {

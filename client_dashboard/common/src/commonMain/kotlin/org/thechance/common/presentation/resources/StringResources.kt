@@ -39,12 +39,16 @@ data class StringResources(
     val taxi: String = "taxi",
     val downloadSuccessMessage: String = "Your file download was successful.",
     val seats: String = "Seats",
+    val status: String = "Status",
     val carModel: String = "Car Model",
     val carColor: String = "Car Color",
     val driverUsername: String = "Driver Username",
     val taxiPlateNumber: String = "Taxi Plate Number",
     val createNewTaxi: String = "Create new Taxi",
     val taxis: String = "Taxis",
+    val offline: String = "Offline",
+    val online: String = "Online",
+    val onRide: String = "On ride",
     //endregion Taxi
 
     //region User
@@ -74,6 +78,6 @@ data class StringResources(
 
     )
 
-val Strings = StringResources()
+val englishStrings = StringResources()
 
 

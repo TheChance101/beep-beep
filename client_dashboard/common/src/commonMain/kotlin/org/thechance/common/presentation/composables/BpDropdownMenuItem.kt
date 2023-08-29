@@ -25,6 +25,7 @@ fun BpDropdownMenuItem(
 ) {
     Column(modifier = modifier) {
         DropdownMenuItem(
+            modifier= Modifier.padding(horizontal = 8.kms),
             onClick = onClick,
             contentPadding = PaddingValues(horizontal = 8.kms),
             text = {
