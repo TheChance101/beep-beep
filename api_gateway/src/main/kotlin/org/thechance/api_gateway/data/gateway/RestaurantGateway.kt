@@ -178,6 +178,26 @@ class RestaurantGateway(
         }
     }
 
+    override suspend fun getMealsByRestaurantId(
+        restaurantId: String,
+        permissions: List<Int>,
+        locale: Locale
+    ): List<MealResource> {
+        val RESTAURANT_MANAGER_PERMISSION = 2
+        if (RESTAURANT_MANAGER_PERMISSION in permissions) {
+            return tryToExecute(
+                api = APIs.RESTAURANT_API,
+                setErrorMessage = { errorCodes ->
+                    errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+                }
+            ) {
+                get("/meals/$restaurantId")
+            }
+        } else {
+            throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
+        }
+    }
+
     @OptIn(InternalAPI::class)
     override suspend fun addCuisine(name: String, permissions: List<Int>, locale: Locale): CuisineResource {
         //TODO()  need to change 1

@@ -56,4 +56,10 @@ interface IRestaurantGateway {
         locale: Locale
     ): MealResource
 
+    suspend fun getMealsByRestaurantId(
+        restaurantId: String,
+        permissions: List<Int>,
+        locale: Locale
+    ): List<MealResource>
+
 }
