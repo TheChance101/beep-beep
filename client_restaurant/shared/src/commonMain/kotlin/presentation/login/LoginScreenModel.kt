@@ -1,9 +1,10 @@
 package presentation.login
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.entity.UserTokens
 import domain.usecase.ILoginUserUseCase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
@@ -35,12 +36,12 @@ class LoginScreenModel:
     ) {
         tryToExecute(
             { loginUserUseCase.loginUser(userName, password, isKeepMeLoggedInChecked) },
-            this::onLoginSuccess,
+            { onLoginSuccess() },
             this::onLoginFailed
         )
     }
 
-    private fun onLoginSuccess(result: UserTokens) {
+    private fun onLoginSuccess() {
         updateState {
             it.copy(
                 isLoading = false,
@@ -50,47 +51,39 @@ class LoginScreenModel:
             )
         }
 
+        sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
     }
 
     private fun onLoginFailed(error: ErrorState) {
-        sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
+//        sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
+        updateState { it.copy(isLoading = false, error = error) }
         handleErrorState(error)
     }
 
     private fun handleErrorState(error: ErrorState) {
         when (error) {
             ErrorState.NoInternet -> {}
-            ErrorState.NetworkNotSupported -> {}
             ErrorState.RequestFailed -> {}
             ErrorState.UnAuthorized -> {}
-            ErrorState.WifiDisabled -> {}
             ErrorState.HasNoPermission -> {}
+            ErrorState.UnknownError -> {}
             is ErrorState.InvalidCredentials -> {
                 updateState {
                     it.copy(
-                        error = ErrorState.InvalidCredentials
+                        passwordErrorMsg = error.errorMessage,
+                        isPasswordError = true,
                     )
                 }
+
             }
 
             is ErrorState.UserNotExist -> {
                 updateState {
                     it.copy(
-                        error = ErrorState.UserNotExist("UserNotExist")
+                        usernameErrorMsg = error.errorMessage,
+                        isUsernameError = true
                     )
                 }
-            }
-
-            is ErrorState.InvalidPassword -> updateState {
-                it.copy(
-                    passwordErrorMsg = "Invalid Password!"
-                )
-            }
-
-            is ErrorState.InvalidUserName -> updateState {
-                it.copy(
-                    usernameErrorMsg = "Invalid UserName!"
-                )
             }
         }
     }
@@ -108,18 +101,44 @@ class LoginScreenModel:
         updateState { it.copy(description = description) }
     }
 
-    override fun onRequestPermissionClick() {
-        updateState { it.copy(showPermissionSheet = true) }
+    override fun onRequestPermissionClicked() {
+        showPermissionSheetWithDelay()
+
     }
 
-    override fun onClickSubmit() {
-        state.value.sheetState.dismiss()
-        updateState { it.copy(showPermissionSheet = false) }
+    private fun showPermissionSheetWithDelay() {
+        coroutineScope.launch {
+            state.value.sheetState.dismiss()
+            delay(500)
+            updateState { it.copy(showPermissionSheet = true) }
+            state.value.sheetState.show()
+        }
     }
 
-    override fun onCancelClick() {
+    override fun onSubmitClicked() {
         state.value.sheetState.dismiss()
-        updateState { it.copy(showPermissionSheet = false) }
+        coroutineScope.launch {
+            delayAndChangePermissionSheetState(false)
+        }
+    }
+
+    override fun onCancelClicked() {
+        state.value.sheetState.dismiss()
+        coroutineScope.launch {
+            delayAndChangePermissionSheetState(false)
+        }
+    }
+
+    override fun onSheetBackgroundClicked() {
+        state.value.sheetState.dismiss()
+        coroutineScope.launch {
+            delayAndChangePermissionSheetState(false)
+        }
+    }
+
+    private suspend fun delayAndChangePermissionSheetState(show: Boolean) {
+        delay(300)
+        updateState { it.copy(showPermissionSheet = show) }
     }
     // endregion
 }

@@ -9,7 +9,7 @@ data class DrawableResources(
     val halfFilledStar: String = "ic_half_filled_star_light.xml",
     val sort: String = "sort.xml",
     val sun: String = "sun.xml",
-    val backgroundPattern: String = "background_pattern_light.png",
+    val backgroundPattern: String = "background_pattern.png",
     val galleryAdd: String = "gallery_add.xml",
     val edit: String = "edit.xml",
     val flag: String = "flag.xml",
@@ -27,5 +27,5 @@ data class DrawableResources(
 val BpDrawableDarkResources = DrawableResources(
     filledStar = "ic_filled_star_dark.xml",
     halfFilledStar = "ic_half_filled_star_dark.xml",
-    backgroundPattern = "background_pattern_dark.png",
+    backgroundPattern = "background_pattern.png",
 )

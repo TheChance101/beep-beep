@@ -22,7 +22,7 @@ class ManageOrderUseCase(private val remoteGateWay: IFakeRemoteGateway) : IManag
             OrderState.PENDING -> Constant.IN_COOKING_ORDER
             OrderState.IN_COOKING -> Constant.FINISHED_ORDER
             OrderState.CANCELED -> Constant.CANCELED_ORDER
-            else -> throw RequestException()
+            else -> throw RequestException("")
         }
         return remoteGateWay.updateOrderState(orderId, newOrderState)
     }

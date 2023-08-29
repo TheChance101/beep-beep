@@ -5,12 +5,11 @@ import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
-import domain.entity.UserTokens
 
 interface IFakeRemoteGateway {
 
     //region login
-    suspend fun loginUser(userName:String,password:String):UserTokens
+    suspend fun loginUser(userName: String, password: String): Pair<String, String>
 
     // endregion
 

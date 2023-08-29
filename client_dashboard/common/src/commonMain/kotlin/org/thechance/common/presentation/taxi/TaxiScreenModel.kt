@@ -4,6 +4,7 @@ import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.usecase.ICreateNewTaxiUseCase
+import org.thechance.common.domain.usecase.IFilterTaxisUseCase
 import org.thechance.common.domain.usecase.IFindTaxisByUsernameUseCase
 import org.thechance.common.domain.usecase.IGetTaxiReportUseCase
 import org.thechance.common.domain.usecase.IGetTaxisUseCase
@@ -15,7 +16,8 @@ class TaxiScreenModel(
     private val getTaxis: IGetTaxisUseCase,
     private val createNewTaxi: ICreateNewTaxiUseCase,
     private val findTaxisByUsername: IFindTaxisByUsernameUseCase,
-    private val getTaxiReport: IGetTaxiReportUseCase
+    private val getTaxiReport: IGetTaxiReportUseCase,
+    private val filterTaxi: IFilterTaxisUseCase
 ) : BaseScreenModel<TaxiUiState, TaxiUiEffect>(TaxiUiState()), TaxiInteractionListener {
 
     init {
@@ -144,6 +146,7 @@ class TaxiScreenModel(
     override fun onAddNewTaxiClicked() {
         updateState { it.copy(isAddNewTaxiDialogVisible = true) }
     }
+
     //endregion
 
     //region filter menu listener
@@ -173,6 +176,35 @@ class TaxiScreenModel(
             it.copy(taxiFilterUiState = it.taxiFilterUiState.copy(status = status))
         }
     }
+
+    override fun onCancelFilterClicked() {
+        updateState { it.copy(
+            isFilterDropdownMenuExpanded = false,
+            taxiFilterUiState = it.taxiFilterUiState.copy(
+            carColor = CarColor.WHITE, seats = 1, status = TaxiStatus.ONLINE)
+        ) }
+        getDummyTaxiData()
+    }
+
+    override fun onSaveFilterClicked() {
+        updateState { it.copy(isFilterDropdownMenuExpanded = false) }
+        tryToExecute(
+            {
+                filterTaxi(
+                    taxi = mutableState.value.taxiFilterUiState.toEntity(),
+                    page = mutableState.value.currentPage,
+                    numberOfTaxis = mutableState.value.specifiedTaxis
+                )
+            },
+            ::onFilterTaxiSuccessfully,
+            ::onError
+        )
+    }
+
+    private fun onFilterTaxiSuccessfully(taxis: DataWrapper<Taxi>) {
+        updateState { it.copy(pageInfo = taxis.toUiState(), isLoading = false) }
+    }
+
     //endregion
 
     //region taxi menu listener
@@ -183,6 +215,7 @@ class TaxiScreenModel(
     override fun hideTaxiMenu() {
         updateState { it.copy(taxiMenu = it.taxiMenu.copy(username = "")) }
     }
+
     override fun onDeleteTaxiClicked(taxi: TaxiDetailsUiState) {
         println("delete taxi")
         //todo: delete taxi
@@ -192,6 +225,7 @@ class TaxiScreenModel(
         //todo: edit taxi show dialog
         println("on click edit taxi")
     }
+
     override fun onSaveEditTaxiMenu() {
         //todo: save taxi
         println("save button, update taxi")
