@@ -24,7 +24,7 @@ data class RestaurantUiState(
     val search: String = "",
     val isFilterDropdownMenuExpanded: Boolean = false,
     val filterRating: Double = 0.0,
-    val filterPriceLevel: Int = 0,
+    val filterPriceLevel: Int = 1,
     val maxPageCount: Int = 1,
     val selectedPageNumber: Int = 1,
     val numberOfRestaurantsInPage: Int = 10,
