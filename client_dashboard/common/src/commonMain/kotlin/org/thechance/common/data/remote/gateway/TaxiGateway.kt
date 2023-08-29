@@ -17,4 +17,8 @@ class TaxiGateway:BaseGateway(), ITaxiGateway {
     override suspend fun searchTaxiByDriverUsername(driverUsername: String): DataWrapper<Taxi> {
         TODO("Not yet implemented")
     }
+
+    override suspend fun filterTaxis(): DataWrapper<Taxi> {
+        TODO("Not yet implemented")
+    }
 }

@@ -8,4 +8,5 @@ interface ITaxiGateway {
     suspend fun getTaxis(): DataWrapper<Taxi>
     suspend fun createTaxi(taxi: NewTaxiInfo): Taxi
     suspend fun searchTaxiByDriverUsername(driverUsername: String): DataWrapper<Taxi>
+    suspend fun filterTaxis(): DataWrapper<Taxi>
 }
