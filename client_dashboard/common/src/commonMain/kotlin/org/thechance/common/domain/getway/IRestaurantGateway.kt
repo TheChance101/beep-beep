@@ -1,4 +1,4 @@
-package org.thechance.common.data.remote.gateway.restaurant_gateway
+package org.thechance.common.domain.getway
 
 import org.thechance.common.domain.entity.AddRestaurant
 import org.thechance.common.domain.entity.DataWrapper

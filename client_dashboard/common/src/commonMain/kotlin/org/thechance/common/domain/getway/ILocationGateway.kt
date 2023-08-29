@@ -1,4 +1,4 @@
-package org.thechance.common.data.remote.gateway.location_gateway
+package org.thechance.common.domain.getway
 
 import org.thechance.common.domain.entity.Location
 

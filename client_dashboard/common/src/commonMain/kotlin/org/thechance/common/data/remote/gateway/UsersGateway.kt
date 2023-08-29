@@ -1,4 +1,4 @@
-package org.thechance.common.data.remote.gateway.user_gateway
+package org.thechance.common.data.remote.gateway
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -8,8 +8,6 @@ import io.ktor.client.request.header
 import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.Parameters
-import org.thechance.common.data.remote.gateway.containsErrors
-import org.thechance.common.data.remote.gateway.getOrEmpty
 import org.thechance.common.data.remote.model.ServerResponse
 import org.thechance.common.data.remote.model.UserTokensRemoteDto
 import org.thechance.common.domain.entity.DataWrapper
@@ -18,6 +16,7 @@ import org.thechance.common.domain.entity.NoInternetException
 import org.thechance.common.domain.entity.UnknownErrorException
 import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.entity.UserNotFoundException
+import org.thechance.common.domain.getway.IUsersGateway
 import java.net.ConnectException
 
 class UsersGateway(private val client: HttpClient) : IUsersGateway {
@@ -64,11 +63,11 @@ class UsersGateway(private val client: HttpClient) : IUsersGateway {
 
     private fun throwMatchingException(errorMessages: Map<String, String>) {
         errorMessages.let {
-            if (it.containsErrors(UsersGateway.WRONG_PASSWORD)) {
-                throw InvalidCredentialsException(it.getOrEmpty(UsersGateway.WRONG_PASSWORD))
+            if (it.containsErrors(WRONG_PASSWORD)) {
+                throw InvalidCredentialsException(it.getOrEmpty(WRONG_PASSWORD))
             } else {
-                if (it.containsErrors(UsersGateway.USER_NOT_EXIST)) {
-                    throw UserNotFoundException(it.getOrEmpty(UsersGateway.USER_NOT_EXIST))
+                if (it.containsErrors(USER_NOT_EXIST)) {
+                    throw UserNotFoundException(it.getOrEmpty(USER_NOT_EXIST))
                 } else {
                     throw UnknownErrorException()
                 }
