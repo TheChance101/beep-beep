@@ -16,14 +16,16 @@ fun RestaurantCollection.toEntity() = Restaurant(
     phone = phone,
     openingTime = openingTime,
     closingTime = closingTime,
-    address = address.toEntity()
+    address = address,
+    currency = currency,
+    location = location.toEntity()
 )
 
 fun List<RestaurantCollection>.toEntity(): List<Restaurant> = map { it.toEntity() }
 
 
 fun Restaurant.toCollection() = RestaurantCollection(
-    ownerId = UUID.fromString(ownerId),
+    ownerId = ObjectId(ownerId),
     name = name,
     description = description,
     priceLevel = priceLevel,
@@ -31,6 +33,8 @@ fun Restaurant.toCollection() = RestaurantCollection(
     phone = phone,
     openingTime = openingTime,
     closingTime = closingTime,
-    address = address.toCollection()
+    address = address,
+    currency = currency,
+    location = location.toCollection()
 )
 

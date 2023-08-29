@@ -10,11 +10,12 @@ import java.util.*
 fun MealDetails.toCollection(): MealCollection =
     MealCollection(
         name = name,
-        restaurantId = UUID.fromString(restaurantId),
+        restaurantId = ObjectId(restaurantId),
         description = description,
         price = price,
+        currency = currency,
         cuisines = cuisines.map { cuisine ->
-            UUID.fromString(cuisine.id)
+            ObjectId(cuisine.id)
         }
     )
 
@@ -23,7 +24,8 @@ fun MealCollection.toEntity() = Meal(
     restaurantId = restaurantId.toString(),
     name = name,
     description = description,
-    price = price
+    price = price,
+    currency = currency
 )
 
 fun MealWithCuisines.toEntity() = MealDetails(
@@ -32,6 +34,7 @@ fun MealWithCuisines.toEntity() = MealDetails(
     name = name,
     description = description,
     price = price,
+    currency = currency,
     cuisines = cuisines.toEntity()
 )
 

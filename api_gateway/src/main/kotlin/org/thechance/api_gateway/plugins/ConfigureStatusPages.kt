@@ -16,4 +16,7 @@ private fun StatusPagesConfig.handleStatusPagesExceptions() {
     exception<LocalizedMessageException> { call, t ->
         respondWithError(call, HttpStatusCode.BadRequest, t.errorMessages)
     }
+    exception<SecurityException>{ call, t ->
+        respondWithError(call, HttpStatusCode.Unauthorized, t.message?.let { mapOf(401 to it) })
+    }
 }

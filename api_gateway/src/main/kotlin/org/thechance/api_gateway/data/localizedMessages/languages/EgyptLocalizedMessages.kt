@@ -16,4 +16,8 @@ class EgyptLocalizedMessages : LocalizedMessages {
     override val userCreatedSuccessfully: String = "اعمل حفلة بقى عندك حساب يا ابن المحظوظة"
     override val unknownError: String = "حصل ايرور لو كانت عارفه كنت هقولك"
     override val userNotFound: String = "مش لاقينك ياعم"
+    override val invalidPermission: String = "مش عندك الصلاحية ياعم"
+    override val taxiCreatedSuccessfully: String= "اعمل حفلة بقى عندك تكسي يا ابن المحظوظة"
+    override val taxiUpdateSuccessfully: String= "تم تحديث التاكسي بنجاح"
+    override val taxiDeleteSuccessfully: String= "تم حذف التاكسي بنجاح"
 }

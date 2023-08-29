@@ -34,33 +34,36 @@ class RemoteGateway(
     private val client: HttpClient,
 ) : IRemoteGateway {
 
-    override fun getUserData(): Admin {
-        return Admin("aaaa")
-    }
+    override fun getUserData(): String = "aaaa"
 
     override fun getUsers(page: Int, numberOfUsers: Int): DataWrapper<User> {
-        return DataWrapper(
-            totalPages = 0,
-            numberOfResult = 0,
-            result = emptyList(),
-        )
+        return DataWrapper(totalPages = 0, numberOfResult = 0, result = emptyList(),)
     }
 
-    override suspend fun getTaxis(): List<Taxi> {
-        return emptyList()
+    override suspend fun getTaxis(page: Int, numberOfUsers: Int): DataWrapper<Taxi> {
+        return DataWrapper(totalPages = 0, numberOfResult = 0, result = emptyList(),)
     }
 
-    override suspend fun createTaxi(taxi: AddTaxi): Taxi {
-        println("createTaxi: $taxi")
-        return Taxi("1", "1", CarColor.BLACK, "1", 4, "1", TaxiStatus.OFFLINE, "1")
+
+    override suspend fun createTaxi(taxi: NewTaxiInfo): Taxi {
+        return Taxi(
+            "1",
+            "1",
+            CarColor.BLACK,
+            "1",
+            4,
+            "1",
+            TaxiStatus.OFFLINE,
+            "1")
     }
 
-    override suspend fun findTaxiByUsername(username: String): List<Taxi> {
-        return emptyList()
+    override suspend fun findTaxisByUsername(username: String, page: Int, offset: Int
+    ): DataWrapper<Taxi> {
+        return DataWrapper(totalPages = 0, numberOfResult = 0, result = emptyList(),)
     }
 
     override suspend fun getPdfTaxiReport() {
-        //todo
+        //todo get pdf by download it
     }
 
     override suspend fun getRestaurants(
