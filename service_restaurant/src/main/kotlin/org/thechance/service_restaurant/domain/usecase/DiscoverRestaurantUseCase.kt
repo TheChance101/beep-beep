@@ -14,11 +14,16 @@ import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 
 interface IDiscoverRestaurantUseCase {
     suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant>
+    suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant>
     suspend fun getRestaurantDetails(restaurantId: String): Restaurant
     suspend fun getMealsByCuisine(cuisineId: String): List<Meal>
+
+    suspend fun getMealsByRestaurantId(restaurantId: String,page: Int, limit: Int): List<Meal>
     suspend fun getMealDetails(mealId: String): MealDetails
     suspend fun getCategories(page: Int, limit: Int): List<Category>
     suspend fun getRestaurantsInCategory(categoryId: String): List<Restaurant>
+
+
 }
 
 class DiscoverRestaurantUseCase(
@@ -29,6 +34,11 @@ class DiscoverRestaurantUseCase(
     override suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant> {
         basicValidation.validatePagination(page,limit)
         return restaurantGateway.getRestaurants(page, limit)
+    }
+
+    override suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant> {
+        basicValidation.isValidId(ownerId)
+        return restaurantGateway.getRestaurantsByOwnerId(ownerId)
     }
 
     override suspend fun getCategories(page: Int, limit: Int): List<Category> {
@@ -50,6 +60,15 @@ class DiscoverRestaurantUseCase(
     override suspend fun getMealsByCuisine(cuisineId: String): List<Meal> {
         checkIfCuisineIsExist(cuisineId)
         return optionsGateway.getMealsInCuisine(cuisineId)
+    }
+
+    override suspend fun getMealsByRestaurantId(
+        restaurantId: String,
+        page: Int,
+        limit: Int
+    ): List<Meal> {
+        checkIfRestaurantIsExist(restaurantId)
+        return restaurantGateway.getMealsByRestaurantId(restaurantId, page, limit)
     }
 
     override suspend fun getMealDetails(mealId: String): MealDetails {

@@ -1,5 +1,7 @@
 package org.thechance.service_taxi.domain.entity
 
+import java.util.HexFormat
+
 data class Taxi(
     val id: String,
     val plateNumber: String,
@@ -10,25 +12,27 @@ data class Taxi(
     val seats: Int = 4,
 )
 
-enum class Color(val colorNumber: Int) {
-    BLACK(0),
-    WHITE(1),
-    RED(2),
-    BLUE(3),
-    GREEN(4),
-    YELLOW(5),
-    ORANGE(6),
-    PURPLE(7),
-    PINK(8),
-    BROWN(9),
-    GRAY(10),
-    SILVER(11),
-    GOLD(12),
-    BRONZE(13),
-    OTHER(14);
+    enum class Color(val colorNumber:   Long) {
+        BLACK(4278190080L),
+        WHITE(4294967295L),
+        RED(4294901760L),
+        BLUE(4278190335L),
+        GREEN(4278255360L),
+
+        ////////////////////////////
+        YELLOW(4294639360L),
+        ORANGE(4294944768L),
+        PURPLE(4288545023L),
+        PINK(4293591295L),
+        BROWN(4283578920L),
+        GRAY(4290626507L),
+        SILVER(4290822336L),
+        GOLD(4294956800L),
+        BRONZE(4291657522L),
+        OTHER(0L);
 
     companion object {
-        fun getColorByColorNumber(colorNumber: Int): Color {
+        fun getColorByColorNumber(colorNumber: Long): Color {
             Color.values().forEach { if (it.colorNumber == colorNumber) { return it } }
             return OTHER
         }
