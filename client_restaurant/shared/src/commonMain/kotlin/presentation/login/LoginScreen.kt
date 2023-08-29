@@ -119,13 +119,13 @@ private fun LoginScreenContent(
                     )
                     Text(
                         modifier = Modifier.padding(top = 32.dp),
-                        text = "Welcome To Restaurant App",
+                        text = Resources.strings.welcomeToRestaurantApp,
                         color = Theme.colors.contentPrimary,
                         style = Theme.typography.titleLarge,
                     )
                     Text(
                         modifier = Modifier.padding(bottom = 16.dp, top = 4.dp),
-                        text = "Login to access all the features",
+                        text = Resources.strings.loginToAccessAllTheFeatures,
                         color = Theme.colors.contentTertiary,
                         style = Theme.typography.title,
                     )

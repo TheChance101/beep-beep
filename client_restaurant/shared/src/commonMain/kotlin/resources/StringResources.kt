@@ -52,5 +52,7 @@ data class StringResources(
     val password: String = "Password",
     val username: String = "Username",
     val login: String = "Login",
+    val welcomeToRestaurantApp: String = "Welcome To Restaurant App",
+    val loginToAccessAllTheFeatures: String = "Login to access all the features",
     val keepMeLoggedIn: String = "Keep me logged in"
 )
