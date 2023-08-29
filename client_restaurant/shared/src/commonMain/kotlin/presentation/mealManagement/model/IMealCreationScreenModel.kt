@@ -6,8 +6,11 @@ import domain.usecase.IManageMealUseCase
 import domain.usecase.IMangeCuisineUseCase
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.component.inject
+import presentation.base.ErrorState
 import presentation.mealManagement.IMealBehavior
+import presentation.mealManagement.MealScreenUIEffect
 import presentation.mealManagement.toMealAddition
+import presentation.mealManagement.toUIState
 
 class IMealCreationScreenModel : IMealBehavior() {
 
@@ -18,14 +21,26 @@ class IMealCreationScreenModel : IMealBehavior() {
     private val cuisines: IMangeCuisineUseCase by inject()
 
 
+    init {
+        getCuisines()
+    }
+
+
     override suspend fun addMeal(): Boolean {
         return manageMeal.addMeal(state.value.meal.toMealAddition())
     }
 
-    override suspend fun getCuisiness(): List<Cuisine> {
-        updateState { it.copy(isLoading = true) }
-        return cuisines.getCuisines()
+    fun getCuisines() {
+        tryToExecute({ cuisines.getCuisines() }, ::onGetCuisinesSuccess, ::onAddCuisinesError)
     }
 
+    private fun onGetCuisinesSuccess(cuisines: List<Cuisine>) {
+        updateState { it.copy(cuisines = cuisines.toUIState(), isLoading = false) }
+    }
+
+    private fun onAddCuisinesError(error: ErrorState) {
+        updateState { it.copy(isLoading = false, error = error.toString()) }
+        sendNewEffect(MealScreenUIEffect.MealResponseFailed(error.toString()))
+    }
 
 }

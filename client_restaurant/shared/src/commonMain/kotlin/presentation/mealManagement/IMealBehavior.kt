@@ -1,7 +1,6 @@
 package presentation.mealManagement
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.entity.Cuisine
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
@@ -13,12 +12,8 @@ abstract class IMealBehavior : BaseScreenModel<MealEditorUIState, MealScreenUIEf
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
 
-    init {
-        getCuisines()
-    }
 
     protected abstract suspend fun addMeal(): Boolean
-    protected abstract suspend fun getCuisiness(): List<Cuisine>
 
     override fun onAddMeal() {
         tryToExecute(
@@ -88,17 +83,6 @@ abstract class IMealBehavior : BaseScreenModel<MealEditorUIState, MealScreenUIEf
         updateState { it.copy(meal = it.meal.copy(price = price)) }
     }
 
-    fun getCuisines() {
-        tryToExecute({ getCuisiness() }, ::onGetCuisinesSuccess, ::onAddCuisinesError)
-    }
 
-    private fun onGetCuisinesSuccess(cuisines: List<Cuisine>) {
-        updateState { it.copy(cuisines = cuisines.toUIState(), isLoading = false) }
-    }
-
-    private fun onAddCuisinesError(error: ErrorState) {
-        updateState { it.copy(isLoading = false, error = error.toString()) }
-        sendNewEffect(MealScreenUIEffect.MealResponseFailed(error.toString()))
-    }
 
 }

@@ -29,11 +29,6 @@ class IMealEditorScreenModel(private val mealId: String) : IMealBehavior() {
         return manageMeal.addMeal(state.value.meal.toMealAddition())
     }
 
-    override suspend fun getCuisiness(): List<Cuisine> {
-        updateState { it.copy(isLoading = true) }
-        return cuisines.getCuisines()
-    }
-
 
     private fun getMeal() {
         updateState { it.copy(id = mealId, isLoading = true) }
