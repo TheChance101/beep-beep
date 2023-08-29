@@ -6,6 +6,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
+import org.thechance.api_gateway.data.mappers.toMeal
 import org.thechance.api_gateway.data.mappers.toRestaurant
 import org.thechance.api_gateway.endpoints.gateway.IRestaurantGateway
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
@@ -41,6 +42,20 @@ fun Route.restaurantRoutes() {
             val limit = call.parameters["limit"]?.toInt() ?: 20
             val restaurants = restaurantGateway.getRestaurants(page, limit, locale = Locale(language, countryCode))
             respondWithResult(HttpStatusCode.OK, restaurants.toRestaurant())
+        }
+
+        get("/{id}/meals"){
+            val (language, countryCode) = extractLocalizationHeader()
+            val page = call.parameters["page"]?.toInt() ?: 1
+            val limit = call.parameters["limit"]?.toInt() ?: 20
+            val restaurantId = call.parameters["id"]?.trim().toString()
+            val meals = restaurantGateway.getMealsByRestaurantId(
+                restaurantId = restaurantId,
+                page = page,
+                limit = limit,
+                locale = Locale(language, countryCode)
+            )
+            respondWithResult(HttpStatusCode.OK, meals.map { it.toMeal() })
         }
 
         get("/{id}") {
