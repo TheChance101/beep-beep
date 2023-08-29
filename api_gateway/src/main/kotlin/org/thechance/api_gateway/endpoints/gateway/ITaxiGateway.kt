@@ -9,7 +9,6 @@ interface ITaxiGateway {
 
     suspend fun getTaxiById(id: String, permissions: List<Int>, locale: Locale): TaxiResource
 
-
     suspend fun createTaxi(
         plateNumber: String,
         color: Int,
