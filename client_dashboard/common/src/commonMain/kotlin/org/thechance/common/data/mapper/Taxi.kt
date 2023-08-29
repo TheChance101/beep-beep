@@ -1,7 +1,7 @@
 package org.thechance.common.data.mapper
 
 import org.thechance.common.data.remote.model.TaxiDto
-import org.thechance.common.domain.entity.AddTaxi
+import org.thechance.common.domain.entity.NewTaxiInfo
 import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.util.TaxiStatus
@@ -17,7 +17,7 @@ fun TaxiDto.toEntity() = Taxi(
     trips = trips ?: "0",
 )
 
-fun AddTaxi.toDto(): TaxiDto {
+fun NewTaxiInfo.toDto(): TaxiDto {
     return TaxiDto(
         plateNumber = plateNumber,
         color = setCarColo(selectedCarColor),

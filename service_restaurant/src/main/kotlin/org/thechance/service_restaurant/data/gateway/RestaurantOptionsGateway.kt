@@ -3,6 +3,7 @@ package org.thechance.service_restaurant.data.gateway
 import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.client.model.ReturnDocument
 import com.mongodb.client.model.Updates
+import org.bson.types.ObjectId
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
 import org.thechance.service_restaurant.data.DataBaseContainer
@@ -13,13 +14,12 @@ import org.thechance.service_restaurant.data.collection.relationModels.CategoryR
 import org.thechance.service_restaurant.data.collection.relationModels.MealCuisines
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
 import org.thechance.service_restaurant.data.utils.paginate
-import org.thechance.service_restaurant.data.utils.toUUIDs
+import org.thechance.service_restaurant.data.utils.toObjectIds
 import org.thechance.service_restaurant.domain.entity.*
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
 import org.thechance.service_restaurant.domain.utils.OrderStatus
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
-import java.util.*
 
 class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRestaurantOptionsGateway {
 
@@ -33,7 +33,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         return container.categoryCollection.aggregate<CategoryCollection>(
             match(
                 and(
-                    CategoryCollection::id eq UUID.fromString(categoryId),
+                    CategoryCollection::id eq ObjectId(categoryId),
                     CategoryCollection::isDeleted eq false
                 )
             ),
@@ -43,7 +43,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
 
     override suspend fun getRestaurantsInCategory(categoryId: String): List<Restaurant> {
         return container.categoryCollection.aggregate<CategoryRestaurant>(
-            match(CategoryCollection::id eq UUID.fromString(categoryId)),
+            match(CategoryCollection::id eq ObjectId(categoryId)),
             lookup(
                 from = DataBaseContainer.RESTAURANT_COLLECTION,
                 localField = CategoryCollection::restaurantIds.name,
@@ -57,7 +57,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         val categoryObjects =
             container.categoryCollection.find(
                 and(
-                    CategoryCollection::id `in` categoryIds.toUUIDs(),
+                    CategoryCollection::id `in` categoryIds.toObjectIds(),
                     CategoryCollection::isDeleted eq false
                 )
             ).toList()
@@ -67,7 +67,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
 
     override suspend fun getCategoriesInRestaurant(restaurantId: String): List<Category> {
         return container.restaurantCollection.aggregate<CategoryRestaurant>(
-            match(RestaurantCollection::id eq UUID.fromString(restaurantId)),
+            match(RestaurantCollection::id eq ObjectId(restaurantId)),
             lookup(
                 from = DataBaseContainer.CATEGORY_COLLECTION,
                 localField = RestaurantCollection::categoryIds.name,
@@ -88,15 +88,15 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         categoryIds: List<String>
     ): Boolean {
         val resultAddToCategory = container.categoryCollection.updateMany(
-            CategoryCollection::id `in` categoryIds.toUUIDs(),
-            addToSet(CategoryCollection::restaurantIds, UUID.fromString(restaurantId))
+            CategoryCollection::id `in` categoryIds.toObjectIds(),
+            addToSet(CategoryCollection::restaurantIds, ObjectId(restaurantId))
         ).isSuccessfullyUpdated()
 
         val resultAddToRestaurant = container.restaurantCollection.updateOneById(
-            UUID.fromString(restaurantId),
+            ObjectId(restaurantId),
             update = Updates.addEachToSet(
                 RestaurantCollection::categoryIds.name,
-                categoryIds.toUUIDs()
+                categoryIds.toObjectIds()
             )
         ).isSuccessfullyUpdated()
 
@@ -105,7 +105,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
 
     override suspend fun updateCategory(category: Category): Category {
         return container.categoryCollection.findOneAndUpdate(
-            filter = CategoryCollection::id eq UUID.fromString(category.id),
+            filter = CategoryCollection::id eq ObjectId(category.id),
             update = category.toCollection(),
             options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toEntity() ?: throw MultiErrorException(listOf(NOT_FOUND))
@@ -113,7 +113,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
 
     override suspend fun deleteCategory(categoryId: String): Boolean {
         return container.categoryCollection.updateOneById(
-            id = UUID.fromString(categoryId),
+            id = ObjectId(categoryId),
             update = Updates.set(CategoryCollection::isDeleted.name, true),
         ).isSuccessfullyUpdated()
     }
@@ -123,13 +123,13 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         restaurantIds: List<String>
     ): Boolean {
         val resultDeleteFromRestaurant = container.restaurantCollection.updateMany(
-            RestaurantCollection::id `in` restaurantIds.toUUIDs(),
-            pull(RestaurantCollection::categoryIds, UUID.fromString(categoryId))
+            RestaurantCollection::id `in` restaurantIds.toObjectIds(),
+            pull(RestaurantCollection::categoryIds, ObjectId(categoryId))
         ).isSuccessfullyUpdated()
 
         val resultDeleteFromCategory = container.categoryCollection.updateOneById(
-            UUID.fromString(categoryId),
-            pullAll(CategoryCollection::restaurantIds, restaurantIds.toUUIDs())
+            ObjectId(categoryId),
+            pullAll(CategoryCollection::restaurantIds, restaurantIds.toObjectIds())
         ).isSuccessfullyUpdated()
         return resultDeleteFromRestaurant and resultDeleteFromCategory
     }
@@ -140,11 +140,11 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         container.cuisineCollection.find(MealCollection::isDeleted eq false).toList().toEntity()
 
     override suspend fun getCuisineById(id: String): Cuisine? =
-        container.cuisineCollection.findOneById(UUID.fromString(id))?.takeIf { !it.isDeleted }?.toEntity()
+        container.cuisineCollection.findOneById(ObjectId(id))?.takeIf { !it.isDeleted }?.toEntity()
 
     override suspend fun getMealsInCuisine(cuisineId: String): List<Meal> {
         return container.cuisineCollection.aggregate<MealCuisines>(
-            match(CuisineCollection::id eq UUID.fromString(cuisineId)),
+            match(CuisineCollection::id eq ObjectId(cuisineId)),
             lookup(
                 from = DataBaseContainer.MEAL_COLLECTION,
                 localField = CuisineCollection::meals.name,
@@ -164,7 +164,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
     override suspend fun areCuisinesExist(cuisineIds: List<String>): Boolean {
         val cuisines = container.cuisineCollection.find(
             and(
-                CuisineCollection::id `in` cuisineIds.toUUIDs(),
+                CuisineCollection::id `in` cuisineIds.toObjectIds(),
                 CuisineCollection::isDeleted eq false
             )
         ).toList()
@@ -174,7 +174,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
 
     override suspend fun updateCuisine(cuisine: Cuisine): Cuisine {
         return container.cuisineCollection.findOneAndUpdate(
-            CuisineCollection::id eq UUID.fromString(cuisine.id),
+            CuisineCollection::id eq ObjectId(cuisine.id),
             cuisine.toCollection(),
             options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toEntity() ?: throw MultiErrorException(listOf(NOT_FOUND))
@@ -182,7 +182,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
 
     override suspend fun deleteCuisine(id: String): Boolean =
         container.cuisineCollection.updateOne(
-            filter = CuisineCollection::id eq UUID.fromString(id),
+            filter = CuisineCollection::id eq ObjectId(id),
             update = set(CuisineCollection::isDeleted setTo true),
         ).isSuccessfullyUpdated()
     //endregion
@@ -195,24 +195,24 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
     override suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order> {
         return  container.orderCollection.find(
             OrderCollection::restaurantId
-                    eq UUID.fromString(restaurantId)).toList().toEntity()
+                    eq ObjectId(restaurantId)).toList().toEntity()
     }
 
     override suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order> {
         return container.orderCollection.find(
-            OrderCollection::restaurantId eq UUID.fromString(restaurantId),
+            OrderCollection::restaurantId eq ObjectId(restaurantId),
             OrderCollection::orderStatus ne OrderStatus.CANCELED.statusCode,
             OrderCollection::orderStatus ne OrderStatus.DONE.statusCode
         ).toList().toEntity()
     }
 
     override suspend fun getOrderById(orderId: String): Order? =
-        container.orderCollection.findOneById(UUID.fromString(orderId))?.toEntity()
+        container.orderCollection.findOneById(ObjectId(orderId))?.toEntity()
 
     override suspend fun updateOrderStatus(orderId: String, status: OrderStatus): Order? {
         val updateOperation = setValue(OrderCollection::orderStatus, status.statusCode)
         val updatedOrder = container.orderCollection.findOneAndUpdate(
-            filter = OrderCollection::id eq UUID.fromString(orderId),
+            filter = OrderCollection::id eq ObjectId(orderId),
             update = updateOperation
         )
         return updatedOrder?.toEntity()
@@ -222,7 +222,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         return container.orderCollection
             .find(OrderCollection::orderStatus eq OrderStatus.DONE.statusCode,
                 OrderCollection::orderStatus eq OrderStatus.CANCELED.statusCode,
-                OrderCollection::restaurantId eq UUID.fromString(restaurantId))
+                OrderCollection::restaurantId eq ObjectId(restaurantId))
             .sort(descending(OrderCollection::createdAt))
             .paginate(page, limit).toList().toEntity()
     }
