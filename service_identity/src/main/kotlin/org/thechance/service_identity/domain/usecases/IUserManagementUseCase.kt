@@ -20,13 +20,13 @@ class UserManagementUseCase(private val dataBaseGateway: IDataBaseGateway) : IUs
     override suspend fun addPermissionToUser(userId: String, permission: Int): Boolean {
         val userPermission = dataBaseGateway.getUserPermission(userId)
         val newPermission = grantPermission(userPermission, permission)
-        return dataBaseGateway.addPermissionToUser(userId, newPermission)
+        return dataBaseGateway.updatePermissionToUser(userId, newPermission)
     }
 
     override suspend fun removePermissionFromUser(userId: String, permission: Int): Boolean {
         val userPermission = dataBaseGateway.getUserPermission(userId)
         val removePermission = revokePermission(userPermission, permission)
-        return dataBaseGateway.removePermissionFromUser(userId, removePermission)
+        return dataBaseGateway.updatePermissionToUser(userId, removePermission)
     }
 
     override suspend fun getUsers(page: Int, limit: Int, searchTerm: String): List<UserManagement> {

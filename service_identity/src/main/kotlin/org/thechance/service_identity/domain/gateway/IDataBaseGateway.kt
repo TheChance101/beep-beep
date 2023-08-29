@@ -57,9 +57,7 @@ interface IDataBaseGateway {
 
     // region: user permission management
 
-    suspend fun addPermissionToUser(userId: String, permission: Int): Boolean
-
-    suspend fun removePermissionFromUser(userId: String, permission: Int): Boolean
+    suspend fun updatePermissionToUser(userId: String, permission: Int): Boolean
 
     suspend fun getUserPermission(userId: String): Int
 

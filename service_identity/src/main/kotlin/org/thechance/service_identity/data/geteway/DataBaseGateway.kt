@@ -4,6 +4,7 @@ import com.mongodb.MongoWriteException
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.IndexOptions
 import com.mongodb.client.model.Indexes
+import com.mongodb.client.model.Updates
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -94,43 +95,6 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) : IDataBaseGateway {
         ).toList().toEntity()
     }
 
-    //endregion
-
-    //region Permission
-    override suspend fun getPermission(permissionId: Int): Permission {
-        return permissionCollection.findOneById(permissionId)?.toEntity()
-            ?: throw ResourceNotFoundException(NOT_FOUND)
-    }
-
-    override suspend fun addPermission(permission: Permission): Boolean {
-        val maximumId = permissionCollection.find().toList().size
-        return permissionCollection.insertOne(permission.toCollection(maximumId + 1)).wasAcknowledged()
-    }
-
-    override suspend fun deletePermission(permissionId: Int): Boolean {
-        return permissionCollection.updateOne(
-            filter = Filters.and(
-                PermissionCollection::id eq permissionId,
-                PermissionCollection::isDeleted eq false
-            ),
-            update = setValue(PermissionCollection::isDeleted, true)
-        ).isUpdatedSuccessfully()
-    }
-
-    override suspend fun getListOfPermission(): List<Permission> {
-        return permissionCollection.find(
-            PermissionCollection::isDeleted eq false
-        ).toList().toEntity()
-    }
-
-
-    override suspend fun updatePermission(permissionId: Int, permission: String?): Boolean {
-        return permissionCollection.updateOneById(
-            id = permissionId,
-            update = permission!!,
-            updateOnlyNotNullProperties = true
-        ).isUpdatedSuccessfully()
-    }
     //endregion
 
 
@@ -297,20 +261,10 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) : IDataBaseGateway {
 
     // region: user permission management
 
-    override suspend fun addPermissionToUser(userId: String, permissionId: Int): Boolean {
-        val permission = permissionCollection.findOne(PermissionCollection::id eq permissionId)
-            ?: throw ResourceNotFoundException(NOT_FOUND)
-
+    override suspend fun updatePermissionToUser(userId: String, permission: Int): Boolean {
         return userCollection.updateOne(
             filter = UserCollection::id eq UUID.fromString(userId),
-            update = push(UserCollection::permission, permission)
-        ).isUpdatedSuccessfully()
-    }
-
-    override suspend fun removePermissionFromUser(userId: String, permissionId: Int): Boolean {
-        return userCollection.updateOne(
-            filter = UserCollection::id eq UUID.fromString(userId),
-            update = pullByFilter(UserCollection::permission, PermissionCollection::id eq permissionId)
+            update = Updates.set(UserCollection::permission.name, permission)
         ).isUpdatedSuccessfully()
     }
 
