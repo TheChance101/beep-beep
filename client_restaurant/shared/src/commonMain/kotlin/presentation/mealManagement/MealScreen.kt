@@ -49,15 +49,7 @@ class MealScreen(
             sheetContent = {
                 CuisineBottomSheet(
                     cuisines = state.cuisines,
-                    onCancelClick = {
-                        listener.onCuisinesCancel()
-                        sheetState.dismiss()
-                    },
-                    onSaveClick = {
-                        listener.onSaveCuisineClick()
-                        sheetState.dismiss()
-                    },
-                    onItemSelected = listener::onCuisineSelected
+                    listener = listener
                 )
             },
             sheetBackgroundColor = Theme.colors.background,
@@ -85,11 +77,10 @@ class MealScreen(
         when (effect) {
             is MealScreenUIEffect.Back -> {
                 navigator.pop()
-
             }
 
             is MealScreenUIEffect.MealResponseSuccessfully -> navigator.pop()
-            else -> {}
+            is MealScreenUIEffect.MealResponseFailed -> {}
         }
     }
 }

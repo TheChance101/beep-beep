@@ -7,10 +7,8 @@ import domain.usecase.IManageMealUseCase
 import domain.usecase.IMangeCuisineUseCase
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.component.inject
-import presentation.base.ErrorState
 import presentation.mealManagement.CuisineUIState
 import presentation.mealManagement.IMealBehavior
-import presentation.mealManagement.MealScreenUIEffect
 import presentation.mealManagement.toMealAddition
 import presentation.mealManagement.toUIState
 
@@ -25,6 +23,15 @@ class IMealEditorScreenModel(private val mealId: String) : IMealBehavior() {
 
     init {
         getMeal()
+    }
+
+    override suspend fun addMeal(): Boolean {
+        return manageMeal.addMeal(state.value.meal.toMealAddition())
+    }
+
+    override suspend fun getCuisiness(): List<Cuisine> {
+        updateState { it.copy(isLoading = true) }
+        return cuisines.getCuisines()
     }
 
 
@@ -63,64 +70,5 @@ class IMealEditorScreenModel(private val mealId: String) : IMealBehavior() {
         }
     }
 
-    override fun onAddMeal() {
-        tryToExecute(
-            { manageMeal.addMeal(state.value.meal.toMealAddition()) },
-            ::onMealAddedSuccessfully,
-            ::onError
-        )
-    }
 
-    override fun onCuisineClick() {
-        updateState { it.copy(isCuisinesShow = true) }
-    }
-
-    private fun onMealAddedSuccessfully(result: Boolean) {
-        sendNewEffect(MealScreenUIEffect.MealResponseSuccessfully)
-    }
-
-
-    private fun onError(error: ErrorState) {
-        updateState { it.copy(isLoading = false, error = error.toString()) }
-        sendNewEffect(MealScreenUIEffect.MealResponseFailed(error.toString()))
-    }
-
-    override fun onSaveCuisineClick() {
-        val mealCuisines = state.value.cuisines.filter { it.isSelected }
-        updateState {
-            it.copy(
-                meal = it.meal.copy(mealCuisines = mealCuisines),
-                isCuisinesShow = false
-            )
-        }
-    }
-
-    override fun onCuisineSelected(id: String) {
-        updateState { it.copy(cuisines = it.cuisines.onUpdateCuisineSelection(listOf(id))) }
-    }
-
-    override fun onImagePicked(image: ByteArray) {
-        updateState { it.copy(meal = it.meal.copy(image = image)) }
-    }
-
-    override fun onClickBack() {
-        sendNewEffect(MealScreenUIEffect.Back)
-    }
-
-    override fun onCuisinesCancel() {
-        updateState { it.copy(isCuisinesShow = false) }
-    }
-
-    override fun onNameChange(name: String) {
-        updateState { it.copy(meal = it.meal.copy(name = name)) }
-    }
-
-    override fun onDescriptionChange(description: String) {
-        updateState { it.copy(meal = it.meal.copy(description = description)) }
-
-    }
-
-    override fun onPriceChange(price: String) {
-        updateState { it.copy(meal = it.meal.copy(price = price)) }
-    }
 }
