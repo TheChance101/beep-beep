@@ -21,7 +21,6 @@ import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import org.thechance.common.presentation.app.ThemeScreenModel
 import org.thechance.common.presentation.composables.scaffold.BpSideBarItem
 import org.thechance.common.presentation.composables.scaffold.DashBoardScaffold
 import org.thechance.common.presentation.composables.scaffold.DashboardAppbar
@@ -29,16 +28,15 @@ import org.thechance.common.presentation.composables.scaffold.DashboardSideBar
 import org.thechance.common.presentation.resources.Resources
 
 object MainContainer : Screen, KoinComponent {
-    private fun readResolve(): Any = MainContainer
 
+    private fun readResolve(): Any = MainContainer
     private val screenModel: MainScreenModel by inject()
-    private val themeScreenModel by inject<ThemeScreenModel>()
 
     @Composable
     override fun Content() {
         val state by screenModel.state.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
-        val isDarkMode = themeScreenModel.state.collectAsState().value
+        val isDarkMode = screenModel.state.collectAsState().value.isDarkMode
 
         TabNavigator(OverviewTab) {
             MainContent(
@@ -47,7 +45,7 @@ object MainContainer : Screen, KoinComponent {
                     screenModel.logout()
                     navigator.popUntilRoot()
                 },
-                onSwitchTheme = themeScreenModel::onSwitchTheme,
+                onSwitchTheme = screenModel::onSwitchTheme,
                 isDarkMode = isDarkMode
             )
         }
