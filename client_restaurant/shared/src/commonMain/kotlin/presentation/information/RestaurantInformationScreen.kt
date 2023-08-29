@@ -99,9 +99,9 @@ class RestaurantInformationScreen : BaseScreen<
     ) {
         BpCard(
             modifier = Modifier.fillMaxWidth().padding(
-                start = Theme.dimens.space16,
-                end = Theme.dimens.space16,
-                top = Theme.dimens.space16
+                start = 16.dp,
+                end = 16.dp,
+                top = 16.dp
             )
         ) {
 
@@ -109,9 +109,9 @@ class RestaurantInformationScreen : BaseScreen<
                 Text(
                     ownerUsername,
                     modifier = Modifier.padding(
-                        start = Theme.dimens.space16,
-                        end = Theme.dimens.space16,
-                        bottom = Theme.dimens.space16
+                        start = 16.dp,
+                        end = 16.dp,
+                        bottom = 16.dp
                     ),
                     style = Theme.typography.body,
                     color = Theme.colors.contentPrimary
@@ -121,9 +121,9 @@ class RestaurantInformationScreen : BaseScreen<
                 Text(
                     address,
                     modifier = Modifier.padding(
-                        start = Theme.dimens.space16,
-                        end = Theme.dimens.space16,
-                        bottom = Theme.dimens.space16
+                        start = 16.dp,
+                        end = 16.dp,
+                        bottom = 16.dp
                     ),
                     style = Theme.typography.body,
                     color = Theme.colors.contentPrimary
@@ -135,20 +135,20 @@ class RestaurantInformationScreen : BaseScreen<
                     selectedIcon = painterResource(Resources.images.filledStar),
                     halfSelectedIcon = painterResource(Resources.images.halfFilledStar),
                     modifier = Modifier.padding(
-                        start = Theme.dimens.space16,
-                        end = Theme.dimens.space16,
-                        bottom = Theme.dimens.space16
+                        start = 16.dp,
+                        end = 16.dp,
+                        bottom = 16.dp
                     ),
-                    iconsSize = Theme.dimens.space16
+                    iconsSize = 16.dp
                 )
             }
             BpTitleWithContentSection(title = Resources.strings.priceLevel) {
                 Text(
                     priceLevel,
                     modifier = Modifier.padding(
-                        start = Theme.dimens.space16,
-                        end = Theme.dimens.space16,
-                        bottom = Theme.dimens.space16
+                        start = 16.dp,
+                        end = 16.dp,
+                        bottom = 16.dp
                     ),
                     style = Theme.typography.titleMedium,
                     color = Theme.colors.success
@@ -164,15 +164,15 @@ class RestaurantInformationScreen : BaseScreen<
         listener: RestaurantInformationInteractionListener
     ) {
         BpCard(
-            modifier = Modifier.fillMaxWidth().padding(Theme.dimens.space16)
+            modifier = Modifier.fillMaxWidth().padding(16.dp)
         ) {
             BpTextField(
                 label = Resources.strings.restaurantName,
                 text = state.restaurant.restaurantName,
                 onValueChange = { listener.onRestaurantNameChange(it) },
                 modifier = Modifier.padding(
-                    horizontal = Theme.dimens.space16,
-                    vertical = Theme.dimens.space16
+                    horizontal = 16.dp,
+                    vertical = 16.dp
                 ),
                 errorMessage = Resources.strings.restaurantNameErrorMessage,
                 isError = state.restaurant.isRestaurantNameError
@@ -182,21 +182,21 @@ class RestaurantInformationScreen : BaseScreen<
                 text = state.restaurant.phoneNumber,
                 onValueChange = { listener.onPhoneNumberChange(it) },
                 modifier = Modifier.padding(
-                    start = Theme.dimens.space16,
-                    end = Theme.dimens.space16,
-                    bottom = Theme.dimens.space16
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp
                 ),
                 isError = state.restaurant.isPhoneNumberError,
                 errorMessage = Resources.strings.phoneNumberErrorMessage
             )
-            Row(modifier = Modifier.padding(bottom = Theme.dimens.space16)) {
+            Row(modifier = Modifier.padding(bottom = 16.dp)) {
                 BpTextField(
                     label = Resources.strings.workingHours,
                     text = state.restaurant.openingTime,
                     onValueChange = { listener.onOpeningTimeChange(it) },
                     modifier = Modifier.padding(
-                        start = Theme.dimens.space16,
-                        end = Theme.dimens.space4
+                        start = 16.dp,
+                        end = 4.dp
                     ).weight(1f),
                     isError = state.restaurant.isOpeningTimeError,
                     errorMessage = Resources.strings.openingTimeErrorMessage
@@ -206,8 +206,8 @@ class RestaurantInformationScreen : BaseScreen<
                     text = state.restaurant.closingTime,
                     onValueChange = { listener.onClosingTimeChange(it) },
                     modifier = Modifier.padding(
-                        start = Theme.dimens.space4,
-                        end = Theme.dimens.space16
+                        start = 4.dp,
+                        end = 16.dp
                     ).weight(1f),
                     isError = state.restaurant.isClosingTimeError,
                     errorMessage = Resources.strings.closingTimeErrorMessage
@@ -218,9 +218,9 @@ class RestaurantInformationScreen : BaseScreen<
                 text = state.restaurant.description,
                 onValueChange = { listener.onDescriptionChanged(it) },
                 modifier = Modifier.padding(
-                    start = Theme.dimens.space16,
-                    end = Theme.dimens.space16,
-                    bottom = Theme.dimens.space24
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 24.dp
                 ),
                 errorMessage = Resources.strings.descriptionErrorMessage,
                 isError = state.restaurant.isDescriptionLengthError,
@@ -232,9 +232,9 @@ class RestaurantInformationScreen : BaseScreen<
                 onClick = { listener.onClickSave() },
                 enabled = state.restaurant.isSaveButtonEnabled,
                 modifier = Modifier.fillMaxWidth().padding(
-                    start = Theme.dimens.space16,
-                    end = Theme.dimens.space16,
-                    bottom = Theme.dimens.space16
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp
                 )
             )
         }
@@ -246,9 +246,9 @@ class RestaurantInformationScreen : BaseScreen<
         onClickLogout: () -> Unit
     ) {
         BpCard(modifier = Modifier.fillMaxWidth().padding(
-            start = Theme.dimens.space16,
-            end = Theme.dimens.space16,
-            bottom = Theme.dimens.space16
+            start = 16.dp,
+            end = 16.dp,
+            bottom = 16.dp
         ).clickable { onClickLogout() }) {
             Row {
                 Icon(
@@ -265,7 +265,7 @@ class RestaurantInformationScreen : BaseScreen<
                 Text(
                     Resources.strings.logout,
                     style = Theme.typography.title.copy(color = Theme.colors.primary),
-                    modifier = Modifier.padding(vertical = Theme.dimens.space16)
+                    modifier = Modifier.padding(vertical = 16.dp)
                 )
             }
         }
