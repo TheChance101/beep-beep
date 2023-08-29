@@ -82,11 +82,12 @@ class RestaurantGateway(
             errorHandler.getLocalizedErrorMessage(errorCodes, locale)
         }
     ) {
-        get("/restaurants"){
+        get("/restaurants") {
             parameter("page", page)
             parameter("limit", limit)
         }
     }
+
     override suspend fun getRestaurantsByOwnerId(
         ownerId: String, locale: Locale, permissions: List<Int>
     ): List<RestaurantResource> {
@@ -104,7 +105,7 @@ class RestaurantGateway(
         }
     }
 
-    override suspend fun deleteRestaurant(restaurantId: String, permissions: List<Int>, locale: Locale) :Boolean{
+    override suspend fun deleteRestaurant(restaurantId: String, permissions: List<Int>, locale: Locale): Boolean {
         return tryToExecute<Boolean>(
             APIs.RESTAURANT_API,
             setErrorMessage = { errorHandler.getLocalizedErrorMessage(it, locale) }
@@ -115,6 +116,7 @@ class RestaurantGateway(
             delete("/restaurant/$restaurantId")
         }
     }
+
     @OptIn(InternalAPI::class)
     override suspend fun addMeal(
         restaurantId: String,
@@ -125,7 +127,6 @@ class RestaurantGateway(
         permissions: List<Int>,
         locale: Locale
     ): MealResource {
-        val RESTAURANT_MANAGER_PERMISSION = 2
         if (RESTAURANT_MANAGER_PERMISSION in permissions) {
             return tryToExecute(
                 api = APIs.RESTAURANT_API,
@@ -145,7 +146,6 @@ class RestaurantGateway(
                         )
                     )
                 }
-
             }
         } else {
             throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
@@ -162,7 +162,6 @@ class RestaurantGateway(
         permissions: List<Int>,
         locale: Locale
     ): MealResource {
-        val RESTAURANT_MANAGER_PERMISSION = 2
         if (RESTAURANT_MANAGER_PERMISSION in permissions) {
             return tryToExecute(
                 api = APIs.RESTAURANT_API,
@@ -182,7 +181,6 @@ class RestaurantGateway(
                         )
                     )
                 }
-
             }
         } else {
             throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
