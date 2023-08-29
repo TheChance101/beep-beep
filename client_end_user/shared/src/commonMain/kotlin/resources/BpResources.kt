@@ -20,12 +20,10 @@ fun BeepBeepTheme(
     content: @Composable () -> Unit,
 ) {
     val drawableResources = if (useDarkTheme) BpDrawableDarkResources else DrawableResources()
-    val context = getPlatformContext()
 
     CompositionLocalProvider(
         localDrawableResources provides drawableResources,
         localStringResources provides StringResources(),
-        LocalImageLoader provides remember { generateImageLoader(context) }
     ) {
         BpTheme {
             content()

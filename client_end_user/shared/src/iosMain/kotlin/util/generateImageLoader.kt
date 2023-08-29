@@ -1,5 +1,8 @@
 package util
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ProvidableCompositionLocal
+import androidx.compose.ui.interop.LocalUIViewController
 import com.seiko.imageloader.ImageLoader
 import com.seiko.imageloader.component.setupDefaultComponents
 import okio.Path.Companion.toPath
@@ -7,7 +10,13 @@ import platform.Foundation.NSCachesDirectory
 import platform.Foundation.NSSearchPathForDirectoriesInDomains
 import platform.Foundation.NSUserDomainMask
 
-actual fun generateImageLoader(applicationContext : PlatformContext): ImageLoader {
+
+actual class PlatformContext(val iosController: ProvidableCompositionLocal<UIViewController>)
+
+@Composable
+actual fun getPlatformContext(): PlatformContext = util.PlatformContext(LocalUIViewController)
+
+actual fun generateImageLoader(applicationContext: PlatformContext): ImageLoader {
     return ImageLoader {
         components {
             setupDefaultComponents()
