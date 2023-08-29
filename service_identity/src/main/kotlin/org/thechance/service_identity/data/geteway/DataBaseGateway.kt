@@ -15,7 +15,6 @@ import org.thechance.service_identity.data.collection.*
 import org.thechance.service_identity.data.mappers.toCollection
 import org.thechance.service_identity.data.mappers.toEntity
 import org.thechance.service_identity.data.mappers.toManagedEntity
-import org.thechance.service_identity.data.util.USER_DETAILS_COLLECTION
 import org.thechance.service_identity.data.util.isUpdatedSuccessfully
 import org.thechance.service_identity.data.util.paginate
 import org.thechance.service_identity.domain.entity.*
@@ -26,8 +25,7 @@ import org.thechance.service_identity.domain.util.USER_NOT_FOUND
 import java.util.*
 
 @Single
-class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
-    IDataBaseGateway {
+class DataBaseGateway(dataBaseContainer: DataBaseContainer) : IDataBaseGateway {
 
 
     private val addressCollection by lazy {
@@ -35,9 +33,6 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
     }
     private val userDetailsCollection by lazy {
         dataBaseContainer.database.getCollection<UserDetailsCollection>(USER_DETAILS_COLLECTION)
-    }
-    private val permissionCollection by lazy {
-        dataBaseContainer.database.getCollection<PermissionCollection>(PERMISSION_COLLECTION_NAME)
     }
     private val userCollection by lazy {
         dataBaseContainer.database.getCollection<UserCollection>(USER_COLLECTION)
@@ -160,7 +155,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
 
         val wallet = getWalletByUserId(id)
         val userAddresses = getUserAddresses(id)
-        val userPermission = getUserPermissions(id)
+        val userPermission = getUserPermission(id)
 
         return userCollection.aggregate<DetailedUserCollection>(
             match(
@@ -190,7 +185,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
             UserCollection::fullName,
             UserCollection::username,
             UserCollection::email,
-            UserCollection::permissions,
+            UserCollection::permission,
         ).paginate(page, limit).toList().toManagedEntity()
     }
 
@@ -308,20 +303,19 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
 
         return userCollection.updateOne(
             filter = UserCollection::id eq UUID.fromString(userId),
-            update = push(UserCollection::permissions, permission)
+            update = push(UserCollection::permission, permission)
         ).isUpdatedSuccessfully()
     }
 
     override suspend fun removePermissionFromUser(userId: String, permissionId: Int): Boolean {
         return userCollection.updateOne(
             filter = UserCollection::id eq UUID.fromString(userId),
-            update = pullByFilter(UserCollection::permissions, PermissionCollection::id eq permissionId)
+            update = pullByFilter(UserCollection::permission, PermissionCollection::id eq permissionId)
         ).isUpdatedSuccessfully()
     }
 
-    override suspend fun getUserPermissions(userId: String): List<Permission> {
-        return userCollection.findOneById(UUID.fromString(userId))?.permissions?.toEntity()
-            ?: emptyList()
+    override suspend fun getUserPermission(userId: String): Int {
+        return userCollection.findOneById(UUID.fromString(userId))?.permission ?: 1
     }
 
 
@@ -340,8 +334,7 @@ class DataBaseGateway(dataBaseContainer: DataBaseContainer) :
     companion object {
         private const val WALLET_COLLECTION = "wallet"
         private const val ADDRESS_COLLECTION_NAME = "address"
-        private const val PERMISSION_COLLECTION_NAME = "permission"
-        private const val TOKENS_COLLECTION = "tokens"
+        const val USER_DETAILS_COLLECTION = "user_details"
         private const val USER_COLLECTION = "user"
         private const val USER_NAME = "username"
         private const val INDEX_NAME = "username_1"

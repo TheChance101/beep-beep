@@ -5,5 +5,5 @@ data class UserManagement(
     val fullName: String,
     val username: String,
     val email: String,
-    val permissions: List<Permission> = emptyList()
+    val permission: Int
 )

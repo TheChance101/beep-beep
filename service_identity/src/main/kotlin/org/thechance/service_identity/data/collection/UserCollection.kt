@@ -18,6 +18,6 @@ data class UserCollection(
     val hashedPassword: String? = null,
     val email: String,
     val salt: String? = null,
-    val permissions: List<PermissionCollection> = emptyList(),
+    val permission: Int,
     val isDeleted: Boolean = false,
 )

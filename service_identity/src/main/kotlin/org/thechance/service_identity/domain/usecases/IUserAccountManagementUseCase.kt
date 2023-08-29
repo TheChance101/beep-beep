@@ -60,10 +60,7 @@ class UserAccountManagementUseCase(
     ): UserManagement {
         userInfoValidationUseCase.validateUserInformation(fullName, username, password, email)
         val saltedHash = hashingService.generateSaltedHash(password)
-        val user = dataBaseGateway.createUser(saltedHash, fullName, username, email)
-        dataBaseGateway.addPermissionToUser(userId = user.id, permissionId = END_USER)
-        val permission = dataBaseGateway.getPermission(END_USER)
-        return user.copy(permissions = listOf(permission))
+        return dataBaseGateway.createUser(saltedHash, fullName, username, email)
     }
 
     override suspend fun getUserByUsername(username: String): UserManagement {
@@ -108,10 +105,6 @@ class UserAccountManagementUseCase(
             throw InsufficientFundsException(INSUFFICIENT_FUNDS)
         }
         return dataBaseGateway.subtractFromWallet(userId, amount)
-    }
-
-    private companion object {
-        const val END_USER = 1
     }
 
 }

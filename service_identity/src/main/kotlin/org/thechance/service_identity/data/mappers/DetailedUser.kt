@@ -2,13 +2,12 @@ package org.thechance.service_identity.data.mappers
 
 import org.thechance.service_identity.data.collection.DetailedUserCollection
 import org.thechance.service_identity.domain.entity.Address
-import org.thechance.service_identity.domain.entity.Permission
 import org.thechance.service_identity.domain.entity.User
 
 fun DetailedUserCollection.toEntity(
     walletBalance: Double,
     addresses: List<Address>,
-    permissions: List<Permission>
+    permission : Int
 ): User {
     return User(
         id = id.toString(),
@@ -17,14 +16,14 @@ fun DetailedUserCollection.toEntity(
         email = email,
         walletBalance = walletBalance,
         addresses = addresses,
-        permissions = permissions
+        permission = permission
     )
 }
 
 fun List<DetailedUserCollection>.toEntity(
     walletBalance: Double,
     addresses: List<Address>,
-    permissions: List<Permission>
+    permission: Int
 ): List<User> {
-    return map { it.toEntity(walletBalance, addresses, permissions) }
+    return map { it.toEntity(walletBalance, addresses, permission) }
 }

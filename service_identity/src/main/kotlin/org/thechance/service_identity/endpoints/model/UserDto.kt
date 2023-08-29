@@ -12,5 +12,5 @@ data class UserDto(
     val email: String? = null,
     val walletBalance: Double? = 0.0,
     val addresses: List<AddressDto> = emptyList(),
-    val permissions: List<PermissionDto> = emptyList()
+    val permission: Int = 1
 )

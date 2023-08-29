@@ -8,5 +8,5 @@ data class UserManagementDto(
     val fullName: String,
     val username: String,
     val email: String,
-    val permissions: List<PermissionDto>
+    val permission : Int
 )
