@@ -5,9 +5,9 @@ import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import io.ktor.util.*
+import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import kotlinx.coroutines.flow.Flow
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.CuisineResource
 import org.thechance.api_gateway.data.model.restaurant.RestaurantResource
@@ -78,11 +78,12 @@ class RestaurantGateway(
             errorHandler.getLocalizedErrorMessage(errorCodes, locale)
         }
     ) {
-        get("/restaurants"){
+        get("/restaurants") {
             parameter("page", page)
             parameter("limit", limit)
         }
     }
+
     override suspend fun getRestaurantsByOwnerId(
         ownerId: String,
         locale: Locale,
@@ -103,7 +104,6 @@ class RestaurantGateway(
             throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
         }
     }
-
 
 
     @OptIn(InternalAPI::class)
@@ -195,7 +195,7 @@ class RestaurantGateway(
                     locale
                 )
             }
-        ){
+        ) {
             get("/order/$restaurantId/orders")
         }
     }

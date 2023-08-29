@@ -5,20 +5,20 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
-import io.ktor.server.auth.*
-import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.mappers.toRestaurant
 import org.thechance.api_gateway.endpoints.gateway.IRestaurantGateway
+import org.thechance.api_gateway.endpoints.model.Order
 import org.thechance.api_gateway.endpoints.utils.*
 import java.util.*
 
 fun Route.restaurantRoutes() {
 
     val restaurantGateway: IRestaurantGateway by inject()
+    val webSocketServerHandler : WebSocketServerHandler by inject()
 
     route("/restaurants") {
 
@@ -39,7 +39,6 @@ fun Route.restaurantRoutes() {
         }
     }
 
-
     route("/restaurant") {
         get {
             val (language, countryCode) = extractLocalizationHeader()
@@ -53,15 +52,12 @@ fun Route.restaurantRoutes() {
         get("/{id}") {
             val (language, countryCode) = extractLocalizationHeader()
             val restaurantId = call.parameters["id"]?.trim().toString()
-            val restaurant =
-                restaurantGateway.getRestaurantInfo(locale = Locale(language, countryCode), restaurantId = restaurantId)
-            respondWithResult(HttpStatusCode.OK, restaurant)
-            val restaurant = restaurantGateway.getRestaurantInfo(locale = Locale(language, countryCode), id = restaurantId)
+            val restaurant = restaurantGateway.getRestaurantInfo(locale = Locale(language, countryCode), restaurantId = restaurantId)
             respondWithResult(HttpStatusCode.OK, restaurant.toRestaurant())
         }
 
 
-        authenticate("auth-jwt") {
+        authenticate("auth-jwt", "refresh-jwt") {
 
             route("/orders") {
 
@@ -70,7 +66,8 @@ fun Route.restaurantRoutes() {
                     val permissions = extractPermissionsFromWebSocket()
                     val (language, countryCode) = extractLocalizationHeaderFromWebSocket()
                     val orders = restaurantGateway.restaurantOrders(permissions, restaurantId, Locale(language, countryCode))
-                    orders.collect { this.sendSerialized(it) }
+                    webSocketServerHandler.sessions[restaurantId] = this
+                    webSocketServerHandler.sessions[restaurantId]?.let { webSocketServerHandler.tryToCollectFormWebSocket(orders, it) }
                 }
 
                 get("/{restaurantId}") {

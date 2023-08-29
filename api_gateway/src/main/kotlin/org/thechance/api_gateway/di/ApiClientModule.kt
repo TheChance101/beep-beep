@@ -14,6 +14,7 @@ import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.util.APIs
+import kotlin.time.Duration.Companion.seconds
 
 @Module
 class ApiClientModule {
@@ -35,19 +36,20 @@ class ApiClientModule {
 
             install(WebSockets) {
                 contentConverter = KotlinxWebsocketSerializationConverter(Json)
+                pingInterval = 20.seconds.inWholeMilliseconds
             }
 
             defaultRequest {
                 header("Content-Type", "application/json")
                 when (clientAttributes[AttributeKey<String>("API")]) {
                     APIs.IDENTITY_API.value -> {
-//                        url("http://127.0.0.5:8088")
-                        url("http://0.0.0.0:8088")
+                        url("http://127.0.0.1:8082")
+//                        url("http://0.0.0.0:8082")
                     }
 
                     APIs.RESTAURANT_API.value -> {
-//                        url("http://127.0.0.2:8080")
-                        url("http://0.0.0.0:8081")
+                        url("http://127.0.0.1:8083")
+//                        url("http://0.0.0.0:8083")
                     }
 
                     APIs.TAXI_API.value -> {
