@@ -5,6 +5,6 @@ import domain.entity.Meal
 
 
 interface IRemoteCuisineGateway {
-    suspend fun getCuisinesByRestaurantId(restaurantId: String): List<Cuisine>
+    suspend fun getCuisinesByRestaurantId(restaurantId: String): List<Cuisine>?
 
 }
