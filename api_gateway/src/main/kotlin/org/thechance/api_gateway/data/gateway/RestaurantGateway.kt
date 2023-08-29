@@ -20,6 +20,11 @@ import org.thechance.api_gateway.endpoints.model.RestaurantRequestPermission
 import org.thechance.api_gateway.util.APIs
 import java.util.*
 
+//TODO will delete it after do with permissions
+const val ADMIN_PERMISSION = 1
+const val RESTAURANT_MANAGER_PERMISSION = 2
+
+
 @Single(binds = [IRestaurantGateway::class])
 class RestaurantGateway(
     client: HttpClient, attributes: Attributes, private val errorHandler: ErrorHandler
@@ -47,8 +52,7 @@ class RestaurantGateway(
         permissions: List<Int>,
         locale: Locale
     ): List<RestaurantRequestPermission> {
-        // todo: implement check permissions logic correctly
-        if (!permissions.contains(1)) {
+        if (!permissions.contains(ADMIN_PERMISSION)) {
             throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
         }
 
@@ -86,12 +90,8 @@ class RestaurantGateway(
     }
 
     override suspend fun getRestaurantsByOwnerId(
-        ownerId: String,
-        locale: Locale,
-        permissions: List<Int>
+        ownerId: String, locale: Locale, permissions: List<Int>
     ): List<RestaurantResource> {
-
-        val RESTAURANT_MANAGER_PERMISSION = 2
         if (RESTAURANT_MANAGER_PERMISSION in permissions) {
             return tryToExecute(
                 api = APIs.RESTAURANT_API,
@@ -106,6 +106,18 @@ class RestaurantGateway(
         }
     }
 
+    override suspend fun deleteRestaurant(restaurantId: String, permissions: List<Int>, locale: Locale): Boolean {
+        return tryToExecute<Boolean>(
+            APIs.RESTAURANT_API,
+            setErrorMessage = { errorHandler.getLocalizedErrorMessage(it, locale) }
+        ) {
+            if (!permissions.contains(ADMIN_PERMISSION)) {
+                throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
+            }
+            delete("/restaurant/$restaurantId")
+        }
+    }
+
     @OptIn(InternalAPI::class)
     override suspend fun addMeal(
         restaurantId: String,
@@ -116,7 +128,6 @@ class RestaurantGateway(
         permissions: List<Int>,
         locale: Locale
     ): MealResource {
-        val RESTAURANT_MANAGER_PERMISSION = 2
         if (RESTAURANT_MANAGER_PERMISSION in permissions) {
             return tryToExecute(
                 api = APIs.RESTAURANT_API,
@@ -136,7 +147,6 @@ class RestaurantGateway(
                         )
                     )
                 }
-
             }
         } else {
             throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
@@ -153,7 +163,6 @@ class RestaurantGateway(
         permissions: List<Int>,
         locale: Locale
     ): MealResource {
-        val RESTAURANT_MANAGER_PERMISSION = 2
         if (RESTAURANT_MANAGER_PERMISSION in permissions) {
             return tryToExecute(
                 api = APIs.RESTAURANT_API,
@@ -173,7 +182,6 @@ class RestaurantGateway(
                         )
                     )
                 }
-
             }
         } else {
             throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
@@ -218,8 +226,7 @@ class RestaurantGateway(
         orderId: String, permissions: List<Int>, status: Int, locale: Locale
     ): Order {
         // todo: implement check permissions logic correctly
-        val RESTAURANT_MANAGER = 2
-        if (!permissions.contains(RESTAURANT_MANAGER)) {
+        if (!permissions.contains(RESTAURANT_MANAGER_PERMISSION)) {
             throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
         }
 
@@ -239,8 +246,7 @@ class RestaurantGateway(
         restaurantId: String, permissions: List<Int>, page: Int, limit: Int, locale: Locale
     ): List<Order> {
         // todo: implement check permissions logic correctly
-        val RESTAURANT_MANAGER = 2
-        if (!permissions.contains(RESTAURANT_MANAGER)) {
+        if (!permissions.contains(RESTAURANT_MANAGER_PERMISSION)) {
             throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
         }
 

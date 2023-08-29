@@ -108,8 +108,20 @@ fun Route.restaurantRoutes() {
                     )
                     respondWithResult(HttpStatusCode.OK, result)
                 }
-
-            }
+                
+                delete("/{restaurantId}") {
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java)
+                    ?: emptyList()
+                val restaurantId = call.parameters["restaurantId"]?.trim().toString()
+                val (language, countryCode) = extractLocalizationHeader()
+                val result = restaurantGateway.deleteRestaurant(
+                    restaurantId = restaurantId,
+                    permissions = permissions,
+                    locale = Locale(language, countryCode),
+                )
+                respondWithResult(HttpStatusCode.OK, result)
+                }
         }
     }
 }
