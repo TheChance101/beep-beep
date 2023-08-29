@@ -188,6 +188,43 @@ class RestaurantGateway(
         }
     }
 
+    override suspend fun getMealsByRestaurantId(
+        restaurantId: String,
+        page: Int,
+        limit: Int,
+        locale: Locale
+    ): List<MealResource> {
+
+            return tryToExecute(
+                api = APIs.RESTAURANT_API,
+                setErrorMessage = { errorCodes ->
+                    errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+                }
+            ) {
+                get("restaurants/$restaurantId/meals"){
+                    parameter("page", page)
+                    parameter("limit", limit)
+                }
+            }
+
+    }
+
+    override suspend fun getMealsByCuisineId(
+        cuisineId: String,
+        locale: Locale
+    ): List<MealResource> {
+
+            return tryToExecute(
+                api = APIs.RESTAURANT_API,
+                setErrorMessage = { errorCodes ->
+                    errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+                }
+            ) {
+                get("/cuisine/$cuisineId/meals")
+            }
+
+    }
+
     @OptIn(InternalAPI::class)
     override suspend fun addCuisine(name: String, permissions: List<Int>, locale: Locale): CuisineResource {
         //TODO()  need to change 1

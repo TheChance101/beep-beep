@@ -33,7 +33,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.HomeAppBar
-import presentation.info.RestaurantInfoScreen
+import presentation.information.RestaurantInformationScreen
 import presentation.main.composables.ChartItem
 import presentation.main.composables.OptionCardItem
 import presentation.meals.MealsScreen
@@ -142,7 +142,7 @@ class MainScreen(private val restaurantId: String) :
             is MainScreenUIEffect.Back -> navigator.pop()
             is MainScreenUIEffect.NavigateToAllMeals -> navigator.push(MealsScreen(effect.restaurantId))
             is MainScreenUIEffect.NavigateToOrders -> navigator.push(OrderScreen())
-            is MainScreenUIEffect.NavigateToRestaurantInfo -> navigator.push(RestaurantInfoScreen())
+            is MainScreenUIEffect.NavigateToRestaurantInfo -> navigator.push(RestaurantInformationScreen())
             is MainScreenUIEffect.NavigateToOrdersHistory -> navigator.push(
                 OrdersHistoryScreen(effect.restaurantId)
             )

@@ -54,8 +54,20 @@ interface IRestaurantGateway {
         cuisines: List<String>, permissions: List<Int>, locale: Locale
     ): MealResource
 
-
     suspend fun restaurantOrders(permissions: List<Int>, restaurantId: String, locale: Locale) : Flow<Order>
 
     suspend fun getActiveOrders(permissions: List<Int>, restaurantId: String, locale: Locale): List<Order>
+  
+    suspend fun getMealsByRestaurantId(
+        restaurantId: String,
+        page: Int,
+        limit: Int,
+        locale: Locale
+    ): List<MealResource>
+
+    suspend fun getMealsByCuisineId(
+        cuisineId: String,
+        locale: Locale
+    ): List<MealResource>
+
 }
