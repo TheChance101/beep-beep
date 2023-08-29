@@ -11,10 +11,10 @@ import io.ktor.client.request.get
 
 class RemoteCuisineGateway(client: HttpClient) : IRemoteCuisineGateway,
     BaseRemoteGateway(client = client) {
-
     override suspend fun getCuisinesByRestaurantId(restaurantId: String): List<Cuisine>? {
         return tryToExecute<BaseResponse<List<CuisineDto>>> {
             get("/cuisines/$restaurantId")
         }.value?.toEntity()
     }
+
 }
