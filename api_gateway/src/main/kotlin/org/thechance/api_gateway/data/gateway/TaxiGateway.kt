@@ -26,7 +26,7 @@ class TaxiGateway(
         locale: Locale,
         page: Int, limit: Int
     ): List<TaxiResource> {
-        if (!permissions.contains(1)) {
+        if (!permissions.contains(ADMIN_PERMISSION)) {
             throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
         }
 
