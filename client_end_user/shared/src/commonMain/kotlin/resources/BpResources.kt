@@ -11,12 +11,11 @@ import com.seiko.imageloader.LocalImageLoader
 import util.generateImageLoader
 import util.getPlatformContext
 
-
 private val localDrawableResources = staticCompositionLocalOf { DrawableResources() }
 private val localStringResources = staticCompositionLocalOf { StringResources() }
 
 @Composable
-fun BpRestaurantTheme(
+fun BpTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {

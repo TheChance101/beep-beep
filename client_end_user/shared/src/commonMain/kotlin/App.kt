@@ -3,12 +3,12 @@ import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import presentation.login.LoginScreen
-import resources.BpRestaurantTheme
+import resources.BpTheme
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun App() {
-    BpRestaurantTheme {
+    BpTheme {
         Navigator(LoginScreen()) {
             SlideTransition(it)
         }
