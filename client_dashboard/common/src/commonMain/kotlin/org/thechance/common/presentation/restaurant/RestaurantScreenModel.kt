@@ -75,7 +75,7 @@ class RestaurantScreenModel(
     }
 
     override fun onCancelFilterRestaurantsClicked() {
-        updateState { it.copy(filterRating = 0.0, filterPriceLevel = 0, isFiltered = false) }
+        updateState { it.copy(filterRating = 0.0, filterPriceLevel = 1, isFiltered = false) }
         getRestaurants(
             pageNumber = 1,
             numberOfRestaurantsInPage = state.value.numberOfRestaurantsInPage,
