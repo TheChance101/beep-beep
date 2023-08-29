@@ -6,6 +6,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
+import org.bson.types.ObjectId
 import org.koin.ktor.ext.inject
 import org.thechance.service_restaurant.api.models.OrderDto
 import org.thechance.service_restaurant.api.models.WebSocketRestaurant
@@ -19,7 +20,6 @@ import org.thechance.service_restaurant.domain.utils.exceptions.INSERT_ORDER_ERR
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_REQUEST_PARAMETER
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
-import java.util.*
 import kotlin.collections.set
 
 fun Route.orderRoutes() {
@@ -60,7 +60,7 @@ fun Route.orderRoutes() {
         }
 
         post {
-            val order = call.receive<OrderDto>().copy(id = UUID.randomUUID().toString(), createdAt = currentTime())
+            val order = call.receive<OrderDto>().copy(id = ObjectId().toHexString(), createdAt = currentTime())
             val isOrderInserted = manageOrder.addOrder(order.toEntity())
             isOrderInserted.takeIf { it }.apply {
                 socketHandler.restaurants[order.restaurantId]?.orders?.emit(order)
