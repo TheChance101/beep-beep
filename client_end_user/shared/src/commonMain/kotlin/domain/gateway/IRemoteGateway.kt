@@ -1,7 +1,7 @@
 package domain.gateway
 
 
-import domain.entity.Tokens
+import domain.entity.UserTokens
 
 interface IRemoteGateway {
 
@@ -15,6 +15,6 @@ interface IRemoteGateway {
     suspend fun loginUser(
         userName: String,
         password: String,
-    ): Tokens
+    ): UserTokens
 
 }

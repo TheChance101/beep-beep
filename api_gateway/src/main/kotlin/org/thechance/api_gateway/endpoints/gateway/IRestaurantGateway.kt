@@ -27,6 +27,13 @@ interface IRestaurantGateway {
     suspend fun getOrdersHistory(
         restaurantId: String, permissions: List<Int>, page: Int, limit: Int, locale: Locale
     ): List<Order>
+
+    suspend fun getOrdersCountByDaysBefore(
+        restaurantId: String,
+        daysBack: Int,
+        permissions: List<Int>,
+        locale: Locale
+    ): List<Map<Int, Int>> // list of maps (dayOfWeek, count) { dayOfWeek 0 - 6 (Sunday - Saturday) }
     // endregion
 
     suspend fun getRestaurantInfo(locale: Locale, restaurantId: String): RestaurantResource

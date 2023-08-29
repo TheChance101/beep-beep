@@ -1,12 +1,9 @@
 package di
 
+import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
-import presentation.screens.home.HomeScreenModel
-import presentation.screens.login.LoginScreenModel
-import presentation.screens.signup.SignUpScreenModel
+import presentation.login.LoginScreenModel
 
 val screenModelsModule = module {
-    factory { HomeScreenModel() }
-    factory { LoginScreenModel(get()) }
-    factory { SignUpScreenModel(get()) }
+    factoryOf(::LoginScreenModel)
 }

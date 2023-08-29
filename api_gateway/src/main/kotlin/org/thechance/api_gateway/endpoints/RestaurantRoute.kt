@@ -19,7 +19,7 @@ import java.util.*
 fun Route.restaurantRoutes() {
 
     val restaurantGateway: IRestaurantGateway by inject()
-    val webSocketServerHandler : WebSocketServerHandler by inject()
+    val webSocketServerHandler: WebSocketServerHandler by inject()
 
     route("/restaurants") {
 
@@ -75,6 +75,8 @@ fun Route.restaurantRoutes() {
                 locale = Locale(language, countryCode),
                 restaurantId = restaurantId
             )
+            val restaurant =
+                restaurantGateway.getRestaurantInfo(locale = Locale(language, countryCode), restaurantId = restaurantId)
             respondWithResult(HttpStatusCode.OK, restaurant.toRestaurant())
         }
 
@@ -92,6 +94,8 @@ fun Route.restaurantRoutes() {
                         restaurantId,
                         Locale(language, countryCode)
                     )
+                    val orders =
+                        restaurantGateway.restaurantOrders(permissions, restaurantId, Locale(language, countryCode))
                     webSocketServerHandler.sessions[restaurantId] = this
                     webSocketServerHandler.sessions[restaurantId]?.let {
                         webSocketServerHandler.tryToCollectFormWebSocket(
@@ -99,6 +103,27 @@ fun Route.restaurantRoutes() {
                             it
                         )
                     }
+                    webSocketServerHandler.sessions[restaurantId]?.let {
+                        webSocketServerHandler.tryToCollectFormWebSocket(
+                            orders,
+                            it
+                        )
+                    }
+                }
+
+                get("/count-by-days-back") {
+                    val tokenClaim = call.principal<JWTPrincipal>()
+                    val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
+                    val id = call.parameters["restaurantId"]?.trim().toString()
+                    val daysBack = call.parameters["daysBack"]?.trim()?.toInt() ?: 7
+                    val (language, countryCode) = extractLocalizationHeader()
+                    val result = restaurantGateway.getOrdersCountByDaysBefore(
+                        restaurantId = id,
+                        daysBack = daysBack,
+                        permissions = permissions,
+                        locale = Locale(language, countryCode)
+                    )
+                    respondWithResult(HttpStatusCode.OK, result)
                 }
 
                 get("/{restaurantId}") {
@@ -138,6 +163,8 @@ fun Route.restaurantRoutes() {
                     val permissions =
                         tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java)
                             ?: emptyList()
+                    val permissions =
+                        tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
                     val id = call.parameters["id"]?.trim().toString()
                     val params = call.receiveParameters()
                     val status = params["status"]?.trim()?.toInt() ?: 0
@@ -164,8 +191,18 @@ fun Route.restaurantRoutes() {
                         locale = Locale(language, countryCode),
                     )
                     respondWithResult(HttpStatusCode.OK, result)
+                    val tokenClaim = call.principal<JWTPrincipal>()
+                    val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java)
+                        ?: emptyList()
+                    val restaurantId = call.parameters["restaurantId"]?.trim().toString()
+                    val (language, countryCode) = extractLocalizationHeader()
+                    val result = restaurantGateway.deleteRestaurant(
+                        restaurantId = restaurantId,
+                        permissions = permissions,
+                        locale = Locale(language, countryCode),
+                    )
+                    respondWithResult(HttpStatusCode.OK, result)
                 }
-            }
         }
     }
 }

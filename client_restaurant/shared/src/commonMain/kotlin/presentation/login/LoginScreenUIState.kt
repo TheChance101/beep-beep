@@ -9,7 +9,9 @@ data class LoginScreenUIState(
     val keepLoggedIn: Boolean = false,
     val isLoading: Boolean = false,
     val isSuccess: Boolean = false,
-    val error: ErrorState = ErrorState.InvalidCredentials,
+    val error: ErrorState? = null,
+    val isUsernameError: Boolean = false,
+    val isPasswordError: Boolean = false,
     val usernameErrorMsg: String = "",
     val passwordErrorMsg: String = "",
     //permission
@@ -18,5 +20,5 @@ data class LoginScreenUIState(
     val ownerEmail: String = "",
     val hasPermission: Boolean = false,
     val showPermissionSheet: Boolean = false,
-    val sheetState: ModalBottomSheetState = ModalBottomSheetState()
+    val sheetState: ModalBottomSheetState = ModalBottomSheetState(),
 )
