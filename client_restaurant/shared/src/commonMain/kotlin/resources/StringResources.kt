@@ -52,5 +52,8 @@ data class StringResources(
     val password: String = "Password",
     val username: String = "Username",
     val login: String = "Login",
-    val keepMeLoggedIn: String = "Keep me logged in"
+    val keepMeLoggedIn: String = "Keep me logged in",
+    val phoneNumberErrorMessage: String = "Phone cannot be empty",
+    val openingTimeErrorMessage: String = "Opening time should be between 00:00 to 23:59",
+    val closingTimeErrorMessage: String = "Closing time should be between 00:00 to 23:59",
 )
