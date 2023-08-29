@@ -19,10 +19,10 @@ import org.thechance.service_taxi.data.collection.TripCollection
 import org.thechance.service_taxi.data.utils.paginate
 import org.thechance.service_taxi.domain.entity.Taxi
 import org.thechance.service_taxi.domain.entity.Trip
-import org.thechance.service_taxi.domain.gateway.DataBaseGateway
+import org.thechance.service_taxi.domain.gateway.ITaxiGateway
 import java.util.UUID
 
-class DataBaseGatewayImpl(private val container: DataBaseContainer) : DataBaseGateway {
+class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
     // region taxi curd
     override suspend fun addTaxi(taxi: Taxi): Taxi {
         val taxiCollection = taxi.toCollection()
@@ -33,6 +33,22 @@ class DataBaseGatewayImpl(private val container: DataBaseContainer) : DataBaseGa
     override suspend fun getTaxiById(taxiId: String): Taxi? {
         return container.taxiCollection.findOneById(UUID.fromString(taxiId))
             ?.takeIf { !it.isDeleted }?.toEntity()
+    }
+
+    override suspend fun editTaxi(taxiId: String,taxi: Taxi): Taxi {
+        val taxiCollection = taxi.toCollection()
+        container.taxiCollection.updateOne(
+            filter = TaxiCollection::id eq UUID.fromString(taxiId),
+            update = Updates.combine(
+                set(TaxiCollection::plateNumber setTo taxiCollection.plateNumber),
+                set(TaxiCollection::color setTo taxiCollection.color),
+                set(TaxiCollection::type setTo taxiCollection.type),
+                set(TaxiCollection::driverId setTo taxiCollection.driverId),
+                set(TaxiCollection::isAvailable setTo taxiCollection.isAvailable),
+                set(TaxiCollection::seats setTo taxiCollection.seats),
+            )
+        )
+        return taxiCollection.toEntity()
     }
 
     override suspend fun getAllTaxes(page: Int, limit: Int): List<Taxi> {

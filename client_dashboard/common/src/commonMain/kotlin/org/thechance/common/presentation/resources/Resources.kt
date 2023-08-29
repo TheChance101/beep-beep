@@ -6,8 +6,12 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 
-private val stringResources = staticCompositionLocalOf { Strings }
-private val drawables = staticCompositionLocalOf { lightDrawableResource }
+private val stringResources = staticCompositionLocalOf<StringResources> {
+    throw Exception("string resources is not provided make sure you are using ProvideResources")
+}
+private val drawables = staticCompositionLocalOf<DrawableResources> {
+    throw Exception("drawables resources is not provided make sure you are using ProvideResources")
+}
 
 object Resources {
 
@@ -28,11 +32,11 @@ fun ProvideResources(
     isSystemInDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
-    val drawableResourcess = if (isSystemInDarkTheme) darkDrawableResource else drawables.current
+    val drawableResources = if (isSystemInDarkTheme) darkDrawableResource else lightDrawableResource
 
     CompositionLocalProvider(
-        stringResources provides Resources.Strings,
-        drawables provides drawableResourcess,
+        stringResources provides englishStrings,
+        drawables provides drawableResources,
     ) {
         content()
     }

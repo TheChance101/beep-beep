@@ -1,10 +1,10 @@
-package presentation.info
+package presentation.information
 
 import domain.entity.Location
 import domain.entity.Restaurant
 import presentation.base.ErrorState
 
-data class RestaurantInfoUiState(
+data class RestaurantInformationUiState(
     val restaurant: RestaurantUiState = RestaurantUiState(),
     val isLoading: Boolean = false,
     val error: ErrorState? = null
@@ -20,7 +20,13 @@ data class RestaurantUiState(
     val phoneNumber: String = "",
     val openingTime: String = "",
     val closingTime: String = "",
-    val description: String = ""
+    val description: String = "",
+    val isRestaurantNameError: Boolean = false,
+    val isDescriptionLengthError: Boolean = false,
+    val isPhoneNumberError: Boolean = false,
+    val isOpeningTimeError: Boolean = false,
+    val isClosingTimeError: Boolean = false,
+    val isSaveButtonEnabled: Boolean = true,
 )
 
 fun Restaurant.toUiState(): RestaurantUiState = RestaurantUiState(
