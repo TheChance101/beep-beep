@@ -35,15 +35,6 @@ fun Route.cuisineRoute() {
                 respondWithResult(HttpStatusCode.Created, cuisine)
             }
         }
-
-
-    }
-    route("/cuisines") {
-        get {
-            val (language, countryCode) = extractLocalizationHeader()
-            val cuisines = restaurantGateway.getCuisines(locale = Locale(language, countryCode))
-            respondWithResult(HttpStatusCode.OK, cuisines)
-        }
         get("/{id}/meals") {
             val (language, countryCode) = extractLocalizationHeader()
             val cuisineId = call.parameters["id"]?.trim().toString()
@@ -53,6 +44,13 @@ fun Route.cuisineRoute() {
             )
             respondWithResult(HttpStatusCode.OK, meals.map { it.toMeal() })
         }
+
     }
+
+        get("/cuisines") {
+            val (language, countryCode) = extractLocalizationHeader()
+            val cuisines = restaurantGateway.getCuisines(locale = Locale(language, countryCode))
+            respondWithResult(HttpStatusCode.OK, cuisines)
+        }
 }
 

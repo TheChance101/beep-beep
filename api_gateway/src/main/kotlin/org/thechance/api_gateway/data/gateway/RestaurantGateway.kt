@@ -210,7 +210,7 @@ class RestaurantGateway(
                     errorHandler.getLocalizedErrorMessage(errorCodes, locale)
                 }
             ) {
-                get("/cuisines/$cuisineId/meals")
+                get("/cuisine/$cuisineId/meals")
             }
 
     }
