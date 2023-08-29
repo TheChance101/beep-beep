@@ -1,7 +1,6 @@
 package org.thechance.service_restaurant.domain.usecase
 
 import kotlinx.datetime.toJavaLocalDateTime
-import org.thechance.service_restaurant.api.utils.isRestaurantOpen
 import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway

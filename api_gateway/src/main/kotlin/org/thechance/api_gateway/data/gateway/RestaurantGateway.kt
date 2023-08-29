@@ -195,34 +195,31 @@ class RestaurantGateway(
         locale: Locale
     ): List<MealResource> {
 
-            return tryToExecute(
-                api = APIs.RESTAURANT_API,
-                setErrorMessage = { errorCodes ->
-                    errorHandler.getLocalizedErrorMessage(errorCodes, locale)
-                }
-            ) {
-                get("restaurants/$restaurantId/meals"){
-                    parameter("page", page)
-                    parameter("limit", limit)
-                }
+        return tryToExecute(
+            api = APIs.RESTAURANT_API,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
-
+        ) {
+            get("restaurants/$restaurantId/meals") {
+                parameter("page", page)
+                parameter("limit", limit)
+            }
+        }
     }
 
     override suspend fun getMealsByCuisineId(
         cuisineId: String,
         locale: Locale
     ): List<MealResource> {
-
-            return tryToExecute(
-                api = APIs.RESTAURANT_API,
-                setErrorMessage = { errorCodes ->
-                    errorHandler.getLocalizedErrorMessage(errorCodes, locale)
-                }
-            ) {
-                get("/cuisine/$cuisineId/meals")
+        return tryToExecute(
+            api = APIs.RESTAURANT_API,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
-
+        ) {
+            get("/cuisine/$cuisineId/meals")
+        }
     }
 
     @OptIn(InternalAPI::class)
@@ -316,6 +313,7 @@ class RestaurantGateway(
             get("/order/$restaurantId/orders")
         }
     }
+
     override suspend fun getOrdersCountByDaysBefore(
         restaurantId: String,
         daysBack: Int,

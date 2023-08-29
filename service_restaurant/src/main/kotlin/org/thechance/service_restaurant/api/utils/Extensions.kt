@@ -1,7 +1,6 @@
 package org.thechance.service_restaurant.api.utils
 
 import io.ktor.http.*
-import kotlinx.datetime.*
 import java.time.LocalTime
 
 fun Parameters.extractString(key: String): String? {
@@ -15,9 +14,4 @@ fun Parameters.extractInt(key: String): Int? {
 fun isRestaurantOpen(openTime: String, closeTime: String): Boolean {
     val now = LocalTime.now()
     return now.isAfter(LocalTime.parse(openTime)) && now.isBefore(LocalTime.parse(closeTime))
-}
-
-fun currentTime(): Long {
-    val currentMoment: Instant = Clock.System.now()
-    return currentMoment.toEpochMilliseconds()
 }
