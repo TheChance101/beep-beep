@@ -70,9 +70,7 @@ abstract class BaseScreenModel<S, E>(initialState: S) : StateScreenModel<S>(init
     }
 
     protected fun updateState(updater: (S) -> S) {
-        coroutineScope.launch(Dispatchers.IO) {
-            mutableState.update(updater)
-        }
+        mutableState.update(updater)
     }
 
     protected fun sendNewEffect(newEffect: E) {

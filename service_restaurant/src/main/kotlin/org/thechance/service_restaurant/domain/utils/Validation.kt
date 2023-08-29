@@ -49,7 +49,8 @@ class Validation : IValidation {
     }
 
     override fun isValidId(id: String?): Boolean {
-        return id != null && id.matches(Regex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}"))
+        val objectIdPattern = "[0-9a-fA-F]{24}"
+        return id != null && id.matches(Regex(objectIdPattern))
     }
 
     internal fun isValidIds(ids: List<String>?): Boolean {
@@ -90,7 +91,7 @@ class Validation : IValidation {
         return regex.matches(address)
     }
 
-    override fun isValidEmail(ownerEmail: String): Boolean{
+    override fun isValidEmail(ownerEmail: String): Boolean {
         return "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$".toRegex().matches(ownerEmail)
     }
 

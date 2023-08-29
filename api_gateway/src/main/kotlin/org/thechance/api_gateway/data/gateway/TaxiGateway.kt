@@ -26,12 +26,7 @@ class TaxiGateway(
         page: Int, limit: Int
     ): List<TaxiResource> {
         if (!permissions.contains(1)) {
-            throw LocalizedMessageException(
-                errorHandler.getLocalizedErrorMessage(
-                    listOf(8000),
-                    locale
-                )
-            )
+            throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
         }
 
         return tryToExecute(
@@ -58,10 +53,7 @@ class TaxiGateway(
         return tryToExecute(
             api = APIs.TAXI_API,
             setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(
-                    errorCodes,
-                    locale
-                )
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
         ) {
             get("/taxi/$id")
@@ -79,19 +71,13 @@ class TaxiGateway(
     ): TaxiResource {
         if (!permissions.contains(1)) {
             throw LocalizedMessageException(
-                errorHandler.getLocalizedErrorMessage(
-                    listOf(8000),
-                    locale
-                )
+                errorHandler.getLocalizedErrorMessage(listOf(8000), locale)
             )
         }
         return tryToExecute(
             api = APIs.TAXI_API,
             setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(
-                    errorCodes,
-                    locale
-                )
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
         ) {
             submitForm("/taxi",
@@ -113,19 +99,13 @@ class TaxiGateway(
     ): TaxiResource {
         if (!permissions.contains(1)) {
             throw LocalizedMessageException(
-                errorHandler.getLocalizedErrorMessage(
-                    listOf(8000),
-                    locale
-                )
+                errorHandler.getLocalizedErrorMessage(listOf(8000), locale)
             )
         }
         return tryToExecute(
             api = APIs.TAXI_API,
             setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(
-                    errorCodes,
-                    locale
-                )
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
         ) {
             delete("/taxi/$id")

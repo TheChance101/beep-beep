@@ -121,26 +121,25 @@ class RestaurantScreen :
     }
 
     @Composable
-    private fun RestaurantTable(
+    private fun ColumnScope.RestaurantTable(
         state: RestaurantUiState,
         listener: RestaurantInteractionListener
     ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
-            BpTable(
-                data = state.restaurants,
-                key = { it.name },
-                headers = state.tableHeader,
-                modifier = Modifier.fillMaxWidth(),
-                rowContent = { restaurant ->
-                    RestaurantRow(
-                        onClickEditRestaurant = { /* TODO: Show Edit Restaurant DropdownMenu */ },
-                        position = state.restaurants.indexOf(restaurant) + 1,
-                        restaurant = restaurant,
-                    )
-                },
-            )
-        }
+        BpTable(
+            data = state.restaurants,
+            key = { it.name },
+            headers = state.tableHeader,
+            modifier = Modifier.fillMaxWidth(),
+            rowContent = { restaurant ->
+                RestaurantRow(
+                    onClickEditRestaurant = { /* TODO: Show Edit Restaurant DropdownMenu */ },
+                    position = state.restaurants.indexOf(restaurant) + 1,
+                    restaurant = restaurant,
+                )
+            },
+        )
     }
+
 
     @Composable
     private fun RestaurantPagingRow(
@@ -148,7 +147,7 @@ class RestaurantScreen :
         listener: RestaurantInteractionListener
     ) {
         Row(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxWidth().background(color = Theme.colors.surface),
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {

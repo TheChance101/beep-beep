@@ -102,10 +102,10 @@ class UserScreen :
                     users = state.pageInfo.data,
                     headers = state.tableHeader,
                     selectedPage = state.currentPage,
-                    onUserMenuClicked = editMenuListener::showEditUserMenu,
                     numberItemInPage = state.specifiedUsers,
                     numberOfUsers = state.pageInfo.numberOfUsers,
                     pageCount = state.pageInfo.totalPages,
+                    onUserMenuClicked = editMenuListener::showEditUserMenu,
                     onPageClicked = pageListener::onPageClick,
                     onItemPerPageChanged = pageListener::onItemsIndicatorChange,
                     editUserMenu = state.userMenu,
@@ -117,6 +117,7 @@ class UserScreen :
         }
     }
 
+    //region UserTable
     @Composable
     private fun ColumnScope.UsersTable(
         users: List<UserScreenUiState.UserUiState>,
@@ -133,23 +134,21 @@ class UserScreen :
         onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
         onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
     ) {
-        Box(modifier = Modifier.weight(1f).padding(bottom = 16.kms)) {
-            BpTable(
-                data = users,
-                key = UserScreenUiState.UserUiState::username,
-                headers = headers,
-                modifier = Modifier.fillMaxWidth(),
-            ) { user ->
-                UserRow(
-                    onUserMenuClicked = onUserMenuClicked,
-                    user = user,
-                    position = users.indexOf(user) + 1,
-                    editUserMenu = editUserMenu,
-                    onEditUserDismiss = onEditUserDismiss,
-                    onEditUserMenuItemClicked = onEditUserMenuItemClicked,
-                    onDeleteUserMenuItemClicked = onDeleteUserMenuItemClicked,
-                )
-            }
+        BpTable(
+            data = users,
+            key = UserScreenUiState.UserUiState::username,
+            headers = headers,
+            modifier = Modifier.fillMaxWidth(),
+        ) { user ->
+            UserRow(
+                onUserMenuClicked = onUserMenuClicked,
+                user = user,
+                position = users.indexOf(user) + 1,
+                editUserMenu = editUserMenu,
+                onEditUserDismiss = onEditUserDismiss,
+                onEditUserMenuItemClicked = onEditUserMenuItemClicked,
+                onDeleteUserMenuItemClicked = onDeleteUserMenuItemClicked,
+            )
         }
 
         UsersTableFooter(
@@ -191,6 +190,131 @@ class UserScreen :
         }
     }
 
+    @OptIn(ExperimentalLayoutApi::class)
+    @Composable
+    private fun RowScope.UserRow(
+        onUserMenuClicked: (String) -> Unit,
+        position: Int,
+        user: UserScreenUiState.UserUiState,
+        firstColumnWeight: Float = 1f,
+        otherColumnsWeight: Float = 3f,
+        editUserMenu: UserScreenUiState.MenuUiState,
+        onEditUserDismiss: () -> Unit,
+        onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
+        onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
+    ) {
+        Text(
+            text = position.toString(),
+            style = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
+            modifier = Modifier.weight(firstColumnWeight),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+
+        Row(
+            modifier = Modifier.weight(otherColumnsWeight),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(painter = painterResource(Resources.Drawable.dummyImg), contentDescription = null)
+            Text(
+                text = user.fullName,
+                style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
+                modifier = Modifier.padding(start = 16.kms),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+
+        Text(
+            text = user.username,
+            style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(otherColumnsWeight),
+            maxLines = 1,
+        )
+
+        Text(
+            user.email,
+            style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(otherColumnsWeight),
+            maxLines = 1,
+        )
+
+        Text(
+            user.country,
+            style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(otherColumnsWeight),
+            maxLines = 1,
+        )
+
+        FlowRow(
+            modifier = Modifier.weight(otherColumnsWeight),
+            horizontalArrangement = Arrangement.spacedBy(8.kms)
+        ) {
+            user.permissions.forEach {
+                Icon(
+                    painter = painterResource(it.iconPath),
+                    contentDescription = null,
+                    tint = Theme.colors.contentPrimary.copy(alpha = 0.87f),
+                    modifier = Modifier.size(24.kms)
+                )
+            }
+        }
+
+        Box(
+            modifier = Modifier.weight(firstColumnWeight),
+        ) {
+            Image(
+                painter = painterResource(Resources.Drawable.dots),
+                contentDescription = null,
+                modifier = Modifier.noRipple { onUserMenuClicked(user.username) },
+                colorFilter = ColorFilter.tint(color = Theme.colors.contentPrimary)
+            )
+            EditUserDropdownMenu(
+                user = user,
+                editUserMenu = editUserMenu,
+                onEditUserDismiss = onEditUserDismiss,
+                onEditUserMenuItemClicked = onEditUserMenuItemClicked,
+                onDeleteUserMenuItemClicked = onDeleteUserMenuItemClicked,
+            )
+        }
+    }
+
+    @Composable
+    private fun EditUserDropdownMenu(
+        user: UserScreenUiState.UserUiState,
+        editUserMenu: UserScreenUiState.MenuUiState,
+        onEditUserDismiss: () -> Unit,
+        onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
+        onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
+    ) {
+        BpDropdownMenu(
+            expanded = user.username == editUserMenu.username,
+            onDismissRequest = onEditUserDismiss,
+            shape = RoundedCornerShape(Theme.radius.medium),
+            offset = DpOffset.Zero.copy(x = -100.kms)
+        ) {
+            Column {
+                editUserMenu.items.forEach {
+                    BpDropdownMenuItem(
+                        onClick = {
+                            when (it.text) {
+                                "Edit" -> onEditUserMenuItemClicked(user)
+                                "Delete" -> onDeleteUserMenuItemClicked(user)
+                            }
+                        },
+                        text = it.text,
+                        leadingIconPath = it.iconPath,
+                        isSecondary = it.isSecondary,
+                        showBottomDivider = it != editUserMenu.items.last()
+                    )
+                }
+            }
+        }
+    }
+    //endregion
     @Composable
     private fun UsersFilterDropdownMenu(
         isFilterDropdownMenuExpanded: Boolean,
@@ -341,131 +465,6 @@ class UserScreen :
                 onFilterMenuClicked = onFilterMenuClicked,
                 onFilterMenuDismiss = onFilterMenuDismiss,
             )
-        }
-    }
-
-    @OptIn(ExperimentalLayoutApi::class)
-    @Composable
-    private fun RowScope.UserRow(
-        onUserMenuClicked: (String) -> Unit,
-        position: Int,
-        user: UserScreenUiState.UserUiState,
-        firstColumnWeight: Float = 1f,
-        otherColumnsWeight: Float = 3f,
-        editUserMenu: UserScreenUiState.MenuUiState,
-        onEditUserDismiss: () -> Unit,
-        onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
-        onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
-    ) {
-        Text(
-            text = position.toString(),
-            style = Theme.typography.titleMedium.copy(color = Theme.colors.contentTertiary),
-            modifier = Modifier.weight(firstColumnWeight),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
-
-        Row(
-            modifier = Modifier.weight(otherColumnsWeight),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(painter = painterResource(Resources.Drawable.dummyImg), contentDescription = null)
-            Text(
-                text = user.fullName,
-                style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
-                modifier = Modifier.padding(start = 16.kms),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-        }
-
-        Text(
-            text = user.username,
-            style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.weight(otherColumnsWeight),
-            maxLines = 1,
-        )
-
-        Text(
-            user.email,
-            style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.weight(otherColumnsWeight),
-            maxLines = 1,
-        )
-
-        Text(
-            user.country,
-            style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.weight(otherColumnsWeight),
-            maxLines = 1,
-        )
-
-        FlowRow(
-            modifier = Modifier.weight(otherColumnsWeight),
-            horizontalArrangement = Arrangement.spacedBy(8.kms)
-        ) {
-            user.permissions.forEach {
-                Icon(
-                    painter = painterResource(it.iconPath),
-                    contentDescription = null,
-                    tint = Theme.colors.contentPrimary.copy(alpha = 0.87f),
-                    modifier = Modifier.size(24.kms)
-                )
-            }
-        }
-
-        Box(
-            modifier = Modifier.weight(firstColumnWeight),
-        ) {
-            Image(
-                painter = painterResource(Resources.Drawable.dots),
-                contentDescription = null,
-                modifier = Modifier.noRipple { onUserMenuClicked(user.username) },
-                colorFilter = ColorFilter.tint(color = Theme.colors.contentPrimary)
-            )
-            EditUserDropdownMenu(
-                user = user,
-                editUserMenu = editUserMenu,
-                onEditUserDismiss = onEditUserDismiss,
-                onEditUserMenuItemClicked = onEditUserMenuItemClicked,
-                onDeleteUserMenuItemClicked = onDeleteUserMenuItemClicked,
-            )
-        }
-    }
-
-    @Composable
-    private fun EditUserDropdownMenu(
-        user: UserScreenUiState.UserUiState,
-        editUserMenu: UserScreenUiState.MenuUiState,
-        onEditUserDismiss: () -> Unit,
-        onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
-        onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
-    ) {
-        BpDropdownMenu(
-            expanded = user.username == editUserMenu.username,
-            onDismissRequest = onEditUserDismiss,
-            shape = RoundedCornerShape(Theme.radius.medium),
-            offset = DpOffset.Zero.copy(x = -100.kms)
-        ) {
-            Column {
-                editUserMenu.items.forEach {
-                    BpDropdownMenuItem(
-                        onClick = {
-                            when (it.text) {
-                                "Edit" -> onEditUserMenuItemClicked(user)
-                                "Delete" -> onDeleteUserMenuItemClicked(user)
-                            }
-                        },
-                        text = it.text,
-                        leadingIconPath = it.iconPath,
-                        isSecondary = it.isSecondary,
-                        showBottomDivider = it != editUserMenu.items.last()
-                    )
-                }
-            }
         }
     }
 }
