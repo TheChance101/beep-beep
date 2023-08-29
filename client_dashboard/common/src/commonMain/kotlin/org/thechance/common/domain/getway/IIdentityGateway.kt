@@ -1,6 +1,6 @@
 package org.thechance.common.domain.getway
 
-import org.thechance.common.domain.entity.ThemeMode
+import kotlinx.coroutines.flow.Flow
 
 interface IIdentityGateway {
 
@@ -18,8 +18,8 @@ interface IIdentityGateway {
 
     suspend fun isUserKeptLoggedIn(): Boolean
 
-    suspend fun getThemeMode(): ThemeMode
+    suspend fun getThemeMode(): Flow<Boolean>
 
-    suspend fun updateThemeMode(mode: ThemeMode)
+    suspend fun updateThemeMode(mode: Boolean)
 
 }
