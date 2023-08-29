@@ -1,7 +1,7 @@
 package di
 
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.DEFAULT
@@ -15,7 +15,7 @@ import org.koin.dsl.module
 
 val NetworkModule = module {
     single {
-        HttpClient(OkHttp) {
+        HttpClient(CIO) {
 
             expectSuccess = true
 
@@ -25,11 +25,8 @@ val NetworkModule = module {
             }
 
             defaultRequest {
-
                 header("Content-Type", "application/json")
-
                 url("http://0.0.0.0:8080")
-
             }
 
             install(ContentNegotiation) {
