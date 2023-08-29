@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data class TaxiResource(
     val id: String,
     val plateNumber: String,
-    val color: Int,
+    val color: Long,
     val type: String,
     val driverId: String,
     val isAvailable: Boolean = true,

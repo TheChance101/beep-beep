@@ -63,7 +63,7 @@ class TaxiGateway(
 
     override suspend fun createTaxi(
         plateNumber: String,
-        color: Int,
+        color: Long,
         type: String,
         driverId: String,
         seats: Int,
@@ -98,7 +98,7 @@ class TaxiGateway(
     override suspend fun editTaxi(
         id: String,
         plateNumber: String,
-        color: Int,
+        color: Long,
         type: String,
         driverId: String,
         seats: Int,

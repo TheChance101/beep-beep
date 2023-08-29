@@ -47,7 +47,7 @@ fun Route.taxiRoutes() {
                         ?: emptyList()
                 val params = call.receiveParameters()
                 val plateNumber = params["plateNumber"] ?: ""
-                val color = params["color"]?.toInt() ?: 0
+                val color = params["color"]?.toLong() ?: 0
                 val type = params["type"] ?: ""
                 val driverId = params["driverId"] ?: ""
                 val seats = params["seats"]?.toInt() ?: 0
@@ -82,7 +82,7 @@ fun Route.taxiRoutes() {
                 val params = call.receiveParameters()
 
                 val plateNumber = params["plateNumber"] ?: ""
-                val color = params["color"]?.toInt() ?: 0
+                val color = params["color"]?.toLong() ?: 0
                 val type = params["type"] ?: ""
                 val driverId = params["driverId"] ?: ""
                 val seats = params["seats"]?.toInt() ?: 0

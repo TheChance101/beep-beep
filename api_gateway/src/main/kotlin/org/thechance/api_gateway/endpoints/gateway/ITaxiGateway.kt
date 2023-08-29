@@ -11,7 +11,7 @@ interface ITaxiGateway {
 
     suspend fun createTaxi(
         plateNumber: String,
-        color: Int,
+        color: Long,
         type: String,
         driverId: String,
         seats: Int,
@@ -24,7 +24,7 @@ interface ITaxiGateway {
     suspend fun editTaxi(
         id: String,
         plateNumber: String,
-        color: Int,
+        color: Long,
         type: String,
         driverId: String,
         seats: Int,
