@@ -1,11 +1,13 @@
 package org.thechance.service_restaurant.api.models.mappers
 
 
+import kotlinx.datetime.LocalDateTime
 import org.thechance.service_restaurant.api.models.OrderDto
 import org.thechance.service_restaurant.api.models.OrderMealDto
 import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.entity.OrderMeal
 import org.thechance.service_restaurant.domain.utils.OrderStatus
+import org.thechance.service_restaurant.domain.utils.currentDateTime
 
 
 fun OrderDto.toEntity(): Order {
@@ -15,7 +17,7 @@ fun OrderDto.toEntity(): Order {
         restaurantId = restaurantId ?: "",
         meals = meals?.map { it.toEntity() } ?: emptyList(),
         totalPrice = totalPrice ?: 0.0,
-        createdAt = createdAt ?: 0L,
+        createdAt = createdAt?.let { LocalDateTime.parse(it) } ?: currentDateTime(),
         status = OrderStatus.PENDING.statusCode
     )
 }
@@ -27,7 +29,7 @@ fun Order.toDto(): OrderDto {
         restaurantId = restaurantId,
         meals = meals.map { it.toDto() },
         totalPrice = totalPrice,
-        createdAt = createdAt,
+        createdAt = createdAt.toString(),
         orderStatus = status
     )
 }

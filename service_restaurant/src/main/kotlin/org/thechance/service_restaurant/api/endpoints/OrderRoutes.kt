@@ -6,20 +6,20 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
+import org.bson.types.ObjectId
 import org.koin.ktor.ext.inject
 import org.thechance.service_restaurant.api.models.OrderDto
 import org.thechance.service_restaurant.api.models.Restaurant
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.SocketHandler
-import org.thechance.service_restaurant.api.utils.currentTime
 import org.thechance.service_restaurant.domain.usecase.IManageOrderUseCase
 import org.thechance.service_restaurant.domain.utils.OrderStatus
+import org.thechance.service_restaurant.domain.utils.currentDateTime
 import org.thechance.service_restaurant.domain.utils.exceptions.INSERT_ORDER_ERROR
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_REQUEST_PARAMETER
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
-import java.util.*
 import kotlin.collections.set
 
 fun Route.orderRoutes() {
@@ -28,6 +28,12 @@ fun Route.orderRoutes() {
     val socketHandler: SocketHandler by inject()
 
     route("/order") {
+
+        get("/week") {
+            val restaurantId = call.parameters["restaurantId"] ?: throw MultiErrorException(listOf(NOT_FOUND))
+            val result = manageOrder.getLastWeekOrdersCount(restaurantId = restaurantId)
+            call.respond(HttpStatusCode.OK, result)
+        }
 
         get("/{id}") {
             val id = call.parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
@@ -60,7 +66,8 @@ fun Route.orderRoutes() {
         }
 
         post {
-            val order = call.receive<OrderDto>().copy(id = UUID.randomUUID().toString(), createdAt = currentTime())
+            val order = call.receive<OrderDto>()
+                .copy(id = ObjectId().toString(), createdAt = currentDateTime().toString())
             val isOrderInserted = manageOrder.addOrder(order.toEntity())
             isOrderInserted.takeIf { it }.apply {
                 socketHandler.restaurants[order.restaurantId]?.orders?.emit(order)

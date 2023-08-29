@@ -1,5 +1,6 @@
 package org.thechance.service_restaurant.domain.usecase
 
+import kotlinx.datetime.toJavaLocalDateTime
 import org.thechance.service_restaurant.api.utils.isRestaurantOpen
 import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
@@ -7,10 +8,12 @@ import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
 import org.thechance.service_restaurant.domain.usecase.validation.IOrderValidationUseCase
 import org.thechance.service_restaurant.domain.utils.IValidation
 import org.thechance.service_restaurant.domain.utils.OrderStatus
+import org.thechance.service_restaurant.domain.utils.currentDateTime
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 import org.thechance.service_restaurant.domain.utils.exceptions.RESTAURANT_CLOSED
+import java.time.temporal.WeekFields
 
 interface IManageOrderUseCase {
     suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order>
@@ -24,6 +27,8 @@ interface IManageOrderUseCase {
     suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order>
 
     suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order>
+
+    suspend fun getLastWeekOrdersCount(restaurantId: String): List<Map<String, Int>> // 7 days
 
 }
 
@@ -67,6 +72,19 @@ class ManageOrderUseCase(
             throw MultiErrorException(listOf(INVALID_ID))
         }
         return optionsGateway.getActiveOrdersByRestaurantId(restaurantId = restaurantId)
+    }
+
+    override suspend fun getLastWeekOrdersCount(restaurantId: String): List<Map<String, Int>> {
+        basicValidation.isValidId(restaurantId).takeIf { it }?.let {
+            val currentWeek = currentDateTime().toJavaLocalDateTime()
+                .get(WeekFields.ISO.weekOfYear())
+
+            return optionsGateway.getOrdersByRestaurantId(
+                restaurantId = restaurantId
+            ).filter { it.createdAt.toJavaLocalDateTime().get(WeekFields.ISO.weekOfYear()) == currentWeek }
+                .groupBy { it.createdAt.dayOfWeek.name }
+                .map { (dayOfWeek, orders) -> mapOf(dayOfWeek to orders.size) }
+        } ?: throw MultiErrorException(listOf(INVALID_ID))
     }
 
     private suspend fun isRestaurantOpened(restaurantId: String): Boolean {
