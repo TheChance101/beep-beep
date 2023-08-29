@@ -3,7 +3,6 @@ package org.thechance.api_gateway.endpoints
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
-import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
@@ -19,8 +18,6 @@ fun Route.mealRoute() {
     route("meal") {
         authenticate("auth-jwt") {
             post {
-                val tokenClaim = call.principal<JWTPrincipal>()
-                val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
                 val (language, countryCode) = extractLocalizationHeader()
                 val params = call.receiveParameters()
                 val restaurantId = params["restaurantId"]?.trim().toString()
@@ -35,15 +32,12 @@ fun Route.mealRoute() {
                     description,
                     price!!,
                     cuisines!!,
-                    permissions,
                     Locale(language, countryCode)
                 )
                 respondWithResult(HttpStatusCode.Created, createdMeal.toMeal())
             }
 
             put {
-                val tokenClaim = call.principal<JWTPrincipal>()
-                val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
                 val (language, countryCode) = extractLocalizationHeader()
                 val params = call.receiveParameters()
                 val restaurantId = params["restaurantId"]?.trim().toString()
@@ -58,7 +52,6 @@ fun Route.mealRoute() {
                     description,
                     price!!,
                     cuisines!!,
-                    permissions,
                     Locale(language, countryCode)
                 )
                 respondWithResult(HttpStatusCode.OK, updatedMeal.toMeal())

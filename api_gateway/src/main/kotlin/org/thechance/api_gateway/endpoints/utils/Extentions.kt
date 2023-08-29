@@ -5,8 +5,10 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.util.pipeline.*
+import org.thechance.api_gateway.util.Role
 
 suspend inline fun <reified T> PipelineContext<Unit, ApplicationCall>.respondWithResult(
     statusCode: HttpStatusCode,
@@ -38,14 +40,38 @@ fun WebSocketServerSession.extractLocalizationHeaderFromWebSocket(): Pair<String
     return Pair(language, countryCode)
 }
 
-fun PipelineContext<Unit, ApplicationCall>.extractPermissions() : List<Int>{
+fun PipelineContext<Unit, ApplicationCall>.extractPermission(): Int {
     val tokenClaim = call.principal<JWTPrincipal>()
-    return tokenClaim?.payload?.getClaim("permissions")?.asString()
-        ?.split(",")?.mapNotNull { it.toIntOrNull() } ?: emptyList()
+    return tokenClaim?.payload?.getClaim("permission")?.asString()?.toInt() ?: -1
 }
 
-fun WebSocketServerSession.extractPermissionsFromWebSocket() : List<Int>{
-    val tokenClaim = call.principal<JWTPrincipal>()
-    return tokenClaim?.payload?.getClaim("permissions")?.asString()
-        ?.split(",")?.mapNotNull { it.toIntOrNull() } ?: emptyList()
+fun Route.authenticateWithRole(role: Int, block: Route.() -> Unit) {
+    authenticate("auth-jwt", "refresh-jwt") {
+        intercept(ApplicationCallPipeline.Call) {
+            val permission = extractPermission()
+            if (!hasPermission(permission, role)) {
+                call.respond(HttpStatusCode.Unauthorized)
+            }
+        }
+        block()
+    }
+}
+
+private fun hasPermission(permission: Int, role: Int): Boolean {
+    return (permission and role) == role
+}
+
+fun main() {
+    val token = 21
+    val roles = listOf(
+        Role.END_USER, // true
+        Role.DASHBOARD_ADMIN, // false
+        Role.RESTAURANT_OWNER, // true
+        Role.TAXI_DRIVER, // false
+        Role.SUPPORT, // true
+        Role.DELIVERY // false
+    )
+    for (role in roles) {
+        println(hasPermission(token, role))
+    }
 }

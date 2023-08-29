@@ -90,8 +90,8 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
             val tokenClaim = call.principal<JWTPrincipal>()
             val userId = tokenClaim?.payload?.getClaim("userId").toString()
             val userPermissions = tokenClaim?.payload?.getClaim("role")?.asList(Int::class.java) ?: emptyList()
-            val token = gateway.generateUserTokens(userId, userPermissions, tokenConfiguration)
-            respondWithResult(HttpStatusCode.Created, token)
+//            val token = gateway.generateUserTokens(userId, userPermissions, tokenConfiguration)
+//            respondWithResult(HttpStatusCode.Created, token)
         }
     }
 }
