@@ -17,7 +17,7 @@ fun Route.orderRoutes() {
 
     route("/order") {
         authenticate("auth-jwt") {
-            get("/week") {
+            get("/last-week-count") {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
                 val id = call.parameters["restaurantId"]?.trim().toString()

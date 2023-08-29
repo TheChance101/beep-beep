@@ -30,7 +30,7 @@ fun Route.orderRoutes() {
 
     route("/order") {
 
-        get("/week") {
+        get("/last-week-count") {
             val restaurantId = call.parameters["restaurantId"] ?: throw MultiErrorException(listOf(NOT_FOUND))
             val result = manageOrder.getLastWeekOrdersCount(restaurantId = restaurantId)
             call.respond(HttpStatusCode.OK, result)
