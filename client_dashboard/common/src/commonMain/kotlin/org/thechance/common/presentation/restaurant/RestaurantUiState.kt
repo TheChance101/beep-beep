@@ -27,9 +27,8 @@ data class RestaurantUiState(
     val filterPriceLevel: Int = 0,
     val maxPageCount: Int = 1,
     val selectedPageNumber: Int = 1,
-    val numberOfRestaurantInPage: Int = 10,
+    val numberOfRestaurantsInPage: Int = 10,
     val isFiltered: Boolean = false,
-    val isSearch: Boolean = false,
 ) {
     data class RestaurantDetailsUiState(
         val name: String,

@@ -11,7 +11,10 @@ interface IManageRestaurantUseCase {
 
     suspend fun getRestaurant(
         pageNumber: Int,
-        numberOfRestaurantsInPage: Int
+        numberOfRestaurantsInPage: Int,
+        restaurantName: String,
+        rating: Double?,
+        priceLevel: Int?
     ): DataWrapper<Restaurant>
 }
 
@@ -24,8 +27,11 @@ class ManageRestaurantUseCase(private val remoteGateway: IRemoteGateway) :
 
     override suspend fun getRestaurant(
         pageNumber: Int,
-        numberOfRestaurantsInPage: Int
+        numberOfRestaurantsInPage: Int,
+        restaurantName: String,
+        rating: Double?,
+        priceLevel: Int?
     ): DataWrapper<Restaurant> {
-        return remoteGateway.getRestaurants(pageNumber, numberOfRestaurantsInPage)
+        return remoteGateway.getRestaurants(pageNumber, numberOfRestaurantsInPage, restaurantName, rating, priceLevel)
     }
 }

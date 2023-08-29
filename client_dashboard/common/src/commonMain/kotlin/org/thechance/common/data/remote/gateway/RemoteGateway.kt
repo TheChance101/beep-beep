@@ -11,19 +11,7 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.Parameters
 import org.thechance.common.data.remote.model.ServerResponse
 import org.thechance.common.data.remote.model.UserTokensRemoteDto
-import org.thechance.common.domain.entity.AddRestaurant
-import org.thechance.common.domain.entity.AddTaxi
-import org.thechance.common.domain.entity.Admin
-import org.thechance.common.domain.entity.CarColor
-import org.thechance.common.domain.entity.DataWrapper
-import org.thechance.common.domain.entity.InvalidCredentialsException
-import org.thechance.common.domain.entity.Location
-import org.thechance.common.domain.entity.NoInternetException
-import org.thechance.common.domain.entity.Restaurant
-import org.thechance.common.domain.entity.Taxi
-import org.thechance.common.domain.entity.UnknownErrorException
-import org.thechance.common.domain.entity.User
-import org.thechance.common.domain.entity.UserNotFoundException
+import org.thechance.common.domain.entity.*
 import org.thechance.common.domain.getway.IRemoteGateway
 import org.thechance.common.domain.util.TaxiStatus
 import java.net.ConnectException
@@ -68,14 +56,10 @@ class RemoteGateway(
 
     override suspend fun getRestaurants(
         pageNumber: Int,
-        numberOfRestaurantsInPage: Int
-    ): DataWrapper<Restaurant> {
-        return DataWrapper(0, 0, emptyList())
-    }
-
-    override suspend fun searchRestaurantsByRestaurantName(
-        restaurantName: String, pageNumber: Int,
-        numberOfRestaurantsInPage: Int
+        numberOfRestaurantsInPage: Int,
+        restaurantName: String,
+        rating: Double?,
+        priceLevel: Int?
     ): DataWrapper<Restaurant> {
         return DataWrapper(0, 0, emptyList())
     }
@@ -96,25 +80,6 @@ class RemoteGateway(
         }.value
 
         return Pair(result?.accessToken ?: "", result?.refreshToken ?: "")
-    }
-
-    override suspend fun filterRestaurants(
-        rating: Double,
-        priceLevel: Int,
-        pageNumber: Int,
-        numberOfRestaurantsInPage: Int
-    ): DataWrapper<Restaurant> {
-        return DataWrapper(0, 0, emptyList())
-    }
-
-    override suspend fun searchFilteredRestaurantsByName(
-        restaurantName: String,
-        rating: Double,
-        priceLevel: Int,
-        pageNumber: Int,
-        numberOfRestaurantsInPage: Int
-    ): DataWrapper<Restaurant> {
-        return DataWrapper(0, 0, emptyList())
     }
 
     override suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant {

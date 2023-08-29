@@ -1,13 +1,6 @@
 package org.thechance.common.domain.getway
 
-import org.thechance.common.domain.entity.AddRestaurant
-import org.thechance.common.domain.entity.AddTaxi
-import org.thechance.common.domain.entity.Admin
-import org.thechance.common.domain.entity.DataWrapper
-import org.thechance.common.domain.entity.Location
-import org.thechance.common.domain.entity.Restaurant
-import org.thechance.common.domain.entity.Taxi
-import org.thechance.common.domain.entity.User
+import org.thechance.common.domain.entity.*
 
 
 interface IRemoteGateway {
@@ -26,32 +19,13 @@ interface IRemoteGateway {
 
     suspend fun getRestaurants(
         pageNumber: Int,
-        numberOfRestaurantsInPage: Int
-    ): DataWrapper<Restaurant>
-
-    suspend fun searchRestaurantsByRestaurantName(
+        numberOfRestaurantsInPage: Int,
         restaurantName: String,
-        pageNumber: Int,
-        numberOfRestaurantsInPage: Int
+        rating: Double?,
+        priceLevel: Int?
     ): DataWrapper<Restaurant>
 
     suspend fun loginUser(username: String, password: String): Pair<String, String>
-
-    suspend fun filterRestaurants(
-        rating: Double,
-        priceLevel: Int,
-        pageNumber: Int,
-        numberOfRestaurantsInPage: Int
-    ): DataWrapper<Restaurant>
-
-    suspend fun searchFilteredRestaurantsByName(
-        restaurantName: String,
-        rating: Double,
-        priceLevel: Int,
-        pageNumber: Int,
-        numberOfRestaurantsInPage: Int
-    ): DataWrapper<Restaurant>
-
 
     suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant
 
