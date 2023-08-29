@@ -1,5 +1,9 @@
 package org.thechance.api_gateway.data.model
 
+import kotlinx.serialization.Serializable
+
+
+@Serializable
 data class TaxiResource(
     val id: String,
     val plateNumber: String,
