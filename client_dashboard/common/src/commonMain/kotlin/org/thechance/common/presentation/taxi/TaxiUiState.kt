@@ -62,8 +62,8 @@ data class TaxiFilterUiState(
     val seats: Int = 1,
     val status: TaxiStatus = ONLINE,
 ){
-    fun toEntity(): TaxiFiltered {
-        return TaxiFiltered(
+    fun toEntity(): TaxiFiltration {
+        return TaxiFiltration(
             carColor = carColor,
             seats = seats,
             status = status

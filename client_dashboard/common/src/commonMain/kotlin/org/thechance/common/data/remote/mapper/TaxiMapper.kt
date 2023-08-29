@@ -1,10 +1,11 @@
 package org.thechance.common.data.remote.mapper
 
 import org.thechance.common.data.remote.model.TaxiDto
+import org.thechance.common.data.remote.model.TaxiFiltrationDto
 import org.thechance.common.domain.entity.NewTaxiInfo
 import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.domain.entity.Taxi
-import org.thechance.common.domain.entity.TaxiFiltered
+import org.thechance.common.domain.entity.TaxiFiltration
 import org.thechance.common.domain.util.TaxiStatus
 
 fun TaxiDto.toEntity() = Taxi(
@@ -28,19 +29,14 @@ fun NewTaxiInfo.toDto(): TaxiDto {
     )
 }
 
-fun TaxiFiltered.toDto():TaxiFilteredDto{
-    return TaxiFilteredDto(
+fun TaxiFiltration.toDto(): TaxiFiltrationDto {
+    return TaxiFiltrationDto(
         color = setCarColo(carColor),
         seats = seats,
         status = setTaxiStatus(status),
     )
 }
 
-data class TaxiFilteredDto(
-    val color: Int,
-    val seats: Int,
-    val status: Int,
-)
 fun List<TaxiDto>.toEntity() = map(TaxiDto::toEntity)
 
 fun getCarColor(color: Int) =

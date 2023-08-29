@@ -843,7 +843,7 @@ class FakeRemoteGateway(
         }
     }
 
-    override suspend fun filterTaxis(taxi: TaxiFiltered, page: Int, numberOfTaxis: Int): DataWrapper<Taxi> {
+    override suspend fun filterTaxis(taxi: TaxiFiltration, page: Int, numberOfTaxis: Int): DataWrapper<Taxi> {
         val taxiDto = taxi.toDto()
         val taxisFiltered = taxis.filter {
             it.color == taxiDto.color && it.seats == taxiDto.seats && it.status == taxiDto.status

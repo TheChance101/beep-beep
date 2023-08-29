@@ -152,7 +152,7 @@ class TaxiScreenModel(
     //region filter menu listener
 
     override fun onFilterMenuDismiss() {
-        updateState { it.copy(isFilterDropdownMenuExpanded = false) }//no need
+        updateState { it.copy(isFilterDropdownMenuExpanded = false) }
     }
 
     override fun onFilterMenuClicked() {

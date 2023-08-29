@@ -9,13 +9,13 @@ interface IRemoteGateway {
 
     fun getUsers(page: Int, numberOfUsers: Int): DataWrapper<User>
 
-    suspend fun getTaxis(page: Int, numberOfUsers: Int): DataWrapper<Taxi>
+    suspend fun getTaxis(page: Int, numberOfTaxis: Int): DataWrapper<Taxi>
 
     suspend fun createTaxi(taxi: NewTaxiInfo): Taxi
 
-    suspend fun findTaxisByUsername(username: String, page: Int, offset:Int): DataWrapper<Taxi>
+    suspend fun findTaxisByUsername(username: String, page: Int, numberOfTaxis:Int): DataWrapper<Taxi>
 
-    suspend fun filterTaxis(taxi: TaxiFiltered, page: Int, numberOfTaxis: Int): DataWrapper<Taxi>
+    suspend fun filterTaxis(taxi: TaxiFiltration, page: Int, numberOfTaxis: Int): DataWrapper<Taxi>
 
     suspend fun getPdfTaxiReport()
 

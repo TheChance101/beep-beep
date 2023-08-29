@@ -51,7 +51,7 @@ class RemoteGateway(
     }
 
     override suspend fun filterTaxis(
-        taxi: TaxiFiltered,
+        taxi: TaxiFiltration,
         page: Int,
         numberOfTaxis: Int
     ): DataWrapper<Taxi> {
