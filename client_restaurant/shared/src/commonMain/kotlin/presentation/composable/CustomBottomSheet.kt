@@ -1,7 +1,12 @@
 package presentation.composables
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,6 +29,7 @@ import presentation.composable.modifier.noRippleEffect
 fun CustomBottomSheet(
     sheetContent: @Composable () -> Unit,
     sheetState: ModalBottomSheetState,
+    onBackGroundClicked: () -> Unit = {},
     sheetBackgroundColor: Color = Theme.colors.background,
     sheetShape: RoundedCornerShape = RoundedCornerShape(
         topStart = Theme.radius.medium,
@@ -32,23 +37,59 @@ fun CustomBottomSheet(
     ),
     content: @Composable () -> Unit
 ) {
+
     Box(modifier = Modifier.fillMaxSize()) {
 
         content()
 
-        if (sheetState.isVisible) {
-            Column(modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = .4f))) {
+        AnimatedVisibility(
+            visible = sheetState.isVisible,
+            enter = fadeIn(),
+            exit = fadeOut(),
+        ) {
+            Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = .4f)))
+        }
 
-                Box(Modifier.fillMaxHeight().weight(1f)) {
-                    Spacer(Modifier.fillMaxSize().noRippleEffect { null })
-                }
+        AnimatedVisibility(
+            visible = sheetState.isVisible,
+            enter = slideInVertically(
+                initialOffsetY = { it },
+                animationSpec = tween(500)
+            ),
+            exit = slideOutVertically(
+                targetOffsetY = { it },
+                animationSpec = tween(500)
+            ),
+        ) {
+            SheetContent(sheetShape, sheetBackgroundColor, { onBackGroundClicked() }, sheetContent)
+        }
+    }
+}
 
-                Box(
-                    modifier = Modifier.background(shape = sheetShape, color = sheetBackgroundColor)
-                ) {
-                    sheetContent()
-                }
-            }
+@Composable
+private fun SheetContent(
+    sheetShape: RoundedCornerShape,
+    sheetBackgroundColor: Color,
+    onBackGroundClicked: () -> Unit,
+    sheetContent: @Composable () -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+
+        Box(Modifier.fillMaxHeight().weight(1f)) {
+            Spacer(Modifier.fillMaxSize().noRippleEffect {
+                onBackGroundClicked()
+            })
+        }
+
+        Box(
+            modifier = Modifier.background(
+                shape = sheetShape,
+                color = sheetBackgroundColor
+            )
+        ) {
+            sheetContent()
         }
     }
 }

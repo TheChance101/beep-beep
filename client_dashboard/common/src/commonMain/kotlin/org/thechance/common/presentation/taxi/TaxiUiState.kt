@@ -61,8 +61,15 @@ data class TaxiFilterUiState(
     val carColor: CarColor = CarColor.WHITE,
     val seats: Int = 1,
     val status: TaxiStatus = ONLINE,
-)
-
+){
+    fun toEntity(): TaxiFiltration {
+        return TaxiFiltration(
+            carColor = carColor,
+            seats = seats,
+            status = status
+        )
+    }
+}
 @Composable
 fun TaxiStatus.getStatusName():String{
     return when (this) {
