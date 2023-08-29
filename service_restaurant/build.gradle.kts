@@ -65,5 +65,8 @@ dependencies {
     implementation("io.ktor:ktor-server-websockets-jvm:$ktor_version")
 
 //    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+
+    //Kotlinx datetime
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
 }
 

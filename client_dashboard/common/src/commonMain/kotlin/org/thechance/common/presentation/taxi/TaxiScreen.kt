@@ -115,6 +115,8 @@ class TaxiScreen :
                             onCarColorSelected = listener::onSelectedCarColor,
                             onSeatsSelected = listener::onSelectedSeat,
                             onStatusSelected = listener::onSelectedStatus,
+                            onSaveFilterClicked = listener::onSaveFilterClicked,
+                            onCancelFilterClicked = listener::onCancelFilterClicked,
                         )
                     }
                     Spacer(modifier = Modifier.weight(1f))
@@ -199,6 +201,8 @@ class TaxiScreen :
         onSeatsSelected: (Int) -> Unit,
         onCarColorSelected: (CarColor) -> Unit,
         onStatusSelected: (TaxiStatus) -> Unit,
+        onSaveFilterClicked: () -> Unit,
+        onCancelFilterClicked: () -> Unit,
     ) {
         BpDropdownMenu(
             expanded = isFilterDropdownMenuExpanded,
@@ -284,13 +288,13 @@ class TaxiScreen :
                         ) {
                             BpTransparentButton(
                                 title = Resources.Strings.cancel,
-                                onClick = onFilterMenuDismiss,
+                                onClick = onCancelFilterClicked,
                                 modifier = Modifier.cursorHoverIconHand()
 
                             )
                             BpOutlinedButton(
                                 title =Resources.Strings.save,
-                                onClick = onFilterMenuDismiss,
+                                onClick = onSaveFilterClicked,
                                 shape = RoundedCornerShape(Theme.radius.small),
                                 modifier = Modifier.height(50.dp).weight(1f)
                             )
