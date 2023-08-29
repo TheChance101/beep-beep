@@ -15,7 +15,7 @@ private val localDrawableResources = staticCompositionLocalOf { DrawableResource
 private val localStringResources = staticCompositionLocalOf { StringResources() }
 
 @Composable
-fun BpTheme(
+fun BeepBeepTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
