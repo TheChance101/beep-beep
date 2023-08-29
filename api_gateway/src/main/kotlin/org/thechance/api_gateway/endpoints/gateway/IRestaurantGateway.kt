@@ -30,7 +30,7 @@ interface IRestaurantGateway {
         locale: Locale
     ): List<Order>
 
-    suspend fun getLastWeekOrdersCount(restaurantId: String, permissions: List<Int>, locale: Locale): List<Map<String, Int>> // 7 days
+    suspend fun getLastWeekOrdersCount(restaurantId: String, permissions: List<Int>, locale: Locale): List<Map<Int, Int>> // 7 days 0 - 6 (Sunday - Saturday)
     // endregion
   
     suspend fun getRestaurantInfo(locale: Locale, restaurantId: String): RestaurantResource

@@ -28,7 +28,7 @@ interface IManageOrderUseCase {
 
     suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order>
 
-    suspend fun getLastWeekOrdersCount(restaurantId: String): List<Map<String, Int>> // 7 days
+    suspend fun getLastWeekOrdersCount(restaurantId: String): List<Map<Int, Int>> // 7 days 0 - 6 (Sunday - Saturday)
 
 }
 
@@ -74,16 +74,18 @@ class ManageOrderUseCase(
         return optionsGateway.getActiveOrdersByRestaurantId(restaurantId = restaurantId)
     }
 
-    override suspend fun getLastWeekOrdersCount(restaurantId: String): List<Map<String, Int>> {
+    override suspend fun getLastWeekOrdersCount(restaurantId: String): List<Map<Int, Int>> {
         basicValidation.isValidId(restaurantId).takeIf { it }?.let {
-            val currentWeek = currentDateTime().toJavaLocalDateTime()
-                .get(WeekFields.ISO.weekOfYear())
+            val days = (0..6) // days of week 0 - 6 (Sunday - Saturday)
+            val currentWeek = currentDateTime().toJavaLocalDateTime().get(WeekFields.ISO.weekOfYear())
+            val lastWeekOrders = optionsGateway.getOrdersByRestaurantId(restaurantId = restaurantId)
+                .filter { it.createdAt.toJavaLocalDateTime().get(WeekFields.ISO.weekOfYear()) == currentWeek }
+                .groupBy { it.createdAt.dayOfWeek.value}
 
-            return optionsGateway.getOrdersByRestaurantId(
-                restaurantId = restaurantId
-            ).filter { it.createdAt.toJavaLocalDateTime().get(WeekFields.ISO.weekOfYear()) == currentWeek }
-                .groupBy { it.createdAt.dayOfWeek.name }
-                .map { (dayOfWeek, orders) -> mapOf(dayOfWeek to orders.size) }
+            return days.map { day ->
+                val count: Int = lastWeekOrders[day]?.size ?: 0
+                mapOf(day to count)
+            }
         } ?: throw MultiErrorException(listOf(INVALID_ID))
     }
 

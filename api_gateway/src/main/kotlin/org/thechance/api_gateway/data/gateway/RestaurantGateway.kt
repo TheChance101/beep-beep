@@ -183,8 +183,9 @@ class RestaurantGateway(
         restaurantId: String,
         permissions: List<Int>,
         locale: Locale
-    ): List<Map<String, Int>> {
-        return tryToExecute<List<Map<String, Int>>>(
+    ): List<Map<Int, Int>> {
+        // todo: implement check permissions logic
+        return tryToExecute<List<Map<Int, Int>>>(
             api = APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
