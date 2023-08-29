@@ -10,6 +10,7 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
+import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
@@ -54,6 +55,7 @@ fun Route.taxiRoutes() {
 
 
                 val (language, countryCode) = extractLocalizationHeader()
+                val locale = Locale(language, countryCode)
 
                 val result = taxiGateway.createTaxi(
                     plateNumber,
@@ -63,22 +65,53 @@ fun Route.taxiRoutes() {
                     seats,
                     isAvailable ,
                     permissions,
-                    Locale(language, countryCode)
-
+                    locale
                 )
-                val locale = Locale(language, countryCode)
                 val successMessage =
                     localizedMessagesFactory.createLocalizedMessages(locale).taxiCreatedSuccessfully
 
                 respondWithResult(HttpStatusCode.Created, result.toTaxi(), successMessage)
             }
 
-            get("/{id}"){
+            put("/{taxiId}") {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val permissions =
                     tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java)
                         ?: emptyList()
-                val id = call.parameters["id"] ?: ""
+                val id = call.parameters["taxiId"] ?: ""
+                val params = call.receiveParameters()
+
+                val plateNumber = params["plateNumber"] ?: ""
+                val color = params["color"]?.toInt() ?: 0
+                val type = params["type"] ?: ""
+                val driverId = params["driverId"] ?: ""
+                val seats = params["seats"]?.toInt() ?: 0
+                val isAvailable = params["isAvailable"]?.toBoolean() ?: true
+
+                val (language, countryCode) = extractLocalizationHeader()
+                val locale = Locale(language, countryCode)
+                val result = taxiGateway.editTaxi(
+                    id,
+                    plateNumber,
+                    color,
+                    type,
+                    driverId,
+                    seats,
+                    isAvailable,
+                    permissions,
+                    locale
+                )
+                val successMessage =
+                    localizedMessagesFactory.createLocalizedMessages(locale).taxiUpdateSuccessfully
+                respondWithResult(HttpStatusCode.OK, result.toTaxi(), successMessage)
+            }
+
+            get("/{taxiId}"){
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val permissions =
+                    tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java)
+                        ?: emptyList()
+                val id = call.parameters["taxiId"] ?: ""
                 val (language, countryCode) = extractLocalizationHeader()
                 val local = Locale(language, countryCode)
                 val result = taxiGateway.getTaxiById(id, permissions, local)
@@ -87,7 +120,7 @@ fun Route.taxiRoutes() {
             }
 
 
-            delete("/{id}"){
+            delete("/{taxiId}"){
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val permissions =
                     tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java)
@@ -95,7 +128,7 @@ fun Route.taxiRoutes() {
                 val (language, countryCode) = extractLocalizationHeader()
                 val params = call.receiveParameters()
                 val local = Locale(language, countryCode)
-                val id = params["id"] ?: ""
+                val id = params["taxiId"] ?: ""
                 val result = taxiGateway.deleteTaxi(id, permissions, Locale(language, countryCode))
                 val successMessage =
                     localizedMessagesFactory.createLocalizedMessages(local).taxiDeleteSuccessfully

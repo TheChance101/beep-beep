@@ -21,5 +21,18 @@ interface ITaxiGateway {
     ): TaxiResource
 
 
+    suspend fun editTaxi(
+        id: String,
+        plateNumber: String,
+        color: Int,
+        type: String,
+        driverId: String,
+        seats: Int,
+        isAvailable: Boolean,
+        permissions: List<Int>,
+        locale: Locale
+    ): TaxiResource
+
+
     suspend fun deleteTaxi(id: String, permissions: List<Int>, locale: Locale): TaxiResource
 }

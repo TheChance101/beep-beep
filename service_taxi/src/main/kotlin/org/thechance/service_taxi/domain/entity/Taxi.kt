@@ -10,10 +10,10 @@ data class Taxi(
     val seats: Int = 4,
 )
 
-enum class Color(val colorNumber: Int) {
+    enum class Color(val colorNumber:   Long) {
     BLACK(0),
     WHITE(1),
-    RED(2),
+    RED(0xFFFF0000L),
     BLUE(3),
     GREEN(4),
     YELLOW(5),
@@ -28,7 +28,7 @@ enum class Color(val colorNumber: Int) {
     OTHER(14);
 
     companion object {
-        fun getColorByColorNumber(colorNumber: Int): Color {
+        fun getColorByColorNumber(colorNumber: Long): Color {
             Color.values().forEach { if (it.colorNumber == colorNumber) { return it } }
             return OTHER
         }
