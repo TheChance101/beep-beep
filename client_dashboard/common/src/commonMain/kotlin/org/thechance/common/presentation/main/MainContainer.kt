@@ -32,11 +32,10 @@ object MainContainer : Screen, KoinComponent {
     private fun readResolve(): Any = MainContainer
 
     private val screenModel: MainScreenModel by inject()
-    val themeScreenModel by inject<ThemeScreenModel>()
+    private val themeScreenModel by inject<ThemeScreenModel>()
 
     @Composable
     override fun Content() {
-        println("themeScreenModel ${themeScreenModel.state}")
         val state by screenModel.state.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
         val isDarkMode = themeScreenModel.state.collectAsState().value
