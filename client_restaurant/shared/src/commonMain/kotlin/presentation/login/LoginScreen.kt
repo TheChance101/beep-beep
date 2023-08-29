@@ -60,7 +60,6 @@ class LoginScreen :
     override fun onRender(state: LoginScreenUIState, listener: LoginScreenInteractionListener) {
 
         Column(modifier = Modifier.fillMaxSize()) {
-
             CustomBottomSheet(
                 sheetContent = {
                     if (state.showPermissionSheet) {
@@ -70,14 +69,18 @@ class LoginScreen :
                         )
                     } else {
                         WrongPermissionBottomSheet(
-                            listener = listener
+                            listener
                         )
                     }
                 },
                 sheetBackgroundColor = Theme.colors.background,
+                onBackGroundClicked = listener::onSheetBackgroundClicked,
                 sheetState = state.sheetState,
-            ) { LoginScreenContent(state, listener) }
+            ) {
+                LoginScreenContent(state, listener)
+            }
         }
+
     }
 }
 

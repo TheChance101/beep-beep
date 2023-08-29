@@ -16,4 +16,5 @@ interface LoginScreenInteractionListener : BaseInteractionListener {
     fun onRequestPermissionClicked()
     fun onSubmitClicked()
     fun onCancelClicked()
+    fun onSheetBackgroundClicked()
 }

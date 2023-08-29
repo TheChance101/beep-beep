@@ -20,5 +20,5 @@ data class LoginScreenUIState(
     val ownerEmail: String = "",
     val hasPermission: Boolean = false,
     val showPermissionSheet: Boolean = false,
-    val sheetState: ModalBottomSheetState = ModalBottomSheetState()
+    val sheetState: ModalBottomSheetState = ModalBottomSheetState(),
 )

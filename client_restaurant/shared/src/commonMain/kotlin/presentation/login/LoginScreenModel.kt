@@ -3,6 +3,8 @@ package presentation.login
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.usecase.ILoginUserUseCase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
@@ -54,6 +56,7 @@ class LoginScreenModel:
 
     private fun onLoginFailed(error: ErrorState) {
 //        sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
+        state.value.sheetState.show()
         handleErrorState(error)
     }
 
@@ -118,17 +121,43 @@ class LoginScreenModel:
     }
 
     override fun onRequestPermissionClicked() {
-        updateState { it.copy(showPermissionSheet = true) }
+        showPermissionSheetWithDelay()
+
+    }
+
+    private fun showPermissionSheetWithDelay() {
+        coroutineScope.launch {
+            state.value.sheetState.dismiss()
+            delay(500)
+            updateState { it.copy(showPermissionSheet = true) }
+            state.value.sheetState.show()
+        }
     }
 
     override fun onSubmitClicked() {
         state.value.sheetState.dismiss()
-        updateState { it.copy(showPermissionSheet = false) }
+        coroutineScope.launch {
+            delayAndChangePermissionSheetState(false)
+        }
     }
 
     override fun onCancelClicked() {
         state.value.sheetState.dismiss()
-        updateState { it.copy(showPermissionSheet = false) }
+        coroutineScope.launch {
+            delayAndChangePermissionSheetState(false)
+        }
+    }
+
+    override fun onSheetBackgroundClicked() {
+        state.value.sheetState.dismiss()
+        coroutineScope.launch {
+            delayAndChangePermissionSheetState(false)
+        }
+    }
+
+    private suspend fun delayAndChangePermissionSheetState(show: Boolean) {
+        delay(300)
+        updateState { it.copy(showPermissionSheet = show) }
     }
     // endregion
 }
