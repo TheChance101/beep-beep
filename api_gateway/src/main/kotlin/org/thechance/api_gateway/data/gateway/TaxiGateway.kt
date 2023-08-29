@@ -71,7 +71,7 @@ class TaxiGateway(
         permissions: List<Int>,
         locale: Locale
     ): TaxiResource {
-        if (!permissions.contains(1)) {
+        if (!permissions.contains(ADMIN_PERMISSION)) {
             throw LocalizedMessageException(
                 errorHandler.getLocalizedErrorMessage(listOf(8000), locale)
             )
@@ -106,7 +106,7 @@ class TaxiGateway(
         permissions: List<Int>,
         locale: Locale
     ): TaxiResource {
-        if (!permissions.contains(1)) {
+        if (!permissions.contains(ADMIN_PERMISSION)) {
             throw LocalizedMessageException(
                 errorHandler.getLocalizedErrorMessage(listOf(8000), locale)
             )
@@ -135,7 +135,7 @@ class TaxiGateway(
         permissions: List<Int>,
         locale: Locale
     ): TaxiResource {
-        if (!permissions.contains(1)) {
+        if (!permissions.contains(ADMIN_PERMISSION)) {
             throw LocalizedMessageException(
                 errorHandler.getLocalizedErrorMessage(listOf(8000), locale)
             )

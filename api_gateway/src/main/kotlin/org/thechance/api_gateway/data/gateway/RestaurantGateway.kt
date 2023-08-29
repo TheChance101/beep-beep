@@ -201,7 +201,7 @@ class RestaurantGateway(
                     errorHandler.getLocalizedErrorMessage(errorCodes, locale)
                 }
             ) {
-                get("restaurants/$restaurantId/meals"){
+                get("restaurant/$restaurantId/meals"){
                     parameter("page", page)
                     parameter("limit", limit)
                 }
@@ -228,8 +228,8 @@ class RestaurantGateway(
     @OptIn(InternalAPI::class)
     override suspend fun addCuisine(name: String, permissions: List<Int>, locale: Locale): CuisineResource {
         //TODO()  need to change 1
-        val ADMIN = 1
-        return if (ADMIN in permissions) {
+
+        return if (ADMIN_PERMISSION in permissions) {
             tryToExecute<CuisineResource>(
                 APIs.RESTAURANT_API,
                 setErrorMessage = { errorCodes ->
