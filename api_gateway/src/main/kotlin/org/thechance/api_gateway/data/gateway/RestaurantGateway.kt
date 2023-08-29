@@ -77,11 +77,12 @@ class RestaurantGateway(
             errorHandler.getLocalizedErrorMessage(errorCodes, locale)
         }
     ) {
-        get("/restaurants"){
+        get("/restaurants") {
             parameter("page", page)
             parameter("limit", limit)
         }
     }
+
     override suspend fun getRestaurantsByOwnerId(
         ownerId: String,
         locale: Locale,
@@ -175,6 +176,21 @@ class RestaurantGateway(
             }
         ) {
             get("/order/history/$restaurantId?page=$page&limit=$limit")
+        }
+    }
+
+    override suspend fun getLastWeekOrdersCount(
+        restaurantId: String,
+        permissions: List<Int>,
+        locale: Locale
+    ): List<Map<String, Int>> {
+        return tryToExecute<List<Map<String, Int>>>(
+            api = APIs.RESTAURANT_API,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+            }
+        ) {
+            get("/order/week?restaurantId=$restaurantId")
         }
     }
 

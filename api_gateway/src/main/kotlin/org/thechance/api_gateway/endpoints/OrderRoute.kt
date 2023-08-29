@@ -17,6 +17,17 @@ fun Route.orderRoutes() {
 
     route("/order") {
         authenticate("auth-jwt") {
+            get("/week") {
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
+                val id = call.parameters["restaurantId"]?.trim().toString()
+                val (language, countryCode) = extractLocalizationHeader()
+                val result = restaurantGateway.getLastWeekOrdersCount(
+                    restaurantId = id, permissions = permissions, locale = Locale(language, countryCode)
+                )
+                respondWithResult(HttpStatusCode.OK, result)
+            }
+
             get("/history/{id}") {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()

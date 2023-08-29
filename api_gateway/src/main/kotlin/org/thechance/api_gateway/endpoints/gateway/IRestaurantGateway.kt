@@ -29,6 +29,8 @@ interface IRestaurantGateway {
         limit: Int,
         locale: Locale
     ): List<Order>
+
+    suspend fun getLastWeekOrdersCount(restaurantId: String, permissions: List<Int>, locale: Locale): List<Map<String, Int>> // 7 days
     // endregion
   
     suspend fun getRestaurantInfo(locale: Locale, restaurantId: String): RestaurantResource
