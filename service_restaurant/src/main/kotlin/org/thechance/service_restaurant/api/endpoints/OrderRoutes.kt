@@ -20,6 +20,7 @@ import org.thechance.service_restaurant.domain.utils.exceptions.INSERT_ORDER_ERR
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_REQUEST_PARAMETER
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
+import org.thechance.service_restaurant.domain.utils.toMillis
 import kotlin.collections.set
 
 fun Route.orderRoutes() {
@@ -67,7 +68,7 @@ fun Route.orderRoutes() {
 
         post {
             val order = call.receive<OrderDto>()
-                .copy(id = ObjectId().toString(), createdAt = currentDateTime().toString())
+                .copy(id = ObjectId().toString(), createdAt = currentDateTime().toMillis())
             val isOrderInserted = manageOrder.addOrder(order.toEntity())
             isOrderInserted.takeIf { it }.apply {
                 socketHandler.restaurants[order.restaurantId]?.orders?.emit(order)
