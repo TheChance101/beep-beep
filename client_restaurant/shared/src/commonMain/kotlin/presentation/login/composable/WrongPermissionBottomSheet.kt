@@ -55,12 +55,12 @@ fun WrongPermissionBottomSheet(
         )
 
         BpButton(
-            onClick = listener::onRequestPermissionClick,
+            onClick = listener::onRequestPermissionClicked,
             title = Resources.strings.requestAPermission,
             modifier = Modifier.fillMaxWidth().padding(bottom = Theme.dimens.space16),
         )
         BpTransparentButton(
-            onClick = listener::onCancelClick,
+            onClick = listener::onCancelClicked,
             title = Resources.strings.cancel,
             modifier = Modifier.fillMaxWidth(),
         )

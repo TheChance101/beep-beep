@@ -95,9 +95,7 @@ class ManageOrderUseCase(
 
     private suspend fun isRestaurantOpened(restaurantId: String): Boolean {
         val restaurant = restaurantGateway.getRestaurant(id = restaurantId)
-        return restaurant?.let {
-            isRestaurantOpen(openTime = it.openingTime, closeTime = it.closingTime)
-        } ?: throw MultiErrorException(listOf(NOT_FOUND))
+        return restaurant?.isRestaurantOpen() ?: throw MultiErrorException(listOf(NOT_FOUND))
     }
 
 }
