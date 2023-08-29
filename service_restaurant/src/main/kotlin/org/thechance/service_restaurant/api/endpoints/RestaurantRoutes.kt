@@ -10,6 +10,7 @@ import org.thechance.service_restaurant.api.models.RestaurantDto
 import org.thechance.service_restaurant.api.models.mappers.toDetailsDto
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
+import org.thechance.service_restaurant.api.models.mappers.toMealDto
 import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
 import org.thechance.service_restaurant.domain.usecase.IControlRestaurantsUseCase
@@ -26,6 +27,22 @@ fun Route.restaurantRoutes() {
 
     route("restaurants") {
 
+        get("/{id}/meals") {
+            val restaurantId = call.parameters["id"] ?: throw MultiErrorException(
+                listOf(
+                    INVALID_REQUEST_PARAMETER
+                )
+            )
+            val page = call.parameters.extractInt("page") ?: 1
+            val limit = call.parameters.extractInt("limit") ?: 10
+            val restaurant = discoverRestaurant.getMealsByRestaurantId(
+                restaurantId = restaurantId,
+                page = page,
+                limit = limit
+            ).toMealDto()
+            call.respond(HttpStatusCode.OK, restaurant)
+        }
+
         get {
             val page = call.parameters.extractInt("page") ?: 1
             val limit = call.parameters.extractInt("limit") ?: 10
@@ -34,7 +51,11 @@ fun Route.restaurantRoutes() {
         }
 
         get("/{id}") {
-            val ownerId = call.parameters["id"] ?: throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER))
+            val ownerId = call.parameters["id"] ?: throw MultiErrorException(
+                listOf(
+                    INVALID_REQUEST_PARAMETER
+                )
+            )
             val restaurants = discoverRestaurant.getRestaurantsByOwnerId(ownerId)
             call.respond(HttpStatusCode.OK, restaurants.toDto())
         }

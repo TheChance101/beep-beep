@@ -1,8 +1,8 @@
-package presentation.info
+package presentation.information
 
 import presentation.base.BaseInteractionListener
 
-interface RestaurantInfoInteractionListener: BaseInteractionListener {
+interface RestaurantInformationInteractionListener: BaseInteractionListener {
     fun onRestaurantNameChange(name: String)
     fun onPhoneNumberChange(phoneNum: String)
     fun onOpeningTimeChange(openingTime: String)
