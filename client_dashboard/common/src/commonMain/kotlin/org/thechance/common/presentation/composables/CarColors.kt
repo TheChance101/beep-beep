@@ -1,14 +1,13 @@
-package org.thechance.common.presentation.taxi
+package org.thechance.common.presentation.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.onClick
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -19,6 +18,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.presentation.util.kms
 
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CarColors(
@@ -27,14 +27,14 @@ fun CarColors(
     onSelectColor: (CarColor) -> Unit,
     selectedCarColor: CarColor
 ) {
-    LazyRow(
+
+    Row(
         modifier = modifier,
         verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.spacedBy(8.kms)
     ) {
-        items(colors) { carColor ->
+        colors.forEach { carColor ->
             val color = Color(carColor.hexadecimal)
-
             val selectedModifier = if (selectedCarColor == carColor) {
                 Modifier.size(32.kms)
                     .border(
@@ -44,7 +44,8 @@ fun CarColors(
                     ).padding(4.kms)
 
             } else {
-                Modifier.size(32.kms).padding(4.kms)
+                Modifier.size(32.kms)
+                    .padding(4.kms)
             }
             Box(
                 modifier = selectedModifier,
@@ -52,7 +53,10 @@ fun CarColors(
             ) {
                 Box(
                     modifier = Modifier.size(20.kms)
-                        .background(color, shape = RoundedCornerShape(4.kms))
+                        .background(
+                            color,
+                            shape = RoundedCornerShape(4.kms)
+                        )
                         .border(
                             width = 2.kms,
                             color = Color.Gray.copy(alpha = 0.5f),

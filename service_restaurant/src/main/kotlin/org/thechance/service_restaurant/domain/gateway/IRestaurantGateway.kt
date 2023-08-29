@@ -10,6 +10,7 @@ interface IRestaurantGateway {
 
     //region Get
     suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant>
+    suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant>
     suspend fun getRestaurant(id: String): Restaurant?
     suspend fun getRestaurantIds(): List<String>
     suspend fun getCuisineInRestaurant(restaurantId: String): List<Cuisine>
