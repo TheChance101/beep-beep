@@ -47,7 +47,7 @@ fun Route.restaurantRoutes() {
             respondWithResult(HttpStatusCode.OK, restaurants.toRestaurant())
         }
 
-        get("/{id}/meals"){
+        get("/{id}/meals") {
             val (language, countryCode) = extractLocalizationHeader()
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 20
@@ -93,7 +93,6 @@ fun Route.restaurantRoutes() {
                         )
                     }
                 }
-
 
                 get("/count-by-days-back") {
                     val tokenClaim = call.principal<JWTPrincipal>()
@@ -153,7 +152,7 @@ fun Route.restaurantRoutes() {
                     )
                     respondWithResult(HttpStatusCode.OK, result)
                 }
-                
+
                 delete("/{restaurantId}") {
                     val tokenClaim = call.principal<JWTPrincipal>()
                     val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java)
@@ -167,6 +166,7 @@ fun Route.restaurantRoutes() {
                     )
                     respondWithResult(HttpStatusCode.OK, result)
                 }
+            }
         }
     }
 }
