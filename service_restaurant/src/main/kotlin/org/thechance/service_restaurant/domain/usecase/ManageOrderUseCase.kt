@@ -13,7 +13,6 @@ import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 import org.thechance.service_restaurant.domain.utils.exceptions.RESTAURANT_CLOSED
-import java.time.temporal.WeekFields
 
 interface IManageOrderUseCase {
     suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order>
@@ -28,7 +27,10 @@ interface IManageOrderUseCase {
 
     suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order>
 
-    suspend fun getLastWeekOrdersCount(restaurantId: String): List<Map<Int, Int>> // 7 days 0 - 6 (Sunday - Saturday)
+    suspend fun getOrdersCountByDaysBefore(
+        restaurantId: String,
+        daysBack: Int
+    ): List<Map<Int, Int>> // list of maps (dayOfWeek, count) { dayOfWeek 0 - 6 (Sunday - Saturday) }
 
 }
 
@@ -74,18 +76,20 @@ class ManageOrderUseCase(
         return optionsGateway.getActiveOrdersByRestaurantId(restaurantId = restaurantId)
     }
 
-    override suspend fun getLastWeekOrdersCount(restaurantId: String): List<Map<Int, Int>> {
+    override suspend fun getOrdersCountByDaysBefore(restaurantId: String, daysBack: Int): List<Map<Int, Int>> {
         basicValidation.isValidId(restaurantId).takeIf { it }?.let {
-            val days = (0..6) // days of week 0 - 6 (Sunday - Saturday)
-            val currentWeek = currentDateTime().toJavaLocalDateTime().get(WeekFields.ISO.weekOfYear())
-            val lastWeekOrders = optionsGateway.getOrdersByRestaurantId(restaurantId = restaurantId)
-                .filter { it.createdAt.toJavaLocalDateTime().get(WeekFields.ISO.weekOfYear()) == currentWeek }
-                .groupBy { it.createdAt.dayOfWeek.value}
+            val currentDateTime = currentDateTime().toJavaLocalDateTime()
+            val currentDayOfYear = currentDateTime.dayOfYear
+            val dayOfYearBefore = currentDateTime.minusDays(daysBack.toLong()).dayOfYear
+            val daysOfYearRange = dayOfYearBefore..currentDayOfYear
+            val groupedOrdersByDayOfYear = optionsGateway.getOrdersByRestaurantId(restaurantId = restaurantId)
+                .filter { it.createdAt.dayOfYear in daysOfYearRange }.groupBy { it.createdAt.dayOfYear }
 
-            return days.map { day ->
-                val count: Int = lastWeekOrders[day]?.size ?: 0
-                mapOf(day to count)
-            }
+            // convert to list of maps (dayOfWeek, count)
+            return daysOfYearRange.map {
+                val count = groupedOrdersByDayOfYear[it]?.size ?: 0
+                mapOf(currentDateTime.withDayOfYear(it).dayOfWeek.value to count)
+            }.reversed()
         } ?: throw MultiErrorException(listOf(INVALID_ID))
     }
 

@@ -179,8 +179,9 @@ class RestaurantGateway(
         }
     }
 
-    override suspend fun getLastWeekOrdersCount(
+    override suspend fun getOrdersCountByDaysBefore(
         restaurantId: String,
+        daysBack: Int,
         permissions: List<Int>,
         locale: Locale
     ): List<Map<Int, Int>> {
@@ -191,7 +192,7 @@ class RestaurantGateway(
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
         ) {
-            get("/order/week?restaurantId=$restaurantId")
+            get("/order/count-by-days-back?restaurantId=$restaurantId&&daysBack=$daysBack")
         }
     }
 

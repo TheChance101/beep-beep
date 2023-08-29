@@ -17,13 +17,17 @@ fun Route.orderRoutes() {
 
     route("/order") {
         authenticate("auth-jwt") {
-            get("/last-week-count") {
+            get("/count-by-days-back") {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
                 val id = call.parameters["restaurantId"]?.trim().toString()
+                val daysBack = call.parameters["daysBack"]?.trim()?.toInt() ?: 7
                 val (language, countryCode) = extractLocalizationHeader()
-                val result = restaurantGateway.getLastWeekOrdersCount(
-                    restaurantId = id, permissions = permissions, locale = Locale(language, countryCode)
+                val result = restaurantGateway.getOrdersCountByDaysBefore(
+                    restaurantId = id,
+                    daysBack = daysBack,
+                    permissions = permissions,
+                    locale = Locale(language, countryCode)
                 )
                 respondWithResult(HttpStatusCode.OK, result)
             }
