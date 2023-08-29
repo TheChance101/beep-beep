@@ -24,8 +24,6 @@ class RemoteIdentityGateway(client: HttpClient) : IRemoteIdentityGateway,
                 }
             ) {
                 url("login")
-                header("Accept-Language", "ar")
-                header("Country-Code", "EG")
             }
         }.value?.toEntity() ?: throw Exception()
     }

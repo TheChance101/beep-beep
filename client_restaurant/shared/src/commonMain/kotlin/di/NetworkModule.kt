@@ -24,6 +24,8 @@ val NetworkModule = module {
 
             defaultRequest {
                 header("Content-Type", "application/json")
+                header("Accept-Language", "ar")
+                header("Country-Code", "EG")
                 url("http://0.0.0.0:8080")
             }
 
