@@ -35,7 +35,7 @@ fun OrderDto.toEntity(): Order {
             Constant.IN_COOKING_ORDER -> OrderState.IN_COOKING
             Constant.FINISHED_ORDER -> OrderState.FINISHED
             Constant.CANCELED_ORDER -> OrderState.CANCELED
-            else -> throw RequestException()
+            else -> throw RequestException("")
         }
     )
 }

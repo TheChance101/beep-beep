@@ -6,10 +6,10 @@ import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.statement.HttpResponse
 import presentation.base.InternetException
-import presentation.base.InvalidCredentialsException
+import presentation.base.InvalidPasswordException
+import presentation.base.InvalidUserNameException
 import presentation.base.NoInternetException
 import presentation.base.UnknownErrorException
-import presentation.base.UserNotFoundException
 
 abstract class BaseRemoteGateway(val client: HttpClient) {
 
@@ -17,7 +17,7 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
         method: HttpClient.() -> HttpResponse
     ): T {
         try {
-            return client.method().body<T>()
+            return client.method().body()
         } catch (e: ClientRequestException) {
             val errorMessages = e.response.body<BaseResponse<*>>().status.errorMessages
             errorMessages?.let { throwMatchingException(it) }
@@ -30,16 +30,26 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
     }
 
     fun throwMatchingException(errorMessages: Map<String, String>) {
-        if (errorMessages.containsErrors("1013")) {
-            throw InvalidCredentialsException()
-        } else if (errorMessages.containsErrors("1043")) {
-            throw UserNotFoundException(errorMessages["1043"] ?: "")
-        } else {
-            throw UnknownErrorException()
+        errorMessages.let {
+            if (it.containsErrors(WRONG_PASSWORD)) {
+                throw InvalidPasswordException(it.getOrEmpty(WRONG_PASSWORD))
+            } else {
+                if (it.containsErrors(USER_NOT_EXIST)) {
+                    throw InvalidUserNameException(it.getOrEmpty(USER_NOT_EXIST))
+                } else {
+                    throw UnknownErrorException()
+                }
+            }
         }
     }
 
     private fun Map<String, String>.containsErrors(vararg errorCodes: String): Boolean =
         keys.containsAll(errorCodes.toList())
 
+    private fun Map<String, String>.getOrEmpty(key: String): String = get(key) ?: ""
+
+    companion object {
+        const val WRONG_PASSWORD = "1013"
+        const val USER_NOT_EXIST = "1043"
+    }
 }

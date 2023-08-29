@@ -1,8 +1,20 @@
 package presentation.base
 
 import cafe.adriel.voyager.core.model.ScreenModel
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import org.koin.core.component.KoinComponent
 
@@ -59,28 +71,22 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
         return inScope.launch(dispatcher) {
             try {
                 function()
-            } catch (e: WifiDisabledException) {
-                onError(ErrorState.WifiDisabled)
-            } catch (e: NoInternetException) {
-                onError(ErrorState.NoInternet)
-            } catch (e: NetworkNotSupportedException) {
-                onError(ErrorState.NetworkNotSupported)
-            } catch (e: UnAuthorizedException) {
-                onError(ErrorState.UnAuthorized)
-            } catch (e: PermissionDenied) {
-                onError(ErrorState.HasNoPermission)
-            } catch (e: ClientSideException) {
-                onError(ErrorState.RequestFailed)
-            } catch (e: ServerSideException) {
-                onError(ErrorState.RequestFailed)
-            } catch (e: UserNotFoundException) {
-                onError(ErrorState.UserNotExist(e.errorMessage))
-            } catch (e: InvalidUserNameException) {
-                onError(ErrorState.InvalidUserName(e.errorMessage))
-            } catch (e: InvalidPasswordException) {
-                onError(ErrorState.InvalidPassword(e.errorMessage))
-            } catch (e: Exception) {
-                onError(ErrorState.RequestFailed)
+            } catch (exception: Exception) {
+                when (exception) {
+                    is NoInternetException -> onError(ErrorState.NoInternet)
+                    is PermissionDenied -> onError(ErrorState.HasNoPermission)
+                    is ClientSideException -> onError(ErrorState.RequestFailed)
+                    is ServerSideException -> onError(ErrorState.RequestFailed)
+                    is UnAuthorizedException -> onError(ErrorState.UnAuthorized)
+                    is UserNotFoundException -> onError(ErrorState.UserNotExist(exception.errorMessage))
+                    is InvalidCredentialsException -> onError(
+                        ErrorState.InvalidCredentials(
+                            exception.message.toString()
+                        )
+                    )
+
+                    else -> onError(ErrorState.UnknownError)
+                }
             }
         }
     }

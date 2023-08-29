@@ -4,49 +4,65 @@ import data.local.model.UserConfigurationCollection
 import domain.gateway.local.ILocalConfigurationGateway
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
-
 class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationGateway {
 
-    override suspend fun saveAccessToken(token: String) {
-        realm.write {
+    init {
+        createUserConfiguration()
+    }
+
+    private fun createUserConfiguration() {
+        realm.writeBlocking {
             copyToRealm(UserConfigurationCollection().apply {
-                this.accessToken = token
+                id = CONFIGURATION_ID
             })
         }
     }
 
-    override suspend fun getAccessToken(): String {
-        return realm.query<UserConfigurationCollection>().first().find()?.accessToken
-            ?: throw Exception("Access Token not found")
+    override suspend fun saveAccessToken(token: String) {
+        realm.write {
+            query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+                .find()?.accessToken = token
+        }
     }
 
     override suspend fun saveRefreshToken(token: String) {
         realm.write {
-            copyToRealm(UserConfigurationCollection().apply {
-                this.refreshToken = token
-            })
+            query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+                .find()?.refreshToken = token
         }
     }
+
+    override suspend fun getAccessToken(): String {
+        return realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+            .find()?.accessToken ?: ""
+    }
+
     override suspend fun getRefreshToken(): String {
-        return realm.query<UserConfigurationCollection>().first().find()?.refreshToken
-            ?: throw Exception("Refresh Token not found")
-    }
-
-    override suspend fun saveKeepMeLoggedInFlag(isChecked: Boolean) {
-        realm.write {
-            copyToRealm(UserConfigurationCollection().apply {
-                this.isKeepMeLoggedInMeChecked = isChecked
-            })
-        }
-    }
-
-    override suspend fun getKeepMeLoggedInFlag(): Boolean {
-        return realm.query<UserConfigurationCollection>().first().find()?.isKeepMeLoggedInMeChecked
-            ?: throw Exception("Nothing ..")
+        return realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+            .find()?.refreshToken ?: ""
     }
 
     override suspend fun clearTokens() {
         realm.write { delete(query<UserConfigurationCollection>()) }
     }
+
+    override suspend fun saveKeepMeLoggedInFlag(isChecked: Boolean) {
+        realm.write {
+            query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+                .find()?.isKeepMeLoggedInMeChecked = isChecked
+        }
+    }
+
+    override suspend fun getKeepMeLoggedInFlag(): Boolean {
+        return realm.query<UserConfigurationCollection>(
+            "$ID == $CONFIGURATION_ID"
+        ).first().find()?.isKeepMeLoggedInMeChecked ?: false
+    }
+
+    companion object {
+        private const val CONFIGURATION_ID = 0
+        private const val ID = "id"
+    }
+
 
 }
