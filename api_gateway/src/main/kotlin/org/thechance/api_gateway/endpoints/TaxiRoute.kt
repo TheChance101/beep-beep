@@ -10,7 +10,6 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
-import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
@@ -51,6 +50,8 @@ fun Route.taxiRoutes() {
                 val type = params["type"] ?: ""
                 val driverId = params["driverId"] ?: ""
                 val seats = params["seats"]?.toInt() ?: 0
+                val isAvailable = params["isAvailable"]?.toBoolean() ?: true
+
 
                 val (language, countryCode) = extractLocalizationHeader()
 
@@ -60,6 +61,7 @@ fun Route.taxiRoutes() {
                     type,
                     driverId,
                     seats,
+                    isAvailable ,
                     permissions,
                     Locale(language, countryCode)
 
