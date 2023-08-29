@@ -1,4 +1,4 @@
-package org.thechance.common.data.mapper
+package org.thechance.common.data.remote.mapper
 
 import org.thechance.common.data.remote.model.RestaurantDto
 import org.thechance.common.domain.entity.Restaurant

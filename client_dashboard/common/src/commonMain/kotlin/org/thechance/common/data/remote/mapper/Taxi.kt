@@ -1,8 +1,8 @@
-package org.thechance.common.data.mapper
+package org.thechance.common.data.remote.mapper
 
 import org.thechance.common.data.remote.model.TaxiDto
-import org.thechance.common.domain.entity.NewTaxiInfo
 import org.thechance.common.domain.entity.CarColor
+import org.thechance.common.domain.entity.NewTaxiInfo
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.util.TaxiStatus
 
