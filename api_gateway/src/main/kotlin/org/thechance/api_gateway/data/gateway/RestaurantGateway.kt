@@ -120,11 +120,7 @@ class RestaurantGateway(
 
     @OptIn(InternalAPI::class)
     override suspend fun addMeal(
-        restaurantId: String,
-        name: String,
-        description: String,
-        price: Double,
-        cuisines: List<String>,
+        meal: MealResource,
         permissions: List<Int>,
         locale: Locale
     ): MealResource {
@@ -139,11 +135,11 @@ class RestaurantGateway(
                     body = Json.encodeToString(
                         MealResource.serializer(),
                         MealResource(
-                            restaurantId = restaurantId,
-                            name = name,
-                            description = description,
-                            price = price,
-                            cuisines = cuisines
+                            restaurantId = meal.restaurantId,
+                            name = meal.name,
+                            description = meal.description,
+                            price = meal.price,
+                            cuisines = meal.cuisines
                         )
                     )
                 }
@@ -155,11 +151,7 @@ class RestaurantGateway(
 
     @OptIn(InternalAPI::class)
     override suspend fun updateMeal(
-        restaurantId: String,
-        name: String,
-        description: String,
-        price: Double,
-        cuisines: List<String>,
+        meal: MealResource,
         permissions: List<Int>,
         locale: Locale
     ): MealResource {
@@ -174,11 +166,11 @@ class RestaurantGateway(
                     body = Json.encodeToString(
                         MealResource.serializer(),
                         MealResource(
-                            restaurantId = restaurantId,
-                            name = name,
-                            description = description,
-                            price = price,
-                            cuisines = cuisines
+                            restaurantId = meal.restaurantId,
+                            name = meal.name,
+                            description = meal.description,
+                            price = meal.price,
+                            cuisines = meal.cuisines
                         )
                     )
                 }
@@ -195,17 +187,17 @@ class RestaurantGateway(
         locale: Locale
     ): List<MealResource> {
 
-            return tryToExecute(
-                api = APIs.RESTAURANT_API,
-                setErrorMessage = { errorCodes ->
-                    errorHandler.getLocalizedErrorMessage(errorCodes, locale)
-                }
-            ) {
-                get("restaurants/$restaurantId/meals"){
-                    parameter("page", page)
-                    parameter("limit", limit)
-                }
+        return tryToExecute(
+            api = APIs.RESTAURANT_API,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
+        ) {
+            get("restaurants/$restaurantId/meals") {
+                parameter("page", page)
+                parameter("limit", limit)
+            }
+        }
 
     }
 
@@ -214,14 +206,14 @@ class RestaurantGateway(
         locale: Locale
     ): List<MealResource> {
 
-            return tryToExecute(
-                api = APIs.RESTAURANT_API,
-                setErrorMessage = { errorCodes ->
-                    errorHandler.getLocalizedErrorMessage(errorCodes, locale)
-                }
-            ) {
-                get("/cuisine/$cuisineId/meals")
+        return tryToExecute(
+            api = APIs.RESTAURANT_API,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
+        ) {
+            get("/cuisine/$cuisineId/meals")
+        }
 
     }
 
