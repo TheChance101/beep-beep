@@ -1,18 +1,18 @@
-package presentation.info
+package presentation.information
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -32,8 +32,11 @@ import presentation.composable.BpTitleWithContentSection
 import presentation.login.LoginScreen
 import resources.Resources
 
-class RestaurantInfoScreen :
-    BaseScreen<RestaurantInfoScreenModel, RestaurantInfoUiState, RestaurantInfoUiEffect, RestaurantInfoInteractionListener>() {
+class RestaurantInfoScreen : BaseScreen<
+        RestaurantInformationScreenModel,
+        RestaurantInformationUiState,
+        RestaurantInformationUiEffect,
+        RestaurantInformationInteractionListener>() {
 
     @Composable
     override fun Content() {
@@ -43,9 +46,12 @@ class RestaurantInfoScreen :
 
     @Composable
     override fun onRender(
-        state: RestaurantInfoUiState,
-        listener: RestaurantInfoInteractionListener
+        state: RestaurantInformationUiState,
+        listener: RestaurantInformationInteractionListener
     ) {
+
+        val scrollState = rememberScrollState()
+
         Column {
             BpAppBar(
                 onNavigateUp = { listener.onClickBackArrow() },
@@ -55,36 +61,31 @@ class RestaurantInfoScreen :
                     .background(Theme.colors.surface)
                     .border(width = 1.dp, color = Theme.colors.divider, shape = RectangleShape)
             )
-            LazyColumn(Modifier.fillMaxSize().background(Theme.colors.background)) {
-                item {
-                    RestaurantInfoCard(
-                        state.restaurant.ownerUsername,
-                        state.restaurant.address,
-                        state.restaurant.rating,
-                        state.restaurant.priceLevel
-                    )
-                }
-                item {
-                    RestaurantUpdateInfoCard(
-                        state.restaurant.restaurantName,
-                        state.restaurant.openingTime,
-                        state.restaurant.closingTime,
-                        state.restaurant.description,
-                        state.restaurant.phoneNumber,
-                        listener
-                    )
-                }
-                item {
-                    LogoutCard(listener)
-                }
+            Column(
+                Modifier
+                    .verticalScroll(scrollState)
+                    .wrapContentSize()
+                    .background(Theme.colors.background)
+            ) {
+                val informationState = state.restaurant
+                RestaurantInfoCard(
+                    informationState.ownerUsername,
+                    informationState.address,
+                    informationState.rating,
+                    informationState.priceLevel
+                )
+
+                RestaurantUpdateInformationCard(state, listener)
+
+                LogoutCard(listener::onClickLogout)
             }
         }
     }
 
-    override fun onEffect(effect: RestaurantInfoUiEffect, navigator: Navigator) {
+    override fun onEffect(effect: RestaurantInformationUiEffect, navigator: Navigator) {
         when (effect) {
-            is RestaurantInfoUiEffect.NavigateToLogin -> navigator.replaceAll(LoginScreen())
-            is RestaurantInfoUiEffect.NavigateUp -> navigator.pop()
+            is RestaurantInformationUiEffect.NavigateToLogin -> navigator.replaceAll(LoginScreen())
+            is RestaurantInformationUiEffect.NavigateUp -> navigator.pop()
         }
     }
 
@@ -158,42 +159,40 @@ class RestaurantInfoScreen :
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    private fun RestaurantUpdateInfoCard(
-        restaurantName: String,
-        openingTime: String,
-        closingTime: String,
-        description: String,
-        phoneNumber: String,
-        listener: RestaurantInfoInteractionListener
+    private fun RestaurantUpdateInformationCard(
+        state: RestaurantInformationUiState,
+        listener: RestaurantInformationInteractionListener
     ) {
         BpCard(
             modifier = Modifier.fillMaxWidth().padding(Theme.dimens.space16)
         ) {
             BpTextField(
                 label = Resources.strings.restaurantName,
-                text = restaurantName,
+                text = state.restaurant.restaurantName,
                 onValueChange = { listener.onRestaurantNameChange(it) },
                 modifier = Modifier.padding(
                     horizontal = Theme.dimens.space16,
                     vertical = Theme.dimens.space16
                 ),
                 errorMessage = Resources.strings.restaurantNameErrorMessage,
-                isError = restaurantName.length !in 4..25
+                isError = state.restaurant.isRestaurantNameError
             )
             BpTextField(
                 label = Resources.strings.phoneNumber,
-                text = phoneNumber,
+                text = state.restaurant.phoneNumber,
                 onValueChange = { listener.onPhoneNumberChange(it) },
                 modifier = Modifier.padding(
                     start = Theme.dimens.space16,
                     end = Theme.dimens.space16,
                     bottom = Theme.dimens.space16
-                )
+                ),
+                isError = state.restaurant.isPhoneNumberError,
+                errorMessage = Resources.strings.phoneNumberErrorMessage
             )
             Row(modifier = Modifier.padding(bottom = Theme.dimens.space16)) {
                 BpTextField(
                     label = Resources.strings.workingHours,
-                    text = openingTime,
+                    text = state.restaurant.openingTime,
                     onValueChange = { listener.onOpeningTimeChange(it) },
                     modifier = Modifier.padding(
                         start = Theme.dimens.space16,
@@ -202,7 +201,7 @@ class RestaurantInfoScreen :
                 )
                 BpTextField(
                     label = "",
-                    text = closingTime,
+                    text = state.restaurant.closingTime,
                     onValueChange = { listener.onClosingTimeChange(it) },
                     modifier = Modifier.padding(
                         start = Theme.dimens.space4,
@@ -212,7 +211,7 @@ class RestaurantInfoScreen :
             }
             BpTextField(
                 label = Resources.strings.description,
-                text = description,
+                text = state.restaurant.description,
                 onValueChange = { listener.onDescriptionChanged(it) },
                 modifier = Modifier.padding(
                     start = Theme.dimens.space16,
@@ -220,15 +219,14 @@ class RestaurantInfoScreen :
                     bottom = Theme.dimens.space24
                 ),
                 errorMessage = Resources.strings.descriptionErrorMessage,
-                isError = description.length > 255,
+                isError = state.restaurant.isDescriptionLengthError,
                 singleLine = false,
                 textFieldModifier = Modifier.fillMaxWidth().height(104.dp)
             )
             BpButton(
                 title = Resources.strings.save,
                 onClick = { listener.onClickSave() },
-                enabled = restaurantName.isNotEmpty() && phoneNumber.isNotEmpty()
-                        && openingTime.isNotEmpty() && closingTime.isNotEmpty(),
+                enabled = state.restaurant.isSaveButtonEnabled,
                 modifier = Modifier.fillMaxWidth().padding(
                     start = Theme.dimens.space16,
                     end = Theme.dimens.space16,
@@ -240,21 +238,24 @@ class RestaurantInfoScreen :
 
     @OptIn(ExperimentalResourceApi::class)
     @Composable
-    private fun LogoutCard(listener: RestaurantInfoInteractionListener) {
+    private fun LogoutCard(
+        onClickLogout: () -> Unit
+    ) {
         BpCard(modifier = Modifier.fillMaxWidth().padding(
             start = Theme.dimens.space16,
             end = Theme.dimens.space16,
             bottom = Theme.dimens.space16
-        ).clickable { listener.onClickLogout() }
-        ) {
+        ).clickable { onClickLogout() }) {
             Row {
                 Icon(
-                    painterResource(Resources.images.logout), modifier = Modifier.padding(
-                        start = Theme.dimens.space16,
-                        top = Theme.dimens.space16,
-                        bottom = Theme.dimens.space16,
-                        end = Theme.dimens.space8
-                    ), contentDescription = null,
+                    painter = painterResource(Resources.images.logout), modifier = Modifier
+                        .padding(
+                            start = Theme.dimens.space16,
+                            top = Theme.dimens.space16,
+                            bottom = Theme.dimens.space16,
+                            end = Theme.dimens.space8
+                        ),
+                    contentDescription = Resources.strings.logout,
                     tint = Theme.colors.primary
                 )
                 Text(
