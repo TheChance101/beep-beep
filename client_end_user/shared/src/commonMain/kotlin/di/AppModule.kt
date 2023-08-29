@@ -1,18 +1,12 @@
 package di
 
-import org.koin.core.context.startKoin
-import org.koin.dsl.KoinAppDeclaration
+import org.koin.dsl.module
 
-object AppModule {
-
-    fun initKoin(appDeclaration: KoinAppDeclaration = {}) = startKoin {
-        appDeclaration()
-        modules(
-            networkModule,
-            gatewayModule,
-            useCaseModule,
-            screenModelsModule,
-        )
-    }
-
+fun appModule() = module {
+    includes(
+        networkModule,
+        gatewayModule,
+        useCaseModule,
+        screenModelsModule,
+    )
 }

@@ -187,17 +187,17 @@ class RestaurantGateway(
         locale: Locale
     ): List<MealResource> {
 
-        return tryToExecute(
-            api = APIs.RESTAURANT_API,
-            setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+            return tryToExecute(
+                api = APIs.RESTAURANT_API,
+                setErrorMessage = { errorCodes ->
+                    errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+                }
+            ) {
+                get("restaurant/$restaurantId/meals"){
+                    parameter("page", page)
+                    parameter("limit", limit)
+                }
             }
-        ) {
-            get("restaurants/$restaurantId/meals") {
-                parameter("page", page)
-                parameter("limit", limit)
-            }
-        }
 
     }
 
@@ -220,8 +220,8 @@ class RestaurantGateway(
     @OptIn(InternalAPI::class)
     override suspend fun addCuisine(name: String, permissions: List<Int>, locale: Locale): CuisineResource {
         //TODO()  need to change 1
-        val ADMIN = 1
-        return if (ADMIN in permissions) {
+
+        return if (ADMIN_PERMISSION in permissions) {
             tryToExecute<CuisineResource>(
                 APIs.RESTAURANT_API,
                 setErrorMessage = { errorCodes ->
@@ -286,6 +286,22 @@ class RestaurantGateway(
             }
         ) {
             get("/order/history/$restaurantId?page=$page&limit=$limit")
+        }
+    }
+
+    override suspend fun getOrdersCountByDaysBefore(
+        restaurantId: String,
+        daysBack: Int,
+        permissions: List<Int>,
+        locale: Locale
+    ): List<Map<Int, Int>> {
+        return tryToExecute<List<Map<Int, Int>>>(
+            api = APIs.RESTAURANT_API,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+            }
+        ) {
+            get("/order/count-by-days-back?restaurantId=$restaurantId&&daysBack=$daysBack")
         }
     }
 

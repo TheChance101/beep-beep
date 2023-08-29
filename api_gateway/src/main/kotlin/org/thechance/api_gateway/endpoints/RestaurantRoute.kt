@@ -47,7 +47,7 @@ fun Route.restaurantRoutes() {
             respondWithResult(HttpStatusCode.OK, restaurants.toRestaurant())
         }
 
-        get("/{id}/meals") {
+        get("/{id}/meals"){
             val (language, countryCode) = extractLocalizationHeader()
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 20
@@ -80,7 +80,11 @@ fun Route.restaurantRoutes() {
                     val permissions = extractPermissionsFromWebSocket()
                     val (language, countryCode) = extractLocalizationHeaderFromWebSocket()
                     val orders =
-                        restaurantGateway.restaurantOrders(permissions, restaurantId, Locale(language, countryCode))
+                        restaurantGateway.restaurantOrders(
+                            permissions,
+                            restaurantId,
+                            Locale(language, countryCode)
+                        )
                     webSocketServerHandler.sessions[restaurantId] = this
                     webSocketServerHandler.sessions[restaurantId]?.let {
                         webSocketServerHandler.tryToCollectFormWebSocket(
@@ -88,6 +92,24 @@ fun Route.restaurantRoutes() {
                             it
                         )
                     }
+                }
+
+
+                get("/count-by-days-back") {
+                    val tokenClaim = call.principal<JWTPrincipal>()
+                    val permissions =
+                        tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java)
+                            ?: emptyList()
+                    val id = call.parameters["restaurantId"]?.trim().toString()
+                    val daysBack = call.parameters["daysBack"]?.trim()?.toInt() ?: 7
+                    val (language, countryCode) = extractLocalizationHeader()
+                    val result = restaurantGateway.getOrdersCountByDaysBefore(
+                        restaurantId = id,
+                        daysBack = daysBack,
+                        permissions = permissions,
+                        locale = Locale(language, countryCode)
+                    )
+                    respondWithResult(HttpStatusCode.OK, result)
                 }
 
                 get("/{restaurantId}") {
@@ -131,7 +153,7 @@ fun Route.restaurantRoutes() {
                     )
                     respondWithResult(HttpStatusCode.OK, result)
                 }
-
+                
                 delete("/{restaurantId}") {
                     val tokenClaim = call.principal<JWTPrincipal>()
                     val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java)
@@ -145,7 +167,6 @@ fun Route.restaurantRoutes() {
                     )
                     respondWithResult(HttpStatusCode.OK, result)
                 }
-            }
         }
     }
 }
