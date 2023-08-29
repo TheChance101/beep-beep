@@ -36,12 +36,7 @@ interface IRestaurantGateway {
 
     suspend fun deleteRestaurant(restaurantId: String, permissions: List<Int>, locale: Locale): Boolean
     suspend fun updateRestaurantForAdmin(
-        restaurantId: String,
-        restaurantName: String,
-        phone: String,
-        description: String,
-        openingTime: String,
-        closingTime: String,
+        restaurant: RestaurantResource,
         permissions: List<Int>,
         locale: Locale
     ): RestaurantResource

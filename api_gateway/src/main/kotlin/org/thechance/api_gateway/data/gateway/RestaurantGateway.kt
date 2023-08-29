@@ -78,12 +78,7 @@ class RestaurantGateway(
 
     @OptIn(InternalAPI::class)
     override suspend fun updateRestaurantForAdmin(
-        restaurantId: String,
-        restaurantName: String,
-        phone: String,
-        description: String,
-        openingTime: String,
-        closingTime: String,
+        restaurant: RestaurantResource,
         permissions: List<Int>,
         locale: Locale
     ): RestaurantResource {
@@ -100,12 +95,12 @@ class RestaurantGateway(
                     body = Json.encodeToString(
                         RestaurantResource.serializer(),
                         RestaurantResource(
-                            id = restaurantId,
-                            name = restaurantName,
-                            phone = phone,
-                            description = description,
-                            openingTime = openingTime,
-                            closingTime = closingTime
+                            id = restaurant.id,
+                            name = restaurant.name,
+                            phone = restaurant.phone,
+                            description = restaurant.description,
+                            openingTime = restaurant.openingTime,
+                            closingTime = restaurant.closingTime
                         )
                     )
                 }
