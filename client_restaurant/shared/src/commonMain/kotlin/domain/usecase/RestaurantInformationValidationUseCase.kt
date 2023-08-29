@@ -1,27 +1,24 @@
 package domain.usecase
 
-import domain.entity.Time
 
 interface IRestaurantInformationValidationUseCase {
 
-    fun isRestaurantNameEmpty(name: String): Boolean
+    fun isRestaurantNameValid(name: String): Boolean
 
-    fun isOpeningTimeEmpty(time: Time): Boolean
+    fun isOpeningTimeValid(time: String): Boolean
 
-    fun isClosingTimeEmpty(time: Time): Boolean
+    fun isClosingTimeValid(time: String): Boolean
 
-    fun isDescriptionEmpty(description: String): Boolean
+    fun isDescriptionValid(description: String): Boolean
 
-    fun isPhoneNumberEmpty(phoneNumber: String): Boolean
+    fun isPhoneNumberValid(phoneNumber: String): Boolean
 
-    fun isValidDescriptionLength(description: String): Boolean
-
-    fun isValidRestaurantName(name: String): Boolean
+    fun isDescriptionLengthValid(description: String): Boolean
 
     fun isRestaurantInformationValid(
         name: String,
-        openingTime: Time,
-        closingTime: Time,
+        openingTime: String,
+        closingTime: String,
         description: String,
         phoneNumber: String
     ): Boolean
@@ -30,48 +27,43 @@ interface IRestaurantInformationValidationUseCase {
 
 class RestaurantInformationValidationUseCase : IRestaurantInformationValidationUseCase {
 
-    override fun isRestaurantNameEmpty(name: String): Boolean {
-        return name.isEmpty()
+    override fun isRestaurantNameValid(name: String): Boolean {
+        return name.length in 4..25
     }
 
-    override fun isOpeningTimeEmpty(time: Time): Boolean {
-        return time.hour == 0 && time.minute == 0 && time.second == 0
+    override fun isOpeningTimeValid(time: String): Boolean {
+        return time.isNotEmpty()
     }
 
-    override fun isClosingTimeEmpty(time: Time): Boolean {
-        return time.hour == 0 && time.minute == 0 && time.second == 0
+    override fun isClosingTimeValid(time: String): Boolean {
+        return time.isNotEmpty()
     }
 
-    override fun isDescriptionEmpty(description: String): Boolean {
-        return description.isEmpty()
+    override fun isDescriptionValid(description: String): Boolean {
+        return description.isNotEmpty()
     }
 
-    override fun isPhoneNumberEmpty(phoneNumber: String): Boolean {
-        return phoneNumber.isEmpty()
+    override fun isPhoneNumberValid(phoneNumber: String): Boolean {
+        return phoneNumber.isNotEmpty()
     }
 
-    override fun isValidDescriptionLength(description: String): Boolean {
+    override fun isDescriptionLengthValid(description: String): Boolean {
         return description.length <= 255
-    }
-
-    override fun isValidRestaurantName(name: String): Boolean {
-        return name.length <= 25
     }
 
     override fun isRestaurantInformationValid(
         name: String,
-        openingTime: Time,
-        closingTime: Time,
+        openingTime: String,
+        closingTime: String,
         description: String,
         phoneNumber: String
     ): Boolean {
-        return isValidDescriptionLength(description) &&
-                isValidRestaurantName(name) &&
-                !isRestaurantNameEmpty(name) &&
-                !isOpeningTimeEmpty(openingTime) &&
-                !isClosingTimeEmpty(closingTime) &&
-                !isDescriptionEmpty(description) &&
-                !isPhoneNumberEmpty(phoneNumber)
+        return isDescriptionLengthValid(description) &&
+                isRestaurantNameValid(name) &&
+                isOpeningTimeValid(openingTime) &&
+                isClosingTimeValid(closingTime) &&
+                isDescriptionValid(description) &&
+                isPhoneNumberValid(phoneNumber)
     }
 
 }
