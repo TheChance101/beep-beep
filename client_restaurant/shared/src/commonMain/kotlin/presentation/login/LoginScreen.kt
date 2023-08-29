@@ -2,7 +2,6 @@ package presentation.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -109,7 +108,6 @@ private fun LoginScreenContent(
             ) {
                 Column(
                     modifier = Modifier.padding(vertical = 32.dp, horizontal = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     Icon(
                         modifier = Modifier.height(44.dp).width(97.dp),
@@ -134,9 +132,9 @@ private fun LoginScreenContent(
                         onValueChange = listener::onUserNameChanged,
                         label = Resources.strings.username,
                         keyboardType = KeyboardType.Text,
-                        modifier = Modifier.fillMaxWidth(),
                         errorMessage = state.usernameErrorMsg,
                         isError = state.isUsernameError,
+                        modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
                     )
                     BpTextField(
                         text = state.password,
@@ -170,7 +168,6 @@ private fun LoginScreenContent(
             }
 
         }
-
     }
 }
 
