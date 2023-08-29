@@ -11,6 +11,7 @@ import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import io.ktor.util.*
+import kotlinx.serialization.json.Json
 import okhttp3.internal.platform.Jdk9Platform.Companion.isAvailable
 import org.thechance.api_gateway.data.utils.ErrorHandler
 
@@ -27,7 +28,12 @@ class TaxiGateway(
         page: Int, limit: Int
     ): List<TaxiResource> {
         if (!permissions.contains(ADMIN_PERMISSION)) {
-            throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
+            throw LocalizedMessageException(
+                errorHandler.getLocalizedErrorMessage(
+                    listOf(8000),
+                    locale
+                )
+            )
         }
 
         return tryToExecute(
@@ -39,7 +45,7 @@ class TaxiGateway(
                 )
             }
         ) {
-            get("/taxi"){
+            get("/taxi") {
                 parameter("page", page)
                 parameter("limit", limit)
             }
@@ -61,13 +67,9 @@ class TaxiGateway(
         }
     }
 
+    @OptIn(InternalAPI::class)
     override suspend fun createTaxi(
-        plateNumber: String,
-        color: Long,
-        type: String,
-        driverId: String,
-        seats: Int,
-        isAvailable: Boolean,
+        taxi: TaxiResource,
         permissions: List<Int>,
         locale: Locale
     ): TaxiResource {
@@ -82,27 +84,28 @@ class TaxiGateway(
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
         ) {
-            submitForm("/taxi",
-                formParameters = parameters {
-                    append("plateNumber", plateNumber)
-                    append("color", color.toString())
-                    append("type", type)
-                    append("driverId", driverId)
-                    append("isAvailable",isAvailable.toString())
-                    append("seats", seats.toString())
-                }
-            )
+
+            post("/taxi") {
+                body = Json.encodeToString(
+                    TaxiResource.serializer(),
+                    TaxiResource(
+                        plateNumber = taxi.plateNumber,
+                        color = taxi.color,
+                        type = taxi.type,
+                        driverId = taxi.driverId,
+                        isAvailable = taxi.isAvailable,
+                        seats = taxi.seats
+                    )
+
+                )
+            }
         }
     }
 
+    @OptIn(InternalAPI::class)
     override suspend fun editTaxi(
         id: String,
-        plateNumber: String,
-        color: Long,
-        type: String,
-        driverId: String,
-        seats: Int,
-        isAvailable: Boolean,
+        taxi: TaxiResource,
         permissions: List<Int>,
         locale: Locale
     ): TaxiResource {
@@ -117,16 +120,21 @@ class TaxiGateway(
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
         ) {
-            submitForm("/taxi/$id",
-                formParameters = parameters {
-                    append("plateNumber", plateNumber)
-                    append("color", color.toString())
-                    append("type", type)
-                    append("driverId", driverId)
-                    append("isAvailable",isAvailable.toString())
-                    append("seats", seats.toString())
-                }
-            )
+            put("/taxi/$id") {
+
+                body = Json.encodeToString(
+                    TaxiResource.serializer(),
+                    TaxiResource(
+                        id = taxi.id,
+                        plateNumber = taxi.plateNumber,
+                        color = taxi.color,
+                        type = taxi.type,
+                        driverId = taxi.driverId,
+                        isAvailable = taxi.isAvailable,
+                        seats = taxi.seats
+                    )
+                )
+            }
         }
     }
 
