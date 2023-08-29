@@ -58,13 +58,13 @@ interface IRestaurantGateway {
 
     suspend fun getMealsByRestaurantId(
         restaurantId: String,
-        permissions: List<Int>,
+        page: Int,
+        limit: Int,
         locale: Locale
     ): List<MealResource>
 
     suspend fun getMealsByCuisineId(
         cuisineId: String,
-        permissions: List<Int>,
         locale: Locale
     ): List<MealResource>
 

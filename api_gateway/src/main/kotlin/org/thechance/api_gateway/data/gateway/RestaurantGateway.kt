@@ -180,7 +180,8 @@ class RestaurantGateway(
 
     override suspend fun getMealsByRestaurantId(
         restaurantId: String,
-        permissions: List<Int>,
+        page: Int,
+        limit: Int,
         locale: Locale
     ): List<MealResource> {
 
@@ -190,14 +191,16 @@ class RestaurantGateway(
                     errorHandler.getLocalizedErrorMessage(errorCodes, locale)
                 }
             ) {
-                get("/meals/$restaurantId")
+                get("restaurants/$restaurantId/meals"){
+                    parameter("page", page)
+                    parameter("limit", limit)
+                }
             }
 
     }
 
     override suspend fun getMealsByCuisineId(
         cuisineId: String,
-        permissions: List<Int>,
         locale: Locale
     ): List<MealResource> {
 
