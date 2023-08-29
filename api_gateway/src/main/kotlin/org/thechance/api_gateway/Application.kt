@@ -24,6 +24,7 @@ fun Application.module() {
         refreshTokenExpirationTimestamp = 356L * 24L * 60L * 60L * 1000L
     )
     configureStatusPages()
+    configureSockets()
     configureJWTAuthentication()
     configureDependencyInjection()
     configureSerialization()

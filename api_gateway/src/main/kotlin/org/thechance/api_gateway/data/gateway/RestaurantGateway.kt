@@ -5,6 +5,7 @@ import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import io.ktor.util.*
+import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
@@ -296,4 +297,23 @@ class RestaurantGateway(
         }
     }
 
+
+    override suspend fun restaurantOrders(permissions: List<Int>, restaurantId: String, locale: Locale): Flow<Order> {
+        // todo check of permission and handel error
+        return tryToExecuteFromWebSocket<Order>(api = APIs.RESTAURANT_API, path = "/order/restaurant/$restaurantId")
+    }
+
+    override suspend fun getActiveOrders(permissions: List<Int>, restaurantId: String, locale: Locale): List<Order> {
+        return tryToExecute<List<Order>>(
+            api = APIs.RESTAURANT_API,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(
+                    errorCodes,
+                    locale
+                )
+            }
+        ) {
+            get("/order/$restaurantId/orders")
+        }
+    }
 }
