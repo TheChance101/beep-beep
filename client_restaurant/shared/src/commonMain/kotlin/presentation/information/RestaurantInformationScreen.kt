@@ -32,7 +32,7 @@ import presentation.composable.BpTitleWithContentSection
 import presentation.login.LoginScreen
 import resources.Resources
 
-class RestaurantInfoScreen : BaseScreen<
+class RestaurantInformationScreen : BaseScreen<
         RestaurantInformationScreenModel,
         RestaurantInformationUiState,
         RestaurantInformationUiEffect,
@@ -254,10 +254,10 @@ class RestaurantInfoScreen : BaseScreen<
                 Icon(
                     painter = painterResource(Resources.images.logout), modifier = Modifier
                         .padding(
-                            start = Theme.dimens.space16,
-                            top = Theme.dimens.space16,
-                            bottom = Theme.dimens.space16,
-                            end = Theme.dimens.space8
+                            start = 16.dp,
+                            top = 16.dp,
+                            bottom = 16.dp,
+                            end = 8.dp
                         ),
                     contentDescription = Resources.strings.logout,
                     tint = Theme.colors.primary
