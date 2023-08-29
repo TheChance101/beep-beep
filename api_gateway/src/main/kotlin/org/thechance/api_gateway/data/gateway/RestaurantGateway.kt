@@ -183,8 +183,7 @@ class RestaurantGateway(
         permissions: List<Int>,
         locale: Locale
     ): List<MealResource> {
-        val RESTAURANT_MANAGER_PERMISSION = 2
-        if (RESTAURANT_MANAGER_PERMISSION in permissions) {
+
             return tryToExecute(
                 api = APIs.RESTAURANT_API,
                 setErrorMessage = { errorCodes ->
@@ -193,9 +192,24 @@ class RestaurantGateway(
             ) {
                 get("/meals/$restaurantId")
             }
-        } else {
-            throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
-        }
+
+    }
+
+    override suspend fun getMealsByCuisineId(
+        cuisineId: String,
+        permissions: List<Int>,
+        locale: Locale
+    ): List<MealResource> {
+
+            return tryToExecute(
+                api = APIs.RESTAURANT_API,
+                setErrorMessage = { errorCodes ->
+                    errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+                }
+            ) {
+                get("/cuisines/$cuisineId/meals")
+            }
+
     }
 
     @OptIn(InternalAPI::class)
