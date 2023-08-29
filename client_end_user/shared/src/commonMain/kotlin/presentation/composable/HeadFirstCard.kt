@@ -22,9 +22,9 @@ import resources.Resources
 fun HeadFirstCard(
     textHeader: String,
     textSubHeader: String,
-    logo: String = Resources.images.bpLogo,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    logo: String = Resources.images.bpLogo,
+    content: @Composable () -> Unit,
 ) {
     Column(
         modifier = modifier.fillMaxWidth().padding(16.dp)
@@ -64,6 +64,5 @@ private fun CardHeader(
                 color = Theme.colors.contentTertiary
             )
         }
-
     }
 }
