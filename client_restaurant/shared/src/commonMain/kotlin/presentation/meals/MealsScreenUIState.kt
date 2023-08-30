@@ -17,17 +17,17 @@ data class CuisineUIState(
     val name: String = "",
 )
 
-fun Cuisine.toUIState(): CuisineUIState {
+fun Cuisine.toMealUIState(): CuisineUIState {
     return CuisineUIState(
         id = id,
         name = name,
     )
 }
 
-fun List<Cuisine>.toUIState(): List<CuisineUIState> {
+fun List<Cuisine>.toCuisineUIState(): List<CuisineUIState> {
     val cuisines = mutableListOf<CuisineUIState>()
     cuisines.add(CuisineUIState("", "All"))
-    cuisines.addAll(map { it.toUIState() })
+    cuisines.addAll(map { it.toMealUIState() })
     return cuisines.toList()
 }
 
@@ -38,7 +38,7 @@ data class MealUIState(
     val imageUrl: String,
 )
 
-fun Meal.toUIState(): MealUIState {
+fun Meal.toMealUIState(): MealUIState {
     return MealUIState(
         id = id,
         name = name,
@@ -47,7 +47,7 @@ fun Meal.toUIState(): MealUIState {
     )
 }
 
-fun List<Meal>.toUIState(): List<MealUIState> = map { it.toUIState() }
+fun List<Meal>.toMealUIState(): List<MealUIState> = map { it.toMealUIState() }
 
 
 
