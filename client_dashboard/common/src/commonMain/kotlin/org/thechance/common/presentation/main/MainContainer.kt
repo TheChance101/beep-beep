@@ -36,7 +36,6 @@ object MainContainer : Screen, KoinComponent {
     override fun Content() {
         val state by screenModel.state.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
-        val isDarkMode = screenModel.state.collectAsState().value.isDarkMode
 
         TabNavigator(OverviewTab) {
             MainContent(
@@ -46,7 +45,7 @@ object MainContainer : Screen, KoinComponent {
                     navigator.popUntilRoot()
                 },
                 onSwitchTheme = screenModel::onSwitchTheme,
-                isDarkMode = isDarkMode
+                isDarkMode = state.isDarkMode
             )
         }
     }
