@@ -96,6 +96,7 @@ class UserScreen :
                     onSearchInputChanged = onSearchInputChanged,
                     onFilterMenuClicked = filterMenuListener::showFilterMenu,
                     onFilterMenuDismiss = filterMenuListener::hideFilterMenu,
+                    onFilterSaved = filterMenuListener::onFilterSaved,
                 )
 
                 UsersTable(
@@ -314,6 +315,7 @@ class UserScreen :
             }
         }
     }
+
     //endregion
     @Composable
     private fun UsersFilterDropdownMenu(
@@ -325,6 +327,7 @@ class UserScreen :
         onFilterCountryClicked: (UserScreenUiState.CountryUiState) -> Unit,
         onFilterMenuClicked: () -> Unit,
         onFilterMenuDismiss: () -> Unit,
+        onFilterSaved: () -> Unit
     ) {
         Row {
             BpIconButton(
@@ -416,7 +419,7 @@ class UserScreen :
                                 )
                                 BpOutlinedButton(
                                     title = Resources.Strings.save,
-                                    onClick = onFilterMenuDismiss,
+                                    onClick = onFilterSaved,
                                     shape = RoundedCornerShape(Theme.radius.small),
                                     modifier = Modifier.height(50.kms).weight(1f)
                                 )
@@ -440,6 +443,7 @@ class UserScreen :
         onSearchInputChanged: (String) -> Unit,
         onFilterMenuClicked: () -> Unit,
         onFilterMenuDismiss: () -> Unit,
+        onFilterSaved: () -> Unit,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.kms),
@@ -464,6 +468,7 @@ class UserScreen :
                 onFilterCountryClicked = onFilterCountryClicked,
                 onFilterMenuClicked = onFilterMenuClicked,
                 onFilterMenuDismiss = onFilterMenuDismiss,
+                onFilterSaved = onFilterSaved
             )
         }
     }
