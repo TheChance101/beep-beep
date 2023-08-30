@@ -9,7 +9,7 @@ import java.util.UUID
 @Serializable
 data class TaxiCollection(
     val plateNumber: String? = null,
-    val color: Int? = null,
+    val color: Long? = null,
     val type: String? = null,
     @Contextual
     val driverId: UUID? = null,
