@@ -17,17 +17,21 @@ import org.thechance.service_identity.endpoints.model.PermissionDto
 fun Route.permissionRoutes() {
     val permissionManagementUseCase: IPermissionManagementUseCase by inject()
     route("/permissions") {
+        get {
+            val permissions = permissionManagementUseCase.getListOfPermission()
+            call.respond(HttpStatusCode.OK, permissions.map { it.toDto() })
+        }
+
+        get("/{permissionId}") {
+            val permissionId = call.parameters["permissionId"]?.toIntOrNull()
+                ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            val permission = permissionManagementUseCase.getPermission(permissionId).toDto()
+            call.respond(HttpStatusCode.OK, permission)
+        }
 
         post {
             val permissionDto = call.receive<PermissionDto>()
             val success = permissionManagementUseCase.createPermission(permissionDto.toEntity())
-            call.respond(HttpStatusCode.OK, success)
-        }
-
-        delete("/{permissionId}") {
-            val permissionId = call.parameters["permissionId"]?.toIntOrNull()
-                ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val success = permissionManagementUseCase.deletePermission(permissionId)
             call.respond(HttpStatusCode.OK, success)
         }
 
@@ -39,16 +43,11 @@ fun Route.permissionRoutes() {
             call.respond(HttpStatusCode.OK, success)
         }
 
-        get("/{permissionId}") {
+        delete("/{permissionId}") {
             val permissionId = call.parameters["permissionId"]?.toIntOrNull()
                 ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val permission = permissionManagementUseCase.getPermission(permissionId).toDto()
-            call.respond(HttpStatusCode.OK, permission)
-        }
-
-        get {
-            val permissions = permissionManagementUseCase.getListOfPermission()
-            call.respond(HttpStatusCode.OK, permissions.map { it.toDto() })
+            val success = permissionManagementUseCase.deletePermission(permissionId)
+            call.respond(HttpStatusCode.OK, success)
         }
     }
 }

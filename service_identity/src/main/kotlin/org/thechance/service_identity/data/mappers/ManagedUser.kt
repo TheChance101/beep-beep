@@ -23,3 +23,4 @@ fun UserManagement.toDto() = UserManagementDto(
 )
 
 fun List<UserManagement>.toDto() = map { it.toDto() }
+
