@@ -9,6 +9,6 @@ data class StringResources(
     val passwordLabel: String = "Password",
     val login: String = "Login",
     val keepMeLoggedIn: String = "Keep me logged in",
-    val signUpNow: String = "SignUp now",
+    val signUpNow: String = "Sign up now",
     val signUpDescription: String = "Don't have an account ?"
 )
