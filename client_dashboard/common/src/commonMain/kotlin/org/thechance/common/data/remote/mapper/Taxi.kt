@@ -1,31 +1,35 @@
 package org.thechance.common.data.remote.mapper
 
 import org.thechance.common.data.remote.model.TaxiDto
-import org.thechance.common.domain.entity.NewTaxiInfo
 import org.thechance.common.domain.entity.CarColor
+import org.thechance.common.domain.entity.NewTaxiInfo
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.util.TaxiStatus
 
 fun TaxiDto.toEntity() = Taxi(
-    id = id?: "",
-    plateNumber = plateNumber,
-    color = getCarColor(color),
-    type = type,
-    seats = seats,
-    status = getTaxiStatus(status?:0),
-    username = username,
-    trips = trips?: "0",
+    id = id ?: "",
+    plateNumber = plateNumber ?: "",
+    color = getCarColor(color ?: 4),
+    type = type ?: "",
+    seats = seats ?: 0,
+    status = getTaxiStatus(status ?: 0),
+    username = username ?: "",
+    trips = trips ?: "0",
 )
 
 fun NewTaxiInfo.toDto(): TaxiDto {
-   return TaxiDto(
+    return TaxiDto(
+        id = null,
         plateNumber = plateNumber,
         color = setCarColo(selectedCarColor),
         type = carModel,
         seats = seats,
         username = driverUserName,
+        status = null,
+        trips = null
     )
 }
+
 fun List<TaxiDto>.toEntity() = map(TaxiDto::toEntity)
 
 fun getCarColor(color: Int) =
@@ -37,6 +41,7 @@ fun getCarColor(color: Int) =
         5 -> CarColor.GREY
         else -> CarColor.BLACK
     }
+
 fun setCarColo(color: CarColor) =
     when (color) {
         CarColor.RED -> 0

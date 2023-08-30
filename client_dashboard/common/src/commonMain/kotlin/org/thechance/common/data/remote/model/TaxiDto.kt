@@ -6,19 +6,19 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TaxiDto(
     @SerializedName("id")
-    val id: String? = null,
+    val id: String?,
     @SerializedName("plate_number")
-    val plateNumber: String? = null,
+    val plateNumber: String?,
     @SerializedName("color")
-    val color: Int? = null,
+    val color: Int?,
     @SerializedName("type")
-    val type: String? = null,
+    val type: String?,
     @SerializedName("seats")
-    val seats: Int? = null,
+    val seats: Int?,
     @SerializedName("username")
-    val username: String? = null,
+    val username: String?,
     @SerializedName("status")
-    val status: Int? = null,
+    val status: Int?,
     @SerializedName("trips")
-    val trips: String? = null,
+    val trips: String?,
 )

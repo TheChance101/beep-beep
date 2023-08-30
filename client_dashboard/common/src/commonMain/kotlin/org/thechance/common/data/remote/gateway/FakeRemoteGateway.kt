@@ -9,13 +9,25 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.thechance.common.data.local.LocalGateway
 import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
-import org.thechance.common.data.remote.model.*
-import org.thechance.common.domain.entity.*
+import org.thechance.common.data.remote.model.DataWrapperDto
+import org.thechance.common.data.remote.model.RestaurantDto
+import org.thechance.common.data.remote.model.TaxiDto
+import org.thechance.common.data.remote.model.UserDto
+import org.thechance.common.data.remote.model.toEntity
+import org.thechance.common.domain.entity.AddRestaurant
+import org.thechance.common.domain.entity.DataWrapper
+import org.thechance.common.domain.entity.Location
+import org.thechance.common.domain.entity.NewTaxiInfo
+import org.thechance.common.domain.entity.Restaurant
+import org.thechance.common.domain.entity.Taxi
+import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.getway.IRemoteGateway
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.math.*
+import java.util.Date
+import java.util.UUID
+import kotlin.math.ceil
+import kotlin.math.floor
 
 class FakeRemoteGateway(
     private val localGateway: LocalGateway
@@ -723,11 +735,11 @@ class FakeRemoteGateway(
         }
     }
 
-    override suspend fun getTaxis(page: Int, numberOfTaxis: Int): DataWrapper<Taxi> {
+    override suspend fun getTaxis(page: Int, numberOfUsers: Int): DataWrapper<Taxi> {
         val taxis = taxis.toEntity()
-        val startIndex = (page - 1) * numberOfTaxis
-        val endIndex = startIndex + numberOfTaxis
-        val numberOfPages = ceil(taxis.size / (numberOfTaxis * 1.0)).toInt()
+        val startIndex = (page - 1) * numberOfUsers
+        val endIndex = startIndex + numberOfUsers
+        val numberOfPages = ceil(taxis.size / (numberOfUsers * 1.0)).toInt()
         return try {
             DataWrapperDto(
                 totalPages = numberOfPages,
@@ -754,20 +766,22 @@ class FakeRemoteGateway(
                 type = taxiDto.type,
                 seats = taxiDto.seats,
                 username = taxiDto.username,
+                status = null,
+                trips = null
             )
         )
         return taxis.last().toEntity()
     }
 
     override suspend fun findTaxisByUsername(
-        username: String, page: Int, numberOfTaxis: Int
+        username: String, page: Int, offset: Int
     ): DataWrapper<Taxi> {
         val taxis = taxis.filter {
-            it.username.startsWith(username, true)
+            it.username?.startsWith(username, true) ?: false
         }.toEntity()
-        val startIndex = (page - 1) * numberOfTaxis
-        val endIndex = startIndex + numberOfTaxis
-        val numberOfPages = ceil(taxis.size / (numberOfTaxis * 1.0)).toInt()
+        val startIndex = (page - 1) * offset
+        val endIndex = startIndex + offset
+        val numberOfPages = ceil(taxis.size / (offset * 1.0)).toInt()
         return try {
             DataWrapperDto(
                 totalPages = numberOfPages,
@@ -862,10 +876,10 @@ class FakeRemoteGateway(
         )
         val columnWidth = listOf(50f, 80f, 80f, 80f, 80f, 80f, 80f, 50f)
 
-        val file = createPDFReport(title, taxis, columnNames, columnWidth) {
-            listOf(
-                it.id.toString(), it.username, it.plateNumber, it.type, it.color,
-                it.seats, it.status.toString(), it.trips.toString()
+        val file = createPDFReport(title, taxis, columnNames, columnWidth) { taxi ->
+            listOfNotNull(
+                taxi.id.toString(), taxi.username, taxi.plateNumber, taxi.type, taxi.color,
+                taxi.seats, taxi.status.toString(), taxi.trips.toString()
             )
         }
         return file

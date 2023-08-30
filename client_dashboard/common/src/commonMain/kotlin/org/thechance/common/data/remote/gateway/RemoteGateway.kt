@@ -119,7 +119,7 @@ class RemoteGateway(
         try {
             return client.method().body()
         } catch (e: ClientRequestException) {
-            val errorMessages = e.response.body<ServerResponse<*>>().status.errorMessages
+            val errorMessages = e.response.body<ServerResponse<*>>().status?.errorMessages
             errorMessages?.let { throwMatchingException(it) }
             throw UnknownErrorException()
         } catch (e: ConnectException) {
