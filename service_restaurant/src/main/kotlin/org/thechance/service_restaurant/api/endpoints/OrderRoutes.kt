@@ -13,13 +13,14 @@ import org.thechance.service_restaurant.api.models.WebSocketRestaurant
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.SocketHandler
-import org.thechance.service_restaurant.api.utils.currentTime
 import org.thechance.service_restaurant.domain.usecase.IManageOrderUseCase
 import org.thechance.service_restaurant.domain.utils.OrderStatus
+import org.thechance.service_restaurant.domain.utils.currentDateTime
 import org.thechance.service_restaurant.domain.utils.exceptions.INSERT_ORDER_ERROR
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_REQUEST_PARAMETER
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
+import org.thechance.service_restaurant.domain.utils.toMillis
 import kotlin.collections.set
 
 fun Route.orderRoutes() {
@@ -28,6 +29,13 @@ fun Route.orderRoutes() {
     val socketHandler: SocketHandler by inject()
 
     route("/order") {
+
+        get("/count-by-days-back") {
+            val restaurantId = call.parameters["restaurantId"] ?: throw MultiErrorException(listOf(NOT_FOUND))
+            val daysBack = call.parameters["daysBack"]?.toInt() ?: 7
+            val result = manageOrder.getOrdersCountByDaysBefore(restaurantId = restaurantId, daysBack = daysBack)
+            call.respond(HttpStatusCode.OK, result)
+        }
 
         get("/{id}") {
             val id = call.parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
@@ -60,7 +68,8 @@ fun Route.orderRoutes() {
         }
 
         post {
-            val order = call.receive<OrderDto>().copy(id = ObjectId().toHexString(), createdAt = currentTime())
+            val order = call.receive<OrderDto>()
+                .copy(id = ObjectId().toString(), createdAt = currentDateTime().toMillis())
             val isOrderInserted = manageOrder.addOrder(order.toEntity())
             isOrderInserted.takeIf { it }.apply {
                 socketHandler.restaurants[order.restaurantId]?.orders?.emit(order)

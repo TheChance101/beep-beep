@@ -14,20 +14,12 @@ import org.thechance.service_identity.domain.util.INVALID_CREDENTIALS
 
 interface IUserAccountManagementUseCase {
 
-    suspend fun createUser(
-        fullName: String,
-        username: String,
-        password: String,
-        email: String,
-    ): UserManagement
+    suspend fun createUser(fullName: String, username: String, password: String, email: String): UserManagement
 
     suspend fun deleteUser(id: String): Boolean
 
     suspend fun updateUser(
-        id: String, fullName: String? = null,
-        username: String? = null,
-        password: String? = null,
-        email: String? = null
+        id: String, fullName: String? = null, username: String? = null, password: String? = null, email: String? = null
     ): Boolean
 
     suspend fun getUser(id: String): User
@@ -53,12 +45,10 @@ class UserAccountManagementUseCase(
 ) : IUserAccountManagementUseCase {
 
     override suspend fun createUser(
-        fullName: String,
-        username: String,
-        password: String,
-        email: String,
+        fullName: String, username: String, password: String, email: String,
     ): UserManagement {
         userInfoValidationUseCase.validateUserInformation(fullName, username, password, email)
+
         val saltedHash = hashingService.generateSaltedHash(password)
         val user = dataBaseGateway.createUser(saltedHash, fullName, username, email)
         dataBaseGateway.addPermissionToUser(userId = user.id, permissionId = END_USER)
@@ -81,10 +71,7 @@ class UserAccountManagementUseCase(
     }
 
     override suspend fun updateUser(
-        id: String, fullName: String?,
-        username: String?,
-        password: String?,
-        email: String?
+        id: String, fullName: String?, username: String?, password: String?, email: String?
     ): Boolean {
         userInfoValidationUseCase.validateUpdateUserInformation(fullName, username, password, email)
         val saltedHash = password?.let {

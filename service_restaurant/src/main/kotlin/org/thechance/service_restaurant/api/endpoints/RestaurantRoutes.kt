@@ -27,6 +27,26 @@ fun Route.restaurantRoutes() {
 
     route("restaurants") {
 
+        get {
+            val page = call.parameters.extractInt("page") ?: 1
+            val limit = call.parameters.extractInt("limit") ?: 10
+            val restaurants = discoverRestaurant.getRestaurants(page, limit).toDto()
+            call.respond(HttpStatusCode.OK, restaurants)
+        }
+
+        get("/{ownerId}") {
+            val ownerId = call.parameters["ownerId"] ?: throw MultiErrorException(
+                listOf(
+                    INVALID_REQUEST_PARAMETER
+                )
+            )
+            val restaurants = discoverRestaurant.getRestaurantsByOwnerId(ownerId)
+            call.respond(HttpStatusCode.OK, restaurants.toDto())
+        }
+
+    }
+
+    route("/restaurant") {
         get("/{id}/meals") {
             val restaurantId = call.parameters["id"] ?: throw MultiErrorException(
                 listOf(
@@ -42,27 +62,6 @@ fun Route.restaurantRoutes() {
             ).toMealDto()
             call.respond(HttpStatusCode.OK, restaurant)
         }
-
-        get {
-            val page = call.parameters.extractInt("page") ?: 1
-            val limit = call.parameters.extractInt("limit") ?: 10
-            val restaurants = discoverRestaurant.getRestaurants(page, limit).toDto()
-            call.respond(HttpStatusCode.OK, restaurants)
-        }
-
-        get("/{id}") {
-            val ownerId = call.parameters["id"] ?: throw MultiErrorException(
-                listOf(
-                    INVALID_REQUEST_PARAMETER
-                )
-            )
-            val restaurants = discoverRestaurant.getRestaurantsByOwnerId(ownerId)
-            call.respond(HttpStatusCode.OK, restaurants.toDto())
-        }
-
-    }
-
-    route("/restaurant") {
 
         get("/{id}") {
             val restaurantId = call.parameters["id"] ?: throw MultiErrorException(

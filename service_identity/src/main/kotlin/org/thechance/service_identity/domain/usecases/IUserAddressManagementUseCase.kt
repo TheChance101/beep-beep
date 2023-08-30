@@ -13,7 +13,7 @@ interface IUserAddressManagementUseCase {
 
     suspend fun deleteAddress(id: String): Boolean
 
-    suspend fun updateAddress(id: String, location: Location): Boolean
+    suspend fun updateAddress(id: String, location: Location): Address
 
     suspend fun getUserAddresses(userId: String): List<Address>
 
@@ -32,7 +32,7 @@ class UserAddressManagementUseCase(
         return dataBaseGateway.deleteAddress(id)
     }
 
-    override suspend fun updateAddress(id: String, location: Location): Boolean {
+    override suspend fun updateAddress(id: String, location: Location): Address {
         return dataBaseGateway.updateAddress(id, location)
     }
 

@@ -1,5 +1,6 @@
 package org.thechance.api_gateway.endpoints
 
+
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -26,10 +27,13 @@ fun Route.restaurantRoutes() {
             get {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val ownerId = tokenClaim?.payload?.subject?.trim().toString()
-                val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
+                val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java)
+                    ?: emptyList()
                 val (language, countryCode) = extractLocalizationHeader()
                 val result = restaurantGateway.getRestaurantsByOwnerId(
-                    ownerId = ownerId, locale = Locale(language, countryCode), permissions = permissions
+                    ownerId = ownerId,
+                    locale = Locale(language, countryCode),
+                    permissions = permissions
                 )
                 respondWithResult(HttpStatusCode.OK, result)
             }
@@ -51,10 +55,14 @@ fun Route.restaurantRoutes() {
             val limit = call.parameters["limit"]?.toInt() ?: 20
             val restaurantId = call.parameters["id"]?.trim().toString()
             val meals = restaurantGateway.getMealsByRestaurantId(
-                restaurantId = restaurantId, page = page, limit = limit, locale = Locale(language, countryCode)
+                restaurantId = restaurantId,
+                page = page,
+                limit = limit,
+                locale = Locale(language, countryCode)
             )
             respondWithResult(HttpStatusCode.OK, meals.map { it.toMeal() })
         }
+
 
         get("/{id}") {
             val (language, countryCode) = extractLocalizationHeader()
@@ -101,24 +109,44 @@ fun Route.restaurantRoutes() {
                     val restaurantId = call.parameters["restaurantId"]?.trim().orEmpty()
                     val permissions = extractPermissionsFromWebSocket()
                     val (language, countryCode) = extractLocalizationHeaderFromWebSocket()
-                    val orders = restaurantGateway.restaurantOrders(
-                        permissions, restaurantId, Locale(language, countryCode)
-                    )
+                    val orders =
+                        restaurantGateway.restaurantOrders(
+                            permissions,
+                            restaurantId,
+                            Locale(language, countryCode)
+                        )
                     webSocketServerHandler.sessions[restaurantId] = this
                     webSocketServerHandler.sessions[restaurantId]?.let {
                         webSocketServerHandler.tryToCollectFormWebSocket(
-                            orders, it
+                            orders,
+                            it
                         )
                     }
+                }
+
+                get("/count-by-days-back") {
+                    val tokenClaim = call.principal<JWTPrincipal>()
+                    val permissions =
+                        tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java)
+                            ?: emptyList()
+                    val id = call.parameters["restaurantId"]?.trim().toString()
+                    val daysBack = call.parameters["daysBack"]?.trim()?.toInt() ?: 7
+                    val (language, countryCode) = extractLocalizationHeader()
+                    val result = restaurantGateway.getOrdersCountByDaysBefore(
+                        restaurantId = id,
+                        daysBack = daysBack,
+                        permissions = permissions,
+                        locale = Locale(language, countryCode)
+                    )
+                    respondWithResult(HttpStatusCode.OK, result)
                 }
 
                 get("/{restaurantId}") {
                     val restaurantId = call.parameters["restaurantId"]?.trim().orEmpty()
                     val permissions = extractPermissions()
                     val (language, countryCode) = extractLocalizationHeader()
-                    val result = restaurantGateway.getActiveOrders(
-                        permissions, restaurantId, Locale(language, countryCode)
-                    )
+                    val result =
+                        restaurantGateway.getActiveOrders(permissions, restaurantId, Locale(language, countryCode))
                     respondWithResult(HttpStatusCode.OK, result)
                 }
 
@@ -157,8 +185,8 @@ fun Route.restaurantRoutes() {
 
                 delete("/{restaurantId}") {
                     val tokenClaim = call.principal<JWTPrincipal>()
-                    val permissions =
-                        tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
+                    val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java)
+                        ?: emptyList()
                     val restaurantId = call.parameters["restaurantId"]?.trim().toString()
                     val (language, countryCode) = extractLocalizationHeader()
                     val result = restaurantGateway.deleteRestaurant(
@@ -169,7 +197,6 @@ fun Route.restaurantRoutes() {
                     respondWithResult(HttpStatusCode.OK, result)
                 }
             }
-
         }
     }
 }

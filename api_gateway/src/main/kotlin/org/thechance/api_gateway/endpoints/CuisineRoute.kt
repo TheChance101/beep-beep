@@ -47,10 +47,10 @@ fun Route.cuisineRoute() {
 
     }
 
-        get("/cuisines") {
-            val (language, countryCode) = extractLocalizationHeader()
-            val cuisines = restaurantGateway.getCuisines(locale = Locale(language, countryCode))
-            respondWithResult(HttpStatusCode.OK, cuisines)
-        }
+    get("/cuisines") {
+        val (language, countryCode) = extractLocalizationHeader()
+        val cuisines = restaurantGateway.getCuisines(locale = Locale(language, countryCode))
+        respondWithResult(HttpStatusCode.OK, cuisines)
+    }
 }
 
