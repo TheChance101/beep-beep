@@ -48,7 +48,6 @@ class UserScreenModel(
         }
     }
 
-
     // region Filter Menu
     override fun showFilterMenu() {
         updateState {
