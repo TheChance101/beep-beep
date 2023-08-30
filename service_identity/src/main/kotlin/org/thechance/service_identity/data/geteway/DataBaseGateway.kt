@@ -9,6 +9,7 @@ import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
+import org.litote.kmongo.coroutine.insertOne
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.*
 import org.thechance.service_identity.data.mappers.toCollection
@@ -18,6 +19,7 @@ import org.thechance.service_identity.data.util.isUpdatedSuccessfully
 import org.thechance.service_identity.data.util.paginate
 import org.thechance.service_identity.domain.entity.*
 import org.thechance.service_identity.domain.gateway.IDataBaseGateway
+import org.thechance.service_identity.domain.util.ERROR_IN_DB
 import org.thechance.service_identity.domain.util.NOT_FOUND
 import org.thechance.service_identity.domain.util.USER_ALREADY_EXISTS
 import org.thechance.service_identity.domain.util.USER_NOT_FOUND
@@ -30,14 +32,37 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
     }
 
     //region Address
-
-    override suspend fun addAddress(userId: String, location: Location): Boolean {
-        val address = AddressCollection(userId = ObjectId(userId), location = location.toCollection())
+    override suspend fun addLocation(userId: String, location: Location): Address {
+        val address = AddressCollection(
+            userId = ObjectId(userId),
+            location = location.toCollection()
+        )
         dataBaseContainer.userDetailsCollection.updateOne(
             filter = UserDetailsCollection::userId eq ObjectId(userId),
             update = Updates.addToSet(UserDetailsCollection::addressIds.name, address.id)
         )
-        return dataBaseContainer.addressCollection.insertOne(address).wasAcknowledged()
+        return if (dataBaseContainer.addressCollection.insertOne(address).wasAcknowledged()) {
+            address.toEntity()
+        } else {
+            throw ResourceNotFoundException(ERROR_IN_DB)
+        }
+    }
+
+    override suspend fun addAddress(userId: String, address: Address): Address {
+        val addressCollection = AddressCollection(
+            userId = ObjectId(userId),
+            address = address.address,
+            location = address.location.toCollection()
+        )
+        dataBaseContainer.userDetailsCollection.updateOne(
+            filter = UserDetailsCollection::userId eq ObjectId(userId),
+            update = Updates.addToSet(UserDetailsCollection::addressIds.name, address.id)
+        )
+        return if (dataBaseContainer.addressCollection.insertOne(addressCollection).wasAcknowledged()) {
+            addressCollection.toEntity()
+        } else {
+            throw ResourceNotFoundException(ERROR_IN_DB)
+        }
     }
 
     override suspend fun deleteAddress(id: String): Boolean {

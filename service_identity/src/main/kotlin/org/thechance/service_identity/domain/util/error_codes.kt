@@ -16,6 +16,8 @@ const val INVALID_EMAIL = "1008"
 const val NOT_FOUND = "1041"
 const val USER_NOT_FOUND = "1043"
 
+const val ERROR_IN_DB = "1044"
+
 const val AMOUNT_MUST_BE_POSITIVE = "1011"
 const val AMOUNT_MUST_BE_NUMERIC = "1012"
 const val INSUFFICIENT_FUNDS = "1010"

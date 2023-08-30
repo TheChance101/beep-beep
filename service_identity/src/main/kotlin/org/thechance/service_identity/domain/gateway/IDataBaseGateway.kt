@@ -5,8 +5,9 @@ import org.thechance.service_identity.domain.entity.*
 interface IDataBaseGateway {
 
     //region address
+    suspend fun addLocation(userId: String, location: Location): Address
 
-    suspend fun addAddress(userId: String, location: Location): Boolean
+    suspend fun addAddress(userId: String, address: Address): Address
 
     suspend fun deleteAddress(id: String): Boolean
 
@@ -31,7 +32,7 @@ interface IDataBaseGateway {
 
     suspend fun deleteUser(id: String): Boolean
 
-    suspend fun getNumberOfUsers():Long
+    suspend fun getNumberOfUsers(): Long
 
     // endregion: user
 

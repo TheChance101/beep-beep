@@ -11,7 +11,9 @@ import org.thechance.service_identity.data.mappers.toEntity
 import org.thechance.service_identity.domain.entity.MissingParameterException
 import org.thechance.service_identity.domain.usecases.IUserAddressManagementUseCase
 import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
+import org.thechance.service_identity.endpoints.model.AddressDto
 import org.thechance.service_identity.endpoints.model.LocationDto
+import org.thechance.service_identity.endpoints.model.mapper.toEntity
 
 fun Route.addressRoutes() {
 
@@ -36,20 +38,26 @@ fun Route.addressRoutes() {
         }
 
     }
-    route("user/{userId}/address") {
 
+    route("/user/{userId}/address"){
         get {
             val id = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val userAddresses = manageUserAddress.getUserAddresses(id)
             call.respond(HttpStatusCode.OK, userAddresses.map { it.toDto() })
         }
 
-        post {
+        post("/location") {
             val location = call.receive<LocationDto>()
             val userId = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            call.respond(HttpStatusCode.Created, manageUserAddress.addAddress(userId, location.toEntity()))
+            call.respond(HttpStatusCode.Created, manageUserAddress.addLocation(userId, location.toEntity()).toDto())
         }
 
+        post {
+            val address = call.receive<AddressDto>()
+            val userId = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            call.respond(HttpStatusCode.Created, manageUserAddress.addAddress(userId, address.toEntity()).toDto())
+        }
     }
+
 
 }
