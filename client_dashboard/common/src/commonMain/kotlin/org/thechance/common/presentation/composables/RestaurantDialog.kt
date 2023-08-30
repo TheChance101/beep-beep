@@ -112,7 +112,6 @@ fun RestaurantDialog(
                     GoogleMap(currentLocation = currentLocation) { address ->
                         onAddressChange(address)
                     }
-
                     Row(
                         modifier = Modifier.fillMaxWidth(0.5f).padding(top = Theme.dimens.space24),
                         horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space16),

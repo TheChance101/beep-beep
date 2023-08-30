@@ -23,6 +23,9 @@ fun GoogleMap(
                     onGetAddress = onGetAddress
                 )
             },
+            update = {
+                println("Recomposition")
+            }
         )
     }
 }

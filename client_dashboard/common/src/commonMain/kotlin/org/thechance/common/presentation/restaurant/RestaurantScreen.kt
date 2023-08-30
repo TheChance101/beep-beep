@@ -45,6 +45,7 @@ class RestaurantScreen :
 
     @Composable
     override fun OnRender(state: RestaurantUiState, listener: RestaurantInteractionListener) {
+        AnimatedVisibility(visible = state.isAddNewRestaurantDialogVisible) {
             RestaurantDialog(
                 modifier = Modifier,
                 onRestaurantNameChange = listener::onRestaurantNameChange,
@@ -59,6 +60,7 @@ class RestaurantScreen :
                 onAddressChange = listener::onAddressChange,
                 currentLocation = state.addNewRestaurantDialogUiState.currentLocation,
             )
+    }
 
         Column(
             Modifier.background(Theme.colors.surface).fillMaxSize(),
@@ -77,7 +79,7 @@ class RestaurantScreen :
     @Composable
     private fun RestaurantScreenTopRow(
         state: RestaurantUiState,
-        listener: RestaurantInteractionListener
+        listener: RestaurantInteractionListener,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -121,7 +123,7 @@ class RestaurantScreen :
     @Composable
     private fun ColumnScope.RestaurantTable(
         state: RestaurantUiState,
-        listener: RestaurantInteractionListener
+        listener: RestaurantInteractionListener,
     ) {
         BpTable(
             data = state.restaurants,
@@ -142,7 +144,7 @@ class RestaurantScreen :
     @Composable
     private fun RestaurantPagingRow(
         state: RestaurantUiState,
-        listener: RestaurantInteractionListener
+        listener: RestaurantInteractionListener,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth().background(color = Theme.colors.surface),
