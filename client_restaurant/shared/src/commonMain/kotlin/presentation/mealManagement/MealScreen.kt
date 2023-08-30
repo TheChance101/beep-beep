@@ -53,6 +53,7 @@ class MealScreen(
                 )
             },
             sheetBackgroundColor = Theme.colors.background,
+            onBackGroundClicked = { listener.onBackgroundClicked() },
             sheetState = sheetState,
         ) {
             MealContent(

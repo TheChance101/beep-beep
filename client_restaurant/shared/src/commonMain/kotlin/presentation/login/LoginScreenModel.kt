@@ -55,9 +55,9 @@ class LoginScreenModel:
     }
 
     private fun onLoginFailed(error: ErrorState) {
-//        sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
+        sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
         updateState { it.copy(isLoading = false, error = error) }
-        handleErrorState(error)
+//        handleErrorState(error)
     }
 
     private fun handleErrorState(error: ErrorState) {
@@ -74,6 +74,7 @@ class LoginScreenModel:
                         isPasswordError = true,
                     )
                 }
+
 
             }
 
@@ -109,7 +110,7 @@ class LoginScreenModel:
     private fun showPermissionSheetWithDelay() {
         coroutineScope.launch {
             state.value.sheetState.dismiss()
-            delay(500)
+            delay(300)
             updateState { it.copy(showPermissionSheet = true) }
             state.value.sheetState.show()
         }

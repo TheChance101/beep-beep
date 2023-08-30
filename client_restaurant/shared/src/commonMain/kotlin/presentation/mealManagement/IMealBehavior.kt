@@ -24,6 +24,7 @@ abstract class IMealBehavior : BaseScreenModel<MealEditorUIState, MealScreenUIEf
     }
 
     override fun onCuisineClick() {
+        state.value.sheetState.show()
         updateState { it.copy(isCuisinesShow = true) }
     }
 
@@ -38,6 +39,7 @@ abstract class IMealBehavior : BaseScreenModel<MealEditorUIState, MealScreenUIEf
 
     override fun onSaveCuisineClick() {
         val mealCuisines = state.value.cuisines.filter { it.isSelected }
+        state.value.sheetState.dismiss()
         updateState {
             it.copy(
                 meal = it.meal.copy(mealCuisines = mealCuisines),
@@ -69,6 +71,7 @@ abstract class IMealBehavior : BaseScreenModel<MealEditorUIState, MealScreenUIEf
 
     override fun onCuisinesCancel() {
         updateState { it.copy(isCuisinesShow = false) }
+        state.value.sheetState.dismiss()
     }
 
     override fun onNameChange(name: String) {
@@ -83,6 +86,9 @@ abstract class IMealBehavior : BaseScreenModel<MealEditorUIState, MealScreenUIEf
         updateState { it.copy(meal = it.meal.copy(price = price)) }
     }
 
-
+    override fun onBackgroundClicked() {
+        state.value.sheetState.dismiss()
+        updateState { it.copy(isCuisinesShow = false) }
+    }
 
 }
