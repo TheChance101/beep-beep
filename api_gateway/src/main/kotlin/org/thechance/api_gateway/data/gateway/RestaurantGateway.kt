@@ -124,6 +124,7 @@ class RestaurantGateway(
                     )
                 )
             }
+        }
     }
 
     @OptIn(InternalAPI::class)

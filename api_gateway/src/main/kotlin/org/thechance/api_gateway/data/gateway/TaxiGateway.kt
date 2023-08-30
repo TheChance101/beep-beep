@@ -36,10 +36,7 @@ class TaxiGateway(
         }
     }
 
-    override suspend fun getTaxiById(
-        id: String,
-        locale: Locale
-    ): TaxiResource {
+    override suspend fun getTaxiById(id: String, locale: Locale): TaxiResource {
         return tryToExecute(
             api = APIs.TAXI_API,
             setErrorMessage = { errorCodes ->

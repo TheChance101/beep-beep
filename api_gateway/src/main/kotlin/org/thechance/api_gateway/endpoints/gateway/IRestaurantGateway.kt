@@ -32,7 +32,6 @@ interface IRestaurantGateway {
     suspend fun getOrdersCountByDaysBefore(
         restaurantId: String,
         daysBack: Int,
-        permissions: List<Int>,
         locale: Locale
     ): List<Map<Int, Int>> // list of maps (dayOfWeek, count) { dayOfWeek 0 - 6 (Sunday - Saturday) }
     // endregion
@@ -43,13 +42,13 @@ interface IRestaurantGateway {
 
     suspend fun deleteRestaurant(restaurantId: String, locale: Locale): Boolean
 
-    suspend fun addMeal(meal: MealResource, permissions: List<Int>, locale: Locale): MealResource
+    suspend fun addMeal(meal: MealResource, locale: Locale): MealResource
 
-    suspend fun updateMeal(meal: MealResource, permissions: List<Int>, locale: Locale): MealResource
+    suspend fun updateMeal(meal: MealResource, locale: Locale): MealResource
 
-    suspend fun restaurantOrders(permissions: List<Int>, restaurantId: String, locale: Locale): Flow<Order>
+    suspend fun restaurantOrders(restaurantId: String, locale: Locale): Flow<Order>
 
-    suspend fun getActiveOrders(permissions: List<Int>, restaurantId: String, locale: Locale): List<Order>
+    suspend fun getActiveOrders(restaurantId: String, locale: Locale): List<Order>
 
     suspend fun getMealsByRestaurantId(restaurantId: String, page: Int, limit: Int, locale: Locale): List<MealResource>
 
