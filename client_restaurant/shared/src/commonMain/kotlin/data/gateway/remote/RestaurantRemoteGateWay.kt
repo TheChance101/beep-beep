@@ -2,11 +2,11 @@ package data.gateway.remote
 
 import domain.entity.Location
 import domain.entity.Restaurant
-import domain.gateway.remote.IRemoteRestaurantGateway
+import domain.gateway.remote.IRestaurantRemoteGateway
 import io.ktor.client.HttpClient
 
 
-class RemoteRestaurantGateWay(private val client: HttpClient) : IRemoteRestaurantGateway {
+class RestaurantRemoteGateWay(private val client: HttpClient) : IRestaurantRemoteGateway {
 
     override suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant> {
         return emptyList()

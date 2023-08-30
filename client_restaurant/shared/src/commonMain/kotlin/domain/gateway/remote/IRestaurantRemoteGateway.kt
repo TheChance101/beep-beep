@@ -3,7 +3,7 @@ package domain.gateway.remote
 import domain.entity.Restaurant
 
 
-interface IRemoteRestaurantGateway {
+interface IRestaurantRemoteGateway {
 
     suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant>
     suspend fun updateRestaurantInfo(restaurant: Restaurant): Boolean
