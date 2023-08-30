@@ -2,10 +2,6 @@ package org.thechance.service_identity.data.geteway
 
 import com.mongodb.MongoWriteException
 import com.mongodb.client.model.*
-import com.mongodb.client.model.Filters
-import com.mongodb.client.model.IndexOptions
-import com.mongodb.client.model.Indexes
-import com.mongodb.client.model.Updates
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -83,12 +79,12 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
     private suspend fun createUniqueIndexIfNotExists() {
         if (!isUniqueIndexCreated()) {
             val indexOptions = IndexOptions().unique(true)
-            dataBaseContainer.userCollection.createIndex(Indexes.ascending("username"), indexOptions)
+            dataBaseContainer.userCollection.createIndex(Indexes.ascending(DataBaseContainer.USER_NAME), indexOptions)
         }
     }
 
     private suspend fun isUniqueIndexCreated(): Boolean {
-        val indexName = "username_1"
+        val indexName = DataBaseContainer.INDEX_NAME
         val indexInfo = dataBaseContainer.userCollection.listIndexes<Indexes>().toList()
             .filter { it.equals(indexName) }
 
@@ -107,7 +103,7 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
             ),
             lookup(
                 localField = UserCollection::id.name,
-                from = USER_DETAILS_COLLECTION,
+                from = DataBaseContainer.USER_DETAILS_COLLECTION,
                 foreignField = UserDetailsCollection::userId.name,
                 newAs = DetailedUserCollection::details.name
             )
@@ -203,24 +199,26 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         ) ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
-    override suspend fun subtractFromWallet(userId: String, amount: Double): Boolean {
-        return dataBaseContainer.walletCollection.updateOne(
+    override suspend fun subtractFromWallet(userId: String, amount: Double): Wallet {
+        return dataBaseContainer.walletCollection.findOneAndUpdate(
             filter = WalletCollection::userId eq ObjectId(userId),
-            update = inc(WalletCollection::walletBalance, -amount)
-        ).isUpdatedSuccessfully()
+            update = inc(WalletCollection::walletBalance, -amount),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
+        )?.toEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
-    override suspend fun getWalletBalance(userId: String): Double {
+    override suspend fun getWalletBalance(userId: String): Wallet {
         return dataBaseContainer.walletCollection.findOne(
-            WalletCollection::userId eq ObjectId(userId)
-        )?.walletBalance ?: throw ResourceNotFoundException(NOT_FOUND)
+            WalletCollection::userId eq ObjectId(userId),
+        )?.toEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
-    override suspend fun addToWallet(userId: String, amount: Double): Boolean {
-        return dataBaseContainer.walletCollection.updateOne(
+    override suspend fun addToWallet(userId: String, amount: Double): Wallet {
+        return dataBaseContainer.walletCollection.findOneAndUpdate(
             filter = WalletCollection::userId eq ObjectId(userId),
-            update = inc(WalletCollection::walletBalance, amount)
-        ).isUpdatedSuccessfully()
+            update = inc(WalletCollection::walletBalance, amount),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
+        )?.toEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
     private suspend fun createWallet(wallet: WalletCollection): Boolean {
@@ -256,14 +254,5 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         return SaltedHash(user.hashedPassword!!, user.salt!!)
     }
     // endregion
-
-    companion object {
-        private const val WALLET_COLLECTION = "wallet"
-        private const val ADDRESS_COLLECTION_NAME = "address"
-        const val USER_DETAILS_COLLECTION = "user_details"
-        private const val USER_COLLECTION = "user"
-        private const val USER_NAME = "username"
-        private const val INDEX_NAME = "username_1"
-    }
 
 }

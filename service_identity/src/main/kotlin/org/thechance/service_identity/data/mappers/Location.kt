@@ -18,8 +18,3 @@ fun Location.toCollection() = LocationCollection(
     latitude = latitude,
     longitude = longitude,
 )
-
-fun Location.toDto() = LocationDto(
-    latitude = latitude,
-    longitude = longitude,
-)

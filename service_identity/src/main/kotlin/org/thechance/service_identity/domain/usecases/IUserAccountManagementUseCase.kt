@@ -1,10 +1,7 @@
 package org.thechance.service_identity.domain.usecases
 
 import org.koin.core.annotation.Single
-import org.thechance.service_identity.domain.entity.InsufficientFundsException
-import org.thechance.service_identity.domain.entity.InvalidCredentialsException
-import org.thechance.service_identity.domain.entity.User
-import org.thechance.service_identity.domain.entity.UserManagement
+import org.thechance.service_identity.domain.entity.*
 import org.thechance.service_identity.domain.gateway.IDataBaseGateway
 import org.thechance.service_identity.domain.security.HashingService
 import org.thechance.service_identity.domain.usecases.validation.IUserInfoValidationUseCase
@@ -24,9 +21,9 @@ interface IUserAccountManagementUseCase {
 
     suspend fun getUser(id: String): User
 
-    suspend fun addToWallet(userId: String, amount: Double): Boolean
+    suspend fun addToWallet(userId: String, amount: Double): Wallet
 
-    suspend fun subtractFromWallet(userId: String, amount: Double): Boolean
+    suspend fun subtractFromWallet(userId: String, amount: Double): Wallet
 
     suspend fun login(username: String, password: String): Boolean
 
@@ -81,14 +78,14 @@ class UserAccountManagementUseCase(
         return dataBaseGateway.getUserById(id)
     }
 
-    override suspend fun addToWallet(userId: String, amount: Double): Boolean {
+    override suspend fun addToWallet(userId: String, amount: Double): Wallet {
         walletBalanceValidationUseCase.validateWalletBalance(amount)
         return dataBaseGateway.addToWallet(userId, amount)
     }
 
-    override suspend fun subtractFromWallet(userId: String, amount: Double): Boolean {
+    override suspend fun subtractFromWallet(userId: String, amount: Double): Wallet {
         walletBalanceValidationUseCase.validateWalletBalance(amount)
-        if (amount > dataBaseGateway.getWalletBalance(userId)) {
+        if (amount > dataBaseGateway.getWalletBalance(userId).walletBalance) {
             throw InsufficientFundsException(INSUFFICIENT_FUNDS)
         }
         return dataBaseGateway.subtractFromWallet(userId, amount)
