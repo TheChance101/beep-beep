@@ -195,38 +195,41 @@ class RestaurantGateway(
         locale: Locale
     ): List<MealResource> {
 
-        return tryToExecute(
-            api = APIs.RESTAURANT_API,
-            setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+            return tryToExecute(
+                api = APIs.RESTAURANT_API,
+                setErrorMessage = { errorCodes ->
+                    errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+                }
+            ) {
+                get("restaurant/$restaurantId/meals"){
+                    parameter("page", page)
+                    parameter("limit", limit)
+                }
             }
-        ) {
-            get("restaurants/$restaurantId/meals") {
-                parameter("page", page)
-                parameter("limit", limit)
-            }
-        }
+
     }
 
     override suspend fun getMealsByCuisineId(
         cuisineId: String,
         locale: Locale
     ): List<MealResource> {
-        return tryToExecute(
-            api = APIs.RESTAURANT_API,
-            setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+
+            return tryToExecute(
+                api = APIs.RESTAURANT_API,
+                setErrorMessage = { errorCodes ->
+                    errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+                }
+            ) {
+                get("/cuisine/$cuisineId/meals")
             }
-        ) {
-            get("/cuisine/$cuisineId/meals")
-        }
+
     }
 
     @OptIn(InternalAPI::class)
     override suspend fun addCuisine(name: String, permissions: List<Int>, locale: Locale): CuisineResource {
         //TODO()  need to change 1
-        val ADMIN = 1
-        return if (ADMIN in permissions) {
+
+        return if (ADMIN_PERMISSION in permissions) {
             tryToExecute<CuisineResource>(
                 APIs.RESTAURANT_API,
                 setErrorMessage = { errorCodes ->
@@ -294,6 +297,22 @@ class RestaurantGateway(
         }
     }
 
+    override suspend fun getOrdersCountByDaysBefore(
+        restaurantId: String,
+        daysBack: Int,
+        permissions: List<Int>,
+        locale: Locale
+    ): List<Map<Int, Int>> {
+        return tryToExecute<List<Map<Int, Int>>>(
+            api = APIs.RESTAURANT_API,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+            }
+        ) {
+            get("/order/count-by-days-back?restaurantId=$restaurantId&&daysBack=$daysBack")
+        }
+    }
+
 
     override suspend fun restaurantOrders(permissions: List<Int>, restaurantId: String, locale: Locale): Flow<Order> {
         // todo check of permission and handel error
@@ -313,22 +332,4 @@ class RestaurantGateway(
             get("/order/$restaurantId/orders")
         }
     }
-
-    override suspend fun getOrdersCountByDaysBefore(
-        restaurantId: String,
-        daysBack: Int,
-        permissions: List<Int>,
-        locale: Locale
-    ): List<Map<Int, Int>> {
-        // todo: implement check permissions logic
-        return tryToExecute<List<Map<Int, Int>>>(
-            api = APIs.RESTAURANT_API,
-            setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
-            }
-        ) {
-            get("/order/count-by-days-back?restaurantId=$restaurantId&&daysBack=$daysBack")
-        }
-    }
-
 }
