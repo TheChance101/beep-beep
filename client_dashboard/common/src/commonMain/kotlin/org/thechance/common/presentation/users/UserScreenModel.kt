@@ -4,11 +4,13 @@ import kotlinx.coroutines.flow.update
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.usecase.IGetUsersUseCase
+import org.thechance.common.domain.usecase.ISearchUsersUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
 class UserScreenModel(
-    private val getUsers: IGetUsersUseCase
+    private val getUsers: IGetUsersUseCase,
+    private val searchUsers: ISearchUsersUseCase
 ) : BaseScreenModel<UserScreenUiState, UserUiEffect>(UserScreenUiState()),
     UserScreenInteractionListener {
 
@@ -35,7 +37,7 @@ class UserScreenModel(
     }
 
     override fun onSearchInputChange(text: String) {
-        mutableState.update { it.copy(search = text) }
+        mutableState.update { it.copy(search = text) }.also { searchUsers() }
     }
 
     override fun showFilterMenu() {
@@ -154,8 +156,7 @@ class UserScreenModel(
     }
 
     override fun onItemsIndicatorChange(itemPerPage: Int) {
-        mutableState.update { it.copy(specifiedUsers = itemPerPage) }
-        getUsers()
+        mutableState.update { it.copy(specifiedUsers = itemPerPage) }.also { searchUsers() }
     }
 
     override fun onPageClick(pageNumber: Int) {
@@ -185,6 +186,23 @@ class UserScreenModel(
             uiState.copy(filter = uiState.filter.copy(countries = updatedCountries))
         }
         getUsers() // TODO : Update users with filter by country
+    }
+
+    private fun searchUsers() {
+        tryToExecute(
+            { searchUsers(state.value.search, state.value.currentPage, state.value.specifiedUsers) },
+            ::onSearchUsersSuccessfully,
+            ::onError
+        )
+    }
+
+    private fun onSearchUsersSuccessfully(users: DataWrapper<User>) {
+        updateState {
+            it.copy(
+                pageInfo = users.toUiState(),
+                isLoading = false
+            )
+        }
     }
 
 }
