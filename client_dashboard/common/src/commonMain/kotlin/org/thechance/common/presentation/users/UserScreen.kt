@@ -420,7 +420,7 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
                                     title = Resources.Strings.save,
                                     onClick = onFilterSaved,
                                     shape = RoundedCornerShape(Theme.radius.small),
-                                    modifier = Modifier.height(50.kms).weight(1f)
+                                    modifier = Modifier.weight(1f)
                                 )
                             }
                         }
