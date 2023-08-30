@@ -119,7 +119,7 @@ class UserScreenModel(
                     permissions = emptyList()
                 )
             )
-        }.also { hideEditUserMenu() }
+        }
     }
 
     private fun getUpdatedPermissions(
