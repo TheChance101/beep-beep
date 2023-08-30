@@ -8,6 +8,8 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.util.pipeline.*
+import org.thechance.api_gateway.data.localizedMessages.Country
+import org.thechance.api_gateway.data.localizedMessages.Language
 
 suspend inline fun <reified T> PipelineContext<Unit, ApplicationCall>.respondWithResult(
     statusCode: HttpStatusCode,
@@ -25,17 +27,17 @@ suspend fun respondWithError(
     call.respond(statusCode, ServerResponse.error(errorMessage, statusCode.value))
 }
 
-fun PipelineContext<Unit, ApplicationCall>.extractLocalizationHeader(): Pair<String?, String?> {
+fun PipelineContext<Unit, ApplicationCall>.extractLocalizationHeader(): Pair<String, String> {
     val headers = call.request.headers
-    val language = headers["Accept-Language"]?.trim()
-    val countryCode = headers["Country-Code"]?.trim()
+    val language = headers["Accept-Language"]?.trim() ?: Language.ENGLISH.code
+    val countryCode = headers["Country-Code"]?.trim() ?: Country.EGYPT.code
     return Pair(language, countryCode)
 }
 
-fun WebSocketServerSession.extractLocalizationHeaderFromWebSocket(): Pair<String?, String?> {
+fun WebSocketServerSession.extractLocalizationHeaderFromWebSocket(): Pair<String, String> {
     val headers = call.request.headers
-    val language = headers["Accept-Language"]?.trim()
-    val countryCode = headers["Country-Code"]?.trim()
+    val language = headers["Accept-Language"]?.trim() ?: Language.ENGLISH.code
+    val countryCode = headers["Country-Code"]?.trim() ?: Country.EGYPT.code
     return Pair(language, countryCode)
 }
 
