@@ -1,7 +1,7 @@
 package org.thechance.service_identity.domain.util
 
 
-object Role{
+object Role {
     const val END_USER = 1
     const val DASHBOARD_ADMIN = 2
     const val RESTAURANT_OWNER = 4
