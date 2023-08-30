@@ -11,3 +11,9 @@ data class UserManagementDto(
     val email: String,
     val permission : Int = Role.END_USER
 )
+
+@Serializable
+data class UsersManagementDto(
+    val users: List<UserManagementDto>,
+    val total: Long
+)

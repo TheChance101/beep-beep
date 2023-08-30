@@ -103,11 +103,7 @@ class RestaurantGateway(
 
     @OptIn(InternalAPI::class)
     override suspend fun addMeal(
-        restaurantId: String,
-        name: String,
-        description: String,
-        price: Double,
-        cuisines: List<String>,
+        meal: MealResource,
         locale: Locale
     ): MealResource {
         return tryToExecute(
@@ -120,26 +116,18 @@ class RestaurantGateway(
                 body = Json.encodeToString(
                     MealResource.serializer(),
                     MealResource(
-                        restaurantId = restaurantId,
-                        name = name,
-                        description = description,
-                        price = price,
-                        cuisines = cuisines
+                        restaurantId = meal.restaurantId,
+                        name = meal.name,
+                        description = meal.description,
+                        price = meal.price,
+                        cuisines = meal.cuisines
                     )
                 )
             }
-        }
     }
 
     @OptIn(InternalAPI::class)
-    override suspend fun updateMeal(
-        restaurantId: String,
-        name: String,
-        description: String,
-        price: Double,
-        cuisines: List<String>,
-        locale: Locale
-    ): MealResource {
+    override suspend fun updateMeal(meal: MealResource, locale: Locale): MealResource {
         return tryToExecute(
             api = APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
@@ -150,11 +138,11 @@ class RestaurantGateway(
                 body = Json.encodeToString(
                     MealResource.serializer(),
                     MealResource(
-                        restaurantId = restaurantId,
-                        name = name,
-                        description = description,
-                        price = price,
-                        cuisines = cuisines
+                        restaurantId = meal.restaurantId,
+                        name = meal.name,
+                        description = meal.description,
+                        price = meal.price,
+                        cuisines = meal.cuisines
                     )
                 )
             }
@@ -169,7 +157,7 @@ class RestaurantGateway(
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
         ) {
-            get("restaurants/$restaurantId/meals") {
+            get("restaurant/$restaurantId/meals") {
                 parameter("page", page)
                 parameter("limit", limit)
             }
@@ -235,6 +223,17 @@ class RestaurantGateway(
             }
         ) {
             get("/order/history/$restaurantId?page=$page&limit=$limit")
+        }
+    }
+
+    override suspend fun getOrdersCountByDaysBefore(restaurantId: String, daysBack: Int, locale: Locale): List<Map<Int, Int>> {
+        return tryToExecute<List<Map<Int, Int>>>(
+            api = APIs.RESTAURANT_API,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+            }
+        ) {
+            get("/order/count-by-days-back?restaurantId=$restaurantId&&daysBack=$daysBack")
         }
     }
 

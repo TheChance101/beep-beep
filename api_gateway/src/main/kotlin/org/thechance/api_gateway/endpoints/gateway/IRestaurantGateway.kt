@@ -10,7 +10,10 @@ import java.util.*
 
 interface IRestaurantGateway {
     suspend fun createRequestPermission(
-        restaurantName: String, ownerEmail: String, cause: String, locale: Locale
+        restaurantName: String,
+        ownerEmail: String,
+        cause: String,
+        locale: Locale
     ): RestaurantRequestPermission
 
     suspend fun getAllRequestPermission(locale: Locale): List<RestaurantRequestPermission>
@@ -25,7 +28,13 @@ interface IRestaurantGateway {
     suspend fun updateOrderStatus(orderId: String, status: Int, locale: Locale): Order
 
     suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int, locale: Locale): List<Order>
-    
+
+    suspend fun getOrdersCountByDaysBefore(
+        restaurantId: String,
+        daysBack: Int,
+        permissions: List<Int>,
+        locale: Locale
+    ): List<Map<Int, Int>> // list of maps (dayOfWeek, count) { dayOfWeek 0 - 6 (Sunday - Saturday) }
     // endregion
 
     suspend fun getRestaurantInfo(locale: Locale, restaurantId: String): RestaurantResource
@@ -34,26 +43,14 @@ interface IRestaurantGateway {
 
     suspend fun deleteRestaurant(restaurantId: String, locale: Locale): Boolean
 
-    suspend fun addMeal(
-        restaurantId: String,
-        name: String,
-        description: String,
-        price: Double,
-        cuisines: List<String>,
-        locale: Locale
-    ): MealResource
+    suspend fun addMeal(meal: MealResource, permissions: List<Int>, locale: Locale): MealResource
 
-    suspend fun updateMeal(
-        restaurantId: String,
-        name: String,
-        description: String, price: Double,
-        cuisines: List<String>, locale: Locale
-    ): MealResource
+    suspend fun updateMeal(meal: MealResource, permissions: List<Int>, locale: Locale): MealResource
 
-    suspend fun restaurantOrders(restaurantId: String, locale: Locale) : Flow<Order>
+    suspend fun restaurantOrders(permissions: List<Int>, restaurantId: String, locale: Locale): Flow<Order>
 
-    suspend fun getActiveOrders(restaurantId: String, locale: Locale): List<Order>
-  
+    suspend fun getActiveOrders(permissions: List<Int>, restaurantId: String, locale: Locale): List<Order>
+
     suspend fun getMealsByRestaurantId(restaurantId: String, page: Int, limit: Int, locale: Locale): List<MealResource>
 
     suspend fun getMealsByCuisineId(cuisineId: String, locale: Locale): List<MealResource>

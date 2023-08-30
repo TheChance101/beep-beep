@@ -12,6 +12,8 @@ interface IUserManagementUseCase {
 
     suspend fun getUsers(page: Int, limit: Int, searchTerm: String): List<UserManagement>
 
+    suspend fun getNumberOfUsers(): Long
+
 }
 
 @Single
@@ -31,6 +33,10 @@ class UserManagementUseCase(private val dataBaseGateway: IDataBaseGateway) : IUs
 
     override suspend fun getUsers(page: Int, limit: Int, searchTerm: String): List<UserManagement> {
         return dataBaseGateway.getUsers(page, limit, searchTerm)
+    }
+
+    override suspend fun getNumberOfUsers(): Long {
+        return dataBaseGateway.getNumberOfUsers()
     }
 
     private fun grantPermission(currentPermissions: Int, permissionToAdd: Int): Int {
