@@ -17,6 +17,7 @@ val networkModule = module {
 
     single {
         HttpClient(CIO) {
+            expectSuccess = true
             install(Logging) {
                 logger = Logger.DEFAULT
                 level = LogLevel.ALL
@@ -24,7 +25,8 @@ val networkModule = module {
 
             defaultRequest {
                 header("Content-Type", "application/json")
-                url("http://127.0.0.1:8080")
+                header("Accept-Language", "en")
+                url("http://0.0.0.0:8080")
             }
 
             install(ContentNegotiation) {

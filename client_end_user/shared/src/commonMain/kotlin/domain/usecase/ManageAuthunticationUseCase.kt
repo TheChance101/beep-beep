@@ -30,15 +30,24 @@ class ManageAuthenticationUseCase(private val remoteGateway: IRemoteGateway) :
     }
 
     override suspend fun loginUser(username: String, password: String): Boolean {
+        if (validateLoginFields(username, password)) {
+            remoteGateway.loginUser(username, password)
+        } else {
+            throw UnAuthorizedException()
+        }
         return true
-//        println(" token is  ${remoteGateway.loginUser(username, password)}")
+//        return if (validateLoginFields(username, password)) {
+//            remoteGateway.loginUser(username, password)
+//            true
+//        } else {
+//            throw UnAuthorizedException()
+//        }
 //        return if (validateLoginFields(username, password)) {
 //            val session = remoteGateway.loginUser(username, password)
 //            session.accessToken.isNotEmpty()
 //        } else {
 //            false
 //        }
-
     }
 
 

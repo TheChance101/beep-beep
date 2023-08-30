@@ -16,12 +16,6 @@ class LoginScreenModel() :
 
     override val viewModelScope: CoroutineScope = coroutineScope
 
-    init {
-        viewModelScope.launch {
-            println("Testttttttttttt ${manageAuthentication.loginUser("Ahmed" , "dsddd")}")
-
-        }
-    }
     override fun onUsernameChanged(username: String) {
         updateState { it.copy(username = username) }
 
@@ -44,7 +38,7 @@ class LoginScreenModel() :
     }
 
     private fun onLoginError(errorState: ErrorState) {
-        println("Error is $errorState")
+        println("Ahmed $errorState")
         when (errorState) {
             ErrorState.InvalidPassword -> updateState {
                 it.copy(
@@ -69,7 +63,7 @@ class LoginScreenModel() :
     }
 
     private fun onLoginSuccess(isLoggedIn: Boolean) {
-        println("Successfully logged in")
+        println(" Ahmed :  Successfully logged in")
         if (isLoggedIn) {
             sendNewEffect(LoginScreenUIEffect.Login)
             updateState {

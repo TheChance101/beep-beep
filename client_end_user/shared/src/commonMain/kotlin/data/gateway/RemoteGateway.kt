@@ -44,16 +44,12 @@ class RemoteGateway(private val client: HttpClient) : IRemoteGateway {
 
     override suspend fun loginUser(username: String, password: String): Session {
         try {
-            val response = client.submitForm(
+            val response = client.submitForm("/login",
                 formParameters = parameters {
                     append("username", username)
                     append("password", password)
                 }
-            ) {
-                url("/login")
-                header("Accept-Language", "ar")
-                header("Country-Code", "EG")
-            }
+            )
             println("From try to login ${response.body<BaseResponse<SessionDto>>()}")
             val responseBody = response.body<BaseResponse<SessionDto>>()
             if (response.status.isSuccess()) {
@@ -63,6 +59,7 @@ class RemoteGateway(private val client: HttpClient) : IRemoteGateway {
             }
 
         } catch (exception: Exception) {
+            println("Ahmed : Catch Error in gateWay")
             throw Exception(exception.message)
         }
     }
