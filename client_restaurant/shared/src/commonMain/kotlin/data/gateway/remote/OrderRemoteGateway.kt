@@ -12,7 +12,6 @@ import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
 import io.ktor.client.request.url
 import io.ktor.http.Parameters
-import kotlinx.atomicfu.TraceBase.None.append
 
 
 class OrderRemoteGateway(client: HttpClient) : IOrderRemoteGateway,
@@ -41,7 +40,7 @@ class OrderRemoteGateway(client: HttpClient) : IOrderRemoteGateway,
             submitForm(
                 formParameters = Parameters.build {
                     append("orderId", orderId)
-                    append("orderState", orderState)
+                 //   append("orderState", orderState)
                 }
             ) {
                 url("/order/$orderId/status")
