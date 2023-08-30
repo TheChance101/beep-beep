@@ -39,9 +39,9 @@ fun WebSocketServerSession.extractLocalizationHeaderFromWebSocket(): Pair<String
     return Pair(language, countryCode)
 }
 
-fun PipelineContext<Unit, ApplicationCall>.extractPermission(): Int {
-    val tokenClaim = call.principal<JWTPrincipal>()
-    return tokenClaim?.payload?.getClaim("permission")?.asString()?.toInt() ?: -1
+private fun PipelineContext<Unit, ApplicationCall>.extractPermission(): Int {
+    val principal = call.principal<JWTPrincipal>()
+    return principal?.getClaim("permission", Int::class) ?: -1
 }
 
 fun Route.authenticateWithRole(role: Int, block: Route.() -> Unit) {
