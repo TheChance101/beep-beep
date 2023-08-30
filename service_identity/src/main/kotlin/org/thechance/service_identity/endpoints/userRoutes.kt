@@ -13,7 +13,6 @@ import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
 
 fun Route.userRoutes() {
 
-
     val manageUserAccount: IUserAccountManagementUseCase by inject()
 
     route("/user") {
@@ -22,6 +21,13 @@ fun Route.userRoutes() {
             val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val user = manageUserAccount.getUser(id).toDto()
             call.respond(HttpStatusCode.OK, user)
+        }
+
+        get("/get-user") {
+            val username = call.parameters["username"]
+                ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            val user = manageUserAccount.getUserByUsername(username)
+            call.respond(HttpStatusCode.OK, user.toDto())
         }
 
         post {
@@ -38,30 +44,6 @@ fun Route.userRoutes() {
                 email = email.toString()
             )
             call.respond(HttpStatusCode.Created, result.toDto())
-        }
-
-        put("/{id}") {
-            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val params = call.receiveParameters()
-            val fullName = params["fullName"]?.trim()
-            val username = params["username"]?.trim()
-            val password = params["password"]?.trim()
-            val email = params["email"]?.trim()
-
-            val result = manageUserAccount.updateUser(
-                id = id,
-                fullName = fullName.toString(),
-                username = username.toString(),
-                password = password.toString(),
-                email = email.toString()
-            )
-            call.respond(HttpStatusCode.OK, result)
-        }
-
-        delete("/{id}") {
-            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val result = manageUserAccount.deleteUser(id)
-            call.respond(HttpStatusCode.OK, result)
         }
 
         post("/{id}/wallet/add") {
@@ -88,11 +70,28 @@ fun Route.userRoutes() {
             call.respond(HttpStatusCode.OK, isLoggedIn)
         }
 
-        get("/get-user") {
-            val username = call.parameters["username"]
-                ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val user = manageUserAccount.getUserByUsername(username)
-            call.respond(HttpStatusCode.OK, user.toDto())
+        put("/{id}") {
+            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            val params = call.receiveParameters()
+            val fullName = params["fullName"]?.trim()
+            val username = params["username"]?.trim()
+            val password = params["password"]?.trim()
+            val email = params["email"]?.trim()
+
+            val result = manageUserAccount.updateUser(
+                id = id,
+                fullName = fullName.toString(),
+                username = username.toString(),
+                password = password.toString(),
+                email = email.toString()
+            )
+            call.respond(HttpStatusCode.OK, result)
+        }
+
+        delete("/{id}") {
+            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            val result = manageUserAccount.deleteUser(id)
+            call.respond(HttpStatusCode.OK, result)
         }
     }
 }

@@ -6,9 +6,16 @@ import kotlinx.serialization.Serializable
 data class TaxiDto(
     val id: String? = null,
     val plateNumber: String? = null,
-    val color: Int? = null,
+    val color: Long? = null,
     val type: String? = null,
     val driverId: String? = null,
     val isAvailable: Boolean? = null,
     val seats: Int? = null,
+)
+
+
+@Serializable
+data class TaxisManagementDto(
+    val taxis : List<TaxiDto>,
+    val total : Long
 )
