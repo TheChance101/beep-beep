@@ -4,12 +4,12 @@ import data.remote.mapper.toEntity
 import data.remote.model.BaseResponse
 import data.remote.model.MealDto
 import domain.entity.Meal
-import domain.gateway.remote.IRemoteMealGateway
+import domain.gateway.remote.IMealRemoteGateway
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 
 
-class RemoteMealGateway(client: HttpClient) : IRemoteMealGateway,
+class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
     BaseRemoteGateway(client = client) {
 
     override suspend fun getAllMealsByRestaurantId(restaurantId: String): List<Meal>? {

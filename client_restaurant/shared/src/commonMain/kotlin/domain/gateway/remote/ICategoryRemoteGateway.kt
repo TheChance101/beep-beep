@@ -3,7 +3,7 @@ package domain.gateway.remote
 import domain.entity.Category
 
 
-interface IRemoteCategoryGateway {
+interface ICategoryRemoteGateway {
 
     suspend fun getCategoriesByRestaurantId(restaurantId: String): Category
 

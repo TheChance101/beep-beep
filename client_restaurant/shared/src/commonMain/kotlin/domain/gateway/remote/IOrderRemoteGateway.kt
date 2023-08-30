@@ -3,7 +3,7 @@ package domain.gateway.remote
 import domain.entity.Order
 
 
-interface IRemoteOrderGateway {
+interface IOrderRemoteGateway {
 
     suspend fun getCurrentOrders(restaurantId: String): List<Order>?
     suspend fun getOrdersHistory(restaurantId: String): List<Order>

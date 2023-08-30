@@ -5,7 +5,7 @@ import data.remote.mapper.toOrderEntity
 import data.remote.model.BaseResponse
 import data.remote.model.OrderDto
 import domain.entity.Order
-import domain.gateway.remote.IRemoteOrderGateway
+import domain.gateway.remote.IOrderRemoteGateway
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.websocket.ws
 import io.ktor.client.request.forms.submitForm
@@ -15,7 +15,7 @@ import io.ktor.http.Parameters
 import kotlinx.atomicfu.TraceBase.None.append
 
 
-class RemoteOrderGateway(client: HttpClient) : IRemoteOrderGateway,
+class OrderRemoteGateway(client: HttpClient) : IOrderRemoteGateway,
     BaseRemoteGateway(client = client) {
 
     override suspend fun getCurrentOrders(restaurantId: String): List<Order>? {

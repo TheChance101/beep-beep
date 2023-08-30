@@ -11,7 +11,7 @@ import org.koin.core.scope.Scope
 fun Scope.intercept(client: HttpClient) {
     client.plugin(HttpSend).intercept { request ->
         val localConfigurationGateway = get<LocalConfigurationGateway>()
-        val remoteIdentityGateway = get<RemoteIdentityGateway>()
+        val remoteIdentityGateway = get<IdentityRemoteGateway>()
         val accessToken = localConfigurationGateway.getAccessToken()
         val refreshToken = localConfigurationGateway.getRefreshToken()
         request.headers {
