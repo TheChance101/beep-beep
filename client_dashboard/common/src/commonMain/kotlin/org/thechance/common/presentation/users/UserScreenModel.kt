@@ -23,7 +23,7 @@ class UserScreenModel(
             {
                 getUsers(
                     byPermissions = state.value.filter.permissions.toEntity(),
-                    byCountries = state.value.filter.countries.map { it.name },
+                    byCountries = state.value.filter.countries.filter { it.selected }.map { it.name },
                     page = state.value.currentPage,
                     numberOfUsers = state.value.specifiedUsers
                 )
@@ -205,7 +205,7 @@ class UserScreenModel(
                 searchUsers(
                     query = state.value.search,
                     byPermissions = state.value.filter.permissions.toEntity(),
-                    byCountries = state.value.filter.countries.map { it.name },
+                    byCountries = state.value.filter.countries.filter { it.selected }.map { it.name },
                     page = state.value.currentPage,
                     numberOfUsers = state.value.specifiedUsers
                 )
