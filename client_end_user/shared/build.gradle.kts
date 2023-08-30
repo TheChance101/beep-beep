@@ -1,4 +1,6 @@
 @file:Suppress("DSL_SCOPE_VIOLATION")
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -7,7 +9,10 @@ plugins {
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kotlinKsp)
     id("io.realm.kotlin") version "1.10.0"
+    id("com.codingfeline.buildkonfig") version "0.14.0"
 }
+
+val url : String = gradleLocalProperties(rootDir).getProperty("API_GATEWAY_URL")
 
 group = "org.thechance"
 version = "1.0-SNAPSHOT"
@@ -99,5 +104,12 @@ android {
     }
     kotlin {
         jvmToolchain(libs.versions.jvmToolchain.get().toInt())
+    }
+}
+
+buildkonfig {
+    packageName = "generated"
+    defaultConfigs {
+        buildConfigField(STRING, "API_GATEWAY_URL", url)
     }
 }
