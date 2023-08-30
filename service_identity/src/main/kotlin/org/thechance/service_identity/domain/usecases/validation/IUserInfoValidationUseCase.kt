@@ -6,19 +6,9 @@ import org.thechance.service_identity.domain.util.*
 
 interface IUserInfoValidationUseCase {
 
-    fun validateUserInformation(
-        fullName: String,
-        username: String,
-        password: String,
-        email: String
-    )
+    fun validateUserInformation(fullName: String, username: String, password: String, email: String)
 
-    fun validateUpdateUserInformation(
-        fullName: String?,
-        username: String?,
-        password: String?,
-        email: String?
-    )
+    fun validateUpdateUserInformation(fullName: String?, username: String?, password: String?, email: String?)
 
     fun validateUsernameIsNotEmpty(username: String): Boolean
 
@@ -34,13 +24,10 @@ interface IUserInfoValidationUseCase {
 }
 
 @Single
-class UserInfoValidationUseCase() : IUserInfoValidationUseCase {
+class UserInfoValidationUseCase : IUserInfoValidationUseCase {
 
     override fun validateUserInformation(
-        fullName: String,
-        username: String,
-        password: String,
-        email: String
+        fullName: String, username: String, password: String, email: String
     ) {
         val reasons = mutableListOf<String>()
 
@@ -74,10 +61,7 @@ class UserInfoValidationUseCase() : IUserInfoValidationUseCase {
     }
 
     override fun validateUpdateUserInformation(
-        fullName: String?,
-        username: String?,
-        password: String?,
-        email: String?
+        fullName: String?, username: String?, password: String?, email: String?
     ) {
         val reasons = mutableListOf<String>()
 
