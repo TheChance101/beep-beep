@@ -4,11 +4,13 @@ import kotlinx.coroutines.flow.update
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.usecase.IGetUsersUseCase
+import org.thechance.common.domain.usecase.ISearchUsersUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
 class UserScreenModel(
     private val getUsers: IGetUsersUseCase,
+    private val searchUsers: ISearchUsersUseCase
 ) : BaseScreenModel<UserScreenUiState, UserUiEffect>(UserScreenUiState()),
     UserScreenInteractionListener {
 
@@ -18,7 +20,14 @@ class UserScreenModel(
 
     private fun getUsers() {
         tryToExecute(
-            { getUsers(state.value.search, state.value.currentPage, state.value.specifiedUsers) },
+            {
+                getUsers(
+                    byPermissions = state.value.filter.permissions.toEntity(),
+                    byCountries = state.value.filter.countries.map { it.name },
+                    page = state.value.currentPage,
+                    numberOfUsers = state.value.specifiedUsers
+                )
+            },
             ::onGetUsersSuccessfully,
             ::onError
         )
@@ -127,7 +136,6 @@ class UserScreenModel(
         permissionUiState: UserScreenUiState.PermissionUiState
     ): List<UserScreenUiState.PermissionUiState> {
         return if (permissions.contains(permissionUiState)) {
-            if (permissionUiState == UserScreenUiState.PermissionUiState.END_USER) return permissions
             permissions.filterNot { it == permissionUiState }
         } else {
             permissions.plus(permissionUiState)
@@ -172,7 +180,6 @@ class UserScreenModel(
                 filter = it.filter.copy(permissions = permissions)
             )
         }
-        getUsers() // TODO: Update users with filter by permission
     }
 
     override fun onFilterMenuCountryClick(country: UserScreenUiState.CountryUiState) {
@@ -183,12 +190,26 @@ class UserScreenModel(
             }
             uiState.copy(filter = uiState.filter.copy(countries = updatedCountries))
         }
-        getUsers() // TODO : Update users with filter by country
+    }
+
+    override fun onFilterSaved() {
+        hideFilterMenu().also {
+            if (state.value.search.isNotEmpty()) searchUsers()
+            else getUsers()
+        }
     }
 
     private fun searchUsers() {
         tryToExecute(
-            { getUsers(state.value.search, state.value.currentPage, state.value.specifiedUsers) },
+            {
+                searchUsers(
+                    query = state.value.search,
+                    byPermissions = state.value.filter.permissions.toEntity(),
+                    byCountries = state.value.filter.countries.map { it.name },
+                    page = state.value.currentPage,
+                    numberOfUsers = state.value.specifiedUsers
+                )
+            },
             ::onSearchUsersSuccessfully,
             ::onError
         )
