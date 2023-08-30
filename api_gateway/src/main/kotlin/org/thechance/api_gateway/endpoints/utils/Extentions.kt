@@ -8,7 +8,6 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.util.pipeline.*
-import org.thechance.api_gateway.util.Role
 
 suspend inline fun <reified T> PipelineContext<Unit, ApplicationCall>.respondWithResult(
     statusCode: HttpStatusCode,
@@ -59,19 +58,4 @@ fun Route.authenticateWithRole(role: Int, block: Route.() -> Unit) {
 
 private fun hasPermission(permission: Int, role: Int): Boolean {
     return (permission and role) == role
-}
-
-fun main() {
-    val token = 21
-    val roles = listOf(
-        Role.END_USER, // true
-        Role.DASHBOARD_ADMIN, // false
-        Role.RESTAURANT_OWNER, // true
-        Role.TAXI_DRIVER, // false
-        Role.SUPPORT, // true
-        Role.DELIVERY // false
-    )
-    for (role in roles) {
-        println(hasPermission(token, role))
-    }
 }
