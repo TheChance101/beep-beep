@@ -13,7 +13,7 @@ interface IRemoteGateway {
 
     suspend fun createTaxi(taxi: NewTaxiInfo): Taxi
 
-    suspend fun findTaxisByUsername(username: String, page: Int, numberOfTaxis:Int): DataWrapper<Taxi>
+    suspend fun findTaxisByUsername(username: String, page: Int, numberOfTaxis: Int): DataWrapper<Taxi>
 
     suspend fun filterTaxis(taxi: TaxiFiltration, page: Int, numberOfTaxis: Int): DataWrapper<Taxi>
 
@@ -37,5 +37,7 @@ interface IRemoteGateway {
     suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant
 
     suspend fun getCurrentLocation(): Location
+
+    suspend fun searchUsers(query: String, page: Int, numberOfUsers: Int): DataWrapper<User>
 
 }

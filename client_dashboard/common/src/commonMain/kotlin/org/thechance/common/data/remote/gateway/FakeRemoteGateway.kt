@@ -15,7 +15,8 @@ import org.thechance.common.domain.getway.IRemoteGateway
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.*
+import kotlin.math.ceil
+import kotlin.math.floor
 
 class FakeRemoteGateway(
     private val localGateway: LocalGateway
@@ -928,6 +929,18 @@ class FakeRemoteGateway(
 
     override suspend fun getCurrentLocation(): Location {
         return Location(location = "30.044420,31.235712")
+    }
+
+    override suspend fun searchUsers(query: String, page: Int, numberOfUsers: Int): DataWrapper<User> {
+        getUsers(page, numberOfUsers).result.filter {
+            it.fullName.startsWith(query, true) || it.username.startsWith(query, true)
+        }.let {
+            return DataWrapper(
+                totalPages = it.size / numberOfUsers,
+                result = it,
+                numberOfResult = it.size
+            )
+        }
     }
 
     private fun createTaxiPDFReport(): File {
