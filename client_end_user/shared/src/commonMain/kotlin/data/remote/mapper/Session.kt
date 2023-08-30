@@ -1,9 +1,9 @@
-package data.local.mapper
+package data.remote.mapper
 
 import data.remote.model.SessionDto
 import domain.entity.Session
 
-fun SessionDto.toEntity() = Session(
+fun SessionDto.toTokenEntity() = Session(
     accessToken = accessToken,
     refreshToken = refreshToken,
     accessTokenExpirationDate = accessTokenExpirationDate,

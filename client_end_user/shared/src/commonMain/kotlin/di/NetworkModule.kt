@@ -1,6 +1,5 @@
 package di
 
-import generated.BuildKonfig
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -25,7 +24,7 @@ val networkModule = module {
 
             defaultRequest {
                 header("Content-Type", "application/json")
-                url(BuildKonfig.API_GATEWAY_URL)
+                url("http://127.0.0.1:8080")
             }
 
             install(ContentNegotiation) {

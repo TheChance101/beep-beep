@@ -11,7 +11,7 @@ data class BaseResponse<T>(
 
 @Serializable
 data class ResponseStatus(
-    val errorMessages: List<Map<Int, String>>? = null,
+    val errorMessages: Map<String, String>? = null,
     val successMessage: String? = null,
     val code: Int?
 )

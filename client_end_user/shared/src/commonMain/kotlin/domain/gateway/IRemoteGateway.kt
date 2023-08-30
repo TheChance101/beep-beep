@@ -1,7 +1,7 @@
 package domain.gateway
 
 
-import domain.entity.UserTokens
+import domain.entity.Session
 
 interface IRemoteGateway {
 
@@ -10,11 +10,8 @@ interface IRemoteGateway {
         username: String,
         password: String,
         email: String
-    ) : Boolean
+    ): Boolean
 
-    suspend fun loginUser(
-        userName: String,
-        password: String,
-    ): UserTokens
+    suspend fun loginUser(username: String, password: String): Session
 
 }

@@ -44,7 +44,9 @@ class LoginScreen :
         effect: LoginScreenUIEffect,
         navigator: Navigator,
     ) {
-
+        when(effect){
+            is LoginScreenUIEffect.Login -> println("Login Successfully")
+        }
     }
 
     @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
@@ -66,7 +68,7 @@ class LoginScreen :
             ) {
                 BpTextField(
                     modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
-                    text = state.userName,
+                    text = state.username,
                     onValueChange = listener::onUsernameChanged,
                     label = Resources.strings.usernameLabel,
                     keyboardType = KeyboardType.Text,
@@ -96,7 +98,7 @@ class LoginScreen :
                     title = Resources.strings.login,
                     onClick = {
                         listener.onClickLogin(
-                            username = state.userName,
+                            username = state.username,
                             password = state.password,
                             keepLoggedIn = state.keepLoggedIn
                         )
