@@ -1,5 +1,6 @@
 package org.thechance.common.presentation.users
 
+import kotlinx.coroutines.Job
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.usecase.IGetUsersUseCase
@@ -10,6 +11,8 @@ import org.thechance.common.presentation.util.ErrorState
 class UserScreenModel(
     private val getUsers: IGetUsersUseCase, private val searchUsers: ISearchUsersUseCase
 ) : BaseScreenModel<UserScreenUiState, UserUiEffect>(UserScreenUiState()), UserScreenInteractionListener {
+
+    private var searchJob: Job? = null
 
     init {
         getUsers()
@@ -81,7 +84,16 @@ class UserScreenModel(
 
     // region Search Bar
     override fun onSearchInputChange(text: String) {
-        updateState { it.copy(search = text) }.also { searchUsers() }
+        updateState { it.copy(search = text) }.also {
+            searchJob?.cancel()
+            searchJob = launchSearchJob()
+        }
+    }
+
+    private fun launchSearchJob(): Job {
+        return launchDelayed(300L) {
+            if (state.value.search.isNotEmpty()) searchUsers() else getUsers()
+        }
     }
 
     private fun onSearchUsersSuccessfully(users: DataWrapper<User>) {
