@@ -15,7 +15,8 @@ import org.thechance.common.domain.getway.IRemoteGateway
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.*
+import kotlin.math.ceil
+import kotlin.math.floor
 
 class FakeRemoteGateway(
     private val localGateway: LocalGateway
