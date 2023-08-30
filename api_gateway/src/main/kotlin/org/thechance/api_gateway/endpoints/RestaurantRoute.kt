@@ -75,9 +75,7 @@ fun Route.restaurantRoutes() {
             val tokenClaim = call.principal<JWTPrincipal>()
             val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
             val (language, countryCode) = extractLocalizationHeader()
-            val params = call.receiveParameters()
             val restaurant = call.receive<RestaurantResource>()
-
 
             val updatedRestaurant = restaurantGateway.updateRestaurantForAdmin(
                 restaurant, permissions, Locale(language, countryCode)
@@ -85,7 +83,7 @@ fun Route.restaurantRoutes() {
             respondWithResult(HttpStatusCode.OK, updatedRestaurant.toRestaurant())
         }
 
-        put {
+        put("/details") {
             val tokenClaim = call.principal<JWTPrincipal>()
             val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
             val (language, countryCode) = extractLocalizationHeader()
