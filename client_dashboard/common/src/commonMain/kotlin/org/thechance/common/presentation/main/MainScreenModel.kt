@@ -18,6 +18,7 @@ class MainScreenModel(
 
     init {
         getUserInfo()
+        getCurrentThemeMode()
     }
 
     private fun getUserInfo() {
@@ -41,6 +42,14 @@ class MainScreenModel(
         coroutineScope.launch(Dispatchers.IO) {
             mutableState.update { it.copy(isDarkMode = !it.isDarkMode) }
             themeManagement.switchTheme(mutableState.value.isDarkMode)
+        }
+    }
+
+    private fun getCurrentThemeMode() {
+        coroutineScope.launch(Dispatchers.IO) {
+            themeManagement.getThemeMode().collect { isDarkMode ->
+                mutableState.update { it.copy(isDarkMode = isDarkMode) }
+            }
         }
     }
 

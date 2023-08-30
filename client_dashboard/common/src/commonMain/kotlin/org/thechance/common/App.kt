@@ -9,7 +9,7 @@ import cafe.adriel.voyager.transitions.SlideTransition
 import com.beepbeep.designSystem.ui.theme.BpTheme
 import org.koin.java.KoinJavaComponent.inject
 import org.thechance.common.presentation.app.AppScreenModel
-import org.thechance.common.presentation.main.MainContainer
+import org.thechance.common.presentation.login.LoginScreen
 import org.thechance.common.presentation.resources.ProvideResources
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -20,7 +20,7 @@ fun App() {
     val themeMode by appScreenModel.state.collectAsState()
     BpTheme(useDarkTheme = themeMode) {
         ProvideResources(isSystemInDarkTheme = themeMode) {
-            Navigator(MainContainer) {
+            Navigator(LoginScreen()) {
                 SlideTransition(it)
             }
         }
