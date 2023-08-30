@@ -217,6 +217,10 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         ).isUpdatedSuccessfully()
     }
 
+    override suspend fun getNumberOfUsers(): Long {
+        return dataBaseContainer.userCollection.countDocuments()
+    }
+
     override suspend fun getUserByUsername(username: String): UserManagement {
         return dataBaseContainer.userCollection.findOne(
             UserCollection::username eq username,

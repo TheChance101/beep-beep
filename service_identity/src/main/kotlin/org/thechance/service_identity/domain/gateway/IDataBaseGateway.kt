@@ -40,6 +40,8 @@ interface IDataBaseGateway {
 
     suspend fun deleteUser(id: String): Boolean
 
+    suspend fun getNumberOfUsers():Long
+
     // endregion: user
 
     // region token
