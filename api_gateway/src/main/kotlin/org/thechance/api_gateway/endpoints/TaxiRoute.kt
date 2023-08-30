@@ -19,6 +19,7 @@ import org.thechance.api_gateway.data.mappers.toTaxi
 import org.thechance.api_gateway.data.model.TaxiResource
 
 import org.thechance.api_gateway.endpoints.gateway.ITaxiGateway
+import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
 import org.thechance.api_gateway.endpoints.utils.respondWithResult
 import java.util.Locale
@@ -26,14 +27,11 @@ import java.util.Locale
 fun Route.taxiRoutes() {
     val taxiGateway: ITaxiGateway by inject()
     val localizedMessagesFactory by inject<LocalizedMessagesFactory>()
+
     route("/taxi") {
 
-        authenticate("auth-jwt") {
+        authenticateWithRole(Role.TAXI_DRIVER) {
             get {
-                val tokenClaim = call.principal<JWTPrincipal>()
-                val permissions =
-                    tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java)
-                        ?: emptyList()
                 val (language, countryCode) = extractLocalizationHeader()
                 val page = call.parameters["page"]?.toInt() ?: 1
                 val limit = call.parameters["limit"]?.toInt() ?: 20
@@ -74,25 +72,17 @@ fun Route.taxiRoutes() {
                 respondWithResult(HttpStatusCode.OK, result.toTaxi(), successMessage)
             }
 
-            get("/{taxiId}"){
-                val tokenClaim = call.principal<JWTPrincipal>()
-                val permissions =
-                    tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java)
-                        ?: emptyList()
+            get("/{taxiId}") {
                 val id = call.parameters["taxiId"] ?: ""
                 val (language, countryCode) = extractLocalizationHeader()
                 val local = Locale(language, countryCode)
-                val result = taxiGateway.getTaxiById(id, permissions, local)
+                val result = taxiGateway.getTaxiById(id, local)
 
                 respondWithResult(HttpStatusCode.OK, result.toTaxi())
             }
 
 
-            delete("/{taxiId}"){
-                val tokenClaim = call.principal<JWTPrincipal>()
-                val permissions =
-                    tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java)
-                        ?: emptyList()
+            delete("/{taxiId}") {
                 val (language, countryCode) = extractLocalizationHeader()
                 val params = call.receiveParameters()
                 val local = Locale(language, countryCode)

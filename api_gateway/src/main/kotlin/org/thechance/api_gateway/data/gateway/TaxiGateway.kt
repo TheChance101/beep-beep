@@ -11,9 +11,14 @@ import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import io.ktor.util.*
+import org.koin.core.annotation.Single
+import org.thechance.api_gateway.data.model.TaxiResource
 import kotlinx.serialization.json.Json
 import okhttp3.internal.platform.Jdk9Platform.Companion.isAvailable
 import org.thechance.api_gateway.data.utils.ErrorHandler
+import org.thechance.api_gateway.endpoints.gateway.ITaxiGateway
+import org.thechance.api_gateway.util.APIs
+import java.util.*
 
 @Single(binds = [ITaxiGateway::class])
 class TaxiGateway(
@@ -36,6 +41,7 @@ class TaxiGateway(
             )
         }
 
+    override suspend fun getAllTaxi(locale: Locale, page: Int, limit: Int): List<TaxiResource> {
         return tryToExecute(
             api = APIs.TAXI_API,
             setErrorMessage = { errorCodes ->

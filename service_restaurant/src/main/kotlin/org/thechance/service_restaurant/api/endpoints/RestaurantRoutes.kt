@@ -6,6 +6,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
+import org.thechance.service_restaurant.api.models.BasePaginationResponseDto
 import org.thechance.service_restaurant.api.models.RestaurantDto
 import org.thechance.service_restaurant.api.models.mappers.toDetailsDto
 import org.thechance.service_restaurant.api.models.mappers.toDto
@@ -31,7 +32,8 @@ fun Route.restaurantRoutes() {
             val page = call.parameters.extractInt("page") ?: 1
             val limit = call.parameters.extractInt("limit") ?: 10
             val restaurants = discoverRestaurant.getRestaurants(page, limit).toDto()
-            call.respond(HttpStatusCode.OK, restaurants)
+            val total = controlRestaurant.getTotalNumberOfRestaurant()
+            call.respond(HttpStatusCode.OK, BasePaginationResponseDto<RestaurantDto>(restaurants, total))
         }
 
         get("/{ownerId}") {
