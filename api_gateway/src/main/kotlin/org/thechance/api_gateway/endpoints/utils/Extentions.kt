@@ -2,7 +2,11 @@ package org.thechance.api_gateway.endpoints.utils
 
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.response.*
+import io.ktor.server.routing.*
+import io.ktor.server.websocket.*
 import io.ktor.util.pipeline.*
 
 suspend inline fun <reified T> PipelineContext<Unit, ApplicationCall>.respondWithResult(
@@ -26,4 +30,32 @@ fun PipelineContext<Unit, ApplicationCall>.extractLocalizationHeader(): Pair<Str
     val language = headers["Accept-Language"]?.trim()
     val countryCode = headers["Country-Code"]?.trim()
     return Pair(language, countryCode)
+}
+
+fun WebSocketServerSession.extractLocalizationHeaderFromWebSocket(): Pair<String?, String?> {
+    val headers = call.request.headers
+    val language = headers["Accept-Language"]?.trim()
+    val countryCode = headers["Country-Code"]?.trim()
+    return Pair(language, countryCode)
+}
+
+private fun PipelineContext<Unit, ApplicationCall>.extractPermission(): Int {
+    val principal = call.principal<JWTPrincipal>()
+    return principal?.getClaim("permission", Int::class) ?: -1
+}
+
+fun Route.authenticateWithRole(role: Int, block: Route.() -> Unit) {
+    authenticate("auth-jwt", "refresh-jwt") {
+        intercept(ApplicationCallPipeline.Call) {
+            val permission = extractPermission()
+            if (!hasPermission(permission, role)) {
+                call.respond(HttpStatusCode.Unauthorized)
+            }
+        }
+        block()
+    }
+}
+
+private fun hasPermission(permission: Int, role: Int): Boolean {
+    return (permission and role) == role
 }

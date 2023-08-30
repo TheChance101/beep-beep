@@ -1,5 +1,7 @@
 package org.thechance.service_identity.domain.entity
 
+import org.thechance.service_identity.domain.util.Role
+
 data class User(
     val id: String,
     val fullName: String,
@@ -7,5 +9,5 @@ data class User(
     val email: String,
     val walletBalance: Double,
     val addresses: List<Address> = emptyList(),
-    val permissions: List<Permission> = emptyList()
+    val permission: Int = Role.END_USER
 )

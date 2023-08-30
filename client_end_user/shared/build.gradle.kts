@@ -5,12 +5,15 @@ plugins {
     alias(libs.plugins.kotlin.native.cocoapods)
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.compose)
+    alias(libs.plugins.kotlinKsp)
+    id("io.realm.kotlin") version "1.10.0"
 }
 
-tasks.register("prepareKotlinBuildScriptModel"){}
+group = "org.thechance"
+version = "1.0-SNAPSHOT"
 
 kotlin {
-    androidTarget()
+    android()
 
     iosX64()
     iosArm64()
@@ -26,8 +29,7 @@ kotlin {
             baseName = "shared"
             isStatic = true
         }
-        extraSpecAttributes["resources"] =
-            "['src/commonMain/resources/**', 'src/iosMain/resources/**','../../design_system/shared/src/commonMain/resources/**']"
+        extraSpecAttributes["resources"] = "['src/commonMain/resources/**', 'src/iosMain/resources/**','../../design_system/shared/src/commonMain/resources/**']"
     }
 
     sourceSets {
@@ -36,22 +38,27 @@ kotlin {
                 implementation(libs.compose.runtime)
                 implementation(libs.compose.foundation)
                 implementation(libs.compose.material3)
+                api(libs.compose.image.loader)
+
                 implementation(libs.compose.components.resources)
-                implementation(libs.koin.core)
-                implementation(libs.koin.test)
-                implementation(libs.voyager.navigator)
-                implementation(libs.voyager.bottomsheet.navigator)
-                implementation(libs.voyager.tab.navigator)
-                implementation(libs.voyager.transitions)
-                implementation(libs.google.accompanist)
-                implementation(libs.voyager.koin)
-                implementation(libs.ktor.client.core)
-                implementation(libs.ktor.client.cio)
-                implementation(libs.google.code.gson)
+                api(libs.compose.image.loader)
+                implementation(libs.kotlinx.datetime)
+
+                implementation(libs.bundles.voyager)
+                implementation(libs.kotlin.coroutines)
+                api(libs.koin.core)
+                implementation(libs.koin.annotations)
+                implementation(libs.koin.compose)
                 implementation(project(":design_system:shared"))
-                implementation(libs.ktor.logging)
-                implementation(libs.ktor.content.negotiation)
+                //realm db
+                implementation(libs.realm.library.base)
+                //ktor-client
+                implementation(libs.ktor.client.core)
                 implementation(libs.ktor.json.serialization)
+                implementation(libs.ktor.content.negotiation)
+                implementation(libs.ktor.logging)
+                implementation(libs.ktor.client.cio)
+                implementation(libs.ktor.serialization)
             }
         }
         val androidMain by getting {
