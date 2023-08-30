@@ -3,15 +3,6 @@ package org.thechance.service_identity.domain.gateway
 import org.thechance.service_identity.domain.entity.*
 
 interface IDataBaseGateway {
-    // region: Permission
-    suspend fun getPermission(permissionId: Int): Permission
-    suspend fun addPermission(permission: Permission): Boolean
-    suspend fun updatePermission(permissionId: Int, permission: String?): Boolean
-
-    suspend fun deletePermission(permissionId: Int): Boolean
-    suspend fun getListOfPermission(): List<Permission>
-
-    // endregion: Permission
 
     //region address
 
@@ -52,11 +43,9 @@ interface IDataBaseGateway {
 
     // region: user permission management
 
-    suspend fun addPermissionToUser(userId: String, permissionId: Int): Boolean
+    suspend fun updatePermissionToUser(userId: String, permission: Int): Boolean
 
-    suspend fun removePermissionFromUser(userId: String, permissionId: Int): Boolean
-
-    suspend fun getUserPermissions(userId: String): List<Permission>
+    suspend fun getUserPermission(userId: String): Int
 
     // endregion: user permission management
     suspend fun subtractFromWallet(userId: String, amount: Double): Boolean

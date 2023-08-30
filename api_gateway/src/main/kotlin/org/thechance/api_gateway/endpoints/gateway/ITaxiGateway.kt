@@ -5,9 +5,9 @@ import java.util.Locale
 
 interface ITaxiGateway {
 
-    suspend fun getAllTaxi(permissions: List<Int>, locale: Locale,page: Int, limit: Int): List<TaxiResource>
+    suspend fun getAllTaxi(locale: Locale,page: Int, limit: Int): List<TaxiResource>
 
-    suspend fun getTaxiById(id: String, permissions: List<Int>, locale: Locale): TaxiResource
+    suspend fun getTaxiById(id: String, locale: Locale): TaxiResource
 
     suspend fun createTaxi(
         plateNumber: String,
@@ -16,7 +16,6 @@ interface ITaxiGateway {
         driverId: String,
         seats: Int,
         isAvailable: Boolean,
-        permissions: List<Int>,
         locale: Locale
     ): TaxiResource
 
@@ -29,10 +28,9 @@ interface ITaxiGateway {
         driverId: String,
         seats: Int,
         isAvailable: Boolean,
-        permissions: List<Int>,
         locale: Locale
     ): TaxiResource
 
 
-    suspend fun deleteTaxi(id: String, permissions: List<Int>, locale: Locale): TaxiResource
+    suspend fun deleteTaxi(id: String, locale: Locale): TaxiResource
 }
