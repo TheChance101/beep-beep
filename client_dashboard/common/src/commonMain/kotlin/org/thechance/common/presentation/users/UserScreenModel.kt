@@ -4,13 +4,11 @@ import kotlinx.coroutines.flow.update
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.usecase.IGetUsersUseCase
-import org.thechance.common.domain.usecase.ISearchUsersUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
 class UserScreenModel(
     private val getUsers: IGetUsersUseCase,
-    private val searchUsers: ISearchUsersUseCase
 ) : BaseScreenModel<UserScreenUiState, UserUiEffect>(UserScreenUiState()),
     UserScreenInteractionListener {
 
@@ -20,7 +18,7 @@ class UserScreenModel(
 
     private fun getUsers() {
         tryToExecute(
-            { getUsers(state.value.currentPage, state.value.specifiedUsers) },
+            { getUsers(state.value.search, state.value.currentPage, state.value.specifiedUsers) },
             ::onGetUsersSuccessfully,
             ::onError
         )
@@ -190,7 +188,7 @@ class UserScreenModel(
 
     private fun searchUsers() {
         tryToExecute(
-            { searchUsers(state.value.search, state.value.currentPage, state.value.specifiedUsers) },
+            { getUsers(state.value.search, state.value.currentPage, state.value.specifiedUsers) },
             ::onSearchUsersSuccessfully,
             ::onError
         )

@@ -10,10 +10,8 @@ interface ISearchUsersUseCase {
 
 class SearchUsersUseCase(
     private val remoteGateway: IRemoteGateway,
-    private val getAllUsers: IGetUsersUseCase
 ) : ISearchUsersUseCase {
     override suspend fun invoke(query: String, page: Int, numberOfUsers: Int): DataWrapper<User> {
-        return if (query.isEmpty()) getAllUsers(page, numberOfUsers)
-        else remoteGateway.searchUsers(query, page, numberOfUsers)
+        return remoteGateway.searchUsers(query, page, numberOfUsers)
     }
 }
