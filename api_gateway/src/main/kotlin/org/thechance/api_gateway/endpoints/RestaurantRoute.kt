@@ -11,29 +11,27 @@ import io.ktor.server.websocket.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.mappers.toMeal
 import org.thechance.api_gateway.data.mappers.toRestaurant
+import org.thechance.api_gateway.data.model.restaurant.RestaurantResource
 import org.thechance.api_gateway.endpoints.gateway.IRestaurantGateway
-import org.thechance.api_gateway.endpoints.model.Order
 import org.thechance.api_gateway.endpoints.utils.*
+import org.thechance.api_gateway.util.Role
 import java.util.*
 
 fun Route.restaurantRoutes() {
 
     val restaurantGateway: IRestaurantGateway by inject()
-    val webSocketServerHandler : WebSocketServerHandler by inject()
+    val webSocketServerHandler: WebSocketServerHandler by inject()
 
     route("/restaurants") {
 
-        authenticate("auth-jwt") {
+        authenticateWithRole(Role.RESTAURANT_OWNER) {
             get {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val ownerId = tokenClaim?.payload?.subject?.trim().toString()
-                val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java)
-                    ?: emptyList()
                 val (language, countryCode) = extractLocalizationHeader()
                 val result = restaurantGateway.getRestaurantsByOwnerId(
                     ownerId = ownerId,
-                    locale = Locale(language, countryCode),
-                    permissions = permissions
+                    locale = Locale(language, countryCode)
                 )
                 respondWithResult(HttpStatusCode.OK, result)
             }
@@ -49,7 +47,7 @@ fun Route.restaurantRoutes() {
             respondWithResult(HttpStatusCode.OK, restaurants.toRestaurant())
         }
 
-        get("/{id}/meals"){
+        get("/{id}/meals") {
             val (language, countryCode) = extractLocalizationHeader()
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 20
@@ -67,43 +65,67 @@ fun Route.restaurantRoutes() {
         get("/{id}") {
             val (language, countryCode) = extractLocalizationHeader()
             val restaurantId = call.parameters["id"]?.trim().toString()
-            val restaurant = restaurantGateway.getRestaurantInfo(locale = Locale(language, countryCode), restaurantId = restaurantId)
-            respondWithResult(HttpStatusCode.OK, restaurant.toRestaurant())
+            val restaurant = restaurantGateway.getRestaurantInfo(
+                locale = Locale(language, countryCode), restaurantId = restaurantId
+            )
+            respondWithResult(HttpStatusCode.OK, restaurant)
         }
 
+        put {
+            val tokenClaim = call.principal<JWTPrincipal>()
+            val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
+            val (language, countryCode) = extractLocalizationHeader()
+            val params = call.receiveParameters()
+            val restaurant = call.receive<RestaurantResource>()
 
-        authenticate("auth-jwt", "refresh-jwt") {
+
+            val updatedRestaurant = restaurantGateway.updateRestaurantForAdmin(
+                restaurant, permissions, Locale(language, countryCode)
+            )
+            respondWithResult(HttpStatusCode.OK, updatedRestaurant.toRestaurant())
+        }
+
+        put {
+            val tokenClaim = call.principal<JWTPrincipal>()
+            val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
+            val (language, countryCode) = extractLocalizationHeader()
+            val restaurant = call.receive<RestaurantResource>()
+
+            val updatedRestaurant = restaurantGateway.updateRestaurant(
+                Locale(language, countryCode),
+                restaurant,
+                permissions,
+            )
+            respondWithResult(HttpStatusCode.OK, updatedRestaurant.toRestaurant())
+        }
+
+        authenticateWithRole(Role.RESTAURANT_OWNER) {
 
             route("/orders") {
 
                 webSocket("/{restaurantId}") {
                     val restaurantId = call.parameters["restaurantId"]?.trim().orEmpty()
-                    val permissions = extractPermissionsFromWebSocket()
                     val (language, countryCode) = extractLocalizationHeaderFromWebSocket()
-                    val orders = restaurantGateway.restaurantOrders(permissions, restaurantId, Locale(language, countryCode))
+                    val orders = restaurantGateway.restaurantOrders(restaurantId, Locale(language, countryCode))
                     webSocketServerHandler.sessions[restaurantId] = this
                     webSocketServerHandler.sessions[restaurantId]?.let { webSocketServerHandler.tryToCollectFormWebSocket(orders, it) }
                 }
 
                 get("/{restaurantId}") {
                     val restaurantId = call.parameters["restaurantId"]?.trim().orEmpty()
-                    val permissions = extractPermissions()
                     val (language, countryCode) = extractLocalizationHeader()
-                    val result = restaurantGateway.getActiveOrders(permissions, restaurantId, Locale(language, countryCode))
+                    val result = restaurantGateway.getActiveOrders(restaurantId, Locale(language, countryCode))
                     respondWithResult(HttpStatusCode.OK, result)
                 }
 
 
                 get("/history/{id}") {
-                    val tokenClaim = call.principal<JWTPrincipal>()
-                    val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
                     val id = call.parameters["id"]?.trim().toString()
                     val page = call.parameters["page"]?.trim()?.toInt() ?: 1
                     val limit = call.parameters["limit"]?.trim()?.toInt() ?: 10
                     val (language, countryCode) = extractLocalizationHeader()
                     val result = restaurantGateway.getOrdersHistory(
                         restaurantId = id,
-                        permissions = permissions,
                         page = page,
                         limit = limit,
                         locale = Locale(language, countryCode)
@@ -112,31 +134,21 @@ fun Route.restaurantRoutes() {
                 }
 
                 put("/{id}/status") {
-                    val tokenClaim = call.principal<JWTPrincipal>()
-                    val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
                     val id = call.parameters["id"]?.trim().toString()
                     val params = call.receiveParameters()
                     val status = params["status"]?.trim()?.toInt() ?: 0
                     val (language, countryCode) = extractLocalizationHeader()
-                    val result = restaurantGateway.updateOrderStatus(
-                        orderId = id, permissions = permissions, status = status, locale = Locale(language, countryCode)
-                    )
+                    val result = restaurantGateway.updateOrderStatus(id, status, Locale(language, countryCode))
                     respondWithResult(HttpStatusCode.OK, result)
                 }
-                
+
                 delete("/{restaurantId}") {
-                val tokenClaim = call.principal<JWTPrincipal>()
-                val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java)
-                    ?: emptyList()
-                val restaurantId = call.parameters["restaurantId"]?.trim().toString()
-                val (language, countryCode) = extractLocalizationHeader()
-                val result = restaurantGateway.deleteRestaurant(
-                    restaurantId = restaurantId,
-                    permissions = permissions,
-                    locale = Locale(language, countryCode),
-                )
-                respondWithResult(HttpStatusCode.OK, result)
+                    val restaurantId = call.parameters["restaurantId"]?.trim().toString()
+                    val (language, countryCode) = extractLocalizationHeader()
+                    val result = restaurantGateway.deleteRestaurant(restaurantId, Locale(language, countryCode))
+                    respondWithResult(HttpStatusCode.OK, result)
                 }
+            }
         }
     }
 }

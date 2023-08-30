@@ -10,10 +10,6 @@ import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
-import presentation.meals.state.CuisineUIState
-import presentation.meals.state.MealsScreenUIState
-import presentation.meals.state.toUIState
-
 class MealsScreenModel(
     private val restaurantId: String,
     private val mangeCousin: IMangeCuisineUseCase,
@@ -57,13 +53,14 @@ class MealsScreenModel(
 
     private fun onGetCuisineSuccessfully(cuisines: List<Cuisine>) {
         updateState {
-            it.copy(cuisines = cuisines.toUIState(), selectedCuisine = cuisines.toUIState().first())
+            it.copy(cuisines = cuisines.toCuisineUIState(), selectedCuisine = cuisines.toCuisineUIState()
+                .first())
         }
         getMeals(state.value.selectedCuisine.id)
     }
 
     private fun onGetMealSuccessfully(meals: List<Meal>) {
-        updateState { it.copy(meals = meals.toUIState(), isLoading = false) }
+        updateState { it.copy(meals = meals.toMealUIState(), isLoading = false) }
     }
 
     private fun onError(error: ErrorState) {

@@ -41,7 +41,7 @@ fun BpTextField(
     text: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    textFieldModifier: Modifier =  Modifier.fillMaxWidth().height(56.dp),
+    textFieldModifier: Modifier = Modifier.fillMaxWidth().height(56.dp),
     hint: String = "",
     keyboardType: KeyboardType = KeyboardType.Text,
     shapeRadius: Shape = RoundedCornerShape(radius.medium),
@@ -78,11 +78,9 @@ fun BpTextField(
             textStyle = typography.body.copy(colors.contentPrimary),
             singleLine = singleLine,
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-            trailingIcon = {
-                TrailingIcon(keyboardType, isError, showPassword) {
-                    showPassword = !showPassword
-                }
-            },
+            trailingIcon = if (keyboardType == KeyboardType.Password) {
+                { TrailingIcon(showPassword) { showPassword = !showPassword } }
+            } else null,
             visualTransformation = BpVisualTransformation(keyboardType, showPassword),
             isError = isError,
             colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -119,20 +117,17 @@ private fun ContainerColor(isError: Boolean, correctValidation: Boolean): Color 
 
 @Composable
 private fun TrailingIcon(
-    keyboardType: KeyboardType,
-    isError: Boolean,
     showPassword: Boolean,
     togglePasswordVisibility: () -> Unit
 ) {
-    AnimatedVisibility((keyboardType == KeyboardType.Password || keyboardType == KeyboardType.NumberPassword) && !isError) {
-        IconButton(onClick = { togglePasswordVisibility() }) {
-            Icon(
-                imageVector = if (showPassword) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility,
-                contentDescription = if (showPassword) "Show Password" else "Hide Password",
-                tint = colors.contentTertiary
-            )
-        }
+    IconButton(onClick = { togglePasswordVisibility() }) {
+        Icon(
+            imageVector = if (showPassword) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility,
+            contentDescription = if (showPassword) "Show Password" else "Hide Password",
+            tint = colors.contentTertiary
+        )
     }
+
 }
 
 @Composable
