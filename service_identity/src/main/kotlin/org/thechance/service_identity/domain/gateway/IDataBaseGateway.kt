@@ -1,6 +1,7 @@
 package org.thechance.service_identity.domain.gateway
 
 import org.thechance.service_identity.domain.entity.*
+import org.thechance.service_identity.domain.security.SaltedHash
 
 interface IDataBaseGateway {
 

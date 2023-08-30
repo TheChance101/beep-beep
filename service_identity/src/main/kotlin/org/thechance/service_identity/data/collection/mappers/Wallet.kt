@@ -1,4 +1,4 @@
-package org.thechance.service_identity.data.mappers
+package org.thechance.service_identity.data.collection.mappers
 
 import org.thechance.service_identity.data.collection.WalletCollection
 import org.thechance.service_identity.domain.entity.Wallet

@@ -1,6 +1,6 @@
 package org.thechance.service_identity.endpoints.model.mapper
 
-import org.thechance.service_identity.data.mappers.toEntity
+import org.thechance.service_identity.data.collection.mappers.toEntity
 import org.thechance.service_identity.domain.entity.Address
 import org.thechance.service_identity.endpoints.model.AddressDto
 

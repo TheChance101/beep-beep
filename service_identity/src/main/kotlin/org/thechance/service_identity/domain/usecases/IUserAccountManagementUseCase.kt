@@ -8,6 +8,8 @@ import org.thechance.service_identity.domain.usecases.validation.IUserInfoValida
 import org.thechance.service_identity.domain.usecases.validation.IWalletBalanceValidationUseCase
 import org.thechance.service_identity.domain.util.INSUFFICIENT_FUNDS
 import org.thechance.service_identity.domain.util.INVALID_CREDENTIALS
+import org.thechance.service_identity.domain.util.InsufficientFundsException
+import org.thechance.service_identity.domain.util.InvalidCredentialsException
 
 interface IUserAccountManagementUseCase {
 

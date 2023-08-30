@@ -9,20 +9,17 @@ import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
-import org.litote.kmongo.coroutine.insertOne
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.*
-import org.thechance.service_identity.data.mappers.toCollection
-import org.thechance.service_identity.data.mappers.toEntity
-import org.thechance.service_identity.data.mappers.toManagedEntity
+import org.thechance.service_identity.data.collection.mappers.toCollection
+import org.thechance.service_identity.data.collection.mappers.toEntity
+import org.thechance.service_identity.data.collection.mappers.toManagedEntity
 import org.thechance.service_identity.data.util.isUpdatedSuccessfully
 import org.thechance.service_identity.data.util.paginate
 import org.thechance.service_identity.domain.entity.*
 import org.thechance.service_identity.domain.gateway.IDataBaseGateway
-import org.thechance.service_identity.domain.util.ERROR_IN_DB
-import org.thechance.service_identity.domain.util.NOT_FOUND
-import org.thechance.service_identity.domain.util.USER_ALREADY_EXISTS
-import org.thechance.service_identity.domain.util.USER_NOT_FOUND
+import org.thechance.service_identity.domain.security.SaltedHash
+import org.thechance.service_identity.domain.util.*
 
 @Single
 class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataBaseGateway {
