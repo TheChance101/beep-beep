@@ -74,32 +74,26 @@ class RestaurantGateway(
         permissions: List<Int>,
         locale: Locale
     ): RestaurantResource {
-        val RESTAURANT_ADMIN_PERMISSION = 1
-
-        if (RESTAURANT_ADMIN_PERMISSION in permissions) {
-            return tryToExecute(
-                api = APIs.RESTAURANT_API,
-                setErrorMessage = { errorCodes ->
-                    errorHandler.getLocalizedErrorMessage(errorCodes, locale)
-                }
-            ) {
-                put("/restaurant") {
-                    body = Json.encodeToString(
-                        RestaurantResource.serializer(),
-                        RestaurantResource(
-                            id = restaurant.id,
-                            name = restaurant.name,
-                            phone = restaurant.phone,
-                            description = restaurant.description,
-                            openingTime = restaurant.openingTime,
-                            closingTime = restaurant.closingTime
-                        )
-                    )
-                }
-
+        return tryToExecute(
+            api = APIs.RESTAURANT_API,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
-        } else {
-            throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
+        ) {
+            put("/restaurant") {
+                body = Json.encodeToString(
+                    RestaurantResource.serializer(),
+                    RestaurantResource(
+                        id = restaurant.id,
+                        name = restaurant.name,
+                        phone = restaurant.phone,
+                        description = restaurant.description,
+                        openingTime = restaurant.openingTime,
+                        closingTime = restaurant.closingTime
+                    )
+                )
+            }
+
         }
     }
 
@@ -109,25 +103,18 @@ class RestaurantGateway(
         restaurant: RestaurantResource,
         permissions: List<Int>
     ): RestaurantResource {
-        val RESTAURANT_MANAGER_PERMISSION = 2
-
-        if (RESTAURANT_MANAGER_PERMISSION in permissions) {
-            return tryToExecute(
-                api = APIs.RESTAURANT_API,
-                setErrorMessage = { errorCodes ->
-                    errorHandler.getLocalizedErrorMessage(errorCodes, locale)
-                }
-            ) {
-                put("/restaurant/details") {
-                    body = Json.encodeToString(
-                        RestaurantResource.serializer(),
-                        restaurant
-                    )
-                }
-
+        return tryToExecute(
+            api = APIs.RESTAURANT_API,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
-        } else {
-            throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
+        ) {
+            put("/restaurant/details") {
+                body = Json.encodeToString(
+                    RestaurantResource.serializer(),
+                    restaurant
+                )
+            }
         }
     }
 
@@ -214,7 +201,12 @@ class RestaurantGateway(
     }
 
 
-    override suspend fun getMealsByRestaurantId(restaurantId: String, page: Int, limit: Int, locale: Locale): List<MealResource> {
+    override suspend fun getMealsByRestaurantId(
+        restaurantId: String,
+        page: Int,
+        limit: Int,
+        locale: Locale
+    ): List<MealResource> {
         return tryToExecute(
             api = APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
@@ -290,7 +282,11 @@ class RestaurantGateway(
         }
     }
 
-    override suspend fun getOrdersCountByDaysBefore(restaurantId: String, daysBack: Int, locale: Locale): List<Map<Int, Int>> {
+    override suspend fun getOrdersCountByDaysBefore(
+        restaurantId: String,
+        daysBack: Int,
+        locale: Locale
+    ): List<Map<Int, Int>> {
         return tryToExecute<List<Map<Int, Int>>>(
             api = APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
