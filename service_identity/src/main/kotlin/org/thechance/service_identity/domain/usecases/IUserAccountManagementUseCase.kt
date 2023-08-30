@@ -48,6 +48,7 @@ class UserAccountManagementUseCase(
         fullName: String, username: String, password: String, email: String,
     ): UserManagement {
         userInfoValidationUseCase.validateUserInformation(fullName, username, password, email)
+
         val saltedHash = hashingService.generateSaltedHash(password)
         val user = dataBaseGateway.createUser(saltedHash, fullName, username, email)
         dataBaseGateway.addPermissionToUser(userId = user.id, permissionId = END_USER)

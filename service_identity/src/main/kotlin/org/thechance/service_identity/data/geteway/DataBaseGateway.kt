@@ -9,7 +9,6 @@ import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
-import org.litote.kmongo.util.UpdateConfiguration.updateOnlyNotNullProperties
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.*
 import org.thechance.service_identity.data.mappers.toCollection
@@ -170,22 +169,22 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
     override suspend fun createUser(
         saltedHash: SaltedHash, fullName: String, username: String, email: String
     ): UserManagement {
-
-        val userDocument = UserCollection(
-            hashedPassword = saltedHash.hash,
-            salt = saltedHash.salt,
-            username = username,
-            fullName = fullName,
-            email = email
-        )
-
-        try {
+        val userNameExist = dataBaseContainer.userCollection.findOne(UserCollection::username eq username)
+        if (userNameExist == null) {
+            val userDocument = UserCollection(
+                hashedPassword = saltedHash.hash,
+                salt = saltedHash.salt,
+                username = username,
+                fullName = fullName,
+                email = email
+            )
             val wallet = WalletCollection(userId = userDocument.id)
             createWallet(wallet)
             dataBaseContainer.userDetailsCollection.insertOne(UserDetailsCollection(userId = userDocument.id))
             dataBaseContainer.userCollection.insertOne(userDocument)
             return userDocument.toManagedEntity()
-        } catch (exception: MongoWriteException) {
+
+        } else {
             throw UserAlreadyExistsException(USER_ALREADY_EXISTS)
         }
     }
