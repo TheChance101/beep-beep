@@ -11,7 +11,6 @@ interface ITaxiGateway {
 
     suspend fun createTaxi(
         taxi : TaxiResource,
-        permissions: List<Int>,
         locale: Locale
     ): TaxiResource
 
@@ -19,7 +18,6 @@ interface ITaxiGateway {
     suspend fun editTaxi(
         id: String,
         taxi : TaxiResource,
-        permissions: List<Int>,
         locale: Locale
     ): TaxiResource
 
