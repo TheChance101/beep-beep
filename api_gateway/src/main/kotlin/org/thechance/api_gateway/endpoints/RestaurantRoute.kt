@@ -1,5 +1,6 @@
 package org.thechance.api_gateway.endpoints
 
+
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -10,6 +11,7 @@ import io.ktor.server.websocket.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.mappers.toMeal
 import org.thechance.api_gateway.data.mappers.toRestaurant
+import org.thechance.api_gateway.data.model.restaurant.RestaurantResource
 import org.thechance.api_gateway.endpoints.gateway.IRestaurantGateway
 import org.thechance.api_gateway.endpoints.utils.*
 import java.util.*
@@ -65,11 +67,39 @@ fun Route.restaurantRoutes() {
         get("/{id}") {
             val (language, countryCode) = extractLocalizationHeader()
             val restaurantId = call.parameters["id"]?.trim().toString()
-            val restaurant =
-                restaurantGateway.getRestaurantInfo(locale = Locale(language, countryCode), restaurantId = restaurantId)
-            respondWithResult(HttpStatusCode.OK, restaurant.toRestaurant())
+            val restaurant = restaurantGateway.getRestaurantInfo(
+                locale = Locale(language, countryCode), restaurantId = restaurantId
+            )
+            respondWithResult(HttpStatusCode.OK, restaurant)
         }
 
+        put {
+            val tokenClaim = call.principal<JWTPrincipal>()
+            val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
+            val (language, countryCode) = extractLocalizationHeader()
+            val params = call.receiveParameters()
+            val restaurant = call.receive<RestaurantResource>()
+
+
+            val updatedRestaurant = restaurantGateway.updateRestaurantForAdmin(
+                restaurant, permissions, Locale(language, countryCode)
+            )
+            respondWithResult(HttpStatusCode.OK, updatedRestaurant.toRestaurant())
+        }
+
+        put {
+            val tokenClaim = call.principal<JWTPrincipal>()
+            val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
+            val (language, countryCode) = extractLocalizationHeader()
+            val restaurant = call.receive<RestaurantResource>()
+
+            val updatedRestaurant = restaurantGateway.updateRestaurant(
+                Locale(language, countryCode),
+                restaurant,
+                permissions,
+            )
+            respondWithResult(HttpStatusCode.OK, updatedRestaurant.toRestaurant())
+        }
 
         authenticate("auth-jwt", "refresh-jwt") {
 
