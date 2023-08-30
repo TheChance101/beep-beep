@@ -10,24 +10,14 @@ interface ITaxiGateway {
     suspend fun getTaxiById(id: String, locale: Locale): TaxiResource
 
     suspend fun createTaxi(
-        plateNumber: String,
-        color: Long,
-        type: String,
-        driverId: String,
-        seats: Int,
-        isAvailable: Boolean,
+        taxi : TaxiResource,
         locale: Locale
     ): TaxiResource
 
 
     suspend fun editTaxi(
         id: String,
-        plateNumber: String,
-        color: Long,
-        type: String,
-        driverId: String,
-        seats: Int,
-        isAvailable: Boolean,
+        taxi : TaxiResource,
         locale: Locale
     ): TaxiResource
 

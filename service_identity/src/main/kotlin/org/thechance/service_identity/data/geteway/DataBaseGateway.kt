@@ -236,14 +236,14 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
     // region: user permission management
 
     override suspend fun updatePermissionToUser(userId: String, permission: Int): Boolean {
-        return userCollection.updateOne(
-            filter = UserCollection::id eq UUID.fromString(userId),
+        return dataBaseContainer.userCollection.updateOne(
+            filter = UserCollection::id eq ObjectId(userId),
             update = Updates.set(UserCollection::permission.name, permission)
         ).isUpdatedSuccessfully()
     }
 
     override suspend fun getUserPermission(userId: String): Int {
-        return userCollection.findOneById(UUID.fromString(userId))?.permission ?: 1
+        return dataBaseContainer.userCollection.findOneById(ObjectId(userId))?.permission ?: 1
     }
     // endregion: user permission management
 
