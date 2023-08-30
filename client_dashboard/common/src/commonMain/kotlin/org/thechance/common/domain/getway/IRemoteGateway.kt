@@ -7,7 +7,12 @@ interface IRemoteGateway {
 
     fun getUserData(): String
 
-    fun getUsers(page: Int, numberOfUsers: Int): DataWrapper<User>
+    fun getUsers(
+        byPermissions: List<Permission>,
+        byCountries: List<String>,
+        page: Int,
+        numberOfUsers: Int
+    ): DataWrapper<User>
 
     suspend fun getTaxis(page: Int, numberOfTaxis: Int): DataWrapper<Taxi>
 
@@ -38,6 +43,19 @@ interface IRemoteGateway {
 
     suspend fun getCurrentLocation(): Location
 
-    suspend fun searchUsers(query: String, page: Int, numberOfUsers: Int): DataWrapper<User>
+    suspend fun searchUsers(
+        query: String,
+        byPermissions: List<Permission>,
+        byCountries: List<String>,
+        page: Int,
+        numberOfUsers: Int
+    ): DataWrapper<User>
+
+    suspend fun filterUsers(
+        permissions: List<Permission>,
+        countries: List<String>,
+        page: Int,
+        numberOfUsers: Int
+    ): DataWrapper<User>
 
 }

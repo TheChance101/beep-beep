@@ -883,23 +883,29 @@ class FakeRemoteGateway(
 
     override fun getUserData() = "asia"
 
-    override fun getUsers(page: Int, numberOfUsers: Int): DataWrapper<User> {
+    override fun getUsers(
+        byPermissions: List<Permission>,
+        byCountries: List<String>,
+        page: Int,
+        numberOfUsers: Int
+    ): DataWrapper<User> {
+        val filteredUsers = fakeUsers.filter { user ->
+            (byPermissions.isEmpty() || user.permission.any { it in byPermissions })
+                    && (byCountries.isEmpty() || user.country in byCountries)
+        }
+
+        val totalUsers = filteredUsers.size
+        val numberOfPages = ceil(totalUsers.toDouble() / numberOfUsers).toInt()
         val startIndex = (page - 1) * numberOfUsers
         val endIndex = startIndex + numberOfUsers
-        val numberOfPages = ceil(fakeUsers.size / (numberOfUsers * 1.0)).toInt()
-        return try {
-            DataWrapperDto(
-                totalPages = numberOfPages,
-                result = fakeUsers.subList(startIndex, endIndex.coerceAtMost(fakeUsers.size)),
-                totalResult = fakeUsers.size
-            ).toEntity()
-        } catch (e: Exception) {
-            DataWrapperDto(
-                totalPages = numberOfPages,
-                result = fakeUsers,
-                totalResult = fakeUsers.size
-            ).toEntity()
-        }
+
+        val paginatedUsers = filteredUsers.subList(startIndex, endIndex.coerceAtMost(totalUsers))
+
+        return DataWrapperDto(
+            totalPages = numberOfPages,
+            result = paginatedUsers,
+            totalResult = totalUsers
+        ).toEntity()
     }
 
     override suspend fun getTaxis(page: Int, numberOfTaxis: Int): DataWrapper<Taxi> {
@@ -1046,12 +1052,57 @@ class FakeRemoteGateway(
         return Location(location = "30.044420,31.235712")
     }
 
-    override suspend fun searchUsers(query: String, page: Int, numberOfUsers: Int): DataWrapper<User> {
+    override suspend fun searchUsers(
+        query: String,
+        byPermissions: List<Permission>,
+        byCountries: List<String>,
+        page: Int,
+        numberOfUsers: Int
+    ): DataWrapper<User> {
         val filteredUsers = fakeUsers.filter {
             it.fullName.startsWith(query, true) || it.username.startsWith(query, true)
+        }.toMutableList()
+
+        if (byPermissions.isNotEmpty()) filteredUsers.retainAll { user ->
+            user.permission.any { permission -> byPermissions.contains(permission) }
         }
+
+        if (byCountries.isNotEmpty()) filteredUsers.retainAll { user ->
+            byCountries.any { it == user.country }
+        }
+
         val startIndex = (page - 1) * numberOfUsers
         val endIndex = startIndex + numberOfUsers
+        val numberOfPages = ceil(filteredUsers.size / (numberOfUsers * 1.0)).toInt()
+        return try {
+            DataWrapperDto(
+                totalPages = numberOfPages,
+                result = filteredUsers.subList(startIndex, endIndex.coerceAtMost(filteredUsers.size)),
+                totalResult = filteredUsers.size
+            ).toEntity()
+        } catch (e: Exception) {
+            DataWrapperDto(
+                totalPages = numberOfPages,
+                result = filteredUsers,
+                totalResult = filteredUsers.size
+            ).toEntity()
+        }
+    }
+
+    override suspend fun filterUsers(
+        permissions: List<Permission>,
+        countries: List<String>,
+        page: Int,
+        numberOfUsers: Int,
+    ): DataWrapper<User> {
+        val filteredUsers = fakeUsers.filter { user ->
+            user.permission.containsAll(permissions) && countries.any { it == user.country }
+        }
+//        val filteredUsers = fakeUsers.filter { user ->
+//            user.permission.any { permission -> permissions.any { it.name == permission.name } } && countries.any { it == user.country }
+//        }
+        val startIndex = (page - 1) * numberOfUsers
+        val endIndex = (page - 1) * numberOfUsers
         val numberOfPages = ceil(filteredUsers.size / (numberOfUsers * 1.0)).toInt()
         return try {
             DataWrapperDto(
