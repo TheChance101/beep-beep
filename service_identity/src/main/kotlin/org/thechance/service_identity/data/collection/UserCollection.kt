@@ -4,6 +4,7 @@ import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
+import org.thechance.service_identity.domain.util.Role
 import org.bson.types.ObjectId
 import java.util.*
 
@@ -19,6 +20,6 @@ data class UserCollection(
     val hashedPassword: String? = null,
     val email: String,
     val salt: String? = null,
-    val permissions: List<PermissionCollection> = emptyList(),
+    val permission: Int = Role.END_USER,
     val isDeleted: Boolean = false,
 )

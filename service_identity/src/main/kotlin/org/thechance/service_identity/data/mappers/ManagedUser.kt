@@ -9,7 +9,7 @@ fun UserCollection.toManagedEntity() = UserManagement(
     fullName,
     username,
     email,
-    permissions.toEntity()
+    permission
 )
 
 fun List<UserCollection>.toManagedEntity() = map { it.toManagedEntity() }
@@ -19,8 +19,7 @@ fun UserManagement.toDto() = UserManagementDto(
     fullName,
     username,
     email,
-    permissions.toDto()
+    permission
 )
 
 fun List<UserManagement>.toDto() = map { it.toDto() }
-
