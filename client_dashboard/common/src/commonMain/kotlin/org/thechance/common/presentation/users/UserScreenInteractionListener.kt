@@ -4,7 +4,7 @@ import org.thechance.common.presentation.base.BaseInteractionListener
 
 interface UserScreenInteractionListener : BaseInteractionListener, FilterMenuListener,
     EditUserMenuListener, PageListener {
-    fun onDeleteUserMenu(user: UserScreenUiState.UserUiState)
+    fun onDeleteUserMenuItemClicked(user: UserScreenUiState.UserUiState)
     fun onSearchInputChange(text: String)
 }
 
@@ -12,9 +12,9 @@ interface EditUserMenuListener {
     fun showEditUserMenu(username: String)
     fun hideEditUserMenu()
     fun onEditUserMenuItemClicked(user: UserScreenUiState.UserUiState)
-    fun onSaveEditUserMenu()
-    fun onCancelEditUserMenu()
-    fun onEditUserMenuPermissionClick(permission: UserScreenUiState.PermissionUiState)
+    fun onSaveUserPermissionsDialog()
+    fun onCancelUserPermissionsDialog()
+    fun onUserPermissionClick(permission: UserScreenUiState.PermissionUiState)
 }
 
 interface FilterMenuListener {
@@ -22,7 +22,7 @@ interface FilterMenuListener {
     fun hideFilterMenu()
     fun onFilterMenuPermissionClick(permission: UserScreenUiState.PermissionUiState)
     fun onFilterMenuCountryClick(country: UserScreenUiState.CountryUiState)
-    fun onFilterSaved()
+    fun onFilterMenuSaveButtonClicked()
 }
 
 interface PageListener {

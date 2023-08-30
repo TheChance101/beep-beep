@@ -36,9 +36,8 @@ import org.thechance.common.presentation.util.kms
 
 sealed interface UserUiEffect
 
-class UserScreen :
-    BaseScreen<UserScreenModel, UserUiEffect,
-            UserScreenUiState, UserScreenInteractionListener>() {
+class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, UserScreenInteractionListener>() {
+
     override fun onEffect(effect: UserUiEffect, navigator: Navigator) {
         TODO("Not yet implemented")
     }
@@ -52,7 +51,7 @@ class UserScreen :
             state = state,
             pageListener = listener,
             editMenuListener = listener,
-            onDeleteUserMenuItemClicked = listener::onDeleteUserMenu,
+            onDeleteUserMenuItemClicked = listener::onDeleteUserMenuItemClicked,
             onSearchInputChanged = listener::onSearchInputChange,
             filterMenuListener = listener
         )
@@ -76,9 +75,9 @@ class UserScreen :
             visible = state.permissionsDialog.show,
             allPermissions = state.allPermissions,
             selectedPermissions = state.permissionsDialog.permissions,
-            onUserPermissionClicked = editMenuListener::onEditUserMenuPermissionClick,
-            onSaveUserPermissions = editMenuListener::onSaveEditUserMenu,
-            onCancelUserPermissionsDialog = editMenuListener::onCancelEditUserMenu,
+            onUserPermissionClicked = editMenuListener::onUserPermissionClick,
+            onSaveUserPermissions = editMenuListener::onSaveUserPermissionsDialog,
+            onCancelUserPermissionsDialog = editMenuListener::onCancelUserPermissionsDialog,
         )
         Box(
             modifier = Modifier.background(Theme.colors.surface).fillMaxSize(),
@@ -96,7 +95,7 @@ class UserScreen :
                     onSearchInputChanged = onSearchInputChanged,
                     onFilterMenuClicked = filterMenuListener::showFilterMenu,
                     onFilterMenuDismiss = filterMenuListener::hideFilterMenu,
-                    onFilterSaved = filterMenuListener::onFilterSaved,
+                    onFilterSaved = filterMenuListener::onFilterMenuSaveButtonClicked,
                 )
 
                 UsersTable(

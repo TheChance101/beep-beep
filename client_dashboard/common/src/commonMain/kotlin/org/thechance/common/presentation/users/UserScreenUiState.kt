@@ -69,25 +69,25 @@ data class UserScreenUiState(
         val countries: List<CountryUiState> = listOf(
             CountryUiState(
                 name = "Iraq",
-                selected = true,
+                selected = false,
             ),
             CountryUiState(
                 name = "Palestine",
-                selected = true,
+                selected = false,
             ),
             CountryUiState(
                 name = "Jordan",
-                selected = true,
+                selected = false,
             ),
             CountryUiState(
                 name = "Syria",
-                selected = true,
+                selected = false,
             ),
             CountryUiState(
                 name = "Egypt",
-                selected = true,
+                selected = false,
             ),
-        )
+        ),
     )
 
     data class CountryUiState(
