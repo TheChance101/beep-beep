@@ -86,18 +86,7 @@ class TaxiGateway(
         ) {
 
             post("/taxi") {
-                body = Json.encodeToString(
-                    TaxiResource.serializer(),
-                    TaxiResource(
-                        plateNumber = taxi.plateNumber,
-                        color = taxi.color,
-                        type = taxi.type,
-                        driverId = taxi.driverId,
-                        isAvailable = taxi.isAvailable,
-                        seats = taxi.seats
-                    )
-
-                )
+                body = Json.encodeToString(TaxiResource.serializer(), taxi)
             }
         }
     }
@@ -121,19 +110,7 @@ class TaxiGateway(
             }
         ) {
             put("/taxi/$id") {
-
-                body = Json.encodeToString(
-                    TaxiResource.serializer(),
-                    TaxiResource(
-                        id = taxi.id,
-                        plateNumber = taxi.plateNumber,
-                        color = taxi.color,
-                        type = taxi.type,
-                        driverId = taxi.driverId,
-                        isAvailable = taxi.isAvailable,
-                        seats = taxi.seats
-                    )
-                )
+                body = Json.encodeToString(TaxiResource.serializer(), taxi)
             }
         }
     }
