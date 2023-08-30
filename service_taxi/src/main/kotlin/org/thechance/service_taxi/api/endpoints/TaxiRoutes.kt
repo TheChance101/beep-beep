@@ -12,6 +12,7 @@ import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 import org.koin.ktor.ext.inject
 import org.thechance.service_taxi.api.dto.taxi.TaxiDto
+import org.thechance.service_taxi.api.dto.taxi.TaxisManagementDto
 import org.thechance.service_taxi.api.dto.taxi.toDto
 import org.thechance.service_taxi.api.dto.taxi.toEntity
 import org.thechance.service_taxi.domain.exceptions.MissingParameterException
@@ -24,8 +25,9 @@ fun Route.taxiRoutes() {
         get {
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 20
-            val result = manageTaxiUseCase.getAllTaxi(page, limit)
-            call.respond(HttpStatusCode.OK, result.toDto())
+            val taxis = manageTaxiUseCase.getAllTaxi(page, limit).toDto()
+            val total = manageTaxiUseCase.getNumberOfTaxis()
+            call.respond(HttpStatusCode.OK, TaxisManagementDto(taxis,total))
         }
 
         get("/{taxiId}") {

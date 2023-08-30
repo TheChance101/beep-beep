@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Taxi(
-    val id: String,
+    val id: String? = null,
     val plateNumber: String,
     val color: Long,
     val type: String,

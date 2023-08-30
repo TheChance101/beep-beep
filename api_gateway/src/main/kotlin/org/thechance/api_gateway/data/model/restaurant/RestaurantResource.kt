@@ -5,16 +5,16 @@ import org.thechance.api_gateway.data.model.CuisineResource
 
 @Serializable
 data class RestaurantResource(
-    val id: String,
-    val ownerId: String,
-    val name: String,
+    val id: String? = null,
+    val ownerId: String? = null,
+    val name: String? = null,
     val description: String? = null,
     val priceLevel: String? = null,
     val rate: Double? = null,
-    val phone: String,
-    val openingTime: String,
-    val closingTime: String,
-    val location: LocationResource,
-    val address: String,
+    val phone: String? = null,
+    val openingTime: String? = null,
+    val closingTime: String? = null,
+    val location: LocationResource? = null,
+    val address: String? = null,
     val cuisines: List<CuisineResource> = emptyList()
 )

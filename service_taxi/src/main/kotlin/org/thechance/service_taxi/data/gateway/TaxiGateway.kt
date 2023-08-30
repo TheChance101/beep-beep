@@ -62,6 +62,10 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
             update = set(TaxiCollection::isDeleted setTo true)
         )?.toEntity()
     }
+
+    override suspend fun getNumberOfTaxis(): Long {
+        return container.taxiCollection.countDocuments()
+    }
     //endregion
 
     //region trip curd

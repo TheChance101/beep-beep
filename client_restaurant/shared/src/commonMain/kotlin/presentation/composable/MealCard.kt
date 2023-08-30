@@ -18,8 +18,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 import com.seiko.imageloader.rememberAsyncImagePainter
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import presentation.meals.state.MealUIState
+import presentation.meals.MealUIState
 
 @Composable
 fun MealCard(onClick:()->Unit, meal: MealUIState,) {

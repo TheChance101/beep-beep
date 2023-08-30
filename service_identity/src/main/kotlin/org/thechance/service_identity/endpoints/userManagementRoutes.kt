@@ -10,6 +10,7 @@ import org.thechance.service_identity.data.mappers.toDto
 import org.thechance.service_identity.domain.entity.MissingParameterException
 import org.thechance.service_identity.domain.usecases.IUserManagementUseCase
 import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
+import org.thechance.service_identity.endpoints.model.UsersManagementDto
 import org.thechance.service_identity.endpoints.util.extractInt
 
 fun Route.userManagementRoutes() {
@@ -23,28 +24,23 @@ fun Route.userManagementRoutes() {
             val page = call.parameters.extractInt("page") ?: 1
             val limit = call.parameters.extractInt("limit") ?: 10
             val users = userManagement.getUsers(page, limit, searchTerm).toDto()
-            call.respond(HttpStatusCode.OK, users)
+            val total = userManagement.getNumberOfUsers()
+            call.respond(HttpStatusCode.OK, UsersManagementDto(users, total))
         }
 
-        get("/{id}/permission") {
-            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val permissions = userManagement.getUserPermissions(id).toDto()
-            call.respond(HttpStatusCode.OK, permissions)
-        }
-
-        post("/{id}/permission") {
-            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val permissionId = call.receiveParameters()["permission_id"]?.toInt()
+        post("/{userId}/permission") {
+            val userId = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            val permission = call.receiveParameters()["permission"]?.toInt()
                 ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val result = userManagement.addPermissionToUser(id, permissionId)
+            val result = userManagement.addPermissionToUser(userId, permission)
             call.respond(HttpStatusCode.Created, result)
         }
 
-        delete("/{id}/permission") {
-            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val permissionId = call.parameters["permission_id"]?.toInt()
+        put("/{userId}/permission") {
+            val userId = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            val permission = call.parameters["permission"]?.toInt()
                 ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val result = userManagement.removePermissionFromUser(id, permissionId)
+            val result = userManagement.removePermissionFromUser(userId, permission)
             call.respond(HttpStatusCode.OK, result)
         }
 
