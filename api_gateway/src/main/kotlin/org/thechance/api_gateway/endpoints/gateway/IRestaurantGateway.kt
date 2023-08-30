@@ -41,6 +41,18 @@ interface IRestaurantGateway {
     suspend fun getRestaurantsByOwnerId(ownerId: String, locale: Locale): List<RestaurantResource>
 
     suspend fun deleteRestaurant(restaurantId: String, locale: Locale): Boolean
+    suspend fun deleteRestaurant(restaurantId: String, permissions: List<Int>, locale: Locale): Boolean
+    suspend fun updateRestaurantForAdmin(
+        restaurant: RestaurantResource,
+        permissions: List<Int>,
+        locale: Locale
+    ): RestaurantResource
+
+    suspend fun updateRestaurant(
+        locale: Locale, restaurant: RestaurantResource,
+        permissions: List<Int>
+    ): RestaurantResource
+
 
     suspend fun addMeal(meal: MealResource, locale: Locale): MealResource
 
