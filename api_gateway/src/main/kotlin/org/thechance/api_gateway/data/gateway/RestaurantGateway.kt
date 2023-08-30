@@ -85,6 +85,7 @@ class RestaurantGateway(
                     RestaurantResource.serializer(),
                     RestaurantResource(
                         id = restaurant.id,
+                        ownerId = restaurant.ownerId,
                         name = restaurant.name,
                         phone = restaurant.phone,
                         description = restaurant.description,

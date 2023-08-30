@@ -70,31 +70,33 @@ fun Route.restaurantRoutes() {
             )
             respondWithResult(HttpStatusCode.OK, restaurant)
         }
+        authenticateWithRole(Role.RESTAURANT_ADMIN) {
+            put {
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
+                val (language, countryCode) = extractLocalizationHeader()
+                val restaurant = call.receive<RestaurantResource>()
 
-        put {
-            val tokenClaim = call.principal<JWTPrincipal>()
-            val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
-            val (language, countryCode) = extractLocalizationHeader()
-            val restaurant = call.receive<RestaurantResource>()
-
-            val updatedRestaurant = restaurantGateway.updateRestaurantForAdmin(
-                restaurant, permissions, Locale(language, countryCode)
-            )
-            respondWithResult(HttpStatusCode.OK, updatedRestaurant.toRestaurant())
+                val updatedRestaurant = restaurantGateway.updateRestaurantForAdmin(
+                    restaurant, permissions, Locale(language, countryCode)
+                )
+                respondWithResult(HttpStatusCode.OK, updatedRestaurant.toRestaurant())
+            }
         }
+        authenticateWithRole(Role.RESTAURANT_OWNER) {
+            put("/details") {
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
+                val (language, countryCode) = extractLocalizationHeader()
+                val restaurant = call.receive<RestaurantResource>()
 
-        put("/details") {
-            val tokenClaim = call.principal<JWTPrincipal>()
-            val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
-            val (language, countryCode) = extractLocalizationHeader()
-            val restaurant = call.receive<RestaurantResource>()
-
-            val updatedRestaurant = restaurantGateway.updateRestaurant(
-                Locale(language, countryCode),
-                restaurant,
-                permissions,
-            )
-            respondWithResult(HttpStatusCode.OK, updatedRestaurant.toRestaurant())
+                val updatedRestaurant = restaurantGateway.updateRestaurant(
+                    Locale(language, countryCode),
+                    restaurant,
+                    permissions,
+                )
+                respondWithResult(HttpStatusCode.OK, updatedRestaurant.toRestaurant())
+            }
         }
 
         authenticateWithRole(Role.RESTAURANT_OWNER) {
