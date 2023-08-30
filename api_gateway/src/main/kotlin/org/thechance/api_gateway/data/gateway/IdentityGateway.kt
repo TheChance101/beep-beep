@@ -89,16 +89,33 @@ class IdentityGateway(
     }
 
     override suspend fun generateUserTokens(
-        userId: String, userPermission : Int, tokenConfiguration: TokenConfiguration
+        userId: String, userPermission: Int, tokenConfiguration: TokenConfiguration
     ): UserTokens {
 
-        val accessTokenExpirationDate = getExpirationDate(tokenConfiguration.accessTokenExpirationTimestamp)
-        val refreshTokenExpirationDate = getExpirationDate(tokenConfiguration.refreshTokenExpirationTimestamp)
+        val accessTokenExpirationDate =
+            getExpirationDate(tokenConfiguration.accessTokenExpirationTimestamp)
+        val refreshTokenExpirationDate =
+            getExpirationDate(tokenConfiguration.refreshTokenExpirationTimestamp)
 
-        val refreshToken = generateToken(userId, userPermission, tokenConfiguration, TokenType.REFRESH_TOKEN)
-        val accessToken = generateToken(userId, userPermission, tokenConfiguration, TokenType.ACCESS_TOKEN)
+        val refreshToken =
+            generateToken(userId, userPermission, tokenConfiguration, TokenType.REFRESH_TOKEN)
+        val accessToken =
+            generateToken(userId, userPermission, tokenConfiguration, TokenType.ACCESS_TOKEN)
 
-        return UserTokens(accessTokenExpirationDate.time, refreshTokenExpirationDate.time, accessToken, refreshToken)
+        return UserTokens(
+            accessTokenExpirationDate.time,
+            refreshTokenExpirationDate.time,
+            accessToken,
+            refreshToken
+        )
+    }
+
+    override suspend fun deleteUser(userId: String, locale: Locale): Boolean {
+        return tryToExecute<Boolean>(api = APIs.IDENTITY_API, setErrorMessage = { errorCodes ->
+            errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+        }) {
+            delete("/user/$userId")
+        }
     }
 
     private fun getExpirationDate(timestamp: Long): Date {
@@ -106,12 +123,20 @@ class IdentityGateway(
     }
 
     private fun generateToken(
-        userId: String, userPermission: Int, tokenConfiguration: TokenConfiguration, tokenType: TokenType
+        userId: String,
+        userPermission: Int,
+        tokenConfiguration: TokenConfiguration,
+        tokenType: TokenType
     ): String {
         val userIdClaim = TokenClaim("userId", userId)
         val rolesClaim = TokenClaim("permission", userPermission.toString())
         val accessTokenClaim = TokenClaim("tokenType", tokenType.name)
-        return tokenManagementService.generateToken(tokenConfiguration, userIdClaim, rolesClaim, accessTokenClaim)
+        return tokenManagementService.generateToken(
+            tokenConfiguration,
+            userIdClaim,
+            rolesClaim,
+            accessTokenClaim
+        )
     }
 
 }
