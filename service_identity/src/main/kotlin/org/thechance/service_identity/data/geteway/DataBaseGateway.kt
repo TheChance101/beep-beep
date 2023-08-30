@@ -1,10 +1,7 @@
 package org.thechance.service_identity.data.geteway
 
 import com.mongodb.MongoWriteException
-import com.mongodb.client.model.Filters
-import com.mongodb.client.model.IndexOptions
-import com.mongodb.client.model.Indexes
-import com.mongodb.client.model.Updates
+import com.mongodb.client.model.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -12,6 +9,7 @@ import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
+import org.litote.kmongo.util.UpdateConfiguration.updateOnlyNotNullProperties
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.*
 import org.thechance.service_identity.data.mappers.toCollection
@@ -54,12 +52,12 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         ).isUpdatedSuccessfully()
     }
 
-    override suspend fun updateAddress(id: String, location: Location): Boolean {
-        return dataBaseContainer.addressCollection.updateOneById(
-            ObjectId(id),
-            location,
-            updateOnlyNotNullProperties = true
-        ).isUpdatedSuccessfully()
+    override suspend fun updateAddress(addressId: String, location: Location): Address {
+        return dataBaseContainer.addressCollection.findOneAndUpdate(
+            filter = AddressCollection::id eq ObjectId(addressId),
+            update = Updates.set(AddressCollection::location.name, location.toCollection()),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
+        )?.toEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
     override suspend fun getAddress(id: String): Address {

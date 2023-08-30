@@ -6,10 +6,7 @@ interface IDataBaseGateway {
     // region: Permission
     suspend fun getPermission(permissionId: Int): Permission
     suspend fun addPermission(permission: Permission): Boolean
-    suspend fun updatePermission(
-        permissionId: Int,
-        permission: String?
-    ): Boolean
+    suspend fun updatePermission(permissionId: Int, permission: String?): Boolean
 
     suspend fun deletePermission(permissionId: Int): Boolean
     suspend fun getListOfPermission(): List<Permission>
@@ -22,7 +19,7 @@ interface IDataBaseGateway {
 
     suspend fun deleteAddress(id: String): Boolean
 
-    suspend fun updateAddress(id: String, location: Location): Boolean
+    suspend fun updateAddress(addressId: String, location: Location): Address
 
     suspend fun getAddress(id: String): Address
 
