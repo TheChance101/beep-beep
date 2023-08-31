@@ -1,13 +1,13 @@
 package org.thechance.common.presentation.main
 
-import cafe.adriel.voyager.core.model.StateScreenModel
-import kotlinx.coroutines.flow.update
-import org.thechance.common.domain.usecase.IGetUserInfoUseCase
+import org.thechance.common.domain.usecase.IManageUsersUseCase
+import org.thechance.common.presentation.base.BaseScreenModel
+import org.thechance.common.presentation.util.ErrorState
 
 
 class MainScreenModel(
-    private val getUserInfo: IGetUserInfoUseCase
-) : StateScreenModel<MainUiState>(MainUiState()) {
+    private val manageUsers: IManageUsersUseCase
+) : BaseScreenModel<MainUiState, MainUiEffect>(MainUiState()), MainInteractionListener {
 
 
     init {
@@ -15,19 +15,36 @@ class MainScreenModel(
     }
 
     private fun getUserInfo() {
-        val user = getUserInfo.getUserInfo()
-        mutableState.update { it.copy(username = user) }
+        tryToExecute(
+            manageUsers::getUserInfo,
+            ::onGetUserInfoSuccessfully,
+            ::onError
+        )
     }
 
-    fun logout() {
-        mutableState.update { it.copy(isLogin = false) }
+    private fun onGetUserInfoSuccessfully(username: String) {
+        updateState {
+            it.copy(
+                username = username,
+                firstUsernameLetter = username.first().uppercase()
+            )
+        }
     }
 
-    fun onClickDropDownMenu() {
-        mutableState.update { it.copy(isDropMenuExpanded = true) }
+    private fun onError(error: ErrorState) {
+        updateState { it.copy(error = error) }
     }
 
-    fun onDismissDropDownMenu() {
-        mutableState.update { it.copy(isDropMenuExpanded = false) }
+    override fun onClickDropDownMenu() {
+        updateState { it.copy(isDropMenuExpanded = true) }
+    }
+
+    override fun onDismissDropDownMenu() {
+        updateState { it.copy(isDropMenuExpanded = false) }
+    }
+
+    override fun onClickLogout() {
+        updateState { it.copy(isLogin = false) }
+        sendNewEffect(MainUiEffect.Logout)
     }
 }
