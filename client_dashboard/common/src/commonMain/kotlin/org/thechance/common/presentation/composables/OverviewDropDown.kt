@@ -6,7 +6,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.onClick
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,7 +26,14 @@ import org.thechance.common.presentation.util.kms
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun OverviewDropDown(titles: List<String>, selectedIndex: Int, isExpanded: Boolean) {
+fun OverviewDropDown(
+    titles: List<String>,
+    selectedIndex: Int,
+    isExpanded: Boolean,
+    onDropDownMenuClicked: () -> Unit,
+    onDismissDropDownMenu: () -> Unit,
+    onMenuItemClicked: (Int) -> Unit
+) {
 
     val dropMenuArrowRotateDirection = animateFloatAsState(targetValue = if (isExpanded) 180f else 0f)
 
@@ -37,7 +43,7 @@ fun OverviewDropDown(titles: List<String>, selectedIndex: Int, isExpanded: Boole
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.kms),
-            modifier = Modifier.onClick(onClick = {}).cursorHoverIconHand()
+            modifier = Modifier.onClick(onClick = onDropDownMenuClicked).cursorHoverIconHand()
         ) {
 
             Text(
@@ -57,30 +63,27 @@ fun OverviewDropDown(titles: List<String>, selectedIndex: Int, isExpanded: Boole
 
         Box {
             BpDropdownMenu(
-                expanded = false,
-                onDismissRequest = {},
+                expanded = isExpanded,
+                onDismissRequest = onDismissDropDownMenu,
                 offset = DpOffset.Zero.copy(y = 32.kms),
                 shape = RoundedCornerShape(Theme.radius.medium).copy(topEnd = CornerSize(Theme.radius.small)),
             ) {
-                DropdownMenuItem(onClick = {
+                titles.forEachIndexed { index, text ->
+                    DropdownMenuItem(
+                        onClick = { onMenuItemClicked(index) },
+                        modifier = Modifier.cursorHoverIconHand(),
+                        enabled = true,
+                        text = {
+                            Text(
+                                text = text,
+                                textAlign = TextAlign.Center,
+                                style = Theme.typography.titleMedium,
+                                color = Theme.colors.primary
+                            )
+                        }
+                    )
+                }
 
-                }, modifier = Modifier.cursorHoverIconHand(), enabled = true, text = {
-                    Row(
-                        modifier = Modifier.fillMaxSize(),
-                        horizontalArrangement = Arrangement.spacedBy(8.kms),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Image(
-                            painterResource(Resources.Drawable.logout), contentDescription = null
-                        )
-                        Text(
-                            text = Resources.Strings.logout,
-                            textAlign = TextAlign.Center,
-                            style = Theme.typography.titleMedium,
-                            color = Theme.colors.primary
-                        )
-                    }
-                })
             }
         }
     }
