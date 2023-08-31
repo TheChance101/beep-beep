@@ -12,8 +12,10 @@ import org.thechance.api_gateway.data.mappers.toManagedUser
 import org.thechance.api_gateway.data.model.TokenConfiguration
 import org.thechance.api_gateway.endpoints.gateway.IIdentityGateway
 import org.thechance.api_gateway.endpoints.gateway.IRestaurantGateway
+import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
 import org.thechance.api_gateway.endpoints.utils.respondWithResult
+import org.thechance.api_gateway.util.Role
 import java.util.*
 
 /**
@@ -77,8 +79,7 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
         respondWithResult(HttpStatusCode.Created, result)
     }
 
-
-    authenticate("auth-jwt") {
+    authenticateWithRole(Role.END_USER) {
         get("/me") {
             val tokenClaim = call.principal<JWTPrincipal>()
             val id = tokenClaim?.payload?.getClaim("userId").toString()
@@ -86,12 +87,24 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
         }
     }
 
-    authenticate("refresh-jwt") {
+    authenticateWithRole(Role.DASHBOARD_ADMIN) {
+        route("/user") {
+            get("/{id}") {
+                val id = call.parameters["id"] ?: ""
+                val (language, countryCode) = extractLocalizationHeader()
+                val result = gateway.deleteUser(userId = id, locale = Locale(language, countryCode))
+                respondWithResult(HttpStatusCode.OK, result)
+            }
+        }
+    }
+
+    authenticateWithRole(Role.END_USER) {
         post("/refresh-access-token") {
             val tokenClaim = call.principal<JWTPrincipal>()
             val userId = tokenClaim?.payload?.getClaim("userId").toString()
-            val userPermissions = tokenClaim?.payload?.getClaim("role")?.asList(Int::class.java) ?: emptyList()
-            val token = gateway.generateUserTokens(userId, userPermissions, tokenConfiguration)
+            val username = tokenClaim?.payload?.getClaim("username").toString()
+            val userPermission = tokenClaim?.payload?.getClaim("permission")?.asString()?.toInt() ?: 1
+            val token = gateway.generateUserTokens(userId,username,userPermission, tokenConfiguration)
             respondWithResult(HttpStatusCode.Created, token)
         }
     }

@@ -12,12 +12,11 @@ import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.*
 import org.thechance.common.domain.entity.*
 import org.thechance.common.domain.getway.IRemoteGateway
-import java.util.UUID
-import kotlin.math.ceil
-import kotlin.math.floor
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.ceil
+import kotlin.math.floor
 
 class FakeRemoteGateway(
     private val localGateway: LocalGateway
@@ -32,11 +31,11 @@ class FakeRemoteGateway(
                 TaxiDto(
                     id = "1",
                     plateNumber = "ABC123",
-                    color = 1,
                     type = "Sedan",
+                    color = 1,
                     seats = 4,
-                    username = "john_doe",
                     status = 1,
+                    username = "john_doe",
                     trips = "10"
                 ),
                 TaxiDto(
@@ -108,7 +107,67 @@ class FakeRemoteGateway(
                     username = "susan_anderson",
                     status = 2,
                     trips = "9"
-                )
+                ),
+                TaxiDto(
+                    id = "9",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 1,
+                    seats = 4,
+                    status = 1,
+                    username = "Asia",
+                    trips = "10"
+                ),
+                TaxiDto(
+                    id = "10",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 1,
+                    seats = 4,
+                    status = 1,
+                    username = "Safi",
+                    trips = "10"
+                ),
+                TaxiDto(
+                    id = "11",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 1,
+                    seats = 4,
+                    status = 1,
+                    username = "Mujtaba",
+                    trips = "10"
+                ),
+                TaxiDto(
+                    id = "12",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 1,
+                    seats = 4,
+                    status = 1,
+                    username = "Krrar",
+                    trips = "10"
+                ),
+                TaxiDto(
+                    id = "13",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 1,
+                    seats = 4,
+                    status = 1,
+                    username = "Aya",
+                    trips = "10"
+                ),
+                TaxiDto(
+                    id = "14",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 1,
+                    seats = 4,
+                    status = 1,
+                    username = "Kamel",
+                    trips = "10"
+                ),
             )
         )
         restaurant.addAll(
@@ -781,6 +840,28 @@ class FakeRemoteGateway(
                 totalPages = numberOfPages,
                 result = taxis,
                 totalResult = taxis.size
+            ).toEntity()
+        }
+    }
+
+    override suspend fun filterTaxis(taxi: TaxiFiltration, page: Int, numberOfTaxis: Int): DataWrapper<Taxi> {
+        val taxiDto = taxi.toDto()
+        val taxisFiltered = taxis.filter {
+            it.color == taxiDto.color && it.seats == taxiDto.seats && it.status == taxiDto.status
+        }.toEntity()
+
+        val startIndex = (page - 1) * numberOfTaxis
+        val endIndex = startIndex + numberOfTaxis
+        val numberOfPages = ceil(taxisFiltered.size / (numberOfTaxis * 1.0)).toInt()
+        return try {
+            DataWrapperDto(
+                totalPages = numberOfPages,
+                result = taxisFiltered.subList(startIndex, endIndex.coerceAtMost(taxisFiltered.size)),
+                totalResult = taxisFiltered.size
+            ).toEntity()
+        } catch (e: Exception) {
+            DataWrapperDto(
+                totalPages = numberOfPages, result = taxisFiltered, totalResult = taxisFiltered.size
             ).toEntity()
         }
     }

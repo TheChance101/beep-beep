@@ -61,6 +61,7 @@ google-code-gson = { module = "com.google.code.gson:gson", version.ref = "google
 ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor-version" }
 ktor-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor-version" }
 ktor-json-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor-version" }
+ktor-serialization = { module = "io.ktor:ktor-client-serialization", version.ref = "ktor-version" }
 ktor-gson = { module = "io.ktor:ktor-serialization-gson", version.ref = "ktor-version" }
 kotlin-realm = { module = "io.realm.kotlin:library-base", version.ref = "kotlin-realm" }
 #realm

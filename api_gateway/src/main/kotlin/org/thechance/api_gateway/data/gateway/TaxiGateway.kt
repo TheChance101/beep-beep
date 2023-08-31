@@ -1,16 +1,17 @@
 package org.thechance.api_gateway.data.gateway
 
 import org.koin.core.annotation.Single
-import org.thechance.api_gateway.data.model.TaxiResource
-import org.thechance.api_gateway.data.utils.LocalizedMessageException
+import org.thechance.api_gateway.data.model.Taxi
+
 import org.thechance.api_gateway.endpoints.gateway.ITaxiGateway
 import org.thechance.api_gateway.util.APIs
 import java.util.Locale
 import io.ktor.client.*
 import io.ktor.client.request.*
-import io.ktor.client.request.forms.*
-import io.ktor.http.*
 import io.ktor.util.*
+import kotlinx.serialization.json.Json
+import org.thechance.api_gateway.data.model.TaxisResource
+
 import org.thechance.api_gateway.data.utils.ErrorHandler
 
 @Single(binds = [ITaxiGateway::class])
@@ -20,15 +21,9 @@ class TaxiGateway(
 
     private val errorHandler: ErrorHandler
 ) : BaseGateway(client = client, attributes = attributes), ITaxiGateway {
-    override suspend fun getAllTaxi(
-        permissions: List<Int>,
-        locale: Locale,
-        page: Int, limit: Int
-    ): List<TaxiResource> {
-        if (!permissions.contains(1)) {
-            throw LocalizedMessageException(errorHandler.getLocalizedErrorMessage(listOf(8000), locale))
-        }
 
+
+    override suspend fun getAllTaxi(locale: Locale, page: Int, limit: Int): TaxisResource {
         return tryToExecute(
             api = APIs.TAXI_API,
             setErrorMessage = { errorCodes ->
@@ -38,7 +33,7 @@ class TaxiGateway(
                 )
             }
         ) {
-            get("/taxi"){
+            get("/taxi") {
                 parameter("page", page)
                 parameter("limit", limit)
             }
@@ -47,9 +42,8 @@ class TaxiGateway(
 
     override suspend fun getTaxiById(
         id: String,
-        permissions: List<Int>,
         locale: Locale
-    ): TaxiResource {
+    ): Taxi {
         return tryToExecute(
             api = APIs.TAXI_API,
             setErrorMessage = { errorCodes ->
@@ -60,48 +54,46 @@ class TaxiGateway(
         }
     }
 
+    @OptIn(InternalAPI::class)
     override suspend fun createTaxi(
-        plateNumber: String,
-        color: Int,
-        type: String,
-        driverId: String,
-        seats: Int,
-        permissions: List<Int>,
+        taxi: Taxi,
         locale: Locale
-    ): TaxiResource {
-        if (!permissions.contains(1)) {
-            throw LocalizedMessageException(
-                errorHandler.getLocalizedErrorMessage(listOf(8000), locale)
-            )
-        }
+    ): Taxi {
         return tryToExecute(
             api = APIs.TAXI_API,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
         ) {
-            submitForm("/taxi",
-                formParameters = parameters {
-                    append("plateNumber", plateNumber)
-                    append("color", color.toString())
-                    append("type", type)
-                    append("driverId", driverId)
-                    append("seats", seats.toString())
-                }
-            )
+
+            post("/taxi") {
+                body = Json.encodeToString(Taxi.serializer(), taxi)
+            }
+        }
+    }
+
+    @OptIn(InternalAPI::class)
+    override suspend fun editTaxi(
+        id: String,
+        taxi: Taxi,
+        locale: Locale
+    ): Taxi {
+        return tryToExecute(
+            api = APIs.TAXI_API,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+            }
+        ) {
+            put("/taxi/$id") {
+                body = Json.encodeToString(Taxi.serializer(), taxi)
+            }
         }
     }
 
     override suspend fun deleteTaxi(
         id: String,
-        permissions: List<Int>,
         locale: Locale
-    ): TaxiResource {
-        if (!permissions.contains(1)) {
-            throw LocalizedMessageException(
-                errorHandler.getLocalizedErrorMessage(listOf(8000), locale)
-            )
-        }
+    ): Taxi {
         return tryToExecute(
             api = APIs.TAXI_API,
             setErrorMessage = { errorCodes ->

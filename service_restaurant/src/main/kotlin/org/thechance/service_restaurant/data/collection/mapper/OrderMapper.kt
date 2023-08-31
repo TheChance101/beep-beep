@@ -1,10 +1,13 @@
 package org.thechance.service_restaurant.data.collection.mapper
 
+import kotlinx.datetime.LocalDateTime
 import org.bson.types.ObjectId
 import org.thechance.service_restaurant.data.collection.OrderCollection
 import org.thechance.service_restaurant.data.collection.OrderMealCollection
 import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.entity.OrderMeal
+import org.thechance.service_restaurant.domain.utils.fromEpochMilliseconds
+import org.thechance.service_restaurant.domain.utils.toMillis
 
 
 fun Order.toCollection(): OrderCollection {
@@ -14,8 +17,8 @@ fun Order.toCollection(): OrderCollection {
         restaurantId = ObjectId(restaurantId),
         meals = meals.map { it.toCollection() },
         totalPrice = totalPrice,
-        createdAt = createdAt,
-        orderStatus = status
+        createdAt = createdAt.toMillis(),
+        orderStatus = status.statusCode
     )
 }
 
@@ -26,8 +29,8 @@ fun OrderCollection.toEntity(): Order {
         restaurantId = restaurantId.toString(),
         meals = meals.map { it.toEntity() },
         totalPrice = totalPrice,
-        createdAt = createdAt,
-        status = orderStatus
+        createdAt = LocalDateTime.fromEpochMilliseconds(createdAt),
+        status = Order.Status.getOrderStatus(orderStatus)
     )
 }
 

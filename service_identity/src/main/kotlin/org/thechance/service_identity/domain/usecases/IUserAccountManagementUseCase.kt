@@ -1,40 +1,31 @@
 package org.thechance.service_identity.domain.usecases
 
 import org.koin.core.annotation.Single
-import org.thechance.service_identity.domain.entity.InsufficientFundsException
-import org.thechance.service_identity.domain.entity.InvalidCredentialsException
-import org.thechance.service_identity.domain.entity.User
-import org.thechance.service_identity.domain.entity.UserManagement
+import org.thechance.service_identity.domain.entity.*
 import org.thechance.service_identity.domain.gateway.IDataBaseGateway
 import org.thechance.service_identity.domain.security.HashingService
 import org.thechance.service_identity.domain.usecases.validation.IUserInfoValidationUseCase
 import org.thechance.service_identity.domain.usecases.validation.IWalletBalanceValidationUseCase
 import org.thechance.service_identity.domain.util.INSUFFICIENT_FUNDS
 import org.thechance.service_identity.domain.util.INVALID_CREDENTIALS
+import org.thechance.service_identity.domain.util.InsufficientFundsException
+import org.thechance.service_identity.domain.util.InvalidCredentialsException
 
 interface IUserAccountManagementUseCase {
 
-    suspend fun createUser(
-        fullName: String,
-        username: String,
-        password: String,
-        email: String,
-    ): UserManagement
+    suspend fun createUser(fullName: String, username: String, password: String, email: String): UserManagement
 
     suspend fun deleteUser(id: String): Boolean
 
     suspend fun updateUser(
-        id: String, fullName: String? = null,
-        username: String? = null,
-        password: String? = null,
-        email: String? = null
+        id: String, fullName: String? = null, username: String? = null, password: String? = null, email: String? = null
     ): Boolean
 
     suspend fun getUser(id: String): User
 
-    suspend fun addToWallet(userId: String, amount: Double): Boolean
+    suspend fun addToWallet(userId: String, amount: Double): Wallet
 
-    suspend fun subtractFromWallet(userId: String, amount: Double): Boolean
+    suspend fun subtractFromWallet(userId: String, amount: Double): Wallet
 
     suspend fun login(username: String, password: String): Boolean
 
@@ -53,17 +44,12 @@ class UserAccountManagementUseCase(
 ) : IUserAccountManagementUseCase {
 
     override suspend fun createUser(
-        fullName: String,
-        username: String,
-        password: String,
-        email: String,
+        fullName: String, username: String, password: String, email: String,
     ): UserManagement {
         userInfoValidationUseCase.validateUserInformation(fullName, username, password, email)
+
         val saltedHash = hashingService.generateSaltedHash(password)
-        val user = dataBaseGateway.createUser(saltedHash, fullName, username, email)
-        dataBaseGateway.addPermissionToUser(userId = user.id, permissionId = END_USER)
-        val permission = dataBaseGateway.getPermission(END_USER)
-        return user.copy(permissions = listOf(permission))
+        return dataBaseGateway.createUser(saltedHash, fullName, username, email)
     }
 
     override suspend fun getUserByUsername(username: String): UserManagement {
@@ -81,10 +67,7 @@ class UserAccountManagementUseCase(
     }
 
     override suspend fun updateUser(
-        id: String, fullName: String?,
-        username: String?,
-        password: String?,
-        email: String?
+        id: String, fullName: String?, username: String?, password: String?, email: String?
     ): Boolean {
         userInfoValidationUseCase.validateUpdateUserInformation(fullName, username, password, email)
         val saltedHash = password?.let {
@@ -97,21 +80,17 @@ class UserAccountManagementUseCase(
         return dataBaseGateway.getUserById(id)
     }
 
-    override suspend fun addToWallet(userId: String, amount: Double): Boolean {
+    override suspend fun addToWallet(userId: String, amount: Double): Wallet {
         walletBalanceValidationUseCase.validateWalletBalance(amount)
         return dataBaseGateway.addToWallet(userId, amount)
     }
 
-    override suspend fun subtractFromWallet(userId: String, amount: Double): Boolean {
+    override suspend fun subtractFromWallet(userId: String, amount: Double): Wallet {
         walletBalanceValidationUseCase.validateWalletBalance(amount)
-        if (amount > dataBaseGateway.getWalletBalance(userId)) {
+        if (amount > dataBaseGateway.getWalletBalance(userId).walletBalance) {
             throw InsufficientFundsException(INSUFFICIENT_FUNDS)
         }
         return dataBaseGateway.subtractFromWallet(userId, amount)
-    }
-
-    private companion object {
-        const val END_USER = 1
     }
 
 }
