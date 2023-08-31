@@ -70,9 +70,7 @@ class RestaurantGateway(
 
     @OptIn(InternalAPI::class)
     override suspend fun updateRestaurantForAdmin(
-        restaurant: RestaurantResource,
-        permissions: List<Int>,
-        locale: Locale
+        restaurant: RestaurantResource, permissions: List<Int>, locale: Locale
     ): RestaurantResource {
         return tryToExecute(
             api = APIs.RESTAURANT_API,
@@ -92,9 +90,7 @@ class RestaurantGateway(
 
     @OptIn(InternalAPI::class)
     override suspend fun updateRestaurant(
-        locale: Locale,
-        restaurant: RestaurantResource,
-        permissions: List<Int>
+        locale: Locale, restaurant: RestaurantResource, permissions: List<Int>
     ): RestaurantResource {
         return tryToExecute(
             api = APIs.RESTAURANT_API,
@@ -153,10 +149,7 @@ class RestaurantGateway(
     }
 
     @OptIn(InternalAPI::class)
-    override suspend fun addMeal(
-        meal: MealResource,
-        locale: Locale
-    ): MealResource {
+    override suspend fun addMeal(meal: MealResource, locale: Locale): MealResource {
         return tryToExecute(
             api = APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
@@ -203,10 +196,7 @@ class RestaurantGateway(
 
 
     override suspend fun getMealsByRestaurantId(
-        restaurantId: String,
-        page: Int,
-        limit: Int,
-        locale: Locale
+        restaurantId: String, page: Int, limit: Int, locale: Locale
     ): List<MealResource> {
         return tryToExecute(
             api = APIs.RESTAURANT_API,
@@ -246,7 +236,6 @@ class RestaurantGateway(
         }
     }
 
-
     override suspend fun getCuisines(locale: Locale): List<CuisineResource> {
         return tryToExecute<List<CuisineResource>>(
             APIs.RESTAURANT_API,
@@ -284,9 +273,7 @@ class RestaurantGateway(
     }
 
     override suspend fun getOrdersCountByDaysBefore(
-        restaurantId: String,
-        daysBack: Int,
-        locale: Locale
+        restaurantId: String, daysBack: Int, locale: Locale
     ): List<Map<Int, Int>> {
         return tryToExecute<List<Map<Int, Int>>>(
             api = APIs.RESTAURANT_API,
@@ -299,9 +286,7 @@ class RestaurantGateway(
     }
 
     override suspend fun getOrdersRevenueByDaysBefore(
-        restaurantId: String,
-        daysBack: Int,
-        locale: Locale
+        restaurantId: String, daysBack: Int, locale: Locale
     ): List<Map<Int, Double>> {
         return tryToExecute<List<Map<Int, Double>>>(
             api = APIs.RESTAURANT_API,
@@ -330,4 +315,5 @@ class RestaurantGateway(
             get("/order/$restaurantId/orders")
         }
     }
+
 }

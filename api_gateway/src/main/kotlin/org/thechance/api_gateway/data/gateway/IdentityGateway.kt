@@ -17,7 +17,6 @@ import org.thechance.api_gateway.endpoints.gateway.IIdentityGateway
 import org.thechance.api_gateway.util.APIs
 import java.util.*
 
-
 @Single(binds = [IIdentityGateway::class])
 class IdentityGateway(
     client: HttpClient,

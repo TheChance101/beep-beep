@@ -19,7 +19,7 @@ fun Route.cuisineRoute() {
     val restaurantGateway: IRestaurantGateway by inject()
 
     route("/cuisine") {
-        authenticateWithRole(Role.RESTAURANT_OWNER) {
+        authenticateWithRole(Role.DASHBOARD_ADMIN) {
             post {
                 val params = call.receiveParameters()
                 val name = params["name"]?.trim().toString()
@@ -28,6 +28,7 @@ fun Route.cuisineRoute() {
                 respondWithResult(HttpStatusCode.Created, cuisine)
             }
         }
+
         get("/{id}/meals") {
             val (language, countryCode) = extractLocalizationHeader()
             val cuisineId = call.parameters["id"]?.trim().toString()

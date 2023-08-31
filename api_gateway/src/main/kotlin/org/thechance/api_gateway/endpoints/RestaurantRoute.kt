@@ -61,7 +61,6 @@ fun Route.restaurantRoutes() {
             respondWithResult(HttpStatusCode.OK, meals.map { it.toMeal() })
         }
 
-
         get("/{id}") {
             val (language, countryCode) = extractLocalizationHeader()
             val restaurantId = call.parameters["id"]?.trim().toString()
@@ -70,7 +69,9 @@ fun Route.restaurantRoutes() {
             )
             respondWithResult(HttpStatusCode.OK, restaurant)
         }
+
         authenticateWithRole(Role.DASHBOARD_ADMIN) {
+
             put {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
@@ -83,6 +84,7 @@ fun Route.restaurantRoutes() {
                 respondWithResult(HttpStatusCode.OK, updatedRestaurant.toRestaurant())
             }
         }
+
         authenticateWithRole(Role.RESTAURANT_OWNER) {
             put("/details") {
                 val tokenClaim = call.principal<JWTPrincipal>()
