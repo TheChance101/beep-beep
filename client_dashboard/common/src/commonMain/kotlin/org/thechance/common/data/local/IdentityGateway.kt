@@ -2,6 +2,8 @@ package org.thechance.common.data.local
 
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import org.thechance.common.data.local.local_dto.ConfigurationCollection
 import org.thechance.common.domain.getway.IIdentityGateway
 
@@ -49,6 +51,18 @@ class IdentityGateway(private val realm: Realm) : IIdentityGateway {
         return realm.query<ConfigurationCollection>(
             "$ID == $CONFIGURATION_ID"
         ).first().find()?.keepLoggedIn ?: false
+    }
+
+    override suspend fun getThemeMode(): Flow<Boolean> {
+        return realm.query<ConfigurationCollection>(
+            "$ID == $CONFIGURATION_ID"
+        ).asFlow().map { result -> result.list.find { it.isDarkMode }?.isDarkMode ?: false }
+    }
+
+    override suspend fun updateThemeMode(mode: Boolean) {
+        realm.write {
+            query<ConfigurationCollection>("$ID == $CONFIGURATION_ID").first().find()?.isDarkMode = mode
+        }
     }
 
     companion object {

@@ -47,7 +47,7 @@ private fun PipelineContext<Unit, ApplicationCall>.extractPermission(): Int {
 }
 
 fun Route.authenticateWithRole(role: Int, block: Route.() -> Unit) {
-    authenticate("auth-jwt", "refresh-jwt") {
+    authenticate("auth-jwt") {
         intercept(ApplicationCallPipeline.Call) {
             val permission = extractPermission()
             if (!hasPermission(permission, role)) {
