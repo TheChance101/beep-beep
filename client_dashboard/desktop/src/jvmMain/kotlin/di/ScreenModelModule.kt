@@ -2,6 +2,7 @@ package di
 
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
+import org.thechance.common.presentation.app.AppScreenModel
 import org.thechance.common.presentation.login.LoginScreenScreenModel
 import org.thechance.common.presentation.main.MainScreenModel
 import org.thechance.common.presentation.overview.OverviewScreenModel
@@ -16,4 +17,5 @@ val ScreenModelModule = module {
     factoryOf(::MainScreenModel)
     factoryOf(::UserScreenModel)
     factoryOf(::LoginScreenScreenModel)
+    factoryOf(::AppScreenModel)
 }
