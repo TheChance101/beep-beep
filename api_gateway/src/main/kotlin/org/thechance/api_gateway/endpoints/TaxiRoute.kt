@@ -12,13 +12,12 @@ import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
-import org.thechance.api_gateway.data.mappers.toTaxi
-import org.thechance.api_gateway.data.model.TaxiResource
-import org.thechance.api_gateway.util.Role
+import org.thechance.api_gateway.data.model.Taxi
 import org.thechance.api_gateway.endpoints.gateway.ITaxiGateway
 import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
 import org.thechance.api_gateway.endpoints.utils.respondWithResult
+import org.thechance.api_gateway.util.Role
 import java.util.Locale
 
 fun Route.taxiRoutes() {
@@ -27,7 +26,7 @@ fun Route.taxiRoutes() {
 
     route("/taxi") {
 
-        authenticateWithRole(Role.TAXI_DRIVER) {
+        authenticateWithRole(Role.DASHBOARD_ADMIN) {
             get {
                 val (language, countryCode) = extractLocalizationHeader()
                 val page = call.parameters["page"]?.toInt() ?: 1
@@ -35,10 +34,10 @@ fun Route.taxiRoutes() {
                 val local = Locale(language, countryCode)
                 val result = taxiGateway.getAllTaxi(local, page, limit)
 
-                respondWithResult(HttpStatusCode.OK, result.map { it.toTaxi() },)
+                respondWithResult(HttpStatusCode.OK, result,)
             }
             post {
-                val taxi = call.receive<TaxiResource>()
+                val taxi = call.receive<Taxi>()
 
                 val (language, countryCode) = extractLocalizationHeader()
                 val locale = Locale(language, countryCode)
@@ -51,7 +50,7 @@ fun Route.taxiRoutes() {
 
             put("/{taxiId}") {
                 val id = call.parameters["taxiId"] ?: ""
-                val taxi = call.receive<TaxiResource>()
+                val taxi = call.receive<Taxi>()
 
                 val (language, countryCode) = extractLocalizationHeader()
                 val locale = Locale(language, countryCode)
@@ -67,7 +66,7 @@ fun Route.taxiRoutes() {
                 val local = Locale(language, countryCode)
                 val result = taxiGateway.getTaxiById(id, local)
 
-                respondWithResult(HttpStatusCode.OK, result.toTaxi())
+                respondWithResult(HttpStatusCode.OK, result)
             }
 
 
@@ -79,7 +78,7 @@ fun Route.taxiRoutes() {
                 val result = taxiGateway.deleteTaxi(id, local)
                 val successMessage =
                     localizedMessagesFactory.createLocalizedMessages(local).taxiDeleteSuccessfully
-                respondWithResult(HttpStatusCode.OK, result.toTaxi(),successMessage)
+                respondWithResult(HttpStatusCode.OK, result,successMessage)
             }
         }
     }
