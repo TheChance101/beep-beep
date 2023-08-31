@@ -58,7 +58,9 @@ object MainContainer : BaseScreen<MainScreenModel, MainUiEffect, MainUiState, Ma
                 },
                 sideBar = {
                     DashboardSideBar(
-                        currentItem = tabNavigator.current.options.index.toInt()
+                        currentItem = tabNavigator.current.options.index.toInt(),
+                        onSwitchTheme = listener::onSwitchTheme,
+                        darkTheme = state.isDarkMode
                     ) { sideBarUnexpandedWidthInKms, mainMenuIsExpanded, itemHeight ->
                         TabNavigationItem(
                             tab = OverviewTab,

@@ -11,7 +11,7 @@ import org.thechance.common.presentation.util.ErrorState
 
 
 class MainScreenModel(
-    private val manageUsers: IManageUsersUseCase
+    private val manageUsers: IManageUsersUseCase,
     private val themeManagement: IThemeManagementUseCase
 ) : BaseScreenModel<MainUiState, MainUiEffect>(MainUiState()), MainInteractionListener {
 
@@ -63,11 +63,15 @@ class MainScreenModel(
     }
 
     private fun getCurrentThemeMode() {
-        coroutineScope.launch(Dispatchers.IO) {
-            themeManagement.getThemeMode().collect { isDarkMode ->
-                mutableState.update { it.copy(isDarkMode = isDarkMode) }
-            }
-        }
+        tryToCollect(
+            themeManagement::getThemeMode,
+            ::onGetThemeModeSuccessfully,
+            ::onError
+        )
+    }
+
+    private fun onGetThemeModeSuccessfully(isDarkMode: Boolean) {
+        updateState { it.copy(isDarkMode = isDarkMode) }
     }
 
 }
