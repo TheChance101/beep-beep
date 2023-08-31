@@ -4,8 +4,10 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.*
 import com.beepbeep.designSystem.ui.theme.Theme
@@ -27,6 +30,7 @@ import org.thechance.common.presentation.composables.table.BpTable
 import org.thechance.common.presentation.composables.table.TotalItemsIndicator
 import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.kms
+import java.awt.Dimension
 
 class RestaurantScreen :
     BaseScreen<RestaurantScreenModel, RestaurantUIEffect, RestaurantUiState, RestaurantInteractionListener>() {
@@ -61,6 +65,17 @@ class RestaurantScreen :
                 currentLocation = state.addNewRestaurantDialogUiState.currentLocation,
             )
         }
+
+        RestaurantAddCuisineDialog(
+            onCloseRequest = listener::onAddCuisineDialogCloseRequest,
+            onClickAdd = listener::onAddCuisineDialogAddClicked,
+            onCuisineNameChange = listener::onCuisineNameChange,
+            onClickDelete = listener::onClickDeleteCuisine,
+            isVisible = state.restaurantAddCuisineDialogUiState.isVisible,
+            cuisineName = state.restaurantAddCuisineDialogUiState.cuisineName,
+            cuisines = state.restaurantAddCuisineDialogUiState.cuisines,
+            cuisinesSize = state.restaurantAddCuisineDialogUiState.cuisinesSize,
+        )
 
         Column(
             Modifier.background(Theme.colors.surface).fillMaxSize(),
@@ -107,7 +122,7 @@ class RestaurantScreen :
             )
             BpOutlinedButton(
                 title = Resources.Strings.addCuisine,
-                onClick = { /* TODO: Show Add cuisine DropdownMenu */ },
+                onClick = listener::onClickAddCuisine,
                 textPadding = PaddingValues(horizontal = 24.kms),
                 modifier = Modifier.cursorHoverIconHand()
             )
@@ -362,13 +377,93 @@ class RestaurantScreen :
                         title = Resources.Strings.cancel,
                         onClick = { onClickCancel(); onDismissRequest() },
                         modifier = Modifier.padding(end = 16.kms)
-                            .height(32.kms)
+                            .height(32.dp)
                             .weight(1f)
                     )
                     BpOutlinedButton(
                         title = Resources.Strings.save,
                         onClick = { onClickSave(); onDismissRequest() },
-                        modifier = Modifier.height(32.kms).weight(3f),
+                        modifier = Modifier.height(32.dp).weight(3f),
+                        textPadding = PaddingValues(0.dp)
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun RestaurantAddCuisineDialog(
+        onCloseRequest: () -> Unit,
+        onClickAdd: () -> Unit,
+        onClickDelete: (String) -> Unit,
+        onCuisineNameChange: (String) -> Unit,
+        isVisible: Boolean,
+        cuisineName: String,
+        cuisines: List<String>,
+        cuisinesSize: Int,
+    ) {
+        Dialog(
+            visible = isVisible,
+            transparent = true,
+            undecorated = true,
+            resizable = false,
+            onCloseRequest = onCloseRequest,
+        ) {
+            window.minimumSize = Dimension(400, 390)
+            Column(modifier = Modifier.background(Theme.colors.surface)) {
+                Text(
+                    text = Resources.Strings.cuisines,
+                    style = Theme.typography.headline,
+                    color = Theme.colors.contentPrimary,
+                    modifier = Modifier.padding(top = 24.kms, start = 24.kms)
+                )
+                BpSimpleTextField(
+                    text = cuisineName,
+                    hint = Resources.Strings.cuisines,
+                    onValueChange = onCuisineNameChange,
+                    modifier = Modifier.padding(top = 24.kms, start = 24.kms, end = 24.kms)
+                )
+                LazyColumn(
+                    modifier = Modifier.padding(top = 16.kms).background(Theme.colors.background)
+                        .fillMaxWidth().heightIn(min = 64.kms, max = 256.kms)
+                ) {
+                    items(cuisinesSize) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 24.kms, vertical = 16.kms),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                cuisines[it],
+                                style = Theme.typography.caption,
+                                color = Theme.colors.contentPrimary,
+                            )
+                            Spacer(modifier = Modifier.weight(1f))
+
+                            Icon(
+                                painter = painterResource(Resources.Drawable.trashBin),
+                                contentDescription = null,
+                                tint = Theme.colors.primary,
+                                modifier = Modifier.noRipple { onClickDelete(cuisines[it]) }
+                            )
+                        }
+                    }
+                }
+                Row(
+                    Modifier.fillMaxWidth().padding(24.kms),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+
+                    BpTransparentButton(
+                        title = Resources.Strings.cancel,
+                        onClick = onCloseRequest,
+                        modifier = Modifier.padding(end = 16.kms)
+                            .height(32.dp)
+                            .weight(1f)
+                    )
+                    BpOutlinedButton(
+                        title = Resources.Strings.add,
+                        onClick = onClickAdd,
+                        modifier = Modifier.height(32.dp).weight(3f),
                         textPadding = PaddingValues(0.dp)
                     )
                 }

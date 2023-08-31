@@ -6,8 +6,11 @@ import org.thechance.common.domain.entity.Restaurant
 
 interface IRestaurantGateway {
     suspend fun getRestaurants(): DataWrapper<Restaurant>
+
     suspend fun searchRestaurantsByRestaurantName(restaurantName: String): DataWrapper<Restaurant>
+
     suspend fun filterRestaurants(rating: Double, priceLevel: Int): DataWrapper<Restaurant>
+
     suspend fun searchFilterRestaurants(
         restaurantName: String,
         rating: Double,
@@ -15,4 +18,9 @@ interface IRestaurantGateway {
     ): DataWrapper<Restaurant>
 
     suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant
+    suspend fun getCuisines(): List<String>
+
+    suspend fun addCuisine(cuisineName: String): List<String>
+
+    suspend fun deleteCuisine(cuisineName: String): List<String>
 }

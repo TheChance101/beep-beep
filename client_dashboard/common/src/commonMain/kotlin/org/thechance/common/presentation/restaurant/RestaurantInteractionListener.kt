@@ -38,4 +38,15 @@ interface RestaurantInteractionListener : BaseInteractionListener {
     fun onCreateNewRestaurantClicked()
 
     fun onAddressChange(address: String)
+
+    fun onClickAddCuisine()
+
+    fun onClickDeleteCuisine(cuisineName: String)
+
+    fun onAddCuisineDialogCloseRequest()
+
+    fun onAddCuisineDialogAddClicked()
+
+    fun onCuisineNameChange(cuisineName: String)
+
 }

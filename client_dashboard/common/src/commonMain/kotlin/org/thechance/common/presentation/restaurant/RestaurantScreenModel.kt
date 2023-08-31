@@ -5,6 +5,7 @@ import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.usecase.FilterRestaurantsUseCase
 import org.thechance.common.domain.usecase.IHandleLocationUseCase
 import org.thechance.common.domain.usecase.IManageRestaurantUseCase
+import org.thechance.common.domain.usecase.MangeCuisinesUseCase
 import org.thechance.common.domain.usecase.SearchFilterRestaurantsUseCase
 import org.thechance.common.domain.usecase.SearchRestaurantsByRestaurantNameUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
@@ -18,11 +19,13 @@ class RestaurantScreenModel(
     private val searchRestaurants: SearchRestaurantsByRestaurantNameUseCase,
     private val searchFilterRestaurants: SearchFilterRestaurantsUseCase,
     private val filterRestaurants: FilterRestaurantsUseCase,
+    private val mangeCuisines: MangeCuisinesUseCase,
 ) : BaseScreenModel<RestaurantUiState, RestaurantUIEffect>(RestaurantUiState()),
     RestaurantInteractionListener {
 
     init {
         getRestaurants()
+        getCuisines()
     }
 
     private fun getRestaurants() {
@@ -60,6 +63,25 @@ class RestaurantScreenModel(
             ::onGetRestaurantSuccessfully,
             ::onError
         )
+    }
+
+    private fun getCuisines() {
+        tryToExecute(
+            mangeCuisines::getCuisines,
+            ::onGetCuisinesSuccessfully,
+            ::onError
+        )
+    }
+
+    private fun onGetCuisinesSuccessfully(cuisines: List<String>) {
+        updateState {
+            it.copy(
+                restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
+                    cuisines = cuisines,
+                    cuisinesSize = cuisines.size
+                )
+            )
+        }
     }
 
     private fun onError(error: ErrorState) {
@@ -211,6 +233,16 @@ class RestaurantScreenModel(
         }
     }
 
+    override fun onClickAddCuisine() {
+        updateState {
+            it.copy(
+                restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
+                    isVisible = true
+                )
+            )
+        }
+    }
+
     override fun onCreateNewRestaurantClicked() {
         tryToExecute(
             callee = { manageRestaurant.createRestaurant(mutableState.value.addNewRestaurantDialogUiState.toEntity()) },
@@ -227,6 +259,43 @@ class RestaurantScreenModel(
                 restaurants = newRestaurant,
                 isLoading = false,
                 isAddNewRestaurantDialogVisible = false
+            )
+        }
+    }
+
+    override fun onClickDeleteCuisine(cuisineName: String) {
+        tryToExecute(
+            { mangeCuisines.deleteCuisine(cuisineName) },
+            ::onGetCuisinesSuccessfully,
+            ::onError
+        )
+    }
+
+    override fun onAddCuisineDialogCloseRequest() {
+        updateState {
+            it.copy(
+                restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
+                    isVisible = false,
+                    cuisineName = ""
+                )
+            )
+        }
+    }
+
+    override fun onAddCuisineDialogAddClicked() {
+        tryToExecute(
+            { mangeCuisines.addCuisine(state.value.restaurantAddCuisineDialogUiState.cuisineName) },
+            ::onGetCuisinesSuccessfully,
+            ::onError
+        )
+    }
+
+    override fun onCuisineNameChange(cuisineName: String) {
+        updateState {
+            it.copy(
+                restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
+                    cuisineName = cuisineName
+                )
             )
         }
     }

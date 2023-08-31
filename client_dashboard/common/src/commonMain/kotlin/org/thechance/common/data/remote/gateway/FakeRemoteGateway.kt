@@ -9,13 +9,26 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.thechance.common.data.local.LocalGateway
 import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
-import org.thechance.common.data.remote.model.*
-import org.thechance.common.domain.entity.*
+import org.thechance.common.data.remote.model.DataWrapperDto
+import org.thechance.common.data.remote.model.RestaurantDto
+import org.thechance.common.data.remote.model.TaxiDto
+import org.thechance.common.data.remote.model.UserDto
+import org.thechance.common.data.remote.model.toEntity
+import org.thechance.common.domain.entity.AddRestaurant
+import org.thechance.common.domain.entity.DataWrapper
+import org.thechance.common.domain.entity.Location
+import org.thechance.common.domain.entity.NewTaxiInfo
+import org.thechance.common.domain.entity.Restaurant
+import org.thechance.common.domain.entity.Taxi
+import org.thechance.common.domain.entity.TaxiFiltration
+import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.getway.IRemoteGateway
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.math.*
+import java.util.Date
+import java.util.UUID
+import kotlin.math.ceil
+import kotlin.math.floor
 
 class FakeRemoteGateway(
     private val localGateway: LocalGateway
@@ -23,6 +36,7 @@ class FakeRemoteGateway(
 
     private val restaurant = mutableListOf<RestaurantDto>()
     private val taxis = mutableListOf<TaxiDto>()
+    private val cuisines = mutableListOf<String>()
 
     init {
         taxis.addAll(
@@ -225,6 +239,30 @@ class FakeRemoteGateway(
                     priceLevel = 3,
                     workingHours = "06:30 - 22:30"
                 ),
+            )
+        )
+        cuisines.addAll(
+            listOf(
+                "Angolan cuisine",
+                "Cameroonian cuisine",
+                "Chadian cuisine",
+                "Congolese cuisine",
+                "Centrafrican cuisine",
+                "Equatorial Guinea cuisine",
+                "Gabonese cuisine",
+                "Santomean cuisine",
+                "Burundian cuisine",
+                "Djiboutian cuisine",
+                "Eritrean cuisine",
+                "Ethiopian cuisine",
+                "Kenyan cuisine",
+                "Maasai cuisine",
+                "Rwandan cuisine",
+                "Somali cuisine",
+                "South Sudanese cuisine",
+                "Tanzanian cuisine",
+                "Zanzibari cuisine",
+                "Ugandan cuisine",
             )
         )
     }
@@ -843,7 +881,11 @@ class FakeRemoteGateway(
         }
     }
 
-    override suspend fun filterTaxis(taxi: TaxiFiltration, page: Int, numberOfTaxis: Int): DataWrapper<Taxi> {
+    override suspend fun filterTaxis(
+        taxi: TaxiFiltration,
+        page: Int,
+        numberOfTaxis: Int
+    ): DataWrapper<Taxi> {
         val taxiDto = taxi.toDto()
         val taxisFiltered = taxis.filter {
             it.color == taxiDto.color && it.seats == taxiDto.seats && it.status == taxiDto.status
@@ -855,7 +897,10 @@ class FakeRemoteGateway(
         return try {
             DataWrapperDto(
                 totalPages = numberOfPages,
-                result = taxisFiltered.subList(startIndex, endIndex.coerceAtMost(taxisFiltered.size)),
+                result = taxisFiltered.subList(
+                    startIndex,
+                    endIndex.coerceAtMost(taxisFiltered.size)
+                ),
                 totalResult = taxisFiltered.size
             ).toEntity()
         } catch (e: Exception) {
@@ -928,6 +973,20 @@ class FakeRemoteGateway(
 
     override suspend fun getCurrentLocation(): Location {
         return Location(location = "30.044420,31.235712")
+    }
+
+    override suspend fun getCuisines(): List<String> {
+        return cuisines
+    }
+
+    override suspend fun addCuisine(cuisineName: String): List<String> {
+        if (cuisineName !in cuisines) cuisines.add(cuisineName)
+        return cuisines
+    }
+
+    override suspend fun deleteCuisine(cuisineName: String): List<String> {
+        cuisines.remove(cuisineName)
+        return cuisines
     }
 
     private fun createTaxiPDFReport(): File {

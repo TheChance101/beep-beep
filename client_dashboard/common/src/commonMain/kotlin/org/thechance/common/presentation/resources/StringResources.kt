@@ -31,6 +31,9 @@ data class StringResources(
     val workStartHourHint: String = "1:00",
     val workEndHourHint: String = "24:00",
     val restaurants: String = "Restaurants",
+    val cuisines: String = "Cuisines",
+    val enterCuisineName: String = "Enter cuisine name",
+    val add: String = "Add",
     //endregion Restaurant
 
     //region Taxi
