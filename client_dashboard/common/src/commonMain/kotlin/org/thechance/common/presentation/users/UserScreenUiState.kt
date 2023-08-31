@@ -99,11 +99,11 @@ data class UserScreenUiState(
         val items: List<MenuItemUiState> = listOf(
             MenuItemUiState(
                 iconPath = "ic_edit.xml",
-                text = "Edit",
+                text = "Permission",
             ),
             MenuItemUiState(
-                iconPath = "ic_delete.svg",
-                text = "Delete",
+                iconPath = "ic_disable.svg",
+                text = "Disable",
                 isSecondary = true,
             ),
         )

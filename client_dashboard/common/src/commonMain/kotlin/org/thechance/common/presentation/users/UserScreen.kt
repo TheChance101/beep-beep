@@ -290,19 +290,20 @@ class UserScreen :
         onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
         onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
     ) {
+        val stringResources = Resources.Strings
         BpDropdownMenu(
             expanded = user.username == editUserMenu.username,
             onDismissRequest = onEditUserDismiss,
-            shape = RoundedCornerShape(Theme.radius.medium),
-            offset = DpOffset.Zero.copy(x = -100.kms)
+            shape = RoundedCornerShape(Theme.radius.medium).copy(topEnd = CornerSize(0.dp)),
+            offset = DpOffset.Zero.copy(x = (-178).kms)
         ) {
             Column {
                 editUserMenu.items.forEach {
                     BpDropdownMenuItem(
                         onClick = {
                             when (it.text) {
-                                "Edit" -> onEditUserMenuItemClicked(user)
-                                "Delete" -> onDeleteUserMenuItemClicked(user)
+                                stringResources.permission -> onEditUserMenuItemClicked(user)
+                                stringResources.disable -> onDeleteUserMenuItemClicked(user)
                             }
                         },
                         text = it.text,
