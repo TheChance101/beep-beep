@@ -17,4 +17,5 @@ val UseCaseModule = module {
     singleOf(::ThemeManagementUseCase) { bind<IThemeManagementUseCase>() }
     singleOf(::ManageTaxisUseCase) { bind<IManageTaxisUseCase>() }
     singleOf(::ManageUsersUseCase) { bind<IManageUsersUseCase>() }
+    singleOf(::LogoutUserUseCase) { bind<ILogoutUserUseCase>() }
 }
