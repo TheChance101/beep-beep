@@ -1,6 +1,5 @@
 package domain.usecase
 
-import domain.entity.Session
 import domain.gateway.IRemoteGateway
 import domain.utils.InvalidPasswordException
 import domain.utils.InvalidUsernameException
@@ -36,20 +35,7 @@ class ManageAuthenticationUseCase(private val remoteGateway: IRemoteGateway) :
             throw UnAuthorizedException()
         }
         return true
-//        return if (validateLoginFields(username, password)) {
-//            remoteGateway.loginUser(username, password)
-//            true
-//        } else {
-//            throw UnAuthorizedException()
-//        }
-//        return if (validateLoginFields(username, password)) {
-//            val session = remoteGateway.loginUser(username, password)
-//            session.accessToken.isNotEmpty()
-//        } else {
-//            false
-//        }
     }
-
 
     private fun validateLoginFields(username: String, password: String): Boolean {
         if (username.isEmpty()) {

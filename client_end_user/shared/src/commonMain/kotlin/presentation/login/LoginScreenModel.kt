@@ -8,17 +8,14 @@ import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
-class LoginScreenModel() :
+class LoginScreenModel(private val manageAuthentication: IManageAuthenticationUseCase) :
     BaseScreenModel<LoginScreenUIState, LoginScreenUIEffect>(LoginScreenUIState()),
     LoginScreenInteractionListener {
-
-    private val manageAuthentication: IManageAuthenticationUseCase by inject()
 
     override val viewModelScope: CoroutineScope = coroutineScope
 
     override fun onUsernameChanged(username: String) {
         updateState { it.copy(username = username) }
-
     }
 
     override fun onPasswordChanged(password: String) {
@@ -35,6 +32,21 @@ class LoginScreenModel() :
             ::onLoginSuccess,
             ::onLoginError
         )
+    }
+
+    private fun onLoginSuccess(isLoggedIn: Boolean) {
+        println(" Ahmed :  Successfully logged in")
+        if (isLoggedIn) {
+            sendNewEffect(LoginScreenUIEffect.Login)
+            updateState {
+                it.copy(
+                    passwordErrorMsg = "",
+                    usernameErrorMsg = "",
+                    isPasswordError = false,
+                    isUsernameError = false
+                )
+            }
+        }
     }
 
     private fun onLoginError(errorState: ErrorState) {
@@ -59,21 +71,6 @@ class LoginScreenModel() :
             ErrorState.RequestFailed -> {}
             ErrorState.UnAuthorized -> {}
             ErrorState.WifiDisabled -> {}
-        }
-    }
-
-    private fun onLoginSuccess(isLoggedIn: Boolean) {
-        println(" Ahmed :  Successfully logged in")
-        if (isLoggedIn) {
-            sendNewEffect(LoginScreenUIEffect.Login)
-            updateState {
-                it.copy(
-                    passwordErrorMsg = "",
-                    usernameErrorMsg = "",
-                    isPasswordError = false,
-                    isUsernameError = false
-                )
-            }
         }
     }
 

@@ -1,11 +1,10 @@
 package data.gateway
 
-import data.local.mapper.toEntity
+import data.remote.mapper.toEntity
 import data.remote.model.BaseResponse
 import data.remote.model.SessionDto
 import domain.entity.Session
 import domain.gateway.IRemoteGateway
-import domain.utils.UsernameException
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.forms.submitForm
@@ -23,14 +22,17 @@ class RemoteGateway(private val client: HttpClient) : IRemoteGateway {
         email: String
     ): Boolean {
         try {
-            val response = client.submitForm("/user",
+            val response = client.submitForm(
                 formParameters = parameters {
                     append("fullName", fullName)
                     append("username", username)
                     append("password", password)
                     append("email", email)
                 }
-            )
+            ) {
+                url("/signup")
+                header("Accept-Language", "en")
+            }
             val responseBody = response.body<BaseResponse<Boolean>>()
             if (response.status.isSuccess()) {
                 return responseBody.value ?: false
@@ -44,13 +46,15 @@ class RemoteGateway(private val client: HttpClient) : IRemoteGateway {
 
     override suspend fun loginUser(username: String, password: String): Session {
         try {
-            val response = client.submitForm("/login",
+            val response = client.submitForm(
                 formParameters = parameters {
                     append("username", username)
                     append("password", password)
                 }
-            )
-            println("From try to login ${response.body<BaseResponse<SessionDto>>()}")
+            ) {
+                url("/login")
+                header("Accept-Language", "en")
+            }
             val responseBody = response.body<BaseResponse<SessionDto>>()
             if (response.status.isSuccess()) {
                 return responseBody.value?.toEntity() ?: throw Exception()
@@ -59,7 +63,6 @@ class RemoteGateway(private val client: HttpClient) : IRemoteGateway {
             }
 
         } catch (exception: Exception) {
-            println("Ahmed : Catch Error in gateWay")
             throw Exception(exception.message)
         }
     }
