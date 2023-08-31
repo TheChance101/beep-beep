@@ -297,6 +297,20 @@ class RestaurantGateway(
         }
     }
 
+    override suspend fun getOrdersRevenueByDaysBefore(
+        restaurantId: String,
+        daysBack: Int,
+        locale: Locale
+    ): List<Map<Int, Double>> {
+        return tryToExecute<List<Map<Int, Double>>>(
+            api = APIs.RESTAURANT_API,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+            }
+        ) {
+            get("/order/revenue-by-days-back?restaurantId=$restaurantId&&daysBack=$daysBack")
+        }
+    }
 
     override suspend fun restaurantOrders(restaurantId: String, locale: Locale): Flow<Order> {
         return tryToExecuteFromWebSocket<Order>(api = APIs.RESTAURANT_API, path = "/order/restaurant/$restaurantId")
