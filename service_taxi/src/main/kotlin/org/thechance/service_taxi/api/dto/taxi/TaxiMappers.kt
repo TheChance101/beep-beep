@@ -54,6 +54,7 @@ fun Taxi.toCollection(): TaxiCollection {
         type = type,
         driverId = ObjectId(driverId),
         isAvailable = isAvailable,
-        seats = seats
+        seats = seats,
+        id = if (id.isNotBlank()) ObjectId(id) else ObjectId()
     )
 }
