@@ -133,6 +133,30 @@ fun Route.restaurantRoutes() {
                     respondWithResult(HttpStatusCode.OK, result)
                 }
 
+                get("/count-by-days-back") {
+                    val id = call.parameters["restaurantId"]?.trim().toString()
+                    val daysBack = call.parameters["daysBack"]?.trim()?.toInt() ?: 7
+                    val (language, countryCode) = extractLocalizationHeader()
+                    val result = restaurantGateway.getOrdersCountByDaysBefore(
+                        restaurantId = id,
+                        daysBack = daysBack,
+                        locale = Locale(language, countryCode)
+                    )
+                    respondWithResult(HttpStatusCode.OK, result)
+                }
+
+                get("/revenue-by-days-back") {
+                    val id = call.parameters["restaurantId"]?.trim().toString()
+                    val daysBack = call.parameters["daysBack"]?.trim()?.toInt() ?: 7
+                    val (language, countryCode) = extractLocalizationHeader()
+                    val result = restaurantGateway.getOrdersRevenueByDaysBefore(
+                        restaurantId = id,
+                        daysBack = daysBack,
+                        locale = Locale(language, countryCode)
+                    )
+                    respondWithResult(HttpStatusCode.OK, result)
+                }
+
                 put("/{id}/status") {
                     val id = call.parameters["id"]?.trim().toString()
                     val params = call.receiveParameters()

@@ -1,17 +1,24 @@
 package org.thechance.common.presentation.main
 
+import cafe.adriel.voyager.core.model.coroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import org.thechance.common.domain.usecase.IManageUsersUseCase
+import org.thechance.common.domain.usecase.IThemeManagementUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
 
 class MainScreenModel(
     private val manageUsers: IManageUsersUseCase
+    private val themeManagement: IThemeManagementUseCase
 ) : BaseScreenModel<MainUiState, MainUiEffect>(MainUiState()), MainInteractionListener {
 
 
     init {
         getUserInfo()
+        getCurrentThemeMode()
     }
 
     private fun getUserInfo() {
@@ -47,4 +54,20 @@ class MainScreenModel(
         updateState { it.copy(isLogin = false) }
         sendNewEffect(MainUiEffect.Logout)
     }
+
+    override fun onSwitchTheme() {
+        coroutineScope.launch(Dispatchers.IO) {
+            mutableState.update { it.copy(isDarkMode = !it.isDarkMode) }
+            themeManagement.switchTheme(mutableState.value.isDarkMode)
+        }
+    }
+
+    private fun getCurrentThemeMode() {
+        coroutineScope.launch(Dispatchers.IO) {
+            themeManagement.getThemeMode().collect { isDarkMode ->
+                mutableState.update { it.copy(isDarkMode = isDarkMode) }
+            }
+        }
+    }
+
 }

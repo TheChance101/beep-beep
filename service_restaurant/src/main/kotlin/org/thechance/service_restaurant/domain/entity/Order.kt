@@ -9,5 +9,20 @@ data class Order(
     val meals: List<OrderMeal>,
     val totalPrice: Double,
     val createdAt: LocalDateTime,
-    val status: Int
-)
+    val status: Status
+){
+    enum class Status(val statusCode: Int) {
+        PENDING(0),
+        COOKING(1),
+        APPROVED(2),
+        CANCELED(3),
+        DONE(4);
+
+        companion object {
+            fun getOrderStatus(statusCode: Int) : Status {
+                Status.values().forEach { if (it.statusCode == statusCode) { return it } }
+                return PENDING
+            }
+        }
+    }
+}

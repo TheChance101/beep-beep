@@ -8,5 +8,6 @@ data class MainUiState(
     val firstUsernameLetter: String = "",
     val isLogin: Boolean = false,
     val error: ErrorState = ErrorState.UnKnownError,
-    val isDropMenuExpanded: Boolean = false
+    val isDropMenuExpanded: Boolean = false,
+    val isDarkMode: Boolean = false
 )
