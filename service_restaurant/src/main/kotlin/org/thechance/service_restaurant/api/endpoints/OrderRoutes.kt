@@ -13,8 +13,8 @@ import org.thechance.service_restaurant.api.models.WebSocketRestaurant
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.SocketHandler
+import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.usecase.IManageOrderUseCase
-import org.thechance.service_restaurant.domain.utils.OrderStatus
 import org.thechance.service_restaurant.domain.utils.currentDateTime
 import org.thechance.service_restaurant.domain.utils.exceptions.INSERT_ORDER_ERROR
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_REQUEST_PARAMETER
@@ -29,6 +29,13 @@ fun Route.orderRoutes() {
     val socketHandler: SocketHandler by inject()
 
     route("/order") {
+
+        get("/revenue-by-days-back") {
+            val restaurantId = call.parameters["restaurantId"] ?: throw MultiErrorException(listOf(NOT_FOUND))
+            val daysBack = call.parameters["daysBack"]?.toInt() ?: 7
+            val result = manageOrder.getOrdersRevenueByDaysBefore(restaurantId = restaurantId, daysBack = daysBack)
+            call.respond(HttpStatusCode.OK, result)
+        }
 
         get("/count-by-days-back") {
             val restaurantId = call.parameters["restaurantId"] ?: throw MultiErrorException(listOf(NOT_FOUND))
@@ -48,7 +55,7 @@ fun Route.orderRoutes() {
             val status = call.receiveParameters()["status"]?.toInt() ?: throw MultiErrorException(
                 listOf(INVALID_REQUEST_PARAMETER)
             )
-            val result = manageOrder.updateOrderStatus(orderId = id, state = OrderStatus.getOrderStatus(status))
+            val result = manageOrder.updateOrderStatus(orderId = id, state = Order.Status.getOrderStatus(status))
             call.respond(HttpStatusCode.OK, result)
         }
 

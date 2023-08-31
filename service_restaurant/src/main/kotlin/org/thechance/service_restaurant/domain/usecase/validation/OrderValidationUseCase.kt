@@ -1,18 +1,15 @@
 package org.thechance.service_restaurant.domain.usecase.validation
 
+import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.utils.IValidation
-import org.thechance.service_restaurant.domain.utils.OrderStatus
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_REQUEST_PARAMETER
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_TIME
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
-
-import java.time.LocalTime
 
 interface IOrderValidationUseCase {
     fun validateGetOrdersByRestaurantId(restaurantId: String)
     fun validateGetOrderById(orderId: String)
-    fun validateUpdateOrder(orderId: String, status: OrderStatus)
+    fun validateUpdateOrder(orderId: String, status: Order.Status)
     fun validateGetOrdersHistory(restaurantId: String, page: Int, limit: Int)
 
 }
@@ -46,7 +43,7 @@ class OrderValidationUseCase(
         }
     }
 
-    override fun validateUpdateOrder(orderId: String, status: OrderStatus) {
+    override fun validateUpdateOrder(orderId: String, status: Order.Status) {
         val validationErrors = mutableListOf<Int>()
 
         if (!basicValidation.isValidId(orderId)) {
