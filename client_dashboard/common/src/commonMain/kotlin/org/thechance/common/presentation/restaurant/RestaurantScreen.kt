@@ -410,7 +410,7 @@ class RestaurantScreen :
             resizable = false,
             onCloseRequest = onCloseRequest,
         ) {
-            window.minimumSize = Dimension(400, 390)
+            window.minimumSize = Dimension(400, 405)
             Column(
                 modifier = Modifier
                     .padding(top = 16.kms, start = 16.kms, end = 16.kms)
