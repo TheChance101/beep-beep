@@ -64,7 +64,13 @@ class RestaurantScreenModel(
 
 
     override fun onSaveFilterRestaurantsClicked(rating: Double, priceLevel: Int) {
-        updateState { it.copy(isFiltered = true) }
+        updateState {
+            it.copy(
+                restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
+                    isFiltered = true
+                )
+            )
+        }
         getRestaurants(
             pageNumber = 1,
             numberOfRestaurantsInPage = state.value.numberOfRestaurantsInPage,
@@ -75,7 +81,15 @@ class RestaurantScreenModel(
     }
 
     override fun onCancelFilterRestaurantsClicked() {
-        updateState { it.copy(filterRating = 0.0, filterPriceLevel = 1, isFiltered = false) }
+        updateState {
+            it.copy(
+                restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
+                    filterRating = 0.0,
+                    filterPriceLevel = 1,
+                    isFiltered = false
+                )
+            )
+        }
         getRestaurants(
             pageNumber = 1,
             numberOfRestaurantsInPage = state.value.numberOfRestaurantsInPage,
@@ -91,27 +105,51 @@ class RestaurantScreenModel(
         getRestaurants(
             pageNumber = 1,
             numberOfRestaurantsInPage = state.value.numberOfRestaurantsInPage,
-            rating = if (state.value.isFiltered) state.value.filterRating else null,
-            priceLevel = if (state.value.isFiltered) state.value.filterPriceLevel else null,
+            rating = if (state.value.restaurantFilterDropdownMenuUiState.isFiltered) state.value.restaurantFilterDropdownMenuUiState.filterRating else null,
+            priceLevel = if (state.value.restaurantFilterDropdownMenuUiState.isFiltered) state.value.restaurantFilterDropdownMenuUiState.filterPriceLevel else null,
             restaurantName = state.value.search
         )
 
     }
 
     override fun onClickDropDownMenu() {
-        updateState { it.copy(isFilterDropdownMenuExpanded = true) }
+        updateState {
+            it.copy(
+                restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
+                    isFilterDropdownMenuExpanded = true
+                )
+            )
+        }
     }
 
     override fun onDismissDropDownMenu() {
-        updateState { it.copy(isFilterDropdownMenuExpanded = false) }
+        updateState {
+            it.copy(
+                restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
+                    isFilterDropdownMenuExpanded = false
+                )
+            )
+        }
     }
 
     override fun onClickFilterRatingBar(rating: Double) {
-        updateState { it.copy(filterRating = rating) }
+        updateState {
+            it.copy(
+                restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
+                    filterRating = rating
+                )
+            )
+        }
     }
 
     override fun onClickFilterPriceBar(priceLevel: Int) {
-        updateState { it.copy(filterPriceLevel = priceLevel) }
+        updateState {
+            it.copy(
+                restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
+                    filterPriceLevel = priceLevel
+                )
+            )
+        }
     }
 
     override fun onPageClicked(pageNumber: Int) {
@@ -119,8 +157,8 @@ class RestaurantScreenModel(
         getRestaurants(
             pageNumber = pageNumber,
             numberOfRestaurantsInPage = state.value.numberOfRestaurantsInPage,
-            rating = if (state.value.isFiltered) state.value.filterRating else null,
-            priceLevel = if (state.value.isFiltered) state.value.filterPriceLevel else null,
+            rating = if (state.value.restaurantFilterDropdownMenuUiState.isFiltered) state.value.restaurantFilterDropdownMenuUiState.filterRating else null,
+            priceLevel = if (state.value.restaurantFilterDropdownMenuUiState.isFiltered) state.value.restaurantFilterDropdownMenuUiState.filterPriceLevel else null,
             restaurantName = state.value.search
         )
     }
@@ -130,8 +168,8 @@ class RestaurantScreenModel(
         getRestaurants(
             pageNumber = state.value.selectedPageNumber,
             numberOfRestaurantsInPage = numberOfRestaurantsInPage,
-            rating = if (state.value.isFiltered) state.value.filterRating else null,
-            priceLevel = if (state.value.isFiltered) state.value.filterPriceLevel else null,
+            rating = if (state.value.restaurantFilterDropdownMenuUiState.isFiltered) state.value.restaurantFilterDropdownMenuUiState.filterRating else null,
+            priceLevel = if (state.value.restaurantFilterDropdownMenuUiState.isFiltered) state.value.restaurantFilterDropdownMenuUiState.filterPriceLevel else null,
             restaurantName = state.value.search
         )
     }
