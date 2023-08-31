@@ -5,8 +5,11 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.util.pipeline.*
+import org.thechance.api_gateway.data.localizedMessages.Country
+import org.thechance.api_gateway.data.localizedMessages.Language
 
 suspend inline fun <reified T> PipelineContext<Unit, ApplicationCall>.respondWithResult(
     statusCode: HttpStatusCode,
@@ -24,28 +27,37 @@ suspend fun respondWithError(
     call.respond(statusCode, ServerResponse.error(errorMessage, statusCode.value))
 }
 
-fun PipelineContext<Unit, ApplicationCall>.extractLocalizationHeader(): Pair<String?, String?> {
+fun PipelineContext<Unit, ApplicationCall>.extractLocalizationHeader(): Pair<String, String> {
     val headers = call.request.headers
-    val language = headers["Accept-Language"]?.trim()
-    val countryCode = headers["Country-Code"]?.trim()
+    val language = headers["Accept-Language"]?.trim() ?: Language.ENGLISH.code
+    val countryCode = headers["Country-Code"]?.trim() ?: Country.EGYPT.code
     return Pair(language, countryCode)
 }
 
-fun WebSocketServerSession.extractLocalizationHeaderFromWebSocket(): Pair<String?, String?> {
+fun WebSocketServerSession.extractLocalizationHeaderFromWebSocket(): Pair<String, String> {
     val headers = call.request.headers
-    val language = headers["Accept-Language"]?.trim()
-    val countryCode = headers["Country-Code"]?.trim()
+    val language = headers["Accept-Language"]?.trim() ?: Language.ENGLISH.code
+    val countryCode = headers["Country-Code"]?.trim() ?: Country.EGYPT.code
     return Pair(language, countryCode)
 }
 
-fun PipelineContext<Unit, ApplicationCall>.extractPermissions() : List<Int>{
-    val tokenClaim = call.principal<JWTPrincipal>()
-    return tokenClaim?.payload?.getClaim("permissions")?.asString()
-        ?.split(",")?.mapNotNull { it.toIntOrNull() } ?: emptyList()
+private fun PipelineContext<Unit, ApplicationCall>.extractPermission(): Int {
+    val principal = call.principal<JWTPrincipal>()
+    return principal?.getClaim("permission", Int::class) ?: -1
 }
 
-fun WebSocketServerSession.extractPermissionsFromWebSocket() : List<Int>{
-    val tokenClaim = call.principal<JWTPrincipal>()
-    return tokenClaim?.payload?.getClaim("permissions")?.asString()
-        ?.split(",")?.mapNotNull { it.toIntOrNull() } ?: emptyList()
+fun Route.authenticateWithRole(role: Int, block: Route.() -> Unit) {
+    authenticate("auth-jwt") {
+        intercept(ApplicationCallPipeline.Call) {
+            val permission = extractPermission()
+            if (!hasPermission(permission, role)) {
+                call.respond(HttpStatusCode.Unauthorized)
+            }
+        }
+        block()
+    }
+}
+
+private fun hasPermission(permission: Int, role: Int): Boolean {
+    return (permission and role) == role
 }

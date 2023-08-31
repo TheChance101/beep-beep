@@ -25,10 +25,10 @@ import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.getway.IRemoteGateway
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.UUID
 import kotlin.math.ceil
 import kotlin.math.floor
+import java.util.Date
+import java.util.UUID
 
 class FakeRemoteGateway(
     private val localGateway: LocalGateway
@@ -881,11 +881,7 @@ class FakeRemoteGateway(
         }
     }
 
-    override suspend fun filterTaxis(
-        taxi: TaxiFiltration,
-        page: Int,
-        numberOfTaxis: Int
-    ): DataWrapper<Taxi> {
+    override suspend fun filterTaxis(taxi: TaxiFiltration, page: Int, numberOfTaxis: Int): DataWrapper<Taxi> {
         val taxiDto = taxi.toDto()
         val taxisFiltered = taxis.filter {
             it.color == taxiDto.color && it.seats == taxiDto.seats && it.status == taxiDto.status
@@ -897,10 +893,7 @@ class FakeRemoteGateway(
         return try {
             DataWrapperDto(
                 totalPages = numberOfPages,
-                result = taxisFiltered.subList(
-                    startIndex,
-                    endIndex.coerceAtMost(taxisFiltered.size)
-                ),
+                result = taxisFiltered.subList(startIndex, endIndex.coerceAtMost(taxisFiltered.size)),
                 totalResult = taxisFiltered.size
             ).toEntity()
         } catch (e: Exception) {

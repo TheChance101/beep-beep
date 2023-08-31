@@ -2,8 +2,8 @@ package org.thechance.common.data.remote.mapper
 
 import org.thechance.common.data.remote.model.TaxiDto
 import org.thechance.common.data.remote.model.TaxiFiltrationDto
-import org.thechance.common.domain.entity.NewTaxiInfo
 import org.thechance.common.domain.entity.CarColor
+import org.thechance.common.domain.entity.NewTaxiInfo
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.entity.TaxiFiltration
 import org.thechance.common.domain.util.TaxiStatus
@@ -22,7 +22,7 @@ fun TaxiDto.toEntity() = Taxi(
 fun NewTaxiInfo.toDto(): TaxiDto {
    return TaxiDto(
         plateNumber = plateNumber,
-        color = setCarColo(selectedCarColor),
+       color = setCarColor(selectedCarColor),
         type = carModel,
         seats = seats,
         username = driverUserName,
@@ -31,13 +31,23 @@ fun NewTaxiInfo.toDto(): TaxiDto {
 
 fun TaxiFiltration.toDto(): TaxiFiltrationDto {
     return TaxiFiltrationDto(
-        color = setCarColo(carColor),
+        color = setCarColor(carColor),
         seats = seats,
         status = setTaxiStatus(status),
     )
 }
 
 fun List<TaxiDto>.toEntity() = map(TaxiDto::toEntity)
+
+fun setCarColor(color: CarColor) =
+    when (color) {
+        CarColor.RED -> 0
+        CarColor.YELLOW -> 1
+        CarColor.GREEN -> 2
+        CarColor.BLUE -> 3
+        CarColor.GREY -> 5
+        else -> 4
+    }
 
 fun getCarColor(color: Int) =
     when (color) {
@@ -48,15 +58,6 @@ fun getCarColor(color: Int) =
         5 -> CarColor.GREY
         else -> CarColor.BLACK
     }
-fun setCarColo(color: CarColor) =
-    when (color) {
-        CarColor.RED -> 0
-        CarColor.YELLOW -> 1
-        CarColor.GREEN -> 2
-        CarColor.BLUE -> 3
-        CarColor.GREY -> 5
-        else -> 4
-    }
 
 fun getTaxiStatus(status: Int) =
     when (status) {
@@ -64,6 +65,7 @@ fun getTaxiStatus(status: Int) =
         1 -> TaxiStatus.ONLINE
         else -> TaxiStatus.ON_RIDE
     }
+
 fun setTaxiStatus(status: TaxiStatus) =
     when (status) {
         TaxiStatus.OFFLINE -> 0

@@ -1,5 +1,6 @@
 package di
 
+import data.gateway.remote.intercept
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -14,7 +15,7 @@ import org.koin.dsl.module
 
 val NetworkModule = module {
     single {
-        HttpClient(CIO) {
+        val client = HttpClient(CIO) {
             expectSuccess = true
 
             install(Logging) {
@@ -24,6 +25,7 @@ val NetworkModule = module {
 
             defaultRequest {
                 header("Content-Type", "application/json")
+                header("Accept-Language", "en")
                 url("http://0.0.0.0:8080")
             }
 
@@ -32,5 +34,8 @@ val NetworkModule = module {
             }
 
         }
+        intercept(client)
+        client
     }
 }
+

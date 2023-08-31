@@ -7,14 +7,14 @@ fun RestaurantResource.toRestaurant() = Restaurant(
     id = this.id,
     ownerId = this.ownerId,
     name = this.name,
-    description = this.description ?: "",
-    priceLevel = this.priceLevel ?: "",
+    description = this.description,
+    priceLevel = this.priceLevel,
     rate = this.rate,
     phone = this.phone,
     openingTime = this.openingTime,
     closingTime = this.closingTime,
     address = this.address,
-    location = this.location.toLocation(),
+    location = this.location?.toLocation(),
 )
 
 fun List<RestaurantResource>.toRestaurant() = map { it.toRestaurant() }

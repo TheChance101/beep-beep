@@ -2,6 +2,7 @@ package org.thechance.service_identity.endpoints.model
 
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
+import org.thechance.service_identity.domain.util.Role
 
 @Serializable
 data class UserDto(
@@ -12,5 +13,5 @@ data class UserDto(
     val email: String? = null,
     val walletBalance: Double? = 0.0,
     val addresses: List<AddressDto> = emptyList(),
-    val permissions: List<PermissionDto> = emptyList()
+    val permission: Int = Role.END_USER
 )

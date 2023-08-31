@@ -1,7 +1,6 @@
 package org.thechance.service_restaurant.domain.gateway
 
 import org.thechance.service_restaurant.domain.entity.*
-import org.thechance.service_restaurant.domain.utils.OrderStatus
 
 interface IRestaurantOptionsGateway {
 
@@ -33,7 +32,7 @@ interface IRestaurantOptionsGateway {
     suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order>
     suspend fun getOrderById(orderId: String): Order?
     suspend fun addOrder(order: Order): Boolean
-    suspend fun updateOrderStatus(orderId: String, status: OrderStatus): Order?
+    suspend fun updateOrderStatus(orderId: String, status: Order.Status): Order?
     suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order>
     //endregion
 }

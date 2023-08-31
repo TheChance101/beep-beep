@@ -17,34 +17,39 @@ fun Route.addressRoutes() {
 
     val manageUserAddress: IUserAddressManagementUseCase by inject()
 
-    route("users/address") {
-        post("{userId}") {
+    route("address") {
+
+        get("/{addressId}") {
+            val id = call.parameters["addressId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            call.respond(HttpStatusCode.OK, manageUserAddress.getAddress(id).toDto())
+        }
+
+        put("/{addressId}") {
+            val id = call.parameters["addressId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            val location = call.receive<LocationDto>()
+            call.respond(HttpStatusCode.OK, manageUserAddress.updateAddress(id, location.toEntity()).toDto())
+        }
+
+        delete("/{addressId}") {
+            val id = call.parameters["addressId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            call.respond(HttpStatusCode.OK, manageUserAddress.deleteAddress(id))
+        }
+
+    }
+    route("user/{userId}/address") {
+
+        get {
+            val id = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            val userAddresses = manageUserAddress.getUserAddresses(id)
+            call.respond(HttpStatusCode.OK, userAddresses.map { it.toDto() })
+        }
+
+        post {
             val location = call.receive<LocationDto>()
             val userId = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             call.respond(HttpStatusCode.Created, manageUserAddress.addAddress(userId, location.toEntity()))
         }
 
-        get("/{id}") {
-            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            call.respond(HttpStatusCode.OK, manageUserAddress.getAddress(id).toDto())
-        }
-
-        delete("/{id}") {
-            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            call.respond(HttpStatusCode.OK, manageUserAddress.deleteAddress(id))
-        }
-
-        put("/{id}") {
-            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val location = call.receive<LocationDto>()
-            call.respond(HttpStatusCode.OK, manageUserAddress.updateAddress(id, location.toEntity()))
-        }
-
-        get("/all/{userId}") {
-            val id = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val userAddresses = manageUserAddress.getUserAddresses(id)
-            call.respond(HttpStatusCode.OK, userAddresses.map { it.toDto() })
-        }
     }
 
 }
