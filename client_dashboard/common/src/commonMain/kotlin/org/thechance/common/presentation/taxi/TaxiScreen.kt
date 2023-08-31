@@ -209,99 +209,96 @@ class TaxiScreen :
             onDismissRequest = onFilterMenuDismiss,
             offset = DpOffset.Zero.copy(y = 16.kms),
             shape = RoundedCornerShape(Theme.radius.medium).copy(topStart = CornerSize(Theme.radius.small)),
-            modifier = Modifier.width(400.dp),
+            modifier = Modifier.width(500.kms),
         ) {
-            DropdownMenuItem(
-                contentPadding = PaddingValues(0.dp),
-                modifier = Modifier.width(500.dp),
-                onClick = {},
-                text = {
-                    Column(Modifier.fillMaxSize()) {
-                        Text(
-                            Resources.Strings.filter,
-                            style = Theme.typography.headline,
-                            color = Theme.colors.contentPrimary,
-                            modifier = Modifier.padding(24.kms)
-                        )
-                        Text(
-                            Resources.Strings.status,
-                            style = Theme.typography.titleLarge,
-                            color = Theme.colors.contentPrimary,
-                            modifier = Modifier
-                                .padding(
-                                    horizontal = 24.kms,
-                                    vertical = 16.kms
-                                ),
-                        )
-                        CarStatus(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(color = Theme.colors.background)
-                                .padding(24.kms),
-                            status = TaxiStatus.values().toList(),
-                            onSelectState = onStatusSelected,
-                            selectedStatus = taxi.status,
-                        )
+            Column(Modifier.fillMaxSize()) {
+                Text(
+                    Resources.Strings.filter,
+                    style = Theme.typography.headline,
+                    color = Theme.colors.contentPrimary,
+                    modifier = Modifier.padding(24.kms)
+                )
+                Text(
+                    Resources.Strings.status,
+                    style = Theme.typography.titleLarge,
+                    color = Theme.colors.contentPrimary,
+                    modifier = Modifier
+                        .padding(
+                            horizontal = 24.kms,
+                            vertical = 16.kms
+                        ),
+                )
+                CarStatus(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(color = Theme.colors.background)
+                        .padding(24.kms),
+                    status = TaxiStatus.values().toList(),
+                    onSelectState = onStatusSelected,
+                    selectedStatus = taxi.status,
+                )
 
-                        Text(
-                            Resources.Strings.carColor,
-                            style = Theme.typography.titleLarge,
-                            color = Theme.colors.contentPrimary,
-                            modifier = Modifier.padding(
-                                horizontal = 24.kms,
-                                vertical = 16.kms
-                            ),
-                        )
-                        CarColors(
-                            modifier = Modifier.fillMaxWidth()
-                                .background(color = Theme.colors.background).padding(
-                                    horizontal = 24.kms,
-                                    vertical = 16.kms
-                                ),
-                            colors = CarColor.values().toList(),
-                            onSelectColor = onCarColorSelected,
-                            selectedCarColor = taxi.carColor
-                        )
-                        Text(
-                            Resources.Strings.seats,
-                            style = Theme.typography.titleLarge,
-                            color = Theme.colors.contentPrimary,
-                            modifier = Modifier.padding(
-                                horizontal = 24.kms,
-                                vertical = 16.kms
-                            )
-                        )
-                        SeatsBar(
-                            selectedSeatsCount = taxi.seats,
-                            count = 6,
-                            selectedIcon = painterResource(Resources.Drawable.seatFilled),
-                            notSelectedIcon = painterResource(Resources.Drawable.seatOutlined),
-                            iconsSize = 24.kms,
-                            iconsPadding = PaddingValues(horizontal = 8.kms),
-                            modifier = Modifier.fillMaxWidth().padding(top = 16.kms),
-                            onClick = onSeatsSelected
-                        )
-                        Row(
-                            Modifier.padding(24.kms),
-                            horizontalArrangement = Arrangement.spacedBy(16.kms),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            BpTransparentButton(
-                                title = Resources.Strings.cancel,
-                                onClick = onCancelFilterClicked,
-                                modifier = Modifier.cursorHoverIconHand()
+                Text(
+                    Resources.Strings.carColor,
+                    style = Theme.typography.titleLarge,
+                    color = Theme.colors.contentPrimary,
+                    modifier = Modifier.padding(
+                        horizontal = 24.kms,
+                        vertical = 16.kms
+                    ),
+                )
+                CarColors(
+                    modifier = Modifier.fillMaxWidth()
+                        .background(color = Theme.colors.background).padding(
+                            horizontal = 24.kms,
+                            vertical = 16.kms
+                        ),
+                    colors = CarColor.values().toList(),
+                    onSelectColor = onCarColorSelected,
+                    selectedCarColor = taxi.carColor
+                )
+                Text(
+                    Resources.Strings.seats,
+                    style = Theme.typography.titleLarge,
+                    color = Theme.colors.contentPrimary,
+                    modifier = Modifier.padding(
+                        horizontal = 24.kms,
+                        vertical = 16.kms
+                    )
+                )
+                SeatsBar(
+                    selectedSeatsCount = taxi.seats,
+                    count = 6,
+                    selectedIcon = painterResource(Resources.Drawable.seatFilled),
+                    notSelectedIcon = painterResource(Resources.Drawable.seatOutlined),
+                    iconsSize = 24.kms,
+                    iconsPadding = PaddingValues(horizontal = 8.kms),
+                    modifier = Modifier.fillMaxWidth()
+                        .background(color = Theme.colors.background).padding(
+                        horizontal = 24.kms,
+                        vertical = 16.kms
+                    ),
+                    onClick = onSeatsSelected
+                )
+                Row(
+                    Modifier.padding(24.kms),
+                    horizontalArrangement = Arrangement.spacedBy(16.kms),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    BpTransparentButton(
+                        title = Resources.Strings.cancel,
+                        onClick = onCancelFilterClicked,
+                        modifier = Modifier.cursorHoverIconHand()
 
-                            )
-                            BpOutlinedButton(
-                                title =Resources.Strings.save,
-                                onClick = onSaveFilterClicked,
-                                shape = RoundedCornerShape(Theme.radius.small),
-                                modifier = Modifier.height(50.dp).weight(1f)
-                            )
-                        }
-                    }
+                    )
+                    BpOutlinedButton(
+                        title =Resources.Strings.save,
+                        onClick = onSaveFilterClicked,
+                        shape = RoundedCornerShape(Theme.radius.small),
+                        modifier = Modifier.height(50.dp).weight(1f)
+                    )
                 }
-            )
+            }
         }
     }
 
