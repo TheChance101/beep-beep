@@ -1,9 +1,10 @@
 package org.thechance.common.presentation.overview
 
-import cafe.adriel.voyager.core.model.StateScreenModel
+import org.thechance.common.presentation.base.BaseScreenModel
 
 
-class OverviewScreenModel() : StateScreenModel<OverviewUiState>(OverviewUiState()) {
+class OverviewScreenModel : BaseScreenModel<OverviewUiState, OverviewUiEffect>(OverviewUiState()),
+    OverviewInteractionListener {
 
 
 }
