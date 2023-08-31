@@ -1,24 +1,24 @@
 package org.thechance.common.data.remote.model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class ServerResponse<T>(
-    @SerializedName("value")
+    @SerialName("value")
     val value: T? = null,
-    @SerializedName("is_success")
+    @SerialName("is_success")
     val isSuccess: Boolean? = null,
-    @SerializedName("status")
+    @SerialName("status")
     val status: ResponseStatus? = null
 )
 
 @Serializable
 data class ResponseStatus(
-    @SerializedName("error_message")
+    @SerialName("error_message")
     val errorMessages: Map<String, String>? = null,
-    @SerializedName("success_message")
+    @SerialName("success_message")
     val successMessage: String? = null,
-    @SerializedName("code")
+    @SerialName("code")
     val code: Int? = null
 )

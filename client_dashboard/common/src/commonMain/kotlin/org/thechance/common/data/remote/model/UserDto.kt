@@ -1,29 +1,29 @@
 package org.thechance.common.data.remote.model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.thechance.common.domain.entity.User
 
 @Serializable
 data class UserDto(
-    @SerializedName("id")
+    @SerialName("id")
     val id: String? = null,
-    @SerializedName("full_name")
+    @SerialName("full_name")
     val fullName: String? = null,
-    @SerializedName("username")
+    @SerialName("username")
     val username: String? = null,
-    @SerializedName("country")
+    @SerialName("country")
     val country: String? = null,
-    @SerializedName("email")
+    @SerialName("email")
     val email: String? = null,
-    @SerializedName("permissions")
+    @SerialName("permissions")
     val permissions: List<PermissionDto?>? = null
 ) {
     @Serializable
     data class PermissionDto(
-        @SerializedName("id")
+        @SerialName("id")
         val id: Int? = null,
-        @SerializedName("permission")
+        @SerialName("permission")
         val permission: String? = null
     )
 }

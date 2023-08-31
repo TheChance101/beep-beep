@@ -1,16 +1,16 @@
 package org.thechance.common.data.remote.model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.thechance.common.domain.entity.DataWrapper
 
 @Serializable
 data class DataWrapperDto<T>(
-    @SerializedName("total_pages")
+    @SerialName("total_pages")
     val totalPages: Int?,
-    @SerializedName("total_result")
+    @SerialName("total_result")
     val totalResult: Int?,
-    @SerializedName("result")
+    @SerialName("result")
     val result: List<T>?
 )
 

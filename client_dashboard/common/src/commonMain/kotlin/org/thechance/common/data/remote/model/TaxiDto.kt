@@ -1,24 +1,24 @@
 package org.thechance.common.data.remote.model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class TaxiDto(
-    @SerializedName("id")
+    @SerialName("id")
     val id: String?,
-    @SerializedName("plate_number")
+    @SerialName("plate_number")
     val plateNumber: String?,
-    @SerializedName("color")
+    @SerialName("color")
     val color: Int?,
-    @SerializedName("type")
+    @SerialName("type")
     val type: String?,
-    @SerializedName("seats")
+    @SerialName("seats")
     val seats: Int?,
-    @SerializedName("username")
+    @SerialName("username")
     val username: String?,
-    @SerializedName("status")
+    @SerialName("status")
     val status: Int?,
-    @SerializedName("trips")
+    @SerialName("trips")
     val trips: String?,
 )

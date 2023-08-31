@@ -1,22 +1,22 @@
 package org.thechance.common.data.remote.model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class RestaurantDto(
-    @SerializedName("id")
+    @SerialName("id")
     val id: String? = null,
-    @SerializedName("name")
+    @SerialName("name")
     val name: String? = null,
-    @SerializedName("owner_username")
+    @SerialName("owner_username")
     val ownerUsername: String? = null,
-    @SerializedName("phone_number")
+    @SerialName("phone_number")
     val phoneNumber: String? = null,
-    @SerializedName("rating")
+    @SerialName("rating")
     val rating: Double? = null,
-    @SerializedName("price_level")
+    @SerialName("price_level")
     val priceLevel: Int? = null,
-    @SerializedName("working_hours")
+    @SerialName("working_hours")
     val workingHours: String? = null,
 )
