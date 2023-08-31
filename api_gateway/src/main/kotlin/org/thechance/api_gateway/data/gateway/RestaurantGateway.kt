@@ -83,15 +83,7 @@ class RestaurantGateway(
             put("/restaurant") {
                 body = Json.encodeToString(
                     RestaurantResource.serializer(),
-                    RestaurantResource(
-                        id = restaurant.id,
-                        ownerId = restaurant.ownerId,
-                        name = restaurant.name,
-                        phone = restaurant.phone,
-                        description = restaurant.description,
-                        openingTime = restaurant.openingTime,
-                        closingTime = restaurant.closingTime
-                    )
+                    restaurant
                 )
             }
 
@@ -113,7 +105,15 @@ class RestaurantGateway(
             put("/restaurant/details") {
                 body = Json.encodeToString(
                     RestaurantResource.serializer(),
-                    restaurant
+                    RestaurantResource(
+                        id = restaurant.id,
+                        ownerId = restaurant.ownerId,
+                        name = restaurant.name,
+                        phone = restaurant.phone,
+                        description = restaurant.description,
+                        openingTime = restaurant.openingTime,
+                        closingTime = restaurant.closingTime
+                    )
                 )
             }
         }

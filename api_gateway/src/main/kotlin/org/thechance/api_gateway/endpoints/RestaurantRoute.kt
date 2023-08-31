@@ -70,7 +70,7 @@ fun Route.restaurantRoutes() {
             )
             respondWithResult(HttpStatusCode.OK, restaurant)
         }
-        authenticateWithRole(Role.RESTAURANT_ADMIN) {
+        authenticateWithRole(Role.DASHBOARD_ADMIN) {
             put {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
