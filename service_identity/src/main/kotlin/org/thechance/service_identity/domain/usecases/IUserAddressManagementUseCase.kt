@@ -7,7 +7,8 @@ import org.thechance.service_identity.domain.gateway.IDataBaseGateway
 
 interface IUserAddressManagementUseCase {
 
-    suspend fun addAddress(userId: String, location: Location): Boolean
+    suspend fun addLocation(userId: String, location: Location): Address
+    suspend fun addAddress(userId: String, address: Address): Address
 
     suspend fun getAddress(id: String): Address
 
@@ -24,8 +25,12 @@ class UserAddressManagementUseCase(
     private val dataBaseGateway: IDataBaseGateway,
 ) : IUserAddressManagementUseCase {
 
-    override suspend fun addAddress(userId: String, location: Location): Boolean {
-        return dataBaseGateway.addAddress(userId, location)
+    override suspend fun addLocation(userId: String, location: Location): Address {
+        return dataBaseGateway.addLocation(userId, location)
+    }
+
+    override suspend fun addAddress(userId: String, address: Address): Address {
+        return dataBaseGateway.addAddress(userId, address)
     }
 
     override suspend fun deleteAddress(id: String): Boolean {

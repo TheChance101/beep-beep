@@ -1,4 +1,4 @@
-package org.thechance.service_identity.data.mappers
+package org.thechance.service_identity.data.collection.mappers
 
 import org.thechance.service_identity.data.collection.UserCollection
 import org.thechance.service_identity.domain.entity.UserManagement
@@ -14,12 +14,3 @@ fun UserCollection.toManagedEntity() = UserManagement(
 
 fun List<UserCollection>.toManagedEntity() = map { it.toManagedEntity() }
 
-fun UserManagement.toDto() = UserManagementDto(
-    id,
-    fullName,
-    username,
-    email,
-    permission
-)
-
-fun List<UserManagement>.toDto() = map { it.toDto() }

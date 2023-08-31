@@ -27,10 +27,12 @@ class DataBaseContainer(client: MongoClient) {
 
     companion object {
         private const val DATA_BASE_NAME = "TheChanceBeepBeep"
-        private const val WALLET_COLLECTION = "wallet"
-        private const val ADDRESS_COLLECTION_NAME = "address"
-        private const val USER_COLLECTION = "user"
-        private const val USER_DETAILS_COLLECTION = "user_details"
+        const val WALLET_COLLECTION = "wallet"
+        const val ADDRESS_COLLECTION_NAME = "address"
+        const val USER_COLLECTION = "user"
+        const val USER_DETAILS_COLLECTION = "user_details"
+        const val USER_NAME = "username"
+        const val INDEX_NAME = "username_1"
     }
 }
 
