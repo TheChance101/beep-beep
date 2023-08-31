@@ -3,10 +3,10 @@ package org.thechance.common.presentation.restaurant
 import org.thechance.common.domain.entity.Location
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.usecase.FilterRestaurantsUseCase
-import org.thechance.common.domain.usecase.IHandleLocationUseCase
+import org.thechance.common.domain.usecase.IManageLocationUseCase
 import org.thechance.common.domain.usecase.IManageRestaurantUseCase
 import org.thechance.common.domain.usecase.SearchFilterRestaurantsUseCase
-import org.thechance.common.domain.usecase.SearchRestaurantsByRestaurantNameUseCase
+import org.thechance.common.domain.usecase.SearchRestaurantsByNameUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 import kotlin.math.ceil
@@ -14,8 +14,8 @@ import kotlin.math.ceil
 
 class RestaurantScreenModel(
     private val manageRestaurant: IManageRestaurantUseCase,
-    private val handleLocation: IHandleLocationUseCase,
-    private val searchRestaurants: SearchRestaurantsByRestaurantNameUseCase,
+    private val handleLocation: IManageLocationUseCase,
+    private val searchRestaurants: SearchRestaurantsByNameUseCase,
     private val searchFilterRestaurants: SearchFilterRestaurantsUseCase,
     private val filterRestaurants: FilterRestaurantsUseCase,
 ) : BaseScreenModel<RestaurantUiState, RestaurantUIEffect>(RestaurantUiState()),

@@ -3,12 +3,12 @@ package org.thechance.common.presentation.users
 import kotlinx.coroutines.flow.update
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.User
-import org.thechance.common.domain.usecase.IGetUsersUseCase
+import org.thechance.common.domain.usecase.IManageUsersUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
 class UserScreenModel(
-    private val getUsers: IGetUsersUseCase
+    private val manageUsers: IManageUsersUseCase
 ) : BaseScreenModel<UserScreenUiState, UserUiEffect>(UserScreenUiState()),
     UserScreenInteractionListener {
 
@@ -18,7 +18,7 @@ class UserScreenModel(
 
     private fun getUsers() {
         tryToExecute(
-            { getUsers(state.value.currentPage, state.value.specifiedUsers) },
+            { manageUsers.getUsers(state.value.currentPage, state.value.specifiedUsers) },
             ::onGetUsersSuccessfully,
             ::onError
         )

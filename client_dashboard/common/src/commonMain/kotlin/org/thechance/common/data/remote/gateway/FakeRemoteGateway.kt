@@ -229,9 +229,9 @@ class FakeRemoteGateway(
         )
     }
 
-    override fun getUserData() = "asia"
+    override suspend fun getUserData() = "asia"
 
-    override fun getUsers(page: Int, numberOfUsers: Int): DataWrapper<User> {
+    override suspend fun getUsers(page: Int, numberOfUsers: Int): DataWrapper<User> {
         val users = listOf(
             UserDto(
                 id = "c4425a0e-9f0a-4df1-bcc1-6dd96322a990",
@@ -819,7 +819,7 @@ class FakeRemoteGateway(
         return taxis.last().toEntity()
     }
 
-    override suspend fun findTaxisByUsername(
+    override suspend fun searchTaxisByUsername(
         username: String, page: Int, numberOfTaxis: Int
     ): DataWrapper<Taxi> {
         val taxis = taxis.filter {

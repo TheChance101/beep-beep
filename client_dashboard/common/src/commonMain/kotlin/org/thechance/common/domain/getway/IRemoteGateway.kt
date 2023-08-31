@@ -5,15 +5,15 @@ import org.thechance.common.domain.entity.*
 
 interface IRemoteGateway {
 
-    fun getUserData(): String
+    suspend fun getUserData(): String
 
-    fun getUsers(page: Int, numberOfUsers: Int): DataWrapper<User>
+    suspend fun getUsers(page: Int, numberOfUsers: Int): DataWrapper<User>
 
     suspend fun getTaxis(page: Int, numberOfTaxis: Int): DataWrapper<Taxi>
 
     suspend fun createTaxi(taxi: NewTaxiInfo): Taxi
 
-    suspend fun findTaxisByUsername(username: String, page: Int, numberOfTaxis:Int): DataWrapper<Taxi>
+    suspend fun searchTaxisByUsername(username: String, page: Int, numberOfTaxis:Int): DataWrapper<Taxi>
 
     suspend fun filterTaxis(taxi: TaxiFiltration, page: Int, numberOfTaxis: Int): DataWrapper<Taxi>
 

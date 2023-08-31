@@ -6,17 +6,15 @@ import org.koin.dsl.module
 import org.thechance.common.domain.usecase.*
 
 val UseCaseModule = module {
-    singleOf(::GetUserInfoUseCase) { bind<IGetUserInfoUseCase>() }
-    singleOf(::GetUsersUseCase) { bind<IGetUsersUseCase>() }
-    singleOf(::GetTaxisUseCase) { bind<IGetTaxisUseCase>() }
-    singleOf(::CreateNewTaxiUseCase) { bind<ICreateNewTaxiUseCase>() }
-    singleOf(::FindTaxisByUserNameUseCase) { bind<IFindTaxisByUsernameUseCase>() }
-    singleOf(::SearchRestaurantsByRestaurantNameUseCase) { bind<ISearchRestaurantsByRestaurantNameUseCase>() }
+    singleOf(::SearchTaxisByUserNameUseCase) { bind<ISearchTaxisByUserNameUseCase>() }
+    singleOf(::SearchRestaurantsByNameUseCase) { bind<ISearchRestaurantsByNameUseCase>() }
     singleOf(::FilterRestaurantsUseCase) { bind<IFilterRestaurantsUseCase>() }
     singleOf(::SearchFilterRestaurantsUseCase) { bind<ISearchFilterRestaurantsUseCase>() }
     singleOf(::LoginUserUseCase) { bind<ILoginUserUseCase>() }
     singleOf(::ManageRestaurantUseCase) { bind<IManageRestaurantUseCase>() }
-    singleOf(::HandleLocationUseCase) { bind<IHandleLocationUseCase>() }
-    singleOf(::GetTaxiReportUseCase) { bind<IGetTaxiReportUseCase>() }
+    singleOf(::ManageLocationUseCase) { bind<IManageLocationUseCase>() }
     singleOf(::FilterTaxisUseCase) { bind<IFilterTaxisUseCase>() }
+    singleOf(::ManageTaxisUseCase) { bind<IManageTaxisUseCase>() }
+    singleOf(::ManageUsersUseCase) { bind<IManageUsersUseCase>() }
+
 }

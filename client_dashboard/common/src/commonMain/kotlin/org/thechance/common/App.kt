@@ -5,7 +5,7 @@ import androidx.compose.runtime.*
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import com.beepbeep.designSystem.ui.theme.BpTheme
-import org.thechance.common.presentation.main.MainContainer
+import org.thechance.common.presentation.login.LoginScreen
 import org.thechance.common.presentation.resources.ProvideResources
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -13,7 +13,7 @@ import org.thechance.common.presentation.resources.ProvideResources
 fun App() {
     BpTheme {
         ProvideResources {
-            Navigator(MainContainer) {
+            Navigator(LoginScreen()) {
                 SlideTransition(it)
             }
         }

@@ -3,13 +3,13 @@ package org.thechance.common.domain.usecase
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.getway.IRemoteGateway
 
-interface ISearchRestaurantsByRestaurantNameUseCase {
+interface ISearchRestaurantsByNameUseCase {
     suspend operator fun invoke(restaurantName: String): List<Restaurant>
 }
 
-class SearchRestaurantsByRestaurantNameUseCase(
+class SearchRestaurantsByNameUseCase(
     private val remoteGateway: IRemoteGateway,
-) : ISearchRestaurantsByRestaurantNameUseCase {
+) : ISearchRestaurantsByNameUseCase {
 
     override suspend operator fun invoke(restaurantName: String): List<Restaurant> {
         return if (restaurantName.isEmpty()) remoteGateway.getRestaurants()
