@@ -30,6 +30,13 @@ fun Route.orderRoutes() {
 
     route("/order") {
 
+        get("/revenue-by-days-back") {
+            val restaurantId = call.parameters["restaurantId"] ?: throw MultiErrorException(listOf(NOT_FOUND))
+            val daysBack = call.parameters["daysBack"]?.toInt() ?: 7
+            val result = manageOrder.getOrdersRevenueByDaysBefore(restaurantId = restaurantId, daysBack = daysBack)
+            call.respond(HttpStatusCode.OK, result)
+        }
+
         get("/count-by-days-back") {
             val restaurantId = call.parameters["restaurantId"] ?: throw MultiErrorException(listOf(NOT_FOUND))
             val daysBack = call.parameters["daysBack"]?.toInt() ?: 7

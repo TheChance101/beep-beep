@@ -1,6 +1,8 @@
 package org.thechance.service_restaurant.domain.usecase
 
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toJavaLocalDateTime
+import kotlinx.datetime.toKotlinLocalDateTime
 import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
@@ -30,6 +32,11 @@ interface IManageOrderUseCase {
         restaurantId: String,
         daysBack: Int
     ): List<Map<Int, Int>> // list of maps (dayOfWeek, count) { dayOfWeek 0 - 6 (Sunday - Saturday) }
+
+    suspend fun getOrdersRevenueByDaysBefore(
+        restaurantId: String,
+        daysBack: Int
+    ): List<Map<Int, Double>> // list of maps (dayOfWeek, prices) { dayOfWeek 0 - 6 (Sunday - Saturday) }
 
 }
 
@@ -77,18 +84,30 @@ class ManageOrderUseCase(
 
     override suspend fun getOrdersCountByDaysBefore(restaurantId: String, daysBack: Int): List<Map<Int, Int>> {
         basicValidation.isValidId(restaurantId).takeIf { it }?.let {
-            val currentDateTime = currentDateTime().toJavaLocalDateTime()
-            val currentDayOfYear = currentDateTime.dayOfYear
-            val dayOfYearBefore = currentDateTime.minusDays(daysBack.toLong()).dayOfYear
-            val daysOfYearRange = dayOfYearBefore..currentDayOfYear
-            val groupedOrdersByDayOfYear = optionsGateway.getOrdersByRestaurantId(restaurantId = restaurantId)
-                .filter { it.createdAt.dayOfYear in daysOfYearRange }.groupBy { it.createdAt.dayOfYear }
+            return doInRangeWithDaysBack(daysBack) { daysOfYearRange, currentDateTime ->
+                val groupedOrdersByDayOfYear = optionsGateway.getOrdersByRestaurantId(restaurantId = restaurantId)
+                    .filter { it.createdAt.dayOfYear in daysOfYearRange }.groupBy { it.createdAt.dayOfYear }
 
-            // convert to list of maps (dayOfWeek, count)
-            return daysOfYearRange.map {
-                val count = groupedOrdersByDayOfYear[it]?.size ?: 0
-                mapOf(currentDateTime.withDayOfYear(it).dayOfWeek.value to count)
-            }.reversed()
+                daysOfYearRange.map {
+                    val count = groupedOrdersByDayOfYear[it]?.size ?: 0
+                    mapOf(currentDateTime.toJavaLocalDateTime().withDayOfYear(it).dayOfWeek.value to count)
+                }.reversed()
+            }
+        } ?: throw MultiErrorException(listOf(INVALID_ID))
+    }
+
+    override suspend fun getOrdersRevenueByDaysBefore(restaurantId: String, daysBack: Int): List<Map<Int, Double>> {
+        basicValidation.isValidId(restaurantId).takeIf { it }?.let {
+            return doInRangeWithDaysBack(daysBack) { daysOfYearRange, currentDateTime ->
+                val groupedOrdersByDayOfYear = optionsGateway.getOrdersByRestaurantId(restaurantId = restaurantId)
+                    .filter { it.createdAt.dayOfYear in daysOfYearRange && it.status == FINISHED }
+                    .groupBy { it.createdAt.dayOfYear }
+
+                daysOfYearRange.map { days ->
+                    val prices = groupedOrdersByDayOfYear[days]?.map { it.totalPrice } ?: emptyList()
+                    mapOf(currentDateTime.toJavaLocalDateTime().withDayOfYear(days).dayOfWeek.value to prices.sumOf { it })
+                }.reversed()
+            }
         } ?: throw MultiErrorException(listOf(INVALID_ID))
     }
 
@@ -97,4 +116,15 @@ class ManageOrderUseCase(
         return restaurant?.isRestaurantOpen() ?: throw MultiErrorException(listOf(NOT_FOUND))
     }
 
+    private suspend fun<T> doInRangeWithDaysBack(daysBack: Int, function: suspend (IntRange, LocalDateTime) -> T): T {
+        val currentDateTime = currentDateTime().toJavaLocalDateTime()
+        val currentDayOfYear = currentDateTime.dayOfYear
+        val dayOfYearBefore = currentDateTime.minusDays(daysBack.toLong()).dayOfYear
+        val daysOfYearRange = dayOfYearBefore..currentDayOfYear
+        return function(daysOfYearRange, currentDateTime.toKotlinLocalDateTime())
+    }
+
+    private companion object{
+        const val FINISHED = 2
+    }
 }
