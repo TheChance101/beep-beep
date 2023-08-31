@@ -21,31 +21,39 @@ class RestaurantInformationScreenModel(
         getRestaurantInfo()
     }
 
+    private fun onError(error: ErrorState) {
+        updateState { it.copy(isLoading = false, error = error) }
+        handleErrorState(error)
+    }
+
+    private fun handleErrorState(error: ErrorState) {
+        when (error) {
+            ErrorState.UnAuthorized -> {
+                sendNewEffect(RestaurantInformationUiEffect.LogoutSuccess)
+            }
+
+            ErrorState.NoInternet -> {
+                sendNewEffect(RestaurantInformationUiEffect.ShowNoInternetError)
+            }
+
+            else -> {
+                sendNewEffect(RestaurantInformationUiEffect.ShowUnknownError)
+            }
+        }
+    }
+
     private fun getRestaurantInfo() {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            {
-                manageRestaurantInformation
-                    .getRestaurantInfo()
-            },
+            { manageRestaurantInformation.getRestaurantInfo() },
             ::onGetRestaurantInfoSuccess,
-            ::onGetRestaurantInfoError
+            ::onError
         )
     }
 
     private fun onGetRestaurantInfoSuccess(restaurant: Restaurant) {
         val result = restaurant.toUiState()
-        updateState {
-            it.copy(
-                restaurant = result,
-                isLoading = false,
-                error = null
-            )
-        }
-    }
-
-    private fun onGetRestaurantInfoError(error: ErrorState) {
-        updateState { it.copy(isLoading = false, error = error) }
+        updateState { it.copy(restaurant = result, isLoading = false, error = null) }
     }
 
     override fun onRestaurantNameChange(name: String) {

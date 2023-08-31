@@ -18,3 +18,5 @@ class UserNotFoundException(val errorMessage: String) : RequestException(errorMe
 class InvalidUserNameException(val errorMessage: String) : InvalidCredentialsException(errorMessage)
 class InvalidPasswordException(val errorMessage: String) : InvalidCredentialsException(errorMessage)
 class UnknownErrorException : RequestException("Unknown error")
+
+class NotFoundedException : BpException("Not founded")

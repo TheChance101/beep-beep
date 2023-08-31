@@ -86,6 +86,8 @@ class RestaurantInformationScreen : BaseScreen<
         when (effect) {
             is RestaurantInformationUiEffect.NavigateToLogin -> navigator.replaceAll(LoginScreen())
             is RestaurantInformationUiEffect.NavigateUp -> navigator.pop()
+            RestaurantInformationUiEffect.ShowNoInternetError -> {}
+            RestaurantInformationUiEffect.ShowUnknownError -> {}
         }
     }
 
