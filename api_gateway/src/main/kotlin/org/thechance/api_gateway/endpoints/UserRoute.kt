@@ -87,6 +87,17 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
         }
     }
 
+    authenticateWithRole(Role.DASHBOARD_ADMIN) {
+        route("/user") {
+            get("/{id}") {
+                val id = call.parameters["id"] ?: ""
+                val (language, countryCode) = extractLocalizationHeader()
+                val result = gateway.deleteUser(userId = id, locale = Locale(language, countryCode))
+                respondWithResult(HttpStatusCode.OK, result)
+            }
+        }
+    }
+
     authenticateWithRole(Role.END_USER) {
         post("/refresh-access-token") {
             val tokenClaim = call.principal<JWTPrincipal>()

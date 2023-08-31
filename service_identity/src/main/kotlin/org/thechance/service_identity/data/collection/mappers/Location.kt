@@ -1,4 +1,4 @@
-package org.thechance.service_identity.data.mappers
+package org.thechance.service_identity.data.collection.mappers
 
 import org.thechance.service_identity.data.collection.LocationCollection
 import org.thechance.service_identity.domain.entity.Location
@@ -15,11 +15,6 @@ fun LocationDto.toEntity() = Location(
 )
 
 fun Location.toCollection() = LocationCollection(
-    latitude = latitude,
-    longitude = longitude,
-)
-
-fun Location.toDto() = LocationDto(
     latitude = latitude,
     longitude = longitude,
 )

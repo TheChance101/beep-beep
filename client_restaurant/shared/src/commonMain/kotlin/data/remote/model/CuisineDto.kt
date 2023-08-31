@@ -1,6 +1,15 @@
 package data.remote.model
 
-data class CuisineDto(val id: String, val name: String)
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class CuisineDto(
+    @SerialName("id")
+    val id: String,
+    @SerialName("name")
+    val name: String
+)
 
 
 

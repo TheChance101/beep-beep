@@ -101,6 +101,14 @@ class IdentityGateway(
         return UserTokens(accessTokenExpirationDate.time, refreshTokenExpirationDate.time, accessToken, refreshToken)
     }
 
+    override suspend fun deleteUser(userId: String, locale: Locale): Boolean {
+        return tryToExecute<Boolean>(api = APIs.IDENTITY_API, setErrorMessage = { errorCodes ->
+            errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+        }) {
+            delete("/user/$userId")
+        }
+    }
+
     private fun getExpirationDate(timestamp: Long): Date {
         return Date(System.currentTimeMillis() + timestamp)
     }

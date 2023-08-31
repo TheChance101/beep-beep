@@ -3,8 +3,8 @@ package org.thechance.service_identity.endpoints.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UserTokenDto(
+data class WalletDto (
+    val id: String,
     val userId: String,
-    val refreshToken: String,
-    val expiresIn: Int,
+    val walletBalance: Double = 0.0,
 )

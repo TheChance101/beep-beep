@@ -17,7 +17,6 @@ import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.data.utils.toObjectIds
 import org.thechance.service_restaurant.domain.entity.*
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
-import org.thechance.service_restaurant.domain.utils.OrderStatus
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 
@@ -201,15 +200,15 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
     override suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order> {
         return container.orderCollection.find(
             OrderCollection::restaurantId eq ObjectId(restaurantId),
-            OrderCollection::orderStatus ne OrderStatus.CANCELED.statusCode,
-            OrderCollection::orderStatus ne OrderStatus.DONE.statusCode
+            OrderCollection::orderStatus ne Order.Status.CANCELED.statusCode,
+            OrderCollection::orderStatus ne Order.Status.DONE.statusCode
         ).toList().toEntity()
     }
 
     override suspend fun getOrderById(orderId: String): Order? =
         container.orderCollection.findOneById(ObjectId(orderId))?.toEntity()
 
-    override suspend fun updateOrderStatus(orderId: String, status: OrderStatus): Order? {
+    override suspend fun updateOrderStatus(orderId: String, status: Order.Status): Order? {
         val updateOperation = setValue(OrderCollection::orderStatus, status.statusCode)
         val updatedOrder = container.orderCollection.findOneAndUpdate(
             filter = OrderCollection::id eq ObjectId(orderId),
@@ -220,8 +219,8 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
 
     override suspend fun getOrdersHistory(restaurantId:String,page: Int, limit: Int): List<Order> {
         return container.orderCollection
-            .find(OrderCollection::orderStatus eq OrderStatus.DONE.statusCode,
-                OrderCollection::orderStatus eq OrderStatus.CANCELED.statusCode,
+            .find(OrderCollection::orderStatus eq Order.Status.DONE.statusCode,
+                OrderCollection::orderStatus eq Order.Status.CANCELED.statusCode,
                 OrderCollection::restaurantId eq ObjectId(restaurantId))
             .sort(descending(OrderCollection::createdAt))
             .paginate(page, limit).toList().toEntity()
