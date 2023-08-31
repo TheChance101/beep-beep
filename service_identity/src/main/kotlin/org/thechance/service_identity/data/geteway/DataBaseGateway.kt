@@ -255,11 +255,12 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
 
     // region: user permission management
 
-    override suspend fun updatePermissionToUser(userId: String, permission: Int): Boolean {
-        return dataBaseContainer.userCollection.updateOne(
+    override suspend fun updatePermissionToUser(userId: String, permission: Int): UserManagement {
+        return dataBaseContainer.userCollection.findOneAndUpdate(
             filter = UserCollection::id eq ObjectId(userId),
-            update = Updates.set(UserCollection::permission.name, permission)
-        ).isUpdatedSuccessfully()
+            update = Updates.set(UserCollection::permission.name, permission),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
+        )?.toManagedEntity() ?: throw ResourceNotFoundException(USER_NOT_FOUND)
     }
 
     override suspend fun getUserPermission(userId: String): Int {

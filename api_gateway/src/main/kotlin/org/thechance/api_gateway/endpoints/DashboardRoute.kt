@@ -12,8 +12,8 @@ import java.util.*
 
 
 fun Route.dashboardRoutes() {
-    val restaurantGateway: IRestaurantGateway by inject()
 
+    val restaurantGateway: IRestaurantGateway by inject()
 
     route("/dashboard") {
 

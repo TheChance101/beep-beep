@@ -10,6 +10,7 @@ import io.ktor.server.websocket.*
 import io.ktor.util.pipeline.*
 import org.thechance.api_gateway.data.localizedMessages.Country
 import org.thechance.api_gateway.data.localizedMessages.Language
+import org.thechance.api_gateway.util.Role
 
 suspend inline fun <reified T> PipelineContext<Unit, ApplicationCall>.respondWithResult(
     statusCode: HttpStatusCode, result: T, message: String? = null
@@ -56,4 +57,8 @@ fun Route.authenticateWithRole(role: Int, block: Route.() -> Unit) {
 
 private fun hasPermission(permission: Int, role: Int): Boolean {
     return (permission and role) == role
+}
+
+fun addPermission(role: Int): Int {
+    return Role.END_USER + role
 }

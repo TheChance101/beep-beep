@@ -57,6 +57,8 @@ class RestaurantGateway(
         }
     }
 
+
+    //region Restaurant
     override suspend fun getRestaurantInfo(locale: Locale, restaurantId: String): RestaurantResource {
         return tryToExecute<RestaurantResource>(
             APIs.RESTAURANT_API,
@@ -69,28 +71,8 @@ class RestaurantGateway(
     }
 
     @OptIn(InternalAPI::class)
-    override suspend fun updateRestaurantForAdmin(
-        restaurant: RestaurantResource, permissions: List<Int>, locale: Locale
-    ): RestaurantResource {
-        return tryToExecute(
-            api = APIs.RESTAURANT_API,
-            setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
-            }
-        ) {
-            put("/restaurant") {
-                body = Json.encodeToString(
-                    RestaurantResource.serializer(),
-                    restaurant
-                )
-            }
-
-        }
-    }
-
-    @OptIn(InternalAPI::class)
     override suspend fun updateRestaurant(
-        locale: Locale, restaurant: RestaurantResource, permissions: List<Int>
+        restaurant: RestaurantResource, isAdmin: Boolean, locale: Locale
     ): RestaurantResource {
         return tryToExecute(
             api = APIs.RESTAURANT_API,
@@ -98,22 +80,33 @@ class RestaurantGateway(
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
         ) {
-            put("/restaurant/details") {
-                body = Json.encodeToString(
-                    RestaurantResource.serializer(),
-                    RestaurantResource(
-                        id = restaurant.id,
-                        ownerId = restaurant.ownerId,
-                        name = restaurant.name,
-                        phone = restaurant.phone,
-                        description = restaurant.description,
-                        openingTime = restaurant.openingTime,
-                        closingTime = restaurant.closingTime
+            if (isAdmin) {
+                put("/restaurant") {
+                    body = Json.encodeToString(
+                        RestaurantResource.serializer(),
+                        restaurant
                     )
-                )
+                }
+            } else {
+                put("/restaurant/details") {
+                    body = Json.encodeToString(
+                        RestaurantResource.serializer(),
+                        RestaurantResource(
+                            id = restaurant.id,
+                            ownerId = restaurant.ownerId,
+                            name = restaurant.name,
+                            phone = restaurant.phone,
+                            description = restaurant.description,
+                            openingTime = restaurant.openingTime,
+                            closingTime = restaurant.closingTime
+                        )
+                    )
+                }
             }
+
         }
     }
+
 
     override suspend fun getRestaurants(page: Int, limit: Int, locale: Locale) = tryToExecute<List<RestaurantResource>>(
         APIs.RESTAURANT_API,
@@ -138,6 +131,22 @@ class RestaurantGateway(
         }
     }
 
+    @OptIn(InternalAPI::class)
+    override suspend fun addRestaurant(restaurant: RestaurantResource, locale: Locale): RestaurantResource {
+        return tryToExecute(
+            api = APIs.RESTAURANT_API,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+            }
+        ) {
+            post("/restaurant") {
+                body = Json.encodeToString(
+                    RestaurantResource.serializer(),
+                    restaurant
+                )
+            }
+        }
+    }
 
     override suspend fun deleteRestaurant(restaurantId: String, locale: Locale): Boolean {
         return tryToExecute<Boolean>(
@@ -147,7 +156,9 @@ class RestaurantGateway(
             delete("/restaurant/$restaurantId")
         }
     }
+    //endregion
 
+    //region meal
     @OptIn(InternalAPI::class)
     override suspend fun addMeal(meal: MealResource, locale: Locale): MealResource {
         return tryToExecute(
@@ -194,7 +205,6 @@ class RestaurantGateway(
         }
     }
 
-
     override suspend fun getMealsByRestaurantId(
         restaurantId: String, page: Int, limit: Int, locale: Locale
     ): List<MealResource> {
@@ -222,6 +232,9 @@ class RestaurantGateway(
         }
     }
 
+    //endregion
+
+    //region cuisine
     @OptIn(InternalAPI::class)
     override suspend fun addCuisine(name: String, locale: Locale): CuisineResource {
         return tryToExecute<CuisineResource>(
@@ -246,7 +259,9 @@ class RestaurantGateway(
             get("/cuisines")
         }
     }
+    //endregion
 
+    //region order
     @OptIn(InternalAPI::class)
     override suspend fun updateOrderStatus(orderId: String, status: Int, locale: Locale): Order {
         return tryToExecute<Order>(
@@ -315,5 +330,5 @@ class RestaurantGateway(
             get("/order/$restaurantId/orders")
         }
     }
-
+    //endregion
 }

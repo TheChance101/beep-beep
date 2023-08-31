@@ -6,7 +6,7 @@ import org.thechance.api_gateway.data.model.CuisineResource
 @Serializable
 data class RestaurantResource(
     val id: String? = null,
-    val ownerId: String? = null,
+    val ownerId: String,
     val name: String? = null,
     val description: String? = null,
     val priceLevel: String? = null,

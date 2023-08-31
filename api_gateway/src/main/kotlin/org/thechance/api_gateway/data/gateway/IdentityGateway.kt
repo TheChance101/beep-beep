@@ -63,7 +63,7 @@ class IdentityGateway(
             )
         }
         val user = getUserByUsername(userName)
-        return generateUserTokens(user.id,userName, user.permission, tokenConfiguration)
+        return generateUserTokens(user.id, userName, user.permission, tokenConfiguration)
     }
 
 
@@ -86,6 +86,18 @@ class IdentityGateway(
             }
         }
     }
+
+    override suspend fun updateUserPermission(userId: String, permission: Int): UserManagementResource {
+        return tryToExecute<UserManagementResource>(APIs.IDENTITY_API) {
+            submitForm("/dashboard/user/$userId/permission",
+                formParameters = parameters {
+                    append("permission", "$permission")
+
+                }
+            )
+        }
+    }
+
 
     override suspend fun deleteUser(userId: String, locale: Locale): Boolean {
         return tryToExecute<Boolean>(api = APIs.IDENTITY_API, setErrorMessage = { errorCodes ->
@@ -113,13 +125,23 @@ class IdentityGateway(
     }
 
     private fun generateToken(
-        userId: String,username : String, userPermission: Int, tokenConfiguration: TokenConfiguration, tokenType: TokenType
+        userId: String,
+        username: String,
+        userPermission: Int,
+        tokenConfiguration: TokenConfiguration,
+        tokenType: TokenType
     ): String {
         val userIdClaim = TokenClaim("userId", userId)
         val rolesClaim = TokenClaim("permission", userPermission.toString())
         val usernameClaim = TokenClaim("username", username)
         val accessTokenClaim = TokenClaim("tokenType", tokenType.name)
-        return tokenManagementService.generateToken(tokenConfiguration, userIdClaim, usernameClaim, rolesClaim, accessTokenClaim)
+        return tokenManagementService.generateToken(
+            tokenConfiguration,
+            userIdClaim,
+            usernameClaim,
+            rolesClaim,
+            accessTokenClaim
+        )
     }
 
 }
