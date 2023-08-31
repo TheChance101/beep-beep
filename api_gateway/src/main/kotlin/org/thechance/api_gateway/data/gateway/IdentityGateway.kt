@@ -88,6 +88,14 @@ class IdentityGateway(
         }
     }
 
+    override suspend fun deleteUser(userId: String, locale: Locale): Boolean {
+        return tryToExecute<Boolean>(api = APIs.IDENTITY_API, setErrorMessage = { errorCodes ->
+            errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+        }) {
+            delete("/user/$userId")
+        }
+    }
+
     override suspend fun generateUserTokens(
         userId: String, username: String, userPermission: Int, tokenConfiguration: TokenConfiguration
     ): UserTokens {
@@ -99,14 +107,6 @@ class IdentityGateway(
         val accessToken = generateToken(userId, username, userPermission, tokenConfiguration, TokenType.ACCESS_TOKEN)
 
         return UserTokens(accessTokenExpirationDate.time, refreshTokenExpirationDate.time, accessToken, refreshToken)
-    }
-
-    override suspend fun deleteUser(userId: String, locale: Locale): Boolean {
-        return tryToExecute<Boolean>(api = APIs.IDENTITY_API, setErrorMessage = { errorCodes ->
-            errorHandler.getLocalizedErrorMessage(errorCodes, locale)
-        }) {
-            delete("/user/$userId")
-        }
     }
 
     private fun getExpirationDate(timestamp: Long): Date {
