@@ -1,5 +1,7 @@
 package org.thechance.service_restaurant.domain.validation
 
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.toJavaLocalTime
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.function.Executable
@@ -177,8 +179,9 @@ class OrderValidationTest {
         // given opening and closing time
         val openTime = "09:00"
         val closeTime = "12:00"
+        val currentTime = LocalTime.parse("13:00")
         // when we pass opening and closing time to the function and the current time is not between this time
-        val result = isRestaurantOpen(openTime = openTime, closeTime = closeTime)
+        val result = isRestaurantOpen(openTime = openTime, closeTime = closeTime, currentTime = currentTime.toJavaLocalTime())
         // then it should return false
         assertFalse(result)
     }
