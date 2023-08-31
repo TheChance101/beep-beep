@@ -8,7 +8,6 @@ import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
 import org.thechance.service_restaurant.domain.usecase.validation.IOrderValidationUseCase
 import org.thechance.service_restaurant.domain.utils.IValidation
-import org.thechance.service_restaurant.domain.utils.OrderStatus
 import org.thechance.service_restaurant.domain.utils.currentDateTime
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
@@ -20,7 +19,7 @@ interface IManageOrderUseCase {
 
     suspend fun addOrder(order: Order): Boolean
 
-    suspend fun updateOrderStatus(orderId: String, state: OrderStatus): Order
+    suspend fun updateOrderStatus(orderId: String, state: Order.Status): Order
 
     suspend fun getOrderById(orderId: String): Order
 
@@ -66,7 +65,7 @@ class ManageOrderUseCase(
         }
     }
 
-    override suspend fun updateOrderStatus(orderId: String, state: OrderStatus): Order {
+    override suspend fun updateOrderStatus(orderId: String, state: Order.Status): Order {
         orderValidationUseCase.validateUpdateOrder(orderId = orderId, status = state)
         return optionsGateway.updateOrderStatus(orderId = orderId, status = state)!!
     }
@@ -100,7 +99,7 @@ class ManageOrderUseCase(
         basicValidation.isValidId(restaurantId).takeIf { it }?.let {
             return doInRangeWithDaysBack(daysBack) { daysOfYearRange, currentDateTime ->
                 val groupedOrdersByDayOfYear = optionsGateway.getOrdersByRestaurantId(restaurantId = restaurantId)
-                    .filter { it.createdAt.dayOfYear in daysOfYearRange && it.status == FINISHED }
+                    .filter { it.createdAt.dayOfYear in daysOfYearRange && it.status == Order.Status.DONE }
                     .groupBy { it.createdAt.dayOfYear }
 
                 daysOfYearRange.map { days ->
@@ -122,9 +121,5 @@ class ManageOrderUseCase(
         val dayOfYearBefore = currentDateTime.minusDays(daysBack.toLong()).dayOfYear
         val daysOfYearRange = dayOfYearBefore..currentDayOfYear
         return function(daysOfYearRange, currentDateTime.toKotlinLocalDateTime())
-    }
-
-    private companion object{
-        const val FINISHED = 2
     }
 }
