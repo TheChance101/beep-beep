@@ -21,6 +21,6 @@ interface IIdentityGateway {
     suspend fun getUserByUsername(username: String): UserManagementResource
 
     suspend fun generateUserTokens(
-        userId: String, userPermission : Int, tokenConfiguration: TokenConfiguration
+        userId: String,username : String, userPermission : Int, tokenConfiguration: TokenConfiguration
     ): UserTokens
 }

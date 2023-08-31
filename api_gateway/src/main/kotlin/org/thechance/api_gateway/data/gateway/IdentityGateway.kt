@@ -64,7 +64,7 @@ class IdentityGateway(
             )
         }
         val user = getUserByUsername(userName)
-        return generateUserTokens(user.id, user.permission, tokenConfiguration)
+        return generateUserTokens(user.id,userName, user.permission, tokenConfiguration)
     }
 
 
@@ -89,14 +89,14 @@ class IdentityGateway(
     }
 
     override suspend fun generateUserTokens(
-        userId: String, userPermission : Int, tokenConfiguration: TokenConfiguration
+        userId: String, username: String, userPermission: Int, tokenConfiguration: TokenConfiguration
     ): UserTokens {
 
         val accessTokenExpirationDate = getExpirationDate(tokenConfiguration.accessTokenExpirationTimestamp)
         val refreshTokenExpirationDate = getExpirationDate(tokenConfiguration.refreshTokenExpirationTimestamp)
 
-        val refreshToken = generateToken(userId, userPermission, tokenConfiguration, TokenType.REFRESH_TOKEN)
-        val accessToken = generateToken(userId, userPermission, tokenConfiguration, TokenType.ACCESS_TOKEN)
+        val refreshToken = generateToken(userId, username, userPermission, tokenConfiguration, TokenType.REFRESH_TOKEN)
+        val accessToken = generateToken(userId, username, userPermission, tokenConfiguration, TokenType.ACCESS_TOKEN)
 
         return UserTokens(accessTokenExpirationDate.time, refreshTokenExpirationDate.time, accessToken, refreshToken)
     }
@@ -106,12 +106,13 @@ class IdentityGateway(
     }
 
     private fun generateToken(
-        userId: String, userPermission: Int, tokenConfiguration: TokenConfiguration, tokenType: TokenType
+        userId: String,username : String, userPermission: Int, tokenConfiguration: TokenConfiguration, tokenType: TokenType
     ): String {
         val userIdClaim = TokenClaim("userId", userId)
         val rolesClaim = TokenClaim("permission", userPermission.toString())
+        val usernameClaim = TokenClaim("username", username)
         val accessTokenClaim = TokenClaim("tokenType", tokenType.name)
-        return tokenManagementService.generateToken(tokenConfiguration, userIdClaim, rolesClaim, accessTokenClaim)
+        return tokenManagementService.generateToken(tokenConfiguration, userIdClaim, usernameClaim, rolesClaim, accessTokenClaim)
     }
 
 }
