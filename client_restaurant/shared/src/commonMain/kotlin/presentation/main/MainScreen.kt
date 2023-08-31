@@ -2,23 +2,11 @@ package presentation.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -142,7 +130,7 @@ class MainScreen(private val restaurantId: String) :
             is MainScreenUIEffect.Back -> navigator.pop()
             is MainScreenUIEffect.NavigateToAllMeals -> navigator.push(MealsScreen(effect.restaurantId))
             is MainScreenUIEffect.NavigateToOrders -> navigator.push(OrderScreen())
-            is MainScreenUIEffect.NavigateToRestaurantInfo -> navigator.push(RestaurantInformationScreen())
+            is MainScreenUIEffect.NavigateToRestaurantInfo -> navigator.push(RestaurantInformationScreen(effect.restaurantId))
             is MainScreenUIEffect.NavigateToOrdersHistory -> navigator.push(
                 OrdersHistoryScreen(effect.restaurantId)
             )

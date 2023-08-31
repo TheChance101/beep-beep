@@ -6,21 +6,23 @@ import domain.usecase.IManageRestaurantInformationUseCase
 import domain.usecase.LogoutUserUseCase
 import domain.usecase.RestaurantInformationValidationUseCase
 import kotlinx.coroutines.CoroutineScope
+import org.koin.core.component.get
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
 class RestaurantInformationScreenModel(
     private val manageRestaurantInformation: IManageRestaurantInformationUseCase,
     private val restaurantInformationValidation: RestaurantInformationValidationUseCase,
-    private val logoutUser: LogoutUserUseCase
+    private val logoutUser: LogoutUserUseCase,
 ) : BaseScreenModel<RestaurantInformationUiState, RestaurantInformationUiEffect>
     (RestaurantInformationUiState()), RestaurantInformationInteractionListener {
+
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
 
 
     init {
-        getRestaurantInfo()
+        getRestaurantInfo(get())
     }
 
     private fun onError(error: ErrorState) {
@@ -44,10 +46,10 @@ class RestaurantInformationScreenModel(
         }
     }
 
-    private fun getRestaurantInfo() {
+    private fun getRestaurantInfo(id: String) {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            { manageRestaurantInformation.getRestaurantInfo() },
+            { manageRestaurantInformation.getRestaurantInfo(id) },
             ::onGetRestaurantInfoSuccess,
             ::onError
         )
@@ -71,12 +73,12 @@ class RestaurantInformationScreenModel(
         onUpdateRestaurantInformation()
     }
 
-    override fun onPhoneNumberChange(phoneNum: String) {
-        val validationResult = restaurantInformationValidation.isPhoneNumberValid(phoneNum)
+    override fun onPhoneNumberChange(phoneNumber: String) {
+        val validationResult = restaurantInformationValidation.isPhoneNumberValid(phoneNumber)
         updateState {
             it.copy(
                 restaurant = it.restaurant.copy(
-                    phoneNumber = phoneNum,
+                    phoneNumber = phoneNumber,
                     isPhoneNumberError = !validationResult
                 )
             )
@@ -130,7 +132,7 @@ class RestaurantInformationScreenModel(
         tryToExecute(
             { manageRestaurantInformation.updateRestaurantInformation(restaurant) },
             ::onUpdateRestaurantInfoSuccess,
-            ::onUpdateRestaurantInfoError
+            ::onError
         )
     }
 
@@ -148,11 +150,8 @@ class RestaurantInformationScreenModel(
     }
 
     private fun onUpdateRestaurantInfoSuccess(result: Boolean) {
-        updateState { it.copy(isLoading = false) }
-    }
-
-    private fun onUpdateRestaurantInfoError(error: ErrorState) {
-        updateState { it.copy(isLoading = false, error = error) }
+        updateState { it.copy(isLoading = false, error = null) }
+        sendNewEffect(RestaurantInformationUiEffect.UpdateInformationSuccess)
     }
 
     override fun onClickLogout() {

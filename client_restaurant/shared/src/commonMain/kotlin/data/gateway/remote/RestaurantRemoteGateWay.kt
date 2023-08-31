@@ -1,12 +1,13 @@
 package data.gateway.remote
 
+import data.remote.mapper.toDto
 import data.remote.mapper.toEntity
 import data.remote.model.BaseResponse
 import data.remote.model.RestaurantDto
 import domain.entity.Restaurant
 import domain.gateway.remote.IRestaurantRemoteGateway
-import io.ktor.client.HttpClient
-import io.ktor.client.request.get
+import io.ktor.client.*
+import io.ktor.client.request.*
 import presentation.base.NotFoundedException
 
 
@@ -18,7 +19,9 @@ class RestaurantRemoteGateWay(client: HttpClient) : BaseRemoteGateway(client),
     }
 
     override suspend fun updateRestaurantInfo(restaurant: Restaurant): Boolean {
-        return true
+        return tryToExecute<BaseResponse<Boolean>> {
+            post("/restaurant") { setBody(restaurant.toDto()) }
+        }.value ?: false
     }
 
     override suspend fun getRestaurantInfo(restaurantId: String): Restaurant {

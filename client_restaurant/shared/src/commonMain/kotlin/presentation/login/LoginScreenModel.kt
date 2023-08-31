@@ -66,25 +66,15 @@ class LoginScreenModel:
             ErrorState.RequestFailed -> {}
             ErrorState.UnAuthorized -> {}
             ErrorState.HasNoPermission -> {}
-            ErrorState.UnknownError -> {}
             is ErrorState.InvalidCredentials -> {
-                updateState {
-                    it.copy(
-                        passwordErrorMsg = error.errorMessage,
-                        isPasswordError = true,
-                    )
-                }
-
+                updateState { it.copy(passwordErrorMsg = error.errorMessage, isPasswordError = true) }
             }
 
             is ErrorState.UserNotExist -> {
-                updateState {
-                    it.copy(
-                        usernameErrorMsg = error.errorMessage,
-                        isUsernameError = true
-                    )
-                }
+                updateState { it.copy(usernameErrorMsg = error.errorMessage, isUsernameError = true) }
             }
+
+            else -> {}
         }
     }
 
