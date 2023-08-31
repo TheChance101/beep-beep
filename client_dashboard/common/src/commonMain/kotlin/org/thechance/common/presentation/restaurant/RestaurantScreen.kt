@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -410,7 +411,12 @@ class RestaurantScreen :
             onCloseRequest = onCloseRequest,
         ) {
             window.minimumSize = Dimension(400, 390)
-            Column(modifier = Modifier.background(Theme.colors.surface)) {
+            Column(
+                modifier = Modifier
+                    .padding(top = 16.kms, start = 16.kms, end = 16.kms)
+                    .shadow(elevation = 5.kms)
+                    .background(Theme.colors.surface, RoundedCornerShape(8.kms))
+            ) {
                 Text(
                     text = Resources.Strings.cuisines,
                     style = Theme.typography.headline,
