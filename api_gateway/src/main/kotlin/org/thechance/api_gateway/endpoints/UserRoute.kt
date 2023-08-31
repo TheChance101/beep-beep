@@ -102,8 +102,9 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
         post("/refresh-access-token") {
             val tokenClaim = call.principal<JWTPrincipal>()
             val userId = tokenClaim?.payload?.getClaim("userId").toString()
+            val username = tokenClaim?.payload?.getClaim("username").toString()
             val userPermission = tokenClaim?.payload?.getClaim("permission")?.asString()?.toInt() ?: 1
-            val token = gateway.generateUserTokens(userId,userPermission, tokenConfiguration)
+            val token = gateway.generateUserTokens(userId,username,userPermission, tokenConfiguration)
             respondWithResult(HttpStatusCode.Created, token)
         }
     }
