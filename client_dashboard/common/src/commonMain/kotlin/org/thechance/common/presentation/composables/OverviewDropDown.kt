@@ -27,12 +27,12 @@ import org.thechance.common.presentation.util.kms
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OverviewDropDown(
-    titles: List<String>,
-    selectedIndex: Int,
-    isExpanded: Boolean,
     onDropDownMenuClicked: () -> Unit,
     onDismissDropDownMenu: () -> Unit,
-    onMenuItemClicked: (Int) -> Unit
+    onMenuItemClicked: (Int) -> Unit,
+    isExpanded: Boolean,
+    items: List<String>,
+    selectedIndex: Int,
 ) {
 
     val dropMenuArrowRotateDirection = animateFloatAsState(targetValue = if (isExpanded) 180f else 0f)
@@ -45,11 +45,10 @@ fun OverviewDropDown(
             horizontalArrangement = Arrangement.spacedBy(8.kms),
             modifier = Modifier.onClick(onClick = onDropDownMenuClicked).cursorHoverIconHand()
         ) {
-
             Text(
-                text = titles[selectedIndex],
-                style = Theme.typography.titleMedium,
-                color = Theme.colors.contentPrimary,
+                text = items[selectedIndex],
+                style = Theme.typography.body,
+                color = Theme.colors.contentSecondary,
                 modifier = Modifier
             )
             Image(painter = painterResource(Resources.Drawable.dropDownArrow),
@@ -57,8 +56,8 @@ fun OverviewDropDown(
                 colorFilter = ColorFilter.tint(Theme.colors.contentPrimary),
                 modifier = Modifier.graphicsLayer {
                     rotationZ = dropMenuArrowRotateDirection.value
-                })
-
+                }
+            )
         }
 
         Box {
@@ -68,7 +67,7 @@ fun OverviewDropDown(
                 offset = DpOffset.Zero.copy(y = 32.kms),
                 shape = RoundedCornerShape(Theme.radius.medium).copy(topEnd = CornerSize(Theme.radius.small)),
             ) {
-                titles.forEachIndexed { index, text ->
+                items.forEachIndexed { index, text ->
                     DropdownMenuItem(
                         onClick = { onMenuItemClicked(index) },
                         modifier = Modifier.cursorHoverIconHand(),
@@ -77,13 +76,12 @@ fun OverviewDropDown(
                             Text(
                                 text = text,
                                 textAlign = TextAlign.Center,
-                                style = Theme.typography.titleMedium,
-                                color = Theme.colors.primary
+                                style = Theme.typography.body,
+                                color = Theme.colors.contentSecondary
                             )
                         }
                     )
                 }
-
             }
         }
     }
