@@ -84,7 +84,7 @@ class RestaurantInformationScreen : BaseScreen<
 
     override fun onEffect(effect: RestaurantInformationUiEffect, navigator: Navigator) {
         when (effect) {
-            is RestaurantInformationUiEffect.NavigateToLogin -> navigator.replaceAll(LoginScreen())
+            is RestaurantInformationUiEffect.LogoutSuccess -> navigator.replaceAll(LoginScreen())
             is RestaurantInformationUiEffect.NavigateUp -> navigator.pop()
             RestaurantInformationUiEffect.ShowNoInternetError -> {}
             RestaurantInformationUiEffect.ShowUnknownError -> {}

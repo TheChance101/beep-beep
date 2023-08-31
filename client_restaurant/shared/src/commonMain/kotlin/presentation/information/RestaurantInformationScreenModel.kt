@@ -3,6 +3,7 @@ package presentation.information
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Restaurant
 import domain.usecase.IManageRestaurantInformationUseCase
+import domain.usecase.LogoutUserUseCase
 import domain.usecase.RestaurantInformationValidationUseCase
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
@@ -10,7 +11,8 @@ import presentation.base.ErrorState
 
 class RestaurantInformationScreenModel(
     private val manageRestaurantInformation: IManageRestaurantInformationUseCase,
-    private val restaurantInformationValidation: RestaurantInformationValidationUseCase
+    private val restaurantInformationValidation: RestaurantInformationValidationUseCase,
+    private val logoutUser: LogoutUserUseCase
 ) : BaseScreenModel<RestaurantInformationUiState, RestaurantInformationUiEffect>
     (RestaurantInformationUiState()), RestaurantInformationInteractionListener {
     override val viewModelScope: CoroutineScope
@@ -154,7 +156,16 @@ class RestaurantInformationScreenModel(
     }
 
     override fun onClickLogout() {
-        sendNewEffect(RestaurantInformationUiEffect.NavigateToLogin)
+        tryToExecute(
+            { logoutUser.logoutUser() },
+            { onLogoutSuccess() },
+            ::onError
+        )
+        sendNewEffect(RestaurantInformationUiEffect.LogoutSuccess)
+    }
+
+    private fun onLogoutSuccess() {
+        sendNewEffect(RestaurantInformationUiEffect.LogoutSuccess)
     }
 
     override fun onClickBackArrow() {
