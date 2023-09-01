@@ -7,21 +7,28 @@ import domain.entity.Meal
 import domain.gateway.remote.IMealRemoteGateway
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 
 
 class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
     BaseRemoteGateway(client = client) {
 
-    override suspend fun getAllMealsByRestaurantId(restaurantId: String): List<Meal>? {
+    override suspend fun getAllMealsByRestaurantId(
+        restaurantId: String,
+        page: Int,
+        limit: Int,
+    ): List<Meal>{
         return tryToExecute<BaseResponse<List<MealDto>>> {
-            get("/meals/$restaurantId")
-        }.value?.toEntity()
+            get("restaurant/$restaurantId/meals") {
+                parameter("page", page)
+                parameter("limit", limit)
+            }
+        }.value?.toEntity() ?: emptyList()
     }
-
-    override suspend fun getMealsByCuisineId(mealId: String): List<Meal>? {
+   //todo add pagination in api first then here
+    override suspend fun getMealsByCuisineId(cuisineId: String): List<Meal>? {
         return tryToExecute<BaseResponse<List<MealDto>>> {
-            get("/meals/$mealId")
-            //todo add pagination
+           get("/cuisine/$cuisineId/meals")
         }.value?.toEntity()
     }
 
