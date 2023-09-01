@@ -74,7 +74,7 @@ fun Route.restaurantRoutes() {
                 val (language, countryCode) = extractLocalizationHeader()
                 val restaurant = call.receive<Restaurant>()
                 val user =
-                    identityGateway.updateUserPermission(restaurant.ownerId ?: "", addPermission(Role.RESTAURANT_OWNER))
+                    identityGateway.updateUserPermission(restaurant.ownerId ?: "", Role.RESTAURANT_OWNER)
                 val newRestaurant =
                     restaurantGateway.addRestaurant(
                         restaurant = restaurant.copy(ownerId = user.id),
