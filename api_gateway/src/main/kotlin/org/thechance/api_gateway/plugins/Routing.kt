@@ -18,5 +18,6 @@ fun Application.configureRouting(tokenConfiguration: TokenConfiguration) {
         cuisineRoute()
         taxiRoutes()
         mealRoute()
+        orderRoutes()
     }
 }

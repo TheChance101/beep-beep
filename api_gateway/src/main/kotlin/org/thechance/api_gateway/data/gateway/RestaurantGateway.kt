@@ -73,9 +73,7 @@ class RestaurantGateway(
     }
 
     @OptIn(InternalAPI::class)
-    override suspend fun updateRestaurant(
-        restaurant: Restaurant, isAdmin: Boolean, locale: Locale
-    ): Restaurant {
+    override suspend fun updateRestaurant(restaurant: Restaurant, isAdmin: Boolean, locale: Locale): Restaurant {
         return tryToExecute(
             api = APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
@@ -93,7 +91,6 @@ class RestaurantGateway(
 
         }
     }
-
 
     override suspend fun getRestaurants(page: Int, limit: Int, locale: Locale) =
         tryToExecute<BasePaginationResponseDto<Restaurant>>(
@@ -114,9 +111,7 @@ class RestaurantGateway(
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
-        ) {
-            get("/restaurants/$ownerId")
-        }
+        ) { get("/restaurants/$ownerId") }
     }
 
     @OptIn(InternalAPI::class)
@@ -128,10 +123,7 @@ class RestaurantGateway(
             }
         ) {
             post("/restaurant") {
-                body = Json.encodeToString(
-                    Restaurant.serializer(),
-                    restaurant
-                )
+                body = Json.encodeToString(Restaurant.serializer(), restaurant)
             }
         }
     }
