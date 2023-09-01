@@ -1,13 +1,7 @@
 package org.thechance.service_taxi.domain.usecase
 
 import org.thechance.service_taxi.domain.entity.Trip
-import org.thechance.service_taxi.domain.exceptions.INVALID_DATE
-import org.thechance.service_taxi.domain.exceptions.INVALID_ID
-import org.thechance.service_taxi.domain.exceptions.INVALID_LOCATION
-import org.thechance.service_taxi.domain.exceptions.INVALID_PRICE
-import org.thechance.service_taxi.domain.exceptions.INVALID_RATE
-import org.thechance.service_taxi.domain.exceptions.MultiErrorException
-import org.thechance.service_taxi.domain.exceptions.ResourceNotFoundException
+import org.thechance.service_taxi.domain.exceptions.*
 import org.thechance.service_taxi.domain.gateway.ITaxiGateway
 import org.thechance.service_taxi.domain.usecase.utils.IValidations
 
@@ -15,6 +9,7 @@ interface IClientTripsManagementUseCase {
     suspend fun getTripsByClientId(clientId: String, page: Int, limit: Int): List<Trip> // user
     suspend fun rateTrip(tripId: String, rate: Double): Trip // user
     suspend fun createTrip(trip: Trip): Trip // user
+    suspend fun getNumberOfTripsByClientId(id: String): Long
 }
 
 class ClientTripsManagementUseCase(
@@ -39,6 +34,10 @@ class ClientTripsManagementUseCase(
     override suspend fun createTrip(trip: Trip): Trip {
         validationTrip(trip)
         return ITaxiGateway.addTrip(trip) ?: throw ResourceNotFoundException
+    }
+
+    override suspend fun getNumberOfTripsByClientId(id: String): Long {
+        return ITaxiGateway.getNumberOfTripsByClientId(id)
     }
 
     private fun validationTrip(trip: Trip) {
