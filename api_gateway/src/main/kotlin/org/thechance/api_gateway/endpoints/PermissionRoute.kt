@@ -29,7 +29,7 @@ fun Route.permissionRoutes() {
         }
 
         authenticateWithRole(Role.DASHBOARD_ADMIN) {
-            get("/restaurant-permission-request") {
+            get("/restaurant-request") {
                 val (language, countryCode) = extractLocalizationHeader()
                 val result = restaurantGateway.getAllRequestPermission(Locale(language, countryCode))
                 respondWithResult(HttpStatusCode.OK, result)
