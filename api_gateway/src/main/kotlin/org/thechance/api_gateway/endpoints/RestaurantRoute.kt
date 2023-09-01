@@ -47,11 +47,11 @@ fun Route.restaurantRoutes() {
 
     route("/restaurant") {
 
-        get("/{id}/meals") {
+        get("/{restaurantId}/meals") {
             val (language, countryCode) = extractLocalizationHeader()
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 20
-            val restaurantId = call.parameters["id"]?.trim().toString()
+            val restaurantId = call.parameters["restaurantId"]?.trim().toString()
             val meals = restaurantGateway.getMealsByRestaurantId(
                 restaurantId = restaurantId,
                 page = page,

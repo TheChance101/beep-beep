@@ -16,6 +16,7 @@ import org.thechance.api_gateway.data.model.restaurant.Restaurant
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.endpoints.gateway.IRestaurantGateway
 import org.thechance.api_gateway.data.model.Order
+import org.thechance.api_gateway.data.model.restaurant.MealDetails
 import org.thechance.api_gateway.data.model.restaurant.RestaurantRequestPermission
 import org.thechance.api_gateway.util.APIs
 import java.util.*
@@ -104,7 +105,6 @@ class RestaurantGateway(
                     )
                 }
             }
-
         }
     }
 
@@ -158,53 +158,17 @@ class RestaurantGateway(
             delete("/restaurant/$restaurantId")
         }
     }
+
     //endregion
 
     //region meal
-    @OptIn(InternalAPI::class)
-    override suspend fun addMeal(meal: Meal, locale: Locale): Meal {
+    override suspend fun getMeal(mealId: String, locale: Locale): MealDetails {
         return tryToExecute(
             api = APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
-        ) {
-            post("/meal") {
-                body = Json.encodeToString(
-                    Meal.serializer(),
-                    Meal(
-                        restaurantId = meal.restaurantId,
-                        name = meal.name,
-                        description = meal.description,
-                        price = meal.price,
-                        cuisines = meal.cuisines
-                    )
-                )
-            }
-        }
-    }
-
-    @OptIn(InternalAPI::class)
-    override suspend fun updateMeal(meal: Meal, locale: Locale): Meal {
-        return tryToExecute(
-            api = APIs.RESTAURANT_API,
-            setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
-            }
-        ) {
-            put("/meal") {
-                body = Json.encodeToString(
-                    Meal.serializer(),
-                    Meal(
-                        restaurantId = meal.restaurantId,
-                        name = meal.name,
-                        description = meal.description,
-                        price = meal.price,
-                        cuisines = meal.cuisines
-                    )
-                )
-            }
-        }
+        ) { get("meal/$mealId") }
     }
 
     override suspend fun getMealsByRestaurantId(
@@ -231,6 +195,32 @@ class RestaurantGateway(
             }
         ) {
             get("/cuisine/$cuisineId/meals")
+        }
+    }
+
+    @OptIn(InternalAPI::class)
+    override suspend fun addMeal(meal: Meal, locale: Locale): Meal {
+        return tryToExecute(
+            api = APIs.RESTAURANT_API,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+            }
+        ) {
+            post("/meal") {
+                body = Json.encodeToString(Meal.serializer(), meal)
+            }
+        }
+    }
+
+    @OptIn(InternalAPI::class)
+    override suspend fun updateMeal(meal: Meal, locale: Locale): Meal {
+        return tryToExecute(
+            api = APIs.RESTAURANT_API,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+            }
+        ) {
+            put("/meal") { body = Json.encodeToString(Meal.serializer(), meal) }
         }
     }
 

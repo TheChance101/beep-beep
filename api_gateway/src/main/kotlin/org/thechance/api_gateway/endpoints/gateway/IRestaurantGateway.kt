@@ -6,6 +6,7 @@ import org.thechance.api_gateway.data.model.Cuisine
 import org.thechance.api_gateway.data.model.restaurant.Meal
 import org.thechance.api_gateway.data.model.restaurant.Restaurant
 import org.thechance.api_gateway.data.model.Order
+import org.thechance.api_gateway.data.model.restaurant.MealDetails
 import org.thechance.api_gateway.data.model.restaurant.RestaurantRequestPermission
 import java.util.*
 
@@ -63,12 +64,10 @@ interface IRestaurantGateway {
     //endregion
 
     //region meal
-    suspend fun addMeal(meal: Meal, locale: Locale): Meal
-
-    suspend fun updateMeal(meal: Meal, locale: Locale): Meal
-
+    suspend fun getMeal(mealId: String, locale: Locale): MealDetails
     suspend fun getMealsByRestaurantId(restaurantId: String, page: Int, limit: Int, locale: Locale): List<Meal>
-
     suspend fun getMealsByCuisineId(cuisineId: String, locale: Locale): List<Meal>
+    suspend fun addMeal(meal: Meal, locale: Locale): Meal
+    suspend fun updateMeal(meal: Meal, locale: Locale): Meal
     //endregion
 }
