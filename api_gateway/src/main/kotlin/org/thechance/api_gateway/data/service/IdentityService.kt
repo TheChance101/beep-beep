@@ -6,7 +6,6 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
-import io.ktor.util.*
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.PaginationResponse
 import org.thechance.api_gateway.data.model.UserDto
@@ -15,6 +14,7 @@ import org.thechance.api_gateway.data.model.authenticate.TokenClaim
 import org.thechance.api_gateway.data.model.authenticate.TokenConfiguration
 import org.thechance.api_gateway.data.model.authenticate.TokenType
 import org.thechance.api_gateway.data.utils.ErrorHandler
+import org.thechance.api_gateway.data.utils.tryToExecute
 import org.thechance.api_gateway.util.APIs
 import org.thechance.api_gateway.util.Claim.PERMISSION
 import org.thechance.api_gateway.util.Claim.TOKEN_TYPE
@@ -24,16 +24,12 @@ import java.util.*
 
 
 @Single
-class IdentityService(
-    client: HttpClient,
-    attributes: Attributes,
-    private val errorHandler: ErrorHandler
-) : BaseGateway(client = client, attributes = attributes) {
+class IdentityService(private val client: HttpClient, private val errorHandler: ErrorHandler) {
 
     suspend fun createUser(
         fullName: String, username: String, password: String, email: String, locale: Locale
     ): UserDto {
-        return tryToExecute<UserDto>(
+        return client.tryToExecute<UserDto>(
             APIs.IDENTITY_API,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
@@ -53,7 +49,7 @@ class IdentityService(
     suspend fun loginUser(
         userName: String, password: String, tokenConfiguration: TokenConfiguration, locale: Locale
     ): UserTokensResponse {
-        tryToExecute<Boolean>(
+        client.tryToExecute<Boolean>(
             api = APIs.IDENTITY_API,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
@@ -72,7 +68,7 @@ class IdentityService(
 
     suspend fun getUsers(
         page: Int, limit: Int, searchTerm: String, locale: Locale
-    ) = tryToExecute<PaginationResponse<UserDto>>(APIs.IDENTITY_API) {
+    ) = client.tryToExecute<PaginationResponse<UserDto>>(APIs.IDENTITY_API) {
         get("/dashboard/user") {
             parameter("page", page)
             parameter("limit", limit)
@@ -80,13 +76,13 @@ class IdentityService(
         }
     }
 
-    suspend fun getUserByUsername(username: String) = tryToExecute<UserDto>(APIs.IDENTITY_API) {
+    private suspend fun getUserByUsername(username: String) = client.tryToExecute<UserDto>(APIs.IDENTITY_API) {
         get("user/get-user") {
             parameter("username", username)
         }
     }
 
-    suspend fun updateUserPermission(userId: String, permission: Int) = tryToExecute<UserDto>(APIs.IDENTITY_API) {
+    suspend fun updateUserPermission(userId: String, permission: Int) = client.tryToExecute<UserDto>(APIs.IDENTITY_API) {
         submitForm("/dashboard/user/$userId/permission",
             formParameters = parameters {
                 append("permission", "$permission")
@@ -96,7 +92,7 @@ class IdentityService(
     }
 
     suspend fun deleteUser(userId: String, locale: Locale): Boolean {
-        return tryToExecute<Boolean>(api = APIs.IDENTITY_API, setErrorMessage = { errorCodes ->
+        return client.tryToExecute<Boolean>(api = APIs.IDENTITY_API, setErrorMessage = { errorCodes ->
             errorHandler.getLocalizedErrorMessage(errorCodes, locale)
         }) {
             delete("/user/$userId")

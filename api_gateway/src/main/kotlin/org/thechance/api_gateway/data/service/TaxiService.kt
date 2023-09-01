@@ -8,20 +8,17 @@ import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.PaginationResponse
 import org.thechance.api_gateway.data.model.taxi.TaxiDto
 import org.thechance.api_gateway.data.utils.ErrorHandler
+import org.thechance.api_gateway.data.utils.tryToExecute
 import org.thechance.api_gateway.util.APIs
 import java.util.*
 
 
 @Single
-class TaxiService(
-    client: HttpClient,
-    attributes: Attributes,
-    private val errorHandler: ErrorHandler
-) : BaseGateway(client = client, attributes = attributes) {
+class TaxiService(private val client: HttpClient, private val errorHandler: ErrorHandler) {
 
 
      suspend fun getAllTaxi(locale: Locale, page: Int, limit: Int): PaginationResponse<TaxiDto> {
-        return tryToExecute(
+        return client.tryToExecute(
             api = APIs.TAXI_API,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(
@@ -41,7 +38,7 @@ class TaxiService(
         id: String,
         locale: Locale
     ): TaxiDto {
-        return tryToExecute(
+        return client.tryToExecute(
             api = APIs.TAXI_API,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
@@ -56,7 +53,7 @@ class TaxiService(
         taxiDto: TaxiDto,
         locale: Locale
     ): TaxiDto {
-        return tryToExecute(
+        return client.tryToExecute(
             api = APIs.TAXI_API,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
@@ -75,7 +72,7 @@ class TaxiService(
         taxiDto: TaxiDto,
         locale: Locale
     ): TaxiDto {
-        return tryToExecute(
+        return client.tryToExecute(
             api = APIs.TAXI_API,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
@@ -91,7 +88,7 @@ class TaxiService(
         id: String,
         locale: Locale
     ): TaxiDto {
-        return tryToExecute(
+        return client.tryToExecute(
             api = APIs.TAXI_API,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
