@@ -3,6 +3,7 @@ package org.thechance.common.data.remote.mapper
 import org.thechance.common.data.remote.model.RestaurantDto
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.entity.Time
+import org.thechance.common.domain.entity.Time.Companion.parseToCustomTime
 
 fun RestaurantDto.toEntity() = Restaurant(
     id = id ?: "",
@@ -11,20 +12,12 @@ fun RestaurantDto.toEntity() = Restaurant(
     phoneNumber = phoneNumber ?: "",
     rating = rating ?: 0.0,
     priceLevel = priceLevel ?: 0,
-    workingHours = workingHours.replace(" ", "").split("-").run{
+    workingHours = workingHours?.replace(" ", "")?.split("-")?.run {
         Pair(
-            Time(
-                get(0).split(":")[0].toInt(),
-                get(0).split(":")[1].toInt()
-            ),
-            Time(
-                get(1).split(":")[0].toInt(),
-                get(1).split(":")[1].toInt()
-            )
+            parseToCustomTime(get(0)),
+            parseToCustomTime(get(1))
         )
-    }
-
-
+    } ?: Pair(Time(0, 0), Time(0, 0))
 )
 
 

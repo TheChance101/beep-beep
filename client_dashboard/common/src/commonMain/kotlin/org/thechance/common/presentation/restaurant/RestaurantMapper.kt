@@ -3,6 +3,7 @@ package org.thechance.common.presentation.restaurant
 import org.thechance.common.domain.entity.AddRestaurant
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.entity.Time
+import org.thechance.common.domain.entity.Time.Companion.parseToCustomTime
 
 fun Restaurant.toUiState(): RestaurantUiState.RestaurantDetailsUiState =
     RestaurantUiState.RestaurantDetailsUiState(
@@ -28,11 +29,3 @@ fun AddRestaurantDialogUiState.toEntity() = AddRestaurant(
         parseToCustomTime(endTime)
     ),
 )
-
-private fun parseToCustomTime(time: String): Time {
-    return try {
-        Time(time.split(":")[0].toInt(), time.split(":")[1].toInt())
-    } catch (e: Exception) {
-        throw IllegalStateException("format must be HH:MM")
-    }
-}
