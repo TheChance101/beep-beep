@@ -59,7 +59,3 @@ fun Route.authenticateWithRole(role: Int, block: Route.() -> Unit) {
 private fun hasPermission(permission: Int, role: Int): Boolean {
     return (permission and role) == role
 }
-
-fun addPermission(role: Int): Int {
-    return Role.END_USER + role
-}
