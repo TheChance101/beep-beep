@@ -1,5 +1,4 @@
 @file:Suppress("DSL_SCOPE_VIOLATION")
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -8,8 +7,7 @@ plugins {
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kotlinKsp)
     id("io.realm.kotlin") version "1.10.0"
-    kotlin("plugin.serialization") version "1.8.10"
-
+    kotlin("plugin.serialization") version "1.9.0"
 }
 
 group = "org.thechance"
@@ -61,7 +59,8 @@ kotlin {
                 implementation(libs.ktor.content.negotiation)
                 implementation(libs.ktor.logging)
                 implementation(libs.ktor.client.cio)
-                implementation(libs.ktor.serialization)
+                implementation(libs.kotlin.serialization)
+
             }
         }
         val androidMain by getting {
@@ -81,6 +80,9 @@ kotlin {
             iosX64Main.dependsOn(this)
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
+            dependencies {
+                implementation("io.ktor:ktor-client-darwin:2.3.3")
+            }
         }
     }
 }

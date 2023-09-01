@@ -1,8 +1,8 @@
 package presentation.login
 
 data class LoginScreenUIState(
-    val username: String = "ahmed_nasser_zaza",
-    val password: String = "12345678aA@",
+    val username: String = "mustafa_sabecsdvdn",
+    val password: String = "alpha1!cssc",
     val keepLoggedIn: Boolean = false,
     val isUsernameError: Boolean = false,
     val isPasswordError: Boolean = false,

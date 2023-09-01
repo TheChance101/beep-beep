@@ -27,7 +27,7 @@ val networkModule = module {
                 header("Content-Type", "application/json")
                 header("Accept-Language", "ar")
                 header("Country-Code", "EG")
-//                url("http://192.168.1.10:8080")
+                url("http://10.23.0.173:8003")
             }
 
             install(ContentNegotiation) {
@@ -41,27 +41,3 @@ val networkModule = module {
         }
     }
 }
-
-
-//val NetworkModule = module {
-//    single {
-//        HttpClient(CIO) {
-//
-//            expectSuccess = true
-//
-//            install(Logging) {
-//                logger = Logger.DEFAULT
-//                level = LogLevel.ALL
-//            }
-//
-//            defaultRequest {
-//                header("Content-Type", "application/json")
-//                url("http://0.0.0.0:8080")
-//            }
-//
-//            install(ContentNegotiation) {
-//                gson()
-//            }
-//        }
-//    }
-//}
