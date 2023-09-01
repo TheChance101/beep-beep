@@ -20,7 +20,9 @@ interface IUserManagementUseCase {
 class UserManagementUseCase(private val dataBaseGateway: IDataBaseGateway) : IUserManagementUseCase {
 
     override suspend fun addPermissionToUser(userId: String, permission: Int): UserManagement {
-        return dataBaseGateway.updatePermissionToUser(userId, permission)
+        val userPermission = dataBaseGateway.getUserPermission(userId)
+        val newPermission = grantPermission(userPermission, permission)
+        return dataBaseGateway.updatePermissionToUser(userId, newPermission)
     }
 
     override suspend fun removePermissionFromUser(userId: String, permission: Int): UserManagement {

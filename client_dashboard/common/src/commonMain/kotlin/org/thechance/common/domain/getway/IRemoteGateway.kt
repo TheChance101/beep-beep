@@ -7,7 +7,12 @@ interface IRemoteGateway {
 
     fun getUserData(): String
 
-    fun getUsers(page: Int, numberOfUsers: Int): DataWrapper<User>
+    fun getUsers(
+        byPermissions: List<Permission>,
+        byCountries: List<String>,
+        page: Int,
+        numberOfUsers: Int
+    ): DataWrapper<User>
 
     suspend fun getTaxis(page: Int, numberOfTaxis: Int): DataWrapper<Taxi>
 
@@ -15,7 +20,7 @@ interface IRemoteGateway {
 
     suspend fun updateTaxi(taxi: NewTaxiInfo): Boolean
     suspend fun deleteTaxi(taxiId: String): Boolean
-    suspend fun findTaxisByUsername(username: String, page: Int, numberOfTaxis:Int): DataWrapper<Taxi>
+    suspend fun findTaxisByUsername(username: String, page: Int, numberOfTaxis: Int): DataWrapper<Taxi>
 
     suspend fun filterTaxis(taxi: TaxiFiltration, page: Int, numberOfTaxis: Int): DataWrapper<Taxi>
 
@@ -34,5 +39,20 @@ interface IRemoteGateway {
     suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant
 
     suspend fun getCurrentLocation(): Location
+
+    suspend fun searchUsers(
+        query: String,
+        byPermissions: List<Permission>,
+        byCountries: List<String>,
+        page: Int,
+        numberOfUsers: Int
+    ): DataWrapper<User>
+
+    suspend fun filterUsers(
+        permissions: List<Permission>,
+        countries: List<String>,
+        page: Int,
+        numberOfUsers: Int
+    ): DataWrapper<User>
 
 }
