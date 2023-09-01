@@ -69,8 +69,8 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
         function: suspend () -> Unit
     ): Job {
         return inScope.launch(dispatcher) {
+            function()
             try {
-                function()
             } catch (exception: Exception) {
                 when (exception) {
                     is NoInternetException -> onError(ErrorState.NoInternet)
@@ -85,7 +85,8 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
                         )
                     )
 
-                    else -> onError(ErrorState.UnknownError)
+                    is UnknownErrorException -> onError(ErrorState.UnknownError(exception.message.toString()))
+                    else -> onError(ErrorState.UnknownError(exception.message.toString()))
                 }
             }
         }

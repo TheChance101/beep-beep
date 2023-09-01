@@ -26,7 +26,7 @@ val NetworkModule = module {
             defaultRequest {
                 header("Content-Type", "application/json")
                 header("Accept-Language", "en")
-                url("http://0.0.0.0:8080")
+                url("http://0.0.0.0:8003")
             }
 
             install(ContentNegotiation) {
