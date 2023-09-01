@@ -49,7 +49,7 @@ class UserGateway(private val client: HttpClient) : BaseGateway(), IUserGateway 
     override suspend fun loginUser(username: String, password: String): Session {
         val result = tryToExecute<ServerResponse<SessionDto>>(client) {
             submitForm(
-                url = ("http://192.168.1.10:8080/login"),
+                url = ("/login"),
                 formParameters = Parameters.build {
                     append("username", username)
                     append("password", password)
