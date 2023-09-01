@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
+import org.thechance.api_gateway.data.model.BasePaginationResponseDto
 import org.thechance.api_gateway.data.model.CuisineResource
 import org.thechance.api_gateway.data.model.restaurant.MealResource
 import org.thechance.api_gateway.data.model.restaurant.RestaurantResource
@@ -108,17 +109,18 @@ class RestaurantGateway(
     }
 
 
-    override suspend fun getRestaurants(page: Int, limit: Int, locale: Locale) = tryToExecute<List<RestaurantResource>>(
-        APIs.RESTAURANT_API,
-        setErrorMessage = { errorCodes ->
-            errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+    override suspend fun getRestaurants(page: Int, limit: Int, locale: Locale) =
+        tryToExecute<BasePaginationResponseDto<RestaurantResource>>(
+            APIs.RESTAURANT_API,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+            }
+        ) {
+            get("/restaurants") {
+                parameter("page", page)
+                parameter("limit", limit)
+            }
         }
-    ) {
-        get("/restaurants") {
-            parameter("page", page)
-            parameter("limit", limit)
-        }
-    }
 
     override suspend fun getRestaurantsByOwnerId(ownerId: String, locale: Locale): List<RestaurantResource> {
         return tryToExecute(

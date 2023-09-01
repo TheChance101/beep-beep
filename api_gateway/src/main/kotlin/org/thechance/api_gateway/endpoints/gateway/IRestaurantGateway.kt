@@ -1,6 +1,7 @@
 package org.thechance.api_gateway.endpoints.gateway
 
 import kotlinx.coroutines.flow.Flow
+import org.thechance.api_gateway.data.model.BasePaginationResponseDto
 import org.thechance.api_gateway.data.model.CuisineResource
 import org.thechance.api_gateway.data.model.restaurant.MealResource
 import org.thechance.api_gateway.data.model.restaurant.RestaurantResource
@@ -46,7 +47,7 @@ interface IRestaurantGateway {
     // endregion
 
     //region Restaurant
-    suspend fun getRestaurants(page: Int, limit: Int, locale: Locale): List<RestaurantResource>
+    suspend fun getRestaurants(page: Int, limit: Int, locale: Locale): BasePaginationResponseDto<RestaurantResource>
 
     suspend fun getRestaurantInfo(locale: Locale, restaurantId: String): RestaurantResource
 

@@ -46,7 +46,7 @@ fun Route.restaurantRoutes() {
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 20
             val restaurants = restaurantGateway.getRestaurants(page, limit, locale = Locale(language, countryCode))
-            respondWithResult(HttpStatusCode.OK, restaurants.toRestaurant())
+            respondWithResult(HttpStatusCode.OK, restaurants)
         }
 
         get("/{id}/meals") {
