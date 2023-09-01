@@ -70,8 +70,8 @@ class RestaurantScreen :
         RestaurantAddCuisineDialog(
             onCloseRequest = listener::onAddCuisineDialogCloseRequest,
             onClickAdd = listener::onAddCuisineDialogAddClicked,
-            onCuisineNameChange = listener::onCuisineNameChange,
-            onClickDelete = listener::onClickDeleteCuisine,
+            onCuisineNameChange = listener::onAddCuisineDialogCuisineNameChange,
+            onClickDelete = listener::onAddCuisineDialogDeleteClicked,
             isVisible = state.restaurantAddCuisineDialogUiState.isVisible,
             cuisineName = state.restaurantAddCuisineDialogUiState.cuisineName,
             cuisines = state.restaurantAddCuisineDialogUiState.cuisines,

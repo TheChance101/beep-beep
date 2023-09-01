@@ -314,7 +314,7 @@ class RestaurantScreenModel(
         }
     }
 
-    override fun onClickDeleteCuisine(cuisineName: String) {
+    override fun onAddCuisineDialogDeleteClicked(cuisineName: String) {
         tryToExecute(
             { mangeCuisines.deleteCuisine(cuisineName) },
             ::onGetCuisinesSuccessfully,
@@ -341,7 +341,7 @@ class RestaurantScreenModel(
         )
     }
 
-    override fun onCuisineNameChange(cuisineName: String) {
+    override fun onAddCuisineDialogCuisineNameChange(cuisineName: String) {
         updateState {
             it.copy(
                 restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
