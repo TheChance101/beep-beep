@@ -1,37 +1,40 @@
 package org.thechance.common.data.remote.model
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import org.thechance.common.domain.entity.User
 
+@Serializable
 data class UserDto(
-    val id: String,
-    val fullName: String,
-    val username: String,
-    val country: String,
-    val email: String,
-    val permissions: List<PermissionDto> = emptyList()
+    @SerialName("id")
+    val id: String? = null,
+    @SerialName("full_name")
+    val fullName: String? = null,
+    @SerialName("username")
+    val username: String? = null,
+    @SerialName("country")
+    val country: String? = null,
+    @SerialName("email")
+    val email: String? = null,
+    @SerialName("permissions")
+    val permissions: List<PermissionDto?>? = null
 ) {
+    @Serializable
     data class PermissionDto(
-        val id: Int,
-        val permission: String
+        @SerialName("id")
+        val id: Int? = null,
+        @SerialName("permission")
+        val permission: String? = null
     )
 }
 
 fun UserDto.toEntity() = User(
-    id = id,
-    fullName = fullName,
-    country = country,
-    username = username,
-    email = email,
-    permission = permissions.map { enumValueOf(it.permission) },
+    id = id ?: "",
+    fullName = fullName ?: "",
+    country = country ?: "",
+    username = username ?: "",
+    email = email ?: "",
+    permission = permissions?.map { enumValueOf(it?.permission ?: "") } ?: emptyList(),
 )
 
-fun List<UserDto>.toEntity() = this.map { user ->
-    User(
-        id = user.id,
-        fullName = user.fullName,
-        country = user.country,
-        username = user.username,
-        email = user.email,
-        permission = user.permissions.map { enumValueOf(it.permission) }
-    )
-}
+fun List<UserDto>.toEntity() = map(UserDto::toEntity)

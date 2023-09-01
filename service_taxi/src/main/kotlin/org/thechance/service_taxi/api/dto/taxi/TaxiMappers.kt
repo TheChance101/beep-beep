@@ -9,11 +9,11 @@ import org.thechance.service_taxi.domain.exceptions.CantBeNullException
 fun TaxiDto.toEntity(): Taxi {
     return Taxi(
         id = if (id.isNullOrBlank()) ObjectId().toHexString() else ObjectId(id).toHexString(),
-        plateNumber = plateNumber ?: throw CantBeNullException,
-        color = color?.let { Color.getColorByColorNumber(it) } ?: throw CantBeNullException,
-        type = type ?: throw CantBeNullException,
-        driverId = driverId ?: throw CantBeNullException,
-        isAvailable = isAvailable ?: throw CantBeNullException,
+        plateNumber = plateNumber ?: "",
+        color = color?.let { Color.getColorByColorNumber(it) } ?: Color.OTHER,
+        type = type ?: "",
+        driverId = driverId ?: "",
+        isAvailable = isAvailable ?: true,
         seats = seats ?: 4,
     )
 }
@@ -54,6 +54,7 @@ fun Taxi.toCollection(): TaxiCollection {
         type = type,
         driverId = ObjectId(driverId),
         isAvailable = isAvailable,
-        seats = seats
+        seats = seats,
+        id = if (id.isNotBlank()) ObjectId(id) else ObjectId()
     )
 }

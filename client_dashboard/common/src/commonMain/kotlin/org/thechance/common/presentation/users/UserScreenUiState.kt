@@ -1,6 +1,7 @@
 package org.thechance.common.presentation.users
 
 import org.thechance.common.domain.entity.DataWrapper
+import org.thechance.common.domain.entity.Permission
 import org.thechance.common.domain.entity.User
 import org.thechance.common.presentation.composables.table.Header
 import org.thechance.common.presentation.util.ErrorState
@@ -68,25 +69,25 @@ data class UserScreenUiState(
         val countries: List<CountryUiState> = listOf(
             CountryUiState(
                 name = "Iraq",
-                selected = true,
+                selected = false,
             ),
             CountryUiState(
                 name = "Palestine",
-                selected = true,
+                selected = false,
             ),
             CountryUiState(
                 name = "Jordan",
-                selected = true,
+                selected = false,
             ),
             CountryUiState(
                 name = "Syria",
-                selected = true,
+                selected = false,
             ),
             CountryUiState(
                 name = "Egypt",
-                selected = true,
+                selected = false,
             ),
-        )
+        ),
     )
 
     data class CountryUiState(
@@ -125,12 +126,12 @@ fun List<User>.toUiState(): List<UserScreenUiState.UserUiState> {
             country = it.country,
             permissions = it.permission.map { permission ->
                 when (permission) {
-                    User.Permission.RESTAURANT -> UserScreenUiState.PermissionUiState.RESTAURANT_OWNER
-                    User.Permission.DRIVER -> UserScreenUiState.PermissionUiState.TAXI_DRIVER
-                    User.Permission.END_USER -> UserScreenUiState.PermissionUiState.END_USER
-                    User.Permission.SUPPORT -> UserScreenUiState.PermissionUiState.SUPPORT
-                    User.Permission.DELIVERY -> UserScreenUiState.PermissionUiState.DELIVERY
-                    User.Permission.ADMIN -> UserScreenUiState.PermissionUiState.DASHBOARD_ADMIN
+                    Permission.RESTAURANT -> UserScreenUiState.PermissionUiState.RESTAURANT_OWNER
+                    Permission.DRIVER -> UserScreenUiState.PermissionUiState.TAXI_DRIVER
+                    Permission.END_USER -> UserScreenUiState.PermissionUiState.END_USER
+                    Permission.SUPPORT -> UserScreenUiState.PermissionUiState.SUPPORT
+                    Permission.DELIVERY -> UserScreenUiState.PermissionUiState.DELIVERY
+                    Permission.ADMIN -> UserScreenUiState.PermissionUiState.DASHBOARD_ADMIN
                 }
             },
         )
@@ -144,3 +145,16 @@ fun DataWrapper<User>.toUiState(): UserScreenUiState.UserPageInfoUiState {
         numberOfUsers = numberOfResult
     )
 }
+
+fun UserScreenUiState.PermissionUiState.toEntity(): Permission {
+    return when (this) {
+        UserScreenUiState.PermissionUiState.END_USER -> Permission.END_USER
+        UserScreenUiState.PermissionUiState.DASHBOARD_ADMIN -> Permission.ADMIN
+        UserScreenUiState.PermissionUiState.SUPPORT -> Permission.SUPPORT
+        UserScreenUiState.PermissionUiState.DELIVERY -> Permission.DELIVERY
+        UserScreenUiState.PermissionUiState.RESTAURANT_OWNER -> Permission.RESTAURANT
+        UserScreenUiState.PermissionUiState.TAXI_DRIVER -> Permission.DRIVER
+    }
+}
+
+fun List<UserScreenUiState.PermissionUiState>.toEntity() = this.map { it.toEntity() }

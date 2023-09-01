@@ -5,11 +5,7 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.bson.types.ObjectId
-import org.litote.kmongo.and
-import org.litote.kmongo.eq
-import org.litote.kmongo.ne
-import org.litote.kmongo.set
-import org.litote.kmongo.setTo
+import org.litote.kmongo.*
 import org.thechance.service_taxi.api.dto.taxi.toCollection
 import org.thechance.service_taxi.api.dto.taxi.toEntity
 import org.thechance.service_taxi.api.dto.trip.toCollection
@@ -36,7 +32,7 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
     }
 
     override suspend fun editTaxi(taxiId: String,taxi: Taxi): Taxi {
-        val taxiCollection = taxi.toCollection()
+        val taxiCollection = taxi.copy(id = taxiId).toCollection()
         container.taxiCollection.updateOne(
             filter = TaxiCollection::id eq ObjectId(taxiId),
             update = Updates.combine(
@@ -64,7 +60,7 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
     }
 
     override suspend fun getNumberOfTaxis(): Long {
-        return container.taxiCollection.countDocuments()
+        return container.taxiCollection.countDocuments(TaxiCollection::isDeleted ne true)
     }
     //endregion
 
@@ -160,6 +156,24 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
             ),
             update = Updates.set(TripCollection::rate.name, rate)
         )?.toEntity()
+    }
+
+    override suspend fun getNumberOfTripsByDriverId(id: String): Long {
+        return container.tripCollection.countDocuments(
+            and(
+                TripCollection::isDeleted ne true,
+                TripCollection::driverId eq ObjectId(id)
+            )
+        )
+    }
+
+    override suspend fun getNumberOfTripsByClientId(id: String): Long {
+        return container.tripCollection.countDocuments(
+            and(
+                TripCollection::isDeleted ne true,
+                TripCollection::clientId eq ObjectId(id)
+            )
+        )
     }
     //endregion
 }

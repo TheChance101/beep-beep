@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kotlinKsp)
     id("io.realm.kotlin") version "1.10.0"
+    kotlin("plugin.serialization") version "1.9.0"
 }
 
 group = "org.thechance"
@@ -58,7 +59,8 @@ kotlin {
                 implementation(libs.ktor.content.negotiation)
                 implementation(libs.ktor.logging)
                 implementation(libs.ktor.client.cio)
-                implementation(libs.ktor.serialization)
+                implementation(libs.kotlin.serialization)
+
             }
         }
         val androidMain by getting {
@@ -66,6 +68,7 @@ kotlin {
                 api(libs.androidx.activity.compose)
                 api(libs.androidx.appcompat)
                 api(libs.androidx.core.ktx)
+                api(libs.koin.android)
                 implementation(libs.androidx.constraint)
             }
         }
@@ -77,6 +80,9 @@ kotlin {
             iosX64Main.dependsOn(this)
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
+            dependencies {
+                implementation("io.ktor:ktor-client-darwin:2.3.3")
+            }
         }
     }
 }

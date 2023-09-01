@@ -1,32 +1,28 @@
 package org.thechance.api_gateway.data.gateway
 
 import org.koin.core.annotation.Single
-import org.thechance.api_gateway.data.model.TaxiResource
+import org.thechance.api_gateway.data.model.Taxi
 
 import org.thechance.api_gateway.endpoints.gateway.ITaxiGateway
 import org.thechance.api_gateway.util.APIs
 import java.util.Locale
 import io.ktor.client.*
 import io.ktor.client.request.*
-import io.ktor.client.request.forms.*
-import io.ktor.http.*
 import io.ktor.util.*
 import kotlinx.serialization.json.Json
+import org.thechance.api_gateway.data.model.BasePaginationResponse
 
 import org.thechance.api_gateway.data.utils.ErrorHandler
-
-import java.util.*
 
 @Single(binds = [ITaxiGateway::class])
 class TaxiGateway(
     client: HttpClient,
     attributes: Attributes,
-
     private val errorHandler: ErrorHandler
 ) : BaseGateway(client = client, attributes = attributes), ITaxiGateway {
 
 
-    override suspend fun getAllTaxi(locale: Locale, page: Int, limit: Int): List<TaxiResource> {
+    override suspend fun getAllTaxi(locale: Locale, page: Int, limit: Int): BasePaginationResponse<Taxi> {
         return tryToExecute(
             api = APIs.TAXI_API,
             setErrorMessage = { errorCodes ->
@@ -46,7 +42,7 @@ class TaxiGateway(
     override suspend fun getTaxiById(
         id: String,
         locale: Locale
-    ): TaxiResource {
+    ): Taxi {
         return tryToExecute(
             api = APIs.TAXI_API,
             setErrorMessage = { errorCodes ->
@@ -59,9 +55,9 @@ class TaxiGateway(
 
     @OptIn(InternalAPI::class)
     override suspend fun createTaxi(
-        taxi: TaxiResource,
+        taxi: Taxi,
         locale: Locale
-    ): TaxiResource {
+    ): Taxi {
         return tryToExecute(
             api = APIs.TAXI_API,
             setErrorMessage = { errorCodes ->
@@ -70,7 +66,7 @@ class TaxiGateway(
         ) {
 
             post("/taxi") {
-                body = Json.encodeToString(TaxiResource.serializer(), taxi)
+                body = Json.encodeToString(Taxi.serializer(), taxi)
             }
         }
     }
@@ -78,9 +74,9 @@ class TaxiGateway(
     @OptIn(InternalAPI::class)
     override suspend fun editTaxi(
         id: String,
-        taxi: TaxiResource,
+        taxi: Taxi,
         locale: Locale
-    ): TaxiResource {
+    ): Taxi {
         return tryToExecute(
             api = APIs.TAXI_API,
             setErrorMessage = { errorCodes ->
@@ -88,7 +84,7 @@ class TaxiGateway(
             }
         ) {
             put("/taxi/$id") {
-                body = Json.encodeToString(TaxiResource.serializer(), taxi)
+                body = Json.encodeToString(Taxi.serializer(), taxi)
             }
         }
     }
@@ -96,7 +92,7 @@ class TaxiGateway(
     override suspend fun deleteTaxi(
         id: String,
         locale: Locale
-    ): TaxiResource {
+    ): Taxi {
         return tryToExecute(
             api = APIs.TAXI_API,
             setErrorMessage = { errorCodes ->

@@ -5,7 +5,6 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import org.thechance.api_gateway.data.mappers.toMeal
 import org.thechance.api_gateway.endpoints.gateway.IRestaurantGateway
 import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
@@ -19,7 +18,7 @@ fun Route.cuisineRoute() {
     val restaurantGateway: IRestaurantGateway by inject()
 
     route("/cuisine") {
-        authenticateWithRole(Role.RESTAURANT_OWNER) {
+        authenticateWithRole(Role.DASHBOARD_ADMIN) {
             post {
                 val params = call.receiveParameters()
                 val name = params["name"]?.trim().toString()
@@ -28,6 +27,7 @@ fun Route.cuisineRoute() {
                 respondWithResult(HttpStatusCode.Created, cuisine)
             }
         }
+
         get("/{id}/meals") {
             val (language, countryCode) = extractLocalizationHeader()
             val cuisineId = call.parameters["id"]?.trim().toString()
@@ -35,7 +35,7 @@ fun Route.cuisineRoute() {
                 cuisineId = cuisineId,
                 locale = Locale(language, countryCode)
             )
-            respondWithResult(HttpStatusCode.OK, meals.map { it.toMeal() })
+            respondWithResult(HttpStatusCode.OK, meals)
         }
 
     }

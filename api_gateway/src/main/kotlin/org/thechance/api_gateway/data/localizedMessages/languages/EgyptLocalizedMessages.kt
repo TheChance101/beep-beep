@@ -20,4 +20,8 @@ class EgyptLocalizedMessages : LocalizedMessages {
     override val taxiCreatedSuccessfully: String= "اعمل حفلة بقى عندك تكسي يا ابن المحظوظة"
     override val taxiUpdateSuccessfully: String= "تم تحديث التاكسي بنجاح"
     override val taxiDeleteSuccessfully: String= "تم حذف التاكسي بنجاح"
+
+    //region restaurant
+    override val restaurantNotFound: String = "مش لاقيين المطعم ده!!"
+    //endregion
 }

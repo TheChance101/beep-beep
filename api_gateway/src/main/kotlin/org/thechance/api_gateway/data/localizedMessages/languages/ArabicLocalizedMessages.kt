@@ -22,5 +22,7 @@ class ArabicLocalizedMessages() : LocalizedMessages {
     override val taxiUpdateSuccessfully: String= "تم تحديث التاكسي بنجاح"
     override val taxiDeleteSuccessfully: String= "تم حذف التاكسي بنجاح"
 
-
+    //region restaurant
+    override val restaurantNotFound: String = "نعتذر لم نستطيع ايجاد هذا المطعم!"
+    //endregion
 }

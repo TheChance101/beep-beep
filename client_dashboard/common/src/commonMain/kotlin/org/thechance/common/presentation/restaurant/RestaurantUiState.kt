@@ -9,6 +9,7 @@ data class RestaurantUiState(
     val error: ErrorState = ErrorState.UnKnownError,
     val isAddNewRestaurantDialogVisible: Boolean = false,
     val addNewRestaurantDialogUiState: AddRestaurantDialogUiState = AddRestaurantDialogUiState(),
+    val restaurantFilterDropdownMenuUiState: RestaurantFilterDropdownMenuUiState = RestaurantFilterDropdownMenuUiState(),
     val restaurants: List<RestaurantDetailsUiState> = emptyList(),
     val tableHeader: List<Header> = listOf(
         Header("No.", 1f),
@@ -22,13 +23,9 @@ data class RestaurantUiState(
     ),
     val numberOfRestaurants: Int = 0,
     val search: String = "",
-    val isFilterDropdownMenuExpanded: Boolean = false,
-    val filterRating: Double = 0.0,
-    val filterPriceLevel: Int = 0,
     val maxPageCount: Int = 1,
     val selectedPageNumber: Int = 1,
-    val numberOfItemsInPage: Int = 10,
-    val isFiltered: Boolean = false,
+    val numberOfRestaurantsInPage: Int = 10,
 ) {
     data class RestaurantDetailsUiState(
         val name: String,
@@ -48,4 +45,11 @@ data class AddRestaurantDialogUiState(
     val endTime: String = "",
     val location: String = "",
     val currentLocation: String = "",
+)
+
+data class RestaurantFilterDropdownMenuUiState(
+    val isFilterDropdownMenuExpanded: Boolean = false,
+    val filterRating: Double = 0.0,
+    val filterPriceLevel: Int = 1,
+    val isFiltered: Boolean = false,
 )
