@@ -11,7 +11,7 @@ import org.thechance.common.presentation.util.kms
 fun GoogleMap(
     modifier: Modifier = Modifier,
     currentLocation: String,
-    onGetAddress: (String) -> Unit,
+    onGetLocation: (String) -> Unit,
 ) {
     Box(
         modifier.size(height = 464.kms, width = 760.kms)
@@ -20,7 +20,7 @@ fun GoogleMap(
             factory = {
                 mapFromWebView(
                     currentLocation = currentLocation,
-                    onGetAddress = onGetAddress
+                    onGetLocation = onGetLocation
                 )
             },
         )

@@ -32,17 +32,24 @@ private fun createWebViewComponent(
     return jfxPanel
 }
 
+private fun getResourceContent(resourcePath: String): String? {
+    val contentResource = object {}.javaClass.getResource(resourcePath)
+    return contentResource?.readText()?.trimIndent()
+}
+
+
+private const val GOOGLE_MAP_PATH = "/google_map.html"
 
 fun mapFromWebView(
     currentLocation: String,
-    onGetAddress: (String) -> Unit,
+    onGetLocation: (String) -> Unit,
 ): JPanel {
     val jPanel = JPanel().apply {
         layout = BorderLayout()
         val webViewPanel = createWebViewComponent(
-            content = "/google_map.html",
+            content = GOOGLE_MAP_PATH,
             onError = { println(it) },
-            onAlert = { onGetAddress(it) },
+            onAlert = { onGetLocation(it) },
             currentLocation = currentLocation,
         )
         add(webViewPanel, BorderLayout.CENTER)
@@ -54,8 +61,4 @@ fun mapFromWebView(
     return jPanel
 }
 
-private fun getResourceContent(resourcePath: String): String? {
-    val contentResource = object {}.javaClass.getResource(resourcePath)
-    return contentResource?.readText()?.trimIndent()
-}
 

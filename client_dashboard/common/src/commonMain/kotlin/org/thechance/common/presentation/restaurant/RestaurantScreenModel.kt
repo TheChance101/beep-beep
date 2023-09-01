@@ -30,7 +30,7 @@ class RestaurantScreenModel(
         numberOfRestaurantsInPage: Int,
         restaurantName: String,
         rating: Double?,
-        priceLevel: Int?
+        priceLevel: Int?,
     ) {
         tryToExecute(
             {
@@ -252,11 +252,11 @@ class RestaurantScreenModel(
         }
     }
 
-    override fun onAddressChange(address: String) {
+    override fun onLocationChange(location: String) {
         updateState {
             it.copy(
                 addNewRestaurantDialogUiState = it.addNewRestaurantDialogUiState.copy(
-                    location = address
+                    location = location
                 )
             )
         }
@@ -264,7 +264,11 @@ class RestaurantScreenModel(
 
     override fun onCreateNewRestaurantClicked() {
         tryToExecute(
-            callee = { manageRestaurant.createRestaurant(mutableState.value.addNewRestaurantDialogUiState.toEntity()) },
+            callee = {
+                manageRestaurant.createRestaurant(
+                    mutableState.value.addNewRestaurantDialogUiState.toEntity()
+                )
+            },
             onSuccess = ::onCreateRestaurantSuccessfully,
             onError = ::onError,
         )

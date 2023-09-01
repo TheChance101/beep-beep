@@ -31,6 +31,6 @@ interface IRemoteGateway {
 
     suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant
 
-    suspend fun getCurrentLocation(): Location
+    suspend fun getCurrentLocation(): String
 
 }

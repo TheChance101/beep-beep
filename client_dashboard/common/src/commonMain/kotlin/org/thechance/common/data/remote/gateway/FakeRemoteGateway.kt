@@ -9,17 +9,28 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.thechance.common.data.local.LocalGateway
 import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
-import org.thechance.common.data.remote.model.*
-import org.thechance.common.domain.entity.*
+import org.thechance.common.data.remote.model.DataWrapperDto
+import org.thechance.common.data.remote.model.RestaurantDto
+import org.thechance.common.data.remote.model.TaxiDto
+import org.thechance.common.data.remote.model.UserDto
+import org.thechance.common.data.remote.model.toEntity
+import org.thechance.common.domain.entity.AddRestaurant
+import org.thechance.common.domain.entity.DataWrapper
+import org.thechance.common.domain.entity.NewTaxiInfo
+import org.thechance.common.domain.entity.Restaurant
+import org.thechance.common.domain.entity.Taxi
+import org.thechance.common.domain.entity.TaxiFiltration
+import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.getway.IRemoteGateway
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.UUID
 import kotlin.math.ceil
 import kotlin.math.floor
 
 class FakeRemoteGateway(
-    private val localGateway: LocalGateway
+    private val localGateway: LocalGateway,
 ) : IRemoteGateway {
 
     private val restaurant = mutableListOf<RestaurantDto>()
@@ -821,7 +832,7 @@ class FakeRemoteGateway(
     }
 
     override suspend fun findTaxisByUsername(
-        username: String, page: Int, numberOfTaxis: Int
+        username: String, page: Int, numberOfTaxis: Int,
     ): DataWrapper<Taxi> {
         val taxis = taxis.filter {
             it.username.startsWith(username, true)
@@ -844,7 +855,11 @@ class FakeRemoteGateway(
         }
     }
 
-    override suspend fun filterTaxis(taxi: TaxiFiltration, page: Int, numberOfTaxis: Int): DataWrapper<Taxi> {
+    override suspend fun filterTaxis(
+        taxi: TaxiFiltration,
+        page: Int,
+        numberOfTaxis: Int,
+    ): DataWrapper<Taxi> {
         val taxiDto = taxi.toDto()
         val taxisFiltered = taxis.filter {
             it.color == taxiDto.color && it.seats == taxiDto.seats && it.status == taxiDto.status
@@ -856,7 +871,10 @@ class FakeRemoteGateway(
         return try {
             DataWrapperDto(
                 totalPages = numberOfPages,
-                result = taxisFiltered.subList(startIndex, endIndex.coerceAtMost(taxisFiltered.size)),
+                result = taxisFiltered.subList(
+                    startIndex,
+                    endIndex.coerceAtMost(taxisFiltered.size)
+                ),
                 totalResult = taxisFiltered.size
             ).toEntity()
         } catch (e: Exception) {
@@ -876,7 +894,7 @@ class FakeRemoteGateway(
         numberOfRestaurantsInPage: Int,
         restaurantName: String,
         rating: Double?,
-        priceLevel: Int?
+        priceLevel: Int?,
     ): DataWrapper<Restaurant> {
         var restaurants = restaurant.toEntity()
         if (restaurantName.isNotEmpty()) {
@@ -932,8 +950,8 @@ class FakeRemoteGateway(
         )
     }
 
-    override suspend fun getCurrentLocation(): Location {
-        return Location(location = "30.044420,31.235712")
+    override suspend fun getCurrentLocation(): String {
+        return "30.044420,31.235712"
     }
 
     private fun createTaxiPDFReport(): File {
@@ -964,7 +982,7 @@ class FakeRemoteGateway(
         dataList: List<T>,
         columnNames: List<String>,
         colWidths: List<Float>,
-        dataExtractor: (T) -> List<Any>
+        dataExtractor: (T) -> List<Any>,
     ): File {
         try {
             //region Create PDF document
@@ -1019,7 +1037,7 @@ class FakeRemoteGateway(
         currentX: Float,
         startX: Float,
         colWidths: List<Float>,
-        dataExtractor: (T) -> List<Any>
+        dataExtractor: (T) -> List<Any>,
     ) {
         // Draw table content
         // Add space between header and table content
@@ -1053,7 +1071,7 @@ class FakeRemoteGateway(
         contentStream: PDPageContentStream,
         title: String,
         pageWidth: Float,
-        pageHeight: Float
+        pageHeight: Float,
     ): Float {
         contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16f)
         contentStream.beginText()
@@ -1069,7 +1087,7 @@ class FakeRemoteGateway(
     private fun dateContent(
         contentStream: PDPageContentStream,
         pageWidth: Float,
-        titleY: Float
+        titleY: Float,
     ): Float {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         val dateTime = dateFormat.format(Date())

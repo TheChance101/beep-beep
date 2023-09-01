@@ -37,5 +37,5 @@ interface RestaurantInteractionListener : BaseInteractionListener {
 
     fun onCreateNewRestaurantClicked()
 
-    fun onAddressChange(address: String)
+    fun onLocationChange(location: String)
 }

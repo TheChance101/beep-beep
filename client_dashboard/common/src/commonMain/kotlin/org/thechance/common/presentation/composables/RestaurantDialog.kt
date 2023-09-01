@@ -36,7 +36,7 @@ fun NewRestaurantInfoDialog(
         onWorkingEndHourChange = listener::onWorkingEndHourChange,
         state = state.addNewRestaurantDialogUiState,
         onCreateClicked = listener::onCreateNewRestaurantClicked,
-        onAddressChange = listener::onAddressChange,
+        onLocationChange = listener::onLocationChange,
         currentLocation = state.addNewRestaurantDialogUiState.currentLocation,
     )
 }
@@ -56,7 +56,7 @@ private fun RestaurantDialog(
     onPhoneNumberChange: (String) -> Unit,
     onWorkingStartHourChange: (String) -> Unit,
     onWorkingEndHourChange: (String) -> Unit,
-    onAddressChange: (String) -> Unit,
+    onLocationChange: (String) -> Unit,
 ) {
     Dialog(
         visible = isVisible,
@@ -136,7 +136,7 @@ private fun RestaurantDialog(
                     horizontalAlignment = Alignment.End,
                 ) {
                     GoogleMap(currentLocation = currentLocation) { address ->
-                        onAddressChange(address)
+                        onLocationChange(address)
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(0.5f).padding(top = Theme.dimens.space24),
