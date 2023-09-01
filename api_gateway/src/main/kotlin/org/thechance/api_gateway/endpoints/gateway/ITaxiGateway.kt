@@ -1,11 +1,12 @@
 package org.thechance.api_gateway.endpoints.gateway
 
 import org.thechance.api_gateway.data.model.Taxi
+import org.thechance.api_gateway.data.model.TaxisResource
 import java.util.Locale
 
 interface ITaxiGateway {
 
-    suspend fun getAllTaxi(locale: Locale,page: Int, limit: Int): List<Taxi>
+    suspend fun getAllTaxi(locale: Locale,page: Int, limit: Int): TaxisResource
 
     suspend fun getTaxiById(id: String, locale: Locale): Taxi
 

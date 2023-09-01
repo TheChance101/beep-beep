@@ -10,6 +10,7 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.util.*
 import kotlinx.serialization.json.Json
+import org.thechance.api_gateway.data.model.TaxisResource
 
 import org.thechance.api_gateway.data.utils.ErrorHandler
 
@@ -22,7 +23,7 @@ class TaxiGateway(
 ) : BaseGateway(client = client, attributes = attributes), ITaxiGateway {
 
 
-    override suspend fun getAllTaxi(locale: Locale, page: Int, limit: Int): List<Taxi> {
+    override suspend fun getAllTaxi(locale: Locale, page: Int, limit: Int): TaxisResource {
         return tryToExecute(
             api = APIs.TAXI_API,
             setErrorMessage = { errorCodes ->
