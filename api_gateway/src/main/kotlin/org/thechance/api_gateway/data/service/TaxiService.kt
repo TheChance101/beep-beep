@@ -8,21 +8,23 @@ import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.PaginationResponse
 import org.thechance.api_gateway.data.model.taxi.TaxiDto
 import org.thechance.api_gateway.data.utils.ErrorHandler
+import org.thechance.api_gateway.data.utils.tryToExecute
 import org.thechance.api_gateway.util.APIs
 import java.util.*
 
 
 @Single
 class TaxiService(
-    client: HttpClient,
-    attributes: Attributes,
+    private val client: HttpClient,
+    private val attributes: Attributes,
     private val errorHandler: ErrorHandler
-) : BaseGateway(client = client, attributes = attributes) {
+) {
 
 
-     suspend fun getAllTaxi(locale: Locale, page: Int, limit: Int): PaginationResponse<TaxiDto> {
-        return tryToExecute(
+    suspend fun getAllTaxi(locale: Locale, page: Int, limit: Int): PaginationResponse<TaxiDto> {
+        return client.tryToExecute(
             api = APIs.TAXI_API,
+            attributes = attributes,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(
                     errorCodes,
@@ -37,12 +39,13 @@ class TaxiService(
         }
     }
 
-     suspend fun getTaxiById(
+    suspend fun getTaxiById(
         id: String,
         locale: Locale
     ): TaxiDto {
-        return tryToExecute(
+        return client.tryToExecute(
             api = APIs.TAXI_API,
+            attributes = attributes,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
@@ -52,12 +55,13 @@ class TaxiService(
     }
 
     @OptIn(InternalAPI::class)
-     suspend fun createTaxi(
+    suspend fun createTaxi(
         taxiDto: TaxiDto,
         locale: Locale
     ): TaxiDto {
-        return tryToExecute(
+        return client.tryToExecute(
             api = APIs.TAXI_API,
+            attributes = attributes,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
@@ -70,13 +74,14 @@ class TaxiService(
     }
 
     @OptIn(InternalAPI::class)
-     suspend fun editTaxi(
+    suspend fun editTaxi(
         id: String,
         taxiDto: TaxiDto,
         locale: Locale
     ): TaxiDto {
-        return tryToExecute(
+        return client.tryToExecute(
             api = APIs.TAXI_API,
+            attributes = attributes,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
@@ -87,12 +92,13 @@ class TaxiService(
         }
     }
 
-     suspend fun deleteTaxi(
+    suspend fun deleteTaxi(
         id: String,
         locale: Locale
     ): TaxiDto {
-        return tryToExecute(
+        return client.tryToExecute(
             api = APIs.TAXI_API,
+            attributes = attributes,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }

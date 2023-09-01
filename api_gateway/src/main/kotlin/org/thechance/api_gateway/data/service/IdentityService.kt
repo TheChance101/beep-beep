@@ -11,10 +11,10 @@ import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.PaginationResponse
 import org.thechance.api_gateway.data.model.UserDto
 import org.thechance.api_gateway.data.model.UserTokensResponse
-import org.thechance.api_gateway.data.model.authenticate.TokenClaim
 import org.thechance.api_gateway.data.model.authenticate.TokenConfiguration
 import org.thechance.api_gateway.data.model.authenticate.TokenType
 import org.thechance.api_gateway.data.utils.ErrorHandler
+import org.thechance.api_gateway.data.utils.tryToExecute
 import org.thechance.api_gateway.util.APIs
 import org.thechance.api_gateway.util.Claim.PERMISSION
 import org.thechance.api_gateway.util.Claim.TOKEN_TYPE
@@ -25,16 +25,17 @@ import java.util.*
 
 @Single
 class IdentityService(
-    client: HttpClient,
-    attributes: Attributes,
+    private val client: HttpClient,
+    private val attributes: Attributes,
     private val errorHandler: ErrorHandler
-) : BaseGateway(client = client, attributes = attributes) {
+) {
 
     suspend fun createUser(
         fullName: String, username: String, password: String, email: String, locale: Locale
     ): UserDto {
-        return tryToExecute<UserDto>(
+        return client.tryToExecute<UserDto>(
             APIs.IDENTITY_API,
+            attributes = attributes,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
@@ -53,8 +54,9 @@ class IdentityService(
     suspend fun loginUser(
         userName: String, password: String, tokenConfiguration: TokenConfiguration, locale: Locale
     ): UserTokensResponse {
-        tryToExecute<Boolean>(
+        client.tryToExecute<Boolean>(
             api = APIs.IDENTITY_API,
+            attributes = attributes,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
@@ -72,7 +74,9 @@ class IdentityService(
 
     suspend fun getUsers(
         page: Int, limit: Int, searchTerm: String, locale: Locale
-    ) = tryToExecute<PaginationResponse<UserDto>>(APIs.IDENTITY_API) {
+    ) = client.tryToExecute<PaginationResponse<UserDto>>(
+        APIs.IDENTITY_API, attributes = attributes,
+    ) {
         get("/dashboard/user") {
             parameter("page", page)
             parameter("limit", limit)
@@ -80,25 +84,33 @@ class IdentityService(
         }
     }
 
-    suspend fun getUserByUsername(username: String) = tryToExecute<UserDto>(APIs.IDENTITY_API) {
+    private suspend fun getUserByUsername(username: String) = client.tryToExecute<UserDto>(
+        APIs.IDENTITY_API, attributes = attributes,
+    ) {
         get("user/get-user") {
             parameter("username", username)
         }
     }
 
-    suspend fun updateUserPermission(userId: String, permission: Int) = tryToExecute<UserDto>(APIs.IDENTITY_API) {
-        submitForm("/dashboard/user/$userId/permission",
-            formParameters = parameters {
-                append("permission", "$permission")
+    suspend fun updateUserPermission(userId: String, permission: Int) =
+        client.tryToExecute<UserDto>(
+            APIs.IDENTITY_API, attributes = attributes,
+        ) {
+            submitForm("/dashboard/user/$userId/permission",
+                formParameters = parameters {
+                    append("permission", "$permission")
 
-            }
-        )
-    }
+                }
+            )
+        }
 
     suspend fun deleteUser(userId: String, locale: Locale): Boolean {
-        return tryToExecute<Boolean>(api = APIs.IDENTITY_API, setErrorMessage = { errorCodes ->
-            errorHandler.getLocalizedErrorMessage(errorCodes, locale)
-        }) {
+        return client.tryToExecute<Boolean>(
+            api = APIs.IDENTITY_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+            }) {
             delete("/user/$userId")
         }
     }
@@ -113,7 +125,12 @@ class IdentityService(
         val refreshToken = generateToken(userId, username, userPermission, tokenConfiguration, TokenType.REFRESH_TOKEN)
         val accessToken = generateToken(userId, username, userPermission, tokenConfiguration, TokenType.ACCESS_TOKEN)
 
-        return UserTokensResponse(accessTokenExpirationDate.time, refreshTokenExpirationDate.time, accessToken, refreshToken)
+        return UserTokensResponse(
+            accessTokenExpirationDate.time,
+            refreshTokenExpirationDate.time,
+            accessToken,
+            refreshToken
+        )
     }
 
     private fun getExpirationDate(timestamp: Long): Date {
@@ -127,34 +144,16 @@ class IdentityService(
         tokenConfiguration: TokenConfiguration,
         tokenType: TokenType
     ): String {
-        val userIdClaim = TokenClaim(USER_ID, userId)
-        val rolesClaim = TokenClaim(PERMISSION, userPermission.toString())
-        val usernameClaim = TokenClaim(USERNAME, username)
-        val accessTokenClaim = TokenClaim(TOKEN_TYPE, tokenType.name)
-        return generateToken(
-            tokenConfiguration,
-            userIdClaim,
-            usernameClaim,
-            rolesClaim,
-            accessTokenClaim
-        )
-    }
-
-
-    private fun generateToken(
-        tokenConfig: TokenConfiguration,
-        vararg tokenClaim: TokenClaim
-    ): String {
         val accessToken = JWT.create()
-            .withIssuer(tokenConfig.issuer)
-            .withAudience(tokenConfig.audience)
-            .withExpiresAt(Date(System.currentTimeMillis() + tokenConfig.accessTokenExpirationTimestamp))
+            .withIssuer(tokenConfiguration.issuer)
+            .withAudience(tokenConfiguration.audience)
+            .withExpiresAt(Date(System.currentTimeMillis() + tokenConfiguration.accessTokenExpirationTimestamp))
+            .withClaim(USER_ID, userId)
+            .withClaim(PERMISSION, userPermission.toString())
+            .withClaim(USERNAME, username)
+            .withClaim(TOKEN_TYPE, tokenType.name)
 
-        tokenClaim.forEach {
-            accessToken.withClaim(it.name, it.value)
-        }
-
-        return accessToken.sign(Algorithm.HMAC256(tokenConfig.secret))
+        return accessToken.sign(Algorithm.HMAC256(tokenConfiguration.secret))
     }
 
 }
