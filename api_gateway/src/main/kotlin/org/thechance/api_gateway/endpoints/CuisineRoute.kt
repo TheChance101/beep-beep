@@ -10,7 +10,6 @@ import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
 import org.thechance.api_gateway.endpoints.utils.respondWithResult
 import org.thechance.api_gateway.util.Role
-import java.util.*
 
 
 fun Route.cuisineRoute() {
@@ -22,18 +21,18 @@ fun Route.cuisineRoute() {
             post {
                 val params = call.receiveParameters()
                 val name = params["name"]?.trim().toString()
-                val (language, countryCode) = extractLocalizationHeader()
-                val cuisine = restaurantService.addCuisine(name, Locale(language, countryCode))
+                val language = extractLocalizationHeader()
+                val cuisine = restaurantService.addCuisine(name, language)
                 respondWithResult(HttpStatusCode.Created, cuisine)
             }
         }
 
         get("/{id}/meals") {
-            val (language, countryCode) = extractLocalizationHeader()
+            val language = extractLocalizationHeader()
             val cuisineId = call.parameters["id"]?.trim().toString()
             val meals = restaurantService.getMealsByCuisineId(
                 cuisineId = cuisineId,
-                locale = Locale(language, countryCode)
+                languageCode = language
             )
             respondWithResult(HttpStatusCode.OK, meals)
         }
@@ -41,8 +40,8 @@ fun Route.cuisineRoute() {
     }
 
     get("/cuisines") {
-        val (language, countryCode) = extractLocalizationHeader()
-        val cuisines = restaurantService.getCuisines(locale = Locale(language, countryCode))
+        val language = extractLocalizationHeader()
+        val cuisines = restaurantService.getCuisines(languageCode = language)
         respondWithResult(HttpStatusCode.OK, cuisines)
     }
 }

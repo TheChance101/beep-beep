@@ -12,7 +12,6 @@ import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
 import org.thechance.api_gateway.endpoints.utils.respondWithResult
 import org.thechance.api_gateway.util.Role
-import java.util.*
 
 fun Route.taxiRoutes() {
     val taxiService: TaxiService by inject()
@@ -22,22 +21,20 @@ fun Route.taxiRoutes() {
 
         authenticateWithRole(Role.DASHBOARD_ADMIN) {
             get {
-                val (language, countryCode) = extractLocalizationHeader()
+                val language = extractLocalizationHeader()
                 val page = call.parameters["page"]?.toInt() ?: 1
                 val limit = call.parameters["limit"]?.toInt() ?: 20
-                val local = Locale(language, countryCode)
-                val result = taxiService.getAllTaxi(local, page, limit)
+                val result = taxiService.getAllTaxi(language, page, limit)
 
-                respondWithResult(HttpStatusCode.OK, result,)
+                respondWithResult(HttpStatusCode.OK, result)
             }
             post {
                 val taxiDto = call.receive<TaxiDto>()
 
-                val (language, countryCode) = extractLocalizationHeader()
-                val locale = Locale(language, countryCode)
-                val result = taxiService.createTaxi(taxiDto, locale)
+                val language = extractLocalizationHeader()
+                val result = taxiService.createTaxi(taxiDto, language)
                 val successMessage =
-                    localizedMessagesFactory.createLocalizedMessages(locale).taxiCreatedSuccessfully
+                    localizedMessagesFactory.createLocalizedMessages(language).taxiCreatedSuccessfully
 
                 respondWithResult(HttpStatusCode.Created, result, successMessage)
             }
@@ -46,33 +43,30 @@ fun Route.taxiRoutes() {
                 val id = call.parameters["taxiId"] ?: ""
                 val taxiDto = call.receive<TaxiDto>()
 
-                val (language, countryCode) = extractLocalizationHeader()
-                val locale = Locale(language, countryCode)
-                val result = taxiService.editTaxi(id, taxiDto, locale)
+                val language = extractLocalizationHeader()
+                val result = taxiService.editTaxi(id, taxiDto, language)
                 val successMessage =
-                    localizedMessagesFactory.createLocalizedMessages(locale).taxiUpdateSuccessfully
+                    localizedMessagesFactory.createLocalizedMessages(language).taxiUpdateSuccessfully
                 respondWithResult(HttpStatusCode.OK, result, successMessage)
             }
 
             get("/{taxiId}") {
                 val id = call.parameters["taxiId"] ?: ""
-                val (language, countryCode) = extractLocalizationHeader()
-                val local = Locale(language, countryCode)
-                val result = taxiService.getTaxiById(id, local)
+                val language = extractLocalizationHeader()
+                val result = taxiService.getTaxiById(id, language)
 
                 respondWithResult(HttpStatusCode.OK, result)
             }
 
 
             delete("/{taxiId}") {
-                val (language, countryCode) = extractLocalizationHeader()
+                val language = extractLocalizationHeader()
                 val params = call.receiveParameters()
-                val local = Locale(language, countryCode)
                 val id = params["taxiId"] ?: ""
-                val result = taxiService.deleteTaxi(id, local)
+                val result = taxiService.deleteTaxi(id, language)
                 val successMessage =
-                    localizedMessagesFactory.createLocalizedMessages(local).taxiDeleteSuccessfully
-                respondWithResult(HttpStatusCode.OK, result,successMessage)
+                    localizedMessagesFactory.createLocalizedMessages(language).taxiDeleteSuccessfully
+                respondWithResult(HttpStatusCode.OK, result, successMessage)
             }
         }
     }

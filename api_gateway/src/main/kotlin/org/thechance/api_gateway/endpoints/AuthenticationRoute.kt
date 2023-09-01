@@ -15,7 +15,6 @@ import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
 import org.thechance.api_gateway.endpoints.utils.respondWithResult
 import org.thechance.api_gateway.util.Claim
 import org.thechance.api_gateway.util.Role
-import java.util.*
 
 
 fun Route.authenticationRoutes(tokenConfiguration: TokenConfiguration) {
@@ -30,17 +29,16 @@ fun Route.authenticationRoutes(tokenConfiguration: TokenConfiguration) {
         val password = params["password"]?.trim()
         val email = params["email"]?.trim()
 
-        val (language, countryCode) = extractLocalizationHeader()
+        val language = extractLocalizationHeader()
 
         val result = identityService.createUser(
             fullName = fullName.toString(),
             username = username.toString(),
             password = password.toString(),
             email = email.toString(),
-            locale = Locale(language, countryCode)
+            languageCode = language
         )
-        val locale = Locale(language, countryCode)
-        val successMessage = localizedMessagesFactory.createLocalizedMessages(locale).userCreatedSuccessfully
+        val successMessage = localizedMessagesFactory.createLocalizedMessages(language).userCreatedSuccessfully
 
         respondWithResult(HttpStatusCode.Created, result, successMessage)
     }
@@ -50,13 +48,13 @@ fun Route.authenticationRoutes(tokenConfiguration: TokenConfiguration) {
         val userName = params["username"]?.trim().toString()
         val password = params["password"]?.trim().toString()
 
-        val (language, countryCode) = extractLocalizationHeader()
+        val language = extractLocalizationHeader()
 
         val token = identityService.loginUser(
             userName,
             password,
             tokenConfiguration,
-            Locale(language, countryCode)
+            language
         )
         respondWithResult(HttpStatusCode.Created, token)
     }

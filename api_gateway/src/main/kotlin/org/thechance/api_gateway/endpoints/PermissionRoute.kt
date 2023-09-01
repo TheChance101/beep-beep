@@ -11,7 +11,6 @@ import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
 import org.thechance.api_gateway.endpoints.utils.respondWithResult
 import org.thechance.api_gateway.util.Role
-import java.util.*
 
 fun Route.permissionRoutes() {
 
@@ -21,17 +20,15 @@ fun Route.permissionRoutes() {
 
         post("/restaurant") {
             val requestedForm = call.receive<RestaurantRequestPermissionDto>()
-            val (language, countryCode) = extractLocalizationHeader()
-            val result = restaurantService.createRequestPermission(
-                requestedForm, Locale(language, countryCode)
-            )
+            val language = extractLocalizationHeader()
+            val result = restaurantService.createRequestPermission(requestedForm, language)
             respondWithResult(HttpStatusCode.Created, result)
         }
 
         authenticateWithRole(Role.DASHBOARD_ADMIN) {
             get("/restaurant-request") {
-                val (language, countryCode) = extractLocalizationHeader()
-                val result = restaurantService.getAllRequestPermission(Locale(language, countryCode))
+                val language = extractLocalizationHeader()
+                val result = restaurantService.getAllRequestPermission(language)
                 respondWithResult(HttpStatusCode.OK, result)
             }
         }

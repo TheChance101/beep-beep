@@ -10,7 +10,6 @@ import org.thechance.api_gateway.data.model.taxi.TaxiDto
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.tryToExecute
 import org.thechance.api_gateway.util.APIs
-import java.util.*
 
 
 @Single
@@ -21,14 +20,14 @@ class TaxiService(
 ) {
 
 
-    suspend fun getAllTaxi(locale: Locale, page: Int, limit: Int): PaginationResponse<TaxiDto> {
+    suspend fun getAllTaxi(languageCode: String, page: Int, limit: Int): PaginationResponse<TaxiDto> {
         return client.tryToExecute(
             api = APIs.TAXI_API,
             attributes = attributes,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(
                     errorCodes,
-                    locale
+                    languageCode
                 )
             }
         ) {
@@ -41,13 +40,13 @@ class TaxiService(
 
     suspend fun getTaxiById(
         id: String,
-        locale: Locale
+        languageCode: String
     ): TaxiDto {
         return client.tryToExecute(
             api = APIs.TAXI_API,
             attributes = attributes,
             setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             }
         ) {
             get("/taxi/$id")
@@ -57,13 +56,13 @@ class TaxiService(
     @OptIn(InternalAPI::class)
     suspend fun createTaxi(
         taxiDto: TaxiDto,
-        locale: Locale
+        languageCode: String
     ): TaxiDto {
         return client.tryToExecute(
             api = APIs.TAXI_API,
             attributes = attributes,
             setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             }
         ) {
 
@@ -77,13 +76,13 @@ class TaxiService(
     suspend fun editTaxi(
         id: String,
         taxiDto: TaxiDto,
-        locale: Locale
+        languageCode: String
     ): TaxiDto {
         return client.tryToExecute(
             api = APIs.TAXI_API,
             attributes = attributes,
             setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             }
         ) {
             put("/taxi/$id") {
@@ -94,13 +93,13 @@ class TaxiService(
 
     suspend fun deleteTaxi(
         id: String,
-        locale: Locale
+        languageCode: String
     ): TaxiDto {
         return client.tryToExecute(
             api = APIs.TAXI_API,
             attributes = attributes,
             setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             }
         ) {
             delete("/taxi/$id")
