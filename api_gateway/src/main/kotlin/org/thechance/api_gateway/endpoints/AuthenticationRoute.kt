@@ -8,8 +8,8 @@ import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
-import org.thechance.api_gateway.data.security.TokenConfiguration
-import org.thechance.api_gateway.endpoints.gateway.IIdentityGateway
+import org.thechance.api_gateway.data.model.authenticate.TokenConfiguration
+import org.thechance.api_gateway.data.service.IdentityService
 import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
 import org.thechance.api_gateway.endpoints.utils.respondWithResult
@@ -19,7 +19,7 @@ import java.util.*
 
 
 fun Route.authenticationRoutes(tokenConfiguration: TokenConfiguration) {
-    val identityGateway: IIdentityGateway by inject()
+    val identityService: IdentityService by inject()
 
     val localizedMessagesFactory by inject<LocalizedMessagesFactory>()
 
@@ -32,7 +32,7 @@ fun Route.authenticationRoutes(tokenConfiguration: TokenConfiguration) {
 
         val (language, countryCode) = extractLocalizationHeader()
 
-        val result = identityGateway.createUser(
+        val result = identityService.createUser(
             fullName = fullName.toString(),
             username = username.toString(),
             password = password.toString(),
@@ -52,7 +52,7 @@ fun Route.authenticationRoutes(tokenConfiguration: TokenConfiguration) {
 
         val (language, countryCode) = extractLocalizationHeader()
 
-        val token = identityGateway.loginUser(
+        val token = identityService.loginUser(
             userName,
             password,
             tokenConfiguration,
@@ -73,7 +73,7 @@ fun Route.authenticationRoutes(tokenConfiguration: TokenConfiguration) {
             val userId = tokenClaim?.payload?.getClaim(Claim.USER_ID).toString()
             val username = tokenClaim?.payload?.getClaim(Claim.USERNAME).toString()
             val userPermission = tokenClaim?.payload?.getClaim(Claim.PERMISSION)?.asString()?.toInt() ?: 1
-            val token = identityGateway.generateUserTokens(userId, username, userPermission, tokenConfiguration)
+            val token = identityService.generateUserTokens(userId, username, userPermission, tokenConfiguration)
             respondWithResult(HttpStatusCode.Created, token)
         }
     }

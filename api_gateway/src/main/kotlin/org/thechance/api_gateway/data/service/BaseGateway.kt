@@ -1,4 +1,4 @@
-package org.thechance.api_gateway.data.gateway
+package org.thechance.api_gateway.data.service
 
 import io.ktor.client.*
 import io.ktor.client.call.*

@@ -1,4 +1,4 @@
-package org.thechance.api_gateway.data.security
+package org.thechance.api_gateway.data.model.authenticate
 
 enum class TokenType {
     ACCESS_TOKEN,
