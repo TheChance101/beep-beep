@@ -21,6 +21,8 @@ interface IIdentityGateway {
     suspend fun getUserByUsername(username: String): UserManagementResource
 
     suspend fun generateUserTokens(
-        userId: String, userPermission : Int, tokenConfiguration: TokenConfiguration
+        userId: String,username : String, userPermission : Int, tokenConfiguration: TokenConfiguration
     ): UserTokens
+
+    suspend fun deleteUser(userId: String, locale: Locale):Boolean
 }

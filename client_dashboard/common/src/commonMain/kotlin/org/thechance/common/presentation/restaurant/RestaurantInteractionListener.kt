@@ -20,7 +20,7 @@ interface RestaurantInteractionListener : BaseInteractionListener {
 
     fun onPageClicked(pageNumber: Int)
 
-    fun onItemPerPageChange(numberOfItemsInPage: Int)
+    fun onItemPerPageChange(numberOfRestaurantsInPage: Int)
 
     fun onAddNewRestaurantClicked()
 

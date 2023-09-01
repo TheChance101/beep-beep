@@ -1,4 +1,4 @@
-package org.thechance.service_identity.domain.entity
+package org.thechance.service_identity.domain.util
 
 
 open class IdentityException(message: String) : Throwable(message)

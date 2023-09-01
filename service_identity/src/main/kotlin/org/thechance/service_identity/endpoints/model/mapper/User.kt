@@ -1,4 +1,4 @@
-package org.thechance.service_identity.data.mappers
+package org.thechance.service_identity.endpoints.model.mapper
 
 import org.thechance.service_identity.domain.entity.User
 import org.thechance.service_identity.domain.entity.UserManagement
