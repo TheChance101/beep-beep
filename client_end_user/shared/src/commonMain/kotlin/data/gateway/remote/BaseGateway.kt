@@ -18,14 +18,12 @@ abstract class BaseGateway {
         try {
             return client.method().body()
         } catch (e: ClientRequestException) {
-            println("Darkness : ${e.response}")
             val errorMessages = e.response.body<ServerResponse<*>>().status.errorMessages
             errorMessages?.let(::throwMatchingException)
             throw UnknownErrorException()
         } catch (e: NoInternetException) {
             throw NoInternetException()
         } catch (e: Exception) {
-            println("Darkness : ${e.message}")
             throw UnknownErrorException()
         }
     }

@@ -56,9 +56,6 @@ class UserGateway(private val client: HttpClient) : BaseGateway(), IUserGateway 
                 }
             )
         }.value
-        println("Darkness Success : ${result?.accessToken}")
-
         return result?.toEntity() ?: throw InvalidCredentialsException("Invalid Credential")
     }
-
 }
