@@ -35,7 +35,6 @@ class LoginScreenModel(private val manageAuthentication: IManageAuthenticationUs
     }
 
     private fun onLoginSuccess(isLoggedIn: Boolean) {
-        println(" Ahmed :  Successfully logged in")
         if (isLoggedIn) {
             sendNewEffect(LoginScreenUIEffect.Login)
             updateState {
@@ -69,7 +68,13 @@ class LoginScreenModel(private val manageAuthentication: IManageAuthenticationUs
             ErrorState.NetworkNotSupported -> {}
             ErrorState.NoInternet -> {}
             ErrorState.RequestFailed -> {}
-            ErrorState.UnAuthorized -> {}
+            ErrorState.UnAuthorized -> updateState {
+                it.copy(
+                    usernameErrorMsg = "this user is not existed",
+                    isUsernameError = true
+                )
+            }
+
             ErrorState.WifiDisabled -> {}
         }
     }

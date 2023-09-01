@@ -3,7 +3,6 @@ package domain.usecase
 import domain.gateway.IUserGateway
 import domain.utils.InvalidPasswordException
 import domain.utils.InvalidUsernameException
-import domain.utils.UnAuthorizedException
 
 interface IManageAuthenticationUseCase {
     suspend fun createUser(
@@ -31,8 +30,6 @@ class ManageAuthenticationUseCase(private val remoteGateway: IUserGateway) :
     override suspend fun loginUser(username: String, password: String): Boolean {
         if (validateLoginFields(username, password)) {
             remoteGateway.loginUser(username, password)
-        } else {
-            throw UnAuthorizedException()
         }
         return true
     }

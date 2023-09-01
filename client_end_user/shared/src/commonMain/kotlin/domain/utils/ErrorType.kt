@@ -1,5 +1,6 @@
 package domain.utils
 
+// Those Exception is just a sample,need to refactor all these exceptions based on app requirements
 open class BpException : Exception()
 open class InternetException : BpException()
 class WifiDisabledException : InternetException()
