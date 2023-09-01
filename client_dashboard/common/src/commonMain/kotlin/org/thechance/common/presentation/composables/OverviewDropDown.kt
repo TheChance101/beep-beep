@@ -33,12 +33,13 @@ fun OverviewDropDown(
     isExpanded: Boolean,
     items: List<String>,
     selectedIndex: Int,
+    modifier: Modifier = Modifier,
 ) {
 
     val dropMenuArrowRotateDirection = animateFloatAsState(targetValue = if (isExpanded) 180f else 0f)
 
     Box(
-        modifier = Modifier,
+        modifier = modifier,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

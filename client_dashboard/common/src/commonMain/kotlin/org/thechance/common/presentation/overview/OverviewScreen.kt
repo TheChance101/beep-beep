@@ -31,8 +31,6 @@ import org.thechance.common.presentation.util.kms
 object OverviewScreen :
     BaseScreen<OverviewScreenModel, OverviewUiEffect, OverviewUiState, OverviewInteractionListener>() {
 
-    private fun readResolve(): Any = OverviewScreen
-
     override fun onEffect(effect: OverviewUiEffect, navigator: Navigator) {
 
     }
@@ -45,42 +43,7 @@ object OverviewScreen :
             verticalArrangement = Arrangement.spacedBy(24.kms)
         ) {
 
-            Column(
-                modifier = Modifier.weight(1f)
-                    .background(Theme.colors.surface)
-                    .border(1.kms, Theme.colors.divider, RoundedCornerShape(Theme.radius.medium))
-                    .padding(24.kms),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(24.kms)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = Resources.Strings.revenueShare,
-                        style = Theme.typography.headline,
-                        color = Theme.colors.contentPrimary,
-                        modifier = Modifier
-                    )
-                    OverviewDropDown(
-                        listener::onMenuItemDropDownClicked,
-                        listener::onDismissDropDownMenu,
-                        listener::onMenuItemClicked,
-                        items = state.dropdownMenuState.items,
-                        selectedIndex = state.dropdownMenuState.selectedIndex,
-                        isExpanded = state.dropdownMenuState.isExpanded,
-                    )
-                }
-                Box(modifier = Modifier.fillMaxWidth().weight(1f).background(Color.LightGray)) {
-                    Text(
-                        modifier = Modifier.align(Alignment.Center),
-                        text = "This is bar chart",
-                        color = Theme.colors.contentPrimary,
-                    )
-                }
-            }
+            RevenueCard(listener, state, modifier = Modifier.weight(1f))
 
             Row(
                 modifier = Modifier.weight(1f),
@@ -169,9 +132,14 @@ object OverviewScreen :
 
     @Composable
     override fun Content() {
-        val tabNavigator = LocalTabNavigator.current
         val screenModel = getScreenModel<OverviewScreenModel>()
         Init(screenModel)
+        LaunchNavigationEffect(screenModel)
+    }
+
+    @Composable
+    private fun LaunchNavigationEffect(screenModel: OverviewScreenModel) {
+        val tabNavigator = LocalTabNavigator.current
         LaunchedEffect(Unit) {
             collectNavigationEffect(screenModel, tabNavigator)
         }
@@ -241,6 +209,50 @@ object OverviewScreen :
     }
 
     @Composable
+    private fun RevenueCard(
+        listener: OverviewInteractionListener,
+        state: OverviewUiState,
+        modifier: Modifier = Modifier
+    ) {
+        Column(
+            modifier = modifier
+                .background(Theme.colors.surface)
+                .border(1.kms, Theme.colors.divider, RoundedCornerShape(Theme.radius.medium))
+                .padding(24.kms),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(24.kms)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = Resources.Strings.revenueShare,
+                    style = Theme.typography.headline,
+                    color = Theme.colors.contentPrimary,
+                    modifier = Modifier
+                )
+                OverviewDropDown(
+                    listener::onMenuItemDropDownClicked,
+                    listener::onDismissDropDownMenu,
+                    listener::onMenuItemClicked,
+                    items = state.dropdownMenuState.items,
+                    selectedIndex = state.dropdownMenuState.selectedIndex,
+                    isExpanded = state.dropdownMenuState.isExpanded,
+                )
+            }
+            Box(modifier = Modifier.fillMaxWidth().weight(1f).background(Color.LightGray)) {
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = "This is bar chart",
+                    color = Theme.colors.contentPrimary,
+                )
+            }
+        }
+    }
+
+    @Composable
     private fun getPermission(permission: PermissionUiState): String {
         return when (permission) {
             PermissionUiState.RESTAURANT -> Resources.Strings.restaurant
@@ -251,4 +263,5 @@ object OverviewScreen :
             PermissionUiState.ADMIN -> Resources.Strings.adminPermission
         }
     }
+
 }
