@@ -39,4 +39,9 @@ interface LocalizedMessages {
     val taxiUpdateSuccessfully: String
 
     val taxiDeleteSuccessfully: String
+
+    //region restaurant
+    val restaurantNotFound:String
+
+    //endregion
 }

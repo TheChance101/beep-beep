@@ -19,20 +19,15 @@ interface IRemoteGateway {
 
     suspend fun getPdfTaxiReport()
 
-    suspend fun getRestaurants(): List<Restaurant>
-
-    suspend fun searchRestaurantsByRestaurantName(restaurantName: String): List<Restaurant>
+    suspend fun getRestaurants(
+        pageNumber: Int,
+        numberOfRestaurantsInPage: Int,
+        restaurantName: String,
+        rating: Double?,
+        priceLevel: Int?
+    ): DataWrapper<Restaurant>
 
     suspend fun loginUser(username: String, password: String): Pair<String, String>
-
-    suspend fun filterRestaurants(rating: Double, priceLevel: Int): List<Restaurant>
-
-    suspend fun searchFilterRestaurants(
-        restaurantName: String,
-        rating: Double,
-        priceLevel: Int
-    ): List<Restaurant>
-
 
     suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant
 

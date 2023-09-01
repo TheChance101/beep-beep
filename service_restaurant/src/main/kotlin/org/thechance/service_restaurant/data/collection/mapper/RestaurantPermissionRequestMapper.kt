@@ -11,9 +11,3 @@ fun RestaurantPermissionRequestCollection.toEntity() = RestaurantPermissionReque
 )
 
 fun List<RestaurantPermissionRequestCollection>.toEntity(): List<RestaurantPermissionRequest> = map { it.toEntity() }
-
-fun RestaurantPermissionRequest.toCollection() = RestaurantPermissionRequestCollection(
-    restaurantName = restaurantName,
-    ownerEmail = ownerEmail,
-    cause = cause,
-)

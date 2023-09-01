@@ -8,44 +8,44 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.util.pipeline.*
+import org.thechance.api_gateway.data.localizedMessages.Country
+import org.thechance.api_gateway.data.localizedMessages.Language
+import org.thechance.api_gateway.util.Claim.PERMISSION
+import org.thechance.api_gateway.util.Role
 
 suspend inline fun <reified T> PipelineContext<Unit, ApplicationCall>.respondWithResult(
-    statusCode: HttpStatusCode,
-    result: T,
-    message: String? = null
+    statusCode: HttpStatusCode, result: T, message: String? = null
 ) {
     call.respond(statusCode, ServerResponse.success(result, message))
 }
 
 suspend fun respondWithError(
-    call: ApplicationCall,
-    statusCode: HttpStatusCode,
-    errorMessage: Map<Int, String>? = null
+    call: ApplicationCall, statusCode: HttpStatusCode, errorMessage: Map<Int, String>? = null
 ) {
     call.respond(statusCode, ServerResponse.error(errorMessage, statusCode.value))
 }
 
-fun PipelineContext<Unit, ApplicationCall>.extractLocalizationHeader(): Pair<String?, String?> {
+fun PipelineContext<Unit, ApplicationCall>.extractLocalizationHeader(): Pair<String, String> {
     val headers = call.request.headers
-    val language = headers["Accept-Language"]?.trim()
-    val countryCode = headers["Country-Code"]?.trim()
+    val language = headers["Accept-Language"]?.trim() ?: Language.ENGLISH.code
+    val countryCode = headers["Country-Code"]?.trim() ?: Country.EGYPT.code
     return Pair(language, countryCode)
 }
 
-fun WebSocketServerSession.extractLocalizationHeaderFromWebSocket(): Pair<String?, String?> {
+fun WebSocketServerSession.extractLocalizationHeaderFromWebSocket(): Pair<String, String> {
     val headers = call.request.headers
-    val language = headers["Accept-Language"]?.trim()
-    val countryCode = headers["Country-Code"]?.trim()
+    val language = headers["Accept-Language"]?.trim() ?: Language.ENGLISH.code
+    val countryCode = headers["Country-Code"]?.trim() ?: Country.EGYPT.code
     return Pair(language, countryCode)
 }
 
 private fun PipelineContext<Unit, ApplicationCall>.extractPermission(): Int {
     val principal = call.principal<JWTPrincipal>()
-    return principal?.getClaim("permission", Int::class) ?: -1
+    return principal?.getClaim(PERMISSION, Int::class) ?: -1
 }
 
 fun Route.authenticateWithRole(role: Int, block: Route.() -> Unit) {
-    authenticate("auth-jwt", "refresh-jwt") {
+    authenticate("auth-jwt") {
         intercept(ApplicationCallPipeline.Call) {
             val permission = extractPermission()
             if (!hasPermission(permission, role)) {
@@ -58,4 +58,8 @@ fun Route.authenticateWithRole(role: Int, block: Route.() -> Unit) {
 
 private fun hasPermission(permission: Int, role: Int): Boolean {
     return (permission and role) == role
+}
+
+fun addPermission(role: Int): Int {
+    return Role.END_USER + role
 }

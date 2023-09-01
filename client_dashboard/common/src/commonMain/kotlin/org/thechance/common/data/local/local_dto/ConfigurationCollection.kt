@@ -7,4 +7,5 @@ class ConfigurationCollection : RealmObject {
     var keepLoggedIn: Boolean = false
     var accessToken: String = ""
     var refreshToken: String = ""
+    var isDarkMode: Boolean = false
 }

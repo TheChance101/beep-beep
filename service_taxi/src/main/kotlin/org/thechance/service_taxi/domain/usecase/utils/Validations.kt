@@ -10,7 +10,8 @@ interface IValidations {
 
 class Validations : IValidations {
     override fun isValidId(id: String): Boolean {
-        return "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$".toRegex().matches(id)
+        val objectIdPattern = "[0-9a-fA-F]{24}"
+        return id.matches(Regex(objectIdPattern))
     }
 
     override fun isValidPrice(price: Double): Boolean {

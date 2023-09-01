@@ -18,7 +18,7 @@ fun Order.toCollection(): OrderCollection {
         meals = meals.map { it.toCollection() },
         totalPrice = totalPrice,
         createdAt = createdAt.toMillis(),
-        orderStatus = status
+        orderStatus = status.statusCode
     )
 }
 
@@ -30,7 +30,7 @@ fun OrderCollection.toEntity(): Order {
         meals = meals.map { it.toEntity() },
         totalPrice = totalPrice,
         createdAt = LocalDateTime.fromEpochMilliseconds(createdAt),
-        status = orderStatus
+        status = Order.Status.getOrderStatus(orderStatus)
     )
 }
 

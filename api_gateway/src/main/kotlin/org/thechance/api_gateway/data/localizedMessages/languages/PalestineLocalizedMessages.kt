@@ -23,4 +23,8 @@ class PalestineLocalizedMessages : LocalizedMessages {
     override val taxiCreatedSuccessfully: String = "   شرفتنا يا صاحبي"
     override val taxiUpdateSuccessfully: String = "   عدلنا معلومات التاكسي يا صاحبي"
     override val taxiDeleteSuccessfully: String = "   حذفنا التاكسي يا صاحبي"
+
+    //region restaurant
+    override val restaurantNotFound: String = "نعتذر لم نستطيع ايجاد هذا المطعم!"
+    //endregion
 }

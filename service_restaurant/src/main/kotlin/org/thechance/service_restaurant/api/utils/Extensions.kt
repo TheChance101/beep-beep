@@ -11,7 +11,6 @@ fun Parameters.extractInt(key: String): Int? {
     return this[key]?.toIntOrNull()
 }
 
-fun isRestaurantOpen(openTime: String, closeTime: String): Boolean {
-    val now = LocalTime.now()
-    return now.isAfter(LocalTime.parse(openTime)) && now.isBefore(LocalTime.parse(closeTime))
+fun isRestaurantOpen(openTime: String, closeTime: String, currentTime: LocalTime = LocalTime.now()): Boolean {
+    return currentTime.isAfter(LocalTime.parse(openTime)) && currentTime.isBefore(LocalTime.parse(closeTime))
 }

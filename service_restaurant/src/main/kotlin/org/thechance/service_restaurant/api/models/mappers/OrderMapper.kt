@@ -6,7 +6,6 @@ import org.thechance.service_restaurant.api.models.OrderDto
 import org.thechance.service_restaurant.api.models.OrderMealDto
 import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.entity.OrderMeal
-import org.thechance.service_restaurant.domain.utils.OrderStatus
 import org.thechance.service_restaurant.domain.utils.currentDateTime
 import org.thechance.service_restaurant.domain.utils.fromEpochMilliseconds
 import org.thechance.service_restaurant.domain.utils.toMillis
@@ -20,7 +19,7 @@ fun OrderDto.toEntity(): Order {
         meals = meals?.map { it.toEntity() } ?: emptyList(),
         totalPrice = totalPrice ?: 0.0,
         createdAt = createdAt?.let { LocalDateTime.fromEpochMilliseconds(it) } ?: currentDateTime(),
-        status = OrderStatus.PENDING.statusCode
+        status = Order.Status.getOrderStatus(orderStatus)
     )
 }
 
@@ -32,7 +31,7 @@ fun Order.toDto(): OrderDto {
         meals = meals.map { it.toDto() },
         totalPrice = totalPrice,
         createdAt = createdAt.toMillis(),
-        orderStatus = status
+        orderStatus = status.statusCode
     )
 }
 

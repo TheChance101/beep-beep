@@ -1,5 +1,7 @@
 package org.thechance.common.domain.getway
 
+import kotlinx.coroutines.flow.Flow
+
 interface IIdentityGateway {
 
     suspend fun saveAccessToken(token: String)
@@ -15,5 +17,9 @@ interface IIdentityGateway {
     suspend fun shouldUserKeptLoggedIn(keepLoggedIn: Boolean)
 
     suspend fun isUserKeptLoggedIn(): Boolean
+
+    suspend fun getThemeMode(): Flow<Boolean>
+
+    suspend fun updateThemeMode(mode: Boolean)
 
 }

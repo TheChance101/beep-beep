@@ -152,7 +152,7 @@ class RestaurantScreen :
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             TotalItemsIndicator(
-                numberItemInPage = state.numberOfItemsInPage,
+                numberItemInPage = state.numberOfRestaurantsInPage,
                 totalItems = state.numberOfRestaurants,
                 itemType = Resources.Strings.restaurant,
                 onItemPerPageChange = listener::onItemPerPageChange
@@ -257,13 +257,13 @@ class RestaurantScreen :
                 onClickCancel = listener::onCancelFilterRestaurantsClicked,
                 onClickSave = {
                     listener.onSaveFilterRestaurantsClicked(
-                        state.filterRating,
-                        state.filterPriceLevel
+                        state.restaurantFilterDropdownMenuUiState.filterRating,
+                        state.restaurantFilterDropdownMenuUiState.filterPriceLevel
                     )
                 },
-                expanded = state.isFilterDropdownMenuExpanded,
-                rating = state.filterRating,
-                priceLevel = state.filterPriceLevel,
+                expanded = state.restaurantFilterDropdownMenuUiState.isFilterDropdownMenuExpanded,
+                rating = state.restaurantFilterDropdownMenuUiState.filterRating,
+                priceLevel = state.restaurantFilterDropdownMenuUiState.filterPriceLevel,
             )
         }
     }

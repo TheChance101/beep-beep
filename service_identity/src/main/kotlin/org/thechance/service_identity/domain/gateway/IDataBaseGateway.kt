@@ -1,12 +1,14 @@
 package org.thechance.service_identity.domain.gateway
 
 import org.thechance.service_identity.domain.entity.*
+import org.thechance.service_identity.domain.security.SaltedHash
 
 interface IDataBaseGateway {
 
     //region address
+    suspend fun addLocation(userId: String, location: Location): Address
 
-    suspend fun addAddress(userId: String, location: Location): Boolean
+    suspend fun addAddress(userId: String, address: Address): Address
 
     suspend fun deleteAddress(id: String): Boolean
 
@@ -31,7 +33,7 @@ interface IDataBaseGateway {
 
     suspend fun deleteUser(id: String): Boolean
 
-    suspend fun getNumberOfUsers():Long
+    suspend fun getNumberOfUsers(): Long
 
     // endregion: user
 
@@ -43,16 +45,16 @@ interface IDataBaseGateway {
 
     // region: user permission management
 
-    suspend fun updatePermissionToUser(userId: String, permission: Int): Boolean
+    suspend fun updatePermissionToUser(userId: String, permission: Int): UserManagement
 
     suspend fun getUserPermission(userId: String): Int
 
     // endregion: user permission management
-    suspend fun subtractFromWallet(userId: String, amount: Double): Boolean
+    suspend fun subtractFromWallet(userId: String, amount: Double): Wallet
 
-    suspend fun getWalletBalance(userId: String): Double
+    suspend fun getWalletBalance(userId: String): Wallet
 
-    suspend fun addToWallet(userId: String, amount: Double): Boolean
+    suspend fun addToWallet(userId: String, amount: Double): Wallet
 
     suspend fun getUserByUsername(username: String): UserManagement
 

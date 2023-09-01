@@ -197,6 +197,10 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
         ).toList().flatMap { it.cuisines }.filter { it.toString() in cuisineIds }
         return deletedCuisineIds.map { it.toString() }
     }
+
+    override suspend fun getTotalNumberOfRestaurant(): Long {
+        return container.restaurantCollection.countDocuments(RestaurantCollection::isDeleted eq false)
+    }
     //endregion
 
     //region meal

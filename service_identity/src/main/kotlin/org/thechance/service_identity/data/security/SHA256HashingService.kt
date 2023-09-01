@@ -4,7 +4,7 @@ import org.apache.commons.codec.binary.Hex
 import org.apache.commons.codec.digest.DigestUtils
 import org.koin.core.annotation.Single
 import org.thechance.service_identity.domain.security.HashingService
-import org.thechance.service_identity.domain.entity.SaltedHash
+import org.thechance.service_identity.domain.security.SaltedHash
 import java.security.SecureRandom
 
 /**
