@@ -3,7 +3,7 @@ package domain.gateway
 
 import domain.entity.Session
 
-interface IRemoteGateway {
+interface IUserGateway {
 
     suspend fun createUser(
         fullName: String,

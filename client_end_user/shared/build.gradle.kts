@@ -8,6 +8,8 @@ plugins {
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kotlinKsp)
     id("io.realm.kotlin") version "1.10.0"
+    kotlin("plugin.serialization") version "1.8.10"
+
 }
 
 group = "org.thechance"

@@ -3,7 +3,7 @@ package data.remote.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class BaseResponse<T>(
+data class ServerResponse<T>(
     val value: T?,
     val isSuccess: Boolean = true,
     val status: ResponseStatus

@@ -1,6 +1,6 @@
 package domain.usecase
 
-import domain.gateway.IRemoteGateway
+import domain.gateway.IUserGateway
 import domain.utils.InvalidPasswordException
 import domain.utils.InvalidUsernameException
 import domain.utils.UnAuthorizedException
@@ -16,7 +16,7 @@ interface IManageAuthenticationUseCase {
     suspend fun loginUser(username: String, password: String): Boolean
 }
 
-class ManageAuthenticationUseCase(private val remoteGateway: IRemoteGateway) :
+class ManageAuthenticationUseCase(private val remoteGateway: IUserGateway) :
     IManageAuthenticationUseCase {
 
     override suspend fun createUser(
