@@ -131,12 +131,12 @@ object OverviewScreen :
                         Column(modifier = Modifier.weight(1f).fillMaxWidth()) {
                             state.users.forEachIndexed { index, user ->
                                 Row(
-                                    modifier = Modifier.padding(16.dp),
+                                    modifier = Modifier.weight(1f),
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
                                     Image(
-                                        modifier = Modifier.defaultMinSize(40.kms),
+                                        modifier = Modifier.size(40.kms),
                                         painter = painterResource(user.image),
                                         contentDescription = null
                                     )
@@ -160,8 +160,8 @@ object OverviewScreen :
                                 }
                             }
                         }
-                    })
-
+                    }
+                )
             }
         }
     }
