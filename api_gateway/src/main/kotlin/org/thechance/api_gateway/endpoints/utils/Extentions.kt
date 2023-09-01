@@ -10,8 +10,8 @@ import io.ktor.server.websocket.*
 import io.ktor.util.pipeline.*
 import org.thechance.api_gateway.data.localizedMessages.Country
 import org.thechance.api_gateway.data.localizedMessages.Language
+import org.thechance.api_gateway.data.model.ServerResponse
 import org.thechance.api_gateway.util.Claim.PERMISSION
-import org.thechance.api_gateway.util.Role
 
 suspend inline fun <reified T> PipelineContext<Unit, ApplicationCall>.respondWithResult(
     statusCode: HttpStatusCode, result: T, message: String? = null

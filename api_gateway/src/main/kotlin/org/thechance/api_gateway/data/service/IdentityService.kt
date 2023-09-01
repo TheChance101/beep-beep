@@ -1,20 +1,20 @@
-package org.thechance.api_gateway.data.gateway
+package org.thechance.api_gateway.data.service
 
+import com.auth0.jwt.JWT
+import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import io.ktor.util.*
 import org.koin.core.annotation.Single
-import org.thechance.api_gateway.data.model.BasePaginationResponse
-import org.thechance.api_gateway.data.model.User
-import org.thechance.api_gateway.data.model.UserTokens
-import org.thechance.api_gateway.data.security.ITokenService
-import org.thechance.api_gateway.data.security.TokenClaim
-import org.thechance.api_gateway.data.security.TokenConfiguration
-import org.thechance.api_gateway.data.security.TokenType
+import org.thechance.api_gateway.data.model.PaginationResponse
+import org.thechance.api_gateway.data.model.UserDto
+import org.thechance.api_gateway.data.model.UserTokensResponse
+import org.thechance.api_gateway.data.model.authenticate.TokenClaim
+import org.thechance.api_gateway.data.model.authenticate.TokenConfiguration
+import org.thechance.api_gateway.data.model.authenticate.TokenType
 import org.thechance.api_gateway.data.utils.ErrorHandler
-import org.thechance.api_gateway.endpoints.gateway.IIdentityGateway
 import org.thechance.api_gateway.util.APIs
 import org.thechance.api_gateway.util.Claim.PERMISSION
 import org.thechance.api_gateway.util.Claim.TOKEN_TYPE
@@ -22,18 +22,18 @@ import org.thechance.api_gateway.util.Claim.USERNAME
 import org.thechance.api_gateway.util.Claim.USER_ID
 import java.util.*
 
-@Single(binds = [IIdentityGateway::class])
-class IdentityGateway(
+
+@Single
+class IdentityService(
     client: HttpClient,
     attributes: Attributes,
-    private val tokenManagementService: ITokenService,
     private val errorHandler: ErrorHandler
-) : BaseGateway(client = client, attributes = attributes), IIdentityGateway {
+) : BaseGateway(client = client, attributes = attributes) {
 
-    override suspend fun createUser(
+    suspend fun createUser(
         fullName: String, username: String, password: String, email: String, locale: Locale
-    ): User {
-        return tryToExecute<User>(
+    ): UserDto {
+        return tryToExecute<UserDto>(
             APIs.IDENTITY_API,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
@@ -50,9 +50,9 @@ class IdentityGateway(
         }
     }
 
-    override suspend fun loginUser(
+    suspend fun loginUser(
         userName: String, password: String, tokenConfiguration: TokenConfiguration, locale: Locale
-    ): UserTokens {
+    ): UserTokensResponse {
         tryToExecute<Boolean>(
             api = APIs.IDENTITY_API,
             setErrorMessage = { errorCodes ->
@@ -70,9 +70,9 @@ class IdentityGateway(
         return generateUserTokens(user.id, userName, user.permission, tokenConfiguration)
     }
 
-    override suspend fun getUsers(
+    suspend fun getUsers(
         page: Int, limit: Int, searchTerm: String, locale: Locale
-    ) = tryToExecute<BasePaginationResponse<User>>(APIs.IDENTITY_API) {
+    ) = tryToExecute<PaginationResponse<UserDto>>(APIs.IDENTITY_API) {
         get("/dashboard/user") {
             parameter("page", page)
             parameter("limit", limit)
@@ -80,13 +80,13 @@ class IdentityGateway(
         }
     }
 
-    override suspend fun getUserByUsername(username: String) = tryToExecute<User>(APIs.IDENTITY_API) {
+    suspend fun getUserByUsername(username: String) = tryToExecute<UserDto>(APIs.IDENTITY_API) {
         get("user/get-user") {
             parameter("username", username)
         }
     }
 
-    override suspend fun updateUserPermission(userId: String, permission: Int) = tryToExecute<User>(APIs.IDENTITY_API) {
+    suspend fun updateUserPermission(userId: String, permission: Int) = tryToExecute<UserDto>(APIs.IDENTITY_API) {
         submitForm("/dashboard/user/$userId/permission",
             formParameters = parameters {
                 append("permission", "$permission")
@@ -95,7 +95,7 @@ class IdentityGateway(
         )
     }
 
-    override suspend fun deleteUser(userId: String, locale: Locale): Boolean {
+    suspend fun deleteUser(userId: String, locale: Locale): Boolean {
         return tryToExecute<Boolean>(api = APIs.IDENTITY_API, setErrorMessage = { errorCodes ->
             errorHandler.getLocalizedErrorMessage(errorCodes, locale)
         }) {
@@ -103,9 +103,9 @@ class IdentityGateway(
         }
     }
 
-    override suspend fun generateUserTokens(
+    fun generateUserTokens(
         userId: String, username: String, userPermission: Int, tokenConfiguration: TokenConfiguration
-    ): UserTokens {
+    ): UserTokensResponse {
 
         val accessTokenExpirationDate = getExpirationDate(tokenConfiguration.accessTokenExpirationTimestamp)
         val refreshTokenExpirationDate = getExpirationDate(tokenConfiguration.refreshTokenExpirationTimestamp)
@@ -113,7 +113,7 @@ class IdentityGateway(
         val refreshToken = generateToken(userId, username, userPermission, tokenConfiguration, TokenType.REFRESH_TOKEN)
         val accessToken = generateToken(userId, username, userPermission, tokenConfiguration, TokenType.ACCESS_TOKEN)
 
-        return UserTokens(accessTokenExpirationDate.time, refreshTokenExpirationDate.time, accessToken, refreshToken)
+        return UserTokensResponse(accessTokenExpirationDate.time, refreshTokenExpirationDate.time, accessToken, refreshToken)
     }
 
     private fun getExpirationDate(timestamp: Long): Date {
@@ -131,13 +131,30 @@ class IdentityGateway(
         val rolesClaim = TokenClaim(PERMISSION, userPermission.toString())
         val usernameClaim = TokenClaim(USERNAME, username)
         val accessTokenClaim = TokenClaim(TOKEN_TYPE, tokenType.name)
-        return tokenManagementService.generateToken(
+        return generateToken(
             tokenConfiguration,
             userIdClaim,
             usernameClaim,
             rolesClaim,
             accessTokenClaim
         )
+    }
+
+
+    private fun generateToken(
+        tokenConfig: TokenConfiguration,
+        vararg tokenClaim: TokenClaim
+    ): String {
+        val accessToken = JWT.create()
+            .withIssuer(tokenConfig.issuer)
+            .withAudience(tokenConfig.audience)
+            .withExpiresAt(Date(System.currentTimeMillis() + tokenConfig.accessTokenExpirationTimestamp))
+
+        tokenClaim.forEach {
+            accessToken.withClaim(it.name, it.value)
+        }
+
+        return accessToken.sign(Algorithm.HMAC256(tokenConfig.secret))
     }
 
 }
