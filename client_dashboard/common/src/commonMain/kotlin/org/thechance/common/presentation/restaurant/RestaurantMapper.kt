@@ -23,7 +23,7 @@ private fun getWorkingHours(workingHours: Pair<Date, Date>): String {
     return "$firstDate - $secondDate"
 }
 
-fun AddRestaurantDialogUiState.toEntity() = AddRestaurant(
+fun NewRestaurantInfoUiState.toEntity() = AddRestaurant(
     name = name,
     ownerUsername = ownerUsername,
     phoneNumber = phoneNumber,

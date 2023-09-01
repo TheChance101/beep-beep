@@ -13,15 +13,40 @@ import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.resources.Resources
-import org.thechance.common.presentation.restaurant.AddRestaurantDialogUiState
+import org.thechance.common.presentation.restaurant.NewRestaurantInfoUiState
+import org.thechance.common.presentation.restaurant.RestaurantInteractionListener
+import org.thechance.common.presentation.restaurant.RestaurantUiState
 import org.thechance.common.presentation.util.kms
 import java.awt.Dimension
 
+@Composable
+fun NewRestaurantInfoDialog(
+    modifier: Modifier = Modifier,
+    state: RestaurantUiState,
+    listener: RestaurantInteractionListener,
+) {
+    RestaurantDialog(
+        modifier = modifier,
+        onRestaurantNameChange = listener::onRestaurantNameChange,
+        isVisible = state.isAddNewRestaurantDialogVisible,
+        onCancelClicked = listener::onCancelCreateRestaurantClicked,
+        onOwnerUserNameChange = listener::onOwnerUserNameChange,
+        onPhoneNumberChange = listener::onPhoneNumberChange,
+        onWorkingStartHourChange = listener::onWorkingStartHourChange,
+        onWorkingEndHourChange = listener::onWorkingEndHourChange,
+        state = state.addNewRestaurantDialogUiState,
+        onCreateClicked = listener::onCreateNewRestaurantClicked,
+        onAddressChange = listener::onAddressChange,
+        currentLocation = state.addNewRestaurantDialogUiState.currentLocation,
+    )
+}
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RestaurantDialog(
+private fun RestaurantDialog(
     modifier: Modifier = Modifier,
-    state: AddRestaurantDialogUiState,
+    state: NewRestaurantInfoUiState,
     currentLocation: String,
     isVisible: Boolean,
     onCreateClicked: () -> Unit,

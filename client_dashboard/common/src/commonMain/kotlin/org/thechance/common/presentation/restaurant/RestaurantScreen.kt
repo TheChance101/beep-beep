@@ -46,21 +46,12 @@ class RestaurantScreen :
     @Composable
     override fun OnRender(state: RestaurantUiState, listener: RestaurantInteractionListener) {
         AnimatedVisibility(visible = state.isAddNewRestaurantDialogVisible) {
-            RestaurantDialog(
+            NewRestaurantInfoDialog(
                 modifier = Modifier,
-                onRestaurantNameChange = listener::onRestaurantNameChange,
-                isVisible = state.isAddNewRestaurantDialogVisible,
-                onCancelClicked = listener::onCancelCreateRestaurantClicked,
-                onOwnerUserNameChange = listener::onOwnerUserNameChange,
-                onPhoneNumberChange = listener::onPhoneNumberChange,
-                onWorkingStartHourChange = listener::onWorkingStartHourChange,
-                onWorkingEndHourChange = listener::onWorkingEndHourChange,
-                state = state.addNewRestaurantDialogUiState,
-                onCreateClicked = listener::onCreateNewRestaurantClicked,
-                onAddressChange = listener::onAddressChange,
-                currentLocation = state.addNewRestaurantDialogUiState.currentLocation,
+                state = state,
+                listener = listener,
             )
-    }
+        }
 
         Column(
             Modifier.background(Theme.colors.surface).fillMaxSize(),
