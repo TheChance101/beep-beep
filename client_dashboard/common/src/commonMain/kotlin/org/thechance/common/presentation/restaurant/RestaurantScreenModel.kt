@@ -63,6 +63,7 @@ class RestaurantScreenModel(
     }
 
     private fun onError(error: ErrorState) {
+        println("error ${error}")
         updateState { it.copy(error = error, isLoading = false) }
     }
 

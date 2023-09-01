@@ -1,7 +1,5 @@
 package org.thechance.common.domain.entity
 
-import java.util.Date
-
 data class Restaurant(
     val id: String,
     val name: String,
@@ -9,5 +7,21 @@ data class Restaurant(
     val phoneNumber: String,
     val rating: Double,
     val priceLevel: Int,
-    val workingHours: Pair<Date,Date>,
+    val workingHours: Pair<CustomTime, CustomTime>, // Pair representing (open time, closing time)
 )
+
+data class CustomTime(val hour: Int, val minute: Int) {
+    init {
+        require(hour in 1..24) { "Hours must be between 1 and 24" }
+        require(minute in 0..59) { "Minutes must be between 0 and 59" }
+    }
+
+    override fun toString(): String = String.format("%02d:%02d", hour, minute)
+
+    companion object {
+        fun parseToCustomTime(time: String): CustomTime =
+            CustomTime(time.split(":")[0].toInt(), time.split(":")[1].toInt())
+    }
+}
+
+fun Pair<CustomTime, CustomTime>.toWorkingHoursString() = "$first - $second"
