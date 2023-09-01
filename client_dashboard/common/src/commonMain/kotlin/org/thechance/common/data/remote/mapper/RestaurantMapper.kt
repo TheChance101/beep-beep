@@ -1,7 +1,7 @@
 package org.thechance.common.data.remote.mapper
 
 import org.thechance.common.data.remote.model.RestaurantDto
-import org.thechance.common.domain.entity.CustomTime
+import org.thechance.common.domain.entity.Time
 import org.thechance.common.domain.entity.Restaurant
 
 fun RestaurantDto.toEntity() = Restaurant(
@@ -13,11 +13,11 @@ fun RestaurantDto.toEntity() = Restaurant(
     priceLevel = priceLevel,
     workingHours = workingHours.replace(" ", "").split("-").run{
         Pair(
-            CustomTime(
+            Time(
                 get(0).split(":")[0].toInt(),
                 get(0).split(":")[1].toInt()
             ),
-            CustomTime(
+            Time(
                 get(1).split(":")[0].toInt(),
                 get(1).split(":")[1].toInt()
             )
