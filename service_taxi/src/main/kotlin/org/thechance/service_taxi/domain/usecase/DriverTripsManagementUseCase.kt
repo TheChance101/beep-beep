@@ -12,20 +12,20 @@ interface IDriverTripsManagementUseCase {
 }
 
 class DriverTripsManagementUseCase(
-    private val ITaxiGateway: ITaxiGateway,
+    private val taxiGateway: ITaxiGateway,
 ) : IDriverTripsManagementUseCase {
     override suspend fun approveTrip(driverId: String, taxiId: String, tripId: String): Trip {
-        ITaxiGateway.getTripById(tripId) ?: throw ResourceNotFoundException
-        return ITaxiGateway.approveTrip(tripId, taxiId, driverId) ?: throw ResourceNotFoundException
+        taxiGateway.getTripById(tripId) ?: throw ResourceNotFoundException
+        return taxiGateway.approveTrip(tripId, taxiId, driverId) ?: throw ResourceNotFoundException
     }
 
     override suspend fun finishTrip(driverId: String, tripId: String): Trip {
-        ITaxiGateway.getTripById(tripId) ?: throw ResourceNotFoundException
-        return ITaxiGateway.finishTrip(tripId, driverId) ?: throw ResourceNotFoundException
+        taxiGateway.getTripById(tripId) ?: throw ResourceNotFoundException
+        return taxiGateway.finishTrip(tripId, driverId) ?: throw ResourceNotFoundException
     }
 
     override suspend fun getNumberOfTripsByDriverId(id: String): Long {
-        return ITaxiGateway.getNumberOfTripsByDriverId(id)
+        return taxiGateway.getNumberOfTripsByDriverId(id)
     }
 
     override suspend fun getTripsByDriverId(
@@ -33,7 +33,7 @@ class DriverTripsManagementUseCase(
         page: Int,
         limit: Int
     ): List<Trip> {
-        return ITaxiGateway.getDriverTripsHistory(driverId, page, limit)
+        return taxiGateway.getDriverTripsHistory(driverId, page, limit)
     }
 
 

@@ -13,7 +13,7 @@ interface IClientTripsManagementUseCase {
 }
 
 class ClientTripsManagementUseCase(
-    private val ITaxiGateway: ITaxiGateway,
+    private val taxiGateway: ITaxiGateway,
     private val validations: IValidations
 ) : IClientTripsManagementUseCase {
 
@@ -22,22 +22,22 @@ class ClientTripsManagementUseCase(
         page: Int,
         limit: Int
     ): List<Trip> {
-        return ITaxiGateway.getClientTripsHistory(clientId, page, limit)
+        return taxiGateway.getClientTripsHistory(clientId, page, limit)
     }
 
     override suspend fun rateTrip(tripId: String, rate: Double): Trip {
-        ITaxiGateway.getTripById(tripId) ?: throw ResourceNotFoundException
+        taxiGateway.getTripById(tripId) ?: throw ResourceNotFoundException
         if (!validations.isValidRate(rate)) throw MultiErrorException(listOf(INVALID_RATE))
-        return ITaxiGateway.rateTrip(tripId, rate) ?: throw ResourceNotFoundException
+        return taxiGateway.rateTrip(tripId, rate) ?: throw ResourceNotFoundException
     }
 
     override suspend fun createTrip(trip: Trip): Trip {
         validationTrip(trip)
-        return ITaxiGateway.addTrip(trip) ?: throw ResourceNotFoundException
+        return taxiGateway.addTrip(trip) ?: throw ResourceNotFoundException
     }
 
     override suspend fun getNumberOfTripsByClientId(id: String): Long {
-        return ITaxiGateway.getNumberOfTripsByClientId(id)
+        return taxiGateway.getNumberOfTripsByClientId(id)
     }
 
     private fun validationTrip(trip: Trip) {
