@@ -1,6 +1,8 @@
 package domain.usecase
 
-import domain.gateway.IRemoteGateway
+import domain.gateway.IUserGateway
+import domain.utils.InvalidPasswordException
+import domain.utils.InvalidUsernameException
 
 interface IManageAuthenticationUseCase {
     suspend fun createUser(
@@ -10,10 +12,10 @@ interface IManageAuthenticationUseCase {
         email: String
     ): Boolean
 
-    suspend fun loginUser(userName: String, password: String)
+    suspend fun loginUser(username: String, password: String): Boolean
 }
 
-class ManageAuthenticationUseCase(private val remoteGateway: IRemoteGateway) :
+class ManageAuthenticationUseCase(private val remoteGateway: IUserGateway) :
     IManageAuthenticationUseCase {
 
     override suspend fun createUser(
@@ -25,9 +27,19 @@ class ManageAuthenticationUseCase(private val remoteGateway: IRemoteGateway) :
         return remoteGateway.createUser(fullName, username, password, email)
     }
 
-    override suspend fun loginUser(userName: String, password: String) {
-        val tokens = remoteGateway.loginUser(userName, password)
-        //save tokens to shared Preferences
+    override suspend fun loginUser(username: String, password: String): Boolean {
+        if (validateLoginFields(username, password)) {
+            remoteGateway.loginUser(username, password)
+        }
+        return true
+    }
+
+    private fun validateLoginFields(username: String, password: String): Boolean {
+        if (username.isEmpty()) {
+            throw InvalidUsernameException()
+        } else if (password.isEmpty()) {
+            throw InvalidPasswordException()
+        } else return true
     }
 
 }

@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 import com.beepbeep.designSystem.ui.theme.Theme.colors
@@ -38,6 +39,9 @@ fun BpCheckBox(
     size: Int = 32,
     isChecked: Boolean = false,
     gapBetweenLabelAndCheckbox: Int = 8,
+    textStyle:TextStyle = Theme.typography.titleMedium,
+    textColor: Color = colors.contentPrimary ,
+
 ) {
     val checkboxColor: Color by animateColorAsState(
         targetValue = if (isChecked) colors.primary else Color.Transparent,
@@ -81,6 +85,6 @@ fun BpCheckBox(
                 )
             }
         }
-        Text(text = label, style = Theme.typography.titleMedium, color = colors.contentPrimary)
+        Text(text = label, style = textStyle, color = textColor)
     }
 }
