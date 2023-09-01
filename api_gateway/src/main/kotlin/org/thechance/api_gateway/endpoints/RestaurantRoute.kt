@@ -10,8 +10,7 @@ import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.gateway.IdentityGateway
-import org.thechance.api_gateway.data.mappers.toMeal
-import org.thechance.api_gateway.data.model.restaurant.RestaurantResource
+import org.thechance.api_gateway.data.model.restaurant.Restaurant
 import org.thechance.api_gateway.endpoints.gateway.IRestaurantGateway
 import org.thechance.api_gateway.endpoints.utils.*
 import org.thechance.api_gateway.util.Claim.USER_ID
@@ -24,19 +23,7 @@ fun Route.restaurantRoutes() {
     val identityGateway: IdentityGateway by inject()
     val webSocketServerHandler: WebSocketServerHandler by inject()
 
-    authenticateWithRole(Role.RESTAURANT_OWNER) {
-        get("/restaurants") {
-            val tokenClaim = call.principal<JWTPrincipal>()
-            val ownerId = tokenClaim?.get(USER_ID).toString()
-            val (language, countryCode) = extractLocalizationHeader()
-            val result = restaurantGateway.getRestaurantsByOwnerId(
-                ownerId = ownerId, locale = Locale(language, countryCode)
-            )
-            respondWithResult(HttpStatusCode.OK, result)
-        }
-    }
-
-    route("/restaurant") {
+    route("/restaurants") {
         get {
             val (language, countryCode) = extractLocalizationHeader()
             val page = call.parameters["page"]?.toInt() ?: 1
@@ -44,6 +31,21 @@ fun Route.restaurantRoutes() {
             val restaurants = restaurantGateway.getRestaurants(page, limit, locale = Locale(language, countryCode))
             respondWithResult(HttpStatusCode.OK, restaurants)
         }
+
+        authenticateWithRole(Role.RESTAURANT_OWNER) {
+            get("/mine") {
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val ownerId = tokenClaim?.get(USER_ID).toString()
+                val (language, countryCode) = extractLocalizationHeader()
+                val result = restaurantGateway.getRestaurantsByOwnerId(
+                    ownerId = ownerId, locale = Locale(language, countryCode)
+                )
+                respondWithResult(HttpStatusCode.OK, result)
+            }
+        }
+    }
+
+    route("/restaurant") {
 
         get("/{id}/meals") {
             val (language, countryCode) = extractLocalizationHeader()
@@ -56,7 +58,7 @@ fun Route.restaurantRoutes() {
                 limit = limit,
                 locale = Locale(language, countryCode)
             )
-            respondWithResult(HttpStatusCode.OK, meals.map { it.toMeal() })
+            respondWithResult(HttpStatusCode.OK, meals)
         }
 
         get("/{id}") {
@@ -71,7 +73,7 @@ fun Route.restaurantRoutes() {
         authenticateWithRole(Role.DASHBOARD_ADMIN) {
             post {
                 val (language, countryCode) = extractLocalizationHeader()
-                val restaurant = call.receive<RestaurantResource>()
+                val restaurant = call.receive<Restaurant>()
                 val user =
                     identityGateway.updateUserPermission(restaurant.ownerId, addPermission(Role.RESTAURANT_OWNER))
                 val newRestaurant =
@@ -88,7 +90,7 @@ fun Route.restaurantRoutes() {
 
             put {
                 val (language, countryCode) = extractLocalizationHeader()
-                val restaurant = call.receive<RestaurantResource>()
+                val restaurant = call.receive<Restaurant>()
 
                 val updatedRestaurant = restaurantGateway.updateRestaurant(
                     restaurant, isAdmin = true, Locale(language, countryCode)
@@ -100,7 +102,7 @@ fun Route.restaurantRoutes() {
         authenticateWithRole(Role.RESTAURANT_OWNER) {
             put("/details") {
                 val (language, countryCode) = extractLocalizationHeader()
-                val restaurant = call.receive<RestaurantResource>()
+                val restaurant = call.receive<Restaurant>()
                 val updatedRestaurant = restaurantGateway.updateRestaurant(
                     locale = Locale(language, countryCode),
                     isAdmin = false,

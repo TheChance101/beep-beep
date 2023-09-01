@@ -2,11 +2,11 @@ package org.thechance.api_gateway.endpoints.gateway
 
 import kotlinx.coroutines.flow.Flow
 import org.thechance.api_gateway.data.model.BasePaginationResponseDto
-import org.thechance.api_gateway.data.model.CuisineResource
-import org.thechance.api_gateway.data.model.restaurant.MealResource
-import org.thechance.api_gateway.data.model.restaurant.RestaurantResource
-import org.thechance.api_gateway.endpoints.model.Order
-import org.thechance.api_gateway.endpoints.model.RestaurantRequestPermission
+import org.thechance.api_gateway.data.model.Cuisine
+import org.thechance.api_gateway.data.model.restaurant.Meal
+import org.thechance.api_gateway.data.model.restaurant.Restaurant
+import org.thechance.api_gateway.data.model.Order
+import org.thechance.api_gateway.data.model.restaurant.RestaurantRequestPermission
 import java.util.*
 
 interface IRestaurantGateway {
@@ -17,9 +17,9 @@ interface IRestaurantGateway {
     suspend fun getAllRequestPermission(locale: Locale): List<RestaurantRequestPermission>
 
     //region Cuisine
-    suspend fun addCuisine(name: String, locale: Locale): CuisineResource
+    suspend fun addCuisine(name: String, locale: Locale): Cuisine
 
-    suspend fun getCuisines(locale: Locale): List<CuisineResource>
+    suspend fun getCuisines(locale: Locale): List<Cuisine>
     //endregion
 
 
@@ -47,28 +47,28 @@ interface IRestaurantGateway {
     // endregion
 
     //region Restaurant
-    suspend fun getRestaurants(page: Int, limit: Int, locale: Locale): BasePaginationResponseDto<RestaurantResource>
+    suspend fun getRestaurants(page: Int, limit: Int, locale: Locale): BasePaginationResponseDto<Restaurant>
 
-    suspend fun getRestaurantInfo(locale: Locale, restaurantId: String): RestaurantResource
+    suspend fun getRestaurantInfo(locale: Locale, restaurantId: String): Restaurant
 
-    suspend fun getRestaurantsByOwnerId(ownerId: String, locale: Locale): List<RestaurantResource>
+    suspend fun getRestaurantsByOwnerId(ownerId: String, locale: Locale): List<Restaurant>
 
-    suspend fun addRestaurant(restaurant: RestaurantResource, locale: Locale): RestaurantResource
+    suspend fun addRestaurant(restaurant: Restaurant, locale: Locale): Restaurant
     suspend fun updateRestaurant(
-        restaurant: RestaurantResource, isAdmin: Boolean, locale: Locale
-    ): RestaurantResource
+        restaurant: Restaurant, isAdmin: Boolean, locale: Locale
+    ): Restaurant
 
     suspend fun deleteRestaurant(restaurantId: String, locale: Locale): Boolean
 
     //endregion
 
     //region meal
-    suspend fun addMeal(meal: MealResource, locale: Locale): MealResource
+    suspend fun addMeal(meal: Meal, locale: Locale): Meal
 
-    suspend fun updateMeal(meal: MealResource, locale: Locale): MealResource
+    suspend fun updateMeal(meal: Meal, locale: Locale): Meal
 
-    suspend fun getMealsByRestaurantId(restaurantId: String, page: Int, limit: Int, locale: Locale): List<MealResource>
+    suspend fun getMealsByRestaurantId(restaurantId: String, page: Int, limit: Int, locale: Locale): List<Meal>
 
-    suspend fun getMealsByCuisineId(cuisineId: String, locale: Locale): List<MealResource>
+    suspend fun getMealsByCuisineId(cuisineId: String, locale: Locale): List<Meal>
     //endregion
 }

@@ -6,12 +6,12 @@ import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import io.ktor.util.*
 import org.koin.core.annotation.Single
+import org.thechance.api_gateway.data.model.User
+import org.thechance.api_gateway.data.model.UserTokens
+import org.thechance.api_gateway.data.security.ITokenService
 import org.thechance.api_gateway.data.security.TokenClaim
 import org.thechance.api_gateway.data.security.TokenConfiguration
 import org.thechance.api_gateway.data.security.TokenType
-import org.thechance.api_gateway.data.model.UserTokens
-import org.thechance.api_gateway.data.model.identity.UserManagementResource
-import org.thechance.api_gateway.data.security.ITokenService
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.endpoints.gateway.IIdentityGateway
 import org.thechance.api_gateway.util.APIs
@@ -31,8 +31,8 @@ class IdentityGateway(
 
     override suspend fun createUser(
         fullName: String, username: String, password: String, email: String, locale: Locale
-    ): UserManagementResource {
-        return tryToExecute<UserManagementResource>(
+    ): User {
+        return tryToExecute<User>(
             APIs.IDENTITY_API,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
@@ -47,7 +47,6 @@ class IdentityGateway(
                 }
             )
         }
-
     }
 
     override suspend fun loginUser(
@@ -70,38 +69,30 @@ class IdentityGateway(
         return generateUserTokens(user.id, userName, user.permission, tokenConfiguration)
     }
 
-
     override suspend fun getUsers(
         page: Int, limit: Int, searchTerm: String, locale: Locale
-    ): List<UserManagementResource> {
-        return tryToExecute<List<UserManagementResource>>(APIs.IDENTITY_API) {
-            get("/users") {
-                parameter("page", page)
-                parameter("limit", limit)
-                parameter("searchTerm", searchTerm)
+    ) = tryToExecute<List<User>>(APIs.IDENTITY_API) {
+        get("/users") {
+            parameter("page", page)
+            parameter("limit", limit)
+            parameter("searchTerm", searchTerm)
+        }
+    }
+
+    override suspend fun getUserByUsername(username: String) = tryToExecute<User>(APIs.IDENTITY_API) {
+        get("user/get-user") {
+            parameter("username", username)
+        }
+    }
+
+    override suspend fun updateUserPermission(userId: String, permission: Int) = tryToExecute<User>(APIs.IDENTITY_API) {
+        submitForm("/dashboard/user/$userId/permission",
+            formParameters = parameters {
+                append("permission", "$permission")
+
             }
-        }
+        )
     }
-
-    override suspend fun getUserByUsername(username: String): UserManagementResource {
-        return tryToExecute<UserManagementResource>(APIs.IDENTITY_API) {
-            get("user/get-user") {
-                parameter("username", username)
-            }
-        }
-    }
-
-    override suspend fun updateUserPermission(userId: String, permission: Int): UserManagementResource {
-        return tryToExecute<UserManagementResource>(APIs.IDENTITY_API) {
-            submitForm("/dashboard/user/$userId/permission",
-                formParameters = parameters {
-                    append("permission", "$permission")
-
-                }
-            )
-        }
-    }
-
 
     override suspend fun deleteUser(userId: String, locale: Locale): Boolean {
         return tryToExecute<Boolean>(api = APIs.IDENTITY_API, setErrorMessage = { errorCodes ->

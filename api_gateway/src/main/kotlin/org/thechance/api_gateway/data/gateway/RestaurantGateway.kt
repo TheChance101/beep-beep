@@ -10,13 +10,13 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.BasePaginationResponseDto
-import org.thechance.api_gateway.data.model.CuisineResource
-import org.thechance.api_gateway.data.model.restaurant.MealResource
-import org.thechance.api_gateway.data.model.restaurant.RestaurantResource
+import org.thechance.api_gateway.data.model.Cuisine
+import org.thechance.api_gateway.data.model.restaurant.Meal
+import org.thechance.api_gateway.data.model.restaurant.Restaurant
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.endpoints.gateway.IRestaurantGateway
-import org.thechance.api_gateway.endpoints.model.Order
-import org.thechance.api_gateway.endpoints.model.RestaurantRequestPermission
+import org.thechance.api_gateway.data.model.Order
+import org.thechance.api_gateway.data.model.restaurant.RestaurantRequestPermission
 import org.thechance.api_gateway.util.APIs
 import java.util.*
 
@@ -60,8 +60,8 @@ class RestaurantGateway(
 
 
     //region Restaurant
-    override suspend fun getRestaurantInfo(locale: Locale, restaurantId: String): RestaurantResource {
-        return tryToExecute<RestaurantResource>(
+    override suspend fun getRestaurantInfo(locale: Locale, restaurantId: String): Restaurant {
+        return tryToExecute<Restaurant>(
             APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
@@ -73,8 +73,8 @@ class RestaurantGateway(
 
     @OptIn(InternalAPI::class)
     override suspend fun updateRestaurant(
-        restaurant: RestaurantResource, isAdmin: Boolean, locale: Locale
-    ): RestaurantResource {
+        restaurant: Restaurant, isAdmin: Boolean, locale: Locale
+    ): Restaurant {
         return tryToExecute(
             api = APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
@@ -84,15 +84,15 @@ class RestaurantGateway(
             if (isAdmin) {
                 put("/restaurant") {
                     body = Json.encodeToString(
-                        RestaurantResource.serializer(),
+                        Restaurant.serializer(),
                         restaurant
                     )
                 }
             } else {
                 put("/restaurant/details") {
                     body = Json.encodeToString(
-                        RestaurantResource.serializer(),
-                        RestaurantResource(
+                        Restaurant.serializer(),
+                        Restaurant(
                             id = restaurant.id,
                             ownerId = restaurant.ownerId,
                             name = restaurant.name,
@@ -110,7 +110,7 @@ class RestaurantGateway(
 
 
     override suspend fun getRestaurants(page: Int, limit: Int, locale: Locale) =
-        tryToExecute<BasePaginationResponseDto<RestaurantResource>>(
+        tryToExecute<BasePaginationResponseDto<Restaurant>>(
             APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
@@ -122,7 +122,7 @@ class RestaurantGateway(
             }
         }
 
-    override suspend fun getRestaurantsByOwnerId(ownerId: String, locale: Locale): List<RestaurantResource> {
+    override suspend fun getRestaurantsByOwnerId(ownerId: String, locale: Locale): List<Restaurant> {
         return tryToExecute(
             api = APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
@@ -134,7 +134,7 @@ class RestaurantGateway(
     }
 
     @OptIn(InternalAPI::class)
-    override suspend fun addRestaurant(restaurant: RestaurantResource, locale: Locale): RestaurantResource {
+    override suspend fun addRestaurant(restaurant: Restaurant, locale: Locale): Restaurant {
         return tryToExecute(
             api = APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
@@ -143,7 +143,7 @@ class RestaurantGateway(
         ) {
             post("/restaurant") {
                 body = Json.encodeToString(
-                    RestaurantResource.serializer(),
+                    Restaurant.serializer(),
                     restaurant
                 )
             }
@@ -162,7 +162,7 @@ class RestaurantGateway(
 
     //region meal
     @OptIn(InternalAPI::class)
-    override suspend fun addMeal(meal: MealResource, locale: Locale): MealResource {
+    override suspend fun addMeal(meal: Meal, locale: Locale): Meal {
         return tryToExecute(
             api = APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
@@ -171,8 +171,8 @@ class RestaurantGateway(
         ) {
             post("/meal") {
                 body = Json.encodeToString(
-                    MealResource.serializer(),
-                    MealResource(
+                    Meal.serializer(),
+                    Meal(
                         restaurantId = meal.restaurantId,
                         name = meal.name,
                         description = meal.description,
@@ -185,7 +185,7 @@ class RestaurantGateway(
     }
 
     @OptIn(InternalAPI::class)
-    override suspend fun updateMeal(meal: MealResource, locale: Locale): MealResource {
+    override suspend fun updateMeal(meal: Meal, locale: Locale): Meal {
         return tryToExecute(
             api = APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
@@ -194,8 +194,8 @@ class RestaurantGateway(
         ) {
             put("/meal") {
                 body = Json.encodeToString(
-                    MealResource.serializer(),
-                    MealResource(
+                    Meal.serializer(),
+                    Meal(
                         restaurantId = meal.restaurantId,
                         name = meal.name,
                         description = meal.description,
@@ -209,7 +209,7 @@ class RestaurantGateway(
 
     override suspend fun getMealsByRestaurantId(
         restaurantId: String, page: Int, limit: Int, locale: Locale
-    ): List<MealResource> {
+    ): List<Meal> {
         return tryToExecute(
             api = APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
@@ -223,7 +223,7 @@ class RestaurantGateway(
         }
     }
 
-    override suspend fun getMealsByCuisineId(cuisineId: String, locale: Locale): List<MealResource> {
+    override suspend fun getMealsByCuisineId(cuisineId: String, locale: Locale): List<Meal> {
         return tryToExecute(
             api = APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
@@ -238,21 +238,21 @@ class RestaurantGateway(
 
     //region cuisine
     @OptIn(InternalAPI::class)
-    override suspend fun addCuisine(name: String, locale: Locale): CuisineResource {
-        return tryToExecute<CuisineResource>(
+    override suspend fun addCuisine(name: String, locale: Locale): Cuisine {
+        return tryToExecute<Cuisine>(
             APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
         ) {
             post("/cuisine") {
-                body = Json.encodeToString(CuisineResource.serializer(), CuisineResource(name = name))
+                body = Json.encodeToString(Cuisine.serializer(), Cuisine(name = name))
             }
         }
     }
 
-    override suspend fun getCuisines(locale: Locale): List<CuisineResource> {
-        return tryToExecute<List<CuisineResource>>(
+    override suspend fun getCuisines(locale: Locale): List<Cuisine> {
+        return tryToExecute<List<Cuisine>>(
             APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
