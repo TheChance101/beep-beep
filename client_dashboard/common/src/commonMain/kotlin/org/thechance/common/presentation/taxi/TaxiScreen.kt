@@ -61,63 +61,12 @@ class TaxiScreen :
         state: TaxiUiState,
         listener: TaxiInteractionListener
     ) {
-
-//        TaxiDialog(
-//            isVisible = state.isAddNewTaxiDialogVisible,
-//            context = DialogContext.ADD_TAXI,
-//            actions = listener,
-//            state = state.newTaxiInfo,
-//            onCancelClicked = {},
-//        )
-//        AddTaxiDialog(
-//            modifier = Modifier,
-//            onTaxiPlateNumberChange = listener::onTaxiPlateNumberChange,
-//            onCancelCreateTaxiClicked = listener::onCancelCreateTaxiClicked,
-//            isVisible = state.isAddNewTaxiDialogVisible,
-//            onDriverUserNamChange = listener::onDriverUserNamChange,
-//            onCarModelChange = listener::onCarModelChanged,
-//            onCarColorSelected = listener::onCarColorSelected,
-//            onSeatsSelected = listener::onSeatSelected,
-//            state = state.newTaxiInfo,
-//            onCreateTaxiClicked = listener::onCreateTaxiClicked
-//        )
-//        EditTaxiDialog(
-//            modifier = Modifier,
-//            onTaxiPlateNumberChange = listener::onTaxiPlateNumberChange,
-//            onCancelClicked = listener::onCancelClicked,
-//            isVisible = state.isEditTaxiDialogVisible,
-//            onDriverUserNamChange = listener::onDriverUserNamChange,
-//            onCarModelChange = listener::onCarModelChanged,
-//            onCarColorSelected = listener::onCarColorSelected,
-//            onSeatsSelected = listener::onSeatSelected,
-//            state = state.newTaxiInfo,
-//            onSaveTaxiClicked = listener::onSaveClicked
-//        )
-//        TaxiDialogBuilder(
-//            isVisible = state.isAddNewTaxiDialogVisible,
-//            onCancelClicked = listener::onCancelClicked,
-//            title = Resources.Strings.create,
-//            state = state.newTaxiInfo,
-//            actions = listener,
-//            onSaveClicked = listener::onCreateTaxiClicked,
-//        ) .build()
-//
-//        TaxiDialogBuilder(
-//            isVisible = state.isEditTaxiDialogVisible,
-//            onCancelClicked = listener::onCancelClicked,
-//            title = Resources.Strings.save,
-//            state = state.newTaxiInfo,
-//            actions = listener,
-//            onSaveClicked = listener::onSaveClicked,
-//        ).build()
-//
         TaxiDialog(
             isVisible = state.isAddNewTaxiDialogVisible,
-            actions = listener,
+            listener = listener,
             state = state.newTaxiInfo,
             isEditMode = state.isEditMode
         )
-
         Box(
             modifier = Modifier.background(Theme.colors.surface).fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
