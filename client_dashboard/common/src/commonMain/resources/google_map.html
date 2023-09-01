@@ -12,6 +12,7 @@
             width: 100%;
         }
 
+
     </style>
 </head>
 <body>
@@ -27,20 +28,22 @@ var svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="49"
                          '</g>' +
                          '</svg>';
 
-       function updateLocation(lat, lng) {
-        initMap(lat,lng)
-        }
-
-        function initMap(lat,lng) {
+    var minZoomLevel = 10;
+    var maxZoomLevel = 18;
+        function initMap(lat, lng) {
                     var userLocation = {
                         lat: lat,
-                        lng: lng,
+                        lng: lng
                     };
                 var map = new google.maps.Map(document.getElementById('map'), {
                 center: userLocation,
-                zoom: 12,
+                zoom: 15,
                 mapId:'cb5e6246d7cd13cf',
             });
+             map.addListener('zoom_changed', function() {
+         if (map.getZoom() < minZoomLevel) map.setZoom(minZoomLevel);
+         else if( map.getZoom() > maxZoomLevel ) map.setZoom(maxZoomLevel);
+        });
                 var marker = new google.maps.Marker({
                 position: userLocation,
                 map: map,
@@ -57,24 +60,24 @@ var svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="49"
                     });
                      map.addListener('click', function(event) {
                 marker.setPosition(event.latLng);
-                   alert(event.latLng);
+                   alert(marker.position.toString());
                     infoWindow.setContent(marker.position.toString())
                      infoWindow.open(map, marker);
             });
               marker.addListener('dragend', function(event) {
-                  alert(marker.position);
+                  alert(marker.position.toString());
                   infoWindow.setContent(marker.position.toString());
                     });
                     marker.addListener('click', function() {
                         infoWindow.setContent(marker.position.toString());
                         infoWindow.open(map, marker);
-                        alert(marker.position);
+                        alert(marker.position.toString());
                     });
         }
 
+
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1kFbtDfzI3bXkfkCEjb0LKtC8PTz-YZU"
-        defer
-></script>
+        async defer></script>
 </body>
 </html>

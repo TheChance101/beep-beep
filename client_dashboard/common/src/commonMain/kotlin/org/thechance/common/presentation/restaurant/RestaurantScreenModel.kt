@@ -22,6 +22,8 @@ class RestaurantScreenModel(
             null,
             null
         )
+        if (state.value.newRestaurantInfoUiState.lat.isEmpty())
+            getCurrentLocation()
     }
 
     private fun getRestaurants(
@@ -175,8 +177,6 @@ class RestaurantScreenModel(
 
     override fun onAddNewRestaurantClicked() {
         updateState { it.copy(isNewRestaurantInfoDialogVisible = true) }
-        if (state.value.newRestaurantInfoUiState.lat.isEmpty())
-            getCurrentLocation()
     }
 
     private fun getCurrentLocation() {

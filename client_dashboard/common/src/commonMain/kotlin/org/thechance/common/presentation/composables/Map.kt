@@ -21,10 +21,6 @@ private fun createWebViewComponent(
         val webView = WebView()
         val webEngine = webView.engine
         val scene = Scene(webView)
-        webEngine.loadWorker.stateProperty().addListener { _, _, newState ->
-            if (newState == Worker.State.SUCCEEDED)
-                webEngine.executeScript("updateLocation($lat, $lng)")
-        }
         jfxPanel.scene = scene
         webEngine.loadContent(getResourceContent(content))
         webEngine.javaScriptEnabledProperty().set(true)
@@ -33,6 +29,15 @@ private fun createWebViewComponent(
         }
         webEngine.setOnAlert { alert ->
             onAlert(alert.data.toString())
+        }
+        webEngine.loadWorker.stateProperty().addListener { _, _, newState ->
+            if (newState == Worker.State.SUCCEEDED) {
+                try {
+                    webEngine.executeScript("initMap($lat, $lng);")
+                } catch (e: Exception) {
+                    println(e.message)
+                }
+            }
         }
     }
     return jfxPanel
@@ -56,7 +61,12 @@ fun mapFromWebView(
         val webViewPanel = createWebViewComponent(
             content = GOOGLE_MAP_PATH,
             onError = { println(it) },
-            onAlert = { onGetLocation(it) },
+            onAlert = {
+                onGetLocation(
+                    it.replace("(", "")
+                        .replace(")", "")
+                )
+            },
             lat = lat,
             lng = lng,
         )

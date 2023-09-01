@@ -38,7 +38,7 @@ fun NewRestaurantInfoDialog(
         onCreateClicked = listener::onCreateNewRestaurantClicked,
         onLocationChange = listener::onLocationChange,
         lat = state.newRestaurantInfoUiState.lat,
-        lng = state.newRestaurantInfoUiState.lat,
+        lng = state.newRestaurantInfoUiState.lng,
     )
 }
 
