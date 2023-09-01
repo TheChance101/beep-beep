@@ -148,7 +148,7 @@ object OverviewScreen :
                                         overflow = TextOverflow.Ellipsis,
                                     )
                                     Text(
-                                        text = user.role,
+                                        text = getPermission(user.permission),
                                         style = Theme.typography.body.copy(color = Theme.colors.contentTertiary)
                                     )
                                 }
@@ -240,4 +240,15 @@ object OverviewScreen :
         }
     }
 
+    @Composable
+    private fun getPermission(permission: PermissionUiState): String {
+        return when (permission) {
+            PermissionUiState.RESTAURANT -> Resources.Strings.restaurant
+            PermissionUiState.DRIVER -> Resources.Strings.deliveryPermission
+            PermissionUiState.END_USER -> Resources.Strings.endUserPermission
+            PermissionUiState.SUPPORT -> Resources.Strings.supportPermission
+            PermissionUiState.DELIVERY -> Resources.Strings.deliveryPermission
+            PermissionUiState.ADMIN -> Resources.Strings.adminPermission
+        }
+    }
 }
