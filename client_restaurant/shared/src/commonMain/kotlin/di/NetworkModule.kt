@@ -11,6 +11,7 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.header
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 
 val NetworkModule = module {
@@ -26,11 +27,16 @@ val NetworkModule = module {
             defaultRequest {
                 header("Content-Type", "application/json")
                 header("Accept-Language", "en")
-                url("http://0.0.0.0:8003")
+                url("http://192.168.1.9:8003")
             }
 
             install(ContentNegotiation) {
-                json()
+                json(
+                    Json {
+                        isLenient = true
+                        ignoreUnknownKeys = true
+                    }
+                )
             }
 
         }

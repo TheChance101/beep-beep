@@ -69,9 +69,10 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
         function: suspend () -> Unit
     ): Job {
         return inScope.launch(dispatcher) {
-            function()
             try {
+                function()
             } catch (exception: Exception) {
+                println("darkennes ${exception.message.toString()}")
                 when (exception) {
                     is NoInternetException -> onError(ErrorState.NoInternet)
                     is PermissionDenied -> onError(ErrorState.HasNoPermission)
