@@ -14,12 +14,17 @@ import java.util.*
 
 
 @Single
-class TaxiService(private val client: HttpClient, private val errorHandler: ErrorHandler) {
+class TaxiService(
+    private val client: HttpClient,
+    private val attributes: Attributes,
+    private val errorHandler: ErrorHandler
+) {
 
 
-     suspend fun getAllTaxi(locale: Locale, page: Int, limit: Int): PaginationResponse<TaxiDto> {
+    suspend fun getAllTaxi(locale: Locale, page: Int, limit: Int): PaginationResponse<TaxiDto> {
         return client.tryToExecute(
             api = APIs.TAXI_API,
+            attributes = attributes,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(
                     errorCodes,
@@ -34,12 +39,13 @@ class TaxiService(private val client: HttpClient, private val errorHandler: Erro
         }
     }
 
-     suspend fun getTaxiById(
+    suspend fun getTaxiById(
         id: String,
         locale: Locale
     ): TaxiDto {
         return client.tryToExecute(
             api = APIs.TAXI_API,
+            attributes = attributes,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
@@ -49,12 +55,13 @@ class TaxiService(private val client: HttpClient, private val errorHandler: Erro
     }
 
     @OptIn(InternalAPI::class)
-     suspend fun createTaxi(
+    suspend fun createTaxi(
         taxiDto: TaxiDto,
         locale: Locale
     ): TaxiDto {
         return client.tryToExecute(
             api = APIs.TAXI_API,
+            attributes = attributes,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
@@ -67,13 +74,14 @@ class TaxiService(private val client: HttpClient, private val errorHandler: Erro
     }
 
     @OptIn(InternalAPI::class)
-     suspend fun editTaxi(
+    suspend fun editTaxi(
         id: String,
         taxiDto: TaxiDto,
         locale: Locale
     ): TaxiDto {
         return client.tryToExecute(
             api = APIs.TAXI_API,
+            attributes = attributes,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
@@ -84,12 +92,13 @@ class TaxiService(private val client: HttpClient, private val errorHandler: Erro
         }
     }
 
-     suspend fun deleteTaxi(
+    suspend fun deleteTaxi(
         id: String,
         locale: Locale
     ): TaxiDto {
         return client.tryToExecute(
             api = APIs.TAXI_API,
+            attributes = attributes,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
