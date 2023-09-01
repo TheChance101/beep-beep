@@ -6,5 +6,6 @@ data class DrawableResources(
     val backgroundPattern: String = "background_pattern.png",
 )
 
+
 val BpDrawableDarkResources = DrawableResources(
 )
