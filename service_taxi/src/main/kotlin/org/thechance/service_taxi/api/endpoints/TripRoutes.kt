@@ -1,16 +1,12 @@
 package org.thechance.service_taxi.api.endpoints
 
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.call
-import io.ktor.server.request.receive
-import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.delete
-import io.ktor.server.routing.get
-import io.ktor.server.routing.post
-import io.ktor.server.routing.put
-import io.ktor.server.routing.route
+import io.ktor.http.*
+import io.ktor.server.application.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
+import org.thechance.service_taxi.api.dto.BasePaginationResponse
 import org.thechance.service_taxi.api.dto.trip.TripDto
 import org.thechance.service_taxi.api.dto.trip.toDto
 import org.thechance.service_taxi.api.dto.trip.toEntity
@@ -42,16 +38,18 @@ fun Route.tripRoutes() {
             val id = call.parameters["driverId"] ?: throw MissingParameterException
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 20
-            val result = driverTripsManagementUseCase.getTripsByDriverId(id, page, limit)
-            call.respond(HttpStatusCode.OK, result.toDto())
+            val result = driverTripsManagementUseCase.getTripsByDriverId(id, page, limit).toDto()
+            val total = driverTripsManagementUseCase.getNumberOfTripsByDriverId(id)
+            call.respond(HttpStatusCode.OK, BasePaginationResponse(result,total))
         }
 
         get("/client/{clientId}") {
             val id = call.parameters["clientId"] ?: throw MissingParameterException
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 20
-            val result = clientTripsManagementUseCase.getTripsByClientId(id, page, limit)
-            call.respond(HttpStatusCode.OK, result.toDto())
+            val result = clientTripsManagementUseCase.getTripsByClientId(id, page, limit).toDto()
+            val total = clientTripsManagementUseCase.getNumberOfTripsByClientId(id)
+            call.respond(HttpStatusCode.OK, BasePaginationResponse(result,total))
         }
 
         post {

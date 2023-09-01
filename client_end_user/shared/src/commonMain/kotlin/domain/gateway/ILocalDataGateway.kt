@@ -1,4 +1,3 @@
 package domain.gateway
 
-interface ILocalDataGateway {
-}
+interface ILocalDataGateway {}

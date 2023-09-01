@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserTokensRemoteDto(
-    val accessTokenExpirationDate: Long,
-    val refreshTokenExpirationDate: Long,
-    val accessToken: String,
-    val refreshToken: String
+    val accessTokenExpirationDate: Long? = null,
+    val refreshTokenExpirationDate: Long? = null,
+    val accessToken: String? = null,
+    val refreshToken: String? = null
 )

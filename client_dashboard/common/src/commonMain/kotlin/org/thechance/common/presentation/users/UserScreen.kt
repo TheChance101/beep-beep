@@ -36,9 +36,8 @@ import org.thechance.common.presentation.util.kms
 
 sealed interface UserUiEffect
 
-class UserScreen :
-    BaseScreen<UserScreenModel, UserUiEffect,
-            UserScreenUiState, UserScreenInteractionListener>() {
+class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, UserScreenInteractionListener>() {
+
     override fun onEffect(effect: UserUiEffect, navigator: Navigator) {
         TODO("Not yet implemented")
     }
@@ -52,7 +51,7 @@ class UserScreen :
             state = state,
             pageListener = listener,
             editMenuListener = listener,
-            onDeleteUserMenuItemClicked = listener::onDeleteUserMenu,
+            onDeleteUserMenuItemClicked = listener::onDeleteUserMenuItemClicked,
             onSearchInputChanged = listener::onSearchInputChange,
             filterMenuListener = listener
         )
@@ -76,9 +75,9 @@ class UserScreen :
             visible = state.permissionsDialog.show,
             allPermissions = state.allPermissions,
             selectedPermissions = state.permissionsDialog.permissions,
-            onUserPermissionClicked = editMenuListener::onEditUserMenuPermissionClick,
-            onSaveUserPermissions = editMenuListener::onSaveEditUserMenu,
-            onCancelUserPermissionsDialog = editMenuListener::onCancelEditUserMenu,
+            onUserPermissionClicked = editMenuListener::onUserPermissionClick,
+            onSaveUserPermissions = editMenuListener::onSaveUserPermissionsDialog,
+            onCancelUserPermissionsDialog = editMenuListener::onCancelUserPermissionsDialog,
         )
         Box(
             modifier = Modifier.background(Theme.colors.surface).fillMaxSize(),
@@ -96,6 +95,7 @@ class UserScreen :
                     onSearchInputChanged = onSearchInputChanged,
                     onFilterMenuClicked = filterMenuListener::showFilterMenu,
                     onFilterMenuDismiss = filterMenuListener::hideFilterMenu,
+                    onFilterSaved = filterMenuListener::onFilterMenuSaveButtonClicked,
                 )
 
                 UsersTable(
@@ -314,6 +314,7 @@ class UserScreen :
             }
         }
     }
+
     //endregion
     @Composable
     private fun UsersFilterDropdownMenu(
@@ -325,6 +326,7 @@ class UserScreen :
         onFilterCountryClicked: (UserScreenUiState.CountryUiState) -> Unit,
         onFilterMenuClicked: () -> Unit,
         onFilterMenuDismiss: () -> Unit,
+        onFilterSaved: () -> Unit
     ) {
         Row {
             BpIconButton(
@@ -416,9 +418,9 @@ class UserScreen :
                                 )
                                 BpOutlinedButton(
                                     title = Resources.Strings.save,
-                                    onClick = onFilterMenuDismiss,
+                                    onClick = onFilterSaved,
                                     shape = RoundedCornerShape(Theme.radius.small),
-                                    modifier = Modifier.height(50.kms).weight(1f)
+                                    modifier = Modifier.weight(1f)
                                 )
                             }
                         }
@@ -440,6 +442,7 @@ class UserScreen :
         onSearchInputChanged: (String) -> Unit,
         onFilterMenuClicked: () -> Unit,
         onFilterMenuDismiss: () -> Unit,
+        onFilterSaved: () -> Unit,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.kms),
@@ -464,6 +467,7 @@ class UserScreen :
                 onFilterCountryClicked = onFilterCountryClicked,
                 onFilterMenuClicked = onFilterMenuClicked,
                 onFilterMenuDismiss = onFilterMenuDismiss,
+                onFilterSaved = onFilterSaved
             )
         }
     }

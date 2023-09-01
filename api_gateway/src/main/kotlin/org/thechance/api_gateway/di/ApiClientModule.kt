@@ -13,7 +13,6 @@ import io.ktor.util.*
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
-import org.thechance.api_gateway.util.APIs
 import kotlin.time.Duration.Companion.seconds
 
 @Module
@@ -41,25 +40,7 @@ class ApiClientModule {
 
             defaultRequest {
                 header("Content-Type", "application/json")
-                when (clientAttributes[AttributeKey<String>("API")]) {
-                    APIs.IDENTITY_API.value -> {
-                        url("http://127.0.0.1:8082")
-//                        url("http://0.0.0.0:8082")
-                    }
-
-                    APIs.RESTAURANT_API.value -> {
-                        url("http://127.0.0.1:8080")
-//                        url("http://0.0.0.0:8083")
-                    }
-
-                    APIs.TAXI_API.value -> {
-                        url("http://127.0.0.3:8080")
-                    }
-
-                    APIs.NOTIFICATION_API.value -> {
-                        url("http://127.0.0.4:8080")
-                    }
-                }
+                url(System.getenv(clientAttributes[AttributeKey("API")]))
             }
 
             install(ContentNegotiation) {

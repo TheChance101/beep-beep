@@ -199,7 +199,7 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
     }
 
     override suspend fun getTotalNumberOfRestaurant(): Long {
-        return container.restaurantCollection.countDocuments()
+        return container.restaurantCollection.countDocuments(RestaurantCollection::isDeleted eq false)
     }
     //endregion
 

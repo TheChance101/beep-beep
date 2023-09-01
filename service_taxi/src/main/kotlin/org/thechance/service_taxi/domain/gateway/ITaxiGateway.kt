@@ -23,5 +23,7 @@ interface ITaxiGateway {
     suspend fun approveTrip(tripId: String, taxiId: String, driverId: String): Trip?
     suspend fun finishTrip(tripId: String, driverId: String): Trip?
     suspend fun rateTrip(tripId: String, rate: Double): Trip?
+    suspend fun getNumberOfTripsByDriverId(id: String): Long
+    suspend fun getNumberOfTripsByClientId(id: String): Long
     //endregion
 }

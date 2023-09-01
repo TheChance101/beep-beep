@@ -1,65 +1,61 @@
 package org.thechance.common.presentation.restaurant
 
+import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Location
 import org.thechance.common.domain.entity.Restaurant
-import org.thechance.common.domain.usecase.FilterRestaurantsUseCase
 import org.thechance.common.domain.usecase.IHandleLocationUseCase
 import org.thechance.common.domain.usecase.IManageRestaurantUseCase
-import org.thechance.common.domain.usecase.SearchFilterRestaurantsUseCase
-import org.thechance.common.domain.usecase.SearchRestaurantsByRestaurantNameUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
-import kotlin.math.ceil
 
 
 class RestaurantScreenModel(
     private val manageRestaurant: IManageRestaurantUseCase,
     private val handleLocation: IHandleLocationUseCase,
-    private val searchRestaurants: SearchRestaurantsByRestaurantNameUseCase,
-    private val searchFilterRestaurants: SearchFilterRestaurantsUseCase,
-    private val filterRestaurants: FilterRestaurantsUseCase,
 ) : BaseScreenModel<RestaurantUiState, RestaurantUIEffect>(RestaurantUiState()),
     RestaurantInteractionListener {
 
     init {
-        getRestaurants()
+        getRestaurants(
+            state.value.selectedPageNumber,
+            state.value.numberOfRestaurantsInPage,
+            state.value.search,
+            null,
+            null
+        )
     }
 
-    private fun getRestaurants() {
-        tryToExecute(manageRestaurant::getRestaurant, ::onGetRestaurantSuccessfully, ::onError)
+    private fun getRestaurants(
+        pageNumber: Int,
+        numberOfRestaurantsInPage: Int,
+        restaurantName: String,
+        rating: Double?,
+        priceLevel: Int?
+    ) {
+        tryToExecute(
+            {
+                manageRestaurant.getRestaurant(
+                    pageNumber,
+                    numberOfRestaurantsInPage,
+                    restaurantName,
+                    rating,
+                    priceLevel
+                )
+            },
+            ::onGetRestaurantSuccessfully,
+            ::onError
+        )
     }
 
-    private fun onGetRestaurantSuccessfully(restaurant: List<Restaurant>) {
+    private fun onGetRestaurantSuccessfully(restaurant: DataWrapper<Restaurant>) {
         updateState {
             it.copy(
-                restaurants = restaurant.toUiState(),
+                restaurants = restaurant.result.toUiState(),
                 isLoading = false,
-                numberOfRestaurants = restaurant.size,
-                maxPageCount = ceil(restaurant.size.toDouble() / it.numberOfItemsInPage).toInt()
+                numberOfRestaurants = restaurant.numberOfResult,
+                maxPageCount = restaurant.totalPages
             )
         }
-    }
-
-    private fun searchRestaurants(restaurantName: String) {
-        tryToExecute(
-            { searchRestaurants.invoke(restaurantName) }, ::onGetRestaurantSuccessfully, ::onError
-        )
-    }
-
-    private fun filterRestaurants(rating: Double, priceLevel: Int) {
-        tryToExecute(
-            { filterRestaurants.invoke(rating, priceLevel) },
-            ::onGetRestaurantSuccessfully,
-            ::onError
-        )
-    }
-
-    private fun searchFilterRestaurants(restaurantName: String, rating: Double, priceLevel: Int) {
-        tryToExecute(
-            { searchFilterRestaurants.invoke(restaurantName, rating, priceLevel) },
-            ::onGetRestaurantSuccessfully,
-            ::onError
-        )
     }
 
     private fun onError(error: ErrorState) {
@@ -68,59 +64,114 @@ class RestaurantScreenModel(
 
 
     override fun onSaveFilterRestaurantsClicked(rating: Double, priceLevel: Int) {
-        updateState { it.copy(isFiltered = true) }
-        filterRestaurants(rating = rating, priceLevel = priceLevel)
+        updateState {
+            it.copy(
+                restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
+                    isFiltered = true
+                )
+            )
+        }
+        getRestaurants(
+            pageNumber = 1,
+            numberOfRestaurantsInPage = state.value.numberOfRestaurantsInPage,
+            rating = rating,
+            priceLevel = priceLevel,
+            restaurantName = state.value.search
+        )
     }
 
     override fun onCancelFilterRestaurantsClicked() {
-        updateState { it.copy(filterRating = 0.0, filterPriceLevel = 0, isFiltered = false) }
-        getRestaurants()
+        updateState {
+            it.copy(
+                restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
+                    filterRating = 0.0,
+                    filterPriceLevel = 1,
+                    isFiltered = false
+                )
+            )
+        }
+        getRestaurants(
+            pageNumber = 1,
+            numberOfRestaurantsInPage = state.value.numberOfRestaurantsInPage,
+            rating = null,
+            priceLevel = null,
+            restaurantName = state.value.search
+        )
     }
 
 
     override fun onSearchChange(restaurantName: String) {
         updateState { it.copy(search = restaurantName) }
-        if (state.value.isFiltered) searchFilterRestaurants(
-            restaurantName = restaurantName,
-            rating = state.value.filterRating,
-            priceLevel = state.value.filterPriceLevel
-        ) else searchRestaurants(restaurantName)
+        getRestaurants(
+            pageNumber = 1,
+            numberOfRestaurantsInPage = state.value.numberOfRestaurantsInPage,
+            rating = if (state.value.restaurantFilterDropdownMenuUiState.isFiltered) state.value.restaurantFilterDropdownMenuUiState.filterRating else null,
+            priceLevel = if (state.value.restaurantFilterDropdownMenuUiState.isFiltered) state.value.restaurantFilterDropdownMenuUiState.filterPriceLevel else null,
+            restaurantName = state.value.search
+        )
 
     }
 
     override fun onClickDropDownMenu() {
-        updateState { it.copy(isFilterDropdownMenuExpanded = true) }
+        updateState {
+            it.copy(
+                restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
+                    isFilterDropdownMenuExpanded = true
+                )
+            )
+        }
     }
 
     override fun onDismissDropDownMenu() {
-        updateState { it.copy(isFilterDropdownMenuExpanded = false) }
+        updateState {
+            it.copy(
+                restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
+                    isFilterDropdownMenuExpanded = false
+                )
+            )
+        }
     }
 
     override fun onClickFilterRatingBar(rating: Double) {
-        updateState { it.copy(filterRating = rating) }
+        updateState {
+            it.copy(
+                restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
+                    filterRating = rating
+                )
+            )
+        }
     }
 
     override fun onClickFilterPriceBar(priceLevel: Int) {
-        updateState { it.copy(filterPriceLevel = priceLevel) }
+        updateState {
+            it.copy(
+                restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
+                    filterPriceLevel = priceLevel
+                )
+            )
+        }
     }
 
     override fun onPageClicked(pageNumber: Int) {
         updateState { it.copy(selectedPageNumber = pageNumber) }
+        getRestaurants(
+            pageNumber = pageNumber,
+            numberOfRestaurantsInPage = state.value.numberOfRestaurantsInPage,
+            rating = if (state.value.restaurantFilterDropdownMenuUiState.isFiltered) state.value.restaurantFilterDropdownMenuUiState.filterRating else null,
+            priceLevel = if (state.value.restaurantFilterDropdownMenuUiState.isFiltered) state.value.restaurantFilterDropdownMenuUiState.filterPriceLevel else null,
+            restaurantName = state.value.search
+        )
     }
 
-    override fun onItemPerPageChange(numberOfItemsInPage: Int) {
-        val numberOfItems = when {
-            numberOfItemsInPage < 1 -> 1
-            numberOfItemsInPage > 100 -> 100
-            else -> numberOfItemsInPage
-
-        }
-        updateState {
-            it.copy(
-                numberOfItemsInPage = numberOfItems,
-                maxPageCount = ceil(it.numberOfRestaurants.toDouble() / numberOfItems).toInt()
-            )
-        }
+    override fun onItemPerPageChange(numberOfRestaurantsInPage: Int) {
+        updateState { it.copy(numberOfRestaurantsInPage = numberOfRestaurantsInPage) }
+        getRestaurants(
+            pageNumber = state.value.selectedPageNumber,
+            numberOfRestaurantsInPage = numberOfRestaurantsInPage,
+            rating = if (state.value.restaurantFilterDropdownMenuUiState.isFiltered) state.value.restaurantFilterDropdownMenuUiState.filterRating else null,
+            priceLevel = if (state.value.restaurantFilterDropdownMenuUiState.isFiltered) state.value.restaurantFilterDropdownMenuUiState.filterPriceLevel else null,
+            restaurantName = state.value.search
+        )
     }
 
     override fun onAddNewRestaurantClicked() {
