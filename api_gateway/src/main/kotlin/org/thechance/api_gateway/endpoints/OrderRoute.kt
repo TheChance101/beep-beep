@@ -9,7 +9,6 @@ import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.endpoints.utils.*
 import org.thechance.api_gateway.util.Role
-import java.util.*
 
 fun Route.orderRoutes() {
 
@@ -21,8 +20,8 @@ fun Route.orderRoutes() {
 
             webSocket("/{restaurantId}") {
                 val restaurantId = call.parameters["restaurantId"]?.trim().orEmpty()
-                val (language, countryCode) = extractLocalizationHeaderFromWebSocket()
-                val orders = restaurantService.restaurantOrders(restaurantId, Locale(language, countryCode))
+                val language = extractLocalizationHeaderFromWebSocket()
+                val orders = restaurantService.restaurantOrders(restaurantId, language)
                 webSocketServerHandler.sessions[restaurantId] = this
                 webSocketServerHandler.sessions[restaurantId]?.let {
                     webSocketServerHandler.tryToCollectFormWebSocket(
@@ -34,8 +33,8 @@ fun Route.orderRoutes() {
 
             get("/{restaurantId}") {
                 val restaurantId = call.parameters["restaurantId"]?.trim().orEmpty()
-                val (language, countryCode) = extractLocalizationHeader()
-                val result = restaurantService.getActiveOrders(restaurantId, Locale(language, countryCode))
+                val language = extractLocalizationHeader()
+                val result = restaurantService.getActiveOrders(restaurantId, language)
                 respondWithResult(HttpStatusCode.OK, result)
             }
 
@@ -44,12 +43,12 @@ fun Route.orderRoutes() {
                 val id = call.parameters["id"]?.trim().toString()
                 val page = call.parameters["page"]?.trim()?.toInt() ?: 1
                 val limit = call.parameters["limit"]?.trim()?.toInt() ?: 10
-                val (language, countryCode) = extractLocalizationHeader()
+                val language = extractLocalizationHeader()
                 val result = restaurantService.getOrdersHistory(
                     restaurantId = id,
                     page = page,
                     limit = limit,
-                    locale = Locale(language, countryCode)
+                    languageCode = language
                 )
                 respondWithResult(HttpStatusCode.OK, result)
             }
@@ -57,11 +56,11 @@ fun Route.orderRoutes() {
             get("/count-by-days-back") {
                 val id = call.parameters["restaurantId"]?.trim().toString()
                 val daysBack = call.parameters["daysBack"]?.trim()?.toInt() ?: 7
-                val (language, countryCode) = extractLocalizationHeader()
+                val language = extractLocalizationHeader()
                 val result = restaurantService.getOrdersCountByDaysBefore(
                     restaurantId = id,
                     daysBack = daysBack,
-                    locale = Locale(language, countryCode)
+                    languageCode = language
                 )
                 respondWithResult(HttpStatusCode.OK, result)
             }
@@ -69,11 +68,11 @@ fun Route.orderRoutes() {
             get("/revenue-by-days-back") {
                 val id = call.parameters["restaurantId"]?.trim().toString()
                 val daysBack = call.parameters["daysBack"]?.trim()?.toInt() ?: 7
-                val (language, countryCode) = extractLocalizationHeader()
+                val language = extractLocalizationHeader()
                 val result = restaurantService.getOrdersRevenueByDaysBefore(
                     restaurantId = id,
                     daysBack = daysBack,
-                    locale = Locale(language, countryCode)
+                    languageCode = language
                 )
                 respondWithResult(HttpStatusCode.OK, result)
             }
@@ -82,15 +81,15 @@ fun Route.orderRoutes() {
                 val id = call.parameters["id"]?.trim().toString()
                 val params = call.receiveParameters()
                 val status = params["status"]?.trim()?.toInt() ?: 0
-                val (language, countryCode) = extractLocalizationHeader()
-                val result = restaurantService.updateOrderStatus(id, status, Locale(language, countryCode))
+                val language = extractLocalizationHeader()
+                val result = restaurantService.updateOrderStatus(id, status, language)
                 respondWithResult(HttpStatusCode.OK, result)
             }
 
             delete("/{restaurantId}") {
                 val restaurantId = call.parameters["restaurantId"]?.trim().toString()
-                val (language, countryCode) = extractLocalizationHeader()
-                val result = restaurantService.deleteRestaurant(restaurantId, Locale(language, countryCode))
+                val language = extractLocalizationHeader()
+                val result = restaurantService.deleteRestaurant(restaurantId, language)
                 respondWithResult(HttpStatusCode.OK, result)
             }
         }

@@ -4,6 +4,8 @@ import org.koin.core.annotation.Single
 
 @Single
 class EnglishLocalizedMessages : LocalizedMessages {
+
+    // region identity
     override val invalidRequestParameter: String = "Invalid request parameter"
     override val invalidAddressLocation: String = "Invalid address location"
     override val userAlreadyExist: String = "User already exists"
@@ -20,9 +22,13 @@ class EnglishLocalizedMessages : LocalizedMessages {
     override val unknownError: String = "Unknown error `¯\\_(ツ)_/¯`"
     override val userNotFound: String = "User not found"
     override val invalidPermission: String = "Invalid permission"
+    // endregion
+
+    // region taxi
     override val taxiCreatedSuccessfully: String = "Taxi created successfully 🎉"
     override val taxiUpdateSuccessfully: String = "Taxi updated successfully 🎉"
     override val taxiDeleteSuccessfully: String = "Taxi deleted successfully 🎉"
+    // endregion
 
     //region restaurant
     override val restaurantNotFound: String = "Sorry, we could not found this restaurant"

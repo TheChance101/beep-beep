@@ -2,15 +2,14 @@ package org.thechance.api_gateway.data.utils
 
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
-import java.util.*
 
 @Single
 class ErrorHandler(
     private val localizedMessagesFactory: LocalizedMessagesFactory
 ) {
 
-    fun getLocalizedErrorMessage(errorCodes: List<Int>, locale: Locale): Map<Int, String> {
-        val localizedMessages = localizedMessagesFactory.createLocalizedMessages(locale)
+    fun getLocalizedErrorMessage(errorCodes: List<Int>, languageCode: String): Map<Int, String> {
+        val localizedMessages = localizedMessagesFactory.createLocalizedMessages(languageCode)
 
         val errors = mutableMapOf<Int, String>()
 

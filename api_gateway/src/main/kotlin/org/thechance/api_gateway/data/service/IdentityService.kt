@@ -31,13 +31,13 @@ class IdentityService(
 ) {
 
     suspend fun createUser(
-        fullName: String, username: String, password: String, email: String, locale: Locale
+        fullName: String, username: String, password: String, email: String, languageCode: String
     ): UserDto {
         return client.tryToExecute<UserDto>(
             APIs.IDENTITY_API,
             attributes = attributes,
             setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             }
         ) {
             submitForm("/user",
@@ -52,13 +52,13 @@ class IdentityService(
     }
 
     suspend fun loginUser(
-        userName: String, password: String, tokenConfiguration: TokenConfiguration, locale: Locale
+        userName: String, password: String, tokenConfiguration: TokenConfiguration, languageCode: String
     ): UserTokensResponse {
         client.tryToExecute<Boolean>(
             api = APIs.IDENTITY_API,
             attributes = attributes,
             setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             }
         ) {
             submitForm("/user/login",
@@ -73,9 +73,11 @@ class IdentityService(
     }
 
     suspend fun getUsers(
-        page: Int, limit: Int, searchTerm: String, locale: Locale
+        page: Int, limit: Int, searchTerm: String, languageCode: String
     ) = client.tryToExecute<PaginationResponse<UserDto>>(
-        APIs.IDENTITY_API, attributes = attributes,
+        APIs.IDENTITY_API, attributes = attributes, setErrorMessage = { errorCodes ->
+            errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+        }
     ) {
         get("/dashboard/user") {
             parameter("page", page)
@@ -104,12 +106,12 @@ class IdentityService(
             )
         }
 
-    suspend fun deleteUser(userId: String, locale: Locale): Boolean {
+    suspend fun deleteUser(userId: String, languageCode: String): Boolean {
         return client.tryToExecute<Boolean>(
             api = APIs.IDENTITY_API,
             attributes = attributes,
             setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             }) {
             delete("/user/$userId")
         }
