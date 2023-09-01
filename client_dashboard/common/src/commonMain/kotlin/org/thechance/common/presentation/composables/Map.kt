@@ -28,19 +28,12 @@ private fun createWebViewComponent(
         webEngine.setOnAlert { alert ->
             onAlert(alert.data.toString())
         }
-        println("webview:" + webView.toString())
-        println("webview:" + webView.isVisible.toString())
-        println("webengine:" + webEngine.isJavaScriptEnabled.toString())
-        println("webengine:" + webEngine.toString())
-        println("scene height:" + scene.height.toString())
     }
-    println("jfxpanel:" + jfxPanel.isVisible.toString())
-    println("scene:" + jfxPanel.scene.toString())
     return jfxPanel
 }
 
 
-fun webViewFromContent(
+fun mapFromWebView(
     currentLocation: String,
     onGetAddress: (String) -> Unit,
 ): JPanel {
@@ -58,7 +51,6 @@ fun webViewFromContent(
         jPanel.revalidate()
         jPanel.repaint()
     }
-    println("jpanel:" + jPanel.isVisible.toString())
     return jPanel
 }
 

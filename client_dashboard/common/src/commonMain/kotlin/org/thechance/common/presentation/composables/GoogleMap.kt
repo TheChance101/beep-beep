@@ -18,14 +18,11 @@ fun GoogleMap(
     ) {
         SwingPanel(
             factory = {
-                webViewFromContent(
+                mapFromWebView(
                     currentLocation = currentLocation,
                     onGetAddress = onGetAddress
                 )
             },
-            update = {
-                println("Recomposition")
-            }
         )
     }
 }

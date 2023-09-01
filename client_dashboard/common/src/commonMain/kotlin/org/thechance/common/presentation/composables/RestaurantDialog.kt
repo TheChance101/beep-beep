@@ -62,6 +62,7 @@ private fun RestaurantDialog(
         visible = isVisible,
         undecorated = true,
         onCloseRequest = onCancelClicked,
+        resizable = false,
     ) {
         window.minimumSize = Dimension(1176, 664)
         Column(
