@@ -1,7 +1,7 @@
 package org.thechance.service_identity.domain.usecases.validation
 
 import org.koin.core.annotation.Single
-import org.thechance.service_identity.domain.entity.RequestValidationException
+import org.thechance.service_identity.domain.util.RequestValidationException
 import org.thechance.service_identity.domain.util.*
 
 interface IUserInfoValidationUseCase {

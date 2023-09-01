@@ -10,12 +10,12 @@ import org.thechance.common.domain.util.TaxiStatus
 
 fun TaxiDto.toEntity() = Taxi(
     id = id ?: "",
-    plateNumber = plateNumber,
-    color = getCarColor(color),
-    type = type,
-    seats = seats,
+    plateNumber = plateNumber ?: "",
+    color = getCarColor(color ?: 4),
+    type = type ?: "",
+    seats = seats ?: 0,
     status = getTaxiStatus(status ?: 0),
-    username = username,
+    username = username ?: "",
     trips = trips ?: "0",
 )
 
@@ -27,6 +27,8 @@ fun NewTaxiInfo.toDto(): TaxiDto {
         type = carModel,
         seats = seats,
         username = driverUserName,
+        status = null,
+        trips = null
     )
 }
 

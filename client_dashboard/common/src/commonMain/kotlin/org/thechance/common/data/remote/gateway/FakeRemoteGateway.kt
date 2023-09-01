@@ -226,7 +226,7 @@ class FakeRemoteGateway(
                     ownerUsername = "asia",
                     phoneNumber = "0528242165",
                     rating = 2.9,
-                    priceLevel = 1,
+                    priceLevel = 2,
                     workingHours = "09:30 - 21:30"
                 ),
                 RestaurantDto(
@@ -827,6 +827,8 @@ class FakeRemoteGateway(
                 type = taxiDto.type,
                 seats = taxiDto.seats,
                 username = taxiDto.username,
+                status = null,
+                trips = null
             )
         )
         return taxis.last().toEntity()
@@ -869,7 +871,7 @@ class FakeRemoteGateway(
         username: String, page: Int, numberOfTaxis: Int
     ): DataWrapper<Taxi> {
         val taxis = taxis.filter {
-            it.username.startsWith(username, true)
+            it.username?.startsWith(username, true) ?: false
         }.toEntity()
         val startIndex = (page - 1) * numberOfTaxis
         val endIndex = startIndex + numberOfTaxis
@@ -889,7 +891,11 @@ class FakeRemoteGateway(
         }
     }
 
-    override suspend fun filterTaxis(taxi: TaxiFiltration, page: Int, numberOfTaxis: Int): DataWrapper<Taxi> {
+    override suspend fun filterTaxis(
+        taxi: TaxiFiltration,
+        page: Int,
+        numberOfTaxis: Int
+    ): DataWrapper<Taxi> {
         val taxiDto = taxi.toDto()
         val taxisFiltered = taxis.filter {
             it.color == taxiDto.color && it.seats == taxiDto.seats && it.status == taxiDto.status
@@ -901,7 +907,10 @@ class FakeRemoteGateway(
         return try {
             DataWrapperDto(
                 totalPages = numberOfPages,
-                result = taxisFiltered.subList(startIndex, endIndex.coerceAtMost(taxisFiltered.size)),
+                result = taxisFiltered.subList(
+                    startIndex,
+                    endIndex.coerceAtMost(taxisFiltered.size)
+                ),
                 totalResult = taxisFiltered.size
             ).toEntity()
         } catch (e: Exception) {
@@ -916,48 +925,53 @@ class FakeRemoteGateway(
         localGateway.saveTaxiReport(taxiReportFile)
     }
 
-    override suspend fun getRestaurants(): List<Restaurant> {
-        return restaurant.toEntity()
-    }
-
-    override suspend fun searchRestaurantsByRestaurantName(restaurantName: String): List<Restaurant> {
-        return getRestaurants().filter { it.name.startsWith(restaurantName, true) }
-    }
-
-    override suspend fun filterRestaurants(rating: Double, priceLevel: Int): List<Restaurant> {
-        return filterRestaurants(getRestaurants(), rating, priceLevel)
-    }
-
-    override suspend fun searchFilterRestaurants(
+    override suspend fun getRestaurants(
+        pageNumber: Int,
+        numberOfRestaurantsInPage: Int,
         restaurantName: String,
-        rating: Double,
-        priceLevel: Int
-    ): List<Restaurant> {
-        return filterRestaurants(
-            searchRestaurantsByRestaurantName(restaurantName),
-            rating,
-            priceLevel
-        )
+        rating: Double?,
+        priceLevel: Int?
+    ): DataWrapper<Restaurant> {
+        var restaurants = restaurant.toEntity()
+        if (restaurantName.isNotEmpty()) {
+            restaurants = restaurants.filter {
+                it.name.startsWith(
+                    restaurantName,
+                    true
+                )
+            }
+        }
+        if (rating != null && priceLevel != null) {
+            restaurants = restaurants.filter {
+                it.priceLevel == priceLevel &&
+                        when {
+                            rating.rem(1) > 0.89 || rating.rem(1) == 0.0 || rating.rem(1) > 0.5
+                            -> it.rating in floor(rating) - 0.1..0.49 + floor(rating)
+
+                            else -> it.rating in 0.5 + floor(rating)..0.89 + floor(rating)
+                        }
+            }
+        }
+        val startIndex = (pageNumber - 1) * numberOfRestaurantsInPage
+        val endIndex = startIndex + numberOfRestaurantsInPage
+        val numberOfPages = ceil(restaurants.size / (numberOfRestaurantsInPage * 1.0)).toInt()
+        return try {
+            DataWrapperDto(
+                totalPages = numberOfPages,
+                result = restaurants.subList(startIndex, endIndex.coerceAtMost(restaurants.size)),
+                totalResult = restaurants.size
+            ).toEntity()
+        } catch (e: Exception) {
+            DataWrapperDto(
+                totalPages = numberOfPages,
+                result = restaurants,
+                totalResult = restaurants.size
+            ).toEntity()
+        }
     }
 
     override suspend fun loginUser(username: String, password: String): Pair<String, String> {
         return Pair("token", "refreshToken")
-    }
-
-    private fun filterRestaurants(
-        restaurants: List<Restaurant>,
-        rating: Double,
-        priceLevel: Int
-    ): List<Restaurant> {
-        return restaurants.filter {
-            it.priceLevel == priceLevel &&
-                    when {
-                        rating.rem(1) > 0.89 || rating.rem(1) == 0.0 || rating.rem(1) > 0.5
-                        -> it.rating in floor(rating) - 0.1..0.49 + floor(rating)
-
-                        else -> it.rating in 0.5 + floor(rating)..0.89 + floor(rating)
-                    }
-        }
     }
 
     override suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant {
@@ -990,11 +1004,11 @@ class FakeRemoteGateway(
         )
         val columnWidth = listOf(50f, 80f, 80f, 80f, 80f, 80f, 80f, 50f)
 
-        val file = createPDFReport(title, taxis, columnNames, columnWidth) {
+        val file = createPDFReport(title, taxis, columnNames, columnWidth) { taxi ->
             listOf(
-                it.id.toString(), it.username, it.plateNumber, it.type, it.color,
-                it.seats, it.status.toString(), it.trips.toString()
-            )
+                taxi.id.toString(), taxi.username, taxi.plateNumber, taxi.type, taxi.color,
+                taxi.seats, taxi.status.toString(), taxi.trips.toString()
+            ).map { it ?: "" }
         }
         return file
     }

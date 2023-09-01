@@ -9,6 +9,7 @@ import okio.Path.Companion.toPath
 import platform.Foundation.NSCachesDirectory
 import platform.Foundation.NSSearchPathForDirectoriesInDomains
 import platform.Foundation.NSUserDomainMask
+import platform.UIKit.UIViewController
 
 
 actual class PlatformContext(val iosController: ProvidableCompositionLocal<UIViewController>)
