@@ -9,11 +9,7 @@ import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorExcept
 import org.thechance.service_restaurant.domain.utils.nullIfFalse
 
 interface IManageRestaurantRequestUseCase {
-    suspend fun createRestaurantRequest(
-        restaurantName: String,
-        ownerEmail: String,
-        cause: String
-    ): RestaurantPermissionRequest
+    suspend fun createRestaurantRequest(form: RestaurantPermissionRequest): RestaurantPermissionRequest
 
     suspend fun getRestaurantRequests(): List<RestaurantPermissionRequest>
 }
@@ -22,14 +18,10 @@ class ManageRestaurantRequestUseCase(
     private val restaurantGateway: IRestaurantGateway,
     private val validations: IValidation
 ) : IManageRestaurantRequestUseCase {
-    override suspend fun createRestaurantRequest(
-        restaurantName: String,
-        ownerEmail: String,
-        cause: String
-    ): RestaurantPermissionRequest {
-        validations.isValidName(restaurantName).nullIfFalse() ?: throw MultiErrorException(listOf(INVALID_NAME))
-        validations.isValidEmail(ownerEmail).nullIfFalse() ?: throw MultiErrorException(listOf(INVALID_EMAIL))
-        return restaurantGateway.createRestaurantPermissionRequest(restaurantName, ownerEmail, cause)
+    override suspend fun createRestaurantRequest(form: RestaurantPermissionRequest): RestaurantPermissionRequest {
+        validations.isValidName(form.restaurantName).nullIfFalse() ?: throw MultiErrorException(listOf(INVALID_NAME))
+        validations.isValidEmail(form.ownerEmail).nullIfFalse() ?: throw MultiErrorException(listOf(INVALID_EMAIL))
+        return restaurantGateway.createRestaurantPermissionRequest(form.restaurantName, form.ownerEmail, form.cause)
     }
 
     override suspend fun getRestaurantRequests(): List<RestaurantPermissionRequest> {

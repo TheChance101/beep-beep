@@ -2,8 +2,8 @@ package data.gateway
 
 import data.remote.mapper.toEntity
 import data.remote.mapper.toOrderEntity
-import data.remote.model.LocationDto
 import data.remote.model.CuisineDto
+import data.remote.model.LocationDto
 import data.remote.model.MealDto
 import data.remote.model.OrderDto
 import data.remote.model.RestaurantDto
@@ -13,7 +13,6 @@ import domain.entity.Location
 import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
-import domain.entity.UserTokens
 import domain.gateway.IFakeRemoteGateway
 import presentation.base.InvalidPasswordException
 import presentation.base.InvalidUserNameException
@@ -575,14 +574,14 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
         )
     )
 
-    override suspend fun loginUser(userName: String, password: String): UserTokens {
+    override suspend fun loginUser(userName: String, password: String): Pair<String, String> {
         if (userName != "theChance") {
             throw InvalidUserNameException("Invalid UserName")
         }
         if (password != "theChance23") {
             throw InvalidPasswordException("Invalid Password")
         }
-        return UserTokens(accessToken = "wertqyhgt", refreshToken = "qazswxza")
+        return Pair("wertqyhgt", "qazswxza")
     }
 
 
@@ -645,7 +644,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
 
     override suspend fun updateOrderState(orderId: String, orderState: Int): Order {
         val order = orders.find { it.id == orderId }
-        return order?.toEntity() ?: throw RequestException()
+        return order?.toEntity() ?: throw RequestException("")
     }
 
     override suspend fun getOrderById(orderId: String): Order? {

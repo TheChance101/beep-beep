@@ -6,4 +6,5 @@ import kotlinx.serialization.Serializable
 data class AddressDto(
     val id: String? = null,
     val location: LocationDto,
+    val address: String
 )

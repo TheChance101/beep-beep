@@ -9,6 +9,7 @@ import org.thechance.api_gateway.endpoints.utils.respondWithError
 fun Application.configureStatusPages() {
     install(StatusPages) {
         handleStatusPagesExceptions()
+        handleUnauthorizedAccess()
     }
 }
 
@@ -18,5 +19,12 @@ private fun StatusPagesConfig.handleStatusPagesExceptions() {
     }
     exception<SecurityException>{ call, t ->
         respondWithError(call, HttpStatusCode.Unauthorized, t.message?.let { mapOf(401 to it) })
+    }
+}
+
+
+private fun StatusPagesConfig.handleUnauthorizedAccess(){
+    status(HttpStatusCode.Unauthorized) { call, _ ->
+        respondWithError(call, statusCode = HttpStatusCode.Unauthorized , mapOf(401 to "Access denied"))
     }
 }
