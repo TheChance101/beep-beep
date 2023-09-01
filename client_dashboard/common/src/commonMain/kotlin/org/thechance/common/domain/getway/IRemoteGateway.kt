@@ -38,4 +38,6 @@ interface IRemoteGateway {
 
     suspend fun getCurrentLocation(): Location
 
+    suspend fun getLatestRegisteredUsers(): List<User>
+
 }
