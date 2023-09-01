@@ -18,6 +18,14 @@ fun Route.mealRoute() {
 
     route("/meal") {
         authenticateWithRole(Role.RESTAURANT_OWNER) {
+
+            get ("/{mealId}"){
+                val (language, countryCode) = extractLocalizationHeader()
+                val mealId = call.parameters["mealId"]?.trim().toString()
+                val meal = restaurantGateway.getMeal(mealId, Locale(language, countryCode))
+                respondWithResult(HttpStatusCode.OK, meal)
+            }
+
             post {
                 val (language, countryCode) = extractLocalizationHeader()
                 val meal = call.receive<Meal>()
@@ -30,20 +38,6 @@ fun Route.mealRoute() {
                 val meal = call.receive<Meal>()
                 val updatedMeal = restaurantGateway.updateMeal(meal, Locale(language, countryCode))
                 respondWithResult(HttpStatusCode.OK, updatedMeal)
-            }
-
-//            delete {
-//                val (language, countryCode) = extractLocalizationHeader()
-//                val meal = call.receive<Meal>()
-//                val updatedMeal = restaurantGateway.updateMeal(meal, Locale(language, countryCode))
-//                respondWithResult(HttpStatusCode.OK, updatedMeal)
-//            }
-//
-            get ("{mealId}"){
-                val (language, countryCode) = extractLocalizationHeader()
-                val mealId = call.parameters["mealId"]?.trim().toString()
-                val meal = restaurantGateway.getMeal(mealId, Locale(language, countryCode))
-                respondWithResult(HttpStatusCode.OK, meal)
             }
         }
     }

@@ -61,9 +61,9 @@ fun Route.restaurantRoutes() {
             respondWithResult(HttpStatusCode.OK, meals)
         }
 
-        get("/{id}") {
+        get("/{restaurantId}") {
             val (language, countryCode) = extractLocalizationHeader()
-            val restaurantId = call.parameters["id"]?.trim().toString()
+            val restaurantId = call.parameters["restaurantId"]?.trim().toString()
             val restaurant = restaurantGateway.getRestaurantInfo(
                 locale = Locale(language, countryCode), restaurantId = restaurantId
             )
@@ -75,7 +75,7 @@ fun Route.restaurantRoutes() {
                 val (language, countryCode) = extractLocalizationHeader()
                 val restaurant = call.receive<Restaurant>()
                 val user =
-                    identityGateway.updateUserPermission(restaurant.ownerId, addPermission(Role.RESTAURANT_OWNER))
+                    identityGateway.updateUserPermission(restaurant.ownerId ?: "", addPermission(Role.RESTAURANT_OWNER))
                 val newRestaurant =
                     restaurantGateway.addRestaurant(
                         restaurant = restaurant.copy(ownerId = user.id),
@@ -87,11 +87,9 @@ fun Route.restaurantRoutes() {
 
 
         authenticateWithRole(Role.DASHBOARD_ADMIN) {
-
             put {
                 val (language, countryCode) = extractLocalizationHeader()
                 val restaurant = call.receive<Restaurant>()
-
                 val updatedRestaurant = restaurantGateway.updateRestaurant(
                     restaurant, isAdmin = true, Locale(language, countryCode)
                 )
@@ -103,10 +101,12 @@ fun Route.restaurantRoutes() {
             put("/details") {
                 val (language, countryCode) = extractLocalizationHeader()
                 val restaurant = call.receive<Restaurant>()
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val ownerId = tokenClaim?.get(USER_ID).toString()
                 val updatedRestaurant = restaurantGateway.updateRestaurant(
                     locale = Locale(language, countryCode),
                     isAdmin = false,
-                    restaurant = restaurant
+                    restaurant = restaurant.copy(ownerId =ownerId )
                 )
                 respondWithResult(HttpStatusCode.OK, updatedRestaurant)
             }

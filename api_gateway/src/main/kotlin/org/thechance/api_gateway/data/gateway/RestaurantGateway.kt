@@ -11,13 +11,13 @@ import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.BasePaginationResponseDto
 import org.thechance.api_gateway.data.model.Cuisine
+import org.thechance.api_gateway.data.model.Order
 import org.thechance.api_gateway.data.model.restaurant.Meal
+import org.thechance.api_gateway.data.model.restaurant.MealDetails
 import org.thechance.api_gateway.data.model.restaurant.Restaurant
+import org.thechance.api_gateway.data.model.restaurant.RestaurantRequestPermission
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.endpoints.gateway.IRestaurantGateway
-import org.thechance.api_gateway.data.model.Order
-import org.thechance.api_gateway.data.model.restaurant.MealDetails
-import org.thechance.api_gateway.data.model.restaurant.RestaurantRequestPermission
 import org.thechance.api_gateway.util.APIs
 import java.util.*
 
@@ -62,7 +62,7 @@ class RestaurantGateway(
 
     //region Restaurant
     override suspend fun getRestaurantInfo(locale: Locale, restaurantId: String): Restaurant {
-        return tryToExecute<Restaurant>(
+        return tryToExecute(
             APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
@@ -82,29 +82,15 @@ class RestaurantGateway(
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
         ) {
-            if (isAdmin) {
-                put("/restaurant") {
-                    body = Json.encodeToString(
-                        Restaurant.serializer(),
-                        restaurant
-                    )
-                }
+            val url = if (isAdmin) {
+                "/restaurant"
             } else {
-                put("/restaurant/details") {
-                    body = Json.encodeToString(
-                        Restaurant.serializer(),
-                        Restaurant(
-                            id = restaurant.id,
-                            ownerId = restaurant.ownerId,
-                            name = restaurant.name,
-                            phone = restaurant.phone,
-                            description = restaurant.description,
-                            openingTime = restaurant.openingTime,
-                            closingTime = restaurant.closingTime
-                        )
-                    )
-                }
+                "/restaurant/details"
             }
+            put(url) {
+                body = Json.encodeToString(Restaurant.serializer(), restaurant)
+            }
+
         }
     }
 

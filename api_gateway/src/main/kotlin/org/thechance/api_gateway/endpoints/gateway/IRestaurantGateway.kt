@@ -3,10 +3,10 @@ package org.thechance.api_gateway.endpoints.gateway
 import kotlinx.coroutines.flow.Flow
 import org.thechance.api_gateway.data.model.BasePaginationResponseDto
 import org.thechance.api_gateway.data.model.Cuisine
-import org.thechance.api_gateway.data.model.restaurant.Meal
-import org.thechance.api_gateway.data.model.restaurant.Restaurant
 import org.thechance.api_gateway.data.model.Order
+import org.thechance.api_gateway.data.model.restaurant.Meal
 import org.thechance.api_gateway.data.model.restaurant.MealDetails
+import org.thechance.api_gateway.data.model.restaurant.Restaurant
 import org.thechance.api_gateway.data.model.restaurant.RestaurantRequestPermission
 import java.util.*
 
