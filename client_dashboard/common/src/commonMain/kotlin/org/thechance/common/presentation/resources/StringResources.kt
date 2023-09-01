@@ -75,6 +75,10 @@ data class StringResources(
 
     //region overview
     val overview: String = "Overview",
+    val revenueShare: String = "Revenue share",
+    val viewMore: String = "View more",
+    val taxiLabel: String = "Taxi",
+    val restaurantLabel: String = "Restaurant",
 
     )
 
