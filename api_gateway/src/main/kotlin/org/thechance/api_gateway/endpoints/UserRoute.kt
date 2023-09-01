@@ -95,8 +95,18 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
     }
 
     authenticateWithRole(Role.DASHBOARD_ADMIN) {
+
+        get("/users") {
+            val (language, countryCode) = extractLocalizationHeader()
+            val page = call.parameters["page"]?.toInt() ?: 1
+            val limit = call.parameters["limit"]?.toInt() ?: 20
+            val result = gateway.getUsers(page = page, limit = limit, locale = Locale(language, countryCode))
+            respondWithResult(HttpStatusCode.OK, result)
+        }
+
         route("/user") {
-            get("/{id}") {
+
+            delete("/{id}") {
                 val id = call.parameters["id"] ?: ""
                 val (language, countryCode) = extractLocalizationHeader()
                 val result = gateway.deleteUser(userId = id, locale = Locale(language, countryCode))
@@ -104,6 +114,5 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
             }
         }
     }
-
 }
 

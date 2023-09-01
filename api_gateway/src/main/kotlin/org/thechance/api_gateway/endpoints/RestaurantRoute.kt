@@ -99,8 +99,6 @@ fun Route.restaurantRoutes() {
                 respondWithResult(HttpStatusCode.Created, result)
 
             }
-
-
         }
 
         authenticateWithRole(Role.RESTAURANT_OWNER) {

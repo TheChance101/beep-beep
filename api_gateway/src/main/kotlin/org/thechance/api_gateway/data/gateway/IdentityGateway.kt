@@ -6,6 +6,7 @@ import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import io.ktor.util.*
 import org.koin.core.annotation.Single
+import org.thechance.api_gateway.data.model.BasePaginationResponse
 import org.thechance.api_gateway.data.model.User
 import org.thechance.api_gateway.data.model.UserTokens
 import org.thechance.api_gateway.data.security.ITokenService
@@ -71,8 +72,8 @@ class IdentityGateway(
 
     override suspend fun getUsers(
         page: Int, limit: Int, searchTerm: String, locale: Locale
-    ) = tryToExecute<List<User>>(APIs.IDENTITY_API) {
-        get("/users") {
+    ) = tryToExecute<BasePaginationResponse<User>>(APIs.IDENTITY_API) {
+        get("/dashboard/user") {
             parameter("page", page)
             parameter("limit", limit)
             parameter("searchTerm", searchTerm)

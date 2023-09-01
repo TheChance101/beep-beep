@@ -2,14 +2,12 @@ package org.thechance.api_gateway.data.gateway
 
 import io.ktor.client.*
 import io.ktor.client.request.*
-import io.ktor.client.request.forms.*
-import io.ktor.http.*
 import io.ktor.util.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
-import org.thechance.api_gateway.data.model.BasePaginationResponseDto
+import org.thechance.api_gateway.data.model.BasePaginationResponse
 import org.thechance.api_gateway.data.model.Cuisine
 import org.thechance.api_gateway.data.model.Order
 import org.thechance.api_gateway.data.model.restaurant.Meal
@@ -89,7 +87,7 @@ class RestaurantGateway(
     }
 
     override suspend fun getRestaurants(page: Int, limit: Int, locale: Locale) =
-        tryToExecute<BasePaginationResponseDto<Restaurant>>(
+        tryToExecute<BasePaginationResponse<Restaurant>>(
             APIs.RESTAURANT_API,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)

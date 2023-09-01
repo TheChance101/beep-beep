@@ -10,6 +10,7 @@ import org.thechance.api_gateway.endpoints.utils.respondWithResult
 import org.thechance.api_gateway.util.Role
 import java.util.*
 
+//TODO rename it to permission and move all permissions to it
 
 fun Route.dashboardRoutes() {
 

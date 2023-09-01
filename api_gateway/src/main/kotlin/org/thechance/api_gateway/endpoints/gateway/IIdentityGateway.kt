@@ -1,5 +1,6 @@
 package org.thechance.api_gateway.endpoints.gateway
 
+import org.thechance.api_gateway.data.model.BasePaginationResponse
 import org.thechance.api_gateway.data.model.User
 import org.thechance.api_gateway.data.model.UserTokens
 import org.thechance.api_gateway.data.security.TokenConfiguration
@@ -14,7 +15,7 @@ interface IIdentityGateway {
         userName: String, password: String, tokenConfiguration: TokenConfiguration, locale: Locale
     ): UserTokens
 
-    suspend fun getUsers(page: Int, limit: Int, searchTerm: String = "", locale: Locale): List<User>
+    suspend fun getUsers(page: Int, limit: Int, searchTerm: String = "", locale: Locale): BasePaginationResponse<User>
 
     suspend fun getUserByUsername(username: String): User
 

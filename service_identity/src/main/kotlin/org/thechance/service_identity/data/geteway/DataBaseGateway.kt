@@ -202,7 +202,7 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
     }
 
     override suspend fun getNumberOfUsers(): Long {
-        return dataBaseContainer.userCollection.countDocuments()
+        return dataBaseContainer.userCollection.countDocuments(UserCollection::isDeleted eq false)
     }
 
     override suspend fun getUserByUsername(username: String): UserManagement {
