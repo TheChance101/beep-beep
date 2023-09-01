@@ -28,7 +28,7 @@ fun EditablePriceBar(
     disabledIconsColor: Color,
     onClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    priceLevel: Int = 0,
+    priceLevel: Int = 1,
     iconsSize: Dp = 32.kms,
     iconsPadding: PaddingValues = PaddingValues(0.dp),
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
@@ -40,7 +40,7 @@ fun EditablePriceBar(
 
         (priceLevel > count) -> throw Exception("price level is bigger than count")
 
-        (priceLevel < 0) -> throw Exception("price level is smaller than 0")
+        (priceLevel < 1) -> throw Exception("price level is smaller than 1")
     }
     Row(
         modifier = modifier

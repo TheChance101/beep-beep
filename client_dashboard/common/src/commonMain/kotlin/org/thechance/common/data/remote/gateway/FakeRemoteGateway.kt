@@ -214,7 +214,7 @@ class FakeRemoteGateway(
                     ownerUsername = "asia",
                     phoneNumber = "0528242165",
                     rating = 2.9,
-                    priceLevel = 1,
+                    priceLevel = 2,
                     workingHours = "09:30 - 21:30"
                 ),
                 RestaurantDto(
@@ -871,48 +871,53 @@ class FakeRemoteGateway(
         localGateway.saveTaxiReport(taxiReportFile)
     }
 
-    override suspend fun getRestaurants(): List<Restaurant> {
-        return restaurant.toEntity()
-    }
-
-    override suspend fun searchRestaurantsByRestaurantName(restaurantName: String): List<Restaurant> {
-        return getRestaurants().filter { it.name.startsWith(restaurantName, true) }
-    }
-
-    override suspend fun filterRestaurants(rating: Double, priceLevel: Int): List<Restaurant> {
-        return filterRestaurants(getRestaurants(), rating, priceLevel)
-    }
-
-    override suspend fun searchFilterRestaurants(
+    override suspend fun getRestaurants(
+        pageNumber: Int,
+        numberOfRestaurantsInPage: Int,
         restaurantName: String,
-        rating: Double,
-        priceLevel: Int
-    ): List<Restaurant> {
-        return filterRestaurants(
-            searchRestaurantsByRestaurantName(restaurantName),
-            rating,
-            priceLevel
-        )
+        rating: Double?,
+        priceLevel: Int?
+    ): DataWrapper<Restaurant> {
+        var restaurants = restaurant.toEntity()
+        if (restaurantName.isNotEmpty()) {
+            restaurants = restaurants.filter {
+                it.name.startsWith(
+                    restaurantName,
+                    true
+                )
+            }
+        }
+        if (rating != null && priceLevel != null) {
+            restaurants = restaurants.filter {
+                it.priceLevel == priceLevel &&
+                        when {
+                            rating.rem(1) > 0.89 || rating.rem(1) == 0.0 || rating.rem(1) > 0.5
+                            -> it.rating in floor(rating) - 0.1..0.49 + floor(rating)
+
+                            else -> it.rating in 0.5 + floor(rating)..0.89 + floor(rating)
+                        }
+            }
+        }
+        val startIndex = (pageNumber - 1) * numberOfRestaurantsInPage
+        val endIndex = startIndex + numberOfRestaurantsInPage
+        val numberOfPages = ceil(restaurants.size / (numberOfRestaurantsInPage * 1.0)).toInt()
+        return try {
+            DataWrapperDto(
+                totalPages = numberOfPages,
+                result = restaurants.subList(startIndex, endIndex.coerceAtMost(restaurants.size)),
+                totalResult = restaurants.size
+            ).toEntity()
+        } catch (e: Exception) {
+            DataWrapperDto(
+                totalPages = numberOfPages,
+                result = restaurants,
+                totalResult = restaurants.size
+            ).toEntity()
+        }
     }
 
     override suspend fun loginUser(username: String, password: String): Pair<String, String> {
         return Pair("token", "refreshToken")
-    }
-
-    private fun filterRestaurants(
-        restaurants: List<Restaurant>,
-        rating: Double,
-        priceLevel: Int
-    ): List<Restaurant> {
-        return restaurants.filter {
-            it.priceLevel == priceLevel &&
-                    when {
-                        rating.rem(1) > 0.89 || rating.rem(1) == 0.0 || rating.rem(1) > 0.5
-                        -> it.rating in floor(rating) - 0.1..0.49 + floor(rating)
-
-                        else -> it.rating in 0.5 + floor(rating)..0.89 + floor(rating)
-                    }
-        }
     }
 
     override suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant {
