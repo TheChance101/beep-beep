@@ -1,6 +1,6 @@
 package org.thechance.common.presentation.restaurant
 
-import org.thechance.common.domain.entity.AddRestaurant
+import org.thechance.common.domain.entity.NewRestaurantInfo
 import org.thechance.common.domain.entity.Restaurant
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -23,7 +23,7 @@ private fun getWorkingHours(workingHours: Pair<Date, Date>): String {
     return "$firstDate - $secondDate"
 }
 
-fun NewRestaurantInfoUiState.toEntity() = AddRestaurant(
+fun NewRestaurantInfoUiState.toEntity() = NewRestaurantInfo(
     name = name,
     ownerUsername = ownerUsername,
     phoneNumber = phoneNumber,

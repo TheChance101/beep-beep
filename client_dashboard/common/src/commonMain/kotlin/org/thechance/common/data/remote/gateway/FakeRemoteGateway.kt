@@ -1,7 +1,6 @@
 package org.thechance.common.data.remote.gateway
 
 
-import kotlinx.coroutines.delay
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
@@ -931,7 +930,7 @@ class FakeRemoteGateway(
         return Pair("token", "refreshToken")
     }
 
-    override suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant {
+    override suspend fun createRestaurant(restaurant: NewRestaurantInfo): Restaurant {
         return Restaurant(
             id = "7",
             name = restaurant.name,

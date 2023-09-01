@@ -29,7 +29,7 @@ interface IRemoteGateway {
 
     suspend fun loginUser(username: String, password: String): Pair<String, String>
 
-    suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant
+    suspend fun createRestaurant(restaurant: NewRestaurantInfo): Restaurant
 
     suspend fun getCurrentLocation(): String
 

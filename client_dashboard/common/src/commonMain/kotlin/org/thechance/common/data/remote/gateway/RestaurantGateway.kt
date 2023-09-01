@@ -1,6 +1,6 @@
 package org.thechance.common.data.remote.gateway
 
-import org.thechance.common.domain.entity.AddRestaurant
+import org.thechance.common.domain.entity.NewRestaurantInfo
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.getway.IRestaurantGateway
@@ -29,7 +29,7 @@ class RestaurantGateway:BaseGateway(), IRestaurantGateway {
         TODO("Not yet implemented")
     }
 
-    override suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant {
+    override suspend fun createRestaurant(restaurant: NewRestaurantInfo): Restaurant {
         TODO("Not yet implemented")
     }
 }

@@ -2,7 +2,7 @@ package org.thechance.common.domain.entity
 
 import java.util.Date
 
-data class AddRestaurant(
+data class NewRestaurantInfo(
     val name: String,
     val ownerUsername: String,
     val phoneNumber: String,
