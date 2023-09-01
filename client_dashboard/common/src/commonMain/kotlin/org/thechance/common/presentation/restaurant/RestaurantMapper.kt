@@ -1,9 +1,11 @@
 package org.thechance.common.presentation.restaurant
 
 import org.thechance.common.domain.entity.AddRestaurant
+import org.thechance.common.domain.entity.CustomTime
 import org.thechance.common.domain.entity.Restaurant
+import org.thechance.common.domain.entity.parseToCustomTime
+import org.thechance.common.domain.entity.toWorkingHoursString
 import java.text.SimpleDateFormat
-import java.util.Date
 
 fun Restaurant.toUiState(): RestaurantUiState.RestaurantDetailsUiState =
     RestaurantUiState.RestaurantDetailsUiState(
@@ -12,16 +14,10 @@ fun Restaurant.toUiState(): RestaurantUiState.RestaurantDetailsUiState =
         phoneNumber = phoneNumber,
         rating = rating,
         priceLevel = priceLevel,
-        workingHours = getWorkingHours(workingHours)
+        workingHours = workingHours.toWorkingHoursString()
     )
 
 fun List<Restaurant>.toUiState() = map(Restaurant::toUiState)
-
-private fun getWorkingHours(workingHours: Pair<Date, Date>): String {
-    val firstDate = SimpleDateFormat("HH:mm").format(workingHours.first)
-    val secondDate = SimpleDateFormat("HH:mm").format(workingHours.second)
-    return "$firstDate - $secondDate"
-}
 
 fun AddRestaurantDialogUiState.toEntity() = AddRestaurant(
     name = name,
@@ -29,7 +25,7 @@ fun AddRestaurantDialogUiState.toEntity() = AddRestaurant(
     phoneNumber = phoneNumber,
     location = location,
     workingHours = Pair(
-        SimpleDateFormat("HH:mm").parse(startTime),
-        SimpleDateFormat("HH:mm").parse(endTime)
+        parseToCustomTime(startTime),
+        parseToCustomTime(endTime)
     ),
 )
