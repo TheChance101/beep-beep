@@ -83,16 +83,6 @@ fun Route.restaurantRoutes() {
                 respondWithResult(HttpStatusCode.Created, newRestaurant)
             }
 
-            delete("/{restaurantId}") {
-                val (language, countryCode) = extractLocalizationHeader()
-                val restaurantId = call.parameters["restaurantId"]?.trim().toString()
-                val result = restaurantGateway.deleteRestaurant(restaurantId, Locale(language, countryCode))
-                respondWithResult(HttpStatusCode.Created, result)
-
-            }
-        }
-
-        authenticateWithRole(Role.DASHBOARD_ADMIN) {
             put {
                 val (language, countryCode) = extractLocalizationHeader()
                 val restaurant = call.receive<Restaurant>()
@@ -101,6 +91,16 @@ fun Route.restaurantRoutes() {
                 )
                 respondWithResult(HttpStatusCode.OK, updatedRestaurant)
             }
+
+            delete("/{restaurantId}") {
+                val (language, countryCode) = extractLocalizationHeader()
+                val restaurantId = call.parameters["restaurantId"]?.trim().toString()
+                val result = restaurantGateway.deleteRestaurant(restaurantId, Locale(language, countryCode))
+                respondWithResult(HttpStatusCode.Created, result)
+
+            }
+
+
         }
 
         authenticateWithRole(Role.RESTAURANT_OWNER) {
@@ -117,7 +117,6 @@ fun Route.restaurantRoutes() {
                 respondWithResult(HttpStatusCode.OK, updatedRestaurant)
             }
         }
-
 
     }
 }

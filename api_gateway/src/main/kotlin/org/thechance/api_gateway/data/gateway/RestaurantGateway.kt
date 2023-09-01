@@ -29,8 +29,9 @@ class RestaurantGateway(
     private val errorHandler: ErrorHandler
 ) : BaseGateway(client = client, attributes = attributes), IRestaurantGateway {
 
+    @OptIn(InternalAPI::class)
     override suspend fun createRequestPermission(
-        restaurantName: String, ownerEmail: String, cause: String, locale: Locale
+        requestedForm: RestaurantRequestPermission, locale: Locale
     ): RestaurantRequestPermission {
         return tryToExecute(
             api = APIs.RESTAURANT_API,
@@ -38,13 +39,9 @@ class RestaurantGateway(
                 errorHandler.getLocalizedErrorMessage(errorCodes, locale)
             }
         ) {
-            submitForm("/restaurant-permission-request",
-                formParameters = parameters {
-                    append("restaurantName", restaurantName)
-                    append("ownerEmail", ownerEmail)
-                    append("cause", cause)
-                }
-            )
+            post("/restaurant-permission-request") {
+                body = Json.encodeToString(RestaurantRequestPermission.serializer(), requestedForm)
+            }
         }
     }
 
@@ -58,7 +55,6 @@ class RestaurantGateway(
             get("/restaurant-permission-request")
         }
     }
-
 
     //region Restaurant
     override suspend fun getRestaurantInfo(locale: Locale, restaurantId: String): Restaurant {

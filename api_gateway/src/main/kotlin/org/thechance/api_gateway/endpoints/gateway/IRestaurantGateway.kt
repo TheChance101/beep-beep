@@ -12,7 +12,7 @@ import java.util.*
 
 interface IRestaurantGateway {
     suspend fun createRequestPermission(
-        restaurantName: String, ownerEmail: String, cause: String, locale: Locale
+        requestedForm: RestaurantRequestPermission, locale: Locale
     ): RestaurantRequestPermission
 
     suspend fun getAllRequestPermission(locale: Locale): List<RestaurantRequestPermission>

@@ -8,6 +8,8 @@ import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
+import org.thechance.api_gateway.data.model.restaurant.Restaurant
+import org.thechance.api_gateway.data.model.restaurant.RestaurantRequestPermission
 import org.thechance.api_gateway.data.security.TokenConfiguration
 import org.thechance.api_gateway.endpoints.gateway.IIdentityGateway
 import org.thechance.api_gateway.endpoints.gateway.IRestaurantGateway
@@ -66,17 +68,11 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
         respondWithResult(HttpStatusCode.Created, token)
     }
 
-    post("restaurant/permission") {
-        val params = call.receiveParameters()
-        val restaurantName = params["restaurantName"]?.trim().toString()
-        val ownerEmail = params["ownerEmail"]?.trim().toString()
-        val cause = params["cause"]?.trim().toString()
+    post("/restaurant/permission") {
+        val requestedForm = call.receive<RestaurantRequestPermission>()
         val (language, countryCode) = extractLocalizationHeader()
         val result = restaurantGateway.createRequestPermission(
-            restaurantName,
-            ownerEmail,
-            cause,
-            Locale(language, countryCode)
+            requestedForm, Locale(language, countryCode)
         )
         respondWithResult(HttpStatusCode.Created, result)
     }
@@ -86,6 +82,15 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
             val tokenClaim = call.principal<JWTPrincipal>()
             val id = tokenClaim?.payload?.getClaim(USER_ID).toString()
             respondWithResult(HttpStatusCode.OK, id)
+        }
+
+        post("/refresh-access-token") {
+            val tokenClaim = call.principal<JWTPrincipal>()
+            val userId = tokenClaim?.payload?.getClaim(USER_ID).toString()
+            val username = tokenClaim?.payload?.getClaim(USERNAME).toString()
+            val userPermission = tokenClaim?.payload?.getClaim(PERMISSION)?.asString()?.toInt() ?: 1
+            val token = gateway.generateUserTokens(userId, username, userPermission, tokenConfiguration)
+            respondWithResult(HttpStatusCode.Created, token)
         }
     }
 
@@ -100,15 +105,5 @@ fun Route.userRoutes(tokenConfiguration: TokenConfiguration) {
         }
     }
 
-    authenticateWithRole(Role.END_USER) {
-        post("/refresh-access-token") {
-            val tokenClaim = call.principal<JWTPrincipal>()
-            val userId = tokenClaim?.payload?.getClaim(USER_ID).toString()
-            val username = tokenClaim?.payload?.getClaim(USERNAME).toString()
-            val userPermission = tokenClaim?.payload?.getClaim(PERMISSION)?.asString()?.toInt() ?: 1
-            val token = gateway.generateUserTokens(userId, username, userPermission, tokenConfiguration)
-            respondWithResult(HttpStatusCode.Created, token)
-        }
-    }
 }
 
