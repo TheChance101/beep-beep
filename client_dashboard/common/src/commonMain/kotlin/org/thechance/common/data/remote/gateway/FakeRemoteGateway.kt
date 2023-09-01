@@ -246,7 +246,8 @@ class FakeRemoteGateway(
                     UserDto.PermissionDto(id = 2, permission = "DRIVER"),
                     UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                     UserDto.PermissionDto(id = 2, permission = "ADMIN")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "f7b087da-8c02-417b-a3db-54c82b5ff5b4",
@@ -258,7 +259,8 @@ class FakeRemoteGateway(
                     UserDto.PermissionDto(id = 3, permission = "END_USER"),
                     UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                     UserDto.PermissionDto(id = 2, permission = "ADMIN"),
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "3e1f5d4a-8317-4f13-aa89-2c094652e6a3",
@@ -269,7 +271,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 3, permission = "END_USER"),
                     UserDto.PermissionDto(id = 1, permission = "ADMIN")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "c3d8fe2b-6d36-47ea-964a-57d45e780bce",
@@ -280,7 +283,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "END_USER"),
                     UserDto.PermissionDto(id = 2, permission = "RESTAURANT")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "7a1bfe39-4b2c-4f76-bde0-82da2eaf9e99",
@@ -293,7 +297,8 @@ class FakeRemoteGateway(
                     UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                     UserDto.PermissionDto(id = 2, permission = "ADMIN"),
                     UserDto.PermissionDto(id = 3, permission = "DELIVERY")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "8c90c4c6-1e69-47f3-aa59-2edcd6f0057b",
@@ -304,7 +309,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "END_USER"),
                     UserDto.PermissionDto(id = 2, permission = "DRIVER")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "8c90c4c6-1e69-47f3-aa59-2edcd6f0057b",
@@ -315,7 +321,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "END_USER"),
                     UserDto.PermissionDto(id = 2, permission = "DRIVER")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "8c90c4c6-1e69-47f3-aa59-2edcd6f0057b",
@@ -326,7 +333,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "END_USER"),
                     UserDto.PermissionDto(id = 2, permission = "DRIVER")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "c4425a0e-9f0a-4df1-bcc1-6dd96322a990",
@@ -338,7 +346,8 @@ class FakeRemoteGateway(
                     UserDto.PermissionDto(id = 1, permission = "RESTAURANT"),
                     UserDto.PermissionDto(id = 2, permission = "DRIVER"),
                     UserDto.PermissionDto(id = 3, permission = "END_USER")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "f7b087da-8c02-417b-a3db-54c82b5ff5b4",
@@ -349,7 +358,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                     UserDto.PermissionDto(id = 2, permission = "DELIVERY")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "3e1f5d4a-8317-4f13-aa89-2c094652e6a3",
@@ -359,7 +369,8 @@ class FakeRemoteGateway(
                 country = "Syria",
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "ADMIN")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "c3d8fe2b-6d36-47ea-964a-57d45e780bce",
@@ -370,7 +381,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "END_USER"),
                     UserDto.PermissionDto(id = 2, permission = "RESTAURANT")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "7a1bfe39-4b2c-4f76-bde0-82da2eaf9e99",
@@ -382,7 +394,8 @@ class FakeRemoteGateway(
                     UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                     UserDto.PermissionDto(id = 2, permission = "ADMIN"),
                     UserDto.PermissionDto(id = 3, permission = "DELIVERY")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "8c90c4c6-1e69-47f3-aa59-2edcd6f0057b",
@@ -393,7 +406,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "END_USER"),
                     UserDto.PermissionDto(id = 2, permission = "DRIVER")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "c28e9e91-3c3b-4e46-9f53-13b380e2a4d5",
@@ -404,7 +418,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "RESTAURANT"),
                     UserDto.PermissionDto(id = 2, permission = "END_USER")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "f5d5b4a1-6a1f-4c8d-8b1e-7a2e90e38d3c",
@@ -414,7 +429,8 @@ class FakeRemoteGateway(
                 country = "Palestine",
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "DELIVERY")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "f5d5b4a1-6a1f-4c8d-8b1e-7a2e90e38d3c",
@@ -425,7 +441,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "ADMIN"),
                     UserDto.PermissionDto(id = 2, permission = "END_USER")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "d9f6c4e2-4a12-4c8f-bb8a-21e4d8f9c3a0",
@@ -436,7 +453,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "DELIVERY"),
                     UserDto.PermissionDto(id = 2, permission = "DRIVER")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "a1b2c3d4-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
@@ -447,7 +465,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "END_USER"),
                     UserDto.PermissionDto(id = 2, permission = "DELIVERY")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "b5c6d7e8-9f0a-1b2c-3d4e-5f6a7b8c9d0",
@@ -459,7 +478,8 @@ class FakeRemoteGateway(
                     UserDto.PermissionDto(id = 1, permission = "RESTAURANT"),
                     UserDto.PermissionDto(id = 2, permission = "DRIVER"),
                     UserDto.PermissionDto(id = 3, permission = "ADMIN")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "c9d0e1f2-a3b4-c5d6-e7f8-a9b0c1d2e3f",
@@ -469,7 +489,8 @@ class FakeRemoteGateway(
                 country = "Syria",
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "SUPPORT")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "d2e3f4a5-b6c7-d8e9-f0a1-b2c3d4e5f6a",
@@ -481,7 +502,8 @@ class FakeRemoteGateway(
                     UserDto.PermissionDto(id = 1, permission = "END_USER"),
                     UserDto.PermissionDto(id = 2, permission = "DRIVER"),
                     UserDto.PermissionDto(id = 3, permission = "DELIVERY")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "f0a1b2c3-d4e5-f6a7-b8c9-d0e1f2a3b4c",
@@ -492,7 +514,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "RESTAURANT"),
                     UserDto.PermissionDto(id = 2, permission = "SUPPORT")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "b4c5d6e7-f8a9-b0c1-d2e3-f4a5b6c7d8e",
@@ -503,7 +526,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "DELIVERY"),
                     UserDto.PermissionDto(id = 2, permission = "ADMIN")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "d8e9f0a1-b2c3-d4e5-f6a7-b8c9d0e1f2a",
@@ -514,7 +538,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "END_USER"),
                     UserDto.PermissionDto(id = 2, permission = "DRIVER")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "b3c4d5e6-f7a8-b9c0-d1e2-f3a4b5c6d7e",
@@ -526,7 +551,8 @@ class FakeRemoteGateway(
                     UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                     UserDto.PermissionDto(id = 2, permission = "DELIVERY"),
                     UserDto.PermissionDto(id = 3, permission = "DRIVER")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "e2f3a4b5-c6d7e8f9-a0b1c2d3-e4f5a6b7c8d",
@@ -537,7 +563,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "END_USER"),
                     UserDto.PermissionDto(id = 2, permission = "DELIVERY")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "d3e4f5a6-b7c8d9e0-f1a2b3c4-d5e6f7a8b9c",
@@ -548,7 +575,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "RESTAURANT"),
                     UserDto.PermissionDto(id = 2, permission = "DRIVER")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "c4d5e6f7-a8b9c0d1-e2f3a4b5-c6d7e8f9a0b",
@@ -560,7 +588,8 @@ class FakeRemoteGateway(
                     UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                     UserDto.PermissionDto(id = 2, permission = "DELIVERY"),
                     UserDto.PermissionDto(id = 3, permission = "ADMIN")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "b5c6d7e8-f9a0b1c2-d3e4f5a6-b7c8d9e0f1a",
@@ -571,7 +600,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "DRIVER"),
                     UserDto.PermissionDto(id = 2, permission = "SUPPORT")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "a0b1c2d3-e4f5a6b7-c8d9e0f1-a2b3c4d5e6f",
@@ -582,7 +612,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "DELIVERY"),
                     UserDto.PermissionDto(id = 2, permission = "ADMIN")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "c2d3e4f5-a6b7c8d9-e0f1a2b3-c4d5e6f7a8b",
@@ -593,7 +624,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                     UserDto.PermissionDto(id = 2, permission = "DRIVER")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "e6f7a8b9-c0d1e2f3-a4b5c6d7-e8f9a0b1c2d",
@@ -605,7 +637,8 @@ class FakeRemoteGateway(
                     UserDto.PermissionDto(id = 1, permission = "END_USER"),
                     UserDto.PermissionDto(id = 2, permission = "DELIVERY"),
                     UserDto.PermissionDto(id = 3, permission = "ADMIN")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "a4b5c6d7-e8f9a0b1-c2d3e4f5-a6b7c8d9e0f",
@@ -617,7 +650,8 @@ class FakeRemoteGateway(
                     UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                     UserDto.PermissionDto(id = 2, permission = "DRIVER"),
                     UserDto.PermissionDto(id = 3, permission = "END_USER")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "e8f9a0b1-c2d3e4f5-a6b7c8d9-e0f1a2b3c4d",
@@ -628,7 +662,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "RESTAURANT"),
                     UserDto.PermissionDto(id = 2, permission = "END_USER")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "a2b3c4d5-e6f7a8b9-c0d1e2f3-a4b5c6d7e8f",
@@ -639,7 +674,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "DRIVER"),
                     UserDto.PermissionDto(id = 2, permission = "ADMIN")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "c6d7e8f9-a0b1c2d3-e4f5a6b7-c8d9e0f1a2b",
@@ -650,7 +686,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                     UserDto.PermissionDto(id = 2, permission = "DELIVERY")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "e0f1a2b3-c4d5e6f7-a8b9c0d1-e2f3a4b5c6d",
@@ -662,7 +699,8 @@ class FakeRemoteGateway(
                     UserDto.PermissionDto(id = 1, permission = "DELIVERY"),
                     UserDto.PermissionDto(id = 2, permission = "SUPPORT"),
                     UserDto.PermissionDto(id = 3, permission = "ADMIN")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "c4d5e6f7-a8b9c0d1-e2f3a4b5-c6d7e8f9a0b",
@@ -673,7 +711,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                     UserDto.PermissionDto(id = 2, permission = "DRIVER")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "e2f3a4b5-c6d7e8f9-a0b1c2d3-e4f5a6b7c8d",
@@ -684,7 +723,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "DELIVERY"),
                     UserDto.PermissionDto(id = 2, permission = "ADMIN")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "a0b1c2d3-e4f5a6b7-c8d9e0f1-a2b3c4d5e6f",
@@ -696,7 +736,8 @@ class FakeRemoteGateway(
                     UserDto.PermissionDto(id = 1, permission = "END_USER"),
                     UserDto.PermissionDto(id = 2, permission = "RESTAURANT"),
                     UserDto.PermissionDto(id = 3, permission = "DELIVERY")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "b1c2d3e4-f5a6b7c8-d9e0f1a2-b3c4d5e6f7a8",
@@ -707,7 +748,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "END_USER"),
                     UserDto.PermissionDto(id = 2, permission = "ADMIN")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "b7c8d9e0-f1a2b3c4-d5e6f7a8-b9c0d1e2f3a4",
@@ -718,7 +760,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "RESTAURANT"),
                     UserDto.PermissionDto(id = 2, permission = "SUPPORT")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "f9a0b1c2-d3e4f5a6-b7c8d9e0-f1a2b3c4d5e6",
@@ -729,7 +772,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "DELIVERY"),
                     UserDto.PermissionDto(id = 2, permission = "END_USER")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "c4d5e6f7-a8b9c0d1-e2f3a4b5-c6d7e8f9a0b",
@@ -741,7 +785,8 @@ class FakeRemoteGateway(
                     UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                     UserDto.PermissionDto(id = 2, permission = "ADMIN"),
                     UserDto.PermissionDto(id = 3, permission = "RESTAURANT")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "e8f9a0b1-c2d3e4f5-a6b7c8d9-e0f1a2b3c4d5",
@@ -752,7 +797,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "DRIVER"),
                     UserDto.PermissionDto(id = 2, permission = "DELIVERY")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
             UserDto(
                 id = "b3c4d5e6-f7a8b9c0-d1e2f3a4-b5c6d7e8f9a0",
@@ -763,7 +809,8 @@ class FakeRemoteGateway(
                 permissions = listOf(
                     UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                     UserDto.PermissionDto(id = 2, permission = "END_USER")
-                )
+                ),
+                imageUrl = "dummy_img.png"
             ),
         ).toEntity()
         val startIndex = (page - 1) * numberOfUsers
@@ -929,6 +976,63 @@ class FakeRemoteGateway(
 
     override suspend fun getCurrentLocation(): Location {
         return Location(location = "30.044420,31.235712")
+    }
+
+    override suspend fun getLatestRegisteredUsers(): List<User> {
+        return listOf(
+            UserDto(
+                id = "c4425a0e-9f0a-4df1-bcc1-6dd96322a990",
+                fullName = "mohammed sayed",
+                username = "mohammed_sayed",
+                email = "elzamalk@example.com",
+                country = "Egypt",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 3, permission = "END_USER"),
+                    UserDto.PermissionDto(id = 1, permission = "RESTAURANT"),
+                    UserDto.PermissionDto(id = 2, permission = "DRIVER"),
+                    UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
+                    UserDto.PermissionDto(id = 2, permission = "ADMIN")
+                ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "f7b087da-8c02-417b-a3db-54c82b5ff5b4",
+                fullName = "asia",
+                username = "asia",
+                email = "asia@example.com",
+                country = "Iraq",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 3, permission = "END_USER"),
+                    UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
+                    UserDto.PermissionDto(id = 2, permission = "ADMIN"),
+                ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "3e1f5d4a-8317-4f13-aa89-2c094652e6a3",
+                fullName = "ali",
+                username = "ali_jamal",
+                email = "ali_jamal@example.com",
+                country = "Iraq",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 3, permission = "END_USER"),
+                    UserDto.PermissionDto(id = 1, permission = "ADMIN")
+                ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "3e1f5d4a-8317-4f13-aa89-2c094652e6a3",
+                fullName = "ali",
+                username = "ali_jamal",
+                email = "ali_jamal@example.com",
+                country = "Iraq",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 3, permission = "END_USER"),
+                    UserDto.PermissionDto(id = 1, permission = "ADMIN")
+                ),
+                imageUrl = "dummy_img.png"
+            )
+        ).toEntity()
     }
 
     private fun createTaxiPDFReport(): File {

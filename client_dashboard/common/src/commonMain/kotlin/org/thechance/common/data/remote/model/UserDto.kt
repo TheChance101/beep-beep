@@ -8,7 +8,8 @@ data class UserDto(
     val username: String,
     val country: String,
     val email: String,
-    val permissions: List<PermissionDto> = emptyList()
+    val permissions: List<PermissionDto> = emptyList(),
+    val imageUrl: String,
 ) {
     data class PermissionDto(
         val id: Int,
@@ -23,6 +24,7 @@ fun UserDto.toEntity() = User(
     username = username,
     email = email,
     permission = permissions.map { enumValueOf(it.permission) },
+    imageUrl = imageUrl
 )
 
 fun List<UserDto>.toEntity() = this.map { user ->
@@ -32,6 +34,7 @@ fun List<UserDto>.toEntity() = this.map { user ->
         country = user.country,
         username = user.username,
         email = user.email,
-        permission = user.permissions.map { enumValueOf(it.permission) }
+        permission = user.permissions.map { enumValueOf(it.permission) },
+        imageUrl = user.imageUrl
     )
 }
