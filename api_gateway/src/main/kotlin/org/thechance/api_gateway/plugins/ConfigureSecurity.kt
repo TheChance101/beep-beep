@@ -5,8 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
-import io.ktor.server.config.*
-import org.thechance.api_gateway.data.model.TokenType
+import org.thechance.api_gateway.data.security.TokenType
 import io.ktor.server.response.*
 
 fun Application.configureJWTAuthentication() {

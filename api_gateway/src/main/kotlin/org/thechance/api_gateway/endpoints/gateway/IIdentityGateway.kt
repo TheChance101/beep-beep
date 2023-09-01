@@ -1,6 +1,6 @@
 package org.thechance.api_gateway.endpoints.gateway
 
-import org.thechance.api_gateway.data.model.TokenConfiguration
+import org.thechance.api_gateway.data.security.TokenConfiguration
 import org.thechance.api_gateway.data.model.UserTokens
 import org.thechance.api_gateway.data.model.identity.UserManagementResource
 import java.util.*

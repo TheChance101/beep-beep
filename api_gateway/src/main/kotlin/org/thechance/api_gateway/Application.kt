@@ -1,10 +1,9 @@
 package org.thechance.api_gateway
 
 import io.ktor.server.application.*
-import io.ktor.server.config.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-import org.thechance.api_gateway.data.model.TokenConfiguration
+import org.thechance.api_gateway.data.security.TokenConfiguration
 import org.thechance.api_gateway.plugins.*
 
 fun main() {

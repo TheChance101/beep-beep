@@ -11,10 +11,10 @@ import io.ktor.server.websocket.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.gateway.IdentityGateway
 import org.thechance.api_gateway.data.mappers.toMeal
-import org.thechance.api_gateway.data.mappers.toRestaurant
 import org.thechance.api_gateway.data.model.restaurant.RestaurantResource
 import org.thechance.api_gateway.endpoints.gateway.IRestaurantGateway
 import org.thechance.api_gateway.endpoints.utils.*
+import org.thechance.api_gateway.util.Claim.USER_ID
 import org.thechance.api_gateway.util.Role
 import java.util.*
 
@@ -24,19 +24,15 @@ fun Route.restaurantRoutes() {
     val identityGateway: IdentityGateway by inject()
     val webSocketServerHandler: WebSocketServerHandler by inject()
 
-    route("/restaurants") {
-
-        authenticateWithRole(Role.RESTAURANT_OWNER) {
-            get {
-                val tokenClaim = call.principal<JWTPrincipal>()
-                val ownerId = tokenClaim?.payload?.subject?.trim().toString()
-                val (language, countryCode) = extractLocalizationHeader()
-                val result = restaurantGateway.getRestaurantsByOwnerId(
-                    ownerId = ownerId,
-                    locale = Locale(language, countryCode)
-                )
-                respondWithResult(HttpStatusCode.OK, result)
-            }
+    authenticateWithRole(Role.RESTAURANT_OWNER) {
+        get("/restaurants") {
+            val tokenClaim = call.principal<JWTPrincipal>()
+            val ownerId = tokenClaim?.get(USER_ID).toString()
+            val (language, countryCode) = extractLocalizationHeader()
+            val result = restaurantGateway.getRestaurantsByOwnerId(
+                ownerId = ownerId, locale = Locale(language, countryCode)
+            )
+            respondWithResult(HttpStatusCode.OK, result)
         }
     }
 
@@ -83,7 +79,7 @@ fun Route.restaurantRoutes() {
                         restaurant = restaurant.copy(ownerId = user.id),
                         Locale(language, countryCode)
                     )
-                respondWithResult(HttpStatusCode.Created, newRestaurant.toRestaurant())
+                respondWithResult(HttpStatusCode.Created, newRestaurant)
             }
         }
 
@@ -97,7 +93,7 @@ fun Route.restaurantRoutes() {
                 val updatedRestaurant = restaurantGateway.updateRestaurant(
                     restaurant, isAdmin = true, Locale(language, countryCode)
                 )
-                respondWithResult(HttpStatusCode.OK, updatedRestaurant.toRestaurant())
+                respondWithResult(HttpStatusCode.OK, updatedRestaurant)
             }
         }
 
@@ -110,14 +106,13 @@ fun Route.restaurantRoutes() {
                     isAdmin = false,
                     restaurant = restaurant
                 )
-                respondWithResult(HttpStatusCode.OK, updatedRestaurant.toRestaurant())
+                respondWithResult(HttpStatusCode.OK, updatedRestaurant)
             }
         }
 
         authenticateWithRole(Role.RESTAURANT_OWNER) {
 
             route("/orders") {
-
                 webSocket("/{restaurantId}") {
                     val restaurantId = call.parameters["restaurantId"]?.trim().orEmpty()
                     val (language, countryCode) = extractLocalizationHeaderFromWebSocket()

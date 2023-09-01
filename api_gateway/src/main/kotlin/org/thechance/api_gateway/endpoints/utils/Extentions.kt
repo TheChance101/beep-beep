@@ -10,6 +10,7 @@ import io.ktor.server.websocket.*
 import io.ktor.util.pipeline.*
 import org.thechance.api_gateway.data.localizedMessages.Country
 import org.thechance.api_gateway.data.localizedMessages.Language
+import org.thechance.api_gateway.util.Claim.PERMISSION
 import org.thechance.api_gateway.util.Role
 
 suspend inline fun <reified T> PipelineContext<Unit, ApplicationCall>.respondWithResult(
@@ -40,7 +41,7 @@ fun WebSocketServerSession.extractLocalizationHeaderFromWebSocket(): Pair<String
 
 private fun PipelineContext<Unit, ApplicationCall>.extractPermission(): Int {
     val principal = call.principal<JWTPrincipal>()
-    return principal?.getClaim("permission", Int::class) ?: -1
+    return principal?.getClaim(PERMISSION, Int::class) ?: -1
 }
 
 fun Route.authenticateWithRole(role: Int, block: Route.() -> Unit) {

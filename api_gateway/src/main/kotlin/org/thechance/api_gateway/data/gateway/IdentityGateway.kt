@@ -6,15 +6,19 @@ import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import io.ktor.util.*
 import org.koin.core.annotation.Single
-import org.thechance.api_gateway.data.model.TokenClaim
-import org.thechance.api_gateway.data.model.TokenConfiguration
-import org.thechance.api_gateway.data.model.TokenType
+import org.thechance.api_gateway.data.security.TokenClaim
+import org.thechance.api_gateway.data.security.TokenConfiguration
+import org.thechance.api_gateway.data.security.TokenType
 import org.thechance.api_gateway.data.model.UserTokens
 import org.thechance.api_gateway.data.model.identity.UserManagementResource
 import org.thechance.api_gateway.data.security.ITokenService
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.endpoints.gateway.IIdentityGateway
 import org.thechance.api_gateway.util.APIs
+import org.thechance.api_gateway.util.Claim.PERMISSION
+import org.thechance.api_gateway.util.Claim.TOKEN_TYPE
+import org.thechance.api_gateway.util.Claim.USERNAME
+import org.thechance.api_gateway.util.Claim.USER_ID
 import java.util.*
 
 @Single(binds = [IIdentityGateway::class])
@@ -131,10 +135,10 @@ class IdentityGateway(
         tokenConfiguration: TokenConfiguration,
         tokenType: TokenType
     ): String {
-        val userIdClaim = TokenClaim("userId", userId)
-        val rolesClaim = TokenClaim("permission", userPermission.toString())
-        val usernameClaim = TokenClaim("username", username)
-        val accessTokenClaim = TokenClaim("tokenType", tokenType.name)
+        val userIdClaim = TokenClaim(USER_ID, userId)
+        val rolesClaim = TokenClaim(PERMISSION, userPermission.toString())
+        val usernameClaim = TokenClaim(USERNAME, username)
+        val accessTokenClaim = TokenClaim(TOKEN_TYPE, tokenType.name)
         return tokenManagementService.generateToken(
             tokenConfiguration,
             userIdClaim,
