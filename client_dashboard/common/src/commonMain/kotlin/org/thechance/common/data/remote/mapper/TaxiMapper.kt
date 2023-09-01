@@ -1,27 +1,29 @@
 package org.thechance.common.data.remote.mapper
 
 import org.thechance.common.data.remote.model.TaxiDto
-import org.thechance.common.domain.entity.NewTaxiInfo
+import org.thechance.common.data.remote.model.TaxiFiltrationDto
 import org.thechance.common.domain.entity.CarColor
+import org.thechance.common.domain.entity.NewTaxiInfo
 import org.thechance.common.domain.entity.Taxi
+import org.thechance.common.domain.entity.TaxiFiltration
 import org.thechance.common.domain.util.TaxiStatus
 
 fun TaxiDto.toEntity() = Taxi(
-    id = id?: "",
-    plateNumber = plateNumber,
-    color = getCarColor(color),
-    type = type,
-    seats = seats,
-    status = getTaxiStatus(status?:0),
-    username = username,
-    trips = trips?: "0",
+    id = id ?: "",
+    plateNumber = plateNumber ?: "",
+    color = getCarColor(color ?: 4),
+    type = type ?: "",
+    seats = seats ?: 0,
+    status = getTaxiStatus(status ?: 0),
+    username = username ?: "",
+    trips = trips ?: "0",
 )
 
 fun NewTaxiInfo.toDto(): TaxiDto {
     return TaxiDto(
         id = null,
         plateNumber = plateNumber,
-       color = setCarColor(selectedCarColor),
+        color = setCarColor(selectedCarColor),
         type = carModel,
         seats = seats,
         username = driverUserName,
