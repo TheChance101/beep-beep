@@ -45,7 +45,7 @@ class RestaurantScreen :
 
     @Composable
     override fun OnRender(state: RestaurantUiState, listener: RestaurantInteractionListener) {
-        AnimatedVisibility(visible = state.isAddNewRestaurantDialogVisible) {
+        AnimatedVisibility(visible = state.isNewRestaurantInfoDialogVisible) {
             NewRestaurantInfoDialog(
                 modifier = Modifier,
                 state = state,

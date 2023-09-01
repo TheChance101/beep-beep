@@ -12,8 +12,6 @@
             width: 100%;
         }
 
-
-
     </style>
 </head>
 <body>
@@ -29,10 +27,14 @@ var svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="49"
                          '</g>' +
                          '</svg>';
 
-        function initMap() {
+       function updateLocation(lat, lng) {
+        initMap(lat,lng)
+        }
+
+        function initMap(lat,lng) {
                     var userLocation = {
-                        lat: 30.044420,
-                        lng: 31.235712
+                        lat: lat,
+                        lng: lng,
                     };
                 var map = new google.maps.Map(document.getElementById('map'), {
                 center: userLocation,
@@ -70,10 +72,8 @@ var svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="49"
                     });
         }
 
-
-
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCFe6kUCN5vweFBJ2MMlwHopB5WEPv3MGI&callback=initMap"
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1kFbtDfzI3bXkfkCEjb0LKtC8PTz-YZU"
         defer
 ></script>
 </body>

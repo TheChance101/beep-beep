@@ -1,7 +1,6 @@
 package org.thechance.common.presentation.restaurant
 
 import org.thechance.common.domain.entity.DataWrapper
-import org.thechance.common.domain.entity.Location
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.usecase.IHandleLocationUseCase
 import org.thechance.common.domain.usecase.IManageRestaurantUseCase
@@ -175,8 +174,8 @@ class RestaurantScreenModel(
     }
 
     override fun onAddNewRestaurantClicked() {
-        updateState { it.copy(isAddNewRestaurantDialogVisible = true) }
-        if (state.value.addNewRestaurantDialogUiState.currentLocation.isEmpty())
+        updateState { it.copy(isNewRestaurantInfoDialogVisible = true) }
+        if (state.value.newRestaurantInfoUiState.lat.isEmpty())
             getCurrentLocation()
     }
 
@@ -188,24 +187,25 @@ class RestaurantScreenModel(
         )
     }
 
-    private fun onGetCurrentLocationSuccess(location: String) {
+    private fun onGetCurrentLocationSuccess(location: Pair<String, String>) {
         updateState {
             it.copy(
-                addNewRestaurantDialogUiState = it.addNewRestaurantDialogUiState.copy(
-                    currentLocation = location
+                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
+                    lat = location.first,
+                    lng = location.second,
                 )
             )
         }
     }
 
     override fun onCancelCreateRestaurantClicked() {
-        updateState { it.copy(isAddNewRestaurantDialogVisible = false) }
+        updateState { it.copy(isNewRestaurantInfoDialogVisible = false) }
     }
 
     override fun onRestaurantNameChange(name: String) {
         updateState {
             it.copy(
-                addNewRestaurantDialogUiState = it.addNewRestaurantDialogUiState.copy(
+                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
                     name = name
                 )
             )
@@ -215,7 +215,7 @@ class RestaurantScreenModel(
     override fun onOwnerUserNameChange(name: String) {
         updateState {
             it.copy(
-                addNewRestaurantDialogUiState = it.addNewRestaurantDialogUiState.copy(
+                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
                     ownerUsername = name
                 )
             )
@@ -225,7 +225,7 @@ class RestaurantScreenModel(
     override fun onPhoneNumberChange(number: String) {
         updateState {
             it.copy(
-                addNewRestaurantDialogUiState = it.addNewRestaurantDialogUiState.copy(
+                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
                     phoneNumber = number
                 )
             )
@@ -235,7 +235,7 @@ class RestaurantScreenModel(
     override fun onWorkingStartHourChange(hour: String) {
         updateState {
             it.copy(
-                addNewRestaurantDialogUiState = it.addNewRestaurantDialogUiState.copy(
+                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
                     startTime = hour
                 )
             )
@@ -245,7 +245,7 @@ class RestaurantScreenModel(
     override fun onWorkingEndHourChange(hour: String) {
         updateState {
             it.copy(
-                addNewRestaurantDialogUiState = it.addNewRestaurantDialogUiState.copy(
+                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
                     endTime = hour
                 )
             )
@@ -255,7 +255,7 @@ class RestaurantScreenModel(
     override fun onLocationChange(location: String) {
         updateState {
             it.copy(
-                addNewRestaurantDialogUiState = it.addNewRestaurantDialogUiState.copy(
+                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
                     location = location
                 )
             )
@@ -266,7 +266,7 @@ class RestaurantScreenModel(
         tryToExecute(
             callee = {
                 manageRestaurant.createRestaurant(
-                    mutableState.value.addNewRestaurantDialogUiState.toEntity()
+                    mutableState.value.newRestaurantInfoUiState.toEntity()
                 )
             },
             onSuccess = ::onCreateRestaurantSuccessfully,
@@ -281,7 +281,7 @@ class RestaurantScreenModel(
             it.copy(
                 restaurants = newRestaurant,
                 isLoading = false,
-                isAddNewRestaurantDialogVisible = false
+                isNewRestaurantInfoDialogVisible = false
             )
         }
     }

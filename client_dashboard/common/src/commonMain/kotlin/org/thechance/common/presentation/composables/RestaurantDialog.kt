@@ -28,16 +28,17 @@ fun NewRestaurantInfoDialog(
     RestaurantDialog(
         modifier = modifier,
         onRestaurantNameChange = listener::onRestaurantNameChange,
-        isVisible = state.isAddNewRestaurantDialogVisible,
+        isVisible = state.isNewRestaurantInfoDialogVisible,
         onCancelClicked = listener::onCancelCreateRestaurantClicked,
         onOwnerUserNameChange = listener::onOwnerUserNameChange,
         onPhoneNumberChange = listener::onPhoneNumberChange,
         onWorkingStartHourChange = listener::onWorkingStartHourChange,
         onWorkingEndHourChange = listener::onWorkingEndHourChange,
-        state = state.addNewRestaurantDialogUiState,
+        state = state.newRestaurantInfoUiState,
         onCreateClicked = listener::onCreateNewRestaurantClicked,
         onLocationChange = listener::onLocationChange,
-        currentLocation = state.addNewRestaurantDialogUiState.currentLocation,
+        lat = state.newRestaurantInfoUiState.lat,
+        lng = state.newRestaurantInfoUiState.lat,
     )
 }
 
@@ -47,7 +48,8 @@ fun NewRestaurantInfoDialog(
 private fun RestaurantDialog(
     modifier: Modifier = Modifier,
     state: NewRestaurantInfoUiState,
-    currentLocation: String,
+    lat: String,
+    lng: String,
     isVisible: Boolean,
     onCreateClicked: () -> Unit,
     onCancelClicked: () -> Unit,
@@ -135,7 +137,7 @@ private fun RestaurantDialog(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.End,
                 ) {
-                    GoogleMap(currentLocation = currentLocation) { address ->
+                    GoogleMap(lat = lat, lng = lng) { address ->
                         onLocationChange(address)
                     }
                     Row(

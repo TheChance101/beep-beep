@@ -1,6 +1,7 @@
 package org.thechance.common.presentation.composables
 
 import javafx.application.Platform
+import javafx.concurrent.Worker
 import javafx.embed.swing.JFXPanel
 import javafx.scene.Scene
 import javafx.scene.web.WebView
@@ -10,7 +11,8 @@ import javax.swing.SwingUtilities
 
 private fun createWebViewComponent(
     content: String,
-    currentLocation: String,
+    lat: String,
+    lng: String,
     onError: (String) -> Unit,
     onAlert: (String) -> Unit = {},
 ): JFXPanel {
@@ -19,6 +21,10 @@ private fun createWebViewComponent(
         val webView = WebView()
         val webEngine = webView.engine
         val scene = Scene(webView)
+        webEngine.loadWorker.stateProperty().addListener { _, _, newState ->
+            if (newState == Worker.State.SUCCEEDED)
+                webEngine.executeScript("updateLocation($lat, $lng)")
+        }
         jfxPanel.scene = scene
         webEngine.loadContent(getResourceContent(content))
         webEngine.javaScriptEnabledProperty().set(true)
@@ -41,7 +47,8 @@ private fun getResourceContent(resourcePath: String): String? {
 private const val GOOGLE_MAP_PATH = "/google_map.html"
 
 fun mapFromWebView(
-    currentLocation: String,
+    lat: String,
+    lng: String,
     onGetLocation: (String) -> Unit,
 ): JPanel {
     val jPanel = JPanel().apply {
@@ -50,7 +57,8 @@ fun mapFromWebView(
             content = GOOGLE_MAP_PATH,
             onError = { println(it) },
             onAlert = { onGetLocation(it) },
-            currentLocation = currentLocation,
+            lat = lat,
+            lng = lng,
         )
         add(webViewPanel, BorderLayout.CENTER)
     }
