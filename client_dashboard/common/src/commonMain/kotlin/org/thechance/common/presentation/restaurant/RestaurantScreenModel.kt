@@ -188,11 +188,11 @@ class RestaurantScreenModel(
         )
     }
 
-    private fun onGetCurrentLocationSuccess(location: Location) {
+    private fun onGetCurrentLocationSuccess(location: String) {
         updateState {
             it.copy(
                 addNewRestaurantDialogUiState = it.addNewRestaurantDialogUiState.copy(
-                    currentLocation = location.location
+                    currentLocation = location
                 )
             )
         }
