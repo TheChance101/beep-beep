@@ -1,4 +1,4 @@
-package org.thechance.api_gateway.endpoints.model
+package org.thechance.api_gateway.data.model.restaurant
 
 import kotlinx.serialization.Serializable
 
@@ -13,6 +13,6 @@ data class Restaurant(
     val phone: String? = null,
     val openingTime: String? = null,
     val closingTime: String? = null,
-    val location: Location? = null,
     val address: String? = null,
+    val location: Location? = null,
 )

@@ -1,4 +1,4 @@
-package org.thechance.api_gateway.endpoints.model
+package org.thechance.api_gateway.data.model
 
 import kotlinx.serialization.Serializable
 

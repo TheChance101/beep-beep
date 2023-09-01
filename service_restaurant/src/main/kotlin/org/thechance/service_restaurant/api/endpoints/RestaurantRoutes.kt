@@ -49,6 +49,7 @@ fun Route.restaurantRoutes() {
     }
 
     route("/restaurant") {
+
         get("/{id}/meals") {
             val restaurantId = call.parameters["id"] ?: throw MultiErrorException(
                 listOf(
@@ -75,13 +76,11 @@ fun Route.restaurantRoutes() {
             call.respond(HttpStatusCode.OK, restaurant)
         }
 
-
         post {
             val restaurant = call.receive<RestaurantDto>()
             val result = controlRestaurant.createRestaurant(restaurant.toEntity())
             call.respond(HttpStatusCode.Created, result.toDto())
         }
-
 
         put("/details") {
             val restaurant = call.receive<RestaurantDto>()

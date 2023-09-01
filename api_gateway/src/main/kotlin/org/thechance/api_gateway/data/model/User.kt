@@ -1,4 +1,4 @@
-package org.thechance.api_gateway.data.model.identity
+package org.thechance.api_gateway.data.model
 
 import kotlinx.serialization.Serializable
 
@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
  */
 
 @Serializable
-data class UserManagementResource(
+data class User(
     val id: String,
     val fullName: String,
     val username: String,
