@@ -70,33 +70,33 @@ fun Route.restaurantRoutes() {
             )
             respondWithResult(HttpStatusCode.OK, restaurant)
         }
+        authenticateWithRole(Role.DASHBOARD_ADMIN) {
+            put {
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
+                val (language, countryCode) = extractLocalizationHeader()
+                val restaurant = call.receive<RestaurantResource>()
 
-        put {
-            val tokenClaim = call.principal<JWTPrincipal>()
-            val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
-            val (language, countryCode) = extractLocalizationHeader()
-            val params = call.receiveParameters()
-            val restaurant = call.receive<RestaurantResource>()
-
-
-            val updatedRestaurant = restaurantGateway.updateRestaurantForAdmin(
-                restaurant, permissions, Locale(language, countryCode)
-            )
-            respondWithResult(HttpStatusCode.OK, updatedRestaurant.toRestaurant())
+                val updatedRestaurant = restaurantGateway.updateRestaurantForAdmin(
+                    restaurant, permissions, Locale(language, countryCode)
+                )
+                respondWithResult(HttpStatusCode.OK, updatedRestaurant.toRestaurant())
+            }
         }
+        authenticateWithRole(Role.RESTAURANT_OWNER) {
+            put("/details") {
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
+                val (language, countryCode) = extractLocalizationHeader()
+                val restaurant = call.receive<RestaurantResource>()
 
-        put {
-            val tokenClaim = call.principal<JWTPrincipal>()
-            val permissions = tokenClaim?.payload?.getClaim("permissions")?.asList(Int::class.java) ?: emptyList()
-            val (language, countryCode) = extractLocalizationHeader()
-            val restaurant = call.receive<RestaurantResource>()
-
-            val updatedRestaurant = restaurantGateway.updateRestaurant(
-                Locale(language, countryCode),
-                restaurant,
-                permissions,
-            )
-            respondWithResult(HttpStatusCode.OK, updatedRestaurant.toRestaurant())
+                val updatedRestaurant = restaurantGateway.updateRestaurant(
+                    Locale(language, countryCode),
+                    restaurant,
+                    permissions,
+                )
+                respondWithResult(HttpStatusCode.OK, updatedRestaurant.toRestaurant())
+            }
         }
 
         authenticateWithRole(Role.RESTAURANT_OWNER) {
@@ -128,6 +128,30 @@ fun Route.restaurantRoutes() {
                         restaurantId = id,
                         page = page,
                         limit = limit,
+                        locale = Locale(language, countryCode)
+                    )
+                    respondWithResult(HttpStatusCode.OK, result)
+                }
+
+                get("/count-by-days-back") {
+                    val id = call.parameters["restaurantId"]?.trim().toString()
+                    val daysBack = call.parameters["daysBack"]?.trim()?.toInt() ?: 7
+                    val (language, countryCode) = extractLocalizationHeader()
+                    val result = restaurantGateway.getOrdersCountByDaysBefore(
+                        restaurantId = id,
+                        daysBack = daysBack,
+                        locale = Locale(language, countryCode)
+                    )
+                    respondWithResult(HttpStatusCode.OK, result)
+                }
+
+                get("/revenue-by-days-back") {
+                    val id = call.parameters["restaurantId"]?.trim().toString()
+                    val daysBack = call.parameters["daysBack"]?.trim()?.toInt() ?: 7
+                    val (language, countryCode) = extractLocalizationHeader()
+                    val result = restaurantGateway.getOrdersRevenueByDaysBefore(
+                        restaurantId = id,
+                        daysBack = daysBack,
                         locale = Locale(language, countryCode)
                     )
                     respondWithResult(HttpStatusCode.OK, result)

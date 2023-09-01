@@ -83,14 +83,7 @@ class RestaurantGateway(
             put("/restaurant") {
                 body = Json.encodeToString(
                     RestaurantResource.serializer(),
-                    RestaurantResource(
-                        id = restaurant.id,
-                        name = restaurant.name,
-                        phone = restaurant.phone,
-                        description = restaurant.description,
-                        openingTime = restaurant.openingTime,
-                        closingTime = restaurant.closingTime
-                    )
+                    restaurant
                 )
             }
 
@@ -112,7 +105,15 @@ class RestaurantGateway(
             put("/restaurant/details") {
                 body = Json.encodeToString(
                     RestaurantResource.serializer(),
-                    restaurant
+                    RestaurantResource(
+                        id = restaurant.id,
+                        ownerId = restaurant.ownerId,
+                        name = restaurant.name,
+                        phone = restaurant.phone,
+                        description = restaurant.description,
+                        openingTime = restaurant.openingTime,
+                        closingTime = restaurant.closingTime
+                    )
                 )
             }
         }
@@ -297,6 +298,20 @@ class RestaurantGateway(
         }
     }
 
+    override suspend fun getOrdersRevenueByDaysBefore(
+        restaurantId: String,
+        daysBack: Int,
+        locale: Locale
+    ): List<Map<Int, Double>> {
+        return tryToExecute<List<Map<Int, Double>>>(
+            api = APIs.RESTAURANT_API,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, locale)
+            }
+        ) {
+            get("/order/revenue-by-days-back?restaurantId=$restaurantId&&daysBack=$daysBack")
+        }
+    }
 
     override suspend fun restaurantOrders(restaurantId: String, locale: Locale): Flow<Order> {
         return tryToExecuteFromWebSocket<Order>(api = APIs.RESTAURANT_API, path = "/order/restaurant/$restaurantId")

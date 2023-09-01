@@ -6,8 +6,8 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import org.thechance.service_identity.data.mappers.toDto
-import org.thechance.service_identity.domain.entity.MissingParameterException
+import org.thechance.service_identity.endpoints.model.mapper.toDto
+import org.thechance.service_identity.domain.util.MissingParameterException
 import org.thechance.service_identity.domain.usecases.IUserManagementUseCase
 import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
 import org.thechance.service_identity.endpoints.model.UsersManagementDto

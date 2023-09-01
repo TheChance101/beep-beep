@@ -3,7 +3,7 @@ package org.thechance.service_identity.domain.usecases.validation
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
-import org.thechance.service_identity.domain.entity.RequestValidationException
+import org.thechance.service_identity.domain.util.RequestValidationException
 import org.thechance.service_identity.domain.util.AMOUNT_MUST_BE_POSITIVE
 
 class WalletBalanceValidationUseCaseTest {

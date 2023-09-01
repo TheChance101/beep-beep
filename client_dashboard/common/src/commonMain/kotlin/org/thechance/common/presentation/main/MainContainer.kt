@@ -29,6 +29,7 @@ import org.thechance.common.presentation.resources.Resources
 
 object MainContainer : Screen, KoinComponent {
 
+    private fun readResolve(): Any = MainContainer
     private val screenModel: MainScreenModel by inject()
 
     @Composable
@@ -42,15 +43,19 @@ object MainContainer : Screen, KoinComponent {
                 onClickLogout = {
                     screenModel.logout()
                     navigator.popUntilRoot()
-                }
+                },
+                onSwitchTheme = screenModel::onSwitchTheme,
+                isDarkMode = state.isDarkMode
             )
         }
     }
 
     @Composable
     private fun MainContent(
-        state: MainUiState,
         onClickLogout: () -> Unit,
+        onSwitchTheme: () -> Unit,
+        state: MainUiState,
+        isDarkMode: Boolean
     ) {
         val tabNavigator = LocalTabNavigator.current
 
@@ -67,7 +72,9 @@ object MainContainer : Screen, KoinComponent {
             },
             sideBar = {
                 DashboardSideBar(
-                    currentItem = tabNavigator.current.options.index.toInt()
+                    currentItem = tabNavigator.current.options.index.toInt(),
+                    onSwitchTheme = onSwitchTheme,
+                    darkTheme = isDarkMode,
                 ) { sideBarUnexpandedWidthInKms, mainMenuIsExpanded, itemHeight ->
                     TabNavigationItem(
                         tab = OverviewTab,

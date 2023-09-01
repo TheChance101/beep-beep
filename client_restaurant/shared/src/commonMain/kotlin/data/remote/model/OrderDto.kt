@@ -1,27 +1,34 @@
 package data.remote.model
 
-import domain.entity.Order
-import domain.entity.OrderState
-import domain.utils.Constant
-import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
-import presentation.base.RequestException
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class OrderDto(
+    @SerialName("id")
     val id: String,
+    @SerialName("id")
     val userId: String,
+    @SerialName("id")
     val restaurantId: String,
+    @SerialName("id")
     val meals: List<MealDto>,
+    @SerialName("id")
     val totalPrice: Double? = null,
+    @SerialName("id")
     val createdAt: String? = null,
+    @SerialName("id")
     val orderState: Int
 ) {
+    @Serializable
     data class MealDto(
+        @SerialName("id")
         val id: String,
+        @SerialName("mealImageUrl")
         val mealImageUrl: String,
+        @SerialName("mealName")
         val mealName: String,
+        @SerialName("quantity")
         val quantity: Int,
     )
 }
