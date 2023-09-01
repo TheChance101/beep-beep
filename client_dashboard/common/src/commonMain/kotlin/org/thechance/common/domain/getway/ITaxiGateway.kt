@@ -7,6 +7,9 @@ import org.thechance.common.domain.entity.Taxi
 interface ITaxiGateway {
     suspend fun getTaxis(): DataWrapper<Taxi>
     suspend fun createTaxi(taxi: NewTaxiInfo): Taxi
+
+    suspend fun updateTaxi(taxi: NewTaxiInfo): Boolean
+    suspend fun deleteTaxi(taxiId: String): Boolean
     suspend fun searchTaxiByDriverUsername(driverUsername: String): DataWrapper<Taxi>
     suspend fun filterTaxis(): DataWrapper<Taxi>
 }

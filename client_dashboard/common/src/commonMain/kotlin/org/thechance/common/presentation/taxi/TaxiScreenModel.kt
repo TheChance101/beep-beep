@@ -3,7 +3,13 @@ package org.thechance.common.presentation.taxi
 import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Taxi
-import org.thechance.common.domain.usecase.*
+import org.thechance.common.domain.usecase.ICreateNewTaxiUseCase
+import org.thechance.common.domain.usecase.IDeleteTaxiUseCase
+import org.thechance.common.domain.usecase.IFilterTaxisUseCase
+import org.thechance.common.domain.usecase.IFindTaxisByUsernameUseCase
+import org.thechance.common.domain.usecase.IGetTaxiReportUseCase
+import org.thechance.common.domain.usecase.IGetTaxisUseCase
+import org.thechance.common.domain.usecase.IUpdateTaxiUseCase
 import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
@@ -11,9 +17,11 @@ import org.thechance.common.presentation.util.ErrorState
 class TaxiScreenModel(
     private val getTaxis: IGetTaxisUseCase,
     private val createNewTaxi: ICreateNewTaxiUseCase,
+    private val updateTaxi: IUpdateTaxiUseCase,
     private val findTaxisByUsername: IFindTaxisByUsernameUseCase,
     private val getTaxiReport: IGetTaxiReportUseCase,
-    private val filterTaxi: IFilterTaxisUseCase
+    private val filterTaxi: IFilterTaxisUseCase,
+    private val deleteTaxi: IDeleteTaxiUseCase
 ) : BaseScreenModel<TaxiUiState, TaxiUiEffect>(TaxiUiState()), TaxiInteractionListener {
 
     init {
@@ -95,9 +103,9 @@ class TaxiScreenModel(
     //endregion
 
     //region add new taxi listener
-    override fun onCancelCreateTaxiClicked() {
-        updateState { it.copy(isAddNewTaxiDialogVisible = false) }
+    override fun onCancelClicked() {
         clearAddNewTaxiDialogState()
+        updateState { it.copy(isAddNewTaxiDialogVisible = false) }
     }
 
     override fun onTaxiPlateNumberChange(number: String) {
@@ -126,6 +134,24 @@ class TaxiScreenModel(
         updateState { it.copy(newTaxiInfo = it.newTaxiInfo.copy(seats = seats)) }
     }
 
+    override fun onSaveClicked() {
+        tryToExecute(
+            { updateTaxi.updateTaxi(mutableState.value.newTaxiInfo.toEntity()) },
+            ::onUpdateTaxiSuccessfully,
+            ::onError
+        )
+    }
+
+    private fun onUpdateTaxiSuccessfully(isUpdate: Boolean) {
+        if (isUpdate) {
+            updateState {
+                it.copy(isAddNewTaxiDialogVisible = false, taxiMenu = it.taxiMenu.copy(id = ""))
+            }
+            getDummyTaxiData()
+        }
+        //todo:show snack bar
+    }
+
     override fun onCreateTaxiClicked() {
         updateState { it.copy(isAddNewTaxiDialogVisible = false) }
         tryToExecute(
@@ -139,10 +165,12 @@ class TaxiScreenModel(
         val newTaxi = mutableState.value.taxis.toMutableList().apply { add(taxi.toUiState()) }
         updateState { it.copy(taxis = newTaxi, isLoading = false) }
         clearAddNewTaxiDialogState()
+        getDummyTaxiData()
     }
 
     override fun onAddNewTaxiClicked() {
-        updateState { it.copy(isAddNewTaxiDialogVisible = true) }
+        clearAddNewTaxiDialogState()
+        updateState { it.copy(isAddNewTaxiDialogVisible = true, isEditMode = false) }
     }
 
     private fun clearAddNewTaxiDialogState() {
@@ -223,33 +251,48 @@ class TaxiScreenModel(
     //endregion
 
     //region taxi menu listener
-    override fun showTaxiMenu(username: String) {
-        updateState { it.copy(taxiMenu = it.taxiMenu.copy(username = username)) }
+    override fun showTaxiMenu(taxiId: String) {
+        updateState { it.copy(taxiMenu = it.taxiMenu.copy(id = taxiId)) }
     }
 
     override fun hideTaxiMenu() {
-        updateState { it.copy(taxiMenu = it.taxiMenu.copy(username = "")) }
+        updateState { it.copy(taxiMenu = it.taxiMenu.copy(id = "")) }
     }
 
-    override fun onDeleteTaxiClicked(taxi: TaxiDetailsUiState) {
-        println("delete taxi")
-        //todo: delete taxi
+    override fun onDeleteTaxiClicked(taxiId: String) {
+        tryToExecute(
+            { deleteTaxi.deleteTaxi(taxiId = taxiId) },
+            ::onDeleteTaxiSuccessfully,
+            ::onError
+        )
+    }
+
+    private fun onDeleteTaxiSuccessfully(isDeleted: Boolean) {
+        updateState { it.copy(taxiMenu = it.taxiMenu.copy(id = "")) }
+        if (isDeleted) {
+            getDummyTaxiData()
+        }
+        //todo:show snack bar
     }
 
     override fun onEditTaxiClicked(taxi: TaxiDetailsUiState) {
-        //todo: edit taxi show dialog
-        println("on click edit taxi")
+        updateState {
+            it.copy(
+                isEditMode = true,
+                isAddNewTaxiDialogVisible = true,
+                newTaxiInfo = it.newTaxiInfo.copy(
+                    id = taxi.id,
+                    plateNumber = taxi.plateNumber,
+                    driverUserName = taxi.username,
+                    carModel = taxi.type,
+                    selectedCarColor = taxi.color,
+                    seats = taxi.seats
+                )
+            )
+        }
     }
 
-    override fun onSaveEditTaxiMenu() {
-        //todo: save taxi
-        println("save button, update taxi")
-    }
 
-    override fun onCancelEditTaxiMenu() {
-        //todo: cancel edit taxi
-        println("cancel button")
-    }
 
 //endregion
 

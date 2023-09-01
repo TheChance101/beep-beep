@@ -9,12 +9,24 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.thechance.common.data.local.LocalGateway
 import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
-import org.thechance.common.data.remote.model.*
-import org.thechance.common.domain.entity.*
+import org.thechance.common.data.remote.model.DataWrapperDto
+import org.thechance.common.data.remote.model.RestaurantDto
+import org.thechance.common.data.remote.model.TaxiDto
+import org.thechance.common.data.remote.model.UserDto
+import org.thechance.common.data.remote.model.toEntity
+import org.thechance.common.domain.entity.AddRestaurant
+import org.thechance.common.domain.entity.DataWrapper
+import org.thechance.common.domain.entity.Location
+import org.thechance.common.domain.entity.NewTaxiInfo
+import org.thechance.common.domain.entity.Restaurant
+import org.thechance.common.domain.entity.Taxi
+import org.thechance.common.domain.entity.TaxiFiltration
+import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.getway.IRemoteGateway
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.UUID
 import kotlin.math.ceil
 import kotlin.math.floor
 
@@ -820,6 +832,39 @@ class FakeRemoteGateway(
         return taxis.last().toEntity()
     }
 
+    override suspend fun updateTaxi(taxi: NewTaxiInfo): Boolean {
+        val indexToUpdate = taxis.indexOfFirst { it.id == taxi.id }
+        val newTaxi = taxi.toDto()
+        return if (indexToUpdate != -1) {
+            val oldTaxi = taxis[indexToUpdate]
+            val updatedTaxi = TaxiDto(
+                id = newTaxi.id,
+                plateNumber = newTaxi.plateNumber,
+                color = newTaxi.color,
+                type = newTaxi.type,
+                seats = newTaxi.seats,
+                username = newTaxi.username,
+                trips = oldTaxi.trips,
+                status = oldTaxi.status
+            )
+            taxis.removeAt(indexToUpdate)
+            taxis.add(index = indexToUpdate, element = updatedTaxi)
+            true
+        } else {
+            false
+        }
+    }
+    override suspend fun deleteTaxi(taxiId: String): Boolean {
+        val indexToUpdate = taxis.indexOfFirst { it.id == taxiId }
+        return if (indexToUpdate != -1) {
+            taxis.removeAt(indexToUpdate)
+            true
+        } else {
+            false
+        }
+    }
+
+
     override suspend fun findTaxisByUsername(
         username: String, page: Int, numberOfTaxis: Int
     ): DataWrapper<Taxi> {
@@ -1073,7 +1118,8 @@ class FakeRemoteGateway(
         contentStream.beginText()
         val dateTimeWidth = PDType1Font.HELVETICA.getStringWidth(dateTime) / 1000 * 12f
         val pageMidX = pageWidth / 2 // Place the text in the center of the page
-        val dateTimeX = pageMidX - dateTimeWidth / 2 // Place the text in the center horizontally
+        val dateTimeX =
+            pageMidX - dateTimeWidth / 2 // Place the text in the center horizontally
         val dateTimeTopMargin = 10f // Add space between date/time and title
         val dateTimeY = titleY - 20f - dateTimeTopMargin // Adjust the value to add more space
         contentStream.newLineAtOffset(dateTimeX, dateTimeY)

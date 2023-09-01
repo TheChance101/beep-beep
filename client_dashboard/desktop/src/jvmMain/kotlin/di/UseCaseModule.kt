@@ -20,4 +20,6 @@ val UseCaseModule = module {
     singleOf(::GetTaxiReportUseCase) { bind<IGetTaxiReportUseCase>() }
     singleOf(::FilterTaxisUseCase) { bind<IFilterTaxisUseCase>() }
     singleOf(::ThemeManagementUseCase) { bind<IThemeManagementUseCase>() }
+    singleOf(::UpdateTaxiUseCase) { bind<IUpdateTaxiUseCase>() }
+    singleOf(::DeleteTaxiUseCase) { bind<IDeleteTaxiUseCase>() }
 }

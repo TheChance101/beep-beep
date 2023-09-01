@@ -6,11 +6,9 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -56,6 +54,7 @@ class TaxiScreen :
         }
     }
 
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun OnRender(
@@ -63,17 +62,60 @@ class TaxiScreen :
         listener: TaxiInteractionListener
     ) {
 
-        AddTaxiDialog(
-            modifier = Modifier,
-            onTaxiPlateNumberChange = listener::onTaxiPlateNumberChange,
-            onCancelCreateTaxiClicked = listener::onCancelCreateTaxiClicked,
+//        TaxiDialog(
+//            isVisible = state.isAddNewTaxiDialogVisible,
+//            context = DialogContext.ADD_TAXI,
+//            actions = listener,
+//            state = state.newTaxiInfo,
+//            onCancelClicked = {},
+//        )
+//        AddTaxiDialog(
+//            modifier = Modifier,
+//            onTaxiPlateNumberChange = listener::onTaxiPlateNumberChange,
+//            onCancelCreateTaxiClicked = listener::onCancelCreateTaxiClicked,
+//            isVisible = state.isAddNewTaxiDialogVisible,
+//            onDriverUserNamChange = listener::onDriverUserNamChange,
+//            onCarModelChange = listener::onCarModelChanged,
+//            onCarColorSelected = listener::onCarColorSelected,
+//            onSeatsSelected = listener::onSeatSelected,
+//            state = state.newTaxiInfo,
+//            onCreateTaxiClicked = listener::onCreateTaxiClicked
+//        )
+//        EditTaxiDialog(
+//            modifier = Modifier,
+//            onTaxiPlateNumberChange = listener::onTaxiPlateNumberChange,
+//            onCancelClicked = listener::onCancelClicked,
+//            isVisible = state.isEditTaxiDialogVisible,
+//            onDriverUserNamChange = listener::onDriverUserNamChange,
+//            onCarModelChange = listener::onCarModelChanged,
+//            onCarColorSelected = listener::onCarColorSelected,
+//            onSeatsSelected = listener::onSeatSelected,
+//            state = state.newTaxiInfo,
+//            onSaveTaxiClicked = listener::onSaveClicked
+//        )
+//        TaxiDialogBuilder(
+//            isVisible = state.isAddNewTaxiDialogVisible,
+//            onCancelClicked = listener::onCancelClicked,
+//            title = Resources.Strings.create,
+//            state = state.newTaxiInfo,
+//            actions = listener,
+//            onSaveClicked = listener::onCreateTaxiClicked,
+//        ) .build()
+//
+//        TaxiDialogBuilder(
+//            isVisible = state.isEditTaxiDialogVisible,
+//            onCancelClicked = listener::onCancelClicked,
+//            title = Resources.Strings.save,
+//            state = state.newTaxiInfo,
+//            actions = listener,
+//            onSaveClicked = listener::onSaveClicked,
+//        ).build()
+//
+        TaxiDialog(
             isVisible = state.isAddNewTaxiDialogVisible,
-            onDriverUserNamChange = listener::onDriverUserNamChange,
-            onCarModelChange = listener::onCarModelChanged,
-            onCarColorSelected = listener::onCarColorSelected,
-            onSeatsSelected = listener::onSeatSelected,
+            actions = listener,
             state = state.newTaxiInfo,
-            onCreateTaxiClicked = listener::onCreateTaxiClicked
+            isEditMode = state.isEditMode
         )
 
         Box(
@@ -135,7 +177,7 @@ class TaxiScreen :
                 }
                 BpTable(
                     data = state.pageInfo.data,
-                    key = { it.username },
+                    key = { it.id },
                     headers = state.tabHeader,
                     modifier = Modifier.fillMaxWidth(),
                     rowContent = { taxi ->
@@ -275,9 +317,9 @@ class TaxiScreen :
                     iconsPadding = PaddingValues(horizontal = 8.kms),
                     modifier = Modifier.fillMaxWidth()
                         .background(color = Theme.colors.background).padding(
-                        horizontal = 24.kms,
-                        vertical = 16.kms
-                    ),
+                            horizontal = 24.kms,
+                            vertical = 16.kms
+                        ),
                     onClick = onSeatsSelected
                 )
                 Row(
@@ -292,7 +334,7 @@ class TaxiScreen :
 
                     )
                     BpOutlinedButton(
-                        title =Resources.Strings.save,
+                        title = Resources.Strings.save,
                         onClick = onSaveFilterClicked,
                         shape = RoundedCornerShape(Theme.radius.small),
                         modifier = Modifier.height(50.dp).weight(1f)
@@ -341,7 +383,7 @@ class TaxiScreen :
         editTaxiMenu: MenuUiState,
         onDropdownMenuDismiss: () -> Unit,
         onEditTaxiClicked: (TaxiDetailsUiState) -> Unit,
-        onDeleteTaxiClicked: (TaxiDetailsUiState) -> Unit,
+        onDeleteTaxiClicked: (String) -> Unit,
     ) {
         TitleField(
             text = position.toString(),
@@ -375,7 +417,7 @@ class TaxiScreen :
             Image(
                 painter = painterResource(Resources.Drawable.dots),
                 contentDescription = null,
-                modifier = Modifier.noRipple { onDropdownMenuClicked(taxi.username) },
+                modifier = Modifier.noRipple { onDropdownMenuClicked(taxi.id) },
                 colorFilter = ColorFilter.tint(color = Theme.colors.contentPrimary)
             )
             EditTaxiDropdownMenu(
@@ -394,10 +436,10 @@ class TaxiScreen :
         onDropdownMenuDismiss: () -> Unit,
         editTaxiMenu: MenuUiState,
         onEditTaxiClicked: (TaxiDetailsUiState) -> Unit,
-        onDeleteTaxiClicked: (TaxiDetailsUiState) -> Unit,
+        onDeleteTaxiClicked: (String) -> Unit,
     ) {
         BpDropdownMenu(
-            expanded = taxi.username == editTaxiMenu.username,
+            expanded = taxi.id == editTaxiMenu.id,
             onDismissRequest = onDropdownMenuDismiss,
             shape = RoundedCornerShape(Theme.radius.medium),
             offset = DpOffset.Zero.copy(x = (-100).kms)
@@ -408,7 +450,7 @@ class TaxiScreen :
                         onClick = {
                             when (it.text) {
                                 "Edit" -> onEditTaxiClicked(taxi)
-                                "Delete" -> onDeleteTaxiClicked(taxi)
+                                "Delete" -> onDeleteTaxiClicked(taxi.id)
                             }
                         },
                         text = it.text,
