@@ -15,7 +15,7 @@ class EgyptianArabicLocalizedMessages : LocalizedMessages {
     override val passwordCannotBeLessThan8Characters: String = "بالذمة شفت باسورد أقل من 8 حروف يا كبير"
     override val usernameCannotBeBlank: String = "في اي يسطا"
     override val passwordCannotBeBlank: String = "فين الباسورد!! هنخم؟"
-    override val invalidEmail: String = "الايميل يابشمهندس!!"
+    override val invalidEmail: String = "الايميل يسطا!!"
     override val notFound: String = "مش موجود ياعم"
     override val invalidCredentials: String = "امسك حرامي"
     override val userCreatedSuccessfully: String = "اعمل حفلة بقى عندك حساب يا ابن المحظوظة 🎉"
@@ -26,8 +26,8 @@ class EgyptianArabicLocalizedMessages : LocalizedMessages {
 
     // region taxi
     override val taxiCreatedSuccessfully: String= "اعمل حفلة بقى عندك تكسي يا ابن المحظوظة 🎉"
-    override val taxiUpdateSuccessfully: String= "تم تحديث التاكسي بنجاح"
-    override val taxiDeleteSuccessfully: String= "تم حذف التاكسي بنجاح"
+    override val taxiUpdateSuccessfully: String= "حدثنالك التاكسي يا عم 🎉"
+    override val taxiDeleteSuccessfully: String= "مسحنالك التاكسي مع الاسف"
     // endregion
 
     //region restaurant
