@@ -5,9 +5,7 @@ import org.thechance.common.domain.entity.Location
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.usecase.IHandleLocationUseCase
 import org.thechance.common.domain.usecase.IManageRestaurantUseCase
-import org.thechance.common.domain.usecase.MangeCuisinesUseCase
-import org.thechance.common.domain.usecase.SearchFilterRestaurantsUseCase
-import org.thechance.common.domain.usecase.SearchRestaurantsByRestaurantNameUseCase
+import org.thechance.common.domain.usecase.IMangeCuisinesUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
@@ -15,10 +13,7 @@ import org.thechance.common.presentation.util.ErrorState
 class RestaurantScreenModel(
     private val manageRestaurant: IManageRestaurantUseCase,
     private val handleLocation: IHandleLocationUseCase,
-    private val searchRestaurants: SearchRestaurantsByRestaurantNameUseCase,
-    private val searchFilterRestaurants: SearchFilterRestaurantsUseCase,
-    private val filterRestaurants: FilterRestaurantsUseCase,
-    private val mangeCuisines: MangeCuisinesUseCase,
+    private val mangeCuisines: IMangeCuisinesUseCase,
 ) : BaseScreenModel<RestaurantUiState, RestaurantUIEffect>(RestaurantUiState()),
     RestaurantInteractionListener {
 
