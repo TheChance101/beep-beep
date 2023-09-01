@@ -25,8 +25,6 @@ interface TaxiDialogListener {
     fun onCarColorSelected(color: CarColor)
 
     fun onSeatSelected(seats: Int)
-
-    // Define other actions here
     fun onSaveClicked()
     fun onCancelClicked()
     fun onCreateTaxiClicked()
