@@ -1,5 +1,6 @@
 package org.thechance.common.presentation.taxi
 
+import kotlinx.coroutines.Job
 import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Taxi
@@ -24,13 +25,16 @@ class TaxiScreenModel(
     private val deleteTaxi: IDeleteTaxiUseCase
 ) : BaseScreenModel<TaxiUiState, TaxiUiEffect>(TaxiUiState()), TaxiInteractionListener {
 
+    private var searchJob: Job? = null
+
     init {
         getDummyTaxiData()
     }
 
     override fun onSearchInputChange(searchQuery: String) {
         updateState { it.copy(searchQuery = searchQuery) }
-        findTaxisByUsername(searchQuery)
+        searchJob?.cancel()
+        searchJob = launchDelayed(300L) { findTaxisByUsername(searchQuery) }
     }
 
     private fun getDummyTaxiData() {
@@ -291,7 +295,6 @@ class TaxiScreenModel(
             )
         }
     }
-
 
 
 //endregion
