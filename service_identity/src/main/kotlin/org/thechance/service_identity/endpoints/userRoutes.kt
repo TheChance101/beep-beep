@@ -6,8 +6,8 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import org.thechance.service_identity.data.mappers.toDto
-import org.thechance.service_identity.domain.entity.MissingParameterException
+import org.thechance.service_identity.endpoints.model.mapper.toDto
+import org.thechance.service_identity.domain.util.MissingParameterException
 import org.thechance.service_identity.domain.usecases.IUserAccountManagementUseCase
 import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
 
@@ -17,8 +17,8 @@ fun Route.userRoutes() {
 
     route("/user") {
 
-        get("/{id}") {
-            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+        get("/{userId}") {
+            val id = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val user = manageUserAccount.getUser(id).toDto()
             call.respond(HttpStatusCode.OK, user)
         }
@@ -50,7 +50,7 @@ fun Route.userRoutes() {
             val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val amount = call.receiveParameters()["amount"]?.toDouble()
                 ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val result = manageUserAccount.addToWallet(id, amount)
+            val result = manageUserAccount.addToWallet(id, amount).toDto()
             call.respond(HttpStatusCode.OK, result)
         }
 
@@ -58,7 +58,7 @@ fun Route.userRoutes() {
             val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val amount = call.receiveParameters()["amount"]?.toDouble()
                 ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val result = manageUserAccount.subtractFromWallet(id, amount)
+            val result = manageUserAccount.subtractFromWallet(id, amount).toDto()
             call.respond(HttpStatusCode.OK, result)
         }
 
@@ -88,10 +88,12 @@ fun Route.userRoutes() {
             call.respond(HttpStatusCode.OK, result)
         }
 
-        delete("/{id}") {
-            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+        delete("/{userId}") {
+            val id = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val result = manageUserAccount.deleteUser(id)
             call.respond(HttpStatusCode.OK, result)
         }
+
     }
+
 }

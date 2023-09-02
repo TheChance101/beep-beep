@@ -19,7 +19,6 @@ data class Restaurant(
     val location: Location,
     val address: String,
     val currency: String,
-    val cuisines: List<Cuisine> = emptyList()
 ){
     fun isRestaurantOpen(): Boolean {
         val instantNow = Clock.System.now()

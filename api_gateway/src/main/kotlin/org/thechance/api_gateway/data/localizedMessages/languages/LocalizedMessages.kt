@@ -2,6 +2,7 @@ package org.thechance.api_gateway.data.localizedMessages.languages
 
 interface LocalizedMessages {
 
+    // region identity
     val invalidRequestParameter: String
 
     val invalidAddressLocation: String
@@ -33,10 +34,17 @@ interface LocalizedMessages {
     val userNotFound: String
 
     val invalidPermission: String
+    // endregion
 
+    // region taxi
     val taxiCreatedSuccessfully: String
 
     val taxiUpdateSuccessfully: String
 
     val taxiDeleteSuccessfully: String
+    // endregion
+
+    //region restaurant
+    val restaurantNotFound:String
+    //endregion
 }

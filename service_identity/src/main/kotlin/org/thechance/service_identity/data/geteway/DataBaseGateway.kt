@@ -2,10 +2,6 @@ package org.thechance.service_identity.data.geteway
 
 import com.mongodb.MongoWriteException
 import com.mongodb.client.model.*
-import com.mongodb.client.model.Filters
-import com.mongodb.client.model.IndexOptions
-import com.mongodb.client.model.Indexes
-import com.mongodb.client.model.Updates
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,16 +11,15 @@ import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.*
-import org.thechance.service_identity.data.mappers.toCollection
-import org.thechance.service_identity.data.mappers.toEntity
-import org.thechance.service_identity.data.mappers.toManagedEntity
+import org.thechance.service_identity.data.collection.mappers.toCollection
+import org.thechance.service_identity.data.collection.mappers.toEntity
+import org.thechance.service_identity.data.collection.mappers.toManagedEntity
 import org.thechance.service_identity.data.util.isUpdatedSuccessfully
 import org.thechance.service_identity.data.util.paginate
 import org.thechance.service_identity.domain.entity.*
 import org.thechance.service_identity.domain.gateway.IDataBaseGateway
-import org.thechance.service_identity.domain.util.NOT_FOUND
-import org.thechance.service_identity.domain.util.USER_ALREADY_EXISTS
-import org.thechance.service_identity.domain.util.USER_NOT_FOUND
+import org.thechance.service_identity.domain.security.SaltedHash
+import org.thechance.service_identity.domain.util.*
 
 @Single
 class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataBaseGateway {
@@ -34,14 +29,37 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
     }
 
     //region Address
-
-    override suspend fun addAddress(userId: String, location: Location): Boolean {
-        val address = AddressCollection(userId = ObjectId(userId), location = location.toCollection())
+    override suspend fun addLocation(userId: String, location: Location): Address {
+        val address = AddressCollection(
+            userId = ObjectId(userId),
+            location = location.toCollection()
+        )
         dataBaseContainer.userDetailsCollection.updateOne(
             filter = UserDetailsCollection::userId eq ObjectId(userId),
             update = Updates.addToSet(UserDetailsCollection::addressIds.name, address.id)
         )
-        return dataBaseContainer.addressCollection.insertOne(address).wasAcknowledged()
+        return if (dataBaseContainer.addressCollection.insertOne(address).wasAcknowledged()) {
+            address.toEntity()
+        } else {
+            throw ResourceNotFoundException(ERROR_IN_DB)
+        }
+    }
+
+    override suspend fun addAddress(userId: String, address: Address): Address {
+        val addressCollection = AddressCollection(
+            userId = ObjectId(userId),
+            address = address.address,
+            location = address.location.toCollection()
+        )
+        dataBaseContainer.userDetailsCollection.updateOne(
+            filter = UserDetailsCollection::userId eq ObjectId(userId),
+            update = Updates.addToSet(UserDetailsCollection::addressIds.name, address.id)
+        )
+        return if (dataBaseContainer.addressCollection.insertOne(addressCollection).wasAcknowledged()) {
+            addressCollection.toEntity()
+        } else {
+            throw ResourceNotFoundException(ERROR_IN_DB)
+        }
     }
 
     override suspend fun deleteAddress(id: String): Boolean {
@@ -83,12 +101,12 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
     private suspend fun createUniqueIndexIfNotExists() {
         if (!isUniqueIndexCreated()) {
             val indexOptions = IndexOptions().unique(true)
-            dataBaseContainer.userCollection.createIndex(Indexes.ascending("username"), indexOptions)
+            dataBaseContainer.userCollection.createIndex(Indexes.ascending(DataBaseContainer.USER_NAME), indexOptions)
         }
     }
 
     private suspend fun isUniqueIndexCreated(): Boolean {
-        val indexName = "username_1"
+        val indexName = DataBaseContainer.INDEX_NAME
         val indexInfo = dataBaseContainer.userCollection.listIndexes<Indexes>().toList()
             .filter { it.equals(indexName) }
 
@@ -107,7 +125,7 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
             ),
             lookup(
                 localField = UserCollection::id.name,
-                from = USER_DETAILS_COLLECTION,
+                from = DataBaseContainer.USER_DETAILS_COLLECTION,
                 foreignField = UserDetailsCollection::userId.name,
                 newAs = DetailedUserCollection::details.name
             )
@@ -184,7 +202,7 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
     }
 
     override suspend fun getNumberOfUsers(): Long {
-        return dataBaseContainer.userCollection.countDocuments()
+        return dataBaseContainer.userCollection.countDocuments(UserCollection::isDeleted eq false)
     }
 
     override suspend fun getUserByUsername(username: String): UserManagement {
@@ -203,24 +221,26 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         ) ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
-    override suspend fun subtractFromWallet(userId: String, amount: Double): Boolean {
-        return dataBaseContainer.walletCollection.updateOne(
+    override suspend fun subtractFromWallet(userId: String, amount: Double): Wallet {
+        return dataBaseContainer.walletCollection.findOneAndUpdate(
             filter = WalletCollection::userId eq ObjectId(userId),
-            update = inc(WalletCollection::walletBalance, -amount)
-        ).isUpdatedSuccessfully()
+            update = inc(WalletCollection::walletBalance, -amount),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
+        )?.toEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
-    override suspend fun getWalletBalance(userId: String): Double {
+    override suspend fun getWalletBalance(userId: String): Wallet {
         return dataBaseContainer.walletCollection.findOne(
-            WalletCollection::userId eq ObjectId(userId)
-        )?.walletBalance ?: throw ResourceNotFoundException(NOT_FOUND)
+            WalletCollection::userId eq ObjectId(userId),
+        )?.toEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
-    override suspend fun addToWallet(userId: String, amount: Double): Boolean {
-        return dataBaseContainer.walletCollection.updateOne(
+    override suspend fun addToWallet(userId: String, amount: Double): Wallet {
+        return dataBaseContainer.walletCollection.findOneAndUpdate(
             filter = WalletCollection::userId eq ObjectId(userId),
-            update = inc(WalletCollection::walletBalance, amount)
-        ).isUpdatedSuccessfully()
+            update = inc(WalletCollection::walletBalance, amount),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
+        )?.toEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
     private suspend fun createWallet(wallet: WalletCollection): Boolean {
@@ -235,11 +255,12 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
 
     // region: user permission management
 
-    override suspend fun updatePermissionToUser(userId: String, permission: Int): Boolean {
-        return dataBaseContainer.userCollection.updateOne(
+    override suspend fun updatePermissionToUser(userId: String, permission: Int): UserManagement {
+        return dataBaseContainer.userCollection.findOneAndUpdate(
             filter = UserCollection::id eq ObjectId(userId),
-            update = Updates.set(UserCollection::permission.name, permission)
-        ).isUpdatedSuccessfully()
+            update = Updates.set(UserCollection::permission.name, permission),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
+        )?.toManagedEntity() ?: throw ResourceNotFoundException(USER_NOT_FOUND)
     }
 
     override suspend fun getUserPermission(userId: String): Int {
@@ -256,14 +277,5 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         return SaltedHash(user.hashedPassword!!, user.salt!!)
     }
     // endregion
-
-    companion object {
-        private const val WALLET_COLLECTION = "wallet"
-        private const val ADDRESS_COLLECTION_NAME = "address"
-        const val USER_DETAILS_COLLECTION = "user_details"
-        private const val USER_COLLECTION = "user"
-        private const val USER_NAME = "username"
-        private const val INDEX_NAME = "username_1"
-    }
 
 }

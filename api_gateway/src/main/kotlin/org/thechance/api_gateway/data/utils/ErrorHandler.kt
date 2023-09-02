@@ -2,15 +2,14 @@ package org.thechance.api_gateway.data.utils
 
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
-import java.util.*
 
 @Single
 class ErrorHandler(
     private val localizedMessagesFactory: LocalizedMessagesFactory
 ) {
 
-    fun getLocalizedErrorMessage(errorCodes: List<Int>, locale: Locale): Map<Int, String> {
-        val localizedMessages = localizedMessagesFactory.createLocalizedMessages(locale)
+    fun getLocalizedErrorMessage(errorCodes: List<Int>, languageCode: String): Map<Int, String> {
+        val localizedMessages = localizedMessagesFactory.createLocalizedMessages(languageCode)
 
         val errors = mutableMapOf<Int, String>()
 
@@ -49,6 +48,10 @@ class ErrorHandler(
 
         if (errorCodes.contains(1045))
             errors[1045] = localizedMessages.invalidAddressLocation
+
+        if (errorCodes.contains(2404)){
+            errors[2404] = localizedMessages.restaurantNotFound
+        }
 
         if (errorCodes.contains(8000))
             errors[8000] = localizedMessages.invalidPermission
