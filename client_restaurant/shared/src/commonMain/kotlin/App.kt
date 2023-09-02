@@ -3,7 +3,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
-import presentation.restaurantSelection.RestaurantSelectionScreen
+import presentation.login.LoginScreen
 import resources.BpRestaurantTheme
 
 
@@ -11,7 +11,7 @@ import resources.BpRestaurantTheme
 @Composable
 fun App() {
     BpRestaurantTheme(statusBarsVisible = false,navigationBarsVisible = false) {
-        Navigator(RestaurantSelectionScreen()) {
+        Navigator(LoginScreen()) {
             SlideTransition(it)
         }
     }

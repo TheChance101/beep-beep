@@ -79,6 +79,7 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
                     is ServerSideException -> onError(ErrorState.RequestFailed)
                     is UnAuthorizedException -> onError(ErrorState.UnAuthorized)
                     is UserNotFoundException -> onError(ErrorState.UserNotExist(exception.errorMessage))
+                    is NotFoundedException -> onError(ErrorState.NotFound)
                     is InvalidCredentialsException -> onError(
                         ErrorState.InvalidCredentials(
                             exception.message.toString()
