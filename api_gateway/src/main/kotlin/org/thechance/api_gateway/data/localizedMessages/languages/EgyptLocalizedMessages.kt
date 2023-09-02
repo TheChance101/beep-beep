@@ -38,7 +38,7 @@ class EgyptianArabicLocalizedMessages() : LocalizedMessages {
     override val invalidDate: String = "مش مظبوط التاريخ اللي دخلته يعم"
     override val invalidPrice: String = "مش مظبوط السعر اللي دخلته يعم"
     override val alreadyExist: String = "التاكسي ده موجود قبل كده ياعم"
-    override val requiredQuery: String = "       في حاجات ناقصة يا معلم"
+    override val requiredQuery: String = " في حاجات ناقصة يا معلم"
     // endregion
 
     //region restaurant
