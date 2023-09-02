@@ -58,7 +58,7 @@ class SyrianArabicLocalizedMessages() : LocalizedMessages {
     override val restaurantInvalidOneOrMoreIds: String = "آي دي واحد أو اكتر مو صحيح"
     override val restaurantInvalidPermissionUpdateLocation: String = "إذن تحدييث المطعم مو صحيح"
     override val restaurantInvalidUpdateParameter: String = "البيانات تبعك مو صحيحة"
-    override val restaurantInvalidPropertyRights: String = "حقوق ملكيتك مو صحيحة"
+    override val restaurantInvalidPropertyRights: String = "حقوق ملكيتك مو مناسبة"
     override val restaurantInvalidPrice: String = "سعرك مو تمام"
     override val restaurantInvalidCuisineLimit: String = "الحد الأقصى للمطابخ مو مناسب"
     override val restaurantInvalidAddress: String = "عنوانك مو صحيح"

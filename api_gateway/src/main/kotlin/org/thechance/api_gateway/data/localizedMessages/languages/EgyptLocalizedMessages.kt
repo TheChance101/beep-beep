@@ -58,7 +58,7 @@ class EgyptianArabicLocalizedMessages() : LocalizedMessages {
     override val restaurantInvalidOneOrMoreIds: String = "الارقام التعريفيه غلط"
     override val restaurantInvalidPermissionUpdateLocation: String = "إذن تحديث الموقع مش صالح"
     override val restaurantInvalidUpdateParameter: String = "البيانات اللي دخلتها مش مناسبة"
-    override val restaurantInvalidPropertyRights: String = "حقوق الملكية مش مناسبة"
+    override val restaurantInvalidPropertyRights: String = "مش عندك حقوق ملكية"
     override val restaurantInvalidPrice: String = "السعر مش مناسب"
     override val restaurantInvalidCuisineLimit: String = "اقصى عدد للمطابخ مش مناسب"
     override val restaurantInvalidAddress: String = "العنوان غلط"
