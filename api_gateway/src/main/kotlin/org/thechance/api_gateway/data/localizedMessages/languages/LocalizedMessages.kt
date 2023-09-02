@@ -70,6 +70,52 @@ interface LocalizedMessages {
     // endregion
 
     //region restaurant
-    val restaurantNotFound:String
+    val restaurantInvalidId: String
+
+    val restaurantInvalidName: String
+
+    val restaurantInvalidLocation: String
+
+    val restaurantInvalidDescription: String
+
+    val restaurantInvalidPriceLevel: String
+
+    val restaurantInvalidRate: String
+
+    val restaurantInvalidPhone: String
+
+    val restaurantInvalidTime: String
+
+    val restaurantInvalidPage: String
+
+    val restaurantInvalidPageLimit: String
+
+    val restaurantInvalidOneOrMoreIds: String
+
+    val restaurantInvalidPermissionUpdateLocation: String
+
+    val restaurantInvalidUpdateParameter: String
+
+    val restaurantInvalidPropertyRights: String
+
+    val restaurantInvalidPrice: String
+
+    val restaurantInvalidCuisineLimit: String
+
+    val restaurantInvalidAddress: String
+
+    val restaurantInvalidEmail: String
+
+    val restaurantInvalidRequestParameter: String
+
+    val restaurantNotFound: String
+
+    val restaurantErrorAdd: String
+
+    val restaurantClosed: String
+
+    val restaurantInsertOrderError: String
+
+    val restaurantInvalidReceivedOrders: String
     //endregion
 }
