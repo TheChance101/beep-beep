@@ -5,9 +5,9 @@ import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
 
-class LoginScreenScreenModel(
-    private val loginUseCase: ILoginUserUseCase
-) : BaseScreenModel<LoginUIState, LoginUIEffect>(LoginUIState()), LoginScreenInteractionListener {
+class LoginScreenModel(
+    private val login: ILoginUserUseCase
+) : BaseScreenModel<LoginUIState, LoginUIEffect>(LoginUIState()), LoginInteractionListener {
 
     override fun onPasswordChange(password: String) {
         updateState { it.copy(password = password) }
@@ -22,7 +22,7 @@ class LoginScreenScreenModel(
         clearErrorState()
         tryToExecute(
             {
-                loginUseCase.loginUser(
+                login.loginUser(
                     username = currentState.username,
                     password = currentState.password,
                     keepLoggedIn = currentState.keepLoggedIn

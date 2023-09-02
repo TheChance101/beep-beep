@@ -1,4 +1,4 @@
-package org.thechance.common.data.local
+package org.thechance.common.data.local.gateway
 
 
 import org.thechance.common.domain.getway.ILocalGateway

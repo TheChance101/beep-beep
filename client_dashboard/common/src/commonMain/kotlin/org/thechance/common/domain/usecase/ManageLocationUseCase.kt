@@ -3,12 +3,12 @@ package org.thechance.common.domain.usecase
 import org.thechance.common.domain.entity.Location
 import org.thechance.common.domain.getway.IRemoteGateway
 
-interface IHandleLocationUseCase {
+interface IManageLocationUseCase {
     suspend fun getCurrentLocation(): Location
 }
 
 
-class HandleLocationUseCase(private val remoteGateway: IRemoteGateway) : IHandleLocationUseCase {
+class ManageLocationUseCase(private val remoteGateway: IRemoteGateway) : IManageLocationUseCase {
     override suspend fun getCurrentLocation(): Location {
         return remoteGateway.getCurrentLocation()
     }
