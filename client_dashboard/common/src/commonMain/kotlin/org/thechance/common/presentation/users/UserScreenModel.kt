@@ -3,14 +3,16 @@ package org.thechance.common.presentation.users
 import kotlinx.coroutines.Job
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.User
-import org.thechance.common.domain.usecase.IGetUsersUseCase
 import org.thechance.common.domain.usecase.ISearchUsersUseCase
+import org.thechance.common.domain.usecase.IManageUsersUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
 class UserScreenModel(
-    private val getUsers: IGetUsersUseCase, private val searchUsers: ISearchUsersUseCase
-) : BaseScreenModel<UserScreenUiState, UserUiEffect>(UserScreenUiState()), UserScreenInteractionListener {
+    private val searchUsers: ISearchUsersUseCase,
+    private val manageUsers: IManageUsersUseCase
+) : BaseScreenModel<UserScreenUiState, UserUiEffect>(UserScreenUiState()),
+    UserScreenInteractionListener {
 
     private var searchJob: Job? = null
 
@@ -21,7 +23,7 @@ class UserScreenModel(
     private fun getUsers() {
         tryToExecute(
             {
-                getUsers(
+                manageUsers.getUsers(
                     byPermissions = state.value.filter.permissions.toEntity(),
                     byCountries = state.value.filter.countries.filter { it.selected }.map { it.name },
                     page = state.value.currentPage,

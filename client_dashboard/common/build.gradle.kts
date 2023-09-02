@@ -30,6 +30,7 @@ kotlin {
                 implementation(libs.voyager.tab.navigator)
                 implementation(libs.voyager.transitions)
                 implementation(libs.voyager.koin)
+                implementation(libs.kotlinx.datetime)
 
                 api(libs.kotlin.realm)
                 implementation(libs.kotlin.coroutines)

@@ -16,9 +16,7 @@ class WebSocketServerHandler {
 
     suspend inline fun <reified T> tryToCollectFormWebSocket(values: Flow<T>, session: DefaultWebSocketServerSession) {
         try {
-            values
-                .flowOn(Dispatchers.IO)
-                .collect { value -> session.sendSerialized(value) }
+            values.flowOn(Dispatchers.IO).collect { value -> session.sendSerialized(value) }
         } catch (e: LocalizedMessageException) {
             session.send(e.localizedMessage)
             session.close()
