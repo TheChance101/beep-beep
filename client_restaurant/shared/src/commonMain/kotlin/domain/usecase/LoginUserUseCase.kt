@@ -11,6 +11,7 @@ interface ILoginUserUseCase {
         password: String,
         isKeepMeLoggedInChecked: Boolean
     )
+    suspend fun getKeepMeLoggedInFlag(): Boolean
 
 }
 
@@ -30,6 +31,10 @@ class LoginUserUseCase(
             localGateWay.saveRefreshToken(userTokens.refreshToken)
             localGateWay.saveKeepMeLoggedInFlag(isKeepMeLoggedInChecked)
         }
+    }
+
+    override suspend fun getKeepMeLoggedInFlag(): Boolean {
+      return  localGateWay.getKeepMeLoggedInFlag()
     }
 
     private fun validateLoginFields(username: String, password: String): Boolean {
