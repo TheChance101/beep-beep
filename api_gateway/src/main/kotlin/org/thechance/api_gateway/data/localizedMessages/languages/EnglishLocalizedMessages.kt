@@ -3,7 +3,7 @@ package org.thechance.api_gateway.data.localizedMessages.languages
 import org.koin.core.annotation.Single
 
 @Single
-class EnglishLocalizedMessages : LocalizedMessages {
+class EnglishLocalizedMessages() : LocalizedMessages {
 
     // region identity
     override val invalidRequestParameter: String = "Invalid request parameter"
@@ -28,6 +28,17 @@ class EnglishLocalizedMessages : LocalizedMessages {
     override val taxiCreatedSuccessfully: String = "Taxi created successfully 🎉"
     override val taxiUpdateSuccessfully: String = "Taxi updated successfully 🎉"
     override val taxiDeleteSuccessfully: String = "Taxi deleted successfully 🎉"
+    override val invalidId: String = "Invalid id"
+    override val invalidPlate: String = "Invalid plate"
+    override val invalidColor: String = "Invalid color"
+    override val invalidCarType: String = "Invalid car type"
+    override val seatOutOfRange: String = "Seat out of range"
+    override val invalidLocation: String= "Invalid location"
+    override val invalidRate: String= "Invalid rate"
+    override val invalidDate: String= "Invalid date"
+    override val invalidPrice: String= "Invalid price"
+    override val alreadyExist: String= "Already exist"
+    override val requiredQuery: String= "Required query"
     // endregion
 
     //region restaurant
