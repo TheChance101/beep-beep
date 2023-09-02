@@ -1,7 +1,5 @@
 package org.thechance.common.domain.entity
 
-import java.util.Date
-
 data class Restaurant(
     val id: String,
     val name: String,
@@ -9,5 +7,6 @@ data class Restaurant(
     val phoneNumber: String,
     val rating: Double,
     val priceLevel: Int,
-    val workingHours: Pair<Date,Date>,
+    val workingHours: Pair<Time, Time>, // Pair representing (open time, closing time)
 )
+

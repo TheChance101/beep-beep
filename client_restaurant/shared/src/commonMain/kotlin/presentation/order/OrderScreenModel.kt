@@ -4,7 +4,6 @@ import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.OrderState
 import domain.usecase.IManageOrderUseCase
 import kotlinx.coroutines.CoroutineScope
-import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
@@ -46,7 +45,7 @@ class OrderScreenModel(private val manageOrders: IManageOrderUseCase) :
     private fun getPendingOrders() {
         tryToExecute(
             {
-                manageOrders.getCurrentOrders()
+                manageOrders.getCurrentOrders("")
                     .filter { it.orderState == OrderState.PENDING }
                     .map { it.toOrderUiState() }
             },
@@ -58,7 +57,7 @@ class OrderScreenModel(private val manageOrders: IManageOrderUseCase) :
     private fun getInCookingOrders() {
         tryToExecute(
             {
-                manageOrders.getCurrentOrders()
+                manageOrders.getCurrentOrders("")
                     .filter { it.orderState == OrderState.IN_COOKING }
                     .map { it.toOrderUiState() }
             },

@@ -7,9 +7,9 @@ import org.koin.dsl.module
 
 val LocalStorageModule = module {
     single {
-        RealmConfiguration.Builder(
-            schema = setOf(UserConfigurationCollection::class)
-        ).compactOnLaunch().build()
+        RealmConfiguration.Builder(schema = setOf(UserConfigurationCollection::class))
+            .compactOnLaunch()
+            .deleteRealmIfMigrationNeeded().build()
     }
     single { Realm.open(configuration = get<RealmConfiguration>()) }
 }

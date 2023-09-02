@@ -9,12 +9,24 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.thechance.common.data.local.LocalGateway
 import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
-import org.thechance.common.data.remote.model.*
-import org.thechance.common.domain.entity.*
+import org.thechance.common.data.remote.model.DataWrapperDto
+import org.thechance.common.data.remote.model.RestaurantDto
+import org.thechance.common.data.remote.model.TaxiDto
+import org.thechance.common.data.remote.model.UserDto
+import org.thechance.common.data.remote.model.toEntity
+import org.thechance.common.domain.entity.AddRestaurant
+import org.thechance.common.domain.entity.DataWrapper
+import org.thechance.common.domain.entity.Location
+import org.thechance.common.domain.entity.NewTaxiInfo
+import org.thechance.common.domain.entity.Restaurant
+import org.thechance.common.domain.entity.Taxi
+import org.thechance.common.domain.entity.TaxiFiltration
+import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.getway.IRemoteGateway
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.UUID
 import kotlin.math.ceil
 import kotlin.math.floor
 
@@ -922,7 +934,7 @@ class FakeRemoteGateway(
                     ownerUsername = "asia",
                     phoneNumber = "0528242165",
                     rating = 2.9,
-                    priceLevel = 2,
+                    priceLevel = 1,
                     workingHours = "09:30 - 21:30"
                 ),
                 RestaurantDto(
@@ -937,10 +949,9 @@ class FakeRemoteGateway(
             )
         )
     }
+    override suspend fun  getUserData() = "asia"
 
-    override fun getUserData() = "asia"
-
-    override fun getUsers(
+    override suspend fun getUsers(
         byPermissions: List<Permission>,
         byCountries: List<String>,
         page: Int,
@@ -1002,7 +1013,7 @@ class FakeRemoteGateway(
         return taxis.last().toEntity()
     }
 
-    override suspend fun findTaxisByUsername(username: String, page: Int, numberOfTaxis: Int): DataWrapper<Taxi> {
+    override suspend fun searchTaxisByUsername(username: String, page: Int, numberOfTaxis: Int): DataWrapper<Taxi> {
         val taxis = taxis.filter {
             it.username?.startsWith(username, true) ?: false
         }.toEntity()
@@ -1123,7 +1134,6 @@ class FakeRemoteGateway(
         return Location(location = "30.044420,31.235712")
     }
 
-
     override suspend fun searchUsers(
         query: String,
         byPermissions: List<Permission>,
@@ -1161,63 +1171,6 @@ class FakeRemoteGateway(
         }
     }
 
-    override suspend fun getLatestRegisteredUsers(): List<User> {
-        return listOf(
-            UserDto(
-                id = "c4425a0e-9f0a-4df1-bcc1-6dd96322a990",
-                fullName = "mohammed sayed",
-                username = "mohammed_sayed",
-                email = "elzamalk@example.com",
-                country = "Egypt",
-                permissions = listOf(
-                    UserDto.PermissionDto(id = 3, permission = "END_USER"),
-                    UserDto.PermissionDto(id = 1, permission = "RESTAURANT"),
-                    UserDto.PermissionDto(id = 2, permission = "DRIVER"),
-                    UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
-                    UserDto.PermissionDto(id = 2, permission = "ADMIN")
-                ),
-                imageUrl = "dummy_img.png"
-            ),
-            UserDto(
-                id = "f7b087da-8c02-417b-a3db-54c82b5ff5b4",
-                fullName = "asia",
-                username = "asia",
-                email = "asia@example.com",
-                country = "Iraq",
-                permissions = listOf(
-                    UserDto.PermissionDto(id = 3, permission = "END_USER"),
-                    UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
-                    UserDto.PermissionDto(id = 2, permission = "ADMIN"),
-                ),
-                imageUrl = "dummy_img.png"
-            ),
-            UserDto(
-                id = "3e1f5d4a-8317-4f13-aa89-2c094652e6a3",
-                fullName = "ali",
-                username = "ali_jamal",
-                email = "ali_jamal@example.com",
-                country = "Iraq",
-                permissions = listOf(
-                    UserDto.PermissionDto(id = 3, permission = "END_USER"),
-                    UserDto.PermissionDto(id = 1, permission = "ADMIN")
-                ),
-                imageUrl = "dummy_img.png"
-            ),
-            UserDto(
-                id = "3e1f5d4a-8317-4f13-aa89-2c094652e6a3",
-                fullName = "ali",
-                username = "ali_jamal",
-                email = "ali_jamal@example.com",
-                country = "Iraq",
-                permissions = listOf(
-                    UserDto.PermissionDto(id = 3, permission = "END_USER"),
-                    UserDto.PermissionDto(id = 1, permission = "ADMIN")
-                ),
-                imageUrl = "dummy_img.png"
-            )
-        ).toEntity()
-    }
-
     override suspend fun filterUsers(
         permissions: List<Permission>,
         countries: List<String>,
@@ -1247,7 +1200,6 @@ class FakeRemoteGateway(
             ).toEntity()
         }
     }
-
 
     private fun createTaxiPDFReport(): File {
         val title = "Taxi Details Report"

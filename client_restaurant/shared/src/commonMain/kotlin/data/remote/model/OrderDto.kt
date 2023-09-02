@@ -7,17 +7,17 @@ import kotlinx.serialization.Serializable
 data class OrderDto(
     @SerialName("id")
     val id: String,
-    @SerialName("id")
+    @SerialName("userId")
     val userId: String,
-    @SerialName("id")
+    @SerialName("restaurantId")
     val restaurantId: String,
-    @SerialName("id")
+    @SerialName("meals")
     val meals: List<MealDto>,
-    @SerialName("id")
+    @SerialName("totalPrice")
     val totalPrice: Double? = null,
-    @SerialName("id")
+    @SerialName("createdAt")
     val createdAt: String? = null,
-    @SerialName("id")
+    @SerialName("orderState")
     val orderState: Int
 ) {
     @Serializable

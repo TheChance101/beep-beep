@@ -28,6 +28,8 @@ data class DrawableResources(
     val restaurantOutlined: String = "ic_restaurant_outlined_light.svg",
     val usersFilled: String = "ic_users_fill.svg",
     val usersOutlined: String = "ic_users_outlined_light.svg",
+    val permission: String = "ic_edit.xml",
+    val disable: String = "ic_disable.svg"
 )
 
 val darkDrawableResource = DrawableResources(

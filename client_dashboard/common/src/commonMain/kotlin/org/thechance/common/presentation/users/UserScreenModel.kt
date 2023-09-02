@@ -3,14 +3,16 @@ package org.thechance.common.presentation.users
 import kotlinx.coroutines.Job
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.User
-import org.thechance.common.domain.usecase.IGetUsersUseCase
 import org.thechance.common.domain.usecase.ISearchUsersUseCase
+import org.thechance.common.domain.usecase.IManageUsersUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
 class UserScreenModel(
-    private val getUsers: IGetUsersUseCase, private val searchUsers: ISearchUsersUseCase
-) : BaseScreenModel<UserScreenUiState, UserUiEffect>(UserScreenUiState()), UserScreenInteractionListener {
+    private val searchUsers: ISearchUsersUseCase,
+    private val manageUsers: IManageUsersUseCase
+) : BaseScreenModel<UserScreenUiState, UserUiEffect>(UserScreenUiState()),
+    UserScreenInteractionListener {
 
     private var searchJob: Job? = null
 
@@ -21,7 +23,7 @@ class UserScreenModel(
     private fun getUsers() {
         tryToExecute(
             {
-                getUsers(
+                manageUsers.getUsers(
                     byPermissions = state.value.filter.permissions.toEntity(),
                     byCountries = state.value.filter.countries.filter { it.selected }.map { it.name },
                     page = state.value.currentPage,
@@ -118,13 +120,13 @@ class UserScreenModel(
     // region User Menu
     override fun showEditUserMenu(username: String) {
         updateState {
-            it.copy(userMenu = it.userMenu.copy(username = username))
+            it.copy(userMenu = username)
         }
     }
 
     override fun hideEditUserMenu() {
         updateState {
-            it.copy(userMenu = it.userMenu.copy(username = ""))
+            it.copy(userMenu = "")
         }
     }
 
@@ -161,6 +163,7 @@ class UserScreenModel(
 
     override fun onUserPermissionClick(permission: UserScreenUiState.PermissionUiState) {
         val permissions = getUpdatedPermissions(mutableState.value.permissionsDialog.permissions, permission)
+        if(permission != UserScreenUiState.PermissionUiState.END_USER)
         updateState {
             it.copy(
                 permissionsDialog = it.permissionsDialog.copy(permissions = permissions)

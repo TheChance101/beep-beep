@@ -4,7 +4,7 @@ import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.usecase.IManageMealUseCase
-import domain.usecase.IMangeCuisineUseCase
+import domain.usecase.IManageCuisineUseCase
 
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
@@ -12,7 +12,7 @@ import presentation.base.ErrorState
 
 class MealsScreenModel(
     private val restaurantId: String,
-    private val mangeCousin: IMangeCuisineUseCase,
+    private val mangeCousin: IManageCuisineUseCase,
     private val mangeMeal: IManageMealUseCase
 ) :
     BaseScreenModel<MealsScreenUIState, MealsScreenUIEffect>(MealsScreenUIState()),
@@ -27,9 +27,7 @@ class MealsScreenModel(
     private fun getCuisine() {
         tryToExecute(
             function = {
-                mangeCousin.getCuisineByRestaurantId(
-                    restaurantId
-                )
+                mangeCousin.getCuisines()
             },
             ::onGetCuisineSuccessfully,
             ::onError
@@ -38,17 +36,17 @@ class MealsScreenModel(
 
     private fun getMeals(cuisineId: String) {
         updateState { it.copy(isLoading = true) }
-        tryToExecute(
-            function = {
-                if (cuisineId.isEmpty()) {
-                    mangeMeal.getAllMeals()
-                } else {
-                    mangeCousin.getMealsByCuisineId(cuisineId)
-                }
-            },
-            ::onGetMealSuccessfully,
-            ::onError
-        )
+//        tryToExecute(
+//            function = {
+//                if (cuisineId.isEmpty()) {
+//                    mangeMeal.getAllMeals("",1,10)
+//                } else {
+//                    mangeMeal.getMealById("")
+//                }
+//            },
+//            ::onGetMealSuccessfully,
+//            ::onError
+    //    )
     }
 
     private fun onGetCuisineSuccessfully(cuisines: List<Cuisine>) {

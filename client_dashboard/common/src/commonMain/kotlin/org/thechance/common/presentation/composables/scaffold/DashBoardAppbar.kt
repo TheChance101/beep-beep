@@ -34,6 +34,7 @@ fun DashboardAppbar(
     onDismissDropDownMenu: () -> Unit,
     title: String,
     username: String,
+    firstUsernameLetter: String,
     isDropMenuExpanded: Boolean,
     onLogOut: () -> Unit
 ) {
@@ -61,11 +62,11 @@ fun DashboardAppbar(
                     Text(
                         modifier = Modifier.circleLayout().padding(8.kms),
                         style = Theme.typography.titleMedium,
-                        text = username.first().uppercase(),
+                        text = firstUsernameLetter,
                         color = Color.White
                     )
                     Text(
-                        username,
+                        text = username,
                         style = Theme.typography.titleMedium,
                         color = Theme.colors.contentPrimary
                     )

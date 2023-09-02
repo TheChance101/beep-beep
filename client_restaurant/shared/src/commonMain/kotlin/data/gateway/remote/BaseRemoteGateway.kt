@@ -13,7 +13,7 @@ import presentation.base.UnknownErrorException
 
 abstract class BaseRemoteGateway(val client: HttpClient) {
 
-   protected suspend inline fun <reified T> tryToExecute(
+    protected suspend inline fun <reified T> tryToExecute(
         method: HttpClient.() -> HttpResponse
     ): T {
         try {
@@ -21,25 +21,23 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
         } catch (e: ClientRequestException) {
             val errorMessages = e.response.body<BaseResponse<*>>().status.errorMessages
             errorMessages?.let { throwMatchingException(it) }
-            throw UnknownErrorException()
+            throw UnknownErrorException(e.message)
         } catch (e: InternetException) {
             throw NoInternetException()
         } catch (e: Exception) {
-            throw UnknownErrorException()
+            throw UnknownErrorException(e.message.toString())
         }
     }
 
     fun throwMatchingException(errorMessages: Map<String, String>) {
-        errorMessages.let {
-            if (it.containsErrors(WRONG_PASSWORD)) {
-                throw InvalidPasswordException(it.getOrEmpty(WRONG_PASSWORD))
-            } else {
-                if (it.containsErrors(USER_NOT_EXIST)) {
-                    throw InvalidUserNameException(it.getOrEmpty(USER_NOT_EXIST))
-                } else {
-                    throw UnknownErrorException()
-                }
-            }
+        when {
+            errorMessages.containsErrors(WRONG_PASSWORD) ->
+                throw InvalidPasswordException(errorMessages.getOrEmpty(WRONG_PASSWORD))
+
+            errorMessages.containsErrors(USER_NOT_EXIST) ->
+                throw InvalidUserNameException(errorMessages.getOrEmpty(USER_NOT_EXIST))
+
+            else -> throw UnknownErrorException("UnKnow Error")
         }
     }
 

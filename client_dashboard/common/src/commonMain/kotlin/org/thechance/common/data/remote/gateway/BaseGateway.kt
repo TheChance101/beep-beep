@@ -5,10 +5,10 @@ import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.statement.HttpResponse
 import org.thechance.common.data.remote.model.ServerResponse
-import org.thechance.common.domain.entity.InvalidCredentialsException
-import org.thechance.common.domain.entity.NoInternetException
-import org.thechance.common.domain.entity.UnknownErrorException
-import org.thechance.common.domain.entity.UserNotFoundException
+import org.thechance.common.domain.util.InvalidCredentialsException
+import org.thechance.common.domain.util.NoInternetException
+import org.thechance.common.domain.util.UnknownErrorException
+import org.thechance.common.domain.util.UserNotFoundException
 import java.net.ConnectException
 
 abstract class BaseGateway {
