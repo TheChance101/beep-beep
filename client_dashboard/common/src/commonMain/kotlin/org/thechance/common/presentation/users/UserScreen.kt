@@ -129,7 +129,7 @@ class UserScreen :
         pageCount: Int,
         onPageClicked: (Int) -> Unit,
         onItemPerPageChanged: (Int) -> Unit,
-        editUserMenu: UserScreenUiState.MenuUiState,
+        editUserMenu: String,
         onEditUserDismiss: () -> Unit,
         onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
         onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
@@ -198,7 +198,7 @@ class UserScreen :
         user: UserScreenUiState.UserUiState,
         firstColumnWeight: Float = 1f,
         otherColumnsWeight: Float = 3f,
-        editUserMenu: UserScreenUiState.MenuUiState,
+        editUserMenu: String,
         onEditUserDismiss: () -> Unit,
         onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
         onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
@@ -285,36 +285,40 @@ class UserScreen :
     @Composable
     private fun EditUserDropdownMenu(
         user: UserScreenUiState.UserUiState,
-        editUserMenu: UserScreenUiState.MenuUiState,
+        editUserMenu: String,
         onEditUserDismiss: () -> Unit,
         onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
         onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
     ) {
-        val stringResources = Resources.Strings
         BpDropdownMenu(
-            expanded = user.username == editUserMenu.username,
+            expanded = user.username == editUserMenu,
             onDismissRequest = onEditUserDismiss,
             shape = RoundedCornerShape(Theme.radius.medium).copy(topEnd = CornerSize(0.dp)),
             offset = DpOffset.Zero.copy(x = (-178).kms)
         ) {
             Column {
-                editUserMenu.items.forEach {
-                    BpDropdownMenuItem(
-                        onClick = {
-                            when (it.text) {
-                                stringResources.permission -> onEditUserMenuItemClicked(user)
-                                stringResources.disable -> onDeleteUserMenuItemClicked(user)
-                            }
-                        },
-                        text = it.text,
-                        leadingIconPath = it.iconPath,
-                        isSecondary = it.isSecondary,
-                        showBottomDivider = it != editUserMenu.items.last()
-                    )
-                }
+                BpDropdownMenuItem(
+                    onClick = {
+                        onEditUserMenuItemClicked(user)
+                    },
+                    text = Resources.Strings.permission,
+                    leadingIconPath = Resources.Drawable.permission,
+                    isSecondary = false,
+                    showBottomDivider = true
+                )
+                BpDropdownMenuItem(
+                    onClick = {
+                        onDeleteUserMenuItemClicked(user)
+                    },
+                    text = Resources.Strings.disable,
+                    leadingIconPath = Resources.Drawable.disable,
+                    isSecondary = true,
+                    showBottomDivider = false
+                )
             }
         }
     }
+
     //endregion
     @Composable
     private fun UsersFilterDropdownMenu(

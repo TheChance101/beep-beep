@@ -59,13 +59,13 @@ class UserScreenModel(
 
     override fun showEditUserMenu(username: String) {
         mutableState.update {
-            it.copy(userMenu = it.userMenu.copy(username = username))
+            it.copy(userMenu = username)
         }
     }
 
     override fun hideEditUserMenu() {
         mutableState.update {
-            it.copy(userMenu = it.userMenu.copy(username = ""))
+            it.copy(userMenu = "")
         }
     }
 

@@ -31,7 +31,7 @@ data class UserScreenUiState(
     ),
     val error: ErrorState = ErrorState.UnKnownError,
     val isLoading: Boolean = true,
-    val userMenu: MenuUiState = MenuUiState(),
+    val userMenu: String = "",
 ) {
     data class UserPageInfoUiState(
         val data: List<UserUiState> = emptyList(),
@@ -93,27 +93,6 @@ data class UserScreenUiState(
         val name: String = "",
         val selected: Boolean = false
     )
-
-    data class MenuUiState(
-        val username: String = "",
-        val items: List<MenuItemUiState> = listOf(
-            MenuItemUiState(
-                iconPath = "ic_edit.xml",
-                text = "Permission",
-            ),
-            MenuItemUiState(
-                iconPath = "ic_disable.svg",
-                text = "Disable",
-                isSecondary = true,
-            ),
-        )
-    ) {
-        data class MenuItemUiState(
-            val iconPath: String = "",
-            val text: String = "",
-            val isSecondary: Boolean = false,
-        )
-    }
 }
 
 fun List<User>.toUiState(): List<UserScreenUiState.UserUiState> {
