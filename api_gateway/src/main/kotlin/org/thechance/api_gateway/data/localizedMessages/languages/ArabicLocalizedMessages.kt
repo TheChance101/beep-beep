@@ -25,6 +25,17 @@ class ArabicLocalizedMessages() : LocalizedMessages {
     override val taxiCreatedSuccessfully: String= "تم انشاء التاكسي بنجاح"
     override val taxiUpdateSuccessfully: String= "تم تحديث التاكسي بنجاح"
     override val taxiDeleteSuccessfully: String= "تم حذف التاكسي بنجاح"
+    override val invalidId: String = "رقم بطاقة غير صالح"
+    override val invalidPlate: String = "رقم لوحة غير صالح"
+    override val invalidColor: String = "لون غير صالح"
+    override val invalidCarType: String = "نوع السيارة غير صالح"
+    override val seatOutOfRange: String = "عدد المقاعد غير صالح"
+    override val invalidLocation: String = "موقع غير صالح"
+    override val invalidRate: String = "تقييم غير صالح"
+    override val invalidDate: String = "تاريخ غير صالح"
+    override val invalidPrice: String = "سعر غير صالح"
+    override val alreadyExist: String = "موجود بالفعل"
+    override val requiredQuery: String = "المدخل مطلوب "
     // endregion
 
     //region restaurant
