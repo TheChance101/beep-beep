@@ -12,7 +12,7 @@ interface IMealRemoteGateway {
     ): List<Meal>
 
     suspend fun getMealsByCuisineId(mealId: String): List<Meal>
-    suspend fun getMealById(mealId: String): MealDetails
+    suspend fun getMealById(mealId: String): Meal
     suspend fun addMeal(meal: Meal): Meal?
     suspend fun updateMeal(meal: Meal): Meal?
 

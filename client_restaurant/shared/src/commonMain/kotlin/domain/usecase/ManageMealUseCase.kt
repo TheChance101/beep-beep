@@ -2,39 +2,48 @@ package domain.usecase
 
 import domain.entity.Meal
 import domain.entity.MealAddition
-import domain.gateway.IFakeRemoteGateway
-import presentation.base.ServerSideException
+import domain.gateway.remote.ICuisineRemoteGateway
+import domain.gateway.remote.IMealRemoteGateway
 
 interface IManageMealUseCase {
     suspend fun addMeal(meal: MealAddition): Boolean
     suspend fun updateMeal(meal: Meal): Boolean
-    suspend fun getMeal(mealId: String): Meal
+    suspend fun getMealById(mealId: String): Meal
     suspend fun isValidMeal(meal: Meal): Boolean
-    suspend fun getAllMeals():List<Meal>
+    suspend fun getAllMeals(
+        restaurantId: String,
+        page: Int,
+        limit: Int
+    ): List<Meal>
 }
 
 class ManageMealUseCase(
-    private val remoteMealGateway: IFakeRemoteGateway,
-    private val remoteCuisineGateway: IFakeRemoteGateway
+    private val mealRemoteGateway: IMealRemoteGateway,
+    private val cuisineRemoteGateway: ICuisineRemoteGateway
 ) : IManageMealUseCase {
     override suspend fun addMeal(meal: MealAddition): Boolean {
-        return remoteMealGateway.addMeal(meal as Meal) != null
+        return mealRemoteGateway.addMeal(meal as Meal) != null
     }
 
     override suspend fun updateMeal(meal: Meal): Boolean {
-        return remoteMealGateway.updateMeal(meal) != null
+        return mealRemoteGateway.updateMeal(meal) != null
     }
 
-    override suspend fun getMeal(mealId: String): Meal {
-        val meal = remoteMealGateway.getMealById(mealId) ?: throw ServerSideException()
-        val cuisine = remoteCuisineGateway.getCuisinesInMeal(mealId)
+    override suspend fun getMealById(mealId: String): Meal {
+        val meal = mealRemoteGateway.getMealById(mealId)
+        val cuisine = cuisineRemoteGateway.getCuisines()
         return meal.copy(cuisines = cuisine)
     }
 
-    override suspend fun getAllMeals(): List<Meal> {
+    override suspend fun getAllMeals(
+        restaurantId: String,
+        page: Int,
+        limit: Int
+    ): List<Meal> {
         //TODO fetch restaurant id from local.
-        return remoteMealGateway.getMealsByRestaurantId("6ab493b4-4b8d-410a-a13e-780346243f3a")
+        return mealRemoteGateway.getAllMealsByRestaurantId(restaurantId, page, limit)
     }
+
     override suspend fun isValidMeal(meal: Meal): Boolean {
         TODO("Not yet implemented")
     }
