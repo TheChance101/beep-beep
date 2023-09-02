@@ -38,7 +38,7 @@ class IraqiArabicLocalizedMessages() : LocalizedMessages {
     override val invalidDate: String = "التاريخ مو صحيح"
     override val invalidPrice: String = "السعر مو صحيح"
     override val alreadyExist: String = " موجود اصلا"
-    override val requiredQuery: String= " نقص عندك بل كويري"
+    override val requiredQuery: String= " عندك نقص بالمعلومات حجي"
     // endregion
 
     //region restaurant
