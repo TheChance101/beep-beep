@@ -7,7 +7,7 @@ import org.thechance.service_restaurant.data.collection.*
 
 class DataBaseContainer(client: MongoClient) {
 
-    private val database = client.coroutine.getDatabase(DATABASE_NAME)
+    private val database = client.coroutine.getDatabase(DATA_BASE_NAME)
 
     val categoryCollection: CoroutineCollection<CategoryCollection> = database.getCollection(CATEGORY_COLLECTION)
 

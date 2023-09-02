@@ -46,6 +46,7 @@ kotlin {
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.google.accompanist)
 
+
                 implementation(libs.bundles.voyager)
                 implementation(libs.kotlin.coroutines)
                 api(libs.koin.core)
@@ -60,6 +61,8 @@ kotlin {
                 implementation(libs.ktor.content.negotiation)
                 implementation(libs.ktor.logging)
                 implementation(libs.ktor.client.cio)
+                implementation(libs.ktor.serialization)
+                implementation(libs.kotlin.serialization)
                 implementation("io.ktor:ktor-client-serialization:$ktorVersion")
                 //implementation("io.ktor:ktor-serialization-gson:ktorVersion")
 
@@ -72,6 +75,8 @@ kotlin {
                 api(libs.androidx.core.ktx)
                 api(libs.koin.android)
                 implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+
             }
         }
         val iosX64Main by getting
@@ -82,6 +87,9 @@ kotlin {
             iosX64Main.dependsOn(this)
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
+            dependencies {
+                implementation("io.ktor:ktor-client-darwin:2.3.3")
+            }
         }
     }
 }

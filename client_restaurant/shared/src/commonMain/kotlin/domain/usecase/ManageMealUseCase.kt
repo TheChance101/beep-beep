@@ -22,11 +22,11 @@ class ManageMealUseCase(
     private val cuisineRemoteGateway: ICuisineRemoteGateway
 ) : IManageMealUseCase {
     override suspend fun addMeal(meal: MealAddition): Boolean {
-        return mealRemoteGateway.addMeal(meal as Meal) != null
+        return mealRemoteGateway.addMeal(meal as Meal)
     }
 
     override suspend fun updateMeal(meal: Meal): Boolean {
-        return mealRemoteGateway.updateMeal(meal) != null
+        return mealRemoteGateway.updateMeal(meal)
     }
 
     override suspend fun getMealById(mealId: String): Meal {

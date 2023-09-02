@@ -21,15 +21,14 @@ import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.mealManagement.CuisineUIState
+import presentation.mealManagement.MealScreenInteractionListener
 import resources.Resources
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CuisineBottomSheet(
     cuisines: List<CuisineUIState>,
-    onSaveClick: () -> Unit,
-    onCancelClick: () -> Unit,
-    onItemSelected: (String) -> Unit,
+    listener: MealScreenInteractionListener,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -51,11 +50,14 @@ fun CuisineBottomSheet(
 
                 Spacer(Modifier.weight(1f))
 
-                BpTransparentButton(title = Resources.strings.cancel, onClick = onCancelClick)
+                BpTransparentButton(
+                    title = Resources.strings.cancel,
+                    onClick = listener::onCuisinesCancel
+                )
 
                 BpOutlinedButton(
                     title = Resources.strings.save,
-                    onClick = onSaveClick,
+                    onClick = listener::onSaveCuisineClick,
                     modifier = Modifier.heightIn(max = 32.dp),
                     textPadding = PaddingValues(Theme.dimens.space4)
                 )
@@ -66,7 +68,7 @@ fun CuisineBottomSheet(
         items(cuisines) { cuisine ->
             BpCheckBox(
                 label = cuisine.name,
-                onCheck = { onItemSelected(cuisine.id) },
+                onCheck = { listener.onCuisineSelected(cuisine.id) },
                 isChecked = cuisine.isSelected,
                 modifier = Modifier.padding(vertical = Theme.dimens.space4)
             )

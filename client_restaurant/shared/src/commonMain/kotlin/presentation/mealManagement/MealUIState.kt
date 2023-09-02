@@ -1,7 +1,6 @@
-package presentation.mealManagement.mealEditor
+package presentation.mealManagement
 
-import presentation.mealManagement.CuisineUIState
-import presentation.mealManagement.MealDetails
+import presentation.composables.ModalBottomSheetState
 
 data class MealEditorUIState(
     val id: String = "",
@@ -9,5 +8,6 @@ data class MealEditorUIState(
     val cuisines: List<CuisineUIState> = emptyList(),
     val isLoading: Boolean = false,
     val error: String = "",
-    val isCuisinesShow: Boolean = false
+    val isCuisinesShow: Boolean = false,
+    val sheetState: ModalBottomSheetState = ModalBottomSheetState()
 )
