@@ -11,6 +11,7 @@ fun UserDto.toEntity() = User(
     username = username ?: "",
     email = email ?: "",
     permission = permissions?.map { enumValueOf(it?.permission ?: "") } ?: emptyList(),
+    imageUrl = imageUrl
 )
 
 fun List<UserDto>.toEntity() = map(UserDto::toEntity)

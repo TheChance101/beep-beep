@@ -76,7 +76,16 @@ data class StringResources(
 
     //region overview
     val overview: String = "Overview",
-
+    val revenueShare: String = "Revenue share",
+    val viewMore: String = "View more",
+    val taxiLabel: String = "Taxi",
+    val restaurantLabel: String = "Restaurant",
+    val restaurantPermission: String = "Restaurant Owner",
+    val taxiPermission: String = "Taxi Driver",
+    val endUserPermission: String = "End User",
+    val supportPermission: String = "Support",
+    val deliveryPermission: String = "Delivery",
+    val adminPermission: String = "Admin",
     )
 
 val englishStrings = StringResources()

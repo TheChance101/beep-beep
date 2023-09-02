@@ -9,20 +9,8 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.thechance.common.data.local.gateway.LocalGateway
 import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
-import org.thechance.common.data.remote.model.DataWrapperDto
-import org.thechance.common.data.remote.model.RestaurantDto
-import org.thechance.common.data.remote.model.TaxiDto
-import org.thechance.common.data.remote.model.UserDto
-import org.thechance.common.data.remote.model.toEntity
-import org.thechance.common.domain.entity.AddRestaurant
-import org.thechance.common.domain.entity.DataWrapper
-import org.thechance.common.domain.entity.Location
-import org.thechance.common.domain.entity.NewTaxiInfo
-import org.thechance.common.domain.entity.Permission
-import org.thechance.common.domain.entity.Restaurant
-import org.thechance.common.domain.entity.Taxi
-import org.thechance.common.domain.entity.TaxiFiltration
-import org.thechance.common.domain.entity.User
+import org.thechance.common.data.remote.model.*
+import org.thechance.common.domain.entity.*
 import org.thechance.common.domain.getway.IRemoteGateway
 import java.io.File
 import java.text.SimpleDateFormat
@@ -49,30 +37,33 @@ class FakeRemoteGateway(
                 UserDto.PermissionDto(id = 2, permission = "DRIVER"),
                 UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                 UserDto.PermissionDto(id = 2, permission = "ADMIN")
-            )
-        ),
-        UserDto(
-            id = "f7b087da-8c02-417b-a3db-54c82b5ff5b4",
-            fullName = "asia",
-            username = "asia",
-            email = "asia@example.com",
-            country = "Iraq",
-            permissions = listOf(
-                UserDto.PermissionDto(id = 3, permission = "END_USER"),
-                UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
-                UserDto.PermissionDto(id = 2, permission = "ADMIN"),
-            )
-        ),
-        UserDto(
-            id = "3e1f5d4a-8317-4f13-aa89-2c094652e6a3",
-            fullName = "ali",
-            username = "ali_jamal",
-            email = "ali_jamal@example.com",
-            country = "Iraq",
-            permissions = listOf(
-                UserDto.PermissionDto(id = 3, permission = "END_USER"),
-                UserDto.PermissionDto(id = 1, permission = "ADMIN")
-            )
+            ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "f7b087da-8c02-417b-a3db-54c82b5ff5b4",
+                fullName = "asia",
+                username = "asia",
+                email = "asia@example.com",
+                country = "Iraq",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 3, permission = "END_USER"),
+                    UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
+                    UserDto.PermissionDto(id = 2, permission = "ADMIN"),
+                ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "3e1f5d4a-8317-4f13-aa89-2c094652e6a3",
+                fullName = "ali",
+                username = "ali_jamal",
+                email = "ali_jamal@example.com",
+                country = "Iraq",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 3, permission = "END_USER"),
+                    UserDto.PermissionDto(id = 1, permission = "ADMIN")
+                ),
+                imageUrl = "dummy_img.png"
         ),
         UserDto(
             id = "c3d8fe2b-6d36-47ea-964a-57d45e780bce",
@@ -83,7 +74,8 @@ class FakeRemoteGateway(
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "END_USER"),
                 UserDto.PermissionDto(id = 2, permission = "RESTAURANT")
-            )
+            ),
+                imageUrl = "dummy_img.png"
         ),
         UserDto(
             id = "7a1bfe39-4b2c-4f76-bde0-82da2eaf9e99",
@@ -96,18 +88,20 @@ class FakeRemoteGateway(
                 UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                 UserDto.PermissionDto(id = 2, permission = "ADMIN"),
                 UserDto.PermissionDto(id = 3, permission = "DELIVERY")
-            )
-        ),
-        UserDto(
-            id = "8c90c4c6-1e69-47f3-aa59-2edcd6f0057b",
-            fullName = "Jane Davis",
-            username = "jane_davis_890",
-            email = "jane_davis@example.com",
-            country = "Other",
-            permissions = listOf(
-                UserDto.PermissionDto(id = 1, permission = "END_USER"),
-                UserDto.PermissionDto(id = 2, permission = "DRIVER")
-            )
+            ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "8c90c4c6-1e69-47f3-aa59-2edcd6f0057b",
+                fullName = "Jane Davis",
+                username = "jane_davis_890",
+                email = "jane_davis@example.com",
+                country = "Other",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 1, permission = "END_USER"),
+                    UserDto.PermissionDto(id = 2, permission = "DRIVER")
+                ),
+                imageUrl = "dummy_img.png"
         ),
         UserDto(
             id = "8c90c4c6-1e69-47f3-aa59-2edcd6f0057b",
@@ -118,7 +112,8 @@ class FakeRemoteGateway(
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "END_USER"),
                 UserDto.PermissionDto(id = 2, permission = "DRIVER")
-            )
+            ),
+                imageUrl = "dummy_img.png"
         ),
         UserDto(
             id = "8c90c4c6-1e69-47f3-aa59-2edcd6f0057b",
@@ -129,19 +124,21 @@ class FakeRemoteGateway(
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "END_USER"),
                 UserDto.PermissionDto(id = 2, permission = "DRIVER")
-            )
-        ),
-        UserDto(
-            id = "c4425a0e-9f0a-4df1-bcc1-6dd96322a990",
-            fullName = "Ahmed Hassan",
-            username = "ahmed_hassan_123",
-            email = "ahmed_hassan@example.com",
-            country = "Egypt",
-            permissions = listOf(
-                UserDto.PermissionDto(id = 1, permission = "RESTAURANT"),
-                UserDto.PermissionDto(id = 2, permission = "DRIVER"),
-                UserDto.PermissionDto(id = 3, permission = "END_USER")
-            )
+            ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "c4425a0e-9f0a-4df1-bcc1-6dd96322a990",
+                fullName = "Ahmed Hassan",
+                username = "ahmed_hassan_123",
+                email = "ahmed_hassan@example.com",
+                country = "Egypt",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 1, permission = "RESTAURANT"),
+                    UserDto.PermissionDto(id = 2, permission = "DRIVER"),
+                    UserDto.PermissionDto(id = 3, permission = "END_USER")
+                ),
+                imageUrl = "dummy_img.png"
         ),
         UserDto(
             id = "f7b087da-8c02-417b-a3db-54c82b5ff5b4",
@@ -152,7 +149,8 @@ class FakeRemoteGateway(
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                 UserDto.PermissionDto(id = 2, permission = "DELIVERY")
-            )
+            ),
+                imageUrl = "dummy_img.png"
         ),
         UserDto(
             id = "3e1f5d4a-8317-4f13-aa89-2c094652e6a3",
@@ -162,18 +160,20 @@ class FakeRemoteGateway(
             country = "Syria",
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "ADMIN")
-            )
-        ),
-        UserDto(
-            id = "c3d8fe2b-6d36-47ea-964a-57d45e780bce",
-            fullName = "Leila Ahmed",
-            username = "leila_ahmed_246",
-            email = "leila_ahmed@example.com",
-            country = "Palestine",
-            permissions = listOf(
-                UserDto.PermissionDto(id = 1, permission = "END_USER"),
-                UserDto.PermissionDto(id = 2, permission = "RESTAURANT")
-            )
+            ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "c3d8fe2b-6d36-47ea-964a-57d45e780bce",
+                fullName = "Leila Ahmed",
+                username = "leila_ahmed_246",
+                email = "leila_ahmed@example.com",
+                country = "Palestine",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 1, permission = "END_USER"),
+                    UserDto.PermissionDto(id = 2, permission = "RESTAURANT")
+                ),
+                imageUrl = "dummy_img.png"
         ),
         UserDto(
             id = "7a1bfe39-4b2c-4f76-bde0-82da2eaf9e99",
@@ -185,7 +185,8 @@ class FakeRemoteGateway(
                 UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                 UserDto.PermissionDto(id = 2, permission = "ADMIN"),
                 UserDto.PermissionDto(id = 3, permission = "DELIVERY")
-            )
+            ),
+                imageUrl = "dummy_img.png"
         ),
         UserDto(
             id = "8c90c4c6-1e69-47f3-aa59-2edcd6f0057b",
@@ -196,18 +197,20 @@ class FakeRemoteGateway(
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "END_USER"),
                 UserDto.PermissionDto(id = 2, permission = "DRIVER")
-            )
-        ),
-        UserDto(
-            id = "c28e9e91-3c3b-4e46-9f53-13b380e2a4d5",
-            fullName = "Layla Mohamed",
-            username = "layla_mohamed_123",
-            email = "layla_mohamed@example.com",
-            country = "Syria",
-            permissions = listOf(
-                UserDto.PermissionDto(id = 1, permission = "RESTAURANT"),
-                UserDto.PermissionDto(id = 2, permission = "END_USER")
-            )
+            ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "c28e9e91-3c3b-4e46-9f53-13b380e2a4d5",
+                fullName = "Layla Mohamed",
+                username = "layla_mohamed_123",
+                email = "layla_mohamed@example.com",
+                country = "Syria",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 1, permission = "RESTAURANT"),
+                    UserDto.PermissionDto(id = 2, permission = "END_USER")
+                ),
+                imageUrl = "dummy_img.png"
         ),
         UserDto(
             id = "f5d5b4a1-6a1f-4c8d-8b1e-7a2e90e38d3c",
@@ -217,7 +220,8 @@ class FakeRemoteGateway(
             country = "Palestine",
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "DELIVERY")
-            )
+            ),
+                imageUrl = "dummy_img.png"
         ),
         UserDto(
             id = "f5d5b4a1-6a1f-4c8d-8b1e-7a2e90e38d3c",
@@ -228,18 +232,20 @@ class FakeRemoteGateway(
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "ADMIN"),
                 UserDto.PermissionDto(id = 2, permission = "END_USER")
-            )
-        ),
-        UserDto(
-            id = "d9f6c4e2-4a12-4c8f-bb8a-21e4d8f9c3a0",
-            fullName = "Nadia Ali",
-            username = "nadia_ali_456",
-            email = "nadia_ali@example.com",
-            country = "Palestine",
-            permissions = listOf(
-                UserDto.PermissionDto(id = 1, permission = "DELIVERY"),
-                UserDto.PermissionDto(id = 2, permission = "DRIVER")
-            )
+            ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "d9f6c4e2-4a12-4c8f-bb8a-21e4d8f9c3a0",
+                fullName = "Nadia Ali",
+                username = "nadia_ali_456",
+                email = "nadia_ali@example.com",
+                country = "Palestine",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 1, permission = "DELIVERY"),
+                    UserDto.PermissionDto(id = 2, permission = "DRIVER")
+                ),
+                imageUrl = "dummy_img.png"
         ),
         UserDto(
             id = "a1b2c3d4-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
@@ -250,7 +256,8 @@ class FakeRemoteGateway(
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "END_USER"),
                 UserDto.PermissionDto(id = 2, permission = "DELIVERY")
-            )
+            ),
+                imageUrl = "dummy_img.png"
         ),
         UserDto(
             id = "b5c6d7e8-9f0a-1b2c-3d4e-5f6a7b8c9d0",
@@ -262,17 +269,19 @@ class FakeRemoteGateway(
                 UserDto.PermissionDto(id = 1, permission = "RESTAURANT"),
                 UserDto.PermissionDto(id = 2, permission = "DRIVER"),
                 UserDto.PermissionDto(id = 3, permission = "ADMIN")
-            )
-        ),
-        UserDto(
-            id = "c9d0e1f2-a3b4-c5d6-e7f8-a9b0c1d2e3f",
-            fullName = "Sami Ahmed",
-            username = "sami_ahmed_789",
-            email = "sami_ahmed@example.com",
-            country = "Syria",
-            permissions = listOf(
-                UserDto.PermissionDto(id = 1, permission = "SUPPORT")
-            )
+            ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "c9d0e1f2-a3b4-c5d6-e7f8-a9b0c1d2e3f",
+                fullName = "Sami Ahmed",
+                username = "sami_ahmed_789",
+                email = "sami_ahmed@example.com",
+                country = "Syria",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 1, permission = "SUPPORT")
+                ),
+                imageUrl = "dummy_img.png"
         ),
         UserDto(
             id = "d2e3f4a5-b6c7-d8e9-f0a1-b2c3d4e5f6a",
@@ -284,7 +293,8 @@ class FakeRemoteGateway(
                 UserDto.PermissionDto(id = 1, permission = "END_USER"),
                 UserDto.PermissionDto(id = 2, permission = "DRIVER"),
                 UserDto.PermissionDto(id = 3, permission = "DELIVERY")
-            )
+            ),
+                imageUrl = "dummy_img.png"
         ),
         UserDto(
             id = "f0a1b2c3-d4e5-f6a7-b8c9-d0e1f2a3b4c",
@@ -295,41 +305,57 @@ class FakeRemoteGateway(
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "RESTAURANT"),
                 UserDto.PermissionDto(id = 2, permission = "SUPPORT")
-            )
-        ),
-        UserDto(
-            id = "b4c5d6e7-f8a9-b0c1-d2e3-f4a5b6c7d8e",
-            fullName = "Amir Ali",
-            username = "amir_ali_456",
-            email = "amir_ali@example.com",
-            country = "Iraq",
-            permissions = listOf(
-                UserDto.PermissionDto(id = 1, permission = "DELIVERY"),
-                UserDto.PermissionDto(id = 2, permission = "ADMIN")
-            )
-        ),
-        UserDto(
-            id = "b3c4d5e6-f7a8-b9c0-d1e2-f3a4b5c6d7e",
-            fullName = "Khaled Abbas",
-            username = "khaled_abbas_246",
-            email = "khaled_abbas@example.com",
-            country = "Palestine",
-            permissions = listOf(
-                UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
-                UserDto.PermissionDto(id = 2, permission = "DELIVERY"),
-                UserDto.PermissionDto(id = 3, permission = "DRIVER")
-            )
-        ),
-        UserDto(
-            id = "e2f3a4b5-c6d7e8f9-a0b1c2d3-e4f5a6b7c8d",
-            fullName = "Nour Hamdi",
-            username = "nour_hamdi_123",
-            email = "nour_hamdi@example.com",
-            country = "Egypt",
-            permissions = listOf(
-                UserDto.PermissionDto(id = 1, permission = "END_USER"),
-                UserDto.PermissionDto(id = 2, permission = "DELIVERY")
-            )
+            ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "b4c5d6e7-f8a9-b0c1-d2e3-f4a5b6c7d8e",
+                fullName = "Amir Ali",
+                username = "amir_ali_456",
+                email = "amir_ali@example.com",
+                country = "Iraq",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 1, permission = "DELIVERY"),
+                    UserDto.PermissionDto(id = 2, permission = "ADMIN")
+                ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "d8e9f0a1-b2c3-d4e5-f6a7-b8c9d0e1f2a",
+                fullName = "Layla Hussein",
+                username = "layla_hussein_789",
+                email = "layla_hussein@example.com",
+                country = "Syria",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 1, permission = "END_USER"),
+                    UserDto.PermissionDto(id = 2, permission = "DRIVER")
+                ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "b3c4d5e6-f7a8-b9c0-d1e2-f3a4b5c6d7e",
+                fullName = "Khaled Abbas",
+                username = "khaled_abbas_246",
+                email = "khaled_abbas@example.com",
+                country = "Palestine",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
+                    UserDto.PermissionDto(id = 2, permission = "DELIVERY"),
+                    UserDto.PermissionDto(id = 3, permission = "DRIVER")
+                ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "e2f3a4b5-c6d7e8f9-a0b1c2d3-e4f5a6b7c8d",
+                fullName = "Nour Hamdi",
+                username = "nour_hamdi_123",
+                email = "nour_hamdi@example.com",
+                country = "Egypt",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 1, permission = "END_USER"),
+                    UserDto.PermissionDto(id = 2, permission = "DELIVERY")
+                ),
+                imageUrl = "dummy_img.png"
         ),
         UserDto(
             id = "d3e4f5a6-b7c8d9e0-f1a2b3c4-d5e6f7a8b9c",
@@ -340,7 +366,8 @@ class FakeRemoteGateway(
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "RESTAURANT"),
                 UserDto.PermissionDto(id = 2, permission = "DRIVER")
-            )
+            ),
+                imageUrl = "dummy_img.png"
         ),
         UserDto(
             id = "c4d5e6f7-a8b9c0d1-e2f3a4b5-c6d7e8f9a0b",
@@ -352,18 +379,20 @@ class FakeRemoteGateway(
                 UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                 UserDto.PermissionDto(id = 2, permission = "DELIVERY"),
                 UserDto.PermissionDto(id = 3, permission = "ADMIN")
-            )
-        ),
-        UserDto(
-            id = "b5c6d7e8-f9a0b1c2-d3e4f5a6-b7c8d9e0f1a",
-            fullName = "Kareem Omar",
-            username = "kareem_omar_246",
-            email = "kareem_omar@example.com",
-            country = "Palestine",
-            permissions = listOf(
-                UserDto.PermissionDto(id = 1, permission = "DRIVER"),
-                UserDto.PermissionDto(id = 2, permission = "SUPPORT")
-            )
+            ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "b5c6d7e8-f9a0b1c2-d3e4f5a6-b7c8d9e0f1a",
+                fullName = "Kareem Omar",
+                username = "kareem_omar_246",
+                email = "kareem_omar@example.com",
+                country = "Palestine",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 1, permission = "DRIVER"),
+                    UserDto.PermissionDto(id = 2, permission = "SUPPORT")
+                ),
+                imageUrl = "dummy_img.png"
         ),
         UserDto(
             id = "a0b1c2d3-e4f5a6b7-c8d9e0f1-a2b3c4d5e6f",
@@ -374,7 +403,8 @@ class FakeRemoteGateway(
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "DELIVERY"),
                 UserDto.PermissionDto(id = 2, permission = "ADMIN")
-            )
+            ),
+                imageUrl = "dummy_img.png"
         ),
         UserDto(
             id = "c2d3e4f5-a6b7c8d9-e0f1a2b3-c4d5e6f7a8b",
@@ -385,19 +415,21 @@ class FakeRemoteGateway(
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                 UserDto.PermissionDto(id = 2, permission = "DRIVER")
-            )
-        ),
-        UserDto(
-            id = "e6f7a8b9-c0d1e2f3-a4b5c6d7-e8f9a0b1c2d",
-            fullName = "Omar Nader",
-            username = "omar_nader_789",
-            email = "omar_nader@example.com",
-            country = "Syria",
-            permissions = listOf(
-                UserDto.PermissionDto(id = 1, permission = "END_USER"),
-                UserDto.PermissionDto(id = 2, permission = "DELIVERY"),
-                UserDto.PermissionDto(id = 3, permission = "ADMIN")
-            )
+            ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "e6f7a8b9-c0d1e2f3-a4b5c6d7-e8f9a0b1c2d",
+                fullName = "Omar Nader",
+                username = "omar_nader_789",
+                email = "omar_nader@example.com",
+                country = "Syria",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 1, permission = "END_USER"),
+                    UserDto.PermissionDto(id = 2, permission = "DELIVERY"),
+                    UserDto.PermissionDto(id = 3, permission = "ADMIN")
+                ),
+                imageUrl = "dummy_img.png"
         ),
         UserDto(
             id = "a4b5c6d7-e8f9a0b1-c2d3e4f5-a6b7c8d9e0f",
@@ -409,7 +441,8 @@ class FakeRemoteGateway(
                 UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                 UserDto.PermissionDto(id = 2, permission = "DRIVER"),
                 UserDto.PermissionDto(id = 3, permission = "END_USER")
-            )
+            ),
+                imageUrl = "dummy_img.png"
         ),
         UserDto(
             id = "e8f9a0b1-c2d3e4f5-a6b7c8d9-e0f1a2b3c4d",
@@ -420,52 +453,57 @@ class FakeRemoteGateway(
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "RESTAURANT"),
                 UserDto.PermissionDto(id = 2, permission = "END_USER")
-            )
-        ),
-        UserDto(
-            id = "a2b3c4d5-e6f7a8b9-c0d1e2f3-a4b5c6d7e8f",
-            fullName = "Hassan Ali",
-            username = "hassan_ali_456",
-            email = "hassan_ali@example.com",
-            country = "Iraq",
-            permissions = listOf(
-                UserDto.PermissionDto(id = 1, permission = "DRIVER"),
-                UserDto.PermissionDto(id = 2, permission = "ADMIN")
-            )
-        ),
-        UserDto(
-            id = "c6d7e8f9-a0b1c2d3-e4f5a6b7-c8d9e0f1a2b",
-            fullName = "Leila Nasser",
-            username = "leila_nasser_789",
-            email = "leila_nasser@example.com",
-            country = "Syria",
-            permissions = listOf(
-                UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
-                UserDto.PermissionDto(id = 2, permission = "DELIVERY")
-            )
-        ),
-        UserDto(
-            id = "e0f1a2b3-c4d5e6f7-a8b9c0d1-e2f3a4b5c6d",
-            fullName = "Khaled Abbas",
-            username = "khaled_abbas_246",
-            email = "khaled_abbas@example.com",
-            country = "Palestine",
-            permissions = listOf(
-                UserDto.PermissionDto(id = 1, permission = "DELIVERY"),
-                UserDto.PermissionDto(id = 2, permission = "SUPPORT"),
-                UserDto.PermissionDto(id = 3, permission = "ADMIN")
-            )
-        ),
-        UserDto(
-            id = "c4d5e6f7-a8b9c0d1-e2f3a4b5-c6d7e8f9a0b",
-            fullName = "Mona Ahmed",
-            username = "mona_ahmed_123",
-            email = "mona_ahmed@example.com",
-            country = "Egypt",
-            permissions = listOf(
-                UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
-                UserDto.PermissionDto(id = 2, permission = "DRIVER")
-            )
+            ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "a2b3c4d5-e6f7a8b9-c0d1e2f3-a4b5c6d7e8f",
+                fullName = "Hassan Ali",
+                username = "hassan_ali_456",
+                email = "hassan_ali@example.com",
+                country = "Iraq",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 1, permission = "DRIVER"),
+                    UserDto.PermissionDto(id = 2, permission = "ADMIN")
+                ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "c6d7e8f9-a0b1c2d3-e4f5a6b7-c8d9e0f1a2b",
+                fullName = "Leila Nasser",
+                username = "leila_nasser_789",
+                email = "leila_nasser@example.com",
+                country = "Syria",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
+                    UserDto.PermissionDto(id = 2, permission = "DELIVERY")
+                ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "e0f1a2b3-c4d5e6f7-a8b9c0d1-e2f3a4b5c6d",
+                fullName = "Khaled Abbas",
+                username = "khaled_abbas_246",
+                email = "khaled_abbas@example.com",
+                country = "Palestine",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 1, permission = "DELIVERY"),
+                    UserDto.PermissionDto(id = 2, permission = "SUPPORT"),
+                    UserDto.PermissionDto(id = 3, permission = "ADMIN")
+                ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "c4d5e6f7-a8b9c0d1-e2f3a4b5-c6d7e8f9a0b",
+                fullName = "Mona Ahmed",
+                username = "mona_ahmed_123",
+                email = "mona_ahmed@example.com",
+                country = "Egypt",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
+                    UserDto.PermissionDto(id = 2, permission = "DRIVER")
+                ),
+                imageUrl = "dummy_img.png"
         ),
         UserDto(
             id = "e2f3a4b5-c6d7e8f9-a0b1c2d3-e4f5a6b7c8d",
@@ -476,7 +514,8 @@ class FakeRemoteGateway(
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "DELIVERY"),
                 UserDto.PermissionDto(id = 2, permission = "ADMIN")
-            )
+            ),
+                imageUrl = "dummy_img.png"
         ),
         UserDto(
             id = "a0b1c2d3-e4f5a6b7-c8d9e0f1-a2b3c4d5e6f",
@@ -488,74 +527,81 @@ class FakeRemoteGateway(
                 UserDto.PermissionDto(id = 1, permission = "END_USER"),
                 UserDto.PermissionDto(id = 2, permission = "RESTAURANT"),
                 UserDto.PermissionDto(id = 3, permission = "DELIVERY")
-            )
-        ),
-        UserDto(
-            id = "b1c2d3e4-f5a6b7c8-d9e0f1a2-b3c4d5e6f7a8",
-            fullName = "Sara Mahmoud",
-            username = "sara_mahmoud_123",
-            email = "sara_mahmoud@example.com",
-            country = "Egypt",
-            permissions = listOf(
-                UserDto.PermissionDto(id = 1, permission = "END_USER"),
-                UserDto.PermissionDto(id = 2, permission = "ADMIN")
-            )
-        ),
-        UserDto(
-            id = "b7c8d9e0-f1a2b3c4-d5e6f7a8-b9c0d1e2f3a4",
-            fullName = "Ahmad Abbas",
-            username = "ahmad_abbas_246",
-            email = "ahmad_abbas@example.com",
-            country = "Palestine",
-            permissions = listOf(
-                UserDto.PermissionDto(id = 1, permission = "RESTAURANT"),
-                UserDto.PermissionDto(id = 2, permission = "SUPPORT")
-            )
-        ),
-        UserDto(
-            id = "f9a0b1c2-d3e4f5a6-b7c8d9e0-f1a2b3c4d5e6",
-            fullName = "Ahmed Ibrahim",
-            username = "ahmed_ibrahim_123",
-            email = "ahmed_ibrahim@example.com",
-            country = "Egypt",
-            permissions = listOf(
-                UserDto.PermissionDto(id = 1, permission = "DELIVERY"),
-                UserDto.PermissionDto(id = 2, permission = "END_USER")
-            )
-        ),
-        UserDto(
-            id = "c4d5e6f7-a8b9c0d1-e2f3a4b5-c6d7e8f9a0b",
-            fullName = "Samar Ali",
-            username = "samar_ali_456",
-            email = "samar_ali@example.com",
-            country = "Iraq",
-            permissions = listOf(
-                UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
-                UserDto.PermissionDto(id = 2, permission = "ADMIN"),
-                UserDto.PermissionDto(id = 3, permission = "RESTAURANT")
-            )
-        ),
-        UserDto(
-            id = "e8f9a0b1-c2d3e4f5-a6b7c8d9-e0f1a2b3c4d5",
-            fullName = "Layla Hussein",
-            username = "layla_hussein_789",
-            email = "layla_hussein@example.com",
-            country = "Syria",
-            permissions = listOf(
-                UserDto.PermissionDto(id = 1, permission = "DRIVER"),
-                UserDto.PermissionDto(id = 2, permission = "DELIVERY")
-            )
-        ),
-        UserDto(
-            id = "b3c4d5e6-f7a8b9c0-d1e2f3a4-b5c6d7e8f9a0",
-            fullName = "Rami Nasser",
-            username = "rami_nasser_246",
-            email = "rami_nasser@example.com",
-            country = "Palestine",
-            permissions = listOf(
-                UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
-                UserDto.PermissionDto(id = 2, permission = "END_USER")
-            )
+            ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "b1c2d3e4-f5a6b7c8-d9e0f1a2-b3c4d5e6f7a8",
+                fullName = "Sara Mahmoud",
+                username = "sara_mahmoud_123",
+                email = "sara_mahmoud@example.com",
+                country = "Egypt",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 1, permission = "END_USER"),
+                    UserDto.PermissionDto(id = 2, permission = "ADMIN")
+                ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "b7c8d9e0-f1a2b3c4-d5e6f7a8-b9c0d1e2f3a4",
+                fullName = "Ahmad Abbas",
+                username = "ahmad_abbas_246",
+                email = "ahmad_abbas@example.com",
+                country = "Palestine",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 1, permission = "RESTAURANT"),
+                    UserDto.PermissionDto(id = 2, permission = "SUPPORT")
+                ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "f9a0b1c2-d3e4f5a6-b7c8d9e0-f1a2b3c4d5e6",
+                fullName = "Ahmed Ibrahim",
+                username = "ahmed_ibrahim_123",
+                email = "ahmed_ibrahim@example.com",
+                country = "Egypt",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 1, permission = "DELIVERY"),
+                    UserDto.PermissionDto(id = 2, permission = "END_USER")
+                ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "c4d5e6f7-a8b9c0d1-e2f3a4b5-c6d7e8f9a0b",
+                fullName = "Samar Ali",
+                username = "samar_ali_456",
+                email = "samar_ali@example.com",
+                country = "Iraq",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
+                    UserDto.PermissionDto(id = 2, permission = "ADMIN"),
+                    UserDto.PermissionDto(id = 3, permission = "RESTAURANT")
+                ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "e8f9a0b1-c2d3e4f5-a6b7c8d9-e0f1a2b3c4d5",
+                fullName = "Layla Hussein",
+                username = "layla_hussein_789",
+                email = "layla_hussein@example.com",
+                country = "Syria",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 1, permission = "DRIVER"),
+                    UserDto.PermissionDto(id = 2, permission = "DELIVERY")
+                ),
+                imageUrl = "dummy_img.png"
+            ),
+            UserDto(
+                id = "b3c4d5e6-f7a8b9c0-d1e2f3a4-b5c6d7e8f9a0",
+                fullName = "Rami Nasser",
+                username = "rami_nasser_246",
+                email = "rami_nasser@example.com",
+                country = "Palestine",
+                permissions = listOf(
+                    UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
+                    UserDto.PermissionDto(id = 2, permission = "END_USER")
+                ),
+                imageUrl = "dummy_img.png"
         ),
         UserDto(
             id = "11111111-2222-3333-4444-555555555555",
@@ -566,7 +612,8 @@ class FakeRemoteGateway(
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                 UserDto.PermissionDto(id = 2, permission = "END_USER")
-            )
+            ),
+            imageUrl = "dummy_img.png"
         ),
         UserDto(
             id = "22222222-3333-4444-5555-666666666666",
@@ -577,7 +624,8 @@ class FakeRemoteGateway(
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                 UserDto.PermissionDto(id = 2, permission = "END_USER")
-            )
+            ),
+            imageUrl = "dummy_img.png"
         ),
 
         UserDto(
@@ -589,7 +637,8 @@ class FakeRemoteGateway(
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                 UserDto.PermissionDto(id = 2, permission = "END_USER")
-            )
+            ),
+            imageUrl = "dummy_img.png"
         ),
 
         UserDto(
@@ -601,7 +650,8 @@ class FakeRemoteGateway(
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                 UserDto.PermissionDto(id = 2, permission = "END_USER")
-            )
+            ),
+            imageUrl = "dummy_img.png"
         ),
 
         UserDto(
@@ -613,7 +663,8 @@ class FakeRemoteGateway(
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                 UserDto.PermissionDto(id = 2, permission = "END_USER")
-            )
+            ),
+            imageUrl = "dummy_img.png"
         ),
 
         UserDto(
@@ -625,7 +676,8 @@ class FakeRemoteGateway(
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                 UserDto.PermissionDto(id = 2, permission = "END_USER")
-            )
+            ),
+            imageUrl = "dummy_img.png"
         ),
 
         UserDto(
@@ -637,7 +689,8 @@ class FakeRemoteGateway(
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                 UserDto.PermissionDto(id = 2, permission = "END_USER")
-            )
+            ),
+            imageUrl = "dummy_img.png"
         ),
 
         UserDto(
@@ -649,7 +702,8 @@ class FakeRemoteGateway(
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                 UserDto.PermissionDto(id = 2, permission = "END_USER")
-            )
+            ),
+            imageUrl = "dummy_img.png"
         ),
 
         UserDto(
@@ -661,7 +715,8 @@ class FakeRemoteGateway(
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                 UserDto.PermissionDto(id = 2, permission = "END_USER")
-            )
+            ),
+            imageUrl = "dummy_img.png"
         ),
 
         UserDto(
@@ -673,7 +728,8 @@ class FakeRemoteGateway(
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "SUPPORT"),
                 UserDto.PermissionDto(id = 2, permission = "END_USER")
-            )
+            ),
+            imageUrl = "dummy_img.png"
         )
     ).toEntity()
 
@@ -1283,7 +1339,6 @@ class FakeRemoteGateway(
         contentStream.endText()
         return dateTimeY
     }
-
 
     private fun headerContent(
         contentStream: PDPageContentStream,

@@ -32,7 +32,6 @@ interface IRemoteGateway {
         priceLevel: Int?
     ): DataWrapper<Restaurant>
 
-    suspend fun loginUser(username: String, password: String): Pair<String, String>
 
     suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant
 
@@ -52,5 +51,7 @@ interface IRemoteGateway {
         page: Int,
         numberOfUsers: Int
     ): DataWrapper<User>
+
+    suspend fun loginUser(username: String, password: String): Pair<String, String>
 
 }
