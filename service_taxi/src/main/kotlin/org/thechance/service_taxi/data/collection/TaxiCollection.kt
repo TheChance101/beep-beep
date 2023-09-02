@@ -15,10 +15,10 @@ data class TaxiCollection(
     val driverId: ObjectId? = null,
     val isAvailable: Boolean? = null,
     val seats: Int? = null,
-){
     @SerialName("_id")
     @BsonId
     @Contextual
     val id: ObjectId = ObjectId()
+){
     val isDeleted: Boolean = false
 }

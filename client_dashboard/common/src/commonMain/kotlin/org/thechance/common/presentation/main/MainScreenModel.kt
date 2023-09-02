@@ -1,19 +1,21 @@
 package org.thechance.common.presentation.main
 
-import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.thechance.common.domain.usecase.IGetUserInfoUseCase
+import org.thechance.common.domain.usecase.ILogoutUserUseCase
+import org.thechance.common.domain.usecase.IManageUsersUseCase
 import org.thechance.common.domain.usecase.IThemeManagementUseCase
-import org.thechance.common.presentation.app.SwitchThemeInteractionListener
+import org.thechance.common.presentation.base.BaseScreenModel
+import org.thechance.common.presentation.util.ErrorState
 
 
 class MainScreenModel(
-    private val getUserInfo: IGetUserInfoUseCase,
+    private val manageUsers: IManageUsersUseCase,
+    private val logout: ILogoutUserUseCase,
     private val themeManagement: IThemeManagementUseCase
-) : StateScreenModel<MainUiState>(MainUiState()), SwitchThemeInteractionListener {
+) : BaseScreenModel<MainUiState, MainUiEffect>(MainUiState()), MainInteractionListener {
 
 
     init {
@@ -22,20 +24,45 @@ class MainScreenModel(
     }
 
     private fun getUserInfo() {
-        val user = getUserInfo.getUserInfo()
-        mutableState.update { it.copy(username = user) }
+        tryToExecute(
+            manageUsers::getUserInfo,
+            ::onGetUserInfoSuccessfully,
+            ::onError
+        )
     }
 
-    fun logout() {
-        mutableState.update { it.copy(isLogin = false) }
+    private fun onGetUserInfoSuccessfully(username: String) {
+        updateState {
+            it.copy(
+                username = username,
+                firstUsernameLetter = username.first().uppercase()
+            )
+        }
     }
 
-    fun onClickDropDownMenu() {
-        mutableState.update { it.copy(isDropMenuExpanded = true) }
+    private fun onError(error: ErrorState) {
+        updateState { it.copy(error = error) }
     }
 
-    fun onDismissDropDownMenu() {
-        mutableState.update { it.copy(isDropMenuExpanded = false) }
+    override fun onClickDropDownMenu() {
+        updateState { it.copy(isDropMenuExpanded = true) }
+    }
+
+    override fun onDismissDropDownMenu() {
+        updateState { it.copy(isDropMenuExpanded = false) }
+    }
+
+    override fun onClickLogout() {
+        tryToExecute(
+            logout::logoutUser,
+            { onLogoutSuccessfully() },
+            ::onError
+        )
+    }
+
+    private fun onLogoutSuccessfully() {
+        updateState { it.copy(isLogin = false) }
+        sendNewEffect(MainUiEffect.Logout)
     }
 
     override fun onSwitchTheme() {
@@ -46,11 +73,15 @@ class MainScreenModel(
     }
 
     private fun getCurrentThemeMode() {
-        coroutineScope.launch(Dispatchers.IO) {
-            themeManagement.getThemeMode().collect { isDarkMode ->
-                mutableState.update { it.copy(isDarkMode = isDarkMode) }
-            }
-        }
+        tryToCollect(
+            themeManagement::getThemeMode,
+            ::onGetThemeModeSuccessfully,
+            ::onError
+        )
+    }
+
+    private fun onGetThemeModeSuccessfully(isDarkMode: Boolean) {
+        updateState { it.copy(isDarkMode = isDarkMode) }
     }
 
 }

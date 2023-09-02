@@ -1,19 +1,15 @@
 package data.gateway.remote
 
 import data.remote.model.BaseResponse
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.plugins.ClientRequestException
-import io.ktor.client.statement.HttpResponse
-import presentation.base.InternetException
-import presentation.base.InvalidPasswordException
-import presentation.base.InvalidUserNameException
-import presentation.base.NoInternetException
-import presentation.base.UnknownErrorException
+import io.ktor.client.*
+import io.ktor.client.call.*
+import io.ktor.client.plugins.*
+import io.ktor.client.statement.*
+import presentation.base.*
 
 abstract class BaseRemoteGateway(val client: HttpClient) {
 
-   protected suspend inline fun <reified T> tryToExecute(
+    protected suspend inline fun <reified T> tryToExecute(
         method: HttpClient.() -> HttpResponse
     ): T {
         try {
@@ -30,16 +26,14 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
     }
 
     fun throwMatchingException(errorMessages: Map<String, String>) {
-        errorMessages.let {
-            if (it.containsErrors(WRONG_PASSWORD)) {
-                throw InvalidPasswordException(it.getOrEmpty(WRONG_PASSWORD))
-            } else {
-                if (it.containsErrors(USER_NOT_EXIST)) {
-                    throw InvalidUserNameException(it.getOrEmpty(USER_NOT_EXIST))
-                } else {
-                    throw UnknownErrorException()
-                }
-            }
+        when {
+            errorMessages.containsErrors(WRONG_PASSWORD) ->
+                throw InvalidPasswordException(errorMessages.getOrEmpty(WRONG_PASSWORD))
+
+            errorMessages.containsErrors(USER_NOT_EXIST) ->
+                throw InvalidUserNameException(errorMessages.getOrEmpty(USER_NOT_EXIST))
+
+            else -> throw UnknownErrorException()
         }
     }
 
