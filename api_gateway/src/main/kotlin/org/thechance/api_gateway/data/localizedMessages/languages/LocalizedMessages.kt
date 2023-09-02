@@ -42,6 +42,31 @@ interface LocalizedMessages {
     val taxiUpdateSuccessfully: String
 
     val taxiDeleteSuccessfully: String
+
+    val invalidId : String
+
+    val invalidPlate: String
+
+    val invalidColor : String
+
+    val invalidCarType : String
+
+    val seatOutOfRange : String
+
+    val invalidLocation : String
+
+    val invalidRate : String
+
+    val invalidDate : String
+
+    val invalidPrice : String
+
+    val alreadyExist : String
+
+    val requiredQuery : String
+
+
+
     // endregion
 
     //region restaurant
