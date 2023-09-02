@@ -33,8 +33,8 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
         }.value?.toEntity() ?: emptyList()
     }
 
-    override suspend fun getMealById(mealId: String): MealDetails {
-        return tryToExecute<BaseResponse<MealDetails>> {
+    override suspend fun getMealById(mealId: String): Meal {
+        return tryToExecute<BaseResponse<Meal>> {
             get("meal/$mealId")
         }.value ?: throw Exception("meal not found")
     }
