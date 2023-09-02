@@ -4,16 +4,16 @@ import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
-import java.util.UUID
+import org.bson.types.ObjectId
 
 @Serializable
 data class TripCollection(
     @Contextual
-    val taxiId: UUID? = null,
+    val taxiId: ObjectId? = null,
     @Contextual
-    val driverId: UUID? = null,
+    val driverId: ObjectId? = null,
     @Contextual
-    val clientId: UUID?,
+    val clientId: ObjectId?,
     val startPoint: LocationCollection? = null,
     val destination: LocationCollection? = null,
     val rate: Double? = null,
@@ -24,7 +24,7 @@ data class TripCollection(
     @SerialName("_id")
     @BsonId
     @Contextual
-    val id: UUID = UUID.randomUUID()
+    val id: ObjectId = ObjectId()
     val isDeleted: Boolean = false
 }
 

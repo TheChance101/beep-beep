@@ -14,6 +14,6 @@ data class UserManagementDto(
 
 @Serializable
 data class UsersManagementDto(
-    val users: List<UserManagementDto>,
+    val items: List<UserManagementDto>,
     val total: Long
 )

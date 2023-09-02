@@ -58,6 +58,10 @@ object FakeGateway : ITaxiGateway {
         return taxi
     }
 
+    override suspend fun getNumberOfTaxis(): Long {
+        return taxes.size.toLong()
+    }
+
     override suspend fun addTrip(trip: Trip): Trip? {
         trips.add(trip)
         return getTripById(trip.id)
@@ -134,6 +138,14 @@ object FakeGateway : ITaxiGateway {
             )
         )
         return trips[position]
+    }
+
+    override suspend fun getNumberOfTripsByDriverId(id: String): Long {
+        return trips.filter { it.driverId == id }.size.toLong()
+    }
+
+    override suspend fun getNumberOfTripsByClientId(id: String): Long {
+        return trips.filter { it.clientId == id }.size.toLong()
     }
 
     fun reset() {

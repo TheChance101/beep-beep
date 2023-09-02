@@ -11,18 +11,18 @@ interface IManageTripsUseCase {
 }
 
 class ManageTripsUseCase(
-    private val ITaxiGateway: ITaxiGateway
+    private val taxiGateway: ITaxiGateway
 ) : IManageTripsUseCase {
     override suspend fun getTrips(page: Int, limit: Int): List<Trip> {
-        return ITaxiGateway.getAllTrips(page, limit)
+        return taxiGateway.getAllTrips(page, limit)
     }
 
     override suspend fun deleteTrip(tripId: String): Trip {
-        ITaxiGateway.getTripById(tripId) ?: throw ResourceNotFoundException
-        return ITaxiGateway.deleteTrip(tripId) ?: throw ResourceNotFoundException
+        taxiGateway.getTripById(tripId) ?: throw ResourceNotFoundException
+        return taxiGateway.deleteTrip(tripId) ?: throw ResourceNotFoundException
     }
 
     override suspend fun getTripById(tripId: String): Trip {
-        return ITaxiGateway.getTripById(tripId) ?: throw ResourceNotFoundException
+        return taxiGateway.getTripById(tripId) ?: throw ResourceNotFoundException
     }
 }

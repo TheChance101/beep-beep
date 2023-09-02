@@ -1,11 +1,13 @@
 package org.thechance.service_restaurant.domain.validation
 
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.toJavaLocalTime
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.function.Executable
 import org.thechance.service_restaurant.api.utils.isRestaurantOpen
+import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.usecase.validation.OrderValidationUseCase
-import org.thechance.service_restaurant.domain.utils.OrderStatus
 import org.thechance.service_restaurant.domain.utils.Validation
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_REQUEST_PARAMETER
@@ -18,7 +20,7 @@ class OrderValidationTest {
     fun `should should throw MultiErrorException contains INVALID_ID when orderId is Invalid`() {
         // given
         val orderId = "not_good_id"
-        val status = OrderStatus.PENDING
+        val status = Order.Status.PENDING
         //when
         val executable = Executable {
             orderValidation.validateUpdateOrder(orderId = orderId, status = status)
@@ -83,8 +85,8 @@ class OrderValidationTest {
     @Test
     fun `should pass when orderStatus is valid`() {
         //given
-        val orderId = "3edf2fc8-6983-484f-a35c-8190f44a08c6"
-        val status = OrderStatus.PENDING
+        val orderId = "6BFC9A2D8E15C037F921D4A6"
+        val status = Order.Status.PENDING
 
         //when
         val executable = Executable {
@@ -99,7 +101,7 @@ class OrderValidationTest {
     fun `should throw MultiErrorException contains INVALID_REQUEST_PARAMETER when orderId is empty`() {
        //given
         val orderId = ""
-        val status = OrderStatus.PENDING
+        val status = Order.Status.PENDING
 
         //when
         val executable = Executable {
@@ -177,8 +179,9 @@ class OrderValidationTest {
         // given opening and closing time
         val openTime = "09:00"
         val closeTime = "12:00"
+        val currentTime = LocalTime.parse("13:00")
         // when we pass opening and closing time to the function and the current time is not between this time
-        val result = isRestaurantOpen(openTime = openTime, closeTime = closeTime)
+        val result = isRestaurantOpen(openTime = openTime, closeTime = closeTime, currentTime = currentTime.toJavaLocalTime())
         // then it should return false
         assertFalse(result)
     }
