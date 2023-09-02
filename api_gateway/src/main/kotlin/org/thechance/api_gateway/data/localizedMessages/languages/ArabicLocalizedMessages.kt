@@ -57,7 +57,7 @@ class ArabicLocalizedMessages() : LocalizedMessages {
     override val restaurantInvalidUpdateParameter: String = "معلومات التحديث غير صالحة"
     override val restaurantInvalidPropertyRights: String = "حقوق الملكية غير صالحة"
     override val restaurantInvalidPrice: String = "السعر غير صالح"
-    override val restaurantInvalidCuisineLimit: String = "اقصى عدد للأطباق غير صالح"
+    override val restaurantInvalidCuisineLimit: String = "اقصى عدد للمطابخ غير صالح"
     override val restaurantInvalidAddress: String = "العنوان غير صالح"
     override val restaurantInvalidEmail: String = "البريد إلكتروني غير صالح"
     override val restaurantInvalidRequestParameter: String = "معلومات الطلب غير صالحة"
