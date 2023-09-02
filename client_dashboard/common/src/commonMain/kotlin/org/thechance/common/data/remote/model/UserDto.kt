@@ -27,14 +27,3 @@ data class UserDto(
         val permission: String? = null
     )
 }
-
-fun UserDto.toEntity() = User(
-    id = id ?: "",
-    fullName = fullName ?: "",
-    country = country ?: "",
-    username = username ?: "",
-    email = email ?: "",
-    permission = permissions?.map { enumValueOf(it?.permission ?: "") } ?: emptyList(),
-)
-
-fun List<UserDto>.toEntity() = map(UserDto::toEntity)
