@@ -7,7 +7,7 @@ import org.thechance.service_restaurant.data.collection.*
 
 class DataBaseContainer(client: MongoClient) {
 
-    private val database = client.coroutine.getDatabase(DATABASE_NAME)
+    private val database = client.coroutine.getDatabase(DATA_BASE_NAME)
 
     val categoryCollection: CoroutineCollection<CategoryCollection> = database.getCollection(CATEGORY_COLLECTION)
 
@@ -23,7 +23,7 @@ class DataBaseContainer(client: MongoClient) {
         database.getCollection(RESTAURANT_PERMISSION_REQUEST_COLLECTION)
 
     companion object {
-        const val DATABASE_NAME = "TheChanceBeepBeep"
+        private val DATA_BASE_NAME = System.getenv("DB_NAME").toString()
         const val CATEGORY_COLLECTION = "category"
         const val RESTAURANT_COLLECTION = "restaurant"
         const val MEAL_COLLECTION = "meal"

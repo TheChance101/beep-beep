@@ -4,7 +4,6 @@ import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.OrderState
 import domain.usecase.IManageOrderUseCase
 import kotlinx.coroutines.CoroutineScope
-import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 

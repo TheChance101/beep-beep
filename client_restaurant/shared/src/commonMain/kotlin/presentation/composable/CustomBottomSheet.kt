@@ -54,11 +54,11 @@ fun CustomBottomSheet(
             visible = sheetState.isVisible,
             enter = slideInVertically(
                 initialOffsetY = { it },
-                animationSpec = tween(500)
+                animationSpec = tween(300)
             ),
             exit = slideOutVertically(
                 targetOffsetY = { it },
-                animationSpec = tween(500)
+                animationSpec = tween(300)
             ),
         ) {
             SheetContent(sheetShape, sheetBackgroundColor, { onBackGroundClicked() }, sheetContent)

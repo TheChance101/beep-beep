@@ -30,7 +30,7 @@ fun MealDetails.toMealAddition() = MealAddition(
     image = image,
     description = description,
     price = price.toDouble(),
-    cuisines = mealCuisines.map { Cuisine(id = it.id, name = name) }
+    cuisines = mealCuisines.toCuisineEntity()
 )
 
 fun Meal.toUIState() = MealDetails(

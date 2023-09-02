@@ -27,7 +27,7 @@ val networkModule = module {
                 header("Content-Type", "application/json")
                 header("Accept-Language", "ar")
                 header("Country-Code", "EG")
-                url("http://10.23.0.173:8003")
+                url("http://192.168.1.9:8080")
             }
 
             install(ContentNegotiation) {
