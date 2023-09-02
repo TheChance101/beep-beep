@@ -1,6 +1,5 @@
 package org.thechance.service_taxi.domain.entity
 
-import java.util.HexFormat
 
 data class Taxi(
     val id: String,
