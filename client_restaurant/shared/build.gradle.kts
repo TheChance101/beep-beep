@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kotlinKsp)
     id("io.realm.kotlin") version "1.10.0"
+    kotlin("plugin.serialization") version "1.9.0"
 }
 
 group = "org.thechance"
@@ -61,10 +62,7 @@ kotlin {
                 implementation(libs.ktor.content.negotiation)
                 implementation(libs.ktor.logging)
                 implementation(libs.ktor.client.cio)
-                implementation(libs.ktor.serialization)
                 implementation(libs.kotlin.serialization)
-                implementation("io.ktor:ktor-client-serialization:$ktorVersion")
-                //implementation("io.ktor:ktor-serialization-gson:ktorVersion")
 
             }
         }
