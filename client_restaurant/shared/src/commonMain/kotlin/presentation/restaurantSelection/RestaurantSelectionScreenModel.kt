@@ -2,13 +2,13 @@ package presentation.restaurantSelection
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Restaurant
-import domain.usecase.IGetOwnerRestaurantsUseCase
+import domain.usecase.IGetRestaurantsUseCase
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
 class RestaurantSelectionScreenModel(
-    private val ownerRestaurants : IGetOwnerRestaurantsUseCase
+    private val ownerRestaurants : IGetRestaurantsUseCase
 ) : BaseScreenModel<RestaurantScreenUIState, RestaurantSelectionScreenUIEffect>
         (RestaurantScreenUIState()), RestaurantSelectionScreenInteractionListener {
 
