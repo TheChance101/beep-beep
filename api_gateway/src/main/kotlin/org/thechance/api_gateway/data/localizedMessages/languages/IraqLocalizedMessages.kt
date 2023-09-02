@@ -42,6 +42,32 @@ class IraqiArabicLocalizedMessages() : LocalizedMessages {
     // endregion
 
     //region restaurant
+    override val restaurantCreatedSuccessfully: String = "صار عندك مطعم الحين"
+    override val restaurantUpdateSuccessfully: String = "حدثنا بيانات المطعم مالتك"
+    override val restaurantDeleteSuccessfully: String = "حذفنا المطعم مالتك"
+    override val restaurantInvalidId: String = "ماكو آي دي هيج"
+    override val restaurantInvalidName: String = "اسمك مو صحيح"
+    override val restaurantInvalidLocation: String = "العنوان مالتك مو صحيح"
+    override val restaurantInvalidDescription: String = "الوصف مال المطعم مو مناسب"
+    override val restaurantInvalidPriceLevel: String = "تسعير المطعم مالتك مو مناسب"
+    override val restaurantInvalidRate: String = "تقييم المطعم مالتك مو مناسب"
+    override val restaurantInvalidPhone: String = "رقم جوالك مو صحيح"
+    override val restaurantInvalidTime: String = "الوقت يلي دزيته مو صحيح"
+    override val restaurantInvalidPage: String = "رقم الصفحة يلي دزيتها مو صحيح"
+    override val restaurantInvalidPageLimit: String = "عدد الصفحات يمك مو مناسبة"
+    override val restaurantInvalidOneOrMoreIds: String = "آي دي أو أكتر مو صحيح"
+    override val restaurantInvalidPermissionUpdateLocation: String = "إذن تحديث الموقع مالتك مو مناسب"
+    override val restaurantInvalidUpdateParameter: String = "البيانات يلي دزيتها مو صحيحة"
+    override val restaurantInvalidPropertyRights: String = "حقوق الملكية مالتك مو ماسبة"
+    override val restaurantInvalidPrice: String = "السعر يلي دزيته مو مناسب"
+    override val restaurantInvalidCuisineLimit: String = "عدد المطابخ يلي دزيتها مو مناسب"
+    override val restaurantInvalidAddress: String = "العنوان مالتك مو صحيح"
+    override val restaurantInvalidEmail: String = "الإيميل يلي دزيته مو صحيح"
+    override val restaurantInvalidRequestParameter: String = "بيانات الطلب مالتك مو صحيح"
+    override val restaurantErrorAdd: String = "واجهتنا مشكلة بالإضافة"
+    override val restaurantClosed: String = "المطعم مقفل"
+    override val restaurantInsertOrderError: String = "واجهتنا مشكلة بإضافة الطلب مالتك"
+    override val restaurantInvalidReceivedOrders: String = "الطلب يلي دزيته النا مو مناسب"
     override val restaurantNotFound: String = "عيني مطعم لتريده ما موجود"
     //endregion
 }

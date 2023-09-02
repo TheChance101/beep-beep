@@ -42,6 +42,32 @@ class EnglishLocalizedMessages() : LocalizedMessages {
     // endregion
 
     //region restaurant
+    override val restaurantCreatedSuccessfully: String = "Restaurant created successfully 🥳"
+    override val restaurantUpdateSuccessfully: String = "Restaurant updated successfully 🥳"
+    override val restaurantDeleteSuccessfully: String = "Restaurant deleted successfully 🥳"
+    override val restaurantInvalidId: String = "invalid id"
+    override val restaurantInvalidName: String = "invalid name"
+    override val restaurantInvalidLocation: String = "invalid location"
+    override val restaurantInvalidDescription: String = "invalid description"
+    override val restaurantInvalidPriceLevel: String = "invalid price level"
+    override val restaurantInvalidRate: String = "invalid rate"
+    override val restaurantInvalidPhone: String = "invalid phone"
+    override val restaurantInvalidTime: String = "invalid time"
+    override val restaurantInvalidPage: String = "invalid page"
+    override val restaurantInvalidPageLimit: String = "invalid page limit"
+    override val restaurantInvalidOneOrMoreIds: String = "invalid one or more ids"
+    override val restaurantInvalidPermissionUpdateLocation: String = "invalid permission update location"
+    override val restaurantInvalidUpdateParameter: String = "invalid update parameter"
+    override val restaurantInvalidPropertyRights: String = "invalid property rights"
+    override val restaurantInvalidPrice: String = "invalid price"
+    override val restaurantInvalidCuisineLimit: String = "invalid cuisine limit"
+    override val restaurantInvalidAddress: String = "invalid address"
+    override val restaurantInvalidEmail: String = "invalid email"
+    override val restaurantInvalidRequestParameter: String = "invalid request parameter"
+    override val restaurantErrorAdd: String = "error add"
+    override val restaurantClosed: String = "restaurant closed"
+    override val restaurantInsertOrderError: String = "insert order error"
+    override val restaurantInvalidReceivedOrders: String = "invalid received orders"
     override val restaurantNotFound: String = "Sorry, we could not found this restaurant"
     //endregion
 }
