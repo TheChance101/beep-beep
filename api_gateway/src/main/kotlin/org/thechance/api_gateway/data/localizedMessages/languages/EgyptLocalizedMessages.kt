@@ -42,6 +42,32 @@ class EgyptianArabicLocalizedMessages() : LocalizedMessages {
     // endregion
 
     //region restaurant
+    override val restaurantCreatedSuccessfully: String = "بقى عندك مطعم جديد"
+    override val restaurantUpdateSuccessfully: String = "حدثنالك المطعم يا سيدي"
+    override val restaurantDeleteSuccessfully: String = "مسحنا المطعم خلاص"
+    override val restaurantInvalidId: String = "رقم حسابك التعريفي غلط"
+    override val restaurantInvalidName: String = "الاسم غلط"
+    override val restaurantInvalidLocation: String = "الموقع غلط"
+    override val restaurantInvalidDescription: String = "وصف المطعم مش مناسب"
+    override val restaurantInvalidPriceLevel: String = "اسعار مطعمك مش متاحة"
+    override val restaurantInvalidRate: String = "التقييم مش صالح"
+    override val restaurantInvalidPhone: String = "رقم الموبايل غلط"
+    override val restaurantInvalidTime: String = "الوقت غلط"
+    override val restaurantInvalidPage: String = "الصفحه مش موجودة"
+    override val restaurantInvalidPageLimit: String = "عدد الصفحات مش مناسب"
+    override val restaurantInvalidOneOrMoreIds: String = "الارقام التعريفيه غلط"
+    override val restaurantInvalidPermissionUpdateLocation: String = "إذن تحديث الموقع مش صالح"
+    override val restaurantInvalidUpdateParameter: String = "البيانات اللي دخلتها مش مناسبة"
+    override val restaurantInvalidPropertyRights: String = "حقوق الملكية مش مناسبة"
+    override val restaurantInvalidPrice: String = "السعر مش مناسب"
+    override val restaurantInvalidCuisineLimit: String = "اقصى عدد للاطباق مش مناسب"
+    override val restaurantInvalidAddress: String = "العنوان غلط"
+    override val restaurantInvalidEmail: String = "الإيميل غلط"
+    override val restaurantInvalidRequestParameter: String = "بيانات الطلب مش مناسبة"
+    override val restaurantErrorAdd: String = "حصل مشكله في الإضافة"
+    override val restaurantClosed: String = "المطعم قافل"
+    override val restaurantInsertOrderError: String = "حصل مشكلة في إضافة الطلب"
+    override val restaurantInvalidReceivedOrders: String = "الأوردر اللي وصلنا مش صالح"
     override val restaurantNotFound: String = "مش لاقيين المطعم ده!!"
     //endregion
 }
