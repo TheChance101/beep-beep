@@ -2,15 +2,15 @@ package presentation.information
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Restaurant
-import domain.usecase.IManageRestaurantInformationUseCase
-import domain.usecase.RestaurantInformationValidationUseCase
+import domain.usecase.IManageRestaurantInfoUseCase
+import domain.usecase.ValidateRestaurantInfoUseCase
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
 class RestaurantInformationScreenModel(
-    private val manageRestaurantInformation: IManageRestaurantInformationUseCase,
-    private val restaurantInformationValidation: RestaurantInformationValidationUseCase
+    private val manageRestaurantInformation: IManageRestaurantInfoUseCase,
+    private val restaurantInformationValidation: ValidateRestaurantInfoUseCase
 ) : BaseScreenModel<RestaurantInformationUiState, RestaurantInformationUiEffect>
     (RestaurantInformationUiState()), RestaurantInformationInteractionListener {
     override val viewModelScope: CoroutineScope

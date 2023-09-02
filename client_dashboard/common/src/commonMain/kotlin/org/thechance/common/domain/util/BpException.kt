@@ -1,4 +1,4 @@
-package org.thechance.common.domain.entity
+package org.thechance.common.domain.util
 
 open class BeepBeepException(message: String) : Exception(message)
 

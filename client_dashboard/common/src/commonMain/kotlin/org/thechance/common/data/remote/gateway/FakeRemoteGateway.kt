@@ -6,27 +6,15 @@ import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
-import org.thechance.common.data.local.LocalGateway
+import org.thechance.common.data.local.gateway.LocalGateway
 import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
-import org.thechance.common.data.remote.model.DataWrapperDto
-import org.thechance.common.data.remote.model.RestaurantDto
-import org.thechance.common.data.remote.model.TaxiDto
-import org.thechance.common.data.remote.model.UserDto
-import org.thechance.common.data.remote.model.toEntity
-import org.thechance.common.domain.entity.AddRestaurant
-import org.thechance.common.domain.entity.DataWrapper
-import org.thechance.common.domain.entity.Location
-import org.thechance.common.domain.entity.NewTaxiInfo
-import org.thechance.common.domain.entity.Restaurant
-import org.thechance.common.domain.entity.Taxi
-import org.thechance.common.domain.entity.TaxiFiltration
-import org.thechance.common.domain.entity.User
+import org.thechance.common.data.remote.model.*
+import org.thechance.common.domain.entity.*
 import org.thechance.common.domain.getway.IRemoteGateway
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.UUID
+import java.util.*
 import kotlin.math.ceil
 import kotlin.math.floor
 
@@ -306,17 +294,6 @@ class FakeRemoteGateway(
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "DELIVERY"),
                 UserDto.PermissionDto(id = 2, permission = "ADMIN")
-            )
-        ),
-        UserDto(
-            id = "d8e9f0a1-b2c3-d4e5-f6a7-b8c9d0e1f2a",
-            fullName = "Layla Hussein",
-            username = "layla_hussein_789",
-            email = "layla_hussein@example.com",
-            country = "Syria",
-            permissions = listOf(
-                UserDto.PermissionDto(id = 1, permission = "END_USER"),
-                UserDto.PermissionDto(id = 2, permission = "DRIVER")
             )
         ),
         UserDto(
@@ -877,7 +854,7 @@ class FakeRemoteGateway(
                     ownerUsername = "asia",
                     phoneNumber = "0528242165",
                     rating = 2.9,
-                    priceLevel = 2,
+                    priceLevel = 1,
                     workingHours = "09:30 - 21:30"
                 ),
                 RestaurantDto(
@@ -892,10 +869,9 @@ class FakeRemoteGateway(
             )
         )
     }
+    override suspend fun  getUserData() = "asia"
 
-    override fun getUserData() = "asia"
-
-    override fun getUsers(
+    override suspend fun getUsers(
         byPermissions: List<Permission>,
         byCountries: List<String>,
         page: Int,
@@ -957,7 +933,7 @@ class FakeRemoteGateway(
         return taxis.last().toEntity()
     }
 
-    override suspend fun findTaxisByUsername(username: String, page: Int, numberOfTaxis: Int): DataWrapper<Taxi> {
+    override suspend fun searchTaxisByUsername(username: String, page: Int, numberOfTaxis: Int): DataWrapper<Taxi> {
         val taxis = taxis.filter {
             it.username?.startsWith(username, true) ?: false
         }.toEntity()

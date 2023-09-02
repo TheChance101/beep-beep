@@ -1,4 +1,4 @@
-package org.thechance.common
+package org.thechance.common.presentation.app
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
@@ -8,7 +8,6 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import com.beepbeep.designSystem.ui.theme.BpTheme
 import org.koin.java.KoinJavaComponent.inject
-import org.thechance.common.presentation.app.AppScreenModel
 import org.thechance.common.presentation.login.LoginScreen
 import org.thechance.common.presentation.resources.ProvideResources
 
