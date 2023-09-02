@@ -120,13 +120,13 @@ class UserScreenModel(
     // region User Menu
     override fun showEditUserMenu(username: String) {
         updateState {
-            it.copy(userMenu = it.userMenu.copy(username = username))
+            it.copy(userMenu = username)
         }
     }
 
     override fun hideEditUserMenu() {
         updateState {
-            it.copy(userMenu = it.userMenu.copy(username = ""))
+            it.copy(userMenu = "")
         }
     }
 
@@ -163,6 +163,7 @@ class UserScreenModel(
 
     override fun onUserPermissionClick(permission: UserScreenUiState.PermissionUiState) {
         val permissions = getUpdatedPermissions(mutableState.value.permissionsDialog.permissions, permission)
+        if(permission != UserScreenUiState.PermissionUiState.END_USER)
         updateState {
             it.copy(
                 permissionsDialog = it.permissionsDialog.copy(permissions = permissions)

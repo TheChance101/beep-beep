@@ -63,7 +63,7 @@ fun TotalItemsIndicator(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
         )
         Text(
-            "$itemType ${Resources.Strings.outOf} $totalItems ${itemType} ${Resources.Strings.pluralLetter}",
+            "$itemType ${Resources.Strings.outOf} $totalItems ${itemType}${Resources.Strings.pluralLetter}",
             style = Theme.typography.body,
             color = Theme.colors.contentSecondary
         )

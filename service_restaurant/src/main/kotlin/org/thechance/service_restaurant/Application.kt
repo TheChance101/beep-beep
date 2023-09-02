@@ -9,7 +9,7 @@ import org.thechance.service_restaurant.plugins.configureDependencyInjection
 fun main() {
     embeddedServer(
         Netty,
-        port = 8083,
+        port = 8080,
         host = "0.0.0.0",
         module = Application::module
     ).start(wait = true)
