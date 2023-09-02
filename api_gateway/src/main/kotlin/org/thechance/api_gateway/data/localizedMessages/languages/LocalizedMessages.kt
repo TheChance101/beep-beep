@@ -70,6 +70,12 @@ interface LocalizedMessages {
     // endregion
 
     //region restaurant
+    val restaurantCreatedSuccessfully: String
+
+    val restaurantUpdateSuccessfully: String
+
+    val restaurantDeleteSuccessfully: String
+
     val restaurantInvalidId: String
 
     val restaurantInvalidName: String
