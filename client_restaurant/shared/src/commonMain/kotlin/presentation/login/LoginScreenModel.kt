@@ -5,15 +5,13 @@ import domain.usecase.ILoginUserUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
-class LoginScreenModel:
+class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
     BaseScreenModel<LoginScreenUIState, LoginScreenUIEffect>(LoginScreenUIState()),
     LoginScreenInteractionListener {
 
-    private val loginUserUseCase: ILoginUserUseCase by inject()
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
 
@@ -55,7 +53,6 @@ class LoginScreenModel:
     }
 
     private fun onLoginFailed(error: ErrorState) {
-//        sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
         updateState { it.copy(isLoading = false, error = error) }
         handleErrorState(error)
     }
