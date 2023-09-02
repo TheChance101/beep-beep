@@ -11,10 +11,8 @@ import org.thechance.common.presentation.util.ErrorState
 
 class TaxiScreenModel(
     private val manageTaxis: IManageTaxisUseCase,
-    private val updateTaxi: IUpdateTaxiUseCase,
     private val findTaxisByUsername: ISearchTaxisByUserNameUseCase,
     private val filterTaxi: IFilterTaxisUseCase,
-    private val deleteTaxi: IDeleteTaxiUseCase
 ) : BaseScreenModel<TaxiUiState, TaxiUiEffect>(TaxiUiState()), TaxiInteractionListener {
 
     private var searchJob: Job? = null
@@ -132,7 +130,7 @@ class TaxiScreenModel(
 
     override fun onSaveClicked() {
         tryToExecute(
-            { updateTaxi.updateTaxi(mutableState.value.newTaxiInfo.toEntity()) },
+            { manageTaxis.updateTaxi(mutableState.value.newTaxiInfo.toEntity()) },
             ::onUpdateTaxiSuccessfully,
             ::onError
         )
@@ -254,7 +252,7 @@ class TaxiScreenModel(
 
     override fun onDeleteTaxiClicked(taxiId: String) {
         tryToExecute(
-            { deleteTaxi.deleteTaxi(taxiId = taxiId) },
+            { manageTaxis.deleteTaxi(taxiId = taxiId) },
             ::onDeleteTaxiSuccessfully,
             ::onError
         )
