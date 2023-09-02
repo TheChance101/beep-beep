@@ -80,6 +80,7 @@ class RestaurantService(
             }
             put(url) {
                 body = Json.encodeToString(RestaurantDto.serializer(), restaurantDto)
+                  body = Json.encodeToString(status.toString())
             }
 
         }

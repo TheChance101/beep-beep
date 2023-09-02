@@ -7,9 +7,9 @@ import data.remote.model.OrderDto
 import domain.entity.Order
 import domain.gateway.remote.IOrderRemoteGateway
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import kotlinx.coroutines.flow.Flow
 
 
@@ -43,7 +43,7 @@ class OrderRemoteGateway(client: HttpClient) : IOrderRemoteGateway,
 
     override suspend fun updateOrderState(orderId: String, orderState: Int): Order {
         return tryToExecute<BaseResponse<OrderDto>>() {
-            post("/order/$orderId/status").body()//todo check
+            post("/order/$orderId/status"){ setBody(orderState.toString()) }//todo check if correct
         }.value?.toEntity() ?: throw Exception("Error!")
     }
 
