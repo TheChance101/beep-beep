@@ -33,7 +33,7 @@ class MealEditorScreenModel(private val mealId: String) :
 
     private fun getMeal() {
         updateState { it.copy(id = mealId, isLoading = true) }
-        tryToExecute({ manageMeal.getMeal(mealId) }, ::onGetMealSuccess, ::onError)
+        tryToExecute({ manageMeal.getMealById(mealId) }, ::onGetMealSuccess, ::onError)
     }
 
     private fun onGetMealSuccess(meal: Meal) {
