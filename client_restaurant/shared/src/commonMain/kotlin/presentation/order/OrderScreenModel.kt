@@ -46,7 +46,7 @@ class OrderScreenModel(private val manageOrders: IManageOrderUseCase) :
     private fun getPendingOrders() {
         tryToExecute(
             {
-                manageOrders.getCurrentOrders()
+                manageOrders.getCurrentOrders("")
                     .filter { it.orderState == OrderState.PENDING }
                     .map { it.toOrderUiState() }
             },
@@ -58,7 +58,7 @@ class OrderScreenModel(private val manageOrders: IManageOrderUseCase) :
     private fun getInCookingOrders() {
         tryToExecute(
             {
-                manageOrders.getCurrentOrders()
+                manageOrders.getCurrentOrders("")
                     .filter { it.orderState == OrderState.IN_COOKING }
                     .map { it.toOrderUiState() }
             },
