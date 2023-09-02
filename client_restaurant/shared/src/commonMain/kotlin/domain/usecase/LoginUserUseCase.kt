@@ -1,7 +1,8 @@
 package domain.usecase
 
-import domain.gateway.IFakeRemoteGateway
 import domain.gateway.local.ILocalConfigurationGateway
+import domain.gateway.remote.IIdentityRemoteGateway
+import presentation.base.InvalidPasswordException
 
 interface ILoginUserUseCase {
 
@@ -14,7 +15,7 @@ interface ILoginUserUseCase {
 }
 
 class LoginUserUseCase(
-    private val remoteGateway: IFakeRemoteGateway,
+    private val remoteGateway: IIdentityRemoteGateway,
     private val localGateWay: ILocalConfigurationGateway
 ) : ILoginUserUseCase {
 
@@ -23,10 +24,20 @@ class LoginUserUseCase(
         password: String,
         isKeepMeLoggedInChecked: Boolean
     ) {
-        val userTokens = remoteGateway.loginUser(userName, password)
-        localGateWay.saveAccessToken(userTokens.first)
-        localGateWay.saveRefreshToken(userTokens.second)
-        localGateWay.saveKeepMeLoggedInFlag(isKeepMeLoggedInChecked)
+        if (validateLoginFields(userName, password)) {
+            val userTokens = remoteGateway.loginUser(userName, password)
+            localGateWay.saveAccessToken(userTokens.accessToken)
+            localGateWay.saveRefreshToken(userTokens.refreshToken)
+            localGateWay.saveKeepMeLoggedInFlag(isKeepMeLoggedInChecked)
+        }
+    }
+
+    private fun validateLoginFields(username: String, password: String): Boolean {
+        if (username.isEmpty()) {
+            throw InvalidPasswordException("")
+        } else if (password.isEmpty()) {
+            throw InvalidPasswordException("")
+        } else return true
     }
 
 }

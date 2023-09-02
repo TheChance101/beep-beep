@@ -5,15 +5,13 @@ import domain.usecase.ILoginUserUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
-class LoginScreenModel:
+class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
     BaseScreenModel<LoginScreenUIState, LoginScreenUIEffect>(LoginScreenUIState()),
     LoginScreenInteractionListener {
 
-    private val loginUserUseCase: ILoginUserUseCase by inject()
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
 
@@ -55,7 +53,6 @@ class LoginScreenModel:
     }
 
     private fun onLoginFailed(error: ErrorState) {
-//        sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
         updateState { it.copy(isLoading = false, error = error) }
         handleErrorState(error)
     }
@@ -66,15 +63,30 @@ class LoginScreenModel:
             ErrorState.RequestFailed -> {}
             ErrorState.UnAuthorized -> {}
             ErrorState.HasNoPermission -> {}
+            is ErrorState.UnknownError -> {}
             is ErrorState.InvalidCredentials -> {
-                updateState { it.copy(passwordErrorMsg = error.errorMessage, isPasswordError = true) }
+                updateState {
+                    it.copy(
+                        passwordErrorMsg = error.errorMessage,
+                        isPasswordError = true,
+                    )
+                }
+
+
             }
 
             is ErrorState.UserNotExist -> {
-                updateState { it.copy(usernameErrorMsg = error.errorMessage, isUsernameError = true) }
+                updateState {
+                    it.copy(
+                        usernameErrorMsg = error.errorMessage,
+                        isUsernameError = true
+                    )
+                }
             }
 
-            else -> {}
+            ErrorState.NotFound -> {
+
+            }
         }
     }
 
@@ -99,7 +111,7 @@ class LoginScreenModel:
     private fun showPermissionSheetWithDelay() {
         coroutineScope.launch {
             state.value.sheetState.dismiss()
-            delay(500)
+            delay(300)
             updateState { it.copy(showPermissionSheet = true) }
             state.value.sheetState.show()
         }

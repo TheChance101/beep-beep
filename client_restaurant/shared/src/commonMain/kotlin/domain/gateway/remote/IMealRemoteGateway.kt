@@ -1,7 +1,6 @@
 package domain.gateway.remote
 
 import domain.entity.Meal
-import presentation.mealManagement.MealDetails
 
 
 interface IMealRemoteGateway {
@@ -13,7 +12,7 @@ interface IMealRemoteGateway {
 
     suspend fun getMealsByCuisineId(mealId: String): List<Meal>
     suspend fun getMealById(mealId: String): Meal
-    suspend fun addMeal(meal: Meal): Meal?
-    suspend fun updateMeal(meal: Meal): Meal?
+    suspend fun addMeal(meal: Meal): Boolean
+    suspend fun updateMeal(meal: Meal): Boolean
 
 }

@@ -13,5 +13,6 @@ interface MealScreenInteractionListener : BaseInteractionListener {
     fun onImagePicked(image: ByteArray)
     fun onClickBack()
     fun onCuisinesCancel()
+    fun onBackgroundClicked()
 }
 
