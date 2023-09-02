@@ -29,16 +29,16 @@ class EgyptianArabicLocalizedMessages() : LocalizedMessages {
     override val taxiUpdateSuccessfully: String= "حدثنالك التاكسي يا عم 🎉"
     override val taxiDeleteSuccessfully: String= "مسحنالك التاكسي مع الاسف"
     override val invalidId: String = "مش لاقيين التاكسي ده!!"
-    override val invalidPlate: String = "مش صالح الرقم اللي دخلته!!"
-    override val invalidColor: String = "مش صالح اللون اللي دخلته!!"
-    override val invalidCarType: String = "مش صالح نوع العربية اللي دخلته!!"
-    override val seatOutOfRange: String = "مش صالح عدد المقاعد اللي دخلته!!"
-    override val invalidLocation: String = "مش صالح المكان اللي دخلته!!"
-    override val invalidRate: String = "مش صالح التقييم اللي دخلته!!"
-    override val invalidDate: String = "مش صالح التاريخ اللي دخلته!!"
-    override val invalidPrice: String = "مش صالح السعر اللي دخلته!!"
+    override val invalidPlate: String = "مش مظبوط الرقم اللي دخلته!!"
+    override val invalidColor: String = "مش مظبوط اللون اللي دخلته!!"
+    override val invalidCarType: String = "مش مظبوط نوع العربية اللي دخلته!!"
+    override val seatOutOfRange: String = "مش مظبوط عدد المقاعد اللي دخلته!!"
+    override val invalidLocation: String = "مش مظبوط المكان اللي دخلته!!"
+    override val invalidRate: String = "مش مظبوط التقييم اللي دخلته!!"
+    override val invalidDate: String = "مش مظبوط التاريخ اللي دخلته!!"
+    override val invalidPrice: String = "مش مظبوط السعر اللي دخلته!!"
     override val alreadyExist: String = "التاكسي ده موجود قبل كده ياعم"
-    override val requiredQuery: String = "مش لاقيين بعض المخلات المطلوبه   ياعم"
+    override val requiredQuery: String = "       في حاجات ناقصة يا معلم"
     // endregion
 
     //region restaurant
