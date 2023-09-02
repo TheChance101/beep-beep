@@ -21,7 +21,8 @@ val kmongoModule = module {
     }
 
     single {
-        get<MongoClient>().coroutine.getDatabase("BeepBeepNotificationsDB")
+        val DATA_BASE_NAME = System.getenv("DB_NAME").toString()
+        get<MongoClient>().coroutine.getDatabase(DATA_BASE_NAME)
     }
 }
 

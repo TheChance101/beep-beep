@@ -12,7 +12,7 @@ class DataBaseContainer(client: CoroutineClient) {
     val taxiCollection by lazy { database.getCollection<TaxiCollection>(TAXI_COLLECTION_NAME) }
 
     companion object {
-        private const val DATA_BASE_NAME = "TheChanceBeepBeep"
+        private val DATA_BASE_NAME = System.getenv("DB_NAME").toString()
         private const val TAXI_COLLECTION_NAME = "taxi"
         private const val TRIP_COLLECTION_NAME = "trip"
     }
