@@ -129,7 +129,7 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
         pageCount: Int,
         onPageClicked: (Int) -> Unit,
         onItemPerPageChanged: (Int) -> Unit,
-        editUserMenu: UserScreenUiState.MenuUiState,
+        editUserMenu: String,
         onEditUserDismiss: () -> Unit,
         onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
         onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
@@ -198,7 +198,7 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
         user: UserScreenUiState.UserUiState,
         firstColumnWeight: Float = 1f,
         otherColumnsWeight: Float = 3f,
-        editUserMenu: UserScreenUiState.MenuUiState,
+        editUserMenu: String,
         onEditUserDismiss: () -> Unit,
         onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
         onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
@@ -285,32 +285,36 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
     @Composable
     private fun EditUserDropdownMenu(
         user: UserScreenUiState.UserUiState,
-        editUserMenu: UserScreenUiState.MenuUiState,
+        editUserMenu: String,
         onEditUserDismiss: () -> Unit,
         onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
         onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
     ) {
         BpDropdownMenu(
-            expanded = user.username == editUserMenu.username,
+            expanded = user.username == editUserMenu,
             onDismissRequest = onEditUserDismiss,
-            shape = RoundedCornerShape(Theme.radius.medium),
-            offset = DpOffset.Zero.copy(x = -100.kms)
+            shape = RoundedCornerShape(Theme.radius.medium).copy(topEnd = CornerSize(0.dp)),
+            offset = DpOffset.Zero.copy(x = (-178).kms)
         ) {
             Column {
-                editUserMenu.items.forEach {
-                    BpDropdownMenuItem(
-                        onClick = {
-                            when (it.text) {
-                                "Edit" -> onEditUserMenuItemClicked(user)
-                                "Delete" -> onDeleteUserMenuItemClicked(user)
-                            }
-                        },
-                        text = it.text,
-                        leadingIconPath = it.iconPath,
-                        isSecondary = it.isSecondary,
-                        showBottomDivider = it != editUserMenu.items.last()
-                    )
-                }
+                BpDropdownMenuItem(
+                    onClick = {
+                        onEditUserMenuItemClicked(user)
+                    },
+                    text = Resources.Strings.permission,
+                    leadingIconPath = Resources.Drawable.permission,
+                    isSecondary = false,
+                    showBottomDivider = true
+                )
+                BpDropdownMenuItem(
+                    onClick = {
+                        onDeleteUserMenuItemClicked(user)
+                    },
+                    text = Resources.Strings.disable,
+                    leadingIconPath = Resources.Drawable.disable,
+                    isSecondary = true,
+                    showBottomDivider = false
+                )
             }
         }
     }
