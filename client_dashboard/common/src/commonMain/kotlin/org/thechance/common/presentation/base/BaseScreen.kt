@@ -10,6 +10,9 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import org.koin.core.parameter.ParametersDefinition
 import org.koin.core.qualifier.Qualifier
 import org.koin.mp.KoinPlatform
@@ -23,11 +26,10 @@ abstract class BaseScreen<SM, E, S, I>
     @Composable
     protected fun Init(screenModel: SM) {
         val state: S by screenModel.state.collectAsState()
-        val effect: E? by screenModel.effect.collectAsState(null)
         val navigator = LocalNavigator.currentOrThrow
 
+        Listen(screenModel.effect){ onEffect(effect = it, navigator = navigator) }
         OnRender(state, screenModel)
-        effect?.Listen { onEffect(it, navigator) }
     }
 
     abstract fun onEffect(effect: E, navigator: Navigator)
@@ -36,12 +38,13 @@ abstract class BaseScreen<SM, E, S, I>
     abstract fun OnRender(state: S, listener: I)
 
     @Composable
-    private fun E.Listen(function: (E) -> Unit) {
-        LaunchedEffect(this) {
-            function(this@Listen)
+    private fun Listen(effect: Flow<E>, function: (E) -> Unit, ) {
+        LaunchedEffect(Unit) {
+            effect.collectLatest {
+                it?.let { function(it) }
+            }
         }
     }
-
     @Composable
     protected inline fun <reified T : ScreenModel> getScreenModel(
         qualifier: Qualifier? = null,

@@ -2,6 +2,7 @@ package org.thechance.api_gateway.data.localizedMessages.languages
 
 class ArabicLocalizedMessages() : LocalizedMessages {
 
+    // region identity
     override val invalidRequestParameter: String = "مدخلات خاطئة"
     override val invalidAddressLocation: String = "عنوان غير صالح"
     override val userAlreadyExist: String = "هذا المستخدم موجود بالفعل"
@@ -18,9 +19,24 @@ class ArabicLocalizedMessages() : LocalizedMessages {
     override val unknownError: String = "حصل خطأ زي حياتك يا 56"
     override val userNotFound: String = "المستخدم غير موجود"
     override val invalidPermission: String = "ليس لديك الصلاحية للقيام بهذا الامر"
+    // endregion
+
+    // region taxi
     override val taxiCreatedSuccessfully: String= "تم انشاء التاكسي بنجاح"
     override val taxiUpdateSuccessfully: String= "تم تحديث التاكسي بنجاح"
     override val taxiDeleteSuccessfully: String= "تم حذف التاكسي بنجاح"
+    override val invalidId: String = "رقم بطاقة غير صالح"
+    override val invalidPlate: String = "رقم لوحة غير صالح"
+    override val invalidColor: String = "لون غير صالح"
+    override val invalidCarType: String = "نوع السيارة غير صالح"
+    override val seatOutOfRange: String = "عدد المقاعد غير صالح"
+    override val invalidLocation: String = "موقع غير صالح"
+    override val invalidRate: String = "تقييم غير صالح"
+    override val invalidDate: String = "تاريخ غير صالح"
+    override val invalidPrice: String = "سعر غير صالح"
+    override val alreadyExist: String = "موجود بالفعل"
+    override val requiredQuery: String = "المدخل مطلوب "
+    // endregion
 
     //region restaurant
     override val restaurantNotFound: String = "نعتذر لم نستطيع ايجاد هذا المطعم!"
