@@ -7,9 +7,6 @@ import org.thechance.common.domain.usecase.*
 
 val UseCaseModule = module {
     singleOf(::SearchTaxisByUserNameUseCase) { bind<ISearchTaxisByUserNameUseCase>() }
-    singleOf(::SearchRestaurantsByNameUseCase) { bind<ISearchRestaurantsByNameUseCase>() }
-    singleOf(::FilterRestaurantsUseCase) { bind<IFilterRestaurantsUseCase>() }
-    singleOf(::SearchFilterRestaurantsUseCase) { bind<ISearchFilterRestaurantsUseCase>() }
     singleOf(::LoginUserUseCase) { bind<ILoginUserUseCase>() }
     singleOf(::ManageRestaurantUseCase) { bind<IManageRestaurantUseCase>() }
     singleOf(::ManageLocationUseCase) { bind<IManageLocationUseCase>() }

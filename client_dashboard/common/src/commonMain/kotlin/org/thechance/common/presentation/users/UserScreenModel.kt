@@ -9,7 +9,7 @@ import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
 class UserScreenModel(
-    private val searchUsers: ISearchUsersUseCase
+    private val searchUsers: ISearchUsersUseCase,
     private val manageUsers: IManageUsersUseCase
 ) : BaseScreenModel<UserScreenUiState, UserUiEffect>(UserScreenUiState()),
     UserScreenInteractionListener {

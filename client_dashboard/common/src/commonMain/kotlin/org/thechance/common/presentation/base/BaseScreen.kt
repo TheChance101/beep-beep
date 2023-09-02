@@ -26,7 +26,6 @@ abstract class BaseScreen<SM, E, S, I>
     @Composable
     protected fun Init(screenModel: SM) {
         val state: S by screenModel.state.collectAsState()
-        val effect: E? by screenModel.effect.collectAsState(null)
         val navigator = LocalNavigator.currentOrThrow
 
         Listen(screenModel.effect){ onEffect(effect = it, navigator = navigator) }

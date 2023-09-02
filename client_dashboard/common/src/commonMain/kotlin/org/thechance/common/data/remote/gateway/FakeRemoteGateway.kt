@@ -6,7 +6,7 @@ import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
-import org.thechance.common.data.local.LocalGateway
+import org.thechance.common.data.local.gateway.LocalGateway
 import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.*
@@ -294,17 +294,6 @@ class FakeRemoteGateway(
             permissions = listOf(
                 UserDto.PermissionDto(id = 1, permission = "DELIVERY"),
                 UserDto.PermissionDto(id = 2, permission = "ADMIN")
-            )
-        ),
-        UserDto(
-            id = "d8e9f0a1-b2c3-d4e5-f6a7-b8c9d0e1f2a",
-            fullName = "Layla Hussein",
-            username = "layla_hussein_789",
-            email = "layla_hussein@example.com",
-            country = "Syria",
-            permissions = listOf(
-                UserDto.PermissionDto(id = 1, permission = "END_USER"),
-                UserDto.PermissionDto(id = 2, permission = "DRIVER")
             )
         ),
         UserDto(

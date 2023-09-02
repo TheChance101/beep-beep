@@ -1,6 +1,5 @@
 package org.thechance.common.domain.usecase
 
-import org.thechance.common.data.remote.gateway.FakeRemoteGateway
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.NewTaxiInfo
 import org.thechance.common.domain.entity.Taxi
