@@ -32,7 +32,6 @@ import presentation.composable.BpAppBar
 import presentation.composable.MealCard
 import presentation.mealManagement.MealScreen
 import presentation.mealManagement.ScreenMode
-import presentation.meals.state.MealsScreenUIState
 import resources.Resources.strings
 
 class MealsScreen(private val restaurantId: String) :

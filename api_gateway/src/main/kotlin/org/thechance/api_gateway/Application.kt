@@ -3,13 +3,13 @@ package org.thechance.api_gateway
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-import org.thechance.api_gateway.data.security.TokenConfiguration
+import org.thechance.api_gateway.data.model.authenticate.TokenConfiguration
 import org.thechance.api_gateway.plugins.*
 
 fun main() {
     embeddedServer(
         Netty,
-        port = 8003,
+        port = 8080,
         host = "0.0.0.0",
         module = Application::module
     ).start(wait = true)

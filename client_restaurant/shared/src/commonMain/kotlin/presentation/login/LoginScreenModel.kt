@@ -55,9 +55,9 @@ class LoginScreenModel:
     }
 
     private fun onLoginFailed(error: ErrorState) {
-        sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
+//        sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
         updateState { it.copy(isLoading = false, error = error) }
-//        handleErrorState(error)
+        handleErrorState(error)
     }
 
     private fun handleErrorState(error: ErrorState) {
@@ -77,7 +77,6 @@ class LoginScreenModel:
 
 
             }
-
             is ErrorState.UserNotExist -> {
                 updateState {
                     it.copy(
