@@ -4,22 +4,23 @@ import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Cuisine
 import domain.usecase.IManageCuisineUseCase
 import domain.usecase.IManageMealUseCase
+import domain.usecase.IValidateManageMealUseCase
 import kotlinx.coroutines.CoroutineScope
-import org.koin.core.component.inject
 import presentation.base.ErrorState
 import presentation.mealManagement.IMealBehavior
 import presentation.mealManagement.MealScreenUIEffect
 import presentation.mealManagement.toMealAddition
 import presentation.mealManagement.toUIState
 
-class IMealCreationScreenModel : IMealBehavior() {
+class IMealCreationScreenModel(
+    private val manageMeal: IManageMealUseCase,
+    private val cuisines: IManageCuisineUseCase,
+    private val restaurantMealValidation: IValidateManageMealUseCase
+
+) : IMealBehavior() {
 
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
-
-    private val manageMeal: IManageMealUseCase by inject()
-    private val cuisines: IManageCuisineUseCase by inject()
-
 
     init {
         getCuisines()
@@ -27,7 +28,17 @@ class IMealCreationScreenModel : IMealBehavior() {
 
 
     override suspend fun addMeal(): Boolean {
-        return manageMeal.addMeal(state.value.meal.toMealAddition())
+        val state = state.value.meal.toMealAddition()
+        val validationResult = restaurantMealValidation.isMealInformationValid(
+            name = state.name,
+            price = state.price,
+            cuisines = state.cuisines,
+            description = state.description,
+        )
+        if (validationResult) {
+            return manageMeal.addMeal(state)
+        }
+        return false
     }
 
     fun getCuisines() {

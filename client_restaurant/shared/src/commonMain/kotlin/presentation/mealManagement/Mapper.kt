@@ -30,7 +30,7 @@ fun MealDetails.toMealAddition() = MealAddition(
     image = image,
     description = description,
     price = price.toDouble(),
-    cuisines = mealCuisines.map { Cuisine(id = it.id, name = name) }
+    cuisines = mealCuisines
 )
 
 fun Meal.toUIState() = MealDetails(
@@ -38,5 +38,5 @@ fun Meal.toUIState() = MealDetails(
     description = description,
     imageUrl = imageUrl,
     price = "$price",
-    mealCuisines = cuisines.toUIState()
+    mealCuisines = cuisines
 )
