@@ -21,11 +21,11 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
         } catch (e: ClientRequestException) {
             val errorMessages = e.response.body<BaseResponse<*>>().status.errorMessages
             errorMessages?.let { throwMatchingException(it) }
-            throw UnknownErrorException()
+            throw UnknownErrorException(e.message)
         } catch (e: InternetException) {
             throw NoInternetException()
         } catch (e: Exception) {
-            throw UnknownErrorException()
+            throw UnknownErrorException(e.message.toString())
         }
     }
 
@@ -37,7 +37,7 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
                 if (it.containsErrors(USER_NOT_EXIST)) {
                     throw InvalidUserNameException(it.getOrEmpty(USER_NOT_EXIST))
                 } else {
-                    throw UnknownErrorException()
+                    throw UnknownErrorException("")
                 }
             }
         }

@@ -12,14 +12,15 @@ class IdentityRemoteGateway(client: HttpClient) : IIdentityRemoteGateway,
     BaseRemoteGateway(client = client) {
 
     override suspend fun loginUser(userName: String, password: String): Pair<String, String> {
-        val result = tryToExecute<BaseResponse<UserTokensDto>>() {
+        val result = tryToExecute<BaseResponse<UserTokensDto>> {
             submitForm(
                 formParameters = Parameters.build {
                     append("username", userName)
                     append("password", password)
+
                 }
             ) {
-                url("login")
+                url("/login")
             }
         }.value ?: throw Exception()
 
@@ -28,15 +29,15 @@ class IdentityRemoteGateway(client: HttpClient) : IIdentityRemoteGateway,
 
 
 override suspend fun refreshAccessToken(refreshToken: String): Pair<String, String> {
-     val result = tryToExecute<BaseResponse<UserTokensDto>>() {
-            submitForm(
-                formParameters = Parameters.build {
-                    append("refreshToken", refreshToken)
-                }
-            ) {
-                url("refresh-access-token")
+    val result = tryToExecute<BaseResponse<UserTokensDto>> {
+        submitForm(
+            formParameters = Parameters.build {
+                append("refreshToken", refreshToken)
             }
-        }.value ?: throw Exception()
+        ) {
+            url("refresh-access-token")
+        }
+    }.value ?: throw Exception()
 
         return Pair(result.accessToken, result.refreshToken)
     }

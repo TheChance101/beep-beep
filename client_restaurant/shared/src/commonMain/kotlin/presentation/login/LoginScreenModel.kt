@@ -66,7 +66,7 @@ class LoginScreenModel:
             ErrorState.RequestFailed -> {}
             ErrorState.UnAuthorized -> {}
             ErrorState.HasNoPermission -> {}
-            ErrorState.UnknownError -> {}
+            is ErrorState.UnknownError -> {}
             is ErrorState.InvalidCredentials -> {
                 updateState {
                     it.copy(
