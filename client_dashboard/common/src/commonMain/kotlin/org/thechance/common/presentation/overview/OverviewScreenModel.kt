@@ -1,17 +1,18 @@
 package org.thechance.common.presentation.overview
 
+import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.User
-import org.thechance.common.domain.usecase.IGetLatestRegisteredUsersUseCase
+import org.thechance.common.domain.usecase.IManageUsersUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
 class OverviewScreenModel(
-    private val getLatestRegisteredUsers: IGetLatestRegisteredUsersUseCase
+    private val manageUsers: IManageUsersUseCase
 ) : BaseScreenModel<OverviewUiState, OverviewUiEffect>(OverviewUiState()),
     OverviewInteractionListener {
 
     init {
-        getUsers()
+        getLatestRegisteredUsers()
     }
 
     override fun onMenuItemDropDownClicked() {
@@ -32,7 +33,6 @@ class OverviewScreenModel(
                     selectedIndex = index
                 )
             )
-
         }
     }
 
@@ -58,16 +58,23 @@ class OverviewScreenModel(
         sendNewEffect(OverviewUiEffect.ViewMoreTaxis)
     }
 
-    fun getUsers() {
+    private fun getLatestRegisteredUsers() {
         tryToExecute(
-            { getLatestRegisteredUsers.getLatestRegisteredUsers() },
+            {
+                manageUsers.getUsers(
+                    byPermissions = listOf(),
+                    byCountries = listOf(),
+                    page = 1,
+                    numberOfUsers = 4
+                )
+            },
             ::onGetUsersSuccessfully,
             ::onError
         )
     }
 
-    private fun onGetUsersSuccessfully(users: List<User>) {
-        val latestRegisteredUsers = users.map { it.toUiState() }
+    private fun onGetUsersSuccessfully(users: DataWrapper<User>) {
+        val latestRegisteredUsers = users.result.toUiState()
         updateState {
             it.copy(users = latestRegisteredUsers, isLoading = false)
         }

@@ -6,27 +6,15 @@ import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
-import org.thechance.common.data.local.LocalGateway
+import org.thechance.common.data.local.gateway.LocalGateway
 import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
-import org.thechance.common.data.remote.model.DataWrapperDto
-import org.thechance.common.data.remote.model.RestaurantDto
-import org.thechance.common.data.remote.model.TaxiDto
-import org.thechance.common.data.remote.model.UserDto
-import org.thechance.common.data.remote.model.toEntity
-import org.thechance.common.domain.entity.AddRestaurant
-import org.thechance.common.domain.entity.DataWrapper
-import org.thechance.common.domain.entity.Location
-import org.thechance.common.domain.entity.NewTaxiInfo
-import org.thechance.common.domain.entity.Restaurant
-import org.thechance.common.domain.entity.Taxi
-import org.thechance.common.domain.entity.TaxiFiltration
-import org.thechance.common.domain.entity.User
+import org.thechance.common.data.remote.model.*
+import org.thechance.common.domain.entity.*
 import org.thechance.common.domain.getway.IRemoteGateway
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.UUID
+import java.util.*
 import kotlin.math.ceil
 import kotlin.math.floor
 
@@ -1351,7 +1339,6 @@ class FakeRemoteGateway(
         contentStream.endText()
         return dateTimeY
     }
-
 
     private fun headerContent(
         contentStream: PDPageContentStream,

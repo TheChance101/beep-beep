@@ -32,6 +32,10 @@ fun User.toUiState(): LatestRegisteredUserUiState {
     )
 }
 
+fun List<User>.toUiState(): List<LatestRegisteredUserUiState> {
+    return this.map { it.toUiState() }
+}
+
 enum class PermissionUiState {
     RESTAURANT,
     DRIVER,

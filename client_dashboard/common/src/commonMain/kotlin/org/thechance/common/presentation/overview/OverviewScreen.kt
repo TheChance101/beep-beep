@@ -1,8 +1,6 @@
 package org.thechance.common.presentation.overview
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
@@ -37,6 +35,8 @@ object OverviewScreen :
 
     @Composable
     override fun OnRender(state: OverviewUiState, listener: OverviewInteractionListener) {
+
+        val scrollState = rememberScrollState()
 
         Column(
             modifier = Modifier.background(Theme.colors.surface).fillMaxSize(),
@@ -91,10 +91,10 @@ object OverviewScreen :
                     title = Resources.Strings.users,
                     onLeadingButtonClicked = listener::onViewMoreUsersClicked,
                     body = {
-                        Column(modifier = Modifier.weight(1f).fillMaxWidth()) {
+                        Column(modifier = Modifier.weight(1f).fillMaxWidth().verticalScroll(scrollState)) {
                             state.users.forEachIndexed { index, user ->
                                 Row(
-                                    modifier = Modifier.weight(1f),
+                                    modifier = Modifier.padding(16.kms),
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {

@@ -52,8 +52,6 @@ interface IRemoteGateway {
         numberOfUsers: Int
     ): DataWrapper<User>
 
-    suspend fun getLatestRegisteredUsers(): List<User>
-
     suspend fun loginUser(username: String, password: String): Pair<String, String>
 
 }
