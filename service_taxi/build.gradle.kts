@@ -1,16 +1,14 @@
-import groovy.xml.dom.DOMCategory.attributes
-import org.jetbrains.kotlin.com.intellij.openapi.vfs.StandardFileSystems.jar
-
-val ktor_version: String by project
-val kotlin_version: String by project
-val logback_version: String by project
-val exposed_version : String by project
-val h2_version : String by project
+val ktorVersion: String by project
+val kotlinVersion: String by project
+val logbackVersion: String by project
+val exposedVersion: String by project
+val h2Version: String by project
 
 plugins {
     kotlin("jvm") version "1.8.10"
     id("io.ktor.plugin") version "2.2.4"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
+    id("com.google.devtools.ksp") version "1.8.10-1.0.9"
     id("application")
 }
 
@@ -34,17 +32,44 @@ repositories {
 
 
 dependencies {
-    implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
-    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor_version")
+    implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktorVersion")
 
-    implementation("io.ktor:ktor-server-call-logging-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-swagger:$ktor_version")
-    implementation("io.ktor:ktor-server-auth-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-auth-jwt-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
-    implementation("ch.qos.logback:logback-classic:$logback_version")
-    testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+    implementation("io.ktor:ktor-server-call-logging-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-swagger:$ktorVersion")
+    implementation("io.ktor:ktor-server-auth-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-auth-jwt-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-netty-jvm:$ktorVersion")
+    implementation("ch.qos.logback:logback-classic:$logbackVersion")
+    testImplementation("io.ktor:ktor-server-tests-jvm:$ktorVersion")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
+    testImplementation(kotlin("test"))
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+
+    val kmongoVersion = "4.9.0"
+    //KMongo
+    implementation("org.litote.kmongo:kmongo:$kmongoVersion")
+
+    //KMongo with coroutine
+    implementation("org.litote.kmongo:kmongo-coroutine-serialization:$kmongoVersion")
+
+    //KMongo
+    implementation("org.litote.kmongo:kmongo-id:$kmongoVersion")
+
+    //Koin for ktor apps
+    implementation("io.insert-koin:koin-ktor:3.4.1")
+
+    //Koin
+    implementation("io.insert-koin:koin-core:3.4.2")
+
+    //Kotlinx Serialization for json
+    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:2.2.4")
+
+    //kotlinx-datetime
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+
+    //validation
+    implementation("io.ktor:ktor-server-status-pages:$ktorVersion")
 }
 

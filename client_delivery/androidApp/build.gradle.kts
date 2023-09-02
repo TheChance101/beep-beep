@@ -16,15 +16,16 @@ kotlin {
 }
 
 android {
-    compileSdk = (findProperty("android.compileSdk") as String).toInt()
+    compileSdk = libs.versions.compileSdk.get().toInt()
     namespace = "org.thechance.beepbeep"
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-
+    sourceSets["main"].res.srcDirs("../../design_system/shared/src/commonMain/resources")
+    packagingOptions.pickFirsts += "compose-multiplatform.xml"
     defaultConfig {
         applicationId = "org.thechance.beepbeep.delivery"
-        minSdk = (findProperty("android.minSdk") as String).toInt()
-        targetSdk = (findProperty("android.targetSdk") as String).toInt()
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
     }
@@ -33,6 +34,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
     kotlin {
-        jvmToolchain(11)
+        jvmToolchain(libs.versions.jvmToolchain.get().toInt())
     }
 }

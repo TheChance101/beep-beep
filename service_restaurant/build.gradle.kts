@@ -1,17 +1,18 @@
-import groovy.xml.dom.DOMCategory.attributes
-import org.jetbrains.kotlin.com.intellij.openapi.vfs.StandardFileSystems.jar
-
 val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
-val exposed_version : String by project
-val h2_version : String by project
+val exposed_version: String by project
+val h2_version: String by project
+val kmongoVersion: String by project
+val koinKsp: String by project
+val kotlinx_datetime: String by project
 
 plugins {
     kotlin("jvm") version "1.8.10"
     id("io.ktor.plugin") version "2.2.4"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
     id("application")
+    id("com.google.devtools.ksp") version "1.8.10-1.0.9"
 }
 
 group = "org.thechance.service_restaurant"
@@ -38,6 +39,20 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor_version")
 
+    //KMongo
+    implementation("org.litote.kmongo:kmongo:$kmongoVersion")
+    implementation("org.litote.kmongo:kmongo-coroutine-serialization:$kmongoVersion")
+    implementation("org.litote.kmongo:kmongo-id:$kmongoVersion")
+
+    //Koin
+    implementation("io.insert-koin:koin-ktor:3.4.3")
+    implementation("io.insert-koin:koin-core:3.4.3")
+
+    testImplementation("junit:junit:4.13.1")
+    implementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    //validation
+    implementation("io.ktor:ktor-server-status-pages:$ktor_version")
+
     implementation("io.ktor:ktor-server-call-logging-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-swagger:$ktor_version")
     implementation("io.ktor:ktor-server-auth-jvm:$ktor_version")
@@ -46,5 +61,12 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlinx_datetime")
+    implementation("io.ktor:ktor-server-websockets-jvm:$ktor_version")
+
+//    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+
+    //Kotlinx datetime
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
 }
 

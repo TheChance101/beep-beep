@@ -1,12 +1,15 @@
 package org.thechance.service_identity.plugins
 
-import io.ktor.server.routing.*
 import io.ktor.server.application.*
-import org.thechance.serivce_identity.endpoints.testRoutes
+import io.ktor.server.routing.*
+import org.thechance.service_identity.endpoints.addressRoutes
+import org.thechance.service_identity.endpoints.userManagementRoutes
+import org.thechance.service_identity.endpoints.userRoutes
 
-fun Application.configureRouting(
-) {
+fun Application.configureRouting() {
     routing {
-        testRoutes()
+        userRoutes()
+        addressRoutes()
+        userManagementRoutes()
     }
 }

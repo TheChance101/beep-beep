@@ -97,10 +97,20 @@ EOM
   esac
 }
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_resource "${PODS_ROOT}/../../shared/src/commonMain/resources/compose-multiplatform.xml"
+  install_resource "${PODS_ROOT}/../../shared/src/commonMain/resources/ic_beep_beep_icon.xml"
+  install_resource "${PODS_ROOT}/../../shared/src/commonMain/resources/ic_beep_beep_logo.xml"
+  install_resource "${PODS_ROOT}/../../shared/src/commonMain/resources/moon_stars.xml"
+  install_resource "${PODS_ROOT}/../../shared/src/commonMain/resources/sort.xml"
+  install_resource "${PODS_ROOT}/../../shared/src/commonMain/resources/sun.xml"
+  install_resource "${PODS_ROOT}/../../shared/src/iosMain/resources/font"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_resource "${PODS_ROOT}/../../shared/src/commonMain/resources/compose-multiplatform.xml"
+  install_resource "${PODS_ROOT}/../../shared/src/commonMain/resources/ic_beep_beep_icon.xml"
+  install_resource "${PODS_ROOT}/../../shared/src/commonMain/resources/ic_beep_beep_logo.xml"
+  install_resource "${PODS_ROOT}/../../shared/src/commonMain/resources/moon_stars.xml"
+  install_resource "${PODS_ROOT}/../../shared/src/commonMain/resources/sort.xml"
+  install_resource "${PODS_ROOT}/../../shared/src/commonMain/resources/sun.xml"
+  install_resource "${PODS_ROOT}/../../shared/src/iosMain/resources/font"
 fi
 
 mkdir -p "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"

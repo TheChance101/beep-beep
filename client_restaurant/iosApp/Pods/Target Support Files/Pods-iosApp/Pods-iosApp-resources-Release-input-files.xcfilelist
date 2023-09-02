@@ -1,2 +1,9 @@
 ${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-resources.sh
-${PODS_ROOT}/../../shared/src/commonMain/resources/compose-multiplatform.xml
+${PODS_ROOT}/../../shared/src/commonMain/resources/arrowdown.svg
+${PODS_ROOT}/../../shared/src/commonMain/resources/arrow_left.xml
+${PODS_ROOT}/../../shared/src/commonMain/resources/ic_beep_beep_icon.xml
+${PODS_ROOT}/../../shared/src/commonMain/resources/ic_beep_beep_logo.xml
+${PODS_ROOT}/../../shared/src/commonMain/resources/moon_stars.xml
+${PODS_ROOT}/../../shared/src/commonMain/resources/sort.xml
+${PODS_ROOT}/../../shared/src/commonMain/resources/sun.xml
+${PODS_ROOT}/../../shared/src/iosMain/resources/font

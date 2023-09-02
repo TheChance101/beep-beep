@@ -27,6 +27,7 @@
   ],
   "resources": [
     "src/commonMain/resources/**",
-    "src/iosMain/resources/**"
+    "src/iosMain/resources/**",
+    "../../design_system/shared/src/commonMain/resources/**"
   ]
 }

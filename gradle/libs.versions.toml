@@ -1,0 +1,96 @@
+[versions]
+androidGradlePlugin = "7.4.2"
+kotlin = "1.9.0"
+
+compileSdk = "33"
+minSdk = "24"
+targetSdk = "33"
+ios-deploymentTarget = "14.1"
+jvmToolchain = "11"
+
+androidx-core = "1.9.0"
+androidx-activity-compose = "1.6.1"
+androidx-appcompat = "1.6.1"
+compose-version = "1.4.3"
+accompanist-version = "0.28.0"
+hilt-version = "2.46.1"
+constraint-version = "1.0.1"
+ksp = "1.8.21-1.0.11"
+koin-version = "3.4.3"
+koinKspVersion = "1.2.2"
+#voyager version
+voyager-version = "1.0.0-rc05"
+ktor-version = "2.3.3"
+google-gson-version = "2.10.1"
+serialization_version = "1.6.0"
+ktor-logging-version = "1.5.0"
+coroutine-version = "1.7.1"
+image-loader = "1.2.8"
+kotlin-realm = "1.10.0"
+realm-version = "1.10.0"
+
+[libraries]
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
+compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose-version" }
+compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "compose-version" }
+compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "compose-version" }
+compose-materialIcons = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "compose-version" }
+compose-coil = { module = "io.coil-kt:coil-compose", version = "2.4.0" }
+
+compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose-version" }
+compose-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose-version" }
+androidx-ui-text = { group = "androidx.compose.ui", name = "ui-text", version = "1.4.3" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3", version = "1.1.1" }
+google-accompanist = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist-version" }
+androidx-constraint = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraint-version" }
+koin-compose = { module = "io.insert-koin:koin-compose", version= "1.0.4" }
+koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin-version" }
+voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager-version" }
+voyager-bottomsheet-navigator = { module = "cafe.adriel.voyager:voyager-bottom-sheet-navigator", version.ref = "voyager-version" }
+voyager-tab-navigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager-version" }
+voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager-version" }
+voyager-androidx = { module = "cafe.adriel.voyager:voyager-androidx", version.ref = "voyager-version" }
+voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager-version" }
+#ktor
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor-version" }
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor-version" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp-jvm", version.ref = "ktor-version" }
+google-code-gson = { module = "com.google.code.gson:gson", version.ref = "google-gson-version" }
+ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor-version" }
+ktor-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor-version" }
+ktor-json-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor-version" }
+ktor-serialization = { module = "io.ktor:ktor-client-serialization", version.ref = "ktor-version" }
+ktor-gson = { module = "io.ktor:ktor-serialization-gson", version.ref = "ktor-version" }
+kotlin-realm = { module = "io.realm.kotlin:library-base", version.ref = "kotlin-realm" }
+#realm
+realm-library-base = { module = "io.realm.kotlin:library-base", version.ref = "realm-version" }
+
+
+compose-image-loader = { module = "io.github.qdsfdhvh:image-loader", version.ref = "image-loader" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin-version" }
+koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koinKspVersion" }
+koin-ksp = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp" }
+koin-compiler = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koinKspVersion" }
+kotlin-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization_version" }
+kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutine-version" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin-version" }
+
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.4.0" }
+
+[bundles]
+voyager = ["voyager-navigator", "voyager-koin", "voyager-transitions"]
+
+
+[plugins]
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-native-cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
+android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose-version" }
+google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt-version" }
+kotlinKsp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+
+
