@@ -74,6 +74,7 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
 
 
             }
+
             is ErrorState.UserNotExist -> {
                 updateState {
                     it.copy(
@@ -81,6 +82,10 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
                         isUsernameError = true
                     )
                 }
+            }
+
+            ErrorState.NotFound -> {
+
             }
         }
     }

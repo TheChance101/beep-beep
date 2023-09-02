@@ -1,11 +1,15 @@
 package data.gateway.remote
 
 import data.remote.model.BaseResponse
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.plugins.*
-import io.ktor.client.statement.*
-import presentation.base.*
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.statement.HttpResponse
+import presentation.base.InternetException
+import presentation.base.InvalidPasswordException
+import presentation.base.InvalidUserNameException
+import presentation.base.NoInternetException
+import presentation.base.UnknownErrorException
 
 abstract class BaseRemoteGateway(val client: HttpClient) {
 
@@ -17,11 +21,11 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
         } catch (e: ClientRequestException) {
             val errorMessages = e.response.body<BaseResponse<*>>().status.errorMessages
             errorMessages?.let { throwMatchingException(it) }
-            throw UnknownErrorException()
+            throw UnknownErrorException(e.message)
         } catch (e: InternetException) {
             throw NoInternetException()
         } catch (e: Exception) {
-            throw UnknownErrorException()
+            throw UnknownErrorException(e.message.toString())
         }
     }
 
@@ -33,7 +37,7 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
             errorMessages.containsErrors(USER_NOT_EXIST) ->
                 throw InvalidUserNameException(errorMessages.getOrEmpty(USER_NOT_EXIST))
 
-            else -> throw UnknownErrorException()
+            else -> throw UnknownErrorException("UnKnow Error")
         }
     }
 
