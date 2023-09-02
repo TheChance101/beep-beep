@@ -4,7 +4,7 @@ import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.usecase.IManageMealUseCase
-import domain.usecase.IMangeCuisineUseCase
+import domain.usecase.IManageCuisineUseCase
 
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
@@ -12,7 +12,7 @@ import presentation.base.ErrorState
 
 class MealsScreenModel(
     private val restaurantId: String,
-    private val mangeCousin: IMangeCuisineUseCase,
+    private val mangeCousin: IManageCuisineUseCase,
     private val mangeMeal: IManageMealUseCase
 ) :
     BaseScreenModel<MealsScreenUIState, MealsScreenUIEffect>(MealsScreenUIState()),
