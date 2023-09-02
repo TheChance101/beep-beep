@@ -35,7 +35,7 @@ data class MealUIState(
     val id: String,
     val name: String,
     val price: String,
-    val imageUrl: String,
+    val imageUrl: String="https://static.toiimg.com/thumb/84784534.cms?imgsize=468021&width=800&height=800",
 )
 
 fun Meal.toMealUIState(): MealUIState {
