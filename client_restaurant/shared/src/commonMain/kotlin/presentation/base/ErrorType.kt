@@ -19,4 +19,6 @@ open class InvalidCredentialsException(message: String) : RequestException(messa
 class UserNotFoundException(val errorMessage: String) : RequestException(errorMessage)
 class InvalidUserNameException(val errorMessage: String) : InvalidCredentialsException(errorMessage)
 class InvalidPasswordException(val errorMessage: String) : InvalidCredentialsException(errorMessage)
+
+class NotFoundedException : BpException("Not founded")
 class UnknownErrorException(val errorMessage: String) : RequestException(errorMessage)

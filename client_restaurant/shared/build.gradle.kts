@@ -44,6 +44,7 @@ kotlin {
                 implementation(libs.compose.components.resources)
                 api(libs.compose.image.loader)
                 implementation(libs.kotlinx.datetime)
+                implementation(libs.google.accompanist)
 
 
                 implementation(libs.bundles.voyager)

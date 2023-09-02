@@ -2,50 +2,62 @@ package presentation.information
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Restaurant
-import domain.usecase.IManageRestaurantInfoUseCase
-import domain.usecase.ValidateRestaurantInfoUseCase
+import domain.usecase.IManageRestaurantInformationUseCase
+import domain.usecase.IValidateRestaurantInfoUseCase
+import domain.usecase.LogoutUserUseCase
 import kotlinx.coroutines.CoroutineScope
+import org.koin.core.component.get
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
 class RestaurantInformationScreenModel(
-    private val manageRestaurantInformation: IManageRestaurantInfoUseCase,
-    private val restaurantInformationValidation: ValidateRestaurantInfoUseCase
+    private val manageRestaurantInformation: IManageRestaurantInformationUseCase,
+    private val restaurantInformationValidation: IValidateRestaurantInfoUseCase,
+    private val logoutUser: LogoutUserUseCase,
 ) : BaseScreenModel<RestaurantInformationUiState, RestaurantInformationUiEffect>
     (RestaurantInformationUiState()), RestaurantInformationInteractionListener {
+
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
 
 
     init {
-        getRestaurantInfo()
+        getRestaurantInfo(get())
     }
 
-    private fun getRestaurantInfo() {
+    private fun onError(error: ErrorState) {
+        updateState { it.copy(isLoading = false, error = error) }
+        handleErrorState(error)
+    }
+
+    private fun handleErrorState(error: ErrorState) {
+        when (error) {
+            ErrorState.UnAuthorized -> {
+                sendNewEffect(RestaurantInformationUiEffect.LogoutSuccess)
+            }
+
+            ErrorState.NoInternet -> {
+                sendNewEffect(RestaurantInformationUiEffect.ShowNoInternetError)
+            }
+
+            else -> {
+                sendNewEffect(RestaurantInformationUiEffect.ShowUnknownError)
+            }
+        }
+    }
+
+    private fun getRestaurantInfo(id: String) {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            {
-                manageRestaurantInformation
-                    .getRestaurantInfo()
-            },
+            { manageRestaurantInformation.getRestaurantInfo(id) },
             ::onGetRestaurantInfoSuccess,
-            ::onGetRestaurantInfoError
+            ::onError
         )
     }
 
     private fun onGetRestaurantInfoSuccess(restaurant: Restaurant) {
         val result = restaurant.toUiState()
-        updateState {
-            it.copy(
-                restaurant = result,
-                isLoading = false,
-                error = null
-            )
-        }
-    }
-
-    private fun onGetRestaurantInfoError(error: ErrorState) {
-        updateState { it.copy(isLoading = false, error = error) }
+        updateState { it.copy(restaurant = result, isLoading = false, error = null) }
     }
 
     override fun onRestaurantNameChange(name: String) {
@@ -61,12 +73,12 @@ class RestaurantInformationScreenModel(
         onUpdateRestaurantInformation()
     }
 
-    override fun onPhoneNumberChange(phoneNum: String) {
-        val validationResult = restaurantInformationValidation.isPhoneNumberValid(phoneNum)
+    override fun onPhoneNumberChange(phoneNumber: String) {
+        val validationResult = restaurantInformationValidation.isPhoneNumberValid(phoneNumber)
         updateState {
             it.copy(
                 restaurant = it.restaurant.copy(
-                    phoneNumber = phoneNum,
+                    phoneNumber = phoneNumber,
                     isPhoneNumberError = !validationResult
                 )
             )
@@ -120,7 +132,7 @@ class RestaurantInformationScreenModel(
         tryToExecute(
             { manageRestaurantInformation.updateRestaurantInformation(restaurant) },
             ::onUpdateRestaurantInfoSuccess,
-            ::onUpdateRestaurantInfoError
+            ::onError
         )
     }
 
@@ -138,15 +150,21 @@ class RestaurantInformationScreenModel(
     }
 
     private fun onUpdateRestaurantInfoSuccess(result: Boolean) {
-        updateState { it.copy(isLoading = false) }
-    }
-
-    private fun onUpdateRestaurantInfoError(error: ErrorState) {
-        updateState { it.copy(isLoading = false, error = error) }
+        updateState { it.copy(isLoading = false, error = null) }
+        sendNewEffect(RestaurantInformationUiEffect.UpdateInformationSuccess)
     }
 
     override fun onClickLogout() {
-        sendNewEffect(RestaurantInformationUiEffect.NavigateToLogin)
+        tryToExecute(
+            { logoutUser.logoutUser() },
+            { onLogoutSuccess() },
+            ::onError
+        )
+        sendNewEffect(RestaurantInformationUiEffect.LogoutSuccess)
+    }
+
+    private fun onLogoutSuccess() {
+        sendNewEffect(RestaurantInformationUiEffect.LogoutSuccess)
     }
 
     override fun onClickBackArrow() {

@@ -10,3 +10,10 @@ fun LocationDto.toEntity(): Location {
         longitude = longitude ?: 0.0
     )
 }
+
+fun Location.toDto(): LocationDto {
+    return LocationDto(
+        latitude = latitude,
+        longitude = longitude
+    )
+}
