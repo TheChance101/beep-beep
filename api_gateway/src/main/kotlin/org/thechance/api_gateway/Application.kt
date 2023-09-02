@@ -3,7 +3,7 @@ package org.thechance.api_gateway
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-import org.thechance.api_gateway.data.security.TokenConfiguration
+import org.thechance.api_gateway.data.model.authenticate.TokenConfiguration
 import org.thechance.api_gateway.plugins.*
 
 fun main() {
@@ -11,9 +11,9 @@ fun main() {
 }
 fun Application.module() {
 
-    val secret = System.getenv("jwt.secret").toString()
-    val issuer = System.getenv("jwt.issuer").toString()
-    val audience = System.getenv("jwt.audience").toString()
+    val secret = System.getenv("jwt_secret").toString()
+    val issuer = System.getenv("jwt_issuer").toString()
+    val audience = System.getenv("jwt_audience").toString()
 
     val tokenConfig = TokenConfiguration(
         secret = secret,
