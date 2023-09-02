@@ -1,5 +1,6 @@
 package data.gateway.remote
 
+import data.remote.mapper.toDto
 import data.remote.mapper.toEntity
 import data.remote.model.BaseResponse
 import data.remote.model.MealDto
@@ -8,7 +9,9 @@ import domain.gateway.remote.IMealRemoteGateway
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
-import presentation.mealManagement.MealDetails
+import io.ktor.client.request.post
+import io.ktor.client.request.put
+import io.ktor.client.request.setBody
 
 
 class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
@@ -39,11 +42,16 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
         }.value ?: throw Exception("meal not found")
     }
 
-    override suspend fun addMeal(meal: Meal): Meal {
-        return meal
+    override suspend fun addMeal(meal: Meal): Boolean {
+        return tryToExecute<BaseResponse<Boolean>> {
+            post("/meal") { setBody(meal.toDto()) }
+        }.value ?: false
     }
 
-    override suspend fun updateMeal(meal: Meal): Meal {
-        return meal
+    override suspend fun updateMeal(meal: Meal): Boolean {
+        return tryToExecute<BaseResponse<Boolean>> {
+            put("/meal") { setBody(meal.toDto()) }
+        }.value ?: false
     }
 }
+

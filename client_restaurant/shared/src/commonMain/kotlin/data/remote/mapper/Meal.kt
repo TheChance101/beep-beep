@@ -16,3 +16,15 @@ fun MealDto.toEntity(): Meal {
         cuisines = emptyList(),
     )
 }
+
+fun Meal.toDto(): MealDto {
+    return MealDto(
+        id = id,
+        restaurantId = restaurantId,
+        name = name,
+        description = description,
+        imageUrl = imageUrl,
+        price = price,
+        cuisines = cuisines
+    )
+}
