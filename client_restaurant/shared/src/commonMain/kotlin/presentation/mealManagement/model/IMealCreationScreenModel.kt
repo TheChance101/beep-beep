@@ -6,6 +6,7 @@ import domain.usecase.IManageCuisineUseCase
 import domain.usecase.IManageMealUseCase
 import domain.usecase.IValidateManageMealUseCase
 import kotlinx.coroutines.CoroutineScope
+import org.koin.core.component.inject
 import presentation.base.ErrorState
 import presentation.mealManagement.IMealBehavior
 import presentation.mealManagement.MealScreenUIEffect
@@ -13,14 +14,15 @@ import presentation.mealManagement.toMealAddition
 import presentation.mealManagement.toUIState
 
 class IMealCreationScreenModel(
-    private val manageMeal: IManageMealUseCase,
-    private val cuisines: IManageCuisineUseCase,
-    private val restaurantMealValidation: IValidateManageMealUseCase
 
 ) : IMealBehavior() {
 
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
+
+    private val manageMeal: IManageMealUseCase by inject()
+    private val cuisines: IManageCuisineUseCase by inject()
+    private val restaurantMealValidation: IValidateManageMealUseCase by inject()
 
     init {
         getCuisines()

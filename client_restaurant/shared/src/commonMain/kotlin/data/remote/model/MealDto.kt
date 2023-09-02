@@ -18,7 +18,7 @@ data class MealDto(
     @SerialName("price")
     val price: Double? = null,
     @SerialName("cuisines")
-    val cuisines: List<CuisineDto>? = null
+    val cuisines: List<String>? = null
 )
 
 

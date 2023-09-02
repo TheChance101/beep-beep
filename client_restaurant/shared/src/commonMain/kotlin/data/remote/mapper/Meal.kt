@@ -25,7 +25,7 @@ fun Meal.toDto(): MealDto {
         description = description,
         imageUrl = imageUrl,
         price = price,
-        cuisines = cuisines.toDto()
+        cuisines = cuisines.map { it.name }
     )
 }
 

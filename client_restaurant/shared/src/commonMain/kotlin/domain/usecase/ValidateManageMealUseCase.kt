@@ -49,7 +49,6 @@ class ValidateManageMealUseCase : IValidateManageMealUseCase {
     ): Boolean {
         return isMealNameValid(name) &&
                 isDescriptionLengthValid(description) &&
-                isPriceValid(price) &&
-                hasAtLeastOneCuisine(cuisines)
+                isPriceValid(price)
     }
 }
