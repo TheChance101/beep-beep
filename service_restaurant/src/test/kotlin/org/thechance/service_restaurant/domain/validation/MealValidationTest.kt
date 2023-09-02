@@ -11,15 +11,7 @@ import org.thechance.service_restaurant.domain.utils.Validation.Companion.DESCRI
 import org.thechance.service_restaurant.domain.utils.Validation.Companion.DESCRIPTION_MIN_LENGTH
 import org.thechance.service_restaurant.domain.utils.Validation.Companion.MAX_CUISINE
 import org.thechance.service_restaurant.domain.utils.Validation.Companion.NULL_DOUBLE
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_CUISINE_LIMIT
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_DESCRIPTION
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_NAME
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ONE_OR_MORE_IDS
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_PRICE
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_REQUEST_PARAMETER
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_UPDATE_PARAMETER
-import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
+import org.thechance.service_restaurant.domain.utils.exceptions.*
 
 class MealValidationTest {
 
@@ -218,11 +210,12 @@ class MealValidationTest {
     private fun createValidMeal(): MealDetails {
         return MealDetails(
             id = "",
-            restaurantId = "3edf2fc8-6983-484f-a35c-8190f44a08c6",
+            restaurantId = "6BFC9A2D8E15C037F921D4A6",
             name = "Delicious Meal",
             description = "A mouthwatering dish",
             price = 20.0,
-            cuisines = listOf(Cuisine("3edf2fc8-6983-484f-a35c-8190f44a08c6", "Italian"))
+            cuisines = listOf(Cuisine("6BFC9A2D8E15C037F921D4A6", "Italian")),
+            currency = "USD",
         )
     }
 
@@ -240,6 +233,7 @@ class MealValidationTest {
             price = 10.0,
             restaurantId = "2a1b3c4d5e6f7a8b9c0d1e2f",
             cuisines = listOf(),
+            currency = "USD",
         )
         // when validateUpdateMeal is invoked
         val result = Executable { mealValidation.validateUpdateMeal(mealDetails) }
@@ -259,6 +253,7 @@ class MealValidationTest {
             price = 10.0,
             restaurantId = restaurantId,
             cuisines = listOf(),
+            currency = "USD",
         )
         // when validateUpdateMeal is invoked
         val result = Executable { mealValidation.validateUpdateMeal(mealDetails) }
@@ -278,6 +273,7 @@ class MealValidationTest {
             price = 10.0,
             restaurantId = "2a1b3c4d5e6f7a8b9c0d1e2f",
             cuisines = listOf(),
+            currency = "USD",
         )
         // when validateUpdateMeal is invoked
         val result = Executable { mealValidation.validateUpdateMeal(mealDetails) }
@@ -297,6 +293,7 @@ class MealValidationTest {
             price = 10.0,
             restaurantId = restaurantId,
             cuisines = listOf(),
+            currency = "USD",
         )
         // when validateUpdateMeal is invoked
         val result = Executable { mealValidation.validateUpdateMeal(mealDetails) }
@@ -315,6 +312,7 @@ class MealValidationTest {
             price = NULL_DOUBLE,
             restaurantId = "2a1b3c4d5e6f7a8b9c0d1e2f",
             cuisines = emptyList(),
+            currency = "USD",
         )
         // when validateUpdateMeal is invoked
         val result = Executable { mealValidation.validateUpdateMeal(mealDetails) }
@@ -334,6 +332,7 @@ class MealValidationTest {
             price = 10.0,
             restaurantId = "2a1b3c4d5e6f7a8b9c0d1e2f",
             cuisines = listOf(),
+            currency = "USD",
         )
         // when validateUpdateMeal is invoked
         val result = Executable { mealValidation.validateUpdateMeal(mealDetails) }
@@ -367,6 +366,7 @@ class MealValidationTest {
             price = 10.0,
             restaurantId = "2a1b3c4d5e6f7a8b9c0d1e2f",
             cuisines = listOf(),
+            currency = "USD",
         )
         // when validateUpdateMeal is invoked
         val result = Executable { mealValidation.validateUpdateMeal(mealDetails) }
@@ -386,6 +386,7 @@ class MealValidationTest {
             price = price,
             restaurantId = "2a1b3c4d5e6f7a8b9c0d1e2f",
             cuisines = listOf(),
+            currency = "USD",
         )
         // when validateUpdateMeal is invoked
         val result = Executable { mealValidation.validateUpdateMeal(mealDetails) }
@@ -414,6 +415,7 @@ class MealValidationTest {
             price = 10.0,
             restaurantId = "2a1b3c4d5e6f7a8b9c0d1e2f",
             cuisines = cuisines,
+            currency = "USD",
         )
         // when  validateUpdateMeal is invoked
         val result = Executable { mealValidation.validateUpdateMeal(mealDetails) }
@@ -442,6 +444,7 @@ class MealValidationTest {
             price = 10.0,
             restaurantId = "2a1b3c4d5e6f7a8b9c0d1e2f",
             cuisines = cuisines,
+            currency = "USD",
         )
         // when  validateUpdateMeal is invoked
         val result = Executable { mealValidation.validateUpdateMeal(mealDetails) }
@@ -455,21 +458,22 @@ class MealValidationTest {
         // given meal details is valid
         val cuisines = listOf(
             Cuisine(
-                "3edf2fc8-6983-484f-a35c-8190f44a08c6",
+                "6BFC9A2D8E15C037F921D4A6",
                 "cuisine name",
             ),
             Cuisine(
-                "3edf2fc8-6983-484f-a35c-8190f44a08c6",
+                "6BFC9A2D8E15C037F921D4A6",
                 "cuisine name",
             ),
         )
         val mealDetails = MealDetails(
-            id = "3edf2fc8-6983-484f-a35c-8190f44a08c6",
+            id = "6BFC9A2D8E15C037F921D4A6",
             name = "meal name",
             description = "d".repeat(DESCRIPTION_MIN_LENGTH),
             price = 10.0,
-            restaurantId = "3edf2fc8-6983-484f-a35c-8190f44a08c6",
+            restaurantId = "6BFC9A2D8E15C037F921D4A6",
             cuisines = cuisines,
+            currency = "USD",
         )
         // when validateUpdateMeal is invoked
         val result = Executable { mealValidation.validateUpdateMeal(mealDetails) }

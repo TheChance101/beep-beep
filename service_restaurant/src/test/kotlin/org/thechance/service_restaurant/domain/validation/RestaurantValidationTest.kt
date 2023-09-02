@@ -2,7 +2,8 @@ package org.thechance.service_restaurant.domain.validation
 
 
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertDoesNotThrow
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.function.Executable
 import org.thechance.service_restaurant.domain.entity.Location
 import org.thechance.service_restaurant.domain.entity.Restaurant
@@ -10,23 +11,11 @@ import org.thechance.service_restaurant.domain.usecase.validation.RestaurantVali
 import org.thechance.service_restaurant.domain.utils.Validation
 import org.thechance.service_restaurant.domain.utils.Validation.Companion.DESCRIPTION_MIN_LENGTH
 import org.thechance.service_restaurant.domain.utils.Validation.Companion.NULL_DOUBLE
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_DESCRIPTION
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_LOCATION
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_NAME
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_PERMISSION_UPDATE_LOCATION
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_PHONE
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_PRICE_LEVEL
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_PROPERTY_RIGHTS
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_RATE
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_TIME
-import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
+import org.thechance.service_restaurant.domain.utils.exceptions.*
 
 class RestaurantValidationTest  {
 
     private val restaurantValidation = RestaurantValidationUseCase(Validation())
-
-
 
     //region create validationRestaurant
     @Test
@@ -192,7 +181,7 @@ class RestaurantValidationTest  {
         val invalidLatitudeExecutable = Executable {
             restaurantValidation.validateAddRestaurant(
                 fakeRestaurant()[0].copy(
-                    address = Location(
+                    location = Location(
                         latitude = 95.0,
                         longitude = 200.0
                     )
@@ -208,7 +197,7 @@ class RestaurantValidationTest  {
     fun `should throw exception when create restaurant with longitude invalid`() {
         // given a restaurant when longitude is more than 180.0
         val invalidLongitudeExecutable = Executable {
-            restaurantValidation.validateAddRestaurant(fakeRestaurant()[0].copy(address = Location(40.0, -190.0)))
+            restaurantValidation.validateAddRestaurant(fakeRestaurant()[0].copy(location = Location(40.0, -190.0)))
         }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, invalidLongitudeExecutable)
@@ -218,7 +207,7 @@ class RestaurantValidationTest  {
     @Test
     fun `should throw exception when create restaurant with latitude and longitude invalid`() {
         val invalidLongitudeAndLatitudeExecutable = Executable {
-            restaurantValidation.validateAddRestaurant(fakeRestaurant()[0].copy(address = Location(-91.0, -181.0)))
+            restaurantValidation.validateAddRestaurant(fakeRestaurant()[0].copy(location = Location(-91.0, -181.0)))
         }
         // then check if throw exception
         val error = assertThrows(MultiErrorException::class.java, invalidLongitudeAndLatitudeExecutable)
@@ -247,7 +236,7 @@ class RestaurantValidationTest  {
         val invalidAddressExecutable = Executable {
             restaurantValidation.validateUpdateRestaurantDetails(
                 fakeRestaurant()[2].copy(
-                    address = Location(
+                    location = Location(
                         40.0,
                         40.0
                     )
@@ -265,7 +254,7 @@ class RestaurantValidationTest  {
         val invalidAddressExecutable = Executable {
             restaurantValidation.validateUpdateRestaurantDetails(
                 fakeRestaurant()[2].copy(
-                    address = Location(
+                    location = Location(
                         NULL_DOUBLE,
                         NULL_DOUBLE
                     )
@@ -427,14 +416,11 @@ class RestaurantValidationTest  {
     @Test
     fun `should pass when admin update restaurant with address that not null`() {
         // given a restaurant when address is not null
-        val d = restaurantValidation.validateUpdateRestaurant(fakeRestaurant()[2].copy(address = Location(40.0, 40.0)))
-
         val invalidAddressExecutable = Executable {
-            restaurantValidation.validateUpdateRestaurant(fakeRestaurant()[2].copy(address = Location(40.0, 40.0)))
+            restaurantValidation.validateUpdateRestaurant(fakeRestaurant()[2].copy(location = Location(40.0, 40.0)))
         }
         // then check if pass
-        println("dddddddd:$d")
-        //assertDoesNotThrow(invalidAddressExecutable)
+        assertDoesNotThrow(invalidAddressExecutable)
     }
 
     //endregion
@@ -457,7 +443,7 @@ class RestaurantValidationTest  {
     fun `should pass validation when restaurant has valid ownership`() {
         // given a restaurant with a valid ownerId
         val validRestaurant = fakeRestaurant()[1]
-        val ownerId = "3edf2fc8-6983-484f-a35c-8190f44a08c6"
+        val ownerId = "6BFC9A2D8E15C037F921D4A6"
         // when the restaurant has the same ownerId
         val restaurantExecutable = Executable {
             restaurantValidation.validateRestaurantOwnership(validRestaurant, ownerId)
@@ -486,38 +472,43 @@ class RestaurantValidationTest  {
         return listOf(
             Restaurant(
                 name = "Good Restaurant",
-                ownerId = "3edf2fc8-6983-484f-a35c-8190f44a08c6",
-                address = Location(0.0, 0.0),
+                ownerId = "6BFC9A2D8E15C037F921D4A6",
                 phone = "1234561234",
                 openingTime = "08:00",
                 closingTime = "22:00",
                 id = "",
+                currency = "USD",
+                location = Location(0.0, 0.0),
+                address = "123 Main Street",
             ),
             Restaurant(
-                id = "3edf2fc8-6983-484f-a35c-8190f44a08c6",
+                id = "6BFC9A2D8E15C037F921D4A6",
                 name = "Good Restaurant",
-                ownerId = "3edf2fc8-6983-484f-a35c-8190f44a08c6",
-                address = Location(NULL_DOUBLE, NULL_DOUBLE),
+                ownerId = "6BFC9A2D8E15C037F921D4A6",
+                location = Location(NULL_DOUBLE, NULL_DOUBLE),
                 phone = "1234561234",
                 openingTime = "08:00",
                 closingTime = "22:00",
                 priceLevel = "$",
                 rate = 4.5,
                 description = "G".repeat(DESCRIPTION_MIN_LENGTH),
+                address = "123 Main Street",
+                currency = "USD"
             ),
             Restaurant(
-                id = "3edf2fc8-6983-484f-a35c-8190f44a08c6",
+                id = "6BFC9A2D8E15C037F921D4A6",
                 name = "Good Restaurant",
-                ownerId = "3edf2fc8-6983-484f-a35c-8190f44a08c5",
-                address = Location(0.0, 0.0),
+                ownerId = "6BFC9A2D8E15C037F921D4A7",
+                location = Location(0.0, 0.0),
                 phone = "1234561234",
                 openingTime = "08:00",
                 closingTime = "22:00",
                 priceLevel = "$",
                 rate = 4.5,
                 description = "G".repeat(DESCRIPTION_MIN_LENGTH),
+                address = "123 Main Street",
+                currency = "USD"
             )
         )
     }
-
 }

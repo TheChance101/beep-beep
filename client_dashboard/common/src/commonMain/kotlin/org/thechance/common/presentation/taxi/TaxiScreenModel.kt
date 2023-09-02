@@ -9,10 +9,8 @@ import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
 class TaxiScreenModel(
-    private val getTaxis: IGetTaxisUseCase,
-    private val createNewTaxi: ICreateNewTaxiUseCase,
-    private val findTaxisByUsername: IFindTaxisByUsernameUseCase,
-    private val getTaxiReport: IGetTaxiReportUseCase,
+    private val manageTaxis: IManageTaxisUseCase,
+    private val findTaxisByUsername: ISearchTaxisByUserNameUseCase,
     private val filterTaxi: IFilterTaxisUseCase
 ) : BaseScreenModel<TaxiUiState, TaxiUiEffect>(TaxiUiState()), TaxiInteractionListener {
 
@@ -27,7 +25,7 @@ class TaxiScreenModel(
 
     private fun getDummyTaxiData() {
         tryToExecute(
-            { getTaxis.getTaxis(state.value.currentPage, state.value.specifiedTaxis) },
+            { manageTaxis.getTaxis(state.value.currentPage, state.value.specifiedTaxis) },
             ::onGetTaxisSuccessfully, ::onError
         )
     }
@@ -39,7 +37,7 @@ class TaxiScreenModel(
     private fun findTaxisByUsername(username: String) {
         tryToExecute(
             {
-                findTaxisByUsername.findTaxisByUsername(
+                findTaxisByUsername.searchTaxisByUsername(
                     username,
                     state.value.currentPage,
                     state.value.specifiedTaxis
@@ -64,7 +62,7 @@ class TaxiScreenModel(
 
     override fun onExportReportClicked() {
         tryToExecute(
-            { getTaxiReport.createTaxiReport() },
+            { manageTaxis.createTaxiReport() },
             { onExportTaxisReportSuccessfully() },
             ::onError
         )
@@ -129,7 +127,7 @@ class TaxiScreenModel(
     override fun onCreateTaxiClicked() {
         updateState { it.copy(isAddNewTaxiDialogVisible = false) }
         tryToExecute(
-            { createNewTaxi.createTaxi(mutableState.value.newTaxiInfo.toEntity()) },
+            { manageTaxis.createTaxi(mutableState.value.newTaxiInfo.toEntity()) },
             ::onCreateTaxiSuccessfully,
             ::onError
         )
@@ -190,14 +188,11 @@ class TaxiScreenModel(
     }
 
     override fun onCancelFilterClicked() {
-        updateState {
-            it.copy(
-                isFilterDropdownMenuExpanded = false,
-                taxiFilterUiState = it.taxiFilterUiState.copy(
-                    carColor = CarColor.WHITE, seats = 1, status = TaxiStatus.ONLINE
-                )
-            )
-        }
+        updateState { it.copy(
+            isFilterDropdownMenuExpanded = false,
+            taxiFilterUiState = it.taxiFilterUiState.copy(
+            carColor = CarColor.WHITE, seats = 1, status = TaxiStatus.ONLINE)
+        ) }
         getDummyTaxiData()
     }
 

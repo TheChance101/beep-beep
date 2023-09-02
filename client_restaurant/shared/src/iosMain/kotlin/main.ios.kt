@@ -1,7 +1,10 @@
-import androidx.compose.ui.window.ComposeUIViewController
+import platform.UIKit.UIViewController
+import util.statusbar.WindowInsetsUIViewController
 
-fun MainViewController() = ComposeUIViewController {
-    App()
+fun MainViewController(): UIViewController {
+    return WindowInsetsUIViewController {
+        App()
+    }
 }
 
 

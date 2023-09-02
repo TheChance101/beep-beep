@@ -2,11 +2,8 @@ package org.thechance.service_restaurant.domain.validation
 
 import org.junit.Test
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.function.Executable
-import org.koin.core.context.GlobalContext
-import org.thechance.service_restaurant.domain.utils.IValidation
 import org.thechance.service_restaurant.domain.utils.Validation
 import org.thechance.service_restaurant.domain.utils.Validation.Companion.DESCRIPTION_MAX_LENGTH
 import org.thechance.service_restaurant.domain.utils.Validation.Companion.DESCRIPTION_MIN_LENGTH
@@ -24,7 +21,7 @@ class ValidationTest {
     @Test
     fun `should return true if id is valid`() {
         // given a valid id with 24 characters and only hex characters
-        val validId = "3edf2fc8-6983-484f-a35c-8190f44a08c6"
+        val validId = "6BFC9A2D8E15C037F921D4A6"
         // when result is true
         val result = validation.isValidId(validId)
         // then check
@@ -44,8 +41,8 @@ class ValidationTest {
     @Test
     fun `should return false if id is too short or too long`() {
         // given an invalid id that
-        val invalidIdToShort = "3edf2fc8-6983-484f-a35c-8f44a08c6"  //less than 24 characters
-        val invalidIdToLong = "3edf2fc8-6983-484f-a35c-8190f4hfff4a08c6" // more than 24 characters
+        val invalidIdToShort = "6BFC9A2D8E15C037F921D4"  //less than 24 characters
+        val invalidIdToLong = "6BFC9A2D8E15C037F921D4A77" // more than 24 characters
 
         // when result is false
         val resultShortId = validation.isValidId(invalidIdToShort)
@@ -347,7 +344,7 @@ class ValidationTest {
     @Test
     fun `should return true when valid ID`() {
         // given valid id
-        val id = "3edf2fc8-6983-484f-a35c-8190f44a08c6"
+        val id = "6BFC9A2D8E15C037F921D4A6"
         // when isValidId is invoked
         val result = validation.isValidId(id)
         // expected return true
@@ -420,7 +417,7 @@ class ValidationTest {
     @Test
     fun `should return true when all IDs list are valid`() {
         // given valid ids list
-        val ids = listOf("3edf2fc8-6983-484f-a35c-8190f44a08c6", "3edf2fc8-6983-484f-a35c-8190f44a08c6")
+        val ids = listOf("6BFC9A2D8E15C037F921D4A6", "6BFC9A2D8E15C037F921D4A7")
         // when isValidIds is invoked
         val result = validation.isValidIds(ids)
         // expected return true
@@ -715,8 +712,8 @@ class ValidationTest {
     @Test
     fun `should do nothing when ids are valid`() {
         // given valid id and listIds
-        val id = "3edf2fc8-6983-484f-a35c-8190f44a08c6"
-        val listIds = listOf("3edf2fc8-6983-484f-a35c-8190f44a08c6", "3edf2fc8-6983-484f-a35c-8190f44a08c6")
+        val id = "6BFC9A2D8E15C037F921D4A6"
+        val listIds = listOf("6BFC9A2D8E15C037F921D4A6", "6BFC9A2D8E15C037F921D4A6")
         // when checkIsValidIds is called
         val result = Executable { validation.checkIsValidIds(id, listIds) }
         // then check if result has no errors
