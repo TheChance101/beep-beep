@@ -163,6 +163,7 @@ class UserScreenModel(
 
     override fun onUserPermissionClick(permission: UserScreenUiState.PermissionUiState) {
         val permissions = getUpdatedPermissions(mutableState.value.permissionsDialog.permissions, permission)
+        if(permission != UserScreenUiState.PermissionUiState.END_USER)
         updateState {
             it.copy(
                 permissionsDialog = it.permissionsDialog.copy(permissions = permissions)
