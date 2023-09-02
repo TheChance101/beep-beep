@@ -3,12 +3,13 @@ package domain.usecase
 import domain.entity.Restaurant
 import domain.gateway.IFakeRemoteGateway
 
-interface IGetOwnerRestaurantsUseCase {
+interface IGetRestaurantsUseCase {
     suspend fun getOwnerRestaurants(): List<Restaurant>
+
 }
 
-class GetOwnerRestaurantsUseCase(private val remoteGateWay: IFakeRemoteGateway) :
-    IGetOwnerRestaurantsUseCase {
+class GetRestaurantsUseCase(private val remoteGateWay: IFakeRemoteGateway) :
+    IGetRestaurantsUseCase {
 
     override suspend fun getOwnerRestaurants(): List<Restaurant> {
         val ownerId = "f5c8b31e-5c4d-4c8a-babc-0e9463daad20"

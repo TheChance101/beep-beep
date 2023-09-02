@@ -1,7 +1,7 @@
 package domain.usecase
 
 
-interface IRestaurantInformationValidationUseCase {
+interface IValidateRestaurantInfoUseCase {
 
     fun isRestaurantNameValid(name: String): Boolean
 
@@ -21,7 +21,7 @@ interface IRestaurantInformationValidationUseCase {
 
 }
 
-class RestaurantInformationValidationUseCase : IRestaurantInformationValidationUseCase {
+class ValidateRestaurantInfoUseCase : IValidateRestaurantInfoUseCase {
 
     override fun isRestaurantNameValid(name: String): Boolean {
         return name.length in 4..25
