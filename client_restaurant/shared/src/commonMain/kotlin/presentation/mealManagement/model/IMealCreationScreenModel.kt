@@ -26,7 +26,6 @@ class IMealCreationScreenModel(
         getCuisines()
     }
 
-
     override suspend fun addMeal(): Boolean {
         val state = state.value.meal.toMealAddition()
         val validationResult = restaurantMealValidation.isMealInformationValid(

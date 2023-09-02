@@ -9,7 +9,7 @@ data class MealDetails(
     val flag: String = "",
     val image: ByteArray? = null,
     val imageUrl: String = "",
-    val mealCuisines: List<CuisineUIState> = emptyList(),
+    val mealCuisines: List<String> = emptyList(),
 )
 
 
