@@ -3,8 +3,8 @@ package presentation.information
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Restaurant
 import domain.usecase.IManageRestaurantInformationUseCase
+import domain.usecase.IValidateRestaurantInfoUseCase
 import domain.usecase.LogoutUserUseCase
-import domain.usecase.RestaurantInformationValidationUseCase
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.component.get
 import presentation.base.BaseScreenModel
@@ -12,7 +12,7 @@ import presentation.base.ErrorState
 
 class RestaurantInformationScreenModel(
     private val manageRestaurantInformation: IManageRestaurantInformationUseCase,
-    private val restaurantInformationValidation: RestaurantInformationValidationUseCase,
+    private val restaurantInformationValidation: IValidateRestaurantInfoUseCase,
     private val logoutUser: LogoutUserUseCase,
 ) : BaseScreenModel<RestaurantInformationUiState, RestaurantInformationUiEffect>
     (RestaurantInformationUiState()), RestaurantInformationInteractionListener {
