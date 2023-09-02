@@ -30,11 +30,11 @@ class OrderHistoryScreenModel(
     private suspend fun getSelectedOrders(): List<Order> {
         return when (state.value.selectedType) {
             OrderHistoryScreenUiState.OrderSelectType.FINISHED -> {
-                ordersManagement.getFinishedOrdersHistory(restaurantId, 1, 2)
+                ordersManagement.getFinishedOrdersHistory(restaurantId,1,10)
             }
 
             OrderHistoryScreenUiState.OrderSelectType.CANCELLED -> {
-                ordersManagement.getCanceledOrdersHistory(restaurantId, 1, 2)
+                ordersManagement.getCanceledOrdersHistory(restaurantId,1,10)
             }
         }
     }

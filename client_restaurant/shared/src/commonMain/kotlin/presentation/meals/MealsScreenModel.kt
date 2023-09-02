@@ -3,8 +3,9 @@ package presentation.meals
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Cuisine
 import domain.entity.Meal
-import domain.usecase.IManageCuisineUseCase
 import domain.usecase.IManageMealUseCase
+import domain.usecase.IManageCuisineUseCase
+
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
@@ -24,30 +25,28 @@ class MealsScreenModel(
     }
 
     private fun getCuisine() {
-//        tryToExecute(
-//            function = {
-//                mangeCousin.getCuisineByRestaurantId(
-//                    restaurantId
-//                )
-//            },
-//            ::onGetCuisineSuccessfully,
-//            ::onError
-//        )
+        tryToExecute(
+            function = {
+                mangeCousin.getCuisines()
+            },
+            ::onGetCuisineSuccessfully,
+            ::onError
+        )
     }
 
     private fun getMeals(cuisineId: String) {
-//        updateState { it.copy(isLoading = true) }
+        updateState { it.copy(isLoading = true) }
 //        tryToExecute(
 //            function = {
 //                if (cuisineId.isEmpty()) {
-//                    mangeMeal.getAllMeals()
+//                    mangeMeal.getAllMeals("",1,10)
 //                } else {
-//                    mangeCousin.getMealsByCuisineId(cuisineId)
+//                    mangeMeal.getMealById("")
 //                }
 //            },
 //            ::onGetMealSuccessfully,
 //            ::onError
-//        )
+    //    )
     }
 
     private fun onGetCuisineSuccessfully(cuisines: List<Cuisine>) {
