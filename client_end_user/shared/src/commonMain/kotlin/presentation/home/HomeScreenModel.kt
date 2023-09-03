@@ -21,7 +21,7 @@ class HomeScreenModel(private val cuisineUseCase: IGetCuisinesUseCase) :
     }
 
     override fun onclickSeeAllCuisines() {
-        getAllCuisines()
+        sendNewEffect(HomeScreenUiEffect.SeeAllCuisineUiEffect)
     }
 
     private fun getPopularCuisines() {
@@ -32,25 +32,13 @@ class HomeScreenModel(private val cuisineUseCase: IGetCuisinesUseCase) :
         )
     }
 
-    private fun getAllCuisines() {
-        tryToExecute(
-            { cuisineUseCase.getCuisines().toCuisineUiState() },
-            ::onGetAllCuisinesSuccess,
-            ::onGetCuisinesError
-        )
-    }
-
-    private fun onGetAllCuisinesSuccess(cuisines: List<CuisineUiState>) {
-        updateState { it.copy(cuisines = cuisines) }
-    }
-
     private fun onGetCuisinesSuccess(cuisines: List<CuisineUiState>) {
         val popularCuisines = cuisines.shuffled().take(4)
         updateState { it.copy(popularCuisines = popularCuisines) }
     }
 
     private fun onGetCuisinesError(error: ErrorState) {
-        TODO("Not yet implemented")
+        println("error is $error")
     }
 
 }

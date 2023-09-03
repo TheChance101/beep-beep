@@ -4,12 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,7 +29,7 @@ class HomeScreen :
     override fun onEffect(effect: HomeScreenUiEffect, navigator: Navigator) {
         when (effect) {
             is HomeScreenUiEffect.CuisineUiEffect -> println("Cuisine id ${effect.cuisineId}")
-            else -> {}
+            is HomeScreenUiEffect.SeeAllCuisineUiEffect -> println("Navigate to Cuisine Screen")
         }
     }
 
@@ -45,27 +42,24 @@ class HomeScreen :
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 SectionHeader(
-                    modifier = Modifier,
+                    onClickViewAll = listener::onclickSeeAllCuisines,
                     title = Resources.strings.cuisineSectionTitle,
                     showViewAll = true
                 )
                 Row(
-                    modifier = Modifier.fillMaxWidth() ,
+                    modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     state.popularCuisines.forEach { cuisine ->
                         CuisineCard(
-                            modifier = Modifier ,
+                            modifier = Modifier,
                             cuisine = cuisine,
                             onClickCuisine = listener::onClickCuisineItem
                         )
                     }
                 }
-
             }
-
         }
     }
-
 }
