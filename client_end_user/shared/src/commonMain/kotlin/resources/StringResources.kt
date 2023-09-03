@@ -16,5 +16,8 @@ data class StringResources(
     val orders: String = "Orders",
     val notification: String = "Notification",
     val profile: String = "Profile",
-    val cuisineImageDescription: String = "image"
+    val cuisineImageDescription: String = "image",
+    val viewAll:String = "View all",
+    val seeAllDescription: String = "view all icon",
+    val cuisineSectionTitle:String = "Cuisine",
 )
