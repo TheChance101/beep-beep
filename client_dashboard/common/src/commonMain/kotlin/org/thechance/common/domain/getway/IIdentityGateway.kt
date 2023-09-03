@@ -12,7 +12,7 @@ interface IIdentityGateway {
 
     suspend fun getRefreshToken(): String
 
-    suspend fun clearTokens()
+    suspend fun clearConfiguration()
 
     suspend fun shouldUserKeptLoggedIn(keepLoggedIn: Boolean)
 
@@ -22,4 +22,5 @@ interface IIdentityGateway {
 
     suspend fun updateThemeMode(mode: Boolean)
 
+    suspend fun createUserConfiguration()
 }

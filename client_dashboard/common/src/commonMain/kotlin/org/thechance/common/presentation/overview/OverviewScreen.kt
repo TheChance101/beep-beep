@@ -105,7 +105,7 @@ object OverviewScreen :
                                     )
                                     Text(
                                         text = user.name,
-                                        style = Theme.typography.body,
+                                        style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
                                         modifier = Modifier.padding(start = 16.kms).weight(1f),
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis,

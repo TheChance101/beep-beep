@@ -77,8 +77,7 @@ fun OverviewDropDown(
                             Text(
                                 text = text,
                                 textAlign = TextAlign.Center,
-                                style = Theme.typography.body,
-                                color = Theme.colors.contentSecondary
+                                style = Theme.typography.body.copy(Theme.colors.contentSecondary),
                             )
                         }
                     )
