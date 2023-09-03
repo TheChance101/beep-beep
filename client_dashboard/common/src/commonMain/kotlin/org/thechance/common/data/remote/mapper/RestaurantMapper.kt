@@ -2,7 +2,8 @@ package org.thechance.common.data.remote.mapper
 
 import org.thechance.common.data.remote.model.RestaurantDto
 import org.thechance.common.domain.entity.Restaurant
-import java.text.SimpleDateFormat
+import org.thechance.common.domain.entity.Time
+import org.thechance.common.domain.entity.Time.Companion.parseToCustomTime
 
 fun RestaurantDto.toEntity() = Restaurant(
     id = id ?: "",
@@ -11,10 +12,12 @@ fun RestaurantDto.toEntity() = Restaurant(
     phoneNumber = phoneNumber ?: "",
     rating = rating ?: 0.0,
     priceLevel = priceLevel ?: 0,
-    workingHours = Pair(
-        SimpleDateFormat("HH:mm").parse(workingHours?.split("-")?.get(0)),
-        SimpleDateFormat("HH:mm").parse(workingHours?.split("-")?.get(1))
-    )
+    workingHours = workingHours?.replace(" ", "")?.split("-")?.run {
+        Pair(
+            parseToCustomTime(get(0)),
+            parseToCustomTime(get(1))
+        )
+    } ?: Pair(Time(0, 0), Time(0, 0))
 )
 
 

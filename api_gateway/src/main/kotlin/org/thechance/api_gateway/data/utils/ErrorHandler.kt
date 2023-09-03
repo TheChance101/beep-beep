@@ -49,9 +49,6 @@ class ErrorHandler(
         if (errorCodes.contains(1045))
             errors[1045] = localizedMessages.invalidAddressLocation
 
-        if (errorCodes.contains(2404)){
-            errors[2404] = localizedMessages.restaurantNotFound
-        }
 
         if (errorCodes.contains(8000))
             errors[8000] = localizedMessages.invalidPermission
@@ -84,6 +81,79 @@ class ErrorHandler(
             errors[3404] = localizedMessages.notFound
         if(errorCodes.contains(3911))
             errors[3911] = localizedMessages.unknownError
+
+
+        if(errorCodes.contains(2001))
+            errors[2001] = localizedMessages.restaurantInvalidId
+
+        if(errorCodes.contains(2002))
+            errors[2002] = localizedMessages.restaurantInvalidName
+
+        if(errorCodes.contains(2003))
+            errors[2003] = localizedMessages.restaurantInvalidLocation
+
+        if(errorCodes.contains(2004))
+            errors[2004] = localizedMessages.restaurantInvalidDescription
+
+        if(errorCodes.contains(2005))
+            errors[2005] = localizedMessages.restaurantInvalidPriceLevel
+
+        if(errorCodes.contains(2006))
+            errors[2006] = localizedMessages.restaurantInvalidRate
+
+        if(errorCodes.contains(2007))
+            errors[2007] = localizedMessages.restaurantInvalidPhone
+
+        if(errorCodes.contains(2008))
+            errors[2008] = localizedMessages.restaurantInvalidTime
+
+        if(errorCodes.contains(2009))
+            errors[2009] = localizedMessages.restaurantInvalidPage
+
+        if(errorCodes.contains(2010))
+            errors[2010] = localizedMessages.restaurantInvalidPageLimit
+
+        if(errorCodes.contains(2011))
+            errors[2011] = localizedMessages.restaurantInvalidOneOrMoreIds
+
+        if(errorCodes.contains(2012))
+            errors[2012] = localizedMessages.restaurantInvalidPermissionUpdateLocation
+
+        if(errorCodes.contains(2013))
+            errors[2013] = localizedMessages.restaurantInvalidUpdateParameter
+
+        if(errorCodes.contains(2014))
+            errors[2014] = localizedMessages.restaurantInvalidPropertyRights
+
+        if(errorCodes.contains(2015))
+            errors[2015] = localizedMessages.restaurantInvalidPrice
+
+        if(errorCodes.contains(2016))
+            errors[2016] = localizedMessages.restaurantInvalidCuisineLimit
+
+        if(errorCodes.contains(2017))
+            errors[2017] = localizedMessages.restaurantInvalidAddress
+
+        if(errorCodes.contains(2018))
+            errors[2018] = localizedMessages.restaurantInvalidEmail
+
+        if(errorCodes.contains(2100))
+            errors[2100] = localizedMessages.restaurantInvalidRequestParameter
+
+        if(errorCodes.contains(2404))
+            errors[2404] = localizedMessages.restaurantNotFound
+
+        if(errorCodes.contains(2405))
+            errors[2405] = localizedMessages.restaurantErrorAdd
+
+        if(errorCodes.contains(2500))
+            errors[2500] = localizedMessages.restaurantClosed
+
+        if(errorCodes.contains(2501))
+            errors[2501] = localizedMessages.restaurantInsertOrderError
+
+        if(errorCodes.contains(2502))
+            errors[2502] = localizedMessages.restaurantInvalidReceivedOrders
 
         return errors
     }

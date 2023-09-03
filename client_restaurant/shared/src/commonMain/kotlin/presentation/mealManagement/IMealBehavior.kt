@@ -1,50 +1,30 @@
-package presentation.mealManagement.mealCreation
+package presentation.mealManagement
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.entity.Cuisine
-import domain.usecase.IManageMealUseCase
-import domain.usecase.IManageCuisineUseCase
 import kotlinx.coroutines.CoroutineScope
-import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
-import presentation.mealManagement.MealScreenInteractionListener
-import presentation.mealManagement.MealScreenUIEffect
-import presentation.mealManagement.toMealAddition
-import presentation.mealManagement.toUIState
 
-class MealCreationScreenModel :
-    BaseScreenModel<MealCreationUIState, MealScreenUIEffect>(MealCreationUIState()),
-    MealScreenInteractionListener {
+abstract class IMealBehavior : BaseScreenModel<MealEditorUIState, MealScreenUIEffect>(
+    MealEditorUIState()
+), MealScreenInteractionListener {
 
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
 
-    private val manageMeal: IManageMealUseCase by inject()
-    private val cuisines: IManageCuisineUseCase by inject()
 
-    init {
-        getCuisines()
-    }
-
-    private fun getCuisines() {
-        updateState { it.copy(isLoading = true) }
-        tryToExecute({ cuisines.getCuisines() }, ::onGetCuisinesSuccess, ::onAddMealError)
-    }
-
-    private fun onGetCuisinesSuccess(cuisines: List<Cuisine>) {
-        updateState { it.copy(cuisines = cuisines.toUIState(), isLoading = false) }
-    }
+    protected abstract suspend fun addMeal(): Boolean
 
     override fun onAddMeal() {
         tryToExecute(
-            { manageMeal.addMeal(state.value.meal.toMealAddition()) },
+            { addMeal() },
             ::onMealAddedSuccessfully,
-            ::onAddMealError
+            ::onError
         )
     }
 
     override fun onCuisineClick() {
+        state.value.sheetState.show()
         updateState { it.copy(isCuisinesShow = true) }
     }
 
@@ -52,15 +32,14 @@ class MealCreationScreenModel :
         sendNewEffect(MealScreenUIEffect.MealResponseSuccessfully)
     }
 
-
-    private fun onAddMealError(error: ErrorState) {
+    protected fun onError(error: ErrorState) {
         updateState { it.copy(isLoading = false, error = error.toString()) }
         sendNewEffect(MealScreenUIEffect.MealResponseFailed(error.toString()))
     }
 
-
     override fun onSaveCuisineClick() {
         val mealCuisines = state.value.cuisines.filter { it.isSelected }
+        state.value.sheetState.dismiss()
         updateState {
             it.copy(
                 meal = it.meal.copy(mealCuisines = mealCuisines),
@@ -92,6 +71,7 @@ class MealCreationScreenModel :
 
     override fun onCuisinesCancel() {
         updateState { it.copy(isCuisinesShow = false) }
+        state.value.sheetState.dismiss()
     }
 
     override fun onNameChange(name: String) {
@@ -100,10 +80,15 @@ class MealCreationScreenModel :
 
     override fun onDescriptionChange(description: String) {
         updateState { it.copy(meal = it.meal.copy(description = description)) }
-
     }
 
     override fun onPriceChange(price: String) {
         updateState { it.copy(meal = it.meal.copy(price = price)) }
     }
+
+    override fun onBackgroundClicked() {
+        state.value.sheetState.dismiss()
+        updateState { it.copy(isCuisinesShow = false) }
+    }
+
 }

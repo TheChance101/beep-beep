@@ -5,7 +5,6 @@ import domain.gateway.IFakeRemoteGateway
 
 interface IGetRestaurantsUseCase {
     suspend fun getOwnerRestaurants(): List<Restaurant>
-
 }
 
 class GetRestaurantsUseCase(private val remoteGateWay: IFakeRemoteGateway) :

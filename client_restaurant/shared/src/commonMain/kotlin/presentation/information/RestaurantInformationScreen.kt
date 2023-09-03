@@ -1,16 +1,7 @@
 package presentation.information
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -24,6 +15,7 @@ import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.BpAppBar
 import presentation.composable.BpCard
@@ -32,7 +24,7 @@ import presentation.composable.BpTitleWithContentSection
 import presentation.login.LoginScreen
 import resources.Resources
 
-class RestaurantInformationScreen : BaseScreen<
+class RestaurantInformationScreen(private val id: String) : BaseScreen<
         RestaurantInformationScreenModel,
         RestaurantInformationUiState,
         RestaurantInformationUiEffect,
@@ -40,7 +32,7 @@ class RestaurantInformationScreen : BaseScreen<
 
     @Composable
     override fun Content() {
-        initScreen(getScreenModel())
+        initScreen(getScreenModel<RestaurantInformationScreenModel> { parametersOf(id) })
     }
 
 
@@ -84,8 +76,11 @@ class RestaurantInformationScreen : BaseScreen<
 
     override fun onEffect(effect: RestaurantInformationUiEffect, navigator: Navigator) {
         when (effect) {
-            is RestaurantInformationUiEffect.NavigateToLogin -> navigator.replaceAll(LoginScreen())
+            is RestaurantInformationUiEffect.LogoutSuccess -> navigator.replaceAll(LoginScreen())
             is RestaurantInformationUiEffect.NavigateUp -> navigator.pop()
+            RestaurantInformationUiEffect.ShowNoInternetError -> {}
+            RestaurantInformationUiEffect.ShowUnknownError -> {}
+            RestaurantInformationUiEffect.UpdateInformationSuccess -> {}
         }
     }
 

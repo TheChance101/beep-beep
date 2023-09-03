@@ -1,20 +1,20 @@
 package domain.usecase
 
 import domain.entity.Restaurant
-import domain.gateway.IFakeRemoteGateway
+import domain.gateway.remote.IRestaurantRemoteGateway
 
-interface IManageRestaurantInfoUseCase {
-    suspend fun getRestaurantInfo(): Restaurant
+interface IManageRestaurantInformationUseCase {
+    suspend fun getRestaurantInfo(id: String): Restaurant
     suspend fun updateRestaurantInformation(restaurant: Restaurant): Boolean
 
 }
 
-class ManageRestaurantInfoUseCase(
-    private val remoteRestaurantGateway: IFakeRemoteGateway
-) : IManageRestaurantInfoUseCase {
+class ManageRestaurantInformationUseCase(
+    private val remoteRestaurantGateway: IRestaurantRemoteGateway
+) : IManageRestaurantInformationUseCase {
 
-    override suspend fun getRestaurantInfo(): Restaurant {
-        return remoteRestaurantGateway.getRestaurantInfo("7c3d631e-6d49-48c9-9f91-9426ec559eb1")
+    override suspend fun getRestaurantInfo(id: String): Restaurant {
+        return remoteRestaurantGateway.getRestaurantInfo(id)
     }
 
     override suspend fun updateRestaurantInformation(restaurant: Restaurant): Boolean {

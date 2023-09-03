@@ -21,3 +21,20 @@ fun RestaurantDto.toEntity(): Restaurant {
         address = address ?: ""
     )
 }
+
+fun Restaurant.toDto(): RestaurantDto {
+    return RestaurantDto(
+        id = id,
+        ownerId = ownerId,
+        ownerUsername = ownerUsername,
+        name = name,
+        description = description,
+        priceLevel = priceLevel,
+        rate = rate,
+        phone = phone,
+        openingTime = openingTime,
+        closingTime = closingTime,
+        location = location.toDto(),
+        address = address
+    )
+}
