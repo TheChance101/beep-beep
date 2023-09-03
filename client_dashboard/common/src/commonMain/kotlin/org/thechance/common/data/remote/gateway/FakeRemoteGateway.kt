@@ -14,6 +14,8 @@ import org.thechance.common.data.remote.model.RestaurantDto
 import org.thechance.common.data.remote.model.TaxiDto
 import org.thechance.common.data.remote.model.UserDto
 import org.thechance.common.data.remote.model.toEntity
+import org.thechance.common.domain.entity.AddRestaurant
+import org.thechance.common.domain.entity.Location
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.NewRestaurantInfo
 import org.thechance.common.domain.entity.NewTaxiInfo
@@ -1015,8 +1017,43 @@ class FakeRemoteGateway(
         return taxis.last().toEntity()
     }
 
+    override suspend fun updateTaxi(taxi: NewTaxiInfo): Taxi {
+        val indexToUpdate = taxis.indexOfFirst { it.id == taxi.id }
+        val newTaxi = taxi.toDto()
+        return if (indexToUpdate != -1) {
+            val oldTaxi = taxis[indexToUpdate]
+            val updatedTaxi = TaxiDto(
+                id = newTaxi.id,
+                plateNumber = newTaxi.plateNumber,
+                color = newTaxi.color,
+                type = newTaxi.type,
+                seats = newTaxi.seats,
+                username = newTaxi.username,
+                trips = oldTaxi.trips,
+                status = oldTaxi.status
+            )
+            taxis.removeAt(indexToUpdate)
+            taxis.add(index = indexToUpdate, element = updatedTaxi)
+            updatedTaxi.toEntity()
+        }else{
+            throw Exception("Taxi not found")
+        }
+    }
+
+    override suspend fun deleteTaxi(taxiId: String): String {
+        val indexToUpdate = taxis.indexOfFirst { it.id == taxiId }
+        return if (indexToUpdate != -1) {
+            taxis.removeAt(indexToUpdate)
+            taxiId
+        } else {
+            throw Exception("Taxi not found")
+        }
+    }
+
     override suspend fun searchTaxisByUsername(
-        username: String, page: Int, numberOfTaxis: Int,
+        username: String,
+        page: Int,
+        numberOfTaxis: Int
     ): DataWrapper<Taxi> {
         val taxis = taxis.filter {
             it.username?.startsWith(username, true) ?: false
@@ -1372,7 +1409,8 @@ class FakeRemoteGateway(
         contentStream.beginText()
         val dateTimeWidth = PDType1Font.HELVETICA.getStringWidth(dateTime) / 1000 * 12f
         val pageMidX = pageWidth / 2 // Place the text in the center of the page
-        val dateTimeX = pageMidX - dateTimeWidth / 2 // Place the text in the center horizontally
+        val dateTimeX =
+            pageMidX - dateTimeWidth / 2 // Place the text in the center horizontally
         val dateTimeTopMargin = 10f // Add space between date/time and title
         val dateTimeY = titleY - 20f - dateTimeTopMargin // Adjust the value to add more space
         contentStream.newLineAtOffset(dateTimeX, dateTimeY)

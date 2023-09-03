@@ -15,7 +15,7 @@ data class TaxiUiState(
     val isLoading: Boolean = false,
     val error: ErrorState = ErrorState.UnKnownError,
     val isAddNewTaxiDialogVisible: Boolean = false,
-    val newTaxiInfo: NewTaxiInfoUiState = NewTaxiInfoUiState(),
+    val newTaxiInfo: TaxiInfoUiState = TaxiInfoUiState(),
     val taxiFilterUiState: TaxiFilterUiState = TaxiFilterUiState(),
     val taxis: List<TaxiDetailsUiState> = emptyList(),
     val searchQuery: String = "",
@@ -25,6 +25,7 @@ data class TaxiUiState(
     val currentPage: Int = 1,
     val taxiMenu: MenuUiState = MenuUiState(),
     val isFilterDropdownMenuExpanded: Boolean = false,
+    val isEditMode: Boolean = false,
 
     ) {
     val tabHeader = listOf(
@@ -84,7 +85,8 @@ data class TaxiPageInfoUiState(
     val numberOfTaxis: Int = 0,
     val totalPages: Int = 0,
 )
-data class NewTaxiInfoUiState(
+data class TaxiInfoUiState(
+    val id: String = "",
     val plateNumber: String = "",
     val driverUserName: String = "",
     val carModel: String = "",
@@ -92,7 +94,7 @@ data class NewTaxiInfoUiState(
     val seats: Int = 0
 )
 data class MenuUiState(
-    val username: String = "",
+     val id: String = "",
     val items: List<MenuItemUiState> = listOf(
         MenuItemUiState(
             iconPath = "ic_edit.xml",
@@ -131,7 +133,13 @@ fun Taxi.toUiState(): TaxiDetailsUiState = TaxiDetailsUiState(
 )
 
 fun List<Taxi>.toUiState() = map { it.toUiState() }
-fun NewTaxiInfoUiState.toEntity() = NewTaxiInfo(plateNumber, driverUserName, carModel, selectedCarColor, seats)
+fun TaxiInfoUiState.toEntity() = NewTaxiInfo(
+    id = id,
+    plateNumber = plateNumber,
+    driverUserName =driverUserName,carModel= carModel,
+    selectedCarColor=     selectedCarColor,
+    seats = seats
+)
 
 fun TaxiDetailsUiState.toEntity(): Taxi = Taxi(
     id = id,

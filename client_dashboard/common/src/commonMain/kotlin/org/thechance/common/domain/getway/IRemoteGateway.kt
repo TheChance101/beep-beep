@@ -25,11 +25,11 @@ interface IRemoteGateway {
 
     suspend fun createTaxi(taxi: NewTaxiInfo): Taxi
 
-    suspend fun searchTaxisByUsername(
-        username: String,
-        page: Int,
-        numberOfTaxis: Int
-    ): DataWrapper<Taxi>
+    suspend fun updateTaxi(taxi: NewTaxiInfo): Taxi
+  
+    suspend fun deleteTaxi(taxiId: String): String
+  
+    suspend fun searchTaxisByUsername(username: String, page: Int, numberOfTaxis: Int): DataWrapper<Taxi>
 
     suspend fun filterTaxis(taxi: TaxiFiltration, page: Int, numberOfTaxis: Int): DataWrapper<Taxi>
 

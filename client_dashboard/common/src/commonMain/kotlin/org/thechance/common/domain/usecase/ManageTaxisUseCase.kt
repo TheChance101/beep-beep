@@ -10,6 +10,9 @@ interface IManageTaxisUseCase {
     suspend fun createTaxi(addTaxi: NewTaxiInfo): Taxi
     suspend fun createTaxiReport()
     suspend fun getTaxis(page:Int,numberOfUsers: Int): DataWrapper<Taxi>
+    suspend fun updateTaxi(addTaxi: NewTaxiInfo): Taxi
+    suspend fun deleteTaxi(taxiId: String): String
+
 
 }
 class ManageTaxisUseCase(
@@ -26,5 +29,11 @@ class ManageTaxisUseCase(
 
     override suspend fun getTaxis(page:Int,numberOfUsers: Int): DataWrapper<Taxi> {
         return remoteGateway.getTaxis(page,numberOfUsers)
+    }
+    override suspend fun deleteTaxi(taxiId: String): String {
+        return remoteGateway.deleteTaxi(taxiId)
+    }
+    override suspend fun updateTaxi(addTaxi: NewTaxiInfo): Taxi {
+        return remoteGateway.updateTaxi(addTaxi)
     }
 }
