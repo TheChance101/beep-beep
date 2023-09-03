@@ -28,8 +28,8 @@ class HomeScreen :
 
     override fun onEffect(effect: HomeScreenUiEffect, navigator: Navigator) {
         when (effect) {
-            is HomeScreenUiEffect.CuisineUiEffect -> println("Cuisine id ${effect.cuisineId}")
-            is HomeScreenUiEffect.SeeAllCuisineUiEffect -> println("Navigate to Cuisine Screen")
+            is HomeScreenUiEffect.NavigateToCuisineDetails -> println("Cuisine id ${effect.cuisineId}")
+            is HomeScreenUiEffect.NavigateToCuisines -> println("Navigate to Cuisine Screen")
         }
     }
 

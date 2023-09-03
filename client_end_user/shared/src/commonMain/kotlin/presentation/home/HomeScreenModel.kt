@@ -16,11 +16,11 @@ class HomeScreenModel(private val cuisineUseCase: IGetCuisinesUseCase) :
     }
 
     override fun onClickCuisineItem(cuisineId: String) {
-        sendNewEffect(HomeScreenUiEffect.CuisineUiEffect(cuisineId))
+        sendNewEffect(HomeScreenUiEffect.NavigateToCuisineDetails(cuisineId))
     }
 
     override fun onclickSeeAllCuisines() {
-        sendNewEffect(HomeScreenUiEffect.SeeAllCuisineUiEffect)
+        sendNewEffect(HomeScreenUiEffect.NavigateToCuisines)
     }
 
     private fun getRecommendedCuisines() {
