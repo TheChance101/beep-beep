@@ -17,7 +17,9 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
 
     init {
         viewModelScope.launch {
-            loginUserUseCase.getKeepMeLoggedInFlag()
+            if (loginUserUseCase.getKeepMeLoggedInFlag()) {
+                sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
+            }
         }
     }
     override fun onUserNameChanged(userName: String) {

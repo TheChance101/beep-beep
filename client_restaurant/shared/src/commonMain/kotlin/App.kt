@@ -11,7 +11,9 @@ import resources.BpRestaurantTheme
 @Composable
 fun App() {
     BpRestaurantTheme(statusBarsVisible = false,navigationBarsVisible = false) {
-        Navigator(LoginScreen()) {
+        Navigator(
+            LoginScreen()
+        ) {
             SlideTransition(it)
         }
     }
