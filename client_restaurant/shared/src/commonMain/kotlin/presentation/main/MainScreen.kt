@@ -2,6 +2,7 @@ package presentation.main
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -12,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.DpOffset
@@ -64,6 +66,10 @@ class MainScreen(private val restaurantId: String) :
                 state = state.selectedRestaurant.isOpen,
                 expanded = state.expanded,
                 restaurants = state.restaurants,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Theme.colors.surface)
+                    .border(width = 1.dp, color = Theme.colors.divider, shape = RectangleShape),
             )
 
             LazyVerticalGrid(
