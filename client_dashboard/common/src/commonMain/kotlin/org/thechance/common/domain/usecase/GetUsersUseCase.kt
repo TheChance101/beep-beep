@@ -8,7 +8,7 @@ import org.thechance.common.domain.getway.IRemoteGateway
 interface IGetUsersUseCase {
 
     suspend operator fun invoke(
-        query: String,
+        query: String? = null,
         byPermissions: List<Permission>,
         byCountries: List<String>,
         page: Int,
@@ -22,7 +22,7 @@ class GetUsersUseCase(
 ) : IGetUsersUseCase {
 
     override suspend fun invoke(
-        query: String,
+        query: String?,
         byPermissions: List<Permission>,
         byCountries: List<String>,
         page: Int,

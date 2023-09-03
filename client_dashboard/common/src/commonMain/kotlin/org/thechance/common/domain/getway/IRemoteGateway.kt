@@ -35,7 +35,7 @@ interface IRemoteGateway {
     suspend fun getCurrentLocation(): String
 
     suspend fun getUsers(
-        query: String,
+        query: String? = null,
         byPermissions: List<Permission>,
         byCountries: List<String>,
         page: Int,

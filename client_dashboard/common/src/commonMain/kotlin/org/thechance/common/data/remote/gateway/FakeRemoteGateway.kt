@@ -1136,19 +1136,20 @@ class FakeRemoteGateway(
     }
 
     override suspend fun getUsers(
-        query: String,
+        query: String?,
         byPermissions: List<Permission>,
         byCountries: List<String>,
         page: Int,
         numberOfUsers: Int
     ): DataWrapper<User> {
         var filteredUsers = fakeUsers.toMutableList()
-        if (query.isNotEmpty()) {
-            filteredUsers = fakeUsers.filter {
-                it.fullName.startsWith(query, true) || it.username.startsWith(query, true)
-            }.toMutableList()
+        query?.let { searchQuery ->
+            if (searchQuery.isNotEmpty()) {
+                filteredUsers = fakeUsers.filter {
+                    it.fullName.startsWith(searchQuery, true) || it.username.startsWith(query, true)
+                }.toMutableList()
+            }
         }
-
         filteredUsers = if (byPermissions.isNotEmpty()) filteredUsers.filter { user ->
             user.permission.containsAll(byPermissions) && user.permission.size == byPermissions.size
         }.toMutableList() else filteredUsers
