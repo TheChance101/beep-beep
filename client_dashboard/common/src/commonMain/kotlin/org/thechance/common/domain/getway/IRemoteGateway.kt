@@ -33,9 +33,9 @@ interface IRemoteGateway {
     ): DataWrapper<Restaurant>
 
 
-    suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant
+    suspend fun createRestaurant(restaurant: NewRestaurantInfo): Restaurant
 
-    suspend fun getCurrentLocation(): Location
+    suspend fun getCurrentLocation(): String
 
     suspend fun searchUsers(
         query: String,
