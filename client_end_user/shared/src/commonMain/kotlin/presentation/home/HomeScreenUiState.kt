@@ -3,8 +3,7 @@ package presentation.home
 import domain.entity.Cuisine
 
 data class HomeScreenUiState(
-    val popularCuisines: List<CuisineUiState> = emptyList(),
-    val cuisines: List<CuisineUiState> = emptyList()
+    val recommendedCuisines: List<CuisineUiState> = emptyList(),
 )
 
 data class CuisineUiState(

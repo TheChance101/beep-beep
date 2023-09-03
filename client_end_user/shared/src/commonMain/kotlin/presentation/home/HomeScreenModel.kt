@@ -5,7 +5,6 @@ import domain.usecase.IGetCuisinesUseCase
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
-import kotlin.random.Random
 
 class HomeScreenModel(private val cuisineUseCase: IGetCuisinesUseCase) :
     BaseScreenModel<HomeScreenUiState, HomeScreenUiEffect>(HomeScreenUiState()),
@@ -13,7 +12,7 @@ class HomeScreenModel(private val cuisineUseCase: IGetCuisinesUseCase) :
     override val viewModelScope: CoroutineScope = coroutineScope
 
     init {
-        getPopularCuisines()
+        getRecommendedCuisines()
     }
 
     override fun onClickCuisineItem(cuisineId: String) {
@@ -24,7 +23,7 @@ class HomeScreenModel(private val cuisineUseCase: IGetCuisinesUseCase) :
         sendNewEffect(HomeScreenUiEffect.SeeAllCuisineUiEffect)
     }
 
-    private fun getPopularCuisines() {
+    private fun getRecommendedCuisines() {
         tryToExecute(
             { cuisineUseCase.getCuisines().toCuisineUiState() },
             ::onGetCuisinesSuccess,
@@ -34,7 +33,7 @@ class HomeScreenModel(private val cuisineUseCase: IGetCuisinesUseCase) :
 
     private fun onGetCuisinesSuccess(cuisines: List<CuisineUiState>) {
         val popularCuisines = cuisines.shuffled().take(4)
-        updateState { it.copy(popularCuisines = popularCuisines) }
+        updateState { it.copy(recommendedCuisines = popularCuisines) }
     }
 
     private fun onGetCuisinesError(error: ErrorState) {

@@ -51,7 +51,7 @@ class HomeScreen :
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    state.popularCuisines.forEach { cuisine ->
+                    state.recommendedCuisines.forEach { cuisine ->
                         CuisineCard(
                             modifier = Modifier,
                             cuisine = cuisine,
