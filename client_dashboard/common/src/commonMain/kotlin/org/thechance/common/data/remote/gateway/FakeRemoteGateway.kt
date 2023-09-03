@@ -22,11 +22,13 @@ import org.thechance.common.domain.entity.Permission
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.entity.TaxiFiltration
+import org.thechance.common.domain.entity.Time
 import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.getway.IRemoteGateway
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.UUID
 import kotlin.math.ceil
 import kotlin.math.floor
 
@@ -34,7 +36,7 @@ class FakeRemoteGateway(
     private val localGateway: LocalGateway
 ) : IRemoteGateway {
 
-    private val restaurant = mutableListOf<RestaurantDto>()
+    private val restaurants = mutableListOf<RestaurantDto>()
     private val taxis = mutableListOf<TaxiDto>()
     private val fakeUsers = listOf(
         UserDto(
@@ -822,7 +824,7 @@ class FakeRemoteGateway(
                 ),
             )
         )
-        restaurant.addAll(
+        restaurants.addAll(
             listOf(
                 RestaurantDto(
                     id = "8c90c4c6-1e69-47f3-aa59-2edcd6f0057b",
@@ -881,7 +883,8 @@ class FakeRemoteGateway(
             )
         )
     }
-    override suspend fun  getUserData() = "asia"
+
+    override suspend fun getUserData() = "asia"
 
     override suspend fun getUsers(
         byPermissions: List<Permission>,
@@ -945,7 +948,11 @@ class FakeRemoteGateway(
         return taxis.last().toEntity()
     }
 
-    override suspend fun searchTaxisByUsername(username: String, page: Int, numberOfTaxis: Int): DataWrapper<Taxi> {
+    override suspend fun searchTaxisByUsername(
+        username: String,
+        page: Int,
+        numberOfTaxis: Int
+    ): DataWrapper<Taxi> {
         val taxis = taxis.filter {
             it.username?.startsWith(username, true) ?: false
         }.toEntity()
@@ -1008,7 +1015,7 @@ class FakeRemoteGateway(
         rating: Double?,
         priceLevel: Int?
     ): DataWrapper<Restaurant> {
-        var restaurants = restaurant.toEntity()
+        var restaurants = restaurants.toEntity()
         if (restaurantName.isNotEmpty()) {
             restaurants = restaurants.filter {
                 it.name.startsWith(
@@ -1091,7 +1098,10 @@ class FakeRemoteGateway(
         return try {
             DataWrapperDto(
                 totalPages = numberOfPages,
-                result = filteredUsers.subList(startIndex, endIndex.coerceAtMost(filteredUsers.size)),
+                result = filteredUsers.subList(
+                    startIndex,
+                    endIndex.coerceAtMost(filteredUsers.size)
+                ),
                 totalResult = filteredUsers.size
             ).toEntity()
         } catch (e: Exception) {
@@ -1121,7 +1131,10 @@ class FakeRemoteGateway(
         return try {
             DataWrapperDto(
                 totalPages = numberOfPages,
-                result = filteredUsers.subList(startIndex, endIndex.coerceAtMost(filteredUsers.size)),
+                result = filteredUsers.subList(
+                    startIndex,
+                    endIndex.coerceAtMost(filteredUsers.size)
+                ),
                 totalResult = filteredUsers.size
             ).toEntity()
         } catch (e: Exception) {
@@ -1131,6 +1144,25 @@ class FakeRemoteGateway(
                 totalResult = filteredUsers.size
             ).toEntity()
         }
+    }
+
+    override suspend fun deleteRestaurants(restaurant: Restaurant): Restaurant {
+        restaurants.remove(
+            RestaurantDto(
+                id = restaurant.id,
+                name = restaurant.name,
+                ownerUsername = restaurant.ownerUsername,
+                phoneNumber = restaurant.phoneNumber,
+                rating = restaurant.rating,
+                priceLevel = restaurant.priceLevel,
+                workingHours = if (restaurant.workingHours == Pair(
+                        Time(0, 0), Time(0, 0)
+                    )
+                ) null
+                else "${restaurant.workingHours.first} - ${restaurant.workingHours.second}",
+            )
+        )
+        return restaurant
     }
 
     private fun createTaxiPDFReport(): File {

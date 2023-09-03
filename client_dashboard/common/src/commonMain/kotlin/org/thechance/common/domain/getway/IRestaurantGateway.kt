@@ -15,4 +15,6 @@ interface IRestaurantGateway {
     ): DataWrapper<Restaurant>
 
     suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant
+
+    suspend fun deleteRestaurants(restaurant: Restaurant): Restaurant
 }

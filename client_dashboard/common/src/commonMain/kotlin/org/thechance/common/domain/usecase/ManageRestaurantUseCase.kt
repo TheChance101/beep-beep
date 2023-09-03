@@ -16,6 +16,8 @@ interface IManageRestaurantUseCase {
         rating: Double?,
         priceLevel: Int?
     ): DataWrapper<Restaurant>
+
+    suspend fun deleteRestaurants(restaurant: Restaurant): Restaurant
 }
 
 
@@ -33,5 +35,9 @@ class ManageRestaurantUseCase(private val remoteGateway: IRemoteGateway) :
         priceLevel: Int?
     ): DataWrapper<Restaurant> {
         return remoteGateway.getRestaurants(pageNumber, numberOfRestaurantsInPage, restaurantName, rating, priceLevel)
+    }
+
+    override suspend fun deleteRestaurants(restaurant: Restaurant): Restaurant {
+        return remoteGateway.deleteRestaurants(restaurant)
     }
 }

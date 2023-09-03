@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -14,6 +15,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.*
@@ -132,9 +134,13 @@ class RestaurantScreen :
             modifier = Modifier.fillMaxWidth(),
             rowContent = { restaurant ->
                 RestaurantRow(
-                    onClickEditRestaurant = { /* TODO: Show Edit Restaurant DropdownMenu */ },
+                    onClickEditRestaurant = listener::showEditRestaurantMenu,
+                    onEditRestaurantDismiss =  listener::hideEditRestaurantMenu,
+                    onClickDeleteRestaurantMenuItem =  listener::onClickDeleteRestaurantMenuItem,
+                    onClickEditRestaurantMenuItem = listener::onClickEditRestaurantMenuItem,
                     position = state.restaurants.indexOf(restaurant) + 1,
                     restaurant = restaurant,
+                    editRestaurantMenu = state.editRestaurantMenu
                 )
             },
         )
@@ -168,8 +174,12 @@ class RestaurantScreen :
     @Composable
     private fun RowScope.RestaurantRow(
         onClickEditRestaurant: (restaurantName: String) -> Unit,
+        onEditRestaurantDismiss: () -> Unit,
+        onClickEditRestaurantMenuItem: (RestaurantUiState.RestaurantDetailsUiState) -> Unit,
+        onClickDeleteRestaurantMenuItem: (RestaurantUiState.RestaurantDetailsUiState) -> Unit,
         position: Int,
         restaurant: RestaurantUiState.RestaurantDetailsUiState,
+        editRestaurantMenu: String,
         firstAndLastColumnWeight: Float = 1f,
         otherColumnsWeight: Float = 3f,
     ) {
@@ -225,14 +235,21 @@ class RestaurantScreen :
             modifier = Modifier.weight(otherColumnsWeight),
             maxLines = 1,
         )
-
-        Image(
-            painter = painterResource(Resources.Drawable.dots),
-            contentDescription = null,
-            modifier = Modifier.noRipple { onClickEditRestaurant(restaurant.name) }
-                .weight(firstAndLastColumnWeight),
-            colorFilter = ColorFilter.tint(color = Theme.colors.contentPrimary)
-        )
+        Box(modifier = Modifier.weight(firstAndLastColumnWeight)) {
+            Image(
+                painter = painterResource(Resources.Drawable.dots),
+                contentDescription = null,
+                modifier = Modifier.noRipple { onClickEditRestaurant(restaurant.name) },
+                colorFilter = ColorFilter.tint(color = Theme.colors.contentPrimary)
+            )
+            EditRestaurantDropdownMenu(
+                restaurant = restaurant,
+                onClickEdit = onClickEditRestaurantMenuItem,
+                onClickDelete = onClickDeleteRestaurantMenuItem,
+                onDismissRequest = onEditRestaurantDismiss,
+                editRestaurantMenu = editRestaurantMenu
+            )
+        }
     }
 
     @Composable
@@ -372,6 +389,43 @@ class RestaurantScreen :
                         textPadding = PaddingValues(0.dp)
                     )
                 }
+            }
+        }
+    }
+
+    @Composable
+    private fun EditRestaurantDropdownMenu(
+        restaurant: RestaurantUiState.RestaurantDetailsUiState,
+        onClickEdit: (RestaurantUiState.RestaurantDetailsUiState) -> Unit,
+        onClickDelete: (RestaurantUiState.RestaurantDetailsUiState) -> Unit,
+        onDismissRequest: () -> Unit,
+        editRestaurantMenu: String,
+    ) {
+        BpDropdownMenu(
+            expanded = restaurant.name == editRestaurantMenu,
+            onDismissRequest = onDismissRequest,
+            shape = RoundedCornerShape(Theme.radius.medium).copy(topEnd = CornerSize(0.dp)),
+            offset = DpOffset.Zero.copy(x = (-178).kms)
+        ) {
+            Column {
+                BpDropdownMenuItem(
+                    onClick = {
+                        onClickEdit(restaurant)
+                    },
+                    text = Resources.Strings.edit,
+                    leadingIconPath = Resources.Drawable.permission,
+                    isSecondary = false,
+                    showBottomDivider = true
+                )
+                BpDropdownMenuItem(
+                    onClick = {
+                        onClickDelete(restaurant)
+                    },
+                    text = Resources.Strings.delete,
+                    leadingIconPath = Resources.Drawable.delete,
+                    isSecondary = true,
+                    showBottomDivider = false
+                )
             }
         }
     }
