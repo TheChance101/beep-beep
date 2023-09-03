@@ -1,25 +1,11 @@
 package org.thechance.common.domain.getway
 
-import org.thechance.common.domain.entity.DataWrapper
-import org.thechance.common.domain.entity.NewRestaurantInfo
-import org.thechance.common.domain.entity.NewTaxiInfo
-import org.thechance.common.domain.entity.Permission
-import org.thechance.common.domain.entity.Restaurant
-import org.thechance.common.domain.entity.Taxi
-import org.thechance.common.domain.entity.TaxiFiltration
-import org.thechance.common.domain.entity.User
+import org.thechance.common.domain.entity.*
 
 
 interface IRemoteGateway {
 
     suspend fun getUserData(): String
-
-    suspend fun getUsers(
-        byPermissions: List<Permission>,
-        byCountries: List<String>,
-        page: Int,
-        numberOfUsers: Int
-    ): DataWrapper<User>
 
     suspend fun getTaxis(page: Int, numberOfTaxis: Int): DataWrapper<Taxi>
 
@@ -48,7 +34,7 @@ interface IRemoteGateway {
 
     suspend fun getCurrentLocation(): String
 
-    suspend fun searchUsers(
+    suspend fun getUsers(
         query: String,
         byPermissions: List<Permission>,
         byCountries: List<String>,

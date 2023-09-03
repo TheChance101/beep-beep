@@ -5,7 +5,8 @@ import org.thechance.common.domain.entity.Permission
 import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.getway.IRemoteGateway
 
-interface ISearchUsersUseCase {
+interface IGetUsersUseCase {
+
     suspend operator fun invoke(
         query: String,
         byPermissions: List<Permission>,
@@ -13,11 +14,13 @@ interface ISearchUsersUseCase {
         page: Int,
         numberOfUsers: Int
     ): DataWrapper<User>
+
 }
 
-class SearchUsersUseCase(
+class GetUsersUseCase(
     private val remoteGateway: IRemoteGateway,
-) : ISearchUsersUseCase {
+) : IGetUsersUseCase {
+
     override suspend fun invoke(
         query: String,
         byPermissions: List<Permission>,
@@ -25,6 +28,7 @@ class SearchUsersUseCase(
         page: Int,
         numberOfUsers: Int,
     ): DataWrapper<User> {
-        return remoteGateway.searchUsers(query, byPermissions, byCountries, page, numberOfUsers)
+        return remoteGateway.getUsers(query, byPermissions, byCountries, page, numberOfUsers)
     }
+
 }

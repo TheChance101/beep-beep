@@ -940,31 +940,6 @@ class FakeRemoteGateway(
 
     override suspend fun getUserData() = "asia"
 
-    override suspend fun getUsers(
-        byPermissions: List<Permission>,
-        byCountries: List<String>,
-        page: Int,
-        numberOfUsers: Int
-    ): DataWrapper<User> {
-        val filteredUsers = fakeUsers.filter { user ->
-            (byPermissions.isEmpty() || user.permission.any { it in byPermissions })
-                    && (byCountries.isEmpty() || user.country in byCountries)
-        }
-
-        val totalUsers = filteredUsers.size
-        val numberOfPages = ceil(totalUsers.toDouble() / numberOfUsers).toInt()
-        val startIndex = (page - 1) * numberOfUsers
-        val endIndex = startIndex + numberOfUsers
-
-        val paginatedUsers = filteredUsers.subList(startIndex, endIndex.coerceAtMost(totalUsers))
-
-        return DataWrapperDto(
-            totalPages = numberOfPages,
-            result = paginatedUsers,
-            totalResult = totalUsers
-        ).toEntity()
-    }
-
     override suspend fun getTaxis(page: Int, numberOfTaxis: Int): DataWrapper<Taxi> {
         val taxis = taxis.toEntity()
         val startIndex = (page - 1) * numberOfTaxis
@@ -1020,7 +995,7 @@ class FakeRemoteGateway(
             taxis.removeAt(indexToUpdate)
             taxis.add(index = indexToUpdate, element = updatedTaxi)
             updatedTaxi.toEntity()
-        }else{
+        } else {
             throw Exception("Taxi not found")
         }
     }
@@ -1160,7 +1135,7 @@ class FakeRemoteGateway(
         return "30.044420,31.235712"
     }
 
-    override suspend fun searchUsers(
+    override suspend fun getUsers(
         query: String,
         byPermissions: List<Permission>,
         byCountries: List<String>,
