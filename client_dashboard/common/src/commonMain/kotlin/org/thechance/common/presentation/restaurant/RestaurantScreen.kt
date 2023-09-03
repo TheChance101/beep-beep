@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -68,15 +69,11 @@ class RestaurantScreen :
         }
 
         RestaurantAddCuisineDialog(
-            onCloseRequest = listener::onAddCuisineDialogCloseRequest,
-            onClickAdd = listener::onAddCuisineDialogAddClicked,
-            onCuisineNameChange = listener::onAddCuisineDialogCuisineNameChange,
-            onClickDelete = listener::onAddCuisineDialogDeleteClicked,
+            listener = listener,
             isVisible = state.restaurantAddCuisineDialogUiState.isVisible,
             cuisineName = state.restaurantAddCuisineDialogUiState.cuisineName,
             cuisines = state.restaurantAddCuisineDialogUiState.cuisines,
-            cuisinesSize = state.restaurantAddCuisineDialogUiState.cuisinesSize,
-        )
+            )
 
         Column(
             Modifier.background(Theme.colors.surface).fillMaxSize(),
@@ -394,21 +391,17 @@ class RestaurantScreen :
 
     @Composable
     private fun RestaurantAddCuisineDialog(
-        onCloseRequest: () -> Unit,
-        onClickAdd: () -> Unit,
-        onClickDelete: (String) -> Unit,
-        onCuisineNameChange: (String) -> Unit,
+        listener: AddCuisineListener,
         isVisible: Boolean,
         cuisineName: String,
         cuisines: List<String>,
-        cuisinesSize: Int,
-    ) {
+        ) {
         Dialog(
             visible = isVisible,
             transparent = true,
             undecorated = true,
             resizable = false,
-            onCloseRequest = onCloseRequest,
+            onCloseRequest = listener::onCloseAddCuisineDialog,
         ) {
             window.minimumSize = Dimension(400, 405)
             Column(
@@ -426,20 +419,20 @@ class RestaurantScreen :
                 BpSimpleTextField(
                     text = cuisineName,
                     hint = Resources.Strings.cuisines,
-                    onValueChange = onCuisineNameChange,
+                    onValueChange = listener::onChangeCuisineName,
                     modifier = Modifier.padding(top = 24.kms, start = 24.kms, end = 24.kms)
                 )
                 LazyColumn(
                     modifier = Modifier.padding(top = 16.kms).background(Theme.colors.background)
                         .fillMaxWidth().heightIn(min = 64.kms, max = 256.kms)
                 ) {
-                    items(cuisinesSize) {
+                    items(cuisines) { cuisineName ->
                         Row(
                             modifier = Modifier.padding(horizontal = 24.kms, vertical = 16.kms),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                cuisines[it],
+                                cuisineName,
                                 style = Theme.typography.caption,
                                 color = Theme.colors.contentPrimary,
                             )
@@ -449,7 +442,8 @@ class RestaurantScreen :
                                 painter = painterResource(Resources.Drawable.trashBin),
                                 contentDescription = null,
                                 tint = Theme.colors.primary,
-                                modifier = Modifier.noRipple { onClickDelete(cuisines[it]) }
+                                modifier = Modifier
+                                    .noRipple { listener.onClickDeleteCuisine(cuisineName) }
                             )
                         }
                     }
@@ -461,14 +455,14 @@ class RestaurantScreen :
 
                     BpTransparentButton(
                         title = Resources.Strings.cancel,
-                        onClick = onCloseRequest,
+                        onClick = listener::onCloseAddCuisineDialog,
                         modifier = Modifier.padding(end = 16.kms)
                             .height(32.dp)
                             .weight(1f)
                     )
                     BpOutlinedButton(
                         title = Resources.Strings.add,
-                        onClick = onClickAdd,
+                        onClick = listener::onClickCreateCuisine,
                         modifier = Modifier.height(32.dp).weight(3f),
                         textPadding = PaddingValues(0.dp)
                     )

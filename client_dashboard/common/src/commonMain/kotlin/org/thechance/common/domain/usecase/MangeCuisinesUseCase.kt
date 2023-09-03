@@ -5,9 +5,9 @@ import org.thechance.common.domain.getway.IRemoteGateway
 interface IMangeCuisinesUseCase {
     suspend fun getCuisines(): List<String>
 
-    suspend fun addCuisine(cuisineName: String): List<String>
+    suspend fun createCuisine(cuisineName: String): String?
 
-    suspend fun deleteCuisine(cuisineName: String): List<String>
+    suspend fun deleteCuisine(cuisineName: String): String
 }
 
 class MangeCuisinesUseCase(private val remoteGateway: IRemoteGateway) : IMangeCuisinesUseCase {
@@ -15,11 +15,11 @@ class MangeCuisinesUseCase(private val remoteGateway: IRemoteGateway) : IMangeCu
         return remoteGateway.getCuisines()
     }
 
-    override suspend fun addCuisine(cuisineName: String): List<String> {
-        return remoteGateway.addCuisine(cuisineName)
+    override suspend fun createCuisine(cuisineName: String): String? {
+        return remoteGateway.createCuisine(cuisineName)
     }
 
-    override suspend fun deleteCuisine(cuisineName: String): List<String> {
+    override suspend fun deleteCuisine(cuisineName: String): String {
         return remoteGateway.deleteCuisine(cuisineName)
     }
 }

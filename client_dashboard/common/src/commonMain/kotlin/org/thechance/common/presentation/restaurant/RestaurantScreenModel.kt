@@ -314,15 +314,26 @@ class RestaurantScreenModel(
         }
     }
 
-    override fun onAddCuisineDialogDeleteClicked(cuisineName: String) {
+    override fun onClickDeleteCuisine(cuisineName: String) {
         tryToExecute(
             { mangeCuisines.deleteCuisine(cuisineName) },
-            ::onGetCuisinesSuccessfully,
+            ::onDeleteCuisinesSuccessfully,
             ::onError
         )
     }
+    private fun onDeleteCuisinesSuccessfully(cuisineName: String) {
+        val cuisines = state.value.restaurantAddCuisineDialogUiState.cuisines
+         cuisines.toMutableList().remove(cuisineName)
+        updateState {
+            it.copy(
+                restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
+                    cuisines = cuisines
+                )
+            )
+        }
+    }
 
-    override fun onAddCuisineDialogCloseRequest() {
+    override fun onCloseAddCuisineDialog() {
         updateState {
             it.copy(
                 restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
@@ -333,15 +344,27 @@ class RestaurantScreenModel(
         }
     }
 
-    override fun onAddCuisineDialogAddClicked() {
+    override fun onClickCreateCuisine() {
         tryToExecute(
-            { mangeCuisines.addCuisine(state.value.restaurantAddCuisineDialogUiState.cuisineName) },
-            ::onGetCuisinesSuccessfully,
+            { mangeCuisines.createCuisine(state.value.restaurantAddCuisineDialogUiState.cuisineName) },
+            ::onCreateCuisinesSuccessfully,
             ::onError
         )
     }
+    private fun onCreateCuisinesSuccessfully(cuisineName: String?) {
+        val cuisines = state.value.restaurantAddCuisineDialogUiState.cuisines
+        if (cuisineName != null) cuisines.toMutableList().add(cuisineName)
+        updateState {
+            it.copy(
+                restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
+                    cuisines = cuisines
+                )
+            )
+        }
+    }
 
-    override fun onAddCuisineDialogCuisineNameChange(cuisineName: String) {
+
+    override fun onChangeCuisineName(cuisineName: String) {
         updateState {
             it.copy(
                 restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(

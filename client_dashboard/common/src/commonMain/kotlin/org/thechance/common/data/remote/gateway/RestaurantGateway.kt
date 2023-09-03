@@ -37,7 +37,7 @@ class RestaurantGateway:BaseGateway(), IRestaurantGateway {
         TODO("Not yet implemented")
     }
 
-    override suspend fun addCuisine(cuisineName: String): List<String> {
+    override suspend fun createCuisine(cuisineName: String): String? {
         TODO("Not yet implemented")
     }
 

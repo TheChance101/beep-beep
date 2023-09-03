@@ -35,8 +35,8 @@ interface IRemoteGateway {
 
     suspend fun getCuisines(): List<String>
 
-    suspend fun addCuisine(cuisineName: String): List<String>
+    suspend fun createCuisine(cuisineName: String): String?
 
-    suspend fun deleteCuisine(cuisineName: String): List<String>
+    suspend fun deleteCuisine(cuisineName: String): String
 
 }

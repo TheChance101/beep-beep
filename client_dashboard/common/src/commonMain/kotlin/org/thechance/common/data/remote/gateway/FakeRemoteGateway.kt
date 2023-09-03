@@ -977,14 +977,15 @@ class FakeRemoteGateway(
         return cuisines
     }
 
-    override suspend fun addCuisine(cuisineName: String): List<String> {
-        if (cuisineName !in cuisines) cuisines.add(cuisineName)
-        return cuisines
+    override suspend fun createCuisine(cuisineName: String): String? {
+        return if (cuisineName !in cuisines && cuisineName.isNotBlank()) {cuisines.add(cuisineName)
+            cuisineName
+        } else null
     }
 
-    override suspend fun deleteCuisine(cuisineName: String): List<String> {
+    override suspend fun deleteCuisine(cuisineName: String): String {
         cuisines.remove(cuisineName)
-        return cuisines
+        return cuisineName
     }
 
     private fun createTaxiPDFReport(): File {
