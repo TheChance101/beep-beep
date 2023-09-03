@@ -56,77 +56,82 @@ object MainContainer : Screen {
                     Text(text = tabNavigator.current.options.title)
                 },
                 bottomBar = {
-                    val tabNavigator = LocalTabNavigator.current
-                    var selectedItemPositionPx by remember { mutableStateOf(0f) }
-                    val selectedItemPositionAnimated by animateFloatAsState(selectedItemPositionPx)
-                    val colors = Theme.colors
-
-                    Row(
-                        Modifier.fillMaxWidth().height(64.dp).background(colors.surface)
-                            .drawBehind {
-                                drawLine(
-                                    color = colors.divider,
-                                    strokeWidth = 1.dp.toPx(),
-                                    start = Offset.Zero,
-                                    end = Offset.Zero.copy(x = size.width)
-                                )
-                                drawLine(
-                                    color = colors.primary,
-                                    strokeWidth = 1.dp.toPx(),
-                                    start = Offset.Zero.copy(x = selectedItemPositionAnimated + 4.dp.toPx()),
-                                    end = Offset.Zero.copy(x = selectedItemPositionAnimated + 40.dp.toPx() + 4.dp.toPx()),
-                                    cap = StrokeCap.Round
-                                )
-                            }.padding(horizontal = 16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        TabNavigationItem(
-                            tab = HomeTab,
-                            selectedIconResource = Resources.images.homeFilled,
-                            unSelectedIconResource = Resources.images.homeOutlined,
-                            modifier = Modifier.weight(1f),
-                            onSelectChange = { tab -> tabNavigator.current = tab },
-                            onPositioned = { selectedItemPositionPx = it }
-                        )
-                        TabNavigationItem(
-                            tab = SearchTab,
-                            selectedIconResource = Resources.images.searchFilled,
-                            unSelectedIconResource = Resources.images.searchOutlined,
-                            modifier = Modifier.weight(1f),
-                            onSelectChange = { tab -> tabNavigator.current = tab },
-                            onPositioned = { selectedItemPositionPx = it }
-                        )
-                        TabNavigationItem(
-                            tab = OrdersTab,
-                            selectedIconResource = Resources.images.ordersFilled,
-                            unSelectedIconResource = Resources.images.ordersOutlined,
-                            modifier = Modifier.weight(1f),
-                            onSelectChange = { tab -> tabNavigator.current = tab },
-                            onPositioned = { selectedItemPositionPx = it }
-                        )
-                        TabNavigationItem(
-                            tab = NotificationsTab,
-                            selectedIconResource = Resources.images.notificationsFilled,
-                            unSelectedIconResource = Resources.images.notificationsOutlined,
-                            modifier = Modifier.weight(1f),
-                            onSelectChange = { tab -> tabNavigator.current = tab },
-                            onPositioned = { selectedItemPositionPx = it }
-                        )
-                        TabNavigationItem(
-                            tab = ProfileTab,
-                            selectedIconResource = Resources.images.profileFilled,
-                            unSelectedIconResource = Resources.images.profileOutlined,
-                            modifier = Modifier.weight(1f),
-                            onSelectChange = { tab -> tabNavigator.current = tab },
-                            onPositioned = { selectedItemPositionPx = it }
-                        )
-                    }
+                    MainBottomBar()
                 },
                 content = {
                     Column(Modifier.fillMaxSize().padding(it)) {
                         CurrentTab()
                     }
                 }
+            )
+        }
+    }
+
+    @Composable
+    private fun MainBottomBar(){
+        val tabNavigator = LocalTabNavigator.current
+        var selectedItemPositionPx by remember { mutableStateOf(0f) }
+        val selectedItemPositionAnimated by animateFloatAsState(selectedItemPositionPx)
+        val colors = Theme.colors
+
+        Row(
+            Modifier.fillMaxWidth().height(64.dp).background(colors.surface)
+                .drawBehind {
+                    drawLine(
+                        color = colors.divider,
+                        strokeWidth = 1.dp.toPx(),
+                        start = Offset.Zero,
+                        end = Offset.Zero.copy(x = size.width)
+                    )
+                    drawLine(
+                        color = colors.primary,
+                        strokeWidth = 1.dp.toPx(),
+                        start = Offset.Zero.copy(x = selectedItemPositionAnimated + 4.dp.toPx()),
+                        end = Offset.Zero.copy(x = selectedItemPositionAnimated + 40.dp.toPx() + 4.dp.toPx()),
+                        cap = StrokeCap.Round
+                    )
+                }.padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            TabNavigationItem(
+                tab = HomeTab,
+                selectedIconResource = Resources.images.homeFilled,
+                unSelectedIconResource = Resources.images.homeOutlined,
+                modifier = Modifier.weight(1f),
+                onSelectChange = { tab -> tabNavigator.current = tab },
+                onPositioned = { selectedItemPositionPx = it }
+            )
+            TabNavigationItem(
+                tab = SearchTab,
+                selectedIconResource = Resources.images.searchFilled,
+                unSelectedIconResource = Resources.images.searchOutlined,
+                modifier = Modifier.weight(1f),
+                onSelectChange = { tab -> tabNavigator.current = tab },
+                onPositioned = { selectedItemPositionPx = it }
+            )
+            TabNavigationItem(
+                tab = OrdersTab,
+                selectedIconResource = Resources.images.ordersFilled,
+                unSelectedIconResource = Resources.images.ordersOutlined,
+                modifier = Modifier.weight(1f),
+                onSelectChange = { tab -> tabNavigator.current = tab },
+                onPositioned = { selectedItemPositionPx = it }
+            )
+            TabNavigationItem(
+                tab = NotificationsTab,
+                selectedIconResource = Resources.images.notificationsFilled,
+                unSelectedIconResource = Resources.images.notificationsOutlined,
+                modifier = Modifier.weight(1f),
+                onSelectChange = { tab -> tabNavigator.current = tab },
+                onPositioned = { selectedItemPositionPx = it }
+            )
+            TabNavigationItem(
+                tab = ProfileTab,
+                selectedIconResource = Resources.images.profileFilled,
+                unSelectedIconResource = Resources.images.profileOutlined,
+                modifier = Modifier.weight(1f),
+                onSelectChange = { tab -> tabNavigator.current = tab },
+                onPositioned = { selectedItemPositionPx = it }
             )
         }
     }
@@ -171,121 +176,4 @@ object MainContainer : Screen {
             }
         }
     }
-
 }
-
-
-//object MainContainer : BaseScreen<MainScreenModel, MainUiEffect, MainUiState, MainInteractionListener>() {
-//
-//    private fun readResolve(): Any = MainContainer
-//
-//    @Composable
-//    override fun Content() {
-//        Init(getScreenModel())
-//    }
-//
-//    override fun onEffect(effect: MainUiEffect, navigator: Navigator) {
-//        when (effect) {
-//            MainUiEffect.Logout -> {
-//                navigator.popUntilRoot()
-//            }
-//        }
-//    }
-//
-//    @Composable
-//    override fun OnRender(state: MainUiState, listener: MainInteractionListener) {
-//
-//        TabNavigator(OverviewTab) {
-//            val tabNavigator = LocalTabNavigator.current
-//            DashBoardScaffold(
-//                appbar = {
-//                    DashboardAppbar(
-//                        title = tabNavigator.current.options.title,
-//                        username = state.username,
-//                        firstUsernameLetter = state.firstUsernameLetter,
-//                        onLogOut = listener::onClickLogout,
-//                        isDropMenuExpanded = state.isDropMenuExpanded,
-//                        onClickDropDownMenu = listener::onClickDropDownMenu,
-//                        onDismissDropDownMenu = listener::onDismissDropDownMenu
-//                    )
-//                },
-//                sideBar = {
-//                    DashboardSideBar(
-//                        currentItem = tabNavigator.current.options.index.toInt(),
-//                        onSwitchTheme = listener::onSwitchTheme,
-//                        darkTheme = state.isDarkMode
-//                    ) { sideBarUnexpandedWidthInKms, mainMenuIsExpanded, itemHeight ->
-//                        TabNavigationItem(
-//                            tab = OverviewTab,
-//                            selectedIconResource = Resources.Drawable.overviewFilled,
-//                            unSelectedIconResource = Resources.Drawable.overviewOutlined,
-//                            mainMenuIsExpanded = mainMenuIsExpanded,
-//                            sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
-//                            modifier = Modifier.onGloballyPositioned {
-//                                itemHeight(it.boundsInParent().height)
-//                            }
-//                        )
-//                        TabNavigationItem(
-//                            tab = TaxisTab,
-//                            selectedIconResource = Resources.Drawable.taxiFilled,
-//                            unSelectedIconResource = Resources.Drawable.taxiOutlined,
-//                            mainMenuIsExpanded = mainMenuIsExpanded,
-//                            sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
-//                            modifier = Modifier.onGloballyPositioned {
-//                                itemHeight(it.boundsInParent().height)
-//                            }
-//                        )
-//                        TabNavigationItem(
-//                            tab = RestaurantsTab,
-//                            selectedIconResource = Resources.Drawable.restaurantFilled,
-//                            unSelectedIconResource = Resources.Drawable.restaurantOutlined,
-//                            mainMenuIsExpanded = mainMenuIsExpanded,
-//                            sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
-//                            modifier = Modifier.onGloballyPositioned {
-//                                itemHeight(it.boundsInParent().height)
-//                            }
-//                        )
-//                        TabNavigationItem(
-//                            tab = UsersTab,
-//                            selectedIconResource = Resources.Drawable.usersFilled,
-//                            unSelectedIconResource = Resources.Drawable.usersOutlined,
-//                            mainMenuIsExpanded = mainMenuIsExpanded,
-//                            sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
-//                            modifier = Modifier.onGloballyPositioned {
-//                                itemHeight(it.boundsInParent().height)
-//                            }
-//                        )
-//                    }
-//                },
-//                content = {
-//                    Box(Modifier.background(Theme.colors.surface).padding(it)) {
-//                        CurrentTab()
-//                    }
-//                },
-//            )
-//        }
-//    }
-//
-//    @Composable
-//    fun ColumnScope.TabNavigationItem(
-//        tab: Tab,
-//        selectedIconResource: String,
-//        unSelectedIconResource: String,
-//        mainMenuIsExpanded: Boolean,
-//        sideBarUnexpandedWidth: Dp,
-//        modifier: Modifier = Modifier,
-//    ) {
-//        val tabNavigator = LocalTabNavigator.current
-//        BpSideBarItem(
-//            onClick = { tabNavigator.current = tab },
-//            isSelected = tabNavigator.current == tab,
-//            label = tab.options.title,
-//            selectedIconResource = selectedIconResource,
-//            unSelectedIconResource = unSelectedIconResource,
-//            mainMenuIsExpanded = mainMenuIsExpanded,
-//            sideBarUnexpandedWidthInKms = sideBarUnexpandedWidth,
-//            modifier = modifier
-//        )
-//    }
-//
-//}
