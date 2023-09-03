@@ -15,7 +15,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.*
 import com.beepbeep.designSystem.ui.theme.Theme
@@ -28,7 +27,6 @@ import org.thechance.common.presentation.composables.table.BpTable
 import org.thechance.common.presentation.composables.table.TotalItemsIndicator
 import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.kms
-import java.awt.Dimension
 
 class RestaurantScreen :
     BaseScreen<RestaurantScreenModel, RestaurantUIEffect, RestaurantUiState, RestaurantInteractionListener>() {
@@ -48,10 +46,9 @@ class RestaurantScreen :
     @Composable
     override fun OnRender(state: RestaurantUiState, listener: RestaurantInteractionListener) {
         AnimatedVisibility(visible = state.isNewRestaurantInfoDialogVisible) {
-            RestaurantDialog(
+            NewRestaurantInfoDialog(
                 modifier = Modifier,
-                state = state.newRestaurantInfoUiState,
-                isVisible = state.isNewRestaurantInfoDialogVisible,
+                state = state,
                 listener = listener,
             )
         }
@@ -365,116 +362,6 @@ class RestaurantScreen :
                         modifier = Modifier.height(32.kms).weight(3f),
                         textPadding = PaddingValues(0.dp)
                     )
-                }
-            }
-        }
-    }
-
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    private fun RestaurantDialog(
-        modifier: Modifier = Modifier,
-        state: NewRestaurantInfoUiState,
-        isVisible: Boolean,
-        listener: RestaurantInteractionListener,
-    ) {
-        Dialog(
-            visible = isVisible,
-            undecorated = true,
-            onCloseRequest = listener::onCancelCreateRestaurantClicked,
-            resizable = false,
-        ) {
-            window.minimumSize = Dimension(1176, 664)
-            Column(
-                modifier
-                    .background(Theme.colors.surface)
-                    .fillMaxSize()
-                    .padding(24.kms)
-            ) {
-                Text(
-                    text = Resources.Strings.newRestaurant,
-                    style = Theme.typography.headlineLarge,
-                    color = Theme.colors.contentPrimary
-                )
-                Row(
-                    modifier = Modifier.fillMaxSize().padding(top = Theme.dimens.space40),
-                    horizontalArrangement = Arrangement.spacedBy(16.kms)
-                ) {
-                    Column(modifier = Modifier.fillMaxHeight().width(350.kms)) {
-                        BpTextField(
-                            onValueChange = listener::onRestaurantNameChange,
-                            text = state.name,
-                            label = Resources.Strings.restaurantName,
-                            modifier = Modifier.padding(top = Theme.dimens.space16),
-                            hint = ""
-                        )
-
-                        BpTextField(
-                            onValueChange = listener::onOwnerUserNameChange,
-                            text = state.ownerUsername,
-                            label = Resources.Strings.ownerUsername,
-                            modifier = Modifier.padding(top = Theme.dimens.space16),
-                            hint = ""
-                        )
-
-                        BpTextField(
-                            onValueChange = listener::onPhoneNumberChange,
-                            text = state.phoneNumber,
-                            label = Resources.Strings.phoneNumber,
-                            modifier = Modifier.padding(top = Theme.dimens.space16),
-                            hint = ""
-                        )
-                        Row(
-                            modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
-                            horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8),
-                        ) {
-                            BpTextField(
-                                onValueChange = listener::onWorkingStartHourChange,
-                                text = state.startTime,
-                                modifier = Modifier.weight(1f),
-                                label = Resources.Strings.workingHours,
-                                hint = Resources.Strings.workStartHourHint
-                            )
-                            BpTextField(
-                                onValueChange = listener::onWorkingEndHourChange,
-                                text = state.endTime,
-                                modifier = Modifier.weight(1f),
-                                label = "",
-                                hint = Resources.Strings.workEndHourHint
-                            )
-                        }
-                        BpTextField(
-                            onValueChange = { },
-                            text = state.location,
-                            label = Resources.Strings.location,
-                            modifier = Modifier.padding(top = Theme.dimens.space16),
-                            hint = ""
-                        )
-                    }
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.End,
-                    ) {
-                        GoogleMap(lat = state.lat, lng = state.lng) { address ->
-                            listener.onLocationChange(address)
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(0.5f)
-                                .padding(top = Theme.dimens.space24),
-                            horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
-                        ) {
-                            BpOutlinedButton(
-                                title = Resources.Strings.cancel,
-                                onClick = { listener.onCancelCreateRestaurantClicked() },
-                                modifier = Modifier.width(120.kms)
-                            )
-                            BpButton(
-                                title = Resources.Strings.create,
-                                onClick = { listener.onCreateNewRestaurantClicked() },
-                                modifier = Modifier.width(240.kms)
-                            )
-                        }
-                    }
                 }
             }
         }
