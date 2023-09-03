@@ -5,6 +5,9 @@ plugins {
     alias(libs.plugins.kotlin.native.cocoapods)
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.compose)
+    alias(libs.plugins.kotlinKsp)
+    id("io.realm.kotlin") version "1.10.0"
+    kotlin("plugin.serialization") version "1.9.0"
 }
 
 kotlin {
@@ -29,13 +32,34 @@ kotlin {
     }
 
     sourceSets {
+        val ktorVersion = "2.3.3"
         val commonMain by getting {
             dependencies {
+                // compose
                 implementation(libs.compose.runtime)
                 implementation(libs.compose.foundation)
                 implementation(libs.compose.material3)
                 implementation(libs.compose.components.resources)
+                implementation(libs.google.accompanist)
+                // design shared
                 implementation(project(":design_system:shared"))
+                //ktor-client
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.json.serialization)
+                implementation(libs.ktor.content.negotiation)
+                implementation(libs.ktor.logging)
+                implementation(libs.ktor.client.cio)
+                implementation(libs.kotlin.serialization)
+                //realm db
+                implementation(libs.realm.library.base)
+                // koin
+                api(libs.koin.core)
+                implementation(libs.koin.annotations)
+                implementation(libs.koin.compose)
+                // navigation voyager
+                implementation(libs.bundles.voyager)
+                // coroutine
+                implementation(libs.kotlin.coroutines)
             }
         }
         val androidMain by getting {
@@ -43,6 +67,9 @@ kotlin {
                 api(libs.androidx.activity.compose)
                 api(libs.androidx.appcompat)
                 api(libs.androidx.core.ktx)
+                api(libs.koin.android)
+                implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2")
             }
         }
         val iosX64Main by getting
@@ -53,6 +80,9 @@ kotlin {
             iosX64Main.dependsOn(this)
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
+            dependencies {
+                implementation("io.ktor:ktor-client-darwin:2.3.3")
+            }
         }
     }
 }
@@ -67,7 +97,7 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk =libs.versions.targetSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
