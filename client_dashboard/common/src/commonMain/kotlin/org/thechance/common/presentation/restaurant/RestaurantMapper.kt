@@ -1,12 +1,13 @@
 package org.thechance.common.presentation.restaurant
 
-import org.thechance.common.domain.entity.AddRestaurant
+import org.thechance.common.domain.entity.NewRestaurantInfo
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.entity.Time
 import org.thechance.common.domain.entity.Time.Companion.parseToCustomTime
 
 fun Restaurant.toUiState(): RestaurantUiState.RestaurantDetailsUiState =
     RestaurantUiState.RestaurantDetailsUiState(
+        id = id,
         name = name,
         ownerUsername = ownerUsername,
         phoneNumber = phoneNumber,
@@ -19,7 +20,7 @@ private fun Pair<Time, Time>.toWorkingHoursString() = "$first - $second"
 
 fun List<Restaurant>.toUiState() = map(Restaurant::toUiState)
 
-fun AddRestaurantDialogUiState.toEntity() = AddRestaurant(
+fun NewRestaurantInfoUiState.toEntity() = NewRestaurantInfo(
     name = name,
     ownerUsername = ownerUsername,
     phoneNumber = phoneNumber,
