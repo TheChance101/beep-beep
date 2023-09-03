@@ -19,7 +19,7 @@ import kotlin.math.ceil
 import kotlin.math.floor
 
 class FakeRemoteGateway(
-    private val localGateway: LocalGateway
+    private val localGateway: LocalGateway,
 ) : IRemoteGateway {
 
     private val restaurant = mutableListOf<RestaurantDto>()
@@ -1001,7 +1001,9 @@ class FakeRemoteGateway(
         return taxis.last().toEntity()
     }
 
-    override suspend fun searchTaxisByUsername(username: String, page: Int, numberOfTaxis: Int): DataWrapper<Taxi> {
+    override suspend fun searchTaxisByUsername(
+        username: String, page: Int, numberOfTaxis: Int,
+    ): DataWrapper<Taxi> {
         val taxis = taxis.filter {
             it.username?.startsWith(username, true) ?: false
         }.toEntity()
@@ -1026,7 +1028,7 @@ class FakeRemoteGateway(
     override suspend fun filterTaxis(
         taxi: TaxiFiltration,
         page: Int,
-        numberOfTaxis: Int
+        numberOfTaxis: Int,
     ): DataWrapper<Taxi> {
         val taxiDto = taxi.toDto()
         val taxisFiltered = taxis.filter {
@@ -1062,7 +1064,7 @@ class FakeRemoteGateway(
         numberOfRestaurantsInPage: Int,
         restaurantName: String,
         rating: Double?,
-        priceLevel: Int?
+        priceLevel: Int?,
     ): DataWrapper<Restaurant> {
         var restaurants = restaurant.toEntity()
         if (restaurantName.isNotEmpty()) {
@@ -1106,7 +1108,7 @@ class FakeRemoteGateway(
         return Pair("token", "refreshToken")
     }
 
-    override suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant {
+    override suspend fun createRestaurant(restaurant: NewRestaurantInfo): Restaurant {
         return Restaurant(
             id = "7",
             name = restaurant.name,
@@ -1118,8 +1120,8 @@ class FakeRemoteGateway(
         )
     }
 
-    override suspend fun getCurrentLocation(): Location {
-        return Location(location = "30.044420,31.235712")
+    override suspend fun getCurrentLocation(): String {
+        return "30.044420,31.235712"
     }
 
     override suspend fun searchUsers(
@@ -1217,7 +1219,7 @@ class FakeRemoteGateway(
         dataList: List<T>,
         columnNames: List<String>,
         colWidths: List<Float>,
-        dataExtractor: (T) -> List<Any>
+        dataExtractor: (T) -> List<Any>,
     ): File {
         try {
             //region Create PDF document
@@ -1272,7 +1274,7 @@ class FakeRemoteGateway(
         currentX: Float,
         startX: Float,
         colWidths: List<Float>,
-        dataExtractor: (T) -> List<Any>
+        dataExtractor: (T) -> List<Any>,
     ) {
         // Draw table content
         // Add space between header and table content
@@ -1306,7 +1308,7 @@ class FakeRemoteGateway(
         contentStream: PDPageContentStream,
         title: String,
         pageWidth: Float,
-        pageHeight: Float
+        pageHeight: Float,
     ): Float {
         contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16f)
         contentStream.beginText()
@@ -1322,7 +1324,7 @@ class FakeRemoteGateway(
     private fun dateContent(
         contentStream: PDPageContentStream,
         pageWidth: Float,
-        titleY: Float
+        titleY: Float,
     ): Float {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         val dateTime = dateFormat.format(Date())
