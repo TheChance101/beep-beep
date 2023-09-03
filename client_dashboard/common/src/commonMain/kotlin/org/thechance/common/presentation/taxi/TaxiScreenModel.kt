@@ -4,7 +4,9 @@ import kotlinx.coroutines.Job
 import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Taxi
-import org.thechance.common.domain.usecase.*
+import org.thechance.common.domain.usecase.IFilterTaxisUseCase
+import org.thechance.common.domain.usecase.IManageTaxisUseCase
+import org.thechance.common.domain.usecase.ISearchTaxisByUserNameUseCase
 import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
@@ -136,14 +138,16 @@ class TaxiScreenModel(
         )
     }
 
-    private fun onUpdateTaxiSuccessfully(isUpdate: Boolean) {
-        if (isUpdate) {
-            updateState {
-                it.copy(isAddNewTaxiDialogVisible = false, taxiMenu = it.taxiMenu.copy(id = ""))
+    private fun onUpdateTaxiSuccessfully(taxi: Taxi) {
+        updateState { it.copy(isAddNewTaxiDialogVisible = false, taxiMenu = it.taxiMenu.copy(id = "")) }
+        mutableState.value.pageInfo.data.find { it.id == taxi.id }?.let { taxiDetailsUiState ->
+            val index = mutableState.value.pageInfo.data.indexOf(taxiDetailsUiState)
+            val newTaxi = mutableState.value.pageInfo.data.toMutableList().apply {
+                set(index, taxi.toUiState())
             }
-            getDummyTaxiData()
+            updateState { it.copy(pageInfo = it.pageInfo.copy(data = newTaxi)) }
+            //todo:show snack bar
         }
-        //todo:show snack bar
     }
 
     override fun onCreateTaxiClicked() {
@@ -212,11 +216,14 @@ class TaxiScreenModel(
     }
 
     override fun onCancelFilterClicked() {
-        updateState { it.copy(
-            isFilterDropdownMenuExpanded = false,
-            taxiFilterUiState = it.taxiFilterUiState.copy(
-            carColor = CarColor.WHITE, seats = 1, status = TaxiStatus.ONLINE)
-        ) }
+        updateState {
+            it.copy(
+                isFilterDropdownMenuExpanded = false,
+                taxiFilterUiState = it.taxiFilterUiState.copy(
+                    carColor = CarColor.WHITE, seats = 1, status = TaxiStatus.ONLINE
+                )
+            )
+        }
         getDummyTaxiData()
     }
 
@@ -258,10 +265,14 @@ class TaxiScreenModel(
         )
     }
 
-    private fun onDeleteTaxiSuccessfully(isDeleted: Boolean) {
+    private fun onDeleteTaxiSuccessfully(taxiId: String) {
         updateState { it.copy(taxiMenu = it.taxiMenu.copy(id = "")) }
-        if (isDeleted) {
-            getDummyTaxiData()
+        mutableState.value.pageInfo.data.find { it.id == taxiId }?.let { taxiDetailsUiState ->
+            val index = mutableState.value.pageInfo.data.indexOf(taxiDetailsUiState)
+            val newTaxi = mutableState.value.pageInfo.data.toMutableList().apply {
+                removeAt(index)
+            }
+            updateState { it.copy(pageInfo = it.pageInfo.copy(data = newTaxi)) }
         }
         //todo:show snack bar
     }

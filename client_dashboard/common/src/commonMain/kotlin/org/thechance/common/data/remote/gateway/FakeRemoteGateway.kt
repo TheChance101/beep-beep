@@ -9,12 +9,25 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.thechance.common.data.local.gateway.LocalGateway
 import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
-import org.thechance.common.data.remote.model.*
-import org.thechance.common.domain.entity.*
+import org.thechance.common.data.remote.model.DataWrapperDto
+import org.thechance.common.data.remote.model.RestaurantDto
+import org.thechance.common.data.remote.model.TaxiDto
+import org.thechance.common.data.remote.model.UserDto
+import org.thechance.common.data.remote.model.toEntity
+import org.thechance.common.domain.entity.AddRestaurant
+import org.thechance.common.domain.entity.DataWrapper
+import org.thechance.common.domain.entity.Location
+import org.thechance.common.domain.entity.NewTaxiInfo
+import org.thechance.common.domain.entity.Permission
+import org.thechance.common.domain.entity.Restaurant
+import org.thechance.common.domain.entity.Taxi
+import org.thechance.common.domain.entity.TaxiFiltration
+import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.getway.IRemoteGateway
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.UUID
 import kotlin.math.ceil
 import kotlin.math.floor
 
@@ -869,7 +882,8 @@ class FakeRemoteGateway(
             )
         )
     }
-    override suspend fun  getUserData() = "asia"
+
+    override suspend fun getUserData() = "asia"
 
     override suspend fun getUsers(
         byPermissions: List<Permission>,
@@ -932,7 +946,8 @@ class FakeRemoteGateway(
         )
         return taxis.last().toEntity()
     }
-    override suspend fun updateTaxi(taxi: NewTaxiInfo): Boolean {
+
+    override suspend fun updateTaxi(taxi: NewTaxiInfo): Taxi {
         val indexToUpdate = taxis.indexOfFirst { it.id == taxi.id }
         val newTaxi = taxi.toDto()
         return if (indexToUpdate != -1) {
@@ -949,21 +964,27 @@ class FakeRemoteGateway(
             )
             taxis.removeAt(indexToUpdate)
             taxis.add(index = indexToUpdate, element = updatedTaxi)
-            true
-        } else {
-            false
+            updatedTaxi.toEntity()
+        }else{
+            throw Exception("Taxi not found")
         }
     }
-    override suspend fun deleteTaxi(taxiId: String): Boolean {
+
+    override suspend fun deleteTaxi(taxiId: String): String {
         val indexToUpdate = taxis.indexOfFirst { it.id == taxiId }
         return if (indexToUpdate != -1) {
             taxis.removeAt(indexToUpdate)
-            true
+            taxiId
         } else {
-            false
+            throw Exception("Taxi not found")
         }
     }
-    override suspend fun searchTaxisByUsername(username: String, page: Int, numberOfTaxis: Int): DataWrapper<Taxi> {
+
+    override suspend fun searchTaxisByUsername(
+        username: String,
+        page: Int,
+        numberOfTaxis: Int
+    ): DataWrapper<Taxi> {
         val taxis = taxis.filter {
             it.username?.startsWith(username, true) ?: false
         }.toEntity()
@@ -1109,7 +1130,10 @@ class FakeRemoteGateway(
         return try {
             DataWrapperDto(
                 totalPages = numberOfPages,
-                result = filteredUsers.subList(startIndex, endIndex.coerceAtMost(filteredUsers.size)),
+                result = filteredUsers.subList(
+                    startIndex,
+                    endIndex.coerceAtMost(filteredUsers.size)
+                ),
                 totalResult = filteredUsers.size
             ).toEntity()
         } catch (e: Exception) {
@@ -1139,7 +1163,10 @@ class FakeRemoteGateway(
         return try {
             DataWrapperDto(
                 totalPages = numberOfPages,
-                result = filteredUsers.subList(startIndex, endIndex.coerceAtMost(filteredUsers.size)),
+                result = filteredUsers.subList(
+                    startIndex,
+                    endIndex.coerceAtMost(filteredUsers.size)
+                ),
                 totalResult = filteredUsers.size
             ).toEntity()
         } catch (e: Exception) {
