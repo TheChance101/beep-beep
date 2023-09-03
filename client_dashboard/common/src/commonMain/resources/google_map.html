@@ -40,10 +40,6 @@ var svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="49"
                 zoom: 15,
                 mapId:'cb5e6246d7cd13cf',
             });
-             map.addListener('zoom_changed', function() {
-         if (map.getZoom() < minZoomLevel) map.setZoom(minZoomLevel);
-         else if( map.getZoom() > maxZoomLevel ) map.setZoom(maxZoomLevel);
-        });
                 var marker = new google.maps.Marker({
                 position: userLocation,
                 map: map,
