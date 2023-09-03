@@ -1,6 +1,6 @@
 package data.gateway.remote
 
-import data.remote.mapper.toEntity
+import data.remote.mapper.toCuisineEntity
 import data.remote.model.ServerResponse
 import data.remote.model.SessionDto
 import domain.entity.Session
@@ -56,6 +56,6 @@ class UserGateway(client: HttpClient) : BaseGateway(client), IUserGateway {
                 }
             )
         }.value
-        return result?.toEntity() ?: throw InvalidCredentialsException("Invalid Credential")
+        return result?.toCuisineEntity() ?: throw InvalidCredentialsException("Invalid Credential")
     }
 }

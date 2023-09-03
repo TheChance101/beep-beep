@@ -5,9 +5,10 @@ import domain.entity.Cuisine
 
 fun CuisineDto.toCuisineEntity(): Cuisine {
     return Cuisine(
-        id = id,
-        name = name
+        cuisineId = id,
+        cuisineName = name,
+        cuisineImageUrl = ""
     )
 }
 
-fun List<CuisineDto>.toEntity() = map { it.toCuisineEntity() }
+fun List<CuisineDto>.toCuisineEntity() = map { it.toCuisineEntity() }

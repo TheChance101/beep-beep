@@ -1,6 +1,6 @@
 package data.gateway.remote
 
-import data.remote.mapper.toEntity
+import data.remote.mapper.toCuisineEntity
 import data.remote.model.CuisineDto
 import data.remote.model.ServerResponse
 import domain.entity.Cuisine
@@ -13,6 +13,6 @@ class CuisineGateway(client: HttpClient) : BaseGateway(client = client), ICuisin
     override suspend fun getCuisines(): List<Cuisine> {
         return tryToExecute<ServerResponse<List<CuisineDto>>> {
             get("/cuisines")
-        }.value?.toEntity() ?: throw NotFoundException()
+        }.value?.toCuisineEntity() ?: throw NotFoundException()
     }
 }

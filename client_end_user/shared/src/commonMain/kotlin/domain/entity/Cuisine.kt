@@ -1,3 +1,7 @@
 package domain.entity
 
-data class Cuisine(val id: String, val name: String)
+data class Cuisine(
+    val cuisineId: String,
+    val cuisineName: String,
+    val cuisineImageUrl: String,
+)
