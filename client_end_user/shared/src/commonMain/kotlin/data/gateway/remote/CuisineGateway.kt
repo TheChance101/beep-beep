@@ -14,6 +14,5 @@ class CuisineGateway(client: HttpClient) : BaseGateway(client = client), ICuisin
         return tryToExecute<ServerResponse<List<CuisineDto>>> {
             get("/cuisines")
         }.value?.toEntity() ?: throw NotFoundException()
-
     }
 }
