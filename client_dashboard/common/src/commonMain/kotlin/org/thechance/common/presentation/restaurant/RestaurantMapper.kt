@@ -7,6 +7,7 @@ import org.thechance.common.domain.entity.Time.Companion.parseToCustomTime
 
 fun Restaurant.toUiState(): RestaurantUiState.RestaurantDetailsUiState =
     RestaurantUiState.RestaurantDetailsUiState(
+        id = id,
         name = name,
         ownerUsername = ownerUsername,
         phoneNumber = phoneNumber,
