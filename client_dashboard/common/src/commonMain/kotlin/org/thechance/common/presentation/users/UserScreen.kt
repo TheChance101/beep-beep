@@ -36,9 +36,8 @@ import org.thechance.common.presentation.util.kms
 
 sealed interface UserUiEffect
 
-class UserScreen :
-    BaseScreen<UserScreenModel, UserUiEffect,
-            UserScreenUiState, UserScreenInteractionListener>() {
+class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, UserScreenInteractionListener>() {
+
     override fun onEffect(effect: UserUiEffect, navigator: Navigator) {
         TODO("Not yet implemented")
     }
@@ -52,7 +51,7 @@ class UserScreen :
             state = state,
             pageListener = listener,
             editMenuListener = listener,
-            onDeleteUserMenuItemClicked = listener::onDeleteUserMenu,
+            onDeleteUserMenuItemClicked = listener::onDeleteUserMenuItemClicked,
             onSearchInputChanged = listener::onSearchInputChange,
             filterMenuListener = listener
         )
@@ -76,9 +75,9 @@ class UserScreen :
             visible = state.permissionsDialog.show,
             allPermissions = state.allPermissions,
             selectedPermissions = state.permissionsDialog.permissions,
-            onUserPermissionClicked = editMenuListener::onEditUserMenuPermissionClick,
-            onSaveUserPermissions = editMenuListener::onSaveEditUserMenu,
-            onCancelUserPermissionsDialog = editMenuListener::onCancelEditUserMenu,
+            onUserPermissionClicked = editMenuListener::onUserPermissionClick,
+            onSaveUserPermissions = editMenuListener::onSaveUserPermissionsDialog,
+            onCancelUserPermissionsDialog = editMenuListener::onCancelUserPermissionsDialog,
         )
         Box(
             modifier = Modifier.background(Theme.colors.surface).fillMaxSize(),
@@ -96,6 +95,7 @@ class UserScreen :
                     onSearchInputChanged = onSearchInputChanged,
                     onFilterMenuClicked = filterMenuListener::showFilterMenu,
                     onFilterMenuDismiss = filterMenuListener::hideFilterMenu,
+                    onFilterSaved = filterMenuListener::onFilterMenuSaveButtonClicked,
                 )
 
                 UsersTable(
@@ -129,7 +129,7 @@ class UserScreen :
         pageCount: Int,
         onPageClicked: (Int) -> Unit,
         onItemPerPageChanged: (Int) -> Unit,
-        editUserMenu: UserScreenUiState.MenuUiState,
+        editUserMenu: String,
         onEditUserDismiss: () -> Unit,
         onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
         onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
@@ -198,7 +198,7 @@ class UserScreen :
         user: UserScreenUiState.UserUiState,
         firstColumnWeight: Float = 1f,
         otherColumnsWeight: Float = 3f,
-        editUserMenu: UserScreenUiState.MenuUiState,
+        editUserMenu: String,
         onEditUserDismiss: () -> Unit,
         onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
         onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
@@ -285,35 +285,40 @@ class UserScreen :
     @Composable
     private fun EditUserDropdownMenu(
         user: UserScreenUiState.UserUiState,
-        editUserMenu: UserScreenUiState.MenuUiState,
+        editUserMenu: String,
         onEditUserDismiss: () -> Unit,
         onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
         onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
     ) {
         BpDropdownMenu(
-            expanded = user.username == editUserMenu.username,
+            expanded = user.username == editUserMenu,
             onDismissRequest = onEditUserDismiss,
-            shape = RoundedCornerShape(Theme.radius.medium),
-            offset = DpOffset.Zero.copy(x = -100.kms)
+            shape = RoundedCornerShape(Theme.radius.medium).copy(topEnd = CornerSize(0.dp)),
+            offset = DpOffset.Zero.copy(x = (-178).kms)
         ) {
             Column {
-                editUserMenu.items.forEach {
-                    BpDropdownMenuItem(
-                        onClick = {
-                            when (it.text) {
-                                "Edit" -> onEditUserMenuItemClicked(user)
-                                "Delete" -> onDeleteUserMenuItemClicked(user)
-                            }
-                        },
-                        text = it.text,
-                        leadingIconPath = it.iconPath,
-                        isSecondary = it.isSecondary,
-                        showBottomDivider = it != editUserMenu.items.last()
-                    )
-                }
+                BpDropdownMenuItem(
+                    onClick = {
+                        onEditUserMenuItemClicked(user)
+                    },
+                    text = Resources.Strings.permission,
+                    leadingIconPath = Resources.Drawable.permission,
+                    isSecondary = false,
+                    showBottomDivider = true
+                )
+                BpDropdownMenuItem(
+                    onClick = {
+                        onDeleteUserMenuItemClicked(user)
+                    },
+                    text = Resources.Strings.disable,
+                    leadingIconPath = Resources.Drawable.disable,
+                    isSecondary = true,
+                    showBottomDivider = false
+                )
             }
         }
     }
+
     //endregion
     @Composable
     private fun UsersFilterDropdownMenu(
@@ -325,6 +330,7 @@ class UserScreen :
         onFilterCountryClicked: (UserScreenUiState.CountryUiState) -> Unit,
         onFilterMenuClicked: () -> Unit,
         onFilterMenuDismiss: () -> Unit,
+        onFilterSaved: () -> Unit
     ) {
         Row {
             BpIconButton(
@@ -416,9 +422,9 @@ class UserScreen :
                                 )
                                 BpOutlinedButton(
                                     title = Resources.Strings.save,
-                                    onClick = onFilterMenuDismiss,
+                                    onClick = onFilterSaved,
                                     shape = RoundedCornerShape(Theme.radius.small),
-                                    modifier = Modifier.height(50.kms).weight(1f)
+                                    modifier = Modifier.weight(1f)
                                 )
                             }
                         }
@@ -440,6 +446,7 @@ class UserScreen :
         onSearchInputChanged: (String) -> Unit,
         onFilterMenuClicked: () -> Unit,
         onFilterMenuDismiss: () -> Unit,
+        onFilterSaved: () -> Unit,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.kms),
@@ -464,6 +471,7 @@ class UserScreen :
                 onFilterCountryClicked = onFilterCountryClicked,
                 onFilterMenuClicked = onFilterMenuClicked,
                 onFilterMenuDismiss = onFilterMenuDismiss,
+                onFilterSaved = onFilterSaved
             )
         }
     }

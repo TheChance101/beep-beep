@@ -8,18 +8,17 @@ import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
-import org.thechance.api_gateway.data.security.TokenConfiguration
-import org.thechance.api_gateway.endpoints.gateway.IIdentityGateway
+import org.thechance.api_gateway.data.model.authenticate.TokenConfiguration
+import org.thechance.api_gateway.data.service.IdentityService
 import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
 import org.thechance.api_gateway.endpoints.utils.respondWithResult
 import org.thechance.api_gateway.util.Claim
 import org.thechance.api_gateway.util.Role
-import java.util.*
 
 
 fun Route.authenticationRoutes(tokenConfiguration: TokenConfiguration) {
-    val identityGateway: IIdentityGateway by inject()
+    val identityService: IdentityService by inject()
 
     val localizedMessagesFactory by inject<LocalizedMessagesFactory>()
 
@@ -30,17 +29,16 @@ fun Route.authenticationRoutes(tokenConfiguration: TokenConfiguration) {
         val password = params["password"]?.trim()
         val email = params["email"]?.trim()
 
-        val (language, countryCode) = extractLocalizationHeader()
+        val language = extractLocalizationHeader()
 
-        val result = identityGateway.createUser(
+        val result = identityService.createUser(
             fullName = fullName.toString(),
             username = username.toString(),
             password = password.toString(),
             email = email.toString(),
-            locale = Locale(language, countryCode)
+            languageCode = language
         )
-        val locale = Locale(language, countryCode)
-        val successMessage = localizedMessagesFactory.createLocalizedMessages(locale).userCreatedSuccessfully
+        val successMessage = localizedMessagesFactory.createLocalizedMessages(language).userCreatedSuccessfully
 
         respondWithResult(HttpStatusCode.Created, result, successMessage)
     }
@@ -50,13 +48,13 @@ fun Route.authenticationRoutes(tokenConfiguration: TokenConfiguration) {
         val userName = params["username"]?.trim().toString()
         val password = params["password"]?.trim().toString()
 
-        val (language, countryCode) = extractLocalizationHeader()
+        val language = extractLocalizationHeader()
 
-        val token = identityGateway.loginUser(
+        val token = identityService.loginUser(
             userName,
             password,
             tokenConfiguration,
-            Locale(language, countryCode)
+            language
         )
         respondWithResult(HttpStatusCode.Created, token)
     }
@@ -73,7 +71,7 @@ fun Route.authenticationRoutes(tokenConfiguration: TokenConfiguration) {
             val userId = tokenClaim?.payload?.getClaim(Claim.USER_ID).toString()
             val username = tokenClaim?.payload?.getClaim(Claim.USERNAME).toString()
             val userPermission = tokenClaim?.payload?.getClaim(Claim.PERMISSION)?.asString()?.toInt() ?: 1
-            val token = identityGateway.generateUserTokens(userId, username, userPermission, tokenConfiguration)
+            val token = identityService.generateUserTokens(userId, username, userPermission, tokenConfiguration)
             respondWithResult(HttpStatusCode.Created, token)
         }
     }

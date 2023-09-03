@@ -30,8 +30,8 @@ import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.BpAppBar
 import presentation.composable.MealCard
-import presentation.mealManagement.mealCreation.MealCreationScreen
-import presentation.mealManagement.mealEditor.MealEditorScreen
+import presentation.mealManagement.MealScreen
+import presentation.mealManagement.ScreenMode
 import resources.Resources.strings
 
 class MealsScreen(private val restaurantId: String) :
@@ -46,9 +46,9 @@ class MealsScreen(private val restaurantId: String) :
         when (effect) {
             is MealsScreenUIEffect.Back -> navigator.pop()
             is MealsScreenUIEffect.NavigateToMealDetails ->
-                navigator.push(MealEditorScreen(mealId = effect.mealId))
+                navigator.push(MealScreen(ScreenMode.EDIT, effect.mealId))
 
-            is MealsScreenUIEffect.NavigateToAddMeal -> navigator.push(MealCreationScreen())
+            is MealsScreenUIEffect.NavigateToAddMeal -> navigator.push(MealScreen(ScreenMode.CREATION))
         }
     }
 

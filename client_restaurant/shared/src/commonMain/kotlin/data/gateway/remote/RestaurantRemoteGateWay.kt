@@ -1,37 +1,37 @@
 package data.gateway.remote
 
-import domain.entity.Location
+import data.remote.mapper.toDto
+import data.remote.mapper.toEntity
+import data.remote.model.BaseResponse
+import data.remote.model.RestaurantDto
 import domain.entity.Restaurant
 import domain.gateway.remote.IRestaurantRemoteGateway
 import io.ktor.client.HttpClient
+import io.ktor.client.request.get
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import presentation.base.NotFoundedException
 
 
-class RestaurantRemoteGateWay(private val client: HttpClient) : IRestaurantRemoteGateway {
+class RestaurantRemoteGateWay(client: HttpClient) : BaseRemoteGateway(client),
+    IRestaurantRemoteGateway {
 
     override suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant> {
-        return emptyList()
+        return tryToExecute<BaseResponse<List<RestaurantDto>>> {
+            get("/restaurants/mine")
+        }.value?.toEntity() ?: throw NotFoundedException()
     }
 
     override suspend fun updateRestaurantInfo(restaurant: Restaurant): Boolean {
-        return true
+        return tryToExecute<BaseResponse<Boolean>> {
+            post("/restaurant") { setBody(restaurant.toDto()) }
+        }.value ?: false
     }
 
     override suspend fun getRestaurantInfo(restaurantId: String): Restaurant {
-        return getRestaurantsByOwnerId("7bf7ef77d907").find { it.id == restaurantId } ?:
-        Restaurant(
-            id  = "",
-            ownerId = "",
-            address = "",
-            location = Location(0.0,0.0),
-            phone = "",
-            openingTime = "",
-            closingTime = "",
-            rate = 0.0,
-            priceLevel = "",
-            description = "",
-            ownerUsername = "",
-            name = ""
-        )
+        return tryToExecute<BaseResponse<RestaurantDto>> {
+            get("/restaurant/$restaurantId")
+        }.value?.toEntity() ?: throw NotFoundedException()
     }
 
 }

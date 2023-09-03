@@ -4,7 +4,7 @@ import androidx.compose.ui.window.application
 import com.sun.javafx.application.PlatformImpl
 import di.appModule
 import org.koin.core.context.startKoin
-import org.thechance.common.App
+import org.thechance.common.presentation.app.App
 import java.awt.Dimension
 
 

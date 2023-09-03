@@ -9,18 +9,21 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.thechance.common.domain.entity.InvalidCredentialsException
-import org.thechance.common.domain.entity.NoInternetException
-import org.thechance.common.domain.entity.UserNotFoundException
+import kotlinx.datetime.Clock
+import org.thechance.common.domain.util.InvalidCredentialsException
+import org.thechance.common.domain.util.NoInternetException
+import org.thechance.common.domain.util.UserNotFoundException
 import org.thechance.common.presentation.util.ErrorState
 
 abstract class BaseScreenModel<S, E>(initialState: S) : StateScreenModel<S>(initialState),
     BaseInteractionListener {
 
     private val _effect = MutableSharedFlow<E?>()
-    val effect = _effect.asSharedFlow()
+    val effect = _effect.asSharedFlow().throttleFirst(500).mapNotNull { it }
 
     protected fun <T> tryToExecute(
         callee: suspend () -> T,
@@ -53,18 +56,14 @@ abstract class BaseScreenModel<S, E>(initialState: S) : StateScreenModel<S>(init
         return inScope.launch(Dispatchers.IO) {
             try {
                 callee()
+            } catch (exception: InvalidCredentialsException) {
+                onError(ErrorState.InvalidCredentials(exception.message.toString()))
+            } catch (exception: UserNotFoundException) {
+                onError(ErrorState.UserNotExist(exception.message.toString()))
+            } catch (exception: NoInternetException) {
+                onError(ErrorState.NoConnection)
             } catch (exception: Exception) {
-                when (exception) {
-                    is InvalidCredentialsException -> onError(
-                        ErrorState.InvalidCredentials(
-                            exception.message.toString()
-                        )
-                    )
-
-                    is UserNotFoundException -> onError(ErrorState.UserNotExist(exception.message.toString()))
-                    is NoInternetException -> onError(ErrorState.NoConnection)
-                    else -> onError(ErrorState.UnKnownError)
-                }
+                onError(ErrorState.UnKnownError)
             }
         }
     }
@@ -76,6 +75,20 @@ abstract class BaseScreenModel<S, E>(initialState: S) : StateScreenModel<S>(init
     protected fun sendNewEffect(newEffect: E) {
         coroutineScope.launch(Dispatchers.IO) {
             _effect.emit(newEffect)
+        }
+    }
+
+    private fun <T> Flow<T>.throttleFirst(periodMillis: Long): Flow<T> {
+        require(periodMillis > 0)
+        return flow {
+            var lastTime = 0L
+            collect { value ->
+                val currentTime = Clock.System.now().toEpochMilliseconds()
+                if (currentTime - lastTime >= periodMillis) {
+                    lastTime = currentTime
+                    emit(value)
+                }
+            }
         }
     }
 

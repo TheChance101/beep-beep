@@ -17,8 +17,11 @@ data class UserDto(
     @SerialName("email")
     val email: String? = null,
     @SerialName("permissions")
-    val permissions: List<PermissionDto?>? = null
-) {
+    val permissions: List<PermissionDto?>? = null,
+    @SerialName("image_url")
+    val imageUrl: String,
+
+    ) {
     @Serializable
     data class PermissionDto(
         @SerialName("id")
@@ -35,6 +38,5 @@ fun UserDto.toEntity() = User(
     username = username ?: "",
     email = email ?: "",
     permission = permissions?.map { enumValueOf(it?.permission ?: "") } ?: emptyList(),
+    imageUrl = imageUrl
 )
-
-fun List<UserDto>.toEntity() = map(UserDto::toEntity)

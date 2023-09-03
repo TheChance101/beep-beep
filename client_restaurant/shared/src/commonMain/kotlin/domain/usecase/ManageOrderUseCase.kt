@@ -2,20 +2,21 @@ package domain.usecase
 
 import domain.entity.Order
 import domain.entity.OrderState
-import domain.gateway.IFakeRemoteGateway
+import domain.gateway.remote.IOrderRemoteGateway
 import domain.utils.Constant
 import presentation.base.RequestException
 
 interface IManageOrderUseCase {
-    suspend fun getCurrentOrders(): List<Order>
+    suspend fun getCurrentOrders(restaurantId: String): List<Order>
     suspend fun updateOrderState(orderId: String, orderState: OrderState): Order
-    suspend fun getFinishedOrdersHistory(restaurantId: String): List<Order>
-    suspend fun getCanceledOrdersHistory(restaurantId: String): List<Order>
+    suspend fun getFinishedOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order>
+    suspend fun getCanceledOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order>
 }
 
-class ManageOrderUseCase(private val remoteGateWay: IFakeRemoteGateway) : IManageOrderUseCase {
-    override suspend fun getCurrentOrders(): List<Order> {
-        return remoteGateWay.getCurrentOrders()
+class ManageOrderUseCase(private val orderRemoteGateway: IOrderRemoteGateway) : IManageOrderUseCase {
+    override suspend fun getCurrentOrders(restaurantId: String): List<Order> {
+        return emptyList()
+       // return orderRemoteGateway.getCurrentOrders(restaurantId)
     }
     override suspend fun updateOrderState(orderId: String, orderState: OrderState): Order {
         val newOrderState = when (orderState) {
@@ -24,16 +25,16 @@ class ManageOrderUseCase(private val remoteGateWay: IFakeRemoteGateway) : IManag
             OrderState.CANCELED -> Constant.CANCELED_ORDER
             else -> throw RequestException("")
         }
-        return remoteGateWay.updateOrderState(orderId, newOrderState)
+        return orderRemoteGateway.updateOrderState(orderId, newOrderState)
     }
 
-    override suspend fun getFinishedOrdersHistory(restaurantId: String): List<Order> {
-        return remoteGateWay.getOrdersHistory(restaurantId)
+    override suspend fun getFinishedOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order> {
+        return orderRemoteGateway.getOrdersHistory(restaurantId,page, limit)
             .filter { it.orderState == OrderState.FINISHED }
     }
 
-    override suspend fun getCanceledOrdersHistory(restaurantId: String): List<Order> {
-        return remoteGateWay.getOrdersHistory(restaurantId)
+    override suspend fun getCanceledOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order> {
+        return orderRemoteGateway.getOrdersHistory(restaurantId,page, limit)
             .filter { it.orderState == OrderState.CANCELED }
     }
 

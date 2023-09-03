@@ -2,7 +2,7 @@ package org.thechance.api_gateway.plugins
 
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
-import org.thechance.api_gateway.data.security.TokenConfiguration
+import org.thechance.api_gateway.data.model.authenticate.TokenConfiguration
 import org.thechance.api_gateway.endpoints.cuisineRoute
 import org.thechance.api_gateway.endpoints.permissionRoutes
 import org.thechance.api_gateway.endpoints.restaurantRoutes

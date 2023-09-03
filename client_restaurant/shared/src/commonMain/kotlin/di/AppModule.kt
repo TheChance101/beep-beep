@@ -4,7 +4,7 @@ import org.koin.dsl.module
 
 fun appModule() = module {
     includes(
-        screenModule,
+        screenModelModule,
         GatewayModule,
         UseCaseModule,
         LocalStorageModule,
