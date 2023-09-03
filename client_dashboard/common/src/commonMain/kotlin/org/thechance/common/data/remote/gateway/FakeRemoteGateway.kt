@@ -1167,17 +1167,20 @@ class FakeRemoteGateway(
         page: Int,
         numberOfUsers: Int
     ): DataWrapper<User> {
-        val filteredUsers = fakeUsers.filter {
-            it.fullName.startsWith(query, true) || it.username.startsWith(query, true)
-        }.toMutableList()
-
-        if (byPermissions.isNotEmpty()) filteredUsers.retainAll { user ->
-            user.permission.any { permission -> byPermissions.contains(permission) }
+        var filteredUsers = fakeUsers.toMutableList()
+        if (query.isNotEmpty()) {
+            filteredUsers = fakeUsers.filter {
+                it.fullName.startsWith(query, true) || it.username.startsWith(query, true)
+            }.toMutableList()
         }
 
-        if (byCountries.isNotEmpty()) filteredUsers.retainAll { user ->
+        filteredUsers = if (byPermissions.isNotEmpty()) filteredUsers.filter { user ->
+            user.permission.containsAll(byPermissions) && user.permission.size == byPermissions.size
+        }.toMutableList() else filteredUsers
+
+        filteredUsers = if (byCountries.isNotEmpty()) filteredUsers.filter { user ->
             byCountries.any { it == user.country }
-        }
+        }.toMutableList() else filteredUsers
 
         val startIndex = (page - 1) * numberOfUsers
         val endIndex = startIndex + numberOfUsers
