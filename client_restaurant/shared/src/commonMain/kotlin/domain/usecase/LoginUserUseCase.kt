@@ -3,6 +3,7 @@ package domain.usecase
 import domain.gateway.local.ILocalConfigurationGateway
 import domain.gateway.remote.IIdentityRemoteGateway
 import presentation.base.InvalidPasswordException
+import presentation.base.InvalidUserNameException
 
 interface ILoginUserUseCase {
 
@@ -11,8 +12,14 @@ interface ILoginUserUseCase {
         password: String,
         isKeepMeLoggedInChecked: Boolean
     )
+
     suspend fun getKeepMeLoggedInFlag(): Boolean
 
+    suspend fun requestPermission(
+        restaurantName: String,
+        ownerEmail: String,
+        description: String
+    ): Boolean
 }
 
 class LoginUserUseCase(
@@ -34,12 +41,23 @@ class LoginUserUseCase(
     }
 
     override suspend fun getKeepMeLoggedInFlag(): Boolean {
-      return  localGateWay.getKeepMeLoggedInFlag()
+        return localGateWay.getKeepMeLoggedInFlag()
     }
+
+    override suspend fun requestPermission(
+        restaurantName: String, ownerEmail: String, description: String
+    ): Boolean {
+        return remoteGateway.createRequestPermission(
+            restaurantName,
+            ownerEmail,
+            description
+        )
+    }
+
 
     private fun validateLoginFields(username: String, password: String): Boolean {
         if (username.isEmpty()) {
-            throw InvalidPasswordException("")
+            throw InvalidUserNameException("")
         } else if (password.isEmpty()) {
             throw InvalidPasswordException("")
         } else return true
