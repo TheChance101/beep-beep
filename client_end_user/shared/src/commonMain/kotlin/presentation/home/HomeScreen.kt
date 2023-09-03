@@ -17,7 +17,7 @@ class HomeScreen : BaseScreen<HomeScreenModel, HomeScreenUiState, HomeScreenUiEf
 
     @Composable
     override fun onRender(state: HomeScreenUiState, listener: HomeScreenInteractionListener) {
-        TODO("Not yet implemented")
+
     }
 
 }

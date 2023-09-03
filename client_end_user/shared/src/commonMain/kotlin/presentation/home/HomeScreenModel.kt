@@ -45,13 +45,12 @@ class HomeScreenModel(private val cuisineUseCase: IGetCuisinesUseCase) :
     }
 
     private fun onGetCuisinesSuccess(cuisines: List<CuisineUiState>) {
-        val popularCuisines = cuisines.shuffled().take(5)
+        val popularCuisines = cuisines.shuffled().take(4)
         updateState { it.copy(popularCuisines = popularCuisines) }
     }
 
     private fun onGetCuisinesError(error: ErrorState) {
         TODO("Not yet implemented")
     }
-
 
 }
