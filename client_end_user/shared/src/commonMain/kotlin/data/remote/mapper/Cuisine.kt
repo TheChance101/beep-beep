@@ -7,7 +7,7 @@ fun CuisineDto.toCuisineEntity(): Cuisine {
     return Cuisine(
         cuisineId = id,
         cuisineName = name,
-        cuisineImageUrl = ""
+        cuisineImageUrl = "https://icons.veryicon.com/png/Holiday/Christmas%205/fast%20food.png"
     )
 }
 

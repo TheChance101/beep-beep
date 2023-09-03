@@ -2,7 +2,7 @@ package domain.gateway
 
 import domain.entity.Cuisine
 
-interface ICuisineRemoteGateway {
+interface IRestaurantRemoteGateway {
     suspend fun getCuisines(): List<Cuisine>
 
 }

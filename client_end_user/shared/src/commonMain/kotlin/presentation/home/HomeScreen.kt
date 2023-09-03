@@ -3,9 +3,15 @@ package presentation.home
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
@@ -24,7 +30,10 @@ class HomeScreen :
     }
 
     override fun onEffect(effect: HomeScreenUiEffect, navigator: Navigator) {
-        TODO("Not yet implemented")
+        when (effect) {
+            is HomeScreenUiEffect.CuisineUiEffect -> println("Cuisine id ${effect.cuisineId}")
+            else -> {}
+        }
     }
 
     @Composable
@@ -32,7 +41,7 @@ class HomeScreen :
         Column(modifier = Modifier.fillMaxSize().background(Theme.colors.background)) {
 
             Column(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 SectionHeader(
@@ -40,13 +49,20 @@ class HomeScreen :
                     title = Resources.strings.cuisineSectionTitle,
                     showViewAll = true
                 )
-                state.popularCuisines.forEach { cuisine ->
-                    CuisineCard(
-                        modifier = Modifier.padding(end = 8.dp),
-                        cuisine = cuisine,
-                        onClickCuisine = listener::onClickCuisineItem
-                    )
+                Row(
+                    modifier = Modifier.fillMaxWidth() ,
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    state.popularCuisines.forEach { cuisine ->
+                        CuisineCard(
+                            modifier = Modifier ,
+                            cuisine = cuisine,
+                            onClickCuisine = listener::onClickCuisineItem
+                        )
+                    }
                 }
+
             }
 
         }

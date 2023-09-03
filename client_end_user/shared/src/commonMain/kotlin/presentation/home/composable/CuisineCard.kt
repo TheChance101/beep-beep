@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,7 +30,7 @@ fun CuisineCard(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.clickable { onClickCuisine(cuisine.cuisineId) },
+        modifier = modifier.size(height = 92.dp , width = 76.dp).clickable { onClickCuisine(cuisine.cuisineId) },
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -37,14 +38,15 @@ fun CuisineCard(
             modifier
                 .fillMaxHeight(0.75f)
                 .fillMaxWidth()
-                .background(Theme.colors.secondary)
                 .clip(shape = RoundedCornerShape(Theme.radius.medium))
+                .background(Theme.colors.secondary),
+            contentAlignment = Alignment.Center
         ) {
             Image(
                 rememberAsyncImagePainter(cuisine.cuisineImageUrl),
                 contentDescription = "${cuisine.cuisineName} ${Resources.strings.cuisineImageDescription}",
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(0.8f)
             )
         }
         Text(
