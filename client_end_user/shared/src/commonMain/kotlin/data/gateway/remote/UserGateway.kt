@@ -15,7 +15,7 @@ import io.ktor.http.Parameters
 import io.ktor.http.isSuccess
 import io.ktor.http.parameters
 
-class UserGateway(private val client: HttpClient) : BaseGateway(), IUserGateway {
+class UserGateway(client: HttpClient) : BaseGateway(client), IUserGateway {
 
     override suspend fun createUser(
         fullName: String,
@@ -47,7 +47,7 @@ class UserGateway(private val client: HttpClient) : BaseGateway(), IUserGateway 
     }
 
     override suspend fun loginUser(username: String, password: String): Session {
-        val result = tryToExecute<ServerResponse<SessionDto>>(client) {
+        val result = tryToExecute<ServerResponse<SessionDto>>() {
             submitForm(
                 url = ("/login"),
                 formParameters = Parameters.build {
