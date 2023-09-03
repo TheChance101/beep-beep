@@ -7,8 +7,8 @@ import org.thechance.common.presentation.util.ErrorState
 data class RestaurantUiState(
     val isLoading: Boolean = false,
     val error: ErrorState = ErrorState.UnKnownError,
-    val isAddNewRestaurantDialogVisible: Boolean = false,
-    val addNewRestaurantDialogUiState: AddRestaurantDialogUiState = AddRestaurantDialogUiState(),
+    val isNewRestaurantInfoDialogVisible: Boolean = false,
+    val newRestaurantInfoUiState: NewRestaurantInfoUiState = NewRestaurantInfoUiState(),
     val restaurantFilterDropdownMenuUiState: RestaurantFilterDropdownMenuUiState = RestaurantFilterDropdownMenuUiState(),
     val restaurants: List<RestaurantDetailsUiState> = emptyList(),
     val tableHeader: List<Header> = listOf(
@@ -39,14 +39,15 @@ data class RestaurantUiState(
     )
 }
 
-data class AddRestaurantDialogUiState(
+data class NewRestaurantInfoUiState(
     val name: String = "",
     val ownerUsername: String = "",
     val phoneNumber: String = "",
     val startTime: String = "",
     val endTime: String = "",
     val location: String = "",
-    val currentLocation: String = "",
+    val lat: String = "",
+    val lng: String = "",
 )
 
 data class RestaurantFilterDropdownMenuUiState(

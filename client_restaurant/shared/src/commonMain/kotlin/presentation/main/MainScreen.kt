@@ -24,7 +24,6 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
-import presentation.composable.BpAppBar
 import presentation.composable.BpDropdownMenu
 import presentation.composable.RestaurantInformation
 import presentation.composable.modifier.noRippleEffect
@@ -57,19 +56,14 @@ class MainScreen(private val restaurantId: String) :
                 .onSizeChanged { screenSize = it }
         ) {
 
-            BpAppBar(
-                leading = {
-                    AppBarDropDownLeading(
-                        onRestaurantSelect = listener::onRestaurantClicked,
-                        onShowMenu = listener::onShowMenu,
-                        onDismissMenu = listener::onDismissMenu,
-                        restaurantName = state.selectedRestaurant.restaurantName,
-                        state = state.selectedRestaurant.isOpen,
-                        expanded = state.expanded,
-                        restaurants = state.restaurants,
-                    )
-                }
-
+            AppBarDropDownLeading(
+                onRestaurantSelect = listener::onRestaurantClicked,
+                onShowMenu = listener::onShowMenu,
+                onDismissMenu = listener::onDismissMenu,
+                restaurantName = state.selectedRestaurant.restaurantName,
+                state = state.selectedRestaurant.isOpen,
+                expanded = state.expanded,
+                restaurants = state.restaurants,
             )
 
             LazyVerticalGrid(
