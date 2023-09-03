@@ -1,15 +1,23 @@
 package presentation.home
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import cafe.adriel.voyager.core.screen.Screen
-import resources.Resources
+import cafe.adriel.voyager.navigator.Navigator
+import presentation.base.BaseScreen
 
-class HomeScreen: Screen {
+class HomeScreen : BaseScreen<HomeScreenModel, HomeScreenUiState, HomeScreenUiEffect, HomeScreenInteractionListener>() {
 
     @Composable
     override fun Content() {
-        Text(text = Resources.strings.home)
+        initScreen(getScreenModel())
+    }
+
+    override fun onEffect(effect: HomeScreenUiEffect, navigator: Navigator) {
+        TODO("Not yet implemented")
+    }
+
+    @Composable
+    override fun onRender(state: HomeScreenUiState, listener: HomeScreenInteractionListener) {
+        TODO("Not yet implemented")
     }
 
 }
