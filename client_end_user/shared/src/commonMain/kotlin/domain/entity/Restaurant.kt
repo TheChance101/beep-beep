@@ -25,8 +25,19 @@ data class Time(
     }
 }
 
-enum class PriceLevel(){
-    LOW,
-    MEDIUM,
-    HIGH
+enum class PriceLevel(val priceLevel: String) {
+    LOW("$"),
+    MEDIUM("$$"),
+    HIGH("$$$");
+
+    companion object {
+        fun getPriceLevel(priceLevel: String): PriceLevel {
+            PriceLevel.values().forEach {
+                if (it.priceLevel == priceLevel) {
+                    return it
+                }
+            }
+            throw  IllegalArgumentException("Invalid price level: $priceLevel")
+        }
+    }
 }

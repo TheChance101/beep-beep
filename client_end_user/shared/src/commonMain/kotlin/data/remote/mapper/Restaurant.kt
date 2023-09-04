@@ -6,12 +6,6 @@ import domain.entity.Restaurant
 import domain.entity.Time
 
 fun RestaurantDto.toEntity(): Restaurant {
-    val priceLevelEnum = when (priceLevel) {
-        "$" -> PriceLevel.LOW
-        "$$" -> PriceLevel.MEDIUM
-        "$$$" -> PriceLevel.HIGH
-        else -> throw IllegalArgumentException("Invalid price level: $priceLevel")
-    }
 
     val openingTimeParts = openingTime?.split(":")
     val closingTimeParts = closingTime?.split(":")
@@ -23,7 +17,7 @@ fun RestaurantDto.toEntity(): Restaurant {
         ownerUsername = ownerUsername ?: "",
         name = name ?: "",
         description = description ?: "",
-        priceLevel = priceLevelEnum,
+        priceLevel = PriceLevel.getPriceLevel(priceLevel ?: ""),
         rate = rate ?: 0.0,
         phone = phone ?: "",
         openingTime = Time(
