@@ -5,13 +5,16 @@ import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.entity.Time
 import org.thechance.common.domain.usecase.IManageLocationUseCase
 import org.thechance.common.domain.usecase.IManageRestaurantUseCase
+import org.thechance.common.domain.usecase.IValidateRestaurantUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
+import java.util.regex.Pattern
 
 
 class RestaurantScreenModel(
     private val manageRestaurant: IManageRestaurantUseCase,
-    private val handleLocation: IManageLocationUseCase
+    private val handleLocation: IManageLocationUseCase,
+    private val iValidateRestaurantUseCase: IValidateRestaurantUseCase
 ) : BaseScreenModel<RestaurantUiState, RestaurantUIEffect>(RestaurantUiState()),
     RestaurantInteractionListener {
 
@@ -200,14 +203,16 @@ class RestaurantScreenModel(
     }
 
     override fun onCancelCreateRestaurantClicked() {
-        updateState { it.copy(isNewRestaurantInfoDialogVisible = false) }
+        updateState { it.copy(isNewRestaurantInfoDialogVisible = false, newRestaurantInfoUiState = NewRestaurantInfoUiState()) }
     }
 
     override fun onRestaurantNameChange(name: String) {
         updateState {
             it.copy(
                 newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
-                    name = name
+                    name = name,
+                    nameError = ErrorWrapper("Letters only, and Longer than 2.",
+                        !iValidateRestaurantUseCase.validateRestaurantName(name)),
                 )
             )
         }
@@ -217,7 +222,9 @@ class RestaurantScreenModel(
         updateState {
             it.copy(
                 newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
-                    ownerUsername = name
+                    ownerUsername = name,
+                    userNameError = ErrorWrapper("Letters only, and Longer than 5.",
+                        !iValidateRestaurantUseCase.validateUserName(name)),
                 )
             )
         }
@@ -227,7 +234,9 @@ class RestaurantScreenModel(
         updateState {
             it.copy(
                 newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
-                    phoneNumber = number
+                    phoneNumber = number,
+                    phoneNumberError = ErrorWrapper("UnValid number format!",
+                        !iValidateRestaurantUseCase.validateNumber(number)),
                 )
             )
         }
@@ -237,7 +246,9 @@ class RestaurantScreenModel(
         updateState {
             it.copy(
                 newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
-                    startTime = hour
+                    startTime = hour,
+                    startTimeError = ErrorWrapper("write in valid format 00:00",
+                        !iValidateRestaurantUseCase.validateStartTime(hour)),
                 )
             )
         }
@@ -247,7 +258,9 @@ class RestaurantScreenModel(
         updateState {
             it.copy(
                 newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
-                    endTime = hour
+                    endTime = hour,
+                    endTimeError = ErrorWrapper("write in valid format 00:00",
+                        !iValidateRestaurantUseCase.validateEndTime(hour)),
                 )
             )
         }
@@ -257,7 +270,10 @@ class RestaurantScreenModel(
         updateState {
             it.copy(
                 newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
-                    location = location
+                    location = location,
+                    locationError = ErrorWrapper("Location can't be empty!",
+                        !iValidateRestaurantUseCase.validateLocation(location)),
+                    buttonEnabled = iValidateRestaurantUseCase.validateLocation(location)
                 )
             )
         }
