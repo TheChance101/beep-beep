@@ -876,6 +876,76 @@ class FakeRemoteGateway(
                     username = "Kamel",
                     trips = "10"
                 ),
+                TaxiDto(
+                    id = "16",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 2,
+                    seats = 4,
+                    status = 1,
+                    username = "Kamel",
+                    trips = "10"
+                ),
+                TaxiDto(
+                    id = "17",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 2,
+                    seats = 5,
+                    status = 1,
+                    username = "Kamel",
+                    trips = "10"
+                ),
+                TaxiDto(
+                    id = "18",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 2,
+                    seats = 4,
+                    status = 1,
+                    username = "Kamel",
+                    trips = "10"
+                ),
+                TaxiDto(
+                    id = "19",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 2,
+                    seats = 4,
+                    status = 1,
+                    username = "Kamel",
+                    trips = "10"
+                ),
+                TaxiDto(
+                    id = "20",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 5,
+                    seats = 5,
+                    status = 1,
+                    username = "Kamel",
+                    trips = "10"
+                ),
+                TaxiDto(
+                    id = "21",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 4,
+                    seats = 4,
+                    status = 1,
+                    username = "Kamel",
+                    trips = "10"
+                ),
+                TaxiDto(
+                    id = "22",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 5,
+                    seats = 4,
+                    status = 2,
+                    username = "Kamel",
+                    trips = "10"
+                ),
             )
         )
         restaurants.addAll(
@@ -940,22 +1010,44 @@ class FakeRemoteGateway(
 
     override suspend fun getUserData() = "asia"
 
-    override suspend fun getTaxis(page: Int, numberOfTaxis: Int): DataWrapper<Taxi> {
-        val taxis = taxis.toEntity()
+    override suspend fun getTaxis(
+        taxiFiltration: TaxiFiltration,
+        username: String?,
+        page: Int,
+        numberOfTaxis: Int
+    ): DataWrapper<Taxi> {
+        var filteredTaxis = taxis.toEntity()
+
+        username?.let { name ->
+            if (name.isNotEmpty()) {
+                filteredTaxis = filteredTaxis.filter {
+                    it.username.startsWith(name, ignoreCase = true)
+                }
+            }
+        }
+
+        if (taxiFiltration.status != null || taxiFiltration.carColor != null || taxiFiltration.seats != -1) {
+            filteredTaxis = filteredTaxis.filter {
+                it.status == taxiFiltration.status &&
+                        it.color == taxiFiltration.carColor &&
+                        it.seats == taxiFiltration.seats
+            }
+        }
+
         val startIndex = (page - 1) * numberOfTaxis
         val endIndex = startIndex + numberOfTaxis
         val numberOfPages = ceil(taxis.size / (numberOfTaxis * 1.0)).toInt()
         return try {
             DataWrapperDto(
                 totalPages = numberOfPages,
-                result = taxis.subList(startIndex, endIndex.coerceAtMost(taxis.size)),
-                totalResult = taxis.size
+                result = filteredTaxis.subList(startIndex, endIndex.coerceAtMost(taxis.size)),
+                totalResult = filteredTaxis.size
             ).toEntity()
         } catch (e: Exception) {
             DataWrapperDto(
                 totalPages = numberOfPages,
-                result = taxis,
-                totalResult = taxis.size
+                result = filteredTaxis,
+                totalResult = filteredTaxis.size
             ).toEntity()
         }
     }
@@ -1087,21 +1179,21 @@ class FakeRemoteGateway(
         page: Int,
         numberOfUsers: Int
     ): DataWrapper<User> {
-        var filteredUsers = fakeUsers.toMutableList()
+        var filteredUsers = fakeUsers
         query?.let { searchQuery ->
             if (searchQuery.isNotEmpty()) {
                 filteredUsers = fakeUsers.filter {
                     it.fullName.startsWith(searchQuery, true) || it.username.startsWith(query, true)
-                }.toMutableList()
+                }
             }
         }
         filteredUsers = if (byPermissions.isNotEmpty()) filteredUsers.filter { user ->
             user.permission.containsAll(byPermissions) && user.permission.size == byPermissions.size
-        }.toMutableList() else filteredUsers
+        } else filteredUsers
 
         filteredUsers = if (byCountries.isNotEmpty()) filteredUsers.filter { user ->
             byCountries.any { it == user.country }
-        }.toMutableList() else filteredUsers
+        } else filteredUsers
 
         val startIndex = (page - 1) * numberOfUsers
         val endIndex = startIndex + numberOfUsers
