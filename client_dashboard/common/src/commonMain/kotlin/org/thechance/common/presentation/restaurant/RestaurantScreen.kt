@@ -95,7 +95,7 @@ class RestaurantScreen :
                 modifier = Modifier.widthIn(min = 340.kms, max = 440.kms),
                 hint = Resources.Strings.searchForRestaurants,
                 onValueChange = listener::onSearchChange,
-                text = state.search,
+                text = state.searchQuery,
                 keyboardType = KeyboardType.Text,
                 trailingPainter = painterResource(Resources.Drawable.search)
             )
