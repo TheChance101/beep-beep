@@ -71,7 +71,6 @@ class LoginScreen :
                 LoginScreenContent(state, listener)
             }
         }
-
     }
 }
 
@@ -138,4 +137,3 @@ private fun LoginScreenContent(
         }
     }
 }
-
