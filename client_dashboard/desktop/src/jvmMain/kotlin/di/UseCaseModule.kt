@@ -6,11 +6,9 @@ import org.koin.dsl.module
 import org.thechance.common.domain.usecase.*
 
 val UseCaseModule = module {
-    singleOf(::SearchTaxisByUserNameUseCase) { bind<ISearchTaxisByUserNameUseCase>() }
     singleOf(::LoginUserUseCase) { bind<ILoginUserUseCase>() }
     singleOf(::ManageRestaurantUseCase) { bind<IManageRestaurantUseCase>() }
     singleOf(::ManageLocationUseCase) { bind<IManageLocationUseCase>() }
-    singleOf(::FilterTaxisUseCase) { bind<IFilterTaxisUseCase>() }
     singleOf(::GetUsersUseCase) { bind<IGetUsersUseCase>() }
     singleOf(::ThemeManagementUseCase) { bind<IThemeManagementUseCase>() }
     singleOf(::ManageTaxisUseCase) { bind<IManageTaxisUseCase>() }

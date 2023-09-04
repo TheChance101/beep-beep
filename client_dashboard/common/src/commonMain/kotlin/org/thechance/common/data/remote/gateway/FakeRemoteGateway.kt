@@ -1010,61 +1010,6 @@ class FakeRemoteGateway(
         }
     }
 
-    override suspend fun searchTaxisByUsername(
-        username: String,
-        page: Int,
-        numberOfTaxis: Int
-    ): DataWrapper<Taxi> {
-        val taxis = taxis.filter {
-            it.username?.startsWith(username, true) ?: false
-        }.toEntity()
-        val startIndex = (page - 1) * numberOfTaxis
-        val endIndex = startIndex + numberOfTaxis
-        val numberOfPages = ceil(taxis.size / (numberOfTaxis * 1.0)).toInt()
-        return try {
-            DataWrapperDto(
-                totalPages = numberOfPages,
-                result = taxis.subList(startIndex, endIndex.coerceAtMost(taxis.size)),
-                totalResult = taxis.size
-            ).toEntity()
-        } catch (e: Exception) {
-            DataWrapperDto(
-                totalPages = numberOfPages,
-                result = taxis,
-                totalResult = taxis.size
-            ).toEntity()
-        }
-    }
-
-    override suspend fun filterTaxis(
-        taxi: TaxiFiltration,
-        page: Int,
-        numberOfTaxis: Int,
-    ): DataWrapper<Taxi> {
-        val taxiDto = taxi.toDto()
-        val taxisFiltered = taxis.filter {
-            it.color == taxiDto.color && it.seats == taxiDto.seats && it.status == taxiDto.status
-        }.toEntity()
-
-        val startIndex = (page - 1) * numberOfTaxis
-        val endIndex = startIndex + numberOfTaxis
-        val numberOfPages = ceil(taxisFiltered.size / (numberOfTaxis * 1.0)).toInt()
-        return try {
-            DataWrapperDto(
-                totalPages = numberOfPages,
-                result = taxisFiltered.subList(
-                    startIndex,
-                    endIndex.coerceAtMost(taxisFiltered.size)
-                ),
-                totalResult = taxisFiltered.size
-            ).toEntity()
-        } catch (e: Exception) {
-            DataWrapperDto(
-                totalPages = numberOfPages, result = taxisFiltered, totalResult = taxisFiltered.size
-            ).toEntity()
-        }
-    }
-
     override suspend fun getPdfTaxiReport() {
         val taxiReportFile = createTaxiPDFReport()
         localGateway.saveTaxiReport(taxiReportFile)
@@ -1160,39 +1105,6 @@ class FakeRemoteGateway(
 
         val startIndex = (page - 1) * numberOfUsers
         val endIndex = startIndex + numberOfUsers
-        val numberOfPages = ceil(filteredUsers.size / (numberOfUsers * 1.0)).toInt()
-        return try {
-            DataWrapperDto(
-                totalPages = numberOfPages,
-                result = filteredUsers.subList(
-                    startIndex,
-                    endIndex.coerceAtMost(filteredUsers.size)
-                ),
-                totalResult = filteredUsers.size
-            ).toEntity()
-        } catch (e: Exception) {
-            DataWrapperDto(
-                totalPages = numberOfPages,
-                result = filteredUsers,
-                totalResult = filteredUsers.size
-            ).toEntity()
-        }
-    }
-
-    override suspend fun filterUsers(
-        permissions: List<Permission>,
-        countries: List<String>,
-        page: Int,
-        numberOfUsers: Int,
-    ): DataWrapper<User> {
-        val filteredUsers = fakeUsers.filter { user ->
-            user.permission.containsAll(permissions) && countries.any { it == user.country }
-        }
-//        val filteredUsers = fakeUsers.filter { user ->
-//            user.permission.any { permission -> permissions.any { it.name == permission.name } } && countries.any { it == user.country }
-//        }
-        val startIndex = (page - 1) * numberOfUsers
-        val endIndex = (page - 1) * numberOfUsers
         val numberOfPages = ceil(filteredUsers.size / (numberOfUsers * 1.0)).toInt()
         return try {
             DataWrapperDto(
