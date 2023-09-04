@@ -96,7 +96,6 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
 
     //endregion
 
-
     //region User
     private suspend fun createUniqueIndexIfNotExists() {
         if (!isUniqueIndexCreated()) {

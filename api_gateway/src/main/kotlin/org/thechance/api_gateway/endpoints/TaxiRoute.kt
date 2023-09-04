@@ -58,7 +58,6 @@ fun Route.taxiRoutes() {
                 respondWithResult(HttpStatusCode.OK, result)
             }
 
-
             delete("/{taxiId}") {
                 val language = extractLocalizationHeader()
                 val params = call.receiveParameters()

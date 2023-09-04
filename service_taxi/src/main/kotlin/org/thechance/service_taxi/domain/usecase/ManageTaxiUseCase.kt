@@ -28,8 +28,8 @@ class ManageTaxiUseCase(
     private val validations: IValidations,
 ) : IManageTaxiUseCase {
     override suspend fun createTaxi(taxi: Taxi): Taxi {
-        validationTaxi(taxi)
-        taxiGateway.getTaxiById(taxi.id)?.let { throw AlreadyExistException }
+        validateTaxi(taxi)
+        if (isTaxiExistedBefore(taxi)) throw AlreadyExistException
         return taxiGateway.addTaxi(taxi)
     }
 
@@ -48,7 +48,7 @@ class ManageTaxiUseCase(
     }
 
     override suspend fun editTaxi(taxiId: String,taxi: Taxi): Taxi {
-        validationTaxi(taxi)
+        validateTaxi(taxi)
         return taxiGateway.editTaxi(taxiId,taxi)
     }
 
@@ -56,7 +56,11 @@ class ManageTaxiUseCase(
         return taxiGateway.getNumberOfTaxis()
     }
 
-    private fun validationTaxi(taxi: Taxi) {
+    private suspend fun isTaxiExistedBefore(taxi: Taxi): Boolean {
+        return taxiGateway.isTaxiExistedBefore(taxi)
+    }
+
+    private fun validateTaxi(taxi: Taxi) {
         val validationErrors = mutableListOf<Int>()
 
         if (!validations.isisValidPlateNumber(taxi.plateNumber)) {
