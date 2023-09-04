@@ -10,5 +10,10 @@ data class StringResources(
     val login: String = "Login",
     val keepMeLoggedIn: String = "Keep me logged in",
     val signUpNow: String = "Sign up now",
-    val signUpDescription: String = "Don't have an account ?"
+    val signUpDescription: String = "Don't have an account ?",
+    val home: String = "Home",
+    val search: String = "Search",
+    val orders: String = "Orders",
+    val notification: String = "Notification",
+    val profile: String = "Profile",
 )
