@@ -15,8 +15,6 @@ interface TaxiInteractionListener : BaseInteractionListener, FilterMenuListener,
 }
 
 interface TaxiDialogListener {
-    fun onCancelCreateTaxiClicked()
-    fun onCreateTaxiClicked()
 
     fun onTaxiPlateNumberChange(number: String)
 
@@ -27,16 +25,16 @@ interface TaxiDialogListener {
     fun onCarColorSelected(color: CarColor)
 
     fun onSeatSelected(seats: Int)
-
+    fun onSaveClicked()
+    fun onCancelClicked()
+    fun onCreateTaxiClicked()
 }
 
 interface TaxiMenuListener {
-    fun showTaxiMenu(username: String)
+    fun showTaxiMenu(taxiId: String)
     fun hideTaxiMenu()
-    fun onDeleteTaxiClicked(taxi: TaxiDetailsUiState)
+    fun onDeleteTaxiClicked(taxi: String)
     fun onEditTaxiClicked(taxi: TaxiDetailsUiState)
-    fun onSaveEditTaxiMenu()
-    fun onCancelEditTaxiMenu()
 }
 
 interface FilterMenuListener {

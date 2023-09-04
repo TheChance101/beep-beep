@@ -79,3 +79,39 @@ object ProfileTab : Tab {
         Navigator(screen = ProfileScreen())
     }
 }
+
+@Composable
+fun rememberTabsContainer(): List<TabContainer>{
+    val images = Resources.images
+    return remember {
+        listOf(
+            TabContainer(
+                HomeTab,
+                selectedIcon = images.homeFilled,
+                unSelectedIcon = images.homeOutlined
+            ), TabContainer(
+                SearchTab,
+                selectedIcon = images.searchFilled,
+                unSelectedIcon = images.searchOutlined
+            ), TabContainer(
+                OrdersTab,
+                selectedIcon = images.ordersFilled,
+                unSelectedIcon = images.ordersOutlined
+            ), TabContainer(
+                NotificationsTab,
+                selectedIcon = images.notificationsFilled,
+                unSelectedIcon = images.notificationsOutlined
+            ), TabContainer(
+                ProfileTab,
+                selectedIcon = images.profileFilled,
+                unSelectedIcon = images.profileOutlined
+            )
+        )
+    }
+}
+
+data class TabContainer(
+    val tab: Tab,
+    val selectedIcon: String,
+    val unSelectedIcon: String,
+)

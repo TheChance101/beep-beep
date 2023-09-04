@@ -1,6 +1,13 @@
 package org.thechance.common.domain.getway
 
-import org.thechance.common.domain.entity.*
+import org.thechance.common.domain.entity.DataWrapper
+import org.thechance.common.domain.entity.NewRestaurantInfo
+import org.thechance.common.domain.entity.NewTaxiInfo
+import org.thechance.common.domain.entity.Permission
+import org.thechance.common.domain.entity.Restaurant
+import org.thechance.common.domain.entity.Taxi
+import org.thechance.common.domain.entity.TaxiFiltration
+import org.thechance.common.domain.entity.User
 
 
 interface IRemoteGateway {
@@ -18,6 +25,10 @@ interface IRemoteGateway {
 
     suspend fun createTaxi(taxi: NewTaxiInfo): Taxi
 
+    suspend fun updateTaxi(taxi: NewTaxiInfo): Taxi
+  
+    suspend fun deleteTaxi(taxiId: String): String
+  
     suspend fun searchTaxisByUsername(username: String, page: Int, numberOfTaxis: Int): DataWrapper<Taxi>
 
     suspend fun filterTaxis(taxi: TaxiFiltration, page: Int, numberOfTaxis: Int): DataWrapper<Taxi>
@@ -53,5 +64,7 @@ interface IRemoteGateway {
     ): DataWrapper<User>
 
     suspend fun loginUser(username: String, password: String): Pair<String, String>
+
+    suspend fun deleteRestaurants(restaurant: Restaurant): Restaurant
 
 }
