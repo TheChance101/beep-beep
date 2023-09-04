@@ -4,60 +4,43 @@ import kotlinx.coroutines.Job
 import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Taxi
-import org.thechance.common.domain.usecase.IFilterTaxisUseCase
 import org.thechance.common.domain.usecase.IManageTaxisUseCase
-import org.thechance.common.domain.usecase.ISearchTaxisByUserNameUseCase
 import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
 class TaxiScreenModel(
     private val manageTaxis: IManageTaxisUseCase,
-    private val findTaxisByUsername: ISearchTaxisByUserNameUseCase,
-    private val filterTaxi: IFilterTaxisUseCase,
 ) : BaseScreenModel<TaxiUiState, TaxiUiEffect>(TaxiUiState()), TaxiInteractionListener {
 
     private var searchJob: Job? = null
 
     init {
-        getDummyTaxiData()
+        getTaxis()
     }
 
     override fun onSearchInputChange(searchQuery: String) {
         updateState { it.copy(searchQuery = searchQuery) }
         searchJob?.cancel()
-        searchJob = launchDelayed(300L) { findTaxisByUsername(searchQuery) }
+        searchJob = launchDelayed(300L) { getTaxis() }
     }
 
-    private fun getDummyTaxiData() {
+    private fun getTaxis() {
         tryToExecute(
-            { manageTaxis.getTaxis(state.value.currentPage, state.value.specifiedTaxis) },
+            {
+                manageTaxis.getTaxis(
+                    state.value.searchQuery.trim(),
+                    state.value.taxiFilterUiState.toEntity(),
+                    state.value.currentPage,
+                    state.value.specifiedTaxis
+                )
+            },
             ::onGetTaxisSuccessfully, ::onError
         )
     }
 
     private fun onGetTaxisSuccessfully(taxis: DataWrapper<Taxi>) {
         updateState { it.copy(pageInfo = taxis.toUiState(), isLoading = false) }
-    }
-
-    private fun findTaxisByUsername(username: String) {
-        tryToExecute(
-            {
-                findTaxisByUsername.searchTaxisByUsername(
-                    username,
-                    state.value.currentPage,
-                    state.value.specifiedTaxis
-                )
-            },
-            ::onFindTaxiSuccessfully,
-            ::onError
-        )
-    }
-
-    private fun onFindTaxiSuccessfully(taxis: DataWrapper<Taxi>) {
-        updateState {
-            it.copy(pageInfo = taxis.toUiState(), isLoading = false)
-        }
     }
 
     private fun onError(error: ErrorState) {
@@ -88,12 +71,12 @@ class TaxiScreenModel(
 
     override fun onItemsIndicatorChange(itemPerPage: Int) {
         updateState { it.copy(specifiedTaxis = itemPerPage) }
-        getDummyTaxiData()
+        getTaxis()
     }
 
     override fun onPageClick(pageNumber: Int) {
         updateState { it.copy(currentPage = pageNumber) }
-        getDummyTaxiData()
+        getTaxis()
     }
 
     //endregion
@@ -163,7 +146,7 @@ class TaxiScreenModel(
         val newTaxi = mutableState.value.taxis.toMutableList().apply { add(taxi.toUiState()) }
         updateState { it.copy(taxis = newTaxi, isLoading = false) }
         clearAddNewTaxiDialogState()
-        getDummyTaxiData()
+        getTaxis()
     }
 
     override fun onAddNewTaxiClicked() {
@@ -219,22 +202,25 @@ class TaxiScreenModel(
         updateState {
             it.copy(
                 isFilterDropdownMenuExpanded = false,
-                taxiFilterUiState = it.taxiFilterUiState.copy(
-                    carColor = CarColor.WHITE, seats = 1, status = TaxiStatus.ONLINE
+                taxiFilterUiState = TaxiFilterUiState(
+                    carColor = null,
+                    seats = -1,
+                    status = null
                 )
             )
         }
-        getDummyTaxiData()
+        getTaxis()
     }
 
     override fun onSaveFilterClicked() {
         updateState { it.copy(isFilterDropdownMenuExpanded = false) }
         tryToExecute(
             {
-                filterTaxi(
-                    taxi = mutableState.value.taxiFilterUiState.toEntity(),
+                manageTaxis.getTaxis(
+                    username = state.value.searchQuery,
+                    taxiFiltration = mutableState.value.taxiFilterUiState.toEntity(),
                     page = mutableState.value.currentPage,
-                    numberOfTaxis = mutableState.value.specifiedTaxis
+                    numberOfUsers = mutableState.value.specifiedTaxis
                 )
             },
             ::onFilterTaxiSuccessfully,
