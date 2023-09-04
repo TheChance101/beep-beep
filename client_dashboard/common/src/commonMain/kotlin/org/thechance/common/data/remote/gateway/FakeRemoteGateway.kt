@@ -1283,7 +1283,7 @@ class FakeRemoteGateway(
 
     override suspend fun createCuisine(cuisineName: String): String? {
         return if (cuisineName !in cuisines && cuisineName.isNotBlank()) {
-            cuisines.add(cuisineName)
+            cuisines.add(0, cuisineName)
             cuisineName
         } else null
     }
