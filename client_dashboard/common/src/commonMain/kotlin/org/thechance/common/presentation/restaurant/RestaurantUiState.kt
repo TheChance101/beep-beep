@@ -22,7 +22,7 @@ data class RestaurantUiState(
         Header("", 1f),
     ),
     val numberOfRestaurants: Int = 0,
-    val search: String = "",
+    val searchQuery: String = "",
     val maxPageCount: Int = 1,
     val selectedPageNumber: Int = 1,
     val numberOfRestaurantsInPage: Int = 10,
