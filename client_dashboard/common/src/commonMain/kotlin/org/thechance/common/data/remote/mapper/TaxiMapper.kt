@@ -21,7 +21,7 @@ fun TaxiDto.toEntity() = Taxi(
 
 fun NewTaxiInfo.toDto(): TaxiDto {
     return TaxiDto(
-        id = null,
+        id = id,
         plateNumber = plateNumber,
         color = setCarColor(selectedCarColor),
         type = carModel,
@@ -39,7 +39,6 @@ fun TaxiFiltration.toDto(): TaxiFiltrationDto {
         status = setTaxiStatus(status),
     )
 }
-
 
 fun List<TaxiDto>.toEntity() = map(TaxiDto::toEntity)
 

@@ -21,15 +21,9 @@ fun ArrowIcon(
     Icon(
         painter = painter,
         contentDescription = contentDescription,
-        modifier = Modifier.size(24.kms).onClick {
-            if (enable) {
-                onClick()
-            }
-        },
-        tint = if (!enable) {
-            Theme.colors.contentTertiary
-        } else {
-            Theme.colors.onPrimary
-        }
+        modifier = Modifier
+            .size(24.kms)
+            .onClick(enabled = enable) { onClick() },
+        tint = if (enable) Theme.colors.contentPrimary else Theme.colors.contentTertiary.copy(alpha = 0.35f)
     )
 }
