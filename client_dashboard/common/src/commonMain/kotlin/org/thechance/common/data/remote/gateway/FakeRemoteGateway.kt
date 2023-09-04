@@ -1213,7 +1213,7 @@ class FakeRemoteGateway(
             }
         }
         filteredUsers = if (byPermissions.isNotEmpty()) filteredUsers.filter { user ->
-            user.permission.containsAll(byPermissions) && user.permission.size == byPermissions.size
+            user.permission.containsAll(byPermissions)
         } else filteredUsers
 
         filteredUsers = if (byCountries.isNotEmpty()) filteredUsers.filter { user ->

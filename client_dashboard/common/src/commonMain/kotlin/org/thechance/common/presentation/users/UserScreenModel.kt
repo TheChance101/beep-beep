@@ -71,7 +71,6 @@ class UserScreenModel(
         searchJob = launchDelayed(300L) { getUsers() }
     }
 
-
     private fun onSearchUsersSuccessfully(users: DataWrapper<User>) {
         updateState { it.copy(pageInfo = users.toUiState(), isLoading = false) }
     }
@@ -94,15 +93,11 @@ class UserScreenModel(
 
     // region User Menu
     override fun showEditUserMenu(username: String) {
-        updateState {
-            it.copy(userMenu = username)
-        }
+        updateState { it.copy(userMenu = username) }
     }
 
     override fun hideEditUserMenu() {
-        updateState {
-            it.copy(userMenu = "")
-        }
+        updateState { it.copy(userMenu = "") }
     }
 
     override fun onEditUserMenuItemClicked(user: UserScreenUiState.UserUiState) {
@@ -114,7 +109,8 @@ class UserScreenModel(
                     permissions = user.permissions
                 )
             )
-        }.also { hideEditUserMenu() }
+        }
+        hideEditUserMenu()
     }
 
     override fun onDeleteUserMenuItemClicked(user: UserScreenUiState.UserUiState) {
@@ -175,7 +171,7 @@ class UserScreenModel(
     // region Pagination
     override fun onItemsIndicatorChange(itemPerPage: Int) {
         updateState { it.copy(specifiedUsers = itemPerPage) }
-            .also { getUsers() }
+        getUsers()
     }
 
     override fun onPageClick(pageNumber: Int) {

@@ -21,6 +21,10 @@ class TaxiScreenModel(
 
     override fun onSearchInputChange(searchQuery: String) {
         updateState { it.copy(searchQuery = searchQuery) }
+        launchSearchJob()
+    }
+
+    private fun launchSearchJob() {
         searchJob?.cancel()
         searchJob = launchDelayed(300L) { getTaxis() }
     }
