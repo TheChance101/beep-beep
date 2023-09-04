@@ -5,10 +5,10 @@ import domain.gateway.IFakeRemoteGateway
 
 
 interface IGetNewOffersUserCase {
-    suspend fun getNewOffers(limit : Int = OFFER_LIMIT): List<Offer>
+    suspend fun getNewOffers(limit : Int = DEFAULT_OFFER_LIMIT): List<Offer>
 
     private companion object {
-        const val OFFER_LIMIT = 3
+        const val DEFAULT_OFFER_LIMIT = 3
     }
 }
 
