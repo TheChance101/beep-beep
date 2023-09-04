@@ -9,10 +9,11 @@ import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,13 +41,12 @@ fun CuisineCard(
     val isPressed by interactionSource.collectIsPressedAsState()
     val animatedFloat by animateFloatAsState(targetValue = if (isPressed) 1.2f else 1f)
     Column(
-        modifier = modifier.size(height = 92.dp, width = 76.dp),
+        modifier = modifier.width(76.dp).wrapContentHeight(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Box(
             modifier
-                .fillMaxHeight(0.75f)
                 .fillMaxWidth()
                 .clip(shape = RoundedCornerShape(Theme.radius.medium))
                 .background(Theme.colors.secondary)
@@ -54,14 +54,14 @@ fun CuisineCard(
                     interactionSource,
                     indication = null,
                     onClick = { onClickCuisine(cuisine.cuisineId) }
-                ),
+                ).padding(8.dp),
             contentAlignment = Alignment.Center
         ) {
             Image(
                 rememberAsyncImagePainter(cuisine.cuisineImageUrl),
                 contentDescription = "${cuisine.cuisineName} ${Resources.strings.cuisineImageDescription}",
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize(0.8f).scale(animatedFloat)
+                modifier = Modifier.size(48.dp).scale(animatedFloat)
             )
         }
         Text(
