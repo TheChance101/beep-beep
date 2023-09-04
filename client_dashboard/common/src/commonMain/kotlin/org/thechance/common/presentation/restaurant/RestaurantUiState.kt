@@ -62,5 +62,4 @@ data class RestaurantAddCuisineDialogUiState(
     val isVisible: Boolean = false,
     val cuisineName: String = "",
     val cuisines: List<String> = emptyList(),
-    val cuisinesSize: Int = 0
 )
