@@ -5,16 +5,15 @@ import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
-import io.ktor.server.config.*
-import org.thechance.api_gateway.data.model.TokenType
+import org.thechance.api_gateway.data.model.authenticate.TokenType
 import io.ktor.server.response.*
 
 fun Application.configureJWTAuthentication() {
 
-    val jwtSecret = ApplicationConfig("jwt.secret").toString()
-    val jwtDomain = ApplicationConfig("jwt.issuer").toString()
-    val jwtAudience = ApplicationConfig("jwt.audience").toString()
-    val jwtRealm = ApplicationConfig("jwt.realm").toString()
+    val jwtSecret = System.getenv("jwt_secret").toString()
+    val jwtDomain = System.getenv("jwt_issuer").toString()
+    val jwtAudience = System.getenv("jwt_audience").toString()
+    val jwtRealm = System.getenv("jwt_realm").toString()
 
     authentication {
         jwt("auth-jwt") {

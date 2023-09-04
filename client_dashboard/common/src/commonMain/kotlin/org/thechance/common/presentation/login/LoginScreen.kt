@@ -28,7 +28,12 @@ import org.thechance.common.presentation.util.kms
 
 
 class LoginScreen :
-    BaseScreen<LoginScreenScreenModel, LoginUIEffect, LoginUIState, LoginScreenInteractionListener>() {
+    BaseScreen<LoginScreenModel, LoginUIEffect, LoginUIState, LoginInteractionListener>() {
+
+    @Composable
+    override fun Content() {
+        Init(getScreenModel())
+    }
 
     override fun onEffect(effect: LoginUIEffect, navigator: Navigator) {
         when (effect) {
@@ -44,7 +49,7 @@ class LoginScreen :
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun OnRender(state: LoginUIState, listener: LoginScreenInteractionListener) {
+    override fun OnRender(state: LoginUIState, listener: LoginInteractionListener) {
         Row(
             Modifier.background(Theme.colors.surface).fillMaxSize()
                 .padding(
@@ -121,10 +126,5 @@ class LoginScreen :
                 }
             }
         }
-    }
-
-    @Composable
-    override fun Content() {
-        Init(getScreenModel())
     }
 }

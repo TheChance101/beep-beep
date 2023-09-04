@@ -13,7 +13,6 @@
         }
 
 
-
     </style>
 </head>
 <body>
@@ -29,14 +28,16 @@ var svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="49"
                          '</g>' +
                          '</svg>';
 
-        function initMap() {
+    var minZoomLevel = 9;
+    var maxZoomLevel = 19;
+        function initMap(lat, lng) {
                     var userLocation = {
-                        lat: 30.044420,
-                        lng: 31.235712
+                        lat: lat,
+                        lng: lng
                     };
                 var map = new google.maps.Map(document.getElementById('map'), {
                 center: userLocation,
-                zoom: 12,
+                zoom: 15,
                 mapId:'cb5e6246d7cd13cf',
             });
                 var marker = new google.maps.Marker({
@@ -55,26 +56,24 @@ var svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="49"
                     });
                      map.addListener('click', function(event) {
                 marker.setPosition(event.latLng);
-                   alert(event.latLng);
+                   alert(marker.position.toString());
                     infoWindow.setContent(marker.position.toString())
                      infoWindow.open(map, marker);
             });
               marker.addListener('dragend', function(event) {
-                  alert(marker.position);
+                  alert(marker.position.toString());
                   infoWindow.setContent(marker.position.toString());
                     });
                     marker.addListener('click', function() {
                         infoWindow.setContent(marker.position.toString());
                         infoWindow.open(map, marker);
-                        alert(marker.position);
+                        alert(marker.position.toString());
                     });
         }
 
 
-
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1kFbtDfzI3bXkfkCEjb0LKtC8PTz-YZU&callback=initMap"
-        defer
-></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1kFbtDfzI3bXkfkCEjb0LKtC8PTz-YZU"
+        async defer></script>
 </body>
 </html>

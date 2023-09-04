@@ -12,10 +12,3 @@ data class TaxiDto(
     val isAvailable: Boolean? = null,
     val seats: Int? = null,
 )
-
-
-@Serializable
-data class TaxisManagementDto(
-    val taxis : List<TaxiDto>,
-    val total : Long
-)

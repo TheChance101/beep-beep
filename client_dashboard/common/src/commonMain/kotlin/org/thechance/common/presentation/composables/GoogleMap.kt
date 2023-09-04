@@ -10,17 +10,19 @@ import org.thechance.common.presentation.util.kms
 @Composable
 fun GoogleMap(
     modifier: Modifier = Modifier,
-    currentLocation: String,
-    onGetAddress: (String) -> Unit,
+    lat: String,
+    lng: String,
+    onGetLocation: (String) -> Unit,
 ) {
     Box(
         modifier.size(height = 464.kms, width = 760.kms)
     ) {
         SwingPanel(
             factory = {
-                webViewFromContent(
-                    currentLocation = currentLocation,
-                    onGetAddress = onGetAddress
+                mapFromWebView(
+                    lat = lat,
+                    lng = lng,
+                    onGetLocation = onGetLocation
                 )
             },
         )

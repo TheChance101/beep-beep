@@ -8,13 +8,5 @@ data class User(
     val email:String,
     val country:String,
     val permission:List<Permission>,
-){
-    enum class Permission {
-        RESTAURANT,
-        DRIVER,
-        END_USER,
-        SUPPORT,
-        DELIVERY,
-        ADMIN,
-    }
-}
+    val imageUrl: String,
+)

@@ -15,7 +15,6 @@ import domain.entity.Order
 import domain.entity.Restaurant
 import domain.gateway.IFakeRemoteGateway
 import presentation.base.InvalidPasswordException
-import presentation.base.InvalidUserNameException
 import presentation.base.RequestException
 
 class FakeRemoteGateWay : IFakeRemoteGateway {
@@ -576,7 +575,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
 
     override suspend fun loginUser(userName: String, password: String): Pair<String, String> {
         if (userName != "theChance") {
-            throw InvalidUserNameException("Invalid UserName")
+            throw InvalidPasswordException("Invalid UserName")
         }
         if (password != "theChance23") {
             throw InvalidPasswordException("Invalid Password")

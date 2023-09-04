@@ -60,7 +60,7 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
     }
 
     override suspend fun getNumberOfTaxis(): Long {
-        return container.taxiCollection.find(TaxiCollection::isDeleted ne true).toList().size.toLong()
+        return container.taxiCollection.countDocuments(TaxiCollection::isDeleted ne true)
     }
     //endregion
 
@@ -156,6 +156,24 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
             ),
             update = Updates.set(TripCollection::rate.name, rate)
         )?.toEntity()
+    }
+
+    override suspend fun getNumberOfTripsByDriverId(id: String): Long {
+        return container.tripCollection.countDocuments(
+            and(
+                TripCollection::isDeleted ne true,
+                TripCollection::driverId eq ObjectId(id)
+            )
+        )
+    }
+
+    override suspend fun getNumberOfTripsByClientId(id: String): Long {
+        return container.tripCollection.countDocuments(
+            and(
+                TripCollection::isDeleted ne true,
+                TripCollection::clientId eq ObjectId(id)
+            )
+        )
     }
     //endregion
 }

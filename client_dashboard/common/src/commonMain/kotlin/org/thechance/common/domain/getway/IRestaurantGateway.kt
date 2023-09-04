@@ -1,6 +1,6 @@
 package org.thechance.common.domain.getway
 
-import org.thechance.common.domain.entity.AddRestaurant
+import org.thechance.common.domain.entity.NewRestaurantInfo
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Restaurant
 
@@ -17,7 +17,10 @@ interface IRestaurantGateway {
         priceLevel: Int
     ): DataWrapper<Restaurant>
 
-    suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant
+    suspend fun createRestaurant(restaurant: NewRestaurantInfo): Restaurant
+
+    suspend fun deleteRestaurants(restaurant: Restaurant): Restaurant
+
     suspend fun getCuisines(): List<String>
 
     suspend fun createCuisine(cuisineName: String): String?

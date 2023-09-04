@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 import com.beepbeep.designSystem.ui.theme.Theme.colors
-import com.beepbeep.designSystem.ui.theme.Theme.dimens
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.composable.modifier.noRippleEffect
@@ -20,7 +19,7 @@ import resources.Resources.images
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 @Composable
 fun BpAppBar(
-    onNavigateUp: () -> Unit,
+    onNavigateUp: (() -> Unit)? = null,
     title: String = "",
     modifier: Modifier = Modifier,
     isBackIconVisible: Boolean = true,
@@ -40,7 +39,7 @@ fun BpAppBar(
                 Icon(
                     painter = painterResource(images.arrowLeft),
                     contentDescription = "",
-                    modifier = Modifier.noRippleEffect { onNavigateUp() }
+                    modifier = Modifier.noRippleEffect { onNavigateUp?.invoke() }
                         .padding(start = 16.dp, end = 16.dp),
                     tint = colors.contentSecondary,
                 )
