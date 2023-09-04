@@ -16,4 +16,14 @@ data class StringResources(
     val orders: String = "Orders",
     val notification: String = "Notification",
     val profile: String = "Profile",
+    val cuisineImageDescription: String = "image",
+    val viewAll: String = "View all",
+    val seeAllDescription: String = "view all icon",
+    val cuisineSectionTitle: String = "Cuisine",
+    val haveQuestions: String = "Have Questions ?",
+    val connectWithSupport: String = "Connect with Support",
+    val connectWithSupportIconDescription: String = "connect with support text icon",
+    val orderCardImageDescription: String = "Order card image",
+    val orderTaxiButtonTitle: String = "Order taxi",
+    val orderFoodButtonTitle: String = "Order food"
 )

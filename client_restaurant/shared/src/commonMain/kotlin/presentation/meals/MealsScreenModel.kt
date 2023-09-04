@@ -22,6 +22,7 @@ class MealsScreenModel(
 
     init {
         getCuisine()
+        getMeals("64f372095fecc11e6d917656")
     }
 
     private fun getCuisine() {
@@ -34,19 +35,15 @@ class MealsScreenModel(
         )
     }
 
-    private fun getMeals(cuisineId: String) {
+    private fun getMeals(restaurantId: String) {
         updateState { it.copy(isLoading = true) }
-//        tryToExecute(
-//            function = {
-//                if (cuisineId.isEmpty()) {
-//                    mangeMeal.getAllMeals("",1,10)
-//                } else {
-//                    mangeMeal.getMealById("")
-//                }
-//            },
-//            ::onGetMealSuccessfully,
-//            ::onError
-    //    )
+        tryToExecute(
+            function = {
+                  mangeMeal.getAllMeals(restaurantId,1,10)
+            },
+            ::onGetMealSuccessfully,
+            ::onError
+        )
     }
 
     private fun onGetCuisineSuccessfully(cuisines: List<Cuisine>) {

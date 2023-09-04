@@ -15,6 +15,13 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
 
+    init {
+        viewModelScope.launch {
+            if (loginUserUseCase.getKeepMeLoggedInFlag()) {
+                sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
+            }
+        }
+    }
     override fun onUserNameChanged(userName: String) {
         updateState { it.copy(userName = userName) }
     }
@@ -71,8 +78,6 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
                         isPasswordError = true,
                     )
                 }
-
-
             }
 
             is ErrorState.UserNotExist -> {
@@ -117,11 +122,39 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
         }
     }
 
-    override fun onSubmitClicked() {
+    override fun onSubmitClicked(
+        restaurantName: String,
+        ownerEmail: String,
+        description: String
+    ) {
+        tryToExecute(
+            {
+                loginUserUseCase.requestPermission(
+                    restaurantName,
+                    ownerEmail,
+                    description
+                )
+            },
+            { onAskForPermissionSuccess() },
+            ::onAskForPermissionFailed
+        )
+    }
+
+    private fun onAskForPermissionSuccess() {
         state.value.sheetState.dismiss()
         coroutineScope.launch {
             delayAndChangePermissionSheetState(false)
         }
+        // todo send effect for that to show toast or something
+    }
+
+
+    private fun onAskForPermissionFailed(error: ErrorState) {
+        state.value.sheetState.dismiss()
+        coroutineScope.launch {
+            delayAndChangePermissionSheetState(false)
+        }
+        // todo send effect for that to show toast or something
     }
 
     override fun onCancelClicked() {
