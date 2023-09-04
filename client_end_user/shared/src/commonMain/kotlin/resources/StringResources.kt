@@ -27,5 +27,7 @@ data class StringResources(
     val orderTaxiButtonTitle: String = "Order taxi",
     val orderFoodButtonTitle: String = "Order food",
     val off: String = "Off",
-    val favoriteRestaurants: String = "Favorite restaurants"
+    val favoriteRestaurants: String = "Favorite restaurants",
+    val eidSpecials: String = "Eid specials",
+    val freeDelivery: String = "Free delivery"
 )
