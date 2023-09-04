@@ -1,5 +1,6 @@
 package org.thechance.common.presentation.restaurant
 
+import kotlinx.coroutines.Job
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.entity.Time
