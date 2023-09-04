@@ -35,14 +35,17 @@ class ManageTaxisUseCase(
         return remoteGateway.getPdfTaxiReport()
     }
 
-    override suspend fun getTaxis(page:Int,numberOfUsers: Int): DataWrapper<Taxi> {
-        return remoteGateway.getTaxis(page,numberOfUsers)
     override suspend fun getTaxis(
         username: String?,
         taxiFiltration: TaxiFiltration,
         page: Int,
         numberOfUsers: Int
     ): DataWrapper<Taxi> {
+        return remoteGateway.getTaxis(
+            page = page,
+            numberOfTaxis = numberOfUsers,
+            username = username,
+            taxiFiltration = taxiFiltration
         )
     }
 
