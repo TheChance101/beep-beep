@@ -58,7 +58,13 @@ fun PermissionBottomSheetContent(
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
         )
         BpButton(
-            onClick = listener::onSubmitClicked,
+            onClick = {
+                listener.onSubmitClicked(
+                    state.restaurantName,
+                    state.ownerEmail,
+                    state.description
+                )
+            },
             title = Resources.strings.submit,
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
         )

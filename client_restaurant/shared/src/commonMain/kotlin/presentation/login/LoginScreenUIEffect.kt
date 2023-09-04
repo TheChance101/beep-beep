@@ -1,7 +1,7 @@
 package presentation.login
 
-sealed class LoginScreenUIEffect {
-    data class LoginEffect(val ownerId: String) : LoginScreenUIEffect()
-    object LoginUIFailed : LoginScreenUIEffect()
+sealed interface LoginScreenUIEffect {
+    data class LoginEffect(val ownerId: String) : LoginScreenUIEffect
+    data object LoginUIFailed : LoginScreenUIEffect
 
 }
