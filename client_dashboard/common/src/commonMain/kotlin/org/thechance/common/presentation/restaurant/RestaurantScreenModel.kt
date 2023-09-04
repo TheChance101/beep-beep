@@ -1,18 +1,19 @@
 package org.thechance.common.presentation.restaurant
 
-import kotlinx.coroutines.Job
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.entity.Time
 import org.thechance.common.domain.usecase.IManageLocationUseCase
 import org.thechance.common.domain.usecase.IManageRestaurantUseCase
+import org.thechance.common.domain.usecase.IMangeCuisinesUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
 
 class RestaurantScreenModel(
     private val manageRestaurant: IManageRestaurantUseCase,
-    private val handleLocation: IManageLocationUseCase
+    private val handleLocation: IManageLocationUseCase,
+    private val mangeCuisines: IMangeCuisinesUseCase,
 ) : BaseScreenModel<RestaurantUiState, RestaurantUIEffect>(RestaurantUiState()),
     RestaurantInteractionListener {
 
@@ -20,6 +21,7 @@ class RestaurantScreenModel(
 
     init {
         getRestaurants()
+        getCuisines()
         if (state.value.newRestaurantInfoUiState.lat.isEmpty())
             getCurrentLocation()
     }
@@ -54,10 +56,27 @@ class RestaurantScreenModel(
         }
     }
 
+    private fun getCuisines() {
+        tryToExecute(
+            mangeCuisines::getCuisines,
+            ::onGetCuisinesSuccessfully,
+            ::onError
+        )
+    }
+
+    private fun onGetCuisinesSuccessfully(cuisines: List<String>) {
+        updateState {
+            it.copy(
+                restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
+                    cuisines = cuisines,
+                )
+            )
+        }
+    }
+
     private fun onError(error: ErrorState) {
         updateState { it.copy(error = error, isLoading = false) }
     }
-
 
     override fun onSaveFilterRestaurantsClicked(rating: Double, priceLevel: Int) {
         updateState {
@@ -257,4 +276,63 @@ class RestaurantScreenModel(
         hideEditRestaurantMenu()
     }
 
+
+
+    // region Cuisine Dialog
+    override fun onClickAddCuisine() {
+        updateState {
+            it.copy(
+                restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
+                    isVisible = true
+                )
+            )
+        }
+    }
+
+    override fun onCloseAddCuisineDialog() {
+        updateState {
+            it.copy(
+                restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
+                    isVisible = false,
+                    cuisineName = ""
+                )
+            )
+        }
+    }
+
+    override fun onClickCreateCuisine() {
+        tryToExecute(
+            { mangeCuisines.createCuisine(state.value.restaurantAddCuisineDialogUiState.cuisineName) },
+            ::onCreateCuisinesSuccessfully,
+            ::onError
+        )
+    }
+
+    private fun onCreateCuisinesSuccessfully(cuisineName: String?) {
+        getCuisines()
+    }
+
+    override fun onClickDeleteCuisine(cuisineName: String) {
+        tryToExecute(
+            { mangeCuisines.deleteCuisine(cuisineName) },
+            ::onDeleteCuisinesSuccessfully,
+            ::onError
+        )
+    }
+
+    private fun onDeleteCuisinesSuccessfully(cuisineName: String) {
+        getCuisines()
+    }
+
+    override fun onChangeCuisineName(cuisineName: String) {
+        updateState {
+            it.copy(
+                restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
+                    cuisineName = cuisineName
+                )
+            )
+        }
+    }
+
+    // endregion
 }

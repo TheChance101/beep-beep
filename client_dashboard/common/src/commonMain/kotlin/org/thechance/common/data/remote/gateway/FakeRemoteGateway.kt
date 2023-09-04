@@ -24,6 +24,7 @@ class FakeRemoteGateway(
 
     private val restaurants = mutableListOf<RestaurantDto>()
     private val taxis = mutableListOf<TaxiDto>()
+    private val cuisines = mutableListOf<String>()
     private val fakeUsers = listOf(
         UserDto(
             id = "c4425a0e-9f0a-4df1-bcc1-6dd96322a990",
@@ -1006,6 +1007,30 @@ class FakeRemoteGateway(
                 ),
             )
         )
+        cuisines.addAll(
+            listOf(
+                "Angolan cuisine",
+                "Cameroonian cuisine",
+                "Chadian cuisine",
+                "Congolese cuisine",
+                "Centrafrican cuisine",
+                "Equatorial Guinea cuisine",
+                "Gabonese cuisine",
+                "Santomean cuisine",
+                "Burundian cuisine",
+                "Djiboutian cuisine",
+                "Eritrean cuisine",
+                "Ethiopian cuisine",
+                "Kenyan cuisine",
+                "Maasai cuisine",
+                "Rwandan cuisine",
+                "Somali cuisine",
+                "South Sudanese cuisine",
+                "Tanzanian cuisine",
+                "Zanzibari cuisine",
+                "Ugandan cuisine",
+            )
+        )
     }
 
     override suspend fun getUserData() = "asia"
@@ -1235,6 +1260,22 @@ class FakeRemoteGateway(
         return restaurant
     }
 
+    override suspend fun getCuisines(): List<String> {
+        return cuisines
+    }
+
+    override suspend fun createCuisine(cuisineName: String): String? {
+        return if (cuisineName !in cuisines && cuisineName.isNotBlank()) {
+            cuisines.add(0, cuisineName)
+            cuisineName
+        } else null
+    }
+
+    override suspend fun deleteCuisine(cuisineName: String): String {
+        cuisines.remove(cuisineName)
+        return cuisineName
+    }
+
     private fun createTaxiPDFReport(): File {
         val title = "Taxi Details Report"
         val columnNames = listOf(
@@ -1377,8 +1418,7 @@ class FakeRemoteGateway(
         contentStream.beginText()
         val dateTimeWidth = PDType1Font.HELVETICA.getStringWidth(dateTime) / 1000 * 12f
         val pageMidX = pageWidth / 2 // Place the text in the center of the page
-        val dateTimeX =
-            pageMidX - dateTimeWidth / 2 // Place the text in the center horizontally
+        val dateTimeX = pageMidX - dateTimeWidth / 2 // Place the text in the center horizontally
         val dateTimeTopMargin = 10f // Add space between date/time and title
         val dateTimeY = titleY - 20f - dateTimeTopMargin // Adjust the value to add more space
         contentStream.newLineAtOffset(dateTimeX, dateTimeY)
