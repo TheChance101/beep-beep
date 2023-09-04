@@ -31,13 +31,13 @@ enum class PriceLevel(val priceLevel: String) {
     HIGH("$$$");
 
     companion object {
-        fun getPriceLevel(priceLevel: String): PriceLevel {
+        fun getPriceLevel(priceLevel: String): PriceLevel? {
             PriceLevel.values().forEach {
                 if (it.priceLevel == priceLevel) {
                     return it
                 }
             }
-            throw  IllegalArgumentException("Invalid price level: $priceLevel")
+            return null
         }
     }
 }

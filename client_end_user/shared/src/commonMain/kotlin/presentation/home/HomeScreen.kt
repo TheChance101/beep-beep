@@ -10,12 +10,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
+import presentation.composable.ItemSection
 import presentation.composable.SectionHeader
 import presentation.home.composable.ChatSupportCard
 import presentation.home.composable.CuisineCard
@@ -45,49 +47,62 @@ class HomeScreen :
     override fun onRender(state: HomeScreenUiState, listener: HomeScreenInteractionListener) {
         Column(modifier = Modifier.fillMaxSize().background(Theme.colors.background)) {
 
-            Column(
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+
+            ChatSupportCard(
+                onClick = listener::onClickChatSupport,
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
+            )
+
+            Row(
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-
-                ChatSupportCard(onClick = listener::onClickChatSupport)
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    OrderCard(
-                        onClick = listener::onClickOrderTaxi,
-                        buttonTitle = Resources.strings.orderTaxiButtonTitle,
-                        painter = painterResource(Resources.images.orderTaxi)
-                    )
-                    OrderCard(
-                        onClick = listener::onClickOrderFood,
-                        buttonTitle = Resources.strings.orderFoodButtonTitle,
-                        painter = painterResource(Resources.images.orderImage),
-                        color = Theme.colors.orange
-                    )
-                }
-
-                SectionHeader(
-                    onClickViewAll = listener::onclickSeeAllCuisines,
-                    title = Resources.strings.cuisineSectionTitle,
-                    showViewAll = true
+                OrderCard(
+                    onClick = listener::onClickOrderTaxi,
+                    buttonTitle = Resources.strings.orderTaxiButtonTitle,
+                    painter = painterResource(Resources.images.orderTaxi)
                 )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    state.recommendedCuisines.forEach { cuisine ->
-                        CuisineCard(
-                            modifier = Modifier,
-                            cuisine = cuisine,
-                            onClickCuisine = listener::onClickCuisineItem
-                        )
-                    }
+                OrderCard(
+                    onClick = listener::onClickOrderFood,
+                    buttonTitle = Resources.strings.orderFoodButtonTitle,
+                    painter = painterResource(Resources.images.orderImage),
+                    color = Theme.colors.orange
+                )
+            }
+
+            SectionHeader(
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp),
+                onClickViewAll = listener::onclickSeeAllCuisines,
+                title = Resources.strings.cuisineSectionTitle,
+                showViewAll = true
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                state.recommendedCuisines.forEach { cuisine ->
+                    CuisineCard(
+                        modifier = Modifier,
+                        cuisine = cuisine,
+                        onClickCuisine = listener::onClickCuisineItem
+                    )
                 }
             }
+
+            val painters = mutableListOf<Painter>()
+            repeat(state.favoriteRestaurants.size) {
+                painters.add(painterResource(Resources.images.placeholder))
+            }
+            ItemSection(
+                header = Resources.strings.favoriteRestaurants,
+                titles = state.favoriteRestaurants.map { it.name },
+                ratings = state.favoriteRestaurants.map { it.rating },
+                priceLevels = state.favoriteRestaurants.map { it.priceLevel },
+                painters = painters,
+                modifier = Modifier.padding(vertical = 16.dp)
+            )
         }
     }
 }

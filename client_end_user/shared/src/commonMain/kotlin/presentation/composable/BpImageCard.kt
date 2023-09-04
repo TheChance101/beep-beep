@@ -3,8 +3,11 @@ package presentation.composable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -35,7 +38,7 @@ fun BpImageCard(
     rate: Double,
     title: String,
     priceLevel: PriceLevel,
-    modifier:Modifier = Modifier,
+    modifier: Modifier = Modifier,
     hasOffer: Boolean = false,
     offer: String = "",
     hasDeliveryPrice: Boolean = false,
@@ -73,13 +76,15 @@ fun BpImageCard(
                 )
             }
         }
-        Row(modifier = Modifier.padding(top = 8.dp)) {
+        Row(
+            modifier = Modifier.padding(top = 8.dp).width(232.dp)
+        ) {
             Text(
                 text = title,
                 style = Theme.typography.title,
-                color = Theme.colors.contentPrimary,
-                modifier = Modifier.padding(end = 130.dp)
+                color = Theme.colors.contentPrimary
             )
+            Spacer(Modifier.weight(1f))
             BpPriceLevel(priceLevel)
         }
         AnimatedVisibility(hasOffer) {

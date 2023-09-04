@@ -9,7 +9,7 @@ interface IGetFavoriteRestaurantsUseCase {
 
 class GetFavoriteRestaurantsUseCase(private val fakeGateway: FakeRemoteGateway) :
     IGetFavoriteRestaurantsUseCase {
-    override suspend fun invoke(): List<Restaurant> {
+    override suspend operator fun invoke(): List<Restaurant> {
         return fakeGateway.getFavoriteRestaurants()
     }
 

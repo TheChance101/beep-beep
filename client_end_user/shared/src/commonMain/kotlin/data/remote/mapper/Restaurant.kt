@@ -17,7 +17,7 @@ fun RestaurantDto.toEntity(): Restaurant {
         ownerUsername = ownerUsername ?: "",
         name = name ?: "",
         description = description ?: "",
-        priceLevel = PriceLevel.getPriceLevel(priceLevel ?: ""),
+        priceLevel = PriceLevel.getPriceLevel(priceLevel ?: "") ?: PriceLevel.LOW,
         rate = rate ?: 0.0,
         phone = phone ?: "",
         openingTime = Time(

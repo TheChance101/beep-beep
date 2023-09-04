@@ -25,6 +25,7 @@ data class StringResources(
     val connectWithSupportIconDescription: String = "connect with support text icon",
     val orderCardImageDescription: String = "Order card image",
     val orderTaxiButtonTitle: String = "Order taxi",
-    val orderFoodButtonTitle: String = "Order food"
-    val off: String = "Off"
+    val orderFoodButtonTitle: String = "Order food",
+    val off: String = "Off",
+    val favoriteRestaurants: String = "Favorite restaurants"
 )
