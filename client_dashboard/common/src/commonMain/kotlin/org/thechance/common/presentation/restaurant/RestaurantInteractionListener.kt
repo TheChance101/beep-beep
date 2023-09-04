@@ -2,7 +2,7 @@ package org.thechance.common.presentation.restaurant
 
 import org.thechance.common.presentation.base.BaseInteractionListener
 
-interface RestaurantInteractionListener : BaseInteractionListener {
+interface RestaurantInteractionListener : BaseInteractionListener, AddCuisineListener {
 
     fun onSearchChange(restaurantName: String)
 
@@ -47,4 +47,16 @@ interface RestaurantInteractionListener : BaseInteractionListener {
     fun onClickEditRestaurantMenuItem(restaurant: RestaurantUiState.RestaurantDetailsUiState)
 
     fun onClickDeleteRestaurantMenuItem(restaurant: RestaurantUiState.RestaurantDetailsUiState)
+}
+
+interface AddCuisineListener {
+    fun onClickAddCuisine()
+
+    fun onClickDeleteCuisine(cuisineName: String)
+
+    fun onCloseAddCuisineDialog()
+
+    fun onClickCreateCuisine()
+
+    fun onChangeCuisineName(cuisineName: String)
 }
