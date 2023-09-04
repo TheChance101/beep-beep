@@ -76,7 +76,6 @@ class RestaurantScreenModel(
             it.copy(
                 restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
                     cuisines = cuisines,
-                    cuisinesSize = cuisines.size
                 )
             )
         }
