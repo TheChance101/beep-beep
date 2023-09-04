@@ -41,10 +41,10 @@ import presentation.composable.modifier.noRippleEffect
 @Composable
 fun ImageSlider(
     images: List<String>,
+    onItemClickListener: (id: Int) -> Unit,
     modifier: Modifier = Modifier,
     indicatorColor: Color = Theme.colors.primary,
     indicatorAlignment: Alignment = Alignment.BottomEnd,
-    onItemClickListener: (id: Int) -> Unit
 ) {
     val pagerState = rememberPagerState()
 
