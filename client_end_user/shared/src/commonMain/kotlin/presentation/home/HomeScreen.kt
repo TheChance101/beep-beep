@@ -15,6 +15,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.base.BaseScreen
 import presentation.composable.SectionHeader
+import presentation.home.composable.ChatSupportCard
 import presentation.home.composable.CuisineCard
 import resources.Resources
 
@@ -30,6 +31,9 @@ class HomeScreen :
         when (effect) {
             is HomeScreenUiEffect.NavigateToCuisineDetails -> println("Cuisine id ${effect.cuisineId}")
             is HomeScreenUiEffect.NavigateToCuisines -> println("Navigate to Cuisine Screen")
+            is HomeScreenUiEffect.NavigateToChatSupport -> println("Navigate to Chat support screen")
+            is HomeScreenUiEffect.NavigateToOrderTaxi -> println("Navigate to Order Taxi screen")
+            is HomeScreenUiEffect.ScrollDownToRecommendedRestaurants -> println("Scroll down home screen")
         }
     }
 
@@ -41,6 +45,9 @@ class HomeScreen :
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+
+                ChatSupportCard(onClick = {})
+
                 SectionHeader(
                     onClickViewAll = listener::onclickSeeAllCuisines,
                     title = Resources.strings.cuisineSectionTitle,

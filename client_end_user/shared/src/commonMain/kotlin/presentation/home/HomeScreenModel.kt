@@ -23,6 +23,18 @@ class HomeScreenModel(private val cuisineUseCase: IGetCuisinesUseCase) :
         sendNewEffect(HomeScreenUiEffect.NavigateToCuisines)
     }
 
+    override fun onClickChatSupport() {
+        sendNewEffect(HomeScreenUiEffect.NavigateToChatSupport)
+    }
+
+    override fun onClickOrderTaxi() {
+        sendNewEffect(HomeScreenUiEffect.NavigateToOrderTaxi)
+    }
+
+    override fun onClickOrderFood() {
+        sendNewEffect(HomeScreenUiEffect.ScrollDownToRecommendedRestaurants)
+    }
+
     private fun getRecommendedCuisines() {
         tryToExecute(
             { cuisineUseCase.getCuisines().toCuisineUiState() },
