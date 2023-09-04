@@ -52,7 +52,7 @@ fun SectionHeader(
                     color = Theme.colors.primary
                 )
                 Icon(
-                    painter = painterResource(Resources.images.seeAll),
+                    painter = painterResource(Resources.images.arrowRight),
                     contentDescription = Resources.strings.seeAllDescription,
                     tint = Theme.colors.primary
                 )
