@@ -60,7 +60,7 @@ class UserGateway(client: HttpClient) : BaseGateway(client), IUserGateway {
     }
 
     override suspend fun refreshAccessToken(refreshToken: String): Pair<String,String> {
-        val result = tryToExecute<ServerResponse<SessionDto>>(client) {
+        val result = tryToExecute<ServerResponse<SessionDto>> {
             submitForm {
                 url("/refresh-access-token")
             }
