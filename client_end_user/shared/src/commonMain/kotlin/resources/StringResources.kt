@@ -23,4 +23,7 @@ data class StringResources(
     val haveQuestions: String = "Have Questions ?",
     val connectWithSupport: String = "Connect with Support",
     val connectWithSupportIconDescription: String = "connect with support text icon",
+    val orderCardImageDescription: String = "Order card image",
+    val orderTaxiButtonTitle: String = "Order taxi",
+    val orderFoodButtonTitle: String = "Order food"
 )

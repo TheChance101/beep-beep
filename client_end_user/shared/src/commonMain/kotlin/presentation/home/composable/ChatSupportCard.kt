@@ -76,6 +76,7 @@ fun ChatSupportCard(
                     color = Theme.colors.primary
                 )
                 Icon(
+                    modifier = Modifier.size(16.dp),
                     painter = painterResource(Resources.images.arrowRight),
                     contentDescription = Resources.strings.connectWithSupportIconDescription,
                     tint = Theme.colors.primary

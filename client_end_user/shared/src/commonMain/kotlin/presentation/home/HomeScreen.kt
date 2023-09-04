@@ -13,10 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.composable.SectionHeader
 import presentation.home.composable.ChatSupportCard
 import presentation.home.composable.CuisineCard
+import presentation.home.composable.OrderCard
 import resources.Resources
 
 class HomeScreen :
@@ -37,6 +40,7 @@ class HomeScreen :
         }
     }
 
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun onRender(state: HomeScreenUiState, listener: HomeScreenInteractionListener) {
         Column(modifier = Modifier.fillMaxSize().background(Theme.colors.background)) {
@@ -46,7 +50,24 @@ class HomeScreen :
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
 
-                ChatSupportCard(onClick = {})
+                ChatSupportCard(onClick = listener::onClickChatSupport)
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    OrderCard(
+                        onClick = listener::onClickOrderTaxi,
+                        buttonTitle = Resources.strings.orderTaxiButtonTitle,
+                        painter = painterResource(Resources.images.orderTaxi)
+                    )
+                    OrderCard(
+                        onClick = listener::onClickOrderFood,
+                        buttonTitle = Resources.strings.orderFoodButtonTitle,
+                        painter = painterResource(Resources.images.orderImage),
+                        color = Theme.colors.orange
+                    )
+                }
 
                 SectionHeader(
                     onClickViewAll = listener::onclickSeeAllCuisines,

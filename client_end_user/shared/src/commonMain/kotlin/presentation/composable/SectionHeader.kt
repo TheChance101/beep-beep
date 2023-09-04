@@ -7,6 +7,7 @@ import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -52,6 +53,7 @@ fun SectionHeader(
                     color = Theme.colors.primary
                 )
                 Icon(
+                    modifier = Modifier.size(16.dp),
                     painter = painterResource(Resources.images.arrowRight),
                     contentDescription = Resources.strings.seeAllDescription,
                     tint = Theme.colors.primary
