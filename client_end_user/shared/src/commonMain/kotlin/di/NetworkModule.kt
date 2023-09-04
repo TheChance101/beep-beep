@@ -1,5 +1,6 @@
 package di
 
+import data.gateway.remote.authorizationIntercept
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -16,7 +17,7 @@ import org.koin.dsl.module
 val networkModule = module {
 
     single {
-        HttpClient(CIO) {
+        val client = HttpClient(CIO) {
             expectSuccess = true
             install(Logging) {
                 logger = Logger.DEFAULT
@@ -27,7 +28,7 @@ val networkModule = module {
                 header("Content-Type", "application/json")
                 header("Accept-Language", "ar")
                 header("Country-Code", "EG")
-                url("http://192.168.1.9:8080")
+                url("https://beep-beep-api-gateway-nap2u.ondigitalocean.app/")
             }
 
             install(ContentNegotiation) {
@@ -39,5 +40,7 @@ val networkModule = module {
                 )
             }
         }
+        authorizationIntercept(client)
+        client
     }
 }

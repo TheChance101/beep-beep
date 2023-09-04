@@ -5,7 +5,8 @@ import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import org.koin.dsl.module
 
-val LocalStorageModule = module {
+val localStorageModule = module {
+
     single {
         RealmConfiguration.Builder(schema = setOf(UserConfigurationCollection::class))
             .compactOnLaunch()

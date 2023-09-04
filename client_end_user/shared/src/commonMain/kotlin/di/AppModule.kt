@@ -5,7 +5,7 @@ import org.koin.dsl.module
 fun appModule() = module {
     includes(
         networkModule,
-        LocalStorageModule,
+        localStorageModule,
         gatewayModule,
         useCaseModule,
         screenModelsModule,
