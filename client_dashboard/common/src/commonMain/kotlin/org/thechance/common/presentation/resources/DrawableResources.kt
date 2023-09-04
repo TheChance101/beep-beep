@@ -28,8 +28,10 @@ data class DrawableResources(
     val restaurantOutlined: String = "ic_restaurant_outlined_light.svg",
     val usersFilled: String = "ic_users_fill.svg",
     val usersOutlined: String = "ic_users_outlined_light.svg",
+    val trashBin: String = "ic_trash_bin_light.svg",
     val permission: String = "ic_edit.xml",
-    val disable: String = "ic_disable.svg"
+    val disable: String = "ic_disable.svg",
+    val delete: String = "ic_delete.svg"
 )
 
 val darkDrawableResource = DrawableResources(
@@ -48,6 +50,7 @@ val darkDrawableResource = DrawableResources(
     filter = "ic_filter_dark.svg",
     dropDownArrow = "ic_drop_down_arrow_dark.svg",
     search = "ic_search_dark.svg",
+    trashBin = "ic_trash_bin_dark.svg"
 )
 
 val lightDrawableResource = DrawableResources()

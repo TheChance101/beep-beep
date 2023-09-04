@@ -17,23 +17,18 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.presentation.composables.CarColors
 import org.thechance.common.presentation.composables.SeatsBar
-import org.thechance.common.presentation.util.kms
 import org.thechance.common.presentation.resources.Resources
+import org.thechance.common.presentation.util.kms
 import java.awt.Dimension
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddTaxiDialog(
+fun TaxiDialog(
     isVisible: Boolean,
-    onSeatsSelected: (Int) -> Unit,
-    onCreateTaxiClicked: () -> Unit,
-    onCancelCreateTaxiClicked: () -> Unit,
-    onCarModelChange: (String) -> Unit,
-    onCarColorSelected: (CarColor) -> Unit,
-    onDriverUserNamChange: (String) -> Unit,
-    onTaxiPlateNumberChange: (String) -> Unit,
-    state: NewTaxiInfoUiState,
+    listener: TaxiDialogListener,
+    isEditMode: Boolean = false,
+    state: TaxiInfoUiState,
     modifier: Modifier = Modifier,
 ) {
 
@@ -42,9 +37,8 @@ fun AddTaxiDialog(
         focusable = true,
         undecorated = true,
         visible = isVisible,
-        onCloseRequest = onCancelCreateTaxiClicked,
-
-        ) {
+        onCloseRequest = listener::onCancelClicked,
+    ) {
 
         this.window.minimumSize = Dimension(464, 800)
 
@@ -65,21 +59,21 @@ fun AddTaxiDialog(
             BpTextField(
                 modifier = Modifier.padding(top = 40.kms),
                 label = Resources.Strings.taxiPlateNumber,
-                onValueChange = onTaxiPlateNumberChange,
+                onValueChange = listener::onTaxiPlateNumberChange,
                 text = state.plateNumber
             )
 
             BpTextField(
                 modifier = Modifier.padding(top = 24.kms),
                 label = Resources.Strings.driverUsername,
-                onValueChange = onDriverUserNamChange,
+                onValueChange = listener::onDriverUserNamChange,
                 text = state.driverUserName
             )
 
             BpTextField(
                 modifier = Modifier.padding(top = 24.kms),
                 label = Resources.Strings.carModel,
-                onValueChange = onCarModelChange,
+                onValueChange = listener::onCarModelChanged,
                 text = state.carModel
             )
 
@@ -93,7 +87,7 @@ fun AddTaxiDialog(
             CarColors(
                 modifier = Modifier.padding(top = 16.kms),
                 colors = CarColor.values().toList(),
-                onSelectColor = { onCarColorSelected(it) },
+                onSelectColor = { listener.onCarColorSelected(it) },
                 selectedCarColor = state.selectedCarColor
             )
 
@@ -112,7 +106,7 @@ fun AddTaxiDialog(
                 iconsSize = 24.kms,
                 iconsPadding = PaddingValues(horizontal = 8.kms),
                 modifier = Modifier.fillMaxWidth().padding(top = 16.kms),
-                onClick = { onSeatsSelected(it) }
+                onClick = { listener.onSeatSelected(it) }
             )
 
             Row(
@@ -122,15 +116,16 @@ fun AddTaxiDialog(
 
                 BpOutlinedButton(
                     Resources.Strings.cancel,
-                    onClick = onCancelCreateTaxiClicked,
+                    onClick = listener::onCancelClicked,
                     modifier = Modifier.width(120.kms)
                 )
                 BpButton(
-                    title = Resources.Strings.create,
-                    onClick = onCreateTaxiClicked,
+                    title = if (isEditMode) Resources.Strings.save else Resources.Strings.create,
+                    onClick = if (isEditMode) listener::onSaveClicked else listener::onCreateTaxiClicked,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
         }
     }
 }
+

@@ -16,6 +16,7 @@ class LoginUserUseCase(
 
     override suspend fun loginUser(username: String, password: String, keepLoggedIn: Boolean) {
         val userTokens = remoteGateway.loginUser(username, password)
+        identityGateway.createUserConfiguration()
         identityGateway.saveAccessToken(userTokens.first)
         identityGateway.saveRefreshToken(userTokens.second)
         identityGateway.shouldUserKeptLoggedIn(keepLoggedIn)
