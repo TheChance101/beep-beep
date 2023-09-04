@@ -61,7 +61,7 @@ data class StringResources(
     val searchForUsers: String = "Search for users",
     val edit: String = "Edit",
     val delete: String = "Delete",
-    val disable:String = "Disable",
+    val disable: String = "Disable",
     val permissions: String = "Permissions",
     val users: String = "Users",
     //endregion User
@@ -89,8 +89,6 @@ data class StringResources(
     val supportPermission: String = "Support",
     val deliveryPermission: String = "Delivery",
     val adminPermission: String = "Admin",
-    )
+)
 
 val englishStrings = StringResources()
-
-

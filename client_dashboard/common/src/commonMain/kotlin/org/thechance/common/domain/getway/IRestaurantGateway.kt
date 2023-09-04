@@ -1,7 +1,7 @@
 package org.thechance.common.domain.getway
 
-import org.thechance.common.domain.entity.NewRestaurantInfo
 import org.thechance.common.domain.entity.DataWrapper
+import org.thechance.common.domain.entity.NewRestaurantInfo
 import org.thechance.common.domain.entity.Restaurant
 
 interface IRestaurantGateway {

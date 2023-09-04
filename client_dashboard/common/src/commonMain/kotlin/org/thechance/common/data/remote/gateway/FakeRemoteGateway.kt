@@ -9,26 +9,14 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.thechance.common.data.local.gateway.LocalGateway
 import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
-import org.thechance.common.data.remote.model.DataWrapperDto
-import org.thechance.common.data.remote.model.RestaurantDto
-import org.thechance.common.data.remote.model.TaxiDto
-import org.thechance.common.data.remote.model.UserDto
-import org.thechance.common.data.remote.model.toEntity
-import org.thechance.common.domain.entity.AddRestaurant
-import org.thechance.common.domain.entity.DataWrapper
-import org.thechance.common.domain.entity.Location
-import org.thechance.common.domain.entity.NewTaxiInfo
-import org.thechance.common.domain.entity.Restaurant
-import org.thechance.common.domain.entity.Taxi
-import org.thechance.common.domain.entity.TaxiFiltration
-import org.thechance.common.domain.entity.User
+import org.thechance.common.data.remote.model.*
+import org.thechance.common.domain.entity.*
 import org.thechance.common.domain.getway.IRemoteGateway
 import java.io.File
 import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.math.ceil
 import kotlin.math.floor
-import java.util.Date
-import java.util.UUID
 
 class FakeRemoteGateway(
     private val localGateway: LocalGateway,
@@ -1057,7 +1045,7 @@ class FakeRemoteGateway(
             taxis.removeAt(indexToUpdate)
             taxis.add(index = indexToUpdate, element = updatedTaxi)
             updatedTaxi.toEntity()
-        }else{
+        } else {
             throw Exception("Taxi not found")
         }
     }
@@ -1294,7 +1282,8 @@ class FakeRemoteGateway(
     }
 
     override suspend fun createCuisine(cuisineName: String): String? {
-        return if (cuisineName !in cuisines && cuisineName.isNotBlank()) {cuisines.add(cuisineName)
+        return if (cuisineName !in cuisines && cuisineName.isNotBlank()) {
+            cuisines.add(cuisineName)
             cuisineName
         } else null
     }

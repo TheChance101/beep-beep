@@ -4,9 +4,9 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -50,7 +50,6 @@ class RestaurantScreen :
         }
     }
 
-
     @Composable
     override fun OnRender(state: RestaurantUiState, listener: RestaurantInteractionListener) {
         AnimatedVisibility(visible = state.isNewRestaurantInfoDialogVisible) {
@@ -66,7 +65,7 @@ class RestaurantScreen :
             isVisible = state.restaurantAddCuisineDialogUiState.isVisible,
             cuisineName = state.restaurantAddCuisineDialogUiState.cuisineName,
             cuisines = state.restaurantAddCuisineDialogUiState.cuisines,
-            )
+        )
 
         Column(
             Modifier.background(Theme.colors.surface).fillMaxSize(),
@@ -139,8 +138,8 @@ class RestaurantScreen :
             rowContent = { restaurant ->
                 RestaurantRow(
                     onClickEditRestaurant = listener::showEditRestaurantMenu,
-                    onEditRestaurantDismiss =  listener::hideEditRestaurantMenu,
-                    onClickDeleteRestaurantMenuItem =  listener::onClickDeleteRestaurantMenuItem,
+                    onEditRestaurantDismiss = listener::hideEditRestaurantMenu,
+                    onClickDeleteRestaurantMenuItem = listener::onClickDeleteRestaurantMenuItem,
                     onClickEditRestaurantMenuItem = listener::onClickEditRestaurantMenuItem,
                     position = state.restaurants.indexOf(restaurant) + 1,
                     restaurant = restaurant,
@@ -149,7 +148,6 @@ class RestaurantScreen :
             },
         )
     }
-
 
     @Composable
     private fun RestaurantPagingRow(
@@ -289,7 +287,6 @@ class RestaurantScreen :
         }
     }
 
-
     @Composable
     private fun RestaurantFilterDropdownMenu(
         onClickRating: (Double) -> Unit,
@@ -403,7 +400,7 @@ class RestaurantScreen :
         isVisible: Boolean,
         cuisineName: String,
         cuisines: List<String>,
-        ) {
+    ) {
         Dialog(
             visible = isVisible,
             transparent = true,
