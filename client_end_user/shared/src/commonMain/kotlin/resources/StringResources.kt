@@ -16,4 +16,5 @@ data class StringResources(
     val orders: String = "Orders",
     val notification: String = "Notification",
     val profile: String = "Profile",
+    val off: String = "Off"
 )

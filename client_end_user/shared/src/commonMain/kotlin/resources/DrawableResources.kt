@@ -14,7 +14,11 @@ data class DrawableResources(
     val searchFilled: String = "ic_search_filled.xml",
     val ordersOutlined: String = "ic_orders_outlined.xml",
     val ordersFilled: String = "ic_orders_filled.xml",
+    val filledStar: String = "ic_filled_star_light.xml",
+    val placeholder: String = "placeholder.jpeg",
+    val scooter: String = "scooter.xml"
 )
 
 val BpDrawableDarkResources = DrawableResources(
+    filledStar = "ic_filled_star_dark.xml",
 )
