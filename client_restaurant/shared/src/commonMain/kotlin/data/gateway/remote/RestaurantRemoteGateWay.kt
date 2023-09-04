@@ -16,7 +16,7 @@ import presentation.base.NotFoundedException
 class RestaurantRemoteGateWay(client: HttpClient) : BaseRemoteGateway(client),
     IRestaurantRemoteGateway {
 
-    override suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant> {
+    override suspend fun getRestaurantsByOwnerId(): List<Restaurant> {
         return tryToExecute<BaseResponse<List<RestaurantDto>>> {
             get("/restaurants/mine")
         }.value?.toEntity() ?: throw NotFoundedException()

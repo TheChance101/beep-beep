@@ -22,11 +22,6 @@ fun StatusPagesConfig.configureStatusPages() {
         call.respond(HttpStatusCode.BadRequest, listOf(REQUIRED_QUERY))
     }
 
-//    exception<Throwable> { call, th ->
-//        println("\n\n***** ERROR(${th.message}) *****\n\n")
-//        call.respond(HttpStatusCode.InternalServerError, listOf(UNKNOWN_ERROR))
-//    }
-
     exception<MultiErrorException> { call, exception ->
         call.respond(HttpStatusCode.BadRequest, exception.errorCodes)
     }

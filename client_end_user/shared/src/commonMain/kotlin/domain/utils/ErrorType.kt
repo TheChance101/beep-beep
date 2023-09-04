@@ -7,6 +7,8 @@ class WifiDisabledException : InternetException()
 class NoInternetException : InternetException()
 class NetworkNotSupportedException : InternetException()
 
+class NotFoundException() : BpException()
+
 class PermissionDenied : AuthorizationException()
 open class RequestException : BpException()
 

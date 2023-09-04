@@ -9,4 +9,9 @@ interface IIdentityRemoteGateway {
 
     suspend fun refreshAccessToken(refreshToken: String): Pair<String, String>
 
+    suspend fun createRequestPermission(
+        restaurantRequestPermission: String,
+        ownerEmail: String,
+        description: String,
+    ): Boolean
 }

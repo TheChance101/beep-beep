@@ -14,6 +14,10 @@ data class DrawableResources(
     val searchFilled: String = "ic_search_filled.xml",
     val ordersOutlined: String = "ic_orders_outlined.xml",
     val ordersFilled: String = "ic_orders_filled.xml",
+    val arrowRight: String = "ic_right_arrow.xml",
+    val chatImage: String = "img_chat.png",
+    val orderImage: String = "img_order.png",
+    val orderTaxi: String = "img_taxi.png"
     val filledStar: String = "ic_filled_star_light.xml",
     val placeholder: String = "placeholder.jpeg",
     val scooter: String = "scooter.xml"

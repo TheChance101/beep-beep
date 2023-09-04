@@ -11,6 +11,8 @@ interface ITaxiGateway {
     suspend fun getAllTaxes(page: Int, limit: Int): List<Taxi>
     suspend fun deleteTaxi(taxiId: String): Taxi?
     suspend fun getNumberOfTaxis() : Long
+    suspend fun isTaxiExistedBefore(taxi: Taxi):Boolean
+
     //endregion
 
     //region trips curd

@@ -1,6 +1,8 @@
 package di
 
 import domain.usecase.IGetFavoriteRestaurantsUseCase
+import domain.usecase.IGetCuisinesUseCase
+import domain.usecase.GetCuisinesUseCase
 import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.ManageAuthenticationUseCase
 import domain.usecase.GetFavoriteRestaurantsUseCase
@@ -11,4 +13,5 @@ import org.koin.dsl.module
 val useCaseModule = module {
     singleOf(::ManageAuthenticationUseCase) { bind<IManageAuthenticationUseCase>() }
     singleOf(::GetFavoriteRestaurantsUseCase) { bind<IGetFavoriteRestaurantsUseCase>() }
+    singleOf(::GetCuisinesUseCase) { bind<IGetCuisinesUseCase>() }
 }

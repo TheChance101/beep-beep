@@ -10,9 +10,8 @@ import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.statement.HttpResponse
 
-abstract class BaseGateway {
+abstract class BaseGateway(val client: HttpClient) {
     suspend inline fun <reified T> tryToExecute(
-        client: HttpClient,
         method: HttpClient.() -> HttpResponse,
     ): T {
         try {

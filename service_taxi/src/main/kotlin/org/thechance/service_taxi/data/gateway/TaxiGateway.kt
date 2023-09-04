@@ -31,7 +31,7 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
             ?.takeIf { !it.isDeleted }?.toEntity()
     }
 
-    override suspend fun editTaxi(taxiId: String,taxi: Taxi): Taxi {
+    override suspend fun editTaxi(taxiId: String, taxi: Taxi): Taxi {
         val taxiCollection = taxi.copy(id = taxiId).toCollection()
         container.taxiCollection.updateOne(
             filter = TaxiCollection::id eq ObjectId(taxiId),
@@ -61,6 +61,11 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
 
     override suspend fun getNumberOfTaxis(): Long {
         return container.taxiCollection.countDocuments(TaxiCollection::isDeleted ne true)
+    }
+
+    override suspend fun isTaxiExistedBefore(taxi: Taxi): Boolean {
+        val query = TaxiCollection::plateNumber eq taxi.plateNumber
+        return container.taxiCollection.findOne(query) != null
     }
     //endregion
 
