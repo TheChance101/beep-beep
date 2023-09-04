@@ -1,3 +1,3 @@
 package presentation.base
 
-sealed interface BaseUiEffect
+interface BaseUiEffect

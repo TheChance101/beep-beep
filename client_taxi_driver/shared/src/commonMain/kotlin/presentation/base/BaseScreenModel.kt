@@ -1,6 +1,12 @@
 package presentation.base
 
 import cafe.adriel.voyager.core.model.ScreenModel
+import domain.NoInternetException
+import domain.NotFoundedException
+import domain.PermissionDenied
+import domain.ServerSideException
+import domain.UnAuthorizedException
+import domain.UnKnownErrorException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -69,22 +75,13 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
             try {
                 function()
             } catch (exception: Exception) {
-                println("darkennes ${exception.message.toString()}")
                 when (exception) {
                     is NoInternetException -> onError(ErrorState.NoInternet)
                     is PermissionDenied -> onError(ErrorState.HasNoPermission)
-                    is ClientSideException -> onError(ErrorState.RequestFailed)
-                    is ServerSideException -> onError(ErrorState.RequestFailed)
+                    is ServerSideException -> onError(ErrorState.ServerError)
                     is UnAuthorizedException -> onError(ErrorState.UnAuthorized)
-                    is UserNotFoundException -> onError(ErrorState.UserNotExist(exception.errorMessage))
                     is NotFoundedException -> onError(ErrorState.NotFound)
-                    is InvalidCredentialsException -> onError(
-                        ErrorState.InvalidCredentials(
-                            exception.message.toString()
-                        )
-                    )
-
-                    is UnknownErrorException -> onError(ErrorState.UnknownError(exception.message.toString()))
+                    is UnKnownErrorException -> onError(ErrorState.UnknownError(exception.message.toString()))
                     else -> onError(ErrorState.UnknownError(exception.message.toString()))
                 }
             }
