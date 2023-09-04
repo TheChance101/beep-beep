@@ -34,15 +34,11 @@ class UserScreenModel(
 
     // region Filter Menu
     override fun showFilterMenu() {
-        updateState {
-            it.copy(filter = it.filter.copy(show = true))
-        }
+        updateState { it.copy(filter = it.filter.copy(show = true)) }
     }
 
     override fun hideFilterMenu() {
-        updateState {
-            it.copy(filter = it.filter.copy(show = false))
-        }
+        updateState { it.copy(filter = it.filter.copy(show = false)) }
     }
 
     override fun onFilterMenuPermissionClick(permission: UserScreenUiState.PermissionUiState) {
@@ -58,7 +54,8 @@ class UserScreenModel(
     }
 
     override fun onFilterMenuSaveButtonClicked() {
-        hideFilterMenu().also { if (state.value.search.isNotEmpty()) getUsers() }
+        hideFilterMenu()
+        getUsers()
     }
 
     // endregion
@@ -66,11 +63,13 @@ class UserScreenModel(
     // region Search Bar
     override fun onSearchInputChange(text: String) {
         updateState { it.copy(search = text) }
-        searchJob?.cancel()
-        searchJob = launchSearchJob()
+        launchSearchJob()
     }
 
-    private fun launchSearchJob(): Job = launchDelayed(300L) { getUsers() }
+    private fun launchSearchJob() {
+        searchJob?.cancel()
+        searchJob = launchDelayed(300L) { getUsers() }
+    }
 
 
     private fun onSearchUsersSuccessfully(users: DataWrapper<User>) {
