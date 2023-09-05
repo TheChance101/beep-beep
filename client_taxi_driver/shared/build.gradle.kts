@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kotlinKsp)
-    id("io.realm.kotlin") version "1.10.0"
+    alias(libs.plugins.realm)
     kotlin("plugin.serialization") version "1.9.0"
 }
 
@@ -32,17 +32,16 @@ kotlin {
     }
 
     sourceSets {
-        val ktorVersion = "2.3.3"
         val commonMain by getting {
             dependencies {
+                // design shared
+                implementation(project(":design_system:shared"))
                 // compose
                 implementation(libs.compose.runtime)
                 implementation(libs.compose.foundation)
                 implementation(libs.compose.material3)
                 implementation(libs.compose.components.resources)
                 implementation(libs.google.accompanist)
-                // design shared
-                implementation(project(":design_system:shared"))
                 //ktor-client
                 implementation(libs.ktor.client.core)
                 implementation(libs.ktor.json.serialization)
@@ -68,8 +67,8 @@ kotlin {
                 api(libs.androidx.appcompat)
                 api(libs.androidx.core.ktx)
                 api(libs.koin.android)
-                implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2")
+                implementation(libs.ktor.client.okhttp)
+                implementation(libs.kotlin.coroutines)
             }
         }
         val iosX64Main by getting
@@ -81,7 +80,7 @@ kotlin {
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
             dependencies {
-                implementation("io.ktor:ktor-client-darwin:2.3.3")
+                implementation(libs.ktor.client.drawin)
             }
         }
     }
