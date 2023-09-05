@@ -29,13 +29,13 @@ fun Route.permissionRoutes() {
                 post("user/{userId}/permission"){
                     val userId = call.parameters["userId"]?.trim().toString()
                     val permission = call.receiveParameters()["permission"]?.trim()?.toInt() ?: 0
-                    val result = identityService.updatePermission(userId,permission)
+                    val result = identityService.updateUserPermission(userId,permission)
                     respondWithResult(HttpStatusCode.Created, result)
                 }
                 put("user/{userId}/permission"){
                     val userId = call.parameters["userId"]?.trim().toString()
                     val permission = call.receiveParameters()["permission"]?.trim()?.toInt() ?: 0
-                    val result = identityService.updatePermission(userId,permission)
+                    val result = identityService.updateUserPermission(userId,permission)
                     respondWithResult(HttpStatusCode.Created, result)
                 }
             }
