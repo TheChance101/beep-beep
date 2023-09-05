@@ -2,7 +2,9 @@ package presentation.main
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,32 +21,78 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabNavigator
+import com.beepbeep.designSystem.ui.composable.BpAppBar
+import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpNavigationBar
 import com.beepbeep.designSystem.ui.composable.BpNavigationBarItem
+import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import presentation.base.BaseScreen
 import presentation.composable.exitinstion.drawTopIndicator
 import presentation.composable.exitinstion.toPx
+import presentation.home.HomeScreenInteractionListener
+import presentation.home.HomeScreenModel
+import presentation.home.HomeScreenUiEffect
+import presentation.home.HomeScreenUiState
+import resources.Resources
 
 
-object MainContainer : Screen {
+object MainContainer :
+    BaseScreen<MainScreenModel, MainUiState, MainScreenUiEffect, MainInteractionListener>() {
+
+    @Composable
+    override fun Content() {
+        initScreen(MainScreenModel())
+    }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content() {
+    override fun onRender(state: MainUiState, listener: MainInteractionListener) {
         TabNavigator(HomeTab) {
             Scaffold(
                 topBar = {
                     val tabNavigator = LocalTabNavigator.current
-                    Text(text = tabNavigator.current.options.title)
+                    if (!state.isLogin) {
+                        BpAppBar(
+                            title = Resources.strings.loginWelcomeMessage,
+                            actions = {
+                                BpButton(
+                                    modifier = Modifier.heightIn(max = 32.dp).padding(end = 16.dp),
+                                    textPadding = PaddingValues(horizontal = 16.dp),
+                                    title = Resources.strings.login,
+                                    onClick = listener::onLoginClicked
+                                )
+                            }
+                        )
+                    } else {
+                        BpAppBar(
+                            title = Resources.strings.welcome + " ${state.username}",
+                            actions = {
+                                Column(modifier = Modifier.padding(end = 16.dp)) {
+                                    Text(
+                                        Resources.strings.wallet,
+                                        style = Theme.typography.body,
+                                        color = Theme.colors.contentSecondary
+                                    )
+                                    Text(
+                                        state.currency + state.wallet,
+                                        style = Theme.typography.title,
+                                        color = Theme.colors.primary
+                                    )
+                                }
+                            }
+                        )
+                    }
                 },
                 bottomBar = {
                     val tabNavigator = LocalTabNavigator.current
                     val tabs = rememberTabsContainer()
-                    BottomBar(tabs, tabNavigator)
+//                    BottomBar(tabs, tabNavigator)
                 },
                 content = {
                     Column(Modifier.fillMaxSize().padding(it)) {
@@ -53,6 +101,10 @@ object MainContainer : Screen {
                 }
             )
         }
+    }
+
+    override fun onEffect(effect: MainScreenUiEffect, navigator: Navigator) {
+
     }
 
     @OptIn(ExperimentalResourceApi::class)

@@ -1,6 +1,7 @@
 package org.thechance.service_notification.di
 
 import com.google.firebase.messaging.FirebaseMessaging
+import com.mongodb.ConnectionString
 import com.mongodb.reactivestreams.client.MongoClient
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
@@ -17,7 +18,9 @@ val kmongoModule = module {
         val cluster = System.getenv("cluster")
         val username = System.getenv("username")
         val password = System.getenv("password")
-        KMongo.createClient("mongodb+srv://$username:$password@$cluster.mongodb.net/")
+//        val connectionString = ConnectionString("mongodb+srv://$username:$password@$cluster.mongodb.net/")
+        val connectionString = ConnectionString("mongodb://localhost:27017")
+        KMongo.createClient(connectionString)
     }
 
     single {
