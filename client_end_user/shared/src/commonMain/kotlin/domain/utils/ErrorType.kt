@@ -9,9 +9,6 @@ class NetworkNotSupportedException : InternetException()
 
 class NotFoundException() : BpException()
 
-class PermissionDenied : AuthorizationException()
-open class RequestException : BpException()
-
 open class AuthorizationException : BpException()
 class UnAuthorizedException : AuthorizationException()
 open class UsernameException : AuthorizationException()
@@ -23,3 +20,4 @@ class InvalidCredentialsException(message: String) : Exception(message)
 
 class UnknownErrorException : Exception()
 class UserNotFoundException(message: String) : Exception(message)
+class UserAlreadyExistException(message: String) : Exception(message)

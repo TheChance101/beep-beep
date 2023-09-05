@@ -21,6 +21,7 @@ data class DrawableResources(
     val filledStar: String = "ic_filled_star_light.xml",
     val placeholder: String = "placeholder.jpeg",
     val scooter: String = "scooter.xml"
+    val icError: String = "ic_error.xml",
 )
 
 val BpDrawableDarkResources = DrawableResources(

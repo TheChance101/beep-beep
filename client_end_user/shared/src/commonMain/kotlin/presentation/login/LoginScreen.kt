@@ -1,5 +1,8 @@
 package presentation.login
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,6 +22,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
+import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpCheckBox
 import com.beepbeep.designSystem.ui.composable.BpTextField
@@ -43,12 +47,12 @@ class LoginScreen :
         effect: LoginScreenUIEffect,
         navigator: Navigator,
     ) {
-        when(effect){
-            is LoginScreenUIEffect.Login -> navigator.push(MainContainer)
+        when (effect) {
+            is LoginScreenUIEffect.Login -> navigator.replaceAll(MainContainer)
         }
     }
 
-    @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
     @Composable
     override fun onRender(state: LoginScreenUIState, listener: LoginScreenInteractionListener) {
         Box(
@@ -101,7 +105,8 @@ class LoginScreen :
                             password = state.password,
                             keepLoggedIn = state.keepLoggedIn
                         )
-                    }
+                    },
+                    enabled = !state.isLoading
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(top = 32.dp, bottom = 16.dp),
@@ -118,6 +123,20 @@ class LoginScreen :
                         text = Resources.strings.signUpNow,
                         onClick = listener::onClickSignUp,
                         border = BorderStroke(width = 0.dp, color = Color.Transparent),
+                    )
+                }
+            }
+
+            AnimatedVisibility(
+                visible = state.showSnackbar,
+                enter = slideInVertically { it },
+                exit = slideOutVertically { it },
+                modifier = Modifier.align(Alignment.BottomCenter)
+            ) {
+                BPSnackBar(icon = painterResource(Resources.images.icError)) {
+                    Text(
+                        text = state.snackbarMessage,
+                        style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
                     )
                 }
             }

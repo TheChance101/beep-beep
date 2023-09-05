@@ -20,6 +20,7 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.composable.ItemSection
+import presentation.composable.ImageSlider
 import presentation.composable.SectionHeader
 import presentation.home.composable.ChatSupportCard
 import presentation.home.composable.CuisineCard
@@ -41,6 +42,7 @@ class HomeScreen :
             is HomeScreenUiEffect.NavigateToChatSupport -> println("Navigate to Chat support screen")
             is HomeScreenUiEffect.NavigateToOrderTaxi -> println("Navigate to Order Taxi screen")
             is HomeScreenUiEffect.ScrollDownToRecommendedRestaurants -> println("Scroll down home screen")
+            is HomeScreenUiEffect.NavigateToOfferItem -> println("Navigate to offer item details ${effect.offerId}")
         }
     }
 
@@ -56,6 +58,14 @@ class HomeScreen :
             verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(vertical = 16.dp)
         ) {
+            item{
+                ImageSlider(
+                    modifier = Modifier.padding(16.dp),
+                    onItemClickListener = { listener.onClickOffersSlider(it) },
+                    images = state.getOfferImages()
+                )
+            }
+
             item {
                 ChatSupportCard(
                     onClick = listener::onClickChatSupport,
