@@ -26,6 +26,15 @@ fun Route.cuisineRoute() {
                 val cuisine = restaurantService.addCuisine(name, language)
                 respondWithResult(HttpStatusCode.Created, cuisine)
             }
+            delete("/{id}") {
+                val language = extractLocalizationHeader()
+                val params = call.receiveParameters()
+                val cuisineId = params["id"]?.trim().toString()
+                restaurantService.deleteCuisine(cuisineId = cuisineId, languageCode = language)
+                val successMessage =
+                    localizedMessagesFactory.createLocalizedMessages(language).deletedSuccessfully
+                respondWithResult(HttpStatusCode.OK, successMessage)
+            }
         }
 
         get("/{id}/meals") {
@@ -38,15 +47,7 @@ fun Route.cuisineRoute() {
             respondWithResult(HttpStatusCode.OK, meals)
         }
 
-        delete("/{id}") {
-            val language = extractLocalizationHeader()
-            val params = call.receiveParameters()
-            val cuisineId = params["id"]?.trim().toString()
-            restaurantService.deleteCuisine(cuisineId = cuisineId, languageCode = language)
-            val successMessage =
-                localizedMessagesFactory.createLocalizedMessages(language).deletedSuccessfully
-            respondWithResult(HttpStatusCode.OK, successMessage)
-        }
+
 
     }
 
