@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
@@ -35,10 +34,6 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.composable.exitinstion.drawTopIndicator
 import presentation.composable.exitinstion.toPx
-import presentation.home.HomeScreenInteractionListener
-import presentation.home.HomeScreenModel
-import presentation.home.HomeScreenUiEffect
-import presentation.home.HomeScreenUiState
 import presentation.login.LoginScreen
 import resources.Resources
 
@@ -48,7 +43,7 @@ object MainContainer :
 
     @Composable
     override fun Content() {
-        initScreen(MainScreenModel())
+        initScreen(getScreenModel())
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
