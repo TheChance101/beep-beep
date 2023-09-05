@@ -158,4 +158,17 @@ class IdentityService(
         return accessToken.sign(Algorithm.HMAC256(tokenConfiguration.secret))
     }
 
+    suspend fun  updatePermission(userId: String, permission: Int,): UserDto {
+        return client.tryToExecute<UserDto>(
+            api = APIs.IDENTITY_API,
+            attributes = attributes,
+        ) {
+            submitForm("/dashboard/user/$userId/permission",
+                formParameters = parameters {
+                    append("permission", "$permission")
+                }
+            )
+        }
+    }
+
 }
