@@ -754,7 +754,7 @@ class FakeRemoteGateway(
                     type = "SUV",
                     seats = 6,
                     username = "jane_doe",
-                    status = 2,
+                    status = 1,
                     trips = "5"
                 ),
                 TaxiDto(
@@ -784,7 +784,7 @@ class FakeRemoteGateway(
                     type = "Convertible",
                     seats = 4,
                     username = "robert_white",
-                    status = 2,
+                    status = 0,
                     trips = "3"
                 ),
                 TaxiDto(
@@ -814,7 +814,7 @@ class FakeRemoteGateway(
                     type = "Minivan",
                     seats = 2,
                     username = "susan_anderson",
-                    status = 2,
+                    status = 0,
                     trips = "9"
                 ),
                 TaxiDto(
@@ -943,7 +943,7 @@ class FakeRemoteGateway(
                     type = "Sedan",
                     color = 5,
                     seats = 4,
-                    status = 2,
+                    status = 1,
                     username = "Kamel",
                     trips = "10"
                 ),

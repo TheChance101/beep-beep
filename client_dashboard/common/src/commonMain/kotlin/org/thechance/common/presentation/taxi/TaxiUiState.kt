@@ -55,7 +55,6 @@ data class TaxiDetailsUiState(
         @Composable get() = when (status) {
             TaxiStatus.OFFLINE -> Theme.colors.primary
             TaxiStatus.ONLINE -> Theme.colors.success
-            TaxiStatus.ON_RIDE -> Theme.colors.warning
         }
 }
 
@@ -78,7 +77,6 @@ fun TaxiStatus.getStatusName(): String {
     return when (this) {
         TaxiStatus.OFFLINE -> Resources.Strings.offline
         TaxiStatus.ONLINE -> Resources.Strings.online
-        TaxiStatus.ON_RIDE -> Resources.Strings.onRide
     }
 }
 
