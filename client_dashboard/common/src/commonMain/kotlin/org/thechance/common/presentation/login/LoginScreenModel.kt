@@ -39,7 +39,6 @@ class LoginScreenModel(
 
     private fun onLoginSuccess() {
         updateState { it.copy(isLoading = false, error = null) }
-        clearLoginState()
         sendNewEffect(LoginUIEffect.LoginSuccess)
     }
 
@@ -79,15 +78,6 @@ class LoginScreenModel(
                 passwordError = "",
                 isPasswordError = false,
                 isLoading = false
-            )
-        }
-
-    private fun clearLoginState() =
-        updateState {
-            it.copy(
-                username = "",
-                password = "",
-                keepLoggedIn = false
             )
         }
 
