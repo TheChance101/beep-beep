@@ -24,11 +24,11 @@ interface RestaurantInteractionListener : BaseInteractionListener, AddCuisineInt
     fun onClickDeleteRestaurantMenuItem(restaurant: RestaurantUiState.RestaurantDetailsUiState)
 
     fun onAddNewRestaurantClicked()
-
 }
 
 
 interface AddCuisineInteractionListener {
+  
     fun onClickAddCuisine()
 
     fun onClickDeleteCuisine(cuisineName: String)
@@ -57,7 +57,6 @@ interface AddRestaurantInteractionListener {
     fun onCreateNewRestaurantClicked()
 
     fun onLocationChange(location: String)
-
 }
 
 interface FilterRestaurantsInteractionListener {
@@ -70,4 +69,5 @@ interface FilterRestaurantsInteractionListener {
 
     fun onCancelFilterRestaurantsClicked()
 
+    fun onFilterClearAllClicked()
 }

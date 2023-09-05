@@ -7,7 +7,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -22,7 +21,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.*
@@ -109,6 +107,7 @@ class TaxiScreen :
                             onStatusSelected = listener::onSelectedStatus,
                             onSaveFilterClicked = listener::onSaveFilterClicked,
                             onCancelFilterClicked = listener::onCancelFilterClicked,
+                            onClearAllClicked = listener::onClearAllClicked,
                         )
                     }
                     Spacer(modifier = Modifier.weight(1f))
@@ -183,6 +182,7 @@ class TaxiScreen :
             }
         }
     }
+
     //region components
 
     @Composable
@@ -195,99 +195,69 @@ class TaxiScreen :
         onStatusSelected: (TaxiStatus) -> Unit,
         onSaveFilterClicked: () -> Unit,
         onCancelFilterClicked: () -> Unit,
+        onClearAllClicked: () -> Unit,
     ) {
         BpDropdownMenu(
             expanded = isFilterDropdownMenuExpanded,
             onDismissRequest = onFilterMenuDismiss,
             offset = DpOffset.Zero.copy(y = 16.kms),
-            shape = RoundedCornerShape(Theme.radius.medium).copy(topStart = CornerSize(Theme.radius.small)),
-            modifier = Modifier.width(500.kms),
+            shape = RoundedCornerShape(Theme.radius.medium),
         ) {
-            Column(Modifier.fillMaxSize()) {
-                Text(
-                    Resources.Strings.filter,
-                    style = Theme.typography.headline,
-                    color = Theme.colors.contentPrimary,
-                    modifier = Modifier.padding(24.kms)
-                )
-                Text(
-                    Resources.Strings.status,
-                    style = Theme.typography.titleLarge,
-                    color = Theme.colors.contentPrimary,
-                    modifier = Modifier
-                        .padding(
-                            horizontal = 24.kms,
-                            vertical = 16.kms
-                        ),
-                )
-                CarStatus(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(color = Theme.colors.background)
-                        .padding(24.kms),
-                    status = TaxiStatus.values().toList(),
-                    onSelectState = onStatusSelected,
-                    selectedStatus = taxi.status,
-                )
-
-                Text(
-                    Resources.Strings.carColor,
-                    style = Theme.typography.titleLarge,
-                    color = Theme.colors.contentPrimary,
-                    modifier = Modifier.padding(
-                        horizontal = 24.kms,
-                        vertical = 16.kms
-                    ),
-                )
-                CarColors(
-                    modifier = Modifier.fillMaxWidth()
-                        .background(color = Theme.colors.background).padding(
-                            horizontal = 24.kms,
-                            vertical = 16.kms
-                        ),
-                    colors = CarColor.values().toList(),
-                    onSelectColor = onCarColorSelected,
-                    selectedCarColor = taxi.carColor
-                )
-                Text(
-                    Resources.Strings.seats,
-                    style = Theme.typography.titleLarge,
-                    color = Theme.colors.contentPrimary,
-                    modifier = Modifier.padding(
-                        horizontal = 24.kms,
-                        vertical = 16.kms
+            FilterBox(
+                title = Resources.Strings.filter,
+                onSaveClicked = onSaveFilterClicked,
+                onCancelClicked = onCancelFilterClicked,
+                onClearAllClicked = onClearAllClicked,
+            ) {
+                Column(Modifier.fillMaxSize()) {
+                    Text(
+                        Resources.Strings.status,
+                        style = Theme.typography.titleLarge,
+                        color = Theme.colors.contentPrimary,
+                        modifier = Modifier.padding(horizontal = 24.kms, vertical = 16.kms),
                     )
-                )
-                SeatsBar(
-                    selectedSeatsCount = taxi.seats,
-                    count = 6,
-                    selectedIcon = painterResource(Resources.Drawable.seatFilled),
-                    notSelectedIcon = painterResource(Resources.Drawable.seatOutlined),
-                    iconsSize = 24.kms,
-                    iconsPadding = PaddingValues(horizontal = 8.kms),
-                    modifier = Modifier.fillMaxWidth()
-                        .background(color = Theme.colors.background).padding(
-                            horizontal = 24.kms,
-                            vertical = 16.kms
-                        ),
-                    onClick = onSeatsSelected
-                )
-                Row(
-                    Modifier.padding(24.kms),
-                    horizontalArrangement = Arrangement.spacedBy(16.kms),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    BpTransparentButton(
-                        title = Resources.Strings.cancel,
-                        onClick = onCancelFilterClicked,
-                        modifier = Modifier.cursorHoverIconHand()
-
+                    CarStatus(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(color = Theme.colors.background)
+                            .padding(24.kms),
+                        status = TaxiStatus.values().toList(),
+                        onSelectState = onStatusSelected,
+                        selectedStatus = taxi.status,
                     )
-                    BpOutlinedButton(
-                        title = Resources.Strings.save,
-                        onClick = onSaveFilterClicked,
-                        shape = RoundedCornerShape(Theme.radius.small),
-                        modifier = Modifier.height(50.dp).weight(1f)
+                    Text(
+                        Resources.Strings.carColor,
+                        style = Theme.typography.titleLarge,
+                        color = Theme.colors.contentPrimary,
+                        modifier = Modifier.padding(horizontal = 24.kms, vertical = 16.kms),
+                    )
+                    CarColors(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(color = Theme.colors.background)
+                            .padding(horizontal = 24.kms, vertical = 16.kms),
+                        colors = CarColor.values().toList(),
+                        onSelectColor = onCarColorSelected,
+                        selectedCarColor = taxi.carColor
+                    )
+                    Text(
+                        Resources.Strings.seats,
+                        style = Theme.typography.titleLarge,
+                        color = Theme.colors.contentPrimary,
+                        modifier = Modifier.padding(horizontal = 24.kms, vertical = 16.kms)
+                    )
+                    SeatsBar(
+                        selectedSeatsCount = taxi.seats,
+                        count = 6,
+                        selectedIcon = painterResource(Resources.Drawable.seatFilled),
+                        notSelectedIcon = painterResource(Resources.Drawable.seatOutlined),
+                        iconsSize = 24.kms,
+                        iconsPadding = PaddingValues(horizontal = 8.kms),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(color = Theme.colors.background)
+                            .padding(horizontal = 24.kms, vertical = 16.kms),
+                        onClick = onSeatsSelected
                     )
                 }
             }

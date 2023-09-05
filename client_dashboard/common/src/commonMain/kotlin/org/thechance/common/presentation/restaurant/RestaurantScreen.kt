@@ -283,6 +283,7 @@ class RestaurantScreen :
                 expanded = state.restaurantFilterDropdownMenuUiState.isFilterDropdownMenuExpanded,
                 rating = state.restaurantFilterDropdownMenuUiState.filterRating,
                 priceLevel = state.restaurantFilterDropdownMenuUiState.filterPriceLevel,
+                onFilterClearAllClicked = listener::onFilterClearAllClicked,
             )
         }
     }
@@ -297,97 +298,60 @@ class RestaurantScreen :
         expanded: Boolean,
         rating: Double,
         priceLevel: Int,
+        onFilterClearAllClicked: () -> Unit,
     ) {
         BpDropdownMenu(
-            onDismissRequest = onDismissRequest,
             expanded = expanded,
-            shape = RoundedCornerShape(8.kms),
+            onDismissRequest = onDismissRequest,
+            offset = DpOffset.Zero.copy(y = 16.kms),
+            shape = RoundedCornerShape(Theme.radius.medium),
         ) {
-            Column(
-                modifier = Modifier.background(
-                    color = Theme.colors.surface,
-                    shape = RoundedCornerShape(8.kms)
-                )
+            FilterBox(
+                title = Resources.Strings.filter,
+                onSaveClicked = onClickSave,
+                onCancelClicked = onClickCancel,
+                onClearAllClicked = onFilterClearAllClicked,
             ) {
-                Text(
-                    text = Resources.Strings.filter,
-                    style = Theme.typography.headline,
-                    color = Theme.colors.contentPrimary,
-                    modifier = Modifier.padding(
-                        start = 24.kms,
-                        top = 24.kms
+                Column {
+                    Text(
+                        text = Resources.Strings.rating,
+                        style = Theme.typography.title,
+                        color = Theme.colors.contentPrimary,
+                        modifier = Modifier.padding(start = 24.kms, top = 16.kms)
                     )
-                )
-                Text(
-                    text = Resources.Strings.rating,
-                    style = Theme.typography.title,
-                    color = Theme.colors.contentPrimary,
-                    modifier = Modifier.padding(
-                        start = 24.kms,
-                        top = 40.kms
+                    EditableRatingBar(
+                        rating = rating,
+                        count = 5,
+                        selectedIcon = painterResource(Resources.Drawable.starFilled),
+                        halfSelectedIcon = painterResource(Resources.Drawable.starHalfFilled),
+                        notSelectedIcon = painterResource(Resources.Drawable.starOutlined),
+                        iconsSize = 24.kms,
+                        iconsPadding = PaddingValues(horizontal = 8.kms),
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(top = 16.kms)
+                            .background(color = Theme.colors.background)
+                            .padding(horizontal = 24.kms, vertical = 16.kms),
+                        onClick = { onClickRating(it) }
                     )
-                )
-                EditableRatingBar(
-                    rating = rating,
-                    count = 5,
-                    selectedIcon = painterResource(Resources.Drawable.starFilled),
-                    halfSelectedIcon = painterResource(Resources.Drawable.starHalfFilled),
-                    notSelectedIcon = painterResource(Resources.Drawable.starOutlined),
-                    iconsSize = 24.kms,
-                    iconsPadding = PaddingValues(horizontal = 8.kms),
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(top = 16.kms)
-                        .background(color = Theme.colors.background)
-                        .padding(
-                            horizontal = 24.kms,
-                            vertical = 16.kms
-                        ),
-                    onClick = { onClickRating(it) }
-                )
-
-                Text(
-                    text = Resources.Strings.priceLevel,
-                    style = Theme.typography.title,
-                    color = Theme.colors.contentPrimary,
-                    modifier = Modifier.padding(
-                        start = 24.kms,
-                        top = 32.kms
+                    Text(
+                        text = Resources.Strings.priceLevel,
+                        style = Theme.typography.title,
+                        color = Theme.colors.contentPrimary,
+                        modifier = Modifier.padding(start = 24.kms, top = 32.kms)
                     )
-                )
-                EditablePriceBar(
-                    priceLevel = priceLevel,
-                    count = 3,
-                    icon = painterResource(Resources.Drawable.dollarSign),
-                    enabledIconsColor = Theme.colors.success,
-                    disabledIconsColor = Theme.colors.disable,
-                    iconsPadding = PaddingValues(horizontal = 8.kms),
-                    iconsSize = 16.kms,
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(top = 16.kms)
-                        .background(color = Theme.colors.background)
-                        .padding(
-                            horizontal = 24.kms,
-                            vertical = 16.kms
-                        ),
-                    onClick = { onClickPrice(it) }
-                )
-
-                Row(
-                    Modifier.fillMaxWidth().padding(24.kms),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    BpTransparentButton(
-                        title = Resources.Strings.cancel,
-                        onClick = { onClickCancel(); onDismissRequest() },
-                        modifier = Modifier.padding(end = 16.kms)
-                            .height(32.dp)
-                            .weight(1f)
-                    )
-                    BpOutlinedButton(
-                        title = Resources.Strings.save,
-                        onClick = { onClickSave(); onDismissRequest() },
-                        modifier = Modifier.height(32.dp).weight(3f),
-                        textPadding = PaddingValues(0.dp)
+                    EditablePriceBar(
+                        priceLevel = priceLevel,
+                        count = 3,
+                        icon = painterResource(Resources.Drawable.dollarSign),
+                        enabledIconsColor = Theme.colors.success,
+                        disabledIconsColor = Theme.colors.disable,
+                        iconsPadding = PaddingValues(horizontal = 8.kms),
+                        iconsSize = 16.kms,
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(top = 16.kms)
+                            .background(color = Theme.colors.background)
+                            .padding(horizontal = 24.kms, vertical = 16.kms),
+                        onClick = { onClickPrice(it) }
                     )
                 }
             }

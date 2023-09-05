@@ -23,6 +23,7 @@ interface FilterMenuListener {
     fun onFilterMenuPermissionClick(permission: UserScreenUiState.PermissionUiState)
     fun onFilterMenuCountryClick(country: UserScreenUiState.CountryUiState)
     fun onFilterMenuSaveButtonClicked()
+    fun onFilterClearAllClicked()
 }
 
 interface PageListener {
