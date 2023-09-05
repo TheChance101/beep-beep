@@ -5,6 +5,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
+import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
 import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
@@ -15,7 +16,7 @@ import org.thechance.api_gateway.util.Role
 fun Route.cuisineRoute() {
 
     val restaurantService: RestaurantService by inject()
-
+    val localizedMessagesFactory by inject<LocalizedMessagesFactory>()
     route("/cuisine") {
         authenticateWithRole(Role.DASHBOARD_ADMIN) {
             post {
@@ -37,12 +38,14 @@ fun Route.cuisineRoute() {
             respondWithResult(HttpStatusCode.OK, meals)
         }
 
-        delete("/{id}"){
+        delete("/{id}") {
             val language = extractLocalizationHeader()
             val params = call.receiveParameters()
             val cuisineId = params["id"]?.trim().toString()
-            restaurantService.deleteCuisine(cuisineId= cuisineId,languageCode=language)
-            respondWithResult(HttpStatusCode.OK, "Deleted Successfully")
+            restaurantService.deleteCuisine(cuisineId = cuisineId, languageCode = language)
+            val successMessage =
+                localizedMessagesFactory.createLocalizedMessages(language).deletedSuccessfully
+            respondWithResult(HttpStatusCode.OK, successMessage)
         }
 
     }

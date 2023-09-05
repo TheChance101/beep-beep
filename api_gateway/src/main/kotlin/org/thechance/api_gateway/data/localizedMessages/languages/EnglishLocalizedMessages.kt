@@ -69,5 +69,6 @@ class EnglishLocalizedMessages() : LocalizedMessages {
     override val restaurantInsertOrderError: String = "insert order error"
     override val restaurantInvalidReceivedOrders: String = "invalid received orders"
     override val restaurantNotFound: String = "Sorry, we could not found this restaurant"
+    override val deletedSuccessfully: String = "Deleted successfully 🥳"
     //endregion
 }
