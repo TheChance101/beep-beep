@@ -2,8 +2,10 @@ package data.gateway.remote
 
 import data.remote.mapper.toEntity
 import data.remote.model.LocationDto
+import data.remote.model.OfferDto
 import data.remote.model.RestaurantDto
 import domain.entity.Location
+import domain.entity.Offer
 import domain.entity.PriceLevel
 import domain.entity.Restaurant
 import domain.entity.Time

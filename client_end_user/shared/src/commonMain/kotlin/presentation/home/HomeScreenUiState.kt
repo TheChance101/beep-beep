@@ -10,7 +10,7 @@ data class HomeScreenUiState(
     val recommendedCuisines: List<CuisineUiState> = emptyList(),
     val favoriteRestaurants: List<RestaurantUiState> = emptyList()
 )
-) {
+{
     fun getOfferImages(): List<String> {
         return this.offers.map { it.image }
     }

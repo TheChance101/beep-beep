@@ -20,7 +20,7 @@ data class DrawableResources(
     val orderTaxi: String = "img_taxi.png",
     val filledStar: String = "ic_filled_star_light.xml",
     val placeholder: String = "placeholder.jpeg",
-    val scooter: String = "scooter.xml"
+    val scooter: String = "scooter.xml",
     val icError: String = "ic_error.xml",
 )
 
