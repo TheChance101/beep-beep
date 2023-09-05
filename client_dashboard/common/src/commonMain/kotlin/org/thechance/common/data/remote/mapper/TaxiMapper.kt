@@ -42,7 +42,7 @@ fun TaxiFiltration.toDto(): TaxiFiltrationDto {
 
 fun List<TaxiDto>.toEntity() = map(TaxiDto::toEntity)
 
-fun setCarColor(color: CarColor) =
+fun setCarColor(color: CarColor?) =
     when (color) {
         CarColor.RED -> 0
         CarColor.YELLOW -> 1
@@ -63,15 +63,8 @@ fun getCarColor(color: Int) =
     }
 
 fun getTaxiStatus(status: Int) =
-    when (status) {
-        0 -> TaxiStatus.OFFLINE
-        1 -> TaxiStatus.ONLINE
-        else -> TaxiStatus.ON_RIDE
-    }
+    if (status == 0) TaxiStatus.OFFLINE else TaxiStatus.ONLINE
 
-fun setTaxiStatus(status: TaxiStatus) =
-    when (status) {
-        TaxiStatus.OFFLINE -> 0
-        TaxiStatus.ONLINE -> 1
-        else -> 2
-    }
+
+fun setTaxiStatus(status: TaxiStatus?) =
+    if (status == TaxiStatus.OFFLINE) 0 else 1

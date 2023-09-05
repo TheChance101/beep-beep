@@ -754,7 +754,7 @@ class FakeRemoteGateway(
                     type = "SUV",
                     seats = 6,
                     username = "jane_doe",
-                    status = 2,
+                    status = 1,
                     trips = "5"
                 ),
                 TaxiDto(
@@ -784,7 +784,7 @@ class FakeRemoteGateway(
                     type = "Convertible",
                     seats = 4,
                     username = "robert_white",
-                    status = 2,
+                    status = 0,
                     trips = "3"
                 ),
                 TaxiDto(
@@ -814,7 +814,7 @@ class FakeRemoteGateway(
                     type = "Minivan",
                     seats = 2,
                     username = "susan_anderson",
-                    status = 2,
+                    status = 0,
                     trips = "9"
                 ),
                 TaxiDto(
@@ -872,6 +872,76 @@ class FakeRemoteGateway(
                     plateNumber = "ABC123",
                     type = "Sedan",
                     color = 1,
+                    seats = 4,
+                    status = 1,
+                    username = "Kamel",
+                    trips = "10"
+                ),
+                TaxiDto(
+                    id = "16",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 2,
+                    seats = 4,
+                    status = 1,
+                    username = "Kamel",
+                    trips = "10"
+                ),
+                TaxiDto(
+                    id = "17",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 2,
+                    seats = 5,
+                    status = 1,
+                    username = "Kamel",
+                    trips = "10"
+                ),
+                TaxiDto(
+                    id = "18",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 2,
+                    seats = 4,
+                    status = 1,
+                    username = "Kamel",
+                    trips = "10"
+                ),
+                TaxiDto(
+                    id = "19",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 2,
+                    seats = 4,
+                    status = 1,
+                    username = "Kamel",
+                    trips = "10"
+                ),
+                TaxiDto(
+                    id = "20",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 5,
+                    seats = 5,
+                    status = 1,
+                    username = "Kamel",
+                    trips = "10"
+                ),
+                TaxiDto(
+                    id = "21",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 4,
+                    seats = 4,
+                    status = 1,
+                    username = "Kamel",
+                    trips = "10"
+                ),
+                TaxiDto(
+                    id = "22",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 5,
                     seats = 4,
                     status = 1,
                     username = "Kamel",
@@ -965,47 +1035,44 @@ class FakeRemoteGateway(
 
     override suspend fun getUserData() = "asia"
 
-    override suspend fun getUsers(
-        byPermissions: List<Permission>,
-        byCountries: List<String>,
+    override suspend fun getTaxis(
+        taxiFiltration: TaxiFiltration,
+        username: String?,
         page: Int,
-        numberOfUsers: Int
-    ): DataWrapper<User> {
-        val filteredUsers = fakeUsers.filter { user ->
-            (byPermissions.isEmpty() || user.permission.any { it in byPermissions })
-                    && (byCountries.isEmpty() || user.country in byCountries)
+        numberOfTaxis: Int
+    ): DataWrapper<Taxi> {
+        var filteredTaxis = taxis.toEntity()
+
+        username?.let { name ->
+            if (name.isNotEmpty()) {
+                filteredTaxis = filteredTaxis.filter {
+                    it.username.startsWith(name, ignoreCase = true)
+                }
+            }
         }
 
-        val totalUsers = filteredUsers.size
-        val numberOfPages = ceil(totalUsers.toDouble() / numberOfUsers).toInt()
-        val startIndex = (page - 1) * numberOfUsers
-        val endIndex = startIndex + numberOfUsers
+        if (taxiFiltration.status != null || taxiFiltration.carColor != null || taxiFiltration.seats != -1) {
+            filteredTaxis = filteredTaxis.filter {
+                it.status == taxiFiltration.status &&
+                        it.color == taxiFiltration.carColor &&
+                        it.seats == taxiFiltration.seats
+            }
+        }
 
-        val paginatedUsers = filteredUsers.subList(startIndex, endIndex.coerceAtMost(totalUsers))
-
-        return DataWrapperDto(
-            totalPages = numberOfPages,
-            result = paginatedUsers,
-            totalResult = totalUsers
-        ).toEntity()
-    }
-
-    override suspend fun getTaxis(page: Int, numberOfTaxis: Int): DataWrapper<Taxi> {
-        val taxis = taxis.toEntity()
         val startIndex = (page - 1) * numberOfTaxis
         val endIndex = startIndex + numberOfTaxis
         val numberOfPages = ceil(taxis.size / (numberOfTaxis * 1.0)).toInt()
         return try {
             DataWrapperDto(
                 totalPages = numberOfPages,
-                result = taxis.subList(startIndex, endIndex.coerceAtMost(taxis.size)),
-                totalResult = taxis.size
+                result = filteredTaxis.subList(startIndex, endIndex.coerceAtMost(taxis.size)),
+                totalResult = filteredTaxis.size
             ).toEntity()
         } catch (e: Exception) {
             DataWrapperDto(
                 totalPages = numberOfPages,
-                result = taxis,
-                totalResult = taxis.size
+                result = filteredTaxis,
+                totalResult = filteredTaxis.size
             ).toEntity()
         }
     }
@@ -1057,61 +1124,6 @@ class FakeRemoteGateway(
             taxiId
         } else {
             throw Exception("Taxi not found")
-        }
-    }
-
-    override suspend fun searchTaxisByUsername(
-        username: String,
-        page: Int,
-        numberOfTaxis: Int
-    ): DataWrapper<Taxi> {
-        val taxis = taxis.filter {
-            it.username?.startsWith(username, true) ?: false
-        }.toEntity()
-        val startIndex = (page - 1) * numberOfTaxis
-        val endIndex = startIndex + numberOfTaxis
-        val numberOfPages = ceil(taxis.size / (numberOfTaxis * 1.0)).toInt()
-        return try {
-            DataWrapperDto(
-                totalPages = numberOfPages,
-                result = taxis.subList(startIndex, endIndex.coerceAtMost(taxis.size)),
-                totalResult = taxis.size
-            ).toEntity()
-        } catch (e: Exception) {
-            DataWrapperDto(
-                totalPages = numberOfPages,
-                result = taxis,
-                totalResult = taxis.size
-            ).toEntity()
-        }
-    }
-
-    override suspend fun filterTaxis(
-        taxi: TaxiFiltration,
-        page: Int,
-        numberOfTaxis: Int,
-    ): DataWrapper<Taxi> {
-        val taxiDto = taxi.toDto()
-        val taxisFiltered = taxis.filter {
-            it.color == taxiDto.color && it.seats == taxiDto.seats && it.status == taxiDto.status
-        }.toEntity()
-
-        val startIndex = (page - 1) * numberOfTaxis
-        val endIndex = startIndex + numberOfTaxis
-        val numberOfPages = ceil(taxisFiltered.size / (numberOfTaxis * 1.0)).toInt()
-        return try {
-            DataWrapperDto(
-                totalPages = numberOfPages,
-                result = taxisFiltered.subList(
-                    startIndex,
-                    endIndex.coerceAtMost(taxisFiltered.size)
-                ),
-                totalResult = taxisFiltered.size
-            ).toEntity()
-        } catch (e: Exception) {
-            DataWrapperDto(
-                totalPages = numberOfPages, result = taxisFiltered, totalResult = taxisFiltered.size
-            ).toEntity()
         }
     }
 
@@ -1185,60 +1197,31 @@ class FakeRemoteGateway(
         return "30.044420,31.235712"
     }
 
-    override suspend fun searchUsers(
-        query: String,
+    override suspend fun getUsers(
+        query: String?,
         byPermissions: List<Permission>,
         byCountries: List<String>,
         page: Int,
         numberOfUsers: Int
     ): DataWrapper<User> {
-        val filteredUsers = fakeUsers.filter {
-            it.fullName.startsWith(query, true) || it.username.startsWith(query, true)
-        }.toMutableList()
-
-        if (byPermissions.isNotEmpty()) filteredUsers.retainAll { user ->
-            user.permission.any { permission -> byPermissions.contains(permission) }
+        var filteredUsers = fakeUsers
+        query?.let { searchQuery ->
+            if (searchQuery.isNotEmpty()) {
+                filteredUsers = fakeUsers.filter {
+                    it.fullName.startsWith(searchQuery, true) || it.username.startsWith(query, true)
+                }
+            }
         }
+        filteredUsers = if (byPermissions.isNotEmpty()) filteredUsers.filter { user ->
+            user.permission.containsAll(byPermissions)
+        } else filteredUsers
 
-        if (byCountries.isNotEmpty()) filteredUsers.retainAll { user ->
+        filteredUsers = if (byCountries.isNotEmpty()) filteredUsers.filter { user ->
             byCountries.any { it == user.country }
-        }
+        } else filteredUsers
 
         val startIndex = (page - 1) * numberOfUsers
         val endIndex = startIndex + numberOfUsers
-        val numberOfPages = ceil(filteredUsers.size / (numberOfUsers * 1.0)).toInt()
-        return try {
-            DataWrapperDto(
-                totalPages = numberOfPages,
-                result = filteredUsers.subList(
-                    startIndex,
-                    endIndex.coerceAtMost(filteredUsers.size)
-                ),
-                totalResult = filteredUsers.size
-            ).toEntity()
-        } catch (e: Exception) {
-            DataWrapperDto(
-                totalPages = numberOfPages,
-                result = filteredUsers,
-                totalResult = filteredUsers.size
-            ).toEntity()
-        }
-    }
-
-    override suspend fun filterUsers(
-        permissions: List<Permission>,
-        countries: List<String>,
-        page: Int,
-        numberOfUsers: Int,
-    ): DataWrapper<User> {
-        val filteredUsers = fakeUsers.filter { user ->
-            user.permission.containsAll(permissions) && countries.any { it == user.country }
-        }
-//        val filteredUsers = fakeUsers.filter { user ->
-//            user.permission.any { permission -> permissions.any { it.name == permission.name } } && countries.any { it == user.country }
-//        }
-        val startIndex = (page - 1) * numberOfUsers
-        val endIndex = (page - 1) * numberOfUsers
         val numberOfPages = ceil(filteredUsers.size / (numberOfUsers * 1.0)).toInt()
         return try {
             DataWrapperDto(

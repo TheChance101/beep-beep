@@ -55,14 +55,14 @@ data class TaxiDetailsUiState(
         @Composable get() = when (status) {
             TaxiStatus.OFFLINE -> Theme.colors.primary
             TaxiStatus.ONLINE -> Theme.colors.success
-            TaxiStatus.ON_RIDE -> Theme.colors.warning
         }
 }
+
 data class TaxiFilterUiState(
-    val carColor: CarColor = CarColor.WHITE,
-    val seats: Int = 1,
-    val status: TaxiStatus = ONLINE,
-){
+    val carColor: CarColor? = null,
+    val seats: Int = -1,
+    val status: TaxiStatus? = null
+) {
     fun toEntity(): TaxiFiltration {
         return TaxiFiltration(
             carColor = carColor,
@@ -71,12 +71,12 @@ data class TaxiFilterUiState(
         )
     }
 }
+
 @Composable
-fun TaxiStatus.getStatusName():String{
+fun TaxiStatus.getStatusName(): String {
     return when (this) {
         TaxiStatus.OFFLINE -> Resources.Strings.offline
         TaxiStatus.ONLINE -> Resources.Strings.online
-        TaxiStatus.ON_RIDE -> Resources.Strings.onRide
     }
 }
 
@@ -85,6 +85,7 @@ data class TaxiPageInfoUiState(
     val numberOfTaxis: Int = 0,
     val totalPages: Int = 0,
 )
+
 data class TaxiInfoUiState(
     val id: String = "",
     val plateNumber: String = "",
@@ -93,8 +94,9 @@ data class TaxiInfoUiState(
     val selectedCarColor: CarColor = CarColor.WHITE,
     val seats: Int = 0
 )
+
 data class MenuUiState(
-     val id: String = "",
+    val id: String = "",
     val items: List<MenuItemUiState> = listOf(
         MenuItemUiState(
             iconPath = "ic_edit.xml",
@@ -113,6 +115,7 @@ data class MenuUiState(
         val isSecondary: Boolean = false,
     )
 }
+
 fun DataWrapper<Taxi>.toUiState(): TaxiPageInfoUiState {
     return TaxiPageInfoUiState(
         data = result.toUiState(),
@@ -136,8 +139,8 @@ fun List<Taxi>.toUiState() = map { it.toUiState() }
 fun TaxiInfoUiState.toEntity() = NewTaxiInfo(
     id = id,
     plateNumber = plateNumber,
-    driverUserName =driverUserName,carModel= carModel,
-    selectedCarColor=     selectedCarColor,
+    driverUserName = driverUserName, carModel = carModel,
+    selectedCarColor = selectedCarColor,
     seats = seats
 )
 
