@@ -83,7 +83,7 @@ abstract class BaseScreenModel<S, E>(initialState: S) : StateScreenModel<S>(init
         return flow {
             var lastTime = 0L
             collect { value ->
-                val currentTime = Clock.systemDefaultZone().instant().toEpochMilli()
+                val currentTime = Clock.System.now().toEpochMilliseconds()
                 if (currentTime - lastTime >= periodMillis) {
                     lastTime = currentTime
                     emit(value)
