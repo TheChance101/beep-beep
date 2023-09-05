@@ -88,6 +88,7 @@ class RestaurantScreenModel(
             )
         }
         getRestaurants()
+        onDismissDropDownMenu()
     }
 
     override fun onCancelFilterRestaurantsClicked() {
@@ -101,6 +102,7 @@ class RestaurantScreenModel(
             )
         }
         getRestaurants()
+        onDismissDropDownMenu()
     }
 
 
@@ -252,6 +254,18 @@ class RestaurantScreenModel(
         )
     }
 
+    override fun onFilterClearAllClicked() {
+        updateState {
+            it.copy(
+                restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
+                    filterRating = 0.0,
+                    filterPriceLevel = 1,
+                    isFiltered = false
+                )
+            )
+        }
+    }
+
     override fun onCreateNewRestaurantClicked() {
         tryToExecute(
             callee = {
@@ -276,7 +290,6 @@ class RestaurantScreenModel(
         updateState { it.copy(restaurants = restaurants, isLoading = false) }
         hideEditRestaurantMenu()
     }
-
 
 
     // region Cuisine Dialog
