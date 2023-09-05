@@ -92,16 +92,6 @@ class RestaurantScreenModel(
     }
 
     override fun onCancelFilterRestaurantsClicked() {
-        updateState {
-            it.copy(
-                restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
-                    filterRating = 0.0,
-                    filterPriceLevel = 1,
-                    isFiltered = false
-                )
-            )
-        }
-        getRestaurants()
         onDismissDropDownMenu()
     }
 
