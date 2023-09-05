@@ -1,6 +1,6 @@
 package data.gateway.remote
 
-import data.remote.mapper.toCuisineEntity
+import data.remote.mapper.toSessionEntity
 import data.remote.model.ServerResponse
 import data.remote.model.SessionDto
 import domain.entity.Session
@@ -11,6 +11,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.header
 import io.ktor.client.request.url
+import io.ktor.http.HttpMethod
 import io.ktor.http.Parameters
 import io.ktor.http.isSuccess
 import io.ktor.http.parameters
@@ -47,16 +48,17 @@ class UserGateway(client: HttpClient) : BaseGateway(client), IUserGateway {
     }
 
     override suspend fun loginUser(username: String, password: String): Session {
-        val result = tryToExecute<ServerResponse<SessionDto>>() {
+        return tryToExecute<ServerResponse<SessionDto>> {
             submitForm(
                 url = ("/login"),
                 formParameters = Parameters.build {
                     append("username", username)
                     append("password", password)
                 }
-            )
-        }.value
-        return result?.toCuisineEntity() ?: throw InvalidCredentialsException("Invalid Credential")
+            ){
+                method = HttpMethod.Post
+            }
+        }.value?.toSessionEntity() ?: throw InvalidCredentialsException("Invalid Credential")
     }
 
     override suspend fun refreshAccessToken(refreshToken: String): Pair<String,String> {
