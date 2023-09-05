@@ -175,8 +175,12 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
     override suspend fun updateUser(
         id: String, saltedHash: SaltedHash?, fullName: String?, username: String?, email: String?
     ): Boolean {
-
         try {
+            dataBaseContainer.userCollection.find(
+                filter = (UserCollection::username eq username)
+                        and (UserCollection::username eq username),
+            )
+
             return dataBaseContainer.userCollection.updateOneById(
                 ObjectId(id),
                 set(

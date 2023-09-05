@@ -17,7 +17,7 @@ class MainScreenModel : BaseScreenModel<MainUiState, MainScreenUiEffect>(MainUiS
     }
 
     override fun onLoginClicked() {
-        TODO("Not yet implemented")
+        sendNewEffect(MainScreenUiEffect.NavigateLoginScreen)
     }
 
 

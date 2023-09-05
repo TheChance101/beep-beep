@@ -39,6 +39,7 @@ import presentation.home.HomeScreenInteractionListener
 import presentation.home.HomeScreenModel
 import presentation.home.HomeScreenUiEffect
 import presentation.home.HomeScreenUiState
+import presentation.login.LoginScreen
 import resources.Resources
 
 
@@ -56,11 +57,16 @@ object MainContainer :
         TabNavigator(HomeTab) {
             Scaffold(
                 topBar = {
-                    val tabNavigator = LocalTabNavigator.current
-                    if (!state.isLogin) {
-                        BpAppBar(
-                            title = Resources.strings.loginWelcomeMessage,
-                            actions = {
+                    BpAppBar(
+                        title = if (state.isLogin) {
+                            Resources.strings.welcome + " ${state.username}"
+                        } else {
+                            Resources.strings.loginWelcomeMessage
+                        },
+                        actions = {
+                            if (state.isLogin) {
+                                Wallet(value = state.currency + state.wallet)
+                            } else {
                                 BpButton(
                                     modifier = Modifier.heightIn(max = 32.dp).padding(end = 16.dp),
                                     textPadding = PaddingValues(horizontal = 16.dp),
@@ -68,31 +74,13 @@ object MainContainer :
                                     onClick = listener::onLoginClicked
                                 )
                             }
-                        )
-                    } else {
-                        BpAppBar(
-                            title = Resources.strings.welcome + " ${state.username}",
-                            actions = {
-                                Column(modifier = Modifier.padding(end = 16.dp)) {
-                                    Text(
-                                        Resources.strings.wallet,
-                                        style = Theme.typography.body,
-                                        color = Theme.colors.contentSecondary
-                                    )
-                                    Text(
-                                        state.currency + state.wallet,
-                                        style = Theme.typography.title,
-                                        color = Theme.colors.primary
-                                    )
-                                }
-                            }
-                        )
-                    }
+                        }
+                    )
                 },
                 bottomBar = {
                     val tabNavigator = LocalTabNavigator.current
                     val tabs = rememberTabsContainer()
-//                    BottomBar(tabs, tabNavigator)
+                    BottomBar(tabs, tabNavigator)
                 },
                 content = {
                     Column(Modifier.fillMaxSize().padding(it)) {
@@ -104,7 +92,9 @@ object MainContainer :
     }
 
     override fun onEffect(effect: MainScreenUiEffect, navigator: Navigator) {
-
+        when (effect) {
+            is MainScreenUiEffect.NavigateLoginScreen -> navigator.push(LoginScreen())
+        }
     }
 
     @OptIn(ExperimentalResourceApi::class)
@@ -140,6 +130,25 @@ object MainContainer :
                     onClick = { tabNavigator.current = tabContainer.tab },
                 )
             }
+        }
+    }
+
+    @Composable
+    private fun Wallet(
+        modifier: Modifier = Modifier,
+        value: String
+    ) {
+        Column(modifier = modifier.padding(end = 16.dp)) {
+            Text(
+                Resources.strings.wallet,
+                style = Theme.typography.body,
+                color = Theme.colors.contentSecondary
+            )
+            Text(
+                value,
+                style = Theme.typography.title,
+                color = Theme.colors.primary
+            )
         }
     }
 }
