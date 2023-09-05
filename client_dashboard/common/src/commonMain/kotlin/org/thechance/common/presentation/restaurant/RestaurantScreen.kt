@@ -360,7 +360,7 @@ class RestaurantScreen :
 
     @Composable
     private fun RestaurantAddCuisineDialog(
-        listener: AddCuisineListener,
+        listener: AddCuisineInteractionListener,
         isVisible: Boolean,
         cuisineName: String,
         cuisines: List<String>,
