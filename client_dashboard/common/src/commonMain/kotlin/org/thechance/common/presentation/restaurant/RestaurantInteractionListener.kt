@@ -2,7 +2,8 @@ package org.thechance.common.presentation.restaurant
 
 import org.thechance.common.presentation.base.BaseInteractionListener
 
-interface RestaurantInteractionListener : BaseInteractionListener, AddCuisineListener {
+interface RestaurantInteractionListener : BaseInteractionListener, AddCuisineInteractionListener,
+    AddRestaurantInteractionListener, FilterRestaurantsInteractionListener {
 
     fun onSearchChange(restaurantName: String)
 
@@ -10,19 +11,36 @@ interface RestaurantInteractionListener : BaseInteractionListener, AddCuisineLis
 
     fun onDismissDropDownMenu()
 
-    fun onClickFilterRatingBar(rating: Double)
-
-    fun onClickFilterPriceBar(priceLevel: Int)
-
-    fun onSaveFilterRestaurantsClicked(rating: Double, priceLevel: Int)
-
-    fun onCancelFilterRestaurantsClicked()
-
     fun onPageClicked(pageNumber: Int)
 
     fun onItemPerPageChange(numberOfRestaurantsInPage: Int)
 
+    fun showEditRestaurantMenu(restaurantName: String)
+
+    fun hideEditRestaurantMenu()
+
+    fun onClickEditRestaurantMenuItem(restaurant: RestaurantUiState.RestaurantDetailsUiState)
+
+    fun onClickDeleteRestaurantMenuItem(restaurant: RestaurantUiState.RestaurantDetailsUiState)
+
     fun onAddNewRestaurantClicked()
+
+}
+
+
+interface AddCuisineInteractionListener {
+    fun onClickAddCuisine()
+
+    fun onClickDeleteCuisine(cuisineName: String)
+
+    fun onCloseAddCuisineDialog()
+
+    fun onClickCreateCuisine()
+
+    fun onChangeCuisineName(cuisineName: String)
+}
+
+interface AddRestaurantInteractionListener {
 
     fun onCancelCreateRestaurantClicked()
 
@@ -40,23 +58,16 @@ interface RestaurantInteractionListener : BaseInteractionListener, AddCuisineLis
 
     fun onLocationChange(location: String)
 
-    fun showEditRestaurantMenu(restaurantName: String)
-
-    fun hideEditRestaurantMenu()
-
-    fun onClickEditRestaurantMenuItem(restaurant: RestaurantUiState.RestaurantDetailsUiState)
-
-    fun onClickDeleteRestaurantMenuItem(restaurant: RestaurantUiState.RestaurantDetailsUiState)
 }
 
-interface AddCuisineListener {
-    fun onClickAddCuisine()
+interface FilterRestaurantsInteractionListener {
 
-    fun onClickDeleteCuisine(cuisineName: String)
+    fun onClickFilterRatingBar(rating: Double)
 
-    fun onCloseAddCuisineDialog()
+    fun onClickFilterPriceBar(priceLevel: Int)
 
-    fun onClickCreateCuisine()
+    fun onSaveFilterRestaurantsClicked(rating: Double, priceLevel: Int)
 
-    fun onChangeCuisineName(cuisineName: String)
+    fun onCancelFilterRestaurantsClicked()
+
 }
