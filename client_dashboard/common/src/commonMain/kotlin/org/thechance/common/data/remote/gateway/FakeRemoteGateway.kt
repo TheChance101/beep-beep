@@ -24,6 +24,7 @@ class FakeRemoteGateway(
 
     private val restaurants = mutableListOf<RestaurantDto>()
     private val taxis = mutableListOf<TaxiDto>()
+    private val cuisines = mutableListOf<String>()
     private val fakeUsers = listOf(
         UserDto(
             id = "c4425a0e-9f0a-4df1-bcc1-6dd96322a990",
@@ -876,6 +877,76 @@ class FakeRemoteGateway(
                     username = "Kamel",
                     trips = "10"
                 ),
+                TaxiDto(
+                    id = "16",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 2,
+                    seats = 4,
+                    status = 1,
+                    username = "Kamel",
+                    trips = "10"
+                ),
+                TaxiDto(
+                    id = "17",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 2,
+                    seats = 5,
+                    status = 1,
+                    username = "Kamel",
+                    trips = "10"
+                ),
+                TaxiDto(
+                    id = "18",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 2,
+                    seats = 4,
+                    status = 1,
+                    username = "Kamel",
+                    trips = "10"
+                ),
+                TaxiDto(
+                    id = "19",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 2,
+                    seats = 4,
+                    status = 1,
+                    username = "Kamel",
+                    trips = "10"
+                ),
+                TaxiDto(
+                    id = "20",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 5,
+                    seats = 5,
+                    status = 1,
+                    username = "Kamel",
+                    trips = "10"
+                ),
+                TaxiDto(
+                    id = "21",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 4,
+                    seats = 4,
+                    status = 1,
+                    username = "Kamel",
+                    trips = "10"
+                ),
+                TaxiDto(
+                    id = "22",
+                    plateNumber = "ABC123",
+                    type = "Sedan",
+                    color = 5,
+                    seats = 4,
+                    status = 2,
+                    username = "Kamel",
+                    trips = "10"
+                ),
             )
         )
         restaurants.addAll(
@@ -936,51 +1007,72 @@ class FakeRemoteGateway(
                 ),
             )
         )
+        cuisines.addAll(
+            listOf(
+                "Angolan cuisine",
+                "Cameroonian cuisine",
+                "Chadian cuisine",
+                "Congolese cuisine",
+                "Centrafrican cuisine",
+                "Equatorial Guinea cuisine",
+                "Gabonese cuisine",
+                "Santomean cuisine",
+                "Burundian cuisine",
+                "Djiboutian cuisine",
+                "Eritrean cuisine",
+                "Ethiopian cuisine",
+                "Kenyan cuisine",
+                "Maasai cuisine",
+                "Rwandan cuisine",
+                "Somali cuisine",
+                "South Sudanese cuisine",
+                "Tanzanian cuisine",
+                "Zanzibari cuisine",
+                "Ugandan cuisine",
+            )
+        )
     }
 
     override suspend fun getUserData() = "asia"
 
-    override suspend fun getUsers(
-        byPermissions: List<Permission>,
-        byCountries: List<String>,
+    override suspend fun getTaxis(
+        taxiFiltration: TaxiFiltration,
+        username: String?,
         page: Int,
-        numberOfUsers: Int
-    ): DataWrapper<User> {
-        val filteredUsers = fakeUsers.filter { user ->
-            (byPermissions.isEmpty() || user.permission.any { it in byPermissions })
-                    && (byCountries.isEmpty() || user.country in byCountries)
+        numberOfTaxis: Int
+    ): DataWrapper<Taxi> {
+        var filteredTaxis = taxis.toEntity()
+
+        username?.let { name ->
+            if (name.isNotEmpty()) {
+                filteredTaxis = filteredTaxis.filter {
+                    it.username.startsWith(name, ignoreCase = true)
+                }
+            }
         }
 
-        val totalUsers = filteredUsers.size
-        val numberOfPages = ceil(totalUsers.toDouble() / numberOfUsers).toInt()
-        val startIndex = (page - 1) * numberOfUsers
-        val endIndex = startIndex + numberOfUsers
+        if (taxiFiltration.status != null || taxiFiltration.carColor != null || taxiFiltration.seats != -1) {
+            filteredTaxis = filteredTaxis.filter {
+                it.status == taxiFiltration.status &&
+                        it.color == taxiFiltration.carColor &&
+                        it.seats == taxiFiltration.seats
+            }
+        }
 
-        val paginatedUsers = filteredUsers.subList(startIndex, endIndex.coerceAtMost(totalUsers))
-
-        return DataWrapperDto(
-            totalPages = numberOfPages,
-            result = paginatedUsers,
-            totalResult = totalUsers
-        ).toEntity()
-    }
-
-    override suspend fun getTaxis(page: Int, numberOfTaxis: Int): DataWrapper<Taxi> {
-        val taxis = taxis.toEntity()
         val startIndex = (page - 1) * numberOfTaxis
         val endIndex = startIndex + numberOfTaxis
         val numberOfPages = ceil(taxis.size / (numberOfTaxis * 1.0)).toInt()
         return try {
             DataWrapperDto(
                 totalPages = numberOfPages,
-                result = taxis.subList(startIndex, endIndex.coerceAtMost(taxis.size)),
-                totalResult = taxis.size
+                result = filteredTaxis.subList(startIndex, endIndex.coerceAtMost(taxis.size)),
+                totalResult = filteredTaxis.size
             ).toEntity()
         } catch (e: Exception) {
             DataWrapperDto(
                 totalPages = numberOfPages,
-                result = taxis,
-                totalResult = taxis.size
+                result = filteredTaxis,
+                totalResult = filteredTaxis.size
             ).toEntity()
         }
     }
@@ -1020,7 +1112,7 @@ class FakeRemoteGateway(
             taxis.removeAt(indexToUpdate)
             taxis.add(index = indexToUpdate, element = updatedTaxi)
             updatedTaxi.toEntity()
-        }else{
+        } else {
             throw Exception("Taxi not found")
         }
     }
@@ -1032,61 +1124,6 @@ class FakeRemoteGateway(
             taxiId
         } else {
             throw Exception("Taxi not found")
-        }
-    }
-
-    override suspend fun searchTaxisByUsername(
-        username: String,
-        page: Int,
-        numberOfTaxis: Int
-    ): DataWrapper<Taxi> {
-        val taxis = taxis.filter {
-            it.username?.startsWith(username, true) ?: false
-        }.toEntity()
-        val startIndex = (page - 1) * numberOfTaxis
-        val endIndex = startIndex + numberOfTaxis
-        val numberOfPages = ceil(taxis.size / (numberOfTaxis * 1.0)).toInt()
-        return try {
-            DataWrapperDto(
-                totalPages = numberOfPages,
-                result = taxis.subList(startIndex, endIndex.coerceAtMost(taxis.size)),
-                totalResult = taxis.size
-            ).toEntity()
-        } catch (e: Exception) {
-            DataWrapperDto(
-                totalPages = numberOfPages,
-                result = taxis,
-                totalResult = taxis.size
-            ).toEntity()
-        }
-    }
-
-    override suspend fun filterTaxis(
-        taxi: TaxiFiltration,
-        page: Int,
-        numberOfTaxis: Int,
-    ): DataWrapper<Taxi> {
-        val taxiDto = taxi.toDto()
-        val taxisFiltered = taxis.filter {
-            it.color == taxiDto.color && it.seats == taxiDto.seats && it.status == taxiDto.status
-        }.toEntity()
-
-        val startIndex = (page - 1) * numberOfTaxis
-        val endIndex = startIndex + numberOfTaxis
-        val numberOfPages = ceil(taxisFiltered.size / (numberOfTaxis * 1.0)).toInt()
-        return try {
-            DataWrapperDto(
-                totalPages = numberOfPages,
-                result = taxisFiltered.subList(
-                    startIndex,
-                    endIndex.coerceAtMost(taxisFiltered.size)
-                ),
-                totalResult = taxisFiltered.size
-            ).toEntity()
-        } catch (e: Exception) {
-            DataWrapperDto(
-                totalPages = numberOfPages, result = taxisFiltered, totalResult = taxisFiltered.size
-            ).toEntity()
         }
     }
 
@@ -1160,60 +1197,31 @@ class FakeRemoteGateway(
         return "30.044420,31.235712"
     }
 
-    override suspend fun searchUsers(
-        query: String,
+    override suspend fun getUsers(
+        query: String?,
         byPermissions: List<Permission>,
         byCountries: List<String>,
         page: Int,
         numberOfUsers: Int
     ): DataWrapper<User> {
-        val filteredUsers = fakeUsers.filter {
-            it.fullName.startsWith(query, true) || it.username.startsWith(query, true)
-        }.toMutableList()
-
-        if (byPermissions.isNotEmpty()) filteredUsers.retainAll { user ->
-            user.permission.any { permission -> byPermissions.contains(permission) }
+        var filteredUsers = fakeUsers
+        query?.let { searchQuery ->
+            if (searchQuery.isNotEmpty()) {
+                filteredUsers = fakeUsers.filter {
+                    it.fullName.startsWith(searchQuery, true) || it.username.startsWith(query, true)
+                }
+            }
         }
+        filteredUsers = if (byPermissions.isNotEmpty()) filteredUsers.filter { user ->
+            user.permission.containsAll(byPermissions)
+        } else filteredUsers
 
-        if (byCountries.isNotEmpty()) filteredUsers.retainAll { user ->
+        filteredUsers = if (byCountries.isNotEmpty()) filteredUsers.filter { user ->
             byCountries.any { it == user.country }
-        }
+        } else filteredUsers
 
         val startIndex = (page - 1) * numberOfUsers
         val endIndex = startIndex + numberOfUsers
-        val numberOfPages = ceil(filteredUsers.size / (numberOfUsers * 1.0)).toInt()
-        return try {
-            DataWrapperDto(
-                totalPages = numberOfPages,
-                result = filteredUsers.subList(
-                    startIndex,
-                    endIndex.coerceAtMost(filteredUsers.size)
-                ),
-                totalResult = filteredUsers.size
-            ).toEntity()
-        } catch (e: Exception) {
-            DataWrapperDto(
-                totalPages = numberOfPages,
-                result = filteredUsers,
-                totalResult = filteredUsers.size
-            ).toEntity()
-        }
-    }
-
-    override suspend fun filterUsers(
-        permissions: List<Permission>,
-        countries: List<String>,
-        page: Int,
-        numberOfUsers: Int,
-    ): DataWrapper<User> {
-        val filteredUsers = fakeUsers.filter { user ->
-            user.permission.containsAll(permissions) && countries.any { it == user.country }
-        }
-//        val filteredUsers = fakeUsers.filter { user ->
-//            user.permission.any { permission -> permissions.any { it.name == permission.name } } && countries.any { it == user.country }
-//        }
-        val startIndex = (page - 1) * numberOfUsers
-        val endIndex = (page - 1) * numberOfUsers
         val numberOfPages = ceil(filteredUsers.size / (numberOfUsers * 1.0)).toInt()
         return try {
             DataWrapperDto(
@@ -1250,6 +1258,22 @@ class FakeRemoteGateway(
             )
         )
         return restaurant
+    }
+
+    override suspend fun getCuisines(): List<String> {
+        return cuisines
+    }
+
+    override suspend fun createCuisine(cuisineName: String): String? {
+        return if (cuisineName !in cuisines && cuisineName.isNotBlank()) {
+            cuisines.add(0, cuisineName)
+            cuisineName
+        } else null
+    }
+
+    override suspend fun deleteCuisine(cuisineName: String): String {
+        cuisines.remove(cuisineName)
+        return cuisineName
     }
 
     private fun createTaxiPDFReport(): File {
@@ -1394,8 +1418,7 @@ class FakeRemoteGateway(
         contentStream.beginText()
         val dateTimeWidth = PDType1Font.HELVETICA.getStringWidth(dateTime) / 1000 * 12f
         val pageMidX = pageWidth / 2 // Place the text in the center of the page
-        val dateTimeX =
-            pageMidX - dateTimeWidth / 2 // Place the text in the center horizontally
+        val dateTimeX = pageMidX - dateTimeWidth / 2 // Place the text in the center horizontally
         val dateTimeTopMargin = 10f // Add space between date/time and title
         val dateTimeY = titleY - 20f - dateTimeTopMargin // Adjust the value to add more space
         contentStream.newLineAtOffset(dateTimeX, dateTimeY)

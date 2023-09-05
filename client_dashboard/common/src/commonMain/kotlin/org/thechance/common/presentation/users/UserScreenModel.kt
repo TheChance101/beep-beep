@@ -3,14 +3,12 @@ package org.thechance.common.presentation.users
 import kotlinx.coroutines.Job
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.User
-import org.thechance.common.domain.usecase.ISearchUsersUseCase
-import org.thechance.common.domain.usecase.IManageUsersUseCase
+import org.thechance.common.domain.usecase.IGetUsersUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
 class UserScreenModel(
-    private val searchUsers: ISearchUsersUseCase,
-    private val manageUsers: IManageUsersUseCase
+    private val searchUsers: IGetUsersUseCase,
 ) : BaseScreenModel<UserScreenUiState, UserUiEffect>(UserScreenUiState()),
     UserScreenInteractionListener {
 
@@ -18,25 +16,6 @@ class UserScreenModel(
 
     init {
         getUsers()
-    }
-
-    private fun getUsers() {
-        tryToExecute(
-            {
-                manageUsers.getUsers(
-                    byPermissions = state.value.filter.permissions.toEntity(),
-                    byCountries = state.value.filter.countries.filter { it.selected }.map { it.name },
-                    page = state.value.currentPage,
-                    numberOfUsers = state.value.specifiedUsers
-                )
-            }, ::onGetUsersSuccessfully, ::onError
-        )
-    }
-
-    private fun onGetUsersSuccessfully(users: DataWrapper<User>) {
-        updateState {
-            it.copy(pageInfo = users.toUiState(), isLoading = false)
-        }
     }
 
     private fun onError(error: ErrorState) {
@@ -55,15 +34,11 @@ class UserScreenModel(
 
     // region Filter Menu
     override fun showFilterMenu() {
-        updateState {
-            it.copy(filter = it.filter.copy(show = true))
-        }
+        updateState { it.copy(filter = it.filter.copy(show = true)) }
     }
 
     override fun hideFilterMenu() {
-        updateState {
-            it.copy(filter = it.filter.copy(show = false))
-        }
+        updateState { it.copy(filter = it.filter.copy(show = false)) }
     }
 
     override fun onFilterMenuPermissionClick(permission: UserScreenUiState.PermissionUiState) {
@@ -79,33 +54,32 @@ class UserScreenModel(
     }
 
     override fun onFilterMenuSaveButtonClicked() {
-        hideFilterMenu().also { if (state.value.search.isNotEmpty()) searchUsers() else getUsers() }
+        hideFilterMenu()
+        getUsers()
     }
 
     // endregion
 
     // region Search Bar
     override fun onSearchInputChange(text: String) {
-        updateState { it.copy(search = text) }.also {
-            searchJob?.cancel()
-            searchJob = launchSearchJob()
-        }
+        updateState { it.copy(search = text) }
+        launchSearchJob()
     }
 
-    private fun launchSearchJob(): Job {
-        return launchDelayed(300L) {
-            if (state.value.search.isNotEmpty()) searchUsers() else getUsers()
-        }
+    private fun launchSearchJob() {
+        searchJob?.cancel()
+        searchJob = launchDelayed(300L) { getUsers() }
     }
 
     private fun onSearchUsersSuccessfully(users: DataWrapper<User>) {
         updateState { it.copy(pageInfo = users.toUiState(), isLoading = false) }
     }
 
-    private fun searchUsers() {
+    private fun getUsers() {
         tryToExecute(
             {
-                searchUsers(query = state.value.search,
+                searchUsers(
+                    query = state.value.search.trim(),
                     byPermissions = state.value.filter.permissions.toEntity(),
                     byCountries = state.value.filter.countries.filter { it.selected }.map { it.name },
                     page = state.value.currentPage,
@@ -119,15 +93,11 @@ class UserScreenModel(
 
     // region User Menu
     override fun showEditUserMenu(username: String) {
-        updateState {
-            it.copy(userMenu = username)
-        }
+        updateState { it.copy(userMenu = username) }
     }
 
     override fun hideEditUserMenu() {
-        updateState {
-            it.copy(userMenu = "")
-        }
+        updateState { it.copy(userMenu = "") }
     }
 
     override fun onEditUserMenuItemClicked(user: UserScreenUiState.UserUiState) {
@@ -139,13 +109,13 @@ class UserScreenModel(
                     permissions = user.permissions
                 )
             )
-        }.also { hideEditUserMenu() }
+        }
+        hideEditUserMenu()
     }
 
     override fun onDeleteUserMenuItemClicked(user: UserScreenUiState.UserUiState) {
         println("Delete user: ${user.username}").also { hideEditUserMenu() }
     }
-
 
     // endregion
 
@@ -163,12 +133,12 @@ class UserScreenModel(
 
     override fun onUserPermissionClick(permission: UserScreenUiState.PermissionUiState) {
         val permissions = getUpdatedPermissions(mutableState.value.permissionsDialog.permissions, permission)
-        if(permission != UserScreenUiState.PermissionUiState.END_USER)
-        updateState {
-            it.copy(
-                permissionsDialog = it.permissionsDialog.copy(permissions = permissions)
-            )
-        }
+        if (permission != UserScreenUiState.PermissionUiState.END_USER)
+            updateState {
+                it.copy(
+                    permissionsDialog = it.permissionsDialog.copy(permissions = permissions)
+                )
+            }
     }
 
     private fun hideUserPermissionsDialog() {
@@ -201,7 +171,7 @@ class UserScreenModel(
     // region Pagination
     override fun onItemsIndicatorChange(itemPerPage: Int) {
         updateState { it.copy(specifiedUsers = itemPerPage) }
-            .also { searchUsers() }
+        getUsers()
     }
 
     override fun onPageClick(pageNumber: Int) {
