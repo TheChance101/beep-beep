@@ -37,6 +37,14 @@ fun Route.cuisineRoute() {
             respondWithResult(HttpStatusCode.OK, meals)
         }
 
+        delete("/{id}"){
+            val language = extractLocalizationHeader()
+            val params = call.receiveParameters()
+            val cuisineId = params["id"]?.trim().toString()
+            restaurantService.deleteCuisine(cuisineId= cuisineId,languageCode=language)
+            respondWithResult(HttpStatusCode.OK, "Deleted Successfully")
+        }
+
     }
 
     get("/cuisines") {
