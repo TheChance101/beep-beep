@@ -48,7 +48,7 @@ class LoginScreen :
         navigator: Navigator,
     ) {
         when (effect) {
-            is LoginScreenUIEffect.Login -> navigator.push(MainContainer)
+            is LoginScreenUIEffect.Login -> navigator.replaceAll(MainContainer)
         }
     }
 
