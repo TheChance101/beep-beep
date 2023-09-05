@@ -31,6 +31,9 @@ data class StringResources(
     val workStartHourHint: String = "1:00",
     val workEndHourHint: String = "24:00",
     val restaurants: String = "Restaurants",
+    val cuisines: String = "Cuisines",
+    val enterCuisineName: String = "Enter cuisine name",
+    val add: String = "Add",
     //endregion Restaurant
 
     //region Taxi
@@ -58,7 +61,7 @@ data class StringResources(
     val searchForUsers: String = "Search for users",
     val edit: String = "Edit",
     val delete: String = "Delete",
-    val disable:String = "Disable",
+    val disable: String = "Disable",
     val permissions: String = "Permissions",
     val users: String = "Users",
     //endregion User
@@ -86,8 +89,9 @@ data class StringResources(
     val supportPermission: String = "Support",
     val deliveryPermission: String = "Delivery",
     val adminPermission: String = "Admin",
-    )
+    // endregion overview
+
+    val clearAll: String = "Clear all",
+)
 
 val englishStrings = StringResources()
-
-

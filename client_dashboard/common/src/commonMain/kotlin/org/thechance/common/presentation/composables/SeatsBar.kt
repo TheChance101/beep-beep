@@ -29,11 +29,6 @@ fun SeatsBar(
 
     var currentCount by remember { mutableStateOf(selectedSeatsCount) }
 
-    when {
-        (selectedSeatsCount > count) -> throw Exception("selectedSeatsCount is bigger than count")
-        (selectedSeatsCount < 0.0) -> throw Exception("selectedSeatsCount is smaller than 0")
-    }
-
     Row(modifier = modifier
         .onPointerEvent(PointerEventType.Exit) { currentCount = selectedSeatsCount }
         .onPointerEvent(PointerEventType.Press) { onClick(currentCount) },

@@ -14,4 +14,6 @@ interface IUserGateway {
 
     suspend fun loginUser(username: String, password: String): Session
 
+    suspend fun refreshAccessToken(refreshToken: String) : Pair<String,String>
+
 }

@@ -4,21 +4,22 @@ import data.remote.model.ServerResponse
 import domain.utils.InvalidCredentialsException
 import domain.utils.NoInternetException
 import domain.utils.UnknownErrorException
+import domain.utils.UserAlreadyExistException
 import domain.utils.UserNotFoundException
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.statement.HttpResponse
 
-abstract class BaseGateway {
+abstract class BaseGateway(val client: HttpClient) {
     suspend inline fun <reified T> tryToExecute(
-        client: HttpClient,
         method: HttpClient.() -> HttpResponse,
     ): T {
         try {
             return client.method().body()
         } catch (e: ClientRequestException) {
-            val errorMessages = e.response.body<ServerResponse<*>>().status.errorMessages
+            //TODO: replace ServerResponse<String> with ServerResponse<T> in next deployment
+            val errorMessages = e.response.body<ServerResponse<String>>().status.errorMessages
             errorMessages?.let(::throwMatchingException)
             throw UnknownErrorException()
         } catch (e: NoInternetException) {
@@ -32,13 +33,17 @@ abstract class BaseGateway {
         errorMessages.let {
             if (it.containsErrors(WRONG_PASSWORD)) {
                 throw InvalidCredentialsException(it.getOrEmpty(WRONG_PASSWORD))
-            } else {
-                if (it.containsErrors(USER_NOT_EXIST)) {
-                    throw UserNotFoundException(it.getOrEmpty(USER_NOT_EXIST))
-                } else {
-                    throw UnknownErrorException()
-                }
             }
+
+            if (it.containsErrors(USER_NOT_EXIST)) {
+                throw UserNotFoundException(it.getOrEmpty(USER_NOT_EXIST))
+            }
+
+            if (it.containsErrors(USER_ALREADY_EXIST)) {
+                throw UserAlreadyExistException(it.getOrEmpty(USER_ALREADY_EXIST))
+            }
+
+            throw UnknownErrorException()
         }
     }
 
@@ -50,5 +55,6 @@ abstract class BaseGateway {
     companion object {
         const val WRONG_PASSWORD = "1013"
         const val USER_NOT_EXIST = "1043"
+        const val USER_ALREADY_EXIST = "1002"
     }
 }

@@ -2,7 +2,8 @@ package org.thechance.common.presentation.restaurant
 
 import org.thechance.common.presentation.base.BaseInteractionListener
 
-interface RestaurantInteractionListener : BaseInteractionListener {
+interface RestaurantInteractionListener : BaseInteractionListener, AddCuisineInteractionListener,
+    AddRestaurantInteractionListener, FilterRestaurantsInteractionListener {
 
     fun onSearchChange(restaurantName: String)
 
@@ -10,19 +11,36 @@ interface RestaurantInteractionListener : BaseInteractionListener {
 
     fun onDismissDropDownMenu()
 
-    fun onClickFilterRatingBar(rating: Double)
-
-    fun onClickFilterPriceBar(priceLevel: Int)
-
-    fun onSaveFilterRestaurantsClicked(rating: Double, priceLevel: Int)
-
-    fun onCancelFilterRestaurantsClicked()
-
     fun onPageClicked(pageNumber: Int)
 
     fun onItemPerPageChange(numberOfRestaurantsInPage: Int)
 
+    fun showEditRestaurantMenu(restaurantName: String)
+
+    fun hideEditRestaurantMenu()
+
+    fun onClickEditRestaurantMenuItem(restaurant: RestaurantUiState.RestaurantDetailsUiState)
+
+    fun onClickDeleteRestaurantMenuItem(restaurant: RestaurantUiState.RestaurantDetailsUiState)
+
     fun onAddNewRestaurantClicked()
+}
+
+
+interface AddCuisineInteractionListener {
+  
+    fun onClickAddCuisine()
+
+    fun onClickDeleteCuisine(cuisineName: String)
+
+    fun onCloseAddCuisineDialog()
+
+    fun onClickCreateCuisine()
+
+    fun onChangeCuisineName(cuisineName: String)
+}
+
+interface AddRestaurantInteractionListener {
 
     fun onCancelCreateRestaurantClicked()
 
@@ -39,12 +57,17 @@ interface RestaurantInteractionListener : BaseInteractionListener {
     fun onCreateNewRestaurantClicked()
 
     fun onLocationChange(location: String)
+}
 
-    fun showEditRestaurantMenu(restaurantName: String)
+interface FilterRestaurantsInteractionListener {
 
-    fun hideEditRestaurantMenu()
+    fun onClickFilterRatingBar(rating: Double)
 
-    fun onClickEditRestaurantMenuItem(restaurant: RestaurantUiState.RestaurantDetailsUiState)
+    fun onClickFilterPriceBar(priceLevel: Int)
 
-    fun onClickDeleteRestaurantMenuItem(restaurant: RestaurantUiState.RestaurantDetailsUiState)
+    fun onSaveFilterRestaurantsClicked(rating: Double, priceLevel: Int)
+
+    fun onCancelFilterRestaurantsClicked()
+
+    fun onFilterClearAllClicked()
 }
