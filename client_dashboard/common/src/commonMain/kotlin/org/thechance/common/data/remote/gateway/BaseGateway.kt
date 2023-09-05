@@ -1,9 +1,9 @@
 package org.thechance.common.data.remote.gateway
 
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.plugins.ClientRequestException
-import io.ktor.client.statement.HttpResponse
+import io.ktor.client.*
+import io.ktor.client.call.*
+import io.ktor.client.plugins.*
+import io.ktor.client.statement.*
 import org.thechance.common.data.remote.model.ServerResponse
 import org.thechance.common.domain.util.InvalidCredentialsException
 import org.thechance.common.domain.util.NoInternetException
@@ -52,4 +52,5 @@ abstract class BaseGateway {
         const val WRONG_PASSWORD = "1013"
         const val USER_NOT_EXIST = "1043"
     }
+
 }

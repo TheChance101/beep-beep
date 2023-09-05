@@ -1,11 +1,9 @@
 package org.thechance.common.data.remote.gateway
 
-import io.ktor.client.HttpClient
-import io.ktor.client.request.forms.submitForm
-import io.ktor.client.request.header
-import io.ktor.client.request.url
-import io.ktor.http.Parameters
-import org.thechance.common.data.remote.gateway.BaseGateway
+import io.ktor.client.*
+import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
+import io.ktor.http.*
 import org.thechance.common.data.remote.model.ServerResponse
 import org.thechance.common.data.remote.model.UserTokensRemoteDto
 import org.thechance.common.domain.entity.DataWrapper
@@ -13,6 +11,7 @@ import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.getway.IUsersGateway
 
 class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGateway {
+
     override suspend fun getUserData(): String = "aaaa"
 
     override suspend fun getUsers(page: Int, numberOfUsers: Int): DataWrapper<User> {
