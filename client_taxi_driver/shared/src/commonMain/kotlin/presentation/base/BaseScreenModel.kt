@@ -17,8 +17,10 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import org.koin.core.component.KoinComponent
 
 abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinComponent {
@@ -88,18 +90,18 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
         }
     }
 
-//    private fun <T> Flow<T>.throttleFirst(periodMillis: Long): Flow<T> {
-//        require(periodMillis > 0)
-//        return flow {
-//            var lastTime = 0L
-//            collect { value ->
-//                val currentTime = Clock.System.now().toEpochMilliseconds()
-//                if (currentTime - lastTime >= periodMillis) {
-//                    lastTime = currentTime
-//                    emit(value)
-//                }
-//            }
-//        }
-//    }
+    private fun <T> Flow<T>.throttleFirst(periodMillis: Long): Flow<T> {
+        require(periodMillis > 0)
+        return flow {
+            var lastTime = 0L
+            collect { value ->
+                val currentTime = Clock.System.now().toEpochMilliseconds()
+                if (currentTime - lastTime >= periodMillis) {
+                    lastTime = currentTime
+                    emit(value)
+                }
+            }
+        }
+    }
 
 }

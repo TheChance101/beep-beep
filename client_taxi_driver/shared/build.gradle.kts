@@ -59,6 +59,8 @@ kotlin {
                 implementation(libs.bundles.voyager)
                 // coroutine
                 implementation(libs.kotlin.coroutines)
+                //date time
+                implementation(libs.kotlinx.datetime)
             }
         }
         val androidMain by getting {

@@ -13,11 +13,11 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import org.thechance.common.domain.util.InvalidCredentialsException
 import org.thechance.common.domain.util.NoInternetException
 import org.thechance.common.domain.util.UserNotFoundException
 import org.thechance.common.presentation.util.ErrorState
-import java.time.Clock
 
 abstract class BaseScreenModel<S, E>(initialState: S) : StateScreenModel<S>(initialState),
     BaseInteractionListener {
