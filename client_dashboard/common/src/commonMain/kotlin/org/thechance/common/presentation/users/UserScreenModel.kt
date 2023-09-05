@@ -58,6 +58,17 @@ class UserScreenModel(
         getUsers()
     }
 
+    override fun onFilterClearAllClicked() {
+        updateState {
+            it.copy(
+                filter = it.filter.copy(
+                    permissions = emptyList(),
+                    countries = it.filter.countries.map { country -> country.copy(selected = false) }
+                )
+            )
+        }
+    }
+
     // endregion
 
     // region Search Bar

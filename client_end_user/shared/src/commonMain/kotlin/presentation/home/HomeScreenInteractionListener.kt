@@ -8,4 +8,5 @@ interface HomeScreenInteractionListener : BaseInteractionListener {
     fun onClickChatSupport()
     fun onClickOrderTaxi()
     fun onClickOrderFood()
+    fun onClickOffersSlider(position : Int)
 }

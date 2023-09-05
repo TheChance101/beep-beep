@@ -202,10 +202,9 @@ class TaxiScreenModel(
         }
     }
 
-    override fun onCancelFilterClicked() {
+    override fun onClearAllClicked() {
         updateState {
             it.copy(
-                isFilterDropdownMenuExpanded = false,
                 taxiFilterUiState = TaxiFilterUiState(
                     carColor = null,
                     seats = -1,
@@ -213,7 +212,10 @@ class TaxiScreenModel(
                 )
             )
         }
-        getTaxis()
+    }
+
+    override fun onCancelFilterClicked() {
+        onFilterMenuDismiss()
     }
 
     override fun onSaveFilterClicked() {
