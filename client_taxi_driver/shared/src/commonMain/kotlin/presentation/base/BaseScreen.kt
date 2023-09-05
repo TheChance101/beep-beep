@@ -1,6 +1,5 @@
 package presentation.base
 
-
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -45,7 +44,6 @@ abstract class BaseScreen<VM, S, E, I> : Screen
     }
 
     abstract fun onEffect(effect: E, navigator: Navigator)
-
 
     @Composable
     inline fun <reified T : ScreenModel> getScreenModel(
