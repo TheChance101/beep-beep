@@ -58,4 +58,14 @@ class UserGateway(client: HttpClient) : BaseGateway(client), IUserGateway {
         }.value
         return result?.toCuisineEntity() ?: throw InvalidCredentialsException("Invalid Credential")
     }
+
+    override suspend fun refreshAccessToken(refreshToken: String): Pair<String,String> {
+        val result = tryToExecute<ServerResponse<SessionDto>> {
+            submitForm {
+                url("/refresh-access-token")
+            }
+        }.value ?: throw Exception()
+
+        return Pair(result.accessToken,result.refreshToken)
+    }
 }
