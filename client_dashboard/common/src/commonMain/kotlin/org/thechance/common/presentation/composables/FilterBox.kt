@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.thechance.common.presentation.composables.modifier.cursorHoverIconHand
 import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.kms
 
@@ -26,7 +27,7 @@ fun FilterBox(
 ) {
     Box(
         modifier = modifier
-            .width(400.kms)
+            .width(450.kms)
             .background(Theme.colors.surface)
             .border(1.dp, Theme.colors.divider)
     ) {
@@ -89,6 +90,7 @@ private fun FilterBoxFooter(
                 .height(32.dp)
                 .weight(1f)
                 .padding(end = 16.kms)
+                .cursorHoverIconHand()
         )
         BpOutlinedButton(
             title = Resources.Strings.save,
@@ -97,6 +99,7 @@ private fun FilterBoxFooter(
             modifier = Modifier
                 .height(32.dp)
                 .weight(3f)
+                .cursorHoverIconHand()
         )
     }
 }
