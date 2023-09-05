@@ -38,7 +38,7 @@ class LoginScreen :
     override fun onEffect(effect: LoginUIEffect, navigator: Navigator) {
         when (effect) {
             LoginUIEffect.LoginSuccess -> {
-                navigator push MainContainer
+                navigator.replaceAll(MainContainer)
             }
 
             is LoginUIEffect.LoginFailed -> {
