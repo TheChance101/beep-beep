@@ -28,6 +28,7 @@ coroutine-version = "1.7.3"
 image-loader = "1.2.8"
 kotlin-realm = "1.10.0"
 realm-version = "1.10.0"
+calf = "0.1.1"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
@@ -78,6 +79,8 @@ kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", 
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin-version" }
 
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.4.0" }
+calf = { module = "com.mohamedrejeb.calf:calf-ui", version.ref = "calf" }
+
 
 [bundles]
 voyager = ["voyager-navigator", "voyager-koin", "voyager-transitions"]
@@ -93,5 +96,4 @@ jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose-versi
 google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt-version" }
 kotlinKsp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 realm = { id = "io.realm.kotlin", version.ref = "realm-version" }
-
 
