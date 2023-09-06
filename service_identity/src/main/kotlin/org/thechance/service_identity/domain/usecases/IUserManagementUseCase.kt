@@ -14,7 +14,7 @@ interface IUserManagementUseCase {
 
     suspend fun getNumberOfUsers(): Long
 
-    suspend fun searchUsers(searchTerm: String,filterByPermission:List<Int>): List<UserManagement>
+    suspend fun searchUsers(searchTerm: String, filterByPermission: List<Int>): List<UserManagement>
 
 }
 

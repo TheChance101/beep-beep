@@ -2,7 +2,6 @@ package org.thechance.service_identity.data.geteway
 
 import com.mongodb.MongoWriteException
 import com.mongodb.client.model.*
-import com.mongodb.client.model.Filters.regex
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -212,12 +211,9 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         )?.toManagedEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
-    override suspend fun searchUsers(searchTerm: String,filterByPermission:List<Int>): List<UserManagement> {
-        println("permissions $filterByPermission")
+    override suspend fun searchUsers(searchTerm: String, filterByPermission: List<Int>): List<UserManagement> {
+        val permissions=filterByPermission.sum()
 
-        val permissions = filterByPermission.sum()
-
-     println("permissions $permissions")
         return dataBaseContainer.userCollection.find(
             and(
                 or(
