@@ -23,4 +23,6 @@ interface IIdentityGateway {
     suspend fun updateThemeMode(mode: Boolean)
 
     suspend fun createUserConfiguration()
+
+    suspend fun refreshAccessToken(refreshToken: String): Pair<String, String>
 }
