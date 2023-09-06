@@ -14,6 +14,7 @@ import org.thechance.service_taxi.data.DataBaseContainer
 import org.thechance.service_taxi.data.collection.TaxiCollection
 import org.thechance.service_taxi.data.collection.TripCollection
 import org.thechance.service_taxi.data.utils.paginate
+import org.thechance.service_taxi.data.utils.toObjectIds
 import org.thechance.service_taxi.domain.entity.Taxi
 import org.thechance.service_taxi.domain.entity.Trip
 import org.thechance.service_taxi.domain.gateway.ITaxiGateway
@@ -66,6 +67,17 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
     override suspend fun isTaxiExistedBefore(taxi: Taxi): Boolean {
         val query = TaxiCollection::plateNumber eq taxi.plateNumber
         return container.taxiCollection.findOne(query) != null
+    }
+
+    override suspend fun findTaxisByPlateNumberAndDriverIds(plateNumber: String, driverIds: List<String>): List<Taxi> {
+        val queries = and(
+                TaxiCollection::plateNumber regex Regex(plateNumber, RegexOption.IGNORE_CASE),
+                TaxiCollection::driverId `in` driverIds.toObjectIds()
+        )
+        return container.taxiCollection.find(
+                queries,
+                TaxiCollection::isDeleted ne true
+        ).toList().toEntity()
     }
     //endregion
 

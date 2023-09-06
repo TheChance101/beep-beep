@@ -22,7 +22,7 @@ fun Route.taxiRoutes() {
             val limit = call.parameters["limit"]?.toInt() ?: 20
             val taxis = manageTaxiUseCase.getAllTaxi(page, limit).toDto()
             val total = manageTaxiUseCase.getNumberOfTaxis()
-            call.respond(HttpStatusCode.OK, BasePaginationResponse(taxis,total))
+            call.respond(HttpStatusCode.OK, BasePaginationResponse(taxis, total))
         }
 
         get("/{taxiId}") {
@@ -31,7 +31,7 @@ fun Route.taxiRoutes() {
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
-        put ("/{taxiId}") {
+        put("/{taxiId}") {
             val taxiId = call.parameters["taxiId"] ?: throw MissingParameterException
             val taxi = call.receive<TaxiDto>()
             val result = manageTaxiUseCase.editTaxi(taxiId, taxi.toEntity())
@@ -48,6 +48,15 @@ fun Route.taxiRoutes() {
             val taxiId = call.parameters["taxiId"] ?: throw MissingParameterException
             val result = manageTaxiUseCase.deleteTaxi(taxiId)
             call.respond(HttpStatusCode.OK, result.toDto())
+        }
+    }
+
+    route("/taxis") {
+        get("/search") {
+            val plateNumber = call.request.queryParameters["query"] ?: ""
+            val driverIDs: List<String> = call.receive<List<String>>()
+            val taxis = manageTaxiUseCase.findTaxisByPlateNumberAndDriverIds(plateNumber,driverIDs)
+            call.respond(HttpStatusCode.OK, taxis.toDto())
         }
     }
 }
