@@ -22,7 +22,6 @@ import org.thechance.api_gateway.util.Claim.USERNAME
 import org.thechance.api_gateway.util.Claim.USER_ID
 import java.util.*
 
-
 @Single
 class IdentityService(
     private val client: HttpClient,
@@ -68,7 +67,7 @@ class IdentityService(
                 }
             )
         }
-        val user = getUserByUsername(userName)
+        val user = getUserByUsername(username = userName)
         return generateUserTokens(user.id, userName, user.permission, tokenConfiguration)
     }
 
@@ -86,7 +85,7 @@ class IdentityService(
         }
     }
 
-    suspend fun getLastRegisteredUsers(limit:Int) = client.tryToExecute<List<UserDto>>(
+    suspend fun getLastRegisteredUsers(limit: Int) = client.tryToExecute<List<UserDto>>(
         APIs.IDENTITY_API, attributes = attributes,
     ) {
         get("/dashboard/user/last-register") {
@@ -94,7 +93,13 @@ class IdentityService(
         }
     }
 
-    private suspend fun getUserByUsername(username: String) = client.tryToExecute<UserDto>(
+    private suspend fun getUserById(id: String): UserDto = client.tryToExecute<UserDto>(
+        APIs.IDENTITY_API, attributes = attributes,
+    ) {
+        get("user/$id")
+    }
+
+    suspend fun getUserByUsername(username: String): UserDto = client.tryToExecute<UserDto>(
         APIs.IDENTITY_API, attributes = attributes,
     ) {
         get("user/get-user") {
