@@ -1,4 +1,6 @@
 val ktor_version: String by project
+val koin_version: String by project
+val koin_ktor: String by project
 val kotlin_version: String by project
 val logback_version: String by project
 val exposed_version : String by project
@@ -47,12 +49,9 @@ dependencies {
     implementation("io.ktor:ktor-server-websockets-jvm:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
     // koin
-    implementation("io.insert-koin:koin-ktor:$koin_ktor")
-    implementation("io.insert-koin:koin-core:$koin_version")
-    implementation("io.insert-koin:koin-annotations:$koin_ksp_version")
-    implementation("com.google.devtools.ksp:symbol-processing-api:1.8.10-1.0.9")
-    ksp("io.insert-koin:koin-ksp-compiler:$koin_ksp_version")
+    implementation("io.insert-koin:koin-ktor:3.4.3")
+    implementation("io.insert-koin:koin-core:3.4.3")
     // koinLogger
-    implementation("io.insert-koin:koin-logger-slf4j:$koin_version")
+    implementation("io.insert-koin:koin-logger-slf4j:3.4.3")
 }
 
