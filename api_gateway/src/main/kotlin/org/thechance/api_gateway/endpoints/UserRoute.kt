@@ -31,7 +31,6 @@ fun Route.userRoutes() {
             respondWithResult(HttpStatusCode.OK, result)
         }
 
-
         route("/user") {
 
             delete("/{id}") {
@@ -52,9 +51,12 @@ fun Route.userRoutes() {
                 val result = identityService.updateUserPermission(userId,permission)
                 respondWithResult(HttpStatusCode.Created, result)
             }
+            get ("/last-register"){
+                val limit = call.parameters["limit"]?.toInt() ?: 4
+                val result = identityService.getLastRegisteredUsers(limit)
+                respondWithResult(HttpStatusCode.OK, result)
+            }
         }
-
-
     }
 }
 

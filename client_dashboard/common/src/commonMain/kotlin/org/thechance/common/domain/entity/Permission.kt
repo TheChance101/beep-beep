@@ -1,7 +1,7 @@
 package org.thechance.common.domain.entity
 
 enum class Permission {
-    RESTAURANT,
+    RESTAURANT_OWNER,
     DRIVER,
     END_USER,
     SUPPORT,
