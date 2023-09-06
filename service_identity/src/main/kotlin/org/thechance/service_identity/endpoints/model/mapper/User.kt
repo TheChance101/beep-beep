@@ -7,7 +7,7 @@ import java.util.*
 
 fun User.toDto(): UserDto {
     return UserDto(
-        id = UUID.fromString(id).toString(),
+        id = id,
         fullName = fullName,
         username = username,
         email = email,

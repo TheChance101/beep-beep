@@ -86,7 +86,13 @@ class IdentityService(
         }
     }
 
-    private suspend fun getUserByUsername(username: String) = client.tryToExecute<UserDto>(
+    private suspend fun getUserById(id:String):UserDto = client.tryToExecute<UserDto>(
+        APIs.IDENTITY_API, attributes = attributes,
+    ) {
+        get("user/$id")
+    }
+
+    private suspend fun getUserByUsername(username: String):UserDto = client.tryToExecute<UserDto>(
         APIs.IDENTITY_API, attributes = attributes,
     ) {
         get("user/get-user") {
