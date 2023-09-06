@@ -39,7 +39,7 @@ object MainContainer : Screen {
             Scaffold(
                 topBar = {
                     val tabNavigator = LocalTabNavigator.current
-                    Text(text = tabNavigator.current.options.title)
+                    //Text(text = tabNavigator.current.options.title)
                 },
                 bottomBar = {
                     val tabNavigator = LocalTabNavigator.current

@@ -29,7 +29,7 @@ class LoginScreenModel(private val manageAuthentication: IManageAuthenticationUs
     override fun onClickLogin(username: String, password: String, keepLoggedIn: Boolean) {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            { manageAuthentication.loginUser(username, password) },
+            { manageAuthentication.loginUser(username, password, keepLoggedIn) },
             ::onLoginSuccess,
             ::onLoginError
         )
