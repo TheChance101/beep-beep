@@ -211,6 +211,19 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         )?.toManagedEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
+    override suspend fun searchUsers(searchTerm: String,filterByPermission:Int): List<UserManagement> {
+        return dataBaseContainer.userCollection.find(
+            and(
+                or(
+                    UserCollection::username eq searchTerm,
+                    UserCollection::email eq searchTerm
+                ),
+                UserCollection::permission eq filterByPermission,
+                UserCollection::isDeleted eq false
+            )
+        )?.toList()?.toManagedEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
+    }
+
     //endregion
 
     // region: wallet
