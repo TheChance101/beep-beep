@@ -55,4 +55,8 @@ class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGatewa
 
         return Pair(result?.accessToken ?: "", result?.refreshToken ?: "")
     }
+
+    override suspend fun deleteUser(userId: String): Boolean {
+        TODO("Not yet implemented")
+    }
 }
