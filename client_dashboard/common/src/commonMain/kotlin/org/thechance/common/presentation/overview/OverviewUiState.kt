@@ -47,7 +47,7 @@ enum class PermissionUiState {
 
 fun Permission.toUiState(): PermissionUiState {
     return when (this) {
-        Permission.RESTAURANT -> PermissionUiState.RESTAURANT
+        Permission.RESTAURANT_OWNER -> PermissionUiState.RESTAURANT
         Permission.DRIVER -> PermissionUiState.DRIVER
         Permission.END_USER -> PermissionUiState.END_USER
         Permission.SUPPORT -> PermissionUiState.SUPPORT
