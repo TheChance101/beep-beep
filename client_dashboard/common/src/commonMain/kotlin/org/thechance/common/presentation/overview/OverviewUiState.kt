@@ -14,7 +14,7 @@ data class OverviewUiState(
 
 data class LatestRegisteredUserUiState(
     val name: String,
-    val image: String,
+    val image: String = "dummy_img.png",
     val permission: PermissionUiState,
 )
 
@@ -27,7 +27,7 @@ data class DropdownMenuState(
 fun User.toUiState(): LatestRegisteredUserUiState {
     return LatestRegisteredUserUiState(
         name = fullName,
-        image = imageUrl,
+        image = imageUrl.ifEmpty { "dummy_img.png" },
         permission = permission.first().toUiState(),
     )
 }

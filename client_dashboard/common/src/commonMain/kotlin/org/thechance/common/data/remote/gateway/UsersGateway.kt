@@ -9,6 +9,7 @@ import org.thechance.common.data.remote.model.ServerResponse
 import org.thechance.common.data.remote.model.UserResponse
 import org.thechance.common.data.remote.model.UserTokensRemoteDto
 import org.thechance.common.domain.entity.DataWrapper
+import org.thechance.common.domain.entity.Permission
 import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.getway.IUsersGateway
 
@@ -16,7 +17,13 @@ class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGatewa
 
     override suspend fun getUserData(): String = "aaaa"
 
-    override suspend fun getUsers(page: Int, numberOfUsers: Int): DataWrapper<User> {
+    override suspend fun getUsers(
+        query: String?,
+        byPermissions: List<Permission>,
+        byCountries: List<String>,
+        page: Int,
+        numberOfUsers: Int
+    ): DataWrapper<User> {
         val result = tryToExecute<ServerResponse<UserResponse>>(client) {
             get(urlString = "/users") {
                 parameter("page", page)

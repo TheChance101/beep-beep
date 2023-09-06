@@ -25,7 +25,7 @@ val NetworkModule = module {
 
             defaultRequest {
                 header("Content-Type", "application/json")
-                url("https://beep-beep-api-gate`way-nap2u.ondigitalocean.app")
+                url("https://beep-beep-api-gateway-nap2u.ondigitalocean.app")
                 header("Accept-Language", "ar")
                 header("Country-Code", "EG")
             }
