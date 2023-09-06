@@ -1,4 +1,4 @@
-package org.thechance.service_location.util
+package org.thechance.service_location.data
 
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
@@ -6,6 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.flowOn
 import org.thechance.service_location.data.model.WebSocketLocation
+import org.thechance.service_location.util.MultiErrorException
 import java.util.concurrent.ConcurrentHashMap
 
 class SocketHandler {

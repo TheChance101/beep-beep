@@ -9,7 +9,7 @@ import kotlinx.serialization.json.Json
 import org.koin.ktor.ext.inject
 import org.thechance.service_location.data.model.LocationDto
 import org.thechance.service_location.data.model.WebSocketLocation
-import org.thechance.service_location.util.SocketHandler
+import org.thechance.service_location.data.SocketHandler
 
 fun Route.locationRoutes() {
 
