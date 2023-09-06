@@ -39,19 +39,15 @@ fun Route.userRoutes() {
                 val result = identityService.deleteUser(userId = id, language)
                 respondWithResult(HttpStatusCode.OK, result)
             }
-            post("/{userId}/permission"){
+
+            put("/{userId}/permission") {
                 val userId = call.parameters["userId"]?.trim().toString()
-                val permission = call.receiveParameters()["permission"]?.trim()?.toInt() ?: 0
-                val result = identityService.updateUserPermission(userId,permission)
+                val params = call.receiveParameters()
+                val permission = params["permission"]?.split(",")?.map { it.toInt() } ?: listOf(1)
+                val result = identityService.updateUserPermission(userId, permission)
                 respondWithResult(HttpStatusCode.Created, result)
             }
-            put("/{userId}/permission"){
-                val userId = call.parameters["userId"]?.trim().toString()
-                val permission = call.receiveParameters()["permission"]?.trim()?.toInt() ?: 0
-                val result = identityService.updateUserPermission(userId,permission)
-                respondWithResult(HttpStatusCode.Created, result)
-            }
-            get ("/last-register"){
+            get("/last-register") {
                 val limit = call.parameters["limit"]?.toInt() ?: 4
                 val result = identityService.getLastRegisteredUsers(limit)
                 respondWithResult(HttpStatusCode.OK, result)

@@ -15,19 +15,8 @@ import org.thechance.api_gateway.util.Role
 
 fun Route.permissionRoutes() {
 
-    val identityService: IdentityService by inject()
     val restaurantService: RestaurantService by inject()
 
-    route("/dashboard"){
-
-            authenticateWithRole(Role.DASHBOARD_ADMIN) {
-                get("/restaurant-request") {
-                    val language = extractLocalizationHeader()
-                    val result = restaurantService.getAllRequestPermission(language)
-                    respondWithResult(HttpStatusCode.OK, result)
-                }
-            }
-    }
 
     route("/permission") {
 
