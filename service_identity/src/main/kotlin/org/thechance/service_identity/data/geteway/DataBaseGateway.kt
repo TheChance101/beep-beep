@@ -213,7 +213,6 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
     }
 
     override suspend fun searchUsers(searchTerm: String,filterByPermission:Int): List<UserManagement> {
-        val regexPattern = "^$searchTerm".toRegex(RegexOption.IGNORE_CASE)
         return dataBaseContainer.userCollection.find(
             and(
                 or(
