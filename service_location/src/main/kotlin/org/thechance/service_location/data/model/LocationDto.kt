@@ -2,8 +2,8 @@ package org.thechance.service_location.data.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import org.thechance.service_location.data.utils.INVALID_LOCATION
-import org.thechance.service_location.data.utils.MultiErrorException
+import org.thechance.service_location.util.INVALID_LOCATION
+import org.thechance.service_location.util.MultiErrorException
 
 @Serializable
 data class LocationDto(

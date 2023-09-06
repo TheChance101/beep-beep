@@ -1,4 +1,4 @@
-package org.thechance.service_location.data.utils
+package org.thechance.service_location.util
 
 import io.ktor.http.*
 import io.ktor.server.plugins.statuspages.*

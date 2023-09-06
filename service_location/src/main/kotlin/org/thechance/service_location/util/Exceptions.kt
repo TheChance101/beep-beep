@@ -1,4 +1,4 @@
-package org.thechance.service_location.data.utils
+package org.thechance.service_location.util
 
 class MultiErrorException(val errorCodes: List<Int>) : Throwable(errorCodes.toString())
 

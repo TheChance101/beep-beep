@@ -6,7 +6,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.flowOn
 import org.thechance.service_location.data.model.WebSocketLocation
-import org.thechance.service_location.data.utils.MultiErrorException
 import java.util.concurrent.ConcurrentHashMap
 
 class SocketHandler {
