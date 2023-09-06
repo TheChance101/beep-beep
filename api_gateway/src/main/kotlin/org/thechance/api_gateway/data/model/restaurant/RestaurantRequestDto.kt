@@ -8,7 +8,6 @@ import org.thechance.api_gateway.data.model.LocationDto
 data class RestaurantRequestDto(
     @SerialName("id") val id: String? = null,
     @SerialName("ownerId") val ownerId: String? = null,
-    @SerialName("requestedRestaurantId") val requestedRestaurantId: String? = null,
     @SerialName("name") val name: String? = null,
     @SerialName("description") val description: String? = null,
     @SerialName("priceLevel") val priceLevel: String? = null,
@@ -24,7 +23,6 @@ fun RestaurantDto.toRestaurantRequestDto(): RestaurantRequestDto {
     return RestaurantRequestDto(
         id = id,
         ownerId = ownerId,
-        requestedRestaurantId = requestedRestaurantId,
         name = name,
         description = description,
         priceLevel = priceLevel,

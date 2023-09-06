@@ -9,7 +9,6 @@ import kotlinx.datetime.toLocalDateTime
 data class Restaurant(
     val id: String,
     val ownerId: String,
-    val requestedRestaurantId: String? = null,
     val name: String,
     val description: String? = null,
     val priceLevel: String? = null,
