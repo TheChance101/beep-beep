@@ -85,21 +85,7 @@ class IdentityService(
         }
     }
 
-    suspend fun getLastRegisteredUsers(limit:Int) = client.tryToExecute<List<UserDto>>(
-        APIs.IDENTITY_API, attributes = attributes,
-    ) {
-        get("/dashboard/user/last-register") {
-            parameter("limit", limit)
-        }
-    }
-
-    private suspend fun getUserById(id: String): UserDto = client.tryToExecute<UserDto>(
-        APIs.IDENTITY_API, attributes = attributes,
-    ) {
-        get("user/$id")
-    }
-
-    suspend fun getLastRegisteredUsers(limit:Int) = client.tryToExecute<List<UserDto>>(
+    suspend fun getLastRegisteredUsers(limit: Int) = client.tryToExecute<List<UserDto>>(
         APIs.IDENTITY_API, attributes = attributes,
     ) {
         get("/dashboard/user/last-register") {
