@@ -212,14 +212,15 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         )?.toManagedEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
-    override suspend fun searchUsers(searchTerm: String,filterByPermission:Int): List<UserManagement> {
+    override suspend fun searchUsers(searchTerm: String,filterByPermission:List<Int>): List<UserManagement> {
+
         return dataBaseContainer.userCollection.find(
             and(
                 or(
                     UserCollection::username.regex("^$searchTerm", "i"),
                     UserCollection::email.regex("^$searchTerm", "i")
                 ),
-                UserCollection::permission eq filterByPermission,
+                or(filterByPermission.map { UserCollection::permission eq it }),
                 UserCollection::isDeleted eq false
             )
         )?.toList()?.toManagedEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
