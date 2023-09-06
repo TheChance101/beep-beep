@@ -1,13 +1,19 @@
 package org.thechance.common.data.remote.gateway
 
-import org.thechance.common.data.remote.gateway.BaseGateway
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.NewTaxiInfo
 import org.thechance.common.domain.entity.Taxi
+import org.thechance.common.domain.entity.TaxiFiltration
 import org.thechance.common.domain.getway.ITaxiGateway
 
-class TaxiGateway: BaseGateway(), ITaxiGateway {
-    override suspend fun getTaxis(): DataWrapper<Taxi> {
+class TaxiGateway : BaseGateway(), ITaxiGateway {
+
+    override suspend fun getTaxis(
+        username: String?,
+        taxiFiltration: TaxiFiltration,
+        page: Int,
+        numberOfUsers: Int
+    ): DataWrapper<Taxi> {
         TODO("getTaxis")
     }
 
@@ -15,7 +21,7 @@ class TaxiGateway: BaseGateway(), ITaxiGateway {
         TODO("createTaxi")
     }
 
-    override suspend fun updateTaxi(taxi: NewTaxiInfo): Boolean {
+    override suspend fun updateTaxi(taxi: NewTaxiInfo): Taxi {
         TODO("updateTaxi")
     }
 
@@ -30,4 +36,5 @@ class TaxiGateway: BaseGateway(), ITaxiGateway {
     override suspend fun filterTaxis(): DataWrapper<Taxi> {
         TODO("filterTaxis")
     }
+
 }
