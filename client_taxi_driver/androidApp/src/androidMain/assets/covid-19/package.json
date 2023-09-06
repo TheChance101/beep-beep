@@ -1,0 +1,20 @@
+{
+	"name": "covid19",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"start": "node app.js"
+	},
+	"dependencies": {
+		"cfenv": "^1.2.4",
+		"cookie-parser": "^1.4.5",
+		"csvtojson": "^2.0.10",
+		"express": "^4.18.2",
+		"path": "*",
+		"sha256": "*"
+	},
+	"repository": {},
+	"engines": {
+		"node": "10.*"
+	}
+}

@@ -1,0 +1,98 @@
+<!doctype HTML>
+<head>
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,700" rel="stylesheet">
+    <link rel="icon" type="image/png" href="logo-respircov.png">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+</head>
+<body>
+    <header>
+        <h1>RespirCov</h1>
+        COVID-19 Ventilators and Hospital Beds Tracker
+        <br><hr><br>
+    </header>
+    <section>
+        <div class="content">
+            <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?callback=GetMap&branch=experimental&key=AgNnGNredNlcyG1M8AET0L9F43oDcjEUyZnPhX2mOf5nHNnQcFkz9IFHN_c7z6fO' async></script>
+            <div class="myMap" id="myMap">
+            </div>
+            <div id="pseudo"></div>
+        </div>
+    </section>
+    <aside>
+            <button id="search"onclick="showson()">Search a Hospital</button>
+            <div class="cvr" onclick="cls()"></div>
+            <div id="hdd" class="hdd">
+            <small onclick="cls()">&times; Cancel</small>
+            <h4>Search a hospital</h4><small>*showing hospitals from adjacent map only</small><br>
+            <input type='text' id="searchname" placeholder='Enter Name' onkeypress="dynamicsearch()">
+            <ul id="dynamics">
+            </ul>
+            <div class="searchres">
+            </div>
+            </div>
+            <input onclick="validtest()" type="button" class="btn-validity" id="btn-validity" value='Check Validity'>
+            <script>
+                const validtest = function(){
+                    var validity;
+                    var xhttps = new XMLHttpRequest();
+                    xhttps.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                    validity = this.responseText;
+                    document.getElementById('btn-validity').setAttribute('value',validity);
+                    }   
+                    };
+                    xhttps.open("GET", "/validity", true);
+                    xhttps.send();   
+                };
+            </script>
+            <div>
+                <h3>Total Numbers</h3>
+                <hr width="20px"><br>
+                <table class="table" border="0px">
+                    <tr class="hdng">
+                        <td><h4> Vacant</h4></td>
+                        <td><h4> Occupied </h4></td>
+                    </tr>
+                    <tr>
+                        <td><h5>Ventilators</h5></td>
+                    </tr>
+                    <tr class="data">
+                        <td class='vacant'></td>
+                        <td class="occupied"></td>
+                    </tr>
+                    <tr>
+                    <td><hr width=20px></td>
+                    <td></td>
+                    </tr>
+                    <tr>
+                        <td><h5>Hospital beds</h5></td>
+                    </tr>
+                    <tr class="data">
+                        <td style="color:green" class='vbed'></td>
+                        <td style="color:red;width:100px;" class="obed"></td>
+                    </tr>
+                    <tr>
+                    <td><hr width=20px></td>
+                    <td></td>
+                    </tr>
+                    <tr>
+                        <td style="padding-top:20px !important" class="counts"></td>
+                        <td style="padding-top:20px !important" > Hospitals</td>
+                    </tr>
+                </table>
+            </div>
+    </aside>
+    <br><br>
+    <footer>
+    <div>
+        &copy; 2020 Ayush Anand <br>
+        Source: Delhi Corona<br>
+        <a href="/#contact"> &nbsp;Contact Us&nbsp; </a>
+    </div>
+    </footer>
+    <script src="script.js" async></script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link rel="icon" type="image/png" href="./images/logo-respircov.png">
+	<link href='hosp_login.css' rel='stylesheet'>
+	<title>Hospital Dashboard | RespirCov</title>
+    <style>
+    #myMap {
+    position: relative;
+    width: 600px;
+    height: 400px; }
+    </style>
+</head>
+<body>
+	<div class="wrapper">
+		<span><b>Hospital Dashboard | <u>Respir</u>Cov</b></span>
+	</div>
+
+    <div id="welcome">
+        <div class="welcome-display">
+            <div>
+                <img alt="App ID Logo" class="logo-icon" src="images/app_id_icon.svg">
+                <p style="font-size:medium">
+                    Welcome to the<br>
+                    Hospital Dashboard.<br>
+                </p>
+            </div>
+            <button id="login" >Login</button>
+            <div id="error"></div>
+        </div>
+        <div class="hintSection">
+            <div class="flex-bottom"><img alt="hint image" id="hintIcon" src="images/hint_icon.svg"></div>
+        <div class="flex-bottom">
+                Note: Please login to proceed. You need <br>to login everytime you update<br> the status for added security.<br>
+            </div>
+        </div>
+        <div style="text-align:center;font-family:sans-serif;color:grey;font-size:medium;">
+            &copy; 2020 Ayush Anand<br>
+            <a href="/#contact" style="color:grey;"> Contact Us</a>
+        </div>
+    </div>
+
+	<div id="afterLogin" class="hidden">
+		<div class="welcome-display">
+			<p id="welcomeNameID"></p>
+			<p id="welcomeMessageII"></p>
+		</div>
+
+        <div class="collapsible">
+            <button type="button">
+                <img class="expand" src="./images/20@2x.svg">
+                ID Token
+            </button>
+            <div class="content" id="tokenContent">None</div>
+        </div>
+
+        <div class="collapsible">
+            <button type="button">
+                <img class="expand" src="./images/20@2x.svg">
+                User Information
+            </button>
+            <div class="content" id="userContent">None</div>
+        </div>
+
+        <div class="collapsible">
+            <button type="button">
+                <img class="expand" src = "./images/20@2x.svg">
+                Update Ventilator Status
+            </button>
+            <div class="content" id="updateVentilator">
+<!-- Area to select map-->
+<div>
+     <form name="form" id="form">
+     <input type="text" id="address" name="address" placeholder="Enter Address of Hospital">
+     <input type="submit" class="go" value="Go">
+</form>
+<div id ="demo">
+Enter address in the field above, then click go to see it on map. Then click to 'Select This Address" to finalize your choice.</div>
+<input type='button' onclick="selectThisArea()" class="selectArea" value="Select This Address">
+<br><br>
+<script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?callback=GetMap&branch=experimental&key=Av4EXrI3jTDkujMDtUrjtMrGUwuCSE52KLBcxvxbI78c3hA32ayoocYbl8MwQ5zv' async defer></script>
+<div id="myMap"></div>
+<br><br>
+</div>
+                <form name='updateventi' id='updateventi' method='get'>
+                    <input type='hidden' name='userid' id='userIdField' required>
+                    <input type='hidden' name='hospital' id='hospital' required>
+                    <input type='hidden' name='hospitalname' id='hospitalname' required><br>
+                    <table border='None'>
+                        <tr>
+                        <th>Ventilator Counts</th>
+                        <th>Hospital Counts</th>
+                        </tr>
+                        <tr>
+                            <td><input type='number' name='vacant' class="txtfld" min="0" max="999" placeholder='Vacant Ventilators' required></td>
+                            <td><input type='number' name='vbed' class="txtfld" min="0" max="999" placeholder='Vacant Beds' required></td>
+                        </tr>
+                        <tr>
+                            <td><input type='number' name='occupied' class="txtfld" min="0" max="999" placeholder='Occupied Ventilators' required></td>
+                            <td><input type='number' name='obed' class="txtfld" min="0" max="999" placeholder='Occupied Beds' required></td>
+                        </tr>
+                    </table>
+                    <input type='hidden' name='longi' id='longi' placeholder='longitude of hospital' required >   &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type='hidden' name='lati' id='lati' placeholder='latitude of hospital' required ><br>
+                    <input type='submit' value='Create' class='submit'>
+                </form>
+
+
+            </div>
+        </div>
+
+		<div class="hintSection">
+			<div class="flex-bottom"><img alt="hint image" src="images/hint_icon.svg"></div>
+			<div class="flex-bottom">
+				Hint: To update ventilator count<br>
+				expand the 'Update Ventilator Status' section<br>
+				and submit the figures. Also update the location <br>
+                of your hospital.
+			</div>
+		</div>
+	 </div>
+    <script src="https://cdn.appid.cloud.ibm.com/appid-0.3.0.min.js"></script>
+	<script src="hosp_login.js"></script>
+</body>
+</html>
