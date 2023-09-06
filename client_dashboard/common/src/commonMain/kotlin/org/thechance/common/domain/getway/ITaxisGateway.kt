@@ -11,7 +11,7 @@ interface ITaxisGateway {
         username: String?,
         taxiFiltration: TaxiFiltration,
         page: Int,
-        numberOfTaxis: Int
+        limit: Int
     ): DataWrapper<Taxi>
 
     suspend fun createTaxi(taxi: NewTaxiInfo): Taxi

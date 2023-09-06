@@ -1,20 +1,38 @@
 package org.thechance.common.data.remote.gateway
 
+import io.ktor.client.*
+import io.ktor.client.request.*
+import org.thechance.common.data.remote.mapper.toEntity
+import org.thechance.common.data.remote.model.PaginationResponse
+import org.thechance.common.data.remote.model.ServerResponse
+import org.thechance.common.data.remote.model.TaxiDto
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.NewTaxiInfo
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.entity.TaxiFiltration
 import org.thechance.common.domain.getway.ITaxisGateway
 
-class TaxisGateway : BaseGateway(), ITaxisGateway {
+class TaxisGateway(private val client: HttpClient) : BaseGateway(), ITaxisGateway {
 
     override suspend fun getTaxis(
         username: String?,
         taxiFiltration: TaxiFiltration,
         page: Int,
-        numberOfTaxis: Int
+        limit: Int
     ): DataWrapper<Taxi> {
-        TODO("getTaxis")
+        val result = tryToExecute<ServerResponse<PaginationResponse<TaxiDto>>>(client) {
+            get(urlString = "/taxi") {
+                parameter("page", page)
+                parameter("limit", limit)
+            }
+        }.value
+
+        return DataWrapper(
+            totalPages = result?.total?.div(limit) ?: 0,
+            numberOfResult = result?.total ?: 0,
+            result = result?.items?.toEntity() ?: emptyList(
+            )
+        )
     }
 
     override suspend fun createTaxi(taxi: NewTaxiInfo): Taxi {

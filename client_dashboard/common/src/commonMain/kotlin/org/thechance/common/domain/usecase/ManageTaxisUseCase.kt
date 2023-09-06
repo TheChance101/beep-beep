@@ -18,7 +18,7 @@ interface IManageTaxisUseCase {
         username: String? = null,
         taxiFiltration: TaxiFiltration,
         page: Int,
-        numberOfUsers: Int
+        limit: Int
     ): DataWrapper<Taxi>
 
     suspend fun updateTaxi(addTaxi: NewTaxiInfo): Taxi
@@ -44,11 +44,11 @@ class ManageTaxisUseCase(
         username: String?,
         taxiFiltration: TaxiFiltration,
         page: Int,
-        numberOfUsers: Int
+        limit: Int
     ): DataWrapper<Taxi> {
         return taxiGateway.getTaxis(
             page = page,
-            numberOfTaxis = numberOfUsers,
+            limit = limit,
             username = username,
             taxiFiltration = taxiFiltration
         )
