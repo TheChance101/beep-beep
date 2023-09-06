@@ -34,19 +34,11 @@ fun Route.userManagementRoutes() {
             call.respond(HttpStatusCode.OK, result)
         }
 
-        post("/{userId}/permission") {
-            val userId = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val permission = call.receiveParameters()["permission"]?.toInt()
-                ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val result = userManagement.addPermissionToUser(userId, permission)
-            call.respond(HttpStatusCode.Created, result.toDto())
-        }
-
         put("/{userId}/permission") {
             val userId = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val permission = call.parameters["permission"]?.toInt()
-                ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val result = userManagement.removePermissionFromUser(userId, permission)
+            val params = call.receiveParameters()
+            val permission = params["permission"]?.split(",")?.map { it.toInt() }
+            val result = userManagement.updateUserPermission(userId, permission ?: listOf(1) )
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 

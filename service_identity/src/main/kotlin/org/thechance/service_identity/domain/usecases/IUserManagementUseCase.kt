@@ -6,9 +6,11 @@ import org.thechance.service_identity.domain.gateway.IDataBaseGateway
 
 interface IUserManagementUseCase {
 
-    suspend fun addPermissionToUser(userId: String, permission: Int): UserManagement
+//    suspend fun addPermissionToUser(userId: String, permission: Int): UserManagement
+//
+//    suspend fun removePermissionFromUser(userId: String, permission: Int): UserManagement
 
-    suspend fun removePermissionFromUser(userId: String, permission: Int): UserManagement
+    suspend fun  updateUserPermission(userId: String, permissions: List<Int>): UserManagement
 
     suspend fun getUsers(page: Int, limit: Int, searchTerm: String): List<UserManagement>
 
@@ -21,16 +23,11 @@ interface IUserManagementUseCase {
 @Single
 class UserManagementUseCase(private val dataBaseGateway: IDataBaseGateway) : IUserManagementUseCase {
 
-    override suspend fun addPermissionToUser(userId: String, permission: Int): UserManagement {
-        val userPermission = dataBaseGateway.getUserPermission(userId)
-        val newPermission = grantPermission(userPermission, permission)
-        return dataBaseGateway.updatePermissionToUser(userId, newPermission)
-    }
-
-    override suspend fun removePermissionFromUser(userId: String, permission: Int): UserManagement {
-        val userPermission = dataBaseGateway.getUserPermission(userId)
-        val removePermission = revokePermission(userPermission, permission)
-        return dataBaseGateway.updatePermissionToUser(userId, removePermission)
+    override suspend fun updateUserPermission(
+        userId: String,
+        permissions: List<Int>
+    ): UserManagement {
+        return dataBaseGateway.updateUserPermission(userId, permissions)
     }
 
     override suspend fun getUsers(page: Int, limit: Int, searchTerm: String): List<UserManagement> {
