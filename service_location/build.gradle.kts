@@ -46,5 +46,13 @@ dependencies {
     //websockets
     implementation("io.ktor:ktor-server-websockets-jvm:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
+    // koin
+    implementation("io.insert-koin:koin-ktor:$koin_ktor")
+    implementation("io.insert-koin:koin-core:$koin_version")
+    implementation("io.insert-koin:koin-annotations:$koin_ksp_version")
+    implementation("com.google.devtools.ksp:symbol-processing-api:1.8.10-1.0.9")
+    ksp("io.insert-koin:koin-ksp-compiler:$koin_ksp_version")
+    // koinLogger
+    implementation("io.insert-koin:koin-logger-slf4j:$koin_version")
 }
 
