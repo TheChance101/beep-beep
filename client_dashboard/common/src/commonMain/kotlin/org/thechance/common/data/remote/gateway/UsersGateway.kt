@@ -57,6 +57,9 @@ class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGatewa
     }
 
     override suspend fun deleteUser(userId: String): Boolean {
-        TODO("Not yet implemented")
+        return tryToExecute<ServerResponse<Boolean>>(client) {
+            delete(urlString = "/user") { url { appendPathSegments(userId) } }
+        }.value ?: false
     }
+
 }
