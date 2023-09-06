@@ -28,6 +28,12 @@ fun Route.userManagementRoutes() {
             call.respond(HttpStatusCode.OK, UsersManagementDto(users, total))
         }
 
+        get("/last-register") {
+            val limit = call.parameters.extractInt("limit") ?: 4
+            val result = userManagement.getLastRegisterUser(limit).toDto()
+            call.respond(HttpStatusCode.OK, result)
+        }
+
         post("/{userId}/permission") {
             val userId = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val permission = call.receiveParameters()["permission"]?.toInt()
