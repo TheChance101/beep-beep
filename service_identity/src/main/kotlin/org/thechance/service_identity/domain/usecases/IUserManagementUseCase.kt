@@ -27,7 +27,8 @@ class UserManagementUseCase(private val dataBaseGateway: IDataBaseGateway) : IUs
         userId: String,
         permissions: List<Int>
     ): UserManagement {
-        return dataBaseGateway.updateUserPermission(userId, permissions)
+        val permission=permissions.reduce { acc, i -> acc or i }
+        return dataBaseGateway.updateUserPermission(userId, permission)
     }
 
     override suspend fun getUsers(page: Int, limit: Int, searchTerm: String): List<UserManagement> {
