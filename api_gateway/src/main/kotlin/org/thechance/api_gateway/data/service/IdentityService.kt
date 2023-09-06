@@ -94,7 +94,7 @@ class IdentityService(
         }
     }
 
-    suspend fun searchUsers(query: String ,permission :Int) = client.tryToExecute<List<UserDto>>(
+    suspend fun searchUsers(query: String ,permission :List<Int>) = client.tryToExecute<List<UserDto>>(
         APIs.IDENTITY_API, attributes = attributes,
     ) {
         get("/dashboard/user/search") {
