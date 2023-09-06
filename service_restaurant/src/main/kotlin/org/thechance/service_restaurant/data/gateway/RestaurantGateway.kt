@@ -104,7 +104,16 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
     override suspend fun addRestaurant(restaurant: Restaurant): Restaurant {
         val addedRestaurant = restaurant.toCollection()
         container.restaurantCollection.insertOne(addedRestaurant)
+        if (restaurant.requestedRestaurantId != null){
+            deleteRequestedRestaurant(restaurant.requestedRestaurantId)
+        }
         return addedRestaurant.toEntity()
+    }
+    private suspend fun deleteRequestedRestaurant(requestedRestaurantId: String): Boolean {
+        return container.restaurantPermissionRequestCollection.updateOneById(
+            id = ObjectId(requestedRestaurantId),
+            update = Updates.set(RestaurantPermissionRequestCollection::isDeleted.name, true),
+        ).isSuccessfullyUpdated()
     }
 
     override suspend fun addCuisineToRestaurant(

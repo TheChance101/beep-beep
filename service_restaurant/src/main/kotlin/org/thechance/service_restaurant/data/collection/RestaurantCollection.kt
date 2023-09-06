@@ -12,6 +12,7 @@ data class RestaurantCollection(
     @Contextual
     val ownerId: ObjectId = ObjectId(),
     val name: String,
+    val requestedRestaurantId: String,
     val description: String?,
     val priceLevel: String?,
     val rate: Double?,
@@ -20,7 +21,7 @@ data class RestaurantCollection(
     val closingTime: String,
     val address: String,
     val location: LocationCollection,
-    val currency:String
+    val currency: String
 ) {
     @BsonId
     @Contextual
