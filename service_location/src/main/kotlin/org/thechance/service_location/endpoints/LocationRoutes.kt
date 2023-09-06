@@ -8,6 +8,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.koin.ktor.ext.inject
 import org.thechance.service_location.data.model.LocationDto
+import org.thechance.service_location.data.model.WebSocketLocation
 import org.thechance.service_location.util.SocketHandler
 
 fun Route.locationRoutes() {
@@ -24,6 +25,12 @@ fun Route.locationRoutes() {
                     socketHandler.location[tripId]?.locations?.emit(location)
                 }
             }
+        }
+
+        webSocket("/receiver/{tripId}") {
+            val tripId = call.parameters["tripId"]?.trim().orEmpty()
+            socketHandler.location[tripId] = WebSocketLocation(this)
+            socketHandler.broadcastLocation(tripId)
         }
     }
 }
