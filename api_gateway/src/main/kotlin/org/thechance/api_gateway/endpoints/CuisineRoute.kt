@@ -28,8 +28,7 @@ fun Route.cuisineRoute() {
             }
             delete("/{id}") {
                 val language = extractLocalizationHeader()
-                val params = call.receiveParameters()
-                val cuisineId = params["id"]?.trim().toString()
+                val cuisineId =call.parameters["id"]?.trim().toString()
                 restaurantService.deleteCuisine(cuisineId = cuisineId, languageCode = language)
                 val successMessage =
                     localizedMessagesFactory.createLocalizedMessages(language).deletedSuccessfully
