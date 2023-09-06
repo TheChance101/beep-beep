@@ -28,6 +28,13 @@ fun Route.userManagementRoutes() {
             call.respond(HttpStatusCode.OK, UsersManagementDto(users, total))
         }
 
+        get("/search"){
+            val searchTerm = call.parameters["query"] ?: ""
+            val permission = call.parameters.extractInt("permission") ?: 1
+            val users = userManagement.searchUsers(searchTerm, permission, ).toDto()
+            call.respond(HttpStatusCode.OK, users)
+        }
+
         post("/{userId}/permission") {
             val userId = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val permission = call.receiveParameters()["permission"]?.toInt()
