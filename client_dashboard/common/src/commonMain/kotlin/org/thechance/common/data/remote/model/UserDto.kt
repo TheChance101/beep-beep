@@ -1,13 +1,18 @@
 package org.thechance.common.data.remote.model
 
-import kotlinx.serialization.SerialName
+import com.google.gson.annotations.SerializedName
+
+data class UserResponse(
+    @SerializedName("items") val users: List<UserDto>,
+    @SerializedName("total") val total: Int,
+)
 
 data class UserDto(
-    @SerialName("id") val id: String,
-    @SerialName("fullName") val fullName: String,
-    @SerialName("username") val username: String,
-    @SerialName("email") val email: String,
-    @SerialName("permission") val permissions: Int,
-    @SerialName("image_url") val imageUrl: String = "",
-    @SerialName("country") val country: String = "",
+    @SerializedName("id") val id: String,
+    @SerializedName("fullName") val fullName: String,
+    @SerializedName("username") val username: String,
+    @SerializedName("email") val email: String,
+    @SerializedName("permission") val permission: Int,
+    @SerializedName("image_url") val imageUrl: String? = null,
+    @SerializedName("country") val country: String = "",
 )
