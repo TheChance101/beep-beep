@@ -27,14 +27,6 @@ interface IRemoteGateway {
 
     suspend fun getCurrentLocation(): String
 
-    suspend fun getUsers(
-        query: String? = null,
-        byPermissions: List<Permission>,
-        byCountries: List<String>,
-        page: Int,
-        numberOfUsers: Int
-    ): DataWrapper<User>
-
     suspend fun loginUser(username: String, password: String): Pair<String, String>
 
     suspend fun deleteRestaurants(restaurant: Restaurant): Restaurant
@@ -51,6 +43,5 @@ interface IRemoteGateway {
     suspend fun createCuisine(cuisineName: String): String?
 
     suspend fun deleteCuisine(cuisineName: String): String
-
 
 }

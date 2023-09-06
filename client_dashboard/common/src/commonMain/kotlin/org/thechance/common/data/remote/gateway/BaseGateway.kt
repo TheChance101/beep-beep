@@ -12,6 +12,7 @@ import org.thechance.common.domain.util.UserNotFoundException
 import java.net.ConnectException
 
 abstract class BaseGateway {
+
     suspend inline fun <reified T> tryToExecute(
         client: HttpClient,
         method: HttpClient.() -> HttpResponse,
