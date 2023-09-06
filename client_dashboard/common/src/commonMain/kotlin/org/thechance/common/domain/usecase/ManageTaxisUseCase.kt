@@ -5,7 +5,7 @@ import org.thechance.common.domain.entity.NewTaxiInfo
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.entity.TaxiFiltration
 import org.thechance.common.domain.getway.IRemoteGateway
-import org.thechance.common.domain.getway.ITaxiGateway
+import org.thechance.common.domain.getway.ITaxisGateway
 
 
 interface IManageTaxisUseCase {
@@ -28,7 +28,7 @@ interface IManageTaxisUseCase {
 }
 
 class ManageTaxisUseCase(
-    private val taxiGateway: ITaxiGateway,
+    private val taxiGateway: ITaxisGateway,
     private val remoteGateway: IRemoteGateway
 ) : IManageTaxisUseCase {
 
@@ -48,7 +48,7 @@ class ManageTaxisUseCase(
     ): DataWrapper<Taxi> {
         return taxiGateway.getTaxis(
             page = page,
-            numberOfUsers = numberOfUsers,
+            numberOfTaxis = numberOfUsers,
             username = username,
             taxiFiltration = taxiFiltration
         )

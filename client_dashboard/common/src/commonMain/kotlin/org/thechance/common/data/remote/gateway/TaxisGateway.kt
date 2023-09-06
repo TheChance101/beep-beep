@@ -4,15 +4,15 @@ import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.NewTaxiInfo
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.entity.TaxiFiltration
-import org.thechance.common.domain.getway.ITaxiGateway
+import org.thechance.common.domain.getway.ITaxisGateway
 
-class TaxiGateway : BaseGateway(), ITaxiGateway {
+class TaxisGateway : BaseGateway(), ITaxisGateway {
 
     override suspend fun getTaxis(
         username: String?,
         taxiFiltration: TaxiFiltration,
         page: Int,
-        numberOfUsers: Int
+        numberOfTaxis: Int
     ): DataWrapper<Taxi> {
         TODO("getTaxis")
     }
@@ -27,14 +27,6 @@ class TaxiGateway : BaseGateway(), ITaxiGateway {
 
     override suspend fun deleteTaxi(taxiId: String): Boolean {
         TODO("deleteTaxi")
-    }
-
-    override suspend fun searchTaxiByDriverUsername(driverUsername: String): DataWrapper<Taxi> {
-        TODO("searchTaxiByDriverUsername")
-    }
-
-    override suspend fun filterTaxis(): DataWrapper<Taxi> {
-        TODO("filterTaxis")
     }
 
 }

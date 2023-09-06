@@ -7,13 +7,15 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.thechance.common.data.local.gateway.LocalGateway
-import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.DataWrapperDto
 import org.thechance.common.data.remote.model.RestaurantDto
 import org.thechance.common.data.remote.model.TaxiDto
 import org.thechance.common.data.remote.model.toEntity
-import org.thechance.common.domain.entity.*
+import org.thechance.common.domain.entity.DataWrapper
+import org.thechance.common.domain.entity.NewRestaurantInfo
+import org.thechance.common.domain.entity.Restaurant
+import org.thechance.common.domain.entity.Time
 import org.thechance.common.domain.getway.IRemoteGateway
 import java.io.File
 import java.text.SimpleDateFormat
@@ -327,100 +329,7 @@ class FakeRemoteGateway(
             )
         )
     }
-
     override suspend fun getUserData() = "asia"
-
-    override suspend fun getTaxis(
-        taxiFiltration: TaxiFiltration,
-        username: String?,
-        page: Int,
-        numberOfTaxis: Int
-    ): DataWrapper<Taxi> {
-        var filteredTaxis = taxis.toEntity()
-
-        username?.let { name ->
-            if (name.isNotEmpty()) {
-                filteredTaxis = filteredTaxis.filter {
-                    it.username.startsWith(name, ignoreCase = true)
-                }
-            }
-        }
-
-        if (taxiFiltration.status != null || taxiFiltration.carColor != null || taxiFiltration.seats != -1) {
-            filteredTaxis = filteredTaxis.filter {
-                it.status == taxiFiltration.status &&
-                        it.color == taxiFiltration.carColor &&
-                        it.seats == taxiFiltration.seats
-            }
-        }
-
-        val startIndex = (page - 1) * numberOfTaxis
-        val endIndex = startIndex + numberOfTaxis
-        val numberOfPages = ceil(taxis.size / (numberOfTaxis * 1.0)).toInt()
-        return try {
-            DataWrapperDto(
-                totalPages = numberOfPages,
-                result = filteredTaxis.subList(startIndex, endIndex.coerceAtMost(taxis.size)),
-                totalResult = filteredTaxis.size
-            ).toEntity()
-        } catch (e: Exception) {
-            DataWrapperDto(
-                totalPages = numberOfPages,
-                result = filteredTaxis,
-                totalResult = filteredTaxis.size
-            ).toEntity()
-        }
-    }
-
-    override suspend fun createTaxi(taxi: NewTaxiInfo): Taxi {
-        val taxiDto = taxi.toDto()
-        taxis.add(
-            TaxiDto(
-                id = UUID.randomUUID().toString(),
-                plateNumber = taxiDto.plateNumber,
-                color = taxiDto.color,
-                type = taxiDto.type,
-                seats = taxiDto.seats,
-                username = taxiDto.username,
-                status = null,
-                trips = null
-            )
-        )
-        return taxis.last().toEntity()
-    }
-
-    override suspend fun updateTaxi(taxi: NewTaxiInfo): Taxi {
-        val indexToUpdate = taxis.indexOfFirst { it.id == taxi.id }
-        val newTaxi = taxi.toDto()
-        return if (indexToUpdate != -1) {
-            val oldTaxi = taxis[indexToUpdate]
-            val updatedTaxi = TaxiDto(
-                id = newTaxi.id,
-                plateNumber = newTaxi.plateNumber,
-                color = newTaxi.color,
-                type = newTaxi.type,
-                seats = newTaxi.seats,
-                username = newTaxi.username,
-                trips = oldTaxi.trips,
-                status = oldTaxi.status
-            )
-            taxis.removeAt(indexToUpdate)
-            taxis.add(index = indexToUpdate, element = updatedTaxi)
-            updatedTaxi.toEntity()
-        } else {
-            throw Exception("Taxi not found")
-        }
-    }
-
-    override suspend fun deleteTaxi(taxiId: String): String {
-        val indexToUpdate = taxis.indexOfFirst { it.id == taxiId }
-        return if (indexToUpdate != -1) {
-            taxis.removeAt(indexToUpdate)
-            taxiId
-        } else {
-            throw Exception("Taxi not found")
-        }
-    }
 
     override suspend fun getPdfTaxiReport() {
         val taxiReportFile = createTaxiPDFReport()
