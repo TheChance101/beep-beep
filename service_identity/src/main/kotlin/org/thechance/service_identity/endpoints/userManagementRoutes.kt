@@ -30,7 +30,9 @@ fun Route.userManagementRoutes() {
 
         get("/search"){
             val searchTerm = call.parameters["query"] ?: ""
-            val permissions = call.parameters.getAll("permission")?.mapNotNull { it.toIntOrNull() } ?: listOf(1)
+            val permissions = call.parameters.getAll("permission")?.toList()?.map {it ->
+                println("permission in route: $it")
+                it.toInt() } ?: listOf(1)
             val users = userManagement.searchUsers(searchTerm, permissions ).toDto()
             call.respond(HttpStatusCode.OK, users)
         }

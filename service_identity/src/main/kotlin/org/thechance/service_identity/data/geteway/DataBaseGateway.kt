@@ -213,14 +213,18 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
     }
 
     override suspend fun searchUsers(searchTerm: String,filterByPermission:List<Int>): List<UserManagement> {
+        println("permissions $filterByPermission")
 
+        val permissions = filterByPermission.sum()
+
+     println("permissions $permissions")
         return dataBaseContainer.userCollection.find(
             and(
                 or(
                     UserCollection::username.regex("^$searchTerm", "i"),
                     UserCollection::email.regex("^$searchTerm", "i")
                 ),
-                or(filterByPermission.map { UserCollection::permission eq it }),
+                UserCollection::permission eq permissions,
                 UserCollection::isDeleted eq false
             )
         )?.toList()?.toManagedEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
