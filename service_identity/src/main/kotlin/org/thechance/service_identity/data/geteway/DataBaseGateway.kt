@@ -2,6 +2,7 @@ package org.thechance.service_identity.data.geteway
 
 import com.mongodb.MongoWriteException
 import com.mongodb.client.model.*
+import com.mongodb.client.model.Filters.regex
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -212,11 +213,12 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
     }
 
     override suspend fun searchUsers(searchTerm: String,filterByPermission:Int): List<UserManagement> {
+        val regexPattern = "^$searchTerm".toRegex(RegexOption.IGNORE_CASE)
         return dataBaseContainer.userCollection.find(
             and(
                 or(
-                    UserCollection::username eq searchTerm,
-                    UserCollection::email eq searchTerm
+                    UserCollection::username.regex("^$searchTerm", "i"),
+                    UserCollection::email.regex("^$searchTerm", "i")
                 ),
                 UserCollection::permission eq filterByPermission,
                 UserCollection::isDeleted eq false
