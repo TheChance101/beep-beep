@@ -2,6 +2,7 @@ package org.thechance.api_gateway.endpoints
 
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.request.receiveParameters
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.service.IdentityService
@@ -30,6 +31,7 @@ fun Route.userRoutes() {
             respondWithResult(HttpStatusCode.OK, result)
         }
 
+
         route("/user") {
 
             delete("/{id}") {
@@ -38,7 +40,21 @@ fun Route.userRoutes() {
                 val result = identityService.deleteUser(userId = id, language)
                 respondWithResult(HttpStatusCode.OK, result)
             }
+            post("/{userId}/permission"){
+                val userId = call.parameters["userId"]?.trim().toString()
+                val permission = call.receiveParameters()["permission"]?.trim()?.toInt() ?: 0
+                val result = identityService.updateUserPermission(userId,permission)
+                respondWithResult(HttpStatusCode.Created, result)
+            }
+            put("/{userId}/permission"){
+                val userId = call.parameters["userId"]?.trim().toString()
+                val permission = call.receiveParameters()["permission"]?.trim()?.toInt() ?: 0
+                val result = identityService.updateUserPermission(userId,permission)
+                respondWithResult(HttpStatusCode.Created, result)
+            }
         }
+
+
     }
 }
 
