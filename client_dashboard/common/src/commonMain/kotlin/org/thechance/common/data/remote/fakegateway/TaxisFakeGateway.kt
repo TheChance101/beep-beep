@@ -19,7 +19,7 @@ class TaxisFakeGateway : ITaxisGateway {
         username: String?,
         taxiFiltration: TaxiFiltration,
         page: Int,
-        numberOfTaxis: Int
+        limit: Int
     ): DataWrapper<Taxi> {
         var filteredTaxis = taxis.toEntity()
 
@@ -39,9 +39,9 @@ class TaxisFakeGateway : ITaxisGateway {
             }
         }
 
-        val startIndex = (page - 1) * numberOfTaxis
-        val endIndex = startIndex + numberOfTaxis
-        val numberOfPages = ceil(taxis.size / (numberOfTaxis * 1.0)).toInt()
+        val startIndex = (page - 1) * limit
+        val endIndex = startIndex + limit
+        val numberOfPages = ceil(taxis.size / (limit * 1.0)).toInt()
         return try {
             DataWrapperDto(
                 totalPages = numberOfPages,
@@ -67,8 +67,9 @@ class TaxisFakeGateway : ITaxisGateway {
                 type = taxiDto.type,
                 seats = taxiDto.seats,
                 username = taxiDto.username,
-                status = null,
-                trips = null
+                isAvailable = null,
+                trips = null,
+                driverId = taxiDto.driverId
             )
         )
         return taxis.last().toEntity()
@@ -87,7 +88,8 @@ class TaxisFakeGateway : ITaxisGateway {
                 seats = newTaxi.seats,
                 username = newTaxi.username,
                 trips = oldTaxi.trips,
-                status = oldTaxi.status
+                isAvailable = oldTaxi.isAvailable,
+                driverId = oldTaxi.driverId
             )
             taxis.removeAt(indexToUpdate)
             taxis.add(index = indexToUpdate, element = updatedTaxi)
@@ -115,9 +117,10 @@ class TaxisFakeGateway : ITaxisGateway {
             type = "Sedan",
             color = 1,
             seats = 4,
-            status = 1,
+            isAvailable = true,
             username = "john_doe",
-            trips = "10"
+            trips = "10",
+            driverId = "DRIVER_ID",
         ),
         TaxiDto(
             id = "2",
@@ -126,8 +129,9 @@ class TaxisFakeGateway : ITaxisGateway {
             type = "SUV",
             seats = 6,
             username = "jane_doe",
-            status = 1,
-            trips = "5"
+            isAvailable = true,
+            trips = "5",
+            driverId = "DRIVER_ID"
         ),
         TaxiDto(
             id = "3",
@@ -136,8 +140,9 @@ class TaxisFakeGateway : ITaxisGateway {
             type = "Hatchback",
             seats = 4,
             username = "james_smith",
-            status = 0,
-            trips = "2"
+            isAvailable = true,
+            trips = "2",
+            driverId = "DRIVER_ID"
         ),
         TaxiDto(
             id = "4",
@@ -146,8 +151,9 @@ class TaxisFakeGateway : ITaxisGateway {
             type = "Minivan",
             seats = 6,
             username = "mary_johnson",
-            status = 1,
-            trips = "15"
+            isAvailable = true,
+            trips = "15",
+            driverId = "DRIVER_ID"
         ),
         TaxiDto(
             id = "5",
@@ -156,8 +162,9 @@ class TaxisFakeGateway : ITaxisGateway {
             type = "Convertible",
             seats = 4,
             username = "robert_white",
-            status = 0,
-            trips = "3"
+            isAvailable = true,
+            trips = "3",
+            driverId = "DRIVER_ID"
         ),
         TaxiDto(
             id = "6",
@@ -166,8 +173,9 @@ class TaxisFakeGateway : ITaxisGateway {
             type = "Sedan",
             seats = 4,
             username = "linda_miller",
-            status = 0,
-            trips = "7"
+            isAvailable = true,
+            trips = "7",
+            driverId = "DRIVER_ID"
         ),
         TaxiDto(
             id = "7",
@@ -176,8 +184,9 @@ class TaxisFakeGateway : ITaxisGateway {
             type = "Hatchback",
             seats = 4,
             username = "david_jones",
-            status = 1,
-            trips = "12"
+            isAvailable = true,
+            trips = "12",
+            driverId = "DRIVER_ID"
         ),
         TaxiDto(
             id = "8",
@@ -186,8 +195,9 @@ class TaxisFakeGateway : ITaxisGateway {
             type = "Minivan",
             seats = 2,
             username = "susan_anderson",
-            status = 0,
-            trips = "9"
+            isAvailable = true,
+            trips = "9",
+            driverId = " DRIVER_ID"
         ),
         TaxiDto(
             id = "9",
@@ -195,9 +205,10 @@ class TaxisFakeGateway : ITaxisGateway {
             type = "Sedan",
             color = 1,
             seats = 4,
-            status = 1,
+            isAvailable = false,
             username = "Asia",
-            trips = "10"
+            trips = "10",
+            driverId = "DRIVER_ID"
         ),
         TaxiDto(
             id = "10",
@@ -205,9 +216,10 @@ class TaxisFakeGateway : ITaxisGateway {
             type = "Sedan",
             color = 1,
             seats = 4,
-            status = 1,
+            isAvailable = false,
             username = "Safi",
-            trips = "10"
+            trips = "10",
+            driverId = "DRIVER_ID"
         ),
         TaxiDto(
             id = "11",
@@ -215,9 +227,10 @@ class TaxisFakeGateway : ITaxisGateway {
             type = "Sedan",
             color = 1,
             seats = 4,
-            status = 1,
+            isAvailable = false,
             username = "Mujtaba",
-            trips = "10"
+            trips = "10",
+            driverId = "DRIVER_ID"
         ),
         TaxiDto(
             id = "12",
@@ -225,9 +238,10 @@ class TaxisFakeGateway : ITaxisGateway {
             type = "Sedan",
             color = 1,
             seats = 4,
-            status = 1,
+            isAvailable = false,
             username = "Krrar",
-            trips = "10"
+            trips = "10",
+            driverId = "DRIVER_ID"
         ),
         TaxiDto(
             id = "13",
@@ -235,9 +249,10 @@ class TaxisFakeGateway : ITaxisGateway {
             type = "Sedan",
             color = 1,
             seats = 4,
-            status = 1,
+            isAvailable = false,
             username = "Aya",
-            trips = "10"
+            trips = "10",
+            driverId = "DRIVER_ID"
         ),
         TaxiDto(
             id = "14",
@@ -245,9 +260,10 @@ class TaxisFakeGateway : ITaxisGateway {
             type = "Sedan",
             color = 1,
             seats = 4,
-            status = 1,
+            isAvailable = false,
             username = "Kamel",
-            trips = "10"
+            trips = "10",
+            driverId = "DRIVER_ID"
         ),
         TaxiDto(
             id = "16",
@@ -255,9 +271,10 @@ class TaxisFakeGateway : ITaxisGateway {
             type = "Sedan",
             color = 2,
             seats = 4,
-            status = 1,
+            isAvailable = false,
             username = "Kamel",
-            trips = "10"
+            trips = "10",
+            driverId = "DRIVER_ID"
         ),
         TaxiDto(
             id = "17",
@@ -265,9 +282,10 @@ class TaxisFakeGateway : ITaxisGateway {
             type = "Sedan",
             color = 2,
             seats = 5,
-            status = 1,
+            isAvailable = false,
             username = "Kamel",
-            trips = "10"
+            trips = "10",
+            driverId = "DRIVER_ID"
         ),
         TaxiDto(
             id = "18",
@@ -275,9 +293,10 @@ class TaxisFakeGateway : ITaxisGateway {
             type = "Sedan",
             color = 2,
             seats = 4,
-            status = 1,
+            isAvailable = false,
             username = "Kamel",
-            trips = "10"
+            trips = "10",
+            driverId = "DRIVER_ID"
         ),
         TaxiDto(
             id = "19",
@@ -285,9 +304,10 @@ class TaxisFakeGateway : ITaxisGateway {
             type = "Sedan",
             color = 2,
             seats = 4,
-            status = 1,
+            isAvailable = true,
             username = "Kamel",
-            trips = "10"
+            trips = "10",
+            driverId = "DRIVER_ID"
         ),
         TaxiDto(
             id = "20",
@@ -295,9 +315,10 @@ class TaxisFakeGateway : ITaxisGateway {
             type = "Sedan",
             color = 5,
             seats = 5,
-            status = 1,
+            isAvailable = true,
             username = "Kamel",
-            trips = "10"
+            trips = "10",
+            driverId = "DRIVER_ID"
         ),
         TaxiDto(
             id = "21",
@@ -305,9 +326,10 @@ class TaxisFakeGateway : ITaxisGateway {
             type = "Sedan",
             color = 4,
             seats = 4,
-            status = 1,
+            isAvailable = true,
             username = "Kamel",
-            trips = "10"
+            trips = "10",
+            driverId = "DRIVER_ID"
         ),
         TaxiDto(
             id = "22",
@@ -315,9 +337,10 @@ class TaxisFakeGateway : ITaxisGateway {
             type = "Sedan",
             color = 5,
             seats = 4,
-            status = 1,
+            isAvailable = true,
             username = "Kamel",
-            trips = "10"
+            trips = "10",
+            driverId = "DRIVER_ID"
         ),
     )
 
