@@ -41,6 +41,7 @@ data class UserScreenUiState(
     )
 
     data class UserUiState(
+        val userId: String = "",
         val fullName: String = "",
         val username: String = "",
         val email: String = "",
@@ -99,6 +100,7 @@ data class UserScreenUiState(
 fun List<User>.toUiState(): List<UserScreenUiState.UserUiState> {
     return map {
         UserScreenUiState.UserUiState(
+            userId = it.id,
             fullName = it.fullName,
             username = it.username,
             email = it.email,
