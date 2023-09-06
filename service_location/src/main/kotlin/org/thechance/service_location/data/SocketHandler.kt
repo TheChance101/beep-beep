@@ -17,7 +17,6 @@ class SocketHandler {
         val ownerSession = location[locationId]?.ownerSession
         val locations = location[locationId]?.locations
 
-
         try {
             locations
                 ?.drop(1)
@@ -25,9 +24,9 @@ class SocketHandler {
                 ?.collect { location -> ownerSession?.sendSerialized(location) }
         } catch (e: MultiErrorException) {
             ownerSession?.send(e.errorCodes.toString())
-            ownerSession?.close()
+            ownerSession?.close(CloseReason(CloseReason.Codes.NORMAL, e.errorCodes.toString()))
         } finally {
-            this.location.remove(locationId)
+            location.remove(locationId)
         }
     }
 
