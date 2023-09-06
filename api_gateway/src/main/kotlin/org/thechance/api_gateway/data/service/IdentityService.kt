@@ -69,8 +69,7 @@ class IdentityService(
                 }
             )
         }
-        val user = getUser(id = "64f5256ef835857bcdd7ceb4")
-        println("user is $user")
+        val user = getUser(username = userName)
         return generateUserTokens(user.id, userName, user.permission, tokenConfiguration)
     }
 
@@ -91,14 +90,15 @@ class IdentityService(
     suspend fun getUser(username: String? = null, id: String? = null): UserDto = client.tryToExecute<UserDto>(
         APIs.IDENTITY_API, attributes = attributes,
     ) {
-        username?.let {
+        if (username != null) {
             get("user/get-user") {
                 parameter("username", username)
             }
-        }
-        id?.let {
+        } else if (id != null) {
             get("user/$id")
-        } ?: throw NotFoundException()
+        } else {
+            throw NotFoundException()
+        }
 
     }
 

@@ -56,7 +56,7 @@ fun Route.authenticationRoutes(tokenConfiguration: TokenConfiguration) {
             tokenConfiguration,
             language
         )
-        respondWithResult(HttpStatusCode.Created, token)
+        respondWithResult(HttpStatusCode.OK, token)
     }
 
     authenticateWithRole(Role.END_USER) {
