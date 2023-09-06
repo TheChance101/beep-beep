@@ -217,10 +217,10 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         )?.toManagedEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
-    override suspend fun getLastFourRegisteredUsers(): List<UserManagement> {
+    override suspend fun getLastRegisterUser(limit:Int): List<UserManagement> {
         return dataBaseContainer.userCollection.find(
             UserCollection::isDeleted eq false
-        ).sort(Sorts.descending("_id")).limit(4).toList().toManagedEntity()
+        ).sort(Sorts.descending("_id")).limit(limit).toList().toManagedEntity()
     }
 
     //endregion

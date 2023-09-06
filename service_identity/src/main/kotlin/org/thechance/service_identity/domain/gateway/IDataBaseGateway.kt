@@ -58,6 +58,6 @@ interface IDataBaseGateway {
 
     suspend fun getUserByUsername(username: String): UserManagement
 
-    suspend fun getLastFourRegisteredUsers(): List<UserManagement>
+    suspend fun getLastRegisterUser(limit:Int ): List<UserManagement>
 
 }

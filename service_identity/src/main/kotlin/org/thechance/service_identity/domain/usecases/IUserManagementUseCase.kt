@@ -14,6 +14,8 @@ interface IUserManagementUseCase {
 
     suspend fun getNumberOfUsers(): Long
 
+    suspend fun  getLastRegisterUser(limit:Int):List<UserManagement>
+
 }
 
 @Single
@@ -37,6 +39,10 @@ class UserManagementUseCase(private val dataBaseGateway: IDataBaseGateway) : IUs
 
     override suspend fun getNumberOfUsers(): Long {
         return dataBaseGateway.getNumberOfUsers()
+    }
+
+    override suspend fun getLastRegisterUser(limit: Int): List<UserManagement> {
+        return dataBaseGateway.getLastRegisterUser(limit)
     }
 
     private fun grantPermission(currentPermissions: Int, permissionToAdd: Int): Int {
