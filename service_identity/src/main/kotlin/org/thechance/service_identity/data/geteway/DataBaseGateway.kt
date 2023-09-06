@@ -55,7 +55,9 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
             filter = UserDetailsCollection::userId eq ObjectId(userId),
             update = Updates.addToSet(UserDetailsCollection::addressIds.name, address.id)
         )
-        return if (dataBaseContainer.addressCollection.insertOne(addressCollection).wasAcknowledged()) {
+        return if (dataBaseContainer.addressCollection.insertOne(addressCollection)
+                .wasAcknowledged()
+        ) {
             addressCollection.toEntity()
         } else {
             throw ResourceNotFoundException(ERROR_IN_DB)
@@ -100,7 +102,10 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
     private suspend fun createUniqueIndexIfNotExists() {
         if (!isUniqueIndexCreated()) {
             val indexOptions = IndexOptions().unique(true)
-            dataBaseContainer.userCollection.createIndex(Indexes.ascending(DataBaseContainer.USER_NAME), indexOptions)
+            dataBaseContainer.userCollection.createIndex(
+                Indexes.ascending(DataBaseContainer.USER_NAME),
+                indexOptions
+            )
         }
     }
 
@@ -152,7 +157,8 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
     override suspend fun createUser(
         saltedHash: SaltedHash, fullName: String, username: String, email: String
     ): UserManagement {
-        val userNameExist = dataBaseContainer.userCollection.findOne(UserCollection::username eq username)
+        val userNameExist =
+            dataBaseContainer.userCollection.findOne(UserCollection::username eq username)
         if (userNameExist == null) {
             val userDocument = UserCollection(
                 hashedPassword = saltedHash.hash,
@@ -209,6 +215,12 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
             UserCollection::username eq username,
             UserCollection::isDeleted eq false
         )?.toManagedEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
+    }
+
+    override suspend fun getLastFourRegisteredUsers(): List<UserManagement> {
+        return dataBaseContainer.userCollection.find(
+            UserCollection::isDeleted eq false
+        ).sort(Sorts.descending("_id")).limit(4).toList().toManagedEntity()
     }
 
     //endregion
