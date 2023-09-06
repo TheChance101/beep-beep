@@ -3,11 +3,13 @@ package org.thechance.common.domain.usecase
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Permission
 import org.thechance.common.domain.entity.User
-import org.thechance.common.domain.getway.IRemoteGateway
+import org.thechance.common.domain.getway.IUsersGateway
 
-interface IGetUsersUseCase {
+interface IUsersManagementUseCase {
 
-    suspend operator fun invoke(
+    suspend fun getUserInfo(): String
+
+    suspend fun getUsers(
         query: String? = null,
         byPermissions: List<Permission>,
         byCountries: List<String>,
@@ -17,18 +19,22 @@ interface IGetUsersUseCase {
 
 }
 
-class GetUsersUseCase(
-    private val remoteGateway: IRemoteGateway,
-) : IGetUsersUseCase {
+class UsersManagementUseCase(
+    private val userGateway: IUsersGateway
+) : IUsersManagementUseCase {
 
-    override suspend fun invoke(
+    override suspend fun getUsers(
         query: String?,
         byPermissions: List<Permission>,
         byCountries: List<String>,
         page: Int,
         numberOfUsers: Int,
     ): DataWrapper<User> {
-        return remoteGateway.getUsers(query, byPermissions, byCountries, page, numberOfUsers)
+        return userGateway.getUsers(query, byPermissions, byCountries, page, numberOfUsers)
+    }
+
+    override suspend fun getUserInfo(): String {
+        return userGateway.getUserData()
     }
 
 }

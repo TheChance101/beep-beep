@@ -86,6 +86,14 @@ class IdentityService(
         }
     }
 
+    suspend fun getLastRegisteredUsers(limit:Int) = client.tryToExecute<List<UserDto>>(
+        APIs.IDENTITY_API, attributes = attributes,
+    ) {
+        get("/dashboard/user/last-register") {
+            parameter("limit", limit)
+        }
+    }
+
     private suspend fun getUserByUsername(username: String) = client.tryToExecute<UserDto>(
         APIs.IDENTITY_API, attributes = attributes,
     ) {
