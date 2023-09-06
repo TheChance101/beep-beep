@@ -53,5 +53,8 @@ dependencies {
     implementation("io.insert-koin:koin-core:3.4.3")
     // koinLogger
     implementation("io.insert-koin:koin-logger-slf4j:3.4.3")
+    //validation
+    implementation("io.ktor:ktor-server-status-pages:$ktor_version")
+
 }
 
