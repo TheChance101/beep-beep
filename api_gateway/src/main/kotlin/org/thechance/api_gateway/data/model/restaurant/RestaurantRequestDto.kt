@@ -5,10 +5,9 @@ import kotlinx.serialization.Serializable
 import org.thechance.api_gateway.data.model.LocationDto
 
 @Serializable
-data class RestaurantDto(
+data class RestaurantRequestDto(
     @SerialName("id") val id: String? = null,
     @SerialName("ownerId") val ownerId: String? = null,
-    @SerialName("username") val username: String,
     @SerialName("name") val name: String? = null,
     @SerialName("description") val description: String? = null,
     @SerialName("priceLevel") val priceLevel: String? = null,
@@ -19,3 +18,19 @@ data class RestaurantDto(
     @SerialName("address") val address: String? = null,
     @SerialName("location") val locationDto: LocationDto? = null,
 )
+
+fun RestaurantDto.toRestaurantRequestDto(): RestaurantRequestDto {
+    return RestaurantRequestDto(
+        id = id,
+        ownerId = ownerId,
+        name = name,
+        description = description,
+        priceLevel = priceLevel,
+        rate = rate,
+        phone = phone,
+        openingTime = openingTime,
+        closingTime = closingTime,
+        address = address,
+        locationDto = locationDto
+    )
+}
