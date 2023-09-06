@@ -16,6 +16,8 @@ fun Route.userRoutes() {
 
     authenticateWithRole(Role.DASHBOARD_ADMIN) {
 
+
+
         get("/users") {
             val language = extractLocalizationHeader()
             val page = call.parameters["page"]?.toInt() ?: 1
@@ -37,6 +39,13 @@ fun Route.userRoutes() {
                 val language = extractLocalizationHeader()
                 val result = identityService.deleteUser(userId = id, language)
                 respondWithResult(HttpStatusCode.OK, result)
+            }
+
+            get("/search"){
+                val searchTerm = call.parameters["query"] ?: ""
+                val permission = call.parameters["permission"]?.toInt() ?: 1
+                val users = identityService.searchUsers(searchTerm, permission)
+                respondWithResult(HttpStatusCode.OK, users)
             }
         }
     }

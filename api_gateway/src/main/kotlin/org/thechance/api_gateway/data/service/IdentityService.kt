@@ -94,6 +94,15 @@ class IdentityService(
         }
     }
 
+    suspend fun searchUsers(query: String ,permission :Int) = client.tryToExecute<List<UserDto>>(
+        APIs.IDENTITY_API, attributes = attributes,
+    ) {
+        get("/dashboard/user/search") {
+            parameter("query", query)
+            parameter("permission", permission)
+        }
+    }
+
     suspend fun updateUserPermission(userId: String, permission: Int) =
         client.tryToExecute<UserDto>(
             APIs.IDENTITY_API, attributes = attributes,
