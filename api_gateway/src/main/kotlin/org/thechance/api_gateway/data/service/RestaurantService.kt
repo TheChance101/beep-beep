@@ -20,7 +20,8 @@ import org.thechance.api_gateway.util.APIs
 class RestaurantService(
     private val client: HttpClient,
     private val attributes: Attributes,
-    private val errorHandler: ErrorHandler
+    private val errorHandler: ErrorHandler,
+    private val identityService: IdentityService
 ) {
 
     @OptIn(InternalAPI::class)
@@ -120,6 +121,9 @@ class RestaurantService(
                 errorHandler.getLocalizedErrorMessage(errorCodes, languageCode )
             }
         ) {
+            if (restaurantDto.ownerId != null){
+
+            }
             post("/restaurant") {
                 body = Json.encodeToString(RestaurantDto.serializer(), restaurantDto)
             }

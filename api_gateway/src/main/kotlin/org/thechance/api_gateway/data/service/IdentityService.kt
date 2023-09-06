@@ -6,6 +6,7 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
+import io.ktor.server.plugins.*
 import io.ktor.util.*
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.PaginationResponse
@@ -68,7 +69,8 @@ class IdentityService(
                 }
             )
         }
-        val user = getUserByUsername(userName)
+        val user = getUser(id = "64f5256ef835857bcdd7ceb4")
+        println("user is $user")
         return generateUserTokens(user.id, userName, user.permission, tokenConfiguration)
     }
 
@@ -86,18 +88,18 @@ class IdentityService(
         }
     }
 
-    private suspend fun getUserById(id:String):UserDto = client.tryToExecute<UserDto>(
+    suspend fun getUser(username: String? = null, id: String? = null): UserDto = client.tryToExecute<UserDto>(
         APIs.IDENTITY_API, attributes = attributes,
     ) {
-        get("user/$id")
-    }
-
-    private suspend fun getUserByUsername(username: String):UserDto = client.tryToExecute<UserDto>(
-        APIs.IDENTITY_API, attributes = attributes,
-    ) {
-        get("user/get-user") {
-            parameter("username", username)
+        username?.let {
+            get("user/get-user") {
+                parameter("username", username)
+            }
         }
+        id?.let {
+            get("user/$id")
+        } ?: throw NotFoundException()
+
     }
 
     suspend fun updateUserPermission(userId: String, permission: Int) =
