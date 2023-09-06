@@ -105,7 +105,7 @@ fun List<User>.toUiState(): List<UserScreenUiState.UserUiState> {
             country = it.country,
             permissions = it.permission.map { permission ->
                 when (permission) {
-                    Permission.RESTAURANT -> UserScreenUiState.PermissionUiState.RESTAURANT_OWNER
+                    Permission.RESTAURANT_OWNER -> UserScreenUiState.PermissionUiState.RESTAURANT_OWNER
                     Permission.DRIVER -> UserScreenUiState.PermissionUiState.TAXI_DRIVER
                     Permission.END_USER -> UserScreenUiState.PermissionUiState.END_USER
                     Permission.SUPPORT -> UserScreenUiState.PermissionUiState.SUPPORT
@@ -131,7 +131,7 @@ fun UserScreenUiState.PermissionUiState.toEntity(): Permission {
         UserScreenUiState.PermissionUiState.DASHBOARD_ADMIN -> Permission.ADMIN
         UserScreenUiState.PermissionUiState.SUPPORT -> Permission.SUPPORT
         UserScreenUiState.PermissionUiState.DELIVERY -> Permission.DELIVERY
-        UserScreenUiState.PermissionUiState.RESTAURANT_OWNER -> Permission.RESTAURANT
+        UserScreenUiState.PermissionUiState.RESTAURANT_OWNER -> Permission.RESTAURANT_OWNER
         UserScreenUiState.PermissionUiState.TAXI_DRIVER -> Permission.DRIVER
     }
 }

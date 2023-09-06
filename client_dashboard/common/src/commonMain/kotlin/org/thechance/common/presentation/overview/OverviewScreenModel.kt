@@ -2,12 +2,12 @@ package org.thechance.common.presentation.overview
 
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.User
-import org.thechance.common.domain.usecase.IGetUsersUseCase
+import org.thechance.common.domain.usecase.IUsersManagementUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
 class OverviewScreenModel(
-    private val getUsers: IGetUsersUseCase
+    private val getUsers: IUsersManagementUseCase
 ) : BaseScreenModel<OverviewUiState, OverviewUiEffect>(OverviewUiState()),
     OverviewInteractionListener {
 
@@ -61,7 +61,7 @@ class OverviewScreenModel(
     private fun getLatestRegisteredUsers() {
         tryToExecute(
             {
-                getUsers(
+                getUsers.getUsers(
                     byPermissions = listOf(),
                     byCountries = listOf(),
                     page = 1,
