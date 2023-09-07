@@ -43,7 +43,8 @@ interface TaxiMenuListener {
 
     fun onDeleteTaxiClicked(taxi: String)
 
-    fun onEditTaxiClicked(taxi: TaxiDetailsUiState)
+    fun onEditTaxiClicked(taxiId: String)
+
 }
 
 interface FilterMenuListener {
