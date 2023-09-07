@@ -73,7 +73,7 @@ class IdentityService(
     }
 
     suspend fun getUsers(
-        page: Int, limit: Int, searchTerm: String, languageCode: String
+        page: Int? = null, limit: Int? = null, searchTerm: String, languageCode: String
     ) = client.tryToExecute<PaginationResponse<UserDto>>(
         APIs.IDENTITY_API, attributes = attributes, setErrorMessage = { errorCodes ->
             errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
@@ -82,7 +82,7 @@ class IdentityService(
         get("/dashboard/user") {
             parameter("page", page)
             parameter("limit", limit)
-            parameter("searchTerm", searchTerm)
+            parameter("name", searchTerm)
         }
     }
 
