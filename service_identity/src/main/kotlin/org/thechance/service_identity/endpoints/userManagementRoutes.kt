@@ -10,8 +10,10 @@ import org.thechance.service_identity.endpoints.model.mapper.toDto
 import org.thechance.service_identity.domain.util.MissingParameterException
 import org.thechance.service_identity.domain.usecases.IUserManagementUseCase
 import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
+import org.thechance.service_identity.domain.util.Role
 import org.thechance.service_identity.endpoints.model.UsersManagementDto
 import org.thechance.service_identity.endpoints.util.extractInt
+import org.thechance.service_identity.endpoints.util.toIntListOrNull
 
 fun Route.userManagementRoutes() {
 
@@ -30,9 +32,9 @@ fun Route.userManagementRoutes() {
 
         get("/search"){
             val searchTerm = call.parameters["query"] ?: ""
-            val permissionsParam = call.parameters.getAll("permission")?.joinToString(",") ?: "1"
-            val permissions = permissionsParam.split(",").map { it.toInt() }
-            val users = userManagement.searchUsers(searchTerm, permissions )
+            val params = call.receiveParameters()
+            val permission = params["permission"]?.toIntListOrNull() ?: listOf(Role.END_USER)
+            val users = userManagement.searchUsers(searchTerm, permission )
             call.respond(HttpStatusCode.OK, users.toDto())
         }
 
