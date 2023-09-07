@@ -1,6 +1,6 @@
 function GetMap() {
 var map = new Microsoft.Maps.Map('#myMap', {
-    credentials: 'AlqUbMVkRpMkWMcFs_18FoZGeNcg8RLToYX5OeOCHnexAuUZxqtesONoCbT1sTAd',
+    credentials: 'Access_token',
     center: new Microsoft.Maps.Location(25,70),
     mapTypeId: Microsoft.Maps.MapTypeId.aerial,
     zoom: 2
