@@ -30,7 +30,7 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
     val state = _state.asStateFlow()
 
     private val _effect = MutableSharedFlow<E?>()
-    val effect = _effect.asSharedFlow()
+    val effect = _effect.asSharedFlow().throttleFirst(500)
 
     protected fun <T> tryToExecute(
         function: suspend () -> T,
