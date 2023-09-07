@@ -2,7 +2,7 @@ package org.thechance.service_taxi.domain.usecase.utils
 
 interface IValidations {
     fun isValidId(id: String): Boolean
-    fun isisValidPlateNumber(plateNumber: String): Boolean
+    fun isValidPlateNumber(plateNumber: String): Boolean
     fun isValidLocation(latitude: Double, longitude: Double): Boolean
     fun isValidRate(rate: Double): Boolean
     fun isValidPrice(price: Double): Boolean
@@ -22,7 +22,7 @@ class Validations : IValidations {
         return isValidLatitude(latitude) && isValidLongitude(longitude)
     }
 
-    override fun isisValidPlateNumber(plateNumber: String): Boolean {
+    override fun isValidPlateNumber(plateNumber: String): Boolean {
         return PLATE_NUMBER_REGEX.any { it.matches(plateNumber) }
     }
 

@@ -20,12 +20,18 @@ fun Route.userManagementRoutes() {
     route("/dashboard/user") {
 
         get {
-            val searchTerm = call.parameters["full_name"] ?: ""
+            val searchTerm = call.parameters["name"] ?: ""
             val page = call.parameters.extractInt("page") ?: 1
             val limit = call.parameters.extractInt("limit") ?: 10
             val users = userManagement.getUsers(page, limit, searchTerm).toDto()
             val total = userManagement.getNumberOfUsers()
             call.respond(HttpStatusCode.OK, UsersManagementDto(users, total))
+        }
+
+        get("/last-register") {
+            val limit = call.parameters.extractInt("limit") ?: 4
+            val result = userManagement.getLastRegisterUser(limit).toDto()
+            call.respond(HttpStatusCode.OK, result)
         }
 
         post("/{userId}/permission") {
