@@ -32,12 +32,19 @@ fun Route.userRoutes() {
             respondWithResult(HttpStatusCode.OK, result)
         }
 
+
+
         route("/user") {
 
             delete("/{id}") {
                 val id = call.parameters["id"] ?: ""
                 val language = extractLocalizationHeader()
                 val result = identityService.deleteUser(userId = id, language)
+                respondWithResult(HttpStatusCode.OK, result)
+            }
+            get ("/last-register"){
+                val limit = call.parameters["limit"]?.toInt() ?: 4
+                val result = identityService.getLastRegisteredUsers(limit)
                 respondWithResult(HttpStatusCode.OK, result)
             }
 

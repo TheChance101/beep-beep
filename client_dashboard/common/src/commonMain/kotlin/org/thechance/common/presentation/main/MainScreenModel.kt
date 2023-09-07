@@ -5,14 +5,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.thechance.common.domain.usecase.ILogoutUserUseCase
-import org.thechance.common.domain.usecase.IManageUsersUseCase
 import org.thechance.common.domain.usecase.IThemeManagementUseCase
+import org.thechance.common.domain.usecase.IUsersManagementUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
 
 class MainScreenModel(
-    private val manageUsers: IManageUsersUseCase,
+    private val getUsersUseCase: IUsersManagementUseCase,
     private val logout: ILogoutUserUseCase,
     private val themeManagement: IThemeManagementUseCase
 ) : BaseScreenModel<MainUiState, MainUiEffect>(MainUiState()), MainInteractionListener {
@@ -25,7 +25,7 @@ class MainScreenModel(
 
     private fun getUserInfo() {
         tryToExecute(
-            manageUsers::getUserInfo,
+            getUsersUseCase::getUserInfo,
             ::onGetUserInfoSuccessfully,
             ::onError
         )

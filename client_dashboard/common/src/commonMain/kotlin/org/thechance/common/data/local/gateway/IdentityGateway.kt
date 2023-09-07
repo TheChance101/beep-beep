@@ -13,6 +13,10 @@ class IdentityGateway(private val realm: Realm) : IIdentityGateway {
         realm.write { copyToRealm(ConfigurationCollection().apply { id = CONFIGURATION_ID }) }
     }
 
+    override suspend fun refreshAccessToken(refreshToken: String): Pair<String, String> {
+        return Pair("", "")
+    }
+
     override suspend fun saveAccessToken(token: String) {
         realm.write {
             query<ConfigurationCollection>("$ID == $CONFIGURATION_ID").first().find()?.accessToken = token
@@ -60,6 +64,7 @@ class IdentityGateway(private val realm: Realm) : IIdentityGateway {
             query<ConfigurationCollection>("$ID == $CONFIGURATION_ID").first().find()?.isDarkMode = mode
         }
     }
+
 
     companion object {
         private const val CONFIGURATION_ID = 0

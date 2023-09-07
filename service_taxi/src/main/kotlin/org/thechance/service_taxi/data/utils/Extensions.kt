@@ -3,6 +3,7 @@ package org.thechance.service_taxi.data.utils
 import com.mongodb.client.model.Updates
 import com.mongodb.client.result.UpdateResult
 import org.bson.conversions.Bson
+import org.bson.types.ObjectId
 import org.litote.kmongo.coroutine.CoroutineFindPublisher
 import kotlin.reflect.full.memberProperties
 
@@ -24,3 +25,5 @@ fun <T> updateNotNullProperties(
             .map { foreach(it.name, it.getter.call(obj)!!) }
     )
 }
+
+fun List<String>.toObjectIds() = map { ObjectId(it) }

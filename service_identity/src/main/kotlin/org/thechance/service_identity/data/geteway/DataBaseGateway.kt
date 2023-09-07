@@ -181,8 +181,12 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
     override suspend fun updateUser(
         id: String, saltedHash: SaltedHash?, fullName: String?, username: String?, email: String?
     ): Boolean {
-
         try {
+            dataBaseContainer.userCollection.find(
+                filter = (UserCollection::username eq username)
+                        and (UserCollection::username eq username),
+            )
+
             return dataBaseContainer.userCollection.updateOneById(
                 ObjectId(id),
                 set(
@@ -215,6 +219,12 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
             UserCollection::username eq username,
             UserCollection::isDeleted eq false
         )?.toManagedEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
+    }
+
+    override suspend fun getLastRegisterUser(limit:Int): List<UserManagement> {
+        return dataBaseContainer.userCollection.find(
+            UserCollection::isDeleted eq false
+        ).sort(Sorts.descending("_id")).limit(limit).toList().toManagedEntity()
     }
 
     override suspend fun searchUsers(

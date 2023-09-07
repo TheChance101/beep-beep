@@ -13,7 +13,6 @@ import presentation.search.SearchScreen
 import resources.Resources
 
 object HomeTab : Tab {
-
     override val options: TabOptions
         @Composable get() {
             val title = Resources.strings.home

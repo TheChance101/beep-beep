@@ -19,7 +19,7 @@ data class Restaurant(
     val location: Location,
     val address: String,
     val currency: String,
-){
+) {
     fun isRestaurantOpen(): Boolean {
         val instantNow = Clock.System.now()
         val currentTime = Instant.parse(instantNow.toString()).toLocalDateTime(TimeZone.UTC).time

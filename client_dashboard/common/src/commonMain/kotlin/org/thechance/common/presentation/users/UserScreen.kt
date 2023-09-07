@@ -17,7 +17,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
-import com.beepbeep.designSystem.ui.composable.*
+import com.beepbeep.designSystem.ui.composable.BpCheckBox
+import com.beepbeep.designSystem.ui.composable.BpIconButton
+import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.base.BaseScreen
 import org.thechance.common.presentation.composables.*
@@ -63,7 +65,7 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
         state: UserScreenUiState,
         pageListener: PageListener,
         editMenuListener: EditUserMenuListener,
-        onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
+        onDeleteUserMenuItemClicked: (String) -> Unit,
         onSearchInputChanged: (String) -> Unit,
         filterMenuListener: FilterMenuListener
     ) {
@@ -129,7 +131,7 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
         editUserMenu: String,
         onEditUserDismiss: () -> Unit,
         onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
-        onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
+        onDeleteUserMenuItemClicked: (String) -> Unit,
     ) {
         BpTable(
             data = users,
@@ -198,7 +200,7 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
         editUserMenu: String,
         onEditUserDismiss: () -> Unit,
         onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
-        onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
+        onDeleteUserMenuItemClicked: (String) -> Unit,
     ) {
         Text(
             text = position.toString(),
@@ -285,7 +287,7 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
         editUserMenu: String,
         onEditUserDismiss: () -> Unit,
         onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
-        onDeleteUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
+        onDeleteUserMenuItemClicked: (String) -> Unit,
     ) {
         BpDropdownMenu(
             expanded = user.username == editUserMenu,
@@ -305,7 +307,7 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
                 )
                 BpDropdownMenuItem(
                     onClick = {
-                        onDeleteUserMenuItemClicked(user)
+                        onDeleteUserMenuItemClicked(user.userId)
                     },
                     text = Resources.Strings.disable,
                     leadingIconPath = Resources.Drawable.disable,
