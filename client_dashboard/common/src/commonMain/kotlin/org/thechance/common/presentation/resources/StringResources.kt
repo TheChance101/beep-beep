@@ -92,6 +92,7 @@ data class StringResources(
     // endregion overview
 
     val clearAll: String = "Clear all",
+    val noMatchesFound: String = "Oops, No matches found",
 )
 
 val englishStrings = StringResources()
