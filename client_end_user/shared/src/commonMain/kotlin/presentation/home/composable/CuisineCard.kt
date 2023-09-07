@@ -39,7 +39,7 @@ fun CuisineCard(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
     val isPressed by interactionSource.collectIsPressedAsState()
-    val animatedFloat by animateFloatAsState(targetValue = if (isPressed) 1.2f else 1f)
+    val animatedFloat by animateFloatAsState(targetValue = if (isPressed) 1.02f else 1f)
     Column(
         modifier = modifier.width(76.dp).wrapContentHeight(),
         horizontalAlignment = Alignment.CenterHorizontally,
