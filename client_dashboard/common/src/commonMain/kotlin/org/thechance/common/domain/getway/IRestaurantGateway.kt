@@ -12,7 +12,7 @@ interface IRestaurantGateway {
 
     suspend fun getCuisines(): List<String>
 
-    suspend fun createCuisine(cuisineName: String): String?
+    suspend fun createCuisine(cuisineName: String): String
 
     suspend fun deleteCuisine(cuisineName: String): String
 

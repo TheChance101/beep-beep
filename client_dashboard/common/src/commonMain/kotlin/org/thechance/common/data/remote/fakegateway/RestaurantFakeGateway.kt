@@ -94,7 +94,7 @@ class RestaurantFakeGateway : IRestaurantGateway {
         return cuisines
     }
 
-    override suspend fun createCuisine(cuisineName: String): String? {
+    override suspend fun createCuisine(cuisineName: String): String {
         return if (cuisineName !in cuisines && cuisineName.isNotBlank()) {
             cuisines.add(0, cuisineName)
             cuisineName
