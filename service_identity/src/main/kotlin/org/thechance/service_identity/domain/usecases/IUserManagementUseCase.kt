@@ -45,8 +45,7 @@ class UserManagementUseCase(private val dataBaseGateway: IDataBaseGateway) : IUs
         searchTerm: String,
         filterByPermission: List<Int>
     ): List<UserManagement> {
-        val permission=filterByPermission.reduce { acc, i -> acc or i }
-        return dataBaseGateway.searchUsers(searchTerm, permission)
+        return dataBaseGateway.searchUsers(searchTerm, filterByPermission)
     }
 
     private fun grantPermission(currentPermissions: Int, permissionToAdd: Int): Int {
