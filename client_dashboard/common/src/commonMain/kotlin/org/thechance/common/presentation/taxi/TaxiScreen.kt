@@ -324,12 +324,14 @@ class TaxiScreen :
             maxItemsInEachRow = 3,
         ) {
             repeat(taxi.seats) {
-                Icon(
-                    painter = painterResource(Resources.Drawable.seatOutlined),
-                    contentDescription = null,
-                    tint = Theme.colors.contentPrimary.copy(alpha = 0.87f),
-                    modifier = Modifier.size(24.kms)
-                )
+                Box(modifier = Modifier.padding(top = 8.kms)) {
+                    Icon(
+                        painter = painterResource(Resources.Drawable.seatOutlined),
+                        contentDescription = null,
+                        tint = Theme.colors.contentPrimary.copy(alpha = 0.87f),
+                        modifier = Modifier.size(24.kms)
+                    )
+                }
             }
         }
         TitleField(text = taxi.trips)
