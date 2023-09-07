@@ -9,6 +9,7 @@ import org.thechance.api_gateway.data.service.IdentityService
 import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
 import org.thechance.api_gateway.endpoints.utils.respondWithResult
+import org.thechance.api_gateway.endpoints.utils.toIntListOrNull
 import org.thechance.api_gateway.util.Role
 
 
@@ -43,7 +44,7 @@ fun Route.userRoutes() {
             put("/{userId}/permission") {
                 val userId = call.parameters["userId"]?.trim().toString()
                 val params = call.receiveParameters()
-                val permission = params["permission"]?.split(",")?.map { it.toInt() } ?: listOf(1)
+                val permission = params["permission"]?.toIntListOrNull() ?: listOf(Role.END_USER)
                 val result = identityService.updateUserPermission(userId, permission)
                 respondWithResult(HttpStatusCode.Created, result)
             }

@@ -10,8 +10,11 @@ import org.thechance.service_identity.endpoints.model.mapper.toDto
 import org.thechance.service_identity.domain.util.MissingParameterException
 import org.thechance.service_identity.domain.usecases.IUserManagementUseCase
 import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
+import org.thechance.service_identity.domain.util.Role
+
 import org.thechance.service_identity.endpoints.model.UsersManagementDto
 import org.thechance.service_identity.endpoints.util.extractInt
+import org.thechance.service_identity.endpoints.util.toIntListOrNull
 
 fun Route.userManagementRoutes() {
 
@@ -35,10 +38,13 @@ fun Route.userManagementRoutes() {
         }
 
         put("/{userId}/permission") {
-            val userId = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            val userId = call.parameters["userId"] ?: throw MissingParameterException(
+                INVALID_REQUEST_PARAMETER
+            )
             val params = call.receiveParameters()
-            val permission = params["permission"]?.split(",")?.map { it.toInt() }?: listOf(1)
-            val result = userManagement.updateUserPermission(userId, permission  )
+            val permission =
+                params["permission"]?.toIntListOrNull() ?: listOf(Role.END_USER)
+            val result = userManagement.updateUserPermission(userId, permission)
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
