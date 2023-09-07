@@ -9,6 +9,7 @@ import domain.entity.Offer
 import domain.entity.PriceLevel
 import domain.entity.Restaurant
 import domain.entity.Time
+import domain.entity.User
 import domain.gateway.IFakeRemoteGateway
 
 class FakeRemoteGateway : IFakeRemoteGateway {
@@ -17,7 +18,11 @@ class FakeRemoteGateway : IFakeRemoteGateway {
         return restaurants.map { it.toEntity() }
     }
 
-    override fun getNewOffers() : List<Offer>{
+    override suspend fun getUsrWallet(): User {
+        return User(name = "Test", currency = "$", walletValue = 100.0)
+    }
+
+    override fun getNewOffers(): List<Offer> {
         return offers.map { it.toEntity() }
     }
 
