@@ -62,6 +62,10 @@ class UsersFakeGateway : IUsersGateway {
         return Pair("token", "refreshToken")
     }
 
+    override suspend fun deleteUser(userId: String): Boolean {
+        return true
+    }
+
     private val fakeUsers = listOf(
         UserDto(
             id = "c4425a0e-9f0a-4df1-bcc1-6dd96322a990",
