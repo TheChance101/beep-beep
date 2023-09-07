@@ -7,21 +7,12 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.thechance.common.data.local.gateway.LocalGateway
-import org.thechance.common.data.remote.mapper.toEntity
-import org.thechance.common.data.remote.model.DataWrapperDto
 import org.thechance.common.data.remote.model.RestaurantDto
 import org.thechance.common.data.remote.model.TaxiDto
-import org.thechance.common.data.remote.model.toEntity
-import org.thechance.common.domain.entity.DataWrapper
-import org.thechance.common.domain.entity.NewRestaurantInfo
-import org.thechance.common.domain.entity.Restaurant
-import org.thechance.common.domain.entity.Time
 import org.thechance.common.domain.getway.IRemoteGateway
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.ceil
-import kotlin.math.floor
 
 class FakeRemoteGateway(
     private val localGateway: LocalGateway,
@@ -336,104 +327,12 @@ class FakeRemoteGateway(
         localGateway.saveTaxiReport(taxiReportFile)
     }
 
-    override suspend fun getRestaurants(
-        pageNumber: Int,
-        numberOfRestaurantsInPage: Int,
-        restaurantName: String,
-        rating: Double?,
-        priceLevel: Int?,
-    ): DataWrapper<Restaurant> {
-        var restaurants = restaurants.toEntity()
-        if (restaurantName.isNotEmpty()) {
-            restaurants = restaurants.filter {
-                it.name.startsWith(
-                    restaurantName,
-                    true
-                )
-            }
-        }
-        if (rating != null && priceLevel != null) {
-            restaurants = restaurants.filter {
-                it.priceLevel == priceLevel &&
-                        when {
-                            rating.rem(1) > 0.89 || rating.rem(1) == 0.0 || rating.rem(1) > 0.5
-                            -> it.rating in floor(rating) - 0.1..0.49 + floor(rating)
-
-                            else -> it.rating in 0.5 + floor(rating)..0.89 + floor(rating)
-                        }
-            }
-        }
-        val startIndex = (pageNumber - 1) * numberOfRestaurantsInPage
-        val endIndex = startIndex + numberOfRestaurantsInPage
-        val numberOfPages = ceil(restaurants.size / (numberOfRestaurantsInPage * 1.0)).toInt()
-        return try {
-            DataWrapperDto(
-                totalPages = numberOfPages,
-                result = restaurants.subList(startIndex, endIndex.coerceAtMost(restaurants.size)),
-                totalResult = restaurants.size
-            ).toEntity()
-        } catch (e: Exception) {
-            DataWrapperDto(
-                totalPages = numberOfPages,
-                result = restaurants,
-                totalResult = restaurants.size
-            ).toEntity()
-        }
-    }
-
     override suspend fun loginUser(username: String, password: String): Pair<String, String> {
         return Pair("token", "refreshToken")
     }
 
-    override suspend fun createRestaurant(restaurant: NewRestaurantInfo): Restaurant {
-        return Restaurant(
-            id = "7",
-            name = restaurant.name,
-            ownerUsername = restaurant.ownerUsername,
-            phoneNumber = restaurant.phoneNumber,
-            workingHours = restaurant.workingHours,
-            rating = 3.0,
-            priceLevel = 1
-        )
-    }
-
     override suspend fun getCurrentLocation(): String {
         return "30.044420,31.235712"
-    }
-
-    override suspend fun deleteRestaurants(restaurant: Restaurant): Restaurant {
-        restaurants.remove(
-            RestaurantDto(
-                id = restaurant.id,
-                name = restaurant.name,
-                ownerUsername = restaurant.ownerUsername,
-                phoneNumber = restaurant.phoneNumber,
-                rating = restaurant.rating,
-                priceLevel = restaurant.priceLevel,
-                workingHours = if (restaurant.workingHours == Pair(
-                        Time(0, 0), Time(0, 0)
-                    )
-                ) null
-                else "${restaurant.workingHours.first} - ${restaurant.workingHours.second}",
-            )
-        )
-        return restaurant
-    }
-
-    override suspend fun getCuisines(): List<String> {
-        return cuisines
-    }
-
-    override suspend fun createCuisine(cuisineName: String): String? {
-        return if (cuisineName !in cuisines && cuisineName.isNotBlank()) {
-            cuisines.add(0, cuisineName)
-            cuisineName
-        } else null
-    }
-
-    override suspend fun deleteCuisine(cuisineName: String): String {
-        cuisines.remove(cuisineName)
-        return cuisineName
     }
 
     private fun createTaxiPDFReport(): File {
