@@ -8,6 +8,8 @@ import domain.usecase.IGetNewOffersUserCase
 import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.ManageAuthenticationUseCase
 import domain.usecase.GetFavoriteRestaurantsUseCase
+import domain.usecase.IManageUserUseCase
+import domain.usecase.ManageUserUseCase
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
@@ -17,5 +19,5 @@ val useCaseModule = module {
     singleOf(::GetFavoriteRestaurantsUseCase) { bind<IGetFavoriteRestaurantsUseCase>() }
     singleOf(::GetCuisinesUseCase) { bind<IGetCuisinesUseCase>() }
     singleOf(::GetNewOffersUserCase) { bind<IGetNewOffersUserCase>() }
-
+    singleOf(::ManageUserUseCase) { bind<IManageUserUseCase>() }
 }

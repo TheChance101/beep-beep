@@ -26,6 +26,8 @@ data class StringResources(
     val orderCardImageDescription: String = "Order card image",
     val orderTaxiButtonTitle: String = "Order taxi",
     val orderFoodButtonTitle: String = "Order food",
+    val wallet: String = "Wallet",
+    val welcome: String = "Welcome",
     val off: String = "Off",
     val favoriteRestaurants: String = "Favorite restaurants",
     val eidSpecials: String = "Eid specials",
