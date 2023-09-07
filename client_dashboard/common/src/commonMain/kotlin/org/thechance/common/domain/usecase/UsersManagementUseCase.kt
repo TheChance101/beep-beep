@@ -17,6 +17,8 @@ interface IUsersManagementUseCase {
         numberOfUsers: Int
     ): DataWrapper<User>
 
+    suspend fun deleteUser(userId: String): Boolean
+
 }
 
 class UsersManagementUseCase(
@@ -31,6 +33,10 @@ class UsersManagementUseCase(
         numberOfUsers: Int,
     ): DataWrapper<User> {
         return userGateway.getUsers(query, byPermissions, byCountries, page, numberOfUsers)
+    }
+
+    override suspend fun deleteUser(userId: String): Boolean {
+        return userGateway.deleteUser(userId)
     }
 
     override suspend fun getUserInfo(): String {

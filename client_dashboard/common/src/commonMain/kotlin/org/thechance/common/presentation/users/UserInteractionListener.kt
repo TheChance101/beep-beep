@@ -4,8 +4,11 @@ import org.thechance.common.presentation.base.BaseInteractionListener
 
 interface UserScreenInteractionListener : BaseInteractionListener, FilterMenuListener,
     EditUserMenuListener, PageListener {
-    fun onDeleteUserMenuItemClicked(user: UserScreenUiState.UserUiState)
+
+    fun onDeleteUserMenuItemClicked(userId: String)
+
     fun onSearchInputChange(text: String)
+
 }
 
 interface EditUserMenuListener {

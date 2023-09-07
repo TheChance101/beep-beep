@@ -124,8 +124,19 @@ class UserScreenModel(
         hideEditUserMenu()
     }
 
-    override fun onDeleteUserMenuItemClicked(user: UserScreenUiState.UserUiState) {
-        println("Delete user: ${user.username}").also { hideEditUserMenu() }
+    override fun onDeleteUserMenuItemClicked(userId: String) {
+        tryToExecute(
+            callee = { userManagement.deleteUser(userId) },
+            onSuccess = ::onDeleteUserSuccess,
+            onError = ::onError
+        )
+
+        hideEditUserMenu()
+    }
+
+    private fun onDeleteUserSuccess(isDeleted: Boolean) {
+        updateState { it.copy(isLoading = false) }
+        getUsers()
     }
 
     // endregion

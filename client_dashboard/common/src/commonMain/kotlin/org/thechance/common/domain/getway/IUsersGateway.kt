@@ -18,4 +18,6 @@ interface IUsersGateway {
 
     suspend fun loginUser(username: String, password: String): Pair<String, String>
 
+    suspend fun deleteUser(userId: String): Boolean
+
 }
