@@ -109,7 +109,12 @@ class TaxiService(
     }
 
     @OptIn(InternalAPI::class)
-    suspend fun findTaxisByQuery(query: String, driverIDs: List<String>, language: String): List<TaxiDto> {
+    suspend fun findTaxisByQuery(status: Boolean,
+                                 color: Long?,
+                                 seats: Int?,
+                                 query: String?,
+                                 driverIds: List<String>,
+                                 language: String): List<TaxiDto> {
         return client.tryToExecute(
                 api = APIs.TAXI_API,
                 attributes = attributes,
@@ -118,8 +123,11 @@ class TaxiService(
                 }
         ) {
             post("/taxis/search") {
+                parameter("status", status)
+                parameter("color", color)
+                parameter("seats", seats)
                 parameter("plate_number", query)
-                body = Json.encodeToString(ListSerializer(String.serializer()), driverIDs)
+                body = Json.encodeToString(ListSerializer(String.serializer()), driverIds)
             }
         }
     }

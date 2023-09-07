@@ -76,10 +76,14 @@ fun Route.taxiRoutes() {
             get("/search") {
                 val language = extractLocalizationHeader()
                 val query = call.request.queryParameters["query"]?.trim().orEmpty()
+                val status = call.request.queryParameters["status"]?.trim().toBoolean()
+                val color = call.request.queryParameters["color"]?.trim()?.toLongOrNull()
+                val seats = call.request.queryParameters["seats"]?.trim()?.toIntOrNull()
                 val driverIDs = async {
                     identityService.getUsers(searchTerm = query, languageCode = language).items.map { it.id }
                 }.await()
-                val result = taxiService.findTaxisByQuery(query, driverIDs, language)
+
+                val result = taxiService.findTaxisByQuery(status, color, seats, query, driverIDs, language)
                 respondWithResult(HttpStatusCode.OK, result)
             }
         }
