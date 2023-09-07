@@ -5,17 +5,6 @@ import org.thechance.common.domain.entity.NewRestaurantInfo
 import org.thechance.common.domain.entity.Restaurant
 
 interface IRestaurantGateway {
-    suspend fun getRestaurants(): DataWrapper<Restaurant>
-
-    suspend fun searchRestaurantsByRestaurantName(restaurantName: String): DataWrapper<Restaurant>
-
-    suspend fun filterRestaurants(rating: Double, priceLevel: Int): DataWrapper<Restaurant>
-
-    suspend fun searchFilterRestaurants(
-        restaurantName: String,
-        rating: Double,
-        priceLevel: Int
-    ): DataWrapper<Restaurant>
 
     suspend fun createRestaurant(restaurant: NewRestaurantInfo): Restaurant
 
@@ -25,5 +14,14 @@ interface IRestaurantGateway {
 
     suspend fun createCuisine(cuisineName: String): String?
 
-    suspend fun deleteCuisine(cuisineName: String): List<String>
+    suspend fun deleteCuisine(cuisineName: String): String
+
+    suspend fun getRestaurants(
+        pageNumber: Int,
+        numberOfRestaurantsInPage: Int,
+        restaurantName: String,
+        rating: Double?,
+        priceLevel: Int?
+    ): DataWrapper<Restaurant>
+
 }
