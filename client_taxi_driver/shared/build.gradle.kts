@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kotlinKsp)
     alias(libs.plugins.realm)
-    kotlin("plugin.serialization") version "1.9.0"
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 kotlin {

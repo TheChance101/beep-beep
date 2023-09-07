@@ -28,6 +28,7 @@ coroutine-version = "1.7.3"
 image-loader = "1.2.8"
 kotlin-realm = "1.10.0"
 realm-version = "1.10.0"
+kotlinx-serialization-version = "1.9.0"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
@@ -93,5 +94,6 @@ jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose-versi
 google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt-version" }
 kotlinKsp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 realm = { id = "io.realm.kotlin", version.ref = "realm-version" }
+kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinx-serialization-version" }
 
 
