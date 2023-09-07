@@ -76,11 +76,19 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
                 when (exception) {
                     is NoInternetException -> onError(ErrorState.NoInternet)
                     is PermissionDenied -> onError(ErrorState.HasNoPermission)
-                    is ClientSideException -> onError(ErrorState.RequestFailed)
                     is ServerSideException -> onError(ErrorState.RequestFailed)
-                    is UnAuthorizedException -> onError(ErrorState.UnAuthorized)
-                    is UserNotFoundException -> onError(ErrorState.UserNotExist(exception.errorMessage))
-                    is NotFoundedException -> onError(ErrorState.NotFound)
+                    is UserNotFoundException -> onError(
+                        ErrorState.UserNotExist(
+                            exception.message.toString()
+                        )
+                    )
+
+                    is WrongPasswordException -> onError(
+                        ErrorState.WrongPassword(
+                            exception.message.toString()
+                        )
+                    )
+
                     is InvalidCredentialsException -> onError(
                         ErrorState.InvalidCredentials(
                             exception.message.toString()

@@ -12,6 +12,7 @@ data class LoginScreenUIState(
     val error: ErrorState? = null,
     val isUsernameError: Boolean = false,
     val isPasswordError: Boolean = false,
+    val isCredentialsError: Boolean = false,
     val usernameErrorMsg: String = "",
     val passwordErrorMsg: String = "",
     //permission
@@ -22,3 +23,15 @@ data class LoginScreenUIState(
     val showPermissionSheet: Boolean = false,
     val sheetState: ModalBottomSheetState = ModalBottomSheetState(),
 )
+
+enum class UserNameErrorType {
+    NOTHING,
+    USER_NAME_EMPTY,
+    USER_NAME_WRONG
+}
+
+enum class PasswordErrorType {
+    NOTHING,
+    PASSWORD_EMPTY,
+    PASSWORD_WRONG
+}
