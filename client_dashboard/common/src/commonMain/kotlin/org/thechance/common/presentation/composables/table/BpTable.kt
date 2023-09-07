@@ -3,15 +3,7 @@ package org.thechance.common.presentation.composables.table
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,9 +16,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.kms
 
 /**
@@ -54,11 +48,16 @@ fun <T> ColumnScope.BpTable(
 ) {
     Box(modifier = Modifier.weight(1f).padding(bottom = 16.kms)) {
         LazyColumn(
-            modifier = modifier.clip(shape = shape).border(border, borderColor, shape),
+            modifier = modifier
+                .clip(shape = shape)
+                .border(border, borderColor, shape),
         ) {
             stickyHeader {
                 Row(
-                    Modifier.fillMaxWidth().background(headerColor).padding(rowPadding)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(headerColor)
+                        .padding(rowPadding)
                         .heightIn(max = maxHeight),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -75,19 +74,34 @@ fun <T> ColumnScope.BpTable(
                 Divider(Modifier.fillMaxWidth(), thickness = border, color = borderColor)
             }
 
-            items(data, key = key) {
-                Row(
-                    Modifier.fillMaxWidth().background(rowsColor).padding(rowPadding)
-                        .heightIn(max = maxHeight),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(16.kms),
-                ) {
-                    rowContent(it)
+            if (data.isNotEmpty()) {
+                items(data, key = key) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(rowsColor)
+                            .padding(rowPadding)
+                            .heightIn(max = maxHeight),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(16.kms),
+                    ) {
+                        rowContent(it)
+                    }
+                    Divider(Modifier.fillMaxWidth(), thickness = border, color = borderColor)
                 }
-                Divider(Modifier.fillMaxWidth(), thickness = border, color = borderColor)
+            }
+
+            if (data.isEmpty()) {
+                item {
+                    Text(
+                        text = Resources.Strings.noMatchesFound,
+                        modifier = Modifier.fillMaxSize().padding(16.kms),
+                        style = Theme.typography.titleMedium,
+                        color = Theme.colors.contentSecondary,
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
         }
     }
 }
-
-
