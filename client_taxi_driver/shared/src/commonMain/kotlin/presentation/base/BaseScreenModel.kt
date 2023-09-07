@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -30,7 +31,7 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
     val state = _state.asStateFlow()
 
     private val _effect = MutableSharedFlow<E?>()
-    val effect = _effect.asSharedFlow().throttleFirst(500)
+    val effect = _effect.asSharedFlow().throttleFirst(500).mapNotNull { it }
 
     protected fun <T> tryToExecute(
         function: suspend () -> T,
