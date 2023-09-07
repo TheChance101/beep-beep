@@ -28,25 +28,32 @@ fun SeatsBar(
 ) {
 
     var currentCount by remember { mutableStateOf(selectedSeatsCount) }
+    var isEditingMode by remember { mutableStateOf(false) }
 
     Row(modifier = modifier
-        .onPointerEvent(PointerEventType.Exit) { currentCount = selectedSeatsCount }
+        .onPointerEvent(PointerEventType.Exit) {
+            currentCount = selectedSeatsCount
+            isEditingMode = false
+        }
         .onPointerEvent(PointerEventType.Press) { onClick(currentCount) },
         horizontalArrangement = horizontalArrangement
     ) {
         repeat(count) { iconPosition ->
             Image(
                 painter = when {
-                    iconPosition < floor(currentCount.toDouble()) -> selectedIcon
+                    iconPosition < floor(
+                        if (isEditingMode) currentCount.toDouble() else selectedSeatsCount.toDouble()
+                    ) -> selectedIcon
+
                     else -> notSelectedIcon
                 },
                 contentDescription = null,
                 modifier = Modifier.padding(iconsPadding).size(iconsSize)
                     .onPointerEvent(PointerEventType.Move) {
+                        isEditingMode = true
                         currentCount = iconPosition + 1
                     }
             )
         }
     }
 }
-
