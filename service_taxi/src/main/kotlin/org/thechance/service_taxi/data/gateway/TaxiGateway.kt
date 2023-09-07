@@ -69,13 +69,19 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
         return container.taxiCollection.findOne(query) != null
     }
 
-    override suspend fun findTaxisByPlateNumberAndDriverIds(plateNumber: String, driverIds: List<String>): List<Taxi> {
-        val queries = or(
-                TaxiCollection::plateNumber regex Regex(plateNumber, RegexOption.IGNORE_CASE),
-                TaxiCollection::driverId `in` driverIds.toObjectIds()
+    override suspend fun findTaxisWithFilters(status: Boolean, color: Long?, seats: Int?, plateNumber: String?, driverIds: List<String>?): List<Taxi> {
+        val searchQueries = or(
+                TaxiCollection::plateNumber regex Regex(plateNumber.orEmpty(), RegexOption.IGNORE_CASE),
+                TaxiCollection::driverId `in` driverIds?.toObjectIds()!!
+        )
+        val filter = and(
+                TaxiCollection::isAvailable eq status,
+                TaxiCollection::color eq color,
+                TaxiCollection::seats eq seats,
         )
         return container.taxiCollection.find(
-                queries,
+                searchQueries,
+                filter,
                 TaxiCollection::isDeleted ne true
         ).toList().toEntity()
     }

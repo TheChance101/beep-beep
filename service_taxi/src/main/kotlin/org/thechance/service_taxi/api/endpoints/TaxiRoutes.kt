@@ -53,9 +53,12 @@ fun Route.taxiRoutes() {
 
     route("/taxis") {
         post("/search") {
-            val plateNumber = call.request.queryParameters["plate_number"]?.trim().orEmpty()
+            val status = call.request.queryParameters["status"]?.trim().toBoolean()
+            val color = call.request.queryParameters["color"]?.trim()?.toLongOrNull()
+            val seats = call.request.queryParameters["seats"]?.trim()?.toIntOrNull()
+            val plateNumber = call.request.queryParameters["plate_number"]?.trim()
             val driverIDs: List<String> = call.receive<List<String>>()
-            val taxis = manageTaxiUseCase.findTaxisByPlateNumberAndDriverIds(plateNumber,driverIDs)
+            val taxis = manageTaxiUseCase.findTaxisWithFilters(status, color, seats, plateNumber, driverIDs)
             call.respond(HttpStatusCode.OK, taxis.toDto())
         }
     }
