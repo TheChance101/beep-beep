@@ -3,16 +3,24 @@ package presentation.home
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.windowInsetsEndWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
@@ -60,7 +68,7 @@ class HomeScreen :
         ) {
             item{
                 ImageSlider(
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.padding( horizontal = 16.dp),
                     onItemClickListener = { listener.onClickOffersSlider(it) },
                     images = state.getOfferImages()
                 )
@@ -74,16 +82,18 @@ class HomeScreen :
             }
             item {
                 Row(
-                    modifier = Modifier.padding(start = 16.dp, top = 16.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     OrderCard(
+                        modifier = Modifier.fillMaxWidth(0.5f),
                         onClick = listener::onClickOrderTaxi,
                         buttonTitle = Resources.strings.orderTaxiButtonTitle,
                         painter = painterResource(Resources.images.orderTaxi)
                     )
                     OrderCard(
+                        modifier = Modifier.fillMaxWidth(1f),
                         onClick = listener::onClickOrderFood,
                         buttonTitle = Resources.strings.orderFoodButtonTitle,
                         painter = painterResource(Resources.images.orderImage),
@@ -92,20 +102,17 @@ class HomeScreen :
                 }
             }
             item {
-                Column {
+                Column(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                     SectionHeader(
-                        modifier = Modifier.padding(
-                            start = 16.dp,
-                            end = 16.dp,
-                            top = 16.dp,
-                            bottom = 8.dp
-                        ),
                         onClickViewAll = listener::onclickSeeAllCuisines,
                         title = Resources.strings.cuisineSectionTitle,
                         showViewAll = true
                     )
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                        modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
@@ -126,7 +133,6 @@ class HomeScreen :
                     ratings = state.favoriteRestaurants.map { it.rating },
                     priceLevels = state.favoriteRestaurants.map { it.priceLevel },
                     painters = painters,
-                    modifier = Modifier.padding(vertical = 16.dp)
                 )
             }
             item {
@@ -136,7 +142,7 @@ class HomeScreen :
                     ratings = state.favoriteRestaurants.map { it.rating },
                     priceLevels = state.favoriteRestaurants.map { it.priceLevel },
                     painters = painters,
-                    modifier = Modifier.padding(vertical = 16.dp),
+                    modifier = Modifier.padding(top = 16.dp),
                     hasOffer = true,
                     offers = listOf("15 %", "15 %", "15 %")
                 )
@@ -149,7 +155,7 @@ class HomeScreen :
                     ratings = state.favoriteRestaurants.map { it.rating },
                     priceLevels = state.favoriteRestaurants.map { it.priceLevel },
                     painters = painters,
-                    modifier = Modifier.padding(vertical = 16.dp),
+                    modifier = Modifier.padding(top = 16.dp),
                     hasDeliveryPrice = true,
                     deliveryPrices = listOf("Free", "Free", "Free")
                 )

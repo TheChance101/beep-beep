@@ -42,7 +42,6 @@ fun ChatSupportCard(
         modifier = modifier
             .fillMaxWidth()
             .height(88.dp)
-            .scale(animatedFloat)
             .border(
                 width = 1.dp,
                 color = Theme.colors.divider,
@@ -87,7 +86,7 @@ fun ChatSupportCard(
         Image(
             painterResource(Resources.images.chatImage),
             contentDescription = Resources.strings.connectWithSupportIconDescription,
-            modifier = Modifier.size(56.dp),
+            modifier = Modifier.size(56.dp).scale(animatedFloat),
         )
     }
 }

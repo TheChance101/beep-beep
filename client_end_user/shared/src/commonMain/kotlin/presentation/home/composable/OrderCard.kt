@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -44,7 +45,7 @@ fun OrderCard(
     val animatedFloat by animateFloatAsState(targetValue = if (isPressed) 1.02f else 1f)
     Column(
         modifier = modifier
-            .size(width = 160.dp, height = 140.dp)
+            .height( height = 140.dp)
             .clip(shape = RoundedCornerShape(Theme.radius.medium))
             .background(color)
             .clickable(
