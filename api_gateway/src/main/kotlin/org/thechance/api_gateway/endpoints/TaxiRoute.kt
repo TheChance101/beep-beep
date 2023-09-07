@@ -60,8 +60,7 @@ fun Route.taxiRoutes() {
 
             delete("/{taxiId}") {
                 val language = extractLocalizationHeader()
-                val params = call.receiveParameters()
-                val id = params["taxiId"] ?: ""
+                val id = call.parameters["taxiId"] ?: ""
                 val result = taxiService.deleteTaxi(id, language)
                 val successMessage =
                     localizedMessagesFactory.createLocalizedMessages(language).taxiDeleteSuccessfully

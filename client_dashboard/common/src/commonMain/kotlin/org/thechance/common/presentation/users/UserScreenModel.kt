@@ -3,12 +3,12 @@ package org.thechance.common.presentation.users
 import kotlinx.coroutines.Job
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.User
-import org.thechance.common.domain.usecase.IGetUsersUseCase
+import org.thechance.common.domain.usecase.IUsersManagementUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
 class UserScreenModel(
-    private val searchUsers: IGetUsersUseCase,
+    private val userManagement: IUsersManagementUseCase,
 ) : BaseScreenModel<UserScreenUiState, UserUiEffect>(UserScreenUiState()),
     UserScreenInteractionListener {
 
@@ -55,7 +55,7 @@ class UserScreenModel(
 
     override fun onFilterMenuSaveButtonClicked() {
         hideFilterMenu()
-        getUsers()
+        this.getUsers()
     }
 
     override fun onFilterClearAllClicked() {
@@ -79,7 +79,7 @@ class UserScreenModel(
 
     private fun launchSearchJob() {
         searchJob?.cancel()
-        searchJob = launchDelayed(300L) { getUsers() }
+        searchJob = launchDelayed(300L) { this@UserScreenModel.getUsers() }
     }
 
     private fun onSearchUsersSuccessfully(users: DataWrapper<User>) {
@@ -89,7 +89,7 @@ class UserScreenModel(
     private fun getUsers() {
         tryToExecute(
             {
-                searchUsers(
+                userManagement.getUsers(
                     query = state.value.search.trim(),
                     byPermissions = state.value.filter.permissions.toEntity(),
                     byCountries = state.value.filter.countries.filter { it.selected }.map { it.name },
@@ -190,4 +190,5 @@ class UserScreenModel(
         getUsers()
     }
     // endregion
+
 }

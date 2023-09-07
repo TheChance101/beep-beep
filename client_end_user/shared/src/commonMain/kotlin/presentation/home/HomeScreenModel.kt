@@ -1,6 +1,8 @@
 package presentation.home
 
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.entity.Restaurant
+import domain.usecase.GetFavoriteRestaurantsUseCase
 import domain.usecase.IGetCuisinesUseCase
 import domain.usecase.IGetNewOffersUserCase
 import kotlinx.coroutines.CoroutineScope
@@ -10,6 +12,7 @@ import presentation.base.ErrorState
 
 class HomeScreenModel(
     private val cuisineUseCase: IGetCuisinesUseCase,
+    private val getFavoriteRestaurantsUseCase: GetFavoriteRestaurantsUseCase,
     private val offers: IGetNewOffersUserCase
 ) :
     BaseScreenModel<HomeScreenUiState, HomeScreenUiEffect>(HomeScreenUiState()),
@@ -18,6 +21,7 @@ class HomeScreenModel(
 
     init {
         getRecommendedCuisines()
+        getFavoriteRestaurants()
         getNewOffers()
     }
 
@@ -62,6 +66,22 @@ class HomeScreenModel(
     }
 
     private fun onGetCuisinesError(error: ErrorState) {
+        println("error is $error")
+    }
+
+    private fun getFavoriteRestaurants() {
+        tryToExecute(
+            { getFavoriteRestaurantsUseCase() },
+            ::onGetFavoriteRestaurantsSuccess,
+            ::onGetFavoriteRestaurantsError
+        )
+    }
+
+    private fun onGetFavoriteRestaurantsSuccess(restaurants: List<Restaurant>) {
+        updateState { it.copy(favoriteRestaurants = restaurants.toRestaurantUiState()) }
+    }
+
+    private fun onGetFavoriteRestaurantsError(error: ErrorState) {
         println("error is $error")
     }
 

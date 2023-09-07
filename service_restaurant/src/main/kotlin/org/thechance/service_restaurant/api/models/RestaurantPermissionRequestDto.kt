@@ -9,5 +9,3 @@ data class RestaurantPermissionRequestDto(
     val ownerEmail: String? = null,
     val cause: String? = null,
 )
-
-
