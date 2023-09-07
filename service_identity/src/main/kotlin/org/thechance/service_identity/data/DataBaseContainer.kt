@@ -23,7 +23,7 @@ class DataBaseContainer(client: MongoClient) {
         database.getCollection(WALLET_COLLECTION)
 
     companion object {
-        private val DATA_BASE_NAME = "beepBeep"
+        private val DATA_BASE_NAME = System.getenv("DB_NAME").toString()
         const val WALLET_COLLECTION = "wallet"
         const val ADDRESS_COLLECTION_NAME = "address"
         const val USER_COLLECTION = "user"

@@ -221,13 +221,13 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         searchTerm: String,
         filterByPermission: List<Int>
     ): List<UserManagement> {
-        val combinedPermission = filterByPermission.fold(0) { acc, i -> acc or i }
         val orConditions = filterByPermission.map { permission ->
             or(
                 UserCollection::permission eq permission,
-                UserCollection::permission.bitsAllSet(permission.toLong())
+                UserCollection::permission.bitsAllSet(permission.toLong()) // Convert to Long
             )
         }
+
         return dataBaseContainer.userCollection.find(
             and(
                 or(

@@ -23,6 +23,6 @@ val kmongoModule = module {
         val settings = MongoClientSettings.builder()
             .applyConnectionString(connectionString)
             .build()
-        KMongo.createClient()
+        KMongo.createClient(settings)
     }
 }
