@@ -16,7 +16,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import com.beepbeep.designSystem.ui.theme.Theme
@@ -93,13 +92,14 @@ fun <T> ColumnScope.BpTable(
 
             if (data.isEmpty()) {
                 item {
-                    Text(
-                        text = Resources.Strings.noMatchesFound,
-                        modifier = Modifier.fillMaxSize().padding(16.kms),
-                        style = Theme.typography.titleMedium,
-                        color = Theme.colors.contentSecondary,
-                        textAlign = TextAlign.Center
-                    )
+                    Box(modifier = Modifier.fillParentMaxSize()) {
+                        Text(
+                            text = Resources.Strings.noMatchesFound,
+                            modifier = Modifier.align(Alignment.Center).padding(16.kms),
+                            style = Theme.typography.titleMedium,
+                            color = Theme.colors.contentSecondary,
+                        )
+                    }
                 }
             }
         }
