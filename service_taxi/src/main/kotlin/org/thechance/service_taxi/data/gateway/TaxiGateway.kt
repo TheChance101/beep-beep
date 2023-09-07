@@ -70,7 +70,7 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
     }
 
     override suspend fun findTaxisByPlateNumberAndDriverIds(plateNumber: String, driverIds: List<String>): List<Taxi> {
-        val queries = and(
+        val queries = or(
                 TaxiCollection::plateNumber regex Regex(plateNumber, RegexOption.IGNORE_CASE),
                 TaxiCollection::driverId `in` driverIds.toObjectIds()
         )
