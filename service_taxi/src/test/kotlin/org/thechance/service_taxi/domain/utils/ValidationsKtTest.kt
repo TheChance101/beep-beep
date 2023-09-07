@@ -101,7 +101,7 @@ class ValidationsKtTest {
         // given an valid plate
         val plate = "1234 MOS"
         // when result is true
-        val result = validations.isisValidPlateNumber(plate)
+        val result = validations.isValidPlateNumber(plate)
         // then check
         Assert.assertTrue(result)
     }
@@ -111,7 +111,7 @@ class ValidationsKtTest {
         // given an valid plate
         val plate = "123456 MS"
         // when result is true
-        val result = validations.isisValidPlateNumber(plate)
+        val result = validations.isValidPlateNumber(plate)
         // then check
         Assert.assertTrue(result)
     }
@@ -121,7 +121,7 @@ class ValidationsKtTest {
         // given an valid plate
         val plate = "123456adsMS"
         // when result is true
-        val result = validations.isisValidPlateNumber(plate)
+        val result = validations.isValidPlateNumber(plate)
         // then check
         Assert.assertFalse(result)
     }

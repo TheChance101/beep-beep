@@ -1,17 +1,13 @@
 package org.thechance.common.domain.getway
 
-import org.thechance.common.domain.entity.*
+import org.thechance.common.domain.entity.DataWrapper
+import org.thechance.common.domain.entity.NewRestaurantInfo
+import org.thechance.common.domain.entity.Restaurant
 
 
 interface IRemoteGateway {
 
     suspend fun getUserData(): String
-
-    suspend fun createTaxi(taxi: NewTaxiInfo): Taxi
-
-    suspend fun updateTaxi(taxi: NewTaxiInfo): Taxi
-
-    suspend fun deleteTaxi(taxiId: String): String
 
     suspend fun getPdfTaxiReport()
 
@@ -30,13 +26,6 @@ interface IRemoteGateway {
     suspend fun loginUser(username: String, password: String): Pair<String, String>
 
     suspend fun deleteRestaurants(restaurant: Restaurant): Restaurant
-
-    suspend fun getTaxis(
-        taxiFiltration: TaxiFiltration,
-        username: String?,
-        page: Int,
-        numberOfTaxis: Int
-    ): DataWrapper<Taxi>
 
     suspend fun getCuisines(): List<String>
 

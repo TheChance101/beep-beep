@@ -48,7 +48,10 @@ fun Scope.intercept(client: HttpClient) {
         val refreshToken = identityGateway.getRefreshToken()
 
         request.headers {
-            append("Authorization", "Bearer $accessToken")
+            append(
+                "Authorization",
+                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhbGxfdXNlcnMiLCJpc3MiOiJ0aGUtY2hhbmNlLm9yZyIsInBlcm1pc3Npb24iOiI3IiwiZXhwIjoxNzI0NzcyMTQ3LCJ0b2tlblR5cGUiOiJBQ0NFU1NfVE9LRU4iLCJ1c2VySWQiOiI2NGYzNjUwYzVkZGJjMTViZmQxZWZjZjciLCJ1c2VybmFtZSI6ImhhaWR5X2Fib3Vnb21hYSJ9.zxdJT60ROmBr8hoDZXny252_jlUs3-tpQ3nH4dZ5V_8"
+            )
         }
         val originalCall = execute(request)
 
