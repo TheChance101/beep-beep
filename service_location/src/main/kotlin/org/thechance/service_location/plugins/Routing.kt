@@ -1,12 +1,12 @@
 package org.thechance.service_location.plugins
 
-import io.ktor.server.routing.*
 import io.ktor.server.application.*
-import org.thechance.serivce_identity.endpoints.testRoutes
+import io.ktor.server.routing.*
+import org.thechance.service_location.endpoints.locationRoutes
 
 fun Application.configureRouting(
 ) {
     routing {
-        testRoutes()
+        locationRoutes()
     }
 }
