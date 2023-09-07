@@ -52,12 +52,9 @@ fun Route.cuisineRoutes() {
         }
 
         delete("/{id}") {
-            val id =
-                call.parameters.extractString("id") ?: throw MultiErrorException(listOf(NOT_FOUND))
+            val id = call.parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
             val isDeleted = manageCuisine.deleteCuisine(id=id)
             if (isDeleted) call.respond(HttpStatusCode.OK, "Deleted Successfully")
         }
-
     }
-
 }

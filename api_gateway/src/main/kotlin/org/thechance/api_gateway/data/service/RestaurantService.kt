@@ -235,6 +235,16 @@ class RestaurantService(
             get("/cuisines")
         }
     }
+
+    suspend fun  deleteCuisine(cuisineId: String, languageCode : String): Boolean {
+        return client.tryToExecute<Boolean>(
+            APIs.RESTAURANT_API,
+            attributes = attributes,
+            setErrorMessage = { errorHandler.getLocalizedErrorMessage(it, languageCode ) }
+        ) {
+            delete("/cuisine/$cuisineId")
+        }
+    }
     //endregion
 
     //region order
