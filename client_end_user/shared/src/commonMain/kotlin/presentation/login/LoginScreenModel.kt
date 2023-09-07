@@ -3,8 +3,8 @@ package presentation.login
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.usecase.IManageAuthenticationUseCase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.koin.core.component.inject
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
@@ -27,29 +27,23 @@ class LoginScreenModel(private val manageAuthentication: IManageAuthenticationUs
     }
 
     override fun onClickLogin(username: String, password: String, keepLoggedIn: Boolean) {
+        updateState { it.copy(isLoading = true) }
         tryToExecute(
-            { manageAuthentication.loginUser(username, password) },
+            { manageAuthentication.loginUser(username, password, keepLoggedIn) },
             ::onLoginSuccess,
             ::onLoginError
         )
     }
 
     private fun onLoginSuccess(isLoggedIn: Boolean) {
+        clearErrors()
         if (isLoggedIn) {
             sendNewEffect(LoginScreenUIEffect.Login)
-            updateState {
-                it.copy(
-                    passwordErrorMsg = "",
-                    usernameErrorMsg = "",
-                    isPasswordError = false,
-                    isUsernameError = false
-                )
-            }
         }
     }
 
     private fun onLoginError(errorState: ErrorState) {
-        println("Ahmed $errorState")
+        clearErrors()
         when (errorState) {
             ErrorState.InvalidPassword -> updateState {
                 it.copy(
@@ -65,17 +59,37 @@ class LoginScreenModel(private val manageAuthentication: IManageAuthenticationUs
                 )
             }
 
-            ErrorState.NetworkNotSupported -> {}
-            ErrorState.NoInternet -> {}
-            ErrorState.RequestFailed -> {}
-            ErrorState.UnAuthorized -> updateState {
-                it.copy(
-                    usernameErrorMsg = "this user is not existed",
-                    isUsernameError = true
-                )
+            is ErrorState.WrongPassword -> {
+                showSnackbar(errorState.message)
             }
 
-            ErrorState.WifiDisabled -> {}
+            is ErrorState.UserNotFound -> {
+                showSnackbar(errorState.message)
+            }
+
+            else -> {}
+        }
+    }
+
+    private fun showSnackbar(message: String) {
+        viewModelScope.launch {
+            updateState { it.copy(snackbarMessage = message, showSnackbar = true) }
+            delay(2000) // wait for snackbar to show
+            updateState { it.copy(showSnackbar = false) }
+            delay(300) // wait for snackbar to hide
+            updateState { it.copy(snackbarMessage = "") }
+        }
+    }
+
+    private fun clearErrors(){
+        updateState {
+            it.copy(
+                usernameErrorMsg = "",
+                isUsernameError = false,
+                passwordErrorMsg = "",
+                isPasswordError = false,
+                isLoading = false
+            )
         }
     }
 

@@ -42,7 +42,7 @@ fun SectionHeader(
 
         if (showViewAll) {
             Row(
-                modifier.clickable(interactionSource, indication = null, onClick = onClickViewAll)
+                Modifier.clickable(interactionSource, indication = null, onClick = onClickViewAll)
                     .scale(animatedFloat),
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically

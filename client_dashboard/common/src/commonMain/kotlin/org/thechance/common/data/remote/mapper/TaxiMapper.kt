@@ -14,7 +14,7 @@ fun TaxiDto.toEntity() = Taxi(
     color = getCarColor(color ?: 4),
     type = type ?: "",
     seats = seats ?: 0,
-    status = getTaxiStatus(status ?: 0),
+    status = getTaxiStatus(isAvailable!!),
     username = username ?: "",
     trips = trips ?: "0",
 )
@@ -27,8 +27,9 @@ fun NewTaxiInfo.toDto(): TaxiDto {
         type = carModel,
         seats = seats,
         username = driverUserName,
-        status = null,
-        trips = null
+        isAvailable = null,
+        trips = null,
+        driverId = null,
     )
 }
 
@@ -44,34 +45,45 @@ fun List<TaxiDto>.toEntity() = map(TaxiDto::toEntity)
 
 fun setCarColor(color: CarColor?) =
     when (color) {
-        CarColor.RED -> 0
-        CarColor.YELLOW -> 1
-        CarColor.GREEN -> 2
-        CarColor.BLUE -> 3
-        CarColor.GREY -> 5
-        else -> 4
+        CarColor.BLACK -> 4278190080L
+        CarColor.WHITE -> 4294967295L
+        CarColor.RED -> 4294901760L
+        CarColor.BLUE -> 4278190335L
+        CarColor.GREEN -> 4278255360L
+        CarColor.YELLOW -> 4294639360L
+        CarColor.ORANGE -> 4294944768L
+        CarColor.PURPLE -> 4288545023L
+        CarColor.PINK -> 4293591295L
+        CarColor.BROWN -> 4283578920L
+        CarColor.GRAY -> 4290626507L
+        CarColor.SILVER -> 4290822336L
+        CarColor.GOLD -> 4294956800L
+        CarColor.BRONZE -> 4291657522L
+        else -> 0L
     }
 
-fun getCarColor(color: Int) =
+fun getCarColor(color: Long) =
     when (color) {
-        0 -> CarColor.RED
-        1 -> CarColor.YELLOW
-        2 -> CarColor.GREEN
-        3 -> CarColor.BLUE
-        5 -> CarColor.GREY
-        else -> CarColor.BLACK
+        4278190080L -> CarColor.BLACK
+        4294967295L -> CarColor.WHITE
+        4294901760L -> CarColor.RED
+        4278190335L -> CarColor.BLUE
+        4278255360L -> CarColor.GREEN
+        4294639360L -> CarColor.YELLOW
+        4294944768L -> CarColor.ORANGE
+        4288545023L -> CarColor.PURPLE
+        4293591295L -> CarColor.PINK
+        4283578920L -> CarColor.BROWN
+        4290626507L -> CarColor.GRAY
+        4290822336L -> CarColor.SILVER
+        4294956800L -> CarColor.GOLD
+        4291657522L -> CarColor.BRONZE
+        else -> CarColor.WHITE
     }
 
-fun getTaxiStatus(status: Int) =
-    when (status) {
-        0 -> TaxiStatus.OFFLINE
-        1 -> TaxiStatus.ONLINE
-        else -> TaxiStatus.ON_RIDE
-    }
+fun getTaxiStatus(isAvailable: Boolean) =
+    if (isAvailable) TaxiStatus.ONLINE else TaxiStatus.OFFLINE
+
 
 fun setTaxiStatus(status: TaxiStatus?) =
-    when (status) {
-        TaxiStatus.OFFLINE -> 0
-        TaxiStatus.ONLINE -> 1
-        else -> 2
-    }
+    if (status == TaxiStatus.OFFLINE) 0 else 1

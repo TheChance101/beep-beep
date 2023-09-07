@@ -39,7 +39,8 @@ class TaxiScreenModel(
                     state.value.specifiedTaxis
                 )
             },
-            ::onGetTaxisSuccessfully, ::onError
+            ::onGetTaxisSuccessfully,
+            ::onError
         )
     }
 
@@ -202,10 +203,9 @@ class TaxiScreenModel(
         }
     }
 
-    override fun onCancelFilterClicked() {
+    override fun onClearAllClicked() {
         updateState {
             it.copy(
-                isFilterDropdownMenuExpanded = false,
                 taxiFilterUiState = TaxiFilterUiState(
                     carColor = null,
                     seats = -1,
@@ -213,7 +213,10 @@ class TaxiScreenModel(
                 )
             )
         }
-        getTaxis()
+    }
+
+    override fun onCancelFilterClicked() {
+        onFilterMenuDismiss()
     }
 
     override fun onSaveFilterClicked() {
@@ -224,7 +227,7 @@ class TaxiScreenModel(
                     username = state.value.searchQuery,
                     taxiFiltration = mutableState.value.taxiFilterUiState.toEntity(),
                     page = mutableState.value.currentPage,
-                    numberOfUsers = mutableState.value.specifiedTaxis
+                    limit = mutableState.value.specifiedTaxis
                 )
             },
             ::onFilterTaxiSuccessfully,
@@ -255,15 +258,15 @@ class TaxiScreenModel(
         )
     }
 
-    private fun onDeleteTaxiSuccessfully(taxiId: String) {
-        updateState { it.copy(taxiMenu = it.taxiMenu.copy(id = "")) }
-        mutableState.value.pageInfo.data.find { it.id == taxiId }?.let { taxiDetailsUiState ->
-            val index = mutableState.value.pageInfo.data.indexOf(taxiDetailsUiState)
-            val newTaxi = mutableState.value.pageInfo.data.toMutableList().apply {
-                removeAt(index)
-            }
-            updateState { it.copy(pageInfo = it.pageInfo.copy(data = newTaxi)) }
-        }
+    private fun onDeleteTaxiSuccessfully(result: Boolean) {
+//        updateState { it.copy(taxiMenu = it.taxiMenu.copy(id = "")) }
+//        mutableState.value.pageInfo.data.find { it.id == taxiId }?.let { taxiDetailsUiState ->
+//            val index = mutableState.value.pageInfo.data.indexOf(taxiDetailsUiState)
+//            val newTaxi = mutableState.value.pageInfo.data.toMutableList().apply {
+//                removeAt(index)
+//            }
+//            updateState { it.copy(pageInfo = it.pageInfo.copy(data = newTaxi)) }
+//        }
         //todo:show snack bar
     }
 
