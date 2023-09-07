@@ -20,14 +20,12 @@ fun Route.locationRoutes() {
 
         webSocket("/sender/{tripId}") {
             val tripId = call.parameters["tripId"]?.trim().orEmpty()
-            for (frame in incoming) {
-                if (frame is Frame.Text) {
-                    runCatching {
-                        val location = Json.decodeFromString<LocationDto>(frame.readText())
-                        socketHandler.location[tripId]?.locations?.emit(location)
-                    }.onFailure { message ->
-                        close(CloseReason(INVALID_LOCATION.toShort(), message.toString()))
-                    }
+            while (true) {
+                runCatching {
+                    val location = receiveDeserialized<LocationDto>()
+                    socketHandler.location[tripId]?.locations?.emit(location)
+                }.onFailure { message ->
+                    close(CloseReason(INVALID_LOCATION.toShort(), message.toString()))
                 }
             }
         }
