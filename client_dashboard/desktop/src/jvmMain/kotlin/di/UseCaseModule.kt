@@ -9,10 +9,9 @@ val UseCaseModule = module {
     singleOf(::LoginUserUseCase) { bind<ILoginUserUseCase>() }
     singleOf(::ManageRestaurantUseCase) { bind<IManageRestaurantUseCase>() }
     singleOf(::ManageLocationUseCase) { bind<IManageLocationUseCase>() }
-    singleOf(::GetUsersUseCase) { bind<IGetUsersUseCase>() }
+    singleOf(::UsersManagementUseCase) { bind<IUsersManagementUseCase>() }
     singleOf(::ThemeManagementUseCase) { bind<IThemeManagementUseCase>() }
     singleOf(::ManageTaxisUseCase) { bind<IManageTaxisUseCase>() }
-    singleOf(::ManageUsersUseCase) { bind<IManageUsersUseCase>() }
     singleOf(::LogoutUserUseCase) { bind<ILogoutUserUseCase>() }
     singleOf(::MangeCuisinesUseCase) { bind<IMangeCuisinesUseCase>() }
     singleOf(::ValidateRestaurantUseCase) { bind<IValidateRestaurantUseCase>() }

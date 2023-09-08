@@ -66,5 +66,6 @@ class ArabicLocalizedMessages() : LocalizedMessages {
     override val restaurantInsertOrderError: String = "خطأ في إضافة الطلب"
     override val restaurantInvalidReceivedOrders: String = "الطلبات الواردة غير صالحة"
     override val restaurantNotFound: String = "عذرًا، لم نتمكن من العثور على هذا المطعم"
+    override val deletedSuccessfully: String = "تم الحذف بنجاح"
     //endregion
 }

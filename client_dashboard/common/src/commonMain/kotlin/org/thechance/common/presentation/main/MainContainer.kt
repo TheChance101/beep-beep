@@ -20,6 +20,7 @@ import org.thechance.common.presentation.composables.scaffold.BpSideBarItem
 import org.thechance.common.presentation.composables.scaffold.DashBoardScaffold
 import org.thechance.common.presentation.composables.scaffold.DashboardAppbar
 import org.thechance.common.presentation.composables.scaffold.DashboardSideBar
+import org.thechance.common.presentation.login.LoginScreen
 import org.thechance.common.presentation.resources.Resources
 
 object MainContainer : BaseScreen<MainScreenModel, MainUiEffect, MainUiState, MainInteractionListener>() {
@@ -34,7 +35,7 @@ object MainContainer : BaseScreen<MainScreenModel, MainUiEffect, MainUiState, Ma
     override fun onEffect(effect: MainUiEffect, navigator: Navigator) {
         when (effect) {
             MainUiEffect.Logout -> {
-                navigator.popUntilRoot()
+                navigator.replaceAll(LoginScreen())
             }
         }
     }

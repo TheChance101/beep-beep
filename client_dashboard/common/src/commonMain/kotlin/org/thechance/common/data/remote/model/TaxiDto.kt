@@ -7,18 +7,20 @@ import kotlinx.serialization.Serializable
 data class TaxiDto(
     @SerialName("id")
     val id: String?,
-    @SerialName("plate_number")
+    @SerialName("plateNumber")
     val plateNumber: String?,
     @SerialName("color")
-    val color: Int?,
+    val color: Long?,
     @SerialName("type")
     val type: String?,
+    @SerialName("driverId")
+    val driverId: String?,
     @SerialName("seats")
     val seats: Int?,
     @SerialName("username")
     val username: String?,
-    @SerialName("status")
-    val status: Int?,
+    @SerialName("isAvailable")
+    val isAvailable: Boolean?,
     @SerialName("trips")
     val trips: String?,
 )

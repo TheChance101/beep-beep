@@ -6,6 +6,13 @@ enum class CarColor(val hexadecimal: Long) {
     GREEN(0xff80E5AB),
     BLUE(0xff77DEEE),
     WHITE(0xffFFFFFF),
-    GREY(0xffAFAFAF),
-    BLACK(0xff3F3F3F)
+    BLACK(0xff3F3F3F),
+    ORANGE(0xffFFB75E),
+    PURPLE(0xffB794F4),
+    PINK(0xffF687B3),
+    BROWN(0xffB794F4),
+    GRAY(0xffAFAFAF),
+    SILVER(0xffE5E5E5),
+    GOLD(0xffFFD700),
+    BRONZE(0xffCD7F32)
 }

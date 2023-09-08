@@ -3,10 +3,7 @@ package org.thechance.service_location
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-import org.thechance.service_location.plugins.configureMonitoring
-import org.thechance.service_location.plugins.configureRouting
-import org.thechance.service_location.plugins.configureSerialization
-import org.thechance.service_location.plugins.configureSockets
+import org.thechance.service_location.plugins.*
 
 fun main() {
     embeddedServer(Netty, port = 8080, host = "0.0.0.0", module = Application::module)
@@ -14,9 +11,10 @@ fun main() {
 }
 
 fun Application.module() {
-
+    configureStatusExceptions()
     configureSerialization()
     configureMonitoring()
-    configureRouting()
     configureSockets()
+    configureRouting()
+    configureDependencyInjection()
 }
