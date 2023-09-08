@@ -96,7 +96,7 @@ fun Route.restaurantRoutes() {
                 val language = extractLocalizationHeader()
                 val restaurantId = call.parameters["restaurantId"]?.trim().toString()
                 val result = restaurantService.deleteRestaurant(restaurantId, language)
-                respondWithResult(HttpStatusCode.Created, result)
+                respondWithResult(HttpStatusCode.OK, result)
 
             }
         }
