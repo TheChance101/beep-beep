@@ -45,7 +45,7 @@ class TaxiScreenModel(
     }
 
     private fun onGetTaxisSuccessfully(taxis: DataWrapper<Taxi>) {
-        updateState { it.copy(pageInfo = taxis.toUiState(), isLoading = false) }
+        updateState { it.copy(pageInfo = taxis.toDetailsUiState(), isLoading = false) }
     }
 
     private fun onError(error: ErrorState) {
@@ -131,7 +131,7 @@ class TaxiScreenModel(
         mutableState.value.pageInfo.data.find { it.id == taxi.id }?.let { taxiDetailsUiState ->
             val index = mutableState.value.pageInfo.data.indexOf(taxiDetailsUiState)
             val newTaxi = mutableState.value.pageInfo.data.toMutableList().apply {
-                set(index, taxi.toUiState())
+                set(index, taxi.toDetailsUiState())
             }
             updateState { it.copy(pageInfo = it.pageInfo.copy(data = newTaxi)) }
             //todo:show snack bar
@@ -148,7 +148,7 @@ class TaxiScreenModel(
     }
 
     private fun onCreateTaxiSuccessfully(taxi: Taxi) {
-        val newTaxi = mutableState.value.taxis.toMutableList().apply { add(taxi.toUiState()) }
+        val newTaxi = mutableState.value.taxis.toMutableList().apply { add(taxi.toDetailsUiState()) }
         updateState { it.copy(taxis = newTaxi, isLoading = false) }
         clearAddNewTaxiDialogState()
         getTaxis()
@@ -236,7 +236,7 @@ class TaxiScreenModel(
     }
 
     private fun onFilterTaxiSuccessfully(taxis: DataWrapper<Taxi>) {
-        updateState { it.copy(pageInfo = taxis.toUiState(), isLoading = false) }
+        updateState { it.copy(pageInfo = taxis.toDetailsUiState(), isLoading = false) }
     }
 
     //endregion
@@ -270,23 +270,20 @@ class TaxiScreenModel(
         //todo:show snack bar
     }
 
-    override fun onEditTaxiClicked(taxi: TaxiDetailsUiState) {
-        updateState {
-            it.copy(
-                isEditMode = true,
-                isAddNewTaxiDialogVisible = true,
-                newTaxiInfo = it.newTaxiInfo.copy(
-                    id = taxi.id,
-                    plateNumber = taxi.plateNumber,
-                    driverUserName = taxi.username,
-                    carModel = taxi.type,
-                    selectedCarColor = taxi.color,
-                    seats = taxi.seats
-                )
-            )
-        }
+    override fun onEditTaxiClicked(taxiId: String) {
+        updateState { it.copy(isEditMode = true, isAddNewTaxiDialogVisible = true) }
+        hideTaxiMenu()
+        tryToExecute(
+            callee = { manageTaxis.getTaxiById(taxiId) },
+            onSuccess = ::onGetTaxiByIdSuccess,
+            onError = ::onError
+        )
     }
 
+    private fun onGetTaxiByIdSuccess(taxi: Taxi) {
+        val taxiState = taxi.toUiState()
+        updateState { it.copy(newTaxiInfo = taxiState) }
+    }
 
 //endregion
 

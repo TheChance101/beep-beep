@@ -109,6 +109,9 @@ class TaxisFakeGateway : ITaxisGateway {
         }
     }
 
+    override suspend fun getTaxiById(taxiId: String): Taxi {
+        return taxis.first { it.id == taxiId }.toEntity()
+    }
 
     private val taxis = mutableListOf(
         TaxiDto(

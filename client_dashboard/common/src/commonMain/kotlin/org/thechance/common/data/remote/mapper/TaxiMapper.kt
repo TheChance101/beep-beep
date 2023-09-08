@@ -15,7 +15,7 @@ fun TaxiDto.toEntity() = Taxi(
     color = getCarColor(color!!),
     type = type ?: "",
     seats = seats ?: 0,
-    status = getTaxiStatus(isAvailable!!),
+    status = getTaxiStatus(isAvailable ?: false),
     username = username ?: "",
     trips = trips ?: "0",
 )

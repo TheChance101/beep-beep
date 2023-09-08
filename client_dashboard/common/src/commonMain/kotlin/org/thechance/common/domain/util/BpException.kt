@@ -9,3 +9,5 @@ class UnknownErrorException : BeepBeepException("Unknown error")
 class NoInternetException : BeepBeepException("No internet connection")
 
 class UserNotFoundException(message: String) : BeepBeepException(message)
+
+class NotFoundException(message: String) : BeepBeepException(message)
