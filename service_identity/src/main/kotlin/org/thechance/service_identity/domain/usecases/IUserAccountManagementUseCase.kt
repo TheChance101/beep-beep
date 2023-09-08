@@ -62,10 +62,8 @@ class UserAccountManagementUseCase(
     }
 
     override suspend fun deleteUser(id: String): Boolean {
-        if (!dataBaseGateway.isUserExist(id)) {
-            throw InvalidIdException(INVALID_ID)
-        } else if (dataBaseGateway.isUserDeleted(id)) {
-            throw UserAlreadyDeletedException(USER_ALREADY_DELETED)
+         if (dataBaseGateway.isUserDeleted(id)) {
+            throw ResourceNotFoundException(NOT_FOUND)
         }
         return dataBaseGateway.deleteUser(id)
     }

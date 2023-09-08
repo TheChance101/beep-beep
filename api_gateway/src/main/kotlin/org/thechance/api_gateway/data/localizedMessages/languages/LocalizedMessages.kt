@@ -35,9 +35,6 @@ interface LocalizedMessages {
 
     val invalidPermission: String
 
-    val invalidUserId: String
-
-    val userAlreadyDeleted: String
     // endregion
 
     // region taxi

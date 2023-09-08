@@ -22,8 +22,6 @@ class SyrianArabicLocalizedMessages() : LocalizedMessages {
     override val unknownError: String = "خطأ مالو معروف `¯\\_(ツ)_/¯`"
     override val userNotFound: String = "المستخدم ما لقيناه"
     override val invalidPermission: String = "صلاحية مالا صحيحة"
-    override val invalidUserId: String = "الرقم هاد مو موجود"
-    override val userAlreadyDeleted: String = " مو حذفته قبل هيك!"
     // endregion
 
     // region taxi

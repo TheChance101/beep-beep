@@ -20,15 +20,11 @@ private fun StatusPagesConfig.handleStatusPagesExceptions() {
 
     respondWithErrorCodes<UserAlreadyExistsException>(HttpStatusCode.UnprocessableEntity)
 
-    respondWithErrorCodes<UserAlreadyDeletedException>(HttpStatusCode.NotAcceptable)
-
     respondWithErrorCodes<ResourceNotFoundException>(HttpStatusCode.NotFound)
 
     respondWithErrorCodes<InsufficientFundsException>(HttpStatusCode.UnprocessableEntity)
 
     respondWithErrorCodes<InvalidCredentialsException>(HttpStatusCode.Unauthorized)
-
-    respondWithErrorCodes<InvalidIdException>(HttpStatusCode.BadRequest)
 
     respondWithErrorCodes<InvalidLocationException>(HttpStatusCode.BadRequest)
 }

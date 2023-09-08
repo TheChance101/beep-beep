@@ -218,12 +218,6 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         return user != null
     }
 
-    override suspend fun isUserExist(id: String): Boolean {
-        val user = dataBaseContainer.userCollection.findOne(UserCollection::id eq ObjectId(id))
-        return user != null
-    }
-
-
     override suspend fun getUserByUsername(username: String): UserManagement {
         return dataBaseContainer.userCollection.findOne(
             UserCollection::username eq username,
