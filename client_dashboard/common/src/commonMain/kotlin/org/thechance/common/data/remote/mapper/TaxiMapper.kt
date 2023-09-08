@@ -2,6 +2,7 @@ package org.thechance.common.data.remote.mapper
 
 import org.thechance.common.data.remote.model.TaxiDto
 import org.thechance.common.data.remote.model.TaxiFiltrationDto
+import org.thechance.common.data.remote.model.TaxiInfoDto
 import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.domain.entity.NewTaxiInfo
 import org.thechance.common.domain.entity.Taxi
@@ -11,7 +12,7 @@ import org.thechance.common.domain.util.TaxiStatus
 fun TaxiDto.toEntity() = Taxi(
     id = id ?: "",
     plateNumber = plateNumber ?: "",
-    color = getCarColor(color ?: 4),
+    color = getCarColor(color!!),
     type = type ?: "",
     seats = seats ?: 0,
     status = getTaxiStatus(isAvailable!!),
@@ -19,17 +20,13 @@ fun TaxiDto.toEntity() = Taxi(
     trips = trips ?: "0",
 )
 
-fun NewTaxiInfo.toDto(): TaxiDto {
-    return TaxiDto(
-        id = id,
+fun NewTaxiInfo.toDto(): TaxiInfoDto {
+    return TaxiInfoDto(
         plateNumber = plateNumber,
-        color = setCarColor(selectedCarColor),
+        color = setCarColor(selectedCarColor).toString(),
         type = carModel,
         seats = seats,
-        username = driverUserName,
-        isAvailable = null,
-        trips = null,
-        driverId = null,
+        driverId = driverUserName,
     )
 }
 
