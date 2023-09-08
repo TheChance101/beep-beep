@@ -19,8 +19,8 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
-import presentation.composable.ItemSection
 import presentation.composable.ImageSlider
+import presentation.composable.ItemSection
 import presentation.composable.SectionHeader
 import presentation.home.composable.ChatSupportCard
 import presentation.home.composable.CuisineCard
@@ -58,9 +58,9 @@ class HomeScreen :
             verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(vertical = 16.dp)
         ) {
-            item{
+            item {
                 ImageSlider(
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.padding(horizontal = 16.dp),
                     onItemClickListener = { listener.onClickOffersSlider(it) },
                     images = state.getOfferImages()
                 )
@@ -74,16 +74,18 @@ class HomeScreen :
             }
             item {
                 Row(
-                    modifier = Modifier.padding(start = 16.dp, top = 16.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     OrderCard(
+                        modifier = Modifier.fillMaxWidth(0.5f),
                         onClick = listener::onClickOrderTaxi,
                         buttonTitle = Resources.strings.orderTaxiButtonTitle,
                         painter = painterResource(Resources.images.orderTaxi)
                     )
                     OrderCard(
+                        modifier = Modifier.fillMaxWidth(1f),
                         onClick = listener::onClickOrderFood,
                         buttonTitle = Resources.strings.orderFoodButtonTitle,
                         painter = painterResource(Resources.images.orderImage),
@@ -92,26 +94,22 @@ class HomeScreen :
                 }
             }
             item {
-                Column {
+                Column(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                     SectionHeader(
-                        modifier = Modifier.padding(
-                            start = 16.dp,
-                            end = 16.dp,
-                            top = 16.dp,
-                            bottom = 8.dp
-                        ),
                         onClickViewAll = listener::onclickSeeAllCuisines,
                         title = Resources.strings.cuisineSectionTitle,
                         showViewAll = true
                     )
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                        modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         state.recommendedCuisines.forEach { cuisine ->
                             CuisineCard(
-                                modifier = Modifier,
                                 cuisine = cuisine,
                                 onClickCuisine = listener::onClickCuisineItem
                             )
@@ -119,6 +117,7 @@ class HomeScreen :
                     }
                 }
             }
+
             item {
                 ItemSection(
                     header = Resources.strings.favoriteRestaurants,
@@ -126,7 +125,6 @@ class HomeScreen :
                     ratings = state.favoriteRestaurants.map { it.rating },
                     priceLevels = state.favoriteRestaurants.map { it.priceLevel },
                     painters = painters,
-                    modifier = Modifier.padding(vertical = 16.dp)
                 )
             }
             item {
@@ -136,7 +134,7 @@ class HomeScreen :
                     ratings = state.favoriteRestaurants.map { it.rating },
                     priceLevels = state.favoriteRestaurants.map { it.priceLevel },
                     painters = painters,
-                    modifier = Modifier.padding(vertical = 16.dp),
+                    modifier = Modifier.padding(top = 16.dp),
                     hasOffer = true,
                     offers = listOf("15 %", "15 %", "15 %")
                 )
@@ -149,7 +147,7 @@ class HomeScreen :
                     ratings = state.favoriteRestaurants.map { it.rating },
                     priceLevels = state.favoriteRestaurants.map { it.priceLevel },
                     painters = painters,
-                    modifier = Modifier.padding(vertical = 16.dp),
+                    modifier = Modifier.padding(top = 16.dp),
                     hasDeliveryPrice = true,
                     deliveryPrices = listOf("Free", "Free", "Free")
                 )
