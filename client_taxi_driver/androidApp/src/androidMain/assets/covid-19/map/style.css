@@ -29,9 +29,8 @@ hr{
     background: darkgreen;
 }
 section{
-    overflow:hidden;
-    float:left;
-    margin-right:10px;
+    width: 100%;
+    height: 100%;
 }
 #myMap,#pseudo {
     position: relative;
