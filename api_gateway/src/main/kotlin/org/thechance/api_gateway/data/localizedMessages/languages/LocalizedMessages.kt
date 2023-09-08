@@ -34,6 +34,10 @@ interface LocalizedMessages {
     val userNotFound: String
 
     val invalidPermission: String
+
+    val invalidUserId: String
+
+    val userAlreadyDeleted: String
     // endregion
 
     // region taxi
@@ -43,28 +47,27 @@ interface LocalizedMessages {
 
     val taxiDeleteSuccessfully: String
 
-    val invalidId : String
+    val invalidId: String
 
     val invalidPlate: String
 
-    val invalidColor : String
+    val invalidColor: String
 
-    val invalidCarType : String
+    val invalidCarType: String
 
-    val seatOutOfRange : String
+    val seatOutOfRange: String
 
-    val invalidLocation : String
+    val invalidLocation: String
 
-    val invalidRate : String
+    val invalidRate: String
 
-    val invalidDate : String
+    val invalidDate: String
 
-    val invalidPrice : String
+    val invalidPrice: String
 
-    val alreadyExist : String
+    val alreadyExist: String
 
-    val requiredQuery : String
-
+    val requiredQuery: String
 
 
     // endregion
@@ -126,6 +129,6 @@ interface LocalizedMessages {
 
     val deletedSuccessfully: String
 
-    val cuisineNameAlreadyExisted:String
+    val cuisineNameAlreadyExisted: String
     //endregion
 }

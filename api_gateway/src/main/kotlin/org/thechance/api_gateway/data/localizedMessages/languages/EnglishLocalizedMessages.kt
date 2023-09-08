@@ -22,6 +22,8 @@ class EnglishLocalizedMessages() : LocalizedMessages {
     override val unknownError: String = "Unknown error `¯\\_(ツ)_/¯`"
     override val userNotFound: String = "User not found"
     override val invalidPermission: String = "Invalid permission"
+    override val invalidUserId: String = "user with this id not found"
+    override val userAlreadyDeleted: String = "user with this id already deleted"
     // endregion
 
     // region taxi

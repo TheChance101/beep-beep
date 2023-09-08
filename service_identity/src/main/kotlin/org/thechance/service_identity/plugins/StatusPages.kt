@@ -13,17 +13,22 @@ fun Application.configureStatusPages() {
 }
 
 private fun StatusPagesConfig.handleStatusPagesExceptions() {
+
     respondWithErrorCodes<MissingParameterException>(HttpStatusCode.BadRequest)
 
     respondWithErrorCodes<RequestValidationException>(HttpStatusCode.BadRequest)
 
     respondWithErrorCodes<UserAlreadyExistsException>(HttpStatusCode.UnprocessableEntity)
 
+    respondWithErrorCodes<UserAlreadyDeletedException>(HttpStatusCode.NotAcceptable)
+
     respondWithErrorCodes<ResourceNotFoundException>(HttpStatusCode.NotFound)
 
     respondWithErrorCodes<InsufficientFundsException>(HttpStatusCode.UnprocessableEntity)
 
     respondWithErrorCodes<InvalidCredentialsException>(HttpStatusCode.Unauthorized)
+
+    respondWithErrorCodes<InvalidIdException>(HttpStatusCode.BadRequest)
 
     respondWithErrorCodes<InvalidLocationException>(HttpStatusCode.BadRequest)
 }

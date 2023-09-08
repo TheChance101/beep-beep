@@ -23,6 +23,8 @@ class PalestinianArabicLocalizedMessages(
     override val unknownError: String = "حصل ايرور وما عرفتش شو عملت"
     override val userNotFound: String = "مش لاقينك يا صاحب"
     override val invalidPermission: String = "مش عندك الصلاحية يا صاحب"
+    override val invalidUserId: String = "مش موجود عندنا الرقم التعريفى هذا"
+    override val userAlreadyDeleted: String = "انت حذفته قبل كدا"
     // endregion
 
     // region taxi

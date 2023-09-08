@@ -19,6 +19,8 @@ class ArabicLocalizedMessages() : LocalizedMessages {
     override val unknownError: String = "حصل خطأ زي حياتك يا 56"
     override val userNotFound: String = "المستخدم غير موجود"
     override val invalidPermission: String = "ليس لديك الصلاحية للقيام بهذا الامر"
+    override val invalidUserId: String = "رقم تعريفى غير موجود"
+    override val userAlreadyDeleted: String = "المستخدم محذوف بالفعل من قبل"
     // endregion
 
     // region taxi
