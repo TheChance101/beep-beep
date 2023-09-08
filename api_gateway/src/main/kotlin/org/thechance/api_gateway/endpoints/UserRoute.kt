@@ -2,12 +2,14 @@ package org.thechance.api_gateway.endpoints
 
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.request.receiveParameters
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.service.IdentityService
 import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
 import org.thechance.api_gateway.endpoints.utils.respondWithResult
+import org.thechance.api_gateway.endpoints.utils.toIntListOrNull
 import org.thechance.api_gateway.util.Role
 
 
@@ -30,8 +32,6 @@ fun Route.userRoutes() {
             respondWithResult(HttpStatusCode.OK, result)
         }
 
-
-
         route("/user") {
 
             delete("/{id}") {
@@ -40,7 +40,15 @@ fun Route.userRoutes() {
                 val result = identityService.deleteUser(userId = id, language)
                 respondWithResult(HttpStatusCode.OK, result)
             }
-            get ("/last-register"){
+
+            put("/{userId}/permission") {
+                val userId = call.parameters["userId"]?.trim().toString()
+                val params = call.receiveParameters()
+                val permission = params["permission"]?.toIntListOrNull() ?: listOf(Role.END_USER)
+                val result = identityService.updateUserPermission(userId, permission)
+                respondWithResult(HttpStatusCode.Created, result)
+            }
+            get("/last-register") {
                 val limit = call.parameters["limit"]?.toInt() ?: 4
                 val result = identityService.getLastRegisteredUsers(limit)
                 respondWithResult(HttpStatusCode.OK, result)
