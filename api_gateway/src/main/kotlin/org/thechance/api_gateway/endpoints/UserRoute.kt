@@ -58,9 +58,9 @@ fun Route.userRoutes() {
 
             get("/search"){
                 val searchTerm = call.parameters["query"] ?: ""
-                val permissionsParam = call.parameters.getAll("permission")?.joinToString(",") ?: "1"
-                val permissions = permissionsParam.split(",").map { it.toInt() }
-                val users = identityService.searchUsers(searchTerm, permissions)
+                val params = call.receiveParameters()
+                val permission = params["permission"]?.toIntListOrNull() ?: listOf(Role.END_USER)
+                val users = identityService.searchUsers(searchTerm, permission)
                 respondWithResult(HttpStatusCode.OK, users)
             }
         }

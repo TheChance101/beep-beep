@@ -12,7 +12,6 @@ import org.thechance.service_identity.domain.usecases.IUserManagementUseCase
 import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
 import org.thechance.service_identity.domain.util.Role
 
-import org.thechance.service_identity.domain.util.Role
 import org.thechance.service_identity.endpoints.model.UsersManagementDto
 import org.thechance.service_identity.endpoints.util.extractInt
 import org.thechance.service_identity.endpoints.util.toIntListOrNull
