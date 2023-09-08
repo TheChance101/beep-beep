@@ -117,6 +117,7 @@ class HomeScreen :
                     }
                 }
             }
+
             item {
                 ItemSection(
                     header = Resources.strings.favoriteRestaurants,
