@@ -125,5 +125,7 @@ interface LocalizedMessages {
     val restaurantInvalidReceivedOrders: String
 
     val deletedSuccessfully: String
+
+    val cuisineNameAlreadyExisted:String
     //endregion
 }

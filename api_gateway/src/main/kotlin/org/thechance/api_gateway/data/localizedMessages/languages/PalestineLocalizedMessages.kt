@@ -72,5 +72,6 @@ class PalestinianArabicLocalizedMessages(
     override val restaurantInvalidReceivedOrders: String = "الأوردر اللي وصلنا مش صالح"
     override val restaurantNotFound: String = "ما لقينا هالمطعم يا صاحب!!"
     override val deletedSuccessfully: String="انحذف يخوو"
+    override val cuisineNameAlreadyExisted: String = "المطبخ موجود قبل كدا يا حبيبى"
     //endregion
 }
