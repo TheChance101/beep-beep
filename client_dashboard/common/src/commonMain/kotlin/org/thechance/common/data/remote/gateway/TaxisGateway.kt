@@ -3,6 +3,7 @@ package org.thechance.common.data.remote.gateway
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.http.*
+import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.PaginationResponse
 import org.thechance.common.data.remote.model.ServerResponse
@@ -37,7 +38,13 @@ class TaxisGateway(private val client: HttpClient) : BaseGateway(), ITaxisGatewa
     }
 
     override suspend fun createTaxi(taxi: NewTaxiInfo): Taxi {
-        TODO("createTaxi")
+        val result = tryToExecute<ServerResponse<TaxiDto>>(client) {
+            post(urlString = "/taxi") {
+                contentType(ContentType.Application.Json)
+                setBody(taxi.toDto())
+            }
+        }.value
+        return result?.toEntity() ?: throw UnknownError()
     }
 
     override suspend fun updateTaxi(taxi: NewTaxiInfo): Taxi {

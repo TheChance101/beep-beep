@@ -137,7 +137,6 @@ fun Taxi.toDetailsUiState(): TaxiDetailsUiState = TaxiDetailsUiState(
 
 fun List<Taxi>.toDetailsUiState() = map { it.toDetailsUiState() }
 fun TaxiInfoUiState.toEntity() = NewTaxiInfo(
-    id = id,
     plateNumber = plateNumber,
     driverUserName = driverUserName,
     carModel = carModel,
