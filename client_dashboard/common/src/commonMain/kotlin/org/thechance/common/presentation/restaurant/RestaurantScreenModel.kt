@@ -78,6 +78,7 @@ class RestaurantScreenModel(
     }
 
     private fun onError(error: ErrorState) {
+        println(error.toString())
         updateState { it.copy(error = error, isLoading = false) }
     }
 
@@ -318,6 +319,7 @@ class RestaurantScreenModel(
     }
 
     private fun onCreateRestaurantSuccessfully(restaurant: Restaurant) {
+        println("Created: $restaurant")
         val newRestaurant =
             mutableState.value.restaurants.toMutableList().apply { add(restaurant.toUiState()) }
         updateState {

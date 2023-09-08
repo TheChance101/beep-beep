@@ -5,6 +5,7 @@ import java.util.regex.Pattern
 interface IValidateRestaurantUseCase {
     fun validateRestaurantName(name: String): Boolean
     fun validateUserName(name: String): Boolean
+    fun validateUserPassword(name: String): Boolean
     fun validateNumber(number: String): Boolean
     fun validateStartTime(hour: String): Boolean
     fun validateEndTime(hour: String): Boolean
@@ -18,6 +19,10 @@ class ValidateRestaurantUseCase():IValidateRestaurantUseCase{
 
     override fun validateUserName(name: String): Boolean {
         return name.isNotBlank() && name.length > 5 && name.any { it.isLetter() }
+    }
+
+    override fun validateUserPassword(name: String): Boolean {
+        return name.isNotBlank() && name.length > 5 && name.any { !it.isLetter() && !it.isDigit() }
     }
 
     override fun validateNumber(number: String): Boolean {
