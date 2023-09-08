@@ -6,6 +6,7 @@ import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.model.restaurant.RestaurantRequestPermissionDto
+import org.thechance.api_gateway.data.service.IdentityService
 import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
@@ -15,6 +16,7 @@ import org.thechance.api_gateway.util.Role
 fun Route.permissionRoutes() {
 
     val restaurantService: RestaurantService by inject()
+
 
     route("/permission") {
 
