@@ -18,6 +18,8 @@ fun Route.userRoutes() {
 
     authenticateWithRole(Role.DASHBOARD_ADMIN) {
 
+
+
         get("/users") {
             val language = extractLocalizationHeader()
             val page = call.parameters["page"]?.toInt() ?: 1
@@ -52,6 +54,14 @@ fun Route.userRoutes() {
                 val limit = call.parameters["limit"]?.toInt() ?: 4
                 val result = identityService.getLastRegisteredUsers(limit)
                 respondWithResult(HttpStatusCode.OK, result)
+            }
+
+            get("/search"){
+                val searchTerm = call.parameters["query"] ?: ""
+                val params = call.receiveParameters()
+                val permission = params["permission"]?.toIntListOrNull() ?: listOf(Role.END_USER)
+                val users = identityService.searchUsers(searchTerm, permission)
+                respondWithResult(HttpStatusCode.OK, users)
             }
         }
     }

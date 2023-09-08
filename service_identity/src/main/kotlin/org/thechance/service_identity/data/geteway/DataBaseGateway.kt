@@ -231,6 +231,29 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         ).sort(Sorts.descending("_id")).limit(limit).toList().toManagedEntity()
     }
 
+    override suspend fun searchUsers(
+        searchTerm: String,
+        filterByPermission: List<Int>
+    ): List<UserManagement> {
+        val orConditions = filterByPermission.map { permission ->
+            or(
+                UserCollection::permission eq permission,
+                UserCollection::permission.bitsAllSet(permission.toLong()) // Convert to Long
+            )
+        }
+
+        return dataBaseContainer.userCollection.find(
+            and(
+                or(
+                    UserCollection::username.regex("^$searchTerm", "i"),
+                    UserCollection::email.regex("^$searchTerm", "i")
+                ),
+                or(*orConditions.toTypedArray()),
+                UserCollection::isDeleted eq false
+            )
+        )?.toList()?.toManagedEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
+    }
+
     //endregion
 
     // region: wallet
