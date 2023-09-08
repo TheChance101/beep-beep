@@ -73,6 +73,8 @@ kotlin {
                 api(libs.androidx.core.ktx)
                 api(libs.koin.android)
                 implementation(libs.androidx.constraint)
+                implementation(libs.google.accompanist)
+
             }
         }
         val iosX64Main by getting

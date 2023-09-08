@@ -3,13 +3,16 @@ package resources
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import com.beepbeep.designSystem.ui.theme.BpTheme
+import com.beepbeep.designSystem.ui.theme.Theme
 import com.seiko.imageloader.LocalImageLoader
 import util.generateImageLoader
 import util.getPlatformContext
+import util.rememberWindowInsetsController
 
 private val localDrawableResources = staticCompositionLocalOf { DrawableResources() }
 private val localStringResources = staticCompositionLocalOf { StringResources() }
@@ -26,6 +29,8 @@ fun BeepBeepTheme(
         localStringResources provides StringResources(),
     ) {
         BpTheme {
+            val windowInsetsController = rememberWindowInsetsController()
+            windowInsetsController?.setStatusBarContentColor(Theme.colors.background, !useDarkTheme)
             content()
         }
     }
