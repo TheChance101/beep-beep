@@ -31,5 +31,7 @@ data class StringResources(
     val off: String = "Off",
     val favoriteRestaurants: String = "Favorite restaurants",
     val eidSpecials: String = "Eid specials",
-    val freeDelivery: String = "Free delivery"
+    val freeDelivery: String = "Free delivery",
+    val lastOrder: String = "Last order",
+    val orderAgain: String = "Order again"
 )
