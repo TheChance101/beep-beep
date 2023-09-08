@@ -116,15 +116,15 @@ data class MenuUiState(
     )
 }
 
-fun DataWrapper<Taxi>.toUiState(): TaxiPageInfoUiState {
+fun DataWrapper<Taxi>.toDetailsUiState(): TaxiPageInfoUiState {
     return TaxiPageInfoUiState(
-        data = result.toUiState(),
+        data = result.toDetailsUiState(),
         totalPages = totalPages,
         numberOfTaxis = numberOfResult
     )
 }
 
-fun Taxi.toUiState(): TaxiDetailsUiState = TaxiDetailsUiState(
+fun Taxi.toDetailsUiState(): TaxiDetailsUiState = TaxiDetailsUiState(
     id = id,
     plateNumber = plateNumber,
     color = color,
@@ -135,11 +135,12 @@ fun Taxi.toUiState(): TaxiDetailsUiState = TaxiDetailsUiState(
     trips = trips,
 )
 
-fun List<Taxi>.toUiState() = map { it.toUiState() }
+fun List<Taxi>.toDetailsUiState() = map { it.toDetailsUiState() }
 fun TaxiInfoUiState.toEntity() = NewTaxiInfo(
     id = id,
     plateNumber = plateNumber,
-    driverUserName = driverUserName, carModel = carModel,
+    driverUserName = driverUserName,
+    carModel = carModel,
     selectedCarColor = selectedCarColor,
     seats = seats
 )
@@ -157,3 +158,12 @@ fun TaxiDetailsUiState.toEntity(): Taxi = Taxi(
 
 fun List<TaxiDetailsUiState>.toEntity() = map { it.toEntity() }
 
+
+fun Taxi.toUiState(): TaxiInfoUiState = TaxiInfoUiState(
+    id = id,
+    plateNumber = plateNumber,
+    driverUserName = username,
+    carModel = type,
+    selectedCarColor = color,
+    seats = seats
+)

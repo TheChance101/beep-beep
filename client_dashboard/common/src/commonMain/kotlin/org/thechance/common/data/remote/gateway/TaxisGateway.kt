@@ -2,6 +2,7 @@ package org.thechance.common.data.remote.gateway
 
 import io.ktor.client.*
 import io.ktor.client.request.*
+import io.ktor.http.*
 import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.PaginationResponse
 import org.thechance.common.data.remote.model.ServerResponse
@@ -11,6 +12,7 @@ import org.thechance.common.domain.entity.NewTaxiInfo
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.entity.TaxiFiltration
 import org.thechance.common.domain.getway.ITaxisGateway
+import org.thechance.common.domain.util.NotFoundException
 
 class TaxisGateway(private val client: HttpClient) : BaseGateway(), ITaxisGateway {
 
@@ -30,8 +32,7 @@ class TaxisGateway(private val client: HttpClient) : BaseGateway(), ITaxisGatewa
         return DataWrapper(
             totalPages = result?.total?.div(limit) ?: 0,
             numberOfResult = result?.total ?: 0,
-            result = result?.items?.toEntity() ?: emptyList(
-            )
+            result = result?.items?.toEntity() ?: emptyList()
         )
     }
 
@@ -45,6 +46,12 @@ class TaxisGateway(private val client: HttpClient) : BaseGateway(), ITaxisGatewa
 
     override suspend fun deleteTaxi(taxiId: String): Boolean {
         TODO("deleteTaxi")
+    }
+
+    override suspend fun getTaxiById(taxiId: String): Taxi {
+        return tryToExecute<ServerResponse<TaxiDto>>(client) {
+            get(urlString = "/taxi") { url { appendPathSegments(taxiId) } }
+        }.value?.toEntity() ?: throw NotFoundException("Taxi not found")
     }
 
 }
