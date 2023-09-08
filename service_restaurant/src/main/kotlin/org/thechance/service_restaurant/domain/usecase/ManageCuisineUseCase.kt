@@ -27,7 +27,7 @@ class ManageCuisineUseCase(
         if (!basicValidation.isValidName(cuisine.name)) {
             throw MultiErrorException(listOf(INVALID_NAME))
         }
-        if (isCuisineExisted(cuisine.name)){
+       else if (isCuisineExisted(cuisine.name)){
             throw MultiErrorException(listOf(ALREADY_EXISTED))
         }
         return restaurantOptions.addCuisine(cuisine)
