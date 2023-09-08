@@ -16,7 +16,6 @@ val DataBaseModule = module {
 
         val settings = MongoClientSettings.builder()
             .applyConnectionString(connectionString)
-            .uuidRepresentation(UuidRepresentation.STANDARD)
             .build()
         KMongo.createClient(settings)
     }
