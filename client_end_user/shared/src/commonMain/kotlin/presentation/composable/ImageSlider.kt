@@ -82,7 +82,7 @@ private fun BoxScope.ImageSliderIndicator(
     val circleOffsetList = remember { mutableStateListOf(Offset(0f, 0f)) }
 
     val animateOffset by animateOffsetAsState(
-        targetValue = circleOffsetList[pagerState.currentPage],
+        targetValue = circleOffsetList.getOrElse(pagerState.currentPage) { Offset(0f, 0f) },
         animationSpec = spring(stiffness = Spring.StiffnessLow),
         label = "indicator"
     )

@@ -293,10 +293,11 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
 
     // region: user permission management
 
-    override suspend fun updatePermissionToUser(userId: String, permission: Int): UserManagement {
+    override suspend fun updateUserPermission(userId: String, permissions: Int): UserManagement {
+
         return dataBaseContainer.userCollection.findOneAndUpdate(
             filter = UserCollection::id eq ObjectId(userId),
-            update = Updates.set(UserCollection::permission.name, permission),
+            update=   Updates.set(UserCollection::permission.name, permissions),
             options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toManagedEntity() ?: throw ResourceNotFoundException(USER_NOT_FOUND)
     }

@@ -116,8 +116,9 @@ class IdentityService(
         }
     }
 
-    suspend fun updateUserPermission(userId: String, permission: Int) =
-        client.tryToExecute<UserDto>(
+
+    suspend fun updateUserPermission(userId: String, permission: List<Int>) : UserDto {
+        return client.tryToExecute<UserDto>(
             APIs.IDENTITY_API, attributes = attributes,
         ) {
             submitForm("/dashboard/user/$userId/permission",
@@ -127,6 +128,7 @@ class IdentityService(
                 }
             )
         }
+    }
 
     suspend fun deleteUser(userId: String, languageCode: String): Boolean {
         return client.tryToExecute<Boolean>(
@@ -179,5 +181,6 @@ class IdentityService(
 
         return accessToken.sign(Algorithm.HMAC256(tokenConfiguration.secret))
     }
+
 
 }
