@@ -75,7 +75,7 @@ fun Route.restaurantRoutes() {
                 val language = extractLocalizationHeader()
                 val restaurantDto = call.receive<RestaurantDto>()
                 val user = identityService.getUserByUsername(restaurantDto.username)
-                identityService.updateUserPermission(userId = user.id, permission = Role.RESTAURANT_OWNER)
+                identityService.updateUserPermission(userId = user.id, permission = listOf(Role.END_USER,Role.RESTAURANT_OWNER) )
                 val newRestaurant = restaurantService.addRestaurant(
                     restaurantDto.toRestaurantRequestDto().copy(ownerId = user.id),
                     language
@@ -96,7 +96,7 @@ fun Route.restaurantRoutes() {
                 val language = extractLocalizationHeader()
                 val restaurantId = call.parameters["restaurantId"]?.trim().toString()
                 val result = restaurantService.deleteRestaurant(restaurantId, language)
-                respondWithResult(HttpStatusCode.Created, result)
+                respondWithResult(HttpStatusCode.OK, result)
 
             }
         }
