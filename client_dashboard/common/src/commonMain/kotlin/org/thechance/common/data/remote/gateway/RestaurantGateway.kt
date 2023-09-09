@@ -24,16 +24,8 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
         )
     }
 
-    override suspend fun deleteRestaurants(restaurant: Restaurant): Restaurant {
-        return Restaurant(
-            id = "1",
-            name = restaurant.name,
-            ownerUsername = restaurant.ownerUsername,
-            phoneNumber = restaurant.phoneNumber,
-            rating = "4.5".toDouble(),
-            priceLevel = 4,
-            workingHours = restaurant.workingHours
-        )
+    override suspend fun deleteRestaurants(id: String): Boolean {
+        return true
     }
 
     override suspend fun getCuisines(): List<String> {

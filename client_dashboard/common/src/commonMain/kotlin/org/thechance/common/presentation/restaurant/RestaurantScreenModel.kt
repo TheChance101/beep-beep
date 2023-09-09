@@ -3,7 +3,6 @@ package org.thechance.common.presentation.restaurant
 import kotlinx.coroutines.Job
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Restaurant
-import org.thechance.common.domain.entity.Time
 import org.thechance.common.domain.usecase.IManageLocationUseCase
 import org.thechance.common.domain.usecase.IManageRestaurantUseCase
 import org.thechance.common.domain.usecase.IMangeCuisinesUseCase
@@ -46,13 +45,13 @@ class RestaurantScreenModel(
         )
     }
 
-    private fun onGetRestaurantSuccessfully(restaurant: DataWrapper<Restaurant>) {
+    private fun onGetRestaurantSuccessfully(restaurants: DataWrapper<Restaurant>) {
         updateState {
             it.copy(
-                restaurants = restaurant.result.toUiState(),
+                restaurants = restaurants.result.toUiState(),
                 isLoading = false,
-                numberOfRestaurants = restaurant.numberOfResult,
-                maxPageCount = restaurant.totalPages
+                numberOfRestaurants = restaurants.numberOfResult,
+                maxPageCount = restaurants.totalPages
             )
         }
     }
@@ -219,26 +218,9 @@ class RestaurantScreenModel(
         TODO("Not yet implemented")
     }
 
-    override fun onClickDeleteRestaurantMenuItem(restaurant: RestaurantUiState.RestaurantDetailsUiState) {
+    override fun onClickDeleteRestaurantMenuItem(id: String) {
         tryToExecute(
-            {
-                manageRestaurant.deleteRestaurants(
-                    Restaurant(
-                        id = restaurant.id,
-                        name = restaurant.name,
-                        ownerUsername = restaurant.ownerUsername,
-                        phoneNumber = restaurant.phoneNumber,
-                        rating = restaurant.rating,
-                        priceLevel = restaurant.priceLevel,
-                        workingHours = restaurant.workingHours.replace(" ", "").split("-").run {
-                            Pair(
-                                Time.parseToCustomTime(get(0)),
-                                Time.parseToCustomTime(get(1))
-                            )
-                        }
-                    )
-                )
-            },
+            { manageRestaurant.deleteRestaurants(id) },
             ::onDeleteRestaurantSuccessfully,
             ::onError
         )
@@ -274,11 +256,12 @@ class RestaurantScreenModel(
         }
     }
 
-    private fun onDeleteRestaurantSuccessfully(restaurant: Restaurant) {
+    private fun onDeleteRestaurantSuccessfully(isDeleted: Boolean) {
         val restaurants =
-            mutableState.value.restaurants.toMutableList().apply { remove(restaurant.toUiState()) }
-        updateState { it.copy(restaurants = restaurants, isLoading = false) }
+//            mutableState.value.restaurants.toMutableList().apply { remove(restaurant.toUiState()) }
+            updateState { it.copy(isLoading = false) }
         hideEditRestaurantMenu()
+        getRestaurants()
     }
 
 
