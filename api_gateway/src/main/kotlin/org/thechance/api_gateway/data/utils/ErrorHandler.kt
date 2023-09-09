@@ -155,6 +155,9 @@ class ErrorHandler(
         if(errorCodes.contains(2502))
             errors[2502] = localizedMessages.restaurantInvalidReceivedOrders
 
+        if(errorCodes.contains( 2503))
+            errors[2503] = localizedMessages.cuisineNameAlreadyExisted
+
         return errors
     }
 

@@ -53,7 +53,6 @@ class TaxiScreen :
         }
     }
 
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun OnRender(
@@ -302,7 +301,7 @@ class TaxiScreen :
         onDropdownMenuClicked: (String) -> Unit,
         editTaxiMenu: MenuUiState,
         onDropdownMenuDismiss: () -> Unit,
-        onEditTaxiClicked: (TaxiDetailsUiState) -> Unit,
+        onEditTaxiClicked: (String) -> Unit,
         onDeleteTaxiClicked: (String) -> Unit,
     ) {
         TitleField(
@@ -357,7 +356,7 @@ class TaxiScreen :
         taxi: TaxiDetailsUiState,
         onDropdownMenuDismiss: () -> Unit,
         editTaxiMenu: MenuUiState,
-        onEditTaxiClicked: (TaxiDetailsUiState) -> Unit,
+        onEditTaxiClicked: (String) -> Unit,
         onDeleteTaxiClicked: (String) -> Unit,
     ) {
         BpDropdownMenu(
@@ -371,7 +370,7 @@ class TaxiScreen :
                     BpDropdownMenuItem(
                         onClick = {
                             when (it.text) {
-                                "Edit" -> onEditTaxiClicked(taxi)
+                                "Edit" -> onEditTaxiClicked(taxi.id)
                                 "Delete" -> onDeleteTaxiClicked(taxi.id)
                             }
                         },
