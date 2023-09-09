@@ -24,7 +24,7 @@ function createInfiniteLoopFunction(latitude) {
             return function() {
     var pushpin = new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(latitude, 40.3321), null);
                     map.entities.push(pushpin);
-                    map.setView({ center: new Microsoft.Maps.Location(latitude, 40.3321), zoom: 18 });
+                    map.setView({ center: new Microsoft.Maps.Location(latitude, 40.3321), zoom: 17 });
 
                 setInterval(function() {
                     clearMap()

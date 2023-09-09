@@ -61,6 +61,7 @@ class MainActivity : AppCompatActivity() {
         val webViewState = rememberWebViewState(url = url)
 
         AndroidView(
+            modifier = modifier,
             factory = { context ->
                 WebView(context).apply {
                     webView = this
