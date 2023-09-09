@@ -5,8 +5,8 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kotlinKsp)
-    alias(libs.plugins.realm)
-    alias(libs.plugins.kotlinx.serialization)
+    id("io.realm.kotlin") version "1.10.0"
+    kotlin("plugin.serialization") version "1.9.0"
 }
 
 group = "org.thechance"
@@ -32,18 +32,28 @@ kotlin {
     }
 
     sourceSets {
-
         val commonMain by getting {
-
             dependencies {
-                // design shared
-                implementation(project(":design_system:shared"))
-                // compose
                 implementation(libs.compose.runtime)
                 implementation(libs.compose.foundation)
                 implementation(libs.compose.material3)
+                api(libs.compose.image.loader)
+
                 implementation(libs.compose.components.resources)
-                implementation(libs.google.accompanist)
+                api(libs.compose.image.loader)
+                implementation(libs.kotlinx.datetime)
+
+                // voyager
+                implementation(libs.bundles.voyager)
+                implementation(libs.voyager.tab.navigator)
+
+                implementation(libs.kotlin.coroutines)
+                api(libs.koin.core)
+                implementation(libs.koin.annotations)
+                implementation(libs.koin.compose)
+                implementation(project(":design_system:shared"))
+                //realm db
+                implementation(libs.realm.library.base)
                 //ktor-client
                 implementation(libs.ktor.client.core)
                 implementation(libs.ktor.json.serialization)
@@ -51,18 +61,7 @@ kotlin {
                 implementation(libs.ktor.logging)
                 implementation(libs.ktor.client.cio)
                 implementation(libs.kotlin.serialization)
-                //realm db
-                implementation(libs.realm.library.base)
-                // koin
-                api(libs.koin.core)
-                implementation(libs.koin.annotations)
-                implementation(libs.koin.compose)
-                // navigation voyager
-                implementation(libs.bundles.voyager)
-                // coroutine
-                implementation(libs.kotlin.coroutines)
-                //date time
-                implementation(libs.kotlinx.datetime)
+
             }
         }
         val androidMain by getting {
