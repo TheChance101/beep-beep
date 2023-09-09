@@ -1,6 +1,6 @@
 package di
 
-import data.gateway.FakeRemoteGateway
+import data.gateway.remote.FakeRemoteGateway
 import domain.gateway.IFakeRemoteGateway
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
