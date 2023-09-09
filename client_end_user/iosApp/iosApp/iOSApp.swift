@@ -10,7 +10,7 @@ struct iOSApp: App {
 	var body: some Scene {
 		WindowGroup {
 		    ZStack {
-                ContentView()
+                ContentView().edgesIgnoringSafeArea([.top])
 			}
 		}
 	}
