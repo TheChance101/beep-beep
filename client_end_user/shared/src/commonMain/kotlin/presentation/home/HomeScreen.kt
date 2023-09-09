@@ -29,7 +29,6 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.composable.BpImageLoader
-import presentation.composable.ItemSection
 import presentation.composable.ImageSlider
 import presentation.composable.ItemSection
 import presentation.composable.SectionHeader
