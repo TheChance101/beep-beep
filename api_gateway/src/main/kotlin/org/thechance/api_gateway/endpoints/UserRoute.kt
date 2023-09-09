@@ -44,10 +44,11 @@ fun Route.userRoutes() {
             }
 
             put("/{userId}/permission") {
+                val language = extractLocalizationHeader()
                 val userId = call.parameters["userId"]?.trim().toString()
                 val params = call.receiveParameters()
                 val permission = params["permission"]?.toIntListOrNull() ?: listOf(Role.END_USER)
-                val result = identityService.updateUserPermission(userId, permission)
+                val result = identityService.updateUserPermission(userId, permission,language)
                 respondWithResult(HttpStatusCode.Created, result)
             }
             get("/last-register") {
