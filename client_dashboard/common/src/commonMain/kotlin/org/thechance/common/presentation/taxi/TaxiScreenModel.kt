@@ -5,12 +5,14 @@ import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.usecase.IManageTaxisUseCase
+import org.thechance.common.domain.usecase.ITaxiValidationUseCase
 import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
 class TaxiScreenModel(
     private val manageTaxis: IManageTaxisUseCase,
+    private val taxiValidation: ITaxiValidationUseCase,
 ) : BaseScreenModel<TaxiUiState, TaxiUiEffect>(TaxiUiState()), TaxiInteractionListener {
 
     private var searchJob: Job? = null
@@ -94,7 +96,12 @@ class TaxiScreenModel(
 
     override fun onTaxiPlateNumberChange(number: String) {
         updateState {
-            it.copy(newTaxiInfo = it.newTaxiInfo.copy(plateNumber = number))
+            it.copy(
+                newTaxiInfo = it.newTaxiInfo.copy(
+                    plateNumber = number,
+                    plateNumberError = if (taxiValidation.isValidPlateNumber(number)) "" else "Invalid plate number"
+                )
+            )
         }
     }
 
@@ -105,7 +112,14 @@ class TaxiScreenModel(
     }
 
     override fun onCarModelChanged(model: String) {
-        updateState { it.copy(newTaxiInfo = it.newTaxiInfo.copy(carModel = model)) }
+        updateState {
+            it.copy(
+                newTaxiInfo = it.newTaxiInfo.copy(
+                    carModel = model,
+                    carModelError = if (taxiValidation.isValidCarModel(model)) "" else "Invalid car model"
+                )
+            )
+        }
     }
 
     override fun onCarColorSelected(color: CarColor) {
