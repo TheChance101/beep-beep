@@ -17,15 +17,16 @@ data class OrderCollection(
     val userId: ObjectId,
     @Contextual
     val restaurantId: ObjectId,
-    val meals: List<OrderMealCollection> = emptyList(),
+    val meals: List<MealCollection> = emptyList(),
     val totalPrice: Double,
     val createdAt: Long,
     val orderStatus: Int
-)
+){
+    @Serializable
+    data class MealCollection(
+        @Contextual
+        val mealId: ObjectId,
+        val quantity: Int
+    )
+}
 
-@Serializable
-data class OrderMealCollection(
-    @Contextual
-    val mealId: ObjectId,
-    val quantity: Int
-)

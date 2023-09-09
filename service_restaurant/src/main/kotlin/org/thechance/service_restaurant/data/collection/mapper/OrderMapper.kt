@@ -3,9 +3,7 @@ package org.thechance.service_restaurant.data.collection.mapper
 import kotlinx.datetime.LocalDateTime
 import org.bson.types.ObjectId
 import org.thechance.service_restaurant.data.collection.OrderCollection
-import org.thechance.service_restaurant.data.collection.OrderMealCollection
 import org.thechance.service_restaurant.domain.entity.Order
-import org.thechance.service_restaurant.domain.entity.OrderMeal
 import org.thechance.service_restaurant.domain.utils.fromEpochMilliseconds
 import org.thechance.service_restaurant.domain.utils.toMillis
 
@@ -34,15 +32,15 @@ fun OrderCollection.toEntity(): Order {
     )
 }
 
-fun OrderMealCollection.toEntity(): OrderMeal {
-    return OrderMeal(
+fun OrderCollection.MealCollection.toEntity(): Order.Meal {
+    return Order.Meal(
         meadId = mealId.toString(),
         quantity = quantity
     )
 }
 
-fun OrderMeal.toCollection(): OrderMealCollection {
-    return OrderMealCollection(
+fun Order.Meal.toCollection(): OrderCollection.MealCollection {
+    return OrderCollection.MealCollection(
         mealId = ObjectId(meadId),
         quantity = quantity
     )
