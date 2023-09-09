@@ -5,6 +5,10 @@ interface ITaxiValidationUseCase {
     fun isValidPlateNumber(plateNumber: String): Boolean
 
     fun isValidCarModel(model: String): Boolean
+
+    fun isFormValid(plateNumber: String, model: String): Boolean {
+        return isValidPlateNumber(plateNumber) && isValidCarModel(model)
+    }
 }
 
 class TaxiValidationUseCase : ITaxiValidationUseCase {

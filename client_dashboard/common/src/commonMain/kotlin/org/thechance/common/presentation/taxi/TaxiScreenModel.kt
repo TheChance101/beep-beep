@@ -99,7 +99,8 @@ class TaxiScreenModel(
             it.copy(
                 newTaxiInfo = it.newTaxiInfo.copy(
                     plateNumber = number,
-                    plateNumberError = if (taxiValidation.isValidPlateNumber(number)) "" else "Invalid plate number"
+                    plateNumberError = if (taxiValidation.isValidPlateNumber(number)) "" else "Invalid plate number",
+                    isFormValid = taxiValidation.isFormValid(number, it.newTaxiInfo.carModel)
                 )
             )
         }
@@ -116,7 +117,8 @@ class TaxiScreenModel(
             it.copy(
                 newTaxiInfo = it.newTaxiInfo.copy(
                     carModel = model,
-                    carModelError = if (taxiValidation.isValidCarModel(model)) "" else "Invalid car model"
+                    carModelError = if (taxiValidation.isValidCarModel(model)) "" else "Invalid car model",
+                    isFormValid = taxiValidation.isFormValid(it.newTaxiInfo.plateNumber, model)
                 )
             )
         }

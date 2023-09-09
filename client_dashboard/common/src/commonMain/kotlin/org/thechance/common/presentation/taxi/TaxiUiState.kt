@@ -95,6 +95,7 @@ data class TaxiInfoUiState(
     val seats: Int = 0,
     val plateNumberError: String = "",
     val carModelError: String = "",
+    val isFormValid: Boolean = false,
 )
 
 data class MenuUiState(

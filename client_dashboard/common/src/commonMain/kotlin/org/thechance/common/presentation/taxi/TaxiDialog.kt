@@ -124,7 +124,8 @@ fun TaxiDialog(
                 BpButton(
                     title = if (isEditMode) Resources.Strings.save else Resources.Strings.create,
                     onClick = if (isEditMode) listener::onSaveClicked else listener::onCreateTaxiClicked,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = state.isFormValid
                 )
             }
         }
