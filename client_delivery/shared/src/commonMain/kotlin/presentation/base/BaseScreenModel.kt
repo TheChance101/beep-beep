@@ -1,15 +1,6 @@
 package presentation.base
 
 import cafe.adriel.voyager.core.model.ScreenModel
-import domain.utils.InvalidCredentialsException
-import domain.utils.InvalidPasswordException
-import domain.utils.InvalidUsernameException
-import domain.utils.NetworkNotSupportedException
-import domain.utils.NoInternetException
-import domain.utils.UnAuthorizedException
-import domain.utils.UserAlreadyExistException
-import domain.utils.UserNotFoundException
-import domain.utils.WifiDisabledException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -80,24 +71,6 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
         return inScope.launch(dispatcher) {
             try {
                 function()
-            } catch (e: WifiDisabledException) {
-                onError(ErrorState.WifiDisabled)
-            } catch (e: NoInternetException) {
-                onError(ErrorState.NoInternet)
-            } catch (e: NetworkNotSupportedException) {
-                onError(ErrorState.NetworkNotSupported)
-            } catch (e: InvalidUsernameException) {
-                onError(ErrorState.InvalidUsername)
-            } catch (e: InvalidPasswordException) {
-                onError(ErrorState.InvalidPassword)
-            } catch (e: UnAuthorizedException) {
-                onError(ErrorState.UnAuthorized)
-            } catch (e: InvalidCredentialsException) {
-                onError(ErrorState.WrongPassword(e.message ?: ""))
-            } catch (e: UserNotFoundException) {
-                onError(ErrorState.UserNotFound(e.message ?: ""))
-            } catch (e: UserAlreadyExistException) {
-                onError(ErrorState.UserAlreadyExists(e.message ?: ""))
             } catch (e: Exception) {
                 onError(ErrorState.RequestFailed)
             }
