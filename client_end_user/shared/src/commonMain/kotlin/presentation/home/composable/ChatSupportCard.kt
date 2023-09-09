@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
@@ -42,12 +43,12 @@ fun ChatSupportCard(
         modifier = modifier
             .fillMaxWidth()
             .height(88.dp)
-            .scale(animatedFloat)
             .border(
                 width = 1.dp,
                 color = Theme.colors.divider,
                 shape = RoundedCornerShape(Theme.radius.medium)
             )
+            .clip(shape = RoundedCornerShape(Theme.radius.medium))
             .background(Theme.colors.surface)
             .clickable(
                 interactionSource,
@@ -87,7 +88,7 @@ fun ChatSupportCard(
         Image(
             painterResource(Resources.images.chatImage),
             contentDescription = Resources.strings.connectWithSupportIconDescription,
-            modifier = Modifier.size(56.dp),
+            modifier = Modifier.size(56.dp).scale(animatedFloat),
         )
     }
 }

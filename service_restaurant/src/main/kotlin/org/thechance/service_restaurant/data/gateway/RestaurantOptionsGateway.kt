@@ -184,17 +184,23 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
             filter = CuisineCollection::id eq ObjectId(id),
             update = set(CuisineCollection::isDeleted setTo true),
         ).isSuccessfullyUpdated()
+
+    override suspend fun getCuisineByName(cuisineName: String): Cuisine? {
+        return container.cuisineCollection.findOne(CuisineCollection::name eq cuisineName)?.toEntity()
+    }
+
     //endregion
 
     //region Order
-    override suspend fun addOrder(order: Order) :Boolean {
-       return container.orderCollection.insertOne(order.toCollection()).wasAcknowledged()
+    override suspend fun addOrder(order: Order): Boolean {
+        return container.orderCollection.insertOne(order.toCollection()).wasAcknowledged()
     }
 
     override suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order> {
-        return  container.orderCollection.find(
+        return container.orderCollection.find(
             OrderCollection::restaurantId
-                    eq ObjectId(restaurantId)).toList().toEntity()
+                    eq ObjectId(restaurantId)
+        ).toList().toEntity()
     }
 
     override suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order> {
@@ -217,11 +223,13 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         return updatedOrder?.toEntity()
     }
 
-    override suspend fun getOrdersHistory(restaurantId:String,page: Int, limit: Int): List<Order> {
+    override suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order> {
         return container.orderCollection
-            .find(OrderCollection::orderStatus eq Order.Status.DONE.statusCode,
+            .find(
+                OrderCollection::orderStatus eq Order.Status.DONE.statusCode,
                 OrderCollection::orderStatus eq Order.Status.CANCELED.statusCode,
-                OrderCollection::restaurantId eq ObjectId(restaurantId))
+                OrderCollection::restaurantId eq ObjectId(restaurantId)
+            )
             .sort(descending(OrderCollection::createdAt))
             .paginate(page, limit).toList().toEntity()
     }

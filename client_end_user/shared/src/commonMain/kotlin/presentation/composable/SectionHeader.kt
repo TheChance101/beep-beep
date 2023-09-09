@@ -31,8 +31,6 @@ fun SectionHeader(
     showViewAll: Boolean = false,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
-    val isPressed by interactionSource.collectIsPressedAsState()
-    val animatedFloat by animateFloatAsState(targetValue = if (isPressed) 1.2f else 1f)
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -42,8 +40,7 @@ fun SectionHeader(
 
         if (showViewAll) {
             Row(
-                Modifier.clickable(interactionSource, indication = null, onClick = onClickViewAll)
-                    .scale(animatedFloat),
+                Modifier.clickable(interactionSource, indication = null, onClick = onClickViewAll),
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
