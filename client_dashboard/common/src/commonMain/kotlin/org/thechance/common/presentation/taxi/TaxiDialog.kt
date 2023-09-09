@@ -60,7 +60,8 @@ fun TaxiDialog(
                 modifier = Modifier.padding(top = 40.kms),
                 label = Resources.Strings.taxiPlateNumber,
                 onValueChange = listener::onTaxiPlateNumberChange,
-                text = state.plateNumber
+                text = state.plateNumber,
+                errorMessage = state.plateNumberError
             )
 
             BpTextField(
@@ -74,7 +75,8 @@ fun TaxiDialog(
                 modifier = Modifier.padding(top = 24.kms),
                 label = Resources.Strings.carModel,
                 onValueChange = listener::onCarModelChanged,
-                text = state.carModel
+                text = state.carModel,
+                errorMessage = state.carModelError
             )
 
             Text(
