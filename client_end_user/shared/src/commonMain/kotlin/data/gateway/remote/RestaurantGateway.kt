@@ -5,7 +5,7 @@ import data.remote.model.CuisineDto
 import data.remote.model.ServerResponse
 import domain.entity.Cuisine
 import domain.gateway.IRestaurantRemoteGateway
-import domain.utils.NotFoundException
+import domain.utils.GeneralException
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 
@@ -13,6 +13,6 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client), IRes
     override suspend fun getCuisines(): List<Cuisine> {
         return tryToExecute<ServerResponse<List<CuisineDto>>> {
             get("/cuisines")
-        }.value?.toCuisineEntity() ?: throw NotFoundException()
+        }.value?.toCuisineEntity() ?: throw GeneralException.NotFoundException
     }
 }
