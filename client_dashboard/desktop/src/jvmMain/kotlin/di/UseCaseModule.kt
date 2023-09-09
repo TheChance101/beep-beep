@@ -14,4 +14,5 @@ val UseCaseModule = module {
     singleOf(::ManageTaxisUseCase) { bind<IManageTaxisUseCase>() }
     singleOf(::LogoutUserUseCase) { bind<ILogoutUserUseCase>() }
     singleOf(::MangeCuisinesUseCase) { bind<IMangeCuisinesUseCase>() }
+    singleOf(::TaxiValidationUseCase) { bind<ITaxiValidationUseCase>() }
 }
