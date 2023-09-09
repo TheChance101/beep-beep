@@ -35,6 +35,8 @@ interface IDataBaseGateway {
 
     suspend fun getNumberOfUsers(): Long
 
+    suspend fun isUserDeleted(id: String): Boolean
+
     // endregion: user
 
     // region token
@@ -58,6 +60,8 @@ interface IDataBaseGateway {
 
     suspend fun getUserByUsername(username: String): UserManagement
 
-    suspend fun getLastRegisterUser(limit:Int ): List<UserManagement>
+    suspend fun getLastRegisterUser(limit: Int): List<UserManagement>
+
+    suspend fun searchUsers(searchTerm: String, filterByPermission: List<Int>): List<UserManagement>
 
 }

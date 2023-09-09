@@ -63,12 +63,12 @@ class TaxisFakeGateway : ITaxisGateway {
             TaxiDto(
                 id = UUID.randomUUID().toString(),
                 plateNumber = taxiDto.plateNumber,
-                color = taxiDto.color,
-                type = taxiDto.type,
+                color = taxiDto.color.toLong(),
                 seats = taxiDto.seats,
-                username = taxiDto.username,
-                isAvailable = null,
-                trips = null,
+                type = taxiDto.type,
+                username = taxiDto.driverId,
+                isAvailable = false,
+                trips = "0",
                 driverId = taxiDto.driverId
             )
         )
@@ -76,17 +76,17 @@ class TaxisFakeGateway : ITaxisGateway {
     }
 
     override suspend fun updateTaxi(taxi: NewTaxiInfo): Taxi {
-        val indexToUpdate = taxis.indexOfFirst { it.id == taxi.id }
+        val indexToUpdate = taxis.indexOfFirst { it.driverId == taxi.driverUserName }
         val newTaxi = taxi.toDto()
         return if (indexToUpdate != -1) {
             val oldTaxi = taxis[indexToUpdate]
             val updatedTaxi = TaxiDto(
-                id = newTaxi.id,
+                id = UUID.randomUUID().toString(),
                 plateNumber = newTaxi.plateNumber,
-                color = newTaxi.color,
+                color = newTaxi.color.toLong(),
                 type = newTaxi.type,
                 seats = newTaxi.seats,
-                username = newTaxi.username,
+                username = newTaxi.driverId,
                 trips = oldTaxi.trips,
                 isAvailable = oldTaxi.isAvailable,
                 driverId = oldTaxi.driverId
@@ -109,6 +109,9 @@ class TaxisFakeGateway : ITaxisGateway {
         }
     }
 
+    override suspend fun getTaxiById(taxiId: String): Taxi {
+        return taxis.first { it.id == taxiId }.toEntity()
+    }
 
     private val taxis = mutableListOf(
         TaxiDto(

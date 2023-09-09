@@ -53,8 +53,11 @@ class HomeScreenModel(
     }
 
     override fun onClickSearch() {
-        println("effect sent")
         sendNewEffect(HomeScreenUiEffect.NavigateToSearch)
+    }
+
+    override fun onClickOrderAgain(orderId: String) {
+        sendNewEffect(HomeScreenUiEffect.NavigateToOrderDetails(orderId))
     }
 
     private fun getRecommendedCuisines() {

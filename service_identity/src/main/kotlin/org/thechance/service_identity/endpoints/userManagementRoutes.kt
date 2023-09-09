@@ -31,6 +31,14 @@ fun Route.userManagementRoutes() {
             call.respond(HttpStatusCode.OK, UsersManagementDto(users, total))
         }
 
+        get("/search"){
+            val searchTerm = call.parameters["query"] ?: ""
+            val params = call.receiveParameters()
+            val permission = params["permission"]?.toIntListOrNull() ?: listOf(Role.END_USER)
+            val users = userManagement.searchUsers(searchTerm, permission )
+            call.respond(HttpStatusCode.OK, users.toDto())
+        }
+
         get("/last-register") {
             val limit = call.parameters.extractInt("limit") ?: 4
             val result = userManagement.getLastRegisterUser(limit).toDto()

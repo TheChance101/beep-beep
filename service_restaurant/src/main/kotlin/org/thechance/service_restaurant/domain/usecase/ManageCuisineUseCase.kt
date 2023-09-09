@@ -3,6 +3,7 @@ package org.thechance.service_restaurant.domain.usecase
 import org.thechance.service_restaurant.domain.entity.Cuisine
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
 import org.thechance.service_restaurant.domain.utils.IValidation
+import org.thechance.service_restaurant.domain.utils.exceptions.ALREADY_EXISTED
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_NAME
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
@@ -25,7 +26,9 @@ class ManageCuisineUseCase(
     override suspend fun addCuisine(cuisine: Cuisine): Cuisine {
         if (!basicValidation.isValidName(cuisine.name)) {
             throw MultiErrorException(listOf(INVALID_NAME))
-
+        }
+       else if (isCuisineExisted(cuisine.name)){
+            throw MultiErrorException(listOf(ALREADY_EXISTED))
         }
         return restaurantOptions.addCuisine(cuisine)
     }
@@ -47,5 +50,9 @@ class ManageCuisineUseCase(
         if (restaurantOptions.getCuisineById(cuisineId) == null) {
             throw MultiErrorException(listOf(NOT_FOUND))
         }
+    }
+
+    private suspend fun isCuisineExisted(cuisineName: String): Boolean {
+        return restaurantOptions.getCuisineByName(cuisineName) != null
     }
 }

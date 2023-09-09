@@ -34,4 +34,6 @@ data class StringResources(
     val freeDelivery: String = "Free delivery",
     val deliciousItemsInYourCart: String = "Delicious items in your cart!",
     val clickHereAndCompleteYourOrder: String = "Click here and Complete your order.",
+    val lastOrder: String = "Last order",
+    val orderAgain: String = "Order again"
 )
