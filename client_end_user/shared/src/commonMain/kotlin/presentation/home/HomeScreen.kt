@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
+import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -22,9 +23,11 @@ import presentation.base.BaseScreen
 import presentation.composable.ImageSlider
 import presentation.composable.ItemSection
 import presentation.composable.SectionHeader
+import presentation.home.composable.CartCard
 import presentation.home.composable.ChatSupportCard
 import presentation.home.composable.CuisineCard
 import presentation.home.composable.OrderCard
+import presentation.search.SearchScreen
 import resources.Resources
 
 class HomeScreen :
@@ -43,6 +46,7 @@ class HomeScreen :
             is HomeScreenUiEffect.NavigateToOrderTaxi -> println("Navigate to Order Taxi screen")
             is HomeScreenUiEffect.ScrollDownToRecommendedRestaurants -> println("Scroll down home screen")
             is HomeScreenUiEffect.NavigateToOfferItem -> println("Navigate to offer item details ${effect.offerId}")
+            HomeScreenUiEffect.NavigateToSearch -> navigator.push(SearchScreen())
         }
     }
 
@@ -64,6 +68,22 @@ class HomeScreen :
                     onItemClickListener = { listener.onClickOffersSlider(it) },
                     images = state.getOfferImages()
                 )
+            }
+
+            item {
+                BpSimpleTextField(
+                    "",
+                    hint = "Search for meal, restaurant",
+                    hintColor = Theme.colors.contentSecondary,
+                    onValueChange = {},
+                    onClick = { listener.onClickSearch() },
+                    leadingPainter = painterResource(Resources.images.searchOutlined),
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            }
+
+            item {
+                CartCard(onClick = {})
             }
 
             item {

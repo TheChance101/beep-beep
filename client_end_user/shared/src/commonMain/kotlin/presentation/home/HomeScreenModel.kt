@@ -52,6 +52,11 @@ class HomeScreenModel(
         }
     }
 
+    override fun onClickSearch() {
+        println("effect sent")
+        sendNewEffect(HomeScreenUiEffect.NavigateToSearch)
+    }
+
     private fun getRecommendedCuisines() {
         tryToExecute(
             { cuisineUseCase.getCuisines().toCuisineUiState() },
