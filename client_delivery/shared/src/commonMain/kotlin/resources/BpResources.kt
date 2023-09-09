@@ -7,16 +7,15 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import com.beepbeep.designSystem.ui.theme.BpTheme
 
+
 private val localDrawableResources = staticCompositionLocalOf { DrawableResources() }
 private val localStringResources = staticCompositionLocalOf { StringResources() }
-
 
 @Composable
 fun BeepBeepTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
-
     val drawableResources = if (useDarkTheme) BpDrawableDarkResources else DrawableResources()
 
     CompositionLocalProvider(
@@ -24,13 +23,13 @@ fun BeepBeepTheme(
         localStringResources provides StringResources(),
     ) {
         BpTheme {
-            content
+            content()
         }
     }
 }
 
 object Resources {
-    val image: DrawableResources
+    val images: DrawableResources
         @Composable
         @ReadOnlyComposable
         get() = localDrawableResources.current
