@@ -22,12 +22,13 @@ var d={}
 var co = 0;
 function createInfiniteLoopFunction(latitude) {
             return function() {
+            clearMap()
     var pushpin = new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(latitude, 40.3321), null);
                     map.entities.push(pushpin);
                     map.setView({ center: new Microsoft.Maps.Location(latitude, 40.3321), zoom: 17 });
 
                 setInterval(function() {
-                    clearMap()
+
                 }, 8000); // Call the inner function every 1000 milliseconds (1 second)
 
             };
