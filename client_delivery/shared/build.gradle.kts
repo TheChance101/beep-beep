@@ -4,6 +4,9 @@ plugins {
     alias(libs.plugins.kotlin.native.cocoapods)
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.compose)
+    alias(libs.plugins.kotlinKsp)
+    alias(libs.plugins.realm)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 kotlin {
@@ -28,12 +31,35 @@ kotlin {
     sourceSets {
 
         val commonMain by getting {
+
             dependencies {
+                // design shared
+                implementation(project(":design_system:shared"))
+                // compose
                 implementation(libs.compose.runtime)
                 implementation(libs.compose.foundation)
                 implementation(libs.compose.material3)
                 implementation(libs.compose.components.resources)
-                implementation(project(":design_system:shared"))
+                implementation(libs.google.accompanist)
+                //ktor-client
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.json.serialization)
+                implementation(libs.ktor.content.negotiation)
+                implementation(libs.ktor.logging)
+                implementation(libs.ktor.client.cio)
+                implementation(libs.kotlin.serialization)
+                //realm db
+                implementation(libs.realm.library.base)
+                // koin
+                api(libs.koin.core)
+                implementation(libs.koin.annotations)
+                implementation(libs.koin.compose)
+                // navigation voyager
+                implementation(libs.bundles.voyager)
+                // coroutine
+                implementation(libs.kotlin.coroutines)
+                //date time
+                implementation(libs.kotlinx.datetime)
             }
         }
         val androidMain by getting {
