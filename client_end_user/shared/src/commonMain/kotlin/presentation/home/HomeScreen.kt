@@ -83,7 +83,7 @@ class HomeScreen :
             item {
                 BpSimpleTextField(
                     "",
-                    hint = "Search for meal, restaurant",
+                    hint = Resources.strings.searchForMealsOrRestaurants,
                     hintColor = Theme.colors.contentSecondary,
                     onValueChange = {},
                     onClick = { listener.onClickSearch() },
