@@ -1,15 +1,14 @@
 package org.thechance.service_identity.domain.usecases
 
 import org.koin.core.annotation.Single
-import org.thechance.service_identity.domain.entity.*
+import org.thechance.service_identity.domain.entity.User
+import org.thechance.service_identity.domain.entity.UserManagement
+import org.thechance.service_identity.domain.entity.Wallet
 import org.thechance.service_identity.domain.gateway.IDataBaseGateway
 import org.thechance.service_identity.domain.security.HashingService
 import org.thechance.service_identity.domain.usecases.validation.IUserInfoValidationUseCase
 import org.thechance.service_identity.domain.usecases.validation.IWalletBalanceValidationUseCase
-import org.thechance.service_identity.domain.util.INSUFFICIENT_FUNDS
-import org.thechance.service_identity.domain.util.INVALID_CREDENTIALS
-import org.thechance.service_identity.domain.util.InsufficientFundsException
-import org.thechance.service_identity.domain.util.InvalidCredentialsException
+import org.thechance.service_identity.domain.util.*
 
 interface IUserAccountManagementUseCase {
 
@@ -63,6 +62,9 @@ class UserAccountManagementUseCase(
     }
 
     override suspend fun deleteUser(id: String): Boolean {
+         if (dataBaseGateway.isUserDeleted(id)) {
+            throw ResourceNotFoundException(NOT_FOUND)
+        }
         return dataBaseGateway.deleteUser(id)
     }
 

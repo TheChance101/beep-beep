@@ -18,8 +18,6 @@ fun Route.userRoutes() {
 
     route("/user") {
 
-
-
         get("/{userId}") {
             val id = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val user = manageUserAccount.getUser(id).toDto()

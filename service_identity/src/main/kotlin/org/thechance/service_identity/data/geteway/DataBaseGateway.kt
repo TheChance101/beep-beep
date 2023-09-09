@@ -182,11 +182,7 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         id: String, saltedHash: SaltedHash?, fullName: String?, username: String?, email: String?
     ): Boolean {
         try {
-            dataBaseContainer.userCollection.find(
-                filter = (UserCollection::username eq username)
-                        and (UserCollection::username eq username),
-            )
-
+            dataBaseContainer.userCollection.find(filter = (UserCollection::username eq username))
             return dataBaseContainer.userCollection.updateOneById(
                 ObjectId(id),
                 set(
@@ -214,6 +210,14 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         return dataBaseContainer.userCollection.countDocuments(UserCollection::isDeleted eq false)
     }
 
+    override suspend fun isUserDeleted(id: String): Boolean {
+        val user = dataBaseContainer.userCollection.findOne(
+            UserCollection::id eq ObjectId(id),
+            UserCollection::isDeleted eq true
+        )
+        return user != null
+    }
+
     override suspend fun getUserByUsername(username: String): UserManagement {
         return dataBaseContainer.userCollection.findOne(
             UserCollection::username eq username,
@@ -221,10 +225,33 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         )?.toManagedEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
-    override suspend fun getLastRegisterUser(limit:Int): List<UserManagement> {
+    override suspend fun getLastRegisterUser(limit: Int): List<UserManagement> {
         return dataBaseContainer.userCollection.find(
             UserCollection::isDeleted eq false
         ).sort(Sorts.descending("_id")).limit(limit).toList().toManagedEntity()
+    }
+
+    override suspend fun searchUsers(
+        searchTerm: String,
+        filterByPermission: List<Int>
+    ): List<UserManagement> {
+        val orConditions = filterByPermission.map { permission ->
+            or(
+                UserCollection::permission eq permission,
+                UserCollection::permission.bitsAllSet(permission.toLong()) // Convert to Long
+            )
+        }
+
+        return dataBaseContainer.userCollection.find(
+            and(
+                or(
+                    UserCollection::username.regex("^$searchTerm", "i"),
+                    UserCollection::email.regex("^$searchTerm", "i")
+                ),
+                or(*orConditions.toTypedArray()),
+                UserCollection::isDeleted eq false
+            )
+        )?.toList()?.toManagedEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
     //endregion
