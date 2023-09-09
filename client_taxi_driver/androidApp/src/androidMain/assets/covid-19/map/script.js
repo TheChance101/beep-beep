@@ -1,33 +1,41 @@
-function GetMap(latitude,longitude) {
-var map = new Microsoft.Maps.Map('#myMap', {
+var latitude2 = 0
+var map
+
+function GetMap() {
+
+map = new Microsoft.Maps.Map('#myMap', {
     credentials: 'Access_token',
-    center: new Microsoft.Maps.Location(latitude,longitude),
+    center: new Microsoft.Maps.Location(0,0),
     mapTypeId: Microsoft.Maps.MapTypeId.aerial,
     zoom: 2
 });
-//Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
-//    var directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
-//    // Set Route Mode to driving
-//    directionsManager.setRequestOptions({ routeMode: Microsoft.Maps.Directions.RouteMode.driving });
-//    var waypoint1 = new Microsoft.Maps.Directions.Waypoint({ address: 'Redmond', location: new Microsoft.Maps.Location(47.67683029174805, -122.1099624633789) });
-//    var waypoint2 = new Microsoft.Maps.Directions.Waypoint({ address: 'Seattle', location: new Microsoft.Maps.Location(47.59977722167969, -122.33458709716797) });
-//    directionsManager.addWaypoint(waypoint1);
-//    directionsManager.addWaypoint(waypoint2);
-//    // Set the element in which the itinerary will be rendered
-//    directionsManager.setRenderOptions({ itineraryContainer: document.getElementById('printoutPanel') });
-//    directionsManager.calculateDirections();
-//});
+
+}
 function getPin(){
     var pushpin = new Microsoft.Maps.Pushpin(map.getCenter(), null);
     map.entities.push(pushpin);
 }
-getPin()
-}
+
 var xhttp = new XMLHttpRequest();
 var block,bs;
 var d={}
 var co = 0;
+function createInfiniteLoopFunction(latitude) {
+            return function() {
+    var pushpin = new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(latitude, 40.3321), null);
+                    map.entities.push(pushpin);
+                    map.setView({ center: new Microsoft.Maps.Location(latitude, 40.3321), zoom: 18 });
 
+                setInterval(function() {
+                    clearMap()
+                }, 8000); // Call the inner function every 1000 milliseconds (1 second)
+
+            };
+        }
+
+function clearMap(){
+map.entities.clear();
+}
 xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
       block = this.responseText;
