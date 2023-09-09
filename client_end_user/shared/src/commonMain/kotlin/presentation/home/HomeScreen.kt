@@ -1,18 +1,28 @@
 package presentation.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
@@ -23,6 +33,7 @@ import presentation.base.BaseScreen
 import presentation.composable.ImageSlider
 import presentation.composable.ItemSection
 import presentation.composable.SectionHeader
+import presentation.composable.modifier.roundedBorderShape
 import presentation.home.composable.CartCard
 import presentation.home.composable.ChatSupportCard
 import presentation.home.composable.CuisineCard
@@ -84,6 +95,70 @@ class HomeScreen :
 
             item {
                 CartCard(onClick = {})
+            }
+
+            item {
+                AnimatedVisibility(state.hasProgress) {
+                    Column(
+                        Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+
+                        Text(
+                            text = Resources.strings.inProgress,
+                            style = Theme.typography.titleLarge.copy(Theme.colors.contentPrimary),
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+
+                        state.taxiOnTheWay?.let { taxiUiState ->
+                            HorizontalImageCard(
+                                painter = painterResource(Resources.images.taxiOnTheWay),
+                                titleText = Resources.strings.taxiOnTheWay,
+                            ) { textStyle ->
+                                Row(
+                                    Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(text = taxiUiState.color, style = textStyle)
+                                    Circle()
+                                    Text(text = taxiUiState.plate, style = textStyle)
+                                    Circle()
+                                    Text(
+                                        text = "${taxiUiState.timeToArriveInMints} min to arrive",
+                                        style = textStyle
+                                    )
+                                }
+                            }
+
+                        }
+
+                        state.tripOnTheWay?.let { tripUiState ->
+                            HorizontalImageCard(
+                                painter = painterResource(Resources.images.taxiOnTheWay),
+                                titleText = Resources.strings.enjoyYourRide,
+                                titleTextColor = Theme.colors.contentSecondary,
+                            ) { textStyle ->
+                                Text(
+                                    text = "${tripUiState.timeToArriveInMints} min to arrive",
+                                    style = textStyle
+                                )
+                            }
+                        }
+
+                        state.orderOnTheWay?.let { orderUiState ->
+                            HorizontalImageCard(
+                                painter = painterResource(Resources.images.orderOnTheWay),
+                                titleText = Resources.strings.orderOnTheWay,
+                            ) { textStyle ->
+                                Text(
+                                    text = "From ${orderUiState.restaurantName}",
+                                    style = textStyle
+                                )
+                            }
+                        }
+                    }
+                }
             }
 
             item {
@@ -173,5 +248,48 @@ class HomeScreen :
                 )
             }
         }
+    }
+
+    @Composable
+    private fun HorizontalImageCard(
+        painter: Painter,
+        titleText: String,
+        modifier: Modifier = Modifier,
+        titleTextColor: Color = Theme.colors.primary,
+        titleTextStyle: TextStyle = Theme.typography.title.copy(color = titleTextColor),
+        captionText: @Composable (TextStyle) -> Unit,
+    ) {
+        Row(
+            modifier = modifier.heightIn(min = 72.dp).fillMaxWidth().padding(horizontal = 16.dp)
+                .roundedBorderShape().padding(horizontal = 16.dp, vertical = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painter,
+                contentDescription = null,
+                modifier = Modifier.size(64.dp)
+            )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Text(
+                    text = titleText,
+                    style = titleTextStyle,
+                    color = titleTextColor
+                )
+                captionText(Theme.typography.caption.copy(color = Theme.colors.contentSecondary))
+            }
+        }
+    }
+
+    @Composable
+    private fun Circle(
+        modifier: Modifier = Modifier,
+        circleSize: Dp = 4.dp,
+        circleColor: Color = Theme.colors.disable
+    ) {
+        Spacer(modifier.size(circleSize).drawBehind { drawCircle(circleColor) })
     }
 }

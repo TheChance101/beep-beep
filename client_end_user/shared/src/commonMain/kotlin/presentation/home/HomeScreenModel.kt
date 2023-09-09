@@ -1,10 +1,13 @@
 package presentation.home
 
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.entity.Order
 import domain.entity.Restaurant
+import domain.entity.Taxi
 import domain.usecase.GetFavoriteRestaurantsUseCase
 import domain.usecase.IGetCuisinesUseCase
 import domain.usecase.IGetNewOffersUserCase
+import domain.usecase.IInProgressTrackerUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
@@ -13,16 +16,46 @@ import presentation.base.ErrorState
 class HomeScreenModel(
     private val cuisineUseCase: IGetCuisinesUseCase,
     private val getFavoriteRestaurantsUseCase: GetFavoriteRestaurantsUseCase,
-    private val offers: IGetNewOffersUserCase
-) :
-    BaseScreenModel<HomeScreenUiState, HomeScreenUiEffect>(HomeScreenUiState()),
+    private val offers: IGetNewOffersUserCase,
+    private val inProgressTrackerUseCase: IInProgressTrackerUseCase,
+) : BaseScreenModel<HomeScreenUiState, HomeScreenUiEffect>(HomeScreenUiState()),
     HomeScreenInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
 
     init {
+        getInProgress()
         getRecommendedCuisines()
         getFavoriteRestaurants()
         getNewOffers()
+    }
+
+    private fun getInProgress() {
+        tryToExecute(
+            { inProgressTrackerUseCase.getTaxiOnTheWay() },
+            ::onGetTaxiInProgressSuccess,
+            ::onGetCuisinesError
+        )
+        tryToExecute(
+            { inProgressTrackerUseCase.getActiveRide() },
+            ::onGetRideInProgressSuccess,
+            ::onGetCuisinesError
+        )
+        tryToExecute(
+            { inProgressTrackerUseCase.getActiveOrder() },
+            ::onGetOrderInProgressSuccess,
+            ::onGetCuisinesError
+        )
+    }
+
+    private fun onGetTaxiInProgressSuccess(taxi: Taxi?) {
+        updateState { it.copy(taxiOnTheWay = taxi?.toUiState()) }
+    }
+
+    private fun onGetRideInProgressSuccess(taxi: Taxi?) {
+        updateState { it.copy(tripOnTheWay = taxi?.toOrderUiState()) }
+    }
+    private fun onGetOrderInProgressSuccess(order: Order?) {
+        updateState { it.copy(orderOnTheWay = order?.toUiState()) }
     }
 
     override fun onClickCuisineItem(cuisineId: String) {

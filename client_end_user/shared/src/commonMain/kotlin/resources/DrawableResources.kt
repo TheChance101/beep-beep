@@ -23,7 +23,9 @@ data class DrawableResources(
     val scooter: String = "scooter.xml",
     val icError: String = "ic_error.xml",
     val backgroundCard: String = "img_background.png",
-    val cart: String = "img_cart.png"
+    val cart: String = "img_cart.png",
+    val taxiOnTheWay: String = "taxi_on_the_way.png",
+    val orderOnTheWay: String = "order_on_the_way.png",
 )
 
 val BpDrawableDarkResources = DrawableResources(
