@@ -9,8 +9,11 @@ plugins {
     alias(libs.plugins.kotlinx.serialization)
 }
 
+group = "org.thechance"
+version = "1.0-SNAPSHOT"
+
 kotlin {
-    androidTarget()
+    android()
 
     iosX64()
     iosArm64()
@@ -67,6 +70,8 @@ kotlin {
                 api(libs.androidx.activity.compose)
                 api(libs.androidx.appcompat)
                 api(libs.androidx.core.ktx)
+                api(libs.koin.android)
+                implementation(libs.androidx.constraint)
             }
         }
         val iosX64Main by getting
@@ -77,6 +82,9 @@ kotlin {
             iosX64Main.dependsOn(this)
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
+            dependencies {
+                implementation("io.ktor:ktor-client-darwin:2.3.3")
+            }
         }
     }
 }
