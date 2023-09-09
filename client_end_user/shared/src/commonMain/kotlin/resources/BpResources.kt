@@ -10,6 +10,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import com.beepbeep.designSystem.ui.theme.BpTheme
 import com.beepbeep.designSystem.ui.theme.Theme
 import com.seiko.imageloader.LocalImageLoader
+import presentation.composable.StatusBar
 import util.generateImageLoader
 import util.getPlatformContext
 import util.rememberWindowInsetsController
@@ -28,9 +29,8 @@ fun BeepBeepTheme(
         localDrawableResources provides drawableResources,
         localStringResources provides StringResources(),
     ) {
-        BpTheme {
-            val windowInsetsController = rememberWindowInsetsController()
-            windowInsetsController?.setStatusBarContentColor(Theme.colors.background, !useDarkTheme)
+        BpTheme(useDarkTheme = useDarkTheme) {
+            StatusBar(Theme.colors.background)
             content()
         }
     }
