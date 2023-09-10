@@ -27,23 +27,6 @@ data class OrderUiState(
     val date : String = "Jan 5"
 )
 
-data class TripUiState(
-    val id: String = "",
-    val timeToArriveInMints: Int = 0,
-)
-
-data class OrderUiState(
-    val id: String = "",
-    val restaurantName: String,
-)
-
-data class TaxiUiState(
-    val id: String = "",
-    val color: String = "",
-    val plate: String = "",
-    val timeToArriveInMints: Int = 0,
-)
-
 data class CuisineUiState(
     val cuisineId: String = "",
     val cuisineName: String = "",

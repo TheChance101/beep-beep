@@ -2,9 +2,7 @@ package presentation.home
 
 import domain.entity.Cuisine
 import domain.entity.Offer
-import domain.entity.Order
 import domain.entity.Restaurant
-import domain.entity.Taxi
 
 fun Offer.toUiState(): OfferUiState {
     return OfferUiState(
@@ -33,27 +31,3 @@ fun Restaurant.toRestaurantUiState(): RestaurantUiState {
 }
 
 fun List<Restaurant>.toRestaurantUiState() = map { it.toRestaurantUiState() }
-
-
-fun Taxi.toUiState(): TaxiUiState {
-    return TaxiUiState(
-        id = id,
-        color = color,
-        plate = plate,
-        timeToArriveInMints = timeToArriveInMints,
-    )
-}
-
-fun Taxi.toOrderUiState(): TripUiState {
-    return TripUiState(
-        id = id,
-        timeToArriveInMints = timeToArriveInMints,
-    )
-}
-
-fun Order.toUiState(): OrderUiState {
-    return OrderUiState(
-        id = id,
-        restaurantName = restaurantName,
-    )
-}

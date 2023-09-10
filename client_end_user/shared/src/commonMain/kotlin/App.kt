@@ -4,7 +4,6 @@ import cafe.adriel.voyager.transitions.SlideTransition
 import presentation.main.MainContainer
 import resources.BeepBeepTheme
 
-
 @Composable
 fun App() {
     BeepBeepTheme {
