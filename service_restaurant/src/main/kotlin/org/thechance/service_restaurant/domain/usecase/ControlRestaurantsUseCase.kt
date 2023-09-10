@@ -14,7 +14,7 @@ interface IControlRestaurantsUseCase {
     suspend fun getAllRestaurants(page: Int, limit: Int): List<Restaurant>
     suspend fun updateRestaurant(restaurant: Restaurant): Restaurant
     suspend fun deleteRestaurant(restaurantId: String): Boolean
-    suspend fun getTotalNumberOfRestaurant():Long
+    suspend fun getTotalNumberOfRestaurant(): Long
 }
 
 class ControlRestaurantsUseCase(
@@ -24,8 +24,10 @@ class ControlRestaurantsUseCase(
 ) : IControlRestaurantsUseCase {
 
     override suspend fun createRestaurant(restaurant: Restaurant): Restaurant {
-        restaurantValidation.validateAddRestaurant(restaurant)
-        return restaurantGateway.addRestaurant(restaurant.copy(currency = getCurrencyForLocation(restaurant.location)))
+        val currency = getCurrencyForLocation(restaurant.location)
+        val newRestaurant = restaurant.copy(currency = currency)
+        restaurantValidation.validateAddRestaurant(newRestaurant)
+        return restaurantGateway.addRestaurant(newRestaurant)
     }
 
     override suspend fun getAllRestaurants(page: Int, limit: Int): List<Restaurant> {
@@ -56,5 +58,4 @@ class ControlRestaurantsUseCase(
             throw MultiErrorException(listOf(NOT_FOUND))
         }
     }
-
 }
