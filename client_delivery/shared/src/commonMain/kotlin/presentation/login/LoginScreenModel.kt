@@ -4,7 +4,7 @@ import cafe.adriel.voyager.core.model.coroutineScope
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
 
-class LoginScreenModel:
+class LoginScreenModel :
     BaseScreenModel<LoginScreenUIState, LoginScreenUIEffect>(LoginScreenUIState()),
 LoginScreenInteractionListener{
 
