@@ -1,6 +1,7 @@
 package org.thechance.common.data.remote.gateway
 
 import io.ktor.client.*
+import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import org.thechance.common.data.remote.model.CuisineDto
@@ -24,8 +25,10 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
         )
     }
 
-    override suspend fun deleteRestaurants(id: String): Boolean {
-        return true
+    override suspend fun deleteRestaurant(id: String): Boolean {
+        return tryToExecute<ServerResponse<Boolean>>(client) {
+            delete(urlString = "/restaurant") { url { appendPathSegments(id) } }
+        }.isSuccess ?: false
     }
 
     override suspend fun getCuisines(): List<String> {

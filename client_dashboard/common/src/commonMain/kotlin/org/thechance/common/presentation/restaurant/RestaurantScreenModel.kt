@@ -220,7 +220,7 @@ class RestaurantScreenModel(
 
     override fun onClickDeleteRestaurantMenuItem(id: String) {
         tryToExecute(
-            { manageRestaurant.deleteRestaurants(id) },
+            { manageRestaurant.deleteRestaurant(id) },
             ::onDeleteRestaurantSuccessfully,
             ::onError
         )
@@ -257,9 +257,7 @@ class RestaurantScreenModel(
     }
 
     private fun onDeleteRestaurantSuccessfully(isDeleted: Boolean) {
-        val restaurants =
-//            mutableState.value.restaurants.toMutableList().apply { remove(restaurant.toUiState()) }
-            updateState { it.copy(isLoading = false) }
+        updateState { it.copy(isLoading = false) }
         hideEditRestaurantMenu()
         getRestaurants()
     }

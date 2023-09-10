@@ -70,10 +70,8 @@ class RestaurantFakeGateway : IRestaurantGateway {
         )
     }
 
-    override suspend fun deleteRestaurants(id: String): Boolean {
-        restaurants.remove(
-            restaurants.find { it.id == id }
-        )
+    override suspend fun deleteRestaurant(id: String): Boolean {
+        restaurants.remove(restaurants.find { it.id == id })
         return true
     }
 
