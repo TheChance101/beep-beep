@@ -38,4 +38,6 @@ data class StringResources(
     val enjoyYourRide: String = "Enjoy your ride!",
     val orderOnTheWay: String = "Your order is on the way...",
     val inProgress: String = "In progress",
+    val lastOrder: String = "Last order",
+    val orderAgain: String = "Order again"
 )

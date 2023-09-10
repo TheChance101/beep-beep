@@ -72,6 +72,10 @@ class HomeScreenModel(
         sendNewEffect(HomeScreenUiEffect.NavigateToSearch)
     }
 
+    override fun onClickOrderAgain(orderId: String) {
+        sendNewEffect(HomeScreenUiEffect.NavigateToOrderDetails(orderId))
+    }
+
     private fun getRecommendedCuisines() {
         tryToExecute(
             { cuisineUseCase.getCuisines().toCuisineUiState() },
