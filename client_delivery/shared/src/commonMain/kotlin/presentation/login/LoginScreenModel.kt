@@ -30,4 +30,33 @@ LoginScreenInteractionListener{
     ) {
         TODO("Not yet implemented")
     }
+    //region permission
+    override fun onOwnerEmailChanged(ownerEmail: String) {
+      updateState { it.copy(ownerEmail = ownerEmail) }
+    }
+
+    override fun onRestaurantNameChanged(restaurantName: String) {
+        updateState { it.copy(restaurantName = restaurantName) }
+    }
+
+    override fun onDescriptionChanged(description: String) {
+        updateState { it.copy(description = description) }
+    }
+
+    override fun onRequestPermissionClicked() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onSubmitClicked(restaurantName: String, ownerEmail: String, description: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onCancelClicked() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onSheetBackgroundClicked() {
+        TODO("Not yet implemented")
+    }
+    //end region
 }

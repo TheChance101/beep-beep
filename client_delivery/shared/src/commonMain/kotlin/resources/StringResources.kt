@@ -19,5 +19,11 @@ data class StringResources(
     val requestAPermission: String = "Request a permission",
     val close: String = "Close",
     val cancel: String = "Cancel",
+    val askForPermission: String = "Ask for permission",
+    val userEmailLabel: String = "User email",
+    val restaurantName: String = "Full name",
+    val questionHint: String = "Describe why you want to join us",
+    val whyBeepBeep: String = "Why beep beep?",
+    val submit: String = "Submit",
     //endregion
 )
