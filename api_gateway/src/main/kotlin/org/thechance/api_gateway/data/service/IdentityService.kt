@@ -7,6 +7,9 @@ import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import io.ktor.util.*
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.serializer
+import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.PaginationResponse
 import org.thechance.api_gateway.data.model.UserDto
@@ -21,7 +24,6 @@ import org.thechance.api_gateway.util.Claim.TOKEN_TYPE
 import org.thechance.api_gateway.util.Claim.USERNAME
 import org.thechance.api_gateway.util.Claim.USER_ID
 import java.util.*
-
 
 @Single
 class IdentityService(
@@ -68,12 +70,12 @@ class IdentityService(
                 }
             )
         }
-        val user = getUserByUsername(userName)
+        val user = getUserByUsername(username = userName,languageCode)
         return generateUserTokens(user.id, userName, user.permission, tokenConfiguration)
     }
 
     suspend fun getUsers(
-        page: Int, limit: Int, searchTerm: String, languageCode: String
+        page: Int? = null, limit: Int? = null, searchTerm: String, languageCode: String
     ) = client.tryToExecute<PaginationResponse<UserDto>>(
         APIs.IDENTITY_API, attributes = attributes, setErrorMessage = { errorCodes ->
             errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
@@ -82,29 +84,58 @@ class IdentityService(
         get("/dashboard/user") {
             parameter("page", page)
             parameter("limit", limit)
-            parameter("searchTerm", searchTerm)
+            parameter("name", searchTerm)
         }
     }
 
-    private suspend fun getUserByUsername(username: String) = client.tryToExecute<UserDto>(
+    suspend fun getLastRegisteredUsers(limit: Int) = client.tryToExecute<List<UserDto>>(
         APIs.IDENTITY_API, attributes = attributes,
+    ) {
+        get("/dashboard/user/last-register") {
+            parameter("limit", limit)
+        }
+    }
+
+    private suspend fun getUserById(id: String): UserDto = client.tryToExecute<UserDto>(
+        APIs.IDENTITY_API, attributes = attributes,
+    ) {
+        get("user/$id")
+    }
+
+    suspend fun getUserByUsername(username: String, languageCode: String): UserDto = client.tryToExecute<UserDto>(
+        APIs.IDENTITY_API, attributes = attributes,setErrorMessage = { errorCodes ->
+            errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+        }
     ) {
         get("user/get-user") {
             parameter("username", username)
         }
     }
 
-    suspend fun updateUserPermission(userId: String, permission: Int) =
-        client.tryToExecute<UserDto>(
-            APIs.IDENTITY_API, attributes = attributes,
-        ) {
-            submitForm("/dashboard/user/$userId/permission",
-                formParameters = parameters {
-                    append("permission", "$permission")
-
-                }
-            )
+    @OptIn(InternalAPI::class)
+    suspend fun searchUsers(query: String, permission :List<Int>) = client.tryToExecute<List<UserDto>>(
+        APIs.IDENTITY_API, attributes = attributes,
+    ) {
+        post("/dashboard/user/search") {
+            parameter("query", query)
+            body = Json.encodeToString(ListSerializer(Int.serializer()), permission)
         }
+    }
+
+
+    @OptIn(InternalAPI::class)
+    suspend fun updateUserPermission(userId: String, permission: List<Int>,languageCode: String) : UserDto {
+        return client.tryToExecute<UserDto>(
+            APIs.IDENTITY_API, attributes = attributes,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+            }
+        ) {
+            put("/dashboard/user/$userId/permission") {
+                body = Json.encodeToString(ListSerializer(Int.serializer()), permission)
+            }
+        }
+    }
 
     suspend fun deleteUser(userId: String, languageCode: String): Boolean {
         return client.tryToExecute<Boolean>(
@@ -157,5 +188,6 @@ class IdentityService(
 
         return accessToken.sign(Algorithm.HMAC256(tokenConfiguration.secret))
     }
+
 
 }

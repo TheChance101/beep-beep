@@ -1,25 +1,22 @@
 package domain.utils
 
-// Those Exception is just a sample,need to refactor all these exceptions based on app requirements
-open class BpException : Exception()
-open class InternetException : BpException()
-class WifiDisabledException : InternetException()
-class NoInternetException : InternetException()
-class NetworkNotSupportedException : InternetException()
+sealed class InternetException : Exception() {
+    class WifiDisabledException : InternetException()
+    class NoInternetException : InternetException()
+    class NetworkNotSupportedException : InternetException()
+}
 
-class NotFoundException() : BpException()
 
-class PermissionDenied : AuthorizationException()
-open class RequestException : BpException()
+sealed class AuthorizationException(val errorMessage: String = "") : Exception() {
+    data object UnAuthorizedException : AuthorizationException()
+    data object InvalidUsernameException : AuthorizationException()
+    data object InvalidPasswordException : AuthorizationException()
+    class UserNotFoundException(message: String) : AuthorizationException(message)
+    class InvalidCredentialsException(message: String) : AuthorizationException(message)
+    class UserAlreadyExistException(message: String) : AuthorizationException(message)
+}
 
-open class AuthorizationException : BpException()
-class UnAuthorizedException : AuthorizationException()
-open class UsernameException : AuthorizationException()
-open class PasswordException : AuthorizationException()
-class InvalidUsernameException : UsernameException()
-class InvalidPasswordException : PasswordException()
-
-class InvalidCredentialsException(message: String) : Exception(message)
-
-class UnknownErrorException : Exception()
-class UserNotFoundException(message: String) : Exception(message)
+sealed class GeneralException : Exception() {
+    data object UnknownErrorException : GeneralException()
+    data object NotFoundException : GeneralException()
+}

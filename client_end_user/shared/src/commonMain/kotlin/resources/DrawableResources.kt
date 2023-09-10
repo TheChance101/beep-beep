@@ -17,8 +17,17 @@ data class DrawableResources(
     val arrowRight: String = "ic_right_arrow.xml",
     val chatImage: String = "img_chat.png",
     val orderImage: String = "img_order.png",
-    val orderTaxi: String = "img_taxi.png"
+    val orderTaxi: String = "img_taxi.png",
+    val filledStar: String = "ic_filled_star_light.xml",
+    val placeholder: String = "placeholder.jpeg",
+    val scooter: String = "scooter.xml",
+    val icError: String = "ic_error.xml",
+    val backgroundCard: String = "img_background.png",
+    val cart: String = "img_cart.png",
+    val taxiOnTheWay: String = "taxi_on_the_way.png",
+    val orderOnTheWay: String = "order_on_the_way.png",
 )
 
 val BpDrawableDarkResources = DrawableResources(
+    filledStar = "ic_filled_star_dark.xml",
 )

@@ -1,6 +1,7 @@
 package org.thechance.common.presentation.restaurant
 
 import org.thechance.common.presentation.composables.table.Header
+import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.ErrorState
 
 
@@ -42,13 +43,25 @@ data class RestaurantUiState(
 
 data class NewRestaurantInfoUiState(
     val name: String = "",
+    val nameError: ErrorWrapper = ErrorWrapper(),
     val ownerUsername: String = "",
+    val userNameError: ErrorWrapper = ErrorWrapper(),
     val phoneNumber: String = "",
+    val phoneNumberError: ErrorWrapper = ErrorWrapper(),
     val startTime: String = "",
+    val startTimeError: ErrorWrapper = ErrorWrapper(),
     val endTime: String = "",
+    val endTimeError: ErrorWrapper = ErrorWrapper(),
     val location: String = "",
+    val locationError: ErrorWrapper = ErrorWrapper(),
     val lat: String = "",
     val lng: String = "",
+    val buttonEnabled: Boolean = false
+)
+
+data class ErrorWrapper(
+    val errorMessage: String = "",
+    val isError: Boolean = false
 )
 
 data class RestaurantFilterDropdownMenuUiState(

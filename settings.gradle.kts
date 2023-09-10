@@ -14,11 +14,11 @@ include(":client_delivery:shared")
 
 include(":client_dashboard")
 include(":client_dashboard:desktop")
-include("client_dashboard:common")
+include(":client_dashboard:common")
 
 include(":client_support")
 include(":client_support:desktop")
-include("client_support:common")
+include(":client_support:common")
 
 include(":design_system")
 include(":design_system:shared")

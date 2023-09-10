@@ -4,6 +4,7 @@ import data.local.model.UserConfigurationCollection
 import domain.gateway.local.ILocalConfigurationGateway
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
+
 class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationGateway {
 
     init {
@@ -63,6 +64,4 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
         private const val CONFIGURATION_ID = 0
         private const val ID = "id"
     }
-
-
 }

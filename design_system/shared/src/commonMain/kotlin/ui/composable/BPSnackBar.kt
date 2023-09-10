@@ -1,4 +1,4 @@
-package presentation.composable
+package com.beepbeep.designSystem.ui.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,8 +19,9 @@ import com.beepbeep.designSystem.ui.theme.Theme
 fun BPSnackBar(
     icon: Painter,
     modifier: Modifier = Modifier,
-    iconBackgroundColor: Color,
-    backgroundColor: Color = Theme.colors.background,
+    iconTint: Color = Theme.colors.primary,
+    iconBackgroundColor: Color = Theme.colors.hover,
+    backgroundColor: Color = Theme.colors.surface,
     content: @Composable () -> Unit,
 ) {
     Snackbar(
@@ -40,6 +41,7 @@ fun BPSnackBar(
                 ).padding(Theme.dimens.space8),
                 painter = icon,
                 contentDescription = null,
+                tint = iconTint
             )
             content()
         }

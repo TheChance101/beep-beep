@@ -1,8 +1,12 @@
 package presentation.home
 
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.entity.InProgressWrapper
+import domain.entity.Restaurant
+import domain.usecase.GetFavoriteRestaurantsUseCase
 import domain.usecase.IGetCuisinesUseCase
 import domain.usecase.IGetNewOffersUserCase
+import domain.usecase.IInProgressTrackerUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
@@ -10,15 +14,30 @@ import presentation.base.ErrorState
 
 class HomeScreenModel(
     private val cuisineUseCase: IGetCuisinesUseCase,
-    private val offers: IGetNewOffersUserCase
-) :
-    BaseScreenModel<HomeScreenUiState, HomeScreenUiEffect>(HomeScreenUiState()),
+    private val getFavoriteRestaurantsUseCase: GetFavoriteRestaurantsUseCase,
+    private val offers: IGetNewOffersUserCase,
+    private val inProgressTrackerUseCase: IInProgressTrackerUseCase,
+) : BaseScreenModel<HomeScreenUiState, HomeScreenUiEffect>(HomeScreenUiState()),
     HomeScreenInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
 
     init {
+        getInProgress()
         getRecommendedCuisines()
+        getFavoriteRestaurants()
         getNewOffers()
+    }
+
+    private fun getInProgress() {
+        tryToExecute(
+            { inProgressTrackerUseCase.getInProgress() },
+            ::onGetInProgressSuccess,
+            ::onGetCuisinesError
+        )
+    }
+
+    private fun onGetInProgressSuccess(inProgressWrapper: InProgressWrapper) {
+        updateState { it.copy(inProgressWrapper = inProgressWrapper) }
     }
 
     override fun onClickCuisineItem(cuisineId: String) {
@@ -48,6 +67,15 @@ class HomeScreenModel(
         }
     }
 
+    override fun onClickSearch() {
+        println("effect sent")
+        sendNewEffect(HomeScreenUiEffect.NavigateToSearch)
+    }
+
+    override fun onClickOrderAgain(orderId: String) {
+        sendNewEffect(HomeScreenUiEffect.NavigateToOrderDetails(orderId))
+    }
+
     private fun getRecommendedCuisines() {
         tryToExecute(
             { cuisineUseCase.getCuisines().toCuisineUiState() },
@@ -62,6 +90,22 @@ class HomeScreenModel(
     }
 
     private fun onGetCuisinesError(error: ErrorState) {
+        println("error is $error")
+    }
+
+    private fun getFavoriteRestaurants() {
+        tryToExecute(
+            { getFavoriteRestaurantsUseCase() },
+            ::onGetFavoriteRestaurantsSuccess,
+            ::onGetFavoriteRestaurantsError
+        )
+    }
+
+    private fun onGetFavoriteRestaurantsSuccess(restaurants: List<Restaurant>) {
+        updateState { it.copy(favoriteRestaurants = restaurants.toRestaurantUiState()) }
+    }
+
+    private fun onGetFavoriteRestaurantsError(error: ErrorState) {
         println("error is $error")
     }
 

@@ -10,11 +10,35 @@ map = new Microsoft.Maps.Map('#myMap', {
     minZoom: 16,
     maxZoom: 18
 });
-
+    var center = map.getCenter();
+           //Create custom Pushpin
+           var pin = new Microsoft.Maps.Pushpin(center, {
+               title: 'Microsoft',
+               subTitle: 'City Center',
+               text: '1',
+               color: 'red',
+           });
+           //Add the pushpin to the map
+           map.entities.push(pin);
+            Microsoft.Maps.Events.addHandler(map, 'click', function () {
+            pin.setLocation(map.getCenter())
+            });
 }
 function getPin(){
     var pushpin = new Microsoft.Maps.Pushpin(map.getCenter(), null);
     map.entities.push(pushpin);
+}
+function getDirections(){
+Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
+    var directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
+    directionsManager.setRequestOptions({ routeMode: Microsoft.Maps.Directions.RouteMode.driving });
+    var waypoint1 = new Microsoft.Maps.Directions.Waypoint({ address: 'Redmond', location: new Microsoft.Maps.Location(47.67683029174805, 40.3321) });
+    var waypoint2 = new Microsoft.Maps.Directions.Waypoint({ address: 'Seattle', location: new Microsoft.Maps.Location(47.59977722167969, 40.3321) });
+    directionsManager.addWaypoint(waypoint1);
+    directionsManager.addWaypoint(waypoint2);
+    directionsManager.setRenderOptions({ itineraryContainer: document.getElementById('printoutPanel') });
+    directionsManager.calculateDirections();
+});
 }
 
 var xhttp = new XMLHttpRequest();

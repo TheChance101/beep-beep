@@ -1,51 +1,70 @@
 package org.thechance.common.data.remote.gateway
 
+import io.ktor.client.*
+import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
+import io.ktor.http.*
+import org.thechance.common.data.remote.mapper.toEntity
+import org.thechance.common.data.remote.model.CuisineDto
+import org.thechance.common.data.remote.model.RestaurantDto
+import org.thechance.common.data.remote.model.ServerResponse
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.NewRestaurantInfo
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.getway.IRestaurantGateway
+import org.thechance.common.presentation.restaurant.toDto
 
-class RestaurantGateway : BaseGateway(), IRestaurantGateway {
-    override suspend fun getRestaurants(): DataWrapper<Restaurant> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun searchRestaurantsByRestaurantName(restaurantName: String): DataWrapper<Restaurant> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun filterRestaurants(
-        rating: Double,
-        priceLevel: Int
-    ): DataWrapper<Restaurant> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun searchFilterRestaurants(
-        restaurantName: String,
-        rating: Double,
-        priceLevel: Int
-    ): DataWrapper<Restaurant> {
-        TODO("Not yet implemented")
-    }
+class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestaurantGateway {
 
     override suspend fun createRestaurant(restaurant: NewRestaurantInfo): Restaurant {
-        TODO("Not yet implemented")
+        return tryToExecute<ServerResponse<RestaurantDto>>(client){
+            post(urlString = "/restaurant") {
+                contentType(ContentType.Application.Json)
+                setBody(restaurant.toDto())
+            }
+        }.value?.toEntity() ?: throw UnknownError()
     }
 
     override suspend fun deleteRestaurants(restaurant: Restaurant): Restaurant {
-        TODO("Not yet implemented")
+        return Restaurant(
+            id = "1",
+            name = restaurant.name,
+            ownerUsername = restaurant.ownerUsername,
+            phoneNumber = restaurant.phoneNumber,
+            rating = "4.5".toDouble(),
+            priceLevel = 4,
+            workingHours = restaurant.workingHours
+        )
     }
 
     override suspend fun getCuisines(): List<String> {
-        TODO("Not yet implemented")
+        return listOf("Italian", "Chinese", "Mexican", "American", "Indian", "Japanese", "Thai")
     }
 
-    override suspend fun createCuisine(cuisineName: String): String? {
-        TODO("Not yet implemented")
+    override suspend fun createCuisine(cuisineName: String): String {
+        println(cuisineName)
+        return tryToExecute<ServerResponse<CuisineDto>>(client) {
+            submitForm(
+                url = "/cuisine",
+                formParameters = parameters {
+                    append("name", cuisineName)
+                },
+            )
+        }.value?.name ?: ""
     }
 
-    override suspend fun deleteCuisine(cuisineName: String): List<String> {
-        TODO("Not yet implemented")
+    override suspend fun deleteCuisine(cuisineName: String): String {
+        return ""
     }
+
+    override suspend fun getRestaurants(
+        pageNumber: Int,
+        numberOfRestaurantsInPage: Int,
+        restaurantName: String,
+        rating: Double?,
+        priceLevel: Int?
+    ): DataWrapper<Restaurant> {
+        return DataWrapper(10, 1, listOf())
+    }
+
 }

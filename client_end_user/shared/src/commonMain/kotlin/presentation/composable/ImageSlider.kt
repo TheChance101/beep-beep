@@ -46,7 +46,9 @@ fun ImageSlider(
     indicatorColor: Color = Theme.colors.primary,
     indicatorAlignment: Alignment = Alignment.BottomEnd,
 ) {
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState{
+        images.size
+    }
 
     Box(
         modifier = modifier.fillMaxWidth().height(160.dp).clip(RoundedCornerShape(8.dp))
@@ -54,7 +56,6 @@ fun ImageSlider(
     ) {
 
         HorizontalPager(
-            pageCount = images.size,
             state = pagerState,
             contentPadding = PaddingValues(0.dp),
             pageSpacing = 0.dp
@@ -82,7 +83,7 @@ private fun BoxScope.ImageSliderIndicator(
     val circleOffsetList = remember { mutableStateListOf(Offset(0f, 0f)) }
 
     val animateOffset by animateOffsetAsState(
-        targetValue = circleOffsetList[pagerState.currentPage],
+        targetValue = circleOffsetList.getOrElse(pagerState.currentPage) { Offset(0f, 0f) },
         animationSpec = spring(stiffness = Spring.StiffnessLow),
         label = "indicator"
     )

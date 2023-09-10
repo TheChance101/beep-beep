@@ -13,6 +13,7 @@ fun Application.configureStatusPages() {
 }
 
 private fun StatusPagesConfig.handleStatusPagesExceptions() {
+
     respondWithErrorCodes<MissingParameterException>(HttpStatusCode.BadRequest)
 
     respondWithErrorCodes<RequestValidationException>(HttpStatusCode.BadRequest)

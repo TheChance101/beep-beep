@@ -8,6 +8,7 @@ import org.thechance.api_gateway.data.model.LocationDto
 data class RestaurantDto(
     @SerialName("id") val id: String? = null,
     @SerialName("ownerId") val ownerId: String? = null,
+    @SerialName("username") val username: String,
     @SerialName("name") val name: String? = null,
     @SerialName("description") val description: String? = null,
     @SerialName("priceLevel") val priceLevel: String? = null,
