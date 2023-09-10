@@ -39,5 +39,7 @@ data class StringResources(
     val orderOnTheWay: String = "Your order is on the way...",
     val inProgress: String = "In progress",
     val lastOrder: String = "Last order",
-    val orderAgain: String = "Order again"
+    val orderAgain: String = "Order again",
+    val languageAskAboutLanguage: String = "What language do you speak?",
+    val selectLanguage: String = "Pick your language.",
 )
