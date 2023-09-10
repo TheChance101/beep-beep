@@ -33,6 +33,13 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
         }
     }
 
+    override suspend fun saveLanguageCode(code: String) {
+        realm.write {
+            query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+                .find()?.languageCode = code
+        }
+    }
+
     override suspend fun getAccessToken(): String {
         return realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
             .find()?.accessToken ?: ""
