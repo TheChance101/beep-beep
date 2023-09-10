@@ -10,7 +10,7 @@ import org.bson.types.ObjectId
 @Serializable
 data class RestaurantCollection(
     @Contextual
-    val ownerId: ObjectId = ObjectId(),
+    val ownerId: ObjectId,
     val name: String,
     val description: String?,
     val priceLevel: String?,
