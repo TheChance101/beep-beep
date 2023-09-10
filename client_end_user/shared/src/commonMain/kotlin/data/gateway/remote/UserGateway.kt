@@ -5,7 +5,7 @@ import data.remote.model.ServerResponse
 import data.remote.model.SessionDto
 import domain.entity.Session
 import domain.gateway.IUserGateway
-import domain.utils.InvalidCredentialsException
+import domain.utils.AuthorizationException
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.forms.submitForm
@@ -58,7 +58,7 @@ class UserGateway(client: HttpClient) : BaseGateway(client), IUserGateway {
             ){
                 method = HttpMethod.Post
             }
-        }.value?.toSessionEntity() ?: throw InvalidCredentialsException("Invalid Credential")
+        }.value?.toSessionEntity() ?: throw AuthorizationException.InvalidCredentialsException("Invalid Credential")
     }
 
     override suspend fun refreshAccessToken(refreshToken: String): Pair<String,String> {

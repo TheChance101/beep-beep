@@ -2,7 +2,7 @@ package domain.usecase
 
 import domain.gateway.IUserGateway
 import domain.gateway.local.ILocalConfigurationGateway
-import domain.utils.AuthorizationException
+import domain.usecase.validation.IValidationUseCase
 
 interface IManageAuthenticationUseCase {
     suspend fun createUser(
@@ -17,7 +17,8 @@ interface IManageAuthenticationUseCase {
 
 class ManageAuthenticationUseCase(
     private val remoteGateway: IUserGateway,
-    private val localGateway: ILocalConfigurationGateway
+    private val localGateway: ILocalConfigurationGateway,
+    private val validation: IValidationUseCase,
 ) : IManageAuthenticationUseCase {
 
     override suspend fun createUser(
@@ -34,21 +35,12 @@ class ManageAuthenticationUseCase(
         password: String,
         keepLoggedIn: Boolean
     ): Boolean {
-        validateLoginFields(username, password)
+        validation.validateUsername(username); validation.validatePassword(password)
         val session = remoteGateway.loginUser(username, password)
         localGateway.saveAccessToken(session.accessToken)
         localGateway.saveRefreshToken(session.refreshToken)
         localGateway.saveKeepMeLoggedInFlag(keepLoggedIn)
         return true
-    }
-
-    private fun validateLoginFields(username: String, password: String) {
-        if (username.isEmpty() || "[a-zA-Z0-9_]+".toRegex().matches(username).not()) {
-            throw AuthorizationException.InvalidUsernameException
-        }
-        if (password.isEmpty() || password.length < 8) {
-            throw AuthorizationException.InvalidPasswordException
-        }
     }
 
 }
