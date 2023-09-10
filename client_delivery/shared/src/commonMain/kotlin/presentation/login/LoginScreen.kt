@@ -23,10 +23,9 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.login.composable.CustomBottomSheet
-import presentation.login.composable.HeadFirstCard
+import presentation.login.composable.LogoHeaderCard
 import presentation.login.composable.RequestPermissionBottomSheet
 import presentation.login.composable.WrongPermissionBottomSheet
-import presentation.login.composable.LogoHeaderCard
 import resources.Resources
 
 class LoginScreen : BaseScreen<
@@ -70,6 +69,7 @@ class LoginScreen : BaseScreen<
     }
 
 }
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 @Composable
 private fun LoginScreenContent(
@@ -122,13 +122,7 @@ private fun LoginScreenContent(
             BpButton(
                 modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
                 title = Resources.strings.login,
-                onClick = {
-//                    listener.onClickLogin(
-//                        userName = state.userName,
-//                        password = state.password,
-//                        isKeepMeLoggedInChecked = state.keepLoggedIn
-//                    )
-                },
+                onClick = {},
             )
         }
     }
