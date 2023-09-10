@@ -70,7 +70,7 @@ class IdentityService(
                 }
             )
         }
-        val user = getUserByUsername(username = userName)
+        val user = getUserByUsername(username = userName,languageCode)
         return generateUserTokens(user.id, userName, user.permission, tokenConfiguration)
     }
 
@@ -102,8 +102,10 @@ class IdentityService(
         get("user/$id")
     }
 
-    suspend fun getUserByUsername(username: String): UserDto = client.tryToExecute<UserDto>(
-        APIs.IDENTITY_API, attributes = attributes,
+    suspend fun getUserByUsername(username: String, languageCode: String): UserDto = client.tryToExecute<UserDto>(
+        APIs.IDENTITY_API, attributes = attributes,setErrorMessage = { errorCodes ->
+            errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+        }
     ) {
         get("user/get-user") {
             parameter("username", username)

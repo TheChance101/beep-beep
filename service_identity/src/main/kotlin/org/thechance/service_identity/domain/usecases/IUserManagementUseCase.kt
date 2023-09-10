@@ -8,10 +8,6 @@ import org.thechance.service_identity.domain.util.RequestValidationException
 
 interface IUserManagementUseCase {
 
-//    suspend fun addPermissionToUser(userId: String, permission: Int): UserManagement
-//
-//    suspend fun removePermissionFromUser(userId: String, permission: Int): UserManagement
-
     suspend fun  updateUserPermission(userId: String, permissions: List<Int>): UserManagement
 
     suspend fun getUsers(page: Int, limit: Int, searchTerm: String): List<UserManagement>

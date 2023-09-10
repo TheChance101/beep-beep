@@ -222,7 +222,7 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         return dataBaseContainer.userCollection.findOne(
             UserCollection::username eq username,
             UserCollection::isDeleted eq false
-        )?.toManagedEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
+        )?.toManagedEntity() ?: throw ResourceNotFoundException(USER_NOT_FOUND)
     }
 
     override suspend fun getLastRegisterUser(limit: Int): List<UserManagement> {
