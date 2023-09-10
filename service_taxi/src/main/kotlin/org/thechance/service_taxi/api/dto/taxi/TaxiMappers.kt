@@ -13,8 +13,10 @@ fun TaxiDto.toEntity(): Taxi {
         color = color?.let { Color.getColorByColorNumber(it) } ?: Color.OTHER,
         type = type ?: "",
         driverId = driverId ?: "",
+        driverUsername = driverUsername ?: "",
         isAvailable = isAvailable ?: true,
         seats = seats ?: 4,
+        tripsCount = tripsCount ?: 0
     )
 }
 
@@ -26,6 +28,8 @@ fun Taxi.toDto(): TaxiDto {
         type = type,
         driverId = driverId,
         isAvailable = isAvailable,
+        tripsCount = tripsCount,
+        driverUsername = driverUsername,
         seats = seats
     )
 }
@@ -41,7 +45,9 @@ fun TaxiCollection.toEntity(): Taxi {
         type = type ?: throw CantBeNullException,
         driverId = driverId?.toString() ?: throw CantBeNullException,
         isAvailable = isAvailable ?: true,
-        seats = seats ?: 4
+        seats = seats ?: 4,
+        tripsCount = tripsCount ?: 0,
+        driverUsername = driverUsername ?: ""
     )
 }
 
@@ -55,6 +61,8 @@ fun Taxi.toCollection(): TaxiCollection {
         driverId = ObjectId(driverId),
         isAvailable = isAvailable,
         seats = seats,
+        tripsCount = tripsCount,
+        driverUsername = driverUsername,
         id = if (id.isNotBlank()) ObjectId(id) else ObjectId()
     )
 }
