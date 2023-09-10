@@ -54,7 +54,6 @@ kotlin {
                 implementation(compose.desktop.currentOs)
                 implementation("com.google.accompanist:accompanist-webview:0.30.1")
                 implementation("org.openjfx:javafx-web:17")
-                implementation(libs.kotlinx.datetime)
             }
         }
         val desktopMain by getting {

@@ -7,6 +7,7 @@ import org.thechance.common.domain.entity.Time
 import org.thechance.common.domain.usecase.IManageLocationUseCase
 import org.thechance.common.domain.usecase.IManageRestaurantUseCase
 import org.thechance.common.domain.usecase.IMangeCuisinesUseCase
+import org.thechance.common.domain.usecase.IValidateRestaurantUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
@@ -15,6 +16,7 @@ class RestaurantScreenModel(
     private val manageRestaurant: IManageRestaurantUseCase,
     private val handleLocation: IManageLocationUseCase,
     private val mangeCuisines: IMangeCuisinesUseCase,
+    private val iValidateRestaurantUseCase: IValidateRestaurantUseCase
 ) : BaseScreenModel<RestaurantUiState, RestaurantUIEffect>(RestaurantUiState()),
     RestaurantInteractionListener {
 
@@ -76,6 +78,7 @@ class RestaurantScreenModel(
     }
 
     private fun onError(error: ErrorState) {
+        println(error.toString())
         updateState { it.copy(error = error, isLoading = false) }
     }
 
@@ -88,19 +91,11 @@ class RestaurantScreenModel(
             )
         }
         getRestaurants()
+        onDismissDropDownMenu()
     }
 
     override fun onCancelFilterRestaurantsClicked() {
-        updateState {
-            it.copy(
-                restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
-                    filterRating = 0.0,
-                    filterPriceLevel = 1,
-                    isFiltered = false
-                )
-            )
-        }
-        getRestaurants()
+        onDismissDropDownMenu()
     }
 
 
@@ -188,31 +183,80 @@ class RestaurantScreenModel(
     }
 
     override fun onCancelCreateRestaurantClicked() {
-        updateState { it.copy(isNewRestaurantInfoDialogVisible = false) }
+        updateState { it.copy(isNewRestaurantInfoDialogVisible = false, newRestaurantInfoUiState = NewRestaurantInfoUiState()) }
     }
 
     override fun onRestaurantNameChange(name: String) {
-        updateState { it.copy(newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(name = name)) }
+        updateState {
+            it.copy(
+                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
+                    name = name,
+                    nameError = ErrorWrapper("Letters only, and Longer than 2.",
+                        !iValidateRestaurantUseCase.validateRestaurantName(name)),
+                )
+            )
+        }
     }
 
     override fun onOwnerUserNameChange(name: String) {
-        updateState { it.copy(newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(ownerUsername = name)) }
+        updateState {
+            it.copy(
+                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
+                    ownerUsername = name,
+                    userNameError = ErrorWrapper("Letters only, and Longer than 5.",
+                        !iValidateRestaurantUseCase.validateUserName(name)),
+                )
+            )
+        }
     }
 
     override fun onPhoneNumberChange(number: String) {
-        updateState { it.copy(newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(phoneNumber = number)) }
+        updateState {
+            it.copy(
+                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
+                    phoneNumber = number,
+                    phoneNumberError = ErrorWrapper("UnValid number format!",
+                        !iValidateRestaurantUseCase.validateNumber(number)),
+                )
+            )
+        }
     }
 
     override fun onWorkingStartHourChange(hour: String) {
-        updateState { it.copy(newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(startTime = hour)) }
+        updateState {
+            it.copy(
+                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
+                    startTime = hour,
+                    startTimeError = ErrorWrapper("write in valid format 00:00",
+                        !iValidateRestaurantUseCase.validateStartTime(hour)),
+                )
+            )
+        }
     }
 
     override fun onWorkingEndHourChange(hour: String) {
-        updateState { it.copy(newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(endTime = hour)) }
+        updateState {
+            it.copy(
+                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
+                    endTime = hour,
+                    endTimeError = ErrorWrapper("write in valid format 00:00",
+                        !iValidateRestaurantUseCase.validateEndTime(hour)),
+                )
+            )
+        }
     }
 
     override fun onLocationChange(location: String) {
-        updateState { it.copy(newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(location = location)) }
+        updateState {
+            it.copy(
+                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
+                    location = location,
+                    locationError = ErrorWrapper("Location can't be empty!",
+                        !iValidateRestaurantUseCase.validateLocation(location)),
+                    buttonEnabled = iValidateRestaurantUseCase.validateLocation(location)
+                )
+            )
+        }
     }
 
     override fun showEditRestaurantMenu(restaurantName: String) {
@@ -252,6 +296,18 @@ class RestaurantScreenModel(
         )
     }
 
+    override fun onFilterClearAllClicked() {
+        updateState {
+            it.copy(
+                restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
+                    filterRating = 0.0,
+                    filterPriceLevel = 1,
+                    isFiltered = false
+                )
+            )
+        }
+    }
+
     override fun onCreateNewRestaurantClicked() {
         tryToExecute(
             callee = {
@@ -263,6 +319,7 @@ class RestaurantScreenModel(
     }
 
     private fun onCreateRestaurantSuccessfully(restaurant: Restaurant) {
+        println("Created: $restaurant")
         val newRestaurant =
             mutableState.value.restaurants.toMutableList().apply { add(restaurant.toUiState()) }
         updateState {
@@ -276,7 +333,6 @@ class RestaurantScreenModel(
         updateState { it.copy(restaurants = restaurants, isLoading = false) }
         hideEditRestaurantMenu()
     }
-
 
 
     // region Cuisine Dialog

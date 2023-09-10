@@ -41,6 +41,7 @@ data class UserScreenUiState(
     )
 
     data class UserUiState(
+        val userId: String = "",
         val fullName: String = "",
         val username: String = "",
         val email: String = "",
@@ -99,13 +100,14 @@ data class UserScreenUiState(
 fun List<User>.toUiState(): List<UserScreenUiState.UserUiState> {
     return map {
         UserScreenUiState.UserUiState(
+            userId = it.id,
             fullName = it.fullName,
             username = it.username,
             email = it.email,
             country = it.country,
             permissions = it.permission.map { permission ->
                 when (permission) {
-                    Permission.RESTAURANT -> UserScreenUiState.PermissionUiState.RESTAURANT_OWNER
+                    Permission.RESTAURANT_OWNER -> UserScreenUiState.PermissionUiState.RESTAURANT_OWNER
                     Permission.DRIVER -> UserScreenUiState.PermissionUiState.TAXI_DRIVER
                     Permission.END_USER -> UserScreenUiState.PermissionUiState.END_USER
                     Permission.SUPPORT -> UserScreenUiState.PermissionUiState.SUPPORT
@@ -131,7 +133,7 @@ fun UserScreenUiState.PermissionUiState.toEntity(): Permission {
         UserScreenUiState.PermissionUiState.DASHBOARD_ADMIN -> Permission.ADMIN
         UserScreenUiState.PermissionUiState.SUPPORT -> Permission.SUPPORT
         UserScreenUiState.PermissionUiState.DELIVERY -> Permission.DELIVERY
-        UserScreenUiState.PermissionUiState.RESTAURANT_OWNER -> Permission.RESTAURANT
+        UserScreenUiState.PermissionUiState.RESTAURANT_OWNER -> Permission.RESTAURANT_OWNER
         UserScreenUiState.PermissionUiState.TAXI_DRIVER -> Permission.DRIVER
     }
 }

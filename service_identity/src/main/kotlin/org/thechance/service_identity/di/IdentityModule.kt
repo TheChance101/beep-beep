@@ -3,7 +3,6 @@ package org.thechance.service_identity.di
 
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
-import org.bson.UuidRepresentation
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
 import org.koin.dsl.module

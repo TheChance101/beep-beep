@@ -1,14 +1,22 @@
 package presentation.base
 
 import cafe.adriel.voyager.core.model.ScreenModel
-import domain.utils.InvalidPasswordException
-import domain.utils.InvalidUsernameException
-import domain.utils.NetworkNotSupportedException
-import domain.utils.NoInternetException
-import domain.utils.UnAuthorizedException
-import domain.utils.WifiDisabledException
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import domain.utils.AuthorizationException
+import domain.utils.InternetException
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import org.koin.core.component.KoinComponent
 
@@ -65,19 +73,11 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
         return inScope.launch(dispatcher) {
             try {
                 function()
-            } catch (e: WifiDisabledException) {
-                onError(ErrorState.WifiDisabled)
-            } catch (e: NoInternetException) {
-                onError(ErrorState.NoInternet)
-            } catch (e: NetworkNotSupportedException) {
-                onError(ErrorState.NetworkNotSupported)
-            } catch (e: InvalidUsernameException) {
-                onError(ErrorState.InvalidUsername)
-            } catch (e: InvalidPasswordException) {
-                onError(ErrorState.InvalidPassword)
-            } catch (e: UnAuthorizedException) {
-                onError(ErrorState.UnAuthorized)
-            } catch (e: Exception) {
+            } catch (exception: InternetException) {
+                handelInternetException(exception, onError)
+            } catch (exception: AuthorizationException) {
+                handelAuthorizationException(exception, onError)
+            } catch (exception: Exception) {
                 onError(ErrorState.RequestFailed)
             }
         }

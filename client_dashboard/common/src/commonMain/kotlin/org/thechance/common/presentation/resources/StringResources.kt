@@ -89,6 +89,10 @@ data class StringResources(
     val supportPermission: String = "Support",
     val deliveryPermission: String = "Delivery",
     val adminPermission: String = "Admin",
+    // endregion overview
+
+    val clearAll: String = "Clear all",
+    val noMatchesFound: String = "Oops, No matches found",
 )
 
 val englishStrings = StringResources()

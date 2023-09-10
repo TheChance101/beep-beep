@@ -10,6 +10,7 @@ import org.thechance.service_identity.endpoints.model.mapper.toDto
 import org.thechance.service_identity.domain.util.MissingParameterException
 import org.thechance.service_identity.domain.usecases.IUserAccountManagementUseCase
 import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
+import org.thechance.service_identity.endpoints.util.extractInt
 
 fun Route.userRoutes() {
 

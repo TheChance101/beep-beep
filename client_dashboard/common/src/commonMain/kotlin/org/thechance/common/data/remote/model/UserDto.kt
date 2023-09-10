@@ -1,42 +1,18 @@
 package org.thechance.common.data.remote.model
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import org.thechance.common.domain.entity.User
+import com.google.gson.annotations.SerializedName
 
-@Serializable
+data class UserResponse(
+    @SerializedName("items") val users: List<UserDto>,
+    @SerializedName("total") val total: Int,
+)
+
 data class UserDto(
-    @SerialName("id")
-    val id: String? = null,
-    @SerialName("full_name")
-    val fullName: String? = null,
-    @SerialName("username")
-    val username: String? = null,
-    @SerialName("country")
-    val country: String? = null,
-    @SerialName("email")
-    val email: String? = null,
-    @SerialName("permissions")
-    val permissions: List<PermissionDto?>? = null,
-    @SerialName("image_url")
-    val imageUrl: String,
-
-    ) {
-    @Serializable
-    data class PermissionDto(
-        @SerialName("id")
-        val id: Int? = null,
-        @SerialName("permission")
-        val permission: String? = null
-    )
-}
-
-fun UserDto.toEntity() = User(
-    id = id ?: "",
-    fullName = fullName ?: "",
-    country = country ?: "",
-    username = username ?: "",
-    email = email ?: "",
-    permission = permissions?.map { enumValueOf(it?.permission ?: "") } ?: emptyList(),
-    imageUrl = imageUrl
+    @SerializedName("id") val id: String,
+    @SerializedName("fullName") val fullName: String,
+    @SerializedName("username") val username: String,
+    @SerializedName("email") val email: String,
+    @SerializedName("permission") val permission: Int,
+    @SerializedName("image_url") val imageUrl: String? = null,
+    @SerializedName("country") val country: String = "",
 )

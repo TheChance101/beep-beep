@@ -69,5 +69,7 @@ class SyrianArabicLocalizedMessages() : LocalizedMessages {
     override val restaurantInsertOrderError: String = "في مشكلة بإضافة الأوردر تبعك"
     override val restaurantInvalidReceivedOrders: String = "الأوردر يلي وصلنا مو صحيح "
     override val restaurantNotFound: String = "عذرًا، ما لقينا هالمطعم"
+    override val deletedSuccessfully: String = "حذفنالك ياجار"
+    override val cuisineNameAlreadyExisted: String = "المطبخ موجود قبل هيك"
     //endregion
 }

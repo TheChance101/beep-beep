@@ -55,7 +55,9 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
             filter = UserDetailsCollection::userId eq ObjectId(userId),
             update = Updates.addToSet(UserDetailsCollection::addressIds.name, address.id)
         )
-        return if (dataBaseContainer.addressCollection.insertOne(addressCollection).wasAcknowledged()) {
+        return if (dataBaseContainer.addressCollection.insertOne(addressCollection)
+                .wasAcknowledged()
+        ) {
             addressCollection.toEntity()
         } else {
             throw ResourceNotFoundException(ERROR_IN_DB)
@@ -100,7 +102,10 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
     private suspend fun createUniqueIndexIfNotExists() {
         if (!isUniqueIndexCreated()) {
             val indexOptions = IndexOptions().unique(true)
-            dataBaseContainer.userCollection.createIndex(Indexes.ascending(DataBaseContainer.USER_NAME), indexOptions)
+            dataBaseContainer.userCollection.createIndex(
+                Indexes.ascending(DataBaseContainer.USER_NAME),
+                indexOptions
+            )
         }
     }
 
@@ -152,7 +157,8 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
     override suspend fun createUser(
         saltedHash: SaltedHash, fullName: String, username: String, email: String
     ): UserManagement {
-        val userNameExist = dataBaseContainer.userCollection.findOne(UserCollection::username eq username)
+        val userNameExist =
+            dataBaseContainer.userCollection.findOne(UserCollection::username eq username)
         if (userNameExist == null) {
             val userDocument = UserCollection(
                 hashedPassword = saltedHash.hash,
@@ -175,8 +181,8 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
     override suspend fun updateUser(
         id: String, saltedHash: SaltedHash?, fullName: String?, username: String?, email: String?
     ): Boolean {
-
         try {
+            dataBaseContainer.userCollection.find(filter = (UserCollection::username eq username))
             return dataBaseContainer.userCollection.updateOneById(
                 ObjectId(id),
                 set(
@@ -204,11 +210,48 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         return dataBaseContainer.userCollection.countDocuments(UserCollection::isDeleted eq false)
     }
 
+    override suspend fun isUserDeleted(id: String): Boolean {
+        val user = dataBaseContainer.userCollection.findOne(
+            UserCollection::id eq ObjectId(id),
+            UserCollection::isDeleted eq true
+        )
+        return user != null
+    }
+
     override suspend fun getUserByUsername(username: String): UserManagement {
         return dataBaseContainer.userCollection.findOne(
             UserCollection::username eq username,
             UserCollection::isDeleted eq false
-        )?.toManagedEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
+        )?.toManagedEntity() ?: throw ResourceNotFoundException(USER_NOT_FOUND)
+    }
+
+    override suspend fun getLastRegisterUser(limit: Int): List<UserManagement> {
+        return dataBaseContainer.userCollection.find(
+            UserCollection::isDeleted eq false
+        ).sort(Sorts.descending("_id")).limit(limit).toList().toManagedEntity()
+    }
+
+    override suspend fun searchUsers(
+        searchTerm: String,
+        filterByPermission: List<Int>
+    ): List<UserManagement> {
+        val orConditions = filterByPermission.map { permission ->
+            or(
+                UserCollection::permission eq permission,
+                UserCollection::permission.bitsAllSet(permission.toLong()) // Convert to Long
+            )
+        }
+
+        return dataBaseContainer.userCollection.find(
+            and(
+                or(
+                    UserCollection::username.regex("^$searchTerm", "i"),
+                    UserCollection::email.regex("^$searchTerm", "i")
+                ),
+                or(*orConditions.toTypedArray()),
+                UserCollection::isDeleted eq false
+            )
+        )?.toList()?.toManagedEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
     //endregion
@@ -254,10 +297,11 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
 
     // region: user permission management
 
-    override suspend fun updatePermissionToUser(userId: String, permission: Int): UserManagement {
+    override suspend fun updateUserPermission(userId: String, permissions: Int): UserManagement {
+
         return dataBaseContainer.userCollection.findOneAndUpdate(
             filter = UserCollection::id eq ObjectId(userId),
-            update = Updates.set(UserCollection::permission.name, permission),
+            update=   Updates.set(UserCollection::permission.name, permissions),
             options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toManagedEntity() ?: throw ResourceNotFoundException(USER_NOT_FOUND)
     }
