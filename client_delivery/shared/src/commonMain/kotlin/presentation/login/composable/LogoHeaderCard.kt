@@ -32,7 +32,7 @@ fun LogoHeaderCard(
             .padding(16.dp)
             .clip(shape = RoundedCornerShape(Theme.radius.medium))
             .background(Theme.colors.surface)
-            .padding(16.dp)
+            .padding(horizontal = 16.dp, vertical = 32.dp)
     ) {
         Icon(
             modifier = Modifier
