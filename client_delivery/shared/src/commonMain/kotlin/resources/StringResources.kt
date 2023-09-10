@@ -24,6 +24,5 @@ data class StringResources(
     val questionHint: String = "Describe why you want to join us",
     val whyBeepBeep: String = "Why beep beep?",
     val submit: String = "Submit",
-
     //endregion
 )

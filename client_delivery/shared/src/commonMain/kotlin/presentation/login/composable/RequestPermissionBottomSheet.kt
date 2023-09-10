@@ -1,0 +1,65 @@
+package presentation.login.composable
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
+import com.beepbeep.designSystem.ui.composable.BpButton
+import com.beepbeep.designSystem.ui.composable.BpExpandableTextField
+import com.beepbeep.designSystem.ui.composable.BpTextField
+import com.beepbeep.designSystem.ui.composable.BpTransparentButton
+import com.beepbeep.designSystem.ui.theme.Theme
+import presentation.login.LoginScreenInteractionListener
+import presentation.login.LoginScreenUIState
+import resources.Resources
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun RequestPermissionBottomSheet(
+    listener: LoginScreenInteractionListener,
+    state: LoginScreenUIState,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.wrapContentHeight()
+            .padding(horizontal = Theme.dimens.space16, vertical = Theme.dimens.space24)
+    ) {
+        Text(text = Resources.strings.askForPermission)
+        BpTextField(
+            text = "",
+            label = Resources.strings.fullNameLabel,
+            keyboardType = KeyboardType.Text,
+            onValueChange = {},
+            modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16)
+        )
+        BpTextField(
+            text = "",
+            onValueChange = {},
+            label = Resources.strings.userEmailLabel,
+            keyboardType = KeyboardType.Text,
+            modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
+        )
+        BpExpandableTextField(
+            text = "",
+            onValueChange = {},
+            label = Resources.strings.whyBeepBeep,
+            keyboardType = KeyboardType.Text,
+            modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
+        )
+        BpButton(
+            onClick = {},
+            title = Resources.strings.submit,
+            modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
+        )
+        BpTransparentButton(
+            onClick = {},
+            title = Resources.strings.cancel,
+            modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
+        )
+    }
+}
