@@ -58,7 +58,7 @@ class MainScreen :
                 modifier = Modifier.fillMaxWidth().padding(16.dp)
                     .clip(shape = RoundedCornerShape(Theme.radius.medium))
                     .background(Theme.colors.surface)
-                    .padding(top = 42.dp, start = 16.dp, end = 16.dp, bottom = 16.dp),
+                    .padding(top = 42.dp, start = 14.dp, end = 14.dp, bottom = 32.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
@@ -80,7 +80,7 @@ class MainScreen :
                     color = Theme.colors.contentSecondary
                 )
                 BpButton(
-                    modifier = Modifier.fillMaxWidth().padding(top = 24.dp, bottom = 16.dp),
+                    modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
                     title = Resources.strings.start,
                     onClick = listener::onClickStart,
                     enabled = !state.isLoading
