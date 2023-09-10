@@ -58,14 +58,14 @@ class MainScreen :
                 modifier = Modifier.fillMaxWidth().padding(16.dp)
                     .clip(shape = RoundedCornerShape(Theme.radius.medium))
                     .background(Theme.colors.surface)
-                    .padding(16.dp),
+                    .padding(top = 42.dp, start = 16.dp, end = 16.dp, bottom = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
                     modifier = Modifier.size(300.dp),
                     painter = painterResource(Resources.images.deliveryBike),
                     contentDescription = Resources.strings.backgroundDescription,
-                    contentScale = ContentScale.FillBounds
+                    contentScale = ContentScale.FillHeight
                 )
                 Text(
                     text = Resources.strings.foodsAreWaiting,
@@ -80,13 +80,11 @@ class MainScreen :
                     color = Theme.colors.contentSecondary
                 )
                 BpButton(
-                    modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
+                    modifier = Modifier.fillMaxWidth().padding(top = 24.dp, bottom = 16.dp),
                     title = Resources.strings.start,
                     onClick = listener::onClickStart,
                     enabled = !state.isLoading
                 )
-
-
             }
         }
     }
