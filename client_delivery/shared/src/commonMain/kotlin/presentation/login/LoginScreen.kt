@@ -21,7 +21,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
-import presentation.login.composable.HeadFirstCard
+import presentation.login.composable.LogoHeaderCard
 import resources.Resources
 
 class LoginScreen : BaseScreen<
@@ -30,11 +30,6 @@ class LoginScreen : BaseScreen<
         LoginScreenUIEffect,
         LoginScreenInteractionListener>() {
 
-    @Composable
-    override fun onRender(state: LoginScreenUIState, listener: LoginScreenInteractionListener) {
-        TODO("Not yet implemented")
-    }
-
     override fun onEffect(effect: LoginScreenUIEffect, navigator: Navigator) {
         TODO("Not yet implemented")
     }
@@ -42,6 +37,11 @@ class LoginScreen : BaseScreen<
     @Composable
     override fun Content() {
         initScreen(getScreenModel())
+    }
+
+    @Composable
+    override fun onRender(state: LoginScreenUIState, listener: LoginScreenInteractionListener) {
+        LoginScreenContent(state, listener)
     }
 
 }
@@ -62,7 +62,7 @@ private fun LoginScreenContent(
             contentDescription = null,
             contentScale = ContentScale.Crop
         )
-        HeadFirstCard(
+        LogoHeaderCard(
             textHeader = Resources.strings.loginWelcomeMessage,
             textSubHeader = Resources.strings.loginSubWelcomeMessage,
         ) {
@@ -98,11 +98,11 @@ private fun LoginScreenContent(
                 modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
                 title = Resources.strings.login,
                 onClick = {
-                    listener.onClickLogin(
-                        userName = state.userName,
-                        password = state.password,
-                        isKeepMeLoggedInChecked = state.keepLoggedIn
-                    )
+//                    listener.onClickLogin(
+//                        userName = state.userName,
+//                        password = state.password,
+//                        isKeepMeLoggedInChecked = state.keepLoggedIn
+//                    )
                 },
             )
         }
