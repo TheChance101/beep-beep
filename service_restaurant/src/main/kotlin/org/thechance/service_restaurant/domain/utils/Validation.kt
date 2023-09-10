@@ -8,7 +8,7 @@ import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorExcept
 interface IValidation {
     fun validatePagination(page: Int, limit: Int)
     fun isValidName(name: String?): Boolean
-    fun isValidPhone(phone: String?): Boolean
+    fun isValidPhone(phone: String?, currency: String): Boolean
     fun isValidId(id: String?): Boolean
     fun isValidatePriceLevel(priceLevel: String): Boolean
     fun isValidRate(rate: Double): Boolean
@@ -22,6 +22,7 @@ interface IValidation {
 
     fun isValidAddress(address: String): Boolean
     fun isValidEmail(ownerEmail: String): Boolean
+
 }
 
 class Validation : IValidation {
@@ -44,8 +45,19 @@ class Validation : IValidation {
         return name != null && name.matches(Regex("^[A-Za-z0-9\\s\\[\\]\\(\\)\\-.,&]{4,$NAME_MAX_LENGTH}$"))
     }
 
-    override fun isValidPhone(phone: String?): Boolean {
-        return phone != null && phone.matches(Regex("\\d{3}\\d{3}\\d{4}"))
+    override fun isValidPhone(phone: String?, currency: String): Boolean {
+        val phoneRegex = getPhoneRegex(currency)
+        return phone != null && phone.matches(Regex(phoneRegex))
+    }
+
+    private fun getPhoneRegex(currency: String): String {
+        return when (currency) {
+            "EGP" -> "^01\\d{9}\$"
+            "IQD" -> "^07\\d{9}\$"
+            "SYP" -> "^09\\d{9}\$"
+            "ILS" -> "^(05|09)\\d{9}\$"
+            else -> "^\\d{10}\$\n"
+        }
     }
 
     override fun isValidId(id: String?): Boolean {
