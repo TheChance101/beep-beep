@@ -1,11 +1,9 @@
 package data.gateway.remote
 
 import data.remote.model.ServerResponse
-import domain.utils.InvalidCredentialsException
-import domain.utils.NoInternetException
-import domain.utils.UnknownErrorException
-import domain.utils.UserAlreadyExistException
-import domain.utils.UserNotFoundException
+import domain.utils.AuthorizationException
+import domain.utils.GeneralException
+import domain.utils.InternetException
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
@@ -21,29 +19,37 @@ abstract class BaseGateway(val client: HttpClient) {
             //TODO: replace ServerResponse<String> with ServerResponse<T> in next deployment
             val errorMessages = e.response.body<ServerResponse<String>>().status.errorMessages
             errorMessages?.let(::throwMatchingException)
-            throw UnknownErrorException()
-        } catch (e: NoInternetException) {
-            throw NoInternetException()
+            throw GeneralException.UnknownErrorException
+        } catch (e: InternetException.NoInternetException) {
+            throw InternetException.NoInternetException()
         } catch (e: Exception) {
-            throw UnknownErrorException()
+            throw GeneralException.UnknownErrorException
         }
     }
 
     fun throwMatchingException(errorMessages: Map<String, String>) {
         errorMessages.let {
             if (it.containsErrors(WRONG_PASSWORD)) {
-                throw InvalidCredentialsException(it.getOrEmpty(WRONG_PASSWORD))
+                throw AuthorizationException.InvalidCredentialsException(
+                    it.getOrEmpty(
+                        WRONG_PASSWORD
+                    )
+                )
             }
 
             if (it.containsErrors(USER_NOT_EXIST)) {
-                throw UserNotFoundException(it.getOrEmpty(USER_NOT_EXIST))
+                throw AuthorizationException.UserNotFoundException(it.getOrEmpty(USER_NOT_EXIST))
             }
 
             if (it.containsErrors(USER_ALREADY_EXIST)) {
-                throw UserAlreadyExistException(it.getOrEmpty(USER_ALREADY_EXIST))
+                throw AuthorizationException.UserAlreadyExistException(
+                    it.getOrEmpty(
+                        USER_ALREADY_EXIST
+                    )
+                )
             }
 
-            throw UnknownErrorException()
+            throw GeneralException.UnknownErrorException
         }
     }
 

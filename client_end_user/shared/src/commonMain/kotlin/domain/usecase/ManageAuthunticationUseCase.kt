@@ -2,8 +2,7 @@ package domain.usecase
 
 import domain.gateway.IUserGateway
 import domain.gateway.local.ILocalConfigurationGateway
-import domain.utils.InvalidPasswordException
-import domain.utils.InvalidUsernameException
+import domain.utils.AuthorizationException
 
 interface IManageAuthenticationUseCase {
     suspend fun createUser(
@@ -45,10 +44,10 @@ class ManageAuthenticationUseCase(
 
     private fun validateLoginFields(username: String, password: String) {
         if (username.isEmpty() || "[a-zA-Z0-9_]+".toRegex().matches(username).not()) {
-            throw InvalidUsernameException()
+            throw AuthorizationException.InvalidUsernameException
         }
         if (password.isEmpty() || password.length < 8) {
-            throw InvalidPasswordException()
+            throw AuthorizationException.InvalidPasswordException
         }
     }
 
