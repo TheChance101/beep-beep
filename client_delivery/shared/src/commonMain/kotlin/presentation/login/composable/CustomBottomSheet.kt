@@ -116,13 +116,4 @@ class BottomSheetState {
         isVisible = false
         offset = bottom
     }
-
-    fun onDrag(deltaY: Float) {
-        offset = (offset - deltaY.dp).coerceIn(0.dp, bottom)
-    }
-
-    internal fun updateBottom(newBottom: Dp) {
-        bottom = newBottom
-        offset = newBottom
-    }
 }
