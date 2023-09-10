@@ -26,7 +26,7 @@ import resources.Resources
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun BpLanguageCard(onClick: () -> Unit,state: LanguageUIState) {
+fun LanguageCard(onClick: () -> Unit,state: LanguageUIState) {
     Box(
         modifier = Modifier
             .height(88.dp)
@@ -39,14 +39,14 @@ fun BpLanguageCard(onClick: () -> Unit,state: LanguageUIState) {
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(Resources.images.placeholder),
-            contentDescription = "image description",
+            painter = painterResource(state.image),
+            contentDescription = "${state.name} Picture",
             contentScale = ContentScale.FillBounds,
             modifier = Modifier.clip(MaterialTheme.shapes.large)
         )
         Box(
             modifier = Modifier.fillMaxSize().background(
-                Color.Black.copy(alpha = 0.5f),
+                Color.Black.copy(alpha = 0.4f),
                 shape = MaterialTheme.shapes.large
             )
         )
