@@ -9,5 +9,9 @@ class MainScreenModel : BaseScreenModel<MainUiState, MainScreenUiEffect>(MainUiS
 
     override val viewModelScope: CoroutineScope = coroutineScope
 
+    override fun onClickStart() {
+        sendNewEffect(MainScreenUiEffect.Start)
+    }
+
 
 }
