@@ -44,7 +44,7 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client),
             Taxi(
                 id = "khhfhdfhd",
                 color = "White",
-                plate = "A)1234BC",
+                plate = "1234BC",
                 timeToArriveInMints = 30,
             )
         )
