@@ -9,7 +9,7 @@ import domain.entity.Order
 import domain.entity.Taxi
 import domain.entity.Trip
 import domain.gateway.IRestaurantRemoteGateway
-import domain.utils.NotFoundException
+import domain.utils.GeneralException
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 
@@ -18,7 +18,7 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client),
     override suspend fun getCuisines(): List<Cuisine> {
         return tryToExecute<ServerResponse<List<CuisineDto>>> {
             get("/cuisines")
-        }.value?.toCuisineEntity() ?: throw NotFoundException()
+        }.value?.toCuisineEntity() ?: throw GeneralException.NotFoundException
     }
 
     // region Fake implementation todo: need to use real api

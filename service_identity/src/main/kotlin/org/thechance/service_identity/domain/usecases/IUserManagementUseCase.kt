@@ -3,6 +3,8 @@ package org.thechance.service_identity.domain.usecases
 import org.koin.core.annotation.Single
 import org.thechance.service_identity.domain.entity.UserManagement
 import org.thechance.service_identity.domain.gateway.IDataBaseGateway
+import org.thechance.service_identity.domain.util.INVALID_PERMISSION
+import org.thechance.service_identity.domain.util.RequestValidationException
 
 interface IUserManagementUseCase {
 
@@ -25,7 +27,8 @@ class UserManagementUseCase(private val dataBaseGateway: IDataBaseGateway) : IUs
         userId: String,
         permissions: List<Int>
     ): UserManagement {
-        val permission= permissions.reduce { acc, i -> acc or i }
+        isValidPermission(permissions)
+        val permission = permissions.reduce { acc, i -> acc or i }
         return dataBaseGateway.updateUserPermission(userId, permission)
     }
 
@@ -48,12 +51,13 @@ class UserManagementUseCase(private val dataBaseGateway: IDataBaseGateway) : IUs
         return dataBaseGateway.searchUsers(searchTerm, filterByPermission)
     }
 
-    private fun grantPermission(currentPermissions: Int, permissionToAdd: Int): Int {
-        return currentPermissions or permissionToAdd
+    private fun isValidPermission(permission: List<Int>) {
+        val reasons = mutableListOf<String>()
+        if (permission.isEmpty()) {
+            reasons.add(INVALID_PERMISSION)
+        }
+        if (reasons.isNotEmpty()) {
+            throw RequestValidationException(reasons)
+        }
     }
-
-    private fun revokePermission(currentPermissions: Int, permissionToRemove: Int): Int {
-        return currentPermissions and permissionToRemove.inv()
-    }
-
 }

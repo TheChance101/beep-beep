@@ -112,20 +112,22 @@ class IdentityService(
         }
     }
 
-    suspend fun searchUsers(query: String ,permission :List<Int>) = client.tryToExecute<List<UserDto>>(
+    @OptIn(InternalAPI::class)
+    suspend fun searchUsers(query: String, permission :List<Int>) = client.tryToExecute<List<UserDto>>(
         APIs.IDENTITY_API, attributes = attributes,
     ) {
-        get("/dashboard/user/search") {
+        post("/dashboard/user/search") {
             parameter("query", query)
-            parameter("permission", permission)
+            body = Json.encodeToString(ListSerializer(Int.serializer()), permission)
         }
     }
 
 
     @OptIn(InternalAPI::class)
-    suspend fun updateUserPermission(userId: String, permission: List<Int>, languageCode: String) : UserDto {
+    suspend fun updateUserPermission(userId: String, permission: List<Int>,languageCode: String) : UserDto {
         return client.tryToExecute<UserDto>(
-            APIs.IDENTITY_API, attributes = attributes,setErrorMessage = { errorCodes ->
+            APIs.IDENTITY_API, attributes = attributes,
+            setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             }
         ) {

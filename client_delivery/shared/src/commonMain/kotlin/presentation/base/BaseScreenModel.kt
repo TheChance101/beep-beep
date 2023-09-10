@@ -1,8 +1,6 @@
 package presentation.base
 
 import cafe.adriel.voyager.core.model.ScreenModel
-import domain.utils.AuthorizationException
-import domain.utils.InternetException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -73,11 +71,7 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
         return inScope.launch(dispatcher) {
             try {
                 function()
-            } catch (exception: InternetException) {
-                handelInternetException(exception, onError)
-            } catch (exception: AuthorizationException) {
-                handelAuthorizationException(exception, onError)
-            } catch (exception: Exception) {
+            } catch (e: Exception) {
                 onError(ErrorState.RequestFailed)
             }
         }
