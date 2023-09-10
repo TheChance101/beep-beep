@@ -1,7 +1,6 @@
 package presentation.login.composable
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,8 +17,9 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import resources.Resources
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
-fun HeadFirstCard(
+fun LogoHeaderCard(
     textHeader: String,
     textSubHeader: String,
     modifier: Modifier = Modifier,
@@ -27,42 +27,31 @@ fun HeadFirstCard(
     content: @Composable () -> Unit,
 ) {
     Column(
-        modifier = modifier.fillMaxWidth().padding(16.dp)
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp)
             .clip(shape = RoundedCornerShape(Theme.radius.medium))
             .background(Theme.colors.surface)
             .padding(16.dp)
     ) {
-        CardHeader(textHeader = textHeader, textSubHeader = textSubHeader, logo = logo)
-        content()
-    }
-}
-
-@OptIn(ExperimentalResourceApi::class)
-@Composable
-private fun CardHeader(
-    textHeader: String,
-    textSubHeader: String,
-    logo: String,
-    modifier: Modifier = Modifier,
-) {
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(32.dp)) {
         Icon(
-            modifier = Modifier.size(width = 70.dp, height = 32.dp),
+            modifier = Modifier
+                .size(width = 70.dp, height = 32.dp),
             painter = painterResource(logo),
             contentDescription = logo,
             tint = Theme.colors.primary
         )
-        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(
-                text = textHeader,
-                style = Theme.typography.titleLarge,
-                color = Theme.colors.contentPrimary
-            )
-            Text(
-                text = textSubHeader,
-                style = Theme.typography.body,
-                color = Theme.colors.contentTertiary
-            )
-        }
+        Text(
+            modifier = Modifier.padding(bottom = 4.dp, top = 32.dp),
+            text = textHeader,
+            style = Theme.typography.titleLarge,
+            color = Theme.colors.contentPrimary
+        )
+        Text(
+            text = textSubHeader,
+            style = Theme.typography.body,
+            color = Theme.colors.contentTertiary
+        )
+        content()
     }
 }
