@@ -143,7 +143,12 @@ class TaxiScreenModel(
     }
 
     private fun onUpdateTaxiSuccessfully(taxi: Taxi) {
-        updateState { it.copy(isAddNewTaxiDialogVisible = false, taxiMenu = it.taxiMenu.copy(id = "")) }
+        updateState {
+            it.copy(
+                isAddNewTaxiDialogVisible = false,
+                taxiMenu = it.taxiMenu.copy(id = "")
+            )
+        }
         mutableState.value.pageInfo.data.find { it.id == taxi.id }?.let { taxiDetailsUiState ->
             val index = mutableState.value.pageInfo.data.indexOf(taxiDetailsUiState)
             val newTaxi = mutableState.value.pageInfo.data.toMutableList().apply {
@@ -164,7 +169,8 @@ class TaxiScreenModel(
     }
 
     private fun onCreateTaxiSuccessfully(taxi: Taxi) {
-        val newTaxi = mutableState.value.taxis.toMutableList().apply { add(taxi.toDetailsUiState()) }
+        val newTaxi =
+            mutableState.value.taxis.toMutableList().apply { add(taxi.toDetailsUiState()) }
         updateState { it.copy(taxis = newTaxi, isLoading = false) }
         clearAddNewTaxiDialogState()
         getTaxis()
@@ -183,8 +189,9 @@ class TaxiScreenModel(
                     driverUserName = "",
                     carModel = "",
                     selectedCarColor = CarColor.WHITE,
-                    seats = 1
-                )
+                    seats = 1,
+                    isFormValid = false
+                ),
             )
         }
     }
@@ -290,9 +297,9 @@ class TaxiScreenModel(
         updateState { it.copy(isEditMode = true, isAddNewTaxiDialogVisible = true) }
         hideTaxiMenu()
         tryToExecute(
-            callee = { manageTaxis.getTaxiById(taxiId) },
-            onSuccess = ::onGetTaxiByIdSuccess,
-            onError = ::onError
+           { manageTaxis.getTaxiById(taxiId) },
+            ::onGetTaxiByIdSuccess,
+            ::onError
         )
     }
 
