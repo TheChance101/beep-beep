@@ -9,6 +9,7 @@ data class StringResources(
     val passwordLabel: String = "Password",
     val login: String = "Login",
     val keepMeLoggedIn: String = "Keep me logged in",
+    val signupWithBeepBeep: String = "Sign up with Beep Beep account",
     val foodsAreWaiting: String = "Foodies are waiting!",
     val tapStartTitle: String = "Tap Start and become their food \nsuperhero",
     val start: String = "Start",
