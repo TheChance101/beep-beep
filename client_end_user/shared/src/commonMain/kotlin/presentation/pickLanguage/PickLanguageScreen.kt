@@ -33,7 +33,7 @@ object PickLanguageScreen :
 
     override fun onEffect(effect: PickLanguageUIEffect, navigator: Navigator) {
         when (effect) {
-            is PickLanguageUIEffect.onGoToPreferredLanguage -> navigator.push(LoginScreen())
+            is PickLanguageUIEffect.onGoToPreferredLanguage -> {}
 
         }
     }
