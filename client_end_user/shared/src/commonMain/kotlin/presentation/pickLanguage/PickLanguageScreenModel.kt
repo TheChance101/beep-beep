@@ -1,25 +1,41 @@
 package presentation.pickLanguage
 
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.usecase.IManageUserUseCase
+import domain.usecase.IMangeLanguageUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
+import presentation.base.ErrorState
 
-class PickLanguageScreenModel : BaseScreenModel<PickLanguageUIState, PickLanguageUIEffect>(PickLanguageUIState()),PickLanguageInteractionListener{
+class PickLanguageScreenModel(
+    private val manageLanguage: IMangeLanguageUseCase
+) : BaseScreenModel<PickLanguageUIState, PickLanguageUIEffect>(PickLanguageUIState()),
+    PickLanguageInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
-    override fun onLanguageSelected(language: LanguageUIState) {
-        updateState { it.copy(selectedLanguage = language) }
-    }
 
-    override fun onGoToPreferredLanguage() {
-        if(state.value.selectedLanguage!=null){
-            sendNewEffect(PickLanguageUIEffect.onGoToPreferredLanguage)
-        }else{
-            showSnackBar("Please select a language")
-        }
+
+    override fun onLanguageSelected(language: LanguageUIState) {
+        tryToExecute(
+            function = {
+                manageLanguage.saveLanguageCode(language.code)
+            },
+            onSuccess = {
+                onSavedLanguageSuccess()
+            },
+            ::onSavedLanguageError
+        )
+
+    }
+    private fun onSavedLanguageSuccess() {
         sendNewEffect(PickLanguageUIEffect.onGoToPreferredLanguage)
     }
+
+    private fun onSavedLanguageError(errorState: ErrorState) {
+        showSnackBar(errorState.toString())
+    }
+
     private fun showSnackBar(message: String) {
         viewModelScope.launch {
             updateState { it.copy(snackBarMessage = message, showSnackBar = true) }

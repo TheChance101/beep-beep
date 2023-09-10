@@ -28,6 +28,8 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.composable.BpLanguageCard
 import presentation.composable.HeadFirstCard
+import presentation.login.LoginScreen
+import presentation.main.MainContainer
 import resources.Resources
 
 
@@ -40,7 +42,7 @@ object PickLanguageScreen :
 
     override fun onEffect(effect: PickLanguageUIEffect, navigator: Navigator) {
         when (effect) {
-            is PickLanguageUIEffect.onGoToPreferredLanguage -> {}
+            is PickLanguageUIEffect.onGoToPreferredLanguage -> navigator.push(LoginScreen())
 
         }
     }

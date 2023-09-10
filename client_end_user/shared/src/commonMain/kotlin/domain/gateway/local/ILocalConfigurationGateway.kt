@@ -11,4 +11,6 @@ interface ILocalConfigurationGateway {
     suspend fun clearTokens()
     suspend fun saveLanguageCode(code: String)
 
+    suspend fun getLanguageCode(): String
+
 }
