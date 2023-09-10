@@ -4,7 +4,6 @@ body, html{
     padding:0;
     margin: 0;
     height:100%;
-     min-height:100%;
     box-sizing: border-box;
 }
 section{
@@ -14,8 +13,7 @@ section{
 #myMap,#pseudo {
     position: relative;
     width:100%;
-    padding:-5px;
-    height: 500px;
+    height: 800px;
 }
 
 .occupied{
@@ -25,7 +23,7 @@ a{
     text-decoration: none;
     background: white;
     color:black;
-    
+
 }
 @media screen and (min-width :800px){
     #myMap,#pseudo{

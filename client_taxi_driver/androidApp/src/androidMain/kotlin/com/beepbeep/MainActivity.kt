@@ -38,10 +38,10 @@ class MainActivity : AppCompatActivity() {
         url: String,
     ) {
         var webView: WebView? by remember { mutableStateOf(null) }
-        var latitude2 by remember { mutableDoubleStateOf(30.0) }
+        var latitude2 by remember { mutableDoubleStateOf(40.6740229) }
 
-        LaunchedEffect(Unit) {
-            while (true) {
+
+            LaunchedEffect(Unit) {while (true) {
                 // Update latitude and longitude values here
                 latitude2 += .00002
                 if (latitude2 >= 180)

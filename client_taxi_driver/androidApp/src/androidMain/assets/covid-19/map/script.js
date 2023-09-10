@@ -6,8 +6,9 @@ function GetMap() {
 map = new Microsoft.Maps.Map('#myMap', {
     credentials: 'Access_token',
     center: new Microsoft.Maps.Location(0,0),
-    mapTypeId: Microsoft.Maps.MapTypeId.aerial,
-    zoom: 2
+    mapTypeId: Microsoft.Maps.MapTypeId.road,
+    minZoom: 16,
+    maxZoom: 18
 });
 
 }
@@ -23,17 +24,27 @@ var co = 0;
 function createInfiniteLoopFunction(latitude) {
             return function() {
             clearMap()
-    var pushpin = new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(latitude, 40.3321), null);
-                    map.entities.push(pushpin);
-                    map.setView({ center: new Microsoft.Maps.Location(latitude, 40.3321), zoom: 17 });
-
-                setInterval(function() {
-
-                }, 8000); // Call the inner function every 1000 milliseconds (1 second)
+    var pushpin = new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(latitude, -73.8740306), {
+                                                                                                     icon: 'user_pin.svg',
+                                                                                                     anchor: new Microsoft.Maps.Point(20, 20)
+                                                                                                 });
+                                                                                                 Microsoft.Maps.loadModule('Microsoft.Maps.SpatialMath', function () {
+                                                                                                         let circle = createCircle(new Microsoft.Maps.Location(latitude, -73.8740306),120,'rgba(31, 0, 0, 0.16)')
+                                                                                                     map.entities.push(circle);
+                                                                                                     map.entities.push(pushpin);})
+                    map.setView({ center: new Microsoft.Maps.Location(latitude, -73.8740306), minZoom: 16,
+                                                                                                  maxZoom: 18});
 
             };
         }
+function createCircle(center, radius, color) {
+//Request the user's location
+    //Calculate the locations for a regular polygon that has 36 locations which will rssult in an approximate circle.
+    var locs = Microsoft.Maps.SpatialMath.getRegularPolygon(center, radius, 80, Microsoft.Maps.SpatialMath.Meters);
 
+    return new Microsoft.Maps.Polygon(locs, { fillColor: color, strokeThickness: 0 });
+
+}
 function clearMap(){
 map.entities.clear();
 }
