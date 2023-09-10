@@ -32,9 +32,8 @@ fun LanguageCard(onClick: () -> Unit,state: LanguageUIState) {
             .height(88.dp)
             .clickable(
                 indication = null,
-                interactionSource = remember { MutableInteractionSource() }
-                onClick = ::onClick
-            ) 
+                interactionSource = remember { MutableInteractionSource() } ,
+            ) { onClick() },
         contentAlignment = Alignment.Center
     ) {
         Image(
