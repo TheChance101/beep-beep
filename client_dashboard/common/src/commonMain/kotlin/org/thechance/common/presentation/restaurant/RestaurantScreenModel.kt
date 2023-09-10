@@ -221,8 +221,7 @@ class RestaurantScreenModel(
 
     override fun onClickDeleteRestaurantMenuItem(restaurant: RestaurantUiState.RestaurantDetailsUiState) {
         tryToExecute(
-            {
-                manageRestaurant.deleteRestaurants(
+            { manageRestaurant.deleteRestaurants(
                     Restaurant(
                         id = restaurant.id,
                         name = restaurant.name,
@@ -230,7 +229,9 @@ class RestaurantScreenModel(
                         phoneNumber = restaurant.phoneNumber,
                         rating = restaurant.rating,
                         priceLevel = restaurant.priceLevel,
-                        workingHours = restaurant.workingHours.replace(" ", "").split("-").run {
+                        workingHours =
+                        restaurant.workingHours.replace(" ", "")
+                            .split("-").run {
                             Pair(
                                 Time.parseToCustomTime(get(0)),
                                 Time.parseToCustomTime(get(1))
@@ -284,18 +285,14 @@ class RestaurantScreenModel(
 
     // region Cuisine Dialog
     override fun onClickAddCuisine() {
-        updateState {
-            it.copy(
-                restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
-                    isVisible = true
-                )
-            )
+        updateState { it.copy(
+            restaurantAddCuisineDialogUiState =
+            it.restaurantAddCuisineDialogUiState.copy(isVisible = true))
         }
     }
 
     override fun onCloseAddCuisineDialog() {
-        updateState {
-            it.copy(
+        updateState { it.copy(
                 restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
                     isVisible = false,
                     cuisineName = ""
@@ -313,7 +310,17 @@ class RestaurantScreenModel(
     }
 
     private fun onCreateCuisinesSuccessfully(cuisineName: String?) {
-        getCuisines()
+        updateState {
+            it.copy(
+                restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
+                    isVisible = true,
+                    cuisineName = "",
+                    cuisines = it.restaurantAddCuisineDialogUiState.cuisines.toMutableList().apply {
+                        add(cuisineName!!)
+                    }
+                )
+            )
+        }
     }
 
     override fun onClickDeleteCuisine(cuisineName: String) {
@@ -325,7 +332,17 @@ class RestaurantScreenModel(
     }
 
     private fun onDeleteCuisinesSuccessfully(cuisineName: String) {
-        getCuisines()
+        updateState {
+            it.copy(
+                restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
+                    isVisible = true,
+                    cuisineName = "",
+                    cuisines = it.restaurantAddCuisineDialogUiState.cuisines.toMutableList().apply {
+                        remove(cuisineName)
+                    }
+                )
+            )
+        }
     }
 
     override fun onChangeCuisineName(cuisineName: String) {
