@@ -3,9 +3,7 @@ package org.thechance.service_restaurant.api.models.mappers
 
 import kotlinx.datetime.LocalDateTime
 import org.thechance.service_restaurant.api.models.OrderDto
-import org.thechance.service_restaurant.api.models.OrderMealDto
 import org.thechance.service_restaurant.domain.entity.Order
-import org.thechance.service_restaurant.domain.entity.OrderMeal
 import org.thechance.service_restaurant.domain.utils.currentDateTime
 import org.thechance.service_restaurant.domain.utils.fromEpochMilliseconds
 import org.thechance.service_restaurant.domain.utils.toMillis
@@ -35,15 +33,15 @@ fun Order.toDto(): OrderDto {
     )
 }
 
-fun OrderMealDto.toEntity(): OrderMeal {
-    return OrderMeal(
+fun OrderDto.MealDto.toEntity(): Order.Meal {
+    return Order.Meal(
         meadId = mealId,
         quantity = quantity
     )
 }
 
-fun OrderMeal.toDto(): OrderMealDto {
-    return OrderMealDto(
+fun Order.Meal.toDto(): OrderDto.MealDto {
+    return OrderDto.MealDto(
         mealId = meadId,
         quantity = quantity
     )

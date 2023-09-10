@@ -6,11 +6,17 @@ data class Order(
     val id: String,
     val userId: String,
     val restaurantId: String,
-    val meals: List<OrderMeal>,
+    val meals: List<Meal>,
     val totalPrice: Double,
     val createdAt: LocalDateTime,
     val status: Status
 ){
+
+    data class Meal(
+        val meadId : String,
+        val quantity : Int
+    )
+
     enum class Status(val statusCode: Int) {
         PENDING(0),
         COOKING(1),

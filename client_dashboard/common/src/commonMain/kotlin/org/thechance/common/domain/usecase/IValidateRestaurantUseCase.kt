@@ -14,7 +14,7 @@ interface IValidateRestaurantUseCase {
 
 class ValidateRestaurantUseCase():IValidateRestaurantUseCase{
     override fun validateRestaurantName(name: String): Boolean {
-        return name.isNotBlank() && name.length > 2 && name.any { it.isLetter() }
+        return name.isNotBlank() && name.length > 3 && name.any { it.isLetter() }
     }
 
     override fun validateUserName(name: String): Boolean {
