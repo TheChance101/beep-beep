@@ -9,6 +9,9 @@ data class StringResources(
     val passwordLabel: String = "Password",
     val login: String = "Login",
     val keepMeLoggedIn: String = "Keep me logged in",
+    val foodsAreWaiting: String = "Foodies are waiting!",
+    val tapStartTitle: String = "Tap Start and become their food \nsuperhero",
+    val start: String = "Start",
     //region permission
     val wrongPermissionMessage: String = "Looks like your account isn't assigned as a restaurant owner, ask for permission?",
     val wrongPermission: String = "Wrong permission",
