@@ -8,6 +8,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
@@ -25,8 +26,20 @@ fun WrongPermissionBottomSheet() {
             contentDescription = null,
             modifier = Modifier.padding(bottom = Theme.dimens.space24)
         )
-        Text(text = Resources.strings.wrongPermission,)
-        Text(text = Resources.strings.wrongPermissionMessage)
+        Text(
+            text = Resources.strings.wrongPermission,
+            style = Theme.typography.titleLarge,
+            color = Theme.colors.contentPrimary,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(bottom = Theme.dimens.space16)
+        )
+        Text(
+            text = Resources.strings.wrongPermissionMessage,
+            style = Theme.typography.body,
+            color = Theme.colors.contentSecondary,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.
+        )
         BpButton(
             onClick = {},
             title = Resources.strings.requestAPermission,
