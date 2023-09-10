@@ -97,8 +97,8 @@ class LoginScreen :
                         onValueChange = { listener.onUsernameChange(it) },
                         text = state.username,
                         label = Resources.Strings.loginUsername,
-                        errorMessage = state.usernameError,
-                        isError = state.isUsernameError,
+                        errorMessage = state.usernameError.errorMessage,
+                        isError = state.passwordError.isError,
                         modifier = Modifier.padding(top = 40.kms),
                         hint = ""
                     )
@@ -106,8 +106,8 @@ class LoginScreen :
                         onValueChange = { listener.onPasswordChange(it) },
                         text = state.password,
                         label = Resources.Strings.loginPassword,
-                        errorMessage = state.passwordError,
-                        isError = state.isPasswordError,
+                        errorMessage = state.passwordError.errorMessage,
+                        isError = state.passwordError.isError,
                         keyboardType = KeyboardType.Password,
                         modifier = Modifier.padding(top = 16.kms),
                         hint = ""
@@ -121,7 +121,8 @@ class LoginScreen :
                     BpButton(
                         title = Resources.Strings.loginButton,
                         onClick = { listener.onLoginClicked() },
-                        modifier = Modifier.padding(top = 24.kms).fillMaxWidth()
+                        modifier = Modifier.padding(top = 24.kms).fillMaxWidth(),
+                        enabled = true
                     )
                 }
             }

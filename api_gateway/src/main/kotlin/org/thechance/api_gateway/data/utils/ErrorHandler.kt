@@ -37,6 +37,9 @@ class ErrorHandler(
         if (errorCodes.contains(1013))
             errors[1013] = localizedMessages.invalidCredentials
 
+        if (errorCodes.contains(1014))
+            errors[1014] = localizedMessages.invalidPermission
+
         if (errorCodes.contains(1041))
             errors[1041] = localizedMessages.notFound
 
@@ -52,6 +55,8 @@ class ErrorHandler(
 
         if (errorCodes.contains(8000))
             errors[8000] = localizedMessages.invalidPermission
+
+
 
         if(errorCodes.contains(3001))
             errors[3001] = localizedMessages.invalidId

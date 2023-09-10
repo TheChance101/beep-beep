@@ -2,6 +2,7 @@ package org.thechance.common.presentation.login
 
 import org.thechance.common.domain.usecase.ILoginUserUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
+import org.thechance.common.presentation.restaurant.ErrorWrapper
 import org.thechance.common.presentation.util.ErrorState
 
 
@@ -50,12 +51,12 @@ class LoginScreenModel(
     private fun handleErrorState(error: ErrorState) {
         when (error) {
             is ErrorState.InvalidCredentials -> {
-                updateState { it.copy(passwordError = error.errorMessage, isPasswordError = true) }
+                updateState { it.copy(passwordError = ErrorWrapper(error.errorMessage,true)) }
                 sendNewEffect(LoginUIEffect.LoginFailed(error.errorMessage))
             }
 
             is ErrorState.UserNotExist -> {
-                updateState { it.copy(usernameError = error.errorMessage, isUsernameError = true) }
+                updateState { it.copy(usernameError = ErrorWrapper(error.errorMessage,true)) }
                 sendNewEffect(LoginUIEffect.LoginFailed(error.errorMessage))
             }
 
@@ -73,10 +74,8 @@ class LoginScreenModel(
         updateState {
             it.copy(
                 error = null,
-                usernameError = "",
-                isUsernameError = false,
-                passwordError = "",
-                isPasswordError = false,
+                usernameError = ErrorWrapper("name must be longer than 2",false),
+                passwordError = ErrorWrapper("password must contains letter and number",false),
                 isLoading = false
             )
         }

@@ -7,6 +7,9 @@ import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import io.ktor.util.*
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.serializer
+import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.PaginationResponse
 import org.thechance.api_gateway.data.model.UserDto
@@ -67,7 +70,7 @@ class IdentityService(
                 }
             )
         }
-        val user = getUserByUsername(username = userName)
+        val user = getUserByUsername(username = userName,languageCode)
         return generateUserTokens(user.id, userName, user.permission, tokenConfiguration)
     }
 
@@ -99,34 +102,38 @@ class IdentityService(
         get("user/$id")
     }
 
-    suspend fun getUserByUsername(username: String): UserDto = client.tryToExecute<UserDto>(
-        APIs.IDENTITY_API, attributes = attributes,
+    suspend fun getUserByUsername(username: String, languageCode: String): UserDto = client.tryToExecute<UserDto>(
+        APIs.IDENTITY_API, attributes = attributes,setErrorMessage = { errorCodes ->
+            errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+        }
     ) {
         get("user/get-user") {
             parameter("username", username)
         }
     }
 
-    suspend fun searchUsers(query: String ,permission :List<Int>) = client.tryToExecute<List<UserDto>>(
+    @OptIn(InternalAPI::class)
+    suspend fun searchUsers(query: String, permission :List<Int>) = client.tryToExecute<List<UserDto>>(
         APIs.IDENTITY_API, attributes = attributes,
     ) {
-        get("/dashboard/user/search") {
+        post("/dashboard/user/search") {
             parameter("query", query)
-            parameter("permission", permission)
+            body = Json.encodeToString(ListSerializer(Int.serializer()), permission)
         }
     }
 
 
-    suspend fun updateUserPermission(userId: String, permission: List<Int>) : UserDto {
+    @OptIn(InternalAPI::class)
+    suspend fun updateUserPermission(userId: String, permission: List<Int>,languageCode: String) : UserDto {
         return client.tryToExecute<UserDto>(
             APIs.IDENTITY_API, attributes = attributes,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+            }
         ) {
-            submitForm("/dashboard/user/$userId/permission",
-                formParameters = parameters {
-                    append("permission", "$permission")
-
-                }
-            )
+            put("/dashboard/user/$userId/permission") {
+                body = Json.encodeToString(ListSerializer(Int.serializer()), permission)
+            }
         }
     }
 
