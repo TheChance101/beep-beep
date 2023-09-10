@@ -2,6 +2,7 @@ package org.thechance.api_gateway.endpoints
 
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.request.receive
 import io.ktor.server.request.receiveParameters
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
@@ -46,10 +47,9 @@ fun Route.userRoutes() {
             put("/{userId}/permission") {
                 val language = extractLocalizationHeader()
                 val userId = call.parameters["userId"]?.trim().toString()
-                val params = call.receiveParameters()
-                val permission = params["permission"]?.toIntListOrNull() ?: listOf(Role.END_USER)
+                val permission: List<Int> = call.receive<List<Int>>()
                 val result = identityService.updateUserPermission(userId, permission,language)
-                respondWithResult(HttpStatusCode.Created, result)
+                respondWithResult(HttpStatusCode.OK, result)
             }
             get("/last-register") {
                 val limit = call.parameters["limit"]?.toInt() ?: 4
@@ -58,9 +58,8 @@ fun Route.userRoutes() {
             }
 
             get("/search"){
-                val searchTerm = call.parameters["query"] ?: ""
-                val params = call.receiveParameters()
-                val permission = params["permission"]?.toIntListOrNull() ?: listOf(Role.END_USER)
+                val searchTerm = call.request.queryParameters["query"]?.trim() ?:""
+                val permission: List<Int> = call.receive<List<Int>>()
                 val users = identityService.searchUsers(searchTerm, permission)
                 respondWithResult(HttpStatusCode.OK, users)
             }
