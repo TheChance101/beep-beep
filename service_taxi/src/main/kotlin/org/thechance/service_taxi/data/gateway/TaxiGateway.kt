@@ -85,6 +85,13 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
                 TaxiCollection::isDeleted ne true
         ).toList().toEntity()
     }
+
+    override suspend fun updateTaxiTripsCount(taxiId: String, count: Int): Taxi? {
+        return container.taxiCollection.findOneAndUpdate(
+            filter = TaxiCollection::id eq ObjectId(taxiId),
+            update = set(TaxiCollection::tripsCount setTo count)
+        )?.toEntity()
+    }
     //endregion
 
     //region trip curd

@@ -46,8 +46,7 @@ class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGatewa
                     append("password", password)
                 }
             ) {
-                url("login")
-                //TODO left until complete get user preferences
+                url("/login")
                 header("Accept-Language", "ar")
                 header("Country-Code", "EG")
             }

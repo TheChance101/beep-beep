@@ -5,12 +5,14 @@ import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.usecase.IManageTaxisUseCase
+import org.thechance.common.domain.usecase.ITaxiValidationUseCase
 import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
 
 class TaxiScreenModel(
     private val manageTaxis: IManageTaxisUseCase,
+    private val taxiValidation: ITaxiValidationUseCase,
 ) : BaseScreenModel<TaxiUiState, TaxiUiEffect>(TaxiUiState()), TaxiInteractionListener {
 
     private var searchJob: Job? = null
@@ -94,7 +96,13 @@ class TaxiScreenModel(
 
     override fun onTaxiPlateNumberChange(number: String) {
         updateState {
-            it.copy(newTaxiInfo = it.newTaxiInfo.copy(plateNumber = number))
+            it.copy(
+                newTaxiInfo = it.newTaxiInfo.copy(
+                    plateNumber = number,
+                    plateNumberError = if (taxiValidation.isValidPlateNumber(number)) "" else "Invalid plate number",
+                    isFormValid = taxiValidation.isFormValid(number, it.newTaxiInfo.carModel)
+                )
+            )
         }
     }
 
@@ -105,7 +113,15 @@ class TaxiScreenModel(
     }
 
     override fun onCarModelChanged(model: String) {
-        updateState { it.copy(newTaxiInfo = it.newTaxiInfo.copy(carModel = model)) }
+        updateState {
+            it.copy(
+                newTaxiInfo = it.newTaxiInfo.copy(
+                    carModel = model,
+                    carModelError = if (taxiValidation.isValidCarModel(model)) "" else "Invalid car model",
+                    isFormValid = taxiValidation.isFormValid(it.newTaxiInfo.plateNumber, model)
+                )
+            )
+        }
     }
 
     override fun onCarColorSelected(color: CarColor) {
@@ -127,7 +143,12 @@ class TaxiScreenModel(
     }
 
     private fun onUpdateTaxiSuccessfully(taxi: Taxi) {
-        updateState { it.copy(isAddNewTaxiDialogVisible = false, taxiMenu = it.taxiMenu.copy(id = "")) }
+        updateState {
+            it.copy(
+                isAddNewTaxiDialogVisible = false,
+                taxiMenu = it.taxiMenu.copy(id = "")
+            )
+        }
         mutableState.value.pageInfo.data.find { it.id == taxi.id }?.let { taxiDetailsUiState ->
             val index = mutableState.value.pageInfo.data.indexOf(taxiDetailsUiState)
             val newTaxi = mutableState.value.pageInfo.data.toMutableList().apply {
@@ -148,7 +169,8 @@ class TaxiScreenModel(
     }
 
     private fun onCreateTaxiSuccessfully(taxi: Taxi) {
-        val newTaxi = mutableState.value.taxis.toMutableList().apply { add(taxi.toDetailsUiState()) }
+        val newTaxi =
+            mutableState.value.taxis.toMutableList().apply { add(taxi.toDetailsUiState()) }
         updateState { it.copy(taxis = newTaxi, isLoading = false) }
         clearAddNewTaxiDialogState()
         getTaxis()
@@ -167,8 +189,9 @@ class TaxiScreenModel(
                     driverUserName = "",
                     carModel = "",
                     selectedCarColor = CarColor.WHITE,
-                    seats = 1
-                )
+                    seats = 1,
+                    isFormValid = false
+                ),
             )
         }
     }
@@ -274,9 +297,9 @@ class TaxiScreenModel(
         updateState { it.copy(isEditMode = true, isAddNewTaxiDialogVisible = true) }
         hideTaxiMenu()
         tryToExecute(
-            callee = { manageTaxis.getTaxiById(taxiId) },
-            onSuccess = ::onGetTaxiByIdSuccess,
-            onError = ::onError
+           { manageTaxis.getTaxiById(taxiId) },
+            ::onGetTaxiByIdSuccess,
+            ::onError
         )
     }
 
