@@ -1,8 +1,11 @@
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.navigator.Navigator
 import presentation.main.MainScreen
+import presentation.resources.BpTaxiTheme
 
 @Composable
 fun App() {
-    Navigator(MainScreen())
+    BpTaxiTheme {
+        Navigator(MainScreen())
+    }
 }
