@@ -9,5 +9,8 @@ class PreferredScreenModel() :
     PreferredScreenInteractionListener {
 
     override val viewModelScope: CoroutineScope = coroutineScope
+    override fun onClickPreferredMeal() {
+
+    }
 
 }

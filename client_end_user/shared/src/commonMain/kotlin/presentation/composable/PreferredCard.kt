@@ -1,7 +1,9 @@
-package presentation.preferredMeal.composable
+package presentation.composable
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,13 +16,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
-import presentation.composable.BpImageLoader
 
 @Composable
 fun PreferredCard(
-    imageUrl: String,
+    onClick: () -> Unit,
+    painter: Painter,
     title: String,
     priceLevel: String? = null,
     modifier: Modifier = Modifier,
@@ -33,12 +37,18 @@ fun PreferredCard(
                 color = Theme.colors.divider,
                 shape = RoundedCornerShape(Theme.radius.medium)
             )
+            .clickable { onClick() }
             .background(Theme.colors.surface)
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        BpImageLoader(imageUrl, modifier.size(56.dp))
+        Image(
+            modifier = Modifier.size(56.dp),
+            painter = painter,
+            contentDescription = "$title image",
+            contentScale = ContentScale.Crop
+        )
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(4.dp)
