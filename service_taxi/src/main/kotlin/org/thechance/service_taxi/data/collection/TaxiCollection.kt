@@ -13,8 +13,10 @@ data class TaxiCollection(
     val type: String? = null,
     @Contextual
     val driverId: ObjectId? = null,
+    val driverUsername: String? = null,
     val isAvailable: Boolean? = null,
     val seats: Int? = null,
+    val tripsCount: Int? = null,
     @SerialName("_id")
     @BsonId
     @Contextual
