@@ -9,7 +9,9 @@ data class TaxiDto(
     @SerialName("plateNumber") val plateNumber: String,
     @SerialName("color") val color: Long,
     @SerialName("type") val type: String,
-    @SerialName("driverId") val driverId: String,
+    @SerialName("driverId") val driverId: String? = null,
+    @SerialName("driverUsername") val driverUsername: String,
     @SerialName("isAvailable") val isAvailable: Boolean = true,
     @SerialName("seats") val seats: Int = 4,
+    @SerialName("tripsCount") val tripsCount: Int? = 0,
 )
