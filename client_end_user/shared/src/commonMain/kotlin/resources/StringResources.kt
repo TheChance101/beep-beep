@@ -32,6 +32,12 @@ data class StringResources(
     val favoriteRestaurants: String = "Favorite restaurants",
     val eidSpecials: String = "Eid specials",
     val freeDelivery: String = "Free delivery",
+    val deliciousItemsInYourCart: String = "Delicious items in your cart!",
+    val clickHereAndCompleteYourOrder: String = "Click here and Complete your order.",
+    val taxiOnTheWay: String = "Your taxi is on the way...",
+    val enjoyYourRide: String = "Enjoy your ride!",
+    val orderOnTheWay: String = "Your order is on the way...",
+    val inProgress: String = "In progress",
     val lastOrder: String = "Last order",
     val orderAgain: String = "Order again"
 )

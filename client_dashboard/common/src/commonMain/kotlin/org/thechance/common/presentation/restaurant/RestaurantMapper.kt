@@ -1,5 +1,7 @@
 package org.thechance.common.presentation.restaurant
 
+import org.thechance.common.data.remote.model.Location
+import org.thechance.common.data.remote.model.RestaurantCreateDto
 import org.thechance.common.domain.entity.NewRestaurantInfo
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.entity.Time
@@ -30,3 +32,19 @@ fun NewRestaurantInfoUiState.toEntity() = NewRestaurantInfo(
         parseToCustomTime(endTime)
     ),
 )
+
+fun NewRestaurantInfo.toDto(): RestaurantCreateDto{
+    val result = RestaurantCreateDto(
+        ownerId = "64f363af5ddbc15bfd1efcf4",
+        name = name,
+        openingTime = workingHours.first.toString(),
+        closingTime = workingHours.second.toString(),
+        phone = phoneNumber,
+        location = Location(
+            latitude = location.split(",")[0].toDouble(),
+            longitude = location.split(",")[1].toDouble()
+        )
+    )
+    println(result.toString())
+    return result
+}
