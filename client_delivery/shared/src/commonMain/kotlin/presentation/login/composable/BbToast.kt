@@ -1,6 +1,5 @@
 package presentation.login.composable
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -21,11 +20,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import com.beepbeep.designSystem.ui.theme.Theme
 import kotlinx.coroutines.delay
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import util.BPToastDuration
 import kotlin.time.Duration
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun BPToast(
     icon: Painter,
@@ -38,38 +35,36 @@ fun BPToast(
 ) {
     var isVisible by remember { mutableStateOf(true) }
 
-    AnimatedVisibility(
-        visible = isVisible,
-    ){
-        Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(
-                    horizontal = Theme.dimens.space16,
-                    vertical = Theme.dimens.space24)
-                .clip(RoundedCornerShape(Theme.radius.medium))
-                .background(backgroundColor)
-                .padding(
-                    horizontal = Theme.dimens.space16,
-                    vertical = Theme.dimens.space8),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8)
-        ) {
-            Icon(
-                modifier = Modifier.background(
-                    color = iconBackgroundColor,
-                    shape = RoundedCornerShape(Theme.radius.medium)
-                ).padding(Theme.dimens.space8),
-                painter = icon,
-                contentDescription = null,
-                tint = iconTint
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = Theme.dimens.space16,
+                vertical = Theme.dimens.space24
             )
-            content()
-        }
+            .clip(RoundedCornerShape(Theme.radius.medium))
+            .background(backgroundColor)
+            .padding(
+                horizontal = Theme.dimens.space16,
+                vertical = Theme.dimens.space8
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8)
+    ) {
+        Icon(
+            modifier = Modifier.background(
+                color = iconBackgroundColor,
+                shape = RoundedCornerShape(Theme.radius.medium)
+            ).padding(Theme.dimens.space8),
+            painter = icon,
+            contentDescription = null,
+            tint = iconTint
+        )
+        content()
     }
 
-    LaunchedEffect(key1 = null){
-        when(duration){
+    LaunchedEffect(key1 = null) {
+        when (duration) {
             BPToastDuration.Long -> delay(10000)
             BPToastDuration.Short -> delay(4000)
             BPToastDuration.Indefinite -> delay(Duration.INFINITE)
