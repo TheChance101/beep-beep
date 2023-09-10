@@ -1,6 +1,7 @@
 package presentation.login
 
 import presentation.base.ErrorState
+import presentation.login.composable.BottomSheetState
 
 data class LoginScreenUIState(
     val isLoading: Boolean = false,
@@ -19,5 +20,6 @@ data class LoginScreenUIState(
     val ownerEmail: String = "",
     val hasPermission: Boolean = false,
     val showPermissionSheet: Boolean = false,
+    val sheetState: BottomSheetState = BottomSheetState(),
 
-)
+    )
