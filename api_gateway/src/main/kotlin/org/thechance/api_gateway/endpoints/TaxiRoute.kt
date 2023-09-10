@@ -10,15 +10,17 @@ import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
 import org.thechance.api_gateway.data.model.taxi.TaxiDto
 import org.thechance.api_gateway.data.service.IdentityService
 import org.thechance.api_gateway.data.service.TaxiService
+import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
 import org.thechance.api_gateway.endpoints.utils.respondWithResult
+import org.thechance.api_gateway.util.Role
 
 fun Route.taxiRoutes() {
     val taxiService: TaxiService by inject()
     val identityService: IdentityService by inject()
     val localizedMessagesFactory by inject<LocalizedMessagesFactory>()
 
-//    authenticateWithRole(Role.DASHBOARD_ADMIN) {
+    authenticateWithRole(Role.DASHBOARD_ADMIN) {
     route("/taxi") {
 
         get {
@@ -86,6 +88,6 @@ fun Route.taxiRoutes() {
         }
     }
 
-//    }
+    }
 
 }
