@@ -6,10 +6,6 @@ import org.thechance.service_identity.domain.gateway.IDataBaseGateway
 
 interface IUserManagementUseCase {
 
-//    suspend fun addPermissionToUser(userId: String, permission: Int): UserManagement
-//
-//    suspend fun removePermissionFromUser(userId: String, permission: Int): UserManagement
-
     suspend fun  updateUserPermission(userId: String, permissions: List<Int>): UserManagement
 
     suspend fun getUsers(page: Int, limit: Int, searchTerm: String): List<UserManagement>
@@ -29,7 +25,7 @@ class UserManagementUseCase(private val dataBaseGateway: IDataBaseGateway) : IUs
         userId: String,
         permissions: List<Int>
     ): UserManagement {
-        val permission=permissions.reduce { acc, i -> acc or i }
+        val permission= permissions.reduce { acc, i -> acc or i }
         return dataBaseGateway.updateUserPermission(userId, permission)
     }
 
