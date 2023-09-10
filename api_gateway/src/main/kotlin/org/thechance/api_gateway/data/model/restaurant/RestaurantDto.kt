@@ -19,17 +19,3 @@ data class RestaurantDto(
     @SerialName("location") val locationDto: LocationDto? = null,
 )
 
-@Serializable
-data class RestaurantWithUsernameDto(
-    @SerialName("id") val id: String? = null,
-    @SerialName("username") val username: String,
-    @SerialName("name") val name: String,
-    @SerialName("description") val description: String? = null,
-    @SerialName("priceLevel") val priceLevel: String? = null,
-    @SerialName("rate") val rate: Double? = null,
-    @SerialName("phone") val phone: String? = null,
-    @SerialName("openingTime") val openingTime: String? = null,
-    @SerialName("closingTime") val closingTime: String? = null,
-    @SerialName("address") val address: String? = null,
-    @SerialName("location") val locationDto: LocationDto? = null,
-)
