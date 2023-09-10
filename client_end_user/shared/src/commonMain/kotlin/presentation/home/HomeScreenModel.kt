@@ -1,9 +1,8 @@
 package presentation.home
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.entity.Order
+import domain.entity.InProgressWrapper
 import domain.entity.Restaurant
-import domain.entity.Taxi
 import domain.usecase.GetFavoriteRestaurantsUseCase
 import domain.usecase.IGetCuisinesUseCase
 import domain.usecase.IGetNewOffersUserCase
@@ -31,31 +30,14 @@ class HomeScreenModel(
 
     private fun getInProgress() {
         tryToExecute(
-            { inProgressTrackerUseCase.getTaxiOnTheWay() },
-            ::onGetTaxiInProgressSuccess,
-            ::onGetCuisinesError
-        )
-        tryToExecute(
-            { inProgressTrackerUseCase.getActiveRide() },
-            ::onGetRideInProgressSuccess,
-            ::onGetCuisinesError
-        )
-        tryToExecute(
-            { inProgressTrackerUseCase.getActiveOrder() },
-            ::onGetOrderInProgressSuccess,
+            { inProgressTrackerUseCase.getInProgress() },
+            ::onGetInProgressSuccess,
             ::onGetCuisinesError
         )
     }
 
-    private fun onGetTaxiInProgressSuccess(taxi: Taxi?) {
-        updateState { it.copy(taxiOnTheWay = taxi?.toUiState()) }
-    }
-
-    private fun onGetRideInProgressSuccess(taxi: Taxi?) {
-        updateState { it.copy(tripOnTheWay = taxi?.toOrderUiState()) }
-    }
-    private fun onGetOrderInProgressSuccess(order: Order?) {
-        updateState { it.copy(orderOnTheWay = order?.toUiState()) }
+    private fun onGetInProgressSuccess(inProgressWrapper: InProgressWrapper) {
+        updateState { it.copy(inProgressWrapper = inProgressWrapper) }
     }
 
     override fun onClickCuisineItem(cuisineId: String) {

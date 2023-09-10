@@ -1,8 +1,6 @@
 package domain.entity
 
-data class Taxi(
+data class Trip(
     val id: String,
-    val color: String,
-    val plate: String,
     val timeToArriveInMints: Int,
 )

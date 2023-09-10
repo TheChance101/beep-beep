@@ -1,6 +1,5 @@
 package presentation.home
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +13,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -97,66 +97,56 @@ class HomeScreen :
                 CartCard(onClick = {})
             }
 
-            item {
-                AnimatedVisibility(state.hasProgress) {
-                    Column(
-                        Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-
+            if (state.hasProgress) {
+                item {
+                    Text(
+                        text = Resources.strings.inProgress,
+                        style = Theme.typography.titleLarge.copy(Theme.colors.contentPrimary),
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                }
+                items(state.inProgressWrapper.taxisOnTheWay) {
+                    HorizontalImageCard(
+                        painter = painterResource(Resources.images.taxiOnTheWay),
+                        titleText = Resources.strings.taxiOnTheWay,
+                    ) { textStyle ->
+                        Row(
+                            Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(text = it.color, style = textStyle)
+                            Circle()
+                            Text(text = it.plate, style = textStyle)
+                            Circle()
+                            Text(
+                                text = "${it.timeToArriveInMints} min to arrive",
+                                style = textStyle
+                            )
+                        }
+                    }
+                }
+                items(state.inProgressWrapper.tripsOnTheWay) {
+                    HorizontalImageCard(
+                        painter = painterResource(Resources.images.taxiOnTheWay),
+                        titleText = Resources.strings.enjoyYourRide,
+                        titleTextColor = Theme.colors.contentSecondary,
+                    ) { textStyle ->
                         Text(
-                            text = Resources.strings.inProgress,
-                            style = Theme.typography.titleLarge.copy(Theme.colors.contentPrimary),
-                            modifier = Modifier.padding(horizontal = 16.dp)
+                            text = "${it.timeToArriveInMints} min to arrive",
+                            style = textStyle
                         )
-
-                        state.taxiOnTheWay?.let { taxiUiState ->
-                            HorizontalImageCard(
-                                painter = painterResource(Resources.images.taxiOnTheWay),
-                                titleText = Resources.strings.taxiOnTheWay,
-                            ) { textStyle ->
-                                Row(
-                                    Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(text = taxiUiState.color, style = textStyle)
-                                    Circle()
-                                    Text(text = taxiUiState.plate, style = textStyle)
-                                    Circle()
-                                    Text(
-                                        text = "${taxiUiState.timeToArriveInMints} min to arrive",
-                                        style = textStyle
-                                    )
-                                }
-                            }
-
-                        }
-
-                        state.tripOnTheWay?.let { tripUiState ->
-                            HorizontalImageCard(
-                                painter = painterResource(Resources.images.taxiOnTheWay),
-                                titleText = Resources.strings.enjoyYourRide,
-                                titleTextColor = Theme.colors.contentSecondary,
-                            ) { textStyle ->
-                                Text(
-                                    text = "${tripUiState.timeToArriveInMints} min to arrive",
-                                    style = textStyle
-                                )
-                            }
-                        }
-
-                        state.orderOnTheWay?.let { orderUiState ->
-                            HorizontalImageCard(
-                                painter = painterResource(Resources.images.orderOnTheWay),
-                                titleText = Resources.strings.orderOnTheWay,
-                            ) { textStyle ->
-                                Text(
-                                    text = "From ${orderUiState.restaurantName}",
-                                    style = textStyle
-                                )
-                            }
-                        }
+                    }
+                }
+                items(state.inProgressWrapper.ordersOnTheWay) {
+                    HorizontalImageCard(
+                        painter = painterResource(Resources.images.orderOnTheWay),
+                        titleText = Resources.strings.orderOnTheWay,
+                    ) { textStyle ->
+                        Text(
+                            text = "From ${it.restaurantName}",
+                            style = textStyle
+                        )
                     }
                 }
             }

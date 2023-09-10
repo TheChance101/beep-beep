@@ -1,17 +1,18 @@
 package presentation.home
 
+import domain.entity.InProgressWrapper
 import domain.entity.PriceLevel
 
 data class HomeScreenUiState(
     val offers: List<OfferUiState> = emptyList(),
     val recommendedCuisines: List<CuisineUiState> = emptyList(),
     val favoriteRestaurants: List<RestaurantUiState> = emptyList(),
-    val taxiOnTheWay: TaxiUiState? = null,
-    val orderOnTheWay: OrderUiState? = null,
-    val tripOnTheWay: TripUiState? = null,
+    val inProgressWrapper: InProgressWrapper = InProgressWrapper(),
 ) {
     val hasProgress: Boolean
-        get() = taxiOnTheWay != null || orderOnTheWay != null || tripOnTheWay != null
+        get() = inProgressWrapper.taxisOnTheWay.isNotEmpty() ||
+                inProgressWrapper.tripsOnTheWay.isNotEmpty() ||
+                inProgressWrapper.ordersOnTheWay.isNotEmpty()
 
     fun getOfferImages(): List<String> {
         return this.offers.map { it.image }
