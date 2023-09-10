@@ -19,7 +19,7 @@ data class RestaurantRequestDto(
     @SerialName("location") val locationDto: LocationDto? = null,
 )
 
-fun RestaurantDto.toRestaurantRequestDto(): RestaurantRequestDto {
+fun RestaurantWithUsernameDto.toRestaurantRequestDto(ownerId: String): RestaurantRequestDto {
     return RestaurantRequestDto(
         id = id,
         ownerId = ownerId,

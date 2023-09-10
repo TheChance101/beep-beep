@@ -4,13 +4,26 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.thechance.api_gateway.data.model.LocationDto
 
-//TODO: remove username from here
 @Serializable
 data class RestaurantDto(
     @SerialName("id") val id: String? = null,
     @SerialName("ownerId") val ownerId: String? = null,
-//    @SerialName("username") val username: String,
     @SerialName("name") val name: String? = null,
+    @SerialName("description") val description: String? = null,
+    @SerialName("priceLevel") val priceLevel: String? = null,
+    @SerialName("rate") val rate: Double? = null,
+    @SerialName("phone") val phone: String? = null,
+    @SerialName("openingTime") val openingTime: String? = null,
+    @SerialName("closingTime") val closingTime: String? = null,
+    @SerialName("address") val address: String? = null,
+    @SerialName("location") val locationDto: LocationDto? = null,
+)
+
+@Serializable
+data class RestaurantWithUsernameDto(
+    @SerialName("id") val id: String? = null,
+    @SerialName("username") val username: String,
+    @SerialName("name") val name: String,
     @SerialName("description") val description: String? = null,
     @SerialName("priceLevel") val priceLevel: String? = null,
     @SerialName("rate") val rate: Double? = null,
