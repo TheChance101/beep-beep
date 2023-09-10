@@ -7,9 +7,21 @@ map = new Microsoft.Maps.Map('#myMap', {
     credentials: 'Access_token',
     center: new Microsoft.Maps.Location(0,0),
     mapTypeId: Microsoft.Maps.MapTypeId.aerial,
-    zoom: 2
+    zoom: 20
 });
-
+    var center = map.getCenter();
+           //Create custom Pushpin
+           var pin = new Microsoft.Maps.Pushpin(center, {
+               title: 'Microsoft',
+               subTitle: 'City Center',
+               text: '1',
+               color: 'red',
+           });
+           //Add the pushpin to the map
+           map.entities.push(pin);
+            Microsoft.Maps.Events.addHandler(map, 'click', function () {
+            pin.setLocation(map.getCenter())
+            });
 }
 function getPin(){
     var pushpin = new Microsoft.Maps.Pushpin(map.getCenter(), null);
