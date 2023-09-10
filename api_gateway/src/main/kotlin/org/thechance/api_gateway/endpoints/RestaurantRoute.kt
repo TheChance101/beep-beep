@@ -70,17 +70,18 @@ fun Route.restaurantRoutes() {
             respondWithResult(HttpStatusCode.OK, restaurant)
         }
 
+        //TODO: problem in username in get restaurant
         authenticateWithRole(Role.DASHBOARD_ADMIN) {
             post {
-                val language = extractLocalizationHeader()
-                val restaurantDto = call.receive<RestaurantDto>()
-                val user = identityService.getUserByUsername(restaurantDto.username)
-                identityService.updateUserPermission(userId = user.id, permission = listOf(Role.END_USER,Role.RESTAURANT_OWNER) )
-                val newRestaurant = restaurantService.addRestaurant(
-                    restaurantDto.toRestaurantRequestDto().copy(ownerId = user.id),
-                    language
-                )
-                respondWithResult(HttpStatusCode.Created, newRestaurant)
+//                val language = extractLocalizationHeader()
+//                val restaurantDto = call.receive<RestaurantDto>()
+//                val user = identityService.getUserByUsername(restaurantDto.username)
+//                identityService.updateUserPermission(userId = user.id, permission = listOf(Role.END_USER,Role.RESTAURANT_OWNER) )
+//                val newRestaurant = restaurantService.addRestaurant(
+//                    restaurantDto.toRestaurantRequestDto().copy(ownerId = user.id),
+//                    language
+//                )
+//                respondWithResult(HttpStatusCode.Created, newRestaurant)
             }
 
             put {

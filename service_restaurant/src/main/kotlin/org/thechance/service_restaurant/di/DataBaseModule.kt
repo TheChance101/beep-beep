@@ -12,12 +12,12 @@ val DataBaseModule = module {
         val cluster = System.getenv("cluster")
         val username = System.getenv("username")
         val password = System.getenv("password")
-        val local = System.getenv("local")
-        val connectionString = if (local.isNotEmpty()) {
-            ConnectionString("mongodb://localhost:27017")
-        } else {
-            ConnectionString("mongodb+srv://$username:$password@$cluster.mongodb.net/")
-        }
+//        val local = System.getenv("local")
+//        val connectionString = if (local.isNotEmpty()) {
+        val connectionString=  ConnectionString("mongodb://localhost:27017")
+//        } else {
+//            ConnectionString("mongodb+srv://$username:$password@$cluster.mongodb.net/")
+//        }
 
         val settings = MongoClientSettings.builder()
             .applyConnectionString(connectionString)
