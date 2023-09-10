@@ -31,33 +31,39 @@ fun RequestPermissionBottomSheet(
     ) {
         Text(text = Resources.strings.askForPermission)
         BpTextField(
-            text = "",
-            label = Resources.strings.fullNameLabel,
+            text = state.restaurantName,
+            label = Resources.strings.restaurantName,
             keyboardType = KeyboardType.Text,
-            onValueChange = {},
+            onValueChange = listener::onRestaurantNameChanged,
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16)
         )
         BpTextField(
-            text = "",
-            onValueChange = {},
+            text = state.ownerEmail,
+            onValueChange = listener::onOwnerEmailChanged,
             label = Resources.strings.userEmailLabel,
             keyboardType = KeyboardType.Text,
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
         )
         BpExpandableTextField(
-            text = "",
-            onValueChange = {},
+            text = state.description,
+            onValueChange = listener::onDescriptionChanged,
             label = Resources.strings.whyBeepBeep,
             keyboardType = KeyboardType.Text,
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
         )
         BpButton(
-            onClick = {},
+            onClick = {
+                listener.onSubmitClicked(
+                    restaurantName = state.restaurantName,
+                    ownerEmail = state.ownerEmail,
+                    description = state.description
+                )
+            },
             title = Resources.strings.submit,
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
         )
         BpTransparentButton(
-            onClick = {},
+            onClick = listener::onCancelClicked,
             title = Resources.strings.cancel,
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
         )

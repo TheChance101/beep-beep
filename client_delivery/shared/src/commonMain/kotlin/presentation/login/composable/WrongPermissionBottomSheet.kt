@@ -49,12 +49,12 @@ fun WrongPermissionBottomSheet(listener: LoginScreenInteractionListener,
             modifier = Modifier.padding(bottom = Theme.dimens.space24)
         )
         BpButton(
-            onClick = {},
+            onClick = listener::onRequestPermissionClicked,
             title = Resources.strings.requestAPermission,
             modifier = Modifier.fillMaxWidth().padding(bottom = Theme.dimens.space16)
         )
         BpTransparentButton(
-            onClick = {},
+            onClick = listener::onCancelClicked,
             title = Resources.strings.cancel,
             modifier = Modifier.fillMaxWidth()
         )

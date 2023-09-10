@@ -20,7 +20,7 @@ data class StringResources(
     val cancel: String = "Cancel",
     val askForPermission: String = "Ask for permission",
     val userEmailLabel: String = "User email",
-    val fullNameLabel: String = "Full name",
+    val restaurantName: String = "Full name",
     val questionHint: String = "Describe why you want to join us",
     val whyBeepBeep: String = "Why beep beep?",
     val submit: String = "Submit",
