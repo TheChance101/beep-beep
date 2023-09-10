@@ -100,7 +100,9 @@ object MainContainer :
         val indicatorWidthPx = 40.dp.toPx()
         val iconSizePx = 24.dp.toPx()
 
-        BpNavigationBar(modifier = Modifier.drawTopIndicator(xOffsetAnimated)) {
+        BpNavigationBar(
+            modifier = Modifier.drawTopIndicator(xOffsetAnimated).padding(bottom = 20.dp)
+        ) {
             tabs.forEach { tabContainer ->
                 val selected = tabNavigator.current == tabContainer.tab
                 val drawable =
