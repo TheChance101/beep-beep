@@ -5,18 +5,13 @@ import org.thechance.service_identity.domain.entity.UserManagement
 import org.thechance.service_identity.domain.gateway.IDataBaseGateway
 
 interface IUserManagementUseCase {
-
-//    suspend fun addPermissionToUser(userId: String, permission: Int): UserManagement
-//
-//    suspend fun removePermissionFromUser(userId: String, permission: Int): UserManagement
-
-    suspend fun  updateUserPermission(userId: String, permissions: List<Int>): UserManagement
+    suspend fun updateUserPermission(userId: String, permissions: List<Int>): UserManagement
 
     suspend fun getUsers(page: Int, limit: Int, searchTerm: String): List<UserManagement>
 
     suspend fun getNumberOfUsers(): Long
 
-    suspend fun  getLastRegisterUser(limit:Int):List<UserManagement>
+    suspend fun getLastRegisterUser(limit: Int): List<UserManagement>
 
     suspend fun searchUsers(searchTerm: String, filterByPermission: List<Int>): List<UserManagement>
 
@@ -25,11 +20,8 @@ interface IUserManagementUseCase {
 @Single
 class UserManagementUseCase(private val dataBaseGateway: IDataBaseGateway) : IUserManagementUseCase {
 
-    override suspend fun updateUserPermission(
-        userId: String,
-        permissions: List<Int>
-    ): UserManagement {
-        val permission=permissions.reduce { acc, i -> acc or i }
+    override suspend fun updateUserPermission(userId: String, permissions: List<Int>): UserManagement {
+        val permission = permissions.reduce { acc, i -> acc or i }
         return dataBaseGateway.updateUserPermission(userId, permission)
     }
 
@@ -45,10 +37,7 @@ class UserManagementUseCase(private val dataBaseGateway: IDataBaseGateway) : IUs
         return dataBaseGateway.getLastRegisterUser(limit)
     }
 
-    override suspend fun searchUsers(
-        searchTerm: String,
-        filterByPermission: List<Int>
-    ): List<UserManagement> {
+    override suspend fun searchUsers(searchTerm: String, filterByPermission: List<Int>): List<UserManagement> {
         return dataBaseGateway.searchUsers(searchTerm, filterByPermission)
     }
 

@@ -321,4 +321,29 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
     }
     // endregion
 
+    // region: favorite
+    override suspend fun getFavoriteRestaurants(userId: String): List<String> {
+        val user = dataBaseContainer.userDetailsCollection.findOne(
+            UserDetailsCollection::userId eq ObjectId(userId)
+        )
+        return user?.favorite?.map(ObjectId::toString) ?: emptyList()
+    }
+
+    override suspend fun addToFavorite(userId: String, restaurantId: String): Boolean {
+        val result = dataBaseContainer.userDetailsCollection.updateOne(
+            UserDetailsCollection::userId eq ObjectId(userId),
+            addToSet(UserDetailsCollection::favorite, ObjectId(restaurantId))
+        )
+        return result.matchedCount > 0
+    }
+
+    override suspend fun deleteFromFavorite(userId: String, restaurantId: String): Boolean {
+        val result = dataBaseContainer.userDetailsCollection.updateOne(
+            UserDetailsCollection::userId eq ObjectId(userId),
+            pull(UserDetailsCollection::favorite, ObjectId(restaurantId))
+        )
+        return result.matchedCount > 0
+    }
+
+    // endregion
 }
