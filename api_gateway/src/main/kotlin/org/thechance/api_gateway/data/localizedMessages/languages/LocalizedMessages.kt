@@ -2,7 +2,7 @@ package org.thechance.api_gateway.data.localizedMessages.languages
 
 import org.koin.core.annotation.Single
 
-@Single
+
 interface LocalizedMessages {
 
     // region identity
