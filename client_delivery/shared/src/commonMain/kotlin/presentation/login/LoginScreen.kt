@@ -3,6 +3,7 @@ package presentation.login
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,7 +22,10 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
+import presentation.login.composable.CustomBottomSheet
 import presentation.login.composable.HeadFirstCard
+import presentation.login.composable.RequestPermissionBottomSheet
+import presentation.login.composable.WrongPermissionBottomSheet
 import resources.Resources
 
 class LoginScreen : BaseScreen<
@@ -32,7 +36,27 @@ class LoginScreen : BaseScreen<
 
     @Composable
     override fun onRender(state: LoginScreenUIState, listener: LoginScreenInteractionListener) {
-        TODO("Not yet implemented")
+        Column(modifier = Modifier.fillMaxSize()) {
+            CustomBottomSheet(
+                sheetContent = {
+                    if (state.showPermissionSheet) {
+                        RequestPermissionBottomSheet(
+                            listener = listener,
+                            state = state
+                        )
+                    } else {
+                        WrongPermissionBottomSheet(
+                            listener
+                        )
+                    }
+                },
+                sheetBackgroundColor = Theme.colors.background,
+                onBackGroundClicked = listener::onSheetBackgroundClicked,
+                sheetState = state.sheetState,
+            ) {
+                LoginScreenContent(state, listener)
+            }
+        }
     }
 
     override fun onEffect(effect: LoginScreenUIEffect, navigator: Navigator) {
