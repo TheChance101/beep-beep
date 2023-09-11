@@ -1,5 +1,6 @@
 package org.thechance.common.presentation.login
 
+import kotlinx.coroutines.flow.update
 import org.thechance.common.domain.usecase.ILoginUserUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.restaurant.ErrorWrapper
@@ -11,7 +12,7 @@ class LoginScreenModel(
 ) : BaseScreenModel<LoginUIState, LoginUIEffect>(LoginUIState()), LoginInteractionListener {
 
     override fun onPasswordChange(password: String) {
-        updateState { it.copy(password = password) }
+        updateState { it.copy(password = password, isLoginAble = true) }
     }
 
     override fun onUsernameChange(username: String) {
@@ -51,12 +52,10 @@ class LoginScreenModel(
     private fun handleErrorState(error: ErrorState) {
         when (error) {
             is ErrorState.InvalidCredentials -> {
-                updateState { it.copy(passwordError = ErrorWrapper(error.errorMessage,true)) }
                 sendNewEffect(LoginUIEffect.LoginFailed(error.errorMessage))
             }
 
             is ErrorState.UserNotExist -> {
-                updateState { it.copy(usernameError = ErrorWrapper(error.errorMessage,true)) }
                 sendNewEffect(LoginUIEffect.LoginFailed(error.errorMessage))
             }
 
@@ -74,8 +73,6 @@ class LoginScreenModel(
         updateState {
             it.copy(
                 error = null,
-                usernameError = ErrorWrapper("name must be longer than 2",false),
-                passwordError = ErrorWrapper("password must contains letter and number",false),
                 isLoading = false
             )
         }

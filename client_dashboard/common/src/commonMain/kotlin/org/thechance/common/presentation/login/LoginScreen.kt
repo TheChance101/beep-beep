@@ -42,7 +42,7 @@ class LoginScreen :
             }
 
             is LoginUIEffect.LoginFailed -> {
-
+                navigator.replaceAll(LoginScreen())
             }
         }
     }
@@ -97,8 +97,6 @@ class LoginScreen :
                         onValueChange = { listener.onUsernameChange(it) },
                         text = state.username,
                         label = Resources.Strings.loginUsername,
-                        errorMessage = state.usernameError.errorMessage,
-                        isError = state.passwordError.isError,
                         modifier = Modifier.padding(top = 40.kms),
                         hint = ""
                     )
@@ -106,8 +104,6 @@ class LoginScreen :
                         onValueChange = { listener.onPasswordChange(it) },
                         text = state.password,
                         label = Resources.Strings.loginPassword,
-                        errorMessage = state.passwordError.errorMessage,
-                        isError = state.passwordError.isError,
                         keyboardType = KeyboardType.Password,
                         modifier = Modifier.padding(top = 16.kms),
                         hint = ""
@@ -122,7 +118,7 @@ class LoginScreen :
                         title = Resources.Strings.loginButton,
                         onClick = { listener.onLoginClicked() },
                         modifier = Modifier.padding(top = 24.kms).fillMaxWidth(),
-                        enabled = true
+                        enabled = state.isLoginAble
                     )
                 }
             }
