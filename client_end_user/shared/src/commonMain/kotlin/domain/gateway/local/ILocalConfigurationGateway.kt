@@ -10,4 +10,8 @@ interface ILocalConfigurationGateway {
     suspend fun getKeepMeLoggedInFlag(): Boolean
     suspend fun clearTokens()
 
+    suspend fun savePreferredFood(food: String)
+
+    suspend fun getPreferredFood(): String
+
 }

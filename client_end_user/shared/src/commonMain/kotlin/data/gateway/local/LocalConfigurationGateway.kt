@@ -47,6 +47,18 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
         realm.write { delete(query<UserConfigurationCollection>()) }
     }
 
+    override suspend fun savePreferredFood(food: String) {
+        return   realm.write {
+            query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+                .find()?.preferredFood = food
+        }
+    }
+
+    override suspend fun getPreferredFood(): String {
+        return realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+            .find()?.preferredFood ?: ""
+    }
+
     override suspend fun saveKeepMeLoggedInFlag(isChecked: Boolean) {
         realm.write {
             query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
