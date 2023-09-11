@@ -74,14 +74,12 @@ fun Route.restaurantRoutes() {
         authenticateWithRole(Role.DASHBOARD_ADMIN) {
             post {
                 val language = extractLocalizationHeader()
-                val restaurantDto = call.receive<RestaurantRequestDto>()
-                val user = identityService.getUserByUsername(restaurantDto.username)
-                identityService.updateUserPermission(
-                    userId = user.id,
-                    permission = listOf(Role.END_USER, Role.RESTAURANT_OWNER)
-                )
+                val restaurantDto = call.receive<RestaurantDto>()
+                val user = identityService.getUserByUsername(restaurantDto.username, language)
+                identityService.updateUserPermission(userId = user.id, permission = listOf(Role.RESTAURANT_OWNER) ,language)
                 val newRestaurant = restaurantService.addRestaurant(
-                    restaurantDto.toRestaurantRequestDto().copy(ownerId = user.id), language
+                    restaurantDto.toRestaurantRequestDto().copy(ownerId = user.id),
+                    language
                 )
                 respondWithResult(HttpStatusCode.Created, newRestaurant)
             }
@@ -99,7 +97,7 @@ fun Route.restaurantRoutes() {
                 val language = extractLocalizationHeader()
                 val restaurantId = call.parameters["restaurantId"]?.trim().toString()
                 val result = restaurantService.deleteRestaurant(restaurantId, language)
-                respondWithResult(HttpStatusCode.OK, result)
+                respondWithResult(HttpStatusCode.Created, result)
 
             }
         }

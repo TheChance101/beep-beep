@@ -1,5 +1,8 @@
 package org.thechance.api_gateway.data.localizedMessages.languages
 
+import org.koin.core.annotation.Single
+
+@Single
 class ArabicLocalizedMessages() : LocalizedMessages {
 
     // region identity

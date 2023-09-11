@@ -2,11 +2,8 @@ package org.thechance.api_gateway.endpoints
 
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.auth.*
-import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
-import kotlinx.coroutines.async
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.service.IdentityService
 import org.thechance.api_gateway.data.service.RestaurantService
@@ -14,7 +11,6 @@ import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
 import org.thechance.api_gateway.endpoints.utils.respondWithResult
 import org.thechance.api_gateway.endpoints.utils.toIntListOrNull
-import org.thechance.api_gateway.util.Claim
 import org.thechance.api_gateway.util.Role
 
 fun Route.userRoutes() {
@@ -47,11 +43,11 @@ fun Route.userRoutes() {
             }
 
             put("/{userId}/permission") {
+                val language = extractLocalizationHeader()
                 val userId = call.parameters["userId"]?.trim().toString()
-                val params = call.receiveParameters()
-                val permission = params["permission"]?.toIntListOrNull() ?: listOf(Role.END_USER)
-                val result = identityService.updateUserPermission(userId, permission)
-                respondWithResult(HttpStatusCode.Created, result)
+                val permission: List<Int> = call.receive<List<Int>>()
+                val result = identityService.updateUserPermission(userId, permission,language)
+                respondWithResult(HttpStatusCode.OK, result)
             }
 
             get("/last-register") {
@@ -60,10 +56,9 @@ fun Route.userRoutes() {
                 respondWithResult(HttpStatusCode.OK, result)
             }
 
-            get("/search") {
-                val searchTerm = call.parameters["query"] ?: ""
-                val params = call.receiveParameters()
-                val permission = params["permission"]?.toIntListOrNull() ?: listOf(Role.END_USER)
+            get("/search"){
+                val searchTerm = call.request.queryParameters["query"]?.trim() ?:""
+                val permission: List<Int> = call.receive<List<Int>>()
                 val users = identityService.searchUsers(searchTerm, permission)
                 respondWithResult(HttpStatusCode.OK, users)
             }

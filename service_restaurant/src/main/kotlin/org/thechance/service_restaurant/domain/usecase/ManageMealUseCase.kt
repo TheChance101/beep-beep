@@ -1,6 +1,5 @@
 package org.thechance.service_restaurant.domain.usecase
 
-import org.thechance.service_restaurant.domain.utils.getCurrencyForLocation
 import org.thechance.service_restaurant.domain.entity.Cuisine
 import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.entity.MealDetails
