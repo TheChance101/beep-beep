@@ -17,14 +17,18 @@ class PickLanguageScreenModel(
 
 
     override fun onLanguageSelected(language: LanguageUIState) {
-        viewModelScope.launch {
-            manageLanguage.saveLanguageCode(language.code)
-            onSavedLanguageSuccess()
-        }
+        tryToExecute(
+            { manageLanguage.saveLanguageCode(language.code) },
+            ::onSavedLanguageSuccess,
+            ::onError
+        )
     }
 
-    private fun onSavedLanguageSuccess() {
+    private fun onSavedLanguageSuccess(unit:Unit) {
         sendNewEffect(PickLanguageUIEffect.onGoToPreferredLanguage)
     }
 
+    private fun onError(errorState: ErrorState) {
+        println(errorState)
+    }
 }
