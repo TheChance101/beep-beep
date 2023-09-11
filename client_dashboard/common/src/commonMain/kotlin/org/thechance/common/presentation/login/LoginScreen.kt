@@ -37,12 +37,11 @@ class LoginScreen :
 
     override fun onEffect(effect: LoginUIEffect, navigator: Navigator) {
         when (effect) {
-            LoginUIEffect.LoginSuccess -> {
+            is LoginUIEffect.LoginSuccess -> {
                 navigator.replaceAll(MainContainer)
             }
-
             is LoginUIEffect.LoginFailed -> {
-                navigator.replaceAll(LoginScreen())
+                println(effect.errorMessage)
             }
         }
     }
@@ -98,6 +97,8 @@ class LoginScreen :
                         text = state.username,
                         label = Resources.Strings.loginUsername,
                         modifier = Modifier.padding(top = 40.kms),
+                        errorMessage = state.isUserError.errorMessage,
+                        isError = state.isUserError.isError,
                         hint = ""
                     )
                     BpTextField(
@@ -106,6 +107,8 @@ class LoginScreen :
                         label = Resources.Strings.loginPassword,
                         keyboardType = KeyboardType.Password,
                         modifier = Modifier.padding(top = 16.kms),
+                        errorMessage = state.isPasswordError.errorMessage,
+                        isError = state.isPasswordError.isError,
                         hint = ""
                     )
                     BpCheckBox(

@@ -1,10 +1,10 @@
 package org.thechance.common.presentation.login
 
-import kotlinx.coroutines.flow.update
 import org.thechance.common.domain.usecase.ILoginUserUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.restaurant.ErrorWrapper
 import org.thechance.common.presentation.util.ErrorState
+import java.lang.Error
 
 
 class LoginScreenModel(
@@ -12,11 +12,11 @@ class LoginScreenModel(
 ) : BaseScreenModel<LoginUIState, LoginUIEffect>(LoginUIState()), LoginInteractionListener {
 
     override fun onPasswordChange(password: String) {
-        updateState { it.copy(password = password, isLoginAble = true) }
+        updateState { it.copy(password = password,isLoginAble = password.isNotBlank()) }
     }
 
     override fun onUsernameChange(username: String) {
-        updateState { it.copy(username = username) }
+        updateState { it.copy(username = username,isLoginAble = username.isNotBlank()) }
     }
 
     override fun onLoginClicked() {
@@ -52,19 +52,25 @@ class LoginScreenModel(
     private fun handleErrorState(error: ErrorState) {
         when (error) {
             is ErrorState.InvalidCredentials -> {
+                updateState { it.copy(isLoading = false, error = error, isPasswordError = ErrorWrapper(error.errorMessage,true)) }
                 sendNewEffect(LoginUIEffect.LoginFailed(error.errorMessage))
             }
 
             is ErrorState.UserNotExist -> {
+                updateState { it.copy(isLoading = false, error = error, isUserError = ErrorWrapper(error.errorMessage,true)) }
                 sendNewEffect(LoginUIEffect.LoginFailed(error.errorMessage))
             }
 
-            ErrorState.NoConnection -> {
-
+            is ErrorState.NoConnection -> {
+                sendNewEffect(LoginUIEffect.LoginFailed("No internet connection!"))
             }
 
-            ErrorState.UnKnownError -> {
+            is ErrorState.UnKnownError -> {
+                sendNewEffect(LoginUIEffect.LoginFailed("Unknown error please retry again!"))
+            }
 
+            is ErrorState.LoginError -> {
+                sendNewEffect(LoginUIEffect.LoginFailed(error.errorMessage))
             }
         }
     }
@@ -73,8 +79,9 @@ class LoginScreenModel(
         updateState {
             it.copy(
                 error = null,
-                isLoading = false
+                isLoading = false,
+                isPasswordError = ErrorWrapper(),
+                isUserError = ErrorWrapper()
             )
         }
-
 }
