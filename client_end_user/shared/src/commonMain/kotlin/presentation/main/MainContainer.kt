@@ -1,6 +1,7 @@
 package presentation.main
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.unit.dp
@@ -101,7 +103,8 @@ object MainContainer :
         val iconSizePx = 24.dp.toPx()
 
         BpNavigationBar(
-            modifier = Modifier.drawTopIndicator(xOffsetAnimated).padding(bottom = 20.dp)
+            modifier = Modifier.background(Theme.colors.surface)
+                .drawTopIndicator(xOffsetAnimated).padding(bottom = 10.dp)
         ) {
             tabs.forEach { tabContainer ->
                 val selected = tabNavigator.current == tabContainer.tab
