@@ -121,6 +121,8 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         val wallet = getWalletByUserId(id)
         val userAddresses = getUserAddresses(id)
         val userPermission = getUserPermission(id)
+        val location = userAddresses.first().location
+        val country = getCountryForLocation(location)
 
         return dataBaseContainer.userCollection.aggregate<DetailedUserCollection>(
             match(
@@ -133,7 +135,7 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
                 foreignField = UserDetailsCollection::userId.name,
                 newAs = DetailedUserCollection::details.name
             )
-        ).toList().toEntity(wallet.walletBalance, userAddresses, userPermission).firstOrNull()
+        ).toList().toEntity(wallet.walletBalance, userAddresses, country, userPermission).firstOrNull()
             ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
@@ -301,7 +303,7 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
 
         return dataBaseContainer.userCollection.findOneAndUpdate(
             filter = UserCollection::id eq ObjectId(userId),
-            update=   Updates.set(UserCollection::permission.name, permissions),
+            update = Updates.set(UserCollection::permission.name, permissions),
             options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toManagedEntity() ?: throw ResourceNotFoundException(USER_NOT_FOUND)
     }
