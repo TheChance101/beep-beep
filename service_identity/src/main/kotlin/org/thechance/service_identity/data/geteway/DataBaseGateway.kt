@@ -301,7 +301,7 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
 
         return dataBaseContainer.userCollection.findOneAndUpdate(
             filter = UserCollection::id eq ObjectId(userId),
-            update=   Updates.set(UserCollection::permission.name, permissions),
+            update = Updates.set(UserCollection::permission.name, permissions),
             options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toManagedEntity() ?: throw ResourceNotFoundException(USER_NOT_FOUND)
     }
@@ -334,7 +334,7 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
             UserDetailsCollection::userId eq ObjectId(userId),
             addToSet(UserDetailsCollection::favorite, ObjectId(restaurantId))
         )
-        return result.matchedCount > 0
+        return result.isUpdatedSuccessfully()
     }
 
     override suspend fun deleteFromFavorite(userId: String, restaurantId: String): Boolean {
@@ -342,7 +342,7 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
             UserDetailsCollection::userId eq ObjectId(userId),
             pull(UserDetailsCollection::favorite, ObjectId(restaurantId))
         )
-        return result.matchedCount > 0
+        return result.isUpdatedSuccessfully()
     }
 
     // endregion

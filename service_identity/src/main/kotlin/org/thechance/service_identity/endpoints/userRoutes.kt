@@ -106,14 +106,14 @@ fun Route.userRoutes() {
 
             post {
                 val userId = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-                val restaurantId = call.receiveParameters()["restaurantId"].toString()
+                val restaurantId = call.parameters["restaurantId"].orEmpty().trim()
                 val restaurant = favorite.addRestaurantsToFavorite(userId = userId, restaurantId = restaurantId)
                 call.respond(HttpStatusCode.OK, restaurant)
             }
 
             delete {
                 val userId = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-                val restaurantId = call.receiveParameters()["restaurantId"].toString()
+                val restaurantId = call.parameters["restaurantId"].orEmpty().trim()
                 val restaurant = favorite.removeRestaurantsFromFavorite(userId = userId, restaurantId = restaurantId)
                 call.respond(HttpStatusCode.OK, restaurant)
             }
