@@ -4,6 +4,9 @@ import data.local.model.UserConfigurationCollection
 import domain.gateway.local.ILocalConfigurationGateway
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
+import io.realm.kotlin.ext.realmListOf
+import io.realm.kotlin.ext.toRealmList
+import io.realm.kotlin.types.RealmList
 
 class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationGateway {
 
@@ -47,16 +50,16 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
         realm.write { delete(query<UserConfigurationCollection>()) }
     }
 
-    override suspend fun savePreferredFood(food: String) {
+    override suspend fun savePreferredFood(food: List<String>) {
         return   realm.write {
             query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
-                .find()?.preferredFood = food
+                .find()?.preferredFood?.addAll(food.toRealmList())
         }
     }
 
-    override suspend fun getPreferredFood(): String {
+    override suspend fun getPreferredFood(): List<String> {
         return realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
-            .find()?.preferredFood ?: ""
+            .find()?.preferredFood?.toList() ?: emptyList()
     }
 
     override suspend fun saveKeepMeLoggedInFlag(isChecked: Boolean) {

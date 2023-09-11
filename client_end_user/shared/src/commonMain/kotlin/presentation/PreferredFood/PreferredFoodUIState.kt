@@ -4,7 +4,7 @@ import util.preferredCuisine
 
 data class PreferredFoodUIState(
     val preferredFood : List<FoodUIState> = preferredCuisine,
-    val selectedPreferredFood :FoodUIState? = FoodUIState()
+    val selectedPreferredFood :List<String> = emptyList()
 )
 data class FoodUIState(
     val name: String = "",

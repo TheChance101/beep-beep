@@ -15,17 +15,28 @@ class PreferredFoodScreenModel(
 ) :BaseScreenModel<PreferredFoodUIState, PreferredFoodUIEffect,>(PreferredFoodUIState()),
     PreferredFoodInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
+    private var  selectedFood = mutableListOf<String>()
 
     override fun onPreferredFoodClicked(foodUIState: FoodUIState) {
 
-        val updatedPreferredCuisine = state.value.preferredFood.filterNot { it.name == foodUIState.name }
+        if(state.value.selectedPreferredFood.size < 4){
+            addPreferredFood(foodUIState)
+        }else{
+            onSaved()
+        }
 
-        updateState { it.copy(preferredFood=updatedPreferredCuisine) }
-//        tryToExecute(
-//            { mangePreferredFood.savePreferredFood(foodUIState.name) },
-//            ::onSavedPreferredFoodSuccess,
-//            ::onError
-//        )
+    }
+    private fun onSaved() {
+        tryToExecute(
+            { mangePreferredFood.savePreferredFood( state.value.selectedPreferredFood) },
+            ::onSavedPreferredFoodSuccess,
+            ::onError
+        )
+    }
+    private fun addPreferredFood(foodUIState: FoodUIState) {
+        selectedFood.add(foodUIState.name)
+        val updatedPreferredCuisine = state.value.preferredFood.filterNot { it.name == foodUIState.name }
+        updateState { it.copy(preferredFood=updatedPreferredCuisine,selectedPreferredFood = selectedFood) }
     }
     private fun onSavedPreferredFoodSuccess(unit:Unit) {
         sendNewEffect(PreferredFoodUIEffect.NavigateToPreferredScreen)
