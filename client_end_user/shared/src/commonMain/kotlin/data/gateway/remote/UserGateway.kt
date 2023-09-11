@@ -1,20 +1,19 @@
 package data.gateway.remote
 
 import data.remote.mapper.toSessionEntity
+import data.remote.mapper.toUser
 import data.remote.model.ServerResponse
 import data.remote.model.SessionDto
+import data.remote.model.UserDto
 import domain.entity.Session
+import domain.entity.User
 import domain.gateway.IUserGateway
 import domain.utils.AuthorizationException
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.request.forms.submitForm
-import io.ktor.client.request.header
 import io.ktor.client.request.url
 import io.ktor.http.HttpMethod
 import io.ktor.http.Parameters
-import io.ktor.http.isSuccess
-import io.ktor.http.parameters
 
 class UserGateway(client: HttpClient) : BaseGateway(client), IUserGateway {
 
@@ -23,28 +22,20 @@ class UserGateway(client: HttpClient) : BaseGateway(client), IUserGateway {
         username: String,
         password: String,
         email: String
-    ): Boolean {
-        try {
-            val response = client.submitForm(
-                formParameters = parameters {
+    ): User {
+        return tryToExecute<ServerResponse<UserDto>> {
+            submitForm(
+                url = ("/signup"),
+                formParameters = Parameters.build {
                     append("fullName", fullName)
                     append("username", username)
                     append("password", password)
                     append("email", email)
                 }
-            ) {
-                url("/signup")
-                header("Accept-Language", "en")
+            ){
+                method = HttpMethod.Post
             }
-            val responseBody = response.body<ServerResponse<Boolean>>()
-            if (response.status.isSuccess()) {
-                return responseBody.value ?: false
-            } else {
-                throw Exception(responseBody.status.errorMessages.toString())
-            }
-        } catch (exception: Exception) {
-            throw Exception(exception.message)
-        }
+        }.value?.toUser() ?: throw AuthorizationException.InvalidCredentialsException("Invalid Credential")
     }
 
     override suspend fun loginUser(username: String, password: String): Session {

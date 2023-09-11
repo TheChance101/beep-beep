@@ -27,7 +27,11 @@ class ManageAuthenticationUseCase(
         password: String,
         email: String
     ): Boolean {
-        return remoteGateway.createUser(fullName, username, password, email)
+        with(validation) {
+            validateFullName(fullName); validateUsername(username); validatePassword(password)
+            validateEmail(email)
+        }
+        return remoteGateway.createUser(fullName, username, password, email).name.isNotEmpty()
     }
 
     override suspend fun loginUser(

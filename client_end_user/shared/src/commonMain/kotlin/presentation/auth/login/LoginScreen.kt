@@ -24,6 +24,7 @@ import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import presentation.auth.signup.registration.RegistrationScreen
 import presentation.base.BaseScreen
 import presentation.composable.BpBrandBackgroundContainer
 import presentation.composable.HeadFirstCard
@@ -45,7 +46,7 @@ class LoginScreen :
     ) {
         when (effect) {
             is LoginScreenUIEffect.NavigateToHome -> navigator.replaceAll(MainContainer)
-            LoginScreenUIEffect.NavigateToSignup -> TODO()
+            LoginScreenUIEffect.NavigateToSignup -> navigator.push(RegistrationScreen())
         }
     }
 

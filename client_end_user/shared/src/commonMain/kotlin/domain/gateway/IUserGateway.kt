@@ -2,6 +2,7 @@ package domain.gateway
 
 
 import domain.entity.Session
+import domain.entity.User
 
 interface IUserGateway {
 
@@ -10,7 +11,7 @@ interface IUserGateway {
         username: String,
         password: String,
         email: String
-    ): Boolean
+    ): User
 
     suspend fun loginUser(username: String, password: String): Session
 

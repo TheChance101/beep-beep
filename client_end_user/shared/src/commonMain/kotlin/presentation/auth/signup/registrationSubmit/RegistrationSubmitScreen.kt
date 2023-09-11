@@ -1,4 +1,4 @@
-package presentation.auth.signup.registration
+package presentation.auth.signup.registrationSubmit
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BPSnackBar
@@ -27,26 +26,27 @@ import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import presentation.auth.signup.registrationSubmit.RegistrationSubmitScreen
+import org.koin.core.parameter.parametersOf
+import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
 import presentation.composable.BpBrandBackgroundContainer
 import presentation.composable.HeadFirstCard
 import presentation.composable.modifier.noRippleEffect
 import resources.Resources
 
-class RegistrationScreen :
-    BaseScreen<RegistrationScreenModel, RegistrationUIState, RegistrationScreenEffect, RegistrationInteractionListener>() {
+class RegistrationSubmitScreen(private val username: String, private val password: String) :
+    BaseScreen<RegistrationSubmitScreenModel, RegistrationSubmitUIState, RegistrationSubmitScreenEffect, RegistrationSubmitInteractionListener>() {
 
     @Composable
     override fun Content() {
-        initScreen(getScreenModel())
+        initScreen(getScreenModel { parametersOf(username, password) })
     }
 
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
     @Composable
     override fun onRender(
-        state: RegistrationUIState,
-        listener: RegistrationInteractionListener
+        state: RegistrationSubmitUIState,
+        listener: RegistrationSubmitInteractionListener
     ) {
         BpBrandBackgroundContainer {
             Row(
@@ -69,29 +69,36 @@ class RegistrationScreen :
                 }
             }
             HeadFirstCard(
-                textHeader = Resources.strings.joinBpToday,
-                textSubHeader = Resources.strings.createYourAccount
+                textHeader = Resources.strings.justOnMoreStep,
+                textSubHeader = Resources.strings.completeYourRegistration
             ) {
                 BpTextField(
                     modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
-                    text = state.username,
-                    onValueChange = listener::onUsernameChanged,
-                    label = Resources.strings.username,
-                    keyboardType = KeyboardType.Text,
-                    errorMessage = state.usernameErrorMsg,
-                    isError = state.isUsernameError,
+                    text = state.fullName,
+                    onValueChange = listener::onFullNameChanged,
+                    label = Resources.strings.fullName,
+                    errorMessage = state.fullErrorMsg,
+                    isError = state.isFullError,
                 )
                 BpTextField(
                     modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
-                    text = state.password,
-                    onValueChange = listener::onPasswordChanged,
-                    label = Resources.strings.password,
-                    errorMessage = state.passwordErrorMsg,
-                    isError = state.isPasswordError,
+                    text = state.email,
+                    onValueChange = listener::onEmailChanged,
+                    label = Resources.strings.email,
+                    errorMessage = state.emailErrorMsg,
+                    isError = state.isEmailError,
+                )
+                BpTextField(
+                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                    text = state.phone,
+                    onValueChange = listener::onPhoneChanged,
+                    label = Resources.strings.mobileNumber,
+                    errorMessage = state.phoneErrorMsg,
+                    isError = state.isPhoneError,
                 )
                 BpButton(
                     modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
-                    title = Resources.strings.next,
+                    title = Resources.strings.signUp,
                     onClick = listener::onNextButtonClicked,
                     enabled = !state.isLoading
                 )
@@ -113,15 +120,10 @@ class RegistrationScreen :
         }
     }
 
-    override fun onEffect(effect: RegistrationScreenEffect, navigator: Navigator) {
+    override fun onEffect(effect: RegistrationSubmitScreenEffect, navigator: Navigator) {
         when (effect) {
-            is RegistrationScreenEffect.NavigateBack -> navigator.pop()
-            is RegistrationScreenEffect.NavigateToSubmitRegistrationScreen -> navigator.push(
-                RegistrationSubmitScreen(
-                    username = effect.username,
-                    password = effect.password
-                )
-            )
+            RegistrationSubmitScreenEffect.NavigateBack -> navigator.pop()
+            RegistrationSubmitScreenEffect.NavigateToLoginScreen -> navigator.replaceAll(LoginScreen())
         }
     }
 }
