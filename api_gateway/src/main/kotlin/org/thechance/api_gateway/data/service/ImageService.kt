@@ -19,7 +19,7 @@ class ImageService(
     private val clientId = System.getenv("CLIENT_ID").toString()
     suspend fun uploadImage(image: ByteArray): ImageResponse {
         return client.tryToExecute<ImageResponse>(
-            api = APIs.IMAUR_API,
+            api = APIs.IMGUR_API,
             attributes = attributes
         ) {
             post("/3/image") {
