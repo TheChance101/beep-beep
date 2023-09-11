@@ -293,10 +293,8 @@ class RestaurantScreenModel(
 
     override fun onCloseAddCuisineDialog() {
         updateState { it.copy(
-                restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
-                    isVisible = false,
-                    cuisineName = ""
-                )
+                restaurantAddCuisineDialogUiState =
+                it.restaurantAddCuisineDialogUiState.copy(isVisible = false, cuisineName = "")
             )
         }
     }
@@ -309,15 +307,14 @@ class RestaurantScreenModel(
         )
     }
 
-    private fun onCreateCuisinesSuccessfully(cuisineName: String?) {
+    private fun onCreateCuisinesSuccessfully(cuisineName: String) {
         updateState {
             it.copy(
                 restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
-                    isVisible = true,
-                    cuisineName = "",
                     cuisines = it.restaurantAddCuisineDialogUiState.cuisines.toMutableList().apply {
-                        add(cuisineName!!)
-                    }
+                        add(cuisineName)
+                    },
+                    cuisineName = ""
                 )
             )
         }
@@ -335,8 +332,6 @@ class RestaurantScreenModel(
         updateState {
             it.copy(
                 restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
-                    isVisible = true,
-                    cuisineName = "",
                     cuisines = it.restaurantAddCuisineDialogUiState.cuisines.toMutableList().apply {
                         remove(cuisineName)
                     }
