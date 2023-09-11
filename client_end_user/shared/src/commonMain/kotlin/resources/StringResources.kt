@@ -39,5 +39,6 @@ data class StringResources(
     val orderOnTheWay: String = "Your order is on the way...",
     val inProgress: String = "In progress",
     val lastOrder: String = "Last order",
-    val orderAgain: String = "Order again"
+    val orderAgain: String = "Order again",
+    val searchHint: String = "Search for meal, restaurant"
 )

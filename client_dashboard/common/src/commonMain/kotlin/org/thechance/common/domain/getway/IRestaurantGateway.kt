@@ -8,7 +8,7 @@ interface IRestaurantGateway {
 
     suspend fun createRestaurant(restaurant: NewRestaurantInfo): Restaurant
 
-    suspend fun deleteRestaurants(restaurant: Restaurant): Restaurant
+    suspend fun deleteRestaurant(id: String): Boolean
 
     suspend fun getCuisines(): List<String>
 
