@@ -1,15 +1,24 @@
 package presentation.orders
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import cafe.adriel.voyager.core.screen.Screen
-import resources.Resources
+import cafe.adriel.voyager.navigator.Navigator
+import presentation.base.BaseScreen
 
-class OrderScreen : Screen {
+class OrderScreen :
+    BaseScreen<OrderScreenModel, OrderScreenUiState, OrderScreenUiEffect, OrderScreenInteractionListener>() {
 
     @Composable
     override fun Content() {
-        Text(text = Resources.strings.orders)
+        initScreen(getScreenModel())
+    }
+
+    override fun onEffect(effect: OrderScreenUiEffect, navigator: Navigator) {
+
+    }
+
+    @Composable
+    override fun onRender(state: OrderScreenUiState, listener: OrderScreenInteractionListener) {
+
     }
 
 }
