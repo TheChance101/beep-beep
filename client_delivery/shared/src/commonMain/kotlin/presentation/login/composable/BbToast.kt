@@ -1,5 +1,8 @@
 package presentation.login.composable
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -26,6 +29,7 @@ import kotlin.time.Duration
 @Composable
 fun BPToast(
     icon: Painter,
+    isVisible : Boolean,
     modifier: Modifier = Modifier,
     iconTint: Color = Theme.colors.primary,
     iconBackgroundColor: Color = Theme.colors.hover,
@@ -33,34 +37,41 @@ fun BPToast(
     duration: BPToastDuration = BPToastDuration.Indefinite,
     content: @Composable () -> Unit
 ) {
-    var isVisible by remember { mutableStateOf(true) }
+    var isToShow by remember { mutableStateOf(true) }
 
-    Row(
+    AnimatedVisibility(
+        visible = isToShow && isVisible,
+        enter = slideInVertically { it },
+        exit = slideOutVertically { it },
         modifier = modifier
-            .fillMaxWidth()
-            .padding(
-                horizontal = Theme.dimens.space16,
-                vertical = Theme.dimens.space24
-            )
-            .clip(RoundedCornerShape(Theme.radius.medium))
-            .background(backgroundColor)
-            .padding(
-                horizontal = Theme.dimens.space16,
-                vertical = Theme.dimens.space8
-            ),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8)
     ) {
-        Icon(
-            modifier = Modifier.background(
-                color = iconBackgroundColor,
-                shape = RoundedCornerShape(Theme.radius.medium)
-            ).padding(Theme.dimens.space8),
-            painter = icon,
-            contentDescription = null,
-            tint = iconTint
-        )
-        content()
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    horizontal = Theme.dimens.space16,
+                    vertical = Theme.dimens.space24
+                )
+                .clip(RoundedCornerShape(Theme.radius.medium))
+                .background(backgroundColor)
+                .padding(
+                    horizontal = Theme.dimens.space16,
+                    vertical = Theme.dimens.space8
+                ),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space8)
+        ) {
+            Icon(
+                modifier = Modifier.background(
+                    color = iconBackgroundColor,
+                    shape = RoundedCornerShape(Theme.radius.medium)
+                ).padding(Theme.dimens.space8),
+                painter = icon,
+                contentDescription = null,
+                tint = iconTint
+            )
+            content()
+        }
     }
 
     LaunchedEffect(key1 = null) {
@@ -69,6 +80,6 @@ fun BPToast(
             BPToastDuration.Short -> delay(4000)
             BPToastDuration.Indefinite -> delay(Duration.INFINITE)
         }
-        isVisible = false
+        isToShow = false
     }
 }
