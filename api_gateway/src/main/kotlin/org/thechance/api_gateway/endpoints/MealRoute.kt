@@ -28,9 +28,10 @@ fun Route.mealRoute() {
 
             post {
                 val language = extractLocalizationHeader()
-                val multipartDto = receiveMultipart<MealDto>(imageValidator,imageService)
-                val mealDto = multipartDto.data.copy(image = multipartDto.image)
-                val createdMeal = restaurantService.addMeal(mealDto, language)
+                val multipartDto = receiveMultipart<MealDto>(imageValidator)
+                val image = multipartDto.image?.let { image -> imageService.uploadImage(image) }
+                val mealDto = multipartDto.data?.copy(image = image?.data?.link)
+                val createdMeal = mealDto?.let { meal -> restaurantService.addMeal(meal, language) }
                 respondWithResult(HttpStatusCode.Created, createdMeal)
             }
 

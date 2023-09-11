@@ -15,7 +15,6 @@ import kotlinx.serialization.json.Json
 import org.thechance.api_gateway.data.localizedMessages.Language
 import org.thechance.api_gateway.data.model.MultipartDto
 import org.thechance.api_gateway.data.model.ServerResponse
-import org.thechance.api_gateway.data.service.ImageService
 import org.thechance.api_gateway.util.Claim.PERMISSION
 
 suspend inline fun <reified T> PipelineContext<Unit, ApplicationCall>.respondWithResult(
@@ -66,22 +65,18 @@ fun String?.toIntListOrNull(): List<Int>? {
 }
 
 suspend inline fun <reified T> PipelineContext<Unit, ApplicationCall>.receiveMultipart(
-    imageValidator: ImageValidator,
-    imageService: ImageService
+    imageValidator: ImageValidator
 ): MultipartDto<T> {
 
     val multipart = call.receiveMultipart()
-    var link = ""
+    var fileBytes: ByteArray? = null
     var data: T? = null
 
     multipart.forEachPart { part ->
         when (part) {
             is PartData.FileItem -> {
-
-                val isImage = imageValidator.isValid(part.originalFileName)
-                if (isImage) {
-                    val fileBytes = part.streamProvider()
-                    imageService.uploadImage(fileBytes).also { link = it.data?.link ?: "" }
+                if (imageValidator.isValid(part.originalFileName)) {
+                    fileBytes = part.streamProvider().readBytes()
                 }
             }
 
@@ -96,5 +91,5 @@ suspend inline fun <reified T> PipelineContext<Unit, ApplicationCall>.receiveMul
         }
         part.dispose()
     }
-    return MultipartDto(data = data!!, image = link)
+    return MultipartDto(data = data, image = fileBytes)
 }

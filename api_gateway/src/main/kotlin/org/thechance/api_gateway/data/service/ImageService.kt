@@ -10,7 +10,6 @@ import org.thechance.api_gateway.data.model.image.ImageResponse
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.tryToExecute
 import org.thechance.api_gateway.util.APIs
-import java.io.InputStream
 
 @Single
 class ImageService(
@@ -20,7 +19,7 @@ class ImageService(
 ) {
 
     private val clientId = System.getenv("CLIENT_ID").toString()
-    suspend fun uploadImage(imageFile: InputStream): ImageResponse {
+    suspend fun uploadImage(image: ByteArray): ImageResponse {
         return client.tryToExecute<ImageResponse>(
             api = APIs.IMAUR_API,
             attributes = attributes
@@ -32,7 +31,7 @@ class ImageService(
                 }
                 setBody(
                     MultiPartFormDataContent(formData {
-                        append("image", imageFile.readBytes())
+                        append("image", image)
                     })
                 )
             }
