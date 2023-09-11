@@ -2,6 +2,8 @@ package presentation.login
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 
 class LoginScreenModel :
@@ -28,7 +30,7 @@ LoginScreenInteractionListener{
         password: String,
         isKeepMeLoggedInChecked: Boolean
     ) {
-        TODO("Not yet implemented")
+        state.value.sheetState.show()//fake scenario just 4 testing
     }
     //region permission
     override fun onOwnerEmailChanged(ownerEmail: String) {
@@ -44,19 +46,33 @@ LoginScreenInteractionListener{
     }
 
     override fun onRequestPermissionClicked() {
-        TODO("Not yet implemented")
+        dismissBottomSheet()
+        showPermissionSheetWithDelay()
+    }
+
+    private fun showPermissionSheetWithDelay() {
+        coroutineScope.launch {
+            delay(300)
+            updateState { it.copy(showPermissionSheet = true) }
+            state.value.sheetState.show()
+        }
     }
 
     override fun onSubmitClicked(restaurantName: String, ownerEmail: String, description: String) {
-        TODO("Not yet implemented")
+        sendNewEffect(LoginScreenUIEffect.LoginEffect(""))//fake scenario just 4 testing
     }
 
     override fun onCancelClicked() {
-        TODO("Not yet implemented")
+        dismissBottomSheet()
     }
 
     override fun onSheetBackgroundClicked() {
-        TODO("Not yet implemented")
+        dismissBottomSheet()
     }
+
+    private fun dismissBottomSheet() {
+        state.value.sheetState.dismiss()
+    }
+
     //end region
 }
