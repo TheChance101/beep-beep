@@ -42,7 +42,7 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
 
     override suspend fun getLanguageCode(): String {
         return realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
-            .find()?.languageCode ?: ""
+            .find()?.languageCode ?: "en"
     }
 
     override suspend fun getAccessToken(): String {
