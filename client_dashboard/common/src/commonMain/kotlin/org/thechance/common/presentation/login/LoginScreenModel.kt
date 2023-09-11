@@ -50,7 +50,7 @@ class LoginScreenModel(
 
     private fun handleErrorState(error: ErrorState) {
         when (error) {
-            is ErrorState.InvalidCredentials -> {
+            is ErrorState.InvalidPassword -> {
                 updateState { it.copy(passwordError = ErrorWrapper(error.errorMessage,true)) }
                 sendNewEffect(LoginUIEffect.LoginFailed(error.errorMessage))
             }
@@ -66,6 +66,10 @@ class LoginScreenModel(
 
             ErrorState.UnKnownError -> {
 
+            }
+
+            else -> {
+                sendNewEffect(LoginUIEffect.LoginFailed("Unknown error"))
             }
         }
     }
