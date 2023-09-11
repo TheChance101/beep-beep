@@ -9,10 +9,11 @@ import org.koin.core.scope.Scope
 
 fun Scope.authorizationIntercept(client: HttpClient) {
 
-    val localConfigurationGateway: LocalConfigurationGateway by inject()
-    val userGateway: UserGateway by inject()
-
     client.plugin(HttpSend).intercept { request ->
+
+        val localConfigurationGateway = get<LocalConfigurationGateway>()
+        // todo add identity gate way to fix this error
+        val remoteIdentityGateway = get<IdentityRemoteGateway>()
 
         val accessToken = localConfigurationGateway.getAccessToken()
         val refreshToken = localConfigurationGateway.getRefreshToken()
@@ -20,10 +21,10 @@ fun Scope.authorizationIntercept(client: HttpClient) {
         request.headers {
             append("Authorization", "Bearer $accessToken")
         }
-
         val originalCall = execute(request)
+
         if (originalCall.response.status.value == 401) {
-            val (access, refresh) = userGateway.refreshAccessToken(refreshToken)
+            val (access, refresh) = remoteIdentityGateway.refreshAccessToken(refreshToken)
             localConfigurationGateway.saveAccessToken(access)
             localConfigurationGateway.saveRefreshToken(refresh)
             execute(request)
