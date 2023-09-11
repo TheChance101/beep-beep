@@ -26,6 +26,7 @@ import presentation.login.composable.CustomBottomSheet
 import presentation.login.composable.LogoHeaderCard
 import presentation.login.composable.RequestPermissionBottomSheet
 import presentation.login.composable.WrongPermissionBottomSheet
+import presentation.main.MainScreen
 import resources.Resources
 
 class LoginScreen : BaseScreen<
@@ -60,7 +61,10 @@ class LoginScreen : BaseScreen<
     }
 
     override fun onEffect(effect: LoginScreenUIEffect, navigator: Navigator) {
-        TODO("Not yet implemented")
+          when (effect) {
+            is LoginScreenUIEffect.LoginEffect -> navigator.push(MainScreen())
+            LoginScreenUIEffect.LoginUIFailed -> {}
+        }
     }
 
     @Composable
@@ -122,7 +126,13 @@ private fun LoginScreenContent(
             BpButton(
                 modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
                 title = Resources.strings.login,
-                onClick = {},
+                onClick = {
+                    listener.onClickLogin(
+                        userName = state.userName,
+                        password = state.password,
+                        isKeepMeLoggedInChecked = state.keepLoggedIn
+                    )
+                },
             )
         }
     }
