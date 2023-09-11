@@ -93,6 +93,8 @@ data class StringResources(
 
     val clearAll: String = "Clear all",
     val noMatchesFound: String = "Oops, No matches found",
+    val invalidPlateNumber: String = "Invalid plate number",
+    val invalidCarModel: String = "Invalid car model",
 )
 
 val englishStrings = StringResources()
