@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MultipartDto<T>(
     val data: T?,
-    val image: ByteArray?
+    val image: ByteArray? = null
 )
