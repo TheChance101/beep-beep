@@ -6,8 +6,6 @@ data class PickLanguageUIState(
     val isLoading: Boolean = false,
     val languages: List<LanguageUIState> = langs,
     val selectedLanguage: LanguageUIState = LanguageUIState(),
-    val  snackBarMessage: String = "",
-    val showSnackBar: Boolean = false
 )
 
 data class LanguageUIState(
