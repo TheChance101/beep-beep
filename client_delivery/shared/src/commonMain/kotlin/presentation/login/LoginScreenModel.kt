@@ -64,15 +64,25 @@ LoginScreenInteractionListener{
 
     override fun onCancelClicked() {
         dismissBottomSheet()
+        coroutineScope.launch {
+            delayAndChangePermissionSheetState(false)
+        }
     }
 
     override fun onSheetBackgroundClicked() {
         dismissBottomSheet()
+        coroutineScope.launch {
+            delayAndChangePermissionSheetState(false)
+        }
     }
 
     private fun dismissBottomSheet() {
         state.value.sheetState.dismiss()
     }
 
+    private suspend fun delayAndChangePermissionSheetState(show: Boolean) {
+        delay(300)
+        updateState { it.copy(showPermissionSheet = show) }
+    }
     //end region
 }
