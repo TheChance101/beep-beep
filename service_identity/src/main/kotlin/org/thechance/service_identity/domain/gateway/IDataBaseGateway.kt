@@ -18,6 +18,10 @@ interface IDataBaseGateway {
 
     suspend fun getUserAddresses(userId: String): List<Address>
 
+    suspend fun getUserCountry(userId: String): String
+
+    suspend fun updateUserCountry(userId: String, country: String): Boolean
+
     //endregion
 
     // region: user
