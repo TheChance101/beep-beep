@@ -91,5 +91,5 @@ suspend inline fun <reified T> PipelineContext<Unit, ApplicationCall>.receiveMul
         }
         part.dispose()
     }
-    return MultipartDto(data = data, image = fileBytes)
+    return MultipartDto(data = data!!, image = fileBytes)
 }
