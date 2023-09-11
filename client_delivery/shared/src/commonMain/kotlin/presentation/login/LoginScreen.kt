@@ -124,15 +124,15 @@ private fun LoginScreenContent(
                 onCheck = listener::onKeepLoggedInClicked
             )
             BpButton(
-                modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
                 title = Resources.strings.login,
+                modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
                 onClick = {
                     listener.onClickLogin(
                         userName = state.userName,
                         password = state.password,
                         isKeepMeLoggedInChecked = state.keepLoggedIn
                     )
-                },
+                }
             )
         }
     }

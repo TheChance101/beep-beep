@@ -1,17 +1,27 @@
 package presentation.login
 
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.usecase.IManageLoginUserUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
+import presentation.base.ErrorState
 
-class LoginScreenModel :
+class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
     BaseScreenModel<LoginScreenUIState, LoginScreenUIEffect>(LoginScreenUIState()),
-LoginScreenInteractionListener{
+    LoginScreenInteractionListener {
 
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
+
+    init {
+        viewModelScope.launch {
+            if (manageLoginUser.getKeepMeLoggedInFlag()) {
+                sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
+            }
+        }
+    }
 
     override fun onUserNameChanged(userName: String) {
         updateState { it.copy(userName = userName) }
@@ -26,15 +36,63 @@ LoginScreenInteractionListener{
     }
 
     override fun onClickLogin(
-        userName: String,
+        username: String,
         password: String,
         isKeepMeLoggedInChecked: Boolean
     ) {
-        state.value.sheetState.show()//fake scenario just 4 testing
+        updateState { it.copy(isLoading = true) }
+        tryToExecute(
+            { manageLoginUser.loginUser(username, password, isKeepMeLoggedInChecked) },
+            { onLoginSuccess() },
+            ::onLoginError
+        )
     }
+
+    private fun onLoginError(errorState: ErrorState) {
+        clearErrors()
+        when (errorState) {
+            ErrorState.InvalidPassword -> updateState {
+                it.copy(
+                    passwordErrorMsg = "invalid password",
+                    isPasswordError = true
+                )
+            }
+
+            ErrorState.InvalidUsername -> updateState {
+                it.copy(
+                    usernameErrorMsg = "invalid username",
+                    isUsernameError = true
+                )
+            }
+
+            is ErrorState.UserNotFound -> {
+
+            }
+
+            else -> {}
+        }
+    }
+
+    private fun onLoginSuccess() {
+        clearErrors()
+        sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
+    }
+
+    private fun clearErrors() {
+        updateState {
+            it.copy(
+                usernameErrorMsg = "",
+                isUsernameError = false,
+                passwordErrorMsg = "",
+                isPasswordError = false,
+                isLoading = false
+            )
+        }
+    }
+
     //region permission
     override fun onOwnerEmailChanged(ownerEmail: String) {
-      updateState { it.copy(ownerEmail = ownerEmail) }
+        updateState { it.copy(ownerEmail = ownerEmail) }
     }
 
     override fun onRestaurantNameChanged(restaurantName: String) {
