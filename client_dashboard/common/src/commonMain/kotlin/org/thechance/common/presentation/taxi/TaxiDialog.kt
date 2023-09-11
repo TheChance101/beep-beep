@@ -1,7 +1,14 @@
 package org.thechance.common.presentation.taxi
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -22,7 +29,7 @@ import org.thechance.common.presentation.util.kms
 import java.awt.Dimension
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun TaxiDialog(
     isVisible: Boolean,
@@ -60,7 +67,8 @@ fun TaxiDialog(
                 modifier = Modifier.padding(top = 40.kms),
                 label = Resources.Strings.taxiPlateNumber,
                 onValueChange = listener::onTaxiPlateNumberChange,
-                text = state.plateNumber
+                text = state.plateNumber,
+                errorMessage = state.plateNumberError
             )
 
             BpTextField(
@@ -74,7 +82,8 @@ fun TaxiDialog(
                 modifier = Modifier.padding(top = 24.kms),
                 label = Resources.Strings.carModel,
                 onValueChange = listener::onCarModelChanged,
-                text = state.carModel
+                text = state.carModel,
+                errorMessage = state.carModelError
             )
 
             Text(
@@ -122,7 +131,8 @@ fun TaxiDialog(
                 BpButton(
                     title = if (isEditMode) Resources.Strings.save else Resources.Strings.create,
                     onClick = if (isEditMode) listener::onSaveClicked else listener::onCreateTaxiClicked,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = state.isFormValid
                 )
             }
         }

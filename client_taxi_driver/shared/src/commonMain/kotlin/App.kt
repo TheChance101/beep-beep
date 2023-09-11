@@ -1,7 +1,8 @@
 import androidx.compose.runtime.Composable
-import com.beepbeep.designSystem.DesignApp
+import cafe.adriel.voyager.navigator.Navigator
+import presentation.main.MainScreen
 
 @Composable
 fun App() {
-    DesignApp()
+    Navigator(MainScreen())
 }

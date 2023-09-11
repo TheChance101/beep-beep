@@ -9,6 +9,8 @@ data class TaxiDto(
     val color: Long? = null,
     val type: String? = null,
     val driverId: String? = null,
+    val driverUsername: String? = null,
     val isAvailable: Boolean? = null,
     val seats: Int? = null,
+    val tripsCount: Int? = null,
 )
