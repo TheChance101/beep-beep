@@ -1,15 +1,21 @@
 package org.thechance.api_gateway.endpoints.utils
 
 import io.ktor.http.*
+import io.ktor.http.content.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.util.pipeline.*
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import org.thechance.api_gateway.data.localizedMessages.Language
+import org.thechance.api_gateway.data.model.MultipartDto
 import org.thechance.api_gateway.data.model.ServerResponse
+import org.thechance.api_gateway.data.service.ImageService
 import org.thechance.api_gateway.util.Claim.PERMISSION
 
 suspend inline fun <reified T> PipelineContext<Unit, ApplicationCall>.respondWithResult(
@@ -57,4 +63,38 @@ private fun hasPermission(permission: Int, role: Int): Boolean {
 
 fun String?.toIntListOrNull(): List<Int>? {
     return this?.split(",")?.mapNotNull { it.toIntOrNull() }
+}
+
+suspend inline fun <reified T> PipelineContext<Unit, ApplicationCall>.receiveMultipart(
+    imageValidator: ImageValidator,
+    imageService: ImageService
+): MultipartDto<T> {
+
+    val multipart = call.receiveMultipart()
+    var link = ""
+    var data: T? = null
+
+    multipart.forEachPart { part ->
+        when (part) {
+            is PartData.FileItem -> {
+
+                val isImage = imageValidator.isValid(part.originalFileName)
+                if (isImage) {
+                    val fileBytes = part.streamProvider()
+                    imageService.uploadImage(fileBytes).also { link = it.data?.link ?: "" }
+                }
+            }
+
+            is PartData.FormItem -> {
+                if (part.name == "data") {
+                    val json = part.value.trimIndent()
+                    data = Json.decodeFromString<T>(json)
+                }
+            }
+
+            else -> {}
+        }
+        part.dispose()
+    }
+    return MultipartDto(data = data!!, image = link)
 }
