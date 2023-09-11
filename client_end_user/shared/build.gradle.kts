@@ -109,3 +109,6 @@ android {
         jvmToolchain(libs.versions.jvmToolchain.get().toInt())
     }
 }
+dependencies {
+    implementation(libs.androidx.foundation.layout.android)
+}

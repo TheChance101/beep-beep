@@ -3,5 +3,5 @@ package presentation.PreferredFood
 import presentation.base.BaseInteractionListener
 
 interface PreferredFoodInteractionListener :BaseInteractionListener {
-    fun onPreferredFoodClicked()
+    fun onPreferredFoodClicked(foodUIState: FoodUIState)
 }
