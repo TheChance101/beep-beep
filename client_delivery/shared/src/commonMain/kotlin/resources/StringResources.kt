@@ -8,5 +8,8 @@ data class StringResources(
     val usernameLabel: String = "Username",
     val passwordLabel: String = "Password",
     val login: String = "Login",
-    val keepMeLoggedIn: String = "Keep me logged in"
+    val keepMeLoggedIn: String = "Keep me logged in",
+    val foodsAreWaiting: String = "Foodies are waiting!",
+    val tapStartTitle: String = "Tap Start and become their food \nsuperhero",
+    val start: String = "Start"
 )

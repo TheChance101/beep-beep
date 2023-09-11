@@ -33,7 +33,12 @@ class ClientTripsManagementUseCase(
 
     override suspend fun createTrip(trip: Trip): Trip {
         validationTrip(trip)
-        return taxiGateway.addTrip(trip) ?: throw ResourceNotFoundException
+        return taxiGateway.addTrip(trip)?.also {
+            it.taxiId?.let { id ->
+                val count = taxiGateway.getTaxiById(id)?.tripsCount ?: 0
+                taxiGateway.updateTaxiTripsCount(id, count + 1)
+            } ?: throw ResourceNotFoundException
+        } ?: throw ResourceNotFoundException
     }
 
     override suspend fun getNumberOfTripsByClientId(id: String): Long {

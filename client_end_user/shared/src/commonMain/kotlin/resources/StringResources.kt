@@ -40,6 +40,7 @@ data class StringResources(
     val inProgress: String = "In progress",
     val lastOrder: String = "Last order",
     val orderAgain: String = "Order again",
+    val searchHint: String = "Search for meal, restaurant"
     val languageAskAboutLanguage: String = "What language do you speak?",
     val selectLanguage: String = "Pick your language.",
 )

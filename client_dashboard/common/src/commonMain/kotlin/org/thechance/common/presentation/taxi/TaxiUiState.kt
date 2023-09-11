@@ -92,7 +92,10 @@ data class TaxiInfoUiState(
     val driverUserName: String = "",
     val carModel: String = "",
     val selectedCarColor: CarColor = CarColor.WHITE,
-    val seats: Int = 0
+    val seats: Int = 0,
+    val plateNumberError: String = "",
+    val carModelError: String = "",
+    val isFormValid: Boolean = false,
 )
 
 data class MenuUiState(
@@ -116,6 +119,7 @@ data class MenuUiState(
     )
 }
 
+
 fun DataWrapper<Taxi>.toDetailsUiState(): TaxiPageInfoUiState {
     return TaxiPageInfoUiState(
         data = result.toDetailsUiState(),
@@ -136,6 +140,7 @@ fun Taxi.toDetailsUiState(): TaxiDetailsUiState = TaxiDetailsUiState(
 )
 
 fun List<Taxi>.toDetailsUiState() = map { it.toDetailsUiState() }
+
 fun TaxiInfoUiState.toEntity() = NewTaxiInfo(
     plateNumber = plateNumber,
     driverUserName = driverUserName,
@@ -156,7 +161,6 @@ fun TaxiDetailsUiState.toEntity(): Taxi = Taxi(
 )
 
 fun List<TaxiDetailsUiState>.toEntity() = map { it.toEntity() }
-
 
 fun Taxi.toUiState(): TaxiInfoUiState = TaxiInfoUiState(
     id = id,
