@@ -27,7 +27,7 @@ import util.BPToastDuration
 import kotlin.time.Duration
 
 @Composable
-fun BPToast(
+fun BpToast(
     icon: Painter,
     isVisible : Boolean,
     modifier: Modifier = Modifier,
