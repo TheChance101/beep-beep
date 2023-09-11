@@ -39,6 +39,10 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
             update = Updates.addToSet(UserDetailsCollection::addressIds.name, address.id)
         )
         return if (dataBaseContainer.addressCollection.insertOne(address).wasAcknowledged()) {
+            val addresses = getUserAddresses(userId)
+            if (addresses.size == 1) {
+                updateUserCountry(userId, getUserCountry(userId))
+            }
             address.toEntity()
         } else {
             throw ResourceNotFoundException(ERROR_IN_DB)
