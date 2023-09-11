@@ -2,7 +2,6 @@ package org.thechance.api_gateway.endpoints
 
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.model.restaurant.MealDto
@@ -37,9 +36,19 @@ fun Route.mealRoute() {
 
             put {
                 val language = extractLocalizationHeader()
-                val mealDto = call.receive<MealDto>()
-                val updatedMeal = restaurantService.updateMeal(mealDto, language)
-                respondWithResult(HttpStatusCode.OK, updatedMeal)
+                val multipartDto = receiveMultipart<MealDto>(imageValidator)
+
+                if (multipartDto.image != null) {
+                    val image = imageService.uploadImage(multipartDto.image)
+                    val mealDto = multipartDto.data?.copy(image = image.data?.link)
+                    val updatedMeal = mealDto?.let { restaurantService.updateMeal(mealDto, language) }
+                    respondWithResult(HttpStatusCode.OK, updatedMeal)
+                } else {
+                    val mealDto = multipartDto.data
+                    val updatedMeal = mealDto?.let { restaurantService.updateMeal(mealDto, language) }
+                    respondWithResult(HttpStatusCode.OK, updatedMeal)
+                }
+
             }
         }
     }

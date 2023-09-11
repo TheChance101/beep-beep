@@ -7,15 +7,13 @@ import io.ktor.http.*
 import io.ktor.util.*
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.image.ImageResponse
-import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.tryToExecute
 import org.thechance.api_gateway.util.APIs
 
 @Single
 class ImageService(
     private val client: HttpClient,
-    private val attributes: Attributes,
-    private val errorHandler: ErrorHandler
+    private val attributes: Attributes
 ) {
 
     private val clientId = System.getenv("CLIENT_ID").toString()
@@ -26,7 +24,6 @@ class ImageService(
         ) {
             post("/3/image") {
                 headers {
-                    append(HttpHeaders.ContentType, ContentType.Image.Any)
                     append(HttpHeaders.Authorization, "Client-ID $clientId")
                 }
                 setBody(
