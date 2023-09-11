@@ -20,5 +20,17 @@ val preferredCuisine: List<FoodUIState> = listOf(
         name = "Seafood",
         image = "seafood.png"
     ),
+    FoodUIState(
+        name = "Salad",
+        image = "salad.png"
+    ),
+    FoodUIState(
+        name = "Rice",
+        image = "rice.png"
+    ),
+    FoodUIState(
+        name = "Breakfast",
+        image = "breakfast.png"
+    ),
 
     )

@@ -1,5 +1,7 @@
 package presentation.PreferredFood
 
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,7 +53,7 @@ object PreferredFoodScreen :
         }
     }
 
-    @OptIn(ExperimentalResourceApi::class)
+    @OptIn(ExperimentalResourceApi::class, ExperimentalFoundationApi::class)
     @Composable
     override fun onRender(state: PreferredFoodUIState, listener: PreferredFoodInteractionListener) {
         Box(
@@ -74,10 +77,19 @@ object PreferredFoodScreen :
                     verticalArrangement = Arrangement.spacedBy(8.dp),
 
                     ) {
-                    items(state.preferredFood.size) { index ->
+
+
+                    items(count = if (state.preferredFood.size > 4) 4 else state.preferredFood.size,
+                        key = { index ->
+                            state.preferredFood[index].name
+
+                        }) { index ->
                         PreferredFoodCard(
                             state = state.preferredFood[index],
-                            onClick = { listener.onPreferredFoodClicked(state.preferredFood[index]) }
+                            onClick = { listener.onPreferredFoodClicked(state.preferredFood[index]) },
+                            modifier = Modifier.animateItemPlacement(
+                                animationSpec = tween(500),
+                            )
                         )
                     }
                 }

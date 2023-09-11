@@ -17,11 +17,15 @@ class PreferredFoodScreenModel(
     override val viewModelScope: CoroutineScope = coroutineScope
 
     override fun onPreferredFoodClicked(foodUIState: FoodUIState) {
-        tryToExecute(
-            { mangePreferredFood.savePreferredFood(foodUIState.name) },
-            ::onSavedPreferredFoodSuccess,
-            ::onError
-        )
+
+        val updatedPreferredCuisine = state.value.preferredFood.filterNot { it.name == foodUIState.name }
+
+        updateState { it.copy(preferredFood=updatedPreferredCuisine) }
+//        tryToExecute(
+//            { mangePreferredFood.savePreferredFood(foodUIState.name) },
+//            ::onSavedPreferredFoodSuccess,
+//            ::onError
+//        )
     }
     private fun onSavedPreferredFoodSuccess(unit:Unit) {
         sendNewEffect(PreferredFoodUIEffect.NavigateToPreferredScreen)

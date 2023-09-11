@@ -29,10 +29,11 @@ import presentation.PreferredFood.FoodUIState
 @Composable
 fun PreferredFoodCard(
     onClick: () -> Unit,
-    state:FoodUIState
+    state:FoodUIState,
+    modifier: Modifier= Modifier
 ) {
     Column(
-        modifier=  Modifier
+        modifier=  modifier
             .border(width = 1.dp, color = Theme.colors.divider, shape = MaterialTheme.shapes.medium)
             .height(112.dp)
             .background(color = Theme.colors.surface, shape = MaterialTheme.shapes.medium)
