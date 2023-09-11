@@ -23,10 +23,10 @@ import com.beepbeep.designSystem.ui.theme.Theme
 
 @Composable
 fun PreferredCard(
-    onClick: () -> Unit,
+    onClick: (priceLevel: String) -> Unit,
     painter: Painter,
     title: String,
-    priceLevel: String? = null,
+    priceLevel: String,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -37,7 +37,7 @@ fun PreferredCard(
                 color = Theme.colors.divider,
                 shape = RoundedCornerShape(Theme.radius.medium)
             )
-            .clickable { onClick() }
+            .clickable { onClick(priceLevel) }
             .background(Theme.colors.surface)
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -58,13 +58,12 @@ fun PreferredCard(
                 style = Theme.typography.body,
                 color = Theme.colors.contentSecondary
             )
-            priceLevel?.let {
-                Text(
-                    text = priceLevel,
-                    style = Theme.typography.titleMedium,
-                    color = Theme.colors.contentPrimary
-                )
-            }
+
+            Text(
+                text = priceLevel,
+                style = Theme.typography.titleMedium,
+                color = Theme.colors.contentPrimary
+            )
 
         }
     }

@@ -9,5 +9,6 @@ interface ILocalConfigurationGateway {
     suspend fun saveKeepMeLoggedInFlag(isChecked: Boolean)
     suspend fun getKeepMeLoggedInFlag(): Boolean
     suspend fun clearTokens()
-
+    suspend fun savePriceLevel(priceLevel: String)
+    suspend fun getPriceLevel(): String
 }
