@@ -20,9 +20,7 @@ class ManageUserUseCase(
        return if (localGateway.getAccessToken().isNotEmpty()) {
             remoteGateway.getUsrWallet()
         } else {
-            throw AuthorizationException()
+            throw AuthorizationException.UnAuthorizedException
         }
     }
-
-
 }
