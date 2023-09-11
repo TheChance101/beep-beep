@@ -48,4 +48,5 @@ data class StringResources(
     val lowLevelDishName: String = "Classic Pasta Dish",
     val mediumLevelDishName: String = "Exceptional Sauce Pasta Dish",
     val highLevelDishName: String = "Healthy (gulten free) Pasta",
+    val searchHint: String = "Search for meal, restaurant"
 )
