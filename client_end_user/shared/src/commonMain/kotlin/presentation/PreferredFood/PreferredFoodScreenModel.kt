@@ -16,15 +16,17 @@ class PreferredFoodScreenModel(
     PreferredFoodInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
 
-
-
     override fun onPreferredFoodClicked(foodUIState: FoodUIState) {
-        viewModelScope.launch {
-            mangePreferredFood.savePreferredFood(foodUIState.name)
-            onSavedPreferredFoodSuccess()
-        }
+        tryToExecute(
+            { mangePreferredFood.savePreferredFood(foodUIState.name) },
+            ::onSavedPreferredFoodSuccess,
+            ::onError
+        )
     }
-    private fun onSavedPreferredFoodSuccess() {
+    private fun onSavedPreferredFoodSuccess(unit:Unit) {
         sendNewEffect(PreferredFoodUIEffect.NavigateToPreferredScreen)
+    }
+    private fun onError(errorState: ErrorState) {
+        println(errorState)
     }
 }

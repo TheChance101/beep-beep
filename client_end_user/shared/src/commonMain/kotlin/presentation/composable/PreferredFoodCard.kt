@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
@@ -54,7 +55,7 @@ fun PreferredFoodCard(
             painter = painterResource(state.image),
             contentDescription = "${state.name} Picture",
             contentScale = ContentScale.Crop,
-            modifier = Modifier.size(88.dp).align(Alignment.End)
+            modifier = Modifier.size(88.dp).clip(shape = MaterialTheme.shapes.medium).align(Alignment.End)
         )
 
     }
