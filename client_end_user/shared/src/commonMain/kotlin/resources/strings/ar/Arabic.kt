@@ -51,5 +51,7 @@ data class Arabic(
     override val mediumLevelDishName: String = "طبق صلصة استثنائي",
     override val highLevelDishName: String = "طبق باستا صحي (خالي من الجلوتين)",
     override val searchHint: String = "ابحث عن وجبة أو مطعم",
-    override val invalidUsername: String = "اسم مستخدم غير صالح"
+    override val invalidUsername: String = "اسم مستخدم غير صالح",
+    override val languageAskAboutLanguage: String = "بأي لغة تتحدث؟",
+    override val selectLanguage: String = "اختر لغتك.",
 ) : IStringResources

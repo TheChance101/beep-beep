@@ -51,5 +51,7 @@ data class English(
     override val mediumLevelDishName: String = "Exceptional Sauce Pasta Dish",
     override val highLevelDishName: String = "Healthy (gulten free) Pasta",
     override val searchHint: String = "Search for meal, restaurant",
-    override val invalidUsername: String = "invalid username"
+    override val invalidUsername: String = "invalid username",
+    override val languageAskAboutLanguage: String = "What language do you speak?",
+    override val selectLanguage: String = "Pick your language.",
 ) : IStringResources

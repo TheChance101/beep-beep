@@ -50,4 +50,6 @@ interface IStringResources {
     val highLevelDishName: String
     val searchHint: String
     val invalidUsername: String
+    val languageAskAboutLanguage: String
+    val selectLanguage: String
 }
