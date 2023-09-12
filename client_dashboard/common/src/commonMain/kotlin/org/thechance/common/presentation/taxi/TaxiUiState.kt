@@ -9,6 +9,7 @@ import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.domain.util.TaxiStatus.ONLINE
 import org.thechance.common.presentation.composables.table.Header
 import org.thechance.common.presentation.resources.Resources
+import org.thechance.common.presentation.restaurant.ErrorWrapper
 import org.thechance.common.presentation.util.ErrorState
 
 data class TaxiUiState(
@@ -93,8 +94,8 @@ data class TaxiInfoUiState(
     val carModel: String = "",
     val selectedCarColor: CarColor = CarColor.WHITE,
     val seats: Int = 0,
-    val plateNumberError: String = "",
-    val carModelError: String = "",
+    val plateNumberError: ErrorWrapper = ErrorWrapper(),
+    val carModelError: ErrorWrapper = ErrorWrapper(),
     val isFormValid: Boolean = false,
 )
 

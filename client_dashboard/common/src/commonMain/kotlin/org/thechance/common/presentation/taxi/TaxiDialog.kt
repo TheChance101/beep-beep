@@ -68,7 +68,8 @@ fun TaxiDialog(
                 label = Resources.Strings.taxiPlateNumber,
                 onValueChange = listener::onTaxiPlateNumberChange,
                 text = state.plateNumber,
-                errorMessage = state.plateNumberError
+                errorMessage = state.plateNumberError.errorMessage,
+                isError = state.plateNumberError.isError
             )
 
             BpTextField(
@@ -83,7 +84,8 @@ fun TaxiDialog(
                 label = Resources.Strings.carModel,
                 onValueChange = listener::onCarModelChanged,
                 text = state.carModel,
-                errorMessage = state.carModelError
+                errorMessage = state.carModelError.errorMessage,
+                isError = state.carModelError.isError
             )
 
             Text(

@@ -8,6 +8,7 @@ import org.thechance.common.domain.usecase.IManageTaxisUseCase
 import org.thechance.common.domain.usecase.ITaxiValidationUseCase
 import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.presentation.base.BaseScreenModel
+import org.thechance.common.presentation.restaurant.ErrorWrapper
 import org.thechance.common.presentation.util.ErrorState
 
 class TaxiScreenModel(
@@ -52,7 +53,48 @@ class TaxiScreenModel(
 
     private fun onError(error: ErrorState) {
         updateState { it.copy(error = error, isLoading = false) }
+        when (error) {
+            is ErrorState.InvalidCarType -> {
+                updateState { it.copy(
+                        newTaxiInfo = it.newTaxiInfo.copy(
+                            carModelError = ErrorWrapper(error.errorMessage, true)
+                        )
+                    )
+                }
+            }
+
+            is ErrorState.InvalidTaxiPlate -> {
+                updateState { it.copy(
+                        newTaxiInfo = it.newTaxiInfo.copy(
+                            plateNumberError = ErrorWrapper(error.errorMessage, true)
+                        )
+                    )
+                }
+            }
+
+            is ErrorState.InvalidTaxiColor -> println("error is invalid taxi color: ${error.errorMessage}")
+            is ErrorState.InvalidTaxiId -> println("error is invalid taxi id: ${error.errorMessage}")
+            is ErrorState.InvalidTaxiLocation -> println("error is invalid taxi location: ${error.errorMessage}")
+            is ErrorState.InvalidTaxiPrice -> println("error is invalid taxi price: ${error.errorMessage}")
+            is ErrorState.InvalidTaxiRate -> println("error is invalid taxi rate: ${error.errorMessage}")
+            ErrorState.NoConnection -> println("error is no connection: ${error}")
+            is ErrorState.SeatOutOfRange -> println("error is seat out of range: ${error.errorMessage}")
+            is ErrorState.TaxiAlreadyExists -> println("error is taxi already exists: ${error.errorMessage}")
+            is ErrorState.TaxiNotFound -> println("error is taxi not found: ${error.errorMessage}")
+            ErrorState.UnKnownError -> println("error is unknown error: ${error}")
+            is ErrorState.UserNotExist -> println("error is user not exist: ${error.errorMessage}")
+            is ErrorState.UsernameCannotBeBlank -> println("error is username cannot be blank: ${error.errorMessage}")
+            else -> {}
+        }
     }
+
+    private fun clearErrorState() =
+        updateState { it.copy(newTaxiInfo = it.newTaxiInfo.copy(
+                    plateNumberError = ErrorWrapper(),
+                    carModelError = ErrorWrapper(),
+                )
+            )
+        }
 
     //region export listener
 
@@ -98,36 +140,30 @@ class TaxiScreenModel(
         updateState {
             it.copy(
                 newTaxiInfo = it.newTaxiInfo.copy(
-                    plateNumber = number,
-                    plateNumberError = if (taxiValidation.isValidPlateNumber(number)) "" else "Invalid plate number",
-                    isFormValid = taxiValidation.isFormValid(number, it.newTaxiInfo.carModel)
+                    plateNumber = number, isFormValid = number.isNotEmpty()
                 )
             )
         }
     }
 
     override fun onDriverUserNamChange(name: String) {
-        updateState {
-            it.copy(newTaxiInfo = it.newTaxiInfo.copy(driverUserName = name))
-        }
-    }
-
-    override fun onCarModelChanged(model: String) {
-        updateState {
-            it.copy(
-                newTaxiInfo = it.newTaxiInfo.copy(
-                    carModel = model,
-                    carModelError = if (taxiValidation.isValidCarModel(model)) "" else "Invalid car model",
-                    isFormValid = taxiValidation.isFormValid(it.newTaxiInfo.plateNumber, model)
+        updateState { it.copy(newTaxiInfo = it.newTaxiInfo.copy(
+                    driverUserName = name, isFormValid = name.isNotEmpty()
                 )
             )
         }
     }
 
+    override fun onCarModelChanged(model: String) {
+            updateState { it.copy(newTaxiInfo = it.newTaxiInfo.copy(
+                        carModel = model, isFormValid = model.isNotEmpty()
+                    )
+                )
+            }
+    }
+
     override fun onCarColorSelected(color: CarColor) {
-        updateState {
-            it.copy(newTaxiInfo = it.newTaxiInfo.copy(selectedCarColor = color))
-        }
+        updateState { it.copy(newTaxiInfo = it.newTaxiInfo.copy(selectedCarColor = color)) }
     }
 
     override fun onSeatSelected(seats: Int) {
@@ -160,7 +196,7 @@ class TaxiScreenModel(
     }
 
     override fun onCreateTaxiClicked() {
-        updateState { it.copy(isAddNewTaxiDialogVisible = false) }
+        clearErrorState()
         tryToExecute(
             { manageTaxis.createTaxi(mutableState.value.newTaxiInfo.toEntity()) },
             ::onCreateTaxiSuccessfully,
@@ -169,6 +205,7 @@ class TaxiScreenModel(
     }
 
     private fun onCreateTaxiSuccessfully(taxi: Taxi) {
+        updateState { it.copy(isAddNewTaxiDialogVisible = false) }
         val newTaxi =
             mutableState.value.taxis.toMutableList().apply { add(taxi.toDetailsUiState()) }
         updateState { it.copy(taxis = newTaxi, isLoading = false) }
@@ -190,7 +227,9 @@ class TaxiScreenModel(
                     carModel = "",
                     selectedCarColor = CarColor.WHITE,
                     seats = 1,
-                    isFormValid = false
+                    isFormValid = false,
+                    plateNumberError = ErrorWrapper(),
+                    carModelError = ErrorWrapper(),
                 ),
             )
         }
@@ -297,7 +336,7 @@ class TaxiScreenModel(
         updateState { it.copy(isEditMode = true, isAddNewTaxiDialogVisible = true) }
         hideTaxiMenu()
         tryToExecute(
-           { manageTaxis.getTaxiById(taxiId) },
+            { manageTaxis.getTaxiById(taxiId) },
             ::onGetTaxiByIdSuccess,
             ::onError
         )
