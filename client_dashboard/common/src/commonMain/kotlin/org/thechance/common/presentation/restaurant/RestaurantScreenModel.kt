@@ -250,8 +250,23 @@ class RestaurantScreenModel(
     }
 
     override fun onCancelCreateRestaurantClicked() {
+        clearAddRestaurantInfo()
         clearAddRestaurantErrorInfo()
         updateState { it.copy(isNewRestaurantInfoDialogVisible = false) }
+    }
+
+    private fun clearAddRestaurantInfo() {
+        updateState {
+            it.copy(
+                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
+                    name = "",
+                    ownerUsername = "",
+                    phoneNumber = "",
+                    startTime = "",
+                    endTime = "",
+                ),
+            )
+        }
     }
 
     override fun onRestaurantNameChange(name: String) {
@@ -280,19 +295,19 @@ class RestaurantScreenModel(
 
     override fun onPhoneNumberChange(number: String) {
         updateState {
-            it.copy(newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(phoneNumber = number,))
+            it.copy(newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(phoneNumber = number))
         }
     }
 
     override fun onWorkingStartHourChange(hour: String) {
         updateState {
-            it.copy(newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(startTime = hour,))
+            it.copy(newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(startTime = hour))
         }
     }
 
     override fun onWorkingEndHourChange(hour: String) {
         updateState {
-            it.copy(newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(endTime = hour,))
+            it.copy(newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(endTime = hour))
         }
     }
 
@@ -350,11 +365,14 @@ class RestaurantScreenModel(
     }
 
     private fun onCreateRestaurantSuccessfully(restaurant: Restaurant) {
+        clearAddRestaurantInfo()
         val newRestaurant =
             mutableState.value.restaurants.toMutableList().apply { add(restaurant.toUiState()) }
         updateState {
             it.copy(
-                restaurants = newRestaurant, isLoading = false, isNewRestaurantInfoDialogVisible = false
+                restaurants = newRestaurant,
+                isLoading = false,
+                isNewRestaurantInfoDialogVisible = false
             )
         }
     }
