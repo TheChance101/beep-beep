@@ -60,7 +60,7 @@ class UserAccountManagementUseCase(
             if (verifyPermissionToLogin(userPermission, applicationId)) {
                 true
             } else {
-                throw InvalidCredentialsException(INVALID_CREDENTIALS)
+                throw InvalidCredentialsException(INVALID_PERMISSION)
             }
         } else throw InvalidCredentialsException(INVALID_CREDENTIALS)
     }
@@ -101,7 +101,7 @@ class UserAccountManagementUseCase(
 
     private fun verifyPermissionToLogin(userPermission: Int, applicationId: String): Boolean {
         val applicationIds = getApplicationIdFromEnvironment()
-        return applicationIds.filterValues { pair -> pair.first == applicationId && (pair.second < userPermission) }
+        return applicationIds.filterValues { pair -> pair.first == applicationId && (pair.second and userPermission) == pair.second }
             .isNotEmpty()
     }
 
