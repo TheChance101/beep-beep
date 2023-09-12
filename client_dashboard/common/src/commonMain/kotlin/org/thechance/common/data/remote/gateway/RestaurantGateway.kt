@@ -2,16 +2,15 @@ package org.thechance.common.data.remote.gateway
 
 import io.ktor.client.*
 import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
 import io.ktor.http.*
-import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
+import org.thechance.common.data.remote.model.CuisineDto
 import org.thechance.common.data.remote.model.RestaurantDto
 import org.thechance.common.data.remote.model.ServerResponse
-import org.thechance.common.data.remote.model.TaxiDto
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.NewRestaurantInfo
 import org.thechance.common.domain.entity.Restaurant
-import org.thechance.common.domain.entity.Time
 import org.thechance.common.domain.getway.IRestaurantGateway
 import org.thechance.common.presentation.restaurant.toDto
 
