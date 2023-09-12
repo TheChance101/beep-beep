@@ -8,6 +8,7 @@ import presentation.auth.signup.registrationSubmit.RegistrationSubmitScreenModel
 import presentation.home.HomeScreenModel
 import presentation.main.MainScreenModel
 import presentation.preferredMeal.PreferredScreenModel
+import presentation.pickLanguage.PickLanguageScreenModel
 
 val screenModelsModule = module {
     factoryOf(::LoginScreenModel)
@@ -16,4 +17,5 @@ val screenModelsModule = module {
     factoryOf(::RegistrationScreenModel)
     factoryOf(::RegistrationSubmitScreenModel)
     factoryOf(::PreferredScreenModel)
+    factoryOf(::PickLanguageScreenModel)
 }
