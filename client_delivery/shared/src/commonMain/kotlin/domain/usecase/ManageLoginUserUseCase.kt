@@ -44,7 +44,8 @@ class ManageLoginUserUseCase(
             throw InvalidUsernameException("")
         }else if (password.isEmpty() || password.length < 8) {
             throw InvalidPasswordException("")
-        } else return true
+        }
+        return true
     }
 
 }
