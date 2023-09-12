@@ -1,4 +1,4 @@
-package presentation.preferredMeal
+package presentation.preferredRide
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,29 +19,20 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.composable.HeadFirstCard
 import presentation.composable.PreferredCard
-import presentation.main.MainContainer
+import presentation.preferredMeal.PreferredMealScreen
 import resources.Resources
 
-class PreferredMealScreen :
-    BaseScreen<PreferredScreenModel, PreferredScreenUiState, PreferredScreenUiEffect, PreferredScreenInteractionListener>() {
+class PreferredRideScreen :
+    BaseScreen<PreferredRideScreenModel, PreferredRideUiState, PreferredRideUiEffect, PreferredRideInteractionListener>() {
 
     @Composable
     override fun Content() {
         initScreen(getScreenModel())
     }
 
-    override fun onEffect(effect: PreferredScreenUiEffect, navigator: Navigator) {
-        when (effect) {
-            PreferredScreenUiEffect.NavigateToHomeScreen -> navigator.replace(MainContainer)
-        }
-    }
-
     @OptIn(ExperimentalResourceApi::class)
     @Composable
-    override fun onRender(
-        state: PreferredScreenUiState,
-        listener: PreferredScreenInteractionListener
-    ) {
+    override fun onRender(state: PreferredRideUiState, listener: PreferredRideInteractionListener) {
         Box(
             modifier = Modifier.fillMaxSize().background(Theme.colors.background),
             contentAlignment = Alignment.Center
@@ -54,38 +45,36 @@ class PreferredMealScreen :
             )
 
             HeadFirstCard(
-                textHeader = Resources.strings.dishPreferredTitle,
-                textSubHeader = Resources.strings.dishPreferredSubTitle
+                modifier = Modifier.padding(vertical = 32.dp),
+                textHeader = Resources.strings.ridePreferredTitle,
+                textSubHeader = Resources.strings.ridePreferredSubTitle
             ) {
                 Column(
                     modifier = Modifier.padding(top = 24.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     PreferredCard(
-                        onClickMealCard = listener::onClickPreferredMeal,
-                        painter = painterResource(Resources.images.wishDishLow),
-                        title = Resources.strings.lowLevelDishName,
-                        isMeal = true,
-                        priceLevel = Resources.strings.lowPriceLevel
+                        onClickRideCard = listener::onClickPreferredRide,
+                        painter = painterResource(Resources.images.quickRide),
+                        title = Resources.strings.quickerRoutesWithHigherCosts,
+                        isMeal = false,
+                        flag = 0
                     )
                     PreferredCard(
-                        onClickMealCard = listener::onClickPreferredMeal,
-                        painter = painterResource(Resources.images.wishDishMedium),
-                        title = Resources.strings.mediumLevelDishName,
-                        isMeal = true,
-                        priceLevel = Resources.strings.mediumPriceLevel,
-                    )
-                    PreferredCard(
-                        onClickMealCard = listener::onClickPreferredMeal,
-                        painter = painterResource(Resources.images.wishDishHigh),
-                        title = Resources.strings.highLevelDishName,
-                        isMeal = true,
-                        priceLevel = Resources.strings.highPriceLevel
+                        onClickRideCard = listener::onClickPreferredRide,
+                        painter = painterResource(Resources.images.slowRide),
+                        title = Resources.strings.slowerRoutesWithLowCosts,
+                        isMeal = false,
+                        flag = 1
                     )
                 }
-
             }
+        }
+    }
 
+    override fun onEffect(effect: PreferredRideUiEffect, navigator: Navigator) {
+        when (effect) {
+            is PreferredRideUiEffect.NavigateToPreferredMeal -> navigator.push(PreferredMealScreen())
         }
     }
 }

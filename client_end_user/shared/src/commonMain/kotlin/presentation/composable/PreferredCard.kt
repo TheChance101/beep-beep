@@ -1,5 +1,6 @@
 package presentation.composable
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,10 +24,13 @@ import com.beepbeep.designSystem.ui.theme.Theme
 
 @Composable
 fun PreferredCard(
-    onClick: (priceLevel: String) -> Unit,
+    onClickMealCard: (priceLevel: String) -> Unit = {},
+    onClickRideCard: (flag: Int) -> Unit = {},
     painter: Painter,
     title: String,
-    priceLevel: String,
+    isMeal: Boolean,
+    priceLevel: String = "",
+    flag: Int = 0,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -37,7 +41,7 @@ fun PreferredCard(
                 color = Theme.colors.divider,
                 shape = RoundedCornerShape(Theme.radius.medium)
             )
-            .clickable { onClick(priceLevel) }
+            .clickable { if (isMeal) onClickMealCard(priceLevel) else onClickRideCard(flag) }
             .background(Theme.colors.surface)
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -47,7 +51,7 @@ fun PreferredCard(
             modifier = Modifier.size(56.dp),
             painter = painter,
             contentDescription = "$title image",
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Fit
         )
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -58,13 +62,13 @@ fun PreferredCard(
                 style = Theme.typography.body,
                 color = Theme.colors.contentSecondary
             )
-
-            Text(
-                text = priceLevel,
-                style = Theme.typography.titleMedium,
-                color = Theme.colors.contentPrimary
-            )
-
+            AnimatedVisibility(isMeal) {
+                Text(
+                    text = priceLevel,
+                    style = Theme.typography.titleMedium,
+                    color = Theme.colors.contentPrimary
+                )
+            }
         }
     }
 }
