@@ -1,5 +1,6 @@
 package domain.gateway.remote
 
+import data.remote.model.DeliveryRequestPermission
 import domain.entity.Session
 
 interface IIdentityRemoteGateway {
@@ -11,9 +12,7 @@ interface IIdentityRemoteGateway {
 
     //region permission
       suspend fun createRequestPermission(
-        restaurantName: String,
-        ownerEmail: String,
-        description: String,
+        restaurantRequest: DeliveryRequestPermission
     ): Boolean
     //endregion
 

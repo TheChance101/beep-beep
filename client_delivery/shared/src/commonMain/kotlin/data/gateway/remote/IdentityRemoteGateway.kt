@@ -2,6 +2,7 @@ package data.gateway.remote
 
 import data.remote.mapper.toEntity
 import data.remote.model.BaseResponse
+import data.remote.model.DeliveryRequestPermission
 import data.remote.model.SessionDto
 import domain.entity.Session
 import domain.gateway.remote.IIdentityRemoteGateway
@@ -48,13 +49,11 @@ class IdentityRemoteGateway(client: HttpClient) : IIdentityRemoteGateway,
     }
 
     override suspend fun createRequestPermission(
-        restaurantName: String,
-        ownerEmail: String,
-        description: String
+        deliveryRequestPermission:DeliveryRequestPermission
     ): Boolean {
         val result = tryToExecute<BaseResponse<Boolean>> {
             post("/restaurant-permission-request") {
-                post("/meal") { setBody(restaurantName) }
+              setBody(deliveryRequestPermission)
             }
         }.value ?: throw Exception()
 
