@@ -1,8 +1,8 @@
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.navigator.Navigator
-import presentation.main.MainScreen
+import presentation.login.LoginScreen
 
 @Composable
 fun App() {
-    Navigator(MainScreen())
+    Navigator(LoginScreen())
 }

@@ -2,12 +2,14 @@ package presentation.base
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.InvalidCredentialsException
 import domain.NoInternetException
 import domain.NotFoundedException
 import domain.PermissionDenied
 import domain.ServerSideException
 import domain.UnAuthorizedException
 import domain.UnKnownErrorException
+import domain.UserNotFoundException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -88,6 +90,12 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
                     is NotFoundedException -> onError(ErrorState.NotFound)
                     is UnKnownErrorException -> onError(
                         ErrorState.UnknownError(
+                            exception.message.toString()
+                        )
+                    )
+                    is UserNotFoundException -> onError(ErrorState.UserNotExist(exception.errorMessage))
+                    is InvalidCredentialsException -> onError(
+                        ErrorState.InvalidCredentials(
                             exception.message.toString()
                         )
                     )
