@@ -8,6 +8,8 @@ import domain.gateway.remote.IIdentityRemoteGateway
 import domain.utils.InvalidCredentialsException
 import io.ktor.client.HttpClient
 import io.ktor.client.request.forms.submitForm
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import io.ktor.http.HttpMethod
 import io.ktor.http.Parameters
@@ -43,6 +45,20 @@ class IdentityRemoteGateway(client: HttpClient) : IIdentityRemoteGateway,
         }.value ?: throw Exception()
 
         return Pair(result.accessToken, result.refreshToken)
+    }
+
+    override suspend fun createRequestPermission(
+        restaurantName: String,
+        ownerEmail: String,
+        description: String
+    ): Boolean {
+        val result = tryToExecute<BaseResponse<Boolean>> {
+            post("/restaurant-permission-request") {
+                post("/meal") { setBody(restaurantName) }
+            }
+        }.value ?: throw Exception()
+
+        return result
     }
 
 }
