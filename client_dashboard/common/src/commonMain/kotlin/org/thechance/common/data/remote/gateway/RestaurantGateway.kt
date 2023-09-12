@@ -42,7 +42,7 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
     override suspend fun getCuisines(): List<String> {
        return tryToExecute<ServerResponse<List<CuisineDto>>>(client) {
             get(urlString = "/cuisines")
-        }.value?.map { it.name }?: emptyList()
+        }.value?.map { it.name }?: throw UnknownError()
     }
 
     override suspend fun createCuisine(cuisineName: String): String {
@@ -53,7 +53,7 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
                     append("name", cuisineName)
                 },
             )
-        }.value?.name ?: ""
+        }.value?.name ?: throw UnknownError()
     }
 
     override suspend fun deleteCuisine(cuisineName: String): String {
