@@ -9,10 +9,12 @@ import domain.usecase.IGetNewOffersUserCase
 import domain.usecase.IInProgressTrackerUseCase
 import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.IManageUserUseCase
+import domain.usecase.IMangeLanguageUseCase
 import domain.usecase.IMangePreferredFoodUseCase
 import domain.usecase.InProgressTrackerUseCase
 import domain.usecase.ManageAuthenticationUseCase
 import domain.usecase.ManageUserUseCase
+import domain.usecase.MangeLanguageUseCase
 import domain.usecase.MangePreferredFoodUseCase
 
 import org.koin.core.module.dsl.bind
@@ -27,4 +29,5 @@ val useCaseModule = module {
     singleOf(::ManageUserUseCase) { bind<IManageUserUseCase>() }
     singleOf(::InProgressTrackerUseCase) { bind<IInProgressTrackerUseCase>() }
     singleOf(::MangePreferredFoodUseCase) { bind<IMangePreferredFoodUseCase>() }
+    singleOf(::MangeLanguageUseCase) { bind<IMangeLanguageUseCase>() }
 }

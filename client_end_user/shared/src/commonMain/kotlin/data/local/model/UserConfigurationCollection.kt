@@ -11,4 +11,5 @@ class UserConfigurationCollection : RealmObject {
     var isKeepMeLoggedInMeChecked: Boolean = false
     var preferredFood: RealmList<String> = realmListOf()
     var priceLevel: String = ""
+    var languageCode : String = ""
 }
