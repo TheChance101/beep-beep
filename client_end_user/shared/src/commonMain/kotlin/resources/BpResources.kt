@@ -6,12 +6,16 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import com.beepbeep.designSystem.ui.theme.BpTheme
+import resources.strings.ar.Arabic
+import resources.strings.en.English
+import resources.strings.IStringResources
 import util.userCountryCode
 import util.userLanguage
 import util.setInsetsController
 
 private val localDrawableResources = staticCompositionLocalOf { DrawableResources() }
-private val localStringResources = staticCompositionLocalOf { StringResources() }
+private val localStringResources = staticCompositionLocalOf<IStringResources> { error("Darkness") }
+
 
 @Composable
 fun BeepBeepTheme(
@@ -23,9 +27,14 @@ fun BeepBeepTheme(
     val language = userLanguage
     val countryCode = userCountryCode
 
+    val stringResources = when (language) {
+        "ar" -> Arabic()
+        else -> English()
+    }
+
     CompositionLocalProvider(
         localDrawableResources provides drawableResources,
-        localStringResources provides StringResources(),
+        localStringResources provides stringResources,
     ) {
         BpTheme(useDarkTheme = useDarkTheme) {
             setInsetsController(useDarkTheme)
@@ -40,7 +49,7 @@ object Resources {
         @ReadOnlyComposable
         get() = localDrawableResources.current
 
-    val strings: StringResources
+    val strings: IStringResources
         @Composable
         @ReadOnlyComposable
         get() = localStringResources.current
