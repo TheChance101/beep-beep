@@ -1,4 +1,4 @@
-package presentation.login
+package presentation.auth.login
 
 data class LoginScreenUIState(
     val username: String = "",

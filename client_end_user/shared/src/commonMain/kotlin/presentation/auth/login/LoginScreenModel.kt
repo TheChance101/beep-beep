@@ -1,4 +1,4 @@
-package presentation.login
+package presentation.auth.login
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.usecase.IManageAuthenticationUseCase
@@ -38,7 +38,7 @@ class LoginScreenModel(private val manageAuthentication: IManageAuthenticationUs
     private fun onLoginSuccess(isLoggedIn: Boolean) {
         clearErrors()
         if (isLoggedIn) {
-            sendNewEffect(LoginScreenUIEffect.Login)
+            sendNewEffect(LoginScreenUIEffect.NavigateToHome)
         }
     }
 
@@ -94,7 +94,7 @@ class LoginScreenModel(private val manageAuthentication: IManageAuthenticationUs
     }
 
     override fun onClickSignUp() {
-        // should send effect to navigate to sign up screen
+        sendNewEffect(LoginScreenUIEffect.NavigateToSignup)
     }
 
 }
