@@ -1,15 +1,20 @@
 package domain.usecase
 
 import data.gateway.remote.FakeRemoteGateway
+import domain.entity.PreferredRide
 import domain.entity.User
 import domain.gateway.local.ILocalConfigurationGateway
 import domain.utils.AuthorizationException
+import data.local.mapper.toFormattedString
+import data.local.mapper.toPreferredRide
 
 interface IManageUserUseCase {
 
     suspend fun getUserWallet(): User
     suspend fun savePriceLevel(priceLevel: String)
     suspend fun getPriceLevel(): String
+    suspend fun savePreferredRide(preferredRide: PreferredRide)
+    suspend fun getPreferredRide(): PreferredRide
 
 }
 
@@ -34,5 +39,12 @@ class ManageUserUseCase(
         return localGateway.getPriceLevel()
     }
 
+    override suspend fun savePreferredRide(preferredRide: PreferredRide) {
+        localGateway.savePreferredRide(preferredRide.toFormattedString())
+    }
+
+    override suspend fun getPreferredRide(): PreferredRide {
+        return localGateway.getPreferredRide().toPreferredRide()
+    }
 
 }

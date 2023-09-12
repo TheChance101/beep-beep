@@ -34,7 +34,7 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
     }
 
     override suspend fun saveLanguageCode(code: String) {
-       return   realm.write {
+        return realm.write {
             query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
                 .find()?.languageCode = code
         }
@@ -69,6 +69,18 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
     override suspend fun getPriceLevel(): String {
         return realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
             .find()?.priceLevel ?: "$"
+    }
+
+    override suspend fun savePreferredRide(preferredRide: String) {
+        realm.write {
+            query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+                .find()?.preferredRide = preferredRide
+        }
+    }
+
+    override suspend fun getPreferredRide(): String {
+        return realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+            .find()?.preferredRide ?: "low,low"
     }
 
     override suspend fun saveKeepMeLoggedInFlag(isChecked: Boolean) {
