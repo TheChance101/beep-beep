@@ -1,5 +1,5 @@
 var latitude2 = 0
-var map
+var map,directionsManager;
 
 function GetMap() {
 
@@ -23,6 +23,7 @@ map = new Microsoft.Maps.Map('#myMap', {
             Microsoft.Maps.Events.addHandler(map, 'click', function () {
             pin.setLocation(map.getCenter())
             });
+            getDirections()
 }
 function getPin(){
     var pushpin = new Microsoft.Maps.Pushpin(map.getCenter(), null);
@@ -30,15 +31,20 @@ function getPin(){
 }
 function getDirections(){
 Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
-    var directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
+    directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
     directionsManager.setRequestOptions({ routeMode: Microsoft.Maps.Directions.RouteMode.driving });
-    var waypoint1 = new Microsoft.Maps.Directions.Waypoint({ address: 'Redmond', location: new Microsoft.Maps.Location(47.67683029174805, 40.3321) });
-    var waypoint2 = new Microsoft.Maps.Directions.Waypoint({ address: 'Seattle', location: new Microsoft.Maps.Location(47.59977722167969, 40.3321) });
+    var waypoint1 = new Microsoft.Maps.Directions.Waypoint({ location: new Microsoft.Maps.Location(40.6790229, -73.8740306) });
+    var waypoint2 = new Microsoft.Maps.Directions.Waypoint({ location: new Microsoft.Maps.Location(40.6740229, -73.8740306) });
     directionsManager.addWaypoint(waypoint1);
     directionsManager.addWaypoint(waypoint2);
-    directionsManager.setRenderOptions({ itineraryContainer: document.getElementById('printoutPanel') });
     directionsManager.calculateDirections();
 });
+}
+function updateDirections(newLat) {
+directionsManager.removeWaypoint(1);
+  var waypoint2 = new Microsoft.Maps.Directions.Waypoint({ location: new Microsoft.Maps.Location(newLat, -73.8740306) });
+   directionsManager.addWaypoint(waypoint2);
+    directionsManager.calculateDirections();
 }
 
 var xhttp = new XMLHttpRequest();
@@ -49,16 +55,16 @@ function createInfiniteLoopFunction(latitude) {
             return function() {
             clearMap()
     var pushpin = new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(latitude, -73.8740306), {
-                                                                                                     icon: 'user_pin.svg',
-                                                                                                     anchor: new Microsoft.Maps.Point(20, 20)
-                                                                                                 });
-                                                                                                 Microsoft.Maps.loadModule('Microsoft.Maps.SpatialMath', function () {
-                                                                                                         let circle = createCircle(new Microsoft.Maps.Location(latitude, -73.8740306),120,'rgba(31, 0, 0, 0.16)')
-                                                                                                     map.entities.push(circle);
-                                                                                                     map.entities.push(pushpin);})
+        icon: 'user_pin.svg',
+     anchor: new Microsoft.Maps.Point(20, 20)
+  });
+   Microsoft.Maps.loadModule('Microsoft.Maps.SpatialMath', function () {
+    let circle = createCircle(new Microsoft.Maps.Location(latitude, -73.8740306),120,'rgba(31, 0, 0, 0.16)')
+        map.entities.push(circle);
+       map.entities.push(pushpin);})
                     map.setView({ center: new Microsoft.Maps.Location(latitude, -73.8740306), minZoom: 16,
-                                                                                                  maxZoom: 18});
-
+            maxZoom: 18});
+        updateDirections(latitude)
             };
         }
 function createCircle(center, radius, color) {
