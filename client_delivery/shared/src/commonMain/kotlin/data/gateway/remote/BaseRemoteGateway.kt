@@ -37,8 +37,6 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
 
             errorMessages.containsErrors(USER_NOT_EXIST) ->
                 throw UserNotFoundException(errorMessages.getOrEmpty(USER_NOT_EXIST))
-
-            else -> throw UnknownErrorException()
         }
     }
 
