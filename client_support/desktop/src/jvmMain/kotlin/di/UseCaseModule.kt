@@ -3,11 +3,11 @@ package di
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import org.thechance.common.data.gateway.IdentityGateway
-import org.thechance.common.domain.gateway.IIdentityGateway
+import org.thechance.common.domain.usecase.ILoginUserUseCase
+import org.thechance.common.domain.usecase.LoginUserUseCase
 
 val UseCaseModule = module {
 
-    singleOf(::IdentityGateway) { bind<IIdentityGateway>()}
+    singleOf(::LoginUserUseCase) { bind<ILoginUserUseCase>() }
 
 }
