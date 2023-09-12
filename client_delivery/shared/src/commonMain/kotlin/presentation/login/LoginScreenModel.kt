@@ -1,6 +1,7 @@
 package presentation.login
 
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.entity.DeliveryRequestPermission
 import domain.usecase.IManageLoginUserUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -126,6 +127,33 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
 
     override fun onSubmitClicked(restaurantName: String, ownerEmail: String, description: String) {
         sendNewEffect(LoginScreenUIEffect.LoginEffect(""))//fake scenario just 4 testing
+        val requestPermission = DeliveryRequestPermission(restaurantName, ownerEmail, description)
+        tryToExecute(
+            {
+                manageLoginUser.requestPermission(
+                    requestPermission
+                )
+            },
+            { onAskForPermissionSuccess() },
+            ::onAskForPermissionFailed
+        )
+    }
+
+    private fun onAskForPermissionSuccess() {
+        state.value.sheetState.dismiss()
+        coroutineScope.launch {
+            delayAndChangePermissionSheetState(false)
+        }
+        // todo send effect for that to show toast or something
+    }
+
+
+    private fun onAskForPermissionFailed(error: ErrorState) {
+        state.value.sheetState.dismiss()
+        coroutineScope.launch {
+            delayAndChangePermissionSheetState(false)
+        }
+        // todo send effect for that to show toast or something
     }
 
     override fun onCancelClicked() {

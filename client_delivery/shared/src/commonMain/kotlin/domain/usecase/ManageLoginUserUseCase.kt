@@ -1,5 +1,6 @@
 package domain.usecase
 
+import domain.entity.DeliveryRequestPermission
 import domain.gateway.local.ILocalConfigurationGateway
 import domain.gateway.remote.IIdentityRemoteGateway
 import domain.utils.InvalidPasswordException
@@ -14,6 +15,10 @@ interface IManageLoginUserUseCase {
     )
 
     suspend fun getKeepMeLoggedInFlag(): Boolean
+
+    suspend fun requestPermission(
+        deliveryRequestPermission: DeliveryRequestPermission
+    ): Boolean
 
 }
 
@@ -42,10 +47,16 @@ class ManageLoginUserUseCase(
     private fun validateLoginFields(username: String, password: String): Boolean {
         if (username.isEmpty() || "[a-zA-Z0-9_]+".toRegex().matches(username).not()) {
             throw InvalidUsernameException("")
-        }else if (password.isEmpty() || password.length < 8) {
+        } else if (password.isEmpty() || password.length < 8) {
             throw InvalidPasswordException("")
         }
         return true
+    }
+
+    override suspend fun requestPermission(deliveryRequestPermission: DeliveryRequestPermission): Boolean {
+        return remoteGateway.createRequestPermission(
+            deliveryRequestPermission
+        )
     }
 
 }

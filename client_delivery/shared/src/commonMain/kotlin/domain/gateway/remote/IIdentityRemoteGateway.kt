@@ -12,7 +12,7 @@ interface IIdentityRemoteGateway {
 
     //region permission
       suspend fun createRequestPermission(
-        restaurantRequest: DeliveryRequestPermission
+        deliveryRequestPermission: DeliveryRequestPermission
     ): Boolean
     //endregion
 
