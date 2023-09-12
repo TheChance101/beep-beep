@@ -21,7 +21,7 @@ interface RestaurantInteractionListener : BaseInteractionListener, AddCuisineInt
 
     fun onClickEditRestaurantMenuItem(restaurant: RestaurantUiState.RestaurantDetailsUiState)
 
-    fun onClickDeleteRestaurantMenuItem(restaurant: RestaurantUiState.RestaurantDetailsUiState)
+    fun onClickDeleteRestaurantMenuItem(id: String)
 
     fun onAddNewRestaurantClicked()
 }

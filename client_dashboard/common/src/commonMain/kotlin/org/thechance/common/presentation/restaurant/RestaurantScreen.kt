@@ -178,7 +178,7 @@ class RestaurantScreen :
         onClickEditRestaurant: (restaurantName: String) -> Unit,
         onEditRestaurantDismiss: () -> Unit,
         onClickEditRestaurantMenuItem: (RestaurantUiState.RestaurantDetailsUiState) -> Unit,
-        onClickDeleteRestaurantMenuItem: (RestaurantUiState.RestaurantDetailsUiState) -> Unit,
+        onClickDeleteRestaurantMenuItem: (id: String) -> Unit,
         position: Int,
         restaurant: RestaurantUiState.RestaurantDetailsUiState,
         editRestaurantMenu: String,
@@ -444,7 +444,7 @@ class RestaurantScreen :
     private fun EditRestaurantDropdownMenu(
         restaurant: RestaurantUiState.RestaurantDetailsUiState,
         onClickEdit: (RestaurantUiState.RestaurantDetailsUiState) -> Unit,
-        onClickDelete: (RestaurantUiState.RestaurantDetailsUiState) -> Unit,
+        onClickDelete: (id: String) -> Unit,
         onDismissRequest: () -> Unit,
         editRestaurantMenu: String,
     ) {
@@ -466,7 +466,7 @@ class RestaurantScreen :
                 )
                 BpDropdownMenuItem(
                     onClick = {
-                        onClickDelete(restaurant)
+                        onClickDelete(restaurant.id)
                     },
                     text = Resources.Strings.delete,
                     leadingIconPath = Resources.Drawable.delete,

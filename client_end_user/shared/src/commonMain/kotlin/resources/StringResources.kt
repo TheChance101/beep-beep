@@ -39,5 +39,14 @@ data class StringResources(
     val orderOnTheWay: String = "Your order is on the way...",
     val inProgress: String = "In progress",
     val lastOrder: String = "Last order",
-    val orderAgain: String = "Order again"
+    val orderAgain: String = "Order again",
+    val dishPreferredTitle: String = "Which dish do you prefer?",
+    val dishPreferredSubTitle: String = "Tell us your preferences to help you.",
+    val lowPriceLevel: String = "$",
+    val mediumPriceLevel: String = "$$",
+    val highPriceLevel: String = "$$$",
+    val lowLevelDishName: String = "Classic Pasta Dish",
+    val mediumLevelDishName: String = "Exceptional Sauce Pasta Dish",
+    val highLevelDishName: String = "Healthy (gulten free) Pasta",
+    val searchHint: String = "Search for meal, restaurant"
 )
