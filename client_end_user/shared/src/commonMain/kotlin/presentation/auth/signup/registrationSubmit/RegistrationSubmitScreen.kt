@@ -61,7 +61,7 @@ class RegistrationSubmitScreen(private val username: String, private val passwor
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        painter = painterResource(Resources.images.icBack),
+                        painter = painterResource(Resources.images.iconBack),
                         contentDescription = null,
                         tint = Theme.colors.primary,
                         modifier = Modifier.size(16.dp)
@@ -78,7 +78,7 @@ class RegistrationSubmitScreen(private val username: String, private val passwor
                     onValueChange = listener::onFullNameChanged,
                     label = Resources.strings.fullName,
                     errorMessage = state.fullErrorMsg,
-                    isError = state.isFullError,
+                    isError = state.isFullNameError,
                 )
                 BpTextField(
                     modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
@@ -99,7 +99,7 @@ class RegistrationSubmitScreen(private val username: String, private val passwor
                 BpButton(
                     modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
                     title = Resources.strings.signUp,
-                    onClick = listener::onNextButtonClicked,
+                    onClick = listener::onSignUpButtonClicked,
                     enabled = !state.isLoading
                 )
             }

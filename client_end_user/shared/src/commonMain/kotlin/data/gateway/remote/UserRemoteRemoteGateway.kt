@@ -7,7 +7,7 @@ import data.remote.model.SessionDto
 import data.remote.model.UserDto
 import domain.entity.Session
 import domain.entity.User
-import domain.gateway.IUserGateway
+import domain.gateway.IUserRemoteGateway
 import domain.utils.AuthorizationException
 import io.ktor.client.HttpClient
 import io.ktor.client.request.forms.submitForm
@@ -15,7 +15,7 @@ import io.ktor.client.request.url
 import io.ktor.http.HttpMethod
 import io.ktor.http.Parameters
 
-class UserGateway(client: HttpClient) : BaseGateway(client), IUserGateway {
+class UserRemoteRemoteGateway(client: HttpClient) : BaseGateway(client), IUserRemoteGateway {
 
     override suspend fun createUser(
         fullName: String,

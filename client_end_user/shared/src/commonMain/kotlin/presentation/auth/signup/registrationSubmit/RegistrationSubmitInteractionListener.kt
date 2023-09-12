@@ -6,6 +6,6 @@ interface RegistrationSubmitInteractionListener : BaseInteractionListener {
     fun onFullNameChanged(fullName: String)
     fun onEmailChanged(email: String)
     fun onPhoneChanged(phone: String)
-    fun onNextButtonClicked()
+    fun onSignUpButtonClicked()
     fun onBackButtonClicked()
 }

@@ -61,7 +61,7 @@ class RegistrationScreen :
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        painter = painterResource(Resources.images.icBack),
+                        painter = painterResource(Resources.images.iconBack),
                         contentDescription = null,
                         tint = Theme.colors.primary,
                         modifier = Modifier.size(16.dp)

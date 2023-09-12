@@ -13,7 +13,5 @@ val screenModelsModule = module {
     factoryOf(::HomeScreenModel)
     factoryOf(::MainScreenModel)
     factoryOf(::RegistrationScreenModel)
-    factory { (username: String, password: String) ->
-        RegistrationSubmitScreenModel(username, password, get(), get())
-    }
+    factoryOf(::RegistrationSubmitScreenModel)
 }

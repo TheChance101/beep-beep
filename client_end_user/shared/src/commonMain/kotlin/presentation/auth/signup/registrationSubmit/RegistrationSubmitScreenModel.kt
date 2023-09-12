@@ -45,7 +45,7 @@ class RegistrationSubmitScreenModel(
         tryCatch { validation.validatePhone(phone); clearErrors() }
     }
 
-    override fun onNextButtonClicked() {
+    override fun onSignUpButtonClicked() {
         with(state.value) {
             updateState { it.copy(isLoading = true) }
             tryToExecute(
@@ -68,7 +68,7 @@ class RegistrationSubmitScreenModel(
         clearErrors()
         when (error) {
             InvalidFullName -> updateState {
-                it.copy(fullErrorMsg = "Invalid Name", isFullError = true)
+                it.copy(fullErrorMsg = "Invalid Name", isFullNameError = true)
             }
 
             InvalidEmail -> updateState {
@@ -97,7 +97,7 @@ class RegistrationSubmitScreenModel(
         try {
             block()
         } catch (e: AuthorizationException.InvalidFullNameException) {
-            updateState { it.copy(fullErrorMsg = e.message ?: "Invalid Name", isFullError = true) }
+            updateState { it.copy(fullErrorMsg = e.message ?: "Invalid Name", isFullNameError = true) }
         } catch (e: AuthorizationException.InvalidEmailException) {
             updateState {
                 it.copy(emailErrorMsg = e.message ?: "Invalid Email", isEmailError = true)
@@ -113,7 +113,7 @@ class RegistrationSubmitScreenModel(
         updateState {
             it.copy(
                 fullErrorMsg = "",
-                isFullError = false,
+                isFullNameError = false,
                 emailErrorMsg = "",
                 isEmailError = false,
                 phoneErrorMsg = "",

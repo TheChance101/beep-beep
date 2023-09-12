@@ -1,6 +1,6 @@
 package domain.usecase
 
-import domain.gateway.IUserGateway
+import domain.gateway.IUserRemoteGateway
 import domain.gateway.local.ILocalConfigurationGateway
 import domain.usecase.validation.IValidationUseCase
 
@@ -16,7 +16,7 @@ interface IManageAuthenticationUseCase {
 }
 
 class ManageAuthenticationUseCase(
-    private val remoteGateway: IUserGateway,
+    private val remoteGateway: IUserRemoteGateway,
     private val localGateway: ILocalConfigurationGateway,
     private val validation: IValidationUseCase,
 ) : IManageAuthenticationUseCase {

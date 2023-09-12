@@ -9,7 +9,7 @@ data class RegistrationSubmitUIState(
     val phoneErrorMsg: String = "",
     val snackbarMessage: String = "",
     val showSnackbar: Boolean = false,
-    val isFullError: Boolean = false,
+    val isFullNameError: Boolean = false,
     val isEmailError: Boolean = false,
     val isPhoneError: Boolean = false,
     val isLoading: Boolean = false,
