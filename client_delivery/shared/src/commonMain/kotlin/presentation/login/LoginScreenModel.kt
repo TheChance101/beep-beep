@@ -41,11 +41,17 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
         isKeepMeLoggedInChecked: Boolean
     ) {
         updateState { it.copy(isLoading = true) }
+        clearErrors()
         tryToExecute(
             { manageLoginUser.loginUser(username, password, isKeepMeLoggedInChecked) },
-            { onLoginSuccess() },
+            {onLoginSuccess()},
             ::onLoginError
         )
+    }
+
+    private fun onLoginSuccess() {
+        clearErrors()
+        sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
     }
 
     private fun onLoginError(errorState: ErrorState) {
@@ -53,30 +59,32 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
         when (errorState) {
             ErrorState.InvalidPassword -> updateState {
                 it.copy(
-                    passwordErrorMsg = "invalid password",
+                    passwordErrorMsg = "Invalid password",
                     isPasswordError = true
                 )
             }
 
             ErrorState.InvalidUsername -> updateState {
                 it.copy(
-                    usernameErrorMsg = "invalid username",
+                    usernameErrorMsg = "Invalid username",
                     isUsernameError = true
                 )
             }
 
-            is ErrorState.UserNotFound -> {
-
-            }
+            is ErrorState.UserNotFound -> showSnackBar("Sign up with Beep Beep account")
 
             else -> {}
         }
     }
 
-    private fun onLoginSuccess() {
-        clearErrors()
-        sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
+    private fun showSnackBar(message: String) {
+        viewModelScope.launch {
+            updateState { it.copy(snackBarMessage = message, showSnackBar = true) }
+            delay(2000) // wait for snack-bar to show
+            updateState { it.copy(showSnackBar = false) }
+        }
     }
+
 
     private fun clearErrors() {
         updateState {
