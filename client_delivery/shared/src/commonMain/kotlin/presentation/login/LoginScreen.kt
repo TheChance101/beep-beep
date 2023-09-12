@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,12 +23,14 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
+import presentation.login.composable.BpToast
 import presentation.login.composable.CustomBottomSheet
 import presentation.login.composable.LogoHeaderCard
 import presentation.login.composable.RequestPermissionBottomSheet
 import presentation.login.composable.WrongPermissionBottomSheet
 import presentation.main.MainScreen
 import resources.Resources
+import util.BPToastDuration
 
 class LoginScreen : BaseScreen<
         LoginScreenModel,
@@ -133,6 +136,18 @@ private fun LoginScreenContent(
                         isKeepMeLoggedInChecked = state.keepLoggedIn
                     )
                 }
+            )
+
+        }
+        BpToast(
+            icon = painterResource(Resources.images.errorIcon),
+            isVisible = state.showSnackBar,
+            modifier = Modifier.align(Alignment.BottomCenter),
+            duration = BPToastDuration.Long
+        ){
+            Text(
+                text = state.snackBarMessage,
+                style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
             )
         }
     }

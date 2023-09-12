@@ -40,7 +40,7 @@ fun BpToast(
     var isToShow by remember { mutableStateOf(true) }
 
     AnimatedVisibility(
-        visible = isToShow && isVisible,
+        visible = isVisible,
         enter = slideInVertically { it },
         exit = slideOutVertically { it },
         modifier = modifier
