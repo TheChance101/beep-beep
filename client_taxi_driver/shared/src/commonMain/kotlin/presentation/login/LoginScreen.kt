@@ -34,6 +34,7 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.composable.CustomBottomSheet
 import presentation.main.MainScreen
+import presentation.resources.Resources
 
 class LoginScreen :
     BaseScreen<LoginScreenModel, LoginScreenUIState, LoginScreenUIEffect, LoginScreenInteractionListener>() {
@@ -93,19 +94,19 @@ private fun LoginScreenContent(
     ) {
         Image(
             modifier = Modifier.fillMaxSize(),
-            painter = painterResource("background_pattern.png"),
+            painter = painterResource(Resources.images.backgroundPattern),
             contentDescription = null,
             contentScale = ContentScale.Crop
         )
         HeadFirstCard(
-            textHeader = "Welcome To Beep Beep App",
-            textSubHeader = "Login to access all the features",
+            textHeader = Resources.strings.welcomeToBeepBeepApp,
+            textSubHeader = Resources.strings.loginToAccessAllTheFeatures,
         ) {
             BpTextField(
                 modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
                 text = state.userName,
                 onValueChange = listener::onUserNameChanged,
-                label = "Username",
+                label = Resources.strings.username,
                 keyboardType = KeyboardType.Text,
                 errorMessage = state.usernameErrorMsg,
                 isError = state.isUsernameError,
@@ -114,7 +115,7 @@ private fun LoginScreenContent(
                 modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
                 text = state.password,
                 onValueChange = listener::onPasswordChanged,
-                label = "Password",
+                label = Resources.strings.password,
                 keyboardType = KeyboardType.Password,
                 errorMessage = state.passwordErrorMsg,
                 isError = state.isPasswordError
@@ -122,7 +123,7 @@ private fun LoginScreenContent(
             )
             BpCheckBox(
                 modifier = Modifier.padding(top = 16.dp),
-                label = "Keep me logged in",
+                label = Resources.strings.keepMeLoggedIn,
                 isChecked = state.keepLoggedIn,
                 size = 24,
                 textStyle = Theme.typography.caption,
@@ -131,7 +132,7 @@ private fun LoginScreenContent(
             )
             BpButton(
                 modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
-                title = "login",
+                title = Resources.strings.login,
                 onClick = {
                     listener.onClickLogin(
                         userName = state.userName,
@@ -150,7 +151,7 @@ private fun HeadFirstCard(
     textHeader: String,
     textSubHeader: String,
     modifier: Modifier = Modifier,
-    logo: String = "ic_beep_beep_logo.xml",
+    logo: String = Resources.images.beepBeepLogo,
     content: @Composable () -> Unit,
 ) {
     Column(
@@ -207,29 +208,29 @@ fun PermissionBottomSheetContent(
             .padding(vertical = Theme.dimens.space24).padding(horizontal = Theme.dimens.space16)
     ) {
         Text(
-            text = "Ask for permission",
+            text = Resources.strings.askForPermission,
             color = Theme.colors.contentPrimary,
             style = Theme.typography.headlineLarge,
         )
         BpTextField(
             text = state.driverFullName,
             onValueChange = listener::onDriverFullNameChanged,
-            label = "Full name",
+            label = Resources.strings.fullName,
             keyboardType = KeyboardType.Text,
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
         )
         BpTextField(
             text = state.driverEmail,
             onValueChange = listener::onOwnerEmailChanged,
-            label = "User email",
+            label = Resources.strings.userEmail,
             keyboardType = KeyboardType.Text,
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
         )
         BpExpandableTextField(
             text = state.description,
             onValueChange = listener::onDescriptionChanged,
-            label = "Why beep beep?",
-            hint = "Describe why you want to join us",
+            label = Resources.strings.whyBeepBeep,
+            hint = Resources.strings.describeWhyYouWantToJoinUs,
             keyboardType = KeyboardType.Text,
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
         )
@@ -241,12 +242,12 @@ fun PermissionBottomSheetContent(
                     state.description
                 )
             },
-            title = "Submit",
+            title = Resources.strings.submit,
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
         )
         BpTransparentButton(
             onClick = listener::onCancelClicked,
-            title = "cancel",
+            title = Resources.strings.cancel,
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
         )
     }
@@ -265,20 +266,20 @@ fun WrongPermissionBottomSheet(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
-            painter = painterResource("ic_error_icon.xml"),
+            painter = painterResource(Resources.images.errorIcon),
             tint = Theme.colors.primary,
             contentDescription = null,
             modifier = Modifier.padding(bottom = Theme.dimens.space24),
         )
 
         Text(
-            text = "Wrong permission",
+            text = Resources.strings.wrongPermission,
             modifier = Modifier.padding(bottom = Theme.dimens.space16),
             style = Theme.typography.titleLarge,
             color = Theme.colors.contentPrimary
         )
         Text(
-            text = "Looks like  your account isn’t assigned as a restaurant owner, ask for permission?",
+            text = Resources.strings.wrongPermissionSheetDescription,
             modifier = Modifier.padding(bottom = Theme.dimens.space24),
             style = Theme.typography.body,
             textAlign = TextAlign.Center,
@@ -287,14 +288,13 @@ fun WrongPermissionBottomSheet(
 
         BpButton(
             onClick = listener::onRequestPermissionClicked,
-            title = "Request a permission",
+            title = Resources.strings.requestAPermission,
             modifier = Modifier.fillMaxWidth().padding(bottom = Theme.dimens.space16),
         )
         BpTransparentButton(
             onClick = listener::onCancelClicked,
-            title = "Close",
+            title = Resources.strings.close,
             modifier = Modifier.fillMaxWidth(),
         )
     }
-
 }
