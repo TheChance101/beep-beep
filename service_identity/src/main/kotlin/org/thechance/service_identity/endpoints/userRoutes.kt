@@ -10,6 +10,7 @@ import org.thechance.service_identity.endpoints.model.mapper.toDto
 import org.thechance.service_identity.domain.util.MissingParameterException
 import org.thechance.service_identity.domain.usecases.IUserAccountManagementUseCase
 import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
+import org.thechance.service_identity.endpoints.util.extractApplicationIdHeader
 import org.thechance.service_identity.endpoints.util.extractInt
 
 fun Route.userRoutes() {
@@ -64,10 +65,10 @@ fun Route.userRoutes() {
         }
 
         post("/login") {
-            val parameters = call.receiveParameters()
-            val username = parameters["username"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val password = parameters["password"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val isLoggedIn = manageUserAccount.login(username, password)
+            val username = call.parameters["username"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            val password = call.parameters["password"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            val applicationId = extractApplicationIdHeader()
+            val isLoggedIn = manageUserAccount.login(username, password, applicationId)
             call.respond(HttpStatusCode.OK, isLoggedIn)
         }
 

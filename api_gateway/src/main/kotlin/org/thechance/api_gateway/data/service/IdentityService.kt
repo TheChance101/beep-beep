@@ -31,7 +31,6 @@ class IdentityService(
     private val attributes: Attributes,
     private val errorHandler: ErrorHandler
 ) {
-
     suspend fun createUser(
         fullName: String, username: String, password: String, email: String, languageCode: String
     ): UserDto {
@@ -54,7 +53,7 @@ class IdentityService(
     }
 
     suspend fun loginUser(
-        userName: String, password: String, tokenConfiguration: TokenConfiguration, languageCode: String
+        userName: String, password: String, tokenConfiguration: TokenConfiguration, languageCode: String, applicationId: String
     ): UserTokensResponse {
         client.tryToExecute<Boolean>(
             api = APIs.IDENTITY_API,
@@ -63,14 +62,15 @@ class IdentityService(
                 errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             }
         ) {
-            submitForm("/user/login",
-                formParameters = parameters {
-                    append("username", userName)
-                    append("password", password)
+            post("/user/login") {
+                headers.append("Application-Id", applicationId)
+                formData {
+                    parameter("username", userName)
+                    parameter("password", password)
                 }
-            )
+            }
         }
-        val user = getUserByUsername(username = userName,languageCode)
+        val user = getUserByUsername(username = userName, languageCode)
         return generateUserTokens(user.id, userName, user.permission, tokenConfiguration)
     }
 
@@ -103,7 +103,7 @@ class IdentityService(
     }
 
     suspend fun getUserByUsername(username: String, languageCode: String): UserDto = client.tryToExecute<UserDto>(
-        APIs.IDENTITY_API, attributes = attributes,setErrorMessage = { errorCodes ->
+        APIs.IDENTITY_API, attributes = attributes, setErrorMessage = { errorCodes ->
             errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
         }
     ) {
@@ -113,7 +113,7 @@ class IdentityService(
     }
 
     @OptIn(InternalAPI::class)
-    suspend fun searchUsers(query: String, permission :List<Int>) = client.tryToExecute<List<UserDto>>(
+    suspend fun searchUsers(query: String, permission: List<Int>) = client.tryToExecute<List<UserDto>>(
         APIs.IDENTITY_API, attributes = attributes,
     ) {
         post("/dashboard/user/search") {
@@ -124,7 +124,7 @@ class IdentityService(
 
 
     @OptIn(InternalAPI::class)
-    suspend fun updateUserPermission(userId: String, permission: List<Int>,languageCode: String) : UserDto {
+    suspend fun updateUserPermission(userId: String, permission: List<Int>, languageCode: String): UserDto {
         return client.tryToExecute<UserDto>(
             APIs.IDENTITY_API, attributes = attributes,
             setErrorMessage = { errorCodes ->

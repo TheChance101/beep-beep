@@ -51,6 +51,8 @@ interface IDataBaseGateway {
 
     suspend fun getUserPermission(userId: String): Int
 
+    suspend fun getUserPermissionByUsername(username: String): Int
+
     // endregion: user permission management
     suspend fun subtractFromWallet(userId: String, amount: Double): Wallet
 

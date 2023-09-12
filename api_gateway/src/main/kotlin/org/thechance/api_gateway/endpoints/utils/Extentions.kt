@@ -29,6 +29,11 @@ fun PipelineContext<Unit, ApplicationCall>.extractLocalizationHeader(): String {
     return headers["Accept-Language"]?.trim() ?: Language.ENGLISH.code
 }
 
+fun PipelineContext<Unit, ApplicationCall>.extractApplicationIdHeader(): String {
+    val headers = call.request.headers
+    return headers["Application-Id"]?.trim() ?: ""
+}
+
 fun WebSocketServerSession.extractLocalizationHeaderFromWebSocket(): String {
     val headers = call.request.headers
     return headers["Accept-Language"]?.trim() ?: Language.ENGLISH.code
