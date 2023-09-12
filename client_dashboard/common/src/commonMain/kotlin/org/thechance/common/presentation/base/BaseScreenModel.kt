@@ -154,13 +154,10 @@ abstract class BaseScreenModel<S, E>(initialState: S) : StateScreenModel<S>(init
         onError: (ErrorState) -> Unit
     ) {
         when (exception) {
-            is InvalidTaxiRateException -> { onError(ErrorState.InvalidTaxiRate(exception.message.toString())) }
-            is InvalidTaxiPriceException -> { onError(ErrorState.InvalidTaxiPrice(exception.message.toString())) }
             is TaxiAlreadyExistsException -> { onError(ErrorState.TaxiAlreadyExists(exception.message.toString())) }
             is InvalidTaxiRequestParameterException -> { onError(ErrorState.InvalidTaxiRequestParameter(exception.message.toString())) }
             is InvalidTaxiIdException -> { onError(ErrorState.InvalidTaxiId(exception.message.toString())) }
             is InvalidTaxiColorException -> { onError(ErrorState.InvalidTaxiColor(exception.message.toString())) }
-            is InvalidTaxiLocationException -> { onError(ErrorState.InvalidTaxiLocation(exception.message.toString())) }
             is TaxiNotFoundException -> { onError(ErrorState.TaxiNotFound(exception.message.toString())) }
             is InvalidTaxiPlateException -> { onError(ErrorState.InvalidTaxiPlate(exception.message.toString())) }
             is InvalidCarTypeException -> { onError(ErrorState.InvalidCarType(exception.message.toString())) }

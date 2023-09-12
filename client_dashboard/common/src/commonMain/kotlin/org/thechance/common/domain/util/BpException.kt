@@ -36,12 +36,6 @@ class InvalidCarTypeException(message: String) : TaxiException(message)
 
 class SeatOutOfRangeException(message: String) : TaxiException(message)
 
-class InvalidTaxiLocationException(message: String) : TaxiException(message)
-
-class InvalidTaxiRateException(message: String) : TaxiException(message)
-
-
-class InvalidTaxiPriceException(message: String) : TaxiException(message)
 
 class TaxiAlreadyExistsException(message: String) : TaxiException(message)
 

@@ -13,8 +13,8 @@ import org.thechance.common.presentation.restaurant.ErrorWrapper
 import org.thechance.common.presentation.util.ErrorState
 
 data class TaxiUiState(
-    val isLoading: Boolean = false,
-    val error: ErrorState = ErrorState.UnKnownError,
+    val isLoading: Boolean = true,
+    val isNoInternetConnection: Boolean = false,
     val isAddNewTaxiDialogVisible: Boolean = false,
     val newTaxiInfo: TaxiInfoUiState = TaxiInfoUiState(),
     val taxiFilterUiState: TaxiFilterUiState = TaxiFilterUiState(),

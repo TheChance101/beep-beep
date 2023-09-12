@@ -52,7 +52,7 @@ class TaxiScreenModel(
     }
 
     private fun onError(error: ErrorState) {
-        updateState { it.copy(error = error, isLoading = false) }
+        updateState { it.copy( isLoading = false) }
         when (error) {
             is ErrorState.InvalidCarType -> {
                 updateState { it.copy(
@@ -62,7 +62,6 @@ class TaxiScreenModel(
                     )
                 }
             }
-
             is ErrorState.InvalidTaxiPlate -> {
                 updateState { it.copy(
                         newTaxiInfo = it.newTaxiInfo.copy(
@@ -71,19 +70,14 @@ class TaxiScreenModel(
                     )
                 }
             }
-
+            ErrorState.NoConnection -> { updateState { it.copy(isNoInternetConnection = true) } }
+            ErrorState.UnKnownError -> println("error is unknown error: ${error}")
             is ErrorState.InvalidTaxiColor -> println("error is invalid taxi color: ${error.errorMessage}")
             is ErrorState.InvalidTaxiId -> println("error is invalid taxi id: ${error.errorMessage}")
-            is ErrorState.InvalidTaxiLocation -> println("error is invalid taxi location: ${error.errorMessage}")
-            is ErrorState.InvalidTaxiPrice -> println("error is invalid taxi price: ${error.errorMessage}")
-            is ErrorState.InvalidTaxiRate -> println("error is invalid taxi rate: ${error.errorMessage}")
-            ErrorState.NoConnection -> println("error is no connection: ${error}")
             is ErrorState.SeatOutOfRange -> println("error is seat out of range: ${error.errorMessage}")
             is ErrorState.TaxiAlreadyExists -> println("error is taxi already exists: ${error.errorMessage}")
             is ErrorState.TaxiNotFound -> println("error is taxi not found: ${error.errorMessage}")
-            ErrorState.UnKnownError -> println("error is unknown error: ${error}")
             is ErrorState.UserNotExist -> println("error is user not exist: ${error.errorMessage}")
-            is ErrorState.UsernameCannotBeBlank -> println("error is username cannot be blank: ${error.errorMessage}")
             else -> {}
         }
     }

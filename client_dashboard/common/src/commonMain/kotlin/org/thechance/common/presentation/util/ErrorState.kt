@@ -21,12 +21,6 @@ sealed interface ErrorState {
 
     class SeatOutOfRange(val errorMessage: String) : ErrorState
 
-    class InvalidTaxiLocation(val errorMessage: String) : ErrorState
-
-    class InvalidTaxiRate(val errorMessage: String) : ErrorState
-
-    class InvalidTaxiPrice(val errorMessage: String) : ErrorState
-
     class TaxiAlreadyExists(val errorMessage: String) : ErrorState
 
     class InvalidTaxiRequestParameter(val errorMessage: String) : ErrorState

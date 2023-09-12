@@ -55,15 +55,6 @@ abstract class BaseGateway {
             errorMessages.containsErrors(SEAT_OUT_OF_RANGE) ->
                 throw SeatOutOfRangeException(errorMessages.getOrEmpty(SEAT_OUT_OF_RANGE))
 
-            errorMessages.containsErrors(INVALID_TAXI_LOCATION) ->
-                throw InvalidTaxiLocationException(errorMessages.getOrEmpty(INVALID_TAXI_LOCATION))
-
-            errorMessages.containsErrors(INVALID_TAXI_RATE) ->
-                throw InvalidTaxiRateException(errorMessages.getOrEmpty(INVALID_TAXI_RATE))
-
-            errorMessages.containsErrors(INVALID_TAXI_PRICE) ->
-                throw InvalidTaxiPriceException(errorMessages.getOrEmpty(INVALID_TAXI_PRICE))
-
             errorMessages.containsErrors(ALREADY_TAXI_EXIST) ->
                 throw TaxiAlreadyExistsException(errorMessages.getOrEmpty(ALREADY_TAXI_EXIST))
 
