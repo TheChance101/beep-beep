@@ -96,6 +96,7 @@ data class TaxiInfoUiState(
     val seats: Int = 0,
     val plateNumberError: ErrorWrapper = ErrorWrapper(),
     val carModelError: ErrorWrapper = ErrorWrapper(),
+    val driverUserNameError: ErrorWrapper = ErrorWrapper(),
     val isFormValid: Boolean = false,
 )
 

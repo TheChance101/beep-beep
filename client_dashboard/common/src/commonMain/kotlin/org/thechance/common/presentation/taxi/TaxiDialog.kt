@@ -76,7 +76,9 @@ fun TaxiDialog(
                 modifier = Modifier.padding(top = 24.kms),
                 label = Resources.Strings.driverUsername,
                 onValueChange = listener::onDriverUserNamChange,
-                text = state.driverUserName
+                text = state.driverUserName,
+                errorMessage = state.driverUserNameError.errorMessage,
+                isError = state.driverUserNameError.isError
             )
 
             BpTextField(

@@ -52,28 +52,45 @@ class TaxiScreenModel(
     }
 
     private fun onError(error: ErrorState) {
-        updateState { it.copy( isLoading = false) }
+        updateState { it.copy(isLoading = false) }
         when (error) {
             is ErrorState.InvalidCarType -> {
-                updateState { it.copy(
+                updateState {
+                    it.copy(
                         newTaxiInfo = it.newTaxiInfo.copy(
                             carModelError = ErrorWrapper(error.errorMessage, true)
                         )
                     )
                 }
             }
+
             is ErrorState.InvalidTaxiPlate -> {
-                updateState { it.copy(
+                updateState {
+                    it.copy(
                         newTaxiInfo = it.newTaxiInfo.copy(
                             plateNumberError = ErrorWrapper(error.errorMessage, true)
                         )
                     )
                 }
             }
-            ErrorState.NoConnection -> { updateState { it.copy(isNoInternetConnection = true) } }
+
+            ErrorState.NoConnection -> {
+                updateState { it.copy(isNoInternetConnection = true) }
+            }
+
             ErrorState.UnKnownError -> println("error is unknown error: ${error}")
             is ErrorState.InvalidTaxiColor -> println("error is invalid taxi color: ${error.errorMessage}")
-            is ErrorState.InvalidTaxiId -> println("error is invalid taxi id: ${error.errorMessage}")
+            is ErrorState.InvalidTaxiId -> {
+                updateState {
+                    it.copy(
+                        newTaxiInfo = it.newTaxiInfo.copy(
+                            driverUserNameError = ErrorWrapper(error.errorMessage, true),
+                        )
+                    )
+                }
+                println("error is invalid taxi id: ${error.errorMessage}")
+            }
+
             is ErrorState.SeatOutOfRange -> println("error is seat out of range: ${error.errorMessage}")
             is ErrorState.TaxiAlreadyExists -> println("error is taxi already exists: ${error.errorMessage}")
             is ErrorState.TaxiNotFound -> println("error is taxi not found: ${error.errorMessage}")
@@ -82,10 +99,11 @@ class TaxiScreenModel(
         }
     }
 
-    private fun clearErrorState() =
+    private fun clearAddTaxiErrorState() =
         updateState { it.copy(newTaxiInfo = it.newTaxiInfo.copy(
                     plateNumberError = ErrorWrapper(),
                     carModelError = ErrorWrapper(),
+                    driverUserNameError = ErrorWrapper(),
                 )
             )
         }
@@ -141,7 +159,9 @@ class TaxiScreenModel(
     }
 
     override fun onDriverUserNamChange(name: String) {
-        updateState { it.copy(newTaxiInfo = it.newTaxiInfo.copy(
+        updateState {
+            it.copy(
+                newTaxiInfo = it.newTaxiInfo.copy(
                     driverUserName = name, isFormValid = name.isNotEmpty()
                 )
             )
@@ -149,11 +169,13 @@ class TaxiScreenModel(
     }
 
     override fun onCarModelChanged(model: String) {
-            updateState { it.copy(newTaxiInfo = it.newTaxiInfo.copy(
-                        carModel = model, isFormValid = model.isNotEmpty()
-                    )
+        updateState {
+            it.copy(
+                newTaxiInfo = it.newTaxiInfo.copy(
+                    carModel = model, isFormValid = model.isNotEmpty()
                 )
-            }
+            )
+        }
     }
 
     override fun onCarColorSelected(color: CarColor) {
@@ -190,7 +212,7 @@ class TaxiScreenModel(
     }
 
     override fun onCreateTaxiClicked() {
-        clearErrorState()
+        clearAddTaxiErrorState()
         tryToExecute(
             { manageTaxis.createTaxi(mutableState.value.newTaxiInfo.toEntity()) },
             ::onCreateTaxiSuccessfully,
