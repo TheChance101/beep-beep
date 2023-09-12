@@ -2,7 +2,7 @@ package org.thechance.common.domain.util
 
 open class BeepBeepException(message: String) : Exception(message)
 
-class UnknownErrorException : BeepBeepException("Unknown error")
+class UnknownErrorException(message: String) : BeepBeepException(message)
 
 class NoInternetException : BeepBeepException("No internet connection")
 
@@ -61,10 +61,6 @@ class RestaurantInvalidLocationException(message: String) : RestaurantException(
 
 class RestaurantInvalidDescriptionException(message: String) : RestaurantException(message)
 
-class RestaurantInvalidPriceLevelException(message: String) : RestaurantException(message)
-
-class RestaurantInvalidRateException(message: String) : RestaurantException(message)
-
 class RestaurantInvalidPhoneException(message: String) : RestaurantException(message)
 
 class RestaurantInvalidTimeException(message: String) : RestaurantException(message)
@@ -73,17 +69,8 @@ class RestaurantInvalidPageException(message: String) : RestaurantException(mess
 
 class RestaurantInvalidPageLimitException(message: String) : RestaurantException(message)
 
-class RestaurantInvalidOneOrMoreIdsException(message: String) : RestaurantException(message)
-
-class RestaurantInvalidPermissionUpdateLocationException(message: String) : RestaurantException(message)
 
 class RestaurantInvalidUpdateParameterException(message: String) : RestaurantException(message)
-
-class RestaurantInvalidPropertyRightsException(message: String) : RestaurantException(message)
-
-class RestaurantInvalidPriceException(message: String) : RestaurantException(message)
-
-class RestaurantInvalidCuisineLimitException(message: String) : RestaurantException(message)
 
 class RestaurantInvalidAddressException(message: String) : RestaurantException(message)
 

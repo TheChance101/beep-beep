@@ -62,6 +62,9 @@ abstract class BaseScreenModel<S, E>(initialState: S) : StateScreenModel<S>(init
                 handleIdentityException(exception, onError)
             } catch (exception: NoInternetException) {
                 onError(ErrorState.NoConnection)
+            }catch (exception: UnknownErrorException) {
+                println("UnknownErrorException: ${exception.message}")
+                onError(ErrorState.UnKnownError)
             } catch (exception: Exception) {
                 onError(ErrorState.UnKnownError)
             }
@@ -103,13 +106,6 @@ abstract class BaseScreenModel<S, E>(initialState: S) : StateScreenModel<S>(init
                 )
             )
 
-            is RestaurantInvalidPriceLevelException -> onError(
-                ErrorState.RestaurantInvalidPriceLevel(
-                    exception.message.toString()
-                )
-            )
-
-            is RestaurantInvalidRateException -> onError(ErrorState.RestaurantInvalidRate(exception.message.toString()))
             is RestaurantInvalidPhoneException -> onError(
                 ErrorState.RestaurantInvalidPhone(
                     exception.message.toString()
@@ -124,38 +120,8 @@ abstract class BaseScreenModel<S, E>(initialState: S) : StateScreenModel<S>(init
                 )
             )
 
-            is RestaurantInvalidOneOrMoreIdsException -> onError(
-                ErrorState.RestaurantInvalidOneOrMoreIds(
-                    exception.message.toString()
-                )
-            )
-
-            is RestaurantInvalidPermissionUpdateLocationException -> onError(
-                ErrorState.RestaurantInvalidPermissionUpdateLocation(
-                    exception.message.toString()
-                )
-            )
-
             is RestaurantInvalidUpdateParameterException -> onError(
                 ErrorState.RestaurantInvalidUpdateParameter(
-                    exception.message.toString()
-                )
-            )
-
-            is RestaurantInvalidPropertyRightsException -> onError(
-                ErrorState.RestaurantInvalidPropertyRights(
-                    exception.message.toString()
-                )
-            )
-
-            is RestaurantInvalidPriceException -> onError(
-                ErrorState.RestaurantInvalidPrice(
-                    exception.message.toString()
-                )
-            )
-
-            is RestaurantInvalidCuisineLimitException -> onError(
-                ErrorState.RestaurantInvalidCuisineLimit(
                     exception.message.toString()
                 )
             )
@@ -199,7 +165,6 @@ abstract class BaseScreenModel<S, E>(initialState: S) : StateScreenModel<S>(init
             is InvalidTaxiPlateException -> { onError(ErrorState.InvalidTaxiPlate(exception.message.toString())) }
             is InvalidCarTypeException -> { onError(ErrorState.InvalidCarType(exception.message.toString())) }
             is SeatOutOfRangeException -> { onError(ErrorState.SeatOutOfRange(exception.message.toString())) }
-            else -> { onError(ErrorState.UnKnownError) }
         }
     }
 

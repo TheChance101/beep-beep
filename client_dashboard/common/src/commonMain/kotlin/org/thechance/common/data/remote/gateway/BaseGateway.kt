@@ -19,13 +19,13 @@ abstract class BaseGateway {
         } catch (e: ClientRequestException) {
             val errorMessages = e.response.body<ServerResponse<String>>().status?.errorMessages
             errorMessages?.let(::throwMatchingException)
-            throw UnknownErrorException()
+            throw UnknownErrorException(e.message)
         } catch (e: ConnectException) {
             throw NoInternetException()
         }catch(e: ConnectException){
             throw NoInternetException()
         } catch (e: Exception) {
-            throw UnknownErrorException()
+            throw UnknownErrorException(e.message.toString())
         }
     }
 
@@ -85,12 +85,6 @@ abstract class BaseGateway {
             errorMessages.containsErrors(RESTAURANT_INVALID_DESCRIPTION) ->
                 throw RestaurantInvalidDescriptionException(errorMessages.getOrEmpty(RESTAURANT_INVALID_DESCRIPTION))
 
-            errorMessages.containsErrors(RESTAURANT_INVALID_PRICE_LEVEL) ->
-                throw RestaurantInvalidPriceLevelException(errorMessages.getOrEmpty(RESTAURANT_INVALID_PRICE_LEVEL))
-
-            errorMessages.containsErrors(RESTAURANT_INVALID_RATE) ->
-                throw RestaurantInvalidRateException(errorMessages.getOrEmpty(RESTAURANT_INVALID_RATE))
-
             errorMessages.containsErrors(RESTAURANT_INVALID_PHONE) ->
                 throw RestaurantInvalidPhoneException(errorMessages.getOrEmpty(RESTAURANT_INVALID_PHONE))
 
@@ -103,23 +97,8 @@ abstract class BaseGateway {
             errorMessages.containsErrors(RESTAURANT_INVALID_PAGE_LIMIT) ->
                 throw RestaurantInvalidPageLimitException(errorMessages.getOrEmpty(RESTAURANT_INVALID_PAGE_LIMIT))
 
-            errorMessages.containsErrors(RESTAURANT_INVALID_ONE_OR_MORE_IDS) ->
-                throw RestaurantInvalidOneOrMoreIdsException(errorMessages.getOrEmpty(RESTAURANT_INVALID_ONE_OR_MORE_IDS))
-
-            errorMessages.containsErrors(RESTAURANT_INVALID_PERMISSION_UPDATE_LOCATION) ->
-                throw RestaurantInvalidPermissionUpdateLocationException(errorMessages.getOrEmpty(RESTAURANT_INVALID_PERMISSION_UPDATE_LOCATION))
-
             errorMessages.containsErrors(RESTAURANT_INVALID_UPDATE_PARAMETER) ->
                 throw RestaurantInvalidUpdateParameterException(errorMessages.getOrEmpty(RESTAURANT_INVALID_UPDATE_PARAMETER))
-
-            errorMessages.containsErrors(RESTAURANT_INVALID_PROPERTY_RIGHTS) ->
-                throw RestaurantInvalidPropertyRightsException(errorMessages.getOrEmpty(RESTAURANT_INVALID_PROPERTY_RIGHTS))
-
-            errorMessages.containsErrors(RESTAURANT_INVALID_PRICE) ->
-                throw RestaurantInvalidPriceException(errorMessages.getOrEmpty(RESTAURANT_INVALID_PRICE))
-
-            errorMessages.containsErrors(RESTAURANT_INVALID_CUISINE_LIMIT) ->
-                throw RestaurantInvalidCuisineLimitException(errorMessages.getOrEmpty(RESTAURANT_INVALID_CUISINE_LIMIT))
 
             errorMessages.containsErrors(RESTAURANT_INVALID_ADDRESS) ->
                 throw RestaurantInvalidAddressException(errorMessages.getOrEmpty(RESTAURANT_INVALID_ADDRESS))
@@ -147,8 +126,6 @@ abstract class BaseGateway {
 
             errorMessages.containsErrors(INVALID_USER_REQUEST_PARAMETER)->
                 throw InvalidUserRequestParameterException(errorMessages.getOrEmpty(INVALID_USER_REQUEST_PARAMETER))
-
-            else -> throw UnknownErrorException()
         }
     }
 

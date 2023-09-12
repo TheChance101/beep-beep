@@ -41,10 +41,6 @@ sealed interface ErrorState {
 
     class RestaurantInvalidDescription(val errorMessage: String) : ErrorState
 
-    class RestaurantInvalidPriceLevel(val errorMessage: String) : ErrorState
-
-    class RestaurantInvalidRate(val errorMessage: String) : ErrorState
-
     class RestaurantInvalidPhone(val errorMessage: String) : ErrorState
 
     class RestaurantInvalidTime(val errorMessage: String) : ErrorState
@@ -53,17 +49,7 @@ sealed interface ErrorState {
 
     class RestaurantInvalidPageLimit(val errorMessage: String) : ErrorState
 
-    class RestaurantInvalidOneOrMoreIds(val errorMessage: String) : ErrorState
-
-    class RestaurantInvalidPermissionUpdateLocation(val errorMessage: String) : ErrorState
-
     class RestaurantInvalidUpdateParameter(val errorMessage: String) : ErrorState
-
-    class RestaurantInvalidPropertyRights(val errorMessage: String) : ErrorState
-
-    class RestaurantInvalidPrice(val errorMessage: String) : ErrorState
-
-    class RestaurantInvalidCuisineLimit(val errorMessage: String) : ErrorState
 
     class RestaurantInvalidAddress(val errorMessage: String) : ErrorState
 
