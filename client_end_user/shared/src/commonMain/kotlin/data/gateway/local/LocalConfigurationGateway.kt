@@ -62,6 +62,18 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
             .find()?.preferredFood?.toList() ?: emptyList()
     }
 
+    override suspend fun savePriceLevel(priceLevel: String) {
+        realm.write {
+            query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+                .find()?.priceLevel = priceLevel
+        }
+    }
+
+    override suspend fun getPriceLevel(): String {
+        return realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+            .find()?.priceLevel ?: "$"
+    }
+
     override suspend fun saveKeepMeLoggedInFlag(isChecked: Boolean) {
         realm.write {
             query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()

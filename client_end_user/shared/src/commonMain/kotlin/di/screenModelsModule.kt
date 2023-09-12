@@ -5,6 +5,7 @@ import org.koin.dsl.module
 import presentation.login.LoginScreenModel
 import presentation.home.HomeScreenModel
 import presentation.main.MainScreenModel
+import presentation.preferredMeal.PreferredScreenModel
 import presentation.PreferredFood.PreferredFoodScreenModel
 
 val screenModelsModule = module {
@@ -12,4 +13,5 @@ val screenModelsModule = module {
     factoryOf(::HomeScreenModel)
     factoryOf(::MainScreenModel)
     factoryOf(::PreferredFoodScreenModel)
+    factoryOf(::PreferredScreenModel)
 }
