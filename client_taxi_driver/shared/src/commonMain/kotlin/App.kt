@@ -1,8 +1,11 @@
 import androidx.compose.runtime.Composable
-import com.beepbeep.designSystem.DesignApp
-import presentation.base.Map
+import cafe.adriel.voyager.navigator.Navigator
+import presentation.main.MainScreen
+import presentation.resources.BpTaxiTheme
 
 @Composable
 fun App() {
-    Map()
+    BpTaxiTheme {
+        Navigator(MainScreen())
+    }
 }

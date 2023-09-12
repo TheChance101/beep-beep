@@ -33,6 +33,18 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
         }
     }
 
+    override suspend fun saveLanguageCode(code: String) {
+       return   realm.write {
+            query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+                .find()?.languageCode = code
+        }
+    }
+
+    override suspend fun getLanguageCode(): String {
+        return realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+            .find()?.languageCode ?: "en"
+    }
+
     override suspend fun getAccessToken(): String {
         return realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
             .find()?.accessToken ?: ""
@@ -45,6 +57,18 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
 
     override suspend fun clearTokens() {
         realm.write { delete(query<UserConfigurationCollection>()) }
+    }
+
+    override suspend fun savePriceLevel(priceLevel: String) {
+        realm.write {
+            query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+                .find()?.priceLevel = priceLevel
+        }
+    }
+
+    override suspend fun getPriceLevel(): String {
+        return realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+            .find()?.priceLevel ?: "$"
     }
 
     override suspend fun saveKeepMeLoggedInFlag(isChecked: Boolean) {

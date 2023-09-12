@@ -6,8 +6,10 @@ data class Taxi(
     val color: Color,
     val type: String,
     val driverId: String,
+    val driverUsername: String,
     val isAvailable: Boolean = true,
     val seats: Int = 4,
+    val tripsCount: Int,
 )
 
 enum class Color(val colorNumber: Long) {

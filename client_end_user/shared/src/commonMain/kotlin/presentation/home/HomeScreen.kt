@@ -65,7 +65,7 @@ class HomeScreen :
             is HomeScreenUiEffect.NavigateToOrderTaxi -> println("Navigate to Order Taxi screen")
             is HomeScreenUiEffect.ScrollDownToRecommendedRestaurants -> println("Scroll down home screen")
             is HomeScreenUiEffect.NavigateToOfferItem -> println("Navigate to offer item details ${effect.offerId}")
-            HomeScreenUiEffect.NavigateToSearch -> navigator.push(SearchScreen())
+            is HomeScreenUiEffect.NavigateToSearch -> println("Navigate to Search Screen")
             is HomeScreenUiEffect.NavigateToOrderDetails ->  println("Navigate to order details ${effect.orderId}")
         }
     }
@@ -93,7 +93,7 @@ class HomeScreen :
             item {
                 BpSimpleTextField(
                     "",
-                    hint = "Search for meal, restaurant",
+                    hint = Resources.strings.searchHint,
                     hintColor = Theme.colors.contentSecondary,
                     onValueChange = {},
                     onClick = { listener.onClickSearch() },

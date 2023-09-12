@@ -7,7 +7,6 @@ import org.thechance.common.data.remote.model.toEntity
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.NewRestaurantInfo
 import org.thechance.common.domain.entity.Restaurant
-import org.thechance.common.domain.entity.Time
 import org.thechance.common.domain.getway.IRestaurantGateway
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -71,23 +70,9 @@ class RestaurantFakeGateway : IRestaurantGateway {
         )
     }
 
-    override suspend fun deleteRestaurants(restaurant: Restaurant): Restaurant {
-        restaurants.remove(
-            RestaurantDto(
-                id = restaurant.id,
-                name = restaurant.name,
-                ownerUsername = restaurant.ownerUsername,
-                phoneNumber = restaurant.phoneNumber,
-                rating = restaurant.rating,
-                priceLevel = restaurant.priceLevel,
-                workingHours = if (restaurant.workingHours == Pair(
-                        Time(0, 0), Time(0, 0)
-                    )
-                ) null
-                else "${restaurant.workingHours.first} - ${restaurant.workingHours.second}",
-            )
-        )
-        return restaurant
+    override suspend fun deleteRestaurant(id: String): Boolean {
+        restaurants.remove(restaurants.find { it.id == id })
+        return true
     }
 
     override suspend fun getCuisines(): List<String> {
