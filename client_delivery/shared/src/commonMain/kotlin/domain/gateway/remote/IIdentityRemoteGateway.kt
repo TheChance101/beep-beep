@@ -1,6 +1,6 @@
 package domain.gateway.remote
 
-import data.remote.model.DeliveryRequestPermission
+import domain.entity.DeliveryRequestPermission
 import domain.entity.Session
 
 interface IIdentityRemoteGateway {

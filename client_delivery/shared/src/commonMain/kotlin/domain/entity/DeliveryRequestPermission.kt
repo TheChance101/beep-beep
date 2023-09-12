@@ -1,4 +1,4 @@
-package data.remote.model
+package domain.entity
 
 data class DeliveryRequestPermission(
     val restaurantName: String,
