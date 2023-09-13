@@ -8,6 +8,7 @@ fun UserCollection.toManagedEntity() = UserManagement(
     fullName,
     username,
     email,
+    country ?: "",
     permission
 )
 

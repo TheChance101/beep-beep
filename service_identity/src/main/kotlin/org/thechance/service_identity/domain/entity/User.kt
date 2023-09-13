@@ -9,5 +9,6 @@ data class User(
     val email: String,
     val walletBalance: Double,
     val addresses: List<Address> = emptyList(),
+    val country: String,
     val permission: Int = Role.END_USER
 )

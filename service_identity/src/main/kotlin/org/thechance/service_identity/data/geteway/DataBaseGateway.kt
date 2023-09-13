@@ -39,6 +39,10 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
             update = Updates.addToSet(UserDetailsCollection::addressIds.name, address.id)
         )
         return if (dataBaseContainer.addressCollection.insertOne(address).wasAcknowledged()) {
+            val addresses = getUserAddresses(userId)
+            if (addresses.size == 1) {
+                updateUserCountry(userId, getUserCountry(userId))
+            }
             address.toEntity()
         } else {
             throw ResourceNotFoundException(ERROR_IN_DB)
@@ -58,6 +62,10 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         return if (dataBaseContainer.addressCollection.insertOne(addressCollection)
                 .wasAcknowledged()
         ) {
+            val addresses = getUserAddresses(userId)
+            if (addresses.size == 1) {
+                updateUserCountry(userId, getUserCountry(userId))
+            }
             addressCollection.toEntity()
         } else {
             throw ResourceNotFoundException(ERROR_IN_DB)
@@ -96,6 +104,25 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         ).toList().toEntity()
     }
 
+    override suspend fun getUserCountry(userId: String): String {
+        val userAddresses = getUserAddresses(userId)
+        val location = userAddresses.firstOrNull()?.location
+        return getCountryForLocation(location)
+    }
+
+    override suspend fun updateUserCountry(userId: String, country: String): Boolean {
+        try {
+            dataBaseContainer.userCollection.find(filter = (UserCollection::id eq ObjectId(userId)))
+            return dataBaseContainer.userCollection.updateOneById(
+                ObjectId(userId),
+                set(UserCollection::country setTo country),
+                updateOnlyNotNullProperties = true
+            ).isUpdatedSuccessfully()
+        } catch (exception: MongoWriteException) {
+            throw UserAlreadyExistsException(USER_ALREADY_EXISTS)
+        }
+    }
+
     //endregion
 
     //region User
@@ -121,6 +148,8 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         val wallet = getWalletByUserId(id)
         val userAddresses = getUserAddresses(id)
         val userPermission = getUserPermission(id)
+        val location = userAddresses.firstOrNull()?.location
+        val country = getCountryForLocation(location)
 
         return dataBaseContainer.userCollection.aggregate<DetailedUserCollection>(
             match(
@@ -133,7 +162,7 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
                 foreignField = UserDetailsCollection::userId.name,
                 newAs = DetailedUserCollection::details.name
             )
-        ).toList().toEntity(wallet.walletBalance, userAddresses, userPermission).firstOrNull()
+        ).toList().toEntity(wallet.walletBalance, userAddresses, country, userPermission).firstOrNull()
             ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
@@ -150,6 +179,7 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
             UserCollection::fullName,
             UserCollection::username,
             UserCollection::email,
+            UserCollection::country,
             UserCollection::permission,
         ).paginate(page, limit).toList().toManagedEntity()
     }
