@@ -231,10 +231,7 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         ).sort(Sorts.descending("_id")).limit(limit).toList().toManagedEntity()
     }
 
-    override suspend fun searchUsers(
-        searchTerm: String,
-        filterByPermission: List<Int>
-    ): List<UserManagement> {
+    override suspend fun searchUsers(searchTerm: String, filterByPermission: List<Int>): List<UserManagement> {
         val orConditions = filterByPermission.map { permission ->
             or(
                 UserCollection::permission eq permission,
@@ -251,7 +248,7 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
                 or(*orConditions.toTypedArray()),
                 UserCollection::isDeleted eq false
             )
-        )?.toList()?.toManagedEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
+        ).toList().toManagedEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
     //endregion
@@ -308,6 +305,10 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
 
     override suspend fun getUserPermission(userId: String): Int {
         return dataBaseContainer.userCollection.findOneById(ObjectId(userId))?.permission ?: 1
+    }
+
+    override suspend fun getUserPermissionByUsername(username: String): Int {
+        return dataBaseContainer.userCollection.findOne(UserCollection::username eq username)?.permission ?: 1
     }
     // endregion: user permission management
 

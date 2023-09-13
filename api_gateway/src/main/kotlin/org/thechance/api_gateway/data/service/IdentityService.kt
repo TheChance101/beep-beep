@@ -33,7 +33,6 @@ class IdentityService(
     private val attributes: Attributes,
     private val errorHandler: ErrorHandler
 ) {
-
     suspend fun createUser(
         fullName: String, username: String, password: String, email: String, languageCode: String
     ): UserDto {
@@ -56,7 +55,7 @@ class IdentityService(
     }
 
     suspend fun loginUser(
-        userName: String, password: String, tokenConfiguration: TokenConfiguration, languageCode: String
+        userName: String, password: String, tokenConfiguration: TokenConfiguration, languageCode: String, applicationId: String
     ): UserTokensResponse {
         client.tryToExecute<Boolean>(
             api = APIs.IDENTITY_API,
@@ -65,12 +64,13 @@ class IdentityService(
                 errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             }
         ) {
-            submitForm("/user/login",
-                formParameters = parameters {
-                    append("username", userName)
-                    append("password", password)
+            post("/user/login") {
+                headers.append("Application-Id", applicationId)
+                formData {
+                    parameter("username", userName)
+                    parameter("password", password)
                 }
-            )
+            }
         }
         val user = getUserByUsername(username = userName, languageCode)
         return generateUserTokens(user.id, userName, user.permission, tokenConfiguration)
