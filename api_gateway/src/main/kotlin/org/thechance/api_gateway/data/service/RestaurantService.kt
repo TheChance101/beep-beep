@@ -15,7 +15,6 @@ import org.thechance.api_gateway.data.utils.tryToExecute
 import org.thechance.api_gateway.data.utils.tryToExecuteFromWebSocket
 import org.thechance.api_gateway.util.APIs
 
-
 @Single
 class RestaurantService(
     private val client: HttpClient,
@@ -99,6 +98,21 @@ class RestaurantService(
                 parameter("limit", limit)
             }
         }
+
+    @OptIn(InternalAPI::class)
+    suspend fun getRestaurants(restaurantIds: List<String>, languageCode: String) =
+        client.tryToExecute<List<RestaurantDto>>(
+            APIs.RESTAURANT_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+            }
+        ) {
+            post("/restaurants") {
+                body = Json.encodeToString(restaurantIds)
+            }
+        }
+
 
     suspend fun getRestaurantsByOwnerId(ownerId: String, languageCode: String): List<RestaurantDto> {
         return client.tryToExecute(
@@ -325,4 +339,6 @@ class RestaurantService(
         }
     }
     //endregion
+
+
 }

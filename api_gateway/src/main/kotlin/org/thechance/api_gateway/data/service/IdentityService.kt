@@ -5,10 +5,12 @@ import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
+import io.ktor.client.utils.*
 import io.ktor.http.*
 import io.ktor.util.*
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.PaginationResponse
@@ -70,7 +72,7 @@ class IdentityService(
                 }
             )
         }
-        val user = getUserByUsername(username = userName,languageCode)
+        val user = getUserByUsername(username = userName, languageCode)
         return generateUserTokens(user.id, userName, user.permission, tokenConfiguration)
     }
 
@@ -102,8 +104,8 @@ class IdentityService(
         get("user/$id")
     }
 
-    suspend fun getUserByUsername(username: String, languageCode: String): UserDto = client.tryToExecute<UserDto>(
-        APIs.IDENTITY_API, attributes = attributes,setErrorMessage = { errorCodes ->
+    suspend fun getUserByUsername(username: String?, languageCode: String): UserDto = client.tryToExecute<UserDto>(
+        APIs.IDENTITY_API, attributes = attributes, setErrorMessage = { errorCodes ->
             errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
         }
     ) {
@@ -113,7 +115,7 @@ class IdentityService(
     }
 
     @OptIn(InternalAPI::class)
-    suspend fun searchUsers(query: String, permission :List<Int>) = client.tryToExecute<List<UserDto>>(
+    suspend fun searchUsers(query: String, permission: List<Int>) = client.tryToExecute<List<UserDto>>(
         APIs.IDENTITY_API, attributes = attributes,
     ) {
         post("/dashboard/user/search") {
@@ -124,7 +126,7 @@ class IdentityService(
 
 
     @OptIn(InternalAPI::class)
-    suspend fun updateUserPermission(userId: String, permission: List<Int>,languageCode: String) : UserDto {
+    suspend fun updateUserPermission(userId: String, permission: List<Int>, languageCode: String): UserDto {
         return client.tryToExecute<UserDto>(
             APIs.IDENTITY_API, attributes = attributes,
             setErrorMessage = { errorCodes ->
@@ -147,6 +149,43 @@ class IdentityService(
             delete("/user/$userId")
         }
     }
+
+    suspend fun getFavoriteRestaurantsIds(userId: String, languageCode: String) = client.tryToExecute<List<String>>(
+        api = APIs.IDENTITY_API,
+        attributes = attributes,
+        setErrorMessage = { errorCodes ->
+            errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+        }) {
+        get("/user/$userId/favorite")
+    }
+
+    suspend fun addRestaurantToFavorite(userId: String, restaurantId: String, languageCode: String) =
+        client.tryToExecute<Boolean>(
+            api = APIs.IDENTITY_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+            }) {
+            post("/user/$userId/favorite") {
+                formData {
+                    parameter("restaurantId", restaurantId)
+                }
+            }
+        }
+
+    suspend fun deleteRestaurantFromFavorite(userId: String, restaurantId: String, languageCode: String) =
+        client.tryToExecute<Boolean>(
+            api = APIs.IDENTITY_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+            }) {
+            delete("/user/$userId/favorite") {
+                formData {
+                    parameter("restaurantId", restaurantId)
+                }
+            }
+        }
 
     fun generateUserTokens(
         userId: String, username: String, userPermission: Int, tokenConfiguration: TokenConfiguration
@@ -188,6 +227,5 @@ class IdentityService(
 
         return accessToken.sign(Algorithm.HMAC256(tokenConfiguration.secret))
     }
-
 
 }
