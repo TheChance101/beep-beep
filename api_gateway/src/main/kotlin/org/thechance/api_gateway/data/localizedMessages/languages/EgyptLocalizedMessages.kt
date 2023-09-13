@@ -26,6 +26,10 @@ class EgyptianArabicLocalizedMessages() : LocalizedMessages {
 
     // region taxi
     override val taxiCreatedSuccessfully: String= "اعمل حفلة بقى عندك تكسي يا ابن المحظوظة 🎉"
+    override val tripCreatedSuccessfully: String = "تم انشاء الرحلة"
+    override val tripApproved: String = "تم قبول الرحلة"
+    override val tripCanceled: String = "تم الغاء الرحلة"
+    override val tripFinished: String = "تم إنهاء الرحلة بنجاح"
     override val taxiUpdateSuccessfully: String= "حدثنالك التاكسي يا عم 🎉"
     override val taxiDeleteSuccessfully: String= "مسحنالك التاكسي مع الاسف"
     override val invalidId: String = "مش لاقيين التاكسي ده!!"
@@ -39,6 +43,7 @@ class EgyptianArabicLocalizedMessages() : LocalizedMessages {
     override val invalidPrice: String = "مش مظبوط السعر اللي دخلته يعم"
     override val alreadyExist: String = "التاكسي ده موجود قبل كده ياعم"
     override val requiredQuery: String = " في حاجات ناقصة يا معلم"
+
     // endregion
 
     //region restaurant

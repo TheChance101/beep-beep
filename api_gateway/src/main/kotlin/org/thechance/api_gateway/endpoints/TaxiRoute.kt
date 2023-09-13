@@ -95,16 +95,15 @@ fun Route.taxiRoutes() {
 
         get("/{tripId}") {
             val language = extractLocalizationHeader()
-            val successMessage = localizedMessagesFactory.createLocalizedMessages(language).taxiCreatedSuccessfully
             val tripId = call.parameters["tripId"]?.trim().orEmpty()
 
             val trip = taxiService.getTripById(tripId = tripId, language)
-            respondWithResult(HttpStatusCode.OK, trip, successMessage)
+            respondWithResult(HttpStatusCode.OK, trip)
         }
 
         post {
             val language = extractLocalizationHeader()
-            val successMessage = localizedMessagesFactory.createLocalizedMessages(language).taxiCreatedSuccessfully
+            val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripCreatedSuccessfully
             val trip = call.receive<TripDto>()
             val createdTrip = taxiService.createTrip(trip, language)
 
@@ -113,7 +112,7 @@ fun Route.taxiRoutes() {
 
         put("/approve") {
             val language = extractLocalizationHeader()
-            val successMessage = localizedMessagesFactory.createLocalizedMessages(language).taxiCreatedSuccessfully
+            val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripApproved
             val parameters = call.receiveParameters()
             val taxiId = parameters["taxiId"]?.trim().orEmpty()
             val driverId = parameters["driverId"]?.trim().orEmpty()
@@ -125,7 +124,7 @@ fun Route.taxiRoutes() {
         }
         put("/finish") {
             val language = extractLocalizationHeader()
-            val successMessage = localizedMessagesFactory.createLocalizedMessages(language).taxiCreatedSuccessfully
+            val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripFinished
             val parameters = call.receiveParameters()
             val driverId = parameters["driverId"]?.trim().orEmpty()
             val tripId = parameters["tripId"]?.trim().orEmpty()
@@ -136,7 +135,7 @@ fun Route.taxiRoutes() {
 
         delete("cancel") {
             val language = extractLocalizationHeader()
-            val successMessage = localizedMessagesFactory.createLocalizedMessages(language).taxiCreatedSuccessfully
+            val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripCanceled
             val parameters = call.receiveParameters()
             val tripId = parameters["tripId"]?.trim().orEmpty()
 
