@@ -1,16 +1,18 @@
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
-import presentation.main.MainContainer
-import presentation.preferredMeal.PreferredMealScreen
+import data.gateway.local.LocalConfigurationGateway
+import kotlinx.coroutines.runBlocking
+import org.koin.compose.getKoin
+import presentation.pickLanguage.PickLanguageScreen
 import resources.BeepBeepTheme
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun App() {
-    BeepBeepTheme {
-        Navigator(PreferredMealScreen()) {
+    val localConfigurationGateway = LocalConfigurationGateway(getKoin().get())
+    val languageCode = runBlocking { localConfigurationGateway.getLanguageCode() }
+    BeepBeepTheme(languageCode = languageCode) {
+        Navigator(PickLanguageScreen) {
             SlideTransition(it)
         }
     }

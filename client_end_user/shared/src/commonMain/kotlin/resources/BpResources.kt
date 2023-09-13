@@ -7,7 +7,7 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import com.beepbeep.designSystem.ui.theme.BpTheme
 import resources.strings.IStringResources
-import resources.strings.en.English
+import util.LocalizationManager
 import util.setInsetsController
 
 private val localDrawableResources = staticCompositionLocalOf { DrawableResources() }
@@ -17,13 +17,14 @@ private val localStringResources = staticCompositionLocalOf<IStringResources> { 
 @Composable
 fun BeepBeepTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
+    languageCode : String = "en",
     content: @Composable () -> Unit,
 ) {
     val drawableResources = if (useDarkTheme) BpDrawableDarkResources else DrawableResources()
 
     CompositionLocalProvider(
         localDrawableResources provides drawableResources,
-        localStringResources provides English(),
+        localStringResources provides LocalizationManager.setLocale(languageCode),
     ) {
         BpTheme(useDarkTheme = useDarkTheme) {
             setInsetsController(useDarkTheme)

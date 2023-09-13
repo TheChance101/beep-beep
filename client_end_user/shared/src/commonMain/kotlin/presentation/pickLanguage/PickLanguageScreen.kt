@@ -18,9 +18,9 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
-import presentation.composable.LanguageCard
 import presentation.composable.HeadFirstCard
-import presentation.login.LoginScreen
+import presentation.composable.LanguageCard
+import presentation.preferredMeal.PreferredMealScreen
 import resources.Resources
 
 
@@ -33,8 +33,7 @@ object PickLanguageScreen :
 
     override fun onEffect(effect: PickLanguageUIEffect, navigator: Navigator) {
         when (effect) {
-            is PickLanguageUIEffect.onGoToPreferredLanguage -> {}
-
+            is PickLanguageUIEffect.onGoToPreferredLanguage -> { navigator.push(PreferredMealScreen()) }
         }
     }
 

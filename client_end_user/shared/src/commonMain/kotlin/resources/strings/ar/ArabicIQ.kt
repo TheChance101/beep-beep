@@ -2,7 +2,7 @@ package resources.strings.ar
 
 import resources.strings.IStringResources
 
-data class ArabicSA(
+data class ArabicIQ(
     override val beepBeep: String = "بيب بيب",
     override val backgroundDescription: String = "صورة الخلفية",
     override val loginWelcomeMessage: String = "مرحبًا بك في تطبيق بيب بيب",

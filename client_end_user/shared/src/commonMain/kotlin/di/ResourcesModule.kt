@@ -1,19 +1,15 @@
 package di
 
+import data.gateway.local.LocalConfigurationGateway
+import kotlinx.coroutines.runBlocking
 import org.koin.dsl.module
-import resources.strings.ar.Arabic
-import resources.strings.en.English
-import util.userCountryCode
-import util.userLanguage
+import util.LocalizationManager
 
 val resourcesModule = module {
     single {
-        val language = userLanguage
-        val countryCode = userCountryCode
-        when (language) {
-            "ar" -> Arabic()
-            else -> English()
-        }
+        val localConfigurationGateway = get<LocalConfigurationGateway>()
+        val languageCode = runBlocking { localConfigurationGateway.getLanguageCode() }
+        LocalizationManager.setLocale(languageCode)
     }
 }
 
