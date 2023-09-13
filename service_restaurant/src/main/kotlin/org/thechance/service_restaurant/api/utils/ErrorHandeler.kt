@@ -7,7 +7,7 @@ import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorExcept
 
 fun StatusPagesConfig.configureStatusPages() {
     exception<MultiErrorException>{ call, exception ->
-        call.respond(HttpStatusCode.NotFound, exception.errorCodes)
+        call.respond(HttpStatusCode.BadRequest, exception.errorCodes)
     }
 
     exception<Throwable> { call, throwable ->
