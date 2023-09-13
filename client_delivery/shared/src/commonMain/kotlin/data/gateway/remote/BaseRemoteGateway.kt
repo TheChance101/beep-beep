@@ -36,7 +36,7 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
                 throw InvalidPasswordException()
 
             errorMessages.containsErrors(USER_NOT_EXIST) ->
-                throw InvalidUserNameException(errorMessages.getOrEmpty(USER_NOT_EXIST))
+                throw InvalidUserNameException()
 
             else -> throw UnknownErrorException()
         }
