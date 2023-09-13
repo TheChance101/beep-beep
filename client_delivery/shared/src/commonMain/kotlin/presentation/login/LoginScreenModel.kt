@@ -38,7 +38,7 @@ LoginScreenInteractionListener{
     }
 
     override fun onRestaurantNameChanged(restaurantName: String) {
-        updateState { it.copy(restaurantName = restaurantName) }
+        updateState { it.copy(deliveryUsername = restaurantName) }
     }
 
     override fun onDescriptionChanged(description: String) {
