@@ -65,7 +65,7 @@ class LoginScreen : BaseScreen<
 
     override fun onEffect(effect: LoginScreenUIEffect, navigator: Navigator) {
           when (effect) {
-            is LoginScreenUIEffect.LoginEffect -> navigator.push(MainScreen())
+            is LoginScreenUIEffect.LoginEffect -> navigator.replaceAll(MainScreen())
             LoginScreenUIEffect.LoginUIFailed -> {}
         }
     }
