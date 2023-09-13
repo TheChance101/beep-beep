@@ -108,7 +108,9 @@ class Validation : IValidation {
     }
 
     override fun isValidTime(time: String?): Boolean {
-        return time != null && time.matches(Regex("\\d{2}:\\d{2}"))
+        val pattern = "^([01]?[0-9]|2[0-3]):[0-5][0-9]$"
+        return Regex(pattern).matches(time!!)
+
     }
 
     override fun checkIsValidIds(id: String, listIds: List<String>) {
