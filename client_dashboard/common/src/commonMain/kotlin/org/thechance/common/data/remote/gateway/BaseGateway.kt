@@ -20,7 +20,7 @@ abstract class BaseGateway {
         try {
             return client.method().body()
         } catch (e: ClientRequestException) {
-            val errorMessages = e.response.body<ServerResponse<*>>().status?.errorMessages
+            val errorMessages = e.response.body<ServerResponse<String>>().status?.errorMessages
             errorMessages?.let(::throwMatchingException)
             throw UnknownErrorException()
         } catch (e: ConnectException) {

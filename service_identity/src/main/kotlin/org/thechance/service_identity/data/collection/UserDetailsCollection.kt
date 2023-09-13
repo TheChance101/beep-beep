@@ -17,5 +17,6 @@ data class UserDetailsCollection(
     @Contextual
     val userId: ObjectId,
     val walletCollection: WalletCollection? = null,
-    val addressIds: MutableList<@Contextual ObjectId> = mutableListOf()
+    val addressIds: MutableList<@Contextual ObjectId> = mutableListOf(),
+    val favorite: MutableList<@Contextual ObjectId> = mutableListOf(),
 )

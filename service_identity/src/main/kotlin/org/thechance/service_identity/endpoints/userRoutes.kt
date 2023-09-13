@@ -9,6 +9,7 @@ import org.koin.ktor.ext.inject
 import org.thechance.service_identity.endpoints.model.mapper.toDto
 import org.thechance.service_identity.domain.util.MissingParameterException
 import org.thechance.service_identity.domain.usecases.IUserAccountManagementUseCase
+import org.thechance.service_identity.domain.usecases.IUserFavoriteUseCase
 import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
 import org.thechance.service_identity.endpoints.util.extractApplicationIdHeader
 import org.thechance.service_identity.endpoints.util.extractInt
@@ -16,6 +17,7 @@ import org.thechance.service_identity.endpoints.util.extractInt
 fun Route.userRoutes() {
 
     val manageUserAccount: IUserAccountManagementUseCase by inject()
+    val favorite: IUserFavoriteUseCase by inject()
 
     route("/user") {
 
@@ -96,6 +98,27 @@ fun Route.userRoutes() {
             call.respond(HttpStatusCode.OK, result)
         }
 
+        route("/{userId}/favorite") {
+            get {
+                val userId = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+                val restaurants = favorite.getFavoriteRestaurants(userId)
+                call.respond(HttpStatusCode.OK, restaurants)
+            }
+
+            post {
+                val userId = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+                val restaurantId = call.parameters["restaurantId"].orEmpty().trim()
+                val restaurant = favorite.addRestaurantsToFavorite(userId = userId, restaurantId = restaurantId)
+                call.respond(HttpStatusCode.OK, restaurant)
+            }
+
+            delete {
+                val userId = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+                val restaurantId = call.parameters["restaurantId"].orEmpty().trim()
+                val restaurant = favorite.removeRestaurantsFromFavorite(userId = userId, restaurantId = restaurantId)
+                call.respond(HttpStatusCode.OK, restaurant)
+            }
+        }
     }
 
 }

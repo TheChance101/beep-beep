@@ -60,5 +60,4 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
     ): DataWrapper<Restaurant> {
         return DataWrapper(10, 1, listOf())
     }
-
 }
