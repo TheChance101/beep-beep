@@ -29,7 +29,6 @@ suspend inline fun <reified T> HttpClient.tryToExecute(
     }
 }
 
-
 suspend inline fun <reified T> HttpClient.tryToExecuteFromWebSocket(api: APIs, path: String,attributes: Attributes): Flow<T> {
     attributes.put(AttributeKey("API"), api.value)
     return flow {
