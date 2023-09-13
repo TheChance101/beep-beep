@@ -14,7 +14,6 @@ import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.tryToExecute
 import org.thechance.api_gateway.data.utils.tryToExecuteFromWebSocket
 import org.thechance.api_gateway.util.APIs
-import org.thechance.api_gateway.util.Role
 
 @Single
 class RestaurantService(
@@ -126,7 +125,7 @@ class RestaurantService(
     }
 
     @OptIn(InternalAPI::class)
-    suspend fun addRestaurant(restaurant: RestaurantDto, languageCode: String): RestaurantDto {
+    suspend fun addRestaurant(restaurant: RestaurantRequestDto, languageCode: String): RestaurantRequestDto {
         return client.tryToExecute(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
@@ -135,7 +134,7 @@ class RestaurantService(
             }
         ) {
             post("/restaurant") {
-                body = Json.encodeToString(RestaurantDto.serializer(), restaurant)
+                body = Json.encodeToString(RestaurantRequestDto.serializer(), restaurant)
             }
         }
     }
@@ -250,11 +249,11 @@ class RestaurantService(
         }
     }
 
-    suspend fun deleteCuisine(cuisineId: String, languageCode: String): Boolean {
+    suspend fun deleteCuisine(cuisineId: String, languageCode : String): Boolean {
         return client.tryToExecute<Boolean>(
             APIs.RESTAURANT_API,
             attributes = attributes,
-            setErrorMessage = { errorHandler.getLocalizedErrorMessage(it, languageCode) }
+            setErrorMessage = { errorHandler.getLocalizedErrorMessage(it, languageCode ) }
         ) {
             delete("/cuisine/$cuisineId")
         }

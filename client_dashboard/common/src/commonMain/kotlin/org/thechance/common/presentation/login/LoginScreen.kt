@@ -37,12 +37,11 @@ class LoginScreen :
 
     override fun onEffect(effect: LoginUIEffect, navigator: Navigator) {
         when (effect) {
-            LoginUIEffect.LoginSuccess -> {
+            is LoginUIEffect.LoginSuccess -> {
                 navigator.replaceAll(MainContainer)
             }
-
             is LoginUIEffect.LoginFailed -> {
-
+                println(effect.errorMessage)
             }
         }
     }
@@ -97,19 +96,19 @@ class LoginScreen :
                         onValueChange = { listener.onUsernameChange(it) },
                         text = state.username,
                         label = Resources.Strings.loginUsername,
-                        errorMessage = state.usernameError.errorMessage,
-                        isError = state.passwordError.isError,
                         modifier = Modifier.padding(top = 40.kms),
+                        errorMessage = state.isUserError.errorMessage,
+                        isError = state.isUserError.isError,
                         hint = ""
                     )
                     BpTextField(
                         onValueChange = { listener.onPasswordChange(it) },
                         text = state.password,
                         label = Resources.Strings.loginPassword,
-                        errorMessage = state.passwordError.errorMessage,
-                        isError = state.passwordError.isError,
                         keyboardType = KeyboardType.Password,
                         modifier = Modifier.padding(top = 16.kms),
+                        errorMessage = state.isPasswordError.errorMessage,
+                        isError = state.isPasswordError.isError,
                         hint = ""
                     )
                     BpCheckBox(
@@ -122,7 +121,7 @@ class LoginScreen :
                         title = Resources.Strings.loginButton,
                         onClick = { listener.onLoginClicked() },
                         modifier = Modifier.padding(top = 24.kms).fillMaxWidth(),
-                        enabled = true
+                        enabled = state.isAbleToLogin
                     )
                 }
             }

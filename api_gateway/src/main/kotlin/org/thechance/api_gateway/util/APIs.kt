@@ -5,4 +5,5 @@ enum class APIs(val value: String) {
     TAXI_API("TAXI_API"),
     IDENTITY_API("IDENTITY_API"),
     NOTIFICATION_API("NOTIFICATION_API"),
+    IMGUR_API("IMGUR_API"),
 }

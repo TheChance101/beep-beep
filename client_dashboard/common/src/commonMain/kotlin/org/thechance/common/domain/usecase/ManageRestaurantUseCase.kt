@@ -18,7 +18,7 @@ interface IManageRestaurantUseCase {
         priceLevel: Int?
     ): DataWrapper<Restaurant>
 
-    suspend fun deleteRestaurants(restaurant: Restaurant): Restaurant
+    suspend fun deleteRestaurant(id: String): Boolean
 
 }
 
@@ -46,8 +46,8 @@ class ManageRestaurantUseCase(private val restaurantGateway: IRestaurantGateway)
         )
     }
 
-    override suspend fun deleteRestaurants(restaurant: Restaurant): Restaurant {
-        return restaurantGateway.deleteRestaurants(restaurant)
+    override suspend fun deleteRestaurant(id: String): Boolean {
+        return restaurantGateway.deleteRestaurant(id)
     }
 
 }
