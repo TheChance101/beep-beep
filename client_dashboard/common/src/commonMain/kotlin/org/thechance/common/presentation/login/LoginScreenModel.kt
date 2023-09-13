@@ -2,9 +2,9 @@ package org.thechance.common.presentation.login
 
 import org.thechance.common.domain.usecase.ILoginUserUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
+import org.thechance.common.presentation.resources.englishStrings
 import org.thechance.common.presentation.restaurant.ErrorWrapper
 import org.thechance.common.presentation.util.ErrorState
-import java.lang.Error
 
 
 class LoginScreenModel(
@@ -12,11 +12,11 @@ class LoginScreenModel(
 ) : BaseScreenModel<LoginUIState, LoginUIEffect>(LoginUIState()), LoginInteractionListener {
 
     override fun onPasswordChange(password: String) {
-        updateState { it.copy(password = password,isLoginAble = password.isNotBlank()) }
+        updateState { it.copy(password = password,isAbleToLogin = password.isNotBlank()) }
     }
 
     override fun onUsernameChange(username: String) {
-        updateState { it.copy(username = username,isLoginAble = username.isNotBlank()) }
+        updateState { it.copy(username = username,isAbleToLogin = username.isNotBlank()) }
     }
 
     override fun onLoginClicked() {
@@ -62,11 +62,11 @@ class LoginScreenModel(
             }
 
             is ErrorState.NoConnection -> {
-                sendNewEffect(LoginUIEffect.LoginFailed("No internet connection!"))
+                sendNewEffect(LoginUIEffect.LoginFailed(englishStrings.noInternet))
             }
 
             is ErrorState.UnKnownError -> {
-                sendNewEffect(LoginUIEffect.LoginFailed("Unknown error please retry again!"))
+                sendNewEffect(LoginUIEffect.LoginFailed(englishStrings.unKnownError))
             }
 
             is ErrorState.LoginError -> {

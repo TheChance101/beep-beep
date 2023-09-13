@@ -12,5 +12,5 @@ data class LoginUIState(
     val isUserError: ErrorWrapper = ErrorWrapper(),
     val isPasswordError: ErrorWrapper = ErrorWrapper(),
     val keepLoggedIn: Boolean = false,
-    val isLoginAble: Boolean = false
+    val isAbleToLogin: Boolean = false
 )
