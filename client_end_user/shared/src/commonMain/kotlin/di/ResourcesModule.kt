@@ -9,7 +9,7 @@ val resourcesModule = module {
     single {
         val localConfigurationGateway = get<LocalConfigurationGateway>()
         val languageCode = runBlocking { localConfigurationGateway.getLanguageCode() }
-        LocalizationManager.setLocale(languageCode)
+        LocalizationManager.getStringResources(languageCode)
     }
 }
 

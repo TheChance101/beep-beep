@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.platform.LocalLayoutDirection
 import com.beepbeep.designSystem.ui.theme.BpTheme
 import resources.strings.IStringResources
 import util.LocalizationManager
@@ -24,7 +25,8 @@ fun BeepBeepTheme(
 
     CompositionLocalProvider(
         localDrawableResources provides drawableResources,
-        localStringResources provides LocalizationManager.setLocale(languageCode),
+        localStringResources provides LocalizationManager.getStringResources(languageCode),
+        LocalLayoutDirection provides LocalizationManager.getLayoutDirection(languageCode)
     ) {
         BpTheme(useDarkTheme = useDarkTheme) {
             setInsetsController(useDarkTheme)
