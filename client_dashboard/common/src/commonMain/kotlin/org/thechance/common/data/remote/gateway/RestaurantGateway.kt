@@ -25,16 +25,10 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
         }.value?.toEntity() ?: throw UnknownError()
     }
 
-    override suspend fun deleteRestaurants(restaurant: Restaurant): Restaurant {
-        return Restaurant(
-            id = "1",
-            name = restaurant.name,
-            ownerUsername = restaurant.ownerUsername,
-            phoneNumber = restaurant.phoneNumber,
-            rating = "4.5".toDouble(),
-            priceLevel = 4,
-            workingHours = restaurant.workingHours
-        )
+    override suspend fun deleteRestaurant(id: String): Boolean {
+        return tryToExecute<ServerResponse<Boolean>>(client) {
+            delete(urlString = "/restaurant") { url { appendPathSegments(id) } }
+        }.isSuccess ?: false
     }
 
     override suspend fun getCuisines(): List<String> {
@@ -66,5 +60,4 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
     ): DataWrapper<Restaurant> {
         return DataWrapper(10, 1, listOf())
     }
-
 }
