@@ -19,6 +19,7 @@ val GatewayModule = module {
     singleOf(::UsersGateway) { bind<IUsersGateway>() }
     singleOf(::TaxisGateway) { bind<ITaxisGateway>() }
     singleOf(::RestaurantGateway){ bind<IRestaurantGateway>() }
+    singleOf(::FakeRemoteGateway){ bind<IRemoteGateway>() }
 //    singleOf(::RestaurantGateway) { bind<IRestaurantGateway>() }
     // endregion
 
