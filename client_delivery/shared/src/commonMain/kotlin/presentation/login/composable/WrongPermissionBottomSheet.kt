@@ -17,11 +17,12 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.login.LoginScreenInteractionListener
+import presentation.login.PermissionInteractionListener
 import resources.Resources
 
 @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun WrongPermissionBottomSheet(listener: LoginScreenInteractionListener,
+fun WrongPermissionBottomSheet(listener: PermissionInteractionListener,
                                modifier: Modifier = Modifier) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

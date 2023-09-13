@@ -16,12 +16,13 @@ import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.login.LoginScreenInteractionListener
 import presentation.login.LoginScreenUIState
+import presentation.login.PermissionInteractionListener
 import resources.Resources
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RequestPermissionBottomSheet(
-    listener: LoginScreenInteractionListener,
+    listener: PermissionInteractionListener,
     state: LoginScreenUIState,
     modifier: Modifier = Modifier
 ) {
