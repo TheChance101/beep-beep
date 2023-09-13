@@ -15,7 +15,7 @@ data class LoginScreenUIState(
     val passwordErrorMsg: String = "",
     val snackBarMessage: String = "",
     //permission
-    val restaurantName: String = "",
+    val deliveryUsername: String = "",
     val description: String = "",
     val ownerEmail: String = "",
     val hasPermission: Boolean = false,

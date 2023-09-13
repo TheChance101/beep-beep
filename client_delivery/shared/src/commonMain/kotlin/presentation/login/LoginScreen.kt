@@ -23,6 +23,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
+import presentation.login.composable.LoginScaffold
 import presentation.login.composable.BpToast
 import presentation.login.composable.CustomBottomSheet
 import presentation.login.composable.LogoHeaderCard
@@ -41,7 +42,7 @@ class LoginScreen : BaseScreen<
     @Composable
     override fun onRender(state: LoginScreenUIState, listener: LoginScreenInteractionListener) {
         Column(modifier = Modifier.fillMaxSize()) {
-            CustomBottomSheet(
+            LoginScaffold(
                 sheetContent = {
                     if (state.showPermissionSheet) {
                         RequestPermissionBottomSheet(

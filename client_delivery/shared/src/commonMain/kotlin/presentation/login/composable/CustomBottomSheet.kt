@@ -20,14 +20,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.modifier.noRippleEffect
 import com.beepbeep.designSystem.ui.theme.Theme
 
 
 @Composable
-fun CustomBottomSheet(
+fun LoginScaffold(
     sheetContent: @Composable () -> Unit,
     sheetState: BottomSheetState,
     onBackGroundClicked: () -> Unit = {},
@@ -70,10 +69,10 @@ fun CustomBottomSheet(
 
 @Composable
 private fun SheetContent(
-    sheetShape: RoundedCornerShape,
-    sheetBackgroundColor: Color,
+    shape: RoundedCornerShape,
+    backgroundColor: Color,
     onBackGroundClicked: () -> Unit,
-    sheetContent: @Composable () -> Unit
+    content: @Composable () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -87,11 +86,11 @@ private fun SheetContent(
 
         Box(
             modifier = Modifier.background(
-                shape = sheetShape,
-                color = sheetBackgroundColor
+                shape = shape,
+                color = backgroundColor
             )
         ) {
-            sheetContent()
+            content()
         }
     }
 }

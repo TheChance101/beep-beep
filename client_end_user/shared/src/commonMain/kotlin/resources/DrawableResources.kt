@@ -26,6 +26,10 @@ data class DrawableResources(
     val cart: String = "img_cart.png",
     val taxiOnTheWay: String = "taxi_on_the_way.png",
     val orderOnTheWay: String = "order_on_the_way.png",
+    val iconBack: String = "ic_back.xml",
+    val wishDishLow: String = "wish_dish_low.png",
+    val wishDishMedium: String = "wish_dish_medium.png",
+    val wishDishHigh: String = "wish_dish_high.png",
 )
 
 val BpDrawableDarkResources = DrawableResources(

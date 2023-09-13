@@ -1,6 +1,7 @@
 package presentation.main
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.unit.dp
@@ -34,7 +36,7 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.composable.exitinstion.drawTopIndicator
 import presentation.composable.exitinstion.toPx
-import presentation.login.LoginScreen
+import presentation.auth.login.LoginScreen
 import resources.Resources
 
 
@@ -100,7 +102,10 @@ object MainContainer :
         val indicatorWidthPx = 40.dp.toPx()
         val iconSizePx = 24.dp.toPx()
 
-        BpNavigationBar(modifier = Modifier.drawTopIndicator(xOffsetAnimated)) {
+        BpNavigationBar(
+            modifier = Modifier.background(Theme.colors.surface)
+                .drawTopIndicator(xOffsetAnimated).padding(bottom = 10.dp)
+        ) {
             tabs.forEach { tabContainer ->
                 val selected = tabNavigator.current == tabContainer.tab
                 val drawable =
