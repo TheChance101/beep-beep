@@ -148,7 +148,7 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         val wallet = getWalletByUserId(id)
         val userAddresses = getUserAddresses(id)
         val userPermission = getUserPermission(id)
-        val location = userAddresses.first().location
+        val location = userAddresses.firstOrNull()?.location
         val country = getCountryForLocation(location)
 
         return dataBaseContainer.userCollection.aggregate<DetailedUserCollection>(
