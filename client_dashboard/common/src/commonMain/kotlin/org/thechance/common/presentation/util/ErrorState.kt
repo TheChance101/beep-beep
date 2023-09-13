@@ -1,13 +1,16 @@
 package org.thechance.common.presentation.util
 
-sealed interface ErrorState {
+import org.thechance.common.presentation.resources.englishStrings
 
-    object NoConnection : ErrorState
+sealed class ErrorState(val message: String) {
 
-    object UnKnownError : ErrorState
+    object NoConnection : ErrorState(englishStrings.noInternet)
 
-    class InvalidCredentials(val errorMessage: String) : ErrorState
+    object UnKnownError : ErrorState(englishStrings.unKnownError)
 
-    class UserNotExist(val errorMessage: String) : ErrorState
+    class InvalidCredentials(val errorMessage: String) : ErrorState(errorMessage)
+
+    class UserNotExist(val errorMessage: String) : ErrorState(errorMessage)
+    class LoginError(val errorMessage: String): ErrorState(errorMessage)
 
 }

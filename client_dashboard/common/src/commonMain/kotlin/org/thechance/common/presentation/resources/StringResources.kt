@@ -95,6 +95,9 @@ data class StringResources(
     val noMatchesFound: String = "Oops, No matches found",
     val invalidPlateNumber: String = "Invalid plate number",
     val invalidCarModel: String = "Invalid car model",
+
+    val noInternet: String = "No internet connection!",
+    val unKnownError: String = "Unknown error please retry again!",
 )
 
 val englishStrings = StringResources()
