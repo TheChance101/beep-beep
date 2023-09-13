@@ -59,6 +59,10 @@ kotlin {
                 implementation(libs.kotlin.coroutines)
                 //date time
                 implementation(libs.kotlinx.datetime)
+                api("dev.icerock.moko:permissions:0.16.0")
+
+                // compose multiplatform
+                api("dev.icerock.moko:permissions-compose:0.16.0") // permissions api + compose extensions
             }
         }
         val androidMain by getting {
