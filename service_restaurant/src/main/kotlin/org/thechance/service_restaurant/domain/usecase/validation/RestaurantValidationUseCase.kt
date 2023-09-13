@@ -40,9 +40,9 @@ class RestaurantValidationUseCase(
         if (restaurant.rate != null && !basicValidation.isValidRate(restaurant.rate)) {
             validationErrors.add(INVALID_RATE)
         }
-//        if (!basicValidation.isValidPhone(restaurant.phone, restaurant.currency)) {
-//            validationErrors.add(INVALID_PHONE)
-//        }
+        if (!basicValidation.isValidPhone(restaurant.phone, restaurant.currency)) {
+            validationErrors.add(INVALID_PHONE)
+        }
         if (!basicValidation.isValidTime(restaurant.closingTime) || !basicValidation.isValidTime(restaurant.openingTime)) {
             validationErrors.add(INVALID_TIME)
         }
