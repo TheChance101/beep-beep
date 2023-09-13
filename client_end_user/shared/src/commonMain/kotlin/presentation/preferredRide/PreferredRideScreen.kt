@@ -14,6 +14,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
+import domain.entity.RideQuality
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
@@ -58,14 +59,14 @@ class PreferredRideScreen :
                         painter = painterResource(Resources.images.quickRide),
                         title = Resources.strings.quickerRoutesWithHigherCosts,
                         isMeal = false,
-                        flag = 0
+                        quality = RideQuality.HIGH
                     )
                     PreferredCard(
                         onClickRideCard = listener::onClickPreferredRide,
                         painter = painterResource(Resources.images.slowRide),
                         title = Resources.strings.slowerRoutesWithLowCosts,
                         isMeal = false,
-                        flag = 1
+                        quality = RideQuality.LOW
                     )
                 }
             }

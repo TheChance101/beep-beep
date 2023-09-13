@@ -9,14 +9,15 @@ import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
-class PreferredRideScreenModel(private val userPreference: ManageUserUseCase)  : BaseScreenModel<PreferredRideUiState, PreferredRideUiEffect>
-    (PreferredRideUiState()), PreferredRideInteractionListener {
+class PreferredRideScreenModel(private val userPreference: ManageUserUseCase) :
+    BaseScreenModel<PreferredRideUiState, PreferredRideUiEffect>
+        (PreferredRideUiState()), PreferredRideInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
-    override fun onClickPreferredRide(flag: Int) {
-        if (flag == 0) {
-            updateState { it.copy(cost = Cost.HIGH, quality = RideQuality.HIGH) }
-        } else if (flag == 1) {
-            updateState { it.copy(cost = Cost.LOW, quality = RideQuality.LOW) }
+    override fun onClickPreferredRide(quality: RideQuality) {
+        when (quality) {
+            RideQuality.LOW -> updateState { it.copy(cost = Cost.LOW, quality = RideQuality.LOW) }
+
+            RideQuality.HIGH -> updateState { it.copy(cost = Cost.HIGH, quality = RideQuality.HIGH)}
         }
         savePreferredRide(state.value.toPreferredRide())
     }
@@ -32,10 +33,10 @@ class PreferredRideScreenModel(private val userPreference: ManageUserUseCase)  :
     private fun onSuccess(unit: Unit) {
         sendNewEffect(PreferredRideUiEffect.NavigateToPreferredMeal)
     }
+
     private fun onError(errorState: ErrorState) {
         println("$errorState")
     }
-
 
 
 }

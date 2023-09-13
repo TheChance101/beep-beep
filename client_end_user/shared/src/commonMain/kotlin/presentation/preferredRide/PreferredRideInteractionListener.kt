@@ -1,7 +1,8 @@
 package presentation.preferredRide
 
+import domain.entity.RideQuality
 import presentation.base.BaseInteractionListener
 
 interface PreferredRideInteractionListener: BaseInteractionListener {
-    fun onClickPreferredRide(flag: Int)
+    fun onClickPreferredRide(quality: RideQuality)
 }

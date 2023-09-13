@@ -21,16 +21,17 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
+import domain.entity.RideQuality
 
 @Composable
 fun PreferredCard(
     onClickMealCard: (priceLevel: String) -> Unit = {},
-    onClickRideCard: (flag: Int) -> Unit = {},
+    onClickRideCard: (quality: RideQuality) -> Unit = {},
     painter: Painter,
     title: String,
     isMeal: Boolean,
     priceLevel: String = "",
-    flag: Int = 0,
+    quality: RideQuality = RideQuality.LOW,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -41,7 +42,7 @@ fun PreferredCard(
                 color = Theme.colors.divider,
                 shape = RoundedCornerShape(Theme.radius.medium)
             )
-            .clickable { if (isMeal) onClickMealCard(priceLevel) else onClickRideCard(flag) }
+            .clickable { if (isMeal) onClickMealCard(priceLevel) else onClickRideCard(quality) }
             .background(Theme.colors.surface)
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
