@@ -21,7 +21,6 @@ import presentation.PreferredFood.PreferredFoodScreen
 import presentation.base.BaseScreen
 import presentation.composable.LanguageCard
 import presentation.composable.HeadFirstCard
-import presentation.login.LoginScreen
 import resources.Resources
 
 
