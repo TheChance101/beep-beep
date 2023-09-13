@@ -12,13 +12,15 @@ import util.LocalizationManager
 import util.setInsetsController
 
 private val localDrawableResources = staticCompositionLocalOf { DrawableResources() }
-private val localStringResources = staticCompositionLocalOf<IStringResources> { error("Darkness") }
+private val localStringResources = staticCompositionLocalOf<IStringResources> {
+    error("CompositionLocal IStringResources not present")
+}
 
 
 @Composable
 fun BeepBeepTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
-    languageCode : String = "en",
+    languageCode: String = "en",
     content: @Composable () -> Unit,
 ) {
     val drawableResources = if (useDarkTheme) BpDrawableDarkResources else DrawableResources()
