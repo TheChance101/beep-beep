@@ -21,6 +21,7 @@ data class MealCollection(
     @Contextual
     val restaurantId: ObjectId,
     val cuisines: List<@Contextual ObjectId>,
+    val image : String
 )
 
 
