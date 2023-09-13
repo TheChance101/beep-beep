@@ -14,6 +14,8 @@ import domain.usecase.IMangePreferredFoodUseCase
 import domain.usecase.InProgressTrackerUseCase
 import domain.usecase.ManageAuthenticationUseCase
 import domain.usecase.ManageUserUseCase
+import domain.usecase.validation.IValidationUseCase
+import domain.usecase.validation.ValidationUseCaseUseCase
 import domain.usecase.MangeLanguageUseCase
 import domain.usecase.MangePreferredFoodUseCase
 
@@ -29,5 +31,6 @@ val useCaseModule = module {
     singleOf(::ManageUserUseCase) { bind<IManageUserUseCase>() }
     singleOf(::InProgressTrackerUseCase) { bind<IInProgressTrackerUseCase>() }
     singleOf(::MangePreferredFoodUseCase) { bind<IMangePreferredFoodUseCase>() }
+    singleOf(::ValidationUseCaseUseCase) { bind<IValidationUseCase>() }
     singleOf(::MangeLanguageUseCase) { bind<IMangeLanguageUseCase>() }
 }

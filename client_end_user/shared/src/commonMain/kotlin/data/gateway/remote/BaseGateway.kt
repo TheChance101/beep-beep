@@ -43,9 +43,7 @@ abstract class BaseGateway(val client: HttpClient) {
 
             if (it.containsErrors(USER_ALREADY_EXIST)) {
                 throw AuthorizationException.UserAlreadyExistException(
-                    it.getOrEmpty(
-                        USER_ALREADY_EXIST
-                    )
+                    it.getOrEmpty(USER_ALREADY_EXIST)
                 )
             }
 

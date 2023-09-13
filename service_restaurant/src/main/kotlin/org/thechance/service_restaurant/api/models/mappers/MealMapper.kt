@@ -25,7 +25,8 @@ fun MealWithCuisineDto.toEntity() = MealDetails(
     description = description ?: "",
     price = price ?: NULL_DOUBLE,
     currency = currency ?: "",
-    cuisines = cuisines?.map { Cuisine(id = it, name = "") } ?: emptyList()
+    cuisines = cuisines?.map { Cuisine(id = it, name = "") } ?: emptyList(),
+    image = image ?: ""
 )
 
 fun Meal.toDto() = MealWithCuisineDto(
@@ -34,7 +35,8 @@ fun Meal.toDto() = MealWithCuisineDto(
     name = name,
     description = description,
     price = price,
-    currency = currency
+    currency = currency,
+    image = image
 )
 
 fun Meal.toMealDto() = MealDto(
@@ -43,7 +45,8 @@ fun Meal.toMealDto() = MealDto(
     name = name,
     description = description,
     price = price,
-    currency= currency
+    currency= currency,
+    image = image
 )
 
 fun List<Meal>.toDto() = map { it.toDto() }
