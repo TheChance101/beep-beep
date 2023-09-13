@@ -6,13 +6,11 @@ data class PreferredRide(
 )
 
 enum class Cost {
-    UNDEFINED,
     LOW,
     HIGH
 }
 
 enum class RideQuality {
-    UNDEFINED,
     LOW,
     HIGH
 }

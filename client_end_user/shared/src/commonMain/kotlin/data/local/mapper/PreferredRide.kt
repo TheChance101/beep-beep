@@ -8,13 +8,11 @@ fun PreferredRide.toFormattedString(): String {
     val costStr = when (cost) {
         Cost.LOW -> "low"
         Cost.HIGH -> "high"
-        Cost.UNDEFINED -> ""
     }
 
     val qualityStr = when (quality) {
         RideQuality.LOW -> "low"
         RideQuality.HIGH -> "high"
-        RideQuality.UNDEFINED -> ""
     }
 
     return "$costStr,$qualityStr"
@@ -25,13 +23,13 @@ fun String.toPreferredRide(): PreferredRide {
     val cost = when (parts[0]) {
         "low" -> Cost.LOW
         "high" -> Cost.HIGH
-        else -> Cost.UNDEFINED
+        else -> Cost.LOW
     }
 
     val quality = when (parts[1]) {
         "low" -> RideQuality.LOW
         "high" -> RideQuality.HIGH
-        else -> RideQuality.UNDEFINED
+        else -> RideQuality.LOW
     }
 
     return PreferredRide(cost, quality)
