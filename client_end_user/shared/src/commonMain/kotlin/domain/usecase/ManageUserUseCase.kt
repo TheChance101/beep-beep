@@ -40,11 +40,11 @@ class ManageUserUseCase(
     }
 
     override suspend fun savePreferredRide(preferredRide: PreferredRide) {
-        localGateway.savePreferredRide(preferredRide.toFormattedString())
+        localGateway.savePreferredRideQuality(preferredRide.toFormattedString())
     }
 
     override suspend fun getPreferredRide(): PreferredRide {
-        return localGateway.getPreferredRide().toPreferredRide()
+        return localGateway.getPreferredRideQuality().toPreferredRide()
     }
 
 }

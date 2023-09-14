@@ -71,16 +71,16 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
             .find()?.priceLevel ?: "$"
     }
 
-    override suspend fun savePreferredRide(preferredRide: String) {
+    override suspend fun savePreferredRideQuality(rideQuality: String) {
         realm.write {
             query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
-                .find()?.preferredRide = preferredRide
+                .find()?.rideQuality = rideQuality
         }
     }
 
-    override suspend fun getPreferredRide(): String {
+    override suspend fun getPreferredRideQuality(): String {
         return realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
-            .find()?.preferredRide ?: "low,low"
+            .find()?.rideQuality ?: "low"
     }
 
     override suspend fun saveKeepMeLoggedInFlag(isChecked: Boolean) {

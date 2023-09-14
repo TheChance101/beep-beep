@@ -13,6 +13,6 @@ interface ILocalConfigurationGateway {
     suspend fun getLanguageCode(): String
     suspend fun savePriceLevel(priceLevel: String)
     suspend fun getPriceLevel(): String
-    suspend fun savePreferredRide(preferredRide: String)
-    suspend fun getPreferredRide(): String
+    suspend fun savePreferredRideQuality(rideQuality: String)
+    suspend fun getPreferredRideQuality(): String
 }
