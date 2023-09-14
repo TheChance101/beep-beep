@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.resources.Resources
@@ -27,10 +28,10 @@ fun FindingRideCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Theme.colors.surface, RoundedCornerShape(8.dp))
-                .padding(horizontal = 14.dp),
+                .padding(horizontal = 16.dp, vertical = 24.dp)
         ) {
             Text(
-                modifier = Modifier.padding(top = 24.dp).align(Alignment.CenterHorizontally),
+                modifier = Modifier.align(Alignment.CenterHorizontally),
                 text = Resources.strings.mapScreenFindingRequest,
                 color = Theme.colors.contentPrimary,
                 style = Theme.typography.headline,
@@ -38,8 +39,10 @@ fun FindingRideCard(
 
             LinearProgressIndicator(
                 modifier = Modifier.fillMaxWidth()
-                    .padding(top = 18.dp, bottom = 24.dp, start = 16.dp, end = 16.dp),
-                color = Theme.colors.primary
+                    .padding(top = 18.dp),
+                color = Theme.colors.primary,
+                trackColor = Theme.colors.secondary,
+                strokeCap = StrokeCap.Round
             )
         }
     }
