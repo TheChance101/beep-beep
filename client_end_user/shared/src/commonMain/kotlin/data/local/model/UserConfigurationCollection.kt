@@ -9,4 +9,5 @@ class UserConfigurationCollection : RealmObject {
     var isKeepMeLoggedInMeChecked: Boolean = false
     var priceLevel: String = ""
     var languageCode : String = ""
+    var isFirstTimeUseApp : Boolean = true
 }

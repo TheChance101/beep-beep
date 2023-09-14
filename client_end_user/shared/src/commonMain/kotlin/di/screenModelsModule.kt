@@ -9,6 +9,8 @@ import presentation.home.HomeScreenModel
 import presentation.main.MainScreenModel
 import presentation.preferredMeal.PreferredScreenModel
 import presentation.pickLanguage.PickLanguageScreenModel
+import presentation.app.AppScreenModel
+
 
 val screenModelsModule = module {
     factoryOf(::LoginScreenModel)
@@ -18,4 +20,5 @@ val screenModelsModule = module {
     factoryOf(::RegistrationSubmitScreenModel)
     factoryOf(::PreferredScreenModel)
     factoryOf(::PickLanguageScreenModel)
+    factoryOf (::AppScreenModel)
 }
