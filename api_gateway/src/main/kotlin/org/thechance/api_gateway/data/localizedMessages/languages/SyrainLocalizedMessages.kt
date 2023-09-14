@@ -22,6 +22,8 @@ class SyrianArabicLocalizedMessages() : LocalizedMessages {
     override val unknownError: String = "خطأ مالو معروف `¯\\_(ツ)_/¯`"
     override val userNotFound: String = "المستخدم ما لقيناه"
     override val invalidPermission: String = "صلاحية مالا صحيحة"
+    override val alreadyInFavorite: String= "بالفعل موجود في المفضله"
+
     // endregion
 
     // region taxi
@@ -69,5 +71,7 @@ class SyrianArabicLocalizedMessages() : LocalizedMessages {
     override val restaurantInsertOrderError: String = "في مشكلة بإضافة الأوردر تبعك"
     override val restaurantInvalidReceivedOrders: String = "الأوردر يلي وصلنا مو صحيح "
     override val restaurantNotFound: String = "عذرًا، ما لقينا هالمطعم"
+    override val deletedSuccessfully: String = "حذفنالك ياجار"
+    override val cuisineNameAlreadyExisted: String = "المطبخ موجود قبل هيك"
     //endregion
 }

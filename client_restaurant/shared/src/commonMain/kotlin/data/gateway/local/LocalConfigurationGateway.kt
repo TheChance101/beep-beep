@@ -4,6 +4,7 @@ import data.local.model.UserConfigurationCollection
 import domain.gateway.local.ILocalConfigurationGateway
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
+
 class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationGateway {
 
     init {
@@ -11,10 +12,15 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
     }
 
     private fun createUserConfiguration() {
-        realm.writeBlocking {
-            copyToRealm(UserConfigurationCollection().apply {
-                id = CONFIGURATION_ID
-            })
+        val hasValue =
+            realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first().find()
+
+        if (hasValue == null) {
+            realm.writeBlocking {
+                copyToRealm(UserConfigurationCollection().apply {
+                    id = CONFIGURATION_ID
+                })
+            }
         }
     }
 

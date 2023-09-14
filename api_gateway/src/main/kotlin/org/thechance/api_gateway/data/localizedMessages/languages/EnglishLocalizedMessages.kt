@@ -22,6 +22,7 @@ class EnglishLocalizedMessages() : LocalizedMessages {
     override val unknownError: String = "Unknown error `¯\\_(ツ)_/¯`"
     override val userNotFound: String = "User not found"
     override val invalidPermission: String = "Invalid permission"
+    override val alreadyInFavorite: String = "already in your favorite list"
     // endregion
 
     // region taxi
@@ -69,5 +70,7 @@ class EnglishLocalizedMessages() : LocalizedMessages {
     override val restaurantInsertOrderError: String = "insert order error"
     override val restaurantInvalidReceivedOrders: String = "invalid received orders"
     override val restaurantNotFound: String = "Sorry, we could not found this restaurant"
+    override val deletedSuccessfully: String = "Deleted successfully "
+    override val cuisineNameAlreadyExisted: String = "Cuisine name already existed"
     //endregion
 }

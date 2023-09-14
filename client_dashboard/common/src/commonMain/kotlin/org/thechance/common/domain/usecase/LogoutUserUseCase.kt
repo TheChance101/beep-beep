@@ -11,7 +11,7 @@ interface ILogoutUserUseCase {
 class LogoutUserUseCase(private val identityGateway: IIdentityGateway) : ILogoutUserUseCase {
 
     override suspend fun logoutUser() {
-        identityGateway.clearTokens()
+        identityGateway.clearConfiguration()
     }
 
 }

@@ -30,7 +30,6 @@ kotlin {
             baseName = "shared"
             isStatic = true
         }
-        extraSpecAttributes["resources"] = "['src/commonMain/resources/**', 'src/iosMain/resources/**','../../design_system/shared/src/commonMain/resources/**']"
     }
 
     sourceSets {
@@ -45,7 +44,10 @@ kotlin {
                 api(libs.compose.image.loader)
                 implementation(libs.kotlinx.datetime)
 
+                // voyager
                 implementation(libs.bundles.voyager)
+                implementation(libs.voyager.tab.navigator)
+
                 implementation(libs.kotlin.coroutines)
                 api(libs.koin.core)
                 implementation(libs.koin.annotations)
@@ -107,3 +109,5 @@ android {
         jvmToolchain(libs.versions.jvmToolchain.get().toInt())
     }
 }
+
+

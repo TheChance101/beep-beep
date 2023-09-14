@@ -11,10 +11,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.beepbeep.designSystem.ui.composable.modifier.noRippleEffect
 import com.beepbeep.designSystem.ui.theme.Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -23,8 +25,11 @@ fun BpSimpleTextField(
     text: String,
     hint: String,
     onValueChange: (String) -> Unit,
+    onClick: () -> Unit = {},
+    hintColor: Color = Theme.colors.contentTertiary,
     modifier: Modifier = Modifier,
     trailingPainter: Painter? = null,
+    leadingPainter: Painter? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
     radius: Dp = Theme.radius.medium,
 ) {
@@ -34,8 +39,9 @@ fun BpSimpleTextField(
         placeholder = {
             Text(
                 hint,
-                style = Theme.typography.caption,
-                color = Theme.colors.contentTertiary
+                style = Theme.typography.body,
+                color = hintColor,
+                modifier = Modifier.fillMaxWidth().noRippleEffect(onClick)
             )
         },
         onValueChange = onValueChange,
@@ -49,6 +55,16 @@ fun BpSimpleTextField(
                     painter = trailingPainter,
                     contentDescription = "trailing icon",
                     tint = Theme.colors.contentTertiary
+                )
+            }
+        },
+        leadingIcon = {
+            leadingPainter?.let {
+                Icon(
+                    painter = leadingPainter,
+                    contentDescription = "leading icon",
+                    tint = Theme.colors.contentSecondary,
+                    modifier = Modifier.noRippleEffect(onClick)
                 )
             }
         },

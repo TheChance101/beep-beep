@@ -4,9 +4,9 @@ import kotlinx.serialization.SerialName
 
 data class TaxiFiltrationDto(
     @SerialName("color")
-    val color: Int,
+    val color: Long?,
     @SerialName("seats")
-    val seats: Int,
+    val seats: Int?,
     @SerialName("status")
-    val status: Int,
+    val status: Int?,
 )

@@ -40,7 +40,7 @@ class RestaurantValidationUseCase(
         if (restaurant.rate != null && !basicValidation.isValidRate(restaurant.rate)) {
             validationErrors.add(INVALID_RATE)
         }
-        if (!basicValidation.isValidPhone(restaurant.phone)) {
+        if (!basicValidation.isValidPhone(restaurant.phone, restaurant.currency)) {
             validationErrors.add(INVALID_PHONE)
         }
         if (!basicValidation.isValidTime(restaurant.closingTime) || !basicValidation.isValidTime(restaurant.openingTime)) {
@@ -92,7 +92,7 @@ class RestaurantValidationUseCase(
             if (restaurant.rate != null && !basicValidation.isValidRate(restaurant.rate)) {
                 validationErrors.add(INVALID_RATE)
             }
-            if (restaurant.phone.isNotEmpty() && !basicValidation.isValidPhone(restaurant.phone)) {
+            if (restaurant.phone.isNotEmpty() && !basicValidation.isValidPhone(restaurant.phone, restaurant.currency)) {
                 validationErrors.add(INVALID_PHONE)
             }
             if (restaurant.closingTime.isNotEmpty() && !basicValidation.isValidTime(restaurant.closingTime)) {
@@ -161,7 +161,7 @@ class RestaurantValidationUseCase(
             if (restaurant.rate != null && !basicValidation.isValidRate(restaurant.rate)) {
                 validationErrors.add(INVALID_RATE)
             }
-            if (restaurant.phone.isNotEmpty() && !basicValidation.isValidPhone(restaurant.phone)) {
+            if (restaurant.phone.isNotEmpty() && !basicValidation.isValidPhone(restaurant.phone, restaurant.currency)) {
                 validationErrors.add(INVALID_PHONE)
             }
             if (restaurant.closingTime.isNotEmpty() && !basicValidation.isValidTime(restaurant.closingTime)) {

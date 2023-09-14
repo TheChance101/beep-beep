@@ -12,7 +12,7 @@ data class ServerResponse<T>(
     companion object {
         fun error(errorMessage: Map<Int, String>?, code: Int): ServerResponse<String> {
             return ServerResponse(
-                value = "",
+                value = null,
                 isSuccess = false,
                 status = ResponseStatus(errorMessages = errorMessage, code = code)
             )

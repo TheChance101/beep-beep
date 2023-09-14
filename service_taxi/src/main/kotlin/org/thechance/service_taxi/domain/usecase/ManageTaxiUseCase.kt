@@ -19,17 +19,18 @@ interface IManageTaxiUseCase {
     suspend fun deleteTaxi(taxiId: String): Taxi
     suspend fun getAllTaxi(page: Int, limit: Int): List<Taxi>
     suspend fun getTaxi(taxiId: String): Taxi
-    suspend fun editTaxi(taxiId: String,taxi: Taxi): Taxi
-    suspend fun getNumberOfTaxis() : Long
+    suspend fun editTaxi(taxiId: String, taxi: Taxi): Taxi
+    suspend fun getNumberOfTaxis(): Long
+    suspend fun findTaxisWithFilters(status: Boolean, color: Long?, seats: Int?, plateNumber: String?, driverIds: List<String>?): List<Taxi>
 }
 
 class ManageTaxiUseCase(
-    private val taxiGateway: ITaxiGateway,
-    private val validations: IValidations,
+        private val taxiGateway: ITaxiGateway,
+        private val validations: IValidations,
 ) : IManageTaxiUseCase {
     override suspend fun createTaxi(taxi: Taxi): Taxi {
-        validationTaxi(taxi)
-        taxiGateway.getTaxiById(taxi.id)?.let { throw AlreadyExistException }
+        validateTaxi(taxi)
+        if (isTaxiExistedBefore(taxi)) throw AlreadyExistException
         return taxiGateway.addTaxi(taxi)
     }
 
@@ -47,19 +48,27 @@ class ManageTaxiUseCase(
         return taxiGateway.getTaxiById(taxiId) ?: throw ResourceNotFoundException
     }
 
-    override suspend fun editTaxi(taxiId: String,taxi: Taxi): Taxi {
-        validationTaxi(taxi)
-        return taxiGateway.editTaxi(taxiId,taxi)
+    override suspend fun editTaxi(taxiId: String, taxi: Taxi): Taxi {
+        validateTaxi(taxi)
+        return taxiGateway.editTaxi(taxiId, taxi)
     }
 
     override suspend fun getNumberOfTaxis(): Long {
         return taxiGateway.getNumberOfTaxis()
     }
 
-    private fun validationTaxi(taxi: Taxi) {
+    override suspend fun findTaxisWithFilters(status: Boolean, color: Long?, seats: Int?, plateNumber: String?, driverIds: List<String>?): List<Taxi> {
+        return taxiGateway.findTaxisWithFilters(status, color, seats, plateNumber, driverIds)
+    }
+
+    private suspend fun isTaxiExistedBefore(taxi: Taxi): Boolean {
+        return taxiGateway.isTaxiExistedBefore(taxi)
+    }
+
+    private fun validateTaxi(taxi: Taxi) {
         val validationErrors = mutableListOf<Int>()
 
-        if (!validations.isisValidPlateNumber(taxi.plateNumber)) {
+        if (!validations.isValidPlateNumber(taxi.plateNumber)) {
             validationErrors.add(INVALID_PLATE)
         }
         if (taxi.color == Color.OTHER) {
@@ -79,7 +88,7 @@ class ManageTaxiUseCase(
         }
     }
 
-    private companion object{
+    private companion object {
         val SEAT_RANGE = 1..8
     }
 }

@@ -14,6 +14,7 @@ import org.thechance.service_taxi.data.DataBaseContainer
 import org.thechance.service_taxi.data.collection.TaxiCollection
 import org.thechance.service_taxi.data.collection.TripCollection
 import org.thechance.service_taxi.data.utils.paginate
+import org.thechance.service_taxi.data.utils.toObjectIds
 import org.thechance.service_taxi.domain.entity.Taxi
 import org.thechance.service_taxi.domain.entity.Trip
 import org.thechance.service_taxi.domain.gateway.ITaxiGateway
@@ -31,7 +32,7 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
             ?.takeIf { !it.isDeleted }?.toEntity()
     }
 
-    override suspend fun editTaxi(taxiId: String,taxi: Taxi): Taxi {
+    override suspend fun editTaxi(taxiId: String, taxi: Taxi): Taxi {
         val taxiCollection = taxi.copy(id = taxiId).toCollection()
         container.taxiCollection.updateOne(
             filter = TaxiCollection::id eq ObjectId(taxiId),
@@ -61,6 +62,35 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
 
     override suspend fun getNumberOfTaxis(): Long {
         return container.taxiCollection.countDocuments(TaxiCollection::isDeleted ne true)
+    }
+
+    override suspend fun isTaxiExistedBefore(taxi: Taxi): Boolean {
+        val query = TaxiCollection::plateNumber eq taxi.plateNumber
+        return container.taxiCollection.findOne(query) != null
+    }
+
+    override suspend fun findTaxisWithFilters(status: Boolean, color: Long?, seats: Int?, plateNumber: String?, driverIds: List<String>?): List<Taxi> {
+        val searchQueries = or(
+                TaxiCollection::plateNumber regex Regex(plateNumber.orEmpty(), RegexOption.IGNORE_CASE),
+                TaxiCollection::driverId `in` driverIds?.toObjectIds()!!
+        )
+        val filter = and(
+                TaxiCollection::isAvailable eq status,
+                TaxiCollection::color eq color,
+                TaxiCollection::seats eq seats,
+        )
+        return container.taxiCollection.find(
+                searchQueries,
+                filter,
+                TaxiCollection::isDeleted ne true
+        ).toList().toEntity()
+    }
+
+    override suspend fun updateTaxiTripsCount(taxiId: String, count: Int): Taxi? {
+        return container.taxiCollection.findOneAndUpdate(
+            filter = TaxiCollection::id eq ObjectId(taxiId),
+            update = set(TaxiCollection::tripsCount setTo count)
+        )?.toEntity()
     }
     //endregion
 

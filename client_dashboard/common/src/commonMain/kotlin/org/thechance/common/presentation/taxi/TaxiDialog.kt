@@ -1,7 +1,14 @@
 package org.thechance.common.presentation.taxi
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -17,23 +24,18 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.presentation.composables.CarColors
 import org.thechance.common.presentation.composables.SeatsBar
-import org.thechance.common.presentation.util.kms
 import org.thechance.common.presentation.resources.Resources
+import org.thechance.common.presentation.util.kms
 import java.awt.Dimension
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun AddTaxiDialog(
+fun TaxiDialog(
     isVisible: Boolean,
-    onSeatsSelected: (Int) -> Unit,
-    onCreateTaxiClicked: () -> Unit,
-    onCancelCreateTaxiClicked: () -> Unit,
-    onCarModelChange: (String) -> Unit,
-    onCarColorSelected: (CarColor) -> Unit,
-    onDriverUserNamChange: (String) -> Unit,
-    onTaxiPlateNumberChange: (String) -> Unit,
-    state: NewTaxiInfoUiState,
+    listener: TaxiDialogListener,
+    isEditMode: Boolean = false,
+    state: TaxiInfoUiState,
     modifier: Modifier = Modifier,
 ) {
 
@@ -42,9 +44,8 @@ fun AddTaxiDialog(
         focusable = true,
         undecorated = true,
         visible = isVisible,
-        onCloseRequest = onCancelCreateTaxiClicked,
-
-        ) {
+        onCloseRequest = listener::onCancelClicked,
+    ) {
 
         this.window.minimumSize = Dimension(464, 800)
 
@@ -65,22 +66,24 @@ fun AddTaxiDialog(
             BpTextField(
                 modifier = Modifier.padding(top = 40.kms),
                 label = Resources.Strings.taxiPlateNumber,
-                onValueChange = onTaxiPlateNumberChange,
-                text = state.plateNumber
+                onValueChange = listener::onTaxiPlateNumberChange,
+                text = state.plateNumber,
+                errorMessage = state.plateNumberError
             )
 
             BpTextField(
                 modifier = Modifier.padding(top = 24.kms),
                 label = Resources.Strings.driverUsername,
-                onValueChange = onDriverUserNamChange,
+                onValueChange = listener::onDriverUserNamChange,
                 text = state.driverUserName
             )
 
             BpTextField(
                 modifier = Modifier.padding(top = 24.kms),
                 label = Resources.Strings.carModel,
-                onValueChange = onCarModelChange,
-                text = state.carModel
+                onValueChange = listener::onCarModelChanged,
+                text = state.carModel,
+                errorMessage = state.carModelError
             )
 
             Text(
@@ -93,7 +96,7 @@ fun AddTaxiDialog(
             CarColors(
                 modifier = Modifier.padding(top = 16.kms),
                 colors = CarColor.values().toList(),
-                onSelectColor = { onCarColorSelected(it) },
+                onSelectColor = { listener.onCarColorSelected(it) },
                 selectedCarColor = state.selectedCarColor
             )
 
@@ -112,7 +115,7 @@ fun AddTaxiDialog(
                 iconsSize = 24.kms,
                 iconsPadding = PaddingValues(horizontal = 8.kms),
                 modifier = Modifier.fillMaxWidth().padding(top = 16.kms),
-                onClick = { onSeatsSelected(it) }
+                onClick = { listener.onSeatSelected(it) }
             )
 
             Row(
@@ -122,15 +125,17 @@ fun AddTaxiDialog(
 
                 BpOutlinedButton(
                     Resources.Strings.cancel,
-                    onClick = onCancelCreateTaxiClicked,
+                    onClick = listener::onCancelClicked,
                     modifier = Modifier.width(120.kms)
                 )
                 BpButton(
-                    title = Resources.Strings.create,
-                    onClick = onCreateTaxiClicked,
-                    modifier = Modifier.fillMaxWidth()
+                    title = if (isEditMode) Resources.Strings.save else Resources.Strings.create,
+                    onClick = if (isEditMode) listener::onSaveClicked else listener::onCreateTaxiClicked,
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = state.isFormValid
                 )
             }
         }
     }
 }
+

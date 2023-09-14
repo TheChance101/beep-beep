@@ -18,3 +18,4 @@ data class RestaurantDto(
     @SerialName("address") val address: String? = null,
     @SerialName("location") val locationDto: LocationDto? = null,
 )
+

@@ -1,13 +1,14 @@
 package org.thechance.common.domain.usecase
 
-import org.thechance.common.domain.entity.AddRestaurant
 import org.thechance.common.domain.entity.DataWrapper
+import org.thechance.common.domain.entity.NewRestaurantInfo
 import org.thechance.common.domain.entity.Restaurant
-import org.thechance.common.domain.getway.IRemoteGateway
+import org.thechance.common.domain.getway.IRestaurantGateway
 
 
 interface IManageRestaurantUseCase {
-    suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant
+
+    suspend fun createRestaurant(restaurant: NewRestaurantInfo): Restaurant
 
     suspend fun getRestaurant(
         pageNumber: Int,
@@ -16,13 +17,17 @@ interface IManageRestaurantUseCase {
         rating: Double?,
         priceLevel: Int?
     ): DataWrapper<Restaurant>
+
+    suspend fun deleteRestaurant(id: String): Boolean
+
 }
 
 
-class ManageRestaurantUseCase(private val remoteGateway: IRemoteGateway) :
+class ManageRestaurantUseCase(private val restaurantGateway: IRestaurantGateway) :
     IManageRestaurantUseCase {
-    override suspend fun createRestaurant(restaurant: AddRestaurant): Restaurant {
-        return remoteGateway.createRestaurant(restaurant)
+
+    override suspend fun createRestaurant(restaurant: NewRestaurantInfo): Restaurant {
+        return restaurantGateway.createRestaurant(restaurant)
     }
 
     override suspend fun getRestaurant(
@@ -32,6 +37,17 @@ class ManageRestaurantUseCase(private val remoteGateway: IRemoteGateway) :
         rating: Double?,
         priceLevel: Int?
     ): DataWrapper<Restaurant> {
-        return remoteGateway.getRestaurants(pageNumber, numberOfRestaurantsInPage, restaurantName, rating, priceLevel)
+        return restaurantGateway.getRestaurants(
+            pageNumber,
+            numberOfRestaurantsInPage,
+            restaurantName,
+            rating,
+            priceLevel
+        )
     }
+
+    override suspend fun deleteRestaurant(id: String): Boolean {
+        return restaurantGateway.deleteRestaurant(id)
+    }
+
 }

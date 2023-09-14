@@ -23,6 +23,8 @@ class PalestinianArabicLocalizedMessages(
     override val unknownError: String = "حصل ايرور وما عرفتش شو عملت"
     override val userNotFound: String = "مش لاقينك يا صاحب"
     override val invalidPermission: String = "مش عندك الصلاحية يا صاحب"
+    override val alreadyInFavorite: String= "بالفعل موجود في المفضله"
+
     // endregion
 
     // region taxi
@@ -71,5 +73,7 @@ class PalestinianArabicLocalizedMessages(
     override val restaurantInsertOrderError: String = "حصل مشكلة في إضافة الأوردر"
     override val restaurantInvalidReceivedOrders: String = "الأوردر اللي وصلنا مش صالح"
     override val restaurantNotFound: String = "ما لقينا هالمطعم يا صاحب!!"
+    override val deletedSuccessfully: String="انحذف يخوو"
+    override val cuisineNameAlreadyExisted: String = "المطبخ موجود قبل كدا يا حبيبى"
     //endregion
 }

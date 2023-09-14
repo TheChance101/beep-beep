@@ -13,16 +13,43 @@ import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.resources.Resources
-import org.thechance.common.presentation.restaurant.AddRestaurantDialogUiState
+import org.thechance.common.presentation.restaurant.NewRestaurantInfoUiState
+import org.thechance.common.presentation.restaurant.RestaurantInteractionListener
+import org.thechance.common.presentation.restaurant.RestaurantUiState
 import org.thechance.common.presentation.util.kms
 import java.awt.Dimension
 
+@Composable
+fun NewRestaurantInfoDialog(
+    modifier: Modifier = Modifier,
+    state: RestaurantUiState,
+    listener: RestaurantInteractionListener,
+) {
+    RestaurantDialog(
+        modifier = modifier,
+        onRestaurantNameChange = listener::onRestaurantNameChange,
+        isVisible = state.isNewRestaurantInfoDialogVisible,
+        onCancelClicked = listener::onCancelCreateRestaurantClicked,
+        onOwnerUserNameChange = listener::onOwnerUserNameChange,
+        onPhoneNumberChange = listener::onPhoneNumberChange,
+        onWorkingStartHourChange = listener::onWorkingStartHourChange,
+        onWorkingEndHourChange = listener::onWorkingEndHourChange,
+        state = state.newRestaurantInfoUiState,
+        onCreateClicked = listener::onCreateNewRestaurantClicked,
+        onLocationChange = listener::onLocationChange,
+        lat = state.newRestaurantInfoUiState.lat,
+        lng = state.newRestaurantInfoUiState.lng,
+    )
+}
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RestaurantDialog(
+private fun RestaurantDialog(
     modifier: Modifier = Modifier,
-    state: AddRestaurantDialogUiState,
-    currentLocation: String,
+    state: NewRestaurantInfoUiState,
+    lat: String,
+    lng: String,
     isVisible: Boolean,
     onCreateClicked: () -> Unit,
     onCancelClicked: () -> Unit,
@@ -31,12 +58,13 @@ fun RestaurantDialog(
     onPhoneNumberChange: (String) -> Unit,
     onWorkingStartHourChange: (String) -> Unit,
     onWorkingEndHourChange: (String) -> Unit,
-    onAddressChange: (String) -> Unit,
+    onLocationChange: (String) -> Unit,
 ) {
     Dialog(
         visible = isVisible,
         undecorated = true,
         onCloseRequest = onCancelClicked,
+        resizable = false,
     ) {
         window.minimumSize = Dimension(1176, 664)
         Column(
@@ -60,7 +88,9 @@ fun RestaurantDialog(
                         text = state.name,
                         label = Resources.Strings.restaurantName,
                         modifier = Modifier.padding(top = Theme.dimens.space16),
-                        hint = ""
+                        hint = "",
+                        errorMessage = state.nameError.errorMessage,
+                        isError = state.nameError.isError
                     )
 
                     BpTextField(
@@ -68,7 +98,9 @@ fun RestaurantDialog(
                         text = state.ownerUsername,
                         label = Resources.Strings.ownerUsername,
                         modifier = Modifier.padding(top = Theme.dimens.space16),
-                        hint = ""
+                        hint = "",
+                        errorMessage = state.userNameError.errorMessage,
+                        isError = state.userNameError.isError
                     )
 
                     BpTextField(
@@ -76,7 +108,9 @@ fun RestaurantDialog(
                         text = state.phoneNumber,
                         label = Resources.Strings.phoneNumber,
                         modifier = Modifier.padding(top = Theme.dimens.space16),
-                        hint = ""
+                        hint = "",
+                        errorMessage = state.phoneNumberError.errorMessage,
+                        isError = state.phoneNumberError.isError
                     )
                     Row(
                         modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
@@ -87,32 +121,37 @@ fun RestaurantDialog(
                             text = state.startTime,
                             modifier = Modifier.weight(1f),
                             label = Resources.Strings.workingHours,
-                            hint = Resources.Strings.workStartHourHint
+                            hint = Resources.Strings.workStartHourHint,
+                            errorMessage = state.startTimeError.errorMessage,
+                            isError = state.startTimeError.isError
                         )
                         BpTextField(
                             onValueChange = onWorkingEndHourChange,
                             text = state.endTime,
                             modifier = Modifier.weight(1f),
                             label = "",
-                            hint = Resources.Strings.workEndHourHint
+                            hint = Resources.Strings.workEndHourHint,
+                            errorMessage = state.endTimeError.errorMessage,
+                            isError = state.endTimeError.isError
                         )
                     }
                     BpTextField(
-                        onValueChange = { },
+                        onValueChange = onLocationChange,
                         text = state.location,
                         label = Resources.Strings.location,
                         modifier = Modifier.padding(top = Theme.dimens.space16),
-                        hint = ""
+                        hint = "",
+                        errorMessage = state.locationError.errorMessage,
+                        isError = state.locationError.isError
                     )
                 }
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.End,
                 ) {
-                    GoogleMap(currentLocation = currentLocation) { address ->
-                        onAddressChange(address)
+                    GoogleMap(lat = lat, lng = lng) { address ->
+                        onLocationChange(address)
                     }
-
                     Row(
                         modifier = Modifier.fillMaxWidth(0.5f).padding(top = Theme.dimens.space24),
                         horizontalArrangement = Arrangement.spacedBy(Theme.dimens.space16),
@@ -125,7 +164,8 @@ fun RestaurantDialog(
                         BpButton(
                             title = Resources.Strings.create,
                             onClick = { onCreateClicked() },
-                            modifier = Modifier.width(240.kms)
+                            modifier = Modifier.width(240.kms),
+                            enabled = state.buttonEnabled
                         )
                     }
                 }

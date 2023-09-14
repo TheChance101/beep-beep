@@ -4,12 +4,11 @@ import org.thechance.service_restaurant.domain.entity.Location
 
 fun getCurrencyForLocation(location: Location): String {
     val countryMappings = mapOf(
-        "Egypt" to Pair(22.0..31.0, 25.0..34.0),
-        "Iraq" to Pair(29.0..38.0, 38.0..48.5),
-        "Syria" to Pair(32.0..37.5, 35.5..42.0),
-        "Palestine" to Pair(31.0..33.5, 34.0..36.5)
+        Country.EGYPT to Pair(22.0..31.0, 25.0..34.0),
+        Country.IRAQ to Pair(29.0..38.0, 38.0..48.5),
+        Country.SYRIA to Pair(32.0..37.5, 35.5..42.0),
+        Country.PALESTINE to Pair(31.0..33.5, 34.0..36.5)
     )
-
     countryMappings.forEach { item ->
         val latRange = item.value.first
         val lonRange = item.value.second
@@ -17,15 +16,15 @@ fun getCurrencyForLocation(location: Location): String {
             return getCurrencyForCountry(item.key)
         }
     }
-    return "USD"
+    return Country.UNITED_STATES.currency
 }
 
-private fun getCurrencyForCountry(countryName: String): String {
+private fun getCurrencyForCountry(countryName: Country): String {
     return when (countryName) {
-        "Egypt" -> "EGP"
-        "Iraq" -> "IQD"
-        "Syria" -> "SYP"
-        "Palestine" -> "ILS"
-        else -> "USD"
+        Country.EGYPT -> Country.EGYPT.currency
+        Country.IRAQ -> Country.IRAQ.currency
+        Country.SYRIA -> Country.SYRIA.currency
+        Country.PALESTINE -> Country.PALESTINE.currency
+        Country.UNITED_STATES -> Country.UNITED_STATES.currency
     }
 }

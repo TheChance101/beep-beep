@@ -31,6 +31,9 @@ data class StringResources(
     val workStartHourHint: String = "1:00",
     val workEndHourHint: String = "24:00",
     val restaurants: String = "Restaurants",
+    val cuisines: String = "Cuisines",
+    val enterCuisineName: String = "Enter cuisine name",
+    val add: String = "Add",
     //endregion Restaurant
 
     //region Taxi
@@ -58,7 +61,7 @@ data class StringResources(
     val searchForUsers: String = "Search for users",
     val edit: String = "Edit",
     val delete: String = "Delete",
-    val disable:String = "Disable",
+    val disable: String = "Disable",
     val permissions: String = "Permissions",
     val users: String = "Users",
     //endregion User
@@ -76,9 +79,25 @@ data class StringResources(
 
     //region overview
     val overview: String = "Overview",
+    val revenueShare: String = "Revenue share",
+    val viewMore: String = "View more",
+    val taxiLabel: String = "Taxi",
+    val restaurantLabel: String = "Restaurant",
+    val restaurantPermission: String = "Restaurant Owner",
+    val taxiPermission: String = "Taxi Driver",
+    val endUserPermission: String = "End User",
+    val supportPermission: String = "Support",
+    val deliveryPermission: String = "Delivery",
+    val adminPermission: String = "Admin",
+    // endregion overview
 
-    )
+    val clearAll: String = "Clear all",
+    val noMatchesFound: String = "Oops, No matches found",
+    val invalidPlateNumber: String = "Invalid plate number",
+    val invalidCarModel: String = "Invalid car model",
+
+    val noInternet: String = "No internet connection!",
+    val unKnownError: String = "Unknown error please retry again!",
+)
 
 val englishStrings = StringResources()
-
-

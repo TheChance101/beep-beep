@@ -24,10 +24,7 @@ fun Route.orderRoutes() {
                 val orders = restaurantService.restaurantOrders(restaurantId, language)
                 webSocketServerHandler.sessions[restaurantId] = this
                 webSocketServerHandler.sessions[restaurantId]?.let {
-                    webSocketServerHandler.tryToCollectFormWebSocket(
-                        orders,
-                        it
-                    )
+                    webSocketServerHandler.tryToCollectFormWebSocket(orders, it)
                 }
             }
 
@@ -37,7 +34,6 @@ fun Route.orderRoutes() {
                 val result = restaurantService.getActiveOrders(restaurantId, language)
                 respondWithResult(HttpStatusCode.OK, result)
             }
-
 
             get("/history/{id}") {
                 val id = call.parameters["id"]?.trim().toString()

@@ -41,3 +41,5 @@ bin/
 ### Mac OS ###
 .DS_Store
 /.idea/
+/desktop/default.realm
+/desktop/default.realm.lock

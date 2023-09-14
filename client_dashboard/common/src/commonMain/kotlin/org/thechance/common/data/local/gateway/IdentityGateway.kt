@@ -9,12 +9,12 @@ import org.thechance.common.domain.getway.IIdentityGateway
 
 class IdentityGateway(private val realm: Realm) : IIdentityGateway {
 
-    init {
-        createUserConfiguration()
+    override suspend fun createUserConfiguration() {
+        realm.write { copyToRealm(ConfigurationCollection().apply { id = CONFIGURATION_ID }) }
     }
 
-    private fun createUserConfiguration() {
-        realm.writeBlocking { copyToRealm(ConfigurationCollection().apply { id = CONFIGURATION_ID }) }
+    override suspend fun refreshAccessToken(refreshToken: String): Pair<String, String> {
+        return Pair("", "")
     }
 
     override suspend fun saveAccessToken(token: String) {
@@ -37,7 +37,7 @@ class IdentityGateway(private val realm: Realm) : IIdentityGateway {
         return realm.query<ConfigurationCollection>("$ID == $CONFIGURATION_ID").first().find()?.refreshToken ?: ""
     }
 
-    override suspend fun clearTokens() {
+    override suspend fun clearConfiguration() {
         realm.write { delete(query<ConfigurationCollection>()) }
     }
 
@@ -64,6 +64,7 @@ class IdentityGateway(private val realm: Realm) : IIdentityGateway {
             query<ConfigurationCollection>("$ID == $CONFIGURATION_ID").first().find()?.isDarkMode = mode
         }
     }
+
 
     companion object {
         private const val CONFIGURATION_ID = 0

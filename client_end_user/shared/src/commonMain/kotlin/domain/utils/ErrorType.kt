@@ -1,23 +1,26 @@
 package domain.utils
 
-// Those Exception is just a sample,need to refactor all these exceptions based on app requirements
-open class BpException : Exception()
-open class InternetException : BpException()
-class WifiDisabledException : InternetException()
-class NoInternetException : InternetException()
-class NetworkNotSupportedException : InternetException()
+sealed class InternetException : Exception() {
+    class WifiDisabledException : InternetException()
+    class NoInternetException : InternetException()
+    class NetworkNotSupportedException : InternetException()
+}
 
-class PermissionDenied : AuthorizationException()
-open class RequestException : BpException()
 
-open class AuthorizationException : BpException()
-class UnAuthorizedException : AuthorizationException()
-open class UsernameException : AuthorizationException()
-open class PasswordException : AuthorizationException()
-class InvalidUsernameException : UsernameException()
-class InvalidPasswordException : PasswordException()
+sealed class AuthorizationException(val errorMessage: String = "") : Exception() {
+    data object UnAuthorizedException : AuthorizationException()
+    data object InvalidUsernameException : AuthorizationException()
+    data object InvalidPasswordException : AuthorizationException()
+    data object InvalidFullNameException : AuthorizationException()
+    data object InvalidEmailException : AuthorizationException()
+    data object InvalidPhoneException : AuthorizationException()
 
-class InvalidCredentialsException(message: String) : Exception(message)
+    class UserNotFoundException(message: String) : AuthorizationException(message)
+    class InvalidCredentialsException(message: String) : AuthorizationException(message)
+    class UserAlreadyExistException(message: String) : AuthorizationException(message)
+}
 
-class UnknownErrorException : Exception()
-class UserNotFoundException(message: String) : Exception(message)
+sealed class GeneralException : Exception() {
+    data object UnknownErrorException : GeneralException()
+    data object NotFoundException : GeneralException()
+}

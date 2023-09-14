@@ -2,16 +2,16 @@
 androidGradlePlugin = "7.4.2"
 kotlin = "1.9.0"
 
-compileSdk = "33"
+compileSdk = "34"
 minSdk = "24"
-targetSdk = "33"
+targetSdk = "34"
 ios-deploymentTarget = "14.1"
 jvmToolchain = "11"
 
-androidx-core = "1.9.0"
-androidx-activity-compose = "1.6.1"
+androidx-core = "1.10.1"
+androidx-activity-compose = "1.7.2"
 androidx-appcompat = "1.6.1"
-compose-version = "1.4.3"
+compose-version = "1.5.1"
 accompanist-version = "0.28.0"
 hilt-version = "2.46.1"
 constraint-version = "1.0.1"
@@ -19,15 +19,16 @@ ksp = "1.8.21-1.0.11"
 koin-version = "3.4.3"
 koinKspVersion = "1.2.2"
 #voyager version
-voyager-version = "1.0.0-rc05"
+voyager-version = "1.0.0-rc07"
 ktor-version = "2.3.3"
 google-gson-version = "2.10.1"
 serialization_version = "1.6.0"
 ktor-logging-version = "1.5.0"
-coroutine-version = "1.7.1"
+coroutine-version = "1.7.3"
 image-loader = "1.2.8"
 kotlin-realm = "1.10.0"
 realm-version = "1.10.0"
+kotlinx-serialization-version = "1.9.0"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
@@ -45,7 +46,7 @@ androidx-ui-text = { group = "androidx.compose.ui", name = "ui-text", version = 
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version = "1.1.1" }
 google-accompanist = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist-version" }
 androidx-constraint = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraint-version" }
-koin-compose = { module = "io.insert-koin:koin-compose", version= "1.0.4" }
+koin-compose = { module = "io.insert-koin:koin-compose", version = "1.0.4" }
 koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin-version" }
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager-version" }
 voyager-bottomsheet-navigator = { module = "cafe.adriel.voyager:voyager-bottom-sheet-navigator", version.ref = "voyager-version" }
@@ -57,6 +58,7 @@ voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voy
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor-version" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor-version" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp-jvm", version.ref = "ktor-version" }
+ktor-client-drawin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor-version" }
 google-code-gson = { module = "com.google.code.gson:gson", version.ref = "google-gson-version" }
 ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor-version" }
 ktor-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor-version" }
@@ -66,7 +68,6 @@ ktor-gson = { module = "io.ktor:ktor-serialization-gson", version.ref = "ktor-ve
 kotlin-realm = { module = "io.realm.kotlin:library-base", version.ref = "kotlin-realm" }
 #realm
 realm-library-base = { module = "io.realm.kotlin:library-base", version.ref = "realm-version" }
-
 
 compose-image-loader = { module = "io.github.qdsfdhvh:image-loader", version.ref = "image-loader" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin-version" }
@@ -78,6 +79,7 @@ kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", 
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin-version" }
 
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.4.0" }
+androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version = "1.5.1" }
 
 [bundles]
 voyager = ["voyager-navigator", "voyager-koin", "voyager-transitions"]
@@ -92,5 +94,7 @@ android-library = { id = "com.android.library", version.ref = "androidGradlePlug
 jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose-version" }
 google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt-version" }
 kotlinKsp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+realm = { id = "io.realm.kotlin", version.ref = "realm-version" }
+kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinx-serialization-version" }
 
 

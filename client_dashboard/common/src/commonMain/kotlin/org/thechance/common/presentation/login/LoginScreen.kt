@@ -37,12 +37,11 @@ class LoginScreen :
 
     override fun onEffect(effect: LoginUIEffect, navigator: Navigator) {
         when (effect) {
-            LoginUIEffect.LoginSuccess -> {
-                navigator push MainContainer
+            is LoginUIEffect.LoginSuccess -> {
+                navigator.replaceAll(MainContainer)
             }
-
             is LoginUIEffect.LoginFailed -> {
-
+                println(effect.errorMessage)
             }
         }
     }
@@ -97,19 +96,19 @@ class LoginScreen :
                         onValueChange = { listener.onUsernameChange(it) },
                         text = state.username,
                         label = Resources.Strings.loginUsername,
-                        errorMessage = state.usernameError,
-                        isError = state.isUsernameError,
                         modifier = Modifier.padding(top = 40.kms),
+                        errorMessage = state.isUserError.errorMessage,
+                        isError = state.isUserError.isError,
                         hint = ""
                     )
                     BpTextField(
                         onValueChange = { listener.onPasswordChange(it) },
                         text = state.password,
                         label = Resources.Strings.loginPassword,
-                        errorMessage = state.passwordError,
-                        isError = state.isPasswordError,
                         keyboardType = KeyboardType.Password,
                         modifier = Modifier.padding(top = 16.kms),
+                        errorMessage = state.isPasswordError.errorMessage,
+                        isError = state.isPasswordError.isError,
                         hint = ""
                     )
                     BpCheckBox(
@@ -121,7 +120,8 @@ class LoginScreen :
                     BpButton(
                         title = Resources.Strings.loginButton,
                         onClick = { listener.onLoginClicked() },
-                        modifier = Modifier.padding(top = 24.kms).fillMaxWidth()
+                        modifier = Modifier.padding(top = 24.kms).fillMaxWidth(),
+                        enabled = state.isAbleToLogin
                     )
                 }
             }
