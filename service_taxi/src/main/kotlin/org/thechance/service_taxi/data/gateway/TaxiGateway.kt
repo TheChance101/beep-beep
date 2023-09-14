@@ -98,7 +98,8 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
     override suspend fun updateTaxiTripsCount(taxiId: String, count: Int): Taxi? {
         return container.taxiCollection.findOneAndUpdate(
             filter = TaxiCollection::id eq ObjectId(taxiId),
-            update = set(TaxiCollection::tripsCount setTo count)
+            update = set(TaxiCollection::tripsCount setTo count),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toEntity()
     }
     //endregion
@@ -184,7 +185,8 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
                 TripCollection::endDate.name, Clock.System.now().toLocalDateTime(
                     TimeZone.currentSystemDefault()
                 ).toString()
-            )
+            ),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toEntity()
     }
 
@@ -194,7 +196,8 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
                 TripCollection::isDeleted ne true,
                 TripCollection::id eq ObjectId(tripId),
             ),
-            update = Updates.set(TripCollection::rate.name, rate)
+            update = Updates.set(TripCollection::rate.name, rate),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toEntity()
     }
 
