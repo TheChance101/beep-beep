@@ -11,6 +11,10 @@ interface IManageUserUseCase {
     suspend fun savePriceLevel(priceLevel: String)
     suspend fun getPriceLevel(): String
 
+    suspend fun saveIsFirstTimeUseApp(isFirstTimeUseApp: Boolean)
+
+    suspend fun getIsFirstTimeUseApp(): Boolean
+
 }
 
 class ManageUserUseCase(
@@ -32,6 +36,14 @@ class ManageUserUseCase(
 
     override suspend fun getPriceLevel(): String {
         return localGateway.getPriceLevel()
+    }
+
+    override suspend fun saveIsFirstTimeUseApp(isFirstTimeUseApp: Boolean) {
+       return localGateway.saveIsFirstTimeUseApp(isFirstTimeUseApp)
+    }
+
+    override suspend fun getIsFirstTimeUseApp(): Boolean {
+        return localGateway.getIsFirstTimeUseApp()
     }
 
 
