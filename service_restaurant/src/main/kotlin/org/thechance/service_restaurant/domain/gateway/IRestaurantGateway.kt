@@ -5,17 +5,22 @@ import org.thechance.service_restaurant.domain.entity.*
 interface IRestaurantGateway {
     //region request
     suspend fun getRestaurantPermissionRequests(): List<RestaurantPermissionRequest>
-    suspend fun createRestaurantPermissionRequest(restaurantName: String, ownerEmail: String, cause: String): RestaurantPermissionRequest
+    suspend fun createRestaurantPermissionRequest(
+        restaurantName: String,
+        ownerEmail: String,
+        cause: String
+    ): RestaurantPermissionRequest
     //endregion
 
     //region Get
     suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant>
+    suspend fun getRestaurants(restaurantIds: List<String>): List<Restaurant>
     suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant>
     suspend fun getRestaurant(id: String): Restaurant?
     suspend fun getRestaurantIds(): List<String>
     suspend fun getCuisineInRestaurant(restaurantId: String): List<Cuisine>
 
-    suspend fun getMealsByRestaurantId(restaurantId: String,page: Int, limit: Int): List<Meal>
+    suspend fun getMealsByRestaurantId(restaurantId: String, page: Int, limit: Int): List<Meal>
     //endregion
 
     //region Add
@@ -32,7 +37,7 @@ interface IRestaurantGateway {
     suspend fun deleteCategoriesInRestaurant(restaurantId: String, categoryIds: List<String>): Boolean
     suspend fun deleteCuisinesInRestaurant(restaurantId: String, cuisineIds: List<String>): Boolean
     suspend fun getCuisinesNotInRestaurant(restaurantId: String, cuisineIds: List<String>): List<String>
-    suspend fun getTotalNumberOfRestaurant():Long
+    suspend fun getTotalNumberOfRestaurant(): Long
     //endregion
 
     //region meal
