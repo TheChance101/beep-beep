@@ -2,11 +2,11 @@ package org.thechance.api_gateway.data.service
 
 import io.ktor.client.*
 import io.ktor.client.request.*
-import io.ktor.client.utils.*
+import io.ktor.client.request.forms.*
+import io.ktor.http.*
 import io.ktor.util.*
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.PaginationResponse
@@ -170,6 +170,7 @@ class TaxiService(
         driverId: String,
         languageCode: String
     ): TripDto {
+
         return client.tryToExecute(
             api = APIs.TAXI_API,
             attributes = attributes,
@@ -177,10 +178,13 @@ class TaxiService(
                 errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             }
         ) {
-            put("trip/$tripId/approve") {
-                parameter("taxiId", taxiId)
-                parameter("driverId", driverId)
-                body = Json.encodeToString(EmptyContent.status.toString())
+            val formData = FormDataContent(Parameters.build {
+                append("tripId", tripId)
+                append("taxiId", taxiId)
+                append("driverId", driverId)
+            })
+            put("/trip/approve") {
+                body = formData
             }
         }
     }
@@ -194,9 +198,12 @@ class TaxiService(
                 errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             }
         ) {
-            put("trip/$tripId/finish") {
-                parameter("driverId", driverId)
-                body = Json.encodeToString(EmptyContent.status.toString())
+            val formData = FormDataContent(Parameters.build {
+                append("tripId", tripId)
+                append("driverId", driverId)
+            })
+            put("/trip/finish") {
+                body = formData
             }
         }
     }
@@ -208,7 +215,7 @@ class TaxiService(
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             },
-            method = { delete("trip/$tripId") }
+            method = { delete("/trip/$tripId") }
         )
     }
 }

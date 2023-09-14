@@ -76,9 +76,10 @@ fun Route.tripRoutes() {
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
-        put("/{tripId}/finish") {
-            val tripId = call.parameters["tripId"] ?: throw MissingParameterException
-            val driverId = call.parameters["driverId"] ?: throw MissingParameterException
+        put("/finish") {
+            val parameters = call.receiveParameters()
+            val tripId = parameters["tripId"] ?: throw MissingParameterException
+            val driverId = parameters["driverId"] ?: throw MissingParameterException
             val result = driverTripsManagementUseCase.finishTrip(driverId, tripId)
             call.respond(HttpStatusCode.OK, result.toDto())
         }

@@ -88,7 +88,6 @@ fun Route.taxiRoutes() {
                 respondWithResult(HttpStatusCode.OK, result)
             }
         }
-
     }
 
     route("trip") {
@@ -142,7 +141,5 @@ fun Route.taxiRoutes() {
             val deletedTrip = taxiService.deleteTrip(tripId = tripId, language)
             respondWithResult(HttpStatusCode.OK, deletedTrip, successMessage)
         }
-
     }
-
 }
