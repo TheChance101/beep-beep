@@ -16,6 +16,7 @@ import org.thechance.common.data.remote.model.TripsRevenueDto
 import org.thechance.common.domain.entity.RevenueShare
 import org.thechance.common.domain.entity.TotalRevenueShare
 import org.thechance.common.domain.getway.IRemoteGateway
+import org.thechance.common.domain.util.RevenueShareDate
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -338,8 +339,8 @@ class FakeRemoteGateway(
         return Pair("token", "refreshToken")
     }
 
-    override suspend fun getRevenueShare(type: Int): TotalRevenueShare {
-        return when (type) {
+    override suspend fun getRevenueShare(revenueShareDate: RevenueShareDate): TotalRevenueShare {
+        return when (revenueShareDate.value) {
             0 -> TotalRevenueShare(
                     revenueData = listOf(
                             50.0,

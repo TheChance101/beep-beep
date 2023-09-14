@@ -14,12 +14,7 @@ class ManageRevenueShareUseCase(
         private val remoteGateway: IRemoteGateway
 ):IManageRevenueShareUseCase {
    override suspend fun getRevenueShare(revenueShareDate: RevenueShareDate): TotalRevenueShare {
-       val type = when (revenueShareDate) {
-           RevenueShareDate.MONTHLY -> 0
-           RevenueShareDate.WEEKLY -> 1
-           RevenueShareDate.DAILY -> 2
-       }
-       return remoteGateway.getRevenueShare(type)
+       return remoteGateway.getRevenueShare(revenueShareDate)
    }
     override suspend fun getDashboardRevenueShare(): RevenueShare {
         return remoteGateway.getDashboardRevenueShare()
