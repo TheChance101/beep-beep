@@ -20,7 +20,6 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.composable.LanguageCard
 import presentation.composable.HeadFirstCard
-import presentation.login.LoginScreen
 import resources.Resources
 
 
