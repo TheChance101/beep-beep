@@ -7,8 +7,3 @@ import presentation.main.MainScreenModel
 val ScreenModelModule = module {
     factory { MainScreenModel(get()) }
 }
-
-val bpPermissionModule = module {
-    single { BpPermissionController(get()) }
-}
-

@@ -4,7 +4,7 @@ import shared
 @main
 struct iOSApp: App {
     init(){
-        HelperKt.doInitKoin(PermissionController())
+        HelperKt.doInitKoin()
     }
 
 	var body: some Scene {

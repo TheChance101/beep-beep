@@ -2,13 +2,15 @@ import dev.icerock.moko.permissions.ios.PermissionsController
 import di.appModule
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
+import presentation.main.BpPermissionController
 
-fun initKoin(permission: PermissionsController){
+val permissions = module {
+    single { BpPermissionController(PermissionsController()) }
+}
+
+fun initKoin(){
     startKoin {
-        modules(appModule(), initPermission(permission))
+        modules(appModule(),permissions)
     }
 }
 
-fun initPermission(permission: PermissionsController) = module {
-    single { permission }
-}
