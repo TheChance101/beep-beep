@@ -17,6 +17,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import presentation.PreferredFood.PreferredFoodScreen
 import presentation.base.BaseScreen
 import presentation.composable.LanguageCard
 import presentation.composable.HeadFirstCard
@@ -32,7 +33,7 @@ object PickLanguageScreen :
 
     override fun onEffect(effect: PickLanguageUIEffect, navigator: Navigator) {
         when (effect) {
-            is PickLanguageUIEffect.onGoToPreferredLanguage -> {}
+            is PickLanguageUIEffect.onGoToPreferredLanguage -> navigator.push(PreferredFoodScreen)
 
         }
     }
@@ -55,7 +56,7 @@ object PickLanguageScreen :
                 textSubHeader = Resources.strings.selectLanguage
             ) {
                 LazyVerticalGrid(
-                    contentPadding = PaddingValues(top=16.dp),
+                    contentPadding = PaddingValues(top = 16.dp),
                     columns = GridCells.Adaptive(140.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
