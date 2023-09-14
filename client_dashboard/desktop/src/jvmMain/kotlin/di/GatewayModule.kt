@@ -10,7 +10,6 @@ import org.thechance.common.data.remote.gateway.FakeRemoteGateway
 import org.thechance.common.data.remote.gateway.RestaurantGateway
 import org.thechance.common.data.remote.gateway.TaxisGateway
 import org.thechance.common.data.remote.gateway.UsersGateway
-import org.thechance.common.data.remote.gateway.RestaurantGateway
 import org.thechance.common.domain.getway.*
 
 val GatewayModule = module {
