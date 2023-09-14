@@ -26,11 +26,9 @@ interface IUserAccountManagementUseCase {
 
     suspend fun subtractFromWallet(userId: String, amount: Double): Wallet
 
-    suspend fun login(username: String, password: String): Boolean
-
+    suspend fun login(username: String, password: String, applicationId: String): Boolean
 
     suspend fun getUserByUsername(username: String): UserManagement
-
 
 }
 
@@ -55,14 +53,20 @@ class UserAccountManagementUseCase(
         return dataBaseGateway.getUserByUsername(username)
     }
 
-    override suspend fun login(username: String, password: String): Boolean {
+    override suspend fun login(username: String, password: String, applicationId: String): Boolean {
         val saltedHash = dataBaseGateway.getSaltedHash(username)
-        return if (hashingService.verify(password, saltedHash)) true
-        else throw InvalidCredentialsException(INVALID_CREDENTIALS)
+        return if (hashingService.verify(password, saltedHash)) {
+            val userPermission = dataBaseGateway.getUserPermissionByUsername(username)
+            if (verifyPermissionToLogin(userPermission, applicationId)) {
+                true
+            } else {
+                throw InvalidCredentialsException(INVALID_PERMISSION)
+            }
+        } else throw InvalidCredentialsException(INVALID_CREDENTIALS)
     }
 
     override suspend fun deleteUser(id: String): Boolean {
-         if (dataBaseGateway.isUserDeleted(id)) {
+        if (dataBaseGateway.isUserDeleted(id)) {
             throw ResourceNotFoundException(NOT_FOUND)
         }
         return dataBaseGateway.deleteUser(id)
@@ -93,6 +97,23 @@ class UserAccountManagementUseCase(
             throw InsufficientFundsException(INSUFFICIENT_FUNDS)
         }
         return dataBaseGateway.subtractFromWallet(userId, amount)
+    }
+
+    private fun verifyPermissionToLogin(userPermission: Int, applicationId: String): Boolean {
+        val applicationIds = getApplicationIdFromEnvironment()
+        return applicationIds.filterValues { pair -> pair.first == applicationId && (pair.second and userPermission) == pair.second }
+            .isNotEmpty()
+    }
+
+    private fun getApplicationIdFromEnvironment(): HashMap<String, Pair<String, Int>> {
+        val map = hashMapOf<String, Pair<String, Int>>()
+        map[ApplicationId.END_USER] = Pair(System.getenv(ApplicationId.END_USER).toString(), Role.END_USER)
+        map[ApplicationId.RESTAURANT] = Pair(System.getenv(ApplicationId.RESTAURANT).toString(), Role.RESTAURANT_OWNER)
+        map[ApplicationId.DASHBOARD] = Pair(System.getenv(ApplicationId.DASHBOARD).toString(), Role.DASHBOARD_ADMIN)
+//        map[ApplicationId.TAXI_DRIVER] = Pair(System.getenv(ApplicationId.TAXI_DRIVER).toString(), Role.TAXI_DRIVER)
+//        map[ApplicationId.DELIVERY] = Pair(System.getenv(ApplicationId.DELIVERY).toString(), Role.DELIVERY)
+//        map[ApplicationId.SUPPORT] = Pair(System.getenv(ApplicationId.SUPPORT).toString(), Role.SUPPORT)
+        return map
     }
 
 }

@@ -13,7 +13,6 @@ val DataBaseModule = module {
         val username = System.getenv("username")
         val password = System.getenv("password")
         val connectionString = ConnectionString("mongodb+srv://$username:$password@$cluster.mongodb.net/")
-
         val settings = MongoClientSettings.builder()
             .applyConnectionString(connectionString)
             .build()

@@ -291,6 +291,7 @@ class RestaurantScreenModel(
     }
 
     override fun onCreateNewRestaurantClicked() {
+        updateState { it.copy(isNewRestaurantInfoDialogVisible = true) }
         tryToExecute(
             callee = {
                 manageRestaurant.createRestaurant(state.value.newRestaurantInfoUiState.toEntity())

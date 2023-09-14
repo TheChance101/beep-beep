@@ -10,5 +10,6 @@ data class MealDetailsDto(
     val description: String? = null,
     val price: Double? = null,
     val currency: String? = null,
-    val cuisines: List<CuisineDto>? = null
+    val cuisines: List<CuisineDto>? = null,
+    val image : String? = null
 )

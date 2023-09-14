@@ -40,6 +40,9 @@ class ErrorHandler(
         if (errorCodes.contains(1014))
             errors[1014] = localizedMessages.invalidPermission
 
+        if (errorCodes.contains(1015))
+            errors[1015] = localizedMessages.alreadyInFavorite
+
         if (errorCodes.contains(1041))
             errors[1041] = localizedMessages.notFound
 
