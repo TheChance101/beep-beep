@@ -11,7 +11,6 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.core.parameter.ParametersDefinition
 import org.koin.core.qualifier.Qualifier
@@ -35,7 +34,7 @@ abstract class BaseScreen<VM, S, E, I> : Screen
     abstract fun onRender(state: S, listener: I)
 
     @Composable
-    private fun Listen(effect: Flow<E>, function: (E) -> Unit, ) {
+    private fun Listen(effect: Flow<E>, function: (E) -> Unit) {
         LaunchedEffect(Unit) {
             effect.collectLatest {
                 it?.let { function(it) }

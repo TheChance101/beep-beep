@@ -59,5 +59,13 @@ fun Route.addressRoutes() {
         }
     }
 
+    route("/user/{userId}/country"){
+        get{
+            val id = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            val country = manageUserAddress.getUserCountry(id)
+            call.respond(HttpStatusCode.OK, country)
+        }
+    }
+
 
 }

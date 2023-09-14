@@ -18,6 +18,8 @@ interface IUserAddressManagementUseCase {
 
     suspend fun getUserAddresses(userId: String): List<Address>
 
+    suspend fun getUserCountry(userId: String): String
+
 }
 
 @Single
@@ -47,6 +49,10 @@ class UserAddressManagementUseCase(
 
     override suspend fun getUserAddresses(userId: String): List<Address> {
         return dataBaseGateway.getUserAddresses(userId)
+    }
+
+    override suspend fun getUserCountry(userId: String): String {
+        return dataBaseGateway.getUserCountry(userId)
     }
 
 }

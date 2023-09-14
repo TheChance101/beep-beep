@@ -5,7 +5,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
-import java.util.*
 
 @Serializable
 data class UserDetailsCollection(
@@ -17,5 +16,7 @@ data class UserDetailsCollection(
     @Contextual
     val userId: ObjectId,
     val walletCollection: WalletCollection? = null,
-    val addressIds: MutableList<@Contextual ObjectId> = mutableListOf()
+    val country: String? = null,
+    val addressIds: MutableList<@Contextual ObjectId> = mutableListOf(),
+    val favorite: MutableList<@Contextual ObjectId> = mutableListOf(),
 )
