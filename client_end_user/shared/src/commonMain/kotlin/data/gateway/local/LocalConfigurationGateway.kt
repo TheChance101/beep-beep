@@ -71,6 +71,18 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
             .find()?.priceLevel ?: "$"
     }
 
+    override suspend fun saveIsFirstTimeUseApp(isFirstTimeUseApp: Boolean) {
+        realm.write {
+            query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+                .find()?.isFirstTimeUseApp = isFirstTimeUseApp
+        }
+    }
+
+    override suspend fun getIsFirstTimeUseApp(): Boolean {
+        return realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+            .find()?.isFirstTimeUseApp ?: true
+    }
+
     override suspend fun saveKeepMeLoggedInFlag(isChecked: Boolean) {
         realm.write {
             query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
