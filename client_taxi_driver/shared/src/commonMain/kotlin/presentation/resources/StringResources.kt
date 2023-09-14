@@ -5,4 +5,5 @@ data class StringResources(
     val mainScreenTitle: String = "Foodies are waiting!",
     val mainScreenSubTitle: String = "Tap Start and become their food superhero",
     val mapScreenFindingRequest: String = "Finding ride requests",
+    val welcomeDriver: String = "Welcome, Ali Ahmed!",
 )
