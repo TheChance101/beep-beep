@@ -55,7 +55,7 @@
     <resources>
         <image name="1670322289884_test" width="97" height="44"/>
         <namedColor name="AccentColor">
-            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.96078431372549022" green="0.23921568627450981" blue="0.27843137254901962" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>
