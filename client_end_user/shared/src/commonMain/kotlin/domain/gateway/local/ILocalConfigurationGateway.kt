@@ -1,5 +1,7 @@
 package domain.gateway.local
 
+import io.realm.kotlin.types.RealmList
+
 interface ILocalConfigurationGateway {
 
     suspend fun saveAccessToken(token: String)
@@ -15,4 +17,8 @@ interface ILocalConfigurationGateway {
     suspend fun getPriceLevel(): String
     suspend fun savePreferredRideQuality(rideQuality: String)
     suspend fun getPreferredRideQuality(): String
+    suspend fun saveIsFirstTimeUseApp(isFirstTimeUseApp: Boolean)
+    suspend fun getIsFirstTimeUseApp(): Boolean
+    suspend fun savePreferredFood(food: List<String>)
+    suspend fun getPreferredFood(): List<String>
 }

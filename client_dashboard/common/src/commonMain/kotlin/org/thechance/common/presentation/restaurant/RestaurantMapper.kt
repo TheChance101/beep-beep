@@ -32,19 +32,3 @@ fun NewRestaurantInfoUiState.toEntity() = NewRestaurantInfo(
         parseToCustomTime(endTime)
     ),
 )
-
-fun NewRestaurantInfo.toDto(): RestaurantCreateDto{
-    val result = RestaurantCreateDto(
-        ownerId = "64f363af5ddbc15bfd1efcf4",
-        name = name,
-        openingTime = workingHours.first.toString(),
-        closingTime = workingHours.second.toString(),
-        phone = phoneNumber,
-        location = Location(
-            latitude = location.split(",")[0].toDouble(),
-            longitude = location.split(",")[1].toDouble()
-        )
-    )
-    println(result.toString())
-    return result
-}

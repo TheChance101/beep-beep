@@ -90,7 +90,7 @@ class MainScreen(private val restaurantId: String) :
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         val rowWidth = with(LocalDensity.current) { rowSize.width.toDp() }
-                        val cardSize = if (isPortrait) (rowWidth / 2 - 4.dp) else 170.dp
+                        val cardSize = if (isPortrait) ((rowWidth / 2 )- 4.dp) else 170.dp
                         OptionCardItem(
                             onClick = listener::onAllMealsCardClicked,
                             title = Resources.strings.allMeals,

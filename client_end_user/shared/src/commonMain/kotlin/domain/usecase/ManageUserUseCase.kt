@@ -16,6 +16,10 @@ interface IManageUserUseCase {
     suspend fun savePreferredRide(preferredRide: PreferredRide)
     suspend fun getPreferredRide(): PreferredRide
 
+    suspend fun saveIsFirstTimeUseApp(isFirstTimeUseApp: Boolean)
+
+    suspend fun getIsFirstTimeUseApp(): Boolean
+
 }
 
 class ManageUserUseCase(
@@ -46,5 +50,13 @@ class ManageUserUseCase(
     override suspend fun getPreferredRide(): PreferredRide {
         return localGateway.getPreferredRideQuality().toPreferredRide()
     }
+    override suspend fun saveIsFirstTimeUseApp(isFirstTimeUseApp: Boolean) {
+       return localGateway.saveIsFirstTimeUseApp(isFirstTimeUseApp)
+    }
+
+    override suspend fun getIsFirstTimeUseApp(): Boolean {
+        return localGateway.getIsFirstTimeUseApp()
+    }
+
 
 }

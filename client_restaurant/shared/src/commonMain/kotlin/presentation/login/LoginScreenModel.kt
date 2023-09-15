@@ -23,11 +23,11 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
         }
     }
     override fun onUserNameChanged(userName: String) {
-        updateState { it.copy(userName = userName) }
+        updateState { it.copy(userName = userName, isUsernameError = false) }
     }
 
     override fun onPasswordChanged(password: String) {
-        updateState { it.copy(password = password) }
+        updateState { it.copy(password = password, isPasswordError = false) }
     }
 
     override fun onKeepLoggedInClicked() {
@@ -51,6 +51,7 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
             it.copy(
                 isLoading = false,
                 isSuccess = true,
+                isCredentialsError = false,
                 usernameErrorMsg = "",
                 passwordErrorMsg = ""
             )
@@ -69,13 +70,17 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
             ErrorState.NoInternet -> {}
             ErrorState.RequestFailed -> {}
             ErrorState.UnAuthorized -> {}
-            ErrorState.HasNoPermission -> {}
+            ErrorState.HasNoPermission -> {
+                state.value.sheetState.show()
+            }
+
             is ErrorState.UnknownError -> {}
             is ErrorState.InvalidCredentials -> {
                 updateState {
                     it.copy(
-                        passwordErrorMsg = error.errorMessage,
                         isPasswordError = true,
+                        isUsernameError = true,
+                        isCredentialsError = true
                     )
                 }
             }
@@ -84,13 +89,20 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
                 updateState {
                     it.copy(
                         usernameErrorMsg = error.errorMessage,
-                        isUsernameError = true
+                        isUsernameError = true,
+                        isCredentialsError = false
                     )
                 }
             }
 
-            ErrorState.NotFound -> {
-
+            is ErrorState.WrongPassword -> {
+                updateState {
+                    it.copy(
+                        passwordErrorMsg = error.errorMessage,
+                        isPasswordError = true,
+                        isCredentialsError = false
+                    )
+                }
             }
         }
     }
