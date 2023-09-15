@@ -11,4 +11,6 @@ data class StringResources(
     val acceptRequest: String = "Accept Request",
     val cancel: String = "Cancel",
     val arrived: String = "Arrived",
+    val pickUp: String = "Pick up",
+    val dropOff: String = "Drop off",
 )

@@ -48,7 +48,7 @@ class MapScreen :
                     contentDescription = null
                 )
             }
-            NewOrder(modifier = Modifier.align(Alignment.BottomCenter))
+            Order(modifier = Modifier.align(Alignment.BottomCenter))
         }
     }
 
@@ -133,7 +133,7 @@ class MapScreen :
                         modifier = Modifier.padding(start = 4.dp),
                         text = Resources.strings.name,
                         color = Theme.colors.contentSecondary,
-                        style = Theme.typography.titleMedium,
+                        style = Theme.typography.title,
                     )
                 }
 
@@ -147,6 +147,71 @@ class MapScreen :
                     title = Resources.strings.cancel,
                     containerColor = Color.Transparent,
                     contentColor = Theme.colors.contentTertiary,
+                    onClick = {})
+            }
+        }
+    }
+
+
+    @Composable
+    private fun Order(
+        modifier: Modifier = Modifier,
+    ) {
+        Card(
+            modifier = modifier.fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, bottom = 20.dp),
+            colors = CardDefaults.cardColors(containerColor = Theme.colors.surface),
+            shape = RoundedCornerShape(8.dp),
+            elevation = CardDefaults.elevatedCardElevation(0.dp),
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 24.dp)
+            ) {
+                Text(
+                    text = Resources.strings.name,
+                    color = Theme.colors.contentPrimary,
+                    style = Theme.typography.headline,
+                )
+
+                Row(modifier = Modifier.padding(top = 30.dp)) {
+                    Icon(imageVector = Icons.Filled.Add, contentDescription = null)
+
+                    Column(modifier = Modifier.padding(start = 8.dp)) {
+                        Text(
+                            text = Resources.strings.pickUp,
+                            color = Theme.colors.contentSecondary,
+                            style = Theme.typography.titleMedium,
+                        )
+                        Text(
+                            text = Resources.strings.name,
+                            color = Theme.colors.contentSecondary,
+                            style = Theme.typography.title,
+                        )
+                    }
+                }
+
+                Row(modifier = Modifier.padding(top = 24.dp)) {
+                    Icon(imageVector = Icons.Filled.Add, contentDescription = null)
+
+                    Column(modifier = Modifier.padding(start = 8.dp)) {
+                        Text(
+                            text = Resources.strings.dropOff,
+                            color = Theme.colors.contentSecondary,
+                            style = Theme.typography.titleMedium,
+                        )
+                        Text(
+                            text = Resources.strings.name,
+                            color = Theme.colors.contentSecondary,
+                            style = Theme.typography.title,
+                        )
+                    }
+                }
+
+                BpButton(
+                    modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
+                    title = Resources.strings.arrived,
                     onClick = {})
             }
         }
