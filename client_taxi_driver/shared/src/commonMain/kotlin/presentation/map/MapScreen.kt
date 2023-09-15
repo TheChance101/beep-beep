@@ -43,7 +43,7 @@ class MapScreen :
         ) {
             BpAppBar(
                 isBackIconVisible = false,
-                title = Resources.strings.welcomeDriver
+                title = Resources.strings.mapScreenAppBarTitle
             ) {
                 Box(
                     modifier = Modifier
@@ -95,7 +95,7 @@ class MapScreen :
             ) {
                 Text(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
-                    text = Resources.strings.mapScreenFindingRequest,
+                    text = Resources.strings.findingRequest,
                     color = Theme.colors.contentPrimary,
                     style = Theme.typography.headline,
                 )
@@ -195,7 +195,7 @@ class MapScreen :
 
                 Row(modifier = Modifier.padding(top = 30.dp)) {
                     Image(
-                        painter = painterResource(Resources.images.location),
+                        painter = painterResource(Resources.images.currentLocation),
                         contentDescription = null
                     )
 
@@ -215,7 +215,7 @@ class MapScreen :
 
                 Row(modifier = Modifier.padding(top = 24.dp)) {
                     Image(
-                        painter = painterResource(Resources.images.gps),
+                        painter = painterResource(Resources.images.location),
                         contentDescription = null
                     )
 

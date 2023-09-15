@@ -5,8 +5,8 @@ data class DrawableResources(
     val mainScreenImage: String = "main_screen_image.png",
     val mapPoint: String = "map_point.xml",
     val close: String = "close.xml",
+    val currentLocation: String = "current_location.xml",
     val location: String = "location.xml",
-    val gps: String = "gps.xml",
 )
 
 val darkDrawableResources = DrawableResources(
