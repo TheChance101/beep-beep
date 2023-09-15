@@ -5,7 +5,7 @@ import domain.InternetException
 import domain.InvalidPasswordException
 import domain.InvalidUserNameException
 import domain.NoInternetException
-import domain.UnKnownErrorException
+import domain.UnknownErrorException
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
@@ -20,13 +20,13 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
         try {
             return client.method().body()
         } catch (e: ClientRequestException) {
-            val errorMessages = e.response.body<BaseResponse<*>>().status.errorMessages
+            val errorMessages = e.response.body<BaseResponse<*>>().status?.errorMessages
             errorMessages?.let { throwMatchingException(it) }
-            throw UnKnownErrorException(e.message)
+            throw UnknownErrorException(e.message)
         } catch (e: InternetException) {
             throw NoInternetException()
         } catch (e: Exception) {
-            throw UnKnownErrorException(e.message.toString())
+            throw UnknownErrorException(e.message.toString())
         }
     }
 
@@ -38,7 +38,7 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
             errorMessages.containsErrors(USER_NOT_EXIST) ->
                 throw InvalidUserNameException(errorMessages.getOrEmpty(USER_NOT_EXIST))
 
-            else -> throw UnKnownErrorException("UnKnow Error")
+            else -> throw UnknownErrorException("UnKnow Error")
         }
     }
 

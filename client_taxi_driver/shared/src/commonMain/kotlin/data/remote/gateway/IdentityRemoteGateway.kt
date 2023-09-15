@@ -4,7 +4,7 @@ import data.remote.mapper.toEntity
 import data.remote.model.BaseResponse
 import data.remote.model.SessionDto
 import data.remote.model.UserTokensDto
-import domain.BpException
+import domain.InvalidCredentialsException
 import domain.entity.Session
 import domain.gateway.remote.IIdentityRemoteGateway
 import io.ktor.client.HttpClient
@@ -26,7 +26,7 @@ class IdentityRemoteGateway(client: HttpClient) : IIdentityRemoteGateway,
             )
         }.value
 
-        return result?.toEntity() ?: throw BpException("Invalid Credential")
+        return result?.toEntity() ?: throw InvalidCredentialsException("Invalid Credential")
     }
 
     override suspend fun refreshAccessToken(refreshToken: String): Pair<String, String> {

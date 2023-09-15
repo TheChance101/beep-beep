@@ -17,9 +17,7 @@ class ServerSideException(message: String) : BpException(message)
 
 class NotFoundedException : BpException("Not founded")
 
-class UnKnownErrorException(message: String) : BpException(message)
-
-class UserNotFoundException(val errorMessage: String) : BpException(errorMessage)
+class UnknownErrorException(message: String) : BpException(message)
 
 class InvalidCredentialsException(message: String) : BpException(message)
 

@@ -18,8 +18,8 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
         }
     }
 
-    override fun onUserNameChanged(userName: String) {
-        updateState { it.copy(userName = userName) }
+    override fun onUsernameChanged(username: String) {
+        updateState { it.copy(username = username) }
     }
 
     override fun onPasswordChanged(password: String) {
@@ -38,7 +38,7 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
         tryToExecute(
             { loginUserUseCase.loginUser(userName, password, isKeepMeLoggedInChecked) },
             { onLoginSuccess() },
-            this::onLoginFailed
+            ::onLoginFailed
         )
     }
 
@@ -62,14 +62,21 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
 
     private fun handleErrorState(error: ErrorState) {
         when (error) {
-            ErrorState.NoInternet -> {}
-            ErrorState.UnAuthorized -> {}
-            ErrorState.HasNoPermission -> {
-                state.value.sheetState.show()
+            ErrorState.NoInternet -> {/* TODO: */
             }
 
-            is ErrorState.UnknownError -> {}
-            is ErrorState.ServerError -> {}
+            ErrorState.UnAuthorized -> {/* TODO: */
+            }
+
+            ErrorState.HasNoPermission -> state.value.bottomSheetUiState.sheetState.show()
+
+
+            is ErrorState.UnknownError -> {/* TODO: */
+            }
+
+            is ErrorState.ServerError -> {/* TODO: */
+            }
+
             is ErrorState.InvalidCredentials -> {
                 updateState {
                     it.copy(
@@ -79,7 +86,7 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
                 }
             }
 
-            is ErrorState.UserNotExist -> {
+            is ErrorState.NotFound -> {
                 updateState {
                     it.copy(
                         usernameErrorMsg = error.errorMessage,
@@ -87,32 +94,27 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
                     )
                 }
             }
-
-            ErrorState.NotFound -> {
-
-            }
         }
     }
 
     // region permission
     override fun onDriverFullNameChanged(driverFullName: String) {
-        updateState { it.copy(driverFullName = driverFullName) }
+        updateState { it.copy(bottomSheetUiState = it.bottomSheetUiState.copy(driverFullName = driverFullName)) }
     }
 
     override fun onOwnerEmailChanged(ownerEmail: String) {
-        updateState { it.copy(driverEmail = ownerEmail) }
+        updateState { it.copy(bottomSheetUiState = it.bottomSheetUiState.copy(driverEmail = ownerEmail)) }
     }
 
     override fun onDescriptionChanged(description: String) {
-        updateState { it.copy(description = description) }
+        updateState { it.copy(bottomSheetUiState = it.bottomSheetUiState.copy(description = description)) }
     }
 
     override fun onRequestPermissionClicked() {
         coroutineScope.launch {
-            state.value.sheetState.dismiss()
-            delay(300)
-            updateState { it.copy(showPermissionSheet = true) }
-            state.value.sheetState.show()
+            state.value.bottomSheetUiState.sheetState.dismiss()
+            delayAndChangePermissionSheetState(true)
+            state.value.bottomSheetUiState.sheetState.show()
         }
     }
 
@@ -136,31 +138,18 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
     }
 
     private fun onAskForPermissionSuccess() {
-        state.value.sheetState.dismiss()
-        coroutineScope.launch {
-            delayAndChangePermissionSheetState(false)
-        }
+        onDismissSheet()
         // todo send effect for that to show toast or something
     }
 
 
     private fun onAskForPermissionFailed(error: ErrorState) {
-        state.value.sheetState.dismiss()
-        coroutineScope.launch {
-            delayAndChangePermissionSheetState(false)
-        }
+        onDismissSheet()
         // todo send effect for that to show toast or something
     }
 
-    override fun onCancelClicked() {
-        state.value.sheetState.dismiss()
-        coroutineScope.launch {
-            delayAndChangePermissionSheetState(false)
-        }
-    }
-
-    override fun onSheetBackgroundClicked() {
-        state.value.sheetState.dismiss()
+    override fun onDismissSheet() {
+        state.value.bottomSheetUiState.sheetState.dismiss()
         coroutineScope.launch {
             delayAndChangePermissionSheetState(false)
         }
@@ -168,7 +157,7 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
 
     private suspend fun delayAndChangePermissionSheetState(show: Boolean) {
         delay(300)
-        updateState { it.copy(showPermissionSheet = show) }
+        updateState { it.copy(bottomSheetUiState = it.bottomSheetUiState.copy(showPermissionSheet = show)) }
     }
     // endregion
 }

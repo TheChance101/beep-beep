@@ -6,11 +6,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class BaseResponse<T>(
     @SerialName("value")
-    val value: T?,
+    val value: T? = null,
     @SerialName("isSuccess")
-    val isSuccess: Boolean = true,
+    val isSuccess: Boolean? = null,
     @SerialName("status")
-    val status: ResponseStatus
+    val status: ResponseStatus? = null
 )
 
 @Serializable
@@ -20,5 +20,5 @@ data class ResponseStatus(
     @SerialName("successMessage")
     val successMessage: String? = null,
     @SerialName("code")
-    val code: Int?
+    val code: Int? = null
 )

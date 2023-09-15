@@ -4,7 +4,7 @@ import presentation.base.ErrorState
 import presentation.composable.ModalBottomSheetState
 
 data class LoginScreenUIState(
-    val userName: String = "",
+    val username: String = "",
     val password: String = "",
     val keepLoggedIn: Boolean = false,
     val isLoading: Boolean = false,
@@ -14,11 +14,14 @@ data class LoginScreenUIState(
     val isPasswordError: Boolean = false,
     val usernameErrorMsg: String = "",
     val passwordErrorMsg: String = "",
-    //permission
+    val bottomSheetUiState: LoginScreenBottomSheetUiState = LoginScreenBottomSheetUiState()
+)
+
+data class LoginScreenBottomSheetUiState(
     val driverFullName: String = "",
     val description: String = "",
     val driverEmail: String = "",
     val hasPermission: Boolean = false,
-    val showPermissionSheet: Boolean = false,
     val sheetState: ModalBottomSheetState = ModalBottomSheetState(),
+    val showPermissionSheet: Boolean = false,
 )

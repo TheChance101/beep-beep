@@ -27,7 +27,7 @@ val NetworkModule = module {
             defaultRequest {
                 header("Content-Type", "application/json")
                 header("Accept-Language", "en")
-                url("https://beep-beep-api-gateway-nap2u.ondigitalocean.app")
+                url(BASEURL)
             }
 
             install(ContentNegotiation) {
@@ -44,5 +44,4 @@ val NetworkModule = module {
         client
     }
 }
-
-
+private const val BASEURL = "https://beep-beep-api-gateway-nap2u.ondigitalocean.app"

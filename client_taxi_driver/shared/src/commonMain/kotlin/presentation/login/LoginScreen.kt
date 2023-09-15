@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -50,7 +51,8 @@ class LoginScreen :
     ) {
         when (effect) {
             is LoginScreenUIEffect.LoginEffect -> navigator.push(MainScreen())
-            LoginScreenUIEffect.LoginUIFailed -> {}
+            LoginScreenUIEffect.LoginUIFailed -> {/* TODO: add failed login effect*/
+            }
         }
     }
 
@@ -60,7 +62,7 @@ class LoginScreen :
         Column(modifier = Modifier.fillMaxSize()) {
             CustomBottomSheet(
                 sheetContent = {
-                    if (state.showPermissionSheet) {
+                    if (state.bottomSheetUiState.showPermissionSheet) {
                         PermissionBottomSheetContent(
                             listener = listener,
                             state = state
@@ -72,8 +74,8 @@ class LoginScreen :
                     }
                 },
                 sheetBackgroundColor = Theme.colors.background,
-                onBackGroundClicked = listener::onSheetBackgroundClicked,
-                sheetState = state.sheetState,
+                onBackGroundClicked = listener::onDismissSheet,
+                sheetState = state.bottomSheetUiState.sheetState,
             ) {
                 LoginScreenContent(state, listener)
             }
@@ -104,8 +106,8 @@ private fun LoginScreenContent(
         ) {
             BpTextField(
                 modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
-                text = state.userName,
-                onValueChange = listener::onUserNameChanged,
+                text = state.username,
+                onValueChange = listener::onUsernameChanged,
                 label = Resources.strings.username,
                 keyboardType = KeyboardType.Text,
                 errorMessage = state.usernameErrorMsg,
@@ -135,7 +137,7 @@ private fun LoginScreenContent(
                 title = Resources.strings.login,
                 onClick = {
                     listener.onClickLogin(
-                        userName = state.userName,
+                        userName = state.username,
                         password = state.password,
                         isKeepMeLoggedInChecked = state.keepLoggedIn
                     )
@@ -146,12 +148,12 @@ private fun LoginScreenContent(
 }
 
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 private fun HeadFirstCard(
     textHeader: String,
     textSubHeader: String,
     modifier: Modifier = Modifier,
-    logo: String = Resources.images.beepBeepLogo,
     content: @Composable () -> Unit,
 ) {
     Column(
@@ -160,24 +162,28 @@ private fun HeadFirstCard(
             .background(Theme.colors.surface)
             .padding(16.dp)
     ) {
-        CardHeader(textHeader = textHeader, textSubHeader = textSubHeader, logo = logo)
+        CardHeader(
+            textHeader = textHeader,
+            textSubHeader = textSubHeader,
+            logo = painterResource(Resources.images.beepBeepLogo)
+        )
         content()
     }
 }
 
-@OptIn(ExperimentalResourceApi::class)
+
 @Composable
 private fun CardHeader(
     textHeader: String,
     textSubHeader: String,
-    logo: String,
+    logo: Painter,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(32.dp)) {
         Icon(
             modifier = Modifier.size(width = 70.dp, height = 32.dp),
-            painter = painterResource(logo),
-            contentDescription = logo,
+            painter = logo,
+            contentDescription = null,
             tint = Theme.colors.primary
         )
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -213,21 +219,21 @@ fun PermissionBottomSheetContent(
             style = Theme.typography.headlineLarge,
         )
         BpTextField(
-            text = state.driverFullName,
+            text = state.bottomSheetUiState.driverFullName,
             onValueChange = listener::onDriverFullNameChanged,
             label = Resources.strings.fullName,
             keyboardType = KeyboardType.Text,
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
         )
         BpTextField(
-            text = state.driverEmail,
+            text = state.bottomSheetUiState.driverEmail,
             onValueChange = listener::onOwnerEmailChanged,
             label = Resources.strings.userEmail,
             keyboardType = KeyboardType.Text,
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
         )
         BpExpandableTextField(
-            text = state.description,
+            text = state.bottomSheetUiState.description,
             onValueChange = listener::onDescriptionChanged,
             label = Resources.strings.whyBeepBeep,
             hint = Resources.strings.describeWhyYouWantToJoinUs,
@@ -237,16 +243,16 @@ fun PermissionBottomSheetContent(
         BpButton(
             onClick = {
                 listener.onSubmitClicked(
-                    state.driverFullName,
-                    state.driverEmail,
-                    state.description
+                    state.bottomSheetUiState.driverFullName,
+                    state.bottomSheetUiState.driverEmail,
+                    state.bottomSheetUiState.description
                 )
             },
             title = Resources.strings.submit,
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
         )
         BpTransparentButton(
-            onClick = listener::onCancelClicked,
+            onClick = listener::onDismissSheet,
             title = Resources.strings.cancel,
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
         )
@@ -292,7 +298,7 @@ fun WrongPermissionBottomSheet(
             modifier = Modifier.fillMaxWidth().padding(bottom = Theme.dimens.space16),
         )
         BpTransparentButton(
-            onClick = listener::onCancelClicked,
+            onClick = listener::onDismissSheet,
             title = Resources.strings.close,
             modifier = Modifier.fillMaxWidth(),
         )
