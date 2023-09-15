@@ -11,6 +11,5 @@ interface IManageOrderUseCase {
 class ManageOrderUseCase(
     private val fakeGateway: MapFakeGateway,
 ) : IManageOrderUseCase {
-    override suspend fun foundNewOrder(): Order = fakeGateway.foundNewOrder()
-
+    override suspend fun foundNewOrder(): Order = fakeGateway.findingNewOrder()
 }

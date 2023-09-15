@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpAppBar
 import com.beepbeep.designSystem.ui.composable.BpButton
+import com.beepbeep.designSystem.ui.composable.modifier.noRippleEffect
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -45,7 +46,7 @@ class MapScreen :
         ) {
             BpAppBar(
                 isBackIconVisible = false,
-                title = Resources.strings.mapScreenAppBarTitle + state.name + "!"
+                title = "${Resources.strings.mapScreenAppBarTitle}${state.userName}"
             ) {
                 Box(
                     modifier = Modifier
@@ -55,7 +56,7 @@ class MapScreen :
                         .background(
                             color = Theme.colors.hover,
                             shape = RoundedCornerShape(size = 8.dp)
-                        )
+                        ).noRippleEffect(onClick = listener::onClickCloseIcon),
                 ) {
                     Icon(
                         modifier = Modifier.align(Alignment.Center),
@@ -86,22 +87,25 @@ class MapScreen :
                 )
             }
 
-//            AnimatedVisibility(
-//                modifier = Modifier.align(Alignment.BottomCenter),
-//                visible = state.isNewOrderFound
-//            ) {
-//                OrderCard(
-//                    modifier = Modifier.align(
-//                        Alignment.BottomCenter,
-//                    ),
-//                    state = state.orderInfoUiState,
-//                )
-//            }
+            AnimatedVisibility(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                visible = state.isAcceptedOrder
+            ) {
+                OrderCard(
+                    modifier = Modifier.align(
+                        Alignment.BottomCenter,
+                    ),
+                    state = state.orderInfoUiState,
+                    listener = listener,
+                )
+            }
         }
     }
 
     override fun onEffect(effect: MapUiEffect, navigator: Navigator) {
-
+        when (effect) {
+            is MapUiEffect.PopUp -> navigator.pop()
+        }
     }
 
     @Composable
@@ -176,7 +180,7 @@ class MapScreen :
 
             Text(
                 modifier = Modifier.padding(top = 32.dp),
-                text = state.name,
+                text = state.passengerName,
                 color = Theme.colors.contentPrimary,
                 style = Theme.typography.titleLarge,
             )
@@ -198,7 +202,8 @@ class MapScreen :
             BpButton(
                 modifier = Modifier.fillMaxWidth().padding(top = 32.dp),
                 title = Resources.strings.acceptRequest,
-                onClick = {})
+                onClick = listener::onClickAccept
+            )
 
             BpButton(
                 modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
@@ -215,12 +220,13 @@ class MapScreen :
     private fun OrderCard(
         modifier: Modifier = Modifier,
         state: OrderInfoUiState,
+        listener: MapScreenInteractionListener,
     ) {
         MapCard(
             modifier = modifier
         ) {
             Text(
-                text = Resources.strings.newOrder,
+                text = state.passengerName,
                 color = Theme.colors.contentPrimary,
                 style = Theme.typography.titleLarge,
             )
@@ -238,7 +244,7 @@ class MapScreen :
                         style = Theme.typography.caption,
                     )
                     Text(
-                        text = Resources.strings.newOrder,
+                        text = state.pickUpAddress,
                         color = Theme.colors.contentPrimary,
                         style = Theme.typography.body,
                     )
@@ -258,7 +264,7 @@ class MapScreen :
                         style = Theme.typography.caption,
                     )
                     Text(
-                        text = Resources.strings.newOrder,
+                        text = state.dropOffAddress,
                         color = Theme.colors.contentPrimary,
                         style = Theme.typography.body,
                     )
@@ -267,8 +273,9 @@ class MapScreen :
 
             BpButton(
                 modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
-                title = Resources.strings.arrived,
-                onClick = {})
+                title = if (state.isArrived) Resources.strings.dropOff else Resources.strings.arrived,
+                onClick = if (state.isArrived) listener::onClickDropOff else listener::onClickArrived
+            )
         }
     }
 }

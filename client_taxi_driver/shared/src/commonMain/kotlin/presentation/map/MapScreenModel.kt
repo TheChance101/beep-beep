@@ -11,10 +11,10 @@ class MapScreenModel(
     MapScreenInteractionListener {
 
     init {
-        foundNewOrder()
+        findingNewOrder()
     }
 
-    private fun foundNewOrder() {
+    private fun findingNewOrder() {
         tryToExecute(
             function = order::foundNewOrder,
             onSuccess = ::onFoundNewOrderSuccess,
@@ -28,10 +28,7 @@ class MapScreenModel(
                 isLoading = false,
                 isNewOrderFound = true,
                 error = null,
-                orderInfoUiState = it.orderInfoUiState.copy(
-                    name = order.passengerName,
-                    dropOffAddress = order.address,
-                )
+                orderInfoUiState = order.toUiState()
             )
         }
     }
@@ -47,6 +44,14 @@ class MapScreenModel(
     }
 
     override fun onClickAccept() {
+        updateState {
+            it.copy(
+                isLoading = false,
+                error = null,
+                isNewOrderFound = false,
+                isAcceptedOrder = true,
+            )
+        }
     }
 
     override fun onClickCancel() {
@@ -54,23 +59,40 @@ class MapScreenModel(
             it.copy(
                 isLoading = true,
                 isNewOrderFound = false,
+                isAcceptedOrder = false,
                 error = null
             )
         }
-        foundNewOrder()
+        findingNewOrder()
     }
 
     override fun onClickArrived() {
+        updateState {
+            it.copy(
+                isLoading = false,
+                error = null,
+                orderInfoUiState = it.orderInfoUiState.copy(
+                    isArrived = true
+                )
+            )
+        }
     }
 
     override fun onClickDropOff() {
         updateState {
             it.copy(
                 isLoading = true,
-                isNewOrderFound = false,
-                error = null
+                isAcceptedOrder = false,
+                error = null,
+                orderInfoUiState = it.orderInfoUiState.copy(
+                    isArrived = false
+                )
             )
         }
-        foundNewOrder()
+        findingNewOrder()
+    }
+
+    override fun onClickCloseIcon() {
+        sendNewEffect(MapUiEffect.PopUp)
     }
 }

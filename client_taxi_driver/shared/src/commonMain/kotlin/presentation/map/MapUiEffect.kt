@@ -1,3 +1,5 @@
 package presentation.map
 
-sealed interface MapUiEffect
+sealed interface MapUiEffect {
+    data object PopUp : MapUiEffect
+}

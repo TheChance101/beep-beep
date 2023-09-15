@@ -7,12 +7,13 @@ import domain.gateway.IMapGateway
 import kotlinx.coroutines.delay
 
 class MapFakeGateway : IMapGateway {
-    override suspend fun foundNewOrder(): Order {
+    override suspend fun findingNewOrder(): Order {
         delay(3000)
         return OrderDto(
-            id = "bsjadahasdy8dsada4ds4a",
-            passengerName = "Kamel",
-            address = "45, Faisal St., Riyadh, KSA",
+            id = "djsahdjadhjadjas45dsadas",
+            passengerName = "Kamel Mohamed",
+            dropOffAddress = "45, Faisal St., Riyadh, KSA",
+            pickUpAddress = "Nirmala,girsls HSS",
         ).toEntity()
     }
 }
