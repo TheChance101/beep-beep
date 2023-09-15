@@ -86,6 +86,18 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
             .find()?.priceLevel ?: "$"
     }
 
+    override suspend fun savePreferredRideQuality(rideQuality: String) {
+        realm.write {
+            query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+                .find()?.rideQuality = rideQuality
+        }
+    }
+
+    override suspend fun getPreferredRideQuality(): String {
+        return realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+            .find()?.rideQuality ?: "low"
+    }
+
     override suspend fun saveIsFirstTimeUseApp(isFirstTimeUseApp: Boolean) {
         realm.write {
             query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
