@@ -28,7 +28,7 @@ fun WrongPermissionBottomSheet(listener: PermissionInteractionListener,
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.wrapContentHeight()
-            .padding(horizontal = Theme.dimens.space16, vertical =24.dp)
+            .padding(horizontal = 16.dp, vertical =24.dp)
     ) {
         Icon(
             painter = painterResource(Resources.images.errorIcon),
