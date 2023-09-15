@@ -22,16 +22,22 @@ class AppScreenModel(private val manageUser: IManageUserUseCase) : ScreenModel {
         return withContext(Dispatchers.IO) {
             val deferred = CompletableDeferred<Boolean>()
 
-            val isFirstTimeOpenApp = manageUser.getIsFirstTimeUseApp()
+            try {
+                val isFirstTimeOpenApp = manageUser.getIsFirstTimeUseApp()
+                println("isFirstTimeOpenApp $isFirstTimeOpenApp")
 
-            if (isFirstTimeOpenApp) {
-                manageUser.saveIsFirstTimeUseApp(false)
-                deferred.complete(isFirstTimeOpenApp)
-            } else {
+                if (isFirstTimeOpenApp) {
+                    manageUser.saveIsFirstTimeUseApp(false)
+                    deferred.complete(isFirstTimeOpenApp)
+                } else {
+                    deferred.complete(false)
+
+                }
+            } catch (e: Exception) {
+                println("AYA ERROR $e")
                 deferred.complete(false)
-
             }
-            deferred.await()
+
         }
     }
 }

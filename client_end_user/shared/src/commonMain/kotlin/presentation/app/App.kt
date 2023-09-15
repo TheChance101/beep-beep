@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
+import org.koin.compose.getKoin
 import org.koin.compose.koinInject
 import presentation.main.MainContainer
 import presentation.preferredMeal.PreferredMealScreen
@@ -16,7 +17,7 @@ import resources.BeepBeepTheme
 fun App() {
     BeepBeepTheme {
 
-        val appScreenModel = koinInject<AppScreenModel>()
+        val appScreenModel = AppScreenModel(getKoin().get())
         val isFirstTime = remember { mutableStateOf(false) }
 
         LaunchedEffect(key1 = Unit) {
