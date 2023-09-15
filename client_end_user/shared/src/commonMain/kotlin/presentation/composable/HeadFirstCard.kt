@@ -30,7 +30,7 @@ fun HeadFirstCard(
         modifier = modifier.fillMaxWidth().padding(16.dp)
             .clip(shape = RoundedCornerShape(Theme.radius.medium))
             .background(Theme.colors.surface)
-            .padding(16.dp)
+            .padding(horizontal = 16.dp, vertical = 32.dp)
     ) {
         CardHeader(textHeader = textHeader, textSubHeader = textSubHeader, logo = logo)
         content()

@@ -16,7 +16,8 @@ open class PasswordException : AuthorizationException()
 class InvalidUsernameException : UsernameException()
 class InvalidPasswordException : PasswordException()
 
-class InvalidCredentialsException(message: String) : Exception(message)
+open class InvalidCredentialsException() : AuthorizationException()
+class InvalidUserNameException() : InvalidCredentialsException()
 
 class UnknownErrorException : Exception()
 class UserNotFoundException(message: String) : Exception(message)

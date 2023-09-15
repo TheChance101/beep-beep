@@ -16,7 +16,8 @@ fun MealDetails.toCollection(): MealCollection =
         currency = currency,
         cuisines = cuisines.map { cuisine ->
             ObjectId(cuisine.id)
-        }
+        },
+        image = image
     )
 
 fun MealCollection.toEntity() = Meal(
@@ -25,7 +26,8 @@ fun MealCollection.toEntity() = Meal(
     name = name,
     description = description,
     price = price,
-    currency = currency
+    currency = currency,
+    image = image
 )
 
 fun MealWithCuisines.toEntity() = MealDetails(
@@ -35,7 +37,8 @@ fun MealWithCuisines.toEntity() = MealDetails(
     description = description,
     price = price,
     currency = currency,
-    cuisines = cuisines.toEntity()
+    cuisines = cuisines.toEntity(),
+    image = image
 )
 
 fun List<MealCollection>.toEntity(): List<Meal> = this.map { it.toEntity() }

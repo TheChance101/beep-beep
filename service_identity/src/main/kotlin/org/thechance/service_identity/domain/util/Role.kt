@@ -9,3 +9,13 @@ object Role {
     const val SUPPORT = 16
     const val DELIVERY = 32
 }
+
+object ApplicationId {
+    const val DASHBOARD = "dashboard"
+    const val END_USER = "end_user"
+    const val RESTAURANT = "restaurantId"
+    const val TAXI_DRIVER = "taxi"
+    const val SUPPORT = "support"
+    const val DELIVERY = "delivery"
+}
+

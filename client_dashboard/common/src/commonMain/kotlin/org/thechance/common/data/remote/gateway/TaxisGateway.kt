@@ -33,7 +33,7 @@ class TaxisGateway(private val client: HttpClient) : BaseGateway(), ITaxisGatewa
         return DataWrapper(
             totalPages = result?.total?.div(limit) ?: 0,
             numberOfResult = result?.total ?: 0,
-            result = result?.items?.toEntity() ?: emptyList()
+            result = result?.items?.toEntity() ?: throw UnknownError()
         )
     }
 

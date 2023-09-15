@@ -36,8 +36,9 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.composable.exitinstion.drawTopIndicator
 import presentation.composable.exitinstion.toPx
-import presentation.login.LoginScreen
+import presentation.auth.login.LoginScreen
 import resources.Resources
+import util.getNavigationBarPadding
 
 
 object MainContainer :
@@ -104,7 +105,7 @@ object MainContainer :
 
         BpNavigationBar(
             modifier = Modifier.background(Theme.colors.surface)
-                .drawTopIndicator(xOffsetAnimated).padding(bottom = 10.dp)
+                .drawTopIndicator(xOffsetAnimated).padding(getNavigationBarPadding())
         ) {
             tabs.forEach { tabContainer ->
                 val selected = tabNavigator.current == tabContainer.tab

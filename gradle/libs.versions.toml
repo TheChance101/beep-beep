@@ -79,6 +79,7 @@ kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", 
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin-version" }
 
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.4.0" }
+androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version = "1.5.1" }
 
 [bundles]
 voyager = ["voyager-navigator", "voyager-koin", "voyager-transitions"]
