@@ -18,6 +18,10 @@ interface IDataBaseGateway {
 
     suspend fun getUserAddresses(userId: String): List<Address>
 
+    suspend fun getUserCountry(userId: String): String
+
+    suspend fun updateUserCountry(userId: String, country: String): Boolean
+
     //endregion
 
     // region: user
@@ -51,12 +55,27 @@ interface IDataBaseGateway {
 
     suspend fun getUserPermission(userId: String): Int
 
+    suspend fun getUserPermissionByUsername(username: String): Int
+
     // endregion: user permission management
+
+    // region: Wallet
     suspend fun subtractFromWallet(userId: String, amount: Double): Wallet
 
     suspend fun getWalletBalance(userId: String): Wallet
 
     suspend fun addToWallet(userId: String, amount: Double): Wallet
+
+    // endregion
+
+    // region: favorite
+
+    suspend fun getFavoriteRestaurants(userId: String): List<String>
+
+    suspend fun addToFavorite(userId: String, restaurantId: String): Boolean
+
+    suspend fun deleteFromFavorite(userId: String, restaurantId: String): Boolean
+    //endregion
 
     suspend fun getUserByUsername(username: String): UserManagement
 

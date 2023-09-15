@@ -49,6 +49,13 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
             .paginate(page, limit).toList().toEntity()
     }
 
+    override suspend fun getRestaurants(restaurantIds: List<String>): List<Restaurant> {
+        return container.restaurantCollection.find(
+            RestaurantCollection::isDeleted eq false,
+            RestaurantCollection::id `in` restaurantIds.toObjectIds()
+        ).toList().toEntity()
+    }
+
     override suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant> {
         return container.restaurantCollection.aggregate<RestaurantCollection>(
             match(
@@ -106,6 +113,7 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
         container.restaurantCollection.insertOne(addedRestaurant)
         return addedRestaurant.toEntity()
     }
+
     private suspend fun deleteRequestedRestaurant(requestedRestaurantId: String): Boolean {
         return container.restaurantPermissionRequestCollection.updateOneById(
             id = ObjectId(requestedRestaurantId),
@@ -207,7 +215,7 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
     override suspend fun getTotalNumberOfRestaurant(): Long {
         return container.restaurantCollection.countDocuments(RestaurantCollection::isDeleted eq false)
     }
-    //endregion
+//endregion
 
     //region meal
     override suspend fun getMeals(page: Int, limit: Int): List<Meal> {
@@ -301,5 +309,5 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
             pull(MealCollection::cuisines, ObjectId(cuisineId)),
         ).wasAcknowledged()
     }
-    //endregion
+//endregion
 }

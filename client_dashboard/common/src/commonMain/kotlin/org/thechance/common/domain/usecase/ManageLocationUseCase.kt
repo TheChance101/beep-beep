@@ -1,5 +1,6 @@
 package org.thechance.common.domain.usecase
 
+import org.thechance.common.domain.getway.ILocationGateway
 import org.thechance.common.domain.getway.IRemoteGateway
 
 interface IManageLocationUseCase {

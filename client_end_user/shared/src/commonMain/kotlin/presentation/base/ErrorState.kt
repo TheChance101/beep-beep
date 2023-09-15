@@ -9,6 +9,9 @@ sealed interface ErrorState {
     data object UnAuthorized : ErrorState
     data object InvalidUsername : ErrorState
     data object InvalidPassword : ErrorState
+    data object InvalidFullName : ErrorState
+    data object InvalidEmail : ErrorState
+    data object InvalidPhone : ErrorState
     data class UserAlreadyExists(val message: String) : ErrorState
     data class UserNotFound(val message: String) : ErrorState
     data class WrongPassword(val message: String) : ErrorState
@@ -55,5 +58,8 @@ fun handelAuthorizationException(
         )
 
         is AuthorizationException.UserNotFoundException -> onError(ErrorState.UserNotFound(exception.errorMessage))
+        AuthorizationException.InvalidEmailException -> onError(ErrorState.InvalidEmail)
+        AuthorizationException.InvalidFullNameException -> onError(ErrorState.InvalidFullName)
+        AuthorizationException.InvalidPhoneException -> onError(ErrorState.InvalidPhone)
     }
 }
