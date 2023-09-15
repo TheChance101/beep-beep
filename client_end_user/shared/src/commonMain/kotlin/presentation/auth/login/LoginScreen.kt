@@ -74,6 +74,7 @@ class LoginScreen :
                     onValueChange = listener::onPasswordChanged,
                     label = Resources.strings.password,
                     keyboardType = KeyboardType.Password,
+                    showPasswordIcon = true,
                     errorMessage = state.passwordErrorMsg,
                     isError = state.isPasswordError,
                 )
