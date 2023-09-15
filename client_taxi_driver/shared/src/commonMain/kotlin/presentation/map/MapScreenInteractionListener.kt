@@ -10,4 +10,6 @@ interface MapScreenInteractionListener : BaseInteractionListener {
     fun onClickArrived()
 
     fun onClickDropOff()
+
+    fun onClickCloseIcon()
 }
