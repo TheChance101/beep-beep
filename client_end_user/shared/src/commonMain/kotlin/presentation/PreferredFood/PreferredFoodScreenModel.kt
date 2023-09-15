@@ -18,8 +18,7 @@ class PreferredFoodScreenModel(
     private var  selectedFood = mutableListOf<String>()
 
     override fun onPreferredFoodClicked(foodUIState: FoodUIState) {
-
-        if(state.value.selectedPreferredFood.size < 4){
+        if(selectedFood.size < 4){
             addPreferredFood(foodUIState)
         }else{
             onSaved()

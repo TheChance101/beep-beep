@@ -10,6 +10,7 @@ import cafe.adriel.voyager.transitions.SlideTransition
 import org.koin.compose.getKoin
 import org.koin.compose.koinInject
 import presentation.main.MainContainer
+import presentation.pickLanguage.PickLanguageScreen
 import presentation.preferredMeal.PreferredMealScreen
 import resources.BeepBeepTheme
 @OptIn(ExperimentalAnimationApi::class)
@@ -25,7 +26,7 @@ fun App() {
         }
 
         if(isFirstTime.value){
-            Navigator(PreferredMealScreen()) {
+            Navigator(PickLanguageScreen) {
                 SlideTransition(it)
             }
 
