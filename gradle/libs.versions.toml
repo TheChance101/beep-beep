@@ -18,6 +18,7 @@ constraint-version = "1.0.1"
 ksp = "1.8.21-1.0.11"
 koin-version = "3.4.3"
 koinKspVersion = "1.2.2"
+aayChart-version = "Beta-0.0.5"
 #voyager version
 voyager-version = "1.0.0-rc07"
 ktor-version = "2.3.3"
@@ -68,6 +69,8 @@ ktor-gson = { module = "io.ktor:ktor-serialization-gson", version.ref = "ktor-ve
 kotlin-realm = { module = "io.realm.kotlin:library-base", version.ref = "kotlin-realm" }
 #realm
 realm-library-base = { module = "io.realm.kotlin:library-base", version.ref = "realm-version" }
+#aay
+aay-chart = { module = "io.github.thechance101:chart", version.ref = "aayChart-version"}
 
 compose-image-loader = { module = "io.github.qdsfdhvh:image-loader", version.ref = "image-loader" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin-version" }

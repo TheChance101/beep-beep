@@ -1,5 +1,9 @@
 package data.gateway
 
+import androidx.compose.ui.graphics.Color
+import com.aay.compose.barChart.model.BarParameters
+import com.aay.compose.lineChart.model.LineParameters
+import com.aay.compose.lineChart.model.LineType
 import data.remote.mapper.toEntity
 import data.remote.mapper.toOrderEntity
 import data.remote.model.CuisineDto
@@ -7,8 +11,10 @@ import data.remote.model.LocationDto
 import data.remote.model.MealDto
 import data.remote.model.OrderDto
 import data.remote.model.RestaurantDto
+import domain.entity.BarsParameters
 import domain.entity.Category
 import domain.entity.Cuisine
+import domain.entity.LinesParameters
 import domain.entity.Location
 import domain.entity.Meal
 import domain.entity.Order
@@ -573,6 +579,32 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
         )
     )
 
+    private val lineXAxisData = listOf("sun", "mon", "tus", "wed", "thu", "fri", "sat")
+    private val lineParameters: LinesParameters = LinesParameters(
+        listOf(
+            LineParameters(
+                label = "revenue",
+                data = listOf(200.0, 300.0, 150.0, 250.0, 100.500, 400.0, 100.0),
+                lineColor = Color.Red,
+                lineType = LineType.CURVED_LINE,
+                lineShadow = true,
+            ),
+
+            ),
+        lineXAxisData
+    )
+
+    private val barXAxisData = listOf("sun", "mon", "tus", "wed", "thu", "fri", "sat")
+    private val barsParameters: BarsParameters = BarsParameters(
+        listOf(
+            BarParameters(
+                dataName = "Completed",
+                data = listOf(0.6, 10.6, 80.0, 50.6, 44.0, 100.6, 10.0),
+                barColor = Color(0xFF6C3428)
+            )
+        ),
+        barXAxisData
+    )
     override suspend fun loginUser(userName: String, password: String): Pair<String, String> {
         if (userName != "theChance") {
             throw InvalidPasswordException("Invalid UserName")
@@ -597,10 +629,10 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
     override suspend fun getRestaurantInfo(restaurantId: String): Restaurant {
         return getRestaurantsByOwnerId("7bf7ef77d907").find { it.id == restaurantId }
             ?: Restaurant(
-                id  = "",
+                id = "",
                 ownerId = "",
                 address = "",
-                location = Location(0.0,0.0),
+                location = Location(0.0, 0.0),
                 phone = "",
                 openingTime = "",
                 closingTime = "",
@@ -682,7 +714,18 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
         }.toEntity()
     }
 
-
     //endregion cuisines
+
+    //region charts
+    override suspend fun getLineChartDate(): LinesParameters {
+        return lineParameters
+    }
+
+    override suspend fun getBarChartDate(): BarsParameters {
+        return barsParameters
+    }
+
+    //endregion charts
+
 
 }

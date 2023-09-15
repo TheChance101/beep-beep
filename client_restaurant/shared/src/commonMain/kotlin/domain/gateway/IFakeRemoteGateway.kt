@@ -1,7 +1,9 @@
 package domain.gateway
 
+import domain.entity.BarsParameters
 import domain.entity.Category
 import domain.entity.Cuisine
+import domain.entity.LinesParameters
 import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
@@ -48,4 +50,9 @@ interface IFakeRemoteGateway {
 
     //endregion Cuisine
 
+    //region Charts
+    suspend fun getLineChartDate(): LinesParameters
+    suspend fun getBarChartDate(): BarsParameters
+
+    //endregion Charts
 }
