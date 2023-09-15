@@ -52,4 +52,15 @@ interface IStringResources {
     val invalidUsername: String
     val languageAskAboutLanguage: String
     val selectLanguage: String
+    val joinBpToday: String
+    val createYourAccount: String
+    val next: String
+    val justOnMoreStep: String
+    val completeYourRegistration: String
+    val fullName: String
+    val email: String
+    val mobileNumber: String
+    val signUp: String
+    val username: String
+    val password: String
 }
