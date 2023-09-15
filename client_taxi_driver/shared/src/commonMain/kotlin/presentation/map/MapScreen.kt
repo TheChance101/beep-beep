@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -53,7 +51,7 @@ class MapScreen :
                         .width(40.dp)
                         .height(40.dp)
                         .background(
-                            color = Theme.colors.surface,
+                            color = Theme.colors.hover,
                             shape = RoundedCornerShape(size = 8.dp)
                         )
                 ) {
@@ -65,7 +63,7 @@ class MapScreen :
                     )
                 }
             }
-            NewOrder(modifier = Modifier.align(Alignment.BottomCenter))
+            Order(modifier = Modifier.align(Alignment.BottomCenter))
         }
     }
 
@@ -192,39 +190,45 @@ class MapScreen :
                 Text(
                     text = Resources.strings.name,
                     color = Theme.colors.contentPrimary,
-                    style = Theme.typography.headline,
+                    style = Theme.typography.titleLarge,
                 )
 
                 Row(modifier = Modifier.padding(top = 30.dp)) {
-                    Icon(imageVector = Icons.Filled.Add, contentDescription = null)
+                    Image(
+                        painter = painterResource(Resources.images.location),
+                        contentDescription = null
+                    )
 
                     Column(modifier = Modifier.padding(start = 8.dp)) {
                         Text(
                             text = Resources.strings.pickUp,
-                            color = Theme.colors.contentSecondary,
-                            style = Theme.typography.titleMedium,
+                            color = Theme.colors.contentTertiary,
+                            style = Theme.typography.caption,
                         )
                         Text(
                             text = Resources.strings.name,
-                            color = Theme.colors.contentSecondary,
-                            style = Theme.typography.title,
+                            color = Theme.colors.contentPrimary,
+                            style = Theme.typography.body,
                         )
                     }
                 }
 
                 Row(modifier = Modifier.padding(top = 24.dp)) {
-                    Icon(imageVector = Icons.Filled.Add, contentDescription = null)
+                    Image(
+                        painter = painterResource(Resources.images.gps),
+                        contentDescription = null
+                    )
 
                     Column(modifier = Modifier.padding(start = 8.dp)) {
                         Text(
                             text = Resources.strings.dropOff,
-                            color = Theme.colors.contentSecondary,
-                            style = Theme.typography.titleMedium,
+                            color = Theme.colors.contentTertiary,
+                            style = Theme.typography.caption,
                         )
                         Text(
                             text = Resources.strings.name,
-                            color = Theme.colors.contentSecondary,
-                            style = Theme.typography.title,
+                            color = Theme.colors.contentPrimary,
+                            style = Theme.typography.body,
                         )
                     }
                 }
