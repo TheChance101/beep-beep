@@ -2,7 +2,6 @@ package presentation.app
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -11,11 +10,10 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import kotlinx.coroutines.runBlocking
 import org.koin.compose.getKoin
-import org.koin.compose.koinInject
 import presentation.main.MainContainer
 import presentation.pickLanguage.PickLanguageScreen
-import presentation.preferredMeal.PreferredMealScreen
 import resources.BeepBeepTheme
+
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun App() {
