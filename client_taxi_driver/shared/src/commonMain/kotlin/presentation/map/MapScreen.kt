@@ -1,6 +1,8 @@
 package presentation.map
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
@@ -72,12 +74,8 @@ class MapScreen :
             AnimatedVisibility(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 visible = state.isLoading,
-                enter = slideInVertically {
-                    it / 2
-                },
-                exit = slideOutVertically {
-                    it / 2
-                }
+                enter = slideInVertically { it } + fadeIn(),
+                exit = slideOutVertically { it } + fadeOut()
             ) {
                 FindingRideCard()
             }
@@ -85,12 +83,8 @@ class MapScreen :
             AnimatedVisibility(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 visible = state.isNewOrderFound,
-                enter = slideInVertically {
-                    it / 2
-                },
-                exit = slideOutVertically {
-                    it / 2
-                }
+                enter = slideInVertically { it } + fadeIn(),
+                exit = slideOutVertically { it } + fadeOut()
             ) {
                 NewOrderCard(
                     modifier = Modifier.align(
@@ -104,12 +98,8 @@ class MapScreen :
             AnimatedVisibility(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 visible = state.isAcceptedOrder,
-                enter = slideInVertically {
-                    it / 2
-                },
-                exit = slideOutVertically {
-                    it / 2
-                }
+                enter = slideInVertically { it } + fadeIn(),
+                exit = slideOutVertically { it } + fadeOut()
             ) {
                 OrderCard(
                     modifier = Modifier.align(
