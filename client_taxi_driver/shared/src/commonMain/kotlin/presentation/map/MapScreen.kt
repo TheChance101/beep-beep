@@ -1,5 +1,6 @@
 package presentation.map
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,10 +27,12 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpAppBar
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.resources.Resources
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 class MapScreen :
     BaseScreen<MapScreenModel, MapScreenUiState, MapUiEffect, MapScreenInteractionListener>() {
 
@@ -48,7 +51,7 @@ class MapScreen :
                     contentDescription = null
                 )
             }
-            Order(modifier = Modifier.align(Alignment.BottomCenter))
+            NewOrder(modifier = Modifier.align(Alignment.BottomCenter))
         }
     }
 
@@ -123,17 +126,20 @@ class MapScreen :
                     modifier = Modifier.padding(top = 32.dp),
                     text = Resources.strings.name,
                     color = Theme.colors.contentPrimary,
-                    style = Theme.typography.headline,
+                    style = Theme.typography.titleLarge,
                 )
 
                 Row(modifier = Modifier.padding(top = 10.dp)) {
-                    Icon(imageVector = Icons.Filled.Add, contentDescription = null)
+                    Image(
+                        painter = painterResource(Resources.images.mapPoint),
+                        contentDescription = null
+                    )
 
                     Text(
                         modifier = Modifier.padding(start = 4.dp),
                         text = Resources.strings.name,
                         color = Theme.colors.contentSecondary,
-                        style = Theme.typography.title,
+                        style = Theme.typography.body,
                     )
                 }
 
