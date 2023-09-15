@@ -1,9 +1,13 @@
 package domain.usecase
 
+import data.remote.model.RestaurantPermission
 import domain.gateway.local.ILocalConfigurationGateway
 import domain.gateway.remote.IIdentityRemoteGateway
+import io.ktor.util.decodeBase64Bytes
+import kotlinx.serialization.json.Json
 import presentation.base.InvalidPasswordException
 import presentation.base.InvalidUserNameException
+import presentation.base.PermissionDenied
 
 interface ILoginUserUseCase {
 
@@ -34,9 +38,12 @@ class LoginUserUseCase(
     ) {
         if (validateLoginFields(userName, password)) {
             val userTokens = remoteGateway.loginUser(userName, password)
-            localGateWay.saveAccessToken(userTokens.accessToken)
-            localGateWay.saveRefreshToken(userTokens.refreshToken)
-            localGateWay.saveKeepMeLoggedInFlag(isKeepMeLoggedInChecked)
+
+            if (decodedToken(userTokens.accessToken)) {
+                localGateWay.saveAccessToken(userTokens.accessToken)
+                localGateWay.saveRefreshToken(userTokens.refreshToken)
+                localGateWay.saveKeepMeLoggedInFlag(isKeepMeLoggedInChecked)
+            }
         }
     }
 
@@ -54,13 +61,35 @@ class LoginUserUseCase(
         )
     }
 
+    private fun decodedToken(input: String): Boolean {
+        val elements = input.split('.')
+        val payload = elements[1]
+        val decryptionTokenValue = payload.decodeBase64Bytes().decodeToString()
+        val result = parseToRestaurantPermission(decryptionTokenValue)
+
+        return validatePermissionRestaurant(result.permission)
+    }
+
+    private fun parseToRestaurantPermission(decryptionTokenValue: String): RestaurantPermission {
+        return Json.decodeFromString(decryptionTokenValue)
+    }
 
     private fun validateLoginFields(username: String, password: String): Boolean {
         if (username.isEmpty()) {
-            throw InvalidUserNameException("")
+            throw InvalidUserNameException()
         } else if (password.isEmpty()) {
-            throw InvalidPasswordException("")
+            throw InvalidPasswordException()
         } else return true
     }
 
+    private fun validatePermissionRestaurant(permission: String?): Boolean {
+        if (permission != HAS_PERMISSION) {
+            throw PermissionDenied()
+        } else return true
+    }
+
+    companion object {
+        private const val HAS_PERMISSION = "5"
+        private const val NO_PERMISSION = "1"
+    }
 }
