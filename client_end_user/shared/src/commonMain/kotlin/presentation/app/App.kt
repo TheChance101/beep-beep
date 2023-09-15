@@ -3,8 +3,10 @@ package presentation.app
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import org.koin.compose.getKoin
@@ -19,13 +21,13 @@ fun App() {
     BeepBeepTheme {
 
         val appScreenModel = AppScreenModel(getKoin().get())
-        val isFirstTime = remember { mutableStateOf(false) }
+        var isFirstTime by remember { mutableStateOf(false) }
 
         LaunchedEffect(key1 = Unit) {
-            isFirstTime.value =  appScreenModel.getInitScreen()
+            isFirstTime =  appScreenModel.getInitScreen()
         }
 
-        if(isFirstTime.value){
+        if(isFirstTime){
             Navigator(PickLanguageScreen) {
                 SlideTransition(it)
             }
