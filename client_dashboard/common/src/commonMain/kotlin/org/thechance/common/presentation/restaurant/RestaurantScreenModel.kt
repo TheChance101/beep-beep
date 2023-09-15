@@ -79,6 +79,17 @@ class RestaurantScreenModel(
     private fun onError(error: ErrorState) {
         updateState { it.copy(isLoading = false) }
         when (error) {
+            is ErrorState.UserNotExist -> {
+                updateState {
+                    it.copy(
+                        newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
+                                userNameError = ErrorWrapper(
+                                errorMessage = error.errorMessage, isError = true,
+                            ),
+                        )
+                    )
+                }
+            }
             is ErrorState.RestaurantInvalidName -> {
                 updateState {
                     it.copy(
@@ -90,7 +101,6 @@ class RestaurantScreenModel(
                     )
                 }
             }
-
             is ErrorState.RestaurantInvalidPhone -> {
                 updateState {
                     it.copy(
@@ -102,7 +112,6 @@ class RestaurantScreenModel(
                     )
                 }
             }
-
             is ErrorState.RestaurantInvalidLocation -> {
                 updateState {
                     it.copy(
@@ -282,13 +291,7 @@ class RestaurantScreenModel(
     override fun onOwnerUserNameChange(name: String) {
         updateState {
             it.copy(
-                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
-                    ownerUsername = name,
-                    userNameError = ErrorWrapper(
-                        "Letters only, and Longer than 5.",
-                        !iValidateRestaurantUseCase.validateUserName(name)
-                    ),
-                )
+                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(ownerUsername = name,)
             )
         }
     }
@@ -356,7 +359,7 @@ class RestaurantScreenModel(
 
     override fun onCreateNewRestaurantClicked() {
         clearAddRestaurantErrorInfo()
-       // updateState { it.copy(isNewRestaurantInfoDialogVisible = true) }
+       updateState { it.copy(isNewRestaurantInfoDialogVisible = true) }
         tryToExecute(
             { manageRestaurant.createRestaurant(state.value.newRestaurantInfoUiState.toEntity()) },
             ::onCreateRestaurantSuccessfully,
@@ -365,6 +368,7 @@ class RestaurantScreenModel(
     }
 
     private fun onCreateRestaurantSuccessfully(restaurant: Restaurant) {
+        println("onCreateRestaurantSuccessfully: $restaurant")
         clearAddRestaurantInfo()
         val newRestaurant =
             mutableState.value.restaurants.toMutableList().apply { add(restaurant.toUiState()) }
