@@ -7,7 +7,6 @@ data class StringResources(
     val findingRequest: String = "Finding ride requests",
     val mapScreenAppBarTitle: String = "Welcome, ",
     val newOrder: String = "New Order",
-    val name: String = "Kamel Mohamed",
     val acceptRequest: String = "Accept Request",
     val cancel: String = "Cancel",
     val arrived: String = "Arrived",

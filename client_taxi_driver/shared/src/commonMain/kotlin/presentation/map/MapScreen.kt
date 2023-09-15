@@ -1,5 +1,6 @@
 package presentation.map
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -44,7 +45,7 @@ class MapScreen :
         ) {
             BpAppBar(
                 isBackIconVisible = false,
-                title = Resources.strings.mapScreenAppBarTitle
+                title = Resources.strings.mapScreenAppBarTitle + state.name + "!"
             ) {
                 Box(
                     modifier = Modifier
@@ -64,7 +65,38 @@ class MapScreen :
                     )
                 }
             }
-            FindingRideCard(modifier = Modifier.align(Alignment.BottomCenter))
+
+            AnimatedVisibility(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                visible = state.isLoading
+            ) {
+                FindingRideCard()
+            }
+
+            AnimatedVisibility(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                visible = state.isNewOrderFound
+            ) {
+                NewOrderCard(
+                    modifier = Modifier.align(
+                        Alignment.BottomCenter,
+                    ),
+                    state = state.orderInfoUiState,
+                    listener = listener,
+                )
+            }
+
+//            AnimatedVisibility(
+//                modifier = Modifier.align(Alignment.BottomCenter),
+//                visible = state.isNewOrderFound
+//            ) {
+//                OrderCard(
+//                    modifier = Modifier.align(
+//                        Alignment.BottomCenter,
+//                    ),
+//                    state = state.orderInfoUiState,
+//                )
+//            }
         }
     }
 
@@ -130,6 +162,8 @@ class MapScreen :
     @Composable
     private fun NewOrderCard(
         modifier: Modifier = Modifier,
+        state: OrderInfoUiState,
+        listener: MapScreenInteractionListener,
     ) {
         MapCard(
             modifier = modifier,
@@ -142,7 +176,7 @@ class MapScreen :
 
             Text(
                 modifier = Modifier.padding(top = 32.dp),
-                text = Resources.strings.name,
+                text = state.name,
                 color = Theme.colors.contentPrimary,
                 style = Theme.typography.titleLarge,
             )
@@ -155,7 +189,7 @@ class MapScreen :
 
                 Text(
                     modifier = Modifier.padding(start = 4.dp),
-                    text = Resources.strings.name,
+                    text = state.dropOffAddress,
                     color = Theme.colors.contentSecondary,
                     style = Theme.typography.body,
                 )
@@ -171,7 +205,8 @@ class MapScreen :
                 title = Resources.strings.cancel,
                 containerColor = Color.Transparent,
                 contentColor = Theme.colors.contentTertiary,
-                onClick = {})
+                onClick = listener::onClickCancel
+            )
         }
     }
 
@@ -179,12 +214,13 @@ class MapScreen :
     @Composable
     private fun OrderCard(
         modifier: Modifier = Modifier,
+        state: OrderInfoUiState,
     ) {
         MapCard(
             modifier = modifier
         ) {
             Text(
-                text = Resources.strings.name,
+                text = Resources.strings.newOrder,
                 color = Theme.colors.contentPrimary,
                 style = Theme.typography.titleLarge,
             )
@@ -202,7 +238,7 @@ class MapScreen :
                         style = Theme.typography.caption,
                     )
                     Text(
-                        text = Resources.strings.name,
+                        text = Resources.strings.newOrder,
                         color = Theme.colors.contentPrimary,
                         style = Theme.typography.body,
                     )
@@ -222,7 +258,7 @@ class MapScreen :
                         style = Theme.typography.caption,
                     )
                     Text(
-                        text = Resources.strings.name,
+                        text = Resources.strings.newOrder,
                         color = Theme.colors.contentPrimary,
                         style = Theme.typography.body,
                     )
