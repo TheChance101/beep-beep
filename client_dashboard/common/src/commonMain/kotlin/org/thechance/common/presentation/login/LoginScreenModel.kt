@@ -51,26 +51,23 @@ class LoginScreenModel(
 
     private fun handleErrorState(error: ErrorState) {
         when (error) {
-            is ErrorState.InvalidCredentials -> {
+            is ErrorState.InvalidPassword -> {
                 updateState { it.copy(isLoading = false, error = error, isPasswordError = ErrorWrapper(error.errorMessage,true)) }
-                sendNewEffect(LoginUIEffect.LoginFailed(error.errorMessage))
             }
 
             is ErrorState.UserNotExist -> {
                 updateState { it.copy(isLoading = false, error = error, isUserError = ErrorWrapper(error.errorMessage,true)) }
-                sendNewEffect(LoginUIEffect.LoginFailed(error.errorMessage))
             }
 
-            is ErrorState.NoConnection -> {
-                sendNewEffect(LoginUIEffect.LoginFailed(englishStrings.noInternet))
+            ErrorState.NoConnection -> {
+
             }
 
-            is ErrorState.UnKnownError -> {
-                sendNewEffect(LoginUIEffect.LoginFailed(englishStrings.unKnownError))
-            }
+            ErrorState.UnKnownError -> {
 
-            is ErrorState.LoginError -> {
-                sendNewEffect(LoginUIEffect.LoginFailed(error.errorMessage))
+            }
+            else -> {
+
             }
         }
     }

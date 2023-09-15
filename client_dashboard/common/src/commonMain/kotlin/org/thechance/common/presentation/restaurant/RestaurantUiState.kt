@@ -1,13 +1,12 @@
 package org.thechance.common.presentation.restaurant
 
 import org.thechance.common.presentation.composables.table.Header
-import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.ErrorState
 
 
 data class RestaurantUiState(
-    val isLoading: Boolean = false,
-    val error: ErrorState = ErrorState.UnKnownError,
+    val isLoading: Boolean = true,
+    val isNoInternetConnection: Boolean = false,
     val isNewRestaurantInfoDialogVisible: Boolean = false,
     val newRestaurantInfoUiState: NewRestaurantInfoUiState = NewRestaurantInfoUiState(),
     val restaurantAddCuisineDialogUiState: RestaurantAddCuisineDialogUiState = RestaurantAddCuisineDialogUiState(),

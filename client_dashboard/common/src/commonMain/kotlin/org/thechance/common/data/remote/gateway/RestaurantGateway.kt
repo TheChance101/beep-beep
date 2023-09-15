@@ -1,21 +1,25 @@
 package org.thechance.common.data.remote.gateway
 
-import io.ktor.client.*
-import io.ktor.client.request.*
-import io.ktor.client.request.forms.*
+import io.ktor.client.HttpClient
+import io.ktor.client.request.delete
+import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
-import io.ktor.client.request.parameter
-import io.ktor.http.*
+import io.ktor.client.request.header
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.appendPathSegments
+import io.ktor.http.contentType
+import io.ktor.http.parameters
+import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.CuisineDto
 import org.thechance.common.data.remote.model.RestaurantDto
 import org.thechance.common.data.remote.model.ServerResponse
-import org.thechance.common.data.remote.model.UserResponse
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.NewRestaurantInfo
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.getway.IRestaurantGateway
-import org.thechance.common.presentation.restaurant.toDto
 
 class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestaurantGateway {
 
