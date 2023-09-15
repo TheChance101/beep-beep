@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
+import kotlinx.coroutines.runBlocking
 import org.koin.compose.getKoin
 import org.koin.compose.koinInject
 import presentation.main.MainContainer
@@ -20,23 +21,23 @@ import resources.BeepBeepTheme
 fun App() {
     BeepBeepTheme {
 
+
         val appScreenModel = AppScreenModel(getKoin().get())
         var isFirstTime by remember { mutableStateOf(false) }
 
-        LaunchedEffect(key1 = Unit) {
+        runBlocking {
             isFirstTime =  appScreenModel.getInitScreen()
         }
-
-        if(isFirstTime){
-            Navigator(PickLanguageScreen) {
-                SlideTransition(it)
+            if(isFirstTime){
+                Navigator(PickLanguageScreen) {
+                    SlideTransition(it)
+                }
+            }else{
+                Navigator(MainContainer) {
+                    SlideTransition(it)
+                }
             }
 
-        }else{
-            Navigator(MainContainer) {
-                SlideTransition(it)
-            }
-        }
     }
 }
 
