@@ -7,12 +7,19 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.thechance.common.data.local.gateway.LocalGateway
+import org.thechance.common.data.remote.mapper.toEntity
+import org.thechance.common.data.remote.model.OrdersRevenueDto
 import org.thechance.common.data.remote.model.RestaurantDto
+import org.thechance.common.data.remote.model.RevenueShareDto
 import org.thechance.common.data.remote.model.TaxiDto
+import org.thechance.common.data.remote.model.TripsRevenueDto
+import org.thechance.common.domain.entity.RevenueShare
+import org.thechance.common.domain.entity.TotalRevenueShare
 import org.thechance.common.domain.getway.IRemoteGateway
+import org.thechance.common.domain.util.RevenueShareDate
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 
 class FakeRemoteGateway(
     private val localGateway: LocalGateway,
@@ -238,88 +245,89 @@ class FakeRemoteGateway(
 //            )
 //        )
         restaurants.addAll(
-            listOf(
-                RestaurantDto(
-                    id = "8c90c4c6-1e69-47f3-aa59-2edcd6f0057b",
-                    name = "Mujtaba Restaurant",
-                    ownerUsername = "mujtaba",
-                    phoneNumber = "0532465722",
-                    rating = 0.4,
-                    priceLevel = 1,
-                    workingHours = "06:30 - 22:30"
-                ),
-                RestaurantDto(
-                    id = "6e21s4f-aw32-fs3e-fe43-aw56g4yr324",
-                    name = "Karrar Restaurant",
-                    ownerUsername = "karrar",
-                    phoneNumber = "0535232154",
-                    rating = 3.5,
-                    priceLevel = 1,
-                    workingHours = "12:00 - 23:00"
-                ),
-                RestaurantDto(
-                    id = "7a33sax-aw32-fs3e-12df-42ad6x352zse",
-                    name = "Saif Restaurant",
-                    ownerUsername = "saif",
-                    phoneNumber = "0554627893",
-                    rating = 4.0,
-                    priceLevel = 3,
-                    workingHours = "09:00 - 23:00"
-                ),
-                RestaurantDto(
-                    id = "7y1z47c-s2df-76de-dwe2-42ad6x352zse",
-                    name = "Nada Restaurant",
-                    ownerUsername = "nada",
-                    phoneNumber = "0524242766",
-                    rating = 3.4,
-                    priceLevel = 2,
-                    workingHours = "01:00 - 23:00"
-                ),
-                RestaurantDto(
-                    id = "3e1f5d4a-8317-4f13-aa89-2c094652e6a3",
-                    name = "Asia Restaurant",
-                    ownerUsername = "asia",
-                    phoneNumber = "0528242165",
-                    rating = 2.9,
-                    priceLevel = 1,
-                    workingHours = "09:30 - 21:30"
-                ),
-                RestaurantDto(
-                    id = "7a1bfe39-4b2c-4f76-bde0-82da2eaf9e99",
-                    name = "Kamel Restaurant",
-                    ownerUsername = "kamel",
-                    phoneNumber = "0528242235",
-                    rating = 4.9,
-                    priceLevel = 3,
-                    workingHours = "06:30 - 22:30"
-                ),
-            )
+                listOf(
+                        RestaurantDto(
+                                id = "8c90c4c6-1e69-47f3-aa59-2edcd6f0057b",
+                                name = "Mujtaba Restaurant",
+                                ownerUsername = "mujtaba",
+                                phoneNumber = "0532465722",
+                                rating = 0.4,
+                                priceLevel = 1,
+                                workingHours = "06:30 - 22:30"
+                        ),
+                        RestaurantDto(
+                                id = "6e21s4f-aw32-fs3e-fe43-aw56g4yr324",
+                                name = "Karrar Restaurant",
+                                ownerUsername = "karrar",
+                                phoneNumber = "0535232154",
+                                rating = 3.5,
+                                priceLevel = 1,
+                                workingHours = "12:00 - 23:00"
+                        ),
+                        RestaurantDto(
+                                id = "7a33sax-aw32-fs3e-12df-42ad6x352zse",
+                                name = "Saif Restaurant",
+                                ownerUsername = "saif",
+                                phoneNumber = "0554627893",
+                                rating = 4.0,
+                                priceLevel = 3,
+                                workingHours = "09:00 - 23:00"
+                        ),
+                        RestaurantDto(
+                                id = "7y1z47c-s2df-76de-dwe2-42ad6x352zse",
+                                name = "Nada Restaurant",
+                                ownerUsername = "nada",
+                                phoneNumber = "0524242766",
+                                rating = 3.4,
+                                priceLevel = 2,
+                                workingHours = "01:00 - 23:00"
+                        ),
+                        RestaurantDto(
+                                id = "3e1f5d4a-8317-4f13-aa89-2c094652e6a3",
+                                name = "Asia Restaurant",
+                                ownerUsername = "asia",
+                                phoneNumber = "0528242165",
+                                rating = 2.9,
+                                priceLevel = 1,
+                                workingHours = "09:30 - 21:30"
+                        ),
+                        RestaurantDto(
+                                id = "7a1bfe39-4b2c-4f76-bde0-82da2eaf9e99",
+                                name = "Kamel Restaurant",
+                                ownerUsername = "kamel",
+                                phoneNumber = "0528242235",
+                                rating = 4.9,
+                                priceLevel = 3,
+                                workingHours = "06:30 - 22:30"
+                        ),
+                )
         )
         cuisines.addAll(
-            listOf(
-                "Angolan cuisine",
-                "Cameroonian cuisine",
-                "Chadian cuisine",
-                "Congolese cuisine",
-                "Centrafrican cuisine",
-                "Equatorial Guinea cuisine",
-                "Gabonese cuisine",
-                "Santomean cuisine",
-                "Burundian cuisine",
-                "Djiboutian cuisine",
-                "Eritrean cuisine",
-                "Ethiopian cuisine",
-                "Kenyan cuisine",
-                "Maasai cuisine",
-                "Rwandan cuisine",
-                "Somali cuisine",
-                "South Sudanese cuisine",
-                "Tanzanian cuisine",
-                "Zanzibari cuisine",
-                "Ugandan cuisine",
-            )
+                listOf(
+                        "Angolan cuisine",
+                        "Cameroonian cuisine",
+                        "Chadian cuisine",
+                        "Congolese cuisine",
+                        "Centrafrican cuisine",
+                        "Equatorial Guinea cuisine",
+                        "Gabonese cuisine",
+                        "Santomean cuisine",
+                        "Burundian cuisine",
+                        "Djiboutian cuisine",
+                        "Eritrean cuisine",
+                        "Ethiopian cuisine",
+                        "Kenyan cuisine",
+                        "Maasai cuisine",
+                        "Rwandan cuisine",
+                        "Somali cuisine",
+                        "South Sudanese cuisine",
+                        "Tanzanian cuisine",
+                        "Zanzibari cuisine",
+                        "Ugandan cuisine",
+                )
         )
     }
+
     override suspend fun getUserData() = "asia"
 
     override suspend fun getPdfTaxiReport() {
@@ -331,6 +339,167 @@ class FakeRemoteGateway(
         return Pair("token", "refreshToken")
     }
 
+    override suspend fun getRevenueShare(revenueShareDate: RevenueShareDate): TotalRevenueShare {
+        return when (revenueShareDate.value) {
+            0 -> TotalRevenueShare(
+                    revenueData = listOf(
+                            50.0,
+                            30.6,
+                            77.0,
+                            69.6,
+                            50.0,
+                            30.6,
+                            80.0,
+                            50.6,
+                            44.0,
+                            100.6,
+                            10.0,
+                            50.0
+                    ),
+                    earningData = listOf(
+                            0.6,
+                            10.6,
+                            80.0,
+                            50.6,
+                            44.0,
+                            100.6,
+                            10.0,
+                            50.0,
+                            30.6,
+                            77.0,
+                            69.6,
+                            50.0
+                    ),
+                    revenueShare = listOf(
+                            "Jan",
+                            "Feb",
+                            "Mar",
+                            "Apr",
+                            "May",
+                            "Jun",
+                            "Jul",
+                            "Aug",
+                            "Sep",
+                            "Oct",
+                            "Nov",
+                            "Dec"
+                    )
+            )
+
+            1 -> TotalRevenueShare(
+                    revenueData = listOf(
+                            99.6,
+                            15.0,
+                            30.6,
+                            14.0,
+                            100.6,
+                            10.0,
+                            50.0,
+                            63.3,
+                            12.3,
+                            22.2,
+                            12.4
+                    ),
+                    earningData = listOf(
+                            10.0,
+                            50.0,
+                            0.6,
+                            10.6,
+                            80.0,
+                            77.0,
+                            69.6,
+                            0.0,
+                            1.3,
+                            22.2,
+                            12.4
+                    ),
+                    revenueShare = listOf(
+                            "13 Wed",
+                            "14 Thu",
+                            "15 Fri",
+                            "16 Sat",
+                            "17 Sun",
+                            "18 Mon",
+                            "19 Tue",
+                            "20 Wed",
+                            "21 Thu",
+                            "22 Fri",
+                            "23 Sat"
+                    )
+            )
+
+            2 -> TotalRevenueShare(
+                    revenueData = listOf(
+                            100.0,
+                            50.6,
+                            24.0,
+                            91.6,
+                            50.0,
+                            30.6,
+                            80.0,
+                            50.6,
+                            44.0,
+                            100.6,
+                            10.0,
+                            50.0,
+                            21.2,
+                            43.2
+                    ),
+                    earningData = listOf(
+                            0.6,
+                            10.6,
+                            80.0,
+                            50.6,
+                            44.0,
+                            100.6,
+                            10.0,
+                            50.0,
+                            30.6,
+                            77.0,
+                            69.6,
+                            50.0,
+                            21.2,
+                            43.2
+                    ),
+                    revenueShare = listOf(
+                            "Week 1",
+                            "Week 2",
+                            "Week 3",
+                            "Week 4",
+                            "Week 5",
+                            "Week 6",
+                            "Week 7",
+                            "Week 8",
+                            "Week 9",
+                            "Week 10",
+                            "Week 11",
+                            "Week 12",
+                            "Week 13",
+                            "Week 14"
+                    )
+            )
+
+            else -> throw UnknownError()
+        }
+
+    }
+
+    override suspend fun getDashboardRevenueShare(): RevenueShare {
+        return RevenueShareDto(
+                ordersRevenueShare = OrdersRevenueDto(
+                        completedOrders = 100.0,
+                        canceledOrders = 50.3,
+                        inTheWayOrders = 30.0,
+                ),
+                tripsRevenueShare = TripsRevenueDto(
+                        acceptedTrips = 100.0,
+                        pendingTrips = 50.3,
+                        rejectedTrips = 10.0,
+                        canceledTrips = 30.0,
+                )
+        ).toEntity()
+    }
+
     override suspend fun getCurrentLocation(): String {
         return "30.044420,31.235712"
     }
@@ -338,21 +507,21 @@ class FakeRemoteGateway(
     private fun createTaxiPDFReport(): File {
         val title = "Taxi Details Report"
         val columnNames = listOf(
-            "Taxi ID",
-            "Username",
-            "Plate Number",
-            "Model",
-            "Color",
-            "Seats",
-            "Status",
-            "Trips"
+                "Taxi ID",
+                "Username",
+                "Plate Number",
+                "Model",
+                "Color",
+                "Seats",
+                "Status",
+                "Trips"
         )
         val columnWidth = listOf(50f, 80f, 80f, 80f, 80f, 80f, 80f, 50f)
 
         val file = createPDFReport(title, taxis, columnNames, columnWidth) { taxi ->
             listOf(
-                taxi.id.toString(), taxi.username, taxi.plateNumber, taxi.type, taxi.color,
-                taxi.seats, taxi.isAvailable.toString(), taxi.trips.toString()
+                    taxi.id.toString(), taxi.username, taxi.plateNumber, taxi.type, taxi.color,
+                    taxi.seats, taxi.isAvailable.toString(), taxi.trips.toString()
             ).map { it ?: "" }
         }
         return file
@@ -381,22 +550,22 @@ class FakeRemoteGateway(
             val titleY = titleContent(contentStream, title, pageWidth, pageHeight)
             val dateTimeY = dateContent(contentStream, pageWidth, titleY)
             val (currentX, currentY) = headerContent(
-                contentStream,
-                startX,
-                dateTimeY,
-                cellHeight,
-                columnNames,
-                colWidths
+                    contentStream,
+                    startX,
+                    dateTimeY,
+                    cellHeight,
+                    columnNames,
+                    colWidths
             )
             tableContent(
-                currentY,
-                contentStream,
-                dataList,
-                cellHeight,
-                currentX,
-                startX,
-                colWidths,
-                dataExtractor
+                    currentY,
+                    contentStream,
+                    dataList,
+                    cellHeight,
+                    currentX,
+                    startX,
+                    colWidths,
+                    dataExtractor
             )
             contentStream.close()
             val pdfFilePath = "${System.getProperty("user.home")}/Downloads/$title.pdf"

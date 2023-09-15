@@ -47,6 +47,7 @@ class LoginScreen :
         when (effect) {
             is LoginScreenUIEffect.NavigateToHome -> navigator.replaceAll(MainContainer)
             LoginScreenUIEffect.NavigateToSignup -> navigator.push(RegistrationScreen())
+            else -> {}
         }
     }
 
