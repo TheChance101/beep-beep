@@ -4,8 +4,6 @@ package org.thechance.service_location.endpoints
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 import org.koin.ktor.ext.inject
 import org.thechance.service_location.data.SocketHandler
 import org.thechance.service_location.data.model.LocationDto

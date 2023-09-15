@@ -41,3 +41,15 @@ suspend inline fun <reified T> HttpClient.tryToExecuteFromWebSocket(
         }
     }.flowOn(Dispatchers.IO)
 }
+
+suspend inline fun <reified T> HttpClient.tryToSendWebSocketData(
+    data: T,
+    api: APIs,
+    path: String,
+    attributes: Attributes
+) {
+    attributes.put(AttributeKey("API"), api.value)
+    webSocket(path = path) {
+        sendSerialized(data)
+    }
+}

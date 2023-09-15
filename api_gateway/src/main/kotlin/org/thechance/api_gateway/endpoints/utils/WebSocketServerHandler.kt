@@ -15,7 +15,6 @@ class WebSocketServerHandler {
     val sessions: ConcurrentHashMap<String, DefaultWebSocketServerSession> = ConcurrentHashMap()
 
     suspend inline fun <reified T> tryToCollectFormWebSocket(values: Flow<T>, session: DefaultWebSocketServerSession) {
-        println("Sessionnn : $sessions")
         try {
             values.flowOn(Dispatchers.IO).collect { value -> session.sendSerialized(value) }
         } catch (e: LocalizedMessageException) {

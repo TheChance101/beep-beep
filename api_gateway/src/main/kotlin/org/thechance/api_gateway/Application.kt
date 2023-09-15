@@ -9,7 +9,7 @@ import org.thechance.api_gateway.plugins.*
 fun main() {
     embeddedServer(
         Netty,
-        port = 8080,
+        port = 8077,
         host = "0.0.0.0",
         module = Application::module
     ).start(wait = true)
