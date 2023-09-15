@@ -13,4 +13,5 @@ data class StringResources(
     val arrived: String = "Arrived",
     val pickUp: String = "Pick up",
     val dropOff: String = "Drop off",
+    val close: String = "Close",
 )

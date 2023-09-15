@@ -1,16 +1,18 @@
 package presentation.map
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -45,11 +47,23 @@ class MapScreen :
                 isBackIconVisible = false,
                 title = Resources.strings.welcomeDriver
             ) {
-                Icon(
-                    modifier = Modifier.padding(end = 16.dp),
-                    imageVector = Icons.Filled.Close,
-                    contentDescription = null
-                )
+                Box(
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .width(40.dp)
+                        .height(40.dp)
+                        .background(
+                            color = Theme.colors.surface,
+                            shape = RoundedCornerShape(size = 8.dp)
+                        )
+                ) {
+                    Icon(
+                        modifier = Modifier.align(Alignment.Center),
+                        painter = painterResource(Resources.images.close),
+                        contentDescription = Resources.strings.close,
+                        tint = Theme.colors.contentPrimary
+                    )
+                }
             }
             NewOrder(modifier = Modifier.align(Alignment.BottomCenter))
         }
