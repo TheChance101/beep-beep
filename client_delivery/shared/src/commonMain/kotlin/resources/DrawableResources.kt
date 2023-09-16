@@ -6,9 +6,10 @@ data class DrawableResources(
     val errorIcon: String = "ic_error_icon.xml",
     val backgroundPattern: String = "background_pattern.png",
     val deliveryBike: String = "delivery_bike.png",
-    val pointOnMap: String = "ic_point_on_map.xml",
+    val iconPointOnMap: String = "ic_point_on_map.xml",
     val iconLocation: String = "ic_location.xml",
     val iconMapPoint: String = "ic_map_point.xml",
+    val iconClock: String = "ic_clock_circle.xml",
     val test: String = "test.jpg"
 )
 
