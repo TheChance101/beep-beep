@@ -4,10 +4,12 @@ import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.DataWrapperDto
 import org.thechance.common.data.remote.model.RestaurantDto
 import org.thechance.common.data.remote.model.toEntity
+import org.thechance.common.domain.entity.Cuisine
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.NewRestaurantInfo
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.getway.IRestaurantGateway
+import java.util.UUID
 import kotlin.math.ceil
 import kotlin.math.floor
 
@@ -78,44 +80,46 @@ class RestaurantFakeGateway : IRestaurantGateway {
         return true
     }
 
-    override suspend fun getCuisines(): List<String> {
+    override suspend fun getCuisines(): List<Cuisine> {
         return cuisines
     }
 
-    override suspend fun createCuisine(cuisineName: String): String {
-        return if (cuisineName !in cuisines && cuisineName.isNotBlank()) {
-            cuisines.add(0, cuisineName)
-            cuisineName
-        } else ""
+
+    override suspend fun createCuisine(cuisineName: String): Cuisine {
+        val newCuisine = Cuisine(UUID.randomUUID().toString(), cuisineName)
+        cuisines.add(newCuisine)
+        return newCuisine
     }
 
-    override suspend fun deleteCuisine(cuisineName: String): String {
-        cuisines.remove(cuisineName)
-        return cuisineName
+    override suspend fun deleteCuisine(cuisineId: String) {
+        cuisines.find { it.id == cuisineId }?.let {
+            cuisines.remove(it)
+        }
     }
 
-    private val cuisines = mutableListOf<String>(
-            "Angolan cuisine",
-            "Cameroonian cuisine",
-            "Chadian cuisine",
-            "Congolese cuisine",
-            "Centrafrican cuisine",
-            "Equatorial Guinea cuisine",
-            "Gabonese cuisine",
-            "Santomean cuisine",
-            "Burundian cuisine",
-            "Djiboutian cuisine",
-            "Eritrean cuisine",
-            "Ethiopian cuisine",
-            "Kenyan cuisine",
-            "Maasai cuisine",
-            "Rwandan cuisine",
-            "Somali cuisine",
-            "South Sudanese cuisine",
-            "Tanzanian cuisine",
-            "Zanzibari cuisine",
-            "Ugandan cuisine",
+    private val cuisines = mutableListOf<Cuisine>(
+            Cuisine("1", "Angolan cuisine"),
+            Cuisine("", "Cameroonian cuisine"),
+            Cuisine("", "Chadian cuisine"),
+            Cuisine("", "Congolese cuisine"),
+            Cuisine("", "Centrafrican cuisine"),
+            Cuisine("", "Equatorial Guinea cuisine"),
+            Cuisine("", "Gabonese cuisine"),
+            Cuisine("", "Santomean cuisine"),
+            Cuisine("", "Burundian cuisine"),
+            Cuisine("", "Djiboutian cuisine"),
+            Cuisine("", "Eritrean cuisine"),
+            Cuisine("", "Ethiopian cuisine"),
+            Cuisine("", "Kenyan cuisine"),
+            Cuisine("", "Maasai cuisine"),
+            Cuisine("", "Rwandan cuisine"),
+            Cuisine("", "Somali cuisine"),
+            Cuisine("", "South Sudanese cuisine"),
+            Cuisine("", "Tanzanian cuisine"),
+            Cuisine("", "Zanzibari cuisine"),
+            Cuisine("", "Ugandan cuisine"),
     )
+
 
     private val restaurants = mutableListOf<RestaurantDto>(
             RestaurantDto(

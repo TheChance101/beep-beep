@@ -1,6 +1,7 @@
 package org.thechance.common.presentation.restaurant
 
 import kotlinx.coroutines.Job
+import org.thechance.common.domain.entity.Cuisine
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.usecase.IManageLocationUseCase
@@ -66,11 +67,11 @@ class RestaurantScreenModel(
         )
     }
 
-    private fun onGetCuisinesSuccessfully(cuisines: List<String>) {
+    private fun onGetCuisinesSuccessfully(cuisines: List<Cuisine>) {
         updateState {
             it.copy(
                 restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
-                    cuisines = cuisines,
+                    cuisines = cuisines.toUiState(),
                 )
             )
         }
@@ -452,35 +453,34 @@ class RestaurantScreenModel(
         )
     }
 
-    private fun onCreateCuisinesSuccessfully(cuisineName: String) {
+    private fun onCreateCuisinesSuccessfully(cuisine: Cuisine) {
         clearCuisineErrorState()
         updateState {
             it.copy(
                     restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
-                            cuisines = it.restaurantAddCuisineDialogUiState.cuisines.toMutableList()
-                                .apply {
-                                    add(cuisineName)
-                                },
+                            cuisines = it.restaurantAddCuisineDialogUiState.cuisines.toMutableList().apply {
+                                    add(cuisine.toUiState()) },
                             cuisineName = ""
                     )
             )
         }
     }
 
-    override fun onClickDeleteCuisine(cuisineName: String) {
+    override fun onClickDeleteCuisine(cuisineId: String) {
         tryToExecute(
-            { mangeCuisines.deleteCuisine(cuisineName) },
-            ::onDeleteCuisinesSuccessfully,
+            { mangeCuisines.deleteCuisine(cuisineId) },
+            { onDeleteCuisinesSuccessfully(cuisineId) },
             ::onError
         )
     }
 
-    private fun onDeleteCuisinesSuccessfully(cuisineName: String) {
+    private fun onDeleteCuisinesSuccessfully(cuisineId: String) {
         updateState {
             it.copy(
                 restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
                     cuisines = it.restaurantAddCuisineDialogUiState.cuisines.toMutableList().apply {
-                        remove(cuisineName)
+                       val cuisine = this.find { cuisineUiState -> cuisineUiState.id == cuisineId }
+                        remove(cuisine)
                     }
                 )
             )

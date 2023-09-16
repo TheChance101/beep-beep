@@ -16,6 +16,7 @@ import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.CuisineDto
 import org.thechance.common.data.remote.model.RestaurantDto
 import org.thechance.common.data.remote.model.ServerResponse
+import org.thechance.common.domain.entity.Cuisine
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.NewRestaurantInfo
 import org.thechance.common.domain.entity.Restaurant
@@ -38,13 +39,13 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
         }.isSuccess ?: false
     }
 
-    override suspend fun getCuisines(): List<String> {
+    override suspend fun getCuisines(): List<Cuisine> {
        return tryToExecute<ServerResponse<List<CuisineDto>>>(client) {
             get(urlString = "/cuisines")
-        }.value?.map { it.name }?: throw UnknownError()
+        }.value?.toEntity()?: throw UnknownError()
     }
 
-    override suspend fun createCuisine(cuisineName: String): String {
+    override suspend fun createCuisine(cuisineName: String): Cuisine {
         return tryToExecute<ServerResponse<CuisineDto>>(client) {
             submitForm(
                 url = "/cuisine",
@@ -52,12 +53,14 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
                     append("name", cuisineName)
                 },
             )
-        }.value?.name ?: throw UnknownError()
+        }.value?.toEntity() ?: throw UnknownError()
     }
 
-    override suspend fun deleteCuisine(cuisineName: String): String {
-        return cuisineName
-    }//Todo: implement endpoint deleteCuisine
+    override suspend fun deleteCuisine(cuisineId: String) {
+       tryToExecute<ServerResponse<Boolean>>(client) {
+            delete(urlString = "/cuisine") { url { appendPathSegments(cuisineId) } }
+        }.isSuccess ?: false
+    }
 
     override suspend fun getRestaurants(
         pageNumber: Int,

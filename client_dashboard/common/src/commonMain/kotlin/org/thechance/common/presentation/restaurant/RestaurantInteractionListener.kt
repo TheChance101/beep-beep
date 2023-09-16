@@ -31,7 +31,7 @@ interface AddCuisineInteractionListener {
   
     fun onClickAddCuisine()
 
-    fun onClickDeleteCuisine(cuisineName: String)
+    fun onClickDeleteCuisine(cuisineId: String)
 
     fun onCloseAddCuisineDialog()
 

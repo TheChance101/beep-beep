@@ -397,13 +397,13 @@ class RestaurantScreen :
                             .background(Theme.colors.background)
                             .fillMaxWidth().heightIn(min = 64.kms, max = 256.kms)
                 ) {
-                    items(state.cuisines) { cuisineName ->
+                    items(state.cuisines) { cuisine ->
                         Row(
                             modifier = Modifier.padding(horizontal = 24.kms, vertical = 16.kms),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                cuisineName,
+                                text= cuisine.name,
                                 style = Theme.typography.caption,
                                 color = Theme.colors.contentPrimary,
                             )
@@ -414,7 +414,7 @@ class RestaurantScreen :
                                 contentDescription = null,
                                 tint = Theme.colors.primary,
                                 modifier = Modifier
-                                    .noRipple { listener.onClickDeleteCuisine(cuisineName) }
+                                    .noRipple { listener.onClickDeleteCuisine(cuisine.id) }
                             )
                         }
                     }
