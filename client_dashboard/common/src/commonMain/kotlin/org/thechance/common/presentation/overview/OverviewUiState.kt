@@ -1,6 +1,8 @@
 package org.thechance.common.presentation.overview
 
+import org.thechance.common.domain.entity.OrdersRevenue
 import org.thechance.common.domain.entity.Permission
+import org.thechance.common.domain.entity.TripsRevenue
 import org.thechance.common.domain.entity.User
 import org.thechance.common.presentation.util.ErrorState
 
@@ -10,6 +12,24 @@ data class OverviewUiState(
     val error: ErrorState = ErrorState.UnKnownError,
     val users: List<LatestRegisteredUserUiState> = emptyList(),
     val dropdownMenuState: DropdownMenuState = DropdownMenuState(),
+    val earningData: List<Double> = emptyList(),
+    val revenueData: List<Double> = emptyList(),
+    val revenueShare: List<String> = emptyList(),
+    val tripsRevenueShare: TripsRevenueShareUiState = TripsRevenueShareUiState(),
+    val ordersRevenueShare: OrdersRevenueShareUiState = OrdersRevenueShareUiState(),
+)
+
+data class TripsRevenueShareUiState(
+    val acceptedTrips: Double = 1.0,
+    val pendingTrips: Double = 1.0,
+    val rejectedTrips: Double = 1.0,
+    val canceledTrips: Double = 1.0
+)
+
+data class OrdersRevenueShareUiState(
+    val completedOrders: Double = 1.0,
+    val canceledOrders: Double = 1.0,
+    val inTheWayOrders: Double = 1.0,
 )
 
 data class LatestRegisteredUserUiState(
@@ -20,15 +40,15 @@ data class LatestRegisteredUserUiState(
 
 data class DropdownMenuState(
     val isExpanded: Boolean = false,
-    val items: List<String> = listOf("Daily", "Weekly", "Monthly"),
+    val items: List<String> = listOf("Monthly", "Daily", "Weekly"),
     val selectedIndex: Int = 0,
 )
 
 fun User.toUiState(): LatestRegisteredUserUiState {
     return LatestRegisteredUserUiState(
-        name = fullName,
-        image = imageUrl.ifEmpty { "dummy_img.png" },
-        permission = permission.first().toUiState(),
+            name = fullName,
+            image = imageUrl.ifEmpty { "dummy_img.png" },
+            permission = permission.first().toUiState(),
     )
 }
 
@@ -56,6 +76,21 @@ fun Permission.toUiState(): PermissionUiState {
     }
 }
 
+fun TripsRevenue.toUiState(): TripsRevenueShareUiState {
+    return TripsRevenueShareUiState(
+            acceptedTrips = acceptedTrips,
+            pendingTrips = pendingTrips,
+            rejectedTrips = rejectedTrips,
+            canceledTrips = canceledTrips,
+    )
+}
 
+fun OrdersRevenue.toUiState(): OrdersRevenueShareUiState {
+    return OrdersRevenueShareUiState(
+            completedOrders = completedOrders,
+            canceledOrders = canceledOrders,
+            inTheWayOrders = inTheWayOrders,
+    )
+}
 
 
