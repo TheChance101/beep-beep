@@ -7,9 +7,7 @@ import resources.BeepBeepTheme
 @Composable
 fun App() {
     BeepBeepTheme {
-        Navigator(
-            LoginScreen()
-        ) {
+        Navigator(LoginScreen()) {
             SlideTransition(it)
         }
     }
