@@ -36,6 +36,7 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.composable.HeadFirstCard
 import presentation.composable.PreferredFoodCard
+import presentation.preferredRide.PreferredRideScreen
 import resources.Resources
 
 
@@ -49,7 +50,7 @@ object PreferredFoodScreen :
 
     override fun onEffect(effect: PreferredFoodUIEffect, navigator: Navigator) {
         when (effect) {
-            is PreferredFoodUIEffect.NavigateToPreferredScreen -> {}
+            is PreferredFoodUIEffect.NavigateToPreferredScreen -> navigator.push(PreferredRideScreen())
         }
     }
 
