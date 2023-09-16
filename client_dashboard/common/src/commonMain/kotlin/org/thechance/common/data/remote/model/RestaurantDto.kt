@@ -6,17 +6,21 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RestaurantDto(
     @SerialName("id")
-    val id: String? = null,
+    val id: String?,
+    @SerialName("rate")
+    val rating: Double?,
+    @SerialName("priceLevel")
+    val priceLevel: Int?,
+    @SerialName("username")
+    val username: String?,
     @SerialName("name")
-    val name: String? = null,
-    @SerialName("owner_username")
-    val ownerUsername: String? = null,
-    @SerialName("phone_number")
-    val phoneNumber: String? = null,
-    @SerialName("rating")
-    val rating: Double? = null,
-    @SerialName("price_level")
-    val priceLevel: Int? = null,
-    @SerialName("working_hours")
-    val workingHours: String? = null,
+    val name: String?,
+    @SerialName("openingTime")
+    val openingTime: String?,
+    @SerialName("closingTime")
+    val closingTime: String?,
+    @SerialName("phone")
+    val phone: String?,
+    @SerialName("location")
+    val location: Location?=null,
 )

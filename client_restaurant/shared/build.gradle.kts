@@ -62,7 +62,6 @@ kotlin {
                 implementation(libs.ktor.logging)
                 implementation(libs.ktor.client.cio)
                 implementation(libs.kotlin.serialization)
-
             }
         }
         val androidMain by getting {
@@ -72,8 +71,7 @@ kotlin {
                 api(libs.androidx.core.ktx)
                 api(libs.koin.android)
                 implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
-
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
             }
         }
         val iosX64Main by getting
