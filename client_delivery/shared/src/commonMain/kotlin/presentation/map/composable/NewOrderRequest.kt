@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,10 +32,10 @@ import resources.Resources
 fun NewOrderRequest() {
     MapCard {
         Text(
-            text = "New Order",
+            text = Resources.strings.newOrder,
             color = Theme.colors.contentPrimary,
             style = Theme.typography.headline,
-            modifier = Modifier.padding(bottom = 24.dp)
+            modifier = Modifier.padding(top = 8.dp, bottom = 24.dp)
         )
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -75,13 +76,12 @@ fun NewOrderRequest() {
             }
         }
         Divider(
-            modifier = Modifier.padding(horizontal = 16.dp),
             color = Theme.colors.divider,
             thickness = 1.dp
         )
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.padding(vertical = 8.dp, horizontal = 32.dp)
+            modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
         ) {
             Image(
                 painter = painterResource(Resources.images.iconLocation),
@@ -89,7 +89,7 @@ fun NewOrderRequest() {
             )
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(
-                    text = "Deliver At",
+                    text = Resources.strings.deliverAt,
                     style = Theme.typography.caption,
                     color = Theme.colors.contentTertiary
                 )
@@ -102,13 +102,13 @@ fun NewOrderRequest() {
         }
         BpButton(
             onClick = {},
-            title = Resources.strings.submit,
+            title = Resources.strings.accept,
             modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
         )
         BpTransparentButton(
             onClick = {},
-            title = Resources.strings.cancel,
-            modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
+            title = Resources.strings.reject,
+            modifier = Modifier.fillMaxWidth().height(56.dp).padding(top = 8.dp, bottom = 8.dp),
         )
     }
 }

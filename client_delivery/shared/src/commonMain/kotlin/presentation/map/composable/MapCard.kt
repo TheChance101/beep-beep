@@ -21,7 +21,7 @@ fun MapCard(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
         border = BorderStroke(width = 1.dp, color = Theme.colors.divider),
         elevation = CardDefaults.elevatedCardElevation(0.dp)
     ) {
-        Column(modifier = Modifier.fillMaxWidth().padding(vertical = 24.dp, horizontal = 16.dp)) {
+        Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
             content()
         }
     }

@@ -1,6 +1,7 @@
 package resources
 
 data class StringResources(
+    //region Login
     val beepBeep: String = "Beep Beep",
     val backgroundDescription: String = "background image",
     val loginWelcomeMessage: String = "Welcome To Delivery App",
@@ -13,6 +14,7 @@ data class StringResources(
     val foodsAreWaiting: String = "Foodies are waiting!",
     val tapStartTitle: String = "Tap Start and become their food \nsuperhero",
     val start: String = "Start",
+    //endregion
     //region permission
     val wrongPermissionMessage: String = "Looks like your account isn't assigned as a restaurant owner, ask for permission?",
     val wrongPermission: String = "Wrong permission",
@@ -31,6 +33,5 @@ data class StringResources(
     val accept: String = "Accept",
     val reject: String = "reject",
     val deliverAt: String = "Deliver At",
-
     //endregion
 )
