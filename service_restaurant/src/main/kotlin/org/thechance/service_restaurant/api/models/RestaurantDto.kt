@@ -10,7 +10,6 @@ data class RestaurantDto(
     val description: String? = null,
     val priceLevel: String? = null,
     val rate: Double? = null,
-    val currency: String? = null,
     val phone: String? = null,
     val address: String? = null,
     val openingTime: String? = null,

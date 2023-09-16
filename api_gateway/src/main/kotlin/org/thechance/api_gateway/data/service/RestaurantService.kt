@@ -79,7 +79,6 @@ class RestaurantService(
             }
             put(url) {
                 body = Json.encodeToString(RestaurantDto.serializer(), restaurantDto)
-                body = Json.encodeToString(status.toString())
             }
 
         }
@@ -125,7 +124,7 @@ class RestaurantService(
     }
 
     @OptIn(InternalAPI::class)
-    suspend fun addRestaurant(restaurant: RestaurantDto, languageCode: String): RestaurantRequestDto {
+    suspend fun addRestaurant(restaurant: RestaurantDto, languageCode: String): RestaurantDto {
         return client.tryToExecute(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
