@@ -23,7 +23,8 @@ import org.thechance.common.presentation.composables.scaffold.DashboardSideBar
 import org.thechance.common.presentation.login.LoginScreen
 import org.thechance.common.presentation.resources.Resources
 
-object MainContainer : BaseScreen<MainScreenModel, MainUiEffect, MainUiState, MainInteractionListener>() {
+object MainContainer :
+    BaseScreen<MainScreenModel, MainUiEffect, MainUiState, MainInteractionListener>() {
 
     private fun readResolve(): Any = MainContainer
 
@@ -46,70 +47,70 @@ object MainContainer : BaseScreen<MainScreenModel, MainUiEffect, MainUiState, Ma
         TabNavigator(OverviewTab) {
             val tabNavigator = LocalTabNavigator.current
             DashBoardScaffold(
-                appbar = {
-                    DashboardAppbar(
-                        title = tabNavigator.current.options.title,
-                        username = state.username,
-                        firstUsernameLetter = state.firstUsernameLetter,
-                        onLogOut = listener::onClickLogout,
-                        isDropMenuExpanded = state.isDropMenuExpanded,
-                        onClickDropDownMenu = listener::onClickDropDownMenu,
-                        onDismissDropDownMenu = listener::onDismissDropDownMenu
-                    )
-                },
-                sideBar = {
-                    DashboardSideBar(
-                        currentItem = tabNavigator.current.options.index.toInt(),
-                        onSwitchTheme = listener::onSwitchTheme,
-                        darkTheme = state.isDarkMode
-                    ) { sideBarUnexpandedWidthInKms, mainMenuIsExpanded, itemHeight ->
-                        TabNavigationItem(
-                            tab = OverviewTab,
-                            selectedIconResource = Resources.Drawable.overviewFilled,
-                            unSelectedIconResource = Resources.Drawable.overviewOutlined,
-                            mainMenuIsExpanded = mainMenuIsExpanded,
-                            sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
-                            modifier = Modifier.onGloballyPositioned {
-                                itemHeight(it.boundsInParent().height)
-                            }
+                    appbar = {
+                        DashboardAppbar(
+                                title = tabNavigator.current.options.title,
+                                username = state.username,
+                                firstUsernameLetter = state.firstUsernameLetter,
+                                onLogOut = listener::onClickLogout,
+                                isDropMenuExpanded = state.isDropMenuExpanded,
+                                onClickDropDownMenu = listener::onClickDropDownMenu,
+                                onDismissDropDownMenu = listener::onDismissDropDownMenu
                         )
-                        TabNavigationItem(
-                            tab = TaxisTab,
-                            selectedIconResource = Resources.Drawable.taxiFilled,
-                            unSelectedIconResource = Resources.Drawable.taxiOutlined,
-                            mainMenuIsExpanded = mainMenuIsExpanded,
-                            sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
-                            modifier = Modifier.onGloballyPositioned {
-                                itemHeight(it.boundsInParent().height)
-                            }
-                        )
-                        TabNavigationItem(
-                            tab = RestaurantsTab,
-                            selectedIconResource = Resources.Drawable.restaurantFilled,
-                            unSelectedIconResource = Resources.Drawable.restaurantOutlined,
-                            mainMenuIsExpanded = mainMenuIsExpanded,
-                            sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
-                            modifier = Modifier.onGloballyPositioned {
-                                itemHeight(it.boundsInParent().height)
-                            }
-                        )
-                        TabNavigationItem(
-                            tab = UsersTab,
-                            selectedIconResource = Resources.Drawable.usersFilled,
-                            unSelectedIconResource = Resources.Drawable.usersOutlined,
-                            mainMenuIsExpanded = mainMenuIsExpanded,
-                            sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
-                            modifier = Modifier.onGloballyPositioned {
-                                itemHeight(it.boundsInParent().height)
-                            }
-                        )
-                    }
-                },
-                content = {
-                    Box(Modifier.background(Theme.colors.surface).padding(it)) {
-                        CurrentTab()
-                    }
-                },
+                    },
+                    sideBar = {
+                        DashboardSideBar(
+                                currentItem = tabNavigator.current.options.index.toInt(),
+                                onSwitchTheme = listener::onSwitchTheme,
+                                darkTheme = state.isDarkMode
+                        ) { sideBarUnexpandedWidthInKms, mainMenuIsExpanded, itemHeight ->
+                            TabNavigationItem(
+                                    tab = OverviewTab,
+                                    selectedIconResource = Resources.Drawable.overviewFilled,
+                                    unSelectedIconResource = Resources.Drawable.overviewOutlined,
+                                    mainMenuIsExpanded = mainMenuIsExpanded,
+                                    sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
+                                    modifier = Modifier.onGloballyPositioned {
+                                        itemHeight(it.boundsInParent().height)
+                                    }
+                            )
+                            TabNavigationItem(
+                                    tab = TaxisTab,
+                                    selectedIconResource = Resources.Drawable.taxiFilled,
+                                    unSelectedIconResource = Resources.Drawable.taxiOutlined,
+                                    mainMenuIsExpanded = mainMenuIsExpanded,
+                                    sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
+                                    modifier = Modifier.onGloballyPositioned {
+                                        itemHeight(it.boundsInParent().height)
+                                    }
+                            )
+                            TabNavigationItem(
+                                    tab = RestaurantsTab,
+                                    selectedIconResource = Resources.Drawable.restaurantFilled,
+                                    unSelectedIconResource = Resources.Drawable.restaurantOutlined,
+                                    mainMenuIsExpanded = mainMenuIsExpanded,
+                                    sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
+                                    modifier = Modifier.onGloballyPositioned {
+                                        itemHeight(it.boundsInParent().height)
+                                    }
+                            )
+                            TabNavigationItem(
+                                    tab = UsersTab,
+                                    selectedIconResource = Resources.Drawable.usersFilled,
+                                    unSelectedIconResource = Resources.Drawable.usersOutlined,
+                                    mainMenuIsExpanded = mainMenuIsExpanded,
+                                    sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
+                                    modifier = Modifier.onGloballyPositioned {
+                                        itemHeight(it.boundsInParent().height)
+                                    }
+                            )
+                        }
+                    },
+                    content = {
+                        Box(Modifier.background(Theme.colors.surface).padding(it)) {
+                            CurrentTab()
+                        }
+                    },
             )
         }
     }
@@ -125,14 +126,14 @@ object MainContainer : BaseScreen<MainScreenModel, MainUiEffect, MainUiState, Ma
     ) {
         val tabNavigator = LocalTabNavigator.current
         BpSideBarItem(
-            onClick = { tabNavigator.current = tab },
-            isSelected = tabNavigator.current == tab,
-            label = tab.options.title,
-            selectedIconResource = selectedIconResource,
-            unSelectedIconResource = unSelectedIconResource,
-            mainMenuIsExpanded = mainMenuIsExpanded,
-            sideBarUnexpandedWidthInKms = sideBarUnexpandedWidth,
-            modifier = modifier
+                onClick = { tabNavigator.current = tab },
+                isSelected = tabNavigator.current == tab,
+                label = tab.options.title,
+                selectedIconResource = selectedIconResource,
+                unSelectedIconResource = unSelectedIconResource,
+                mainMenuIsExpanded = mainMenuIsExpanded,
+                sideBarUnexpandedWidthInKms = sideBarUnexpandedWidth,
+                modifier = modifier
         )
     }
 

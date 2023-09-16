@@ -49,11 +49,13 @@ class RegistrationScreen :
         listener: RegistrationInteractionListener
     ) {
         BpBrandBackgroundContainer {
+
             Row(
                 Modifier.height(56.dp).fillMaxWidth().align(Alignment.TopCenter)
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+
                 Box(
                     Modifier.size(40.dp).clip(RoundedCornerShape(Theme.radius.medium))
                         .background(color = Theme.colors.surface)
@@ -84,6 +86,8 @@ class RegistrationScreen :
                 BpTextField(
                     modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
                     text = state.password,
+                    keyboardType = KeyboardType.Password,
+                    showPasswordIcon = false,
                     onValueChange = listener::onPasswordChanged,
                     label = Resources.strings.password,
                     errorMessage = state.passwordErrorMsg,

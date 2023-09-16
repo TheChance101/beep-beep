@@ -37,8 +37,6 @@ fun NewRestaurantInfoDialog(
         state = state.newRestaurantInfoUiState,
         onCreateClicked = listener::onCreateNewRestaurantClicked,
         onLocationChange = listener::onLocationChange,
-        lat = state.newRestaurantInfoUiState.lat,
-        lng = state.newRestaurantInfoUiState.lng,
     )
 }
 
@@ -48,8 +46,6 @@ fun NewRestaurantInfoDialog(
 private fun RestaurantDialog(
     modifier: Modifier = Modifier,
     state: NewRestaurantInfoUiState,
-    lat: String,
-    lng: String,
     isVisible: Boolean,
     onCreateClicked: () -> Unit,
     onCancelClicked: () -> Unit,
@@ -149,7 +145,7 @@ private fun RestaurantDialog(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.End,
                 ) {
-                    GoogleMap(lat = lat, lng = lng) { address ->
+                    GoogleMap(lat = state.lat, lng = state.lng,) { address ->
                         onLocationChange(address)
                     }
                     Row(
@@ -158,12 +154,12 @@ private fun RestaurantDialog(
                     ) {
                         BpOutlinedButton(
                             title = Resources.Strings.cancel,
-                            onClick = { onCancelClicked() },
+                            onClick =  onCancelClicked,
                             modifier = Modifier.width(120.kms)
                         )
                         BpButton(
                             title = Resources.Strings.create,
-                            onClick = { onCreateClicked() },
+                            onClick =  onCreateClicked,
                             modifier = Modifier.width(240.kms),
                             enabled = state.buttonEnabled
                         )
