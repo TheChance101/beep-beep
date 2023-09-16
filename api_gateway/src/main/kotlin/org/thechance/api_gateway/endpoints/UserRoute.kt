@@ -5,9 +5,11 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
+import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.async
 import org.koin.ktor.ext.inject
+import org.thechance.api_gateway.data.model.LocationDto
 import org.thechance.api_gateway.data.service.IdentityService
 import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
@@ -74,6 +76,15 @@ fun Route.userRoutes() {
                 val language = extractLocalizationHeader()
                 val user = identityService.getUserById(userId, language)
                 respondWithResult(HttpStatusCode.OK, user)
+            }
+
+            put("/location") {
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val userId = tokenClaim?.get(Claim.USER_ID).toString()
+                val language = extractLocalizationHeader()
+                val location = call.receive<LocationDto>()
+                val userLocation = identityService.updateUserLocation(userId, location, language)
+                call.respond(HttpStatusCode.Created, userLocation)
             }
 
             get("/favorite") {

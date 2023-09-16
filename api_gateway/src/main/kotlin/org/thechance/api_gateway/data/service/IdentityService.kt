@@ -13,11 +13,10 @@ import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
-import org.thechance.api_gateway.data.model.PaginationResponse
-import org.thechance.api_gateway.data.model.UserDto
-import org.thechance.api_gateway.data.model.UserTokensResponse
+import org.thechance.api_gateway.data.model.*
 import org.thechance.api_gateway.data.model.authenticate.TokenConfiguration
 import org.thechance.api_gateway.data.model.authenticate.TokenType
+import org.thechance.api_gateway.data.model.restaurant.RestaurantDto
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.tryToExecute
 import org.thechance.api_gateway.util.APIs
@@ -233,5 +232,18 @@ class IdentityService(
 
         return accessToken.sign(Algorithm.HMAC256(tokenConfiguration.secret))
     }
+
+    @OptIn(InternalAPI::class)
+    suspend fun updateUserLocation(userId: String, location: LocationDto, language: String) =
+        client.tryToExecute<AddressDto>(
+            api = APIs.IDENTITY_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, language)
+            }) {
+            post("/user/$userId/address/location") {
+                body = Json.encodeToString(LocationDto.serializer(), location)
+            }
+        }
 
 }
