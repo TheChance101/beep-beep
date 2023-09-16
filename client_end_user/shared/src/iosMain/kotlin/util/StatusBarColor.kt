@@ -15,5 +15,5 @@ actual fun getNavigationBarPadding(): PaddingValues {
 
 @Composable
 actual fun getStatusBarPadding(): PaddingValues {
-    return PaddingValues(top = 30.dp)
+    return PaddingValues(top = 35.dp)
 }
