@@ -36,7 +36,7 @@ fun WrongPermissionBottomSheet(listener: PermissionInteractionListener,
                 color = Theme.colors.hover,
                 shape = RoundedCornerShape(Theme.radius.medium)
             ).padding(Theme.dimens.space8),
-            painter = painterResource(Resources.images.errorIcon),
+            painter = painterResource(Resources.images.warningIcon),
             tint = Theme.colors.primary,
             contentDescription = null
         )

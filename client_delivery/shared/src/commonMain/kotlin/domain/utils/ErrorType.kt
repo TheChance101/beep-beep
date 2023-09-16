@@ -3,9 +3,7 @@ package domain.utils
 // Those Exception is just a sample,need to refactor all these exceptions based on app requirements
 open class BpException : Exception()
 open class InternetException : BpException()
-class WifiDisabledException : InternetException()
 class NoInternetException : InternetException()
-class NetworkNotSupportedException : InternetException()
 
 class NotFoundException() : BpException()
 
@@ -18,5 +16,4 @@ class InvalidPasswordException(message: String) : PasswordException(message)
 
 open class InvalidCredentialsException(message: String) : AuthorizationException(message)
 class UserNotFoundException(message: String) : AuthorizationException(message)
-class UserAlreadyExistException(message: String) : AuthorizationException(message)
 class UnknownErrorException : BpException()

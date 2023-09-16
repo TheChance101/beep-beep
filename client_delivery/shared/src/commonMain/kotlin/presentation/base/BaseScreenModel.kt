@@ -3,6 +3,7 @@ package presentation.base
 import cafe.adriel.voyager.core.model.ScreenModel
 import domain.utils.InvalidPasswordException
 import domain.utils.InvalidUsernameException
+import domain.utils.UnAuthorizedException
 import domain.utils.UserNotFoundException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -80,7 +81,10 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
                 onError(ErrorState.InvalidPassword)
             } catch (e: UserNotFoundException) {
                 onError(ErrorState.UserNotFound)
+            } catch (e: UnAuthorizedException) {
+                onError(ErrorState.UnAuthorized)
             } catch (e: Exception) {
+                println("mohamed: $e")
                 onError(ErrorState.RequestFailed)
             }
         }

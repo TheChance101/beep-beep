@@ -24,8 +24,8 @@ class RestaurantFakeGateway : IRestaurantGateway {
         if (restaurantName.isNotEmpty()) {
             restaurants = restaurants.filter {
                 it.name.startsWith(
-                    restaurantName,
-                    true
+                        restaurantName,
+                        true
                 )
             }
         }
@@ -45,28 +45,31 @@ class RestaurantFakeGateway : IRestaurantGateway {
         val numberOfPages = ceil(restaurants.size / (numberOfRestaurantsInPage * 1.0)).toInt()
         return try {
             DataWrapperDto(
-                totalPages = numberOfPages,
-                result = restaurants.subList(startIndex, endIndex.coerceAtMost(restaurants.size)),
-                totalResult = restaurants.size
+                    totalPages = numberOfPages,
+                    result = restaurants.subList(
+                            startIndex,
+                            endIndex.coerceAtMost(restaurants.size)
+                    ),
+                    totalResult = restaurants.size
             ).toEntity()
         } catch (e: Exception) {
             DataWrapperDto(
-                totalPages = numberOfPages,
-                result = restaurants,
-                totalResult = restaurants.size
+                    totalPages = numberOfPages,
+                    result = restaurants,
+                    totalResult = restaurants.size
             ).toEntity()
         }
     }
 
     override suspend fun createRestaurant(restaurant: NewRestaurantInfo): Restaurant {
         return Restaurant(
-            id = "7",
-            name = restaurant.name,
-            ownerUsername = restaurant.ownerUsername,
-            phoneNumber = restaurant.phoneNumber,
-            workingHours = restaurant.workingHours,
-            rating = 3.0,
-            priceLevel = 1
+                id = "7",
+                name = restaurant.name,
+                ownerUsername = restaurant.ownerUsername,
+                phoneNumber = restaurant.phoneNumber,
+                workingHours = restaurant.workingHours,
+                rating = 3.0,
+                priceLevel = 1
         )
     }
 
@@ -92,83 +95,89 @@ class RestaurantFakeGateway : IRestaurantGateway {
     }
 
     private val cuisines = mutableListOf<String>(
-        "Angolan cuisine",
-        "Cameroonian cuisine",
-        "Chadian cuisine",
-        "Congolese cuisine",
-        "Centrafrican cuisine",
-        "Equatorial Guinea cuisine",
-        "Gabonese cuisine",
-        "Santomean cuisine",
-        "Burundian cuisine",
-        "Djiboutian cuisine",
-        "Eritrean cuisine",
-        "Ethiopian cuisine",
-        "Kenyan cuisine",
-        "Maasai cuisine",
-        "Rwandan cuisine",
-        "Somali cuisine",
-        "South Sudanese cuisine",
-        "Tanzanian cuisine",
-        "Zanzibari cuisine",
-        "Ugandan cuisine",
+            "Angolan cuisine",
+            "Cameroonian cuisine",
+            "Chadian cuisine",
+            "Congolese cuisine",
+            "Centrafrican cuisine",
+            "Equatorial Guinea cuisine",
+            "Gabonese cuisine",
+            "Santomean cuisine",
+            "Burundian cuisine",
+            "Djiboutian cuisine",
+            "Eritrean cuisine",
+            "Ethiopian cuisine",
+            "Kenyan cuisine",
+            "Maasai cuisine",
+            "Rwandan cuisine",
+            "Somali cuisine",
+            "South Sudanese cuisine",
+            "Tanzanian cuisine",
+            "Zanzibari cuisine",
+            "Ugandan cuisine",
     )
 
     private val restaurants = mutableListOf<RestaurantDto>(
-        RestaurantDto(
-            id = "8c90c4c6-1e69-47f3-aa59-2edcd6f0057b",
-            name = "Mujtaba Restaurant",
-            ownerUsername = "mujtaba",
-            phoneNumber = "0532465722",
-            rating = 0.4,
-            priceLevel = 1,
-            workingHours = "06:30 - 22:30"
-        ),
-        RestaurantDto(
-            id = "6e21s4f-aw32-fs3e-fe43-aw56g4yr324",
-            name = "Karrar Restaurant",
-            ownerUsername = "karrar",
-            phoneNumber = "0535232154",
-            rating = 3.5,
-            priceLevel = 1,
-            workingHours = "12:00 - 23:00"
-        ),
-        RestaurantDto(
-            id = "7a33sax-aw32-fs3e-12df-42ad6x352zse",
-            name = "Saif Restaurant",
-            ownerUsername = "saif",
-            phoneNumber = "0554627893",
-            rating = 4.0,
-            priceLevel = 3,
-            workingHours = "09:00 - 23:00"
-        ),
-        RestaurantDto(
-            id = "7y1z47c-s2df-76de-dwe2-42ad6x352zse",
-            name = "Nada Restaurant",
-            ownerUsername = "nada",
-            phoneNumber = "0524242766",
-            rating = 3.4,
-            priceLevel = 2,
-            workingHours = "01:00 - 23:00"
-        ),
-        RestaurantDto(
-            id = "3e1f5d4a-8317-4f13-aa89-2c094652e6a3",
-            name = "Asia Restaurant",
-            ownerUsername = "asia",
-            phoneNumber = "0528242165",
-            rating = 2.9,
-            priceLevel = 1,
-            workingHours = "09:30 - 21:30"
-        ),
-        RestaurantDto(
-            id = "7a1bfe39-4b2c-4f76-bde0-82da2eaf9e99",
-            name = "Kamel Restaurant",
-            ownerUsername = "kamel",
-            phoneNumber = "0528242235",
-            rating = 4.9,
-            priceLevel = 3,
-            workingHours = "06:30 - 22:30"
-        ),
+            RestaurantDto(
+                    id = "8c90c4c6-1e69-47f3-aa59-2edcd6f0057b",
+                    name = "Mujtaba Restaurant",
+                    username = "mujtaba",
+                    phone = "0532465722",
+                    rating = 0.4,
+                    priceLevel = 1,
+                    openingTime = "06:30",
+                    closingTime = "22:30",
+            ),
+            RestaurantDto(
+                    id = "6e21s4f-aw32-fs3e-fe43-aw56g4yr324",
+                    name = "Karrar Restaurant",
+                    username = "karrar",
+                    phone = "0535232154",
+                    rating = 3.5,
+                    priceLevel = 1,
+                    openingTime = "12:00",
+                    closingTime = "23:00",
+            ),
+            RestaurantDto(
+                    id = "7a33sax-aw32-fs3e-12df-42ad6x352zse",
+                    name = "Saif Restaurant",
+                    username = "saif",
+                    phone = "0554627893",
+                    rating = 4.0,
+                    priceLevel = 3,
+                    openingTime = "12:00",
+                    closingTime = "23:00",
+            ),
+            RestaurantDto(
+                    id = "7y1z47c-s2df-76de-dwe2-42ad6x352zse",
+                    name = "Nada Restaurant",
+                    username = "nada",
+                    phone = "0524242766",
+                    rating = 3.4,
+                    priceLevel = 2,
+                    openingTime = "12:00",
+                    closingTime = "23:00",
+            ),
+            RestaurantDto(
+                    id = "3e1f5d4a-8317-4f13-aa89-2c094652e6a3",
+                    name = "Asia Restaurant",
+                    username = "asia",
+                    phone = "0528242165",
+                    rating = 2.9,
+                    priceLevel = 1,
+                    openingTime = "12:00",
+                    closingTime = "23:00",
+            ),
+            RestaurantDto(
+                    id = "7a1bfe39-4b2c-4f76-bde0-82da2eaf9e99",
+                    name = "Kamel Restaurant",
+                    username = "kamel",
+                    phone = "0528242235",
+                    rating = 4.9,
+                    priceLevel = 3,
+                    openingTime = "12:00",
+                    closingTime = "23:00",
+            ),
     )
 
 }

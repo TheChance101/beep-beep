@@ -30,6 +30,8 @@ data class DrawableResources(
     val wishDishLow: String = "wish_dish_low.png",
     val wishDishMedium: String = "wish_dish_medium.png",
     val wishDishHigh: String = "wish_dish_high.png",
+    val quickRide: String = "quick_ride.png",
+    val slowRide: String = "slow_ride.png",
 )
 
 val BpDrawableDarkResources = DrawableResources(

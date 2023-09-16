@@ -8,6 +8,7 @@ fun UserManagement.toDto() = UserManagementDto(
     fullName,
     username,
     email,
+    country,
     permission
 )
 
