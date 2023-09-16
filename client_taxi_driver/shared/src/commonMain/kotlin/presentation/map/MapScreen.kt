@@ -71,20 +71,16 @@ class MapScreen :
                 }
             }
 
-            AnimatedVisibility(
+            MapCardAnimation(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 visible = state.isLoading,
-                enter = slideInVertically { it } + fadeIn(),
-                exit = slideOutVertically { it } + fadeOut()
             ) {
                 FindingRideCard()
             }
 
-            AnimatedVisibility(
+            MapCardAnimation(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 visible = state.isNewOrderFound,
-                enter = slideInVertically { it } + fadeIn(),
-                exit = slideOutVertically { it } + fadeOut()
             ) {
                 NewOrderCard(
                     modifier = Modifier.align(
@@ -95,11 +91,9 @@ class MapScreen :
                 )
             }
 
-            AnimatedVisibility(
+            MapCardAnimation(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 visible = state.isAcceptedOrder,
-                enter = slideInVertically { it } + fadeIn(),
-                exit = slideOutVertically { it } + fadeOut()
             ) {
                 OrderCard(
                     modifier = Modifier.align(
@@ -121,6 +115,23 @@ class MapScreen :
     @Composable
     override fun Content() {
         initScreen(getScreenModel())
+    }
+
+
+    @Composable
+    private fun MapCardAnimation(
+        modifier: Modifier = Modifier,
+        visible: Boolean,
+        content: @Composable () -> Unit,
+    ) {
+        AnimatedVisibility(
+            modifier = modifier,
+            visible = visible,
+            enter = slideInVertically { it } + fadeIn(),
+            exit = slideOutVertically { it } + fadeOut()
+        ) {
+            content()
+        }
     }
 
 
