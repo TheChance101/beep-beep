@@ -21,12 +21,12 @@ data class RestaurantDto(
     val ownerId: String? = null,
     @SerialName("phone")
     val phone: String? = null,
-    @SerialName("rating")
-    val rating: Double? = null,
+    @SerialName("rate")
+    val rate: Double? = null,
     @SerialName("price_level")
-    val priceLevel: Int? = null,
+    val priceLevel: String? = null,
     @SerialName("openingTime")
-    val workingHours: String? = null,
+    val openingTime: String? = null,
     @SerialName("closingTime")
     val closingTime: String? = null,
     @SerialName("address")
@@ -38,9 +38,9 @@ data class RestaurantDto(
 @Serializable
 data class LocationDto(
     @SerializedName("lat")
-    val lat: Double,
+    val latitude: Double,
     @SerializedName("lng")
-    val lng: Double,
+    val longitude: Double,
 )
 
 

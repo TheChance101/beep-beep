@@ -118,7 +118,7 @@ private fun RestaurantDialog(
                     ) {
                         BpTextField(
                             onValueChange = onWorkingStartHourChange,
-                            text = state.startTime,
+                            text = state.openingTime,
                             modifier = Modifier.weight(1f),
                             label = Resources.Strings.workingHours,
                             hint = Resources.Strings.workStartHourHint,
@@ -127,7 +127,7 @@ private fun RestaurantDialog(
                         )
                         BpTextField(
                             onValueChange = onWorkingEndHourChange,
-                            text = state.endTime,
+                            text = state.closingTime,
                             modifier = Modifier.weight(1f),
                             label = "",
                             hint = Resources.Strings.workEndHourHint,

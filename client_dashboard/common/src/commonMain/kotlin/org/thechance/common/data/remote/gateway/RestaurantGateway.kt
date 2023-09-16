@@ -57,7 +57,7 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
         numberOfRestaurantsInPage: Int,
         restaurantName: String,
         rating: Double?,
-        priceLevel: Int?
+        priceLevel: String?
     ): DataWrapper<Restaurant> {
 
         return tryToExecute<ServerResponse<RestaurantResponse>>(client) {

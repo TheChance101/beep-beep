@@ -81,7 +81,7 @@ class RestaurantScreenModel(
         updateState { it.copy(error = error, isLoading = false) }
     }
 
-    override fun onSaveFilterRestaurantsClicked(rating: Double, priceLevel: Int) {
+    override fun onSaveFilterRestaurantsClicked(rating: Double, priceLevel: String) {
         updateState {
             it.copy(
                 restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
@@ -142,7 +142,7 @@ class RestaurantScreenModel(
         updateState {
             it.copy(
                 restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
-                    filterPriceLevel = priceLevel
+                    filterPriceLevel = priceLevel.toString()
                 )
             )
         }
@@ -225,7 +225,7 @@ class RestaurantScreenModel(
         updateState {
             it.copy(
                 newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
-                    startTime = hour,
+                    openingTime = hour,
                     startTimeError = ErrorWrapper("write in valid format 00:00",
                         !iValidateRestaurantUseCase.validateStartTime(hour)),
                 )
@@ -237,7 +237,7 @@ class RestaurantScreenModel(
         updateState {
             it.copy(
                 newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
-                    endTime = hour,
+                    closingTime = hour,
                     endTimeError = ErrorWrapper("write in valid format 00:00",
                         !iValidateRestaurantUseCase.validateEndTime(hour)),
                 )
@@ -283,7 +283,7 @@ class RestaurantScreenModel(
             it.copy(
                 restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
                     filterRating = 0.0,
-                    filterPriceLevel = 1,
+                    filterPriceLevel = "",
                     isFiltered = false
                 )
             )
