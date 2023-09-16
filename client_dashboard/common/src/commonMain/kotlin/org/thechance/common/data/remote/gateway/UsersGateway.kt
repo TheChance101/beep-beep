@@ -62,4 +62,8 @@ class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGatewa
         }.value ?: false
     }
 
+    override suspend fun getLastRegisteredUsers(): DataWrapper<User> {
+        TODO("Not yet implemented")
+    }
+
 }

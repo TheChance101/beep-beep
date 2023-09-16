@@ -66,6 +66,10 @@ class UsersFakeGateway : IUsersGateway {
         return true
     }
 
+    override suspend fun getLastRegisteredUsers(): DataWrapper<User> {
+        TODO("Not yet implemented")
+    }
+
     private val fakeUsers = listOf(
         UserDto(
             id = "c4425a0e-9f0a-4df1-bcc1-6dd96322a990",
