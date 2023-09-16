@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -67,9 +68,10 @@ fun NewOrderRequest(state: MapScreenUiState, listener: MapScreenInteractionsList
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Image(
+                    Icon(
                         painter = painterResource(Resources.images.iconMapPoint),
                         contentDescription = null,
+                        tint = Theme.colors.contentTertiary
                     )
                     Text(
                         text = state.restaurantLocation,
@@ -146,9 +148,10 @@ private fun DistanceInfo(text: String, icon: Painter) {
             )
             .padding(vertical = 8.dp, horizontal = 44.dp)
     ) {
-        Image(
+        Icon(
             painter = icon,
             contentDescription = null,
+            tint = Theme.colors.contentTertiary
         )
         Text(
             modifier = Modifier.padding(vertical = 8.dp, horizontal = 12.dp),
