@@ -1,12 +1,15 @@
 package presentation.map
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,7 +35,6 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpAppBar
 import com.beepbeep.designSystem.ui.composable.BpButton
-import com.beepbeep.designSystem.ui.composable.modifier.noRippleEffect
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -51,7 +53,7 @@ class MapScreen :
             MapWebView(url = "File:///android_asset/bing_map/map/index.html")
             BpAppBar(
                 isBackIconVisible = false,
-                title = "${Resources.strings.mapScreenAppBarTitle}${state.userName}"
+                title = "${Resources.strings.mapScreenAppBarTitle}${state.userName}!"
             ) {
                 Box(
                     modifier = Modifier
@@ -61,7 +63,7 @@ class MapScreen :
                         .background(
                             color = Theme.colors.hover,
                             shape = RoundedCornerShape(size = 8.dp)
-                        ).noRippleEffect(onClick = listener::onClickCloseIcon),
+                        ).clickable(onClick = listener::onClickCloseIcon),
                 ) {
                     Icon(
                         modifier = Modifier.align(Alignment.Center),
@@ -71,20 +73,16 @@ class MapScreen :
                     )
                 }
             }
-            AnimatedVisibility(
+            MapCardAnimation(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 visible = state.isLoading,
-                enter = slideInVertically { it } + fadeIn(),
-                exit = slideOutVertically { it } + fadeOut()
             ) {
                 FindingRideCard()
             }
 
-            AnimatedVisibility(
+            MapCardAnimation(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 visible = state.isNewOrderFound,
-                enter = slideInVertically { it } + fadeIn(),
-                exit = slideOutVertically { it } + fadeOut()
             ) {
                 NewOrderCard(
                     modifier = Modifier.align(
@@ -95,11 +93,9 @@ class MapScreen :
                 )
             }
 
-            AnimatedVisibility(
+            MapCardAnimation(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 visible = state.isAcceptedOrder,
-                enter = slideInVertically { it } + fadeIn(),
-                exit = slideOutVertically { it } + fadeOut()
             ) {
                 OrderCard(
                     modifier = Modifier.align(
@@ -122,6 +118,25 @@ class MapScreen :
     @Composable
     override fun Content() {
         initScreen(getScreenModel())
+    }
+
+
+    @Composable
+    private fun MapCardAnimation(
+        modifier: Modifier = Modifier,
+        visible: Boolean,
+        enter: EnterTransition = slideInVertically { it } + fadeIn(),
+        exit: ExitTransition = slideOutVertically { it } + fadeOut(),
+        content: @Composable () -> Unit,
+    ) {
+        AnimatedVisibility(
+            modifier = modifier,
+            visible = visible,
+            enter = enter,
+            exit = exit,
+        ) {
+            content()
+        }
     }
 
 
@@ -204,7 +219,7 @@ class MapScreen :
 
                 Text(
                     modifier = Modifier.padding(start = 4.dp),
-                    text = state.dropOffAddress,
+                    text = state.dropOffAddress.name,
                     color = Theme.colors.contentSecondary,
                     style = Theme.typography.body,
                 )
@@ -255,7 +270,7 @@ class MapScreen :
                         style = Theme.typography.caption,
                     )
                     Text(
-                        text = state.pickUpAddress,
+                        text = state.pickUpAddress.name,
                         color = Theme.colors.contentPrimary,
                         style = Theme.typography.body,
                     )
@@ -275,7 +290,7 @@ class MapScreen :
                         style = Theme.typography.caption,
                     )
                     Text(
-                        text = state.dropOffAddress,
+                        text = state.dropOffAddress.name,
                         color = Theme.colors.contentPrimary,
                         style = Theme.typography.body,
                     )
