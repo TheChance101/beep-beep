@@ -1,5 +1,6 @@
 package presentation.map.composable
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BpButton
@@ -25,11 +26,13 @@ import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import presentation.map.MapScreenInteractionsListener
+import presentation.map.MapScreenUiState
 import resources.Resources
 
 @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun NewOrderRequest() {
+fun NewOrderRequest(state: MapScreenUiState, listener: MapScreenInteractionsListener) {
     MapCard {
         Text(
             text = Resources.strings.newOrder,
@@ -42,10 +45,12 @@ fun NewOrderRequest() {
             modifier = Modifier.padding(bottom = 28.dp)
         ) {
             Image(
-                modifier = Modifier.size(48.dp)
-                    .clip(shape = RoundedCornerShape(4.dp))
-                    .border(width = 1.dp, color = Theme.colors.divider, shape = RectangleShape),
-                painter = painterResource(Resources.images.test),
+                modifier = Modifier.size(48.dp).clip(shape = RoundedCornerShape(4.dp))
+                    .border(
+                        border = BorderStroke(width = 1.dp, color = Theme.colors.divider),
+                        shape = RoundedCornerShape(4.dp)
+                    ),
+                painter = painterResource(Resources.images.test),//just for now,then will be from state
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )
@@ -54,7 +59,7 @@ fun NewOrderRequest() {
                 modifier = Modifier.padding(4.dp)
             ) {
                 Text(
-                    text = "Restaurant Name",
+                    text = state.restaurantName,
                     color = Theme.colors.contentPrimary,
                     style = Theme.typography.titleLarge,
                 )
@@ -67,12 +72,11 @@ fun NewOrderRequest() {
                         contentDescription = null,
                     )
                     Text(
-                        text = "Restaurant Location",
+                        text = state.restaurantLocation,
                         color = Theme.colors.contentSecondary,
                         style = Theme.typography.caption,
                     )
                 }
-
             }
         }
         Divider(
@@ -94,12 +98,30 @@ fun NewOrderRequest() {
                     color = Theme.colors.contentTertiary
                 )
                 Text(
-                    text = "Alex,Egypt",
+                    text = state.orderLocation,
                     style = Theme.typography.body,
                     color = Theme.colors.contentPrimary
                 )
             }
         }
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(
+                12.dp,
+                alignment = Alignment.CenterHorizontally
+            ),
+            modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
+        ) {
+            DistanceInfo(
+                text = state.orderDistance,
+                icon = painterResource(Resources.images.iconPointOnMap)
+            )
+            DistanceInfo(
+                text = state.orderDuration,
+                icon = painterResource(Resources.images.iconClock)
+            )
+        }
+
         BpButton(
             onClick = {},
             title = Resources.strings.accept,
@@ -109,6 +131,30 @@ fun NewOrderRequest() {
             onClick = {},
             title = Resources.strings.reject,
             modifier = Modifier.fillMaxWidth().height(56.dp).padding(top = 8.dp, bottom = 8.dp),
+        )
+    }
+}
+
+@Composable
+private fun DistanceInfo(text: String, icon: Painter) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .border(
+                border = BorderStroke(width = 1.dp, color = Theme.colors.divider),
+                shape = RoundedCornerShape(8.dp)
+            )
+            .padding(vertical = 8.dp, horizontal = 44.dp)
+    ) {
+        Image(
+            painter = icon,
+            contentDescription = null,
+        )
+        Text(
+            modifier = Modifier.padding(vertical = 8.dp, horizontal = 12.dp),
+            text = text,
+            color = Theme.colors.contentSecondary,
+            style = Theme.typography.body,
         )
     }
 }

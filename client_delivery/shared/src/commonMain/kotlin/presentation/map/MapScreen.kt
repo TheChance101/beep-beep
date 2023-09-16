@@ -26,7 +26,7 @@ class MapScreen:BaseScreen<MapScreenModel,MapScreenUiState,MapScreenUiEffect,Map
                 enter = slideInVertically { it } + fadeIn(),
                 exit = slideOutVertically { it } + fadeOut()
             ) {
-                NewOrderRequest()
+                NewOrderRequest(state, listener)
             }
         }
     }
