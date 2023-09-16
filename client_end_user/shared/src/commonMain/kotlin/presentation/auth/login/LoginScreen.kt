@@ -74,6 +74,7 @@ class LoginScreen :
                     onValueChange = listener::onPasswordChanged,
                     label = Resources.strings.password,
                     keyboardType = KeyboardType.Password,
+                    showPasswordIcon = true,
                     errorMessage = state.passwordErrorMsg,
                     isError = state.isPasswordError,
                 )
@@ -109,7 +110,7 @@ class LoginScreen :
                         color = Theme.colors.contentTertiary
                     )
                     SimpleTextButton(
-                        modifier = Modifier.padding(vertical = 2.dp, horizontal = 4.dp),
+                        modifier = Modifier.padding(vertical = 2.dp),
                         text = Resources.strings.signUpNow,
                         onClick = listener::onClickSignUp,
                         border = BorderStroke(width = 0.dp, color = Color.Transparent),
