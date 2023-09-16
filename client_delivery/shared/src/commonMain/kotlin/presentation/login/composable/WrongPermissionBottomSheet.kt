@@ -35,7 +35,7 @@ fun WrongPermissionBottomSheet(listener: PermissionInteractionListener,
             modifier = Modifier.background(
                 color = Theme.colors.hover,
                 shape = RoundedCornerShape(Theme.radius.medium)
-            ).padding(Theme.dimens.space8),
+            ).padding(8.dp),
             painter = painterResource(Resources.images.warningIcon),
             tint = Theme.colors.primary,
             contentDescription = null
@@ -45,14 +45,14 @@ fun WrongPermissionBottomSheet(listener: PermissionInteractionListener,
             style = Theme.typography.titleLarge,
             color = Theme.colors.contentPrimary,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(bottom = 16.dp, start = 16.dp, end = 16.dp)
+            modifier = Modifier.padding(16.dp)
         )
         Text(
             text = Resources.strings.wrongPermissionMessage,
             style = Theme.typography.body,
             color = Theme.colors.contentSecondary,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(bottom = 24.dp)
+            modifier = Modifier.padding(bottom = 24.dp, start = 32.dp,end=32.dp)
         )
         BpButton(
             onClick = listener::onRequestPermissionClicked,
