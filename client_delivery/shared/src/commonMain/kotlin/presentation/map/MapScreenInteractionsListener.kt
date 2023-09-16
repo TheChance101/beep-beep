@@ -1,7 +1,9 @@
 package presentation.map
 
+import presentation.base.BaseInteractionListener
 
-interface MapScreenInteractionsListener {
+
+interface MapScreenInteractionsListener : BaseInteractionListener {
     fun onAcceptClicked()
     fun onRejectClicked()
 }
