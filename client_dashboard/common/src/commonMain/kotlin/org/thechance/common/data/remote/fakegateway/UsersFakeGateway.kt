@@ -66,8 +66,12 @@ class UsersFakeGateway : IUsersGateway {
         return true
     }
 
-    override suspend fun getLastRegisteredUsers(): DataWrapper<User> {
-        TODO("Not yet implemented")
+    override suspend fun getLastRegisteredUsers(limit : Int): DataWrapper<User> {
+        return DataWrapper(
+            totalPages = 0,
+            numberOfResult = limit,
+            result = fakeUsers.subList(0, limit)
+        )
     }
 
     private val fakeUsers = listOf(

@@ -6,6 +6,7 @@ import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.ServerResponse
+import org.thechance.common.data.remote.model.UserDto
 import org.thechance.common.data.remote.model.UserResponse
 import org.thechance.common.data.remote.model.UserTokensRemoteDto
 import org.thechance.common.domain.entity.DataWrapper
@@ -24,6 +25,7 @@ class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGatewa
         page: Int,
         numberOfUsers: Int
     ): DataWrapper<User> {
+        getLastRegisteredUsers(4)
         val result = tryToExecute<ServerResponse<UserResponse>>(client) {
             get(urlString = "/users") {
                 parameter("page", page)
@@ -62,8 +64,18 @@ class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGatewa
         }.value ?: false
     }
 
-    override suspend fun getLastRegisteredUsers(): DataWrapper<User> {
-        TODO("Not yet implemented")
+    override suspend fun getLastRegisteredUsers(limit: Int): DataWrapper<User> {
+        return tryToExecute<ServerResponse<List<UserDto>>>(client) {
+            get(urlString = "/user/last-register?limit=4") {
+                parameter("limit", limit)
+            }
+        }.value?.let {
+            DataWrapper(
+                totalPages = 0,
+                numberOfResult = limit,
+                result = it.toEntity()
+            )
+        } ?: throw UnknownError()
     }
 
 }

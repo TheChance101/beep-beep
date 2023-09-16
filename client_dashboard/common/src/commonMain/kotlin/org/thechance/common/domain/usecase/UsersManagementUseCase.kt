@@ -19,7 +19,7 @@ interface IUsersManagementUseCase {
 
     suspend fun deleteUser(userId: String): Boolean
 
-    suspend fun getLastRegisteredUsers(): DataWrapper<User>
+    suspend fun getLastRegisteredUsers(limit: Int = 4): DataWrapper<User>
 
 }
 
@@ -41,8 +41,8 @@ class UsersManagementUseCase(
         return userGateway.deleteUser(id)
     }
 
-    override suspend fun getLastRegisteredUsers(): DataWrapper<User> {
-        return userGateway.getLastRegisteredUsers()
+    override suspend fun getLastRegisteredUsers(limit: Int): DataWrapper<User> {
+        return userGateway.getLastRegisteredUsers(limit)
     }
 
     override suspend fun getUserInfo(): String {
