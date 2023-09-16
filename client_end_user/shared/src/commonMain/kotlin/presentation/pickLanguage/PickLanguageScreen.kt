@@ -22,6 +22,7 @@ import presentation.base.BaseScreen
 import presentation.composable.LanguageCard
 import presentation.composable.HeadFirstCard
 import resources.Resources
+import util.setAppLanguage
 
 
 object PickLanguageScreen :
@@ -65,7 +66,10 @@ object PickLanguageScreen :
                     items(state.languages.size) { index ->
                         LanguageCard(
                             state = state.languages[index],
-                            onClick = { listener.onLanguageSelected(state.languages[index]) }
+                            onClick = {
+                                setAppLanguage(state.languages[index].code)
+                                listener.onLanguageSelected(state.languages[index])
+                            }
                         )
                     }
                 }

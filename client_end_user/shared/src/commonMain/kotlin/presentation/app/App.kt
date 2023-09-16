@@ -15,13 +15,12 @@ import resources.BeepBeepTheme
 
 @Composable
 fun App() {
-
     val appScreenModel = AppScreenModel(getKoin().get())
-    var isFirstTime by remember { mutableStateOf(false) }
+    var isFirstTime by remember { mutableStateOf(true) }
     var userLanguageCode by remember { mutableStateOf("en") }
 
     runBlocking {
-        isFirstTime = appScreenModel.getInitScreen()
+//        isFirstTime = appScreenModel.getInitScreen()
         userLanguageCode = appScreenModel.getUserLanguageCode()
     }
 
@@ -35,7 +34,6 @@ fun App() {
                 SlideTransition(it)
             }
         }
-
     }
 }
 

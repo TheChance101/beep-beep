@@ -15,6 +15,7 @@ class PreferredScreenModel(private val userPreference: ManageUserUseCase) :
         savePriceLevel(priceLevel)
     }
 
+
     private fun savePriceLevel(priceLevel: String) {
         tryToExecute(
             { userPreference.savePriceLevel(priceLevel) },
