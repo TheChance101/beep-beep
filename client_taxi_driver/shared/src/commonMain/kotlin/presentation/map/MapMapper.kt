@@ -4,6 +4,6 @@ import domain.entity.Order
 
 fun Order.toUiState() = OrderInfoUiState(
     passengerName = passengerName,
-    dropOffAddress = dropOffAddress,
-    pickUpAddress = pickUpAddress,
+    dropOffAddress = LocationInfoUiState(name = dropOffAddress),
+    pickUpAddress = LocationInfoUiState(name = pickUpAddress),
 )
