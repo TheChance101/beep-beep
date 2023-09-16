@@ -1,7 +1,6 @@
 package org.thechance.common.presentation.restaurant
 
 import org.thechance.common.presentation.composables.table.Header
-import org.thechance.common.presentation.util.ErrorState
 
 
 data class RestaurantUiState(
@@ -74,4 +73,5 @@ data class RestaurantAddCuisineDialogUiState(
     val isVisible: Boolean = false,
     val cuisineName: String = "",
     val cuisines: List<String> = emptyList(),
+    val cuisineNameError: ErrorWrapper = ErrorWrapper(),
 )
