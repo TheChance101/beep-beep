@@ -26,4 +26,11 @@ data class StringResources(
     val whyBeepBeep: String = "Why beep beep?",
     val submit: String = "Submit",
     //endregion
+    //region Map
+    val newOrder: String = "NewOrder",
+    val accept: String = "Accept",
+    val reject: String = "reject",
+    val deliverAt: String = "Deliver At",
+
+    //endregion
 )
