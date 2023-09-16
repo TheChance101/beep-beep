@@ -5,8 +5,8 @@ import org.thechance.common.presentation.util.ErrorState
 
 
 data class RestaurantUiState(
-    val isLoading: Boolean = false,
-    val error: ErrorState = ErrorState.UnKnownError,
+    val isLoading: Boolean = true,
+    val isNoInternetConnection: Boolean = false,
     val isNewRestaurantInfoDialogVisible: Boolean = false,
     val newRestaurantInfoUiState: NewRestaurantInfoUiState = NewRestaurantInfoUiState(),
     val restaurantAddCuisineDialogUiState: RestaurantAddCuisineDialogUiState = RestaurantAddCuisineDialogUiState(),

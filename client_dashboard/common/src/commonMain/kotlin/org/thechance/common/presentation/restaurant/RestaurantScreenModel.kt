@@ -142,7 +142,7 @@ class RestaurantScreenModel(
         updateState {
             it.copy(
                 restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
-                    filterPriceLevel = priceLevel.toString()
+                    filterPriceLevel = priceLevel
                 )
             )
         }
@@ -182,7 +182,23 @@ class RestaurantScreenModel(
     }
 
     override fun onCancelCreateRestaurantClicked() {
-        updateState { it.copy(isNewRestaurantInfoDialogVisible = false, newRestaurantInfoUiState = NewRestaurantInfoUiState()) }
+        clearAddRestaurantInfo()
+        clearAddRestaurantErrorInfo()
+        updateState { it.copy(isNewRestaurantInfoDialogVisible = false) }
+    }
+
+    private fun clearAddRestaurantInfo() {
+        updateState {
+            it.copy(
+                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
+                    name = "",
+                    ownerUsername = "",
+                    phoneNumber = "",
+                    startTime = "",
+                    endTime = "",
+                ),
+            )
+        }
     }
 
     override fun onRestaurantNameChange(name: String) {
@@ -190,8 +206,6 @@ class RestaurantScreenModel(
             it.copy(
                 newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
                     name = name,
-                    nameError = ErrorWrapper("Letters only, and Longer than 2.",
-                        !iValidateRestaurantUseCase.validateRestaurantName(name)),
                 )
             )
         }
@@ -200,29 +214,20 @@ class RestaurantScreenModel(
     override fun onOwnerUserNameChange(name: String) {
         updateState {
             it.copy(
-                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
-                    ownerUsername = name,
-                    userNameError = ErrorWrapper("Letters only, and Longer than 5.",
-                        !iValidateRestaurantUseCase.validateUserName(name)),
-                )
+                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(ownerUsername = name,)
             )
         }
     }
 
     override fun onPhoneNumberChange(number: String) {
         updateState {
-            it.copy(
-                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
-                    phoneNumber = number,
-                    phoneNumberError = ErrorWrapper("UnValid number format!",
-                        !iValidateRestaurantUseCase.validateNumber(number)),
-                )
-            )
+            it.copy(newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(phoneNumber = number))
         }
     }
 
     override fun onWorkingStartHourChange(hour: String) {
         updateState {
+            it.copy(newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(startTime = hour))
             it.copy(
                 newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
                     openingTime = hour,
@@ -235,13 +240,7 @@ class RestaurantScreenModel(
 
     override fun onWorkingEndHourChange(hour: String) {
         updateState {
-            it.copy(
-                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
-                    closingTime = hour,
-                    endTimeError = ErrorWrapper("write in valid format 00:00",
-                        !iValidateRestaurantUseCase.validateEndTime(hour)),
-                )
-            )
+            it.copy(newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(endTime = hour))
         }
     }
 
@@ -250,8 +249,6 @@ class RestaurantScreenModel(
             it.copy(
                 newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
                     location = location,
-                    locationError = ErrorWrapper("Location can't be empty!",
-                        !iValidateRestaurantUseCase.validateLocation(location)),
                     buttonEnabled = iValidateRestaurantUseCase.validateLocation(location)
                 )
             )
@@ -283,7 +280,7 @@ class RestaurantScreenModel(
             it.copy(
                 restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
                     filterRating = 0.0,
-                    filterPriceLevel = "",
+                    filterPriceLevel = 1,
                     isFiltered = false
                 )
             )
