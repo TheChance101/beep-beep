@@ -278,7 +278,7 @@ class RestaurantScreen :
                 onClickSave = {
                     listener.onSaveFilterRestaurantsClicked(
                         state.restaurantFilterDropdownMenuUiState.filterRating,
-                        state.restaurantFilterDropdownMenuUiState.filterPriceLevel
+                        state.restaurantFilterDropdownMenuUiState.filterPriceLevel.toString()
                     )
                 },
                 expanded = state.restaurantFilterDropdownMenuUiState.isFilterDropdownMenuExpanded,
@@ -298,7 +298,7 @@ class RestaurantScreen :
         onClickSave: () -> Unit,
         expanded: Boolean,
         rating: Double,
-        priceLevel: String,
+        priceLevel: Int,
         onFilterClearAllClicked: () -> Unit,
     ) {
         BpDropdownMenu(
@@ -341,7 +341,7 @@ class RestaurantScreen :
                         modifier = Modifier.padding(start = 24.kms, top = 32.kms)
                     )
                     EditablePriceBar(
-                        priceLevel = priceLevel.toInt(),
+                        priceLevel = priceLevel,
                         count = 3,
                         icon = painterResource(Resources.Drawable.dollarSign),
                         enabledIconsColor = Theme.colors.success,

@@ -31,8 +31,8 @@ fun NewRestaurantInfoUiState.toEntity() = NewRestaurantInfo(
 
 fun NewRestaurantInfo.toDto(): RestaurantCreateDto {
     val result = RestaurantCreateDto(
-        ownerId = "64f363af5ddbc15bfd1efcf4",
         name = name,
+        username = ownerUsername,
         openingTime = openingTime,
         closingTime = closingTime,
         phone = phoneNumber,

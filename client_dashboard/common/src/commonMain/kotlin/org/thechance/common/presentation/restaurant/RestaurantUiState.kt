@@ -67,7 +67,7 @@ data class ErrorWrapper(
 data class RestaurantFilterDropdownMenuUiState(
     val isFilterDropdownMenuExpanded: Boolean = false,
     val filterRating: Double = 0.0,
-    val filterPriceLevel: String = "",
+    val filterPriceLevel: Int = 1,
     val isFiltered: Boolean = false,
 )
 
