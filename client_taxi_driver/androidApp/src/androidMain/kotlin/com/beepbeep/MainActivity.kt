@@ -1,82 +1,16 @@
 package com.beepbeep
 
-import android.annotation.SuppressLint
+import MainView
 import android.os.Bundle
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.viewinterop.AndroidView
-import com.google.accompanist.web.rememberWebViewState
-import kotlinx.coroutines.delay
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            AccompanishWebClient(
-                url = "File:///android_asset/covid-19/map/index.html",
-            )
-        }
-    }
-
-    @SuppressLint("SetJavaScriptEnabled")
-    @Composable
-    fun AccompanishWebClient(
-        modifier: Modifier = Modifier,
-
-        url: String,
-    ) {
-        var webView: WebView? by remember { mutableStateOf(null) }
-        var latitude2 by remember { mutableDoubleStateOf(40.6740229) }
-
-
-            LaunchedEffect(Unit) {while (true) {
-                // Update latitude and longitude values here
-                latitude2 += .00002
-                if (latitude2 >= 180)
-                    latitude2 = 0.0
-
-                // Send updated values to the JavaScript function
-
-                val jsCode = "createInfiniteLoopFunction($latitude2)()"
-
-                webView?.evaluateJavascript(jsCode, null)
-                // Delay for a specified interval before the next update (e.g., 5 seconds)
-
-                delay(1000)
-
-            }
-        }
-        val webViewState = rememberWebViewState(url = url)
-
-        AndroidView(
-            modifier = modifier,
-            factory = { context ->
-                WebView(context).apply {
-                    webView = this
-                    settings.javaScriptEnabled = true
-                    webViewClient = object : WebViewClient() {
-                        override fun onPageFinished(view: WebView?, url: String?) {
-                            super.onPageFinished(view, url)
-                            webView?.evaluateJavascript("GetMap()", null)
-//                            webView?.evaluateJavascript("getPin()", null)
-                        }
-                    }
-                }
-            }
-        ) {
-            it.loadUrl(url)
+            MainView()
         }
     }
 }

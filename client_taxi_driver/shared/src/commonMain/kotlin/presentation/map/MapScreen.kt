@@ -48,6 +48,7 @@ class MapScreen :
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
+            MapWebView(url = "File:///android_asset/bing_map/map/index.html")
             BpAppBar(
                 isBackIconVisible = false,
                 title = "${Resources.strings.mapScreenAppBarTitle}${state.userName}"
@@ -70,7 +71,6 @@ class MapScreen :
                     )
                 }
             }
-
             AnimatedVisibility(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 visible = state.isLoading,
@@ -109,6 +109,7 @@ class MapScreen :
                     listener = listener,
                 )
             }
+
         }
     }
 
