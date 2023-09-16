@@ -4,6 +4,7 @@ import presentation.base.ErrorState
 
 data class MapScreenUiState(
     val isLoading: Boolean = true,
+    val username: String = "Youssef",
     val errorState: ErrorState? = null,
     val restaurantName: String = "Restaurant Name",
     val restaurantLocation: String = "Restaurant Location",

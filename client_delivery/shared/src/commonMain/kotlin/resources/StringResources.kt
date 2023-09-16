@@ -33,5 +33,6 @@ data class StringResources(
     val accept: String = "Accept",
     val reject: String = "reject",
     val deliverAt: String = "Deliver At",
+    val welcome: String = "Welcome, "
     //endregion
 )

@@ -24,6 +24,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
+import presentation.map.MapScreen
 import resources.Resources
 
 class MainScreen :
@@ -35,9 +36,7 @@ class MainScreen :
 
     override fun onEffect(effect: MainScreenUiEffect, navigator: Navigator) {
         when (effect) {
-            MainScreenUiEffect.Start -> {
-                // todo navigate to map screen
-            }
+            MainScreenUiEffect.Start -> navigator.push(MapScreen())
         }
     }
 

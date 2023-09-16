@@ -1,5 +1,6 @@
 package presentation.map
 
 
-interface MapScreenUiEffect {
+sealed interface MapScreenUiEffect {
+    data object CloseMap : MapScreenUiEffect
 }

@@ -10,7 +10,8 @@ data class DrawableResources(
     val iconLocation: String = "ic_location.xml",
     val iconMapPoint: String = "ic_map_point.xml",
     val iconClock: String = "ic_clock_circle.xml",
-    val test: String = "test.jpg"
+    val test: String = "test.jpg",
+    val close: String = "close.xml"
 )
 
 val BpDrawableDarkResources = DrawableResources(
