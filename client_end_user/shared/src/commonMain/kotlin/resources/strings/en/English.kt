@@ -65,4 +65,8 @@ data class English(
     override val signUp: String = "Sign up",
     override val username: String = "Username",
     override val password: String = "Password",
+    override val ridePreferredTitle: String = "Which do you prefer for your taxi rides?",
+    override val ridePreferredSubTitle: String = "Help us improve your experience with us.",
+    override val quickerRoutesWithHigherCosts: String = "Quicker routes with higher costs.",
+    override val slowerRoutesWithLowCosts: String = "Slower routes with lower costs."
 ) : IStringResources

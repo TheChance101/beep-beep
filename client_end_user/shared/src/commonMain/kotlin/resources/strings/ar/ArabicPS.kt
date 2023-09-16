@@ -65,4 +65,8 @@ data class ArabicPS(
     override val signUp: String = "سجل",
     override val username: String = "اسم المستخدم",
     override val password: String = "كلمة المرور",
+    override val ridePreferredTitle: String = "أيهما تفضل لرحلات الأجرة الخاصة بك؟",
+    override val ridePreferredSubTitle: String = "ساعدنا في تحسين تجربتك معنا.",
+    override val quickerRoutesWithHigherCosts: String = "مسارات أسرع بتكلفة أعلى.",
+    override val slowerRoutesWithLowCosts: String = "مسارات أبطأ بتكلفة أقل.",
 ) : IStringResources

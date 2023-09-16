@@ -63,4 +63,8 @@ interface IStringResources {
     val signUp: String
     val username: String
     val password: String
+    val ridePreferredTitle: String
+    val ridePreferredSubTitle: String
+    val quickerRoutesWithHigherCosts: String
+    val slowerRoutesWithLowCosts: String
 }
