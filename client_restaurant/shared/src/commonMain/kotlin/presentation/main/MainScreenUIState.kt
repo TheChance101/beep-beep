@@ -13,11 +13,11 @@ data class MainScreenUIState(
     val error: ErrorState? = null,
     val restaurants: List<RestaurantUIState> = emptyList(),
     val selectedRestaurantId: String = "",
-    val ordersChart: BarChartItemUiState = BarChartItemUiState(
+    val ordersChart: ChartsItemUiState = ChartsItemUiState(
         barsParameters = emptyList(),
         xAxisData = emptyList(),
     ),
-    val revenueChart: LineChartItemUiState = LineChartItemUiState(
+    val revenueChart: ChartsItemUiState = ChartsItemUiState(
         linesParameters = emptyList(),
         xAxisData = emptyList(),
     ),
@@ -27,22 +27,20 @@ data class MainScreenUIState(
 }
 
 // todo: Need to handle how date look like
-data class LineChartItemUiState(
+data class ChartsItemUiState(
     val linesParameters: List<LineParameters> = emptyList(),
-    val xAxisData: List<String> = emptyList()
-)
-
-data class BarChartItemUiState(
     val barsParameters: List<BarParameters> = emptyList(),
     val xAxisData: List<String> = emptyList()
 )
 
-fun LinesParameters.toLineChartItemUiState() = LineChartItemUiState(
+
+
+fun LinesParameters.toChartsItemUiState() = ChartsItemUiState(
     linesParameters = linesParameters,
     xAxisData = xAxisData
 )
 
-fun BarsParameters.toBarChartItemUiState() = BarChartItemUiState(
+fun BarsParameters.toChartsItemUiState() = ChartsItemUiState(
     barsParameters = barsParameters,
     xAxisData = xAxisData
 )
