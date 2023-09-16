@@ -35,7 +35,7 @@ data class OrdersRevenueShareUiState(
 data class LatestRegisteredUserUiState(
     val name: String,
     val image: String = "dummy_img.png",
-    val permission: PermissionUiState,
+    val permission: List<PermissionUiState>,
 )
 
 data class DropdownMenuState(
@@ -46,13 +46,13 @@ data class DropdownMenuState(
 
 fun User.toUiState(): LatestRegisteredUserUiState {
     return LatestRegisteredUserUiState(
-            name = fullName,
-            image = imageUrl.ifEmpty { "dummy_img.png" },
-            permission = permission.first().toUiState(),
+        name = fullName,
+        image = imageUrl.ifEmpty { "dummy_img.png" },
+        permission = permission.toUiState(),
     )
 }
 
-fun List<User>.toUiState(): List<LatestRegisteredUserUiState> {
+fun List<User>.toLatestUsersUiState(): List<LatestRegisteredUserUiState> {
     return this.map { it.toUiState() }
 }
 
@@ -76,20 +76,24 @@ fun Permission.toUiState(): PermissionUiState {
     }
 }
 
+fun List<Permission>.toUiState(): List<PermissionUiState> {
+    return this.map { it.toUiState() }
+}
+
 fun TripsRevenue.toUiState(): TripsRevenueShareUiState {
     return TripsRevenueShareUiState(
-            acceptedTrips = acceptedTrips,
-            pendingTrips = pendingTrips,
-            rejectedTrips = rejectedTrips,
-            canceledTrips = canceledTrips,
+        acceptedTrips = acceptedTrips,
+        pendingTrips = pendingTrips,
+        rejectedTrips = rejectedTrips,
+        canceledTrips = canceledTrips,
     )
 }
 
 fun OrdersRevenue.toUiState(): OrdersRevenueShareUiState {
     return OrdersRevenueShareUiState(
-            completedOrders = completedOrders,
-            canceledOrders = canceledOrders,
-            inTheWayOrders = inTheWayOrders,
+        completedOrders = completedOrders,
+        canceledOrders = canceledOrders,
+        inTheWayOrders = inTheWayOrders,
     )
 }
 
