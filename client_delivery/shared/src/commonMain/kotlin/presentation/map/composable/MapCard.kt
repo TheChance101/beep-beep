@@ -1,5 +1,6 @@
 package presentation.map.composable
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,6 +18,7 @@ fun MapCard(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
         modifier = modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
         colors = CardDefaults.cardColors(containerColor = Theme.colors.surface),
         shape = RoundedCornerShape(8.dp),
+        border = BorderStroke(width = 1.dp, color = Theme.colors.divider),
         elevation = CardDefaults.elevatedCardElevation(0.dp)
     ) {
         Column(modifier = Modifier.fillMaxWidth().padding(vertical = 24.dp, horizontal = 16.dp)) {
