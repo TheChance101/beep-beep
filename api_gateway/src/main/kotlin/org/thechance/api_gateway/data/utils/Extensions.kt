@@ -37,7 +37,11 @@ suspend inline fun <reified T> HttpClient.tryToExecuteFromWebSocket(
     attributes.put(AttributeKey("API"), api.value)
     return flow {
         webSocket(path = path) {
-            emit(receiveDeserialized<T>())
+            var i = 0
+            while (true) { // it's work
+                println("aaa ${i++}")
+                emit(receiveDeserialized<T>())
+            }
         }
     }.flowOn(Dispatchers.IO)
 }

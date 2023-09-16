@@ -16,7 +16,7 @@ fun Route.mealRoute() {
     val restaurantService: RestaurantService by inject()
 
     route("/meal") {
-        authenticateWithRole(Role.RESTAURANT_OWNER) {
+//        authenticateWithRole(Role.RESTAURANT_OWNER) {
 
             get("/{mealId}") {
                 val language = extractLocalizationHeader()
@@ -38,7 +38,7 @@ fun Route.mealRoute() {
                 val updatedMeal = restaurantService.updateMeal(mealDto, language)
                 respondWithResult(HttpStatusCode.OK, updatedMeal)
             }
-        }
+//        }
     }
 
 }

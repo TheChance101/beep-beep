@@ -248,6 +248,22 @@ class RestaurantService(
 
     //region order
     @OptIn(InternalAPI::class)
+    suspend fun createOrder(order: OrderDto, languageCode: String) : OrderDto {
+        return client.tryToExecute<OrderDto>(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+            }
+        ) {
+            post("/order") {
+                body = Json.encodeToString(OrderDto.serializer(), order)
+            }
+        }
+    }
+
+
+    @OptIn(InternalAPI::class)
     suspend fun updateOrderStatus(orderId: String, status: Int, languageCode: String): OrderDto {
         return client.tryToExecute<OrderDto>(
             api = APIs.RESTAURANT_API,

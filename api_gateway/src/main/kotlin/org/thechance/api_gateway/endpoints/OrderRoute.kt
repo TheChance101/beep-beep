@@ -6,17 +6,24 @@ import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import org.koin.ktor.ext.inject
+import org.thechance.api_gateway.data.model.restaurant.OrderDto
 import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.endpoints.utils.*
-import org.thechance.api_gateway.util.Role
 
 fun Route.orderRoutes() {
 
     val webSocketServerHandler: WebSocketServerHandler by inject()
     val restaurantService: RestaurantService by inject()
 
-    authenticateWithRole(Role.RESTAURANT_OWNER) {
+//    authenticateWithRole(Role.RESTAURANT_OWNER) {
         route("/orders") {
+
+            post {
+                val language = extractLocalizationHeader()
+                val order = call.receive<OrderDto>()
+                val result = restaurantService.createOrder(order,language)
+                respondWithResult(HttpStatusCode.Created, result)
+            }
 
             webSocket("/{restaurantId}") {
                 val restaurantId = call.parameters["restaurantId"]?.trim().orEmpty()
@@ -89,6 +96,6 @@ fun Route.orderRoutes() {
                 respondWithResult(HttpStatusCode.OK, result)
             }
         }
-    }
+//    }
 
 }
