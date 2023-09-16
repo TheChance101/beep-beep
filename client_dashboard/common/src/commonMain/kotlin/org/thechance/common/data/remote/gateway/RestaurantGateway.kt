@@ -7,10 +7,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.http.*
 import org.thechance.common.data.remote.mapper.toEntity
-import org.thechance.common.data.remote.model.CuisineDto
-import org.thechance.common.data.remote.model.RestaurantDto
-import org.thechance.common.data.remote.model.ServerResponse
-import org.thechance.common.data.remote.model.UserResponse
+import org.thechance.common.data.remote.model.*
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.NewRestaurantInfo
 import org.thechance.common.domain.entity.Restaurant
@@ -20,7 +17,7 @@ import org.thechance.common.presentation.restaurant.toDto
 class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestaurantGateway {
 
     override suspend fun createRestaurant(restaurant: NewRestaurantInfo): Restaurant {
-        return tryToExecute<ServerResponse<RestaurantDto>>(client){
+        return tryToExecute<ServerResponse<RestaurantDto>>(client) {
             post(urlString = "/restaurant") {
                 contentType(ContentType.Application.Json)
                 setBody(restaurant.toDto())
@@ -35,9 +32,9 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
     }
 
     override suspend fun getCuisines(): List<String> {
-       return tryToExecute<ServerResponse<List<CuisineDto>>>(client) {
+        return tryToExecute<ServerResponse<List<CuisineDto>>>(client) {
             get(urlString = "/cuisines")
-        }.value?.map { it.name }?: throw UnknownError()
+        }.value?.map { it.name } ?: throw UnknownError()
     }
 
     override suspend fun createCuisine(cuisineName: String): String {
@@ -62,7 +59,20 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
         rating: Double?,
         priceLevel: Int?
     ): DataWrapper<Restaurant> {
-        return DataWrapper(10, 1, listOf())
-    }//Todo: implement endpoint getRestaurants
+
+        return tryToExecute<ServerResponse<RestaurantResponse>>(client) {
+            get(urlString = "/restaurants") {
+                parameter("page", pageNumber)
+                parameter("limit", numberOfRestaurantsInPage)
+            }
+        }.value?.let {
+            DataWrapper(
+                totalPages = it.restaurants.size.div(numberOfRestaurantsInPage),
+                numberOfResult = it.total,
+                result = it.restaurants.toEntity()
+            )
+        } ?: throw UnknownError()
+    }
 
 }
+
