@@ -7,6 +7,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpAppBar
 import com.beepbeep.designSystem.ui.composable.BpButton
-import com.beepbeep.designSystem.ui.composable.modifier.noRippleEffect
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -50,7 +50,7 @@ class MapScreen :
         ) {
             BpAppBar(
                 isBackIconVisible = false,
-                title = "${Resources.strings.mapScreenAppBarTitle}${state.userName}"
+                title = "${Resources.strings.mapScreenAppBarTitle}${state.userName}!"
             ) {
                 Box(
                     modifier = Modifier
@@ -60,7 +60,7 @@ class MapScreen :
                         .background(
                             color = Theme.colors.hover,
                             shape = RoundedCornerShape(size = 8.dp)
-                        ).noRippleEffect(onClick = listener::onClickCloseIcon),
+                        ).clickable(onClick = listener::onClickCloseIcon),
                 ) {
                     Icon(
                         modifier = Modifier.align(Alignment.Center),
@@ -203,7 +203,7 @@ class MapScreen :
 
                 Text(
                     modifier = Modifier.padding(start = 4.dp),
-                    text = state.dropOffAddress,
+                    text = state.dropOffAddress.name,
                     color = Theme.colors.contentSecondary,
                     style = Theme.typography.body,
                 )
@@ -254,7 +254,7 @@ class MapScreen :
                         style = Theme.typography.caption,
                     )
                     Text(
-                        text = state.pickUpAddress,
+                        text = state.pickUpAddress.name,
                         color = Theme.colors.contentPrimary,
                         style = Theme.typography.body,
                     )
@@ -274,7 +274,7 @@ class MapScreen :
                         style = Theme.typography.caption,
                     )
                     Text(
-                        text = state.dropOffAddress,
+                        text = state.dropOffAddress.name,
                         color = Theme.colors.contentPrimary,
                         style = Theme.typography.body,
                     )
