@@ -120,7 +120,7 @@ class OverviewScreenModel(
     }
 
     private fun onGetUsersSuccessfully(users: DataWrapper<User>) {
-        val latestRegisteredUsers = users.result.toUiState()
+        val latestRegisteredUsers = users.result.toLastUserUiState()
         updateState {
             it.copy(users = latestRegisteredUsers, isLoading = false)
         }

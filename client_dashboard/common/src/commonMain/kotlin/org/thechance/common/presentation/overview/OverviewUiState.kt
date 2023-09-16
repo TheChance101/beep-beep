@@ -44,7 +44,7 @@ data class DropdownMenuState(
     val selectedIndex: Int = 0,
 )
 
-fun User.toUiState(): LatestRegisteredUserUiState {
+fun User.toLastUserUiState(): LatestRegisteredUserUiState {
     return LatestRegisteredUserUiState(
             name = fullName,
             image = imageUrl.ifEmpty { "dummy_img.png" },
@@ -52,8 +52,8 @@ fun User.toUiState(): LatestRegisteredUserUiState {
     )
 }
 
-fun List<User>.toUiState(): List<LatestRegisteredUserUiState> {
-    return this.map { it.toUiState() }
+fun List<User>.toLastUserUiState(): List<LatestRegisteredUserUiState> {
+    return this.map { it.toLastUserUiState() }
 }
 
 enum class PermissionUiState {
