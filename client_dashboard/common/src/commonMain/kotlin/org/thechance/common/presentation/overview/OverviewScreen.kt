@@ -66,9 +66,9 @@ object OverviewScreen :
                 verticalArrangement = Arrangement.spacedBy(24.kms)
         ) {
 
-            RevenueCard(listener = listener, state = state)
+            RevenueCard(listener = listener, state = state , modifier = Modifier.weight(1f))
             Row(
-                    modifier = Modifier.height(340.dp),
+                    modifier = Modifier.weight(1f),
                     horizontalArrangement = Arrangement.spacedBy(24.kms)
             ) {
                 OverviewCard(
@@ -285,7 +285,7 @@ object OverviewScreen :
                             barColor = Theme.colors.secondary,
                     ),
             )
-            Box(modifier = Modifier.fillMaxWidth().height(400.dp)) {
+            Box(modifier = Modifier.fillMaxSize()) {
                 BarChart(
                         chartParameters = testBarParameters,
                         gridColor = Theme.colors.divider,
