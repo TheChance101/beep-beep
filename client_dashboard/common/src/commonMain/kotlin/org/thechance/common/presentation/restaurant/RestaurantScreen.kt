@@ -388,7 +388,7 @@ class RestaurantScreen :
                         text = state.cuisineName,
                         hint = Resources.Strings.enterCuisineName,
                         onValueChange = listener::onChangeCuisineName,
-                        modifier = Modifier.padding(top = 14.kms, start = 14.kms, end = 14.kms),
+                        modifier = Modifier.padding(top =24.kms, start = 24.kms, end = 24.kms),
                         isError = state.cuisineNameError.isError,
                         errorMessage = state.cuisineNameError.errorMessage,
                 )

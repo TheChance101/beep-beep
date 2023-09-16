@@ -44,7 +44,7 @@ fun BpSimpleTextField(
             horizontalAlignment = Alignment.Start
     ) {
         OutlinedTextField(
-                modifier = modifier.fillMaxWidth().height(56.dp),
+                modifier = Modifier.fillMaxWidth().height(56.dp),
                 value = text,
                 placeholder = {
                     Text(
