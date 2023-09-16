@@ -1,6 +1,8 @@
 package presentation.map
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -122,13 +124,15 @@ class MapScreen :
     private fun MapCardAnimation(
         modifier: Modifier = Modifier,
         visible: Boolean,
+        enter: EnterTransition = slideInVertically { it } + fadeIn(),
+        exit: ExitTransition = slideOutVertically { it } + fadeOut(),
         content: @Composable () -> Unit,
     ) {
         AnimatedVisibility(
             modifier = modifier,
             visible = visible,
-            enter = slideInVertically { it } + fadeIn(),
-            exit = slideOutVertically { it } + fadeOut()
+            enter = enter,
+            exit = exit,
         ) {
             content()
         }

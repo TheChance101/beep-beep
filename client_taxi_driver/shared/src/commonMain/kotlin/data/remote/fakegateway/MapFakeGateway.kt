@@ -11,6 +11,7 @@ class MapFakeGateway : IMapGateway {
         delay(3000)
         return OrderDto(
             id = "djsahdjadhjadjas45dsadas",
+            passengerId = "sjdadjsadsa-dsa4d8sa4dsa",
             passengerName = "Kamel Mohamed",
             dropOffAddress = "45, Faisal St., Riyadh, KSA",
             pickUpAddress = "Nirmala,girsls HSS",
