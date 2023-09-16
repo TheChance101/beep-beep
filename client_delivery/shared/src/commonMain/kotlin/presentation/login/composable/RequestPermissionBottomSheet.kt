@@ -37,7 +37,7 @@ fun RequestPermissionBottomSheet(
         )
         BpTextField(
             text = state.deliveryUsername,
-            label = Resources.strings.restaurantName,
+            label = Resources.strings.deliveryUsername,
             keyboardType = KeyboardType.Text,
             onValueChange = listener::onRestaurantNameChanged,
             modifier = Modifier.fillMaxWidth().padding(top = 24.dp)
