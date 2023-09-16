@@ -14,7 +14,6 @@ import org.thechance.api_gateway.util.APIs
 class LocationService(
     private val client: HttpClient,
     private val attributes: Attributes,
-    private val errorHandler: ErrorHandler
 ) {
 
     suspend fun sendLocation(location: LocationDto, tripId: String) {
@@ -27,6 +26,7 @@ class LocationService(
     }
 
     suspend fun receiveLocation(tripId: String): Flow<LocationDto> {
+        println("Function called")
         return client.tryToExecuteFromWebSocket<LocationDto>(
             api = APIs.LOCATION_API,
             attributes = attributes,
