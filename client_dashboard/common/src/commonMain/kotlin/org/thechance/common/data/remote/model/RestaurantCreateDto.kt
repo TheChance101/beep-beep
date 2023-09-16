@@ -6,8 +6,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RestaurantCreateDto(
-    @SerialName("ownerId")
-    val ownerId: String?,
+    @SerialName("username")
+    val username: String?,
     @SerialName("name")
     val name: String?,
     @SerialName("openingTime")
