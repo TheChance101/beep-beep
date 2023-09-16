@@ -1,7 +1,11 @@
 package presentation.main
 
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.entity.BarsParameters
+import domain.entity.LinesParameters
 import domain.entity.Restaurant
+import domain.usecase.IGetBarChartDataUseCase
+import domain.usecase.IGetLineChartDataUseCase
 import domain.usecase.IGetRestaurantsUseCase
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
@@ -10,7 +14,9 @@ import presentation.restaurantSelection.toUiState
 
 class MainScreenModel(
     private val restaurantId: String,
-    private val getOwnerRestaurantsUseCase: IGetRestaurantsUseCase
+    private val getOwnerRestaurants: IGetRestaurantsUseCase,
+    private val getLineChartData: IGetLineChartDataUseCase,
+    private val getBarChartData: IGetBarChartDataUseCase,
 ) : BaseScreenModel<MainScreenUIState, MainScreenUIEffect>(MainScreenUIState()),
     MainScreenInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
@@ -19,6 +25,8 @@ class MainScreenModel(
     init {
         updateState { it.copy(selectedRestaurantId = restaurantId) }
         getData()
+        getLineChartData()
+        getBarChartData()
     }
 
     private fun getData() {
@@ -26,17 +34,44 @@ class MainScreenModel(
     }
 
     private suspend fun callee(): List<Restaurant> {
-        return getOwnerRestaurantsUseCase.getOwnerRestaurants()
+        return getOwnerRestaurants.getOwnerRestaurants()
+    }
+
+    private fun getLineChartData() {
+        updateState { it.copy(isLoading = true) }
+        tryToExecute(
+            function = {
+                getLineChartData.getLineChartData()
+            },
+            ::onGetLineChartDataSuccessfully,
+            ::onError
+        )
+    }
+    private  fun onGetLineChartDataSuccessfully(lines:LinesParameters){
+        updateState { it.copy(revenueChart = lines.toLineChartItemUiState(), isLoading = false) }
+    }
+    private fun getBarChartData() {
+        updateState { it.copy(isLoading = true) }
+        tryToExecute(
+            function = {
+                getBarChartData.getBarChartData()
+            },
+            ::onGetBarChartDataSuccessfully,
+            ::onError
+        )
+    }
+    private  fun onGetBarChartDataSuccessfully(bars:BarsParameters){
+        updateState { it.copy(ordersChart = bars.toBarChartItemUiState(), isLoading = false) }
     }
 
     private fun onSuccess(restaurants: List<Restaurant>) {
         updateState { it.copy(restaurants = restaurants.toUiState()) }
+
     }
 
     private fun onError(errorState: ErrorState) {
-        TODO("Not yet implemented")
+        updateState { it.copy(error = errorState, isLoading = false) }
     }
-
 
     override fun onClickBack() {
         sendNewEffect(MainScreenUIEffect.Back)

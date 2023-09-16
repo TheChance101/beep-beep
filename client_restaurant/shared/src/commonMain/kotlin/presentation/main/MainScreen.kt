@@ -20,6 +20,9 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
+import com.aay.compose.barChart.BarChart
+import com.aay.compose.baseComponents.model.LegendPosition
+import com.aay.compose.lineChart.LineChart
 import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -125,14 +128,28 @@ class MainScreen(private val restaurantId: String) :
                 item {
                     ChartItem(
                         imagePainter = painterResource(Resources.images.revenue),
-                        chartItemUiState = state.revenueChart,
-                    )
+                        title = state.revenueChart.linesParameters[0].label,
+                    ){
+                        LineChart(
+                            linesParameters = state.revenueChart.linesParameters,
+                            xAxisData = state.revenueChart.xAxisData,
+                            legendPosition = LegendPosition.DISAPPEAR,
+                            yAxisRange = 5
+                        )
+                    }
                 }
                 item {
                     ChartItem(
                         imagePainter = painterResource(Resources.images.orders),
-                        chartItemUiState = state.ordersChart,
-                    )
+                        title = state.ordersChart.barsParameters[0].dataName,
+                    ){
+                        BarChart(
+                            chartParameters = state.ordersChart.barsParameters,
+                            xAxisData = state.ordersChart.xAxisData,
+                            legendPosition = LegendPosition.DISAPPEAR,
+                            yAxisRange = 5
+                        )
+                    }
                 }
             }
         }

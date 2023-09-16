@@ -2,6 +2,7 @@ package di
 
 
 import domain.usecase.GetRestaurantsUseCase
+import domain.usecase.IGetLineChartDataUseCase
 import domain.usecase.IGetRestaurantsUseCase
 import domain.usecase.ILoginUserUseCase
 import domain.usecase.ILogoutUserUseCase
@@ -19,6 +20,9 @@ import domain.usecase.ManageOrderUseCase
 import domain.usecase.ManageRestaurantInformationUseCase
 import domain.usecase.ValidateManageMealUseCase
 import domain.usecase.ValidateRestaurantInfoUseCase
+import domain.usecase.GetLineChartDataUseCase
+import domain.usecase.IGetBarChartDataUseCase
+import domain.usecase.GetBarChartDataUseCase
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
@@ -33,5 +37,7 @@ val UseCaseModule = module {
     singleOf(::LogoutUserUseCase) { bind<ILogoutUserUseCase>() }
     singleOf(::ValidateRestaurantInfoUseCase) { bind<IValidateRestaurantInfoUseCase>() }
     singleOf(::ValidateManageMealUseCase) { bind<IValidateManageMealUseCase>() }
+    singleOf(::GetLineChartDataUseCase) { bind<IGetLineChartDataUseCase>() }
+    singleOf(::GetBarChartDataUseCase) { bind<IGetBarChartDataUseCase>() }
 
 }
