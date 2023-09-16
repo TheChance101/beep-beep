@@ -1,4 +1,4 @@
-package util.util
+package util
 
 import android.app.Activity
 import android.content.Context
@@ -12,7 +12,7 @@ actual class PlatformContext(val androidContext: Context)
 actual fun getPlatformContext(): PlatformContext = PlatformContext(LocalContext.current)
 
 @Composable
-actual fun setInsetsController(isDark: Boolean) {
+actual fun SetInsetsController(isDark: Boolean) {
     val window = (getPlatformContext().androidContext as Activity).window
     WindowCompat.getInsetsController(window, window.decorView)
         .isAppearanceLightStatusBars = !isDark

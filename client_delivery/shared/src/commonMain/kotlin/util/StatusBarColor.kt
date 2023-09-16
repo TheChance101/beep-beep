@@ -1,6 +1,8 @@
-package util.util
+package util
 
 import androidx.compose.runtime.Composable
+
+
 
 expect class PlatformContext
 
@@ -8,4 +10,4 @@ expect class PlatformContext
 expect fun getPlatformContext(): PlatformContext
 
 @Composable
-expect fun setInsetsController(isDark: Boolean)
+expect fun SetInsetsController(isDark: Boolean)
