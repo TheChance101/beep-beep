@@ -19,11 +19,7 @@ class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGatewa
     override suspend fun getUserData(): String = "aaaa"
 
     override suspend fun getUsers(
-        query: String?,
-        byPermissions: List<Permission>,
-        byCountries: List<String>,
-        page: Int,
-        numberOfUsers: Int
+        query: String?, byPermissions: List<Permission>, byCountries: List<String>, page: Int, numberOfUsers: Int
     ): DataWrapper<User> {
         getLastRegisteredUsers(4)
         val result = tryToExecute<ServerResponse<UserResponse>>(client) {
@@ -42,12 +38,10 @@ class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGatewa
 
     override suspend fun loginUser(username: String, password: String): Pair<String, String> {
         val result = tryToExecute<ServerResponse<UserTokensRemoteDto>>(client) {
-            submitForm(
-                formParameters = Parameters.build {
-                    append("username", username)
-                    append("password", password)
-                }
-            ) {
+            submitForm(formParameters = Parameters.build {
+                append("username", username)
+                append("password", password)
+            }) {
                 url("/login")
                 header("Accept-Language", "ar")
                 header("Country-Code", "EG")
@@ -64,18 +58,12 @@ class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGatewa
         }.value ?: false
     }
 
-    override suspend fun getLastRegisteredUsers(limit: Int): DataWrapper<User> {
+    override suspend fun getLastRegisteredUsers(limit: Int): List<User> {
         return tryToExecute<ServerResponse<List<UserDto>>>(client) {
             get(urlString = "/user/last-register?limit=4") {
                 parameter("limit", limit)
             }
-        }.value?.let {
-            DataWrapper(
-                totalPages = 0,
-                numberOfResult = limit,
-                result = it.toEntity()
-            )
-        } ?: throw UnknownError()
+        }.value?.toEntity() ?: throw UnknownError()
     }
 
 }
