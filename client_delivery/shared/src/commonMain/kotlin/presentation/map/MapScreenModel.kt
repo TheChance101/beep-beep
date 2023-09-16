@@ -16,4 +16,8 @@ class MapScreenModel:BaseScreenModel<MapScreenUiState,MapScreenUiEffect>(MapScre
         TODO("Not yet implemented")
     }
 
+    override fun onCloseClicked() {
+        sendNewEffect(MapScreenUiEffect.CloseMap)
+    }
+
 }
