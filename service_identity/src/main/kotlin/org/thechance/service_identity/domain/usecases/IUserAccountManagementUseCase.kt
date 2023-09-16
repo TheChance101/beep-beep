@@ -21,7 +21,6 @@ interface IUserAccountManagementUseCase {
     ): Boolean
 
     suspend fun getUser(id: String): User
-
     suspend fun addToWallet(userId: String, amount: Double): Wallet
 
     suspend fun subtractFromWallet(userId: String, amount: Double): Wallet

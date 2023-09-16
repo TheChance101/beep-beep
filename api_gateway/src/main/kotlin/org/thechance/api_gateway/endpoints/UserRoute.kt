@@ -38,36 +38,44 @@ fun Route.userRoutes() {
 
     route("/user") {
         authenticateWithRole(Role.DASHBOARD_ADMIN) {
-            delete("/{id}") {
-                val id = call.parameters["id"] ?: ""
-                val language = extractLocalizationHeader()
-                val result = identityService.deleteUser(userId = id, language)
-                respondWithResult(HttpStatusCode.OK, result)
-            }
-
-            put("/{userId}/permission") {
-                val language = extractLocalizationHeader()
-                val userId = call.parameters["userId"]?.trim().toString()
-                val permission: List<Int> = call.receive<List<Int>>()
-                val result = identityService.updateUserPermission(userId, permission,language)
-                respondWithResult(HttpStatusCode.OK, result)
-            }
-
             get("/last-register") {
                 val limit = call.parameters["limit"]?.toInt() ?: 4
                 val result = identityService.getLastRegisteredUsers(limit)
                 respondWithResult(HttpStatusCode.OK, result)
             }
 
-            get("/search"){
-                val searchTerm = call.request.queryParameters["query"]?.trim() ?:""
+            get("/search") {
+                val searchTerm = call.request.queryParameters["query"]?.trim() ?: ""
                 val permission: List<Int> = call.receive<List<Int>>()
                 val users = identityService.searchUsers(searchTerm, permission)
                 respondWithResult(HttpStatusCode.OK, users)
             }
+
+            put("/{userId}/permission") {
+                val language = extractLocalizationHeader()
+                val userId = call.parameters["userId"]?.trim().toString()
+                val permission: List<Int> = call.receive<List<Int>>()
+                val result = identityService.updateUserPermission(userId, permission, language)
+                respondWithResult(HttpStatusCode.OK, result)
+            }
+
+            delete("/{id}") {
+                val id = call.parameters["id"] ?: ""
+                val language = extractLocalizationHeader()
+                val result = identityService.deleteUser(userId = id, language)
+                respondWithResult(HttpStatusCode.OK, result)
+            }
         }
 
         authenticateWithRole(Role.END_USER) {
+            get {
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val userId = tokenClaim?.get(Claim.USER_ID).toString()
+                val language = extractLocalizationHeader()
+                val user = identityService.getUserById(userId, language)
+                respondWithResult(HttpStatusCode.OK, user)
+            }
+
             get("/favorite") {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val userId = tokenClaim?.get(Claim.USER_ID).toString()

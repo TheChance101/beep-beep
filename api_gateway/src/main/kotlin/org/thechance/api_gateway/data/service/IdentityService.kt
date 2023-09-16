@@ -55,7 +55,11 @@ class IdentityService(
     }
 
     suspend fun loginUser(
-        userName: String, password: String, tokenConfiguration: TokenConfiguration, languageCode: String, applicationId: String
+        userName: String,
+        password: String,
+        tokenConfiguration: TokenConfiguration,
+        languageCode: String,
+        applicationId: String
     ): UserTokensResponse {
         client.tryToExecute<Boolean>(
             api = APIs.IDENTITY_API,
@@ -98,8 +102,10 @@ class IdentityService(
         }
     }
 
-    private suspend fun getUserById(id: String): UserDto = client.tryToExecute<UserDto>(
-        APIs.IDENTITY_API, attributes = attributes,
+    suspend fun getUserById(id: String, languageCode: String): UserDto = client.tryToExecute<UserDto>(
+        APIs.IDENTITY_API, attributes = attributes, setErrorMessage = { errorCodes ->
+            errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+        }
     ) {
         get("user/$id")
     }

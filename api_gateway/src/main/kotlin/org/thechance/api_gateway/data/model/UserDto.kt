@@ -11,5 +11,6 @@ data class UserDto(
     @SerialName("username") val username: String,
     @SerialName("country") val country: String,
     @SerialName("email") val email: String,
+    @SerialName("currency") val currency: String? = null,
     @SerialName("permission") val permission: Int
 )
