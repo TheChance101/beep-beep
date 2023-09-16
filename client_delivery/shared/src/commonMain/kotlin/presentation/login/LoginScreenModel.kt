@@ -74,6 +74,7 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
 
             is ErrorState.UserNotFound -> showSnackBar("Sign up with Beep Beep account")
 
+            is ErrorState.UnAuthorized -> state.value.sheetState.show()
             else -> {}
         }
     }
@@ -81,7 +82,7 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
     private fun showSnackBar(message: String) {
         viewModelScope.launch {
             updateState { it.copy(snackBarMessage = message, showSnackBar = true) }
-            delay(2000) // wait for snack-bar to show
+            delay(4000) // wait for snack-bar to show
             updateState { it.copy(showSnackBar = false) }
         }
     }

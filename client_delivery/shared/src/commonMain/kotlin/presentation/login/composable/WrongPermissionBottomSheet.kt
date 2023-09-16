@@ -17,7 +17,6 @@ import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import presentation.login.LoginScreenInteractionListener
 import presentation.login.PermissionInteractionListener
 import resources.Resources
 
@@ -31,7 +30,7 @@ fun WrongPermissionBottomSheet(listener: PermissionInteractionListener,
             .padding(horizontal = 16.dp, vertical =24.dp)
     ) {
         Icon(
-            painter = painterResource(Resources.images.errorIcon),
+            painter = painterResource(Resources.images.warningIcon),
             tint = Theme.colors.primary,
             contentDescription = null,
             modifier = Modifier.padding(bottom = 24.dp)
