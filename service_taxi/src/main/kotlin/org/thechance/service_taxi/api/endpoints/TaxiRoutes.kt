@@ -53,7 +53,7 @@ fun Route.taxiRoutes() {
 
     route("/taxis") {
         post("/search") {
-            val status = call.request.queryParameters["status"]?.trim().toBoolean()
+            val status = call.request.queryParameters["status"]?.trim()?.toBoolean()
             val color = call.request.queryParameters["color"]?.trim()?.toLongOrNull()
             val seats = call.request.queryParameters["seats"]?.trim()?.toIntOrNull()
             val plateNumber = call.request.queryParameters["plate_number"]?.trim()

@@ -21,7 +21,7 @@ interface IManageTaxiUseCase {
     suspend fun getTaxi(taxiId: String): Taxi
     suspend fun editTaxi(taxiId: String, taxi: Taxi): Taxi
     suspend fun getNumberOfTaxis(): Long
-    suspend fun findTaxisWithFilters(status: Boolean, color: Long?, seats: Int?, plateNumber: String?, driverIds: List<String>?): List<Taxi>
+    suspend fun findTaxisWithFilters(status: Boolean?, color: Long?, seats: Int?, plateNumber: String?, driverIds: List<String>?): List<Taxi>
 }
 
 class ManageTaxiUseCase(
@@ -57,7 +57,7 @@ class ManageTaxiUseCase(
         return taxiGateway.getNumberOfTaxis()
     }
 
-    override suspend fun findTaxisWithFilters(status: Boolean, color: Long?, seats: Int?, plateNumber: String?, driverIds: List<String>?): List<Taxi> {
+    override suspend fun findTaxisWithFilters(status: Boolean?, color: Long?, seats: Int?, plateNumber: String?, driverIds: List<String>?): List<Taxi> {
         return taxiGateway.findTaxisWithFilters(status, color, seats, plateNumber, driverIds)
     }
 

@@ -109,7 +109,7 @@ class TaxiService(
     }
 
     @OptIn(InternalAPI::class)
-    suspend fun findTaxisByQuery(status: Boolean,
+    suspend fun findTaxisByQuery(status: Boolean?,
                                  color: Long?,
                                  seats: Int?,
                                  query: String?,
