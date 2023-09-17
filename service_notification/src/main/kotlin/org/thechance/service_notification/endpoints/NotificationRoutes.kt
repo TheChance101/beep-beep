@@ -25,9 +25,19 @@ fun Route.notificationRoutes() {
     route("tokens") {
         post("/save-token") {
             val receivedData = call.receive<TokenRegistrationDto>()
-            val result = registerToken(receivedData.userId, receivedData.token)
+            val result = registerToken.saveToken(receivedData.userId, receivedData.token)
             if (!result) throw InternalServerErrorException(TOKEN_NOT_REGISTERED)
             call.respond(HttpStatusCode.OK, "Token registered successfully")
+        }
+        get("/user/{userId}") {
+            val userId = call.parameters.requireNotEmpty("userId")
+            val result = registerToken.getUserTokens(userId)
+            call.respond(HttpStatusCode.OK, result)
+        }
+        get("/users") {
+            val userIds = call.parameters["userIds"]?.split(",") ?: emptyList()
+            val result = registerToken.getAllUsersTokens(userIds)
+            call.respond(HttpStatusCode.OK, result)
         }
     }
 
