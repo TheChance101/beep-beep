@@ -4,7 +4,6 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
-import kotlinx.coroutines.async
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
 import org.thechance.api_gateway.data.model.taxi.TaxiDto
@@ -81,16 +80,7 @@ fun Route.taxiRoutes() {
                 val status = call.request.queryParameters["status"]?.trim()?.toBoolean()
                 val color = call.request.queryParameters["color"]?.trim()?.toLongOrNull()
                 val seats = call.request.queryParameters["seats"]?.trim()?.toIntOrNull()
-                val drivers = async { identityService.getUsers(searchTerm = query, languageCode = language).items }.await()
-                val taxis = taxiService.findTaxisByQuery(page, limit, status, color, seats, query, drivers.map { it.id }, language)
-
-                val driverUsernameMap = drivers.associateBy { it.id }.mapValues { it.value.username }
-
-                val result = taxis.items.map { taxiDto ->
-                    val driverUsername = driverUsernameMap[taxiDto.driverId]
-                    taxiDto.copy(driverUsername = driverUsername ?: "")
-                }
-
+                val result = taxiService.findTaxisByQuery(page, limit, status, color, seats, query, language)
                 respondWithResult(HttpStatusCode.OK, result)
             }
         }

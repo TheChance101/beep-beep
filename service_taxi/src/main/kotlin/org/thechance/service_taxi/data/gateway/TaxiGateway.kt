@@ -14,7 +14,6 @@ import org.thechance.service_taxi.data.DataBaseContainer
 import org.thechance.service_taxi.data.collection.TaxiCollection
 import org.thechance.service_taxi.data.collection.TripCollection
 import org.thechance.service_taxi.data.utils.paginate
-import org.thechance.service_taxi.data.utils.toObjectIds
 import org.thechance.service_taxi.domain.entity.Taxi
 import org.thechance.service_taxi.domain.entity.Trip
 import org.thechance.service_taxi.domain.gateway.ITaxiGateway
@@ -75,12 +74,11 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
         status: Boolean?,
         color: Long?,
         seats: Int?,
-        plateNumber: String?,
-        driverIds: List<String>?
+        query: String?
     ): List<Taxi> {
         val searchQueries = or(
-            TaxiCollection::plateNumber regex Regex(plateNumber.orEmpty(), RegexOption.IGNORE_CASE),
-            TaxiCollection::driverId `in` driverIds?.toObjectIds()!!
+            TaxiCollection::plateNumber regex Regex(query.orEmpty(), RegexOption.IGNORE_CASE),
+            TaxiCollection::driverUsername regex Regex(query.orEmpty(), RegexOption.IGNORE_CASE),
         )
         val filter = and(
             status?.let { TaxiCollection::isAvailable eq it },

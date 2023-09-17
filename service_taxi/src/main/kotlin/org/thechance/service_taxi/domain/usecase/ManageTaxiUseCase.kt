@@ -27,8 +27,7 @@ interface IManageTaxiUseCase {
         status: Boolean?,
         color: Long?,
         seats: Int?,
-        plateNumber: String?,
-        driverIds: List<String>?
+        query: String?
     ): List<Taxi>
 }
 
@@ -71,10 +70,9 @@ class ManageTaxiUseCase(
         status: Boolean?,
         color: Long?,
         seats: Int?,
-        plateNumber: String?,
-        driverIds: List<String>?
+        query: String?
     ): List<Taxi> {
-        return taxiGateway.findTaxisWithFilters(page, limit, status, color, seats, plateNumber, driverIds)
+        return taxiGateway.findTaxisWithFilters(page, limit, status, color, seats, query)
     }
 
     private suspend fun isTaxiExistedBefore(taxi: Taxi): Boolean {
