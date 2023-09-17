@@ -8,25 +8,30 @@ import org.thechance.service_notification.endpoints.model.UserDto
 fun User.toCollection(): UserCollection {
     return UserCollection(
         id = ObjectId(id),
+        userId = userId,
         deviceTokens = deviceTokens,
+
     )
 }
 fun User.toDto(): UserDto {
     return UserDto(
         id = id,
         deviceTokens = deviceTokens,
+        userId = userId,
     )
 }
 fun UserDto.toEntity(): User {
     return User(
         id = id,
         deviceTokens = deviceTokens,
+        userId = userId,
     )
 }
 fun UserCollection.toEntity(): User {
     return User(
         id = id.toHexString(),
         deviceTokens = deviceTokens,
+        userId = userId,
     )
 }
 
