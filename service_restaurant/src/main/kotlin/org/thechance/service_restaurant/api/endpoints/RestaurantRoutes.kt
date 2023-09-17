@@ -46,6 +46,11 @@ fun Route.restaurantRoutes() {
             call.respond(HttpStatusCode.OK, restaurants.toDto())
         }
 
+        post {
+            val restaurantIds = call.receive<List<String>>()
+            val result = discoverRestaurant.getRestaurantsByIds(restaurantIds)
+            call.respond(HttpStatusCode.Created, result.toDto())
+        }
     }
 
     route("/restaurant") {

@@ -9,7 +9,6 @@ import org.thechance.common.domain.entity.NewRestaurantInfo
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.getway.IRestaurantGateway
 import kotlin.math.ceil
-import kotlin.math.floor
 
 class RestaurantFakeGateway : IRestaurantGateway {
 
@@ -18,7 +17,7 @@ class RestaurantFakeGateway : IRestaurantGateway {
         numberOfRestaurantsInPage: Int,
         restaurantName: String,
         rating: Double?,
-        priceLevel: Int?,
+        priceLevel: String?,
     ): DataWrapper<Restaurant> {
         var restaurants = restaurants.toEntity()
         if (restaurantName.isNotEmpty()) {
@@ -31,13 +30,7 @@ class RestaurantFakeGateway : IRestaurantGateway {
         }
         if (rating != null && priceLevel != null) {
             restaurants = restaurants.filter {
-                it.priceLevel == priceLevel &&
-                        when {
-                            rating.rem(1) > 0.89 || rating.rem(1) == 0.0 || rating.rem(1) > 0.5
-                            -> it.rating in floor(rating) - 0.1..0.49 + floor(rating)
-
-                            else -> it.rating in 0.5 + floor(rating)..0.89 + floor(rating)
-                        }
+                it.priceLevel == priceLevel
             }
         }
         val startIndex = (pageNumber - 1) * numberOfRestaurantsInPage
@@ -62,11 +55,12 @@ class RestaurantFakeGateway : IRestaurantGateway {
         return Restaurant(
             id = "7",
             name = restaurant.name,
-            ownerUsername = restaurant.ownerUsername,
-            phoneNumber = restaurant.phoneNumber,
-            workingHours = restaurant.workingHours,
-            rating = 3.0,
-            priceLevel = 1
+            ownerId = restaurant.ownerUsername,
+            phone = restaurant.phoneNumber,
+            openingTime = restaurant.openingTime,
+            closingTime = restaurant.closingTime,
+            rate = 0.0,
+            priceLevel = "",
         )
     }
 
@@ -91,7 +85,7 @@ class RestaurantFakeGateway : IRestaurantGateway {
         return cuisineName
     }
 
-    private val cuisines = mutableListOf<String>(
+    private val cuisines = mutableListOf(
         "Angolan cuisine",
         "Cameroonian cuisine",
         "Chadian cuisine",
@@ -114,60 +108,60 @@ class RestaurantFakeGateway : IRestaurantGateway {
         "Ugandan cuisine",
     )
 
-    private val restaurants = mutableListOf<RestaurantDto>(
+    private val restaurants = mutableListOf(
         RestaurantDto(
             id = "8c90c4c6-1e69-47f3-aa59-2edcd6f0057b",
             name = "Mujtaba Restaurant",
-            ownerUsername = "mujtaba",
-            phoneNumber = "0532465722",
-            rating = 0.4,
-            priceLevel = 1,
-            workingHours = "06:30 - 22:30"
+            ownerId = "mujtaba",
+            phone = "0532465722",
+            rate = 0.4,
+            priceLevel = "",
+            openingTime = "06:30 - 22:30"
         ),
         RestaurantDto(
             id = "6e21s4f-aw32-fs3e-fe43-aw56g4yr324",
             name = "Karrar Restaurant",
-            ownerUsername = "karrar",
-            phoneNumber = "0535232154",
-            rating = 3.5,
-            priceLevel = 1,
-            workingHours = "12:00 - 23:00"
+            ownerId = "karrar",
+            phone = "0535232154",
+            rate = 3.5,
+            priceLevel = "",
+            openingTime = "12:00 - 23:00"
         ),
         RestaurantDto(
             id = "7a33sax-aw32-fs3e-12df-42ad6x352zse",
             name = "Saif Restaurant",
-            ownerUsername = "saif",
-            phoneNumber = "0554627893",
-            rating = 4.0,
-            priceLevel = 3,
-            workingHours = "09:00 - 23:00"
+            ownerId = "saif",
+            phone = "0554627893",
+            rate = 4.0,
+            priceLevel = "",
+            openingTime = "09:00 - 23:00"
         ),
         RestaurantDto(
             id = "7y1z47c-s2df-76de-dwe2-42ad6x352zse",
             name = "Nada Restaurant",
-            ownerUsername = "nada",
-            phoneNumber = "0524242766",
-            rating = 3.4,
-            priceLevel = 2,
-            workingHours = "01:00 - 23:00"
+            ownerId = "nada",
+            phone = "0524242766",
+            rate = 3.4,
+            priceLevel = "",
+            openingTime = "01:00 - 23:00"
         ),
         RestaurantDto(
             id = "3e1f5d4a-8317-4f13-aa89-2c094652e6a3",
             name = "Asia Restaurant",
-            ownerUsername = "asia",
-            phoneNumber = "0528242165",
-            rating = 2.9,
-            priceLevel = 1,
-            workingHours = "09:30 - 21:30"
+            ownerId = "asia",
+            phone = "0528242165",
+            rate = 2.9,
+            priceLevel = "",
+            openingTime = "09:30 - 21:30"
         ),
         RestaurantDto(
             id = "7a1bfe39-4b2c-4f76-bde0-82da2eaf9e99",
             name = "Kamel Restaurant",
-            ownerUsername = "kamel",
-            phoneNumber = "0528242235",
-            rating = 4.9,
-            priceLevel = 3,
-            workingHours = "06:30 - 22:30"
+            ownerId = "kamel",
+            phone = "0528242235",
+            rate = 4.9,
+            priceLevel = "",
+            openingTime = "06:30 - 22:30"
         ),
     )
 

@@ -4,21 +4,19 @@ import org.thechance.common.data.remote.model.Location
 import org.thechance.common.data.remote.model.RestaurantCreateDto
 import org.thechance.common.domain.entity.NewRestaurantInfo
 import org.thechance.common.domain.entity.Restaurant
-import org.thechance.common.domain.entity.Time
-import org.thechance.common.domain.entity.Time.Companion.parseToCustomTime
 
 fun Restaurant.toUiState(): RestaurantUiState.RestaurantDetailsUiState =
     RestaurantUiState.RestaurantDetailsUiState(
         id = id,
         name = name,
-        ownerUsername = ownerUsername,
-        phoneNumber = phoneNumber,
-        rating = rating,
+        ownerUsername = ownerId,
+        phone = phone,
+        rate = rate,
         priceLevel = priceLevel,
-        workingHours = workingHours.toWorkingHoursString()
+        openingTime = openingTime,
+        closingTime = closingTime,
     )
 
-private fun Pair<Time, Time>.toWorkingHoursString() = "$first - $second"
 
 fun List<Restaurant>.toUiState() = map(Restaurant::toUiState)
 
@@ -27,18 +25,16 @@ fun NewRestaurantInfoUiState.toEntity() = NewRestaurantInfo(
     ownerUsername = ownerUsername,
     phoneNumber = phoneNumber,
     location = location,
-    workingHours = Pair(
-        parseToCustomTime(startTime),
-        parseToCustomTime(endTime)
-    ),
+    openingTime = openingTime,
+    closingTime = closingTime,
 )
 
-fun NewRestaurantInfo.toDto(): RestaurantCreateDto{
+fun NewRestaurantInfo.toDto(): RestaurantCreateDto {
     val result = RestaurantCreateDto(
-        ownerId = "64f363af5ddbc15bfd1efcf4",
         name = name,
-        openingTime = workingHours.first.toString(),
-        closingTime = workingHours.second.toString(),
+        username = ownerUsername,
+        openingTime = openingTime,
+        closingTime = closingTime,
         phone = phoneNumber,
         location = Location(
             latitude = location.split(",")[0].toDouble(),

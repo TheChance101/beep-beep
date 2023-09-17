@@ -37,3 +37,6 @@ android {
         jvmToolchain(libs.versions.jvmToolchain.get().toInt())
     }
 }
+dependencies{
+    implementation("androidx.core:core-splashscreen:1.0.1")
+}

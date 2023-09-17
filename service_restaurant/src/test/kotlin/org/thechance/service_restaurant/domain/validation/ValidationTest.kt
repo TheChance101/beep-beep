@@ -264,7 +264,7 @@ class ValidationTest {
         // given valid phone number
         val phone = "1234567890"
         // when isValidatePhone is invoked
-        val result = validation.isValidPhone(phone)
+        val result = validation.isValidPhone(phone,"us")
         // then return true
         Assertions.assertTrue(result)
     }
@@ -274,7 +274,7 @@ class ValidationTest {
         // given valid phone number
         val phone = "123 456 7890"
         // when isValidatePhone is invoked
-        val result = validation.isValidPhone(phone)
+        val result = validation.isValidPhone(phone,"us")
         // then return false
         Assertions.assertFalse(result)
     }
@@ -284,7 +284,7 @@ class ValidationTest {
         // given valid phone number
         val phone = "123-456-7890"
         // when isValidatePhone is invoked
-        val result = validation.isValidPhone(phone)
+        val result = validation.isValidPhone(phone,"us")
         // then return false
         Assertions.assertFalse(result)
     }
@@ -294,7 +294,7 @@ class ValidationTest {
         // given valid phone number
         val phone = "123abc456def"
         // when isValidatePhone is invoked
-        val result = validation.isValidPhone(phone)
+        val result = validation.isValidPhone(phone,"us")
         // then return false
         Assertions.assertFalse(result)
     }
@@ -304,7 +304,7 @@ class ValidationTest {
         // given valid phone number
         val phone = "123456"
         // when isValidatePhone is invoked
-        val result = validation.isValidPhone(phone)
+        val result = validation.isValidPhone(phone,"us")
         // then return false
         Assertions.assertFalse(result)
     }
@@ -314,7 +314,7 @@ class ValidationTest {
         // given valid phone number
         val phone = "12345678901234"
         // when isValidatePhone is invoked
-        val result = validation.isValidPhone(phone)
+        val result = validation.isValidPhone(phone,"us")
         // then return false
         Assertions.assertFalse(result)
     }
@@ -324,7 +324,7 @@ class ValidationTest {
         // given valid phone number
         val phone = ""
         // when isValidatePhone is invoked
-        val result = validation.isValidPhone(phone)
+        val result = validation.isValidPhone(phone,"us")
         // then return false
         Assertions.assertFalse(result)
     }
@@ -334,7 +334,7 @@ class ValidationTest {
         // given valid phone number
         val phone: String? = null
         // when isValidatePhone is invoked
-        val result = validation.isValidPhone(phone)
+        val result = validation.isValidPhone(phone,"us")
         // then return false
         Assertions.assertFalse(result)
     }

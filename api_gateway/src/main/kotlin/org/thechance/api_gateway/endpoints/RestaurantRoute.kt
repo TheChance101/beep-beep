@@ -9,6 +9,7 @@ import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.model.restaurant.RestaurantDto
+import org.thechance.api_gateway.data.model.restaurant.RestaurantRequestDto
 import org.thechance.api_gateway.data.model.restaurant.toRestaurantRequestDto
 import org.thechance.api_gateway.data.service.IdentityService
 import org.thechance.api_gateway.data.service.RestaurantService
@@ -73,12 +74,13 @@ fun Route.restaurantRoutes() {
         authenticateWithRole(Role.DASHBOARD_ADMIN) {
             post {
                 val language = extractLocalizationHeader()
-                val restaurantDto = call.receive<RestaurantDto>()
+                val restaurantDto = call.receive<RestaurantRequestDto>()
                 val user = identityService.getUserByUsername(restaurantDto.username, language)
-                identityService.updateUserPermission(userId = user.id, permission = listOf(Role.RESTAURANT_OWNER) ,language)
+                identityService.updateUserPermission(
+                    userId = user.id, permission = listOf(Role.RESTAURANT_OWNER), language
+                )
                 val newRestaurant = restaurantService.addRestaurant(
-                    restaurantDto.toRestaurantRequestDto().copy(ownerId = user.id),
-                    language
+                    restaurantDto.toRestaurantRequestDto().copy(ownerId = user.id), language
                 )
                 respondWithResult(HttpStatusCode.Created, newRestaurant)
             }

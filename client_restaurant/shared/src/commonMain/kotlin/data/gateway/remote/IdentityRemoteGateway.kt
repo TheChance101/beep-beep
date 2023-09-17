@@ -30,7 +30,7 @@ class IdentityRemoteGateway(client: HttpClient) : IIdentityRemoteGateway,
             )
         }.value
 
-        return result?.toEntity() ?: throw InvalidCredentialsException("Invalid Credential")
+        return result?.toEntity() ?: throw InvalidCredentialsException()
     }
 
     override suspend fun refreshAccessToken(refreshToken: String): Pair<String, String> {

@@ -14,11 +14,12 @@ import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 
 interface IDiscoverRestaurantUseCase {
     suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant>
+    suspend fun getRestaurantsByIds(restaurantIds: List<String>): List<Restaurant>
     suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant>
     suspend fun getRestaurantDetails(restaurantId: String): Restaurant
     suspend fun getMealsByCuisine(cuisineId: String): List<Meal>
 
-    suspend fun getMealsByRestaurantId(restaurantId: String,page: Int, limit: Int): List<Meal>
+    suspend fun getMealsByRestaurantId(restaurantId: String, page: Int, limit: Int): List<Meal>
     suspend fun getMealDetails(mealId: String): MealDetails
     suspend fun getCategories(page: Int, limit: Int): List<Category>
     suspend fun getRestaurantsInCategory(categoryId: String): List<Restaurant>
@@ -32,8 +33,12 @@ class DiscoverRestaurantUseCase(
     private val basicValidation: IValidation
 ) : IDiscoverRestaurantUseCase {
     override suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant> {
-        basicValidation.validatePagination(page,limit)
+        basicValidation.validatePagination(page, limit)
         return restaurantGateway.getRestaurants(page, limit)
+    }
+
+    override suspend fun getRestaurantsByIds(restaurantIds: List<String>): List<Restaurant> {
+        return restaurantGateway.getRestaurants(restaurantIds)
     }
 
     override suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant> {
@@ -42,7 +47,7 @@ class DiscoverRestaurantUseCase(
     }
 
     override suspend fun getCategories(page: Int, limit: Int): List<Category> {
-        basicValidation.validatePagination(page,limit)
+        basicValidation.validatePagination(page, limit)
         return optionsGateway.getCategories(page, limit)
     }
 
@@ -53,8 +58,7 @@ class DiscoverRestaurantUseCase(
 
     override suspend fun getRestaurantDetails(restaurantId: String): Restaurant {
         checkIfRestaurantIsExist(restaurantId)
-        return restaurantGateway.getRestaurant(restaurantId) ?:
-        throw MultiErrorException(listOf(NOT_FOUND))
+        return restaurantGateway.getRestaurant(restaurantId) ?: throw MultiErrorException(listOf(NOT_FOUND))
     }
 
     override suspend fun getMealsByCuisine(cuisineId: String): List<Meal> {
@@ -75,8 +79,7 @@ class DiscoverRestaurantUseCase(
         if (!basicValidation.isValidId(mealId)) {
             throw MultiErrorException(listOf(INVALID_ID))
         }
-        return restaurantGateway.getMealById(mealId) ?:
-        throw MultiErrorException(listOf(NOT_FOUND))
+        return restaurantGateway.getMealById(mealId) ?: throw MultiErrorException(listOf(NOT_FOUND))
     }
 
     private suspend fun checkIfCategoryIsExist(categoryId: String) {
@@ -84,7 +87,8 @@ class DiscoverRestaurantUseCase(
             throw MultiErrorException(listOf(INVALID_ID))
         }
         if (optionsGateway.getCategory(categoryId) == null) {
-            throw MultiErrorException(listOf(NOT_FOUND))        }
+            throw MultiErrorException(listOf(NOT_FOUND))
+        }
     }
 
     private suspend fun checkIfRestaurantIsExist(restaurantId: String) {
