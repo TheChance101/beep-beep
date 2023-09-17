@@ -3,7 +3,7 @@ package org.thechance.service_location.data.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.thechance.service_location.util.INVALID_LOCATION
-import org.thechance.service_location.util.MultiErrorException
+import org.thechance.service_location.util.InvalidLocationException
 
 @Serializable
 data class LocationDto(
@@ -12,10 +12,10 @@ data class LocationDto(
 ) {
     init {
         if (latitude < LATITUDE_MIN || latitude > LATITUDE_MAX) {
-            throw MultiErrorException(listOf(INVALID_LOCATION))
+            throw InvalidLocationException(INVALID_LOCATION)
         }
         if (longitude < LONGITUDE_MIN || longitude > LONGITUDE_MAX) {
-            throw MultiErrorException(listOf(INVALID_LOCATION))
+            throw InvalidLocationException(INVALID_LOCATION)
         }
     }
 

@@ -78,4 +78,9 @@ class PalestinianArabicLocalizedMessages(
     override val deletedSuccessfully: String="انحذف يخوو"
     override val cuisineNameAlreadyExisted: String = "المطبخ موجود قبل كدا يا حبيبى"
     //endregion
+
+    //region location
+    override val invalidLocationValues: String = "موقع خاطىء"
+    override val invalidRequestParameters: String = "بيانات خاطئة"
+    //endregion location
 }

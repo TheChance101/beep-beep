@@ -9,8 +9,6 @@ import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.utils.LocalizedMessageException
 import java.util.concurrent.ConcurrentHashMap
 
-
-
 @Single
 class WebSocketServerHandler {
 

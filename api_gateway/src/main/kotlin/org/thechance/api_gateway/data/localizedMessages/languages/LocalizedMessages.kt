@@ -140,4 +140,12 @@ interface LocalizedMessages {
     val cuisineNameAlreadyExisted: String
 
     //endregion
+
+    //region location
+
+    val invalidLocationValues: String
+
+    val invalidRequestParameters: String
+
+    //endregion
 }

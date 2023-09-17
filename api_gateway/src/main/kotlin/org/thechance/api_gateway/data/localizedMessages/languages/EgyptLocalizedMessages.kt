@@ -77,4 +77,9 @@ class EgyptianArabicLocalizedMessages() : LocalizedMessages {
     override val deletedSuccessfully: String = "مسحناها ياعم"
     override val cuisineNameAlreadyExisted: String = "المطبخ موجود مرة يا عم مش فرح هو"
     //endregion
+
+    //region location
+    override val invalidLocationValues: String = "موقع خاطىء"
+    override val invalidRequestParameters: String = "بيانات خاطئة"
+    //endregion location
 }

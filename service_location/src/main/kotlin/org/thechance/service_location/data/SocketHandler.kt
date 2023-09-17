@@ -3,34 +3,32 @@ package org.thechance.service_location.data
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.flowOn
-import org.thechance.service_location.data.model.WebSocketLocation
-import org.thechance.service_location.util.MultiErrorException
+import org.thechance.service_location.data.model.Trip
+import org.thechance.service_location.util.ConnectionErrorException
 import java.util.concurrent.ConcurrentHashMap
 
 class SocketHandler {
-    val location: ConcurrentHashMap<String,WebSocketLocation> = ConcurrentHashMap()
 
-    suspend fun broadcastLocation(locationId: String) {
+    val trip: ConcurrentHashMap<String, Trip> = ConcurrentHashMap()
 
-        val ownerSession = location[locationId]?.ownerSession
-        val locations = location[locationId]?.locations
+    suspend fun broadcastLocation(tripId: String) {
+
+        val session = trip[tripId]?.session
+        val currentLocation = trip[tripId]?.location
 
         try {
-            locations
+            currentLocation
                 ?.drop(1)
                 ?.flowOn(Dispatchers.IO)
                 ?.collect { location ->
-                    ownerSession?.sendSerialized(location)
-                    println("ssss flow ${location.latitude} , ${location.longitude}")
+                    session?.sendSerialized(location)
                 }
-        } catch (e: MultiErrorException) {
-            ownerSession?.send(e.errorCodes.toString())
-            ownerSession?.close(CloseReason(CloseReason.Codes.NORMAL, e.errorCodes.toString()))
+        } catch (e: ConnectionErrorException) {
+            session?.close(CloseReason(CloseReason.Codes.TRY_AGAIN_LATER, e.toString()))
         } finally {
-            location.remove(locationId)
+            trip.remove(tripId)
         }
     }
 

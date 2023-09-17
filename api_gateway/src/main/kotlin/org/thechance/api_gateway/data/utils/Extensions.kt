@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.isActive
 import org.thechance.api_gateway.util.APIs
 
 suspend inline fun <reified T> HttpClient.tryToExecute(
@@ -37,9 +38,7 @@ suspend inline fun <reified T> HttpClient.tryToExecuteFromWebSocket(
     attributes.put(AttributeKey("API"), api.value)
     return flow {
         webSocket(path = path) {
-            var i = 0
-            while (true) { // it's work
-                println("aaa ${i++}")
+            while (true) {
                 emit(receiveDeserialized<T>())
             }
         }
