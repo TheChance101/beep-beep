@@ -16,15 +16,12 @@ import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.tryToExecute
 import org.thechance.api_gateway.util.APIs
 
-
 @Single
 class TaxiService(
     private val client: HttpClient,
     private val attributes: Attributes,
     private val errorHandler: ErrorHandler
 ) {
-
-
     suspend fun getAllTaxi(languageCode: String, page: Int, limit: Int): PaginationResponse<TaxiDto> {
         return client.tryToExecute(
             api = APIs.TAXI_API,
@@ -170,7 +167,6 @@ class TaxiService(
         driverId: String,
         languageCode: String
     ): TripDto {
-
         return client.tryToExecute(
             api = APIs.TAXI_API,
             attributes = attributes,

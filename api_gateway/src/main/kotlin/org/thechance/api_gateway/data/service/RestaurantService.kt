@@ -14,8 +14,6 @@ import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.tryToExecute
 import org.thechance.api_gateway.data.utils.tryToExecuteFromWebSocket
 import org.thechance.api_gateway.util.APIs
-import org.thechance.api_gateway.util.Role
-
 
 @Single
 class RestaurantService(
@@ -114,7 +112,6 @@ class RestaurantService(
                 body = Json.encodeToString(restaurantIds)
             }
         }
-
 
     suspend fun getRestaurantsByOwnerId(ownerId: String, languageCode: String): List<RestaurantDto> {
         return client.tryToExecute(
@@ -251,7 +248,7 @@ class RestaurantService(
         }
     }
 
-    suspend fun deleteCuisine(cuisineId: String, languageCode : String): Boolean {
+    suspend fun deleteCuisine(cuisineId: String, languageCode: String): Boolean {
         return client.tryToExecute<Boolean>(
             APIs.RESTAURANT_API,
             attributes = attributes,
@@ -264,7 +261,7 @@ class RestaurantService(
 
     //region order
     @OptIn(InternalAPI::class)
-    suspend fun createOrder(order: OrderDto, languageCode: String) : OrderDto {
+    suspend fun createOrder(order: OrderDto, languageCode: String): OrderDto {
         return client.tryToExecute<OrderDto>(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
@@ -277,7 +274,6 @@ class RestaurantService(
             }
         }
     }
-
 
     @OptIn(InternalAPI::class)
     suspend fun updateOrderStatus(orderId: String, status: Int, languageCode: String): OrderDto {
