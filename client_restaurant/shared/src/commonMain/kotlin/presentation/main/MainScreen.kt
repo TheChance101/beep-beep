@@ -21,8 +21,11 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.aay.compose.barChart.BarChart
+import com.aay.compose.barChart.model.BarParameters
 import com.aay.compose.baseComponents.model.LegendPosition
 import com.aay.compose.lineChart.LineChart
+import com.aay.compose.lineChart.model.LineParameters
+import com.aay.compose.lineChart.model.LineType
 import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -93,7 +96,7 @@ class MainScreen(private val restaurantId: String) :
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         val rowWidth = with(LocalDensity.current) { rowSize.width.toDp() }
-                        val cardSize = if (isPortrait) ((rowWidth / 2 )- 4.dp) else 170.dp
+                        val cardSize = if (isPortrait) ((rowWidth / 2) - 4.dp) else 170.dp
                         OptionCardItem(
                             onClick = listener::onAllMealsCardClicked,
                             title = Resources.strings.allMeals,
@@ -128,24 +131,39 @@ class MainScreen(private val restaurantId: String) :
                 item {
                     ChartItem(
                         imagePainter = painterResource(Resources.images.revenue),
-                        title = state.revenueChart.linesParameters[0].label,
-                    ){
-                        LineChart(
-                            linesParameters = state.revenueChart.linesParameters,
-                            xAxisData = state.revenueChart.xAxisData,
+                        title = state.chartsItemUiState.dataSets[0].label,
+                    ) {
+                        BarChart(
+                            chartParameters = listOf(
+                                BarParameters(
+                                    dataName = state.chartsItemUiState.dataSets[0].label,
+                                    data = state.chartsItemUiState.dataSets[0].data,
+                                    barColor = Theme.colors.primary
+                                )
+                            ),
+                            xAxisData = state.chartsItemUiState.xAxisData,
                             legendPosition = LegendPosition.DISAPPEAR,
-                            yAxisRange = 5
+                            yAxisRange = 5,
+                            barCornerRadius = 8.dp
                         )
                     }
                 }
                 item {
                     ChartItem(
                         imagePainter = painterResource(Resources.images.orders),
-                        title = state.ordersChart.barsParameters[0].dataName,
-                    ){
-                        BarChart(
-                            chartParameters = state.ordersChart.barsParameters,
-                            xAxisData = state.ordersChart.xAxisData,
+                        title = state.chartsItemUiState.dataSets[1].label,
+                    ) {
+                        LineChart(
+                            linesParameters = listOf(
+                                LineParameters(
+                                    label = state.chartsItemUiState.dataSets[1].label,
+                                    data = state.chartsItemUiState.dataSets[1].data,
+                                    lineColor = Theme.colors.primary,
+                                    lineType = LineType.CURVED_LINE,
+                                    lineShadow = true,
+                                )
+                            ),
+                            xAxisData = state.chartsItemUiState.xAxisData,
                             legendPosition = LegendPosition.DISAPPEAR,
                             yAxisRange = 5
                         )

@@ -1,10 +1,9 @@
 package presentation.main
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.entity.BarsParameters
-import domain.entity.LinesParameters
 import domain.entity.Restaurant
-import domain.usecase.IMangeChartsUseCase
+import domain.entity.Statistics
+import domain.usecase.IMangeStatisticsUseCase
 import domain.usecase.IGetRestaurantsUseCase
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
@@ -14,7 +13,7 @@ import presentation.restaurantSelection.toUiState
 class MainScreenModel(
     private val restaurantId: String,
     private val getOwnerRestaurants: IGetRestaurantsUseCase,
-    private val mangeCharts: IMangeChartsUseCase,
+    private val mangeStatistics: IMangeStatisticsUseCase,
 ) : BaseScreenModel<MainScreenUIState, MainScreenUIEffect>(MainScreenUIState()),
     MainScreenInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
@@ -23,8 +22,7 @@ class MainScreenModel(
     init {
         updateState { it.copy(selectedRestaurantId = restaurantId) }
         getData()
-        getLineChartData()
-        getBarChartData()
+        getStats()
     }
 
     private fun getData() {
@@ -36,33 +34,18 @@ class MainScreenModel(
     }
 
 
-    private fun getLineChartData() {
+    private fun getStats() {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
             function = {
-                mangeCharts.getLineChartData()
+                mangeStatistics.getStatistics()
             },
-            ::onGetLineChartDataSuccessfully,
+            ::onGetChartsDataSuccessfully,
             ::onError
         )
     }
-    private  fun onGetLineChartDataSuccessfully(lines:LinesParameters){
-        updateState { it.copy(revenueChart = lines.toChartsItemUiState(), isLoading = false) }
-    }
-
-
-    private fun getBarChartData() {
-        updateState { it.copy(isLoading = true) }
-        tryToExecute(
-            function = {
-                mangeCharts.getBarChartData()
-            },
-            ::onGetBarChartDataSuccessfully,
-            ::onError
-        )
-    }
-    private  fun onGetBarChartDataSuccessfully(bars:BarsParameters){
-        updateState { it.copy(ordersChart = bars.toChartsItemUiState(), isLoading = false) }
+    private  fun onGetChartsDataSuccessfully(statistics: Statistics){
+        updateState { it.copy( chartsItemUiState = statistics.toChartsItemUiState(), isLoading = false) }
     }
 
 

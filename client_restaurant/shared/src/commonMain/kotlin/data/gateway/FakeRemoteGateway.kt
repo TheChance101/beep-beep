@@ -1,9 +1,5 @@
 package data.gateway
 
-import androidx.compose.ui.graphics.Color
-import com.aay.compose.barChart.model.BarParameters
-import com.aay.compose.lineChart.model.LineParameters
-import com.aay.compose.lineChart.model.LineType
 import data.remote.mapper.toEntity
 import data.remote.mapper.toOrderEntity
 import data.remote.model.CuisineDto
@@ -11,14 +7,14 @@ import data.remote.model.LocationDto
 import data.remote.model.MealDto
 import data.remote.model.OrderDto
 import data.remote.model.RestaurantDto
-import domain.entity.BarsParameters
 import domain.entity.Category
 import domain.entity.Cuisine
-import domain.entity.LinesParameters
+import domain.entity.DataSet
 import domain.entity.Location
 import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
+import domain.entity.Statistics
 import domain.gateway.IFakeRemoteGateway
 import presentation.base.InvalidPasswordException
 import presentation.base.RequestException
@@ -579,32 +575,23 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
         )
     )
 
-    private val lineXAxisData = listOf("sun", "mon", "tus", "wed", "thu", "fri", "sat")
-    private val lineParameters: LinesParameters = LinesParameters(
-        listOf(
-            LineParameters(
-                label = "revenue",
-                data = listOf(200.0, 300.0, 150.0, 250.0, 100.500, 400.0, 100.0),
-                lineColor = Color.Red,
-                lineType = LineType.CURVED_LINE,
-                lineShadow = true,
-            ),
-
-            ),
-        lineXAxisData
-    )
-
-    private val barXAxisData = listOf("sun", "mon", "tus", "wed", "thu", "fri", "sat")
-    private val barsParameters: BarsParameters = BarsParameters(
-        listOf(
-            BarParameters(
-                dataName = "Completed",
-                data = listOf(0.6, 10.6, 80.0, 50.6, 44.0, 100.6, 10.0),
-                barColor = Color(0xFF6C3428)
-            )
+    private val xAxisData = listOf("sun", "mon", "tus", "wed", "thu", "fri", "sat")
+    private val dataSets : List<DataSet> = listOf(
+        DataSet(
+            label = "revenue",
+            data = listOf(200.0, 300.0, 150.0, 250.0, 100.500, 400.0, 100.0)
         ),
-        barXAxisData
+        DataSet(
+            label = "Completed",
+            data = listOf(0.6, 10.6, 80.0, 50.6, 44.0, 100.6, 10.0),
+        )
     )
+    private val statistics : Statistics = Statistics(
+        dataSets = dataSets,
+        xAxisData = xAxisData
+    )
+
+
     override suspend fun loginUser(userName: String, password: String): Pair<String, String> {
         if (userName != "theChance") {
             throw InvalidPasswordException()
@@ -714,15 +701,13 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
         }.toEntity()
     }
 
+
     //endregion cuisines
 
-    //region charts
-    override suspend fun getLineChartDate(): LinesParameters {
-        return lineParameters
-    }
 
-    override suspend fun getBarChartDate(): BarsParameters {
-        return barsParameters
+    //region charts
+    override suspend fun getStatistics(): Statistics {
+        return statistics
     }
 
     //endregion charts
