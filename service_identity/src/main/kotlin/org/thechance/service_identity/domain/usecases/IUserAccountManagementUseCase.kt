@@ -109,9 +109,9 @@ class UserAccountManagementUseCase(
         map[ApplicationId.END_USER] = Pair(System.getenv(ApplicationId.END_USER).toString(), Role.END_USER)
         map[ApplicationId.RESTAURANT] = Pair(System.getenv(ApplicationId.RESTAURANT).toString(), Role.RESTAURANT_OWNER)
         map[ApplicationId.DASHBOARD] = Pair(System.getenv(ApplicationId.DASHBOARD).toString(), Role.DASHBOARD_ADMIN)
-//        map[ApplicationId.TAXI_DRIVER] = Pair(System.getenv(ApplicationId.TAXI_DRIVER).toString(), Role.TAXI_DRIVER)
-//        map[ApplicationId.DELIVERY] = Pair(System.getenv(ApplicationId.DELIVERY).toString(), Role.DELIVERY)
-//        map[ApplicationId.SUPPORT] = Pair(System.getenv(ApplicationId.SUPPORT).toString(), Role.SUPPORT)
+        map[ApplicationId.TAXI_DRIVER] = Pair(System.getenv(ApplicationId.TAXI_DRIVER).toString(), Role.TAXI_DRIVER)
+        map[ApplicationId.DELIVERY] = Pair(System.getenv(ApplicationId.DELIVERY).toString(), Role.DELIVERY)
+        map[ApplicationId.SUPPORT] = Pair(System.getenv(ApplicationId.SUPPORT).toString(), Role.SUPPORT)
         return map
     }
 
