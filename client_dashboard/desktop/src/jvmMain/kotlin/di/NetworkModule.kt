@@ -6,6 +6,8 @@ import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import io.ktor.serialization.gson.*
 import org.koin.core.scope.Scope
 import org.koin.dsl.module
@@ -28,6 +30,10 @@ val NetworkModule = module {
                 url("https://beep-beep-api-gateway-nap2u.ondigitalocean.app")
                 header("Accept-Language", "ar")
                 header("Country-Code", "EG")
+                header("Application-Id", "3000")
+                contentType(ContentType.Application.Json)
+                logger.debug("Request: $url")
+
             }
 
             install(ContentNegotiation) {
@@ -48,10 +54,7 @@ fun Scope.intercept(client: HttpClient) {
         val refreshToken = identityGateway.getRefreshToken()
 
         request.headers {
-            append(
-                "Authorization",
-                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhbGxfdXNlcnMiLCJpc3MiOiJ0aGUtY2hhbmNlLm9yZyIsInBlcm1pc3Npb24iOiI3IiwiZXhwIjoxNzI0NzcyMTQ3LCJ0b2tlblR5cGUiOiJBQ0NFU1NfVE9LRU4iLCJ1c2VySWQiOiI2NGYzNjUwYzVkZGJjMTViZmQxZWZjZjciLCJ1c2VybmFtZSI6ImhhaWR5X2Fib3Vnb21hYSJ9.zxdJT60ROmBr8hoDZXny252_jlUs3-tpQ3nH4dZ5V_8"
-            )
+            append("Authorization", "Bearer $accessToken")
         }
         val originalCall = execute(request)
 
