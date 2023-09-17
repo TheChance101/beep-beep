@@ -35,7 +35,7 @@ fun Route.notificationRoutes() {
             call.respond(HttpStatusCode.OK, result)
         }
         get("/users") {
-            val userIds = call.parameters["userIds"]?.split(",") ?: emptyList()
+            val userIds = call.parameters["userIds"]?.split(",")?.map { it } ?: emptyList()
             val result = registerToken.getAllUsersTokens(userIds)
             call.respond(HttpStatusCode.OK, result)
         }
