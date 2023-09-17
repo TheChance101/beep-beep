@@ -52,7 +52,9 @@ class TaxisGateway(private val client: HttpClient) : BaseGateway(), ITaxisGatewa
     }
 
     override suspend fun deleteTaxi(taxiId: String): Boolean {
-        TODO("deleteTaxi")
+        return tryToExecute<ServerResponse<TaxiDto>>(client) {
+            delete(urlString = "/taxi") { url { appendPathSegments(taxiId) } }
+        }.isSuccess ?: throw UnknownError()
     }
 
     override suspend fun getTaxiById(taxiId: String): Taxi {
