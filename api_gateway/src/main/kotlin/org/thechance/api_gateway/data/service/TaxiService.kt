@@ -109,20 +109,26 @@ class TaxiService(
     }
 
     @OptIn(InternalAPI::class)
-    suspend fun findTaxisByQuery(status: Boolean?,
-                                 color: Long?,
-                                 seats: Int?,
-                                 query: String?,
-                                 driverIds: List<String>,
-                                 language: String): List<TaxiDto> {
+    suspend fun findTaxisByQuery(
+        page: Int,
+        limit: Int,
+        status: Boolean?,
+        color: Long?,
+        seats: Int?,
+        query: String?,
+        driverIds: List<String>,
+        language: String
+    ): PaginationResponse<TaxiDto> {
         return client.tryToExecute(
-                api = APIs.TAXI_API,
-                attributes = attributes,
-                setErrorMessage = { errorCodes ->
-                    errorHandler.getLocalizedErrorMessage(errorCodes, language)
-                }
+            api = APIs.TAXI_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, language)
+            }
         ) {
             post("/taxis/search") {
+                parameter("page", page)
+                parameter("limit", limit)
                 parameter("status", status)
                 parameter("color", color)
                 parameter("seats", seats)
