@@ -29,6 +29,8 @@ data class StringResources(
     val submit: String = "Submit",
     //endregion
     //region Map
+    val beReady: String = "Be ready!",
+    val subLoadingText: String = "to take orders, and they will be assigned soon",
     val newOrder: String = "NewOrder",
     val accept: String = "Accept",
     val reject: String = "reject",
