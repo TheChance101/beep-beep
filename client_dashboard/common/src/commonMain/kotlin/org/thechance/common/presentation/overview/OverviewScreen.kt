@@ -3,23 +3,12 @@ package org.thechance.common.presentation.overview
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -53,6 +42,7 @@ object OverviewScreen :
 
     }
 
+    @OptIn(ExperimentalLayoutApi::class)
     @Composable
     override fun OnRender(state: OverviewUiState, listener: OverviewInteractionListener) {
 
@@ -66,9 +56,9 @@ object OverviewScreen :
                 verticalArrangement = Arrangement.spacedBy(24.kms)
         ) {
 
-            RevenueCard(listener = listener, state = state)
+            RevenueCard(listener = listener, state = state , modifier = Modifier.weight(1f))
             Row(
-                    modifier = Modifier.height(340.dp),
+                    modifier = Modifier.weight(1f),
                     horizontalArrangement = Arrangement.spacedBy(24.kms)
             ) {
                 OverviewCard(
@@ -135,10 +125,19 @@ object OverviewScreen :
                                                 maxLines = 1,
                                                 overflow = TextOverflow.Ellipsis,
                                         )
-                                        Text(
-                                                text = getPermission(user.permission),
-                                                style = Theme.typography.body.copy(color = Theme.colors.contentTertiary)
-                                        )
+                                        FlowRow(
+                                            modifier = Modifier,
+                                            horizontalArrangement = Arrangement.spacedBy(8.kms)
+                                        ) {
+                                            user.permission.forEach {
+                                                Icon(
+                                                    painter = painterResource(getPermissionIcon(it)),
+                                                    contentDescription = null,
+                                                    tint = Theme.colors.contentPrimary.copy(alpha = 0.87f),
+                                                    modifier = Modifier.size(24.kms)
+                                                )
+                                            }
+                                        }
                                     }
                                     if (index != state.users.lastIndex) {
                                         Divider(
@@ -285,7 +284,7 @@ object OverviewScreen :
                             barColor = Theme.colors.secondary,
                     ),
             )
-            Box(modifier = Modifier.fillMaxWidth().height(400.dp)) {
+            Box(modifier = Modifier.fillMaxSize()) {
                 BarChart(
                         chartParameters = testBarParameters,
                         gridColor = Theme.colors.divider,
@@ -392,6 +391,18 @@ object OverviewScreen :
                 textRatioStyle = Theme.typography.caption.copy(color = Theme.colors.contentPrimary),
                 descriptionStyle = Theme.typography.caption.copy(color = Theme.colors.contentPrimary),
         )
+    }
+
+    @Composable
+    fun getPermissionIcon(permission: PermissionUiState): String {
+        return when (permission) {
+            PermissionUiState.RESTAURANT -> Resources.Drawable.restaurantOutlined
+            PermissionUiState.DRIVER -> Resources.Drawable.taxiOutlined
+            PermissionUiState.END_USER -> Resources.Drawable.endUser
+            PermissionUiState.SUPPORT -> Resources.Drawable.support
+            PermissionUiState.DELIVERY -> Resources.Drawable.delivery
+            PermissionUiState.ADMIN -> Resources.Drawable.dashboardAdmin
+        }
     }
 
 
