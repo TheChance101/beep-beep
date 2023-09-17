@@ -31,7 +31,11 @@ data class DrawableResources(
     val trashBin: String = "ic_trash_bin_light.svg",
     val permission: String = "ic_edit.xml",
     val disable: String = "ic_disable.svg",
-    val delete: String = "ic_delete.svg"
+    val delete: String = "ic_delete.svg",
+    val support : String = "ic_support.xml",
+    val delivery : String = "ic_delivery.xml",
+    val dashboardAdmin : String = "ic_admin.xml",
+    val endUser : String = "ic_end_user.xml",
 )
 
 val darkDrawableResource = DrawableResources(

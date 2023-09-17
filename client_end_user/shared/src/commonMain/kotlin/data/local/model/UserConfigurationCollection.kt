@@ -12,5 +12,6 @@ class UserConfigurationCollection : RealmObject {
     var preferredFood: RealmList<String> = realmListOf()
     var priceLevel: String = ""
     var languageCode : String = ""
+    var rideQuality: String = ""
     var isFirstTimeUseApp : Boolean = true
 }

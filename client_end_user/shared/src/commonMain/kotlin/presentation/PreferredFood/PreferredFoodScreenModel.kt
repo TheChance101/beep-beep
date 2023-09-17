@@ -18,8 +18,8 @@ class PreferredFoodScreenModel(
     private var  selectedFood = mutableListOf<String>()
 
     override fun onPreferredFoodClicked(foodUIState: FoodUIState) {
-
-        if(state.value.selectedPreferredFood.size < 4){
+        selectedFood.add(foodUIState.name)
+        if(selectedFood.size < 4){
             addPreferredFood(foodUIState)
         }else{
             onSaved()
@@ -34,7 +34,6 @@ class PreferredFoodScreenModel(
         )
     }
     private fun addPreferredFood(foodUIState: FoodUIState) {
-        selectedFood.add(foodUIState.name)
         val updatedPreferredCuisine = state.value.preferredFood.filterNot { it.name == foodUIState.name }
         updateState { it.copy(preferredFood=updatedPreferredCuisine,selectedPreferredFood = selectedFood) }
     }
