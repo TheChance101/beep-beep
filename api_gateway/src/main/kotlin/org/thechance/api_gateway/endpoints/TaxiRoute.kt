@@ -21,74 +21,79 @@ fun Route.taxiRoutes() {
     val localizedMessagesFactory by inject<LocalizedMessagesFactory>()
 
     authenticateWithRole(Role.DASHBOARD_ADMIN) {
-    route("/taxi") {
+        route("/taxi") {
 
-        get {
-            val language = extractLocalizationHeader()
-            val page = call.parameters["page"]?.toInt() ?: 1
-            val limit = call.parameters["limit"]?.toInt() ?: 20
-            val result = taxiService.getAllTaxi(language, page, limit)
+            get {
+                val language = extractLocalizationHeader()
+                val page = call.parameters["page"]?.toInt() ?: 1
+                val limit = call.parameters["limit"]?.toInt() ?: 20
+                val result = taxiService.getAllTaxi(language, page, limit)
 
-            respondWithResult(HttpStatusCode.OK, result)
+                respondWithResult(HttpStatusCode.OK, result)
+            }
+            post {
+                val taxiDto = call.receive<TaxiDto>()
+
+                val language = extractLocalizationHeader()
+                val user = identityService.getUserByUsername(taxiDto.driverUsername, language)
+                val result = taxiService.createTaxi(taxiDto.copy(driverId = user.id), language)
+                val successMessage =
+                    localizedMessagesFactory.createLocalizedMessages(language).taxiCreatedSuccessfully
+
+                respondWithResult(HttpStatusCode.Created, result, successMessage)
+            }
+
+            put("/{taxiId}") {
+                val id = call.parameters["taxiId"] ?: ""
+                val taxiDto = call.receive<TaxiDto>()
+
+                val language = extractLocalizationHeader()
+                val result = taxiService.editTaxi(id, taxiDto, language)
+                val successMessage =
+                    localizedMessagesFactory.createLocalizedMessages(language).taxiUpdateSuccessfully
+                respondWithResult(HttpStatusCode.OK, result, successMessage)
+            }
+
+            get("/{taxiId}") {
+                val id = call.parameters["taxiId"] ?: ""
+                val language = extractLocalizationHeader()
+                val result = taxiService.getTaxiById(id, language)
+
+                respondWithResult(HttpStatusCode.OK, result)
+            }
+
+            delete("/{taxiId}") {
+                val language = extractLocalizationHeader()
+                val id = call.parameters["taxiId"] ?: ""
+                val result = taxiService.deleteTaxi(id, language)
+                val successMessage =
+                    localizedMessagesFactory.createLocalizedMessages(language).taxiDeleteSuccessfully
+                respondWithResult(HttpStatusCode.OK, result, successMessage)
+            }
         }
-        post {
-            val taxiDto = call.receive<TaxiDto>()
 
-            val language = extractLocalizationHeader()
-            val user = identityService.getUserByUsername(taxiDto.driverUsername, language)
-            val result = taxiService.createTaxi(taxiDto.copy(driverId = user.id), language)
-            val successMessage =
-                localizedMessagesFactory.createLocalizedMessages(language).taxiCreatedSuccessfully
+        route("/taxis") {
+            get("/search") {
+                val language = extractLocalizationHeader()
+                val page = call.parameters["page"]?.toInt() ?: 1
+                val limit = call.parameters["limit"]?.toInt() ?: 20
+                val query = call.request.queryParameters["query"]?.trim().orEmpty()
+                val status = call.request.queryParameters["status"]?.trim()?.toBoolean()
+                val color = call.request.queryParameters["color"]?.trim()?.toLongOrNull()
+                val seats = call.request.queryParameters["seats"]?.trim()?.toIntOrNull()
+                val drivers = async { identityService.getUsers(searchTerm = query, languageCode = language).items }.await()
+                val taxis = taxiService.findTaxisByQuery(page, limit, status, color, seats, query, drivers.map { it.id }, language)
 
-            respondWithResult(HttpStatusCode.Created, result, successMessage)
+                val driverUsernameMap = drivers.associateBy { it.id }.mapValues { it.value.username }
+
+                val result = taxis.items.map { taxiDto ->
+                    val driverUsername = driverUsernameMap[taxiDto.driverId]
+                    taxiDto.copy(driverUsername = driverUsername ?: "")
+                }
+
+                respondWithResult(HttpStatusCode.OK, result)
+            }
         }
-
-        put("/{taxiId}") {
-            val id = call.parameters["taxiId"] ?: ""
-            val taxiDto = call.receive<TaxiDto>()
-
-            val language = extractLocalizationHeader()
-            val result = taxiService.editTaxi(id, taxiDto, language)
-            val successMessage =
-                localizedMessagesFactory.createLocalizedMessages(language).taxiUpdateSuccessfully
-            respondWithResult(HttpStatusCode.OK, result, successMessage)
-        }
-
-        get("/{taxiId}") {
-            val id = call.parameters["taxiId"] ?: ""
-            val language = extractLocalizationHeader()
-            val result = taxiService.getTaxiById(id, language)
-
-            respondWithResult(HttpStatusCode.OK, result)
-        }
-
-        delete("/{taxiId}") {
-            val language = extractLocalizationHeader()
-            val id = call.parameters["taxiId"] ?: ""
-            val result = taxiService.deleteTaxi(id, language)
-            val successMessage =
-                localizedMessagesFactory.createLocalizedMessages(language).taxiDeleteSuccessfully
-            respondWithResult(HttpStatusCode.OK, result, successMessage)
-        }
-    }
-
-    route("/taxis") {
-        get("/search") {
-            val language = extractLocalizationHeader()
-            val page = call.parameters["page"]?.toInt() ?: 1
-            val limit = call.parameters["limit"]?.toInt() ?: 20
-            val query = call.request.queryParameters["query"]?.trim().orEmpty()
-            val status = call.request.queryParameters["status"]?.trim()?.toBoolean()
-            val color = call.request.queryParameters["color"]?.trim()?.toLongOrNull()
-            val seats = call.request.queryParameters["seats"]?.trim()?.toIntOrNull()
-            val driverIDs = async {
-                identityService.getUsers(searchTerm = query, languageCode = language).items.map { it.id }
-            }.await()
-
-            val result = taxiService.findTaxisByQuery(page, limit, status, color, seats, query, driverIDs, language)
-            respondWithResult(HttpStatusCode.OK, result)
-        }
-    }
 
     }
 
