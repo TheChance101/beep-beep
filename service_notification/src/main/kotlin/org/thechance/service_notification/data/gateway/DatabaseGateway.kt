@@ -25,8 +25,8 @@ class DatabaseGateway(
     private val userCollection by lazy { databaseContainer.userCollection }
     private val historyCollection by lazy { databaseContainer.historyCollection }
 
-    override suspend fun getUserTokens(userId: String): List<String> {
-        return userCollection.findOne(UserCollection::userId eq userId)?.deviceTokens ?: throw NotFoundException(TOKENS_NOT_FOUND)
+    override suspend fun getUserTokens(id: String): List<String> {
+        return userCollection.findOneById(ObjectId(id))?.deviceTokens ?: throw NotFoundException(TOKENS_NOT_FOUND)
     }
 
     override suspend fun registerToken(userId: String, token: String): Boolean {
@@ -38,7 +38,7 @@ class DatabaseGateway(
     }
 
     override suspend fun getUsersTokens(ids: List<String>): List<String> {
-        return userCollection.find(UserCollection::userId `in` ids.map { it }).toList()
+        return userCollection.find(UserCollection::id `in` ids.map { ObjectId(it) }).toList()
             .flatMap { it.deviceTokens }
     }
 

@@ -12,8 +12,6 @@ data class UserCollection(
     @SerialName("_id")
     @Contextual
     val id: ObjectId,
-    @SerialName("user_id")
-    val userId: String,
     @SerialName("device_tokens")
     val deviceTokens: List<String>,
 )
