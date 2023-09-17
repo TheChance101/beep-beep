@@ -32,7 +32,7 @@ class PreferredMealScreen :
 
     override fun onEffect(effect: PreferredScreenUiEffect, navigator: Navigator) {
         when (effect) {
-            PreferredScreenUiEffect.NavigateToHomeScreen -> navigator.replace(MainContainer)
+            PreferredScreenUiEffect.NavigateToHomeScreen -> navigator.replaceAll(MainContainer)
         }
     }
 

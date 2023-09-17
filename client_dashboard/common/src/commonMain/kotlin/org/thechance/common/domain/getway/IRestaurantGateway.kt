@@ -21,7 +21,7 @@ interface IRestaurantGateway {
         numberOfRestaurantsInPage: Int,
         restaurantName: String,
         rating: Double?,
-        priceLevel: Int?
+        priceLevel: String?
     ): DataWrapper<Restaurant>
 
 }

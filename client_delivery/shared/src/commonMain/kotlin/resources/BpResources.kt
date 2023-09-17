@@ -6,6 +6,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import com.beepbeep.designSystem.ui.theme.BpTheme
+import util.SetInsetsController
 
 
 private val localDrawableResources = staticCompositionLocalOf { DrawableResources() }
@@ -23,6 +24,7 @@ fun BeepBeepTheme(
         localStringResources provides StringResources(),
     ) {
         BpTheme {
+            SetInsetsController(useDarkTheme)
             content()
         }
     }

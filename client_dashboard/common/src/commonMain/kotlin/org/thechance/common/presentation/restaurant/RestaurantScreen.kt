@@ -35,6 +35,7 @@ import org.thechance.common.presentation.composables.table.TotalItemsIndicator
 import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.kms
 import java.awt.Dimension
+import kotlin.reflect.KFunction1
 
 class RestaurantScreen :
     BaseScreen<RestaurantScreenModel, RestaurantUIEffect, RestaurantUiState, RestaurantInteractionListener>() {
@@ -132,7 +133,7 @@ class RestaurantScreen :
     ) {
         BpTable(
             data = state.restaurants,
-            key = { it.name },
+            key = { it.id },
             headers = state.tableHeader,
             modifier = Modifier.fillMaxWidth(),
             rowContent = { restaurant ->
@@ -209,21 +210,21 @@ class RestaurantScreen :
             maxLines = 1,
         )
         Text(
-            restaurant.phoneNumber,
+            restaurant.phone,
             style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(otherColumnsWeight),
             maxLines = 1,
         )
         RatingBar(
-            rating = restaurant.rating,
+            rating = restaurant.rate,
             selectedIcon = painterResource(Resources.Drawable.starFilled),
             halfSelectedIcon = painterResource(Resources.Drawable.starHalfFilled),
             modifier = Modifier.weight(otherColumnsWeight),
             iconsSize = 16.kms
         )
         PriceBar(
-            priceLevel = restaurant.priceLevel,
+            priceLevel = 1,
             icon = painterResource(Resources.Drawable.dollarSign),
             iconColor = Theme.colors.success,
             modifier = Modifier.weight(otherColumnsWeight),
@@ -231,7 +232,7 @@ class RestaurantScreen :
         )
 
         Text(
-            restaurant.workingHours,
+            text = "${restaurant.openingTime} - ${restaurant.closingTime}",
             style = Theme.typography.titleMedium.copy(color = Theme.colors.contentPrimary),
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(otherColumnsWeight),
@@ -277,7 +278,7 @@ class RestaurantScreen :
                 onClickSave = {
                     listener.onSaveFilterRestaurantsClicked(
                         state.restaurantFilterDropdownMenuUiState.filterRating,
-                        state.restaurantFilterDropdownMenuUiState.filterPriceLevel
+                        state.restaurantFilterDropdownMenuUiState.filterPriceLevel.toString()
                     )
                 },
                 expanded = state.restaurantFilterDropdownMenuUiState.isFilterDropdownMenuExpanded,
@@ -291,7 +292,7 @@ class RestaurantScreen :
     @Composable
     private fun RestaurantFilterDropdownMenu(
         onClickRating: (Double) -> Unit,
-        onClickPrice: (Int) -> Unit,
+        onClickPrice: KFunction1<Int, Unit>,
         onDismissRequest: () -> Unit,
         onClickCancel: () -> Unit,
         onClickSave: () -> Unit,
