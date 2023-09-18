@@ -7,6 +7,8 @@ import io.ktor.client.statement.HttpResponse
 import org.thechance.common.data.remote.model.ServerResponse
 import org.thechance.common.domain.util.*
 import java.net.ConnectException
+import java.net.UnknownHostException
+import java.nio.channels.UnresolvedAddressException
 
 abstract class BaseGateway {
 
@@ -19,14 +21,15 @@ abstract class BaseGateway {
         } catch (e: ClientRequestException) {
             val errorMessages = e.response.body<ServerResponse<String>>().status?.errorMessages
             errorMessages?.let(::throwMatchingException)
-            throw UnknownErrorException(e.message)
-        } catch (e: ConnectException) {
-            throw NoInternetException()
-        }catch(e: ConnectException){
-            throw NoInternetException()
         } catch (e: Exception) {
-            throw UnknownErrorException(e.message.toString())
+            when (e) {
+                is UnresolvedAddressException,
+                is ConnectException,
+                is UnknownHostException -> throw NoInternetException()
+                else -> throw UnknownErrorException(e.message.toString())
+            }
         }
+        throw UnknownErrorException("Unknown Error Exception")
     }
 
     fun throwMatchingException(errorMessages: Map<String, String>) {
