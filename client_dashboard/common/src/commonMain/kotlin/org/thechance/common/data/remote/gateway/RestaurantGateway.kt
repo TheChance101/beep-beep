@@ -6,6 +6,7 @@ import io.ktor.client.request.forms.*
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.http.*
+import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.*
 import org.thechance.common.domain.entity.*
