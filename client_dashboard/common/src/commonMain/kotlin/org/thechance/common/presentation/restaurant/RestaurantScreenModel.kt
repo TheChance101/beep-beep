@@ -372,6 +372,7 @@ class RestaurantScreenModel(
     }
 
     override fun onCreateNewRestaurantClicked() {
+        clearAddRestaurantErrorInfo()
         updateState { it.copy(isNewRestaurantInfoDialogVisible = true) }
         tryToExecute(
             callee = {
