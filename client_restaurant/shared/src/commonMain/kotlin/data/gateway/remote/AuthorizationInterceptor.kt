@@ -19,6 +19,7 @@ fun Scope.intercept(client: HttpClient) {
 
         request.headers {
             append("Authorization", "Bearer $accessToken")
+            append("Application-Id","2000")
         }
         val originalCall = execute(request)
 

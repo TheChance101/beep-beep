@@ -20,4 +20,6 @@ interface IUsersGateway {
 
     suspend fun deleteUser(userId: String): Boolean
 
+    suspend fun getLastRegisteredUsers(limit : Int): List<User>
+
 }
