@@ -5,7 +5,6 @@ import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.usecase.IUsersManagementUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
-import org.thechance.common.presentation.overview.toLastUserUiState
 import org.thechance.common.presentation.util.ErrorState
 
 class UserScreenModel(
@@ -14,6 +13,7 @@ class UserScreenModel(
     UserScreenInteractionListener {
 
     private var searchJob: Job? = null
+    private var limitJob: Job? = null
 
     init {
         getUsers()
@@ -118,7 +118,7 @@ class UserScreenModel(
             it.copy(
                 permissionsDialog = it.permissionsDialog.copy(
                     show = true,
-                    id=  user.userId,
+                    id = user.userId,
                     permissions = user.permissions
                 )
             )
@@ -180,22 +180,22 @@ class UserScreenModel(
         userId: String, permissions: List<UserScreenUiState.PermissionUiState>
     ) {
         tryToExecute(
-                { userManagement.updateUserPermissions(userId, permissions.toEntity()) },
-                { onUpdatePermissionsSuccessfully(it.toUiState()) },
-                ::onError
+            { userManagement.updateUserPermissions(userId, permissions.toEntity()) },
+            { onUpdatePermissionsSuccessfully(it.toUiState()) },
+            ::onError
         )
     }
 
-    private fun onUpdatePermissionsSuccessfully(user:UserScreenUiState.UserUiState) {
+    private fun onUpdatePermissionsSuccessfully(user: UserScreenUiState.UserUiState) {
         updateState {
             it.copy(
-                    isLoading = false,
-                    pageInfo = it.pageInfo.copy(
-                            data = it.pageInfo.data.map { userUiState ->
-                                if (userUiState.userId == user.userId) userUiState.copy(permissions = user.permissions)
-                                else userUiState
-                            },
-                    )
+                isLoading = false,
+                pageInfo = it.pageInfo.copy(
+                    data = it.pageInfo.data.map { userUiState ->
+                        if (userUiState.userId == user.userId) userUiState.copy(permissions = user.permissions)
+                        else userUiState
+                    },
+                )
             )
         }
     }
@@ -205,7 +205,12 @@ class UserScreenModel(
     // region Pagination
     override fun onItemsIndicatorChange(itemPerPage: Int) {
         updateState { it.copy(specifiedUsers = itemPerPage) }
-        getUsers()
+        launchLimitJob()
+    }
+
+    private fun launchLimitJob() {
+        limitJob?.cancel()
+        limitJob = launchDelayed(300L) { getUsers() }
     }
 
     override fun onPageClick(pageNumber: Int) {
