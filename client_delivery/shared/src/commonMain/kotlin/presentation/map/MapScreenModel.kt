@@ -12,11 +12,11 @@ class MapScreenModel:BaseScreenModel<MapScreenUiState,MapScreenUiEffect>(MapScre
     init {
         viewModelScope.launch {
             delay(5000)
-            updateState { it.copy(isLoading = false) }
+            updateState { it.copy(isLoading = false, showChoiceButtons = true) }
         }
     }
     override fun onAcceptClicked() {
-        updateState { it.copy(isOrderAccepted = true) }
+        updateState { it.copy(showChoiceButtons = false, showOrderDuration = true) }
     }
 
     override fun onRejectClicked() {
@@ -24,7 +24,7 @@ class MapScreenModel:BaseScreenModel<MapScreenUiState,MapScreenUiEffect>(MapScre
     }
 
     override fun onReceivedClicked() {
-        TODO("Not yet implemented")
+      updateState { it.copy(showOrderDuration = false, showReceivedButton = true) }
     }
 
     override fun onDeliveredClicked() {

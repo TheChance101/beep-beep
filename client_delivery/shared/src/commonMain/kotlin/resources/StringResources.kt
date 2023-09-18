@@ -30,9 +30,11 @@ data class StringResources(
     //endregion
     //region Map
     val beReady: String = "Be ready!",
-    val subLoadingText: String = "to take orders, and they will be assigned soon",
+    val subLoadingText: String = "to take orders, and they will be \nassigned soon",
     val newOrder: String = "NewOrder",
     val accept: String = "Accept",
+    val received: String = "Received",
+    val delivered: String = "Delivered",
     val reject: String = "reject",
     val deliverAt: String = "Deliver At",
     val welcome: String = "Welcome, "
