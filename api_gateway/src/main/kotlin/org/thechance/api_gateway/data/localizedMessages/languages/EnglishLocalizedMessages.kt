@@ -73,4 +73,8 @@ class EnglishLocalizedMessages() : LocalizedMessages {
     override val deletedSuccessfully: String = "Deleted successfully "
     override val cuisineNameAlreadyExisted: String = "Cuisine name already existed"
     //endregion
+
+    // region notification
+    override val notificationNotSent: String = "Notification not sent"
+    //endregion
 }

@@ -76,4 +76,8 @@ class PalestinianArabicLocalizedMessages(
     override val deletedSuccessfully: String="انحذف يخوو"
     override val cuisineNameAlreadyExisted: String = "المطبخ موجود قبل كدا يا حبيبى"
     //endregion
+
+    // region notification
+    override val notificationNotSent: String = "لم يتم إرسال الإشعار"
+    //endregion
 }

@@ -166,6 +166,10 @@ class ErrorHandler(
         if(errorCodes.contains( 2503))
             errors[2503] = localizedMessages.cuisineNameAlreadyExisted
 
+
+        if(errorCodes.contains(4004))
+            errors[4004] = localizedMessages.notificationNotSent
+
         return errors
     }
 

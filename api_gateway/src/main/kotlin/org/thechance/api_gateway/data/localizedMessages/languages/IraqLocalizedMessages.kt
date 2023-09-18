@@ -73,4 +73,8 @@ class IraqiArabicLocalizedMessages() : LocalizedMessages {
     override val deletedSuccessfully: String = "حذفناه حجي"
     override val cuisineNameAlreadyExisted: String = "مو ضايف هذا المطبخ من قبل !!"
     //endregion
+
+    // region notification
+    override val notificationNotSent: String = "حجي..اشعار ماكو"
+    //endregion
 }

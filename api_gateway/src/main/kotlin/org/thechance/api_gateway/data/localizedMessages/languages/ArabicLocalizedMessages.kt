@@ -73,4 +73,8 @@ class ArabicLocalizedMessages : LocalizedMessages {
     override val deletedSuccessfully: String = "تم الحذف بنجاح"
     override val cuisineNameAlreadyExisted: String = "هذا المطبخ موجود بالفعل "
     //endregion
+
+    // region notification
+    override val notificationNotSent: String = "لم يتم إرسال الإشعار"
+    //endregion
 }
