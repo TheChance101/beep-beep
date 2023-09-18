@@ -9,22 +9,19 @@ import io.ktor.client.request.*
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.gson.*
+import org.koin.core.qualifier.named
 import org.koin.core.scope.Scope
 import org.koin.dsl.module
 import org.thechance.common.domain.getway.IIdentityGateway
 
-
 val NetworkModule = module {
     single {
         val client = HttpClient(CIO) {
-
             expectSuccess = true
-
             install(Logging) {
                 logger = Logger.DEFAULT
                 level = LogLevel.ALL
             }
-
             defaultRequest {
                 header("Content-Type", "application/json")
                 url("https://beep-beep-api-gateway-nap2u.ondigitalocean.app")
@@ -35,12 +32,25 @@ val NetworkModule = module {
                 logger.debug("Request: $url")
 
             }
-
             install(ContentNegotiation) {
                 gson()
             }
         }
         intercept(client)
+        client
+    }
+
+    single(named("locationClient")) {
+        val client = HttpClient(CIO) {
+            expectSuccess = true
+            install(Logging) {
+                logger = Logger.DEFAULT
+                level = LogLevel.ALL
+            }
+            install(ContentNegotiation) {
+                gson()
+            }
+        }
         client
     }
 }

@@ -22,7 +22,7 @@ class MealsScreenModel(
 
     init {
         getCuisine()
-        getMeals("64f372095fecc11e6d917656")
+        getMeals(restaurantId)
     }
 
     private fun getCuisine() {

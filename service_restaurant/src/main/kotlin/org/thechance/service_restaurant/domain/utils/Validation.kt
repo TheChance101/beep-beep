@@ -1,5 +1,6 @@
 package org.thechance.service_restaurant.domain.utils
 
+import org.thechance.service_restaurant.domain.entity.Location
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_PAGE
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_PAGE_LIMIT
@@ -16,7 +17,7 @@ interface IValidation {
     fun isValidDescription(description: String): Boolean
     fun isValidLatitude(latitude: Double): Boolean
     fun isValidLongitude(longitude: Double): Boolean
-    fun isValidLocation(latitude: Double, longitude: Double): Boolean
+    fun isValidLocation(location: Location): Boolean
     fun isValidTime(time: String?): Boolean
     fun checkIsValidIds(id: String, listIds: List<String>)
 
@@ -56,7 +57,7 @@ class Validation : IValidation {
             "IQD" -> "^07\\d{9}\$"
             "SYP" -> "^09\\d{9}\$"
             "ILS" -> "^(05|09)\\d{9}\$"
-            else -> "^\\d{10}\$\n"
+            else -> "^\\d{10}\$"
         }
     }
 
@@ -94,8 +95,8 @@ class Validation : IValidation {
         return (longitude != -1.0) && (longitude in LONGITUDE_MIN..LONGITUDE_MAX)
     }
 
-    override fun isValidLocation(latitude: Double, longitude: Double): Boolean {
-        return isValidLatitude(latitude) && isValidLongitude(longitude)
+    override fun isValidLocation(location: Location): Boolean {
+        return isValidLatitude(location.latitude) && isValidLongitude(location.longitude)
     }
 
     override fun isValidAddress(address: String): Boolean {
@@ -109,7 +110,7 @@ class Validation : IValidation {
 
     override fun isValidTime(time: String?): Boolean {
         val pattern = "^([01]?[0-9]|2[0-3]):[0-5][0-9]$"
-        return if ( time != null) Regex(pattern).matches(time!!) else false
+        return if (time != null) Regex(pattern).matches(time) else false
 
     }
 

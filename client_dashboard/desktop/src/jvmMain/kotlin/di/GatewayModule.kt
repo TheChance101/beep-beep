@@ -5,11 +5,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.thechance.common.data.local.gateway.IdentityGateway
 import org.thechance.common.data.local.gateway.LocalGateway
-import org.thechance.common.data.remote.fakegateway.RestaurantFakeGateway
-import org.thechance.common.data.remote.gateway.FakeRemoteGateway
-import org.thechance.common.data.remote.gateway.RestaurantGateway
-import org.thechance.common.data.remote.gateway.TaxisGateway
-import org.thechance.common.data.remote.gateway.UsersGateway
+import org.thechance.common.data.remote.gateway.*
 import org.thechance.common.domain.getway.*
 
 val GatewayModule = module {
@@ -17,7 +13,8 @@ val GatewayModule = module {
     singleOf(::IdentityGateway) { bind<IIdentityGateway>() }
     singleOf(::UsersGateway) { bind<IUsersGateway>() }
     singleOf(::TaxisGateway) { bind<ITaxisGateway>() }
-    singleOf(::RestaurantGateway){ bind<IRestaurantGateway>() }
+    singleOf(::RestaurantGateway) { bind<IRestaurantGateway>() }
+    singleOf(::LocationGateway) { bind<ILocationGateway>() }
     // endregion
 
     // region Fake Gateways
