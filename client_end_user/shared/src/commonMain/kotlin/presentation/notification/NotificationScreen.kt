@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -31,10 +30,11 @@ class NotificationScreen :
             modifier = Modifier.fillMaxSize().background(Theme.colors.background),
             contentPadding = PaddingValues(vertical = 24.dp)
         ) {
-            items(state.todayNotifications) {item ->
+            itemsIndexed(state.todayNotifications) { index, item ->
+                val showDate = index == 0
                 NotificationCard(
                     title = item.title,
-                    showDate = true,
+                    showDate = showDate,
                     date = Resources.strings.today,
                     time = item.time,
                     content = item.body,
