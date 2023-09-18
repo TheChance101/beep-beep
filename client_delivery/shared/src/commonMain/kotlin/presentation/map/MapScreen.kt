@@ -40,7 +40,7 @@ class MapScreen:BaseScreen<MapScreenModel,MapScreenUiState,MapScreenUiEffect,Map
                 isBackIconVisible = false,
                 title = "${Resources.strings.welcome}${state.username}"
             ) {
-                Box(
+                Icon(
                     modifier = Modifier
                         .padding(end = 16.dp)
                         .width(40.dp)
@@ -48,15 +48,13 @@ class MapScreen:BaseScreen<MapScreenModel,MapScreenUiState,MapScreenUiEffect,Map
                         .background(
                             color = Theme.colors.hover,
                             shape = RoundedCornerShape(size = 8.dp)
-                        ).clickable { listener.onCloseClicked() },
-                ) {
-                    Icon(
-                        modifier = Modifier.align(Alignment.Center),
-                        painter = painterResource(Resources.images.close),
-                        contentDescription = Resources.strings.close,
-                        tint = Theme.colors.contentPrimary
-                    )
-                }
+                        ).clickable { listener.onCloseClicked() }
+                        .align(Alignment.Center)
+                        .padding(12.dp),
+                    painter = painterResource(Resources.images.close),
+                    contentDescription = Resources.strings.close,
+                    tint = Theme.colors.contentPrimary
+                )
             }
 
             AnimatedVisibility(modifier = Modifier.align(Alignment.BottomCenter),
