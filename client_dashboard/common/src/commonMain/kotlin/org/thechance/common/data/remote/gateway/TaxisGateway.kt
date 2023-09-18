@@ -29,12 +29,7 @@ class TaxisGateway(private val client: HttpClient) : BaseGateway(), ITaxisGatewa
                 parameter("limit", limit)
             }
         }.value
-
-        return DataWrapper(
-            totalPages = result?.total?.div(limit) ?: 0,
-            numberOfResult = result?.total ?: 0,
-            result = result?.items?.toEntity() ?: throw UnknownError()
-        )
+        return paginateData(result?.items?.toEntity() ?: emptyList(), limit, result?.total ?: 0)
     }
 
     override suspend fun createTaxi(taxi: NewTaxiInfo): Taxi {
@@ -48,8 +43,8 @@ class TaxisGateway(private val client: HttpClient) : BaseGateway(), ITaxisGatewa
     }
 
     override suspend fun updateTaxi(taxi: NewTaxiInfo): Taxi {
-        val result = tryToExecute<ServerResponse<TaxiDto>>(client){
-            put(urlString = "/taxi/{taxiId}"){
+        val result = tryToExecute<ServerResponse<TaxiDto>>(client) {
+            put(urlString = "/taxi/{taxiId}") {
                 contentType(ContentType.Application.Json)
                 setBody(taxi.toDto())
             }
