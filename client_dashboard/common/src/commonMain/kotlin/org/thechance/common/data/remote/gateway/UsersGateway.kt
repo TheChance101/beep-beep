@@ -36,20 +36,16 @@ class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGatewa
             }
         }.value
 
-        return DataWrapper(
-                totalPages = result?.total?.div(numberOfUsers) ?: 0,
-                numberOfResult = result?.total ?: 0,
-                result = result?.users?.toEntity() ?: emptyList()
-        )
+        return paginateData(result?.users?.toEntity() ?: emptyList(), numberOfUsers, result?.total ?: 0)
     }
 
     override suspend fun loginUser(username: String, password: String): Pair<String, String> {
         val result = tryToExecute<ServerResponse<UserTokensRemoteDto>>(client) {
             submitForm(
-                    formParameters = Parameters.build {
-                        append("username", username)
-                        append("password", password)
-                    }
+                formParameters = Parameters.build {
+                    append("username", username)
+                    append("password", password)
+                }
             ) {
                 url("/login")
                 header("Accept-Language", "ar")
@@ -82,10 +78,10 @@ class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGatewa
         return tryToExecute<ServerResponse<UserDto>>(client) {
             put(urlString = "/user/$userId/permission") {
                 setBody(
-                        Json.encodeToString(
-                                ListSerializer(Int.serializer()),
-                                mapPermissionsToInt(permissions)
-                        )
+                    Json.encodeToString(
+                        ListSerializer(Int.serializer()),
+                        mapPermissionsToInt(permissions)
+                    )
                 )
             }
         }.value?.toEntity() ?: throw UnknownError()
