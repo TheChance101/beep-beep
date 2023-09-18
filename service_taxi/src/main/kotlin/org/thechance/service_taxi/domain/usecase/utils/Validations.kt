@@ -6,6 +6,7 @@ interface IValidations {
     fun isValidLocation(latitude: Double, longitude: Double): Boolean
     fun isValidRate(rate: Double): Boolean
     fun isValidPrice(price: Double): Boolean
+    fun isValidCarType(type: String): Boolean
 }
 
 class Validations : IValidations {
@@ -16,6 +17,10 @@ class Validations : IValidations {
 
     override fun isValidPrice(price: Double): Boolean {
         return price >= 10.0
+    }
+
+    override fun isValidCarType(type: String): Boolean {
+        return "^[A-Za-z0-9\\s\\-]+\$".toRegex().matches(type)
     }
 
     override fun isValidLocation(latitude: Double, longitude: Double): Boolean {

@@ -22,4 +22,6 @@ interface IUsersGateway {
 
     suspend fun getLastRegisteredUsers(limit : Int): List<User>
 
+    suspend fun updateUserPermissions(userId: String, permissions: List<Permission>): User
+
 }
