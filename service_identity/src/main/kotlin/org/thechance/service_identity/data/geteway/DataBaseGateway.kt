@@ -162,7 +162,7 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
                 foreignField = UserDetailsCollection::userId.name,
                 newAs = DetailedUserCollection::details.name
             )
-        ).toList().toEntity(wallet.walletBalance, userAddresses, country, userPermission).firstOrNull()
+        ).toList().toEntity(wallet.walletBalance, wallet.currency, userAddresses, country, userPermission).firstOrNull()
             ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
@@ -310,6 +310,14 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
             update = inc(WalletCollection::walletBalance, amount),
             options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
+    }
+
+    override suspend fun updateWalletCurrency(userId: String, currency: String) {
+        dataBaseContainer.walletCollection.findOneAndUpdate(
+            filter = WalletCollection::userId eq ObjectId(userId),
+            update = Updates.set(WalletCollection::currency.name, currency),
+            options = FindOneAndUpdateOptions().upsert(true)
+        )
     }
 
     private suspend fun createWallet(wallet: WalletCollection): Boolean {

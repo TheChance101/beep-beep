@@ -2,6 +2,7 @@ package org.thechance.service_identity.domain.gateway
 
 import org.thechance.service_identity.domain.entity.*
 import org.thechance.service_identity.domain.security.SaltedHash
+import java.util.Currency
 
 interface IDataBaseGateway {
 
@@ -65,6 +66,8 @@ interface IDataBaseGateway {
     suspend fun getWalletBalance(userId: String): Wallet
 
     suspend fun addToWallet(userId: String, amount: Double): Wallet
+
+    suspend fun updateWalletCurrency(userId:String, currency: String)
 
     // endregion
 

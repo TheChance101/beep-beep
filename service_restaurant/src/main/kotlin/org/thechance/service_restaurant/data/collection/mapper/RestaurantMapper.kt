@@ -8,6 +8,7 @@ import java.util.*
 
 fun RestaurantCollection.toEntity() = Restaurant(
     id = id.toString(),
+    ownerUserName = ownerUserName?:"",
     ownerId = ownerId.toString(),
     name = name,
     description = description,
@@ -26,6 +27,7 @@ fun List<RestaurantCollection>.toEntity(): List<Restaurant> = map { it.toEntity(
 
 fun Restaurant.toCollection() = RestaurantCollection(
     ownerId = ObjectId(ownerId),
+    ownerUserName = ownerUserName,
     name = name,
     description = description,
     priceLevel = priceLevel,
