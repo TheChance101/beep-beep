@@ -68,5 +68,9 @@ data class English(
     override val ridePreferredTitle: String = "Which do you prefer for your taxi rides?",
     override val ridePreferredSubTitle: String = "Help us improve your experience with us.",
     override val quickerRoutesWithHigherCosts: String = "Quicker routes with higher costs.",
-    override val slowerRoutesWithLowCosts: String = "Slower routes with lower costs."
+    override val slowerRoutesWithLowCosts: String = "Slower routes with lower costs.",
+    override val today: String = "Today",
+    override val thisWeek: String = "This Week",
+    override val tryAgain: String = "Try again",
+    override val trackYourOrder: String = "Track Your Order",
 ) : IStringResources

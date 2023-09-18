@@ -69,4 +69,8 @@ data class ArabicPS(
     override val ridePreferredSubTitle: String = "ساعدنا في تحسين تجربتك معنا.",
     override val quickerRoutesWithHigherCosts: String = "مسارات أسرع بتكلفة أعلى.",
     override val slowerRoutesWithLowCosts: String = "مسارات أبطأ بتكلفة أقل.",
+    override val today: String = "اليوم",
+    override val thisWeek: String = "هاد الأسبوع",
+    override val tryAgain: String = "حاول تاني",
+    override val trackYourOrder: String = "تابع طلبك",
 ) : IStringResources
