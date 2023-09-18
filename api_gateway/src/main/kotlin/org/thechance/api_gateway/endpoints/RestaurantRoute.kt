@@ -11,6 +11,7 @@ import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.model.restaurant.RestaurantDto
 import org.thechance.api_gateway.data.service.IdentityService
 import org.thechance.api_gateway.data.service.RestaurantService
+import org.thechance.api_gateway.data.model.restaurant.getRestaurantOptions
 import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
 import org.thechance.api_gateway.endpoints.utils.respondWithResult
@@ -23,11 +24,11 @@ fun Route.restaurantRoutes() {
     val identityService: IdentityService by inject()
 
     route("/restaurants") {
+
         get {
             val language = extractLocalizationHeader()
-            val page = call.parameters["page"]?.toInt() ?: 1
-            val limit = call.parameters["limit"]?.toInt() ?: 20
-            val restaurants = restaurantService.getRestaurants(page, limit, languageCode = language)
+            val restaurants =
+                restaurantService.getRestaurants(getRestaurantOptions(call.parameters), languageCode = language)
             respondWithResult(HttpStatusCode.OK, restaurants)
         }
 

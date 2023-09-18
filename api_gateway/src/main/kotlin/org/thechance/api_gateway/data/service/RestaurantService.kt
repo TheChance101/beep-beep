@@ -2,7 +2,6 @@ package org.thechance.api_gateway.data.service
 
 import io.ktor.client.*
 import io.ktor.client.request.*
-import io.ktor.client.utils.EmptyContent.status
 import io.ktor.util.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.encodeToString
@@ -84,7 +83,8 @@ class RestaurantService(
         }
     }
 
-    suspend fun getRestaurants(page: Int, limit: Int, languageCode: String) =
+    @OptIn(InternalAPI::class)
+    suspend fun getRestaurants(restaurantOptions: RestaurantOptions, languageCode: String) =
         client.tryToExecute<PaginationResponse<RestaurantDto>>(
             APIs.RESTAURANT_API,
             attributes = attributes,
@@ -92,9 +92,8 @@ class RestaurantService(
                 errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             }
         ) {
-            get("/restaurants") {
-                parameter("page", page)
-                parameter("limit", limit)
+            post("/restaurants") {
+                body = Json.encodeToString(RestaurantOptions.serializer(), restaurantOptions)
             }
         }
 
@@ -248,11 +247,11 @@ class RestaurantService(
         }
     }
 
-    suspend fun deleteCuisine(cuisineId: String, languageCode : String): Boolean {
+    suspend fun deleteCuisine(cuisineId: String, languageCode: String): Boolean {
         return client.tryToExecute<Boolean>(
             APIs.RESTAURANT_API,
             attributes = attributes,
-            setErrorMessage = { errorHandler.getLocalizedErrorMessage(it, languageCode ) }
+            setErrorMessage = { errorHandler.getLocalizedErrorMessage(it, languageCode) }
         ) {
             delete("/cuisine/$cuisineId")
         }
