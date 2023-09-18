@@ -2,6 +2,7 @@ package org.thechance.common.presentation.restaurant
 
 import kotlinx.coroutines.Job
 import org.thechance.common.domain.entity.DataWrapper
+import org.thechance.common.domain.entity.LocationInfo
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.usecase.IManageLocationUseCase
 import org.thechance.common.domain.usecase.IManageRestaurantUseCase
@@ -13,7 +14,7 @@ import org.thechance.common.presentation.util.ErrorState
 
 class RestaurantScreenModel(
     private val manageRestaurant: IManageRestaurantUseCase,
-    private val handleLocation: IManageLocationUseCase,
+    private val manageLocation: IManageLocationUseCase,
     private val mangeCuisines: IMangeCuisinesUseCase,
     private val iValidateRestaurantUseCase: IValidateRestaurantUseCase
 ) : BaseScreenModel<RestaurantUiState, RestaurantUIEffect>(RestaurantUiState()),
@@ -254,18 +255,18 @@ class RestaurantScreenModel(
 
     private fun getCurrentLocation() {
         tryToExecute(
-            callee = { handleLocation.getCurrentLocation() },
+            callee = { manageLocation.getCurrentLocation() },
             onSuccess = ::onGetCurrentLocationSuccess,
             onError = ::onError,
         )
     }
 
-    private fun onGetCurrentLocationSuccess(location: Pair<String, String>) {
+    private fun onGetCurrentLocationSuccess(location: LocationInfo) {
         updateState {
             it.copy(
                 newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
-                    lat = location.first,
-                    lng = location.second,
+                    lat = location.latitude.toString(),
+                    lng = location.longitude.toString(),
                 )
             )
         }
