@@ -40,7 +40,7 @@ class LoginScreenModel(
     }
 
     private fun onLoginSuccess() {
-        updateState { it.copy(isLoading = false, error = null) }
+        updateState { it.copy(isLoading = false, error = null, hasInternetConnection = true) }
         sendNewEffect(LoginUIEffect.LoginSuccess)
     }
 
@@ -60,7 +60,7 @@ class LoginScreenModel(
             }
 
             ErrorState.NoConnection -> {
-
+                updateState { it.copy(hasInternetConnection = false) }
             }
 
             ErrorState.UnKnownError -> {

@@ -1,5 +1,6 @@
 package org.thechance.common.presentation.login
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,6 +17,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import cafe.adriel.voyager.navigator.Navigator
+import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpCheckBox
 import com.beepbeep.designSystem.ui.composable.BpTextField
@@ -117,6 +119,12 @@ class LoginScreen :
                         modifier = Modifier.padding(top = 24.kms).fillMaxWidth(),
                         enabled = state.isAbleToLogin
                     )
+                    Spacer(modifier = Modifier.weight(1f))
+                    AnimatedVisibility(!state.hasInternetConnection){
+                        BPSnackBar(icon = painterResource(Resources.Drawable.infoIcon)){
+                            Text(Resources.Strings.noInternet)
+                        }
+                    }
                 }
             }
         }
