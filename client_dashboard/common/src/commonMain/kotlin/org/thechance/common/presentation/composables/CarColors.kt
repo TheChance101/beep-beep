@@ -1,12 +1,9 @@
 package org.thechance.common.presentation.composables
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.onClick
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,15 +22,12 @@ fun CarColors(
     onSelectColor: (CarColor) -> Unit,
     selectedCarColor: CarColor?
 ) {
-
-    LazyRow(
-        modifier = modifier,
-        verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.spacedBy(8.kms),
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(4.kms),
+        modifier = modifier.fillMaxWidth()
     ) {
-        items(items = colors) {carColor ->
-            val color = Color(carColor.hexadecimal)
-            val selectedModifier = if (selectedCarColor == carColor) {
+        colors.forEach {
+            val selectedModifier = if (selectedCarColor == it) {
                 Modifier.size(32.kms)
                     .border(
                         width = 2.kms,
@@ -52,7 +46,7 @@ fun CarColors(
                 Box(
                     modifier = Modifier.size(20.kms)
                         .background(
-                            color,
+                            color = Color(it.hexadecimal),
                             shape = RoundedCornerShape(4.kms)
                         )
                         .border(
@@ -60,7 +54,7 @@ fun CarColors(
                             color = Color.Gray.copy(alpha = 0.5f),
                             shape = RoundedCornerShape(4.kms)
                         )
-                        .onClick { onSelectColor(carColor) }
+                        .onClick { onSelectColor(it) }
                 )
             }
         }

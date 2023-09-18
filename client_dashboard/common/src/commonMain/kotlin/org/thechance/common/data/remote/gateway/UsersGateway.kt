@@ -1,23 +1,16 @@
 package org.thechance.common.data.remote.gateway
 
-import io.ktor.client.HttpClient
-import io.ktor.client.request.delete
-import io.ktor.client.request.forms.submitForm
-import io.ktor.client.request.get
-import io.ktor.client.request.header
-import io.ktor.client.request.parameter
-import io.ktor.client.request.put
-import io.ktor.client.request.setBody
-import io.ktor.client.request.url
-import io.ktor.http.Parameters
-import io.ktor.http.appendPathSegments
+import io.ktor.client.*
+import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
+import io.ktor.http.*
 import io.ktor.util.InternalAPI
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
-import org.thechance.common.data.remote.mapper.mapPermissionsToInt
 import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.ServerResponse
+import org.thechance.common.data.remote.model.UserDto
 import org.thechance.common.data.remote.model.UserDto
 import org.thechance.common.data.remote.model.UserResponse
 import org.thechance.common.data.remote.model.UserTokensRemoteDto
@@ -73,6 +66,14 @@ class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGatewa
         return tryToExecute<ServerResponse<Boolean>>(client) {
             delete(urlString = "/user") { url { appendPathSegments(id) } }
         }.value ?: false
+    }
+
+    override suspend fun getLastRegisteredUsers(limit: Int): List<User> {
+        return tryToExecute<ServerResponse<List<UserDto>>>(client) {
+            get(urlString = "/user/last-register?limit=4") {
+                parameter("limit", limit)
+            }
+        }.value?.toEntity() ?: throw UnknownError()
     }
 
     override suspend fun updateUserPermissions(

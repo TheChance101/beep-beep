@@ -2,15 +2,7 @@ package org.thechance.service_taxi.domain.usecase
 
 import org.thechance.service_taxi.domain.entity.Color
 import org.thechance.service_taxi.domain.entity.Taxi
-import org.thechance.service_taxi.domain.exceptions.AlreadyExistException
-import org.thechance.service_taxi.domain.exceptions.INVALID_CAR_TYPE
-import org.thechance.service_taxi.domain.exceptions.INVALID_COLOR
-import org.thechance.service_taxi.domain.exceptions.INVALID_ID
-import org.thechance.service_taxi.domain.exceptions.INVALID_PLATE
-import org.thechance.service_taxi.domain.exceptions.InvalidIdException
-import org.thechance.service_taxi.domain.exceptions.MultiErrorException
-import org.thechance.service_taxi.domain.exceptions.ResourceNotFoundException
-import org.thechance.service_taxi.domain.exceptions.SEAT_OUT_OF_RANGE
+import org.thechance.service_taxi.domain.exceptions.*
 import org.thechance.service_taxi.domain.gateway.ITaxiGateway
 import org.thechance.service_taxi.domain.usecase.utils.IValidations
 
@@ -71,11 +63,14 @@ class ManageTaxiUseCase(
         if (!validations.isValidPlateNumber(taxi.plateNumber)) {
             validationErrors.add(INVALID_PLATE)
         }
-        if (taxi.color == Color.OTHER) {
-            validationErrors.add(INVALID_COLOR)
-        }
         if (taxi.type.isBlank()) {
             validationErrors.add(INVALID_CAR_TYPE)
+        }
+        if (!validations.isValidCarType(taxi.type)) {
+            validationErrors.add(INVALID_CAR_TYPE)
+        }
+        if (taxi.color == Color.OTHER) {
+            validationErrors.add(INVALID_COLOR)
         }
         if (!validations.isValidId(taxi.driverId)) {
             validationErrors.add(INVALID_ID)

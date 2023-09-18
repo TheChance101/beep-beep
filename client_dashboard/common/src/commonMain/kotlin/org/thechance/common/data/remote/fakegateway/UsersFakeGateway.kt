@@ -12,6 +12,64 @@ import kotlin.math.ceil
 
 class UsersFakeGateway : IUsersGateway {
 
+    override suspend fun getUserData(): String = "aaaa"
+
+    override suspend fun getUsers(
+        query: String?,
+        byPermissions: List<Permission>,
+        byCountries: List<String>,
+        page: Int,
+        numberOfUsers: Int
+    ): DataWrapper<User> {
+        var filteredUsers = fakeUsers
+        query?.let { searchQuery ->
+            if (searchQuery.isNotEmpty()) {
+                filteredUsers = fakeUsers.filter {
+                    it.fullName.startsWith(searchQuery, true) || it.username.startsWith(query, true)
+                }
+            }
+        }
+        filteredUsers = if (byPermissions.isNotEmpty()) filteredUsers.filter { user ->
+            user.permission.containsAll(byPermissions)
+        } else filteredUsers
+
+        filteredUsers = if (byCountries.isNotEmpty()) filteredUsers.filter { user ->
+            byCountries.any { it == user.country }
+        } else filteredUsers
+
+        val startIndex = (page - 1) * numberOfUsers
+        val endIndex = startIndex + numberOfUsers
+        val numberOfPages = ceil(filteredUsers.size / (numberOfUsers * 1.0)).toInt()
+        return try {
+            DataWrapperDto(
+                totalPages = numberOfPages,
+                result = filteredUsers.subList(
+                    startIndex,
+                    endIndex.coerceAtMost(filteredUsers.size)
+                ),
+                totalResult = filteredUsers.size
+            ).toEntity()
+        } catch (e: Exception) {
+            DataWrapperDto(
+                totalPages = numberOfPages,
+                result = filteredUsers,
+                totalResult = filteredUsers.size
+            ).toEntity()
+        }
+    }
+
+    override suspend fun loginUser(username: String, password: String): Pair<String, String> {
+        return Pair("token", "refreshToken")
+    }
+
+    override suspend fun deleteUser(userId: String): Boolean {
+        return true
+    }
+
+    override suspend fun getLastRegisteredUsers(limit : Int): List<User> {
+        return  fakeUsers.subList(0, limit)
+    }
+
     private val fakeUsers = listOf(
             UserDto(
                     id = "c4425a0e-9f0a-4df1-bcc1-6dd96322a990",
@@ -535,66 +593,11 @@ class UsersFakeGateway : IUsersGateway {
             )
     ).toEntity()
 
-    override suspend fun getUserData(): String = "aaaa"
-
-    override suspend fun getUsers(
-        query: String?,
-        byPermissions: List<Permission>,
-        byCountries: List<String>,
-        page: Int,
-        numberOfUsers: Int
-    ): DataWrapper<User> {
-        var filteredUsers = fakeUsers
-        query?.let { searchQuery ->
-            if (searchQuery.isNotEmpty()) {
-                filteredUsers = fakeUsers.filter {
-                    it.fullName.startsWith(searchQuery, true) || it.username.startsWith(query, true)
-                }
-            }
-        }
-        filteredUsers = if (byPermissions.isNotEmpty()) filteredUsers.filter { user ->
-            user.permission.containsAll(byPermissions)
-        } else filteredUsers
-
-        filteredUsers = if (byCountries.isNotEmpty()) filteredUsers.filter { user ->
-            byCountries.any { it == user.country }
-        } else filteredUsers
-
-        val startIndex = (page - 1) * numberOfUsers
-        val endIndex = startIndex + numberOfUsers
-        val numberOfPages = ceil(filteredUsers.size / (numberOfUsers * 1.0)).toInt()
-        return try {
-            DataWrapperDto(
-                totalPages = numberOfPages,
-                result = filteredUsers.subList(
-                    startIndex,
-                    endIndex.coerceAtMost(filteredUsers.size)
-                ),
-                totalResult = filteredUsers.size
-            ).toEntity()
-        } catch (e: Exception) {
-            DataWrapperDto(
-                totalPages = numberOfPages,
-                result = filteredUsers,
-                totalResult = filteredUsers.size
-            ).toEntity()
-        }
-    }
-
-    override suspend fun loginUser(username: String, password: String): Pair<String, String> {
-        return Pair("token", "refreshToken")
-    }
-
-    override suspend fun deleteUser(userId: String): Boolean {
-        return true
-    }
-
     override suspend fun updateUserPermissions(
         userId: String,
         permissions: List<Permission>
     ): User {
         return fakeUsers.find { it.id == userId }?.copy(permission = permissions) ?: throw Exception("User not found")
     }
-
 
 }
