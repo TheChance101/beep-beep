@@ -57,6 +57,9 @@ class RestaurantScreenModel(
                 maxPageCount = restaurants.totalPages
             )
         }
+        if (state.value.selectedPageNumber > state.value.maxPageCount) {
+            onPageClicked(state.value.maxPageCount)
+        }
     }
 
     private fun getCuisines() {
