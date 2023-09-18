@@ -17,7 +17,6 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
     override suspend fun createRestaurant(restaurant: NewRestaurantInfo): Restaurant {
         return tryToExecute<ServerResponse<RestaurantDto>>(client) {
             post(urlString = "/restaurant") {
-                contentType(ContentType.Application.Json)
                 setBody(restaurant.toDto())
             }
         }.value?.toEntity() ?: throw UnknownError()
