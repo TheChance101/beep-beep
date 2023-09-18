@@ -20,10 +20,6 @@ map = new Microsoft.Maps.Map('#myMap', {
            });
            //Add the pushpin to the map
            map.entities.push(pin);
-            Microsoft.Maps.Events.addHandler(map, 'click', function () {
-            pin.setLocation(map.getCenter())
-            });
-            getDirections()
 }
 function getPin(){
     var pushpin = new Microsoft.Maps.Pushpin(map.getCenter(), null);
@@ -51,20 +47,19 @@ var xhttp = new XMLHttpRequest();
 var block,bs;
 var d={}
 var co = 0;
-function createInfiniteLoopFunction(latitude) {
+function createInfiniteLoopFunction(latitude,lng) {
             return function() {
             clearMap()
-    var pushpin = new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(latitude, -73.8740306), {
+    var pushpin = new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(latitude,lng), {
         icon: 'user_pin.svg',
      anchor: new Microsoft.Maps.Point(20, 20)
   });
    Microsoft.Maps.loadModule('Microsoft.Maps.SpatialMath', function () {
-    let circle = createCircle(new Microsoft.Maps.Location(latitude, -73.8740306),120,'rgba(31, 0, 0, 0.16)')
+    let circle = createCircle(new Microsoft.Maps.Location(latitude, lng),120,'rgba(31, 0, 0, 0.16)')
         map.entities.push(circle);
        map.entities.push(pushpin);})
-                    map.setView({ center: new Microsoft.Maps.Location(latitude, -73.8740306), minZoom: 16,
+                    map.setView({ center: new Microsoft.Maps.Location(latitude, lng), minZoom: 16,
             maxZoom: 18});
-        updateDirections(latitude)
             };
         }
 function createCircle(center, radius, color) {

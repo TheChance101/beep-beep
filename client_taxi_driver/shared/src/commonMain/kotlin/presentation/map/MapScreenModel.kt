@@ -1,5 +1,6 @@
 package presentation.map
 
+import domain.entity.Location
 import domain.entity.Order
 import domain.usecase.ManageOrderUseCase
 import presentation.base.BaseScreenModel
@@ -11,6 +12,7 @@ class MapScreenModel(
     MapScreenInteractionListener {
 
     init {
+        getLiveLocation()
         findingNewOrder()
     }
 
@@ -38,10 +40,38 @@ class MapScreenModel(
             it.copy(
                 isLoading = false,
                 isNewOrderFound = false,
+                isAcceptedOrder = false,
                 error = errorState,
             )
         }
     }
+
+
+    private fun getLiveLocation() {
+        tryToCollect(
+            function = order::getLiveLocation,
+            onNewValue = ::onGetLiveLocationSuccess,
+            onError = ::onGetLiveLocationFailed,
+        )
+    }
+
+    private fun onGetLiveLocationSuccess(location: Location) {
+        updateState {
+            it.copy(
+                error = null,
+                currentLocation = location.toUiState()
+            )
+        }
+    }
+
+    private fun onGetLiveLocationFailed(errorState: ErrorState) {
+        updateState {
+            it.copy(
+                error = errorState
+            )
+        }
+    }
+
 
     override fun onClickAccept() {
         updateState {

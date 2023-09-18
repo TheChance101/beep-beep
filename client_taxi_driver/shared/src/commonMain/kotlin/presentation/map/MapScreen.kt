@@ -51,7 +51,11 @@ class MapScreen :
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            MapWebView(url = "File:///android_asset/bing_map/map/index.html")
+            MapWebView(
+                url = MAP_URL,
+                lat = state.currentLocation.lat,
+                lng = state.currentLocation.lng,
+            )
             BpAppBar(
                 isBackIconVisible = false,
                 title = "${Resources.strings.mapScreenAppBarTitle}${state.userName}!"
@@ -304,6 +308,10 @@ class MapScreen :
                 onClick = if (state.isArrived) listener::onClickDropOff else listener::onClickArrived
             )
         }
+    }
+
+    companion object {
+        private const val MAP_URL = "File:///android_asset/bing_map/map/index.html"
     }
 }
 

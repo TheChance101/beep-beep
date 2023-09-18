@@ -21,6 +21,6 @@ data class OrderInfoUiState(
 
 data class LocationInfoUiState(
     val lat: String = "",
-    val long: String = "",
+    val lng: String = "",
     val name: String = "",
 )
