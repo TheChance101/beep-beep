@@ -2,13 +2,12 @@ package data.gateway.remote
 
 import data.remote.mapper.toEntity
 import data.remote.model.LocationDto
+import data.remote.model.NotificationDto
 import data.remote.model.OfferDto
 import data.remote.model.RestaurantDto
-import domain.entity.Location
+import domain.entity.Notification
 import domain.entity.Offer
-import domain.entity.PriceLevel
 import domain.entity.Restaurant
-import domain.entity.Time
 import domain.entity.User
 import domain.gateway.IFakeRemoteGateway
 
@@ -24,6 +23,10 @@ class FakeRemoteGateway : IFakeRemoteGateway {
 
     override fun getNewOffers(): List<Offer> {
         return offers.map { it.toEntity() }
+    }
+
+    override suspend fun getNotificationHistory(): List<Notification> {
+        return notifications.map{ it.toEntity() }
     }
 
     private val restaurants = listOf(
@@ -88,5 +91,44 @@ class FakeRemoteGateway : IFakeRemoteGateway {
             "000-0wdwdwdww-d-w-d-wd-dw",
             "https://s3-alpha-sig.figma.com/img/44f7/7fd1/8c37e4958c7caca679d133c2374c85a6?Expires=1694390400&Signature=j9wjjnLOGs1wG-C8T1riMy6npf-G0V0VARSQGtIgqM3L0lCMY-yJbBcWEEsoGuUdPXZzGTlon-RWMDnRChj2k51akbCp4rLuv-UYdtMIDXljS5hcGdVi0bYkI7V4nY4Jp2vkQdKZuY73N5Yy49WfyElVfsB8n1Qgi4hMxtsicAzF0-5bZnyaLQZda2LPK-rWVH2yj5rhR2evzrcrKYRVY2GaYNQQ58zsHdwvieq4IKlHx44RPg~x2kG~ObSAmzW1iQ8LEEF8~jhI9S~Iw3TSbejP0T64qYpA21erIX8DPLfygUOB0XvhT41vsR-nkVsiYRHXcIyAet-Apj5V5xCevA__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
         )
+    )
+
+    private val notifications = listOf(
+        NotificationDto(
+            id = "64f372095fecc11e6d917656",
+            title = "Order is Cancelled",
+            body = "Sorry! Yummies Restaurant have so much load they cancelled your order.",
+            time = "23:44",
+            date = 0,
+            topic = "Order",
+            userId = "64f3663e5ddbc15bfd1efcfa"
+        ),
+        NotificationDto(
+            id = "64f372095fecc11e6d917656",
+            title = "Order is Cancelled",
+            body = "Sorry! Yummies Restaurant have so much load they cancelled your order.",
+            time = "8:44",
+            date = 0,
+            topic = "Order",
+            userId = "64f3663e5ddbc15bfd1efcfa"
+        ),
+        NotificationDto(
+            id = "64f372095fecc11e6d917656",
+            title = "Order is Cancelled",
+            body = "Sorry! Yummies Restaurant have so much load they cancelled your order.",
+            time = "12:44",
+            date = 0,
+            topic = "Order",
+            userId = "64f3663e5ddbc15bfd1efcfa"
+        ),
+        NotificationDto(
+            id = "64f372095fecc11e6d917656",
+            title = "Order is Cancelled",
+            body = "Sorry! Yummies Restaurant have so much load they cancelled your order.",
+            time = "14:44",
+            date = 0,
+            topic = "Order",
+            userId = "64f3663e5ddbc15bfd1efcfa"
+        ),
     )
 }
