@@ -20,8 +20,6 @@ abstract class BaseGateway {
             val errorMessages = e.response.body<ServerResponse<String>>().status?.errorMessages
             errorMessages?.let(::throwMatchingException)
             throw UnknownErrorException(e.message)
-        } catch (e: ConnectException) {
-            throw NoInternetException()
         }catch(e: ConnectException){
             throw NoInternetException()
         } catch (e: Exception) {
