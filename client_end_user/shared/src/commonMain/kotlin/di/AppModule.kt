@@ -9,5 +9,6 @@ fun appModule() = module {
         gatewayModule,
         useCaseModule,
         screenModelsModule,
+        resourcesModule,
     )
 }
