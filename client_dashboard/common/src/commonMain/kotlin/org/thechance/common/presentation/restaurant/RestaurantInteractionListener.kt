@@ -65,7 +65,7 @@ interface FilterRestaurantsInteractionListener {
 
     fun onClickFilterPriceBar(priceLevel: Int)
 
-    fun onSaveFilterRestaurantsClicked(rating: Double, priceLevel: Int)
+    fun onSaveFilterRestaurantsClicked(rating: Double, priceLevel: String)
 
     fun onCancelFilterRestaurantsClicked()
 

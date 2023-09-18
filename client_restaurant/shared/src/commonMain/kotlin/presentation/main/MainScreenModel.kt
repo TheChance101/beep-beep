@@ -34,7 +34,6 @@ class MainScreenModel(
     }
 
     private fun onError(errorState: ErrorState) {
-        TODO("Not yet implemented")
     }
 
 

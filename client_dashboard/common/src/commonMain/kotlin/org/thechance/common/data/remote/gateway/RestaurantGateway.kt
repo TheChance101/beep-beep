@@ -1,31 +1,20 @@
 package org.thechance.common.data.remote.gateway
 
-import io.ktor.client.HttpClient
-import io.ktor.client.request.delete
-import io.ktor.client.request.forms.submitForm
+import io.ktor.client.*
+import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
 import io.ktor.client.request.get
-import io.ktor.client.request.header
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
-import io.ktor.http.ContentType
-import io.ktor.http.appendPathSegments
-import io.ktor.http.contentType
-import io.ktor.http.parameters
-import org.thechance.common.data.remote.mapper.toDto
+import io.ktor.client.request.parameter
+import io.ktor.http.*
 import org.thechance.common.data.remote.mapper.toEntity
-import org.thechance.common.data.remote.model.CuisineDto
-import org.thechance.common.data.remote.model.RestaurantDto
-import org.thechance.common.data.remote.model.ServerResponse
-import org.thechance.common.domain.entity.Cuisine
-import org.thechance.common.domain.entity.DataWrapper
-import org.thechance.common.domain.entity.NewRestaurantInfo
-import org.thechance.common.domain.entity.Restaurant
+import org.thechance.common.data.remote.model.*
+import org.thechance.common.domain.entity.*
 import org.thechance.common.domain.getway.IRestaurantGateway
 
 class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestaurantGateway {
 
     override suspend fun createRestaurant(restaurant: NewRestaurantInfo): Restaurant {
-        return tryToExecute<ServerResponse<RestaurantDto>>(client){
+        return tryToExecute<ServerResponse<RestaurantDto>>(client) {
             post(urlString = "/restaurant") {
                 contentType(ContentType.Application.Json)
                 setBody(restaurant.toDto())
@@ -67,9 +56,22 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
         numberOfRestaurantsInPage: Int,
         restaurantName: String,
         rating: Double?,
-        priceLevel: Int?
+        priceLevel: String?
     ): DataWrapper<Restaurant> {
-        return DataWrapper(10, 1, listOf())
-    }//Todo: implement endpoint getRestaurants
+
+        return tryToExecute<ServerResponse<RestaurantResponse>>(client) {
+            get(urlString = "/restaurants") {
+                parameter("page", pageNumber)
+                parameter("limit", numberOfRestaurantsInPage)
+            }
+        }.value?.let {
+            DataWrapper(
+                totalPages = it.restaurants.size.div(numberOfRestaurantsInPage),
+                numberOfResult = it.total,
+                result = it.restaurants.toEntity()
+            )
+        } ?: throw UnknownError()
+    }
 
 }
+

@@ -40,7 +40,7 @@ class RestaurantScreenModel(
                     if (currentState.restaurantFilterDropdownMenuUiState.isFiltered)
                         currentState.restaurantFilterDropdownMenuUiState.filterRating else null,
                     if (currentState.restaurantFilterDropdownMenuUiState.isFiltered)
-                        currentState.restaurantFilterDropdownMenuUiState.filterPriceLevel else null,
+                        currentState.restaurantFilterDropdownMenuUiState.filterPriceLevel.toString() else null,
                 )
             },
             ::onGetRestaurantSuccessfully,
@@ -84,7 +84,7 @@ class RestaurantScreenModel(
                 updateState {
                     it.copy(
                         newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
-                                userNameError = ErrorWrapper(
+                            userNameError = ErrorWrapper(
                                 errorMessage = error.errorMessage, isError = true,
                             ),
                         )
@@ -109,6 +109,7 @@ class RestaurantScreenModel(
                     )
                 }
             }
+
             is ErrorState.RestaurantInvalidPhone -> {
                 updateState {
                     it.copy(
@@ -177,7 +178,7 @@ class RestaurantScreenModel(
         }
     }
 
-    override fun onSaveFilterRestaurantsClicked(rating: Double, priceLevel: Int) {
+    override fun onSaveFilterRestaurantsClicked(rating: Double, priceLevel: String) {
         updateState {
             it.copy(
                 restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
@@ -290,8 +291,8 @@ class RestaurantScreenModel(
                     name = "",
                     ownerUsername = "",
                     phoneNumber = "",
-                    startTime = "",
-                    endTime = "",
+                    openingTime = "",
+                    closingTime = "",
                 ),
             )
         }
@@ -310,7 +311,7 @@ class RestaurantScreenModel(
     override fun onOwnerUserNameChange(name: String) {
         updateState {
             it.copy(
-                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(ownerUsername = name,)
+                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(ownerUsername = name)
             )
         }
     }
@@ -323,13 +324,22 @@ class RestaurantScreenModel(
 
     override fun onWorkingStartHourChange(hour: String) {
         updateState {
-            it.copy(newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(startTime = hour))
+            it.copy(newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(openingTime = hour))
+            it.copy(
+                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
+                    openingTime = hour,
+                    startTimeError = ErrorWrapper(
+                        "write in valid format 00:00",
+                        !iValidateRestaurantUseCase.validateStartTime(hour)
+                    ),
+                )
+            )
         }
     }
 
     override fun onWorkingEndHourChange(hour: String) {
         updateState {
-            it.copy(newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(endTime = hour))
+            it.copy(newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(closingTime = hour))
         }
     }
 
@@ -369,7 +379,7 @@ class RestaurantScreenModel(
             it.copy(
                 restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
                     filterRating = 0.0,
-                    filterPriceLevel = 1,
+                    filterPriceLevel = 0,
                     isFiltered = false
                 )
             )
@@ -378,7 +388,7 @@ class RestaurantScreenModel(
 
     override fun onCreateNewRestaurantClicked() {
         clearAddRestaurantErrorInfo()
-       updateState { it.copy(isNewRestaurantInfoDialogVisible = true) }
+        updateState { it.copy(isNewRestaurantInfoDialogVisible = true) }
         tryToExecute(
             { manageRestaurant.createRestaurant(state.value.newRestaurantInfoUiState.toEntity()) },
             ::onCreateRestaurantSuccessfully,
@@ -387,16 +397,11 @@ class RestaurantScreenModel(
     }
 
     private fun onCreateRestaurantSuccessfully(restaurant: Restaurant) {
-        println("onCreateRestaurantSuccessfully: $restaurant")
         clearAddRestaurantInfo()
         val newRestaurant =
             mutableState.value.restaurants.toMutableList().apply { add(restaurant.toUiState()) }
         updateState {
-            it.copy(
-                restaurants = newRestaurant,
-                isLoading = false,
-                isNewRestaurantInfoDialogVisible = false
-            )
+            it.copy(restaurants = newRestaurant, isLoading = false, isNewRestaurantInfoDialogVisible = false)
         }
     }
 
@@ -424,6 +429,7 @@ class RestaurantScreenModel(
         updateState { it.copy(restaurantAddCuisineDialogUiState =
         it.restaurantAddCuisineDialogUiState.copy(cuisineNameError = ErrorWrapper())) }
     }
+
 
     // region Cuisine Dialog
     override fun onClickAddCuisine() {
@@ -493,5 +499,5 @@ class RestaurantScreenModel(
         it.restaurantAddCuisineDialogUiState.copy(cuisineName = cuisineName)) }
     }
 
-// endregion
+    // endregion
 }

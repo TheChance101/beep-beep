@@ -11,7 +11,6 @@ import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.getway.IRestaurantGateway
 import java.util.UUID
 import kotlin.math.ceil
-import kotlin.math.floor
 
 class RestaurantFakeGateway : IRestaurantGateway {
 
@@ -20,26 +19,20 @@ class RestaurantFakeGateway : IRestaurantGateway {
         numberOfRestaurantsInPage: Int,
         restaurantName: String,
         rating: Double?,
-        priceLevel: Int?,
+        priceLevel: String?,
     ): DataWrapper<Restaurant> {
         var restaurants = restaurants.toEntity()
         if (restaurantName.isNotEmpty()) {
             restaurants = restaurants.filter {
                 it.name.startsWith(
-                        restaurantName,
-                        true
+                    restaurantName,
+                    true
                 )
             }
         }
         if (rating != null && priceLevel != null) {
             restaurants = restaurants.filter {
-                it.priceLevel == priceLevel &&
-                        when {
-                            rating.rem(1) > 0.89 || rating.rem(1) == 0.0 || rating.rem(1) > 0.5
-                            -> it.rating in floor(rating) - 0.1..0.49 + floor(rating)
-
-                            else -> it.rating in 0.5 + floor(rating)..0.89 + floor(rating)
-                        }
+                it.priceLevel == priceLevel
             }
         }
         val startIndex = (pageNumber - 1) * numberOfRestaurantsInPage
@@ -47,31 +40,29 @@ class RestaurantFakeGateway : IRestaurantGateway {
         val numberOfPages = ceil(restaurants.size / (numberOfRestaurantsInPage * 1.0)).toInt()
         return try {
             DataWrapperDto(
-                    totalPages = numberOfPages,
-                    result = restaurants.subList(
-                            startIndex,
-                            endIndex.coerceAtMost(restaurants.size)
-                    ),
-                    totalResult = restaurants.size
+                totalPages = numberOfPages,
+                result = restaurants.subList(startIndex, endIndex.coerceAtMost(restaurants.size)),
+                totalResult = restaurants.size
             ).toEntity()
         } catch (e: Exception) {
             DataWrapperDto(
-                    totalPages = numberOfPages,
-                    result = restaurants,
-                    totalResult = restaurants.size
+                totalPages = numberOfPages,
+                result = restaurants,
+                totalResult = restaurants.size
             ).toEntity()
         }
     }
 
     override suspend fun createRestaurant(restaurant: NewRestaurantInfo): Restaurant {
         return Restaurant(
-                id = "7",
-                name = restaurant.name,
-                ownerUsername = restaurant.ownerUsername,
-                phoneNumber = restaurant.phoneNumber,
-                workingHours = restaurant.workingHours,
-                rating = 3.0,
-                priceLevel = 1
+            id = "7",
+            name = restaurant.name,
+            ownerId = restaurant.ownerUsername,
+            phone = restaurant.phoneNumber,
+            openingTime = restaurant.openingTime,
+            closingTime = restaurant.closingTime,
+            rate = 0.0,
+            priceLevel = "",
         )
     }
 

@@ -33,10 +33,11 @@ data class RestaurantUiState(
         val id: String,
         val name: String,
         val ownerUsername: String,
-        val phoneNumber: String,
-        val rating: Double,
-        val priceLevel: Int,
-        val workingHours: String,
+        val phone: String,
+        val rate: Double,
+        val priceLevel: String,
+        val openingTime: String,
+        val closingTime: String,
     )
 }
 
@@ -47,9 +48,9 @@ data class NewRestaurantInfoUiState(
     val userNameError: ErrorWrapper = ErrorWrapper(),
     val phoneNumber: String = "",
     val phoneNumberError: ErrorWrapper = ErrorWrapper(),
-    val startTime: String = "",
+    val openingTime: String = "",
     val startTimeError: ErrorWrapper = ErrorWrapper(),
-    val endTime: String = "",
+    val closingTime: String = "",
     val endTimeError: ErrorWrapper = ErrorWrapper(),
     val location: String = "",
     val locationError: ErrorWrapper = ErrorWrapper(),
