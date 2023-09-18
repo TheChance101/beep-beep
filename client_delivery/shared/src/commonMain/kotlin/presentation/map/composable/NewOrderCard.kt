@@ -13,17 +13,13 @@ import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import presentation.map.NewOrderInteractionsListener
+import presentation.map.MapScreenInteractionsListener
+import presentation.map.MapScreenUiState
 import resources.Resources
 
 @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun NewOrderCard(
-    restaurantName: String,
-    restaurantLocation: String,
-    orderLocation: String,
-    listener: NewOrderInteractionsListener
-) {
+fun NewOrderCard(state: MapScreenUiState, listener: MapScreenInteractionsListener) {
     MapCard {
         Text(
             text = Resources.strings.newOrder,
@@ -33,9 +29,9 @@ fun NewOrderCard(
         )
         OrderInfo(
             restaurantImage = painterResource(Resources.images.test),//just for now,then will be from state,
-            restaurantName = restaurantName,
-            restaurantLocation = restaurantLocation,
-            orderLocation = orderLocation
+            restaurantName = state.restaurantName,
+            restaurantLocation = state.restaurantLocation,
+            orderLocation = state.orderLocation
         )
         BpButton(
             onClick = listener::onAcceptClicked,
