@@ -2,6 +2,7 @@ package org.thechance.api_gateway.endpoints
 
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
+import io.ktor.server.request.receive
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 import io.ktor.server.routing.route
@@ -24,7 +25,7 @@ fun Route.notificationRoute() {
         }
         get("/users"){
             val language = extractLocalizationHeader()
-            val ids = call.parameters["ids"]?.split(",")?.map { it } ?: emptyList()
+            val ids  : List<String> = call.receive<List<String>>()
             val result= notificationService.getAllUsersTokens(ids,language)
             respondWithResult(HttpStatusCode.OK, result)
         }
