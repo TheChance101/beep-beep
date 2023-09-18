@@ -1,5 +1,6 @@
 package org.thechance.common.presentation.overview
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -25,6 +26,7 @@ import com.aay.compose.barChart.model.BarParameters
 import com.aay.compose.baseComponents.model.LegendPosition
 import com.aay.compose.donutChart.DonutChart
 import com.aay.compose.donutChart.model.PieChartData
+import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.base.BaseScreen
@@ -47,27 +49,33 @@ object OverviewScreen :
     override fun OnRender(state: OverviewUiState, listener: OverviewInteractionListener) {
 
         val scrollState = rememberScrollState()
-
-        Column(
+        AnimatedVisibility(!state.hasInternetConnection){
+            BPSnackBar(icon = painterResource(Resources.Drawable.infoIcon),
+                modifier = Modifier){
+                Text(Resources.Strings.noInternet)
+            }
+        }
+        AnimatedVisibility(state.hasInternetConnection){
+            Column(
                 modifier = Modifier
                     .background(Theme.colors.surface)
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(24.kms)
-        ) {
+            ) {
 
-            RevenueCard(listener = listener, state = state , modifier = Modifier.weight(1f))
-            Row(
+                RevenueCard(listener = listener, state = state , modifier = Modifier.weight(1f))
+                Row(
                     modifier = Modifier.weight(1f),
                     horizontalArrangement = Arrangement.spacedBy(24.kms)
-            ) {
-                OverviewCard(
+                ) {
+                    OverviewCard(
                         modifier = Modifier.fillMaxHeight().background(Theme.colors.surface)
                             .weight(1f)
                             .border(
-                                    1.kms,
-                                    Theme.colors.divider,
-                                    RoundedCornerShape(Theme.radius.medium)
+                                1.kms,
+                                Theme.colors.divider,
+                                RoundedCornerShape(Theme.radius.medium)
                             ),
                         title = Resources.Strings.taxiLabel,
                         onLeadingButtonClicked = listener::onViewMoreTaxiClicked,
@@ -75,14 +83,14 @@ object OverviewScreen :
                         content = {
                             TaxiChart(tripsRevenueShare = state.tripsRevenueShare)
                         }
-                )
-                OverviewCard(
+                    )
+                    OverviewCard(
                         modifier = Modifier.weight(1f).fillMaxHeight()
                             .background(Theme.colors.surface)
                             .border(
-                                    1.kms,
-                                    Theme.colors.divider,
-                                    RoundedCornerShape(Theme.radius.medium)
+                                1.kms,
+                                Theme.colors.divider,
+                                RoundedCornerShape(Theme.radius.medium)
                             ),
                         title = Resources.Strings.restaurantLabel,
                         onLeadingButtonClicked = listener::onViewMoreRestaurantClicked,
@@ -90,40 +98,40 @@ object OverviewScreen :
                         content = {
                             RestaurantsChart(ordersRevenueShare = state.ordersRevenueShare)
                         }
-                )
-                OverviewCard(
+                    )
+                    OverviewCard(
                         modifier = Modifier.weight(1f)
                             .background(Theme.colors.surface)
                             .border(
-                                    1.kms,
-                                    Theme.colors.divider,
-                                    RoundedCornerShape(Theme.radius.medium)
+                                1.kms,
+                                Theme.colors.divider,
+                                RoundedCornerShape(Theme.radius.medium)
                             ),
                         title = Resources.Strings.users,
                         onLeadingButtonClicked = listener::onViewMoreUsersClicked,
                         content = {
                             Column(
-                                    modifier = Modifier.weight(1f).fillMaxWidth()
-                                        .verticalScroll(scrollState)
+                                modifier = Modifier.weight(1f).fillMaxWidth()
+                                    .verticalScroll(scrollState)
                             ) {
                                 state.users.forEachIndexed { index, user ->
                                     Row(
-                                            modifier = Modifier.padding(16.kms),
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            horizontalArrangement = Arrangement.SpaceBetween
+                                        modifier = Modifier.padding(16.kms),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.SpaceBetween
                                     ) {
                                         Image(
-                                                modifier = Modifier.size(40.kms),
-                                                painter = painterResource(user.image),
-                                                contentDescription = null
+                                            modifier = Modifier.size(40.kms),
+                                            painter = painterResource(user.image),
+                                            contentDescription = null
                                         )
                                         Text(
-                                                text = user.name,
-                                                style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
-                                                modifier = Modifier.padding(start = 16.kms)
-                                                    .weight(1f),
-                                                maxLines = 1,
-                                                overflow = TextOverflow.Ellipsis,
+                                            text = user.name,
+                                            style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
+                                            modifier = Modifier.padding(start = 16.kms)
+                                                .weight(1f),
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
                                         )
                                         FlowRow(
                                             modifier = Modifier,
@@ -141,14 +149,15 @@ object OverviewScreen :
                                     }
                                     if (index != state.users.lastIndex) {
                                         Divider(
-                                                modifier = Modifier,
-                                                color = Theme.colors.divider
+                                            modifier = Modifier,
+                                            color = Theme.colors.divider
                                         )
                                     }
                                 }
                             }
                         }
-                )
+                    )
+                }
             }
         }
     }
@@ -202,7 +211,6 @@ object OverviewScreen :
         verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(16.kms),
         content: @Composable ColumnScope.() -> Unit,
     ) {
-
         Column(
                 modifier = modifier
                     .background(Theme.colors.surface, RoundedCornerShape(8.kms))
