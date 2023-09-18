@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RestaurantDetailsDto(
     val id: String,
+    val ownerUserName: String,
     val name: String,
     val description: String?,
     val priceLevel: String?,
