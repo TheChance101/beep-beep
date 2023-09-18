@@ -3,9 +3,9 @@ package presentation.map
 import presentation.base.BaseInteractionListener
 
 
-interface MapScreenInteractionsListener : NewOrderInteractionsListener {
-
-    fun onDeliveredClicked()
+interface MapScreenInteractionsListener : NewOrderInteractionsListener,
+    AcceptedOrderInteractionsListener, DeliveredOrderInteractionsListener
+{
     fun onCloseClicked()
 }
 
@@ -16,4 +16,8 @@ interface NewOrderInteractionsListener : BaseInteractionListener {
 
 interface AcceptedOrderInteractionsListener : BaseInteractionListener {
     fun onReceivedClicked()
+}
+
+interface DeliveredOrderInteractionsListener : BaseInteractionListener {
+    fun onDeliveredClicked()
 }
