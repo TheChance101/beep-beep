@@ -12,3 +12,8 @@ actual fun setInsetsController(isDark: Boolean) {
 actual fun getNavigationBarPadding(): PaddingValues {
     return PaddingValues(bottom = 10.dp)
 }
+
+@Composable
+actual fun getStatusBarPadding(): PaddingValues {
+    return PaddingValues(top = 35.dp)
+}
