@@ -1,19 +1,26 @@
 package presentation.map
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +31,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
-import presentation.map.composable.NewOrderRequest
+import presentation.map.composable.MapCard
 import resources.Resources
 
 
@@ -59,13 +66,43 @@ class MapScreen:BaseScreen<MapScreenModel,MapScreenUiState,MapScreenUiEffect,Map
                 }
             }
 
-            AnimatedVisibility(modifier = Modifier.align(Alignment.BottomCenter),
-                visible = true,
-                enter = slideInVertically { it } + fadeIn(),
-                exit = slideOutVertically { it } + fadeOut()
-            ) {
-                NewOrderRequest(state, listener)
-            }
+           AnimatedVisibility(
+               visible = state.isLoading,
+               enter = slideInVertically { it } + fadeIn(),
+               exit = slideOutVertically(tween(1000)) { it } + fadeOut(),
+               modifier = Modifier.align(Alignment.BottomCenter)
+           ){
+               MapCard {
+                   Row(
+                       modifier = Modifier.fillMaxWidth(),
+                       verticalAlignment = Alignment.CenterVertically,
+                       horizontalArrangement = Arrangement.SpaceBetween
+                   ) {
+                       Column(
+                           verticalArrangement = Arrangement.spacedBy(8.dp)
+                       ) {
+                           Text(
+                               text = Resources.strings.beReady,
+                               style = Theme.typography.titleLarge,
+                               color = Theme.colors.contentPrimary
+                           )
+                           Text(
+                               text = Resources.strings.subLoadingText,
+                               style = Theme.typography.caption,
+                               color = Theme.colors.contentTertiary
+                           )
+                       }
+                       Image(
+                           modifier = Modifier
+                               .width(80.dp)
+                               .height(85.dp),
+                           painter = painterResource(Resources.images.readyDeliveryBike),
+                           contentDescription = "ready bike"
+                       )
+                   }
+               }
+           }
+
         }
     }
 
