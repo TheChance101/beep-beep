@@ -86,6 +86,9 @@ class UserScreenModel(
 
     private fun onSearchUsersSuccessfully(users: DataWrapper<User>) {
         updateState { it.copy(pageInfo = users.toUiState(), isLoading = false) }
+        if (state.value.currentPage > state.value.pageInfo.totalPages) {
+            onPageClick(state.value.pageInfo.totalPages)
+        }
     }
 
     private fun getUsers() {
