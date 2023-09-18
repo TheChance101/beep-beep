@@ -84,7 +84,6 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
             } catch (e: UnAuthorizedException) {
                 onError(ErrorState.UnAuthorized)
             } catch (e: Exception) {
-                println("mohamed: $e")
                 onError(ErrorState.RequestFailed)
             }
         }
