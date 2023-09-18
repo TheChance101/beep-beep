@@ -6,11 +6,13 @@ import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
 
+//TODO remove null from ownerUserName if we can reset dataBase
 
 @Serializable
 data class RestaurantCollection(
     @Contextual
     val ownerId: ObjectId,
+    val ownerUserName: String? = null,
     val name: String,
     val description: String?,
     val priceLevel: String?,
