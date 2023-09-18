@@ -4,13 +4,12 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
-import io.ktor.util.InternalAPI
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
+import org.thechance.common.data.remote.mapper.mapPermissionsToInt
 import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.ServerResponse
-import org.thechance.common.data.remote.model.UserDto
 import org.thechance.common.data.remote.model.UserDto
 import org.thechance.common.data.remote.model.UserResponse
 import org.thechance.common.data.remote.model.UserTokensRemoteDto
