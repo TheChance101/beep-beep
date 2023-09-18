@@ -13,13 +13,17 @@ import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import presentation.map.MapScreenInteractionsListener
-import presentation.map.MapScreenUiState
+import presentation.map.NewOrderInteractionsListener
 import resources.Resources
 
 @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun NewOrderRequest(state: MapScreenUiState, listener: MapScreenInteractionsListener) {
+fun NewOrderCard(
+    restaurantName: String,
+    restaurantLocation: String,
+    orderLocation: String,
+    listener: NewOrderInteractionsListener
+) {
     MapCard {
         Text(
             text = Resources.strings.newOrder,
@@ -29,19 +33,17 @@ fun NewOrderRequest(state: MapScreenUiState, listener: MapScreenInteractionsList
         )
         OrderInfo(
             restaurantImage = painterResource(Resources.images.test),//just for now,then will be from state,
-            restaurantName = state.restaurantName,
-            restaurantLocation = state.restaurantLocation,
-            orderLocation = state.orderLocation
+            restaurantName = restaurantName,
+            restaurantLocation = restaurantLocation,
+            orderLocation = orderLocation
         )
-        DistanceInfo(orderDistance = state.orderDistance, orderDuration = state.orderDuration)
-
         BpButton(
-            onClick = {},
+            onClick = listener::onAcceptClicked,
             title = Resources.strings.accept,
             modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
         )
         BpTransparentButton(
-            onClick = {},
+            onClick = listener::onRejectClicked,
             title = Resources.strings.reject,
             modifier = Modifier.fillMaxWidth().height(56.dp).padding(top = 8.dp, bottom = 8.dp),
         )
