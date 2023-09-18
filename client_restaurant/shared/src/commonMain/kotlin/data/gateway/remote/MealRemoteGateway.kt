@@ -7,11 +7,16 @@ import data.remote.model.MealDto
 import domain.entity.Meal
 import domain.gateway.remote.IMealRemoteGateway
 import io.ktor.client.HttpClient
+import io.ktor.client.request.forms.formData
 import io.ktor.client.request.get
+import io.ktor.client.request.header
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.util.InternalAPI
+import kotlinx.serialization.json.Json
 
 
 class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
@@ -37,9 +42,10 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
     }
 
     override suspend fun getMealById(mealId: String): Meal {
-        return tryToExecute<BaseResponse<Meal>> {
+        println("remote : $mealId")
+        return tryToExecute<BaseResponse<MealDto>> {
             get("meal/$mealId")
-        }.value ?: throw Exception("meal not found")
+        }.value?.toEntity() ?: throw Exception("meal not found")
     }
 
     override suspend fun addMeal(meal: Meal): Boolean {
@@ -48,10 +54,20 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
         }.value ?: false
     }
 
+    @OptIn(InternalAPI::class)
     override suspend fun updateMeal(meal: Meal): Boolean {
+        val formData = formData {
+            val mealDto = meal.toDto() // Assuming toDto() converts Meal to MealDto
+            append("data", Json.encodeToString(MealDto.serializer(), mealDto))
+        }
         return tryToExecute<BaseResponse<Boolean>> {
-            put("/meal") { setBody(meal.toDto()) }
+            put("/meal") {
+                body = formData
+                header("Content-Type", ContentType.MultiPart.FormData.toString())
+            }
         }.value ?: false
     }
+
+
 }
 

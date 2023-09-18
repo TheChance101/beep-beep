@@ -55,6 +55,7 @@ class MealsScreenModel(
     }
 
     private fun onGetMealSuccessfully(meals: List<Meal>) {
+        println("meals : $meals")
         updateState { it.copy(meals = meals.toMealUIState(), isLoading = false) }
     }
 

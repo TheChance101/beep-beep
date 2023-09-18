@@ -40,3 +40,13 @@ fun Meal.toUIState() = MealDetails(
     price = "$price",
     mealCuisines = cuisines.toUIState()
 )
+
+fun MealDetails.toMeal() = Meal(
+    name = name,
+    description = description,
+    price = price.toDouble(),
+    cuisines = mealCuisines.toCuisineEntity(),
+    restaurantId = restaurantId,
+    id = id,
+    imageUrl = ""
+)
