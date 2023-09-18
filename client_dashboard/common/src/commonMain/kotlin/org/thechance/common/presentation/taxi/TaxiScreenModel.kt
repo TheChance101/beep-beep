@@ -50,6 +50,9 @@ class TaxiScreenModel(
 
     private fun onGetTaxisSuccessfully(taxis: DataWrapper<Taxi>) {
         updateState { it.copy(pageInfo = taxis.toDetailsUiState(), isLoading = false) }
+        if (state.value.currentPage > state.value.pageInfo.totalPages) {
+            onPageClick(state.value.pageInfo.totalPages)
+        }
     }
 
     private fun onError(error: ErrorState) {
