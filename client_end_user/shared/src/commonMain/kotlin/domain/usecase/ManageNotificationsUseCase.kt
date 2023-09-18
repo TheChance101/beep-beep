@@ -11,11 +11,11 @@ interface IManageNotificationsUseCase {
 class ManageNotificationsUseCase(private val remoteGateway: FakeRemoteGateway) :
     IManageNotificationsUseCase {
     override suspend fun getTodayNotifications(): List<Notification> {
-        return remoteGateway.getNotificationHistory()
+        return remoteGateway.getNotificationHistory().take(2)
     }
 
     override suspend fun getThisWeekNotifications(): List<Notification> {
-        return remoteGateway.getNotificationHistory()
+        return remoteGateway.getNotificationHistory().takeLast(3)
     }
 
 }

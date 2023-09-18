@@ -14,6 +14,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.base.BaseScreen
 import presentation.notification.combosable.NotificationCard
+import resources.Resources
 
 class NotificationScreen :
     BaseScreen<NotificationScreenModel, NotificationsUiState, NotificationUiEffect, NotificationInteractionListener>() {
@@ -30,23 +31,15 @@ class NotificationScreen :
             contentPadding = PaddingValues(vertical = 24.dp)
         ) {
             itemsIndexed(state.todayNotifications) { index, item ->
-                if (index == 0) {
-                    NotificationCard(
-                        title = item.title,
-                        showDate = true,
-                        date = "Today",
-                        time = item.time,
-                        content = item.body,
-                        isClickable = true,
-                        clickableText = "Try again"
-                    )
-                } else {
-                    NotificationCard(
-                        title = item.title,
-                        time = item.time,
-                        content = item.body,
-                    )
-                }
+                NotificationCard(
+                    title = item.title,
+                    showDate = true,
+                    date = Resources.strings.today,
+                    time = item.time,
+                    content = item.body,
+                    isClickable = true,
+                    clickableText = Resources.strings.tryAgain
+                )
             }
 
             itemsIndexed(state.thisWeekNotifications) { index, item ->
@@ -54,11 +47,13 @@ class NotificationScreen :
                     NotificationCard(
                         title = item.title,
                         showDate = true,
-                        date = "This Week",
+                        date = Resources.strings.thisWeek,
                         time = item.time,
                         content = item.body,
                         modifier = Modifier.fillMaxWidth()
-                            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp)
+                            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp),
+                        isClickable = true,
+                        clickableText = Resources.strings.trackYourOrder
                     )
                 } else {
                     NotificationCard(
@@ -72,7 +67,10 @@ class NotificationScreen :
     }
 
     override fun onEffect(effect: NotificationUiEffect, navigator: Navigator) {
-        TODO("Not yet implemented")
+        when (effect) {
+            is NotificationUiEffect.MakeOrderAgain -> println("order again")
+            is NotificationUiEffect.NavigateToTraceOrderScreen -> println("navigate to trace order screen")
+        }
     }
 
 }

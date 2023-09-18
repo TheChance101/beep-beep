@@ -63,5 +63,9 @@ data class StringResources(
     val ridePreferredTitle: String = "Which do you prefer for your taxi rides?",
     val ridePreferredSubTitle: String = "Help us improve your experience with us.",
     val quickerRoutesWithHigherCosts: String = "Quicker routes with higher costs.",
-    val slowerRoutesWithLowCosts: String = "Slower routes with lower costs."
+    val slowerRoutesWithLowCosts: String = "Slower routes with lower costs.",
+    val today: String = "Today",
+    val thisWeek: String = "This Week",
+    val tryAgain: String = "Try again",
+    val trackYourOrder: String = "Track Your Order"
 )
