@@ -12,8 +12,6 @@ import kotlin.math.ceil
 
 class UsersFakeGateway : IUsersGateway {
 
-    override suspend fun getUserData(): String = "aaaa"
-
     override suspend fun getUsers(
         query: String?,
         byPermissions: List<Permission>,

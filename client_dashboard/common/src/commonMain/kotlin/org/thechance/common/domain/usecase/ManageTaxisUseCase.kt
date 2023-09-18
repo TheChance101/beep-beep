@@ -31,7 +31,6 @@ interface IManageTaxisUseCase {
 
 class ManageTaxisUseCase(
     private val taxiGateway: ITaxisGateway,
-    private val remoteGateway: IRemoteGateway
 ) : IManageTaxisUseCase {
 
     override suspend fun createTaxi(addTaxi: NewTaxiInfo): Taxi {
@@ -39,7 +38,7 @@ class ManageTaxisUseCase(
     }
 
     override suspend fun createTaxiReport() {
-        return remoteGateway.getPdfTaxiReport()
+        return taxiGateway.getPdfTaxiReport()
     }
 
     override suspend fun getTaxis(

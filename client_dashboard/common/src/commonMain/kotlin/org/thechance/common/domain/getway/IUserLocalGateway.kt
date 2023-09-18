@@ -2,10 +2,12 @@ package org.thechance.common.domain.getway
 
 import kotlinx.coroutines.flow.Flow
 
-interface IIdentityGateway {
+interface IUserLocalGateway {
 
     suspend fun saveAccessToken(token: String)
 
+    suspend fun saveUserName(username: String)
+    suspend fun getUserName(): String
     suspend fun saveRefreshToken(token: String)
 
     suspend fun getAccessToken(): String
@@ -13,10 +15,6 @@ interface IIdentityGateway {
     suspend fun getRefreshToken(): String
 
     suspend fun clearConfiguration()
-
-    suspend fun shouldUserKeptLoggedIn(keepLoggedIn: Boolean)
-
-    suspend fun isUserKeptLoggedIn(): Boolean
 
     suspend fun getThemeMode(): Flow<Boolean>
 

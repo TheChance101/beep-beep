@@ -9,7 +9,7 @@ import io.ktor.client.request.*
 import io.ktor.serialization.gson.*
 import org.koin.core.scope.Scope
 import org.koin.dsl.module
-import org.thechance.common.domain.getway.IIdentityGateway
+import org.thechance.common.domain.getway.IUserLocalGateway
 
 
 val NetworkModule = module {
@@ -42,7 +42,7 @@ val NetworkModule = module {
 fun Scope.intercept(client: HttpClient) {
     client.plugin(HttpSend).intercept { request ->
 
-        val identityGateway = get<IIdentityGateway>()
+        val identityGateway = get<IUserLocalGateway>()
 
         val accessToken = identityGateway.getAccessToken()
         val refreshToken = identityGateway.getRefreshToken()

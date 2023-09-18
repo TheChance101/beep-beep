@@ -16,6 +16,9 @@ import org.thechance.common.domain.getway.ITaxisGateway
 import org.thechance.common.domain.util.NotFoundException
 
 class TaxisGateway(private val client: HttpClient) : BaseGateway(), ITaxisGateway {
+    override suspend fun getPdfTaxiReport() {
+        TODO("Not yet implemented")
+    }
 
     override suspend fun getTaxis(
         username: String?,

@@ -7,6 +7,7 @@ import org.thechance.common.domain.entity.TaxiFiltration
 
 interface ITaxisGateway {
 
+    suspend fun getPdfTaxiReport()
     suspend fun getTaxis(
         username: String?,
         taxiFiltration: TaxiFiltration,
