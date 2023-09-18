@@ -13,6 +13,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 import domain.entity.Time
@@ -53,20 +55,22 @@ fun NotificationCard(
             style = Theme.typography.title,
             color = Theme.colors.contentPrimary
         )
+        val text = buildAnnotatedString {
+            pushStyle(SpanStyle(color = Theme.colors.contentSecondary))
+            append(content)
+            pop()
+            if (isClickable) {
+                pushStyle(SpanStyle(Theme.colors.primary))
+                append(" $clickableText")
+            }
+            toAnnotatedString()
+        }
         Text(
             modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
-            text = content,
+            text = text,
             style = Theme.typography.caption,
             color = Theme.colors.contentSecondary
         )
-        AnimatedVisibility(isClickable) {
-            Text(
-                modifier = Modifier.padding(bottom = 8.dp, start = 16.dp, end = 16.dp),
-                text = clickableText,
-                style = Theme.typography.caption,
-                color = Theme.colors.primary
-            )
-        }
 
         var hourOfDay = time.hours
         val minute = time.minutes
