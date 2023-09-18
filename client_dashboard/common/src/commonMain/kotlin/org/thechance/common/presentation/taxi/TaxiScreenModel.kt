@@ -197,12 +197,8 @@ class TaxiScreenModel(
     }
 
     private fun onUpdateTaxiSuccessfully(taxi: Taxi) {
-        updateState {
-            it.copy(
-                isAddNewTaxiDialogVisible = false,
-                taxiMenu = it.taxiMenu.copy(id = "")
-            )
-        }
+        updateState { it.copy(isAddNewTaxiDialogVisible = false,) }
+        setTaxiMenuVisibility(taxi.id, false)
         mutableState.value.pageInfo.data.find { it.id == taxi.id }?.let { taxiDetailsUiState ->
             val index = mutableState.value.pageInfo.data.indexOf(taxiDetailsUiState)
             val newTaxi = mutableState.value.pageInfo.data.toMutableList().apply {
@@ -362,18 +358,15 @@ class TaxiScreenModel(
 
     private fun setTaxiMenuVisibility(id: String, isExpanded: Boolean) {
         val currentTaxisState = state.value.pageInfo.data
-        val selectedTaxiState = currentTaxisState.find { it.id == id }
-        val updatedTaxiState = selectedTaxiState?.copy(isTaxiMenuExpanded = isExpanded)
-        updatedTaxiState?.let{
-            updateState {
-                it.copy(
-                    pageInfo = state.value.pageInfo.copy(data = currentTaxisState.toMutableList()
-                        .apply { set(indexOf(selectedTaxiState), updatedTaxiState) })
-                )
-            }
+        val selectedTaxiState = currentTaxisState.first { it.id == id }
+        val updatedTaxiState = selectedTaxiState.copy(isTaxiMenuExpanded = isExpanded)
+        updateState {
+            it.copy(
+                pageInfo = state.value.pageInfo.copy(data = currentTaxisState.toMutableList()
+                    .apply { set(indexOf(selectedTaxiState), updatedTaxiState) })
+            )
         }
     }
-
 //endregion
 
 }

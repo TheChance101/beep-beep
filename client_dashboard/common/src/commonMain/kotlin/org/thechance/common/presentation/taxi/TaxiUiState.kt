@@ -23,7 +23,6 @@ data class TaxiUiState(
     val pageInfo: TaxiPageInfoUiState = TaxiPageInfoUiState(),
     val specifiedTaxis: Int = 10,
     val currentPage: Int = 1,
-    val taxiMenu: MenuUiState = MenuUiState(),
     val isFilterDropdownMenuExpanded: Boolean = false,
     val isEditMode: Boolean = false,
 
@@ -99,28 +98,6 @@ data class TaxiInfoUiState(
     val driverUserNameError: ErrorWrapper = ErrorWrapper(),
     val isFormValid: Boolean = false,
 )
-
-data class MenuUiState(
-    val id: String = "",
-    val items: List<MenuItemUiState> = listOf(
-        MenuItemUiState(
-            iconPath = "ic_edit.xml",
-            text = "Edit",
-        ),
-        MenuItemUiState(
-            iconPath = "ic_delete.svg",
-            text = "Delete",
-            isSecondary = true,
-        ),
-    )
-) {
-    data class MenuItemUiState(
-        val iconPath: String = "",
-        val text: String = "",
-        val isSecondary: Boolean = false,
-    )
-}
-
 
 fun DataWrapper<Taxi>.toDetailsUiState(): TaxiPageInfoUiState {
     return TaxiPageInfoUiState(
