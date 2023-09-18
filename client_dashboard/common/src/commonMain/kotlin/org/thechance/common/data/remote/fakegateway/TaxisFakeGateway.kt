@@ -10,6 +10,7 @@ import org.thechance.common.domain.entity.NewTaxiInfo
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.entity.TaxiFiltration
 import org.thechance.common.domain.getway.ITaxisGateway
+import org.thechance.common.domain.util.NotFoundException
 import java.util.*
 import kotlin.math.ceil
 
@@ -99,13 +100,14 @@ class TaxisFakeGateway : ITaxisGateway {
         }
     }
 
-    override suspend fun deleteTaxi(taxiId: String): Boolean {
+    override suspend fun deleteTaxi(taxiId: String): Taxi {
         val indexToUpdate = taxis.indexOfFirst { it.id == taxiId }
-        return if (indexToUpdate != -1) {
+        if (indexToUpdate != -1) {
+            val taxi = taxis[indexToUpdate].toEntity()
             taxis.removeAt(indexToUpdate)
-            true
+            return taxi
         } else {
-            throw Exception("Taxi not found")
+            throw NotFoundException("Taxi not found")
         }
     }
 
