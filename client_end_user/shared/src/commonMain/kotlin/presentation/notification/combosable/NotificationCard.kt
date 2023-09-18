@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -39,7 +38,7 @@ fun NotificationCard(
     ) {
         AnimatedVisibility(showDate) {
             Row(
-                modifier = Modifier.fillMaxWidth().height(48.dp).background(Theme.colors.primary)
+                modifier = Modifier.background(Theme.colors.primary).fillMaxWidth()
                     .padding(16.dp)
             ) {
                 Text(
