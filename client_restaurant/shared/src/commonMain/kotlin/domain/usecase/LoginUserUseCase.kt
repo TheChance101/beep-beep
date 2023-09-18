@@ -38,12 +38,9 @@ class LoginUserUseCase(
     ) {
         if (validateLoginFields(userName, password)) {
             val userTokens = remoteGateway.loginUser(userName, password)
-
-            if (decodedToken(userTokens.accessToken)) {
-                localGateWay.saveAccessToken(userTokens.accessToken)
-                localGateWay.saveRefreshToken(userTokens.refreshToken)
-                localGateWay.saveKeepMeLoggedInFlag(isKeepMeLoggedInChecked)
-            }
+            localGateWay.saveAccessToken(userTokens.accessToken)
+            localGateWay.saveRefreshToken(userTokens.refreshToken)
+            localGateWay.saveKeepMeLoggedInFlag(isKeepMeLoggedInChecked)
         }
     }
 

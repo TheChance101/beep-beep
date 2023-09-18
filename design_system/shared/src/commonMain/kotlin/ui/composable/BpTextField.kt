@@ -46,7 +46,6 @@ fun BpTextField(
     keyboardType: KeyboardType = KeyboardType.Text,
     shapeRadius: Shape = RoundedCornerShape(radius.medium),
     singleLine: Boolean = true,
-    showPasswordIcon: Boolean = false,
     errorMessage: String = "",
     correctValidation: Boolean = false,
     isError: Boolean = errorMessage.isNotEmpty(),
@@ -79,7 +78,7 @@ fun BpTextField(
             textStyle = typography.body.copy(colors.contentPrimary),
             singleLine = singleLine,
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-            trailingIcon = if (keyboardType == KeyboardType.Password && showPasswordIcon) {
+            trailingIcon = if (keyboardType == KeyboardType.Password) {
                 { TrailingIcon(showPassword) { showPassword = !showPassword } }
             } else null,
             visualTransformation = BpVisualTransformation(keyboardType, showPassword),

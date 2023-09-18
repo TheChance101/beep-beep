@@ -32,7 +32,7 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
 
     @Composable
     override fun Content() {
-        initScreen(getScreenModel<RestaurantInformationScreenModel> { parametersOf(id) })
+        initScreen(getScreenModel { parametersOf(id) })
     }
 
 
