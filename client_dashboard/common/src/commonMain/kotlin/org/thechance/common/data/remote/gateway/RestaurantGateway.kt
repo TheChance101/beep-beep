@@ -6,13 +6,11 @@ import io.ktor.client.request.forms.*
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.http.*
+import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.*
-import org.thechance.common.domain.entity.DataWrapper
-import org.thechance.common.domain.entity.NewRestaurantInfo
-import org.thechance.common.domain.entity.Restaurant
+import org.thechance.common.domain.entity.*
 import org.thechance.common.domain.getway.IRestaurantGateway
-import org.thechance.common.presentation.restaurant.toDto
 
 class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestaurantGateway {
 
@@ -31,13 +29,13 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
         }.isSuccess ?: false
     }
 
-    override suspend fun getCuisines(): List<String> {
-        return tryToExecute<ServerResponse<List<CuisineDto>>>(client) {
+    override suspend fun getCuisines(): List<Cuisine> {
+       return tryToExecute<ServerResponse<List<CuisineDto>>>(client) {
             get(urlString = "/cuisines")
-        }.value?.map { it.name } ?: throw UnknownError()
+        }.value?.toEntity()?: throw UnknownError()
     }
 
-    override suspend fun createCuisine(cuisineName: String): String {
+    override suspend fun createCuisine(cuisineName: String): Cuisine {
         return tryToExecute<ServerResponse<CuisineDto>>(client) {
             submitForm(
                 url = "/cuisine",
@@ -45,12 +43,14 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
                     append("name", cuisineName)
                 },
             )
-        }.value?.name ?: throw UnknownError()
+        }.value?.toEntity() ?: throw UnknownError()
     }
 
-    override suspend fun deleteCuisine(cuisineName: String): String {
-        return cuisineName
-    }//Todo: implement endpoint deleteCuisine
+    override suspend fun deleteCuisine(cuisineId: String) {
+       tryToExecute<ServerResponse<Boolean>>(client) {
+            delete(urlString = "/cuisine") { url { appendPathSegments(cuisineId) } }
+        }.isSuccess ?: false
+    }
 
     override suspend fun getRestaurants(
         pageNumber: Int,
