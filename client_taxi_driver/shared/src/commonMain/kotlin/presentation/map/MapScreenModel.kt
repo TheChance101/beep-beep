@@ -13,6 +13,7 @@ class MapScreenModel(
 
     init {
         getLiveLocation()
+        getTaxiDriverName()
         findingNewOrder()
     }
 
@@ -20,7 +21,7 @@ class MapScreenModel(
         tryToExecute(
             function = order::foundNewOrder,
             onSuccess = ::onFoundNewOrderSuccess,
-            onError = ::onFoundNewOrderFailed
+            onError = ::onError
         )
     }
 
@@ -35,12 +36,10 @@ class MapScreenModel(
         }
     }
 
-    private fun onFoundNewOrderFailed(errorState: ErrorState) {
+    private fun onError(errorState: ErrorState) {
         updateState {
             it.copy(
                 isLoading = false,
-                isNewOrderFound = false,
-                isAcceptedOrder = false,
                 error = errorState,
             )
         }
@@ -51,7 +50,7 @@ class MapScreenModel(
         tryToCollect(
             function = order::getLiveLocation,
             onNewValue = ::onGetLiveLocationSuccess,
-            onError = ::onGetLiveLocationFailed,
+            onError = ::onError,
         )
     }
 
@@ -64,10 +63,20 @@ class MapScreenModel(
         }
     }
 
-    private fun onGetLiveLocationFailed(errorState: ErrorState) {
+
+    private fun getTaxiDriverName() {
+        tryToExecute(
+            function = order::getTaxiDriverName,
+            onSuccess = ::onGetTaxiDriverNameSuccess,
+            onError = ::onError,
+        )
+    }
+
+    private fun onGetTaxiDriverNameSuccess(name: String) {
         updateState {
             it.copy(
-                error = errorState
+                error = null,
+                userName = name
             )
         }
     }

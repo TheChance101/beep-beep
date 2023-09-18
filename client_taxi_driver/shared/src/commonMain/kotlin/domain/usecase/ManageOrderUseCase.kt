@@ -11,6 +11,8 @@ interface IManageOrderUseCase {
     suspend fun foundNewOrder(): Order
 
     fun getLiveLocation(): Flow<Location>
+
+    suspend fun getTaxiDriverName(): String
 }
 
 class ManageOrderUseCase(
@@ -18,5 +20,8 @@ class ManageOrderUseCase(
     private val locationGateway: LocationFakeGateway,
 ) : IManageOrderUseCase {
     override suspend fun foundNewOrder() = mapGateway.findingNewOrder()
+
     override fun getLiveLocation() = locationGateway.streamLiveLocation()
+
+    override suspend fun getTaxiDriverName() = mapGateway.getTaxiDriverName()
 }

@@ -17,4 +17,6 @@ class MapFakeGateway : IMapGateway {
             pickUpAddress = "Nirmala,girsls HSS",
         ).toEntity()
     }
+
+    override suspend fun getTaxiDriverName() = "Kamel Mohamed"
 }
