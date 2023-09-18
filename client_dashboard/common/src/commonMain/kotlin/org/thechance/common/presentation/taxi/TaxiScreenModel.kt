@@ -17,6 +17,7 @@ class TaxiScreenModel(
 ) : BaseScreenModel<TaxiUiState, TaxiUiEffect>(TaxiUiState()), TaxiInteractionListener {
 
     private var searchJob: Job? = null
+    private var limitJob: Job? = null
 
     init {
         getTaxis()
@@ -100,7 +101,9 @@ class TaxiScreenModel(
     }
 
     private fun clearAddTaxiErrorState() =
-        updateState { it.copy(newTaxiInfo = it.newTaxiInfo.copy(
+        updateState {
+            it.copy(
+                newTaxiInfo = it.newTaxiInfo.copy(
                     plateNumberError = ErrorWrapper(),
                     carModelError = ErrorWrapper(),
                     driverUserNameError = ErrorWrapper(),
@@ -132,7 +135,12 @@ class TaxiScreenModel(
 
     override fun onItemsIndicatorChange(itemPerPage: Int) {
         updateState { it.copy(specifiedTaxis = itemPerPage) }
-        getTaxis()
+        launchLimitJob()
+    }
+
+    private fun launchLimitJob() {
+        limitJob?.cancel()
+        limitJob = launchDelayed(300L) { getTaxis() }
     }
 
     override fun onPageClick(pageNumber: Int) {
