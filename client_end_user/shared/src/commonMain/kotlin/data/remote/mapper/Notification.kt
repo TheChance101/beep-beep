@@ -8,7 +8,7 @@ fun NotificationDto.toEntity(): Notification {
         id = id ?: "",
         title = title,
         body = body,
-        date = date,
+        date = date.toDate(),
         time = date.toTime(),
         userId = userId ?: "",
         topic = topic ?: "",
