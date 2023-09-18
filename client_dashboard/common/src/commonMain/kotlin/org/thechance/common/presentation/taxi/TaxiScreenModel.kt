@@ -82,7 +82,15 @@ class TaxiScreenModel(
             is ErrorState.InvalidTaxiColor -> println("error is invalid taxi color: ${error.errorMessage}")
             is ErrorState.InvalidTaxiId -> println("error is invalid taxi id: ${error.errorMessage}")
             is ErrorState.SeatOutOfRange -> println("error is seat out of range: ${error.errorMessage}")
-            is ErrorState.TaxiAlreadyExists -> println("error is taxi already exists: ${error.errorMessage}")
+            is ErrorState.TaxiAlreadyExists -> {
+                updateState {
+                    it.copy(
+                            newTaxiInfo = it.newTaxiInfo.copy(
+                                    plateNumberError = ErrorWrapper(error.errorMessage, true)
+                            )
+                    )
+                }
+            }
             is ErrorState.TaxiNotFound -> println("error is taxi not found: ${error.errorMessage}")
             is ErrorState.UserNotExist -> {
                 updateState { it.copy(newTaxiInfo = it.newTaxiInfo.copy(

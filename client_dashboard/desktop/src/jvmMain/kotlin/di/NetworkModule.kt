@@ -23,14 +23,10 @@ val NetworkModule = module {
                 level = LogLevel.ALL
             }
             defaultRequest {
-                header("Content-Type", "application/json")
                 url("https://beep-beep-api-gateway-nap2u.ondigitalocean.app")
-                header("Accept-Language", "ar")
-                header("Country-Code", "EG")
                 header("Application-Id", "3000")
                 contentType(ContentType.Application.Json)
                 logger.debug("Request: $url")
-
             }
             install(ContentNegotiation) {
                 gson()
@@ -65,6 +61,8 @@ fun Scope.intercept(client: HttpClient) {
 
         request.headers {
             append("Authorization", "Bearer $accessToken")
+            append("Accept-Language", "ar")
+            append("Country-Code", "EG")
         }
         val originalCall = execute(request)
 
