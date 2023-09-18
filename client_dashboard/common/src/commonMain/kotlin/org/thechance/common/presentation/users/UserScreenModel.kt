@@ -5,6 +5,7 @@ import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.usecase.IUsersManagementUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
+import org.thechance.common.presentation.overview.toLastUserUiState
 import org.thechance.common.presentation.util.ErrorState
 
 class UserScreenModel(
@@ -23,7 +24,8 @@ class UserScreenModel(
     }
 
     private fun getUpdatedPermissions(
-        permissions: List<UserScreenUiState.PermissionUiState>, permissionUiState: UserScreenUiState.PermissionUiState
+        permissions: List<UserScreenUiState.PermissionUiState>,
+        permissionUiState: UserScreenUiState.PermissionUiState
     ): List<UserScreenUiState.PermissionUiState> {
         return if (permissions.contains(permissionUiState)) {
             permissions.filterNot { it == permissionUiState }
@@ -116,7 +118,7 @@ class UserScreenModel(
             it.copy(
                 permissionsDialog = it.permissionsDialog.copy(
                     show = true,
-                    username = user.username,
+                    id=  user.userId,
                     permissions = user.permissions
                 )
             )
@@ -143,9 +145,9 @@ class UserScreenModel(
 
     // region Permissions Dialog
     override fun onSaveUserPermissionsDialog() {
-        val username = mutableState.value.permissionsDialog.username
+        val userId = mutableState.value.permissionsDialog.id
         val permissions = mutableState.value.permissionsDialog.permissions
-        updateUserPermissions(username, permissions)
+        updateUserPermissions(userId, permissions)
         hideUserPermissionsDialog()
     }
 
@@ -168,22 +170,32 @@ class UserScreenModel(
             it.copy(
                 permissionsDialog = it.permissionsDialog.copy(
                     show = false,
-                    username = "",
                     permissions = emptyList()
                 )
             )
         }
     }
 
-    private fun updateUserPermissions(username: String, permissions: List<UserScreenUiState.PermissionUiState>) {
+    private fun updateUserPermissions(
+        userId: String, permissions: List<UserScreenUiState.PermissionUiState>
+    ) {
+        tryToExecute(
+                { userManagement.updateUserPermissions(userId, permissions.toEntity()) },
+                { onUpdatePermissionsSuccessfully(it.toUiState()) },
+                ::onError
+        )
+    }
+
+    private fun onUpdatePermissionsSuccessfully(user:UserScreenUiState.UserUiState) {
         updateState {
             it.copy(
-                pageInfo = it.pageInfo.copy(
-                    data = it.pageInfo.data.map { userUiState ->
-                        if (userUiState.username == username) userUiState.copy(permissions = permissions)
-                        else userUiState
-                    },
-                )
+                    isLoading = false,
+                    pageInfo = it.pageInfo.copy(
+                            data = it.pageInfo.data.map { userUiState ->
+                                if (userUiState.userId == user.userId) userUiState.copy(permissions = user.permissions)
+                                else userUiState
+                            },
+                    )
             )
         }
     }

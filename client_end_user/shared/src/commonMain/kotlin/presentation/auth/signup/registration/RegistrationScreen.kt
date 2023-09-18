@@ -86,8 +86,6 @@ class RegistrationScreen :
                 BpTextField(
                     modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
                     text = state.password,
-                    keyboardType = KeyboardType.Password,
-                    showPasswordIcon = false,
                     onValueChange = listener::onPasswordChanged,
                     label = Resources.strings.password,
                     errorMessage = state.passwordErrorMsg,

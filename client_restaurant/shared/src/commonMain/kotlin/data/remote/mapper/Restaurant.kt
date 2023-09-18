@@ -8,7 +8,7 @@ fun List<RestaurantDto>.toEntity():List<Restaurant> = map { it.toEntity() }
 fun RestaurantDto.toEntity(): Restaurant {
     return Restaurant(
         id = id,
-        ownerId = ownerId,
+        ownerId = ownerId.toString(),
         ownerUsername = ownerUsername ?: "",
         name = name ?: "",
         description = description ?: "",

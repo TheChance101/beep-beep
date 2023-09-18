@@ -60,7 +60,7 @@ data class UserScreenUiState(
 
     data class PermissionsDialogUiState(
         val show: Boolean = false,
-        val username: String = "",
+        val id:String = "",
         val permissions: List<PermissionUiState> = emptyList(),
     )
 
@@ -97,27 +97,26 @@ data class UserScreenUiState(
     )
 }
 
-fun List<User>.toUiState(): List<UserScreenUiState.UserUiState> {
-    return map {
-        UserScreenUiState.UserUiState(
-            userId = it.id,
-            fullName = it.fullName,
-            username = it.username,
-            email = it.email,
-            country = it.country,
-            permissions = it.permission.map { permission ->
-                when (permission) {
-                    Permission.RESTAURANT_OWNER -> UserScreenUiState.PermissionUiState.RESTAURANT_OWNER
-                    Permission.DRIVER -> UserScreenUiState.PermissionUiState.TAXI_DRIVER
-                    Permission.END_USER -> UserScreenUiState.PermissionUiState.END_USER
-                    Permission.SUPPORT -> UserScreenUiState.PermissionUiState.SUPPORT
-                    Permission.DELIVERY -> UserScreenUiState.PermissionUiState.DELIVERY
-                    Permission.ADMIN -> UserScreenUiState.PermissionUiState.DASHBOARD_ADMIN
-                }
-            },
-        )
-    }
+fun User.toUiState(): UserScreenUiState.UserUiState {
+    return UserScreenUiState.UserUiState(
+        userId = id,
+        fullName = fullName,
+        username = username,
+        email = email,
+        country = country,
+        permissions = permission.map { permission ->
+            when (permission) {
+                Permission.RESTAURANT_OWNER -> UserScreenUiState.PermissionUiState.RESTAURANT_OWNER
+                Permission.DRIVER -> UserScreenUiState.PermissionUiState.TAXI_DRIVER
+                Permission.END_USER -> UserScreenUiState.PermissionUiState.END_USER
+                Permission.SUPPORT -> UserScreenUiState.PermissionUiState.SUPPORT
+                Permission.DELIVERY -> UserScreenUiState.PermissionUiState.DELIVERY
+                Permission.ADMIN -> UserScreenUiState.PermissionUiState.DASHBOARD_ADMIN
+            }
+        },
+    )
 }
+fun List<User>.toUiState(): List<UserScreenUiState.UserUiState> = map { it.toUiState() }
 
 fun DataWrapper<User>.toUiState(): UserScreenUiState.UserPageInfoUiState {
     return UserScreenUiState.UserPageInfoUiState(
