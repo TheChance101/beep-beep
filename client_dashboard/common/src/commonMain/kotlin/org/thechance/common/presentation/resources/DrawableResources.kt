@@ -36,6 +36,7 @@ data class DrawableResources(
     val delivery : String = "ic_delivery.xml",
     val dashboardAdmin : String = "ic_admin.xml",
     val endUser : String = "ic_end_user.xml",
+    val infoIcon: String = "ic_info_square.svg"
 )
 
 val darkDrawableResource = DrawableResources(
