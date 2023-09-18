@@ -132,8 +132,8 @@ class TaxiScreen :
                         TaxiRow(
                             taxi = taxi,
                             position = state.pageInfo.data.indexOf(taxi) + 1,
-                            onDropdownMenuClicked = listener::showTaxiMenu,
-                            onDropdownMenuDismiss = listener::hideTaxiMenu,
+                            onDropdownMenuClicked = listener::onShowTaxiMenu,
+                            onDropdownMenuDismiss = listener::onHideTaxiMenu,
                             onEditTaxiClicked = listener::onEditTaxiClicked,
                             onDeleteTaxiClicked = listener::onDeleteTaxiClicked,
                             editTaxiMenu = state.taxiMenu,
@@ -300,7 +300,7 @@ class TaxiScreen :
         otherColumnsWeight: Float = 3f,
         onDropdownMenuClicked: (String) -> Unit,
         editTaxiMenu: MenuUiState,
-        onDropdownMenuDismiss: () -> Unit,
+        onDropdownMenuDismiss: (String) -> Unit,
         onEditTaxiClicked: (String) -> Unit,
         onDeleteTaxiClicked: (String) -> Unit,
     ) {
@@ -344,7 +344,7 @@ class TaxiScreen :
             EditTaxiDropdownMenu(
                 taxi = taxi,
                 editTaxiMenu = editTaxiMenu,
-                onDropdownMenuDismiss = onDropdownMenuDismiss,
+                onDropdownMenuDismiss = { onDropdownMenuDismiss(taxi.id) },
                 onEditTaxiClicked = onEditTaxiClicked,
                 onDeleteTaxiClicked = onDeleteTaxiClicked,
             )
@@ -360,7 +360,7 @@ class TaxiScreen :
         onDeleteTaxiClicked: (String) -> Unit,
     ) {
         BpDropdownMenu(
-            expanded = taxi.id == editTaxiMenu.id,
+            expanded = taxi.isTaxiMenuExpanded,
             onDismissRequest = onDropdownMenuDismiss,
             shape = RoundedCornerShape(Theme.radius.medium),
             offset = DpOffset.Zero.copy(x = (-100).kms)

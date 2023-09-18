@@ -100,7 +100,9 @@ class TaxiScreenModel(
     }
 
     private fun clearAddTaxiErrorState() =
-        updateState { it.copy(newTaxiInfo = it.newTaxiInfo.copy(
+        updateState {
+            it.copy(
+                newTaxiInfo = it.newTaxiInfo.copy(
                     plateNumberError = ErrorWrapper(),
                     carModelError = ErrorWrapper(),
                     driverUserNameError = ErrorWrapper(),
@@ -320,12 +322,13 @@ class TaxiScreenModel(
     //endregion
 
     //region taxi menu listener
-    override fun showTaxiMenu(taxiId: String) {
-        updateState { it.copy(taxiMenu = it.taxiMenu.copy(id = taxiId)) }
+
+    override fun onShowTaxiMenu(id: String) {
+        setTaxiMenuVisibility(id, true)
     }
 
-    override fun hideTaxiMenu() {
-        updateState { it.copy(taxiMenu = it.taxiMenu.copy(id = "")) }
+    override fun onHideTaxiMenu(id: String) {
+        setTaxiMenuVisibility(id, false)
     }
 
     override fun onDeleteTaxiClicked(taxiId: String) {
@@ -334,15 +337,17 @@ class TaxiScreenModel(
             ::onDeleteTaxiSuccessfully,
             ::onError
         )
+        setTaxiMenuVisibility(taxiId, false)
     }
 
-    private fun onDeleteTaxiSuccessfully(result: Boolean) {
-
+    private fun onDeleteTaxiSuccessfully(taxi: Taxi) {
+        setTaxiMenuVisibility(taxi.id, false)
+        getTaxis()
     }
 
     override fun onEditTaxiClicked(taxiId: String) {
         updateState { it.copy(isEditMode = true, isAddNewTaxiDialogVisible = true) }
-        hideTaxiMenu()
+        setTaxiMenuVisibility(taxiId, false)
         tryToExecute(
             { manageTaxis.getTaxiById(taxiId) },
             ::onGetTaxiByIdSuccess,
@@ -353,6 +358,20 @@ class TaxiScreenModel(
     private fun onGetTaxiByIdSuccess(taxi: Taxi) {
         val taxiState = taxi.toUiState()
         updateState { it.copy(newTaxiInfo = taxiState) }
+    }
+
+    private fun setTaxiMenuVisibility(id: String, isExpanded: Boolean) {
+        val currentTaxisState = state.value.pageInfo.data
+        val selectedTaxiState = currentTaxisState.find { it.id == id }
+        val updatedTaxiState = selectedTaxiState?.copy(isTaxiMenuExpanded = isExpanded)
+        updatedTaxiState?.let{
+            updateState {
+                it.copy(
+                    pageInfo = state.value.pageInfo.copy(data = currentTaxisState.toMutableList()
+                        .apply { set(indexOf(selectedTaxiState), updatedTaxiState) })
+                )
+            }
+        }
     }
 
 //endregion

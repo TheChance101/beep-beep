@@ -10,7 +10,6 @@ import org.thechance.common.domain.util.TaxiStatus.ONLINE
 import org.thechance.common.presentation.composables.table.Header
 import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.restaurant.ErrorWrapper
-import org.thechance.common.presentation.util.ErrorState
 
 data class TaxiUiState(
     val isLoading: Boolean = true,
@@ -51,6 +50,7 @@ data class TaxiDetailsUiState(
     val username: String = "",
     val status: TaxiStatus = ONLINE,
     val trips: String = "1",
+    val isTaxiMenuExpanded: Boolean = false,
 ) {
     val statusColor: Color
         @Composable get() = when (status) {
