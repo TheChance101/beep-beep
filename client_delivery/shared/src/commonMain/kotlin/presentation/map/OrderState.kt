@@ -1,10 +1,9 @@
 package presentation.map
 
-
 enum class OrderState {
+    LOADING,
     NEW_ORDER,
     ACCEPTED,
-    REJECTED,
     RECEIVED,
     DELIVERED
 }
