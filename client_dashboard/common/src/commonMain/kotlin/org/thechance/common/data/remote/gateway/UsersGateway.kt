@@ -4,6 +4,10 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.serializer
+import kotlinx.serialization.json.Json
+import org.thechance.common.data.remote.mapper.mapPermissionsToInt
 import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.ServerResponse
 import org.thechance.common.data.remote.model.UserDto
@@ -19,9 +23,12 @@ class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGatewa
     override suspend fun getUserData(): String = "aaaa"
 
     override suspend fun getUsers(
-        query: String?, byPermissions: List<Permission>, byCountries: List<String>, page: Int, numberOfUsers: Int
+        query: String?,
+        byPermissions: List<Permission>,
+        byCountries: List<String>,
+        page: Int,
+        numberOfUsers: Int
     ): DataWrapper<User> {
-        getLastRegisteredUsers(4)
         val result = tryToExecute<ServerResponse<UserResponse>>(client) {
             get(urlString = "/users") {
                 parameter("page", page)
@@ -30,18 +37,20 @@ class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGatewa
         }.value
 
         return DataWrapper(
-            totalPages = result?.total?.div(numberOfUsers) ?: 0,
-            numberOfResult = result?.total ?: 0,
-            result = result?.users?.toEntity() ?: emptyList()
+                totalPages = result?.total?.div(numberOfUsers) ?: 0,
+                numberOfResult = result?.total ?: 0,
+                result = result?.users?.toEntity() ?: emptyList()
         )
     }
 
     override suspend fun loginUser(username: String, password: String): Pair<String, String> {
         val result = tryToExecute<ServerResponse<UserTokensRemoteDto>>(client) {
-            submitForm(formParameters = Parameters.build {
-                append("username", username)
-                append("password", password)
-            }) {
+            submitForm(
+                    formParameters = Parameters.build {
+                        append("username", username)
+                        append("password", password)
+                    }
+            ) {
                 url("/login")
                 header("Accept-Language", "ar")
                 header("Country-Code", "EG")
@@ -62,6 +71,22 @@ class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGatewa
         return tryToExecute<ServerResponse<List<UserDto>>>(client) {
             get(urlString = "/user/last-register?limit=4") {
                 parameter("limit", limit)
+            }
+        }.value?.toEntity() ?: throw UnknownError()
+    }
+
+    override suspend fun updateUserPermissions(
+        userId: String,
+        permissions: List<Permission>
+    ): User {
+        return tryToExecute<ServerResponse<UserDto>>(client) {
+            put(urlString = "/user/$userId/permission") {
+                setBody(
+                        Json.encodeToString(
+                                ListSerializer(Int.serializer()),
+                                mapPermissionsToInt(permissions)
+                        )
+                )
             }
         }.value?.toEntity() ?: throw UnknownError()
     }
