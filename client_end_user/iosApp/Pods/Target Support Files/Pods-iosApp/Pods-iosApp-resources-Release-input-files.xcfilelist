@@ -1,6 +1,17 @@
 ${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-resources.sh
+${PODS_ROOT}/../../shared/src/commonMain/resources/background_pattern.png
 ${PODS_ROOT}/../../shared/src/commonMain/resources/ic_beep_beep_icon.xml
 ${PODS_ROOT}/../../shared/src/commonMain/resources/ic_beep_beep_logo.xml
+${PODS_ROOT}/../../shared/src/commonMain/resources/ic_orders_filled.xml
+${PODS_ROOT}/../../shared/src/commonMain/resources/ic_orders_outlined.xml
+${PODS_ROOT}/../../shared/src/commonMain/resources/ic_profile_filled.xml
+${PODS_ROOT}/../../shared/src/commonMain/resources/ic_profile_outlined.xml
+${PODS_ROOT}/../../shared/src/commonMain/resources/ic_right_arrow.xml
+${PODS_ROOT}/../../shared/src/commonMain/resources/ic_search_filled.xml
+${PODS_ROOT}/../../shared/src/commonMain/resources/ic_search_outlined.xml
+${PODS_ROOT}/../../shared/src/commonMain/resources/img_chat.png
+${PODS_ROOT}/../../shared/src/commonMain/resources/img_order.png
+${PODS_ROOT}/../../shared/src/commonMain/resources/img_taxi.png
 ${PODS_ROOT}/../../shared/src/commonMain/resources/moon_stars.xml
 ${PODS_ROOT}/../../shared/src/commonMain/resources/sort.xml
 ${PODS_ROOT}/../../shared/src/commonMain/resources/sun.xml

@@ -60,4 +60,8 @@ data class StringResources(
     val searchHint: String = "Search for meal, restaurant",
     val languageAskAboutLanguage: String = "What language do you speak?",
     val selectLanguage: String = "Pick your language.",
+    val ridePreferredTitle: String = "Which do you prefer for your taxi rides?",
+    val ridePreferredSubTitle: String = "Help us improve your experience with us.",
+    val quickerRoutesWithHigherCosts: String = "Quicker routes with higher costs.",
+    val slowerRoutesWithLowCosts: String = "Slower routes with lower costs."
 )
