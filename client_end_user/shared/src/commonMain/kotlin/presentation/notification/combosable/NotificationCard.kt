@@ -74,6 +74,9 @@ fun NotificationCard(
 
         if (time.hours < 12) {
             period = "AM"
+            if (hourOfDay == 0) {
+                hourOfDay = 12
+            }
         } else {
             period = "PM"
             if (hourOfDay > 12) {

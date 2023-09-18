@@ -98,8 +98,7 @@ class FakeRemoteGateway : IFakeRemoteGateway {
             id = "64f372095fecc11e6d917656",
             title = "Order is Cancelled",
             body = "Sorry! Yummies Restaurant have so much load they cancelled your order.",
-            time = "23:44",
-            date = 0,
+            date = 1695047432000,
             topic = "Order",
             userId = "64f3663e5ddbc15bfd1efcfa"
         ),
@@ -107,8 +106,7 @@ class FakeRemoteGateway : IFakeRemoteGateway {
             id = "64f372095fecc11e6d917656",
             title = "Order is Cancelled",
             body = "Sorry! Yummies Restaurant have so much load they cancelled your order.",
-            time = "8:44",
-            date = 0,
+            date = 1694996492000,
             topic = "Order",
             userId = "64f3663e5ddbc15bfd1efcfa"
         ),
@@ -116,8 +114,7 @@ class FakeRemoteGateway : IFakeRemoteGateway {
             id = "64f372095fecc11e6d917656",
             title = "Order is Cancelled",
             body = "Sorry! Yummies Restaurant have so much load they cancelled your order.",
-            time = "12:44",
-            date = 0,
+            date = 1695070832000,
             topic = "Order",
             userId = "64f3663e5ddbc15bfd1efcfa"
         ),
@@ -125,8 +122,7 @@ class FakeRemoteGateway : IFakeRemoteGateway {
             id = "64f372095fecc11e6d917656",
             title = "Order is Cancelled",
             body = "Sorry! Yummies Restaurant have so much load they cancelled your order.",
-            time = "14:44",
-            date = 0,
+            date = 1695032732000,
             topic = "Order",
             userId = "64f3663e5ddbc15bfd1efcfa"
         ),
