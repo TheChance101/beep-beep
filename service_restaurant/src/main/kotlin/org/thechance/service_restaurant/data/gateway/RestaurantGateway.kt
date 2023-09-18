@@ -44,9 +44,15 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
     //endregion
 
     //region Restaurant
-    override suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant> {
-        return container.restaurantCollection.find(RestaurantCollection::isDeleted eq false)
-            .paginate(page, limit).toList().toEntity()
+    override suspend fun getRestaurants(options: RestaurantOptions): List<Restaurant> {
+        return container.restaurantCollection.find(
+            and(
+                RestaurantCollection::isDeleted eq false,
+                RestaurantCollection::name regex Regex(options.query.orEmpty(), RegexOption.IGNORE_CASE),
+                options.rating?.let { RestaurantCollection::rate eq it },
+                options.priceLevel?.let { RestaurantCollection::priceLevel eq it }
+            )
+        ).paginate(options.page, options.limit).toList().toEntity()
     }
 
     override suspend fun getRestaurants(restaurantIds: List<String>): List<Restaurant> {
