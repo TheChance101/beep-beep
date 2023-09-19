@@ -5,6 +5,7 @@ import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.statement.HttpResponse
 import org.thechance.common.data.remote.model.ServerResponse
+import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.util.*
 import java.net.ConnectException
 import java.net.UnknownHostException
@@ -173,4 +174,12 @@ abstract class BaseGateway {
         const val CUISINE_NAME_ALREADY_EXISTED = "2503"
     }
 
+    fun <T> paginateData(result: List<T>, limit: Int, total: Int): DataWrapper<T> {
+        val pages = (total + limit - 1) / limit
+        return DataWrapper(
+            totalPages = pages,
+            numberOfResult = total,
+            result = result
+        )
+    }
 }
