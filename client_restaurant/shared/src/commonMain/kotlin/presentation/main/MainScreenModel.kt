@@ -29,7 +29,7 @@ class MainScreenModel(
 
     private suspend fun callee(): List<Restaurant> {
         val result = manageOrderUseCase.getOrdersRevenueByDaysBefore(restaurantId, 5)
-        println("getOrdersRevenueByDaysBefore: ${result.first().values}")
+        println("getOrdersRevenueByDaysBefore: ${result.map { it.first}}")
         return getOwnerRestaurantsUseCase.getOwnerRestaurants()
     }
 

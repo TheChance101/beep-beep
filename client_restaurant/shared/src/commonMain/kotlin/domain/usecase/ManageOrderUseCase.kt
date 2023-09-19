@@ -14,12 +14,12 @@ interface IManageOrderUseCase {
     suspend fun getOrdersRevenueByDaysBefore(
         restaurantId: String,
         daysBack: Int
-    ): List<Map<String, Double>>
+    ): List<Pair<String, Double>>
 
     suspend fun getOrdersCountByDaysBefore(
         restaurantId: String,
         daysBack: Int
-    ): List<Map<String, Int>>
+    ): List<Pair<String, Int>>
 }
 
 class ManageOrderUseCase(private val orderRemoteGateway: IOrderRemoteGateway) : IManageOrderUseCase {
@@ -59,15 +59,21 @@ class ManageOrderUseCase(private val orderRemoteGateway: IOrderRemoteGateway) : 
     override suspend fun getOrdersRevenueByDaysBefore(
         restaurantId: String,
         daysBack: Int
-    ): List<Map<String, Double>> {
+    ): List<Pair<String, Double>> {
         return orderRemoteGateway.getOrdersRevenueByDaysBefore(restaurantId, daysBack)
+            .flatMap { map ->
+                map.entries.map { it.key to it.value }
+            }
     }
 
     override suspend fun getOrdersCountByDaysBefore(
         restaurantId: String,
         daysBack: Int
-    ): List<Map<String, Int>> {
+    ): List<Pair<String, Int>> {
         return orderRemoteGateway.getOrdersCountByDaysBefore(restaurantId, daysBack)
+            .flatMap { map ->
+                map.entries.map { it.key to it.value }
+            }
     }
 
 }
