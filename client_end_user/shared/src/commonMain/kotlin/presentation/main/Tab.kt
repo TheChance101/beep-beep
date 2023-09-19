@@ -7,7 +7,7 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import presentation.home.HomeScreen
 import presentation.notification.NotificationScreen
-import presentation.orders.OrderScreen
+import presentation.orderHistory.OrderScreen
 import presentation.profile.ProfileScreen
 import presentation.search.SearchScreen
 import resources.Resources

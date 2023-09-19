@@ -1,7 +1,8 @@
-package presentation.orders
+package presentation.orderHistory
 
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.navigator.Navigator
+import org.koin.core.parameter.ParametersDefinition
 import presentation.base.BaseScreen
 
 class OrderScreen :

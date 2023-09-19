@@ -1,4 +1,4 @@
-package presentation.orders
+package presentation.orderHistory
 
 sealed class OrderScreenUiEffect{
 

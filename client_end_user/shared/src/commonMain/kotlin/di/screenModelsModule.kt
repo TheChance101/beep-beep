@@ -9,7 +9,7 @@ import presentation.auth.signup.registrationSubmit.RegistrationSubmitScreenModel
 import presentation.home.HomeScreenModel
 import presentation.main.MainScreenModel
 import presentation.notification.NotificationScreenModel
-import presentation.orders.OrderScreenModel
+import presentation.orderHistory.OrderScreenModel
 import presentation.pickLanguage.PickLanguageScreenModel
 import presentation.preferredMeal.PreferredScreenModel
 import presentation.preferredRide.PreferredRideScreenModel
