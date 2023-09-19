@@ -7,6 +7,7 @@ minSdk = "24"
 targetSdk = "34"
 ios-deploymentTarget = "14.1"
 jvmToolchain = "11"
+calf = "0.1.1"
 
 androidx-core = "1.10.1"
 androidx-activity-compose = "1.7.2"
@@ -80,6 +81,7 @@ koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin-ver
 
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.4.0" }
 androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version = "1.5.1" }
+calf = { module = "com.mohamedrejeb.calf:calf-ui", version.ref = "calf" }
 
 [bundles]
 voyager = ["voyager-navigator", "voyager-koin", "voyager-transitions"]
