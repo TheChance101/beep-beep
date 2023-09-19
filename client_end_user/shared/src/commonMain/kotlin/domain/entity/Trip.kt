@@ -5,6 +5,7 @@ data class Trip(
     val taxiId: String,
     val taxiPlateNumber: String,
     val driverId: String,
+    val driverName: String,
     val clientId: String,
     val startPoint: Location,
     val destination: Location,

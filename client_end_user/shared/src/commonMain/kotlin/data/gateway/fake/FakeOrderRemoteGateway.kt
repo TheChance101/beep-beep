@@ -14,6 +14,7 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                 taxiId = "taxi123",
                 taxiPlateNumber = "ABC123",
                 driverId = "driver456",
+                driverName = "Said Kolish",
                 clientId = "client789",
                 startPoint = Location(37.7749, -122.4194),
                 destination = Location(37.7831, -122.4039),
@@ -28,6 +29,7 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                 taxiId = "taxi789",
                 taxiPlateNumber = "XYZ456",
                 driverId = "driver789",
+                driverName = "Ahmed Hassan",
                 clientId = "client101",
                 startPoint = Location(37.7802, -122.4212),
                 destination = Location(37.7915, -122.4017),
@@ -46,6 +48,8 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                 id = "order1",
                 userId = "user123",
                 restaurantId = "restaurant456",
+                restaurantName = " Burger king",
+                restaurantImageUrl = "",
                 meals = listOf(
                     Order.Meal(
                         mealId = "meal1",
@@ -67,6 +71,8 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                 id = "order2",
                 userId = "user456",
                 restaurantId = "restaurant789",
+                restaurantImageUrl = "",
+                restaurantName = "Zeko Talawoth",
                 meals = listOf(
                     Order.Meal(
                         mealId = "meal3",

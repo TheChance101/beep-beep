@@ -8,6 +8,8 @@ fun OrderDto.toOrderEntity(): Order {
         id = id,
         userId = userId,
         restaurantId = restaurantId,
+        restaurantName = restaurantName,
+        restaurantImageUrl = restaurantImageUrl ?: "",
         meals = meals.toEntity(),
         totalPrice = totalPrice ?: 0.0,
         createdAt = createdAt ?: 0L,

@@ -4,6 +4,8 @@ data class Order(
     val id: String,
     val userId: String,
     val restaurantId: String,
+    val restaurantName: String,
+    val restaurantImageUrl: String,
     val meals: List<Meal>,
     val totalPrice: Double,
     val createdAt: Long,

@@ -10,6 +10,7 @@ fun TripDto.toTripEntity(): Trip {
         taxiId = taxiId ?: "",
         taxiPlateNumber = taxiPlateNumber ?: "",
         driverId = driverId ?: "",
+        driverName = driverName ?: "",
         clientId = clientId,
         startPoint = startPoint?.toEntity() ?: Location(0.0, 0.0),
         destination = destination?.toEntity() ?: Location(0.0, 0.0),
