@@ -10,14 +10,9 @@ map = new Microsoft.Maps.Map('#myMap', {
     maxZoom: 18
 });
     var center = map.getCenter();
-           //Create custom Pushpin
            var pin = new Microsoft.Maps.Pushpin(center, {
-               title: 'Microsoft',
-               subTitle: 'City Center',
-               text: '1',
                color: 'red',
            });
-           //Add the pushpin to the map
            map.entities.push(pin);
 }
 function getPin(){
