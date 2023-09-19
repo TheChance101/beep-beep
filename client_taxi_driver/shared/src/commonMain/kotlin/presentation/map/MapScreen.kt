@@ -53,8 +53,8 @@ class MapScreen :
         ) {
             MapWebView(
                 url = MAP_URL,
-                lat = state.currentLocation.lat,
-                lng = state.currentLocation.lng,
+                currentLocation = state.currentLocation.toEntity(),
+                destination = state.orderInfoUiState.dropOffAddress?.toEntity(),
             )
             BpAppBar(
                 isBackIconVisible = false,
@@ -224,7 +224,7 @@ class MapScreen :
 
                 Text(
                     modifier = Modifier.padding(start = 4.dp),
-                    text = state.dropOffAddress.name,
+                    text = state.pickUpAddress?.addressName ?: "",
                     color = Theme.colors.contentSecondary,
                     style = Theme.typography.body,
                 )
@@ -275,7 +275,7 @@ class MapScreen :
                         style = Theme.typography.caption,
                     )
                     Text(
-                        text = state.pickUpAddress.name,
+                        text = state.pickUpAddress?.addressName ?: "",
                         color = Theme.colors.contentPrimary,
                         style = Theme.typography.body,
                     )
@@ -295,7 +295,7 @@ class MapScreen :
                         style = Theme.typography.caption,
                     )
                     Text(
-                        text = state.dropOffAddress.name,
+                        text = state.dropOffAddress?.addressName ?: "",
                         color = Theme.colors.contentPrimary,
                         style = Theme.typography.body,
                     )

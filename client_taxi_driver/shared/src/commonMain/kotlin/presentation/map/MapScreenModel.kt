@@ -2,12 +2,14 @@ package presentation.map
 
 import domain.entity.Location
 import domain.entity.Order
-import domain.usecase.ManageOrderUseCase
+import domain.usecase.IManageLocationUseCase
+import domain.usecase.IManageOrderUseCase
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
 class MapScreenModel(
-    private val order: ManageOrderUseCase,
+    private val order: IManageOrderUseCase,
+    private val location: IManageLocationUseCase,
 ) : BaseScreenModel<MapScreenUiState, MapUiEffect>(MapScreenUiState()),
     MapScreenInteractionListener {
 
@@ -48,7 +50,7 @@ class MapScreenModel(
 
     private fun getLiveLocation() {
         tryToCollect(
-            function = order::getLiveLocation,
+            function = location::trackCurrentLocation,
             onNewValue = ::onGetLiveLocationSuccess,
             onError = ::onError,
         )
@@ -99,7 +101,8 @@ class MapScreenModel(
                 isLoading = true,
                 isNewOrderFound = false,
                 isAcceptedOrder = false,
-                error = null
+                error = null,
+                orderInfoUiState = OrderInfoUiState()
             )
         }
         findingNewOrder()
@@ -123,9 +126,7 @@ class MapScreenModel(
                 isLoading = true,
                 isAcceptedOrder = false,
                 error = null,
-                orderInfoUiState = it.orderInfoUiState.copy(
-                    isArrived = false
-                )
+                orderInfoUiState = OrderInfoUiState()
             )
         }
         findingNewOrder()

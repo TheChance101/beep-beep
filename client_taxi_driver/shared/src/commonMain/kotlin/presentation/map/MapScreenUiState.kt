@@ -14,13 +14,13 @@ data class MapScreenUiState(
 
 data class OrderInfoUiState(
     val passengerName: String = "",
-    val pickUpAddress: LocationInfoUiState = LocationInfoUiState(),
-    val dropOffAddress: LocationInfoUiState = LocationInfoUiState(),
+    val pickUpAddress: LocationInfoUiState? = null,
+    val dropOffAddress: LocationInfoUiState? = null,
     val isArrived: Boolean = false,
 )
 
 data class LocationInfoUiState(
-    val lat: String = "",
-    val lng: String = "",
-    val name: String = "",
+    val lat: Double = 0.0,
+    val lng: Double = 0.0,
+    val addressName: String = "",
 )

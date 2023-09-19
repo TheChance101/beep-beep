@@ -9,12 +9,12 @@ class LocationFakeGateway : ILocationGateway {
     override fun trackCurrentLocation() = flow {
         var lattiude = 30.044420
         while (true) {
-            lattiude += 0.00002
+            lattiude += 0.00004
             emit(
                 Location(
                     lat = lattiude,
                     lng = 31.235712,
-                    addressName = "",
+                    addressName = "Cairo, Egypt",
                 )
             )
             delay(2000)
