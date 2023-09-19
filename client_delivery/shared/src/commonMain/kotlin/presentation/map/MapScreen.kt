@@ -1,13 +1,5 @@
 package presentation.map
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.animation.togetherWith
-import androidx.compose.animation.with
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -30,6 +22,7 @@ import presentation.base.BaseScreen
 import presentation.map.composable.AcceptedOrderCard
 import presentation.map.composable.DeliveredOrderCard
 import presentation.map.composable.LoadingCard
+import presentation.map.composable.MapCardAnimation
 import presentation.map.composable.NewOrderCard
 import resources.Resources
 
@@ -63,26 +56,35 @@ class MapScreen:BaseScreen<MapScreenModel,MapScreenUiState,MapScreenUiEffect,Map
                 )
             }
 
-            AnimatedContent(
-                targetState = state.orderState,
-                modifier = Modifier.align(Alignment.BottomCenter),
-                transitionSpec = {
-                    (slideInVertically { it } + fadeIn(tween(1500)))
-                        .togetherWith(
-                        slideOutVertically { it } + fadeOut(tween(1000))
-                    )
-                }
-            ) {
-                when(it){
-                    OrderState.LOADING -> LoadingCard()
-                    OrderState.NEW_ORDER -> NewOrderCard(state, listener)
-                    OrderState.ACCEPTED -> AcceptedOrderCard(state, listener)
-                    OrderState.RECEIVED -> DeliveredOrderCard(state, listener)
-                    else -> {}
-                }
+           MapCardAnimation(
+               visible = state.orderState == OrderState.LOADING ,
+               modifier = Modifier.align(Alignment.BottomCenter)
+           ){
+                LoadingCard()
             }
 
+            MapCardAnimation(
+                visible = state.orderState == OrderState.NEW_ORDER ,
+                modifier = Modifier.align(Alignment.BottomCenter)
+            ){
+                NewOrderCard(state, listener)
+            }
+
+            MapCardAnimation(
+                visible = state.orderState == OrderState.ACCEPTED ,
+                modifier = Modifier.align(Alignment.BottomCenter)
+            ){
+                AcceptedOrderCard(state, listener)
+            }
+
+            MapCardAnimation(
+                visible = state.orderState == OrderState.RECEIVED ,
+                modifier = Modifier.align(Alignment.BottomCenter)
+            ){
+                DeliveredOrderCard(state, listener)
+            }
         }
+
     }
 
     override fun onEffect(effect: MapScreenUiEffect, navigator: Navigator) {
