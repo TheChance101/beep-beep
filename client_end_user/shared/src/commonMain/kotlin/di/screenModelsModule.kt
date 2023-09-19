@@ -24,4 +24,5 @@ val screenModelsModule = module {
     factoryOf(::PreferredScreenModel)
     factoryOf(::PickLanguageScreenModel)
     factoryOf(::PreferredRideScreenModel)
+    factory { AppScreenModel(get()) }
 }
