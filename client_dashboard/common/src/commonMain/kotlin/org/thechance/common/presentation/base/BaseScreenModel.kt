@@ -108,7 +108,7 @@ abstract class BaseScreenModel<S, E>(initialState: S) : StateScreenModel<S>(init
                 is BpError.InvalidPassword -> ErrorState.InvalidPassword(error.message)
                 is BpError.InvalidTaxiColor -> ErrorState.InvalidTaxiColor(error.message)
                 is BpError.InvalidTaxiId -> ErrorState.InvalidTaxiId(error.message)
-                is BpError.InvalidTaxiPlate , -> ErrorState.InvalidTaxiPlate(error.message)
+                is BpError.InvalidTaxiPlate -> ErrorState.InvalidTaxiPlate(error.message)
                 is BpError.TaxiAlreadyExists -> ErrorState.TaxiAlreadyExists(error.message)
                 is BpError.InvalidUserName -> ErrorState.InvalidUserName(error.message)
                 is BpError.NoInternetConnection -> ErrorState.NoConnection
@@ -139,4 +139,8 @@ abstract class BaseScreenModel<S, E>(initialState: S) : StateScreenModel<S>(init
         }
         return ErrorState.MultipleErrors(errorStates)
     }
+
+    protected inline fun <reified T : ErrorState> List<ErrorState>.firstInstanceOfOrNull() =
+        filterIsInstance<T>().firstOrNull()
+
 }
