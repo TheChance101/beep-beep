@@ -3,6 +3,7 @@ package presentation.main
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Restaurant
 import domain.usecase.IGetRestaurantsUseCase
+import domain.usecase.IManageOrderUseCase
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
@@ -10,7 +11,8 @@ import presentation.restaurantSelection.toUiState
 
 class MainScreenModel(
     private val restaurantId: String,
-    private val getOwnerRestaurantsUseCase: IGetRestaurantsUseCase
+    private val getOwnerRestaurantsUseCase: IGetRestaurantsUseCase,
+    private val manageOrderUseCase: IManageOrderUseCase
 ) : BaseScreenModel<MainScreenUIState, MainScreenUIEffect>(MainScreenUIState()),
     MainScreenInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
@@ -26,6 +28,8 @@ class MainScreenModel(
     }
 
     private suspend fun callee(): List<Restaurant> {
+        val result = manageOrderUseCase.getOrdersRevenueByDaysBefore(restaurantId, 5)
+        println("getOrdersRevenueByDaysBefore: ${result.first().values}")
         return getOwnerRestaurantsUseCase.getOwnerRestaurants()
     }
 
