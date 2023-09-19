@@ -153,7 +153,7 @@ class HomeScreen :
                         titleText = Resources.strings.orderOnTheWay,
                     ) { textStyle ->
                         Text(
-                            text = "From ${it.restaurantId}",
+                            text = "From ${it.restaurantName}",
                             style = textStyle
                         )
                     }

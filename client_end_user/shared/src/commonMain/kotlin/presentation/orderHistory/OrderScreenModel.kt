@@ -17,7 +17,6 @@ class OrderScreenModel(private val orderHistoryUseCase: GetOrderHistoryUseCase) 
         getTripsHistory()
     }
 
-
     private fun getOrdersHistory() {
         tryToExecute(
             { orderHistoryUseCase.getOrdersHistory().map { it.toOrderHistoryUiState() } },
