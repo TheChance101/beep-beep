@@ -108,7 +108,8 @@ abstract class BaseScreenModel<S, E>(initialState: S) : StateScreenModel<S>(init
                 is BpError.InvalidPassword -> ErrorState.InvalidPassword(error.message)
                 is BpError.InvalidTaxiColor -> ErrorState.InvalidTaxiColor(error.message)
                 is BpError.InvalidTaxiId -> ErrorState.InvalidTaxiId(error.message)
-                is BpError.InvalidTaxiPlate -> ErrorState.InvalidTaxiPlate(error.message)
+                is BpError.InvalidTaxiPlate , -> ErrorState.InvalidTaxiPlate(error.message)
+                is BpError.TaxiAlreadyExists -> ErrorState.TaxiAlreadyExists(error.message)
                 is BpError.InvalidUserName -> ErrorState.InvalidUserName(error.message)
                 is BpError.NoInternetConnection -> ErrorState.NoConnection
                 is BpError.NotFoundException -> ErrorState.UnKnownError
@@ -129,7 +130,6 @@ abstract class BaseScreenModel<S, E>(initialState: S) : StateScreenModel<S>(init
                 is BpError.RestaurantInvalidUpdateParameter ->
                     ErrorState.RestaurantInvalidUpdateParameter(error.message)
                 is BpError.RestaurantNotFound -> ErrorState.RestaurantNotFound(error.message)
-                is BpError.TaxiAlreadyExists -> ErrorState.TaxiAlreadyExists(error.message)
                 is BpError.TaxiNotFound -> ErrorState.TaxiNotFound(error.message)
                 is BpError.SeatOutOfRange -> ErrorState.SeatOutOfRange(error.message)
                 is BpError.UnknownError -> ErrorState.UnKnownError

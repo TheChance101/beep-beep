@@ -57,34 +57,31 @@ class TaxiScreenModel(
         when (error) {
             is ErrorState.MultipleErrors -> {
                 val errorStates = error.errors
-                println("errorStates: $errorStates")
                 updateState {
                     it.copy(
                         newTaxiInfo = it.newTaxiInfo.copy(
-                            plateNumberError = ErrorWrapper(
-                                errorStates.firstByType<ErrorState.InvalidTaxiPlate>().errorMessage,
-                                true
-                            ),
-                            driverUserNameError = ErrorWrapper(
-                                errorStates.firstByType<ErrorState.InvalidUserName>().errorMessage,
-                                true
-                            ),
-                            carModelError = ErrorWrapper(
-                                errorStates.firstByType<ErrorState.InvalidCarType>().errorMessage,
-                                true
-                            ),
+                            plateNumberError = errorStates.firstByType<ErrorState.InvalidTaxiPlate>()?.let { error ->
+                                ErrorWrapper(error.errorMessage, true)
+                            },
+                            driverUserNameError = errorStates.firstByType<ErrorState.InvalidUserName>()?.let { error ->
+                                ErrorWrapper(error.errorMessage, true)
+                            },
+                            carModelError = errorStates.firstByType<ErrorState.InvalidCarType>()?.let { error ->
+                                ErrorWrapper(error.errorMessage, true)
+                            },
                         )
                     )
                 }
             }
-
             else -> {}
         }
 
     }
 
     private fun clearAddTaxiErrorState() =
-        updateState { it.copy(newTaxiInfo = it.newTaxiInfo.copy(
+        updateState {
+            it.copy(
+                newTaxiInfo = it.newTaxiInfo.copy(
                     plateNumberError = ErrorWrapper(),
                     carModelError = ErrorWrapper(),
                     driverUserNameError = ErrorWrapper(),
@@ -184,7 +181,7 @@ class TaxiScreenModel(
     }
 
     private fun onUpdateTaxiSuccessfully(taxi: Taxi) {
-        updateState { it.copy(isAddNewTaxiDialogVisible = false,) }
+        updateState { it.copy(isAddNewTaxiDialogVisible = false) }
         setTaxiMenuVisibility(taxi.id, false)
         mutableState.value.pageInfo.data.find { it.id == taxi.id }?.let { taxiDetailsUiState ->
             val index = mutableState.value.pageInfo.data.indexOf(taxiDetailsUiState)
@@ -357,6 +354,6 @@ class TaxiScreenModel(
 //endregion
 
     private inline fun <reified T : ErrorState> List<ErrorState>.firstByType() =
-        filterIsInstance<T>().first()
+        filterIsInstance<T>().firstOrNull()
 
 }
