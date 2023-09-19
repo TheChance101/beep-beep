@@ -10,6 +10,7 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation(project(":client_delivery:shared"))
+                implementation ("com.google.accompanist:accompanist-webview:0.25.1")
             }
         }
     }
