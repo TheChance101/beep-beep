@@ -34,8 +34,9 @@ class MapScreenModel:BaseScreenModel<MapScreenUiState,MapScreenUiEffect>(MapScre
     override fun onDeliveredClicked() {
         viewModelScope.launch {
             updateState { it.copy(orderState = OrderState.DELIVERED) }
-            delay(2000) // just for simulation
             updateState { it.copy(orderState = OrderState.LOADING) }
+            delay(2000)
+            updateState { it.copy(orderState = OrderState.NEW_ORDER) }
         }
     }
 
