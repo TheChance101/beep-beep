@@ -4,7 +4,7 @@ open class BeepBeepException(message: String) : Exception(message)
 
 class UnknownErrorException(message: String) : BeepBeepException(message)
 
-class NoInternetException : BeepBeepException("No internet connection")
+class NoInternetException(message: String) : BeepBeepException(message)
 
 class NotFoundException(message: String) : BeepBeepException(message)
 
