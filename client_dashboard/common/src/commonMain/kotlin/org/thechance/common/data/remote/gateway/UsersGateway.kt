@@ -20,7 +20,7 @@ import org.thechance.common.domain.getway.IUsersGateway
 
 class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGateway {
 
-    override suspend fun getUserData(): String = "aaaa"
+    override suspend fun getUserData(): String = "Golden"
 
     override suspend fun getUsers(
         query: String?,
