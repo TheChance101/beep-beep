@@ -29,12 +29,29 @@ suspend inline fun <reified T> HttpClient.tryToExecute(
     }
 }
 
-
-suspend inline fun <reified T> HttpClient.tryToExecuteFromWebSocket(api: APIs, path: String,attributes: Attributes): Flow<T> {
+suspend inline fun <reified T> HttpClient.tryToExecuteFromWebSocket(
+    api: APIs,
+    path: String,
+    attributes: Attributes
+): Flow<T> {
     attributes.put(AttributeKey("API"), api.value)
     return flow {
         webSocket(path = path) {
-            emit(receiveDeserialized<T>())
+            while (true) {
+                emit(receiveDeserialized<T>())
+            }
         }
     }.flowOn(Dispatchers.IO)
+}
+
+suspend inline fun <reified T> HttpClient.tryToSendWebSocketData(
+    data: T,
+    api: APIs,
+    path: String,
+    attributes: Attributes
+) {
+    attributes.put(AttributeKey("API"), api.value)
+    webSocket(path = path) {
+        sendSerialized(data)
+    }
 }

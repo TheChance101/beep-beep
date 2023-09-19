@@ -1,5 +1,7 @@
 package org.thechance.service_taxi.data.gateway
 
+import com.mongodb.client.model.FindOneAndUpdateOptions
+import com.mongodb.client.model.ReturnDocument
 import com.mongodb.client.model.Updates
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
@@ -13,6 +15,7 @@ import org.thechance.service_taxi.api.dto.trip.toEntity
 import org.thechance.service_taxi.data.DataBaseContainer
 import org.thechance.service_taxi.data.collection.TaxiCollection
 import org.thechance.service_taxi.data.collection.TripCollection
+import org.thechance.service_taxi.data.utils.isSuccessfullyUpdated
 import org.thechance.service_taxi.data.utils.paginate
 import org.thechance.service_taxi.domain.entity.Taxi
 import org.thechance.service_taxi.domain.entity.Trip
@@ -95,7 +98,8 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
     override suspend fun updateTaxiTripsCount(taxiId: String, count: Int): Taxi? {
         return container.taxiCollection.findOneAndUpdate(
             filter = TaxiCollection::id eq ObjectId(taxiId),
-            update = set(TaxiCollection::tripsCount setTo count)
+            update = set(TaxiCollection::tripsCount setTo count),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toEntity()
     }
     //endregion
@@ -165,7 +169,8 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
                         TimeZone.currentSystemDefault()
                     ).toString()
                 )
-            )
+            ),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toEntity()
     }
 
@@ -180,7 +185,8 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
                 TripCollection::endDate.name, Clock.System.now().toLocalDateTime(
                     TimeZone.currentSystemDefault()
                 ).toString()
-            )
+            ),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toEntity()
     }
 
@@ -190,7 +196,8 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
                 TripCollection::isDeleted ne true,
                 TripCollection::id eq ObjectId(tripId),
             ),
-            update = Updates.set(TripCollection::rate.name, rate)
+            update = Updates.set(TripCollection::rate.name, rate),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toEntity()
     }
 
