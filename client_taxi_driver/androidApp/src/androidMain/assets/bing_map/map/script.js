@@ -4,7 +4,7 @@ var map,directionsManager;
 function GetMap() {
 map = new Microsoft.Maps.Map('#myMap', {
     credentials: 'Access_token',
-    center: new Microsoft.Maps.Location(0,0),
+    center: new Microsoft.Maps.Location(30.044420,31.235712),
     mapTypeId: Microsoft.Maps.MapTypeId.road,
     minZoom: 16,
     maxZoom: 18
