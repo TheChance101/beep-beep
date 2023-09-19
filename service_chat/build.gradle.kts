@@ -70,5 +70,9 @@ dependencies {
     // Status pages error handler
     implementation("io.ktor:ktor-server-status-pages-jvm:$status_pages")
     implementation("io.ktor:ktor-server-request-validation:$ktor_version")
+
+    //websockets
+    implementation("io.ktor:ktor-server-websockets-jvm:$ktor_version")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
 }
 
