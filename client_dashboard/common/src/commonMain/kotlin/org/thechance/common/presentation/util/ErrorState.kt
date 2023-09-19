@@ -7,6 +7,8 @@ sealed interface ErrorState {
     object UnKnownError : ErrorState
     class InvalidPassword(val errorMessage: String) : ErrorState
 
+    data class InvalidUserName(val errorMessage: String) : ErrorState
+
     class UserNotExist(val errorMessage: String) : ErrorState
 
 
@@ -58,4 +60,9 @@ sealed interface ErrorState {
     class RestaurantClosed(val errorMessage: String) : ErrorState
 
     class CuisineNameAlreadyExisted(val errorMessage: String) : ErrorState
+
+    data class MultipleErrors(val errors: List<ErrorState>) : ErrorState
+
+    class PasswordCannotBeBlank(message: String) : ErrorState
+
 }
