@@ -59,7 +59,8 @@ kotlin {
                 implementation(libs.kotlin.coroutines)
                 //date time
                 implementation(libs.kotlinx.datetime)
-                api("dev.icerock.moko:permissions:0.16.0")
+
+                api(libs.moko.geo)
             }
         }
         val androidMain by getting {
