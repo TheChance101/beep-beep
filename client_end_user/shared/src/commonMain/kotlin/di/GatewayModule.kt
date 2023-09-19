@@ -1,7 +1,7 @@
 package di
 
 import data.gateway.local.LocalConfigurationGateway
-import data.gateway.remote.FakeRemoteGateway
+import data.gateway.fake.FakeRemoteGateway
 import data.gateway.remote.RestaurantGateway
 import data.gateway.remote.UserRemoteRemoteGateway
 import domain.gateway.IFakeRemoteGateway
