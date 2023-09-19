@@ -2,7 +2,6 @@ var latitude2 = 0
 var map,directionsManager;
 
 function GetMap() {
-
 map = new Microsoft.Maps.Map('#myMap', {
     credentials: 'Access_token',
     center: new Microsoft.Maps.Location(0,0),
@@ -25,20 +24,20 @@ function getPin(){
     var pushpin = new Microsoft.Maps.Pushpin(map.getCenter(), null);
     map.entities.push(pushpin);
 }
-function getDirections(){
+function getDirections(lat,lng){
 Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
     directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
     directionsManager.setRequestOptions({ routeMode: Microsoft.Maps.Directions.RouteMode.driving });
     var waypoint1 = new Microsoft.Maps.Directions.Waypoint({ location: new Microsoft.Maps.Location(40.6790229, -73.8740306) });
-    var waypoint2 = new Microsoft.Maps.Directions.Waypoint({ location: new Microsoft.Maps.Location(40.6740229, -73.8740306) });
+    var waypoint2 = new Microsoft.Maps.Directions.Waypoint({ location: new Microsoft.Maps.Location(lat,lng) });
     directionsManager.addWaypoint(waypoint1);
     directionsManager.addWaypoint(waypoint2);
     directionsManager.calculateDirections();
 });
 }
-function updateDirections(newLat) {
+function updateDirections(newLat,newLng) {
 directionsManager.removeWaypoint(1);
-  var waypoint2 = new Microsoft.Maps.Directions.Waypoint({ location: new Microsoft.Maps.Location(newLat, -73.8740306) });
+  var waypoint2 = new Microsoft.Maps.Directions.Waypoint({ location: new Microsoft.Maps.Location(newLat,newLng) });
    directionsManager.addWaypoint(waypoint2);
     directionsManager.calculateDirections();
 }
