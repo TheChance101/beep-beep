@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 data class TripDto(
     @SerialName("id") val id: String? = null,
     @SerialName("taxiId") val taxiId: String? = null,
+    @SerialName("taxiPlateNumber") val taxiPlateNumber: String? = null,
     @SerialName("driverId") val driverId: String? = null,
     @SerialName("clientId") val clientId: String? = null,
     @SerialName("startPoint") val startPoint: LocationDto? = null,
