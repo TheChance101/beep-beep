@@ -62,11 +62,11 @@ object OverviewScreen :
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(24.kms)
-            ) {
+        ) {
 
-                RevenueCard(listener = listener, state = state , modifier = Modifier.weight(1f))
-                Row(
-                    modifier = Modifier.weight(1f),
+            RevenueCard(listener = listener, state = state )
+            Row(
+                    modifier = Modifier.height(340.dp),
                     horizontalArrangement = Arrangement.spacedBy(24.kms)
                 ) {
                     OverviewCard(
@@ -215,7 +215,7 @@ object OverviewScreen :
                 modifier = modifier
                     .background(Theme.colors.surface, RoundedCornerShape(8.kms))
                     .padding(paddingValues)
-                    .defaultMinSize(minHeight = 300.dp, minWidth = 300.dp),
+                    .defaultMinSize(minHeight = 280.dp, minWidth = 300.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = verticalArrangement
         ) {
@@ -292,7 +292,7 @@ object OverviewScreen :
                             barColor = Theme.colors.secondary,
                     ),
             )
-            Box(modifier = Modifier.fillMaxSize()) {
+            Box(modifier = Modifier.fillMaxWidth().height(400.dp)) {
                 BarChart(
                         chartParameters = testBarParameters,
                         gridColor = Theme.colors.divider,
@@ -309,18 +309,6 @@ object OverviewScreen :
                         descriptionStyle = Theme.typography.caption.copy(color = Theme.colors.contentPrimary),
                 )
             }
-        }
-    }
-
-    @Composable
-    private fun getPermission(permission: PermissionUiState): String {
-        return when (permission) {
-            PermissionUiState.RESTAURANT -> Resources.Strings.restaurant
-            PermissionUiState.DRIVER -> Resources.Strings.deliveryPermission
-            PermissionUiState.END_USER -> Resources.Strings.endUserPermission
-            PermissionUiState.SUPPORT -> Resources.Strings.supportPermission
-            PermissionUiState.DELIVERY -> Resources.Strings.deliveryPermission
-            PermissionUiState.ADMIN -> Resources.Strings.adminPermission
         }
     }
 

@@ -19,6 +19,7 @@ interface IManageUserUseCase {
     suspend fun saveIsFirstTimeUseApp(isFirstTimeUseApp: Boolean)
 
     suspend fun getIsFirstTimeUseApp(): Boolean
+    suspend fun getUserLanguageCode(): String
 
 }
 
@@ -56,6 +57,10 @@ class ManageUserUseCase(
 
     override suspend fun getIsFirstTimeUseApp(): Boolean {
         return localGateway.getIsFirstTimeUseApp()
+    }
+
+    override suspend fun getUserLanguageCode(): String {
+        return localGateway.getLanguageCode()
     }
 
 
