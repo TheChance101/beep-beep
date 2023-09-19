@@ -1,9 +1,9 @@
 package org.thechance.common.data.remote.gateway
 
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.plugins.ClientRequestException
-import io.ktor.client.statement.HttpResponse
+import io.ktor.client.*
+import io.ktor.client.call.*
+import io.ktor.client.plugins.*
+import io.ktor.client.statement.*
 import org.thechance.common.data.remote.model.ServerResponse
 import org.thechance.common.domain.util.*
 import java.net.ConnectException
@@ -22,8 +22,6 @@ abstract class BaseGateway {
             throw UnknownErrorException(e.message)
         } catch (e: ConnectException) {
             throw NoInternetException()
-        }catch(e: ConnectException){
-            throw NoInternetException()
         } catch (e: Exception) {
             throw UnknownErrorException(e.message.toString())
         }
@@ -34,7 +32,7 @@ abstract class BaseGateway {
             errorMessages.containsErrors(WRONG_PASSWORD) ->
                 throw InvalidPasswordException(errorMessages.getOrEmpty(WRONG_PASSWORD))
 
-            errorMessages.containsErrors(INVALID_USERNAME)->
+            errorMessages.containsErrors(INVALID_USERNAME) ->
                 throw InvalidUserNameException(errorMessages.getOrEmpty(INVALID_USERNAME))
 
             errorMessages.containsErrors(USER_NOT_EXIST) ->
@@ -89,13 +87,21 @@ abstract class BaseGateway {
                 throw RestaurantInvalidPageLimitException(errorMessages.getOrEmpty(RESTAURANT_INVALID_PAGE_LIMIT))
 
             errorMessages.containsErrors(RESTAURANT_INVALID_UPDATE_PARAMETER) ->
-                throw RestaurantInvalidUpdateParameterException(errorMessages.getOrEmpty(RESTAURANT_INVALID_UPDATE_PARAMETER))
+                throw RestaurantInvalidUpdateParameterException(
+                    errorMessages.getOrEmpty(
+                        RESTAURANT_INVALID_UPDATE_PARAMETER
+                    )
+                )
 
             errorMessages.containsErrors(RESTAURANT_INVALID_ADDRESS) ->
                 throw RestaurantInvalidAddressException(errorMessages.getOrEmpty(RESTAURANT_INVALID_ADDRESS))
 
             errorMessages.containsErrors(RESTAURANT_INVALID_REQUEST_PARAMETER) ->
-                throw RestaurantInvalidRequestParameterException(errorMessages.getOrEmpty(RESTAURANT_INVALID_REQUEST_PARAMETER))
+                throw RestaurantInvalidRequestParameterException(
+                    errorMessages.getOrEmpty(
+                        RESTAURANT_INVALID_REQUEST_PARAMETER
+                    )
+                )
 
             errorMessages.containsErrors(RESTAURANT_NOT_FOUND) ->
                 throw RestaurantNotFoundException(errorMessages.getOrEmpty(RESTAURANT_NOT_FOUND))
@@ -109,13 +115,13 @@ abstract class BaseGateway {
             errorMessages.containsErrors(CUISINE_NAME_ALREADY_EXISTED) ->
                 throw CuisineNameAlreadyExistedException(errorMessages.getOrEmpty(CUISINE_NAME_ALREADY_EXISTED))
 
-            errorMessages.containsErrors(USERNAME_CANNOT_BE_BLANK)->
+            errorMessages.containsErrors(USERNAME_CANNOT_BE_BLANK) ->
                 throw UsernameCannotBeBlankException(errorMessages.getOrEmpty(USERNAME_CANNOT_BE_BLANK))
 
-            errorMessages.containsErrors(PASSWORD_CANNOT_BE_BLANK)->
+            errorMessages.containsErrors(PASSWORD_CANNOT_BE_BLANK) ->
                 throw PasswordCannotBeBlankException(errorMessages.getOrEmpty(PASSWORD_CANNOT_BE_BLANK))
 
-            errorMessages.containsErrors(INVALID_USER_REQUEST_PARAMETER)->
+            errorMessages.containsErrors(INVALID_USER_REQUEST_PARAMETER) ->
                 throw InvalidUserRequestParameterException(errorMessages.getOrEmpty(INVALID_USER_REQUEST_PARAMETER))
         }
     }
