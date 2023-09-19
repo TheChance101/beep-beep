@@ -4,8 +4,6 @@ package org.thechance.service_location.endpoints
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 import org.koin.ktor.ext.inject
 import org.thechance.service_location.data.SocketHandler
 import org.thechance.service_location.data.model.LocationDto
@@ -20,13 +18,12 @@ fun Route.locationRoutes() {
 
         webSocket("/sender/{tripId}") {
             val tripId = call.parameters["tripId"]?.trim().orEmpty()
-            while (true) {
-                runCatching {
-                    val location = receiveDeserialized<LocationDto>()
-                    socketHandler.location[tripId]?.locations?.emit(location)
-                }.onFailure { message ->
-                    close(CloseReason(INVALID_LOCATION.toShort(), message.toString()))
-                }
+            runCatching {
+                val location = receiveDeserialized<LocationDto>()
+                socketHandler.location[tripId]?.locations?.emit(location)
+                println("ssss websocket ${location.latitude} , ${location.longitude}")
+            }.onFailure { message ->
+                close(CloseReason(INVALID_LOCATION.toShort(), message.toString()))
             }
         }
 

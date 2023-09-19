@@ -35,7 +35,6 @@ class TaxisGateway(private val client: HttpClient) : BaseGateway(), ITaxisGatewa
     override suspend fun createTaxi(taxi: NewTaxiInfo): Taxi {
         val result = tryToExecute<ServerResponse<TaxiDto>>(client) {
             post(urlString = "/taxi") {
-                contentType(ContentType.Application.Json)
                 setBody(taxi.toDto())
             }
         }.value
