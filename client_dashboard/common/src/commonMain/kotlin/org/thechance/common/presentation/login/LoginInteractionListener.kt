@@ -12,4 +12,6 @@ interface LoginInteractionListener : BaseInteractionListener {
 
     fun onKeepLoggedInClicked()
 
+    fun onSnackBarDismiss()
+
 }

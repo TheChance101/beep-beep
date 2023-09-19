@@ -1,5 +1,6 @@
 package org.thechance.common.presentation.login
 
+import kotlinx.coroutines.delay
 import org.thechance.common.domain.usecase.ILoginUserUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.resources.englishStrings
@@ -70,6 +71,10 @@ class LoginScreenModel(
 
             }
         }
+    }
+
+    override fun onSnackBarDismiss() {
+        updateState { it.copy(hasInternetConnection = true) }
     }
 
     private fun clearErrorState() =

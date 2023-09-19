@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,6 +23,7 @@ import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpCheckBox
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
+import kotlinx.coroutines.delay
 import org.thechance.common.presentation.base.BaseScreen
 import org.thechance.common.presentation.composables.BpLogo
 import org.thechance.common.presentation.main.MainContainer
@@ -42,6 +44,7 @@ class LoginScreen :
             is LoginUIEffect.LoginSuccess -> {
                 navigator.replaceAll(MainContainer)
             }
+
             is LoginUIEffect.LoginFailed -> {
                 println(effect.errorMessage)
             }
@@ -120,13 +123,21 @@ class LoginScreen :
                         enabled = state.isAbleToLogin
                     )
                     Spacer(modifier = Modifier.weight(1f))
-                    AnimatedVisibility(!state.hasInternetConnection){
-                        BPSnackBar(icon = painterResource(Resources.Drawable.infoIcon)){
-                            Text(Resources.Strings.noInternet)
+                    AnimatedVisibility(!state.hasInternetConnection) {
+                        BPSnackBar(icon = painterResource(Resources.Drawable.infoIcon)) {
+                            Text(
+                                text = Resources.Strings.noInternet,
+                                style = Theme.typography.titleMedium,
+                                color = Theme.colors.primary,
+                            )
                         }
                     }
                 }
             }
+        }
+        LaunchedEffect(!state.hasInternetConnection) {
+            delay(1500)
+            listener.onSnackBarDismiss()
         }
     }
 }
