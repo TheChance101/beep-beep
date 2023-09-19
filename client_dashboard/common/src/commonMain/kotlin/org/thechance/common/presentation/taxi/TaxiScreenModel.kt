@@ -54,25 +54,30 @@ class TaxiScreenModel(
     }
 
     private fun onError(error: ErrorState) {
+        updateState { it.copy(isLoading = false) }
         when (error) {
             is ErrorState.MultipleErrors -> {
                 val errorStates = error.errors
                 updateState {
                     it.copy(
                         newTaxiInfo = it.newTaxiInfo.copy(
-                            plateNumberError = errorStates.firstByType<ErrorState.InvalidTaxiPlate>()?.let { error ->
-                                ErrorWrapper(error.errorMessage, true)
-                            },
-                            driverUserNameError = errorStates.firstByType<ErrorState.InvalidUserName>()?.let { error ->
-                                ErrorWrapper(error.errorMessage, true)
-                            },
-                            carModelError = errorStates.firstByType<ErrorState.InvalidCarType>()?.let { error ->
-                                ErrorWrapper(error.errorMessage, true)
-                            },
+                            plateNumberError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidTaxiPlate>()
+                                ?.let { error ->
+                                    ErrorWrapper(error.errorMessage, true)
+                                },
+                            driverUserNameError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidUserName>()
+                                ?.let { error ->
+                                    ErrorWrapper(error.errorMessage, true)
+                                },
+                            carModelError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidCarType>()
+                                ?.let { error ->
+                                    ErrorWrapper(error.errorMessage, true)
+                                },
                         )
                     )
                 }
             }
+
             else -> {}
         }
 
@@ -352,8 +357,5 @@ class TaxiScreenModel(
         }
     }
 //endregion
-
-    private inline fun <reified T : ErrorState> List<ErrorState>.firstByType() =
-        filterIsInstance<T>().firstOrNull()
 
 }
