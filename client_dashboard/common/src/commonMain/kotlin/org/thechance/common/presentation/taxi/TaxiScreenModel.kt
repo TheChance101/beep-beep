@@ -210,12 +210,8 @@ class TaxiScreenModel(
     }
 
     private fun onUpdateTaxiSuccessfully(taxi: Taxi) {
-        updateState {
-            it.copy(
-                isAddNewTaxiDialogVisible = false,
-                taxiMenu = it.taxiMenu.copy(id = "")
-            )
-        }
+        updateState { it.copy(isAddNewTaxiDialogVisible = false,) }
+        setTaxiMenuVisibility(taxi.id, false)
         mutableState.value.pageInfo.data.find { it.id == taxi.id }?.let { taxiDetailsUiState ->
             val index = mutableState.value.pageInfo.data.indexOf(taxiDetailsUiState)
             val newTaxi = mutableState.value.pageInfo.data.toMutableList().apply {
@@ -335,12 +331,13 @@ class TaxiScreenModel(
     //endregion
 
     //region taxi menu listener
-    override fun showTaxiMenu(taxiId: String) {
-        updateState { it.copy(taxiMenu = it.taxiMenu.copy(id = taxiId)) }
+
+    override fun onShowTaxiMenu(id: String) {
+        setTaxiMenuVisibility(id, true)
     }
 
-    override fun hideTaxiMenu() {
-        updateState { it.copy(taxiMenu = it.taxiMenu.copy(id = "")) }
+    override fun onHideTaxiMenu(id: String) {
+        setTaxiMenuVisibility(id, false)
     }
 
     override fun onDeleteTaxiClicked(taxiId: String) {
@@ -349,23 +346,17 @@ class TaxiScreenModel(
             ::onDeleteTaxiSuccessfully,
             ::onError
         )
+        setTaxiMenuVisibility(taxiId, false)
     }
 
-    private fun onDeleteTaxiSuccessfully(result: Boolean) {
-//        updateState { it.copy(taxiMenu = it.taxiMenu.copy(id = "")) }
-//        mutableState.value.pageInfo.data.find { it.id == taxiId }?.let { taxiDetailsUiState ->
-//            val index = mutableState.value.pageInfo.data.indexOf(taxiDetailsUiState)
-//            val newTaxi = mutableState.value.pageInfo.data.toMutableList().apply {
-//                removeAt(index)
-//            }
-//            updateState { it.copy(pageInfo = it.pageInfo.copy(data = newTaxi)) }
-//        }
-        //todo:show snack bar
+    private fun onDeleteTaxiSuccessfully(taxi: Taxi) {
+        setTaxiMenuVisibility(taxi.id, false)
+        getTaxis()
     }
 
     override fun onEditTaxiClicked(taxiId: String) {
         updateState { it.copy(isEditMode = true, isAddNewTaxiDialogVisible = true) }
-        hideTaxiMenu()
+        setTaxiMenuVisibility(taxiId, false)
         tryToExecute(
             { manageTaxis.getTaxiById(taxiId) },
             ::onGetTaxiByIdSuccess,
@@ -378,6 +369,17 @@ class TaxiScreenModel(
         updateState { it.copy(newTaxiInfo = taxiState) }
     }
 
+    private fun setTaxiMenuVisibility(id: String, isExpanded: Boolean) {
+        val currentTaxisState = state.value.pageInfo.data
+        val selectedTaxiState = currentTaxisState.first { it.id == id }
+        val updatedTaxiState = selectedTaxiState.copy(isTaxiMenuExpanded = isExpanded)
+        updateState {
+            it.copy(
+                pageInfo = state.value.pageInfo.copy(data = currentTaxisState.toMutableList()
+                    .apply { set(indexOf(selectedTaxiState), updatedTaxiState) })
+            )
+        }
+    }
 //endregion
 
 }

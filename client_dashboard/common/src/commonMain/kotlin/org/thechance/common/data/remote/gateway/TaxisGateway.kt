@@ -51,8 +51,10 @@ class TaxisGateway(private val client: HttpClient) : BaseGateway(), ITaxisGatewa
         return result?.toEntity() ?: throw UnknownError()
     }
 
-    override suspend fun deleteTaxi(taxiId: String): Boolean {
-        TODO("deleteTaxi")
+    override suspend fun deleteTaxi(taxiId: String): Taxi {
+        return tryToExecute<ServerResponse<TaxiDto>>(client) {
+            delete(urlString = "/taxi") { url { appendPathSegments(taxiId) } }
+        }.value?.toEntity() ?: throw NotFoundException("Taxi not found")
     }
 
     override suspend fun getTaxiById(taxiId: String): Taxi {
