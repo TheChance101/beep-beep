@@ -32,7 +32,7 @@ class PreferredMealScreen :
 
     override fun onEffect(effect: PreferredScreenUiEffect, navigator: Navigator) {
         when (effect) {
-            PreferredScreenUiEffect.NavigateToHomeScreen -> navigator.replace(MainContainer)
+            PreferredScreenUiEffect.NavigateToHomeScreen -> navigator.replaceAll(MainContainer)
         }
     }
 
@@ -62,21 +62,24 @@ class PreferredMealScreen :
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     PreferredCard(
-                        onClick = listener::onClickPreferredMeal,
+                        onClickMealCard = listener::onClickPreferredMeal,
                         painter = painterResource(Resources.images.wishDishLow),
                         title = Resources.strings.lowLevelDishName,
+                        isMeal = true,
                         priceLevel = Resources.strings.lowPriceLevel
                     )
                     PreferredCard(
-                        onClick = listener::onClickPreferredMeal,
+                        onClickMealCard = listener::onClickPreferredMeal,
                         painter = painterResource(Resources.images.wishDishMedium),
                         title = Resources.strings.mediumLevelDishName,
+                        isMeal = true,
                         priceLevel = Resources.strings.mediumPriceLevel,
                     )
                     PreferredCard(
-                        onClick = listener::onClickPreferredMeal,
+                        onClickMealCard = listener::onClickPreferredMeal,
                         painter = painterResource(Resources.images.wishDishHigh),
                         title = Resources.strings.highLevelDishName,
+                        isMeal = true,
                         priceLevel = Resources.strings.highPriceLevel
                     )
                 }

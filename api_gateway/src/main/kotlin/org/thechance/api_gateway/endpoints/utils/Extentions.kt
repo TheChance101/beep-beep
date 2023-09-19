@@ -1,14 +1,19 @@
 package org.thechance.api_gateway.endpoints.utils
 
 import io.ktor.http.*
+import io.ktor.http.content.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.util.pipeline.*
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import org.thechance.api_gateway.data.localizedMessages.Language
+import org.thechance.api_gateway.data.model.MultipartDto
 import org.thechance.api_gateway.data.model.ServerResponse
 import org.thechance.api_gateway.util.Claim.PERMISSION
 
@@ -27,6 +32,11 @@ suspend fun respondWithError(
 fun PipelineContext<Unit, ApplicationCall>.extractLocalizationHeader(): String {
     val headers = call.request.headers
     return headers["Accept-Language"]?.trim() ?: Language.ENGLISH.code
+}
+
+fun PipelineContext<Unit, ApplicationCall>.extractApplicationIdHeader(): String {
+    val headers = call.request.headers
+    return headers["Application-Id"]?.trim() ?: ""
 }
 
 fun WebSocketServerSession.extractLocalizationHeaderFromWebSocket(): String {
@@ -57,4 +67,34 @@ private fun hasPermission(permission: Int, role: Int): Boolean {
 
 fun String?.toIntListOrNull(): List<Int>? {
     return this?.split(",")?.mapNotNull { it.toIntOrNull() }
+}
+
+suspend inline fun <reified T> PipelineContext<Unit, ApplicationCall>.receiveMultipart(
+    imageValidator: ImageValidator
+): MultipartDto<T> {
+
+    val multipart = call.receiveMultipart()
+    var fileBytes: ByteArray? = null
+    var data: T? = null
+
+    multipart.forEachPart { part ->
+        when (part) {
+            is PartData.FileItem -> {
+                if (imageValidator.isValid(part.originalFileName)) {
+                    fileBytes = part.streamProvider().readBytes()
+                }
+            }
+
+            is PartData.FormItem -> {
+                if (part.name == "data") {
+                    val json = part.value.trimIndent()
+                    data = Json.decodeFromString<T>(json)
+                }
+            }
+
+            else -> {}
+        }
+        part.dispose()
+    }
+    return MultipartDto(data = data!!, image = fileBytes)
 }

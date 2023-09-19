@@ -5,8 +5,6 @@ import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import io.ktor.util.*
-import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.PaginationResponse
@@ -111,15 +109,15 @@ class TaxiService(
         }
     }
 
-    @OptIn(InternalAPI::class)
     suspend fun findTaxisByQuery(
-        status: Boolean,
+        page: Int,
+        limit: Int,
+        status: Boolean?,
         color: Long?,
         seats: Int?,
         query: String?,
-        driverIds: List<String>,
         language: String
-    ): List<TaxiDto> {
+    ): PaginationResponse<TaxiDto> {
         return client.tryToExecute(
             api = APIs.TAXI_API,
             attributes = attributes,
@@ -127,12 +125,13 @@ class TaxiService(
                 errorHandler.getLocalizedErrorMessage(errorCodes, language)
             }
         ) {
-            post("/taxis/search") {
+            get("/taxis/search") {
+                parameter("page", page)
+                parameter("limit", limit)
                 parameter("status", status)
                 parameter("color", color)
                 parameter("seats", seats)
-                parameter("plate_number", query)
-                body = Json.encodeToString(ListSerializer(String.serializer()), driverIds)
+                parameter("query", query)
             }
         }
     }

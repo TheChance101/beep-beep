@@ -22,4 +22,5 @@ data class MealWithCuisines(
     @Contextual
     val restaurantId: ObjectId,
     val cuisines: List<CuisineCollection>,
+    val image : String
 )

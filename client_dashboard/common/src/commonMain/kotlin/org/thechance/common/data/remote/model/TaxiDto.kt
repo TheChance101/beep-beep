@@ -14,11 +14,11 @@ data class TaxiDto(
     @SerialName("type")
     val type: String?,
     @SerialName("driverId")
-    val driverId: String?,
+    val driverId: String? = null,
     @SerialName("seats")
     val seats: Int?,
-    @SerialName("username")
-    val username: String?,
+    @SerialName("driverUsername")
+    val driverUsername: String?,
     @SerialName("isAvailable")
     val isAvailable: Boolean?,
     @SerialName("trips")

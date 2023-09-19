@@ -4,7 +4,6 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
-import kotlinx.coroutines.async
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
 import org.thechance.api_gateway.data.model.taxi.TaxiDto
@@ -76,21 +75,18 @@ fun Route.taxiRoutes() {
         route("/taxis") {
             get("/search") {
                 val language = extractLocalizationHeader()
+                val page = call.parameters["page"]?.toInt() ?: 1
+                val limit = call.parameters["limit"]?.toInt() ?: 20
                 val query = call.request.queryParameters["query"]?.trim().orEmpty()
-                val status = call.request.queryParameters["status"]?.trim().toBoolean()
+                val status = call.request.queryParameters["status"]?.trim()?.toBoolean()
                 val color = call.request.queryParameters["color"]?.trim()?.toLongOrNull()
                 val seats = call.request.queryParameters["seats"]?.trim()?.toIntOrNull()
-                val driverIDs = async {
-                    identityService.getUsers(searchTerm = query, languageCode = language).items.map { it.id }
-                }.await()
-
-                val result = taxiService.findTaxisByQuery(status, color, seats, query, driverIDs, language)
+                val result = taxiService.findTaxisByQuery(page, limit, status, color, seats, query, language)
                 respondWithResult(HttpStatusCode.OK, result)
             }
         }
-    }
 
-    route("trip") {
+        }route("trip") {
 
         get("/{tripId}") {
             val language = extractLocalizationHeader()
@@ -142,4 +138,5 @@ fun Route.taxiRoutes() {
             respondWithResult(HttpStatusCode.OK, deletedTrip, successMessage)
         }
     }
+
 }

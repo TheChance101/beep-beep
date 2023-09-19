@@ -575,10 +575,10 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
 
     override suspend fun loginUser(userName: String, password: String): Pair<String, String> {
         if (userName != "theChance") {
-            throw InvalidPasswordException("Invalid UserName")
+            throw InvalidPasswordException()
         }
         if (password != "theChance23") {
-            throw InvalidPasswordException("Invalid Password")
+            throw InvalidPasswordException()
         }
         return Pair("wertqyhgt", "qazswxza")
     }
