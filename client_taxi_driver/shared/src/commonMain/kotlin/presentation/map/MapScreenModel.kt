@@ -2,6 +2,7 @@ package presentation.map
 
 import domain.entity.Location
 import domain.entity.Order
+import domain.usecase.IIdentityUseCase
 import domain.usecase.IManageLocationUseCase
 import domain.usecase.IManageOrderUseCase
 import presentation.base.BaseScreenModel
@@ -10,6 +11,7 @@ import presentation.base.ErrorState
 class MapScreenModel(
     private val order: IManageOrderUseCase,
     private val location: IManageLocationUseCase,
+    private val identity: IIdentityUseCase,
 ) : BaseScreenModel<MapScreenUiState, MapUiEffect>(MapScreenUiState()),
     MapScreenInteractionListener {
 
@@ -68,7 +70,7 @@ class MapScreenModel(
 
     private fun getTaxiDriverName() {
         tryToExecute(
-            function = order::getTaxiDriverName,
+            function = identity::getTaxiDriverName,
             onSuccess = ::onGetTaxiDriverNameSuccess,
             onError = ::onError,
         )

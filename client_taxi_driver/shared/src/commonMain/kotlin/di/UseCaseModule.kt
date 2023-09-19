@@ -1,12 +1,13 @@
 package di
 
-import domain.usecase.IManageLocationUseCase
-
+import domain.usecase.IIdentityUseCase
 import domain.usecase.ILoginUserUseCase
 import domain.usecase.ILogoutUserUseCase
+import domain.usecase.IManageLocationUseCase
+import domain.usecase.IManageOrderUseCase
+import domain.usecase.IdentityUseCase
 import domain.usecase.LoginUserUseCase
 import domain.usecase.LogoutUserUseCase
-import domain.usecase.IManageOrderUseCase
 import domain.usecase.ManageLocationUseCase
 import domain.usecase.ManageOrderUseCase
 import org.koin.core.module.dsl.bind
@@ -18,4 +19,5 @@ val UseCaseModule = module {
     singleOf(::LogoutUserUseCase) { bind<ILogoutUserUseCase>() }
     singleOf(::ManageOrderUseCase) { bind<IManageOrderUseCase>() }
     singleOf(::ManageLocationUseCase) { bind<IManageLocationUseCase>() }
+    singleOf(::IdentityUseCase) { bind<IIdentityUseCase>() }
 }
