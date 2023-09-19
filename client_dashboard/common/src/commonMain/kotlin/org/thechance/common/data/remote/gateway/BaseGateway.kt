@@ -25,7 +25,7 @@ abstract class BaseGateway {
             when (e) {
                 is UnresolvedAddressException,
                 is ConnectException,
-                is UnknownHostException -> throw NoInternetException()
+                is UnknownHostException -> throw NoInternetException(e.message.toString())
                 else -> throw UnknownErrorException(e.message.toString())
             }
         }
