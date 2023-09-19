@@ -7,8 +7,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
+import resources.strings.IStringResources
 
-class LoginScreenModel(private val manageAuthentication: IManageAuthenticationUseCase) :
+class LoginScreenModel(
+    private val manageAuthentication: IManageAuthenticationUseCase,
+    private val stringResources: IStringResources
+) :
     BaseScreenModel<LoginScreenUIState, LoginScreenUIEffect>(LoginScreenUIState()),
     LoginScreenInteractionListener {
 
@@ -54,7 +58,7 @@ class LoginScreenModel(private val manageAuthentication: IManageAuthenticationUs
 
             ErrorState.InvalidUsername -> updateState {
                 it.copy(
-                    usernameErrorMsg = "invalid username",
+                    usernameErrorMsg = stringResources.invalidUsername,
                     isUsernameError = true
                 )
             }
@@ -81,7 +85,7 @@ class LoginScreenModel(private val manageAuthentication: IManageAuthenticationUs
         }
     }
 
-    private fun clearErrors(){
+    private fun clearErrors() {
         updateState {
             it.copy(
                 usernameErrorMsg = "",

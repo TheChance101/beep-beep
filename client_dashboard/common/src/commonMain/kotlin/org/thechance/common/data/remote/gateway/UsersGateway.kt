@@ -52,9 +52,6 @@ class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGatewa
                     }
             ) {
                 url("/login")
-                header("Accept-Language", "ar")
-                header("Country-Code", "EG")
-                header("Application-Id", "3000")
             }
         }.value
 
