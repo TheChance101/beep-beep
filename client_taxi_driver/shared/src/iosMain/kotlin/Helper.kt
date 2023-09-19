@@ -4,14 +4,24 @@ import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import data.BpLocationDataSource
 import dev.icerock.moko.geo.LocationTracker
+import domain.dataSource.IBpLocationDataSource
 
 val permissions = module {
-    single { BpLocationDataSource(LocationTracker(PermissionsController())) }
+    single<IBpLocationDataSource> { BpLocationDataSource(get()) }
 }
 
-fun initKoin(){
+val locationTracker = module {
+    single { LocationTracker(PermissionsController()) }
+}
+
+
+fun initKoin() {
     startKoin {
-        modules(appModule(),permissions)
+        modules(
+            appModule(),
+            permissions,
+            locationTracker
+        )
     }
 }
 
