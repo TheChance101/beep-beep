@@ -30,7 +30,7 @@ actual fun MapWebView(
     }
 
     destination?.let { location ->
-        webView?.evaluateJavascript("clearMap()", null)
+        webView?.evaluateJavascript("clearMap(${currentLocation.lat},${currentLocation.lng})", null)
         webView?.evaluateJavascript(
             "getDirections(${location.lat},${location.lng})",
             null
