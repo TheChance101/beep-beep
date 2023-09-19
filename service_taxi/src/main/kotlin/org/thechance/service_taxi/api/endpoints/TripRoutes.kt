@@ -5,6 +5,8 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import org.koin.ktor.ext.inject
 import org.thechance.service_taxi.api.dto.BasePaginationResponse
 import org.thechance.service_taxi.api.dto.trip.TripDto
@@ -40,7 +42,7 @@ fun Route.tripRoutes() {
             val limit = call.parameters["limit"]?.toInt() ?: 20
             val result = driverTripsManagementUseCase.getTripsByDriverId(id, page, limit).toDto()
             val total = driverTripsManagementUseCase.getNumberOfTripsByDriverId(id)
-            call.respond(HttpStatusCode.OK, BasePaginationResponse(result,total))
+            call.respond(HttpStatusCode.OK, BasePaginationResponse(result, total))
         }
 
         get("/client/{clientId}") {
@@ -49,7 +51,7 @@ fun Route.tripRoutes() {
             val limit = call.parameters["limit"]?.toInt() ?: 20
             val result = clientTripsManagementUseCase.getTripsByClientId(id, page, limit).toDto()
             val total = clientTripsManagementUseCase.getNumberOfTripsByClientId(id)
-            call.respond(HttpStatusCode.OK, BasePaginationResponse(result,total))
+            call.respond(HttpStatusCode.OK, BasePaginationResponse(result, total))
         }
 
         post {
@@ -65,17 +67,19 @@ fun Route.tripRoutes() {
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
-        put("/{tripId}/approve") {
-            val tripId = call.parameters["tripId"] ?: throw MissingParameterException
-            val driverId = call.parameters["driverId"] ?: throw MissingParameterException
-            val taxiId = call.parameters["taxiId"] ?: throw MissingParameterException
+        put("/approve") {
+            val parameters = call.receiveParameters()
+            val tripId = parameters["tripId"] ?: throw MissingParameterException
+            val driverId = parameters["driverId"] ?: throw MissingParameterException
+            val taxiId = parameters["taxiId"] ?: throw MissingParameterException
             val result = driverTripsManagementUseCase.approveTrip(driverId, taxiId, tripId)
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
-        put("/{tripId}/finish") {
-            val tripId = call.parameters["tripId"] ?: throw MissingParameterException
-            val driverId = call.parameters["driverId"] ?: throw MissingParameterException
+        put("/finish") {
+            val parameters = call.receiveParameters()
+            val tripId = parameters["tripId"] ?: throw MissingParameterException
+            val driverId = parameters["driverId"] ?: throw MissingParameterException
             val result = driverTripsManagementUseCase.finishTrip(driverId, tripId)
             call.respond(HttpStatusCode.OK, result.toDto())
         }

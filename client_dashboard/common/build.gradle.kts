@@ -34,6 +34,7 @@ kotlin {
 
                 api(libs.kotlin.realm)
                 implementation(libs.kotlin.coroutines)
+                implementation("io.github.thechance101:chart:Beta-0.0.5")
 
                 api(libs.ktor.client.core)
                 api(libs.ktor.client.cio)

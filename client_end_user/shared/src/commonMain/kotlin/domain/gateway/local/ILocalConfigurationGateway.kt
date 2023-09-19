@@ -15,6 +15,8 @@ interface ILocalConfigurationGateway {
     suspend fun getLanguageCode(): String
     suspend fun savePriceLevel(priceLevel: String)
     suspend fun getPriceLevel(): String
+    suspend fun savePreferredRideQuality(rideQuality: String)
+    suspend fun getPreferredRideQuality(): String
     suspend fun saveIsFirstTimeUseApp(isFirstTimeUseApp: Boolean)
     suspend fun getIsFirstTimeUseApp(): Boolean
     suspend fun savePreferredFood(food: List<String>)

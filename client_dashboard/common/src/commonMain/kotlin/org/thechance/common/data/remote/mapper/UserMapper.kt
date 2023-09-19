@@ -15,6 +15,7 @@ fun UserDto.toEntity() = User(
     imageUrl = imageUrl ?: ""
 )
 
+
 fun List<UserDto>.toEntity() = map(UserDto::toEntity)
 
 fun mapIntToPermissions(permissionNumbers: Int): List<Permission> {
@@ -33,4 +34,16 @@ fun mapIntToPermissions(permissionNumbers: Int): List<Permission> {
         }
     }
     return permissions
+}
+
+fun mapPermissionsToInt(permissions: List<Permission>):List<Int> {
+    val permissionMapping = mapOf(
+            Permission.END_USER to 1,
+            Permission.ADMIN to 2,
+            Permission.RESTAURANT_OWNER to 4,
+            Permission.DRIVER to 8,
+            Permission.SUPPORT to 16,
+            Permission.DELIVERY to 32
+    )
+    return permissionMapping.filterKeys { permissions.contains(it) }.values.toList()
 }

@@ -40,7 +40,6 @@ class TaxisGateway(private val client: HttpClient) : BaseGateway(), ITaxisGatewa
     override suspend fun createTaxi(taxi: NewTaxiInfo): Taxi {
         val result = tryToExecute<ServerResponse<TaxiDto>>(client) {
             post(urlString = "/taxi") {
-                contentType(ContentType.Application.Json)
                 setBody(taxi.toDto())
             }
         }.value
@@ -48,7 +47,13 @@ class TaxisGateway(private val client: HttpClient) : BaseGateway(), ITaxisGatewa
     }
 
     override suspend fun updateTaxi(taxi: NewTaxiInfo): Taxi {
-        TODO("updateTaxi")
+        val result = tryToExecute<ServerResponse<TaxiDto>>(client){
+            put(urlString = "/taxi/{taxiId}"){
+                contentType(ContentType.Application.Json)
+                setBody(taxi.toDto())
+            }
+        }.value
+        return result?.toEntity() ?: throw UnknownError()
     }
 
     override suspend fun deleteTaxi(taxiId: String): Boolean {
