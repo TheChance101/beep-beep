@@ -23,7 +23,7 @@ interface IManageTaxisUseCase {
 
     suspend fun updateTaxi(addTaxi: NewTaxiInfo): Taxi
 
-    suspend fun deleteTaxi(taxiId: String): Boolean
+    suspend fun deleteTaxi(taxiId: String): Taxi
 
     suspend fun getTaxiById(id: String): Taxi
 
@@ -55,7 +55,7 @@ class ManageTaxisUseCase(
         )
     }
 
-    override suspend fun deleteTaxi(taxiId: String): Boolean {
+    override suspend fun deleteTaxi(taxiId: String): Taxi {
         return taxiGateway.deleteTaxi(taxiId)
     }
 
