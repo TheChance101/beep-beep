@@ -22,6 +22,7 @@ class RestaurantScreenModel(
     RestaurantInteractionListener {
 
     private var searchJob: Job? = null
+    private var limitJob: Job? = null
 
     init {
         getRestaurants()
@@ -57,6 +58,9 @@ class RestaurantScreenModel(
                 numberOfRestaurants = restaurants.numberOfResult,
                 maxPageCount = restaurants.totalPages
             )
+        }
+        if (state.value.selectedPageNumber > state.value.maxPageCount) {
+            onPageClicked(state.value.maxPageCount)
         }
     }
 
@@ -253,7 +257,12 @@ class RestaurantScreenModel(
 
     override fun onItemPerPageChange(numberOfRestaurantsInPage: Int) {
         updateState { it.copy(numberOfRestaurantsInPage = numberOfRestaurantsInPage) }
-        getRestaurants()
+        launchLimitJob()
+    }
+
+    private fun launchLimitJob() {
+        limitJob?.cancel()
+        limitJob = launchDelayed(300L) { getRestaurants() }
     }
 
     override fun onAddNewRestaurantClicked() {
