@@ -38,10 +38,20 @@ interface LocalizedMessages {
 
     val invalidPermission: String
 
+    val alreadyInFavorite: String
+
     // endregion
 
     // region taxi
     val taxiCreatedSuccessfully: String
+
+    val tripCreatedSuccessfully: String
+
+    val tripApproved: String
+
+    val tripCanceled: String
+
+    val tripFinished: String
 
     val taxiUpdateSuccessfully: String
 

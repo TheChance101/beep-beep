@@ -2,7 +2,6 @@ package org.thechance.api_gateway.data.service
 
 import io.ktor.client.*
 import io.ktor.client.request.*
-import io.ktor.client.utils.EmptyContent.status
 import io.ktor.util.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.encodeToString
@@ -14,7 +13,6 @@ import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.tryToExecute
 import org.thechance.api_gateway.data.utils.tryToExecuteFromWebSocket
 import org.thechance.api_gateway.util.APIs
-import org.thechance.api_gateway.util.Role
 
 
 @Single
@@ -81,13 +79,13 @@ class RestaurantService(
             }
             put(url) {
                 body = Json.encodeToString(RestaurantDto.serializer(), restaurantDto)
-                body = Json.encodeToString(status.toString())
             }
 
         }
     }
 
-    suspend fun getRestaurants(page: Int, limit: Int, languageCode: String) =
+    @OptIn(InternalAPI::class)
+    suspend fun getRestaurants(restaurantOptions: RestaurantOptions, languageCode: String) =
         client.tryToExecute<PaginationResponse<RestaurantDto>>(
             APIs.RESTAURANT_API,
             attributes = attributes,
@@ -95,11 +93,25 @@ class RestaurantService(
                 errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             }
         ) {
-            get("/restaurants") {
-                parameter("page", page)
-                parameter("limit", limit)
+            post("/restaurants") {
+                body = Json.encodeToString(RestaurantOptions.serializer(), restaurantOptions)
             }
         }
+
+    @OptIn(InternalAPI::class)
+    suspend fun getRestaurants(restaurantIds: List<String>, languageCode: String) =
+        client.tryToExecute<List<RestaurantDto>>(
+            APIs.RESTAURANT_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+            }
+        ) {
+            post("/restaurants") {
+                body = Json.encodeToString(restaurantIds)
+            }
+        }
+
 
     suspend fun getRestaurantsByOwnerId(ownerId: String, languageCode: String): List<RestaurantDto> {
         return client.tryToExecute(
@@ -112,7 +124,7 @@ class RestaurantService(
     }
 
     @OptIn(InternalAPI::class)
-    suspend fun addRestaurant(restaurant: RestaurantRequestDto, languageCode: String): RestaurantRequestDto {
+    suspend fun addRestaurant(restaurant: RestaurantDto, languageCode: String): RestaurantDto {
         return client.tryToExecute(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
@@ -121,7 +133,7 @@ class RestaurantService(
             }
         ) {
             post("/restaurant") {
-                body = Json.encodeToString(RestaurantRequestDto.serializer(), restaurant)
+                body = Json.encodeToString(RestaurantDto.serializer(), restaurant)
             }
         }
     }
@@ -236,11 +248,11 @@ class RestaurantService(
         }
     }
 
-    suspend fun  deleteCuisine(cuisineId: String, languageCode : String): Boolean {
+    suspend fun deleteCuisine(cuisineId: String, languageCode: String): Boolean {
         return client.tryToExecute<Boolean>(
             APIs.RESTAURANT_API,
             attributes = attributes,
-            setErrorMessage = { errorHandler.getLocalizedErrorMessage(it, languageCode ) }
+            setErrorMessage = { errorHandler.getLocalizedErrorMessage(it, languageCode) }
         ) {
             delete("/cuisine/$cuisineId")
         }
@@ -248,6 +260,22 @@ class RestaurantService(
     //endregion
 
     //region order
+    @OptIn(InternalAPI::class)
+    suspend fun createOrder(order: OrderDto, languageCode: String) : OrderDto {
+        return client.tryToExecute<OrderDto>(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+            }
+        ) {
+            post("/order") {
+                body = Json.encodeToString(OrderDto.serializer(), order)
+            }
+        }
+    }
+
+
     @OptIn(InternalAPI::class)
     suspend fun updateOrderStatus(orderId: String, status: Int, languageCode: String): OrderDto {
         return client.tryToExecute<OrderDto>(
@@ -307,7 +335,7 @@ class RestaurantService(
         return client.tryToExecuteFromWebSocket<OrderDto>(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
-            path = "/order/restaurant/$restaurantId"
+            path = "/order/restaurant/$restaurantId",
         )
     }
 
@@ -326,4 +354,6 @@ class RestaurantService(
         }
     }
     //endregion
+
+
 }

@@ -22,10 +22,15 @@ class IraqiArabicLocalizedMessages() : LocalizedMessages {
     override val unknownError: String = "خطأ مو معروف `¯\\_(ツ)_/¯`"
     override val userNotFound: String = "المستخدم  ما موجود"
     override val invalidPermission: String = "صلاحية كلش غلط"
+    override val alreadyInFavorite: String= "بالفعل موجود في المفضله"
     // endregion
 
     // region taxi
     override val taxiCreatedSuccessfully: String = "سيارة التاكسي صارت عندنا بنجاح 🎉"
+    override val tripCreatedSuccessfully: String = "تم انشاء الرحلة"
+    override val tripApproved: String = "تم قبول الرحلة"
+    override val tripCanceled: String = "تم الغاء الرحلة"
+    override val tripFinished: String = "تم إنهاء الرحلة بنجاح"
     override val taxiUpdateSuccessfully: String = "سيارة التاكسي صارت محدثة بنجاح 🎉"
     override val taxiDeleteSuccessfully: String = "سيارة التاكسي صارت محذوفة بنجاح 🎉"
     override val invalidId: String = "الايدي مالتك مو صحيح"

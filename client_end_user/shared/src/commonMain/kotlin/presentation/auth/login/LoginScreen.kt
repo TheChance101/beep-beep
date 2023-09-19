@@ -47,6 +47,7 @@ class LoginScreen :
         when (effect) {
             is LoginScreenUIEffect.NavigateToHome -> navigator.replaceAll(MainContainer)
             LoginScreenUIEffect.NavigateToSignup -> navigator.push(RegistrationScreen())
+            else -> {}
         }
     }
 
@@ -108,7 +109,7 @@ class LoginScreen :
                         color = Theme.colors.contentTertiary
                     )
                     SimpleTextButton(
-                        modifier = Modifier.padding(vertical = 2.dp, horizontal = 4.dp),
+                        modifier = Modifier.padding(vertical = 2.dp),
                         text = Resources.strings.signUpNow,
                         onClick = listener::onClickSignUp,
                         border = BorderStroke(width = 0.dp, color = Color.Transparent),

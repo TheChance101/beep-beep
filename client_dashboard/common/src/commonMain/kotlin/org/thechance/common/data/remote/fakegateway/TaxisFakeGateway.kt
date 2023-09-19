@@ -10,6 +10,7 @@ import org.thechance.common.domain.entity.NewTaxiInfo
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.entity.TaxiFiltration
 import org.thechance.common.domain.getway.ITaxisGateway
+import org.thechance.common.domain.util.NotFoundException
 import java.util.*
 import kotlin.math.ceil
 
@@ -66,10 +67,9 @@ class TaxisFakeGateway : ITaxisGateway {
                 color = taxiDto.color.toLong(),
                 seats = taxiDto.seats,
                 type = taxiDto.type,
-                username = taxiDto.driverId,
+                driverUsername = taxiDto.driverUsername,
                 isAvailable = false,
                 trips = "0",
-                driverId = taxiDto.driverId
             )
         )
         return taxis.last().toEntity()
@@ -86,7 +86,7 @@ class TaxisFakeGateway : ITaxisGateway {
                 color = newTaxi.color.toLong(),
                 type = newTaxi.type,
                 seats = newTaxi.seats,
-                username = newTaxi.driverId,
+                driverUsername = newTaxi.driverUsername,
                 trips = oldTaxi.trips,
                 isAvailable = oldTaxi.isAvailable,
                 driverId = oldTaxi.driverId
@@ -99,13 +99,14 @@ class TaxisFakeGateway : ITaxisGateway {
         }
     }
 
-    override suspend fun deleteTaxi(taxiId: String): Boolean {
+    override suspend fun deleteTaxi(taxiId: String): Taxi {
         val indexToUpdate = taxis.indexOfFirst { it.id == taxiId }
-        return if (indexToUpdate != -1) {
+        if (indexToUpdate != -1) {
+            val taxi = taxis[indexToUpdate].toEntity()
             taxis.removeAt(indexToUpdate)
-            true
+            return taxi
         } else {
-            throw Exception("Taxi not found")
+            throw NotFoundException("Taxi not found")
         }
     }
 
@@ -121,7 +122,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 1,
             seats = 4,
             isAvailable = true,
-            username = "john_doe",
+            driverUsername = "john_doe",
             trips = "10",
             driverId = "DRIVER_ID",
         ),
@@ -131,7 +132,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 2,
             type = "SUV",
             seats = 6,
-            username = "jane_doe",
+            driverUsername = "jane_doe",
             isAvailable = true,
             trips = "5",
             driverId = "DRIVER_ID"
@@ -142,7 +143,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 3,
             type = "Hatchback",
             seats = 4,
-            username = "james_smith",
+            driverUsername = "james_smith",
             isAvailable = true,
             trips = "2",
             driverId = "DRIVER_ID"
@@ -153,7 +154,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 4,
             type = "Minivan",
             seats = 6,
-            username = "mary_johnson",
+            driverUsername = "mary_johnson",
             isAvailable = true,
             trips = "15",
             driverId = "DRIVER_ID"
@@ -164,7 +165,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 1,
             type = "Convertible",
             seats = 4,
-            username = "robert_white",
+            driverUsername = "robert_white",
             isAvailable = true,
             trips = "3",
             driverId = "DRIVER_ID"
@@ -175,7 +176,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 2,
             type = "Sedan",
             seats = 4,
-            username = "linda_miller",
+            driverUsername = "linda_miller",
             isAvailable = true,
             trips = "7",
             driverId = "DRIVER_ID"
@@ -186,7 +187,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 3,
             type = "Hatchback",
             seats = 4,
-            username = "david_jones",
+            driverUsername = "david_jones",
             isAvailable = true,
             trips = "12",
             driverId = "DRIVER_ID"
@@ -197,7 +198,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 4,
             type = "Minivan",
             seats = 2,
-            username = "susan_anderson",
+            driverUsername = "susan_anderson",
             isAvailable = true,
             trips = "9",
             driverId = " DRIVER_ID"
@@ -209,7 +210,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 1,
             seats = 4,
             isAvailable = false,
-            username = "Asia",
+            driverUsername = "Asia",
             trips = "10",
             driverId = "DRIVER_ID"
         ),
@@ -220,7 +221,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 1,
             seats = 4,
             isAvailable = false,
-            username = "Safi",
+            driverUsername = "Safi",
             trips = "10",
             driverId = "DRIVER_ID"
         ),
@@ -231,7 +232,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 1,
             seats = 4,
             isAvailable = false,
-            username = "Mujtaba",
+            driverUsername = "Mujtaba",
             trips = "10",
             driverId = "DRIVER_ID"
         ),
@@ -242,7 +243,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 1,
             seats = 4,
             isAvailable = false,
-            username = "Krrar",
+            driverUsername = "Krrar",
             trips = "10",
             driverId = "DRIVER_ID"
         ),
@@ -253,7 +254,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 1,
             seats = 4,
             isAvailable = false,
-            username = "Aya",
+            driverUsername = "Aya",
             trips = "10",
             driverId = "DRIVER_ID"
         ),
@@ -264,7 +265,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 1,
             seats = 4,
             isAvailable = false,
-            username = "Kamel",
+            driverUsername = "Kamel",
             trips = "10",
             driverId = "DRIVER_ID"
         ),
@@ -275,7 +276,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 2,
             seats = 4,
             isAvailable = false,
-            username = "Kamel",
+            driverUsername = "Kamel",
             trips = "10",
             driverId = "DRIVER_ID"
         ),
@@ -286,7 +287,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 2,
             seats = 5,
             isAvailable = false,
-            username = "Kamel",
+            driverUsername = "Kamel",
             trips = "10",
             driverId = "DRIVER_ID"
         ),
@@ -297,7 +298,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 2,
             seats = 4,
             isAvailable = false,
-            username = "Kamel",
+            driverUsername = "Kamel",
             trips = "10",
             driverId = "DRIVER_ID"
         ),
@@ -308,7 +309,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 2,
             seats = 4,
             isAvailable = true,
-            username = "Kamel",
+            driverUsername = "Kamel",
             trips = "10",
             driverId = "DRIVER_ID"
         ),
@@ -319,7 +320,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 5,
             seats = 5,
             isAvailable = true,
-            username = "Kamel",
+            driverUsername = "Kamel",
             trips = "10",
             driverId = "DRIVER_ID"
         ),
@@ -330,7 +331,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 4,
             seats = 4,
             isAvailable = true,
-            username = "Kamel",
+            driverUsername = "Kamel",
             trips = "10",
             driverId = "DRIVER_ID"
         ),
@@ -341,7 +342,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 5,
             seats = 4,
             isAvailable = true,
-            username = "Kamel",
+            driverUsername = "Kamel",
             trips = "10",
             driverId = "DRIVER_ID"
         ),

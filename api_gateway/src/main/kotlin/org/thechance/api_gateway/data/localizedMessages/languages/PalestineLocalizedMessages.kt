@@ -23,10 +23,16 @@ class PalestinianArabicLocalizedMessages(
     override val unknownError: String = "حصل ايرور وما عرفتش شو عملت"
     override val userNotFound: String = "مش لاقينك يا صاحب"
     override val invalidPermission: String = "مش عندك الصلاحية يا صاحب"
+    override val alreadyInFavorite: String= "بالفعل موجود في المفضله"
+
     // endregion
 
     // region taxi
     override val taxiCreatedSuccessfully: String = "اعمل حفلة بقى عندك تكسي يا صاحب الحظ 🎉"
+    override val tripCreatedSuccessfully: String = "تم انشاء الرحلة"
+    override val tripApproved: String = "تم قبول الرحلة"
+    override val tripCanceled: String = "تم الغاء الرحلة"
+    override val tripFinished: String = "تم إنهاء الرحلة بنجاح"
     override val taxiUpdateSuccessfully: String = "تم تحديث التاكسي بنجاح"
     override val taxiDeleteSuccessfully: String = "تم حذف التاكسي بنجاح"
     override val invalidId: String = "هاد التاكسي مش عنده رقم صحيح!"

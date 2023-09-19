@@ -37,7 +37,7 @@ class ClientTripsManagementUseCase(
             it.taxiId?.let { id ->
                 val count = taxiGateway.getTaxiById(id)?.tripsCount ?: 0
                 taxiGateway.updateTaxiTripsCount(id, count + 1)
-            } ?: throw ResourceNotFoundException
+            }
         } ?: throw ResourceNotFoundException
     }
 

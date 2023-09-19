@@ -33,6 +33,7 @@ import presentation.composable.BpBrandBackgroundContainer
 import presentation.composable.HeadFirstCard
 import presentation.composable.modifier.noRippleEffect
 import resources.Resources
+import util.getStatusBarPadding
 
 class RegistrationScreen :
     BaseScreen<RegistrationScreenModel, RegistrationUIState, RegistrationScreenEffect, RegistrationInteractionListener>() {
@@ -50,10 +51,12 @@ class RegistrationScreen :
     ) {
         BpBrandBackgroundContainer {
             Row(
-                Modifier.height(56.dp).fillMaxWidth().align(Alignment.TopCenter)
+                Modifier.padding(getStatusBarPadding()).height(56.dp).fillMaxWidth()
+                    .align(Alignment.TopCenter)
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+
                 Box(
                     Modifier.size(40.dp).clip(RoundedCornerShape(Theme.radius.medium))
                         .background(color = Theme.colors.surface)
@@ -86,6 +89,7 @@ class RegistrationScreen :
                     text = state.password,
                     onValueChange = listener::onPasswordChanged,
                     label = Resources.strings.password,
+                    keyboardType = KeyboardType.Password,
                     errorMessage = state.passwordErrorMsg,
                     isError = state.isPasswordError,
                 )
