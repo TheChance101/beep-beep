@@ -26,6 +26,4 @@ class OrderFakeGateway : IOrderGateway {
             ),
         ).toEntity()
     }
-
-    override suspend fun getTaxiDriverName() = "Emerald Team"
 }
