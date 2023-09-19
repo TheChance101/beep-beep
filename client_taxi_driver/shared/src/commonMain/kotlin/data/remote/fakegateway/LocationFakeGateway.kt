@@ -6,18 +6,18 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 
 class LocationFakeGateway : ILocationGateway {
-    override fun streamLiveLocation() = flow {
+    override fun trackCurrentLocation() = flow {
         var lattiude = 30.044420
         while (true) {
             lattiude += 0.00002
             emit(
                 Location(
-                    lat = lattiude.toString(),
-                    lng = 31.235712.toString(),
-                    name = "",
+                    lat = lattiude,
+                    lng = 31.235712,
+                    addressName = "",
                 )
             )
-            delay(1000)
+            delay(2000)
         }
     }
 }

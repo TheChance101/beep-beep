@@ -1,27 +1,19 @@
 package domain.usecase
 
-import data.remote.fakegateway.LocationFakeGateway
-import data.remote.fakegateway.MapFakeGateway
-import domain.entity.Location
+import data.remote.fakegateway.OrderFakeGateway
 import domain.entity.Order
-import kotlinx.coroutines.flow.Flow
 
 
 interface IManageOrderUseCase {
     suspend fun foundNewOrder(): Order
 
-    fun getLiveLocation(): Flow<Location>
-
     suspend fun getTaxiDriverName(): String
 }
 
 class ManageOrderUseCase(
-    private val mapGateway: MapFakeGateway,
-    private val locationGateway: LocationFakeGateway,
+    private val mapGateway: OrderFakeGateway,
 ) : IManageOrderUseCase {
     override suspend fun foundNewOrder() = mapGateway.findingNewOrder()
-
-    override fun getLiveLocation() = locationGateway.streamLiveLocation()
 
     override suspend fun getTaxiDriverName() = mapGateway.getTaxiDriverName()
 }

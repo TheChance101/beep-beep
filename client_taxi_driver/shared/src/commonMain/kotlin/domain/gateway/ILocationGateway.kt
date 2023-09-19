@@ -4,5 +4,5 @@ import domain.entity.Location
 import kotlinx.coroutines.flow.Flow
 
 interface ILocationGateway {
-    fun streamLiveLocation(): Flow<Location>
+    fun trackCurrentLocation(): Flow<Location>
 }
