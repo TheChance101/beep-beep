@@ -17,6 +17,10 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
         get() = coroutineScope
 
     init {
+        loginIfKeepMeLoggedInFlagSet()
+    }
+
+    private fun loginIfKeepMeLoggedInFlagSet(){
         viewModelScope.launch {
             if (manageLoginUser.getKeepMeLoggedInFlag()) {
                 sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
