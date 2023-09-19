@@ -7,13 +7,12 @@ import presentation.auth.login.LoginScreenModel
 import presentation.auth.signup.registration.RegistrationScreenModel
 import presentation.auth.signup.registrationSubmit.RegistrationSubmitScreenModel
 import presentation.home.HomeScreenModel
-import presentation.login.LoginScreenModel
 import presentation.main.MainScreenModel
+import presentation.notification.NotificationScreenModel
 import presentation.orders.OrderScreenModel
 import presentation.pickLanguage.PickLanguageScreenModel
 import presentation.preferredMeal.PreferredScreenModel
 import presentation.preferredRide.PreferredRideScreenModel
-import presentation.notification.NotificationScreenModel
 
 val screenModelsModule = module {
     factoryOf(::LoginScreenModel)
