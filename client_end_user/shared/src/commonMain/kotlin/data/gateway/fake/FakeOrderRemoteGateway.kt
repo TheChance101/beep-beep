@@ -60,7 +60,7 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                 ),
                 totalPrice = 15.99,
                 createdAt = Clock.System.now().epochSeconds,
-                orderStatus = 1,
+                orderStatus = 4,
                 timeToArriveInMints = 20
             ),
             Order(
@@ -81,7 +81,7 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                 ),
                 totalPrice = 22.50,
                 createdAt = Clock.System.now().epochSeconds,
-                orderStatus = 2,
+                orderStatus = 4,
                 timeToArriveInMints = 15
             )
         )
