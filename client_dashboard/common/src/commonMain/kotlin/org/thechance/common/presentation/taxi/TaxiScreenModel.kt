@@ -5,15 +5,13 @@ import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.usecase.IManageTaxisUseCase
-import org.thechance.common.domain.usecase.ITaxiValidationUseCase
 import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.restaurant.ErrorWrapper
 import org.thechance.common.presentation.util.ErrorState
 
 class TaxiScreenModel(
-    private val manageTaxis: IManageTaxisUseCase,
-    private val taxiValidation: ITaxiValidationUseCase,
+    private val manageTaxis: IManageTaxisUseCase
 ) : BaseScreenModel<TaxiUiState, TaxiUiEffect>(TaxiUiState()), TaxiInteractionListener {
 
     private var searchJob: Job? = null
@@ -52,55 +50,39 @@ class TaxiScreenModel(
     }
 
     private fun onError(error: ErrorState) {
-        updateState { it.copy(isLoading = false) }
         when (error) {
-            is ErrorState.InvalidCarType -> {
+            is ErrorState.MultipleErrors -> {
+                val errorStates = error.errors
+                println("errorStates: $errorStates")
                 updateState {
                     it.copy(
                         newTaxiInfo = it.newTaxiInfo.copy(
-                            carModelError = ErrorWrapper(error.errorMessage, true)
+                            plateNumberError = ErrorWrapper(
+                                errorStates.firstByType<ErrorState.InvalidTaxiPlate>().errorMessage,
+                                true
+                            ),
+                            driverUserNameError = ErrorWrapper(
+                                errorStates.firstByType<ErrorState.InvalidUserName>().errorMessage,
+                                true
+                            ),
+                            carModelError = ErrorWrapper(
+                                errorStates.firstByType<ErrorState.InvalidCarType>().errorMessage,
+                                true
+                            ),
                         )
                     )
                 }
             }
 
-            is ErrorState.InvalidTaxiPlate -> {
-                updateState {
-                    it.copy(
-                        newTaxiInfo = it.newTaxiInfo.copy(
-                            plateNumberError = ErrorWrapper(error.errorMessage, true)
-                        )
-                    )
-                }
-            }
-
-            ErrorState.NoConnection -> {
-                updateState { it.copy(isNoInternetConnection = true) }
-            }
-
-            ErrorState.UnKnownError -> println("error is unknown error: ${error}")
-            is ErrorState.InvalidTaxiColor -> println("error is invalid taxi color: ${error.errorMessage}")
-            is ErrorState.InvalidTaxiId -> {
-                updateState {
-                    it.copy(
-                        newTaxiInfo = it.newTaxiInfo.copy(
-                            driverUserNameError = ErrorWrapper(error.errorMessage, true),
-                        )
-                    )
-                }
-                println("error is invalid taxi id: ${error.errorMessage}")
-            }
-
-            is ErrorState.SeatOutOfRange -> println("error is seat out of range: ${error.errorMessage}")
-            is ErrorState.TaxiAlreadyExists -> println("error is taxi already exists: ${error.errorMessage}")
-            is ErrorState.TaxiNotFound -> println("error is taxi not found: ${error.errorMessage}")
-            is ErrorState.UserNotExist -> println("error is user not exist: ${error.errorMessage}")
             else -> {}
         }
+
     }
 
     private fun clearAddTaxiErrorState() =
-        updateState { it.copy(newTaxiInfo = it.newTaxiInfo.copy(
+        updateState {
+            it.copy(
+                newTaxiInfo = it.newTaxiInfo.copy(
                     plateNumberError = ErrorWrapper(),
                     carModelError = ErrorWrapper(),
                     driverUserNameError = ErrorWrapper(),
@@ -364,5 +346,8 @@ class TaxiScreenModel(
     }
 
 //endregion
+
+    private inline fun <reified T : ErrorState> List<ErrorState>.firstByType() =
+        filterIsInstance<T>().first()
 
 }
