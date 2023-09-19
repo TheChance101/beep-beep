@@ -5,10 +5,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class OrderDto(
-    @SerialName("id") val id: String? = null,
-    @SerialName("userId") val userId: String? = null,
-    @SerialName("restaurantId") val restaurantId: String? = null,
-    @SerialName("meals") val meals: List<MealDto>? = null,
+    @SerialName("id") val id: String,
+    @SerialName("userId") val userId: String,
+    @SerialName("restaurantId") val restaurantId: String,
+    @SerialName("meals") val meals: List<MealDto> ,
     @SerialName("totalPrice") val totalPrice: Double? = null,
     @SerialName("createdAt") val createdAt: Long? = null,
     @SerialName("orderStatus") val orderStatus: Int = 0,
