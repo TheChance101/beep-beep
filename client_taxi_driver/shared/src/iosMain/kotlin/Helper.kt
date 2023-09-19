@@ -6,21 +6,20 @@ import data.BpLocationDataSource
 import dev.icerock.moko.geo.LocationTracker
 import domain.dataSource.IBpLocationDataSource
 
-val permissions = module {
+val locationDataSourceModule = module {
     single<IBpLocationDataSource> { BpLocationDataSource(get()) }
 }
 
-val locationTracker = module {
+val locationTrackerModule = module {
     single { LocationTracker(PermissionsController()) }
 }
-
 
 fun initKoin() {
     startKoin {
         modules(
             appModule(),
-            permissions,
-            locationTracker
+            locationDataSourceModule,
+            locationTrackerModule
         )
     }
 }

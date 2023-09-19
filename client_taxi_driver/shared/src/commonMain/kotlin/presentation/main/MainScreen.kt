@@ -72,7 +72,7 @@ class MainScreen :
 
                     BpButton(
                         title = Resources.strings.start,
-                        onClick = listener::getLocationPermission,
+                        onClick = {},
                         modifier = Modifier.fillMaxWidth().padding(top = 24.dp, bottom = 22.dp)
                     )
                 }
