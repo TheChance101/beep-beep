@@ -51,7 +51,7 @@ class LoginScreenModel(
         when (errorState) {
             ErrorState.InvalidPassword -> updateState {
                 it.copy(
-                    passwordErrorMsg = "invalid password",
+                    passwordErrorMsg = stringResources.invalidPassword,
                     isPasswordError = true
                 )
             }
