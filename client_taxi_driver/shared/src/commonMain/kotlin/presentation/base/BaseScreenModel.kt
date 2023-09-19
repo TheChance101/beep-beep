@@ -2,12 +2,13 @@ package presentation.base
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.InvalidCredentialsException
 import domain.NoInternetException
 import domain.NotFoundedException
 import domain.PermissionDenied
 import domain.ServerSideException
 import domain.UnAuthorizedException
-import domain.UnKnownErrorException
+import domain.UnknownErrorException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +30,7 @@ import org.koin.core.component.KoinComponent
 
 abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinComponent {
 
-    private val _state = MutableStateFlow(initialState)
+    protected val _state = MutableStateFlow(initialState)
     val state = _state.asStateFlow()
 
     private val _effect = MutableSharedFlow<E?>()
@@ -85,9 +86,15 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
                     is PermissionDenied -> onError(ErrorState.HasNoPermission)
                     is ServerSideException -> onError(ErrorState.ServerError)
                     is UnAuthorizedException -> onError(ErrorState.UnAuthorized)
-                    is NotFoundedException -> onError(ErrorState.NotFound)
-                    is UnKnownErrorException -> onError(
+                    is NotFoundedException -> onError(ErrorState.NotFound(exception.message.toString()))
+                    is UnknownErrorException -> onError(
                         ErrorState.UnknownError(
+                            exception.message.toString()
+                        )
+                    )
+
+                    is InvalidCredentialsException -> onError(
+                        ErrorState.InvalidCredentials(
                             exception.message.toString()
                         )
                     )
