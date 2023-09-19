@@ -17,6 +17,7 @@ data class OrderDto(
     @Serializable
     data class MealDto(
         @SerialName("mealId") val mealId: String,
+        @SerialName("mealName") val mealName:String,
         @SerialName("quantity") val quantity: Int
     )
 }
