@@ -61,7 +61,8 @@ class LoginScreen :
                     start = 40.kms,
                     bottom = 40.kms
                 ),
-            horizontalArrangement = Arrangement.Center
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Box(Modifier.weight(1f)) {
                 Image(
@@ -81,10 +82,11 @@ class LoginScreen :
                     modifier = Modifier.align(Alignment.TopStart).padding(32.kms)
                 )
             }
-            Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
+            Box(Modifier.weight(1f), contentAlignment = Alignment.Center,) {
                 Column(
                     Modifier.fillMaxHeight().width(450.kms),
                     verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
                         Resources.Strings.login,
@@ -122,7 +124,7 @@ class LoginScreen :
                         modifier = Modifier.padding(top = 24.kms).fillMaxWidth(),
                         enabled = state.isAbleToLogin
                     )
-                    Spacer(modifier = Modifier.weight(1f))
+
                     AnimatedVisibility(!state.hasInternetConnection) {
                         BPSnackBar(icon = painterResource(Resources.Drawable.infoIcon)) {
                             Text(
