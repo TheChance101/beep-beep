@@ -86,8 +86,8 @@ class TaxisFakeGateway : ITaxisGateway {
         return taxis.last().toEntity()
     }
 
-    override suspend fun updateTaxi(taxi: NewTaxiInfo): Taxi {
-        val indexToUpdate = taxis.indexOfFirst { it.driverId == taxi.driverUserName }
+    override suspend fun updateTaxi(taxi: NewTaxiInfo,taxiId: String): Taxi {
+        val indexToUpdate = taxis.indexOfFirst { it.driverUsername == taxi.driverUserName }
         val newTaxi = taxi.toDto()
         return if (indexToUpdate != -1) {
             val oldTaxi = taxis[indexToUpdate]

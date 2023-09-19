@@ -17,7 +17,7 @@ interface ITaxisGateway {
 
     suspend fun createTaxi(taxi: NewTaxiInfo): Taxi
 
-    suspend fun updateTaxi(taxi: NewTaxiInfo): Taxi
+    suspend fun updateTaxi(taxi: NewTaxiInfo,taxiId:String): Taxi
 
     suspend fun deleteTaxi(taxiId: String): Taxi
 

@@ -21,7 +21,7 @@ interface IManageTaxisUseCase {
         limit: Int
     ): DataWrapper<Taxi>
 
-    suspend fun updateTaxi(addTaxi: NewTaxiInfo): Taxi
+    suspend fun updateTaxi(addTaxi: NewTaxiInfo,taxiId:String): Taxi
 
     suspend fun deleteTaxi(taxiId: String): Taxi
 
@@ -63,8 +63,8 @@ class ManageTaxisUseCase(
         return taxiGateway.getTaxiById(id)
     }
 
-    override suspend fun updateTaxi(addTaxi: NewTaxiInfo): Taxi {
-        return taxiGateway.updateTaxi(addTaxi)
+    override suspend fun updateTaxi(addTaxi: NewTaxiInfo,taxiId:String): Taxi {
+        return taxiGateway.updateTaxi(addTaxi,taxiId)
     }
 
 }

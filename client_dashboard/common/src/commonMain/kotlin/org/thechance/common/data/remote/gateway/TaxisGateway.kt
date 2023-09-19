@@ -44,9 +44,10 @@ class TaxisGateway(private val client: HttpClient) : BaseGateway(), ITaxisGatewa
         return result?.toEntity() ?: throw UnknownError()
     }
 
-    override suspend fun updateTaxi(taxi: NewTaxiInfo): Taxi {
+    override suspend fun updateTaxi(taxi: NewTaxiInfo,taxiId:String): Taxi {
+        println("updateTaxi: $taxiId")
         val result = tryToExecute<ServerResponse<TaxiDto>>(client) {
-            put(urlString = "/taxi/{taxiId}") {
+            put(urlString = "/taxi/$taxiId") {
                 contentType(ContentType.Application.Json)
                 setBody(taxi.toDto())
             }
