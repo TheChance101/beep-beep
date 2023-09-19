@@ -5,8 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TaxiInfoDto(
-    // TODO : Change DriverId to Driver username after backend update
-    @SerialName("driverId") val driverId: String,
+    @SerialName("driverUsername") val driverUsername: String,
     @SerialName("plateNumber") val plateNumber: String,
     @SerialName("color") val color: String,
     @SerialName("type") val type: String,

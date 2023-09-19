@@ -89,6 +89,7 @@ class RegistrationScreen :
                     text = state.password,
                     onValueChange = listener::onPasswordChanged,
                     label = Resources.strings.password,
+                    keyboardType = KeyboardType.Password,
                     errorMessage = state.passwordErrorMsg,
                     isError = state.isPasswordError,
                 )

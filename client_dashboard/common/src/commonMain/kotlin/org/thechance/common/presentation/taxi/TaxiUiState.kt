@@ -10,7 +10,6 @@ import org.thechance.common.domain.util.TaxiStatus.ONLINE
 import org.thechance.common.presentation.composables.table.Header
 import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.restaurant.ErrorWrapper
-import org.thechance.common.presentation.util.ErrorState
 
 data class TaxiUiState(
     val isLoading: Boolean = true,
@@ -24,7 +23,6 @@ data class TaxiUiState(
     val pageInfo: TaxiPageInfoUiState = TaxiPageInfoUiState(),
     val specifiedTaxis: Int = 10,
     val currentPage: Int = 1,
-    val taxiMenu: MenuUiState = MenuUiState(),
     val isFilterDropdownMenuExpanded: Boolean = false,
     val isEditMode: Boolean = false,
 
@@ -51,6 +49,7 @@ data class TaxiDetailsUiState(
     val username: String = "",
     val status: TaxiStatus = ONLINE,
     val trips: String = "1",
+    val isTaxiMenuExpanded: Boolean = false,
 ) {
     val statusColor: Color
         @Composable get() = when (status) {
@@ -99,28 +98,6 @@ data class TaxiInfoUiState(
     val driverUserNameError: ErrorWrapper = ErrorWrapper(),
     val isFormValid: Boolean = false,
 )
-
-data class MenuUiState(
-    val id: String = "",
-    val items: List<MenuItemUiState> = listOf(
-        MenuItemUiState(
-            iconPath = "ic_edit.xml",
-            text = "Edit",
-        ),
-        MenuItemUiState(
-            iconPath = "ic_delete.svg",
-            text = "Delete",
-            isSecondary = true,
-        ),
-    )
-) {
-    data class MenuItemUiState(
-        val iconPath: String = "",
-        val text: String = "",
-        val isSecondary: Boolean = false,
-    )
-}
-
 
 fun DataWrapper<Taxi>.toDetailsUiState(): TaxiPageInfoUiState {
     return TaxiPageInfoUiState(

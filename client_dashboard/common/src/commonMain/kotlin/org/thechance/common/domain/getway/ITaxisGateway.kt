@@ -18,7 +18,7 @@ interface ITaxisGateway {
 
     suspend fun updateTaxi(taxi: NewTaxiInfo): Taxi
 
-    suspend fun deleteTaxi(taxiId: String): Boolean
+    suspend fun deleteTaxi(taxiId: String): Taxi
 
     suspend fun getTaxiById(taxiId: String): Taxi
 
