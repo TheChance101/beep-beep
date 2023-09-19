@@ -5,6 +5,11 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.thechance.common.data.local.gateway.UserLocalGateway
 import org.thechance.common.data.remote.*
+import org.thechance.common.data.remote.fakegateway.FakeRemoteGateway
+import org.thechance.common.data.remote.gateway.LocationGateway
+import org.thechance.common.data.remote.gateway.RestaurantGateway
+import org.thechance.common.data.remote.gateway.TaxisGateway
+import org.thechance.common.data.remote.gateway.UsersGateway
 import org.thechance.common.domain.getway.*
 
 val GatewayModule = module {

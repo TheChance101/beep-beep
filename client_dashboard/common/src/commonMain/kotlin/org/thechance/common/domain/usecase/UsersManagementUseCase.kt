@@ -40,8 +40,8 @@ class UsersManagementUseCase(
         return userGateway.getUsers(query, byPermissions, byCountries, page, numberOfUsers)
     }
 
-    override suspend fun deleteUser(id: String): Boolean {
-        return userGateway.deleteUser(id)
+    override suspend fun deleteUser(userId: String): Boolean {
+        return userGateway.deleteUser(userId)
     }
 
     override suspend fun getLastRegisteredUsers(limit: Int): List<User> {

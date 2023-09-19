@@ -373,7 +373,7 @@ class TaxisFakeGateway : ITaxisGateway {
 
         val file = createPDFReport(title, taxis, columnNames, columnWidth) { taxi ->
             listOf(
-                    taxi.id.toString(), taxi.username, taxi.plateNumber, taxi.type, taxi.color,
+                    taxi.id.toString(), taxi.driverUsername, taxi.plateNumber, taxi.type, taxi.color,
                     taxi.seats, taxi.isAvailable.toString(), taxi.trips.toString()
             ).map { it ?: "" }
         }
