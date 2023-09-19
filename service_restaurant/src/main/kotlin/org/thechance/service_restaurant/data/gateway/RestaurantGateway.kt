@@ -44,9 +44,22 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
     //endregion
 
     //region Restaurant
-    override suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant> {
-        return container.restaurantCollection.find(RestaurantCollection::isDeleted eq false)
-            .paginate(page, limit).toList().toEntity()
+    override suspend fun getRestaurants(options: RestaurantOptions): List<Restaurant> {
+        return container.restaurantCollection.find(
+            and(
+                RestaurantCollection::isDeleted eq false,
+                RestaurantCollection::name regex Regex(options.query.orEmpty(), RegexOption.IGNORE_CASE),
+                options.rating?.let { RestaurantCollection::rate eq it },
+                options.priceLevel?.let { RestaurantCollection::priceLevel eq it }
+            )
+        ).paginate(options.page, options.limit).toList().toEntity()
+    }
+
+    override suspend fun getRestaurants(restaurantIds: List<String>): List<Restaurant> {
+        return container.restaurantCollection.find(
+            RestaurantCollection::isDeleted eq false,
+            RestaurantCollection::id `in` restaurantIds.toObjectIds()
+        ).toList().toEntity()
     }
 
     override suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant> {
@@ -106,6 +119,7 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
         container.restaurantCollection.insertOne(addedRestaurant)
         return addedRestaurant.toEntity()
     }
+
     private suspend fun deleteRequestedRestaurant(requestedRestaurantId: String): Boolean {
         return container.restaurantPermissionRequestCollection.updateOneById(
             id = ObjectId(requestedRestaurantId),
@@ -207,7 +221,7 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
     override suspend fun getTotalNumberOfRestaurant(): Long {
         return container.restaurantCollection.countDocuments(RestaurantCollection::isDeleted eq false)
     }
-    //endregion
+//endregion
 
     //region meal
     override suspend fun getMeals(page: Int, limit: Int): List<Meal> {
@@ -301,5 +315,5 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
             pull(MealCollection::cuisines, ObjectId(cuisineId)),
         ).wasAcknowledged()
     }
-    //endregion
+//endregion
 }

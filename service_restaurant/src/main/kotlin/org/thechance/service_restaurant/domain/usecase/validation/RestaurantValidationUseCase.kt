@@ -28,7 +28,7 @@ class RestaurantValidationUseCase(
         if (!basicValidation.isValidId(restaurant.ownerId)) {
             validationErrors.add(INVALID_ID)
         }
-        if (!basicValidation.isValidLocation(restaurant.location.longitude, restaurant.location.latitude)) {
+        if (!basicValidation.isValidLocation(restaurant.location)) {
             validationErrors.add(INVALID_LOCATION)
         }
         if (!(restaurant.description.isNullOrBlank() || basicValidation.isValidDescription(restaurant.description))) {

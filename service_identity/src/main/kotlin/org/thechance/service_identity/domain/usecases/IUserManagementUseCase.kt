@@ -14,7 +14,7 @@ interface IUserManagementUseCase {
 
     suspend fun getNumberOfUsers(): Long
 
-    suspend fun  getLastRegisterUser(limit:Int):List<UserManagement>
+    suspend fun getLastRegisterUser(limit: Int): List<UserManagement>
 
     suspend fun searchUsers(searchTerm: String, filterByPermission: List<Int>): List<UserManagement>
 
@@ -23,10 +23,7 @@ interface IUserManagementUseCase {
 @Single
 class UserManagementUseCase(private val dataBaseGateway: IDataBaseGateway) : IUserManagementUseCase {
 
-    override suspend fun updateUserPermission(
-        userId: String,
-        permissions: List<Int>
-    ): UserManagement {
+    override suspend fun updateUserPermission(userId: String, permissions: List<Int>): UserManagement {
         isValidPermission(permissions)
         val permission = permissions.reduce { acc, i -> acc or i }
         return dataBaseGateway.updateUserPermission(userId, permission)

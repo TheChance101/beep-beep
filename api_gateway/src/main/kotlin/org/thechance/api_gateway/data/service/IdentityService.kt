@@ -5,17 +5,18 @@ import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
+import io.ktor.client.utils.*
 import io.ktor.http.*
 import io.ktor.util.*
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
-import org.thechance.api_gateway.data.model.PaginationResponse
-import org.thechance.api_gateway.data.model.UserDto
-import org.thechance.api_gateway.data.model.UserTokensResponse
+import org.thechance.api_gateway.data.model.*
 import org.thechance.api_gateway.data.model.authenticate.TokenConfiguration
 import org.thechance.api_gateway.data.model.authenticate.TokenType
+import org.thechance.api_gateway.data.model.restaurant.RestaurantDto
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.tryToExecute
 import org.thechance.api_gateway.util.APIs
@@ -31,7 +32,6 @@ class IdentityService(
     private val attributes: Attributes,
     private val errorHandler: ErrorHandler
 ) {
-
     suspend fun createUser(
         fullName: String, username: String, password: String, email: String, languageCode: String
     ): UserDto {
@@ -54,7 +54,11 @@ class IdentityService(
     }
 
     suspend fun loginUser(
-        userName: String, password: String, tokenConfiguration: TokenConfiguration, languageCode: String
+        userName: String,
+        password: String,
+        tokenConfiguration: TokenConfiguration,
+        languageCode: String,
+        applicationId: String
     ): UserTokensResponse {
         client.tryToExecute<Boolean>(
             api = APIs.IDENTITY_API,
@@ -63,14 +67,15 @@ class IdentityService(
                 errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             }
         ) {
-            submitForm("/user/login",
-                formParameters = parameters {
-                    append("username", userName)
-                    append("password", password)
+            post("/user/login") {
+                headers.append("Application-Id", applicationId)
+                formData {
+                    parameter("username", userName)
+                    parameter("password", password)
                 }
-            )
+            }
         }
-        val user = getUserByUsername(username = userName,languageCode)
+        val user = getUserByUsername(username = userName, languageCode)
         return generateUserTokens(user.id, userName, user.permission, tokenConfiguration)
     }
 
@@ -96,14 +101,16 @@ class IdentityService(
         }
     }
 
-    private suspend fun getUserById(id: String): UserDto = client.tryToExecute<UserDto>(
-        APIs.IDENTITY_API, attributes = attributes,
+    suspend fun getUserById(id: String, languageCode: String): UserDto = client.tryToExecute<UserDto>(
+        APIs.IDENTITY_API, attributes = attributes, setErrorMessage = { errorCodes ->
+            errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+        }
     ) {
         get("user/$id")
     }
 
-    suspend fun getUserByUsername(username: String, languageCode: String): UserDto = client.tryToExecute<UserDto>(
-        APIs.IDENTITY_API, attributes = attributes,setErrorMessage = { errorCodes ->
+    suspend fun getUserByUsername(username: String?, languageCode: String): UserDto = client.tryToExecute<UserDto>(
+        APIs.IDENTITY_API, attributes = attributes, setErrorMessage = { errorCodes ->
             errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
         }
     ) {
@@ -113,7 +120,7 @@ class IdentityService(
     }
 
     @OptIn(InternalAPI::class)
-    suspend fun searchUsers(query: String, permission :List<Int>) = client.tryToExecute<List<UserDto>>(
+    suspend fun searchUsers(query: String, permission: List<Int>) = client.tryToExecute<List<UserDto>>(
         APIs.IDENTITY_API, attributes = attributes,
     ) {
         post("/dashboard/user/search") {
@@ -124,7 +131,7 @@ class IdentityService(
 
 
     @OptIn(InternalAPI::class)
-    suspend fun updateUserPermission(userId: String, permission: List<Int>,languageCode: String) : UserDto {
+    suspend fun updateUserPermission(userId: String, permission: List<Int>, languageCode: String): UserDto {
         return client.tryToExecute<UserDto>(
             APIs.IDENTITY_API, attributes = attributes,
             setErrorMessage = { errorCodes ->
@@ -147,6 +154,43 @@ class IdentityService(
             delete("/user/$userId")
         }
     }
+
+    suspend fun getFavoriteRestaurantsIds(userId: String, languageCode: String) = client.tryToExecute<List<String>>(
+        api = APIs.IDENTITY_API,
+        attributes = attributes,
+        setErrorMessage = { errorCodes ->
+            errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+        }) {
+        get("/user/$userId/favorite")
+    }
+
+    suspend fun addRestaurantToFavorite(userId: String, restaurantId: String, languageCode: String) =
+        client.tryToExecute<Boolean>(
+            api = APIs.IDENTITY_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+            }) {
+            post("/user/$userId/favorite") {
+                formData {
+                    parameter("restaurantId", restaurantId)
+                }
+            }
+        }
+
+    suspend fun deleteRestaurantFromFavorite(userId: String, restaurantId: String, languageCode: String) =
+        client.tryToExecute<Boolean>(
+            api = APIs.IDENTITY_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+            }) {
+            delete("/user/$userId/favorite") {
+                formData {
+                    parameter("restaurantId", restaurantId)
+                }
+            }
+        }
 
     fun generateUserTokens(
         userId: String, username: String, userPermission: Int, tokenConfiguration: TokenConfiguration
@@ -189,5 +233,17 @@ class IdentityService(
         return accessToken.sign(Algorithm.HMAC256(tokenConfiguration.secret))
     }
 
+    @OptIn(InternalAPI::class)
+    suspend fun updateUserLocation(userId: String, location: LocationDto, language: String) =
+        client.tryToExecute<AddressDto>(
+            api = APIs.IDENTITY_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, language)
+            }) {
+            post("/user/$userId/address/location") {
+                body = Json.encodeToString(LocationDto.serializer(), location)
+            }
+        }
 
 }

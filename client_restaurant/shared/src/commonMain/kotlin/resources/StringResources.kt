@@ -58,4 +58,6 @@ data class StringResources(
     val phoneNumberErrorMessage: String = "Phone cannot be empty",
     val openingTimeErrorMessage: String = "Opening time should be between 00:00 to 23:59",
     val closingTimeErrorMessage: String = "Closing time should be between 00:00 to 23:59",
+    val userNameIsRequired: String = "Username is required.",
+    val passwordIsRequired: String = "Password is required",
 )

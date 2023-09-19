@@ -4,28 +4,34 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.platform.LocalLayoutDirection
 import com.beepbeep.designSystem.ui.theme.BpTheme
-import com.seiko.imageloader.LocalImageLoader
-import util.generateImageLoader
-import util.getPlatformContext
+import resources.strings.IStringResources
+import util.LocalizationManager
+import util.setInsetsController
 
 private val localDrawableResources = staticCompositionLocalOf { DrawableResources() }
-private val localStringResources = staticCompositionLocalOf { StringResources() }
+private val localStringResources = staticCompositionLocalOf<IStringResources> {
+    error("CompositionLocal IStringResources not present")
+}
+
 
 @Composable
 fun BeepBeepTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
+    languageCode: String = "en",
     content: @Composable () -> Unit,
 ) {
     val drawableResources = if (useDarkTheme) BpDrawableDarkResources else DrawableResources()
 
     CompositionLocalProvider(
         localDrawableResources provides drawableResources,
-        localStringResources provides StringResources(),
+        localStringResources provides LocalizationManager.getStringResources(languageCode),
+        LocalLayoutDirection provides LocalizationManager.getLayoutDirection(languageCode)
     ) {
-        BpTheme {
+        BpTheme(useDarkTheme = useDarkTheme) {
+            setInsetsController(useDarkTheme)
             content()
         }
     }
@@ -37,7 +43,7 @@ object Resources {
         @ReadOnlyComposable
         get() = localDrawableResources.current
 
-    val strings: StringResources
+    val strings: IStringResources
         @Composable
         @ReadOnlyComposable
         get() = localStringResources.current

@@ -11,6 +11,7 @@ import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
 import org.thechance.api_gateway.data.model.authenticate.TokenConfiguration
 import org.thechance.api_gateway.data.service.IdentityService
 import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
+import org.thechance.api_gateway.endpoints.utils.extractApplicationIdHeader
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
 import org.thechance.api_gateway.endpoints.utils.respondWithResult
 import org.thechance.api_gateway.util.Claim
@@ -49,12 +50,9 @@ fun Route.authenticationRoutes(tokenConfiguration: TokenConfiguration) {
         val password = params["password"]?.trim().toString()
 
         val language = extractLocalizationHeader()
-
+        val appId = extractApplicationIdHeader()
         val token = identityService.loginUser(
-            userName,
-            password,
-            tokenConfiguration,
-            language
+            userName, password, tokenConfiguration, language, appId
         )
         respondWithResult(HttpStatusCode.OK, token)
     }
