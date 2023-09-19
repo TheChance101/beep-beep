@@ -1,7 +1,7 @@
 package data.remote.mapper
 
-import data.remote.model.LocationDto
 import data.remote.model.TripDto
+import domain.entity.Location
 import domain.entity.Trip
 
 fun TripDto.toTripEntity(): Trip {
@@ -11,8 +11,8 @@ fun TripDto.toTripEntity(): Trip {
         taxiPlateNumber = taxiPlateNumber ?: "",
         driverId = driverId ?: "",
         clientId = clientId,
-        startPoint = startPoint ?: LocationDto(),
-        destination = destination ?: LocationDto(),
+        startPoint = startPoint?.toEntity() ?: Location(0.0, 0.0),
+        destination = destination?.toEntity() ?: Location(0.0, 0.0),
         rate = rate ?: 0.0,
         price = price ?: 0.0,
         startDate = startDate ?: "",
