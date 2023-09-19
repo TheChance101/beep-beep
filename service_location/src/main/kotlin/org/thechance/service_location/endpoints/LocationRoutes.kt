@@ -18,15 +18,13 @@ fun Route.locationRoutes() {
 
         webSocket("/sender/{tripId}") {
             val tripId = call.parameters["tripId"]?.trim().orEmpty()
-//            while (true) {
-//                runCatching {
-                    val location = receiveDeserialized<LocationDto>()
-                    socketHandler.location[tripId]?.locations?.emit(location)
-                    println("ssss websocket ${location.latitude} , ${location.longitude}")
-//                }.onFailure { message ->
-//                    close(CloseReason(INVALID_LOCATION.toShort(), message.toString()))
-//                }
-//            }
+            runCatching {
+                val location = receiveDeserialized<LocationDto>()
+                socketHandler.location[tripId]?.locations?.emit(location)
+                println("ssss websocket ${location.latitude} , ${location.longitude}")
+            }.onFailure { message ->
+                close(CloseReason(INVALID_LOCATION.toShort(), message.toString()))
+            }
         }
 
         webSocket("/receiver/{tripId}") {

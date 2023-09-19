@@ -3,7 +3,6 @@ package org.thechance.service_location.data
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.flowOn
 import org.thechance.service_location.data.model.WebSocketLocation
@@ -24,7 +23,6 @@ class SocketHandler {
                 ?.flowOn(Dispatchers.IO)
                 ?.collect { location ->
                     ownerSession?.sendSerialized(location)
-                    println("ssss flow ${location.latitude} , ${location.longitude}")
                 }
         } catch (e: MultiErrorException) {
             ownerSession?.send(e.errorCodes.toString())

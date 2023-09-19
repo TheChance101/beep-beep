@@ -2,14 +2,10 @@ package org.thechance.api_gateway.endpoints
 
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
-import io.ktor.websocket.*
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flow
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.model.LocationDto
 import org.thechance.api_gateway.data.service.LocationService
 import org.thechance.api_gateway.endpoints.utils.WebSocketServerHandler
-import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeaderFromWebSocket
 
 
 fun Route.locationRoute() {
@@ -18,7 +14,6 @@ fun Route.locationRoute() {
 
     route("location") {
 
-        // approve trip and connect to socket to send location to the user
         webSocket("/send/{tripId}") {
             val tripId = call.parameters["tripId"]?.trim().orEmpty()
             while (true) {
@@ -29,8 +24,10 @@ fun Route.locationRoute() {
 
         webSocket("/receive/{tripId}") {
             val tripId = call.parameters["tripId"]?.trim().orEmpty()
-            locationService.receiveLocation(tripId).collectLatest {
-                sendSerialized(it)
+            val locations = locationService.receiveLocation(tripId)
+            webSocketServerHandler.sessions[tripId] = this
+            webSocketServerHandler.sessions[tripId]?.let {
+                webSocketServerHandler.tryToCollectFormWebSocket(locations, it)
             }
         }
 
