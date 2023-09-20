@@ -2,6 +2,8 @@ package org.thechance.api_gateway.endpoints
 
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
@@ -13,6 +15,7 @@ import org.thechance.api_gateway.data.service.TaxiService
 import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
 import org.thechance.api_gateway.endpoints.utils.respondWithResult
+import org.thechance.api_gateway.util.Claim
 import org.thechance.api_gateway.util.Role
 
 fun Route.taxiRoutes() {
@@ -20,7 +23,7 @@ fun Route.taxiRoutes() {
     val identityService: IdentityService by inject()
     val localizedMessagesFactory by inject<LocalizedMessagesFactory>()
 
-    authenticateWithRole(Role.DASHBOARD_ADMIN) {
+//    authenticateWithRole(Role.DASHBOARD_ADMIN) {
         route("/taxi") {
 
             get {
@@ -85,7 +88,7 @@ fun Route.taxiRoutes() {
             }
         }
 
-        route("trip") {
+        route("/trip") {
 
             get("/{tripId}") {
                 val language = extractLocalizationHeader()
@@ -93,6 +96,21 @@ fun Route.taxiRoutes() {
 
                 val trip = taxiService.getTripById(tripId = tripId, language)
                 respondWithResult(HttpStatusCode.OK, trip)
+            }
+
+            get("/history") {
+                val parameters = call.parameters
+                val userId = parameters["id"]?.trim().toString()
+                val page = parameters["page"]?.trim()?.toInt() ?: 1
+                val limit = parameters["limit"]?.trim()?.toInt() ?: 10
+                val language = extractLocalizationHeader()
+                val result = taxiService.getTripsHistoryForUser(
+                    userId = userId,
+                    page = page,
+                    limit = limit,
+                    languageCode = language
+                )
+                respondWithResult(HttpStatusCode.OK, result)
             }
 
             post {
@@ -138,5 +156,5 @@ fun Route.taxiRoutes() {
                 respondWithResult(HttpStatusCode.OK, deletedTrip, successMessage)
             }
         }
-    }
+//    }
 }

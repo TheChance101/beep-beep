@@ -45,21 +45,6 @@ fun Route.orderRoutes() {
             respondWithResult(HttpStatusCode.OK, result)
         }
 
-/*        get("/restaurant/history") {
-            val parameters = call.parameters
-            val id = parameters["id"]?.trim().toString()
-            val page = parameters["page"]?.trim()?.toInt() ?: 1
-            val limit = parameters["limit"]?.trim()?.toInt() ?: 10
-            val language = extractLocalizationHeader()
-            val result = restaurantService.getOrdersHistoryInRestaurant(
-                restaurantId = id,
-                page = page,
-                limit = limit,
-                languageCode = language
-            )
-            respondWithResult(HttpStatusCode.OK, result)
-        }*/
-
         get("/restaurant/history") {
             val parameters = call.parameters
             val id = parameters["id"]?.trim().toString()
