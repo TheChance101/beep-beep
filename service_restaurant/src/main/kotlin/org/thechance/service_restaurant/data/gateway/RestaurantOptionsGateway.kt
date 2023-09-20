@@ -197,17 +197,14 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
     }
 
     override suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order> {
-        return container.orderCollection.find(
-            OrderCollection::restaurantId
-                    eq ObjectId(restaurantId)
+        return container.orderCollection.find(OrderCollection::restaurantId eq ObjectId(restaurantId)
         ).toList().toEntity()
     }
 
     override suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order> {
         return container.orderCollection.find(
             OrderCollection::restaurantId eq ObjectId(restaurantId),
-            OrderCollection::orderStatus ne Order.Status.CANCELED.statusCode,
-            OrderCollection::orderStatus ne Order.Status.DONE.statusCode
+            OrderCollection::orderStatus nin listOf(Order.Status.DONE.statusCode, Order.Status.CANCELED.statusCode)
         ).toList().toEntity()
     }
 
@@ -227,8 +224,8 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         return container.orderCollection
             .find(
                 OrderCollection::restaurantId eq ObjectId(restaurantId),
-                OrderCollection::orderStatus eq Order.Status.DONE.statusCode,
-                OrderCollection::orderStatus eq Order.Status.CANCELED.statusCode,
+                OrderCollection::orderStatus `in` listOf(Order.Status.DONE.statusCode, Order.Status.CANCELED.statusCode)
+
             )
             .sort(descending(OrderCollection::createdAt))
             .paginate(page, limit).toList().toEntity()
@@ -242,6 +239,15 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
             )
             .sort(descending(OrderCollection::createdAt))
             .paginate(page, limit).toList().toEntity()
+    }
+
+    override suspend fun getNumberOfOrdersHistoryInRestaurant(restaurantId: String): Long {
+        return container.orderCollection.countDocuments(
+            and(
+                OrderCollection::restaurantId eq ObjectId(restaurantId),
+                OrderCollection::orderStatus `in` listOf(Order.Status.DONE.statusCode, Order.Status.CANCELED.statusCode)
+            )
+        )
     }
 
     override suspend fun getNumberOfOrdersHistoryForUser(userId: String): Long {

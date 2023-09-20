@@ -36,6 +36,9 @@ interface IManageOrderUseCase {
     suspend fun getOrdersRevenueByDaysBefore(
         restaurantId: String, daysBack: Int
     ): List<Map<Int, Double>> // list of maps (dayOfWeek, prices) { dayOfWeek 0 - 6 (Sunday - Saturday) }
+
+    suspend fun getNumberOfOrdersHistoryInRestaurant(restaurantId: String): Long
+    suspend fun getNumberOfOrdersHistoryForUser(userId: String): Long
 }
 
 class ManageOrderUseCase(
@@ -113,6 +116,14 @@ class ManageOrderUseCase(
                 }.reversed()
             }
         } ?: throw MultiErrorException(listOf(INVALID_ID))
+    }
+
+    override suspend fun getNumberOfOrdersHistoryInRestaurant(restaurantId: String): Long {
+        return optionsGateway.getNumberOfOrdersHistoryInRestaurant(restaurantId)
+    }
+
+    override suspend fun getNumberOfOrdersHistoryForUser(userId: String): Long {
+        return optionsGateway.getNumberOfOrdersHistoryForUser(userId)
     }
 
     private suspend fun isRestaurantOpened(restaurantId: String): Boolean {

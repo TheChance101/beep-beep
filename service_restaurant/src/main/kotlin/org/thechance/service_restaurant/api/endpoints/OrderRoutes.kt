@@ -8,6 +8,7 @@ import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import org.bson.types.ObjectId
 import org.koin.ktor.ext.inject
+import org.thechance.service_restaurant.api.models.BasePaginationResponseDto
 import org.thechance.service_restaurant.api.models.OrderDto
 import org.thechance.service_restaurant.api.models.WebSocketRestaurant
 import org.thechance.service_restaurant.api.models.mappers.toDto
@@ -59,23 +60,27 @@ fun Route.orderRoutes() {
             call.respond(HttpStatusCode.OK, result)
         }
 
-        get("/history/{id}") {
-            val id = call.parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
-            val page = call.parameters["page"]?.toInt() ?: 1
-            val limit = call.parameters["limit"]?.toInt() ?: 10
-
-            val result = manageOrder.getOrdersHistoryForRestaurant(restaurantId = id, page = page, limit = limit)
-            call.respond(HttpStatusCode.OK, result.map { it.toDto() })
+        get("/restaurant/history") {
+            val parameters = call.receiveParameters()
+            val restaurantId = parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
+            val page = parameters["page"]?.toInt() ?: 1
+            val limit = parameters["limit"]?.toInt() ?: 10
+            val result =
+                manageOrder.getOrdersHistoryForRestaurant(restaurantId = restaurantId, page = page, limit = limit)
+                    .map { it.toDto() }
+            val total = manageOrder.getNumberOfOrdersHistoryInRestaurant(restaurantId)
+            call.respond(HttpStatusCode.OK, BasePaginationResponseDto(result = result, total = total))
         }
 
-        get("/history") {
+        get("/user/history") {
             val parameters = call.receiveParameters()
             val userId = parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
             val page = parameters["page"]?.toInt() ?: 1
             val limit = parameters["limit"]?.toInt() ?: 10
-
             val result = manageOrder.getOrdersHistoryForUser(userId = userId, page = page, limit = limit)
-            call.respond(HttpStatusCode.OK, result.map { it.toDto() })
+                .map { it.toDto() }
+            val total = manageOrder.getNumberOfOrdersHistoryForUser(userId)
+            call.respond(HttpStatusCode.OK, BasePaginationResponseDto(result = result, total = total))
         }
 
         get("/{restaurantId}/orders") {
