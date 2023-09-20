@@ -2,7 +2,7 @@ package di
 
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
-import presentation.PreferredFood.PreferredFoodScreenModel
+import presentation.preferredFood.PreferredFoodScreenModel
 import presentation.auth.login.LoginScreenModel
 import presentation.auth.signup.registration.RegistrationScreenModel
 import presentation.auth.signup.registrationSubmit.RegistrationSubmitScreenModel

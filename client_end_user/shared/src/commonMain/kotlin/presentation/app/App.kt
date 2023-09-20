@@ -17,7 +17,9 @@ import resources.BeepBeepTheme
 import util.LanguageCode
 
 @Composable
-fun App() { Navigator(MainApp) }
+fun App() {
+    Navigator(MainApp)
+}
 
 object MainApp : Screen {
     @Composable
@@ -25,16 +27,13 @@ object MainApp : Screen {
         val appScreenModel = getScreenModel<AppScreenModel>()
 
         val userLanguage by appScreenModel.language.collectAsState()
+        val firstTime by appScreenModel.isFirstTimeOpenApp.collectAsState()
 
         BeepBeepTheme(languageCode = userLanguage) {
-            if (true) {
-                Navigator(PickLanguageScreen) {
-                    SlideTransition(it)
-                }
+            if (firstTime) {
+                Navigator(PickLanguageScreen) { SlideTransition(it) }
             } else {
-                Navigator(MainContainer) {
-                    SlideTransition(it)
-                }
+                Navigator(MainContainer) { SlideTransition(it) }
             }
         }
     }

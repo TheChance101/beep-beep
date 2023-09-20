@@ -19,9 +19,12 @@ class AppScreenModel(private val manageUser: IManageUserUseCase) : ScreenModel {
     private val _language: MutableStateFlow<LanguageCode> = MutableStateFlow(LanguageCode.EG)
     val language: StateFlow<LanguageCode> = _language.asStateFlow()
 
+    private val _isFirstTimeOpenApp: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val isFirstTimeOpenApp: StateFlow<Boolean> = _isFirstTimeOpenApp.asStateFlow()
 
     init {
         getUserLanguageCode()
+        getInitScreen()
     }
 
     private fun getUserLanguageCode() {
@@ -35,14 +38,9 @@ class AppScreenModel(private val manageUser: IManageUserUseCase) : ScreenModel {
         }
     }
 
-    suspend fun getInitScreen(): Boolean {
-        return withContext(Dispatchers.IO) {
-            val isFirstTimeOpenApp = manageUser.getIsFirstTimeUseApp()
-
-            if (isFirstTimeOpenApp) {
-                manageUser.saveIsFirstTimeUseApp(false)
-            }
-            isFirstTimeOpenApp
+    private fun getInitScreen() {
+        coroutineScope.launch(Dispatchers.IO) {
+            _isFirstTimeOpenApp.update { manageUser.getIsFirstTimeUseApp() }
         }
     }
 }
