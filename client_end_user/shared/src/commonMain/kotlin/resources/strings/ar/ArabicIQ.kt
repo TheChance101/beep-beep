@@ -72,9 +72,7 @@ data class ArabicIQ(
     override val today: String = "اليوم",
     override val thisWeek: String = "هذا الأسبوع",
     override val tryAgain: String = "حاول مجدداً",
-    override val trackYourOrder: String = "تتبع طلبك",
-    override val history: String = "سجل الطلبات"
-    override val tryAgain: String = "حاول مرة تانية",
+    override val history: String = "سجل الطلبات",
     override val trackYourOrder: String = "راقب طلبك",
     override val invalidPassword: String = "كلمة المرور مش صالحة",
     override val unknownError: String = "خطأ غير معروف",

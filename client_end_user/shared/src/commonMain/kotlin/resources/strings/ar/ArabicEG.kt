@@ -72,7 +72,6 @@ data class ArabicEG(
     override val today: String = "النهارده",
     override val thisWeek: String = "الأسبوع ده",
     override val tryAgain: String = "حاول تاني",
-    override val trackYourOrder: String = "تابع الأوردر",
     override val invalidPassword: String = "كلمة المرور غير صالحة",
     override val unknownError: String = "خطأ غير معروف",
     override val wifiDisabled: String = "الواي فاي متوقف",
