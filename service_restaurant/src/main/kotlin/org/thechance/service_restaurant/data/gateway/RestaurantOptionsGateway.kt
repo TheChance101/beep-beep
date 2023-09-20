@@ -233,6 +233,15 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
             .sort(descending(OrderCollection::createdAt))
             .paginate(page, limit).toList().toEntity()
     }
-    //endregion
 
+    override suspend fun getOrdersHistoryForUser(userId: String, page: Int, limit: Int): List<Order> {
+        return container.orderCollection
+            .find(
+                OrderCollection::userId eq ObjectId(userId),
+                OrderCollection::orderStatus eq Order.Status.DONE.statusCode,
+            )
+            .sort(descending(OrderCollection::createdAt))
+            .paginate(page, limit).toList().toEntity()
+    }
+    //endregion
 }
