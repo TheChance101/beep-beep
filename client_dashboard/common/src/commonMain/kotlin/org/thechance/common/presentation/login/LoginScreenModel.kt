@@ -2,7 +2,6 @@ package org.thechance.common.presentation.login
 
 import org.thechance.common.domain.usecase.ILoginUserUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
-import org.thechance.common.presentation.resources.englishStrings
 import org.thechance.common.presentation.restaurant.ErrorWrapper
 import org.thechance.common.presentation.util.ErrorState
 
