@@ -20,6 +20,8 @@ interface IManageRestaurantUseCase {
 
     suspend fun deleteRestaurant(id: String): Boolean
 
+    suspend fun getRestaurantById(id: String): Restaurant
+
 }
 
 
@@ -48,6 +50,10 @@ class ManageRestaurantUseCase(private val restaurantGateway: IRestaurantGateway)
 
     override suspend fun deleteRestaurant(id: String): Boolean {
         return restaurantGateway.deleteRestaurant(id)
+    }
+
+    override suspend fun getRestaurantById(id: String): Restaurant {
+        return restaurantGateway.getRestaurantById(id)
     }
 
 }

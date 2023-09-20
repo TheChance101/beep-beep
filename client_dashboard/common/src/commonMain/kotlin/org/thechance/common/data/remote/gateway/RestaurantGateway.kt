@@ -78,5 +78,9 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
         )
     }
 
+    override suspend fun getRestaurantById(id: String): Restaurant {
+        TODO()
+    }
+
 }
 

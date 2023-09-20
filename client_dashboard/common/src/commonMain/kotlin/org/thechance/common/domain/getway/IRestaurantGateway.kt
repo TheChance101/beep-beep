@@ -25,4 +25,6 @@ interface IRestaurantGateway {
         priceLevel: Int,
     ): DataWrapper<Restaurant>
 
+    suspend fun getRestaurantById(id: String): Restaurant
+
 }

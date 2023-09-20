@@ -62,6 +62,10 @@ class RestaurantFakeGateway : IRestaurantGateway {
         }
     }
 
+    override suspend fun getRestaurantById(id: String): Restaurant {
+        TODO()
+    }
+
     override suspend fun createRestaurant(restaurant: NewRestaurantInfo): Restaurant {
         return Restaurant(
             id = "7",
