@@ -37,10 +37,8 @@ class RestaurantScreenModel(
                     currentState.selectedPageNumber,
                     currentState.numberOfRestaurantsInPage,
                     currentState.searchQuery,
-                    if (currentState.restaurantFilterDropdownMenuUiState.isFiltered)
-                        currentState.restaurantFilterDropdownMenuUiState.filterRating else null,
-                    if (currentState.restaurantFilterDropdownMenuUiState.isFiltered)
-                        currentState.restaurantFilterDropdownMenuUiState.filterPriceLevel.toString() else null,
+                        currentState.restaurantFilterDropdownMenuUiState.filterRating ,
+                        currentState.restaurantFilterDropdownMenuUiState.filterPriceLevel,
                 )
             },
             ::onGetRestaurantSuccessfully,
