@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
@@ -21,16 +22,16 @@ actual fun MapWebView(
     destination: Location?,
 ) {
     var webView: WebView? by remember { mutableStateOf(null) }
-
     AnimatedVisibility(destination == null) {
         webView?.evaluateJavascript(
             "createInfiniteLoopFunction(${currentLocation.lat},${currentLocation.lng})()",
             null
         )
+        webView?.evaluateJavascript("GetMap(${currentLocation.lat},${currentLocation.lng})", null)
     }
-
     destination?.let { location ->
-        webView?.evaluateJavascript("clearMap(${currentLocation.lat},${currentLocation.lng})", null)
+        webView?.evaluateJavascript("clearMap()", null)
+
         webView?.evaluateJavascript(
             "getDirections(${location.lat},${location.lng})",
             null
