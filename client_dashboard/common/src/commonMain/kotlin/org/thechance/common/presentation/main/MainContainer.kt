@@ -30,9 +30,7 @@ import org.thechance.common.presentation.resources.Resources
 
 object MainContainer :
     BaseScreen<MainScreenModel, MainUiEffect, MainUiState, MainInteractionListener>() {
-
-    private fun readResolve(): Any = MainContainer
-
+    
     @Composable
     override fun Content() {
         Init(getScreenModel())

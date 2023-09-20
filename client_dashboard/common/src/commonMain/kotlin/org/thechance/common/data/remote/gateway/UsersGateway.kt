@@ -20,8 +20,6 @@ import org.thechance.common.domain.getway.IUsersGateway
 
 class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGateway {
 
-    override suspend fun getUserData(): String = "Golden"
-
     override suspend fun getUsers(
         query: String?,
         byPermissions: List<Permission>,
@@ -54,9 +52,9 @@ class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGatewa
         return Pair(result?.accessToken ?: "", result?.refreshToken ?: "")
     }
 
-    override suspend fun deleteUser(id: String): Boolean {
+    override suspend fun deleteUser(userId: String): Boolean {
         return tryToExecute<ServerResponse<Boolean>>(client) {
-            delete(urlString = "/user") { url { appendPathSegments(id) } }
+            delete(urlString = "/user") { url { appendPathSegments(userId) } }
         }.value ?: false
     }
 

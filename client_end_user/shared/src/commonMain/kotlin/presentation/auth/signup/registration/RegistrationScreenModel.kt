@@ -5,8 +5,12 @@ import domain.usecase.validation.IValidationUseCase
 import domain.utils.AuthorizationException
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
+import resources.strings.IStringResources
 
-class RegistrationScreenModel(private val validation: IValidationUseCase) :
+class RegistrationScreenModel(
+    private val validation: IValidationUseCase,
+    private val stringResources: IStringResources
+) :
     BaseScreenModel<RegistrationUIState, RegistrationScreenEffect>(RegistrationUIState()),
     RegistrationInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
@@ -51,14 +55,14 @@ class RegistrationScreenModel(private val validation: IValidationUseCase) :
         } catch (e: AuthorizationException.InvalidUsernameException) {
             updateState {
                 it.copy(
-                    usernameErrorMsg = e.message ?: "Invalid Username",
+                    usernameErrorMsg = e.message ?: stringResources.invalidUsername,
                     isUsernameError = true
                 )
             }
         } catch (e: AuthorizationException.InvalidPasswordException) {
             updateState {
                 it.copy(
-                    passwordErrorMsg = e.message ?: "Invalid Password",
+                    passwordErrorMsg = e.message ?: stringResources.invalidPassword,
                     isPasswordError = true
                 )
             }

@@ -132,15 +132,26 @@ class UserScreenModel(
     override fun onDeleteUserMenuItemClicked(userId: String) {
         tryToExecute(
             callee = { userManagement.deleteUser(userId) },
-            onSuccess = ::onDeleteUserSuccess,
+            onSuccess = { onDeleteUserSuccess(userId) },
             onError = ::onError
         )
 
-        hideEditUserMenu()
     }
 
-    private fun onDeleteUserSuccess(isDeleted: Boolean) {
+    private fun onDeleteUserSuccess(userId: String) {
         updateState { it.copy(isLoading = false) }
+        hideEditUserMenu()
+        val userUiState = mutableState.value.pageInfo.data.find { it.userId == userId }
+        updateState {
+            it.copy(
+                    isLoading = false,
+                    pageInfo = it.pageInfo.copy(
+                            data = it.pageInfo.data.toMutableList().apply {
+                                remove(userUiState)
+                            },
+                    )
+            )
+        }
         getUsers()
     }
 

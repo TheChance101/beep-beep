@@ -63,6 +63,7 @@ class RestaurantFakeGateway : IRestaurantGateway {
             closingTime = restaurant.closingTime,
             rate = 0.0,
             priceLevel = "",
+            ownerUsername = restaurant.ownerUsername
         )
     }
 
