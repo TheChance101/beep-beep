@@ -45,5 +45,7 @@ class OrderScreenModel(private val orderHistoryUseCase: GetOrderHistoryUseCase) 
         // catch errors here
     }
 
-
+    override fun onClickTab(type: OrderScreenUiState.OrderSelectType) {
+        updateState { it.copy(selectedType = type) }
+    }
 }

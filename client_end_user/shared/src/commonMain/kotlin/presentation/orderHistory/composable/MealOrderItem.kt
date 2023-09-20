@@ -1,9 +1,6 @@
 package presentation.orderHistory.composable
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,12 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.orderHistory.OrderHistoryUiState
+import resources.Resources
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
@@ -29,17 +26,17 @@ fun MealOrderItem(
     orders: OrderHistoryUiState,
 ) {
     Column(
-        modifier.fillMaxWidth().background(Theme.colors.background),
+        modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(top = 16.dp, start = 16.dp, end = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
                 modifier = modifier.size(64.dp),
-                painter = painterResource(orders.restaurantImageUrl),
+                painter = painterResource(Resources.images.orderImage),
                 contentDescription = "${orders.restaurantName} image",
                 contentScale = ContentScale.Crop,
             )
@@ -67,14 +64,17 @@ fun MealOrderItem(
                 )
             }
         }
-        orders.meals.forEach { meal ->
-            Text(
-                text = "${meal.quantity} ${meal.mealName},",
-                style = Theme.typography.caption,
-                color = Theme.colors.contentTertiary
-            )
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp, start = 16.dp, end = 16.dp)
+        ) {
+            orders.meals.forEach { meal ->
+                Text(
+                    text = "${meal.quantity} ${meal.mealName}, ",
+                    style = Theme.typography.caption,
+                    color = Theme.colors.contentTertiary
+                )
+            }
         }
 
-        SimpleLine(modifier.fillMaxWidth())
     }
 }

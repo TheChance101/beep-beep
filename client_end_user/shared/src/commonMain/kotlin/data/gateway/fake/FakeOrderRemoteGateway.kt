@@ -48,7 +48,7 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                 id = "order1",
                 userId = "user123",
                 restaurantId = "restaurant456",
-                restaurantName = " Burger king",
+                restaurantName = "Burger king",
                 restaurantImageUrl = "",
                 meals = listOf(
                     Order.Meal(
@@ -89,7 +89,168 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                 createdAt = Clock.System.now().epochSeconds,
                 orderStatus = 4,
                 timeToArriveInMints = 15
-            )
+            ),
+            Order(
+                id = "order1",
+                userId = "user123",
+                restaurantId = "restaurant456",
+                restaurantName = "Kebdaki",
+                restaurantImageUrl = "",
+                meals = listOf(
+                    Order.Meal(
+                        mealId = "meal1",
+                        mealName = "Koshary",
+                        quantity = 2
+                    ),
+                    Order.Meal(
+                        mealId = "meal2",
+                        mealName = "Fries",
+                        quantity = 1
+                    )
+                ),
+                totalPrice = 15.99,
+                createdAt = Clock.System.now().epochSeconds,
+                orderStatus = 4,
+                timeToArriveInMints = 20
+            ),
+            Order(
+                id = "order1",
+                userId = "user123",
+                restaurantId = "restaurant456",
+                restaurantName = "Elza3em",
+                restaurantImageUrl = "",
+                meals = listOf(
+                    Order.Meal(
+                        mealId = "meal1",
+                        mealName = "Cheeseburger",
+                        quantity = 2
+                    ),
+                    Order.Meal(
+                        mealId = "meal2",
+                        mealName = "pizza",
+                        quantity = 3
+                    )
+                ),
+                totalPrice = 15.99,
+                createdAt = Clock.System.now().epochSeconds,
+                orderStatus = 4,
+                timeToArriveInMints = 20
+            ),
+            Order(
+                id = "order1",
+                userId = "user123",
+                restaurantId = "restaurant456",
+                restaurantName = "Burger king",
+                restaurantImageUrl = "",
+                meals = listOf(
+                    Order.Meal(
+                        mealId = "meal1",
+                        mealName = "Cheeseburger",
+                        quantity = 2
+                    ),
+                    Order.Meal(
+                        mealId = "meal2",
+                        mealName = "Fries",
+                        quantity = 1
+                    )
+                ),
+                totalPrice = 15.99,
+                createdAt = Clock.System.now().epochSeconds,
+                orderStatus = 4,
+                timeToArriveInMints = 20
+            ),
+            Order(
+                id = "order1",
+                userId = "user123",
+                restaurantId = "restaurant456",
+                restaurantName = "Burger king",
+                restaurantImageUrl = "",
+                meals = listOf(
+                    Order.Meal(
+                        mealId = "meal1",
+                        mealName = "Cheeseburger",
+                        quantity = 2
+                    ),
+                    Order.Meal(
+                        mealId = "meal2",
+                        mealName = "Fries",
+                        quantity = 1
+                    )
+                ),
+                totalPrice = 15.99,
+                createdAt = Clock.System.now().epochSeconds,
+                orderStatus = 4,
+                timeToArriveInMints = 20
+            ),
+            Order(
+                id = "order1",
+                userId = "user123",
+                restaurantId = "restaurant456",
+                restaurantName = "Burger king",
+                restaurantImageUrl = "",
+                meals = listOf(
+                    Order.Meal(
+                        mealId = "meal1",
+                        mealName = "Cheeseburger",
+                        quantity = 2
+                    ),
+                    Order.Meal(
+                        mealId = "meal2",
+                        mealName = "Fries",
+                        quantity = 1
+                    )
+                ),
+                totalPrice = 15.99,
+                createdAt = Clock.System.now().epochSeconds,
+                orderStatus = 4,
+                timeToArriveInMints = 20
+            ),
+            Order(
+                id = "order1",
+                userId = "user123",
+                restaurantId = "restaurant456",
+                restaurantName = "Burger king",
+                restaurantImageUrl = "",
+                meals = listOf(
+                    Order.Meal(
+                        mealId = "meal1",
+                        mealName = "Cheeseburger",
+                        quantity = 2
+                    ),
+                    Order.Meal(
+                        mealId = "meal2",
+                        mealName = "Fries",
+                        quantity = 1
+                    )
+                ),
+                totalPrice = 15.99,
+                createdAt = Clock.System.now().epochSeconds,
+                orderStatus = 4,
+                timeToArriveInMints = 20
+            ),
+            Order(
+                id = "order1",
+                userId = "user123",
+                restaurantId = "restaurant456",
+                restaurantName = "Burger king",
+                restaurantImageUrl = "",
+                meals = listOf(
+                    Order.Meal(
+                        mealId = "meal1",
+                        mealName = "Cheeseburger",
+                        quantity = 2
+                    ),
+                    Order.Meal(
+                        mealId = "meal2",
+                        mealName = "Fries",
+                        quantity = 1
+                    )
+                ),
+                totalPrice = 15.99,
+                createdAt = Clock.System.now().epochSeconds,
+                orderStatus = 4,
+                timeToArriveInMints = 20
+            ),
         )
     }
 

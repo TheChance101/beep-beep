@@ -1,9 +1,27 @@
 package presentation.orderHistory
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
-import org.koin.core.parameter.ParametersDefinition
+import com.beepbeep.designSystem.ui.composable.BpAnimatedTabLayout
+import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.base.BaseScreen
+import presentation.orderHistory.composable.HorizontalDivider
+import presentation.orderHistory.composable.MealOrderItem
+import util.capitalizeFirstLetter
 
 class OrderScreen :
     BaseScreen<OrderScreenModel, OrderScreenUiState, OrderScreenUiEffect, OrderScreenInteractionListener>() {
@@ -19,6 +37,51 @@ class OrderScreen :
 
     @Composable
     override fun onRender(state: OrderScreenUiState, listener: OrderScreenInteractionListener) {
+        Column(
+            modifier = Modifier.fillMaxSize().background(Theme.colors.background),
+        ) {
+            Text(
+                modifier = Modifier.padding(top = 24.dp, bottom = 16.dp, start = 16.dp),
+                text = "History",
+                style = Theme.typography.headline,
+                color = Theme.colors.contentPrimary
+            )
+            BpAnimatedTabLayout(
+                tabItems = OrderScreenUiState.OrderSelectType.values().toList(),
+                selectedTab = state.selectedType,
+                onTabSelected = { listener.onClickTab(it) },
+                modifier = Modifier.height(40.dp).fillMaxWidth().padding(horizontal = 16.dp),
+                horizontalPadding = 4.dp,
+            ) { type ->
+                Text(
+                    text = type.name.capitalizeFirstLetter(),
+                    style = Theme.typography.titleMedium,
+                    color = animateColorAsState(
+                        if (type == state.selectedType) Theme.colors.onPrimary
+                        else Theme.colors.contentTertiary
+                    ).value,
+                    modifier = Modifier.padding(4.dp)
+                )
+            }
+            LazyColumn(modifier = Modifier.padding(top = 24.dp)) {
+
+                when (state.selectedType) {
+                    OrderScreenUiState.OrderSelectType.MEALS -> {
+                        items(state.ordersHistory) {
+                            MealOrderItem(orders = it)
+                            HorizontalDivider()
+                        }
+                    }
+
+                    OrderScreenUiState.OrderSelectType.TRIPS -> {
+                        items(state.tripsHistory) {
+                            // call trip item
+                        }
+                    }
+                }
+
+            }
+        }
 
     }
 
