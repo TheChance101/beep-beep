@@ -2,6 +2,7 @@ package presentation.home
 
 import domain.entity.InProgressWrapper
 import domain.entity.PriceLevel
+import presentation.cuisines.CuisineUiState
 
 data class HomeScreenUiState(
     val offers: List<OfferUiState> = emptyList(),
@@ -27,17 +28,10 @@ data class OrderUiState(
     val date : String = "Jan 5"
 )
 
-data class CuisineUiState(
-    val cuisineId: String = "",
-    val cuisineName: String = "",
-    val cuisineImageUrl: String = ""
-)
-
 data class OfferUiState(
     val id: String,
     val image: String
 )
-
 
 data class RestaurantUiState(
     val name: String = "",

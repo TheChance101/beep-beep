@@ -42,11 +42,11 @@ import presentation.composable.ImageSlider
 import presentation.composable.ItemSection
 import presentation.composable.SectionHeader
 import presentation.composable.modifier.roundedBorderShape
+import presentation.cuisines.CuisinesScreen
 import presentation.home.composable.CartCard
 import presentation.home.composable.ChatSupportCard
 import presentation.home.composable.CuisineCard
 import presentation.home.composable.OrderCard
-import presentation.search.SearchScreen
 import resources.Resources
 
 class HomeScreen :
@@ -60,7 +60,7 @@ class HomeScreen :
     override fun onEffect(effect: HomeScreenUiEffect, navigator: Navigator) {
         when (effect) {
             is HomeScreenUiEffect.NavigateToCuisineDetails -> println("Cuisine id ${effect.cuisineId}")
-            is HomeScreenUiEffect.NavigateToCuisines -> println("Navigate to Cuisine Screen")
+            is HomeScreenUiEffect.NavigateToCuisines -> navigator.push(CuisinesScreen())
             is HomeScreenUiEffect.NavigateToChatSupport -> println("Navigate to Chat support screen")
             is HomeScreenUiEffect.NavigateToOrderTaxi -> println("Navigate to Order Taxi screen")
             is HomeScreenUiEffect.ScrollDownToRecommendedRestaurants -> println("Scroll down home screen")

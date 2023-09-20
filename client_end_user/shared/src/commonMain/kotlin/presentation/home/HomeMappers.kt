@@ -1,6 +1,5 @@
 package presentation.home
 
-import domain.entity.Cuisine
 import domain.entity.Offer
 import domain.entity.Restaurant
 
@@ -10,17 +9,6 @@ fun Offer.toUiState(): OfferUiState {
         image = image
     )
 }
-
-fun Cuisine.toCuisineUiState(): CuisineUiState {
-    return CuisineUiState(
-        cuisineId = cuisineId,
-        cuisineName = cuisineName,
-        cuisineImageUrl = cuisineImageUrl,
-    )
-}
-
-fun List<Cuisine>.toCuisineUiState() = map { it.toCuisineUiState() }
-
 
 fun Restaurant.toRestaurantUiState(): RestaurantUiState {
     return RestaurantUiState(

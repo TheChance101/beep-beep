@@ -11,6 +11,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
+import presentation.cuisines.CuisineUiState
+import presentation.cuisines.toCuisineUiState
 
 class HomeScreenModel(
     private val cuisineUseCase: IGetCuisinesUseCase,
