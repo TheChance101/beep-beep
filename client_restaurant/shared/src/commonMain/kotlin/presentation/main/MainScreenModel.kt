@@ -11,8 +11,8 @@ import presentation.restaurantSelection.toUiState
 
 class MainScreenModel(
     private val restaurantId: String,
-    private val getOwnerRestaurantsUseCase: IGetRestaurantsUseCase,
-    private val manageOrderUseCase: IManageOrderUseCase
+    private val getOwnerRestaurants: IGetRestaurantsUseCase,
+    private val mangeOrders: IManageOrderUseCase,
 ) : BaseScreenModel<MainScreenUIState, MainScreenUIEffect>(MainScreenUIState()),
     MainScreenInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
@@ -21,6 +21,8 @@ class MainScreenModel(
     init {
         updateState { it.copy(selectedRestaurantId = restaurantId) }
         getData()
+        getOrdersCountByDays()
+        getOrdersRevenueByDaysBefore()
     }
 
     private fun getData() {
@@ -28,18 +30,48 @@ class MainScreenModel(
     }
 
     private suspend fun callee(): List<Restaurant> {
-        val result = manageOrderUseCase.getOrdersRevenueByDaysBefore(restaurantId, 5)
-        println("getOrdersRevenueByDaysBefore: ${result.map { it.first}}")
-        return getOwnerRestaurantsUseCase.getOwnerRestaurants()
+        return getOwnerRestaurants.getOwnerRestaurants()
     }
+
+
+    private fun getOrdersCountByDays() {
+        updateState { it.copy(isLoading = true) }
+        tryToExecute(
+            function = {
+                mangeOrders.getOrdersCountByDaysBefore(restaurantId,7)
+            },
+            ::onGetOrdersCountByDaysSuccessfully,
+            ::onError
+        )
+    }
+    private  fun onGetOrdersCountByDaysSuccessfully(data: List<Pair<String,Double>>){
+        updateState { it.copy( orderUiState = data.toChartsItemUiState("Orders"), isLoading = false) }
+    }
+
+
+    private fun getOrdersRevenueByDaysBefore() {
+        updateState { it.copy(isLoading = true) }
+        tryToExecute(
+            function = {
+                mangeOrders.getOrdersRevenueByDaysBefore(restaurantId,7)
+            },
+            ::onGetOrdersRevenueByDaysBeforeSuccessfully,
+            ::onError
+        )
+    }
+    private  fun onGetOrdersRevenueByDaysBeforeSuccessfully(data: List<Pair<String,Double>>){
+        updateState { it.copy( revenueUiState = data.toChartsItemUiState("Revenue"), isLoading = false) }
+    }
+
 
     private fun onSuccess(restaurants: List<Restaurant>) {
         updateState { it.copy(restaurants = restaurants.toUiState()) }
+
     }
 
     private fun onError(errorState: ErrorState) {
+        updateState { it.copy(error = errorState, isLoading = false) }
     }
-
 
     override fun onClickBack() {
         sendNewEffect(MainScreenUIEffect.Back)

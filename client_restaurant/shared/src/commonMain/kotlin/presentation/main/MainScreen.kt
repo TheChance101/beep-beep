@@ -20,6 +20,12 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
+import com.aay.compose.barChart.BarChart
+import com.aay.compose.barChart.model.BarParameters
+import com.aay.compose.baseComponents.model.LegendPosition
+import com.aay.compose.lineChart.LineChart
+import com.aay.compose.lineChart.model.LineParameters
+import com.aay.compose.lineChart.model.LineType
 import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -37,6 +43,7 @@ import presentation.order.OrderScreen
 import presentation.order.orderHistory.OrdersHistoryScreen
 import presentation.restaurantSelection.RestaurantUIState
 import resources.Resources
+import util.toWeekDay
 
 class MainScreen(private val restaurantId: String) :
     BaseScreen<MainScreenModel, MainScreenUIState, MainScreenUIEffect, MainScreenInteractionListener>() {
@@ -90,7 +97,7 @@ class MainScreen(private val restaurantId: String) :
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         val rowWidth = with(LocalDensity.current) { rowSize.width.toDp() }
-                        val cardSize = if (isPortrait) ((rowWidth / 2 )- 4.dp) else 170.dp
+                        val cardSize = if (isPortrait) ((rowWidth / 2) - 4.dp) else 170.dp
                         OptionCardItem(
                             onClick = listener::onAllMealsCardClicked,
                             title = Resources.strings.allMeals,
@@ -125,14 +132,43 @@ class MainScreen(private val restaurantId: String) :
                 item {
                     ChartItem(
                         imagePainter = painterResource(Resources.images.revenue),
-                        chartItemUiState = state.revenueChart,
-                    )
+                        title = state.orderUiState.label,
+                    ) {
+                        BarChart(
+                            chartParameters = listOf(
+                                BarParameters(
+                                    dataName = state.orderUiState.label,
+                                    data = state.orderUiState.yAxisData,
+                                    barColor = Theme.colors.primary
+                                )
+                            ),
+                            xAxisData = state.orderUiState.xAxisData.toWeekDay(),
+                            legendPosition = LegendPosition.DISAPPEAR,
+                            yAxisRange = 5,
+                            barCornerRadius = 8.dp
+                        )
+                    }
                 }
                 item {
                     ChartItem(
                         imagePainter = painterResource(Resources.images.orders),
-                        chartItemUiState = state.ordersChart,
-                    )
+                        title = state.revenueUiState.label,
+                    ) {
+                        LineChart(
+                            linesParameters = listOf(
+                                LineParameters(
+                                    label = state.revenueUiState.label,
+                                    data = state.revenueUiState.yAxisData,
+                                    lineColor = Theme.colors.primary,
+                                    lineType = LineType.CURVED_LINE,
+                                    lineShadow = true,
+                                )
+                            ),
+                            xAxisData = state.revenueUiState.xAxisData.toWeekDay(),
+                            legendPosition = LegendPosition.DISAPPEAR,
+                            yAxisRange = 5
+                        )
+                    }
                 }
             }
         }
