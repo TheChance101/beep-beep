@@ -67,4 +67,8 @@ interface IStringResources {
     val ridePreferredSubTitle: String
     val quickerRoutesWithHigherCosts: String
     val slowerRoutesWithLowCosts: String
+    val today: String
+    val thisWeek: String
+    val tryAgain: String
+    val trackYourOrder: String
 }

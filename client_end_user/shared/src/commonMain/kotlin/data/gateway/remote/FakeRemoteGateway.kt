@@ -2,8 +2,10 @@ package data.gateway.remote
 
 import data.remote.mapper.toEntity
 import data.remote.model.LocationDto
+import data.remote.model.NotificationDto
 import data.remote.model.OfferDto
 import data.remote.model.RestaurantDto
+import domain.entity.Notification
 import domain.entity.Offer
 import domain.entity.Restaurant
 import domain.entity.User
@@ -21,6 +23,10 @@ class FakeRemoteGateway : IFakeRemoteGateway {
 
     override fun getNewOffers(): List<Offer> {
         return offers.map { it.toEntity() }
+    }
+
+    override suspend fun getNotificationHistory(): List<Notification> {
+        return notifications.map{ it.toEntity() }
     }
 
     private val restaurants = listOf(
@@ -85,5 +91,48 @@ class FakeRemoteGateway : IFakeRemoteGateway {
             "000-0wdwdwdww-d-w-d-wd-dw",
             "https://s3-alpha-sig.figma.com/img/44f7/7fd1/8c37e4958c7caca679d133c2374c85a6?Expires=1695600000&Signature=bQJPGKU2FfZPuIyU2gEXeJV9Ei9XsRe6ytOGcUIz6mbVzv-g1SJ0hCNg1dXHeKaXEvqEAmXHG-KGQTmiGqldgPCfGWw9a0baZWOfSqrcN-2qPxjkBXZiilrDvhn4UyzF5tDsMwArarP~DpNQ0XcZseHKDGBOZFihi-Dbv8DHhS3qPi4uvi5mrGHltMM9KHkZkLLU5NYQOPUUOXo~A2tg1wk1NI7Zd7h2Jh0v3Rn72o~G1e9dpj8Mqxr-4SZYqY8pBvQTdSXHEIx2uqFuBAobbw4Bi2Fzgdf894XMjjebqcm8b9KSh1RNiIN7y4xD0kb1JCcpV~UFc0HwkyNu9PummQ__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
         )
+    )
+
+    private val notifications = listOf(
+        NotificationDto(
+            id = "64f372095fecc11e6d917656",
+            title = "Order is Cancelled",
+            body = "Sorry! Yummies Restaurant have so much load they cancelled your order.",
+            date = 1695047432000,
+            topic = "Order",
+            userId = "64f3663e5ddbc15bfd1efcfa"
+        ),
+        NotificationDto(
+            id = "64f372095fecc11e6d917656",
+            title = "Order is Cancelled",
+            body = "Sorry! Yummies Restaurant have so much load they cancelled your order.",
+            date = 1695070832000,
+            topic = "Order",
+            userId = "64f3663e5ddbc15bfd1efcfa"
+        ),
+        NotificationDto(
+            id = "64f372095fecc11e6d917656",
+            title = "Order is Ready",
+            body = "Your order is on its way!",
+            date = 1694996492000,
+            topic = "Order",
+            userId = "64f3663e5ddbc15bfd1efcfa"
+        ),
+        NotificationDto(
+            id = "64f372095fecc11e6d917656",
+            title = "Cashback 50%",
+            body = "Get 50% cashback for the next order from Restaurant Yummies.",
+            date = 1695032732000,
+            topic = "Order",
+            userId = "64f3663e5ddbc15bfd1efcfa"
+        ),
+        NotificationDto(
+            id = "64f372095fecc11e6d917656",
+            title = "Cashback 50%",
+            body = "Get 50% cashback for the next order from Restaurant Yummies.",
+            date = 1695032732000,
+            topic = "Order",
+            userId = "64f3663e5ddbc15bfd1efcfa"
+        ),
     )
 }

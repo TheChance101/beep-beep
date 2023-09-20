@@ -69,4 +69,8 @@ data class ArabicEG(
     override val ridePreferredSubTitle: String = "ساعدنا في تحسين تجربتك معنا.",
     override val quickerRoutesWithHigherCosts: String = "مسارات أسرع بتكلفة أعلى.",
     override val slowerRoutesWithLowCosts: String = "مسارات أبطأ بتكلفة أقل.",
+    override val today: String = "النهارده",
+    override val thisWeek: String = "الاسبوع ده",
+    override val tryAgain: String = "حاول تاني",
+    override val trackYourOrder: String = "تابع الاوردر",
 ) : IStringResources

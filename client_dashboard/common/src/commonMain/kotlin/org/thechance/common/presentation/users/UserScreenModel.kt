@@ -13,6 +13,7 @@ class UserScreenModel(
     UserScreenInteractionListener {
 
     private var searchJob: Job? = null
+    private var limitJob: Job? = null
 
     init {
         getUsers()
@@ -23,7 +24,8 @@ class UserScreenModel(
     }
 
     private fun getUpdatedPermissions(
-        permissions: List<UserScreenUiState.PermissionUiState>, permissionUiState: UserScreenUiState.PermissionUiState
+        permissions: List<UserScreenUiState.PermissionUiState>,
+        permissionUiState: UserScreenUiState.PermissionUiState
     ): List<UserScreenUiState.PermissionUiState> {
         return if (permissions.contains(permissionUiState)) {
             permissions.filterNot { it == permissionUiState }
@@ -84,6 +86,9 @@ class UserScreenModel(
 
     private fun onSearchUsersSuccessfully(users: DataWrapper<User>) {
         updateState { it.copy(pageInfo = users.toUiState(), isLoading = false) }
+        if (state.value.currentPage > state.value.pageInfo.totalPages) {
+            onPageClick(state.value.pageInfo.totalPages)
+        }
     }
 
     private fun getUsers() {
@@ -116,7 +121,7 @@ class UserScreenModel(
             it.copy(
                 permissionsDialog = it.permissionsDialog.copy(
                     show = true,
-                    username = user.username,
+                    id = user.userId,
                     permissions = user.permissions
                 )
             )
@@ -143,9 +148,9 @@ class UserScreenModel(
 
     // region Permissions Dialog
     override fun onSaveUserPermissionsDialog() {
-        val username = mutableState.value.permissionsDialog.username
+        val userId = mutableState.value.permissionsDialog.id
         val permissions = mutableState.value.permissionsDialog.permissions
-        updateUserPermissions(username, permissions)
+        updateUserPermissions(userId, permissions)
         hideUserPermissionsDialog()
     }
 
@@ -168,19 +173,29 @@ class UserScreenModel(
             it.copy(
                 permissionsDialog = it.permissionsDialog.copy(
                     show = false,
-                    username = "",
                     permissions = emptyList()
                 )
             )
         }
     }
 
-    private fun updateUserPermissions(username: String, permissions: List<UserScreenUiState.PermissionUiState>) {
+    private fun updateUserPermissions(
+        userId: String, permissions: List<UserScreenUiState.PermissionUiState>
+    ) {
+        tryToExecute(
+            { userManagement.updateUserPermissions(userId, permissions.toEntity()) },
+            { onUpdatePermissionsSuccessfully(it.toUiState()) },
+            ::onError
+        )
+    }
+
+    private fun onUpdatePermissionsSuccessfully(user: UserScreenUiState.UserUiState) {
         updateState {
             it.copy(
+                isLoading = false,
                 pageInfo = it.pageInfo.copy(
                     data = it.pageInfo.data.map { userUiState ->
-                        if (userUiState.username == username) userUiState.copy(permissions = permissions)
+                        if (userUiState.userId == user.userId) userUiState.copy(permissions = user.permissions)
                         else userUiState
                     },
                 )
@@ -193,7 +208,12 @@ class UserScreenModel(
     // region Pagination
     override fun onItemsIndicatorChange(itemPerPage: Int) {
         updateState { it.copy(specifiedUsers = itemPerPage) }
-        getUsers()
+        launchLimitJob()
+    }
+
+    private fun launchLimitJob() {
+        limitJob?.cancel()
+        limitJob = launchDelayed(300L) { getUsers() }
     }
 
     override fun onPageClick(pageNumber: Int) {

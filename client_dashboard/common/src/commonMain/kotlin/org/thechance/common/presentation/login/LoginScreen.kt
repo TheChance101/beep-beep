@@ -111,12 +111,6 @@ class LoginScreen :
                         isError = state.isPasswordError.isError,
                         hint = ""
                     )
-                    BpCheckBox(
-                        label = Resources.Strings.loginKeepMeLoggedIn,
-                        isChecked = state.keepLoggedIn,
-                        onCheck = { listener.onKeepLoggedInClicked() },
-                        modifier = Modifier.fillMaxWidth().padding(top = 16.kms)
-                    )
                     BpButton(
                         title = Resources.Strings.loginButton,
                         onClick = { listener.onLoginClicked() },
