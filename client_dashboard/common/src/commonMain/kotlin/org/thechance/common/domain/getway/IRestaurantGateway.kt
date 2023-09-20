@@ -1,6 +1,5 @@
 package org.thechance.common.domain.getway
 
-import org.thechance.common.data.remote.model.CuisineDto
 import org.thechance.common.domain.entity.Cuisine
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.NewRestaurantInfo
@@ -22,8 +21,8 @@ interface IRestaurantGateway {
         pageNumber: Int,
         numberOfRestaurantsInPage: Int,
         restaurantName: String,
-        rating: Double?,
-        priceLevel: String?
+        rating: Double,
+        priceLevel: Int,
     ): DataWrapper<Restaurant>
 
 }
