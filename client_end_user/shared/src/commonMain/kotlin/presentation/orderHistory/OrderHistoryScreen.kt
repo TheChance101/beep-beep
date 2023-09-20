@@ -1,9 +1,7 @@
 package presentation.orderHistory
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,18 +23,18 @@ import presentation.orderHistory.composable.MealOrderItem
 import presentation.orderHistory.composable.TripHistoryItem
 import util.capitalizeFirstLetter
 
-class OrderScreen :
-    BaseScreen<OrderScreenModel, OrderScreenUiState, OrderScreenUiEffect, OrderScreenInteractionListener>() {
+class OrderHistoryScreen :
+    BaseScreen<OrderHistoryScreenModel, OrderScreenUiState, OrderHistoryScreenUiEffect, OrderHistoryScreenInteractionListener>() {
 
     @Composable
     override fun Content() {
         initScreen(getScreenModel())
     }
 
-    override fun onEffect(effect: OrderScreenUiEffect, navigator: Navigator) {}
+    override fun onEffect(effect: OrderHistoryScreenUiEffect, navigator: Navigator) {}
 
     @Composable
-    override fun onRender(state: OrderScreenUiState, listener: OrderScreenInteractionListener) {
+    override fun onRender(state: OrderScreenUiState, listener: OrderHistoryScreenInteractionListener) {
         Column(
             modifier = Modifier.fillMaxSize().background(Theme.colors.background),
         ) {

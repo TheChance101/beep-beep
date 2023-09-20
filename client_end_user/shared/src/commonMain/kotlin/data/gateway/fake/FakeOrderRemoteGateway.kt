@@ -4,7 +4,6 @@ import domain.entity.Location
 import domain.entity.Order
 import domain.entity.Trip
 import domain.gateway.IOrderRemoteGateway
-import kotlinx.datetime.Clock
 
 class FakeOrderRemoteGateway : IOrderRemoteGateway {
     override suspend fun getTripHistory(): List<Trip> {

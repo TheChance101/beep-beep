@@ -33,7 +33,8 @@ fun TripHistoryItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                tripState.endDate,
+                text = "16 Dec 2022, 20:30",
+//              text = tripState.endDate,
                 style = Theme.typography.title,
                 color = Theme.colors.contentPrimary
             )
@@ -66,7 +67,7 @@ fun TripHistoryItem(
             Icon(
                 modifier = Modifier.fillMaxHeight().width(24.dp),
                 painter = painterResource(Resources.images.transferIcon),
-                contentDescription = "icon trip location transfer",
+                contentDescription = "",
                 tint = Theme.colors.primary
             )
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {

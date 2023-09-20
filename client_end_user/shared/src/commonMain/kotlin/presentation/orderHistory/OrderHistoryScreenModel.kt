@@ -6,9 +6,9 @@ import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
-class OrderScreenModel(private val orderHistoryUseCase: GetOrderHistoryUseCase) :
-    BaseScreenModel<OrderScreenUiState, OrderScreenUiEffect>(OrderScreenUiState()),
-    OrderScreenInteractionListener {
+class OrderHistoryScreenModel(private val orderHistoryUseCase: GetOrderHistoryUseCase) :
+    BaseScreenModel<OrderScreenUiState, OrderHistoryScreenUiEffect>(OrderScreenUiState()),
+    OrderHistoryScreenInteractionListener {
 
     override val viewModelScope: CoroutineScope = coroutineScope
 
