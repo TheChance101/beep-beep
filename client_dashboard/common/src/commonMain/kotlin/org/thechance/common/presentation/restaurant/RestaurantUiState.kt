@@ -59,20 +59,20 @@ fun List<Restaurant>.toUiState() = map(Restaurant::toUiState)
 
 data class NewRestaurantInfoUiState(
     val name: String = "",
-    val nameError: ErrorWrapper = ErrorWrapper(),
+    val nameError: ErrorWrapper? = null,
     val ownerUsername: String = "",
-    val userNameError: ErrorWrapper = ErrorWrapper(),
+    val userNameError: ErrorWrapper? = null,
     val phoneNumber: String = "",
-    val phoneNumberError: ErrorWrapper = ErrorWrapper(),
+    val phoneNumberError: ErrorWrapper? = null,
     val openingTime: String = "",
-    val startTimeError: ErrorWrapper = ErrorWrapper(),
+    val startTimeError: ErrorWrapper? = null,
     val closingTime: String = "",
-    val endTimeError: ErrorWrapper = ErrorWrapper(),
+    val endTimeError: ErrorWrapper? = null,
     val location: String = "",
-    val locationError: ErrorWrapper = ErrorWrapper(),
+    val locationError: ErrorWrapper? = null,
     val lat: String = "",
     val lng: String = "",
-    val buttonEnabled: Boolean = false
+    val buttonEnabled: Boolean = true
 )
 
 fun NewRestaurantInfoUiState.toEntity() = NewRestaurantInfo(
