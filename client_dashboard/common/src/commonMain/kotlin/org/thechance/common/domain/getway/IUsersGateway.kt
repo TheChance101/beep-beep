@@ -6,8 +6,6 @@ import org.thechance.common.domain.entity.User
 
 interface IUsersGateway {
 
-    suspend fun getUserData(): String
-
     suspend fun getUsers(
         query: String?,
         byPermissions: List<Permission>,
@@ -21,5 +19,7 @@ interface IUsersGateway {
     suspend fun deleteUser(userId: String): Boolean
 
     suspend fun getLastRegisteredUsers(limit : Int): List<User>
+
+    suspend fun updateUserPermissions(userId: String, permissions: List<Permission>): User
 
 }

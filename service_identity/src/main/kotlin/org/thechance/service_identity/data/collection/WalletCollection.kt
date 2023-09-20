@@ -16,6 +16,7 @@ data class WalletCollection(
     @Contextual
     val userId: ObjectId,
     val walletBalance: Double = 0.0,
+    val currency: String = "",
     val isDeleted: Boolean = false
 )
 

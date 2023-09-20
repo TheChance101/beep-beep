@@ -1,6 +1,7 @@
 package org.thechance.service_restaurant.domain.usecase
 
 import org.thechance.service_restaurant.domain.entity.Restaurant
+import org.thechance.service_restaurant.domain.entity.RestaurantOptions
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.usecase.validation.IRestaurantValidationUseCase
 import org.thechance.service_restaurant.domain.utils.IValidation
@@ -11,7 +12,7 @@ import org.thechance.service_restaurant.domain.utils.getCurrencyForLocation
 
 interface IControlRestaurantsUseCase {
     suspend fun createRestaurant(restaurant: Restaurant): Restaurant
-    suspend fun getAllRestaurants(page: Int, limit: Int): List<Restaurant>
+    suspend fun getAllRestaurants(restaurantOptions: RestaurantOptions): List<Restaurant>
     suspend fun updateRestaurant(restaurant: Restaurant): Restaurant
     suspend fun deleteRestaurant(restaurantId: String): Boolean
     suspend fun getTotalNumberOfRestaurant(): Long
@@ -30,9 +31,11 @@ class ControlRestaurantsUseCase(
         return restaurantGateway.addRestaurant(newRestaurant)
     }
 
-    override suspend fun getAllRestaurants(page: Int, limit: Int): List<Restaurant> {
-        basicValidation.validatePagination(page, limit)
-        return restaurantGateway.getRestaurants(page, limit)
+    override suspend fun getAllRestaurants(restaurantOptions: RestaurantOptions): List<Restaurant> {
+        basicValidation.validatePagination(restaurantOptions.page, restaurantOptions.limit)
+        restaurantOptions.priceLevel?.let { basicValidation.isValidatePriceLevel(it) }
+        restaurantOptions.rating?.let { basicValidation.isValidRate(it) }
+        return restaurantGateway.getRestaurants(restaurantOptions)
     }
 
     override suspend fun updateRestaurant(restaurant: Restaurant): Restaurant {

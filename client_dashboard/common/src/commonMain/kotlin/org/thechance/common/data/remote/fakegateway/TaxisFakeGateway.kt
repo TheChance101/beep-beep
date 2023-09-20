@@ -1,5 +1,10 @@
 package org.thechance.common.data.remote.fakegateway
 
+import org.apache.pdfbox.pdmodel.PDDocument
+import org.apache.pdfbox.pdmodel.PDPage
+import org.apache.pdfbox.pdmodel.PDPageContentStream
+import org.apache.pdfbox.pdmodel.common.PDRectangle
+import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.DataWrapperDto
@@ -10,10 +15,17 @@ import org.thechance.common.domain.entity.NewTaxiInfo
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.entity.TaxiFiltration
 import org.thechance.common.domain.getway.ITaxisGateway
+import java.io.File
+import java.text.SimpleDateFormat
+import org.thechance.common.domain.util.NotFoundException
 import java.util.*
 import kotlin.math.ceil
 
 class TaxisFakeGateway : ITaxisGateway {
+
+    override suspend fun getPdfTaxiReport() {
+        createTaxiPDFReport()
+    }
 
     override suspend fun getTaxis(
         username: String?,
@@ -66,17 +78,16 @@ class TaxisFakeGateway : ITaxisGateway {
                 color = taxiDto.color.toLong(),
                 seats = taxiDto.seats,
                 type = taxiDto.type,
-                username = taxiDto.driverId,
+                driverUsername = taxiDto.driverUsername,
                 isAvailable = false,
                 trips = "0",
-                driverId = taxiDto.driverId
             )
         )
         return taxis.last().toEntity()
     }
 
-    override suspend fun updateTaxi(taxi: NewTaxiInfo): Taxi {
-        val indexToUpdate = taxis.indexOfFirst { it.driverId == taxi.driverUserName }
+    override suspend fun updateTaxi(taxi: NewTaxiInfo,taxiId: String): Taxi {
+        val indexToUpdate = taxis.indexOfFirst { it.driverUsername == taxi.driverUserName }
         val newTaxi = taxi.toDto()
         return if (indexToUpdate != -1) {
             val oldTaxi = taxis[indexToUpdate]
@@ -86,7 +97,7 @@ class TaxisFakeGateway : ITaxisGateway {
                 color = newTaxi.color.toLong(),
                 type = newTaxi.type,
                 seats = newTaxi.seats,
-                username = newTaxi.driverId,
+                driverUsername = newTaxi.driverUsername,
                 trips = oldTaxi.trips,
                 isAvailable = oldTaxi.isAvailable,
                 driverId = oldTaxi.driverId
@@ -99,13 +110,14 @@ class TaxisFakeGateway : ITaxisGateway {
         }
     }
 
-    override suspend fun deleteTaxi(taxiId: String): Boolean {
+    override suspend fun deleteTaxi(taxiId: String): Taxi {
         val indexToUpdate = taxis.indexOfFirst { it.id == taxiId }
-        return if (indexToUpdate != -1) {
+        if (indexToUpdate != -1) {
+            val taxi = taxis[indexToUpdate].toEntity()
             taxis.removeAt(indexToUpdate)
-            true
+            return taxi
         } else {
-            throw Exception("Taxi not found")
+            throw NotFoundException("Taxi not found")
         }
     }
 
@@ -121,7 +133,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 1,
             seats = 4,
             isAvailable = true,
-            username = "john_doe",
+            driverUsername = "john_doe",
             trips = "10",
             driverId = "DRIVER_ID",
         ),
@@ -131,7 +143,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 2,
             type = "SUV",
             seats = 6,
-            username = "jane_doe",
+            driverUsername = "jane_doe",
             isAvailable = true,
             trips = "5",
             driverId = "DRIVER_ID"
@@ -142,7 +154,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 3,
             type = "Hatchback",
             seats = 4,
-            username = "james_smith",
+            driverUsername = "james_smith",
             isAvailable = true,
             trips = "2",
             driverId = "DRIVER_ID"
@@ -153,7 +165,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 4,
             type = "Minivan",
             seats = 6,
-            username = "mary_johnson",
+            driverUsername = "mary_johnson",
             isAvailable = true,
             trips = "15",
             driverId = "DRIVER_ID"
@@ -164,7 +176,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 1,
             type = "Convertible",
             seats = 4,
-            username = "robert_white",
+            driverUsername = "robert_white",
             isAvailable = true,
             trips = "3",
             driverId = "DRIVER_ID"
@@ -175,7 +187,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 2,
             type = "Sedan",
             seats = 4,
-            username = "linda_miller",
+            driverUsername = "linda_miller",
             isAvailable = true,
             trips = "7",
             driverId = "DRIVER_ID"
@@ -186,7 +198,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 3,
             type = "Hatchback",
             seats = 4,
-            username = "david_jones",
+            driverUsername = "david_jones",
             isAvailable = true,
             trips = "12",
             driverId = "DRIVER_ID"
@@ -197,7 +209,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 4,
             type = "Minivan",
             seats = 2,
-            username = "susan_anderson",
+            driverUsername = "susan_anderson",
             isAvailable = true,
             trips = "9",
             driverId = " DRIVER_ID"
@@ -209,7 +221,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 1,
             seats = 4,
             isAvailable = false,
-            username = "Asia",
+            driverUsername = "Asia",
             trips = "10",
             driverId = "DRIVER_ID"
         ),
@@ -220,7 +232,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 1,
             seats = 4,
             isAvailable = false,
-            username = "Safi",
+            driverUsername = "Safi",
             trips = "10",
             driverId = "DRIVER_ID"
         ),
@@ -231,7 +243,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 1,
             seats = 4,
             isAvailable = false,
-            username = "Mujtaba",
+            driverUsername = "Mujtaba",
             trips = "10",
             driverId = "DRIVER_ID"
         ),
@@ -242,7 +254,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 1,
             seats = 4,
             isAvailable = false,
-            username = "Krrar",
+            driverUsername = "Krrar",
             trips = "10",
             driverId = "DRIVER_ID"
         ),
@@ -253,7 +265,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 1,
             seats = 4,
             isAvailable = false,
-            username = "Aya",
+            driverUsername = "Aya",
             trips = "10",
             driverId = "DRIVER_ID"
         ),
@@ -264,7 +276,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 1,
             seats = 4,
             isAvailable = false,
-            username = "Kamel",
+            driverUsername = "Kamel",
             trips = "10",
             driverId = "DRIVER_ID"
         ),
@@ -275,7 +287,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 2,
             seats = 4,
             isAvailable = false,
-            username = "Kamel",
+            driverUsername = "Kamel",
             trips = "10",
             driverId = "DRIVER_ID"
         ),
@@ -286,7 +298,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 2,
             seats = 5,
             isAvailable = false,
-            username = "Kamel",
+            driverUsername = "Kamel",
             trips = "10",
             driverId = "DRIVER_ID"
         ),
@@ -297,7 +309,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 2,
             seats = 4,
             isAvailable = false,
-            username = "Kamel",
+            driverUsername = "Kamel",
             trips = "10",
             driverId = "DRIVER_ID"
         ),
@@ -308,7 +320,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 2,
             seats = 4,
             isAvailable = true,
-            username = "Kamel",
+            driverUsername = "Kamel",
             trips = "10",
             driverId = "DRIVER_ID"
         ),
@@ -319,7 +331,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 5,
             seats = 5,
             isAvailable = true,
-            username = "Kamel",
+            driverUsername = "Kamel",
             trips = "10",
             driverId = "DRIVER_ID"
         ),
@@ -330,7 +342,7 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 4,
             seats = 4,
             isAvailable = true,
-            username = "Kamel",
+            driverUsername = "Kamel",
             trips = "10",
             driverId = "DRIVER_ID"
         ),
@@ -341,10 +353,190 @@ class TaxisFakeGateway : ITaxisGateway {
             color = 5,
             seats = 4,
             isAvailable = true,
-            username = "Kamel",
+            driverUsername = "Kamel",
             trips = "10",
             driverId = "DRIVER_ID"
         ),
     )
+
+    private fun createTaxiPDFReport(): File {
+        val title = "Taxi Details Report"
+        val columnNames = listOf(
+                "Taxi ID",
+                "Username",
+                "Plate Number",
+                "Model",
+                "Color",
+                "Seats",
+                "Status",
+                "Trips"
+        )
+        val columnWidth = listOf(50f, 80f, 80f, 80f, 80f, 80f, 80f, 50f)
+
+        val file = createPDFReport(title, taxis, columnNames, columnWidth) { taxi ->
+            listOf(
+                    taxi.id.toString(), taxi.driverUsername, taxi.plateNumber, taxi.type, taxi.color,
+                    taxi.seats, taxi.isAvailable.toString(), taxi.trips.toString()
+            ).map { it ?: "" }
+        }
+        return file
+    }
+
+    private fun <T> createPDFReport(
+        title: String,
+        dataList: List<T>,
+        columnNames: List<String>,
+        colWidths: List<Float>,
+        dataExtractor: (T) -> List<Any>,
+    ): File {
+        try {
+            //region Create PDF document
+            val document = PDDocument()
+            val page = PDPage(PDRectangle.A4)
+            document.addPage(page)
+            val contentStream = PDPageContentStream(document, page)
+
+            val pageWidth = page.trimBox.width
+            val pageHeight = page.trimBox.height
+
+            val startX = 10f
+            val cellHeight = 30f
+            //endregion
+            val titleY = titleContent(contentStream, title, pageWidth, pageHeight)
+            val dateTimeY = dateContent(contentStream, pageWidth, titleY)
+            val (currentX, currentY) = headerContent(
+                    contentStream,
+                    startX,
+                    dateTimeY,
+                    cellHeight,
+                    columnNames,
+                    colWidths
+            )
+            tableContent(
+                    currentY,
+                    contentStream,
+                    dataList,
+                    cellHeight,
+                    currentX,
+                    startX,
+                    colWidths,
+                    dataExtractor
+            )
+            contentStream.close()
+            val pdfFilePath = "${System.getProperty("user.home")}/Downloads/$title.pdf"
+            val pdfFile = File(pdfFilePath)
+            document.save(pdfFile)
+            document.close()
+            return pdfFile
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return File("")
+        }
+    }
+
+    private fun <T> tableContent(
+        currentY: Float,
+        contentStream: PDPageContentStream,
+        dataList: List<T>,
+        cellHeight: Float,
+        currentX: Float,
+        startX: Float,
+        colWidths: List<Float>,
+        dataExtractor: (T) -> List<Any>,
+    ) {
+        // Draw table content
+        // Add space between header and table content
+        var currentY = currentY
+        var currentX = currentX
+        val contentTopMargin = 30f // Add the desired space
+        currentY -= contentTopMargin
+        contentStream.setFont(PDType1Font.HELVETICA, 12f)
+        for ((rowIndex, item) in dataList.withIndex()) {
+            currentY -= cellHeight // Move down for the next row
+            currentX = startX
+
+            val rowData = dataExtractor(item)
+
+            for ((index, cellData) in rowData.withIndex()) {
+                contentStream.beginText()
+                val textWidth =
+                    PDType1Font.HELVETICA.getStringWidth(cellData.toString()) / 1000 * 12f
+                val textX = currentX + (colWidths[index] - textWidth) / 2
+                val textY = currentY + 20f
+                contentStream.newLineAtOffset(textX, textY)
+                contentStream.showText(cellData.toString())
+                contentStream.endText()
+
+                currentX += colWidths[index]
+            }
+        }
+    }
+
+    private fun titleContent(
+        contentStream: PDPageContentStream,
+        title: String,
+        pageWidth: Float,
+        pageHeight: Float,
+    ): Float {
+        contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16f)
+        contentStream.beginText()
+        val titleWidth = PDType1Font.HELVETICA_BOLD.getStringWidth(title) / 1000 * 16f
+        val titleX = pageWidth / 2 - titleWidth / 2
+        val titleY = pageHeight - 30f
+        contentStream.newLineAtOffset(titleX, titleY)
+        contentStream.showText(title)
+        contentStream.endText()
+        return titleY
+    }
+
+    private fun dateContent(
+        contentStream: PDPageContentStream,
+        pageWidth: Float,
+        titleY: Float,
+    ): Float {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        val dateTime = dateFormat.format(Date())
+        contentStream.setFont(PDType1Font.HELVETICA, 11f)
+
+        contentStream.beginText()
+        val dateTimeWidth = PDType1Font.HELVETICA.getStringWidth(dateTime) / 1000 * 12f
+        val pageMidX = pageWidth / 2 // Place the text in the center of the page
+        val dateTimeX = pageMidX - dateTimeWidth / 2 // Place the text in the center horizontally
+        val dateTimeTopMargin = 10f // Add space between date/time and title
+        val dateTimeY = titleY - 20f - dateTimeTopMargin // Adjust the value to add more space
+        contentStream.newLineAtOffset(dateTimeX, dateTimeY)
+        contentStream.showText(dateTime)
+        contentStream.endText()
+        return dateTimeY
+    }
+
+    private fun headerContent(
+        contentStream: PDPageContentStream,
+        startX: Float,
+        dateTimeY: Float,
+        cellHeight: Float,
+        columnNames: List<String>,
+        colWidths: List<Float>,
+    ): Pair<Float, Float> {
+        // region Draw header row
+        contentStream.setFont(PDType1Font.HELVETICA_BOLD, 11f)
+        var currentX = startX
+        val headerTopMargin = 20f // Add space between title/date
+        val headerY = dateTimeY - headerTopMargin - cellHeight
+        var currentY = headerY
+        val columnWidth = columnNames.size
+        for ((index, columnName) in columnNames.withIndex()) {
+            contentStream.beginText()
+            val textWidth = PDType1Font.HELVETICA_BOLD.getStringWidth(columnName) / 1000 * 12f
+            val textX = currentX + (colWidths[index] - textWidth) / 2
+            val textY = currentY - cellHeight + 20f
+            contentStream.newLineAtOffset(textX, textY)
+            contentStream.showText(columnName)
+            contentStream.endText()
+            currentX += colWidths[index]
+        }
+        return Pair(currentX, currentY)
+    }
+
 
 }

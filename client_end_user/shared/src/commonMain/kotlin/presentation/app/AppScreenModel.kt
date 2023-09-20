@@ -8,9 +8,13 @@ import kotlinx.coroutines.withContext
 
 class AppScreenModel(private val manageUser: IManageUserUseCase) : ScreenModel {
 
+    suspend fun getUserLanguageCode(): String {
+        return withContext(Dispatchers.IO) {
+            manageUser.getUserLanguageCode()
+        }
+    }
 
-
-     suspend fun getInitScreen(): Boolean {
+    suspend fun getInitScreen(): Boolean {
         return withContext(Dispatchers.IO) {
             val isFirstTimeOpenApp = manageUser.getIsFirstTimeUseApp()
 

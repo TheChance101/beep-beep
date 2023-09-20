@@ -1,7 +1,5 @@
 package org.thechance.common.presentation.restaurant
 
-import org.thechance.common.data.remote.model.Location
-import org.thechance.common.data.remote.model.RestaurantCreateDto
 import org.thechance.common.domain.entity.NewRestaurantInfo
 import org.thechance.common.domain.entity.Restaurant
 
@@ -9,7 +7,7 @@ fun Restaurant.toUiState(): RestaurantUiState.RestaurantDetailsUiState =
     RestaurantUiState.RestaurantDetailsUiState(
         id = id,
         name = name,
-        ownerUsername = ownerId,
+        ownerUsername = ownerUsername,
         phone = phone,
         rate = rate,
         priceLevel = priceLevel,
@@ -28,19 +26,3 @@ fun NewRestaurantInfoUiState.toEntity() = NewRestaurantInfo(
     openingTime = openingTime,
     closingTime = closingTime,
 )
-
-fun NewRestaurantInfo.toDto(): RestaurantCreateDto {
-    val result = RestaurantCreateDto(
-        name = name,
-        username = ownerUsername,
-        openingTime = openingTime,
-        closingTime = closingTime,
-        phone = phoneNumber,
-        location = Location(
-            latitude = location.split(",")[0].toDouble(),
-            longitude = location.split(",")[1].toDouble()
-        )
-    )
-    println(result.toString())
-    return result
-}
