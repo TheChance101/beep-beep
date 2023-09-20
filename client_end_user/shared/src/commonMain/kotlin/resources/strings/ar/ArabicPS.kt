@@ -73,4 +73,5 @@ data class ArabicPS(
     override val thisWeek: String = "هاد الأسبوع",
     override val tryAgain: String = "حاول تاني",
     override val trackYourOrder: String = "تابع طلبك",
+    override val history: String = "سجل الطلبات"
 ) : IStringResources

@@ -63,7 +63,7 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                     )
                 ),
                 totalPrice = 15.99,
-                createdAt = Clock.System.now().epochSeconds,
+                createdAt = 5489897989474,
                 orderStatus = 4,
                 timeToArriveInMints = 20
             ),
@@ -86,7 +86,7 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                     )
                 ),
                 totalPrice = 22.50,
-                createdAt = Clock.System.now().epochSeconds,
+                createdAt = 564844874874,
                 orderStatus = 4,
                 timeToArriveInMints = 15
             ),
@@ -109,7 +109,7 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                     )
                 ),
                 totalPrice = 15.99,
-                createdAt = Clock.System.now().epochSeconds,
+                createdAt = 9685989874,
                 orderStatus = 4,
                 timeToArriveInMints = 20
             ),
@@ -132,7 +132,7 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                     )
                 ),
                 totalPrice = 15.99,
-                createdAt = Clock.System.now().epochSeconds,
+                createdAt = 54748979565,
                 orderStatus = 4,
                 timeToArriveInMints = 20
             ),
@@ -155,7 +155,7 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                     )
                 ),
                 totalPrice = 15.99,
-                createdAt = Clock.System.now().epochSeconds,
+                createdAt = 89890544485,
                 orderStatus = 4,
                 timeToArriveInMints = 20
             ),
@@ -178,7 +178,7 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                     )
                 ),
                 totalPrice = 15.99,
-                createdAt = Clock.System.now().epochSeconds,
+                createdAt = 54861256747,
                 orderStatus = 4,
                 timeToArriveInMints = 20
             ),
@@ -201,7 +201,7 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                     )
                 ),
                 totalPrice = 15.99,
-                createdAt = Clock.System.now().epochSeconds,
+                createdAt = 42512544644545,
                 orderStatus = 4,
                 timeToArriveInMints = 20
             ),
@@ -224,7 +224,7 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                     )
                 ),
                 totalPrice = 15.99,
-                createdAt = Clock.System.now().epochSeconds,
+                createdAt = 54578787894847,
                 orderStatus = 4,
                 timeToArriveInMints = 20
             ),
@@ -247,7 +247,7 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                     )
                 ),
                 totalPrice = 15.99,
-                createdAt = Clock.System.now().epochSeconds,
+                createdAt = 845845415444545,
                 orderStatus = 4,
                 timeToArriveInMints = 20
             ),

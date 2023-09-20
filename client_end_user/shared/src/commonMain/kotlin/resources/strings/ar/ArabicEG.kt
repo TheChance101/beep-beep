@@ -73,4 +73,5 @@ data class ArabicEG(
     override val thisWeek: String = "الاسبوع ده",
     override val tryAgain: String = "حاول تاني",
     override val trackYourOrder: String = "تابع الاوردر",
+    override val history: String = "سجل الطلبات"
 ) : IStringResources

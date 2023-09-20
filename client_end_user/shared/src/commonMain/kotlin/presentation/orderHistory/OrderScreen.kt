@@ -5,6 +5,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,6 +22,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.base.BaseScreen
 import presentation.orderHistory.composable.HorizontalDivider
 import presentation.orderHistory.composable.MealOrderItem
+import presentation.orderHistory.composable.TripHistoryItem
 import util.capitalizeFirstLetter
 
 class OrderScreen :
@@ -31,9 +33,7 @@ class OrderScreen :
         initScreen(getScreenModel())
     }
 
-    override fun onEffect(effect: OrderScreenUiEffect, navigator: Navigator) {
-
-    }
+    override fun onEffect(effect: OrderScreenUiEffect, navigator: Navigator) {}
 
     @Composable
     override fun onRender(state: OrderScreenUiState, listener: OrderScreenInteractionListener) {
@@ -63,7 +63,10 @@ class OrderScreen :
                     modifier = Modifier.padding(4.dp)
                 )
             }
-            LazyColumn(modifier = Modifier.padding(top = 24.dp)) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(vertical = 24.dp)
+            ) {
 
                 when (state.selectedType) {
                     OrderScreenUiState.OrderSelectType.MEALS -> {
@@ -75,7 +78,8 @@ class OrderScreen :
 
                     OrderScreenUiState.OrderSelectType.TRIPS -> {
                         items(state.tripsHistory) {
-                            // call trip item
+                            TripHistoryItem(it)
+                            HorizontalDivider()
                         }
                     }
                 }
