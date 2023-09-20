@@ -50,7 +50,7 @@ class LoginScreen :
         navigator: Navigator,
     ) {
         when (effect) {
-            is LoginScreenUIEffect.LoginEffect -> navigator.push(MainScreen())
+            is LoginScreenUIEffect.LoginEffect -> navigator.replace(MainScreen())
             LoginScreenUIEffect.LoginUIFailed -> {/* TODO: add failed login effect*/
             }
         }
@@ -204,7 +204,7 @@ private fun CardHeader(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PermissionBottomSheetContent(
-    listener: LoginScreenInteractionListener,
+    listener: LoginScreenBottomSheetInteractionListener,
     modifier: Modifier = Modifier,
     state: LoginScreenUIState
 ) {
@@ -262,7 +262,7 @@ fun PermissionBottomSheetContent(
 @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun WrongPermissionBottomSheet(
-    listener: LoginScreenInteractionListener,
+    listener: LoginScreenBottomSheetInteractionListener,
     modifier: Modifier = Modifier
 ) {
     Column(

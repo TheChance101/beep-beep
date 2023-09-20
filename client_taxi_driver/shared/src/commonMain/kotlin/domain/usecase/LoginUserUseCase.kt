@@ -1,7 +1,6 @@
 package domain.usecase
 
-import domain.InvalidPasswordException
-import domain.InvalidUserNameException
+import domain.*
 import domain.gateway.local.ILocalConfigurationGateway
 import domain.gateway.remote.IIdentityRemoteGateway
 
@@ -16,8 +15,8 @@ interface ILoginUserUseCase {
     suspend fun getKeepMeLoggedInFlag(): Boolean
 
     suspend fun requestPermission(
-        restaurantName: String,
-        ownerEmail: String,
+        driverFullName: String,
+        driverEmail: String,
         description: String
     ): Boolean
 }
@@ -45,21 +44,33 @@ class LoginUserUseCase(
     }
 
     override suspend fun requestPermission(
-        restaurantName: String, ownerEmail: String, description: String
+        driverFullName: String, driverEmail: String, description: String
     ): Boolean {
-        return remoteGateway.createRequestPermission(
-            restaurantName,
-            ownerEmail,
-            description
-        )
+        return if (validatePermissionFields(driverFullName, driverEmail, description)) {
+             remoteGateway.createRequestPermission(
+                driverFullName,
+                driverEmail,
+                description
+            )
+        } else false
     }
 
 
     private fun validateLoginFields(username: String, password: String): Boolean {
-        if (username.isEmpty()) {
+        if (username.isBlank()) {
             throw InvalidUserNameException("")
-        } else if (password.isEmpty()) {
+        } else if (password.isBlank()) {
             throw InvalidPasswordException("")
+        } else return true
+    }
+
+    private fun validatePermissionFields(driverFullName: String, driverEmail: String, description: String): Boolean {
+        if (driverFullName.isBlank()) {
+            throw InvalidDriverNameException("")
+        } else if (driverEmail.isBlank()) {
+            throw InvalidDriverEmailException("")
+        } else if (description.isBlank()) {
+            throw InvalidDescriptionException("")
         } else return true
     }
 

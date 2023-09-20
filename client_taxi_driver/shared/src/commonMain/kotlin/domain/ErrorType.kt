@@ -24,3 +24,9 @@ class InvalidCredentialsException(message: String) : BpException(message)
 class InvalidUserNameException(private val errorMessage: String) : BpException(errorMessage)
 
 class InvalidPasswordException(private val errorMessage: String) : BpException(errorMessage)
+
+class InvalidDriverNameException(private val errorMessage: String) : BpException(errorMessage)
+
+class InvalidDriverEmailException(private val errorMessage: String) : BpException(errorMessage)
+
+class InvalidDescriptionException(private val errorMessage: String) : BpException(errorMessage)

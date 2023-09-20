@@ -2,14 +2,14 @@ package presentation.login
 
 import presentation.base.BaseInteractionListener
 
-interface LoginScreenInteractionListener : BaseInteractionListener {
-    //login
+interface LoginScreenInteractionListener : BaseInteractionListener, LoginScreenBottomSheetInteractionListener {
     fun onUsernameChanged(username: String)
     fun onPasswordChanged(password: String)
     fun onKeepLoggedInClicked()
     fun onClickLogin(userName: String, password: String, isKeepMeLoggedInChecked: Boolean)
 
-    //permission will move
+}
+interface LoginScreenBottomSheetInteractionListener{
     fun onOwnerEmailChanged(ownerEmail: String)
     fun onDriverFullNameChanged(driverFullName: String)
     fun onDescriptionChanged(description: String)
