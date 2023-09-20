@@ -56,7 +56,9 @@ actual fun MapView(modifier: Modifier) {
             }
         }
     ) {
-        it.loadUrl("File:///android_asset/bing_map/map/index.html")
+        it.loadUrl(MAP_URL)
     }
 
 }
+
+private const val MAP_URL = "File:///android_asset/bing_map/map/index2.html"

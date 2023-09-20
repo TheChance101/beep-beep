@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,700" rel="stylesheet">
+    <link rel="icon" type="image/png" href="logo-respircov.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+
+    <script>
+    var map, watchId, userPin, directionsManager, routePath;
+
+    function GetMap() {
+        map = new Microsoft.Maps.Map('#myMap', {});
+
+        //Load the directions and spatial math modules.
+        Microsoft.Maps.loadModule(['Microsoft.Maps.Directions'], function () {
+            //Create an instance of the directions manager.
+            directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
+
+            //Define direciton options that you want to use, that won't be reset the next time a route is calculated.
+
+            //Set the request options that avoid highways and uses kilometers.
+            directionsManager.setRequestOptions({
+                distanceUnit: Microsoft.Maps.Directions.DistanceUnit.km,
+                routeAvoidance: [Microsoft.Maps.Directions.RouteAvoidance.avoidLimitedAccessHighway]
+            });
+
+            //Make the route line thick and green.
+            directionsManager.setRenderOptions({
+                drivingPolylineOptions: {
+                    strokeColor: 'green',
+                    strokeThickness: 6
+                }
+            });
+
+            Microsoft.Maps.Events.addHandler(directionsManager, 'directionsUpdated', directionsUpdated);
+        });
+    }
+
+    function startTracking() {
+        //Add a pushpin to show the user's location.
+        userPin = new Microsoft.Maps.Pushpin(map.getCenter(), { visible: false });
+        map.entities.push(userPin);
+
+        //Watch the users location.
+        watchId = navigator.geolocation.watchPosition(usersLocationUpdated);
+    }
+
+    function usersLocationUpdated(position) {
+        var loc = new Microsoft.Maps.Location(
+            position.coords.latitude,
+            position.coords.longitude);
+
+        //Update the user pushpin.
+        userPin.setLocation(loc);
+        userPin.setOptions({ visible: true });
+
+        //Center the map on the user's location.
+        map.setView({ center: loc });
+
+        //Calculate a new route if one hasn't been calculated or if the users current location is further than 50 meters from the current route.
+        if (!routePath || Microsoft.Maps.SpatialMath.distance(loc, routePath) > 50) {
+            calculateRoute(loc, document.getElementById('detinationTbx').value);
+        }
+    }
+
+    function stopTracking() {
+        // Cancel the geolocation updates.
+        navigator.geolocation.clearWatch(watchId);
+
+        //Remove the user pushpin.
+        map.entities.clear();
+        clearDirections();
+    }
+
+    function calculateRoute(userLocation, destination) {
+        clearDirections();
+
+        //Create waypoints to route between.
+        directionsManager.addWaypoint(new Microsoft.Maps.Directions.Waypoint({ location: userLocation }));
+        directionsManager.addWaypoint(new Microsoft.Maps.Directions.Waypoint({ address: destination }));
+
+        //Calculate directions.
+        directionsManager.calculateDirections();
+    }
+
+    function directionsUpdated(e) {
+        //When the directions are updated, get a polyline for the route path to perform calculations against in the future.
+        var route = directionsManager.getCurrentRoute();
+
+        if (route && route.routePath && route.routePath.length > 0) {
+            routePath = new Microsoft.Maps.Polyline(route.routePath);
+        }
+    }
+
+    function clearDirections() {
+        //Clear directions waypoints and display without clearing it's options.
+        directionsManager.clearDisplay();
+
+        var wp = directionsManager.getAllWaypoints();
+        if (wp && wp.length > 0) {
+            for (var i = wp.length - 1; i >= 0; i--) {
+                this.directionsManager.removeWaypoint(wp[i]);
+            }
+        }
+
+        routePath = null;
+    }
+    </script>
+
+</head>
+<body>
+<div class="myMap" id="myMap"></div>
+<script>
+        // Dynamic load the Bing Maps Key and Script
+        // Get your own Bing Maps key at https://www.microsoft.com/maps
+         (async () => {
+            let script = document.createElement("script");
+            let bingKey = "AgNnGNredNlcyG1M8AET0L9F43oDcjEUyZnPhX2mOf5nHNnQcFkz9IFHN_c7z6fO"
+            script.setAttribute("src", `https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=${bingKey}`);
+            document.body.appendChild(script);
+        })();
+    </script>
+</body>
+</html>
