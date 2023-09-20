@@ -63,7 +63,7 @@ class RestaurantFakeGateway : IRestaurantGateway {
     }
 
     override suspend fun getRestaurantById(id: String): Restaurant {
-        TODO()
+        return restaurants.find { it.id == id }?.toEntity() ?: throw UnknownError()
     }
 
     override suspend fun createRestaurant(restaurant: NewRestaurantInfo): Restaurant {

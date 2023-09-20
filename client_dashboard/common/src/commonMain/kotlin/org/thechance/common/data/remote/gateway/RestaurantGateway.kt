@@ -79,7 +79,9 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
     }
 
     override suspend fun getRestaurantById(id: String): Restaurant {
-        TODO()
+        return tryToExecute<ServerResponse<RestaurantDto>>(client) {
+            get(urlString = "/restaurant") { url { appendPathSegments(id) } }
+        }.value?.toEntity() ?: throw UnknownError()
     }
 
 }
