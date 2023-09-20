@@ -49,7 +49,7 @@ class RestaurantScreenModel(
     private fun onGetRestaurantSuccessfully(restaurants: DataWrapper<Restaurant>) {
         updateState {
             it.copy(
-                restaurants = restaurants.result.toUiState(),
+                restaurants = restaurants.result.toRestaurantsUIState(),
                 isLoading = false,
                 numberOfRestaurants = restaurants.numberOfResult,
                 maxPageCount = restaurants.totalPages

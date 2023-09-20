@@ -55,7 +55,7 @@ fun Restaurant.toUiState(): RestaurantUiState.RestaurantDetailsUiState =
         closingTime = closingTime,
     )
 
-fun List<Restaurant>.toUiState() = map(Restaurant::toUiState)
+fun List<Restaurant>.toRestaurantsUIState() = map(Restaurant::toUiState)
 
 data class NewRestaurantInfoUiState(
     val name: String = "",
