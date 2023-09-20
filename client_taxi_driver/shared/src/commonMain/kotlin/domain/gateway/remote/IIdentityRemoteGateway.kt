@@ -11,7 +11,7 @@ interface IIdentityRemoteGateway {
     suspend fun refreshAccessToken(refreshToken: String): Pair<String, String>
 
     suspend fun createRequestPermission(
-        taxiRequestPermission: String,
+        driverFullName: String,
         driverEmail: String,
         description: String,
     ): Boolean

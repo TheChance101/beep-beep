@@ -28,7 +28,7 @@ class IdentityFakeGateway: IIdentityRemoteGateway {
     }
 
     override suspend fun createRequestPermission(
-        taxiRequestPermission: String,
+        driverFullName: String,
         driverEmail: String,
         description: String
     ): Boolean {
