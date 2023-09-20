@@ -73,6 +73,5 @@ data class English(
     override val thisWeek: String = "This Week",
     override val tryAgain: String = "Try again",
     override val trackYourOrder: String = "Track Your Order",
-) : IStringResources {
     override val history: String = "History"
-}
+) : IStringResources
