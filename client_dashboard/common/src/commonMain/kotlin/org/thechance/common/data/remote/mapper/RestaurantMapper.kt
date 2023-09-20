@@ -23,7 +23,7 @@ fun List<RestaurantDto>.toEntity() = map(RestaurantDto::toEntity)
 fun NewRestaurantInfo.toDto(): RestaurantCreateDto {
     return RestaurantCreateDto(
             name = name,
-            username = ownerUsername,
+            ownerUserName = ownerUsername,
             openingTime = openingTime,
             closingTime = closingTime,
             phone = phoneNumber,
