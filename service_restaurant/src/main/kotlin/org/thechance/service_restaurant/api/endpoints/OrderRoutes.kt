@@ -64,7 +64,7 @@ fun Route.orderRoutes() {
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 10
 
-            val result = manageOrder.getOrdersHistory(restaurantId = id, page = page, limit = limit)
+            val result = manageOrder.getOrdersHistoryForRestaurant(restaurantId = id, page = page, limit = limit)
             call.respond(HttpStatusCode.OK, result.map { it.toDto() })
         }
 

@@ -23,7 +23,9 @@ interface IManageOrderUseCase {
 
     suspend fun getOrderById(orderId: String): Order
 
-    suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order>
+    suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<Order>
+
+    suspend fun getOrdersHistoryForUser(userId: String, page: Int, limit: Int): List<Order>
 
     suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order>
 
@@ -34,7 +36,6 @@ interface IManageOrderUseCase {
     suspend fun getOrdersRevenueByDaysBefore(
         restaurantId: String, daysBack: Int
     ): List<Map<Int, Double>> // list of maps (dayOfWeek, prices) { dayOfWeek 0 - 6 (Sunday - Saturday) }
-
 }
 
 class ManageOrderUseCase(
@@ -68,8 +69,12 @@ class ManageOrderUseCase(
         return optionsGateway.updateOrderStatus(orderId = orderId, status = state)!!
     }
 
-    override suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order> {
-        return optionsGateway.getOrdersHistory(restaurantId = restaurantId, page = page, limit = limit)
+    override suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<Order> {
+        return optionsGateway.getOrdersHistoryForRestaurant(restaurantId = restaurantId, page = page, limit = limit)
+    }
+
+    override suspend fun getOrdersHistoryForUser(userId: String, page: Int, limit: Int): List<Order> {
+        return optionsGateway.getOrdersHistoryForUser(userId = userId, page = page, limit = limit)
     }
 
     override suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order> {
@@ -102,7 +107,9 @@ class ManageOrderUseCase(
 
                 daysOfYearRange.map { days ->
                     val prices = groupedOrdersByDayOfYear[days]?.map { it.totalPrice } ?: emptyList()
-                    mapOf(currentDateTime.toJavaLocalDateTime().withDayOfYear(days).dayOfWeek.value to prices.sumOf { it })
+                    mapOf(
+                        currentDateTime.toJavaLocalDateTime()
+                            .withDayOfYear(days).dayOfWeek.value to prices.sumOf { it })
                 }.reversed()
             }
         } ?: throw MultiErrorException(listOf(INVALID_ID))
@@ -113,7 +120,7 @@ class ManageOrderUseCase(
         return restaurant?.isRestaurantOpen() ?: throw MultiErrorException(listOf(NOT_FOUND))
     }
 
-    private suspend fun<T> doInRangeWithDaysBack(daysBack: Int, function: suspend (IntRange, LocalDateTime) -> T): T {
+    private suspend fun <T> doInRangeWithDaysBack(daysBack: Int, function: suspend (IntRange, LocalDateTime) -> T): T {
         val currentDateTime = currentDateTime().toJavaLocalDateTime()
         val currentDayOfYear = currentDateTime.dayOfYear
         val dayOfYearBefore = currentDateTime.minusDays(daysBack.toLong()).dayOfYear

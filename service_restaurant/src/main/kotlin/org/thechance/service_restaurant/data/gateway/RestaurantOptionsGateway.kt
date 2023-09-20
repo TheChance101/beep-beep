@@ -223,7 +223,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         return updatedOrder?.toEntity()
     }
 
-    override suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order> {
+    override suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<Order> {
         return container.orderCollection
             .find(
                 OrderCollection::orderStatus eq Order.Status.DONE.statusCode,
