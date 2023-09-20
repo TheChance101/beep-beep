@@ -77,7 +77,7 @@ fun Route.orderRoutes() {
         }
 
         get("/count-by-days-back") {
-            val id = call.parameters["restaurantId"]?.trim() ?: "64f7b9b1fb40ed0dfdbc2d3a"
+            val id = call.parameters["restaurantId"]?.trim().toString()
             val daysBack = call.parameters["daysBack"]?.trim()?.toInt() ?: 7
             val language = extractLocalizationHeader()
             val result = restaurantService.getOrdersCountByDaysBefore(
