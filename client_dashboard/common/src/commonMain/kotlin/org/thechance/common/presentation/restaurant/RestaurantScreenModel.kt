@@ -322,8 +322,18 @@ class RestaurantScreenModel(
         }
     }
 
-    override fun onClickEditRestaurantMenuItem(restaurant: RestaurantUiState.RestaurantDetailsUiState) {
-        TODO("navigate to restaurant details screen")
+    private fun onGetRestaurantByIdSuccessfully(restaurant: Restaurant) {
+        val restaurantUiState = restaurant.toUIState()
+        updateState { it.copy(restaurantInformationUIState = restaurantUiState) }
+    }
+
+    private fun getRestaurantById(id: String) {
+        tryToExecute(
+            { manageRestaurant.getRestaurantById(id) },
+            ::onGetRestaurantByIdSuccessfully,
+            ::onError
+        )
+    }
 
     override fun onClickEditRestaurantMenuItem(restaurantId: String) {
         getRestaurantById(restaurantId)

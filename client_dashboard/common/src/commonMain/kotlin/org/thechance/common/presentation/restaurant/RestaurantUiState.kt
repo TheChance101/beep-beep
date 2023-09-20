@@ -10,7 +10,7 @@ data class RestaurantUiState(
     val isLoading: Boolean = true,
     val isNoInternetConnection: Boolean = false,
     val isNewRestaurantInfoDialogVisible: Boolean = false,
-    val newRestaurantInfoUiState: NewRestaurantInfoUiState = NewRestaurantInfoUiState(),
+    val restaurantInformationUIState: RestaurantInformationUIState = RestaurantInformationUIState(),
     val restaurantAddCuisineDialogUiState: RestaurantAddCuisineDialogUiState = RestaurantAddCuisineDialogUiState(),
     val restaurantFilterDropdownMenuUiState: RestaurantFilterDropdownMenuUiState = RestaurantFilterDropdownMenuUiState(),
     val restaurants: List<RestaurantDetailsUiState> = emptyList(),
@@ -58,7 +58,7 @@ fun Restaurant.toUiState(): RestaurantUiState.RestaurantDetailsUiState =
 
 fun List<Restaurant>.toRestaurantsUIState() = map(Restaurant::toUiState)
 
-data class NewRestaurantInfoUiState(
+data class RestaurantInformationUIState(
     val name: String = "",
     val nameError: ErrorWrapper? = null,
     val ownerUsername: String = "",
@@ -71,12 +71,21 @@ data class NewRestaurantInfoUiState(
     val endTimeError: ErrorWrapper? = null,
     val location: String = "",
     val locationError: ErrorWrapper? = null,
-    val lat: String = "",
-    val lng: String = "",
+    val latitude: String = "",
+    val longitude: String = "",
     val buttonEnabled: Boolean = true
 )
 
-fun NewRestaurantInfoUiState.toEntity() = NewRestaurantInfo(
+fun Restaurant.toUIState() = RestaurantInformationUIState(
+    name = name,
+    ownerUsername = ownerUsername,
+    phoneNumber = phone,
+    openingTime = openingTime,
+    closingTime = closingTime,
+    location = location.latitude.toString() + "," + location.longitude.toString()
+)
+
+fun RestaurantInformationUIState.toEntity() = NewRestaurantInfo(
     name = name,
     ownerUsername = ownerUsername,
     phoneNumber = phoneNumber,

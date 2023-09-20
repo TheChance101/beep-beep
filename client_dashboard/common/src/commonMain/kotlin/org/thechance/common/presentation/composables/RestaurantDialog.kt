@@ -9,7 +9,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.beepbeep.designSystem.ui.composable.BpButton
@@ -17,7 +16,7 @@ import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.resources.Resources
-import org.thechance.common.presentation.restaurant.NewRestaurantInfoUiState
+import org.thechance.common.presentation.restaurant.RestaurantInformationUIState
 import org.thechance.common.presentation.restaurant.RestaurantInteractionListener
 import org.thechance.common.presentation.restaurant.RestaurantUiState
 import org.thechance.common.presentation.util.kms
@@ -38,7 +37,7 @@ fun NewRestaurantInfoDialog(
         onPhoneNumberChange = listener::onPhoneNumberChange,
         onWorkingStartHourChange = listener::onWorkingStartHourChange,
         onWorkingEndHourChange = listener::onWorkingEndHourChange,
-        state = state.newRestaurantInfoUiState,
+        state = state.restaurantInformationUIState,
         onCreateClicked = listener::onCreateNewRestaurantClicked,
         onLocationChange = listener::onLocationChange,
     )
@@ -49,7 +48,7 @@ fun NewRestaurantInfoDialog(
 @Composable
 private fun RestaurantDialog(
     modifier: Modifier = Modifier,
-    state: NewRestaurantInfoUiState,
+    state: RestaurantInformationUIState,
     isVisible: Boolean,
     onCreateClicked: () -> Unit,
     onCancelClicked: () -> Unit,
@@ -155,7 +154,7 @@ private fun RestaurantDialog(
                 ) {
                     GoogleMap(
                             modifier =Modifier.fillMaxWidth().weight(5f),
-                            lat = state.lat, lng = state.lng,) { address ->
+                            lat = state.latitude, lng = state.longitude,) { address ->
                         onLocationChange(address)
                     }
                     Row(
