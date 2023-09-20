@@ -62,7 +62,7 @@ fun Route.orderRoutes() {
 
         get("/restaurant/history") {
             val parameters = call.receiveParameters()
-            val restaurantId = parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
+            val restaurantId = parameters["id"]?.trim() ?: throw MultiErrorException(listOf(NOT_FOUND))
             val page = parameters["page"]?.toInt() ?: 1
             val limit = parameters["limit"]?.toInt() ?: 10
             val result =
@@ -74,7 +74,7 @@ fun Route.orderRoutes() {
 
         get("/user/history") {
             val parameters = call.receiveParameters()
-            val userId = parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
+            val userId = parameters["id"]?.trim()  ?: throw MultiErrorException(listOf(NOT_FOUND))
             val page = parameters["page"]?.toInt() ?: 1
             val limit = parameters["limit"]?.toInt() ?: 10
             val result = manageOrder.getOrdersHistoryForUser(userId = userId, page = page, limit = limit)
@@ -104,6 +104,5 @@ fun Route.orderRoutes() {
             socketHandler.restaurants[restaurantId] = WebSocketRestaurant(this)
             socketHandler.broadcastOrder(restaurantId)
         }
-
     }
 }

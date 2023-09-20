@@ -2,6 +2,8 @@ package org.thechance.api_gateway.data.service
 
 import io.ktor.client.*
 import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
+import io.ktor.http.*
 import io.ktor.util.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.encodeToString
@@ -13,7 +15,6 @@ import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.tryToExecute
 import org.thechance.api_gateway.data.utils.tryToExecuteFromWebSocket
 import org.thechance.api_gateway.util.APIs
-
 
 @Single
 class RestaurantService(
@@ -261,7 +262,7 @@ class RestaurantService(
 
     //region order
     @OptIn(InternalAPI::class)
-    suspend fun createOrder(order: OrderDto, languageCode: String) : OrderDto {
+    suspend fun createOrder(order: OrderDto, languageCode: String): OrderDto {
         return client.tryToExecute<OrderDto>(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
@@ -291,7 +292,13 @@ class RestaurantService(
         }
     }
 
-    suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int, languageCode: String): List<OrderDto> {
+    @OptIn(InternalAPI::class)
+    suspend fun getOrdersHistoryInRestaurant(
+        restaurantId: String,
+        page: Int,
+        limit: Int,
+        languageCode: String
+    ): List<OrderDto> {
         return client.tryToExecute(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
@@ -299,7 +306,33 @@ class RestaurantService(
                 errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             }
         ) {
-            get("/order/history/$restaurantId?page=$page&limit=$limit")
+            val formData = FormDataContent(Parameters.build {
+                append("id", restaurantId)
+                append("page", page.toString())
+                append("limit", limit.toString())
+            })
+            get("/order/restaurant/history") {
+                body = formData
+            }
+        }
+    }
+    @OptIn(InternalAPI::class)
+    suspend fun getOrdersHistoryForUser(userId: String, page: Int, limit: Int, languageCode: String): List<OrderDto> {
+        return client.tryToExecute(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+            }
+        ) {
+            val formData = FormDataContent(Parameters.build {
+                append("id", userId)
+                append("page", page.toString())
+                append("limit", limit.toString())
+            })
+            get("/order/user/history") {
+                body = formData
+            }
         }
     }
 
