@@ -9,11 +9,11 @@ import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.domain.util.TaxiStatus.ONLINE
 import org.thechance.common.presentation.composables.table.Header
 import org.thechance.common.presentation.resources.Resources
-import org.thechance.common.presentation.util.ErrorState
+import org.thechance.common.presentation.restaurant.ErrorWrapper
 
 data class TaxiUiState(
-    val isLoading: Boolean = false,
-    val error: ErrorState = ErrorState.UnKnownError,
+    val isLoading: Boolean = true,
+    val isNoInternetConnection: Boolean = false,
     val isAddNewTaxiDialogVisible: Boolean = false,
     val newTaxiInfo: TaxiInfoUiState = TaxiInfoUiState(),
     val taxiFilterUiState: TaxiFilterUiState = TaxiFilterUiState(),
@@ -23,7 +23,6 @@ data class TaxiUiState(
     val pageInfo: TaxiPageInfoUiState = TaxiPageInfoUiState(),
     val specifiedTaxis: Int = 10,
     val currentPage: Int = 1,
-    val taxiMenu: MenuUiState = MenuUiState(),
     val isFilterDropdownMenuExpanded: Boolean = false,
     val isEditMode: Boolean = false,
 
@@ -48,8 +47,10 @@ data class TaxiDetailsUiState(
     val type: String = "",
     val seats: Int = 4,
     val username: String = "",
+    val driverId: String? = null,
     val status: TaxiStatus = ONLINE,
     val trips: String = "1",
+    val isTaxiMenuExpanded: Boolean = false,
 ) {
     val statusColor: Color
         @Composable get() = when (status) {
@@ -90,35 +91,15 @@ data class TaxiInfoUiState(
     val id: String = "",
     val plateNumber: String = "",
     val driverUserName: String = "",
+    val driverId: String = "",
     val carModel: String = "",
     val selectedCarColor: CarColor = CarColor.WHITE,
     val seats: Int = 0,
-    val plateNumberError: String = "",
-    val carModelError: String = "",
+    val plateNumberError: ErrorWrapper = ErrorWrapper(),
+    val carModelError: ErrorWrapper = ErrorWrapper(),
+    val driverUserNameError: ErrorWrapper = ErrorWrapper(),
     val isFormValid: Boolean = false,
 )
-
-data class MenuUiState(
-    val id: String = "",
-    val items: List<MenuItemUiState> = listOf(
-        MenuItemUiState(
-            iconPath = "ic_edit.xml",
-            text = "Edit",
-        ),
-        MenuItemUiState(
-            iconPath = "ic_delete.svg",
-            text = "Delete",
-            isSecondary = true,
-        ),
-    )
-) {
-    data class MenuItemUiState(
-        val iconPath: String = "",
-        val text: String = "",
-        val isSecondary: Boolean = false,
-    )
-}
-
 
 fun DataWrapper<Taxi>.toDetailsUiState(): TaxiPageInfoUiState {
     return TaxiPageInfoUiState(
@@ -137,6 +118,7 @@ fun Taxi.toDetailsUiState(): TaxiDetailsUiState = TaxiDetailsUiState(
     username = username,
     status = status,
     trips = trips,
+    driverId = driverId
 )
 
 fun List<Taxi>.toDetailsUiState() = map { it.toDetailsUiState() }
@@ -144,6 +126,7 @@ fun List<Taxi>.toDetailsUiState() = map { it.toDetailsUiState() }
 fun TaxiInfoUiState.toEntity() = NewTaxiInfo(
     plateNumber = plateNumber,
     driverUserName = driverUserName,
+    driverId = driverId,
     carModel = carModel,
     selectedCarColor = selectedCarColor,
     seats = seats
@@ -158,6 +141,7 @@ fun TaxiDetailsUiState.toEntity(): Taxi = Taxi(
     username = username,
     status = status,
     trips = trips,
+    driverId = driverId
 )
 
 fun List<TaxiDetailsUiState>.toEntity() = map { it.toEntity() }
@@ -168,5 +152,6 @@ fun Taxi.toUiState(): TaxiInfoUiState = TaxiInfoUiState(
     driverUserName = username,
     carModel = type,
     selectedCarColor = color,
-    seats = seats
+    seats = seats,
+    driverId = driverId ?: ""
 )

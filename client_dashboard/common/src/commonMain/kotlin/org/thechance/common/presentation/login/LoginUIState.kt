@@ -6,10 +6,10 @@ import org.thechance.common.presentation.util.ErrorState
 
 data class LoginUIState(
     val username: String = "",
-    val usernameError: ErrorWrapper = ErrorWrapper(),
     val password: String = "",
-    val passwordError: ErrorWrapper = ErrorWrapper(),
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val error: ErrorState? = null,
-    val keepLoggedIn: Boolean = false,
+    val isUserError: ErrorWrapper = ErrorWrapper(),
+    val isPasswordError: ErrorWrapper = ErrorWrapper(),
+    val isAbleToLogin: Boolean = false
 )

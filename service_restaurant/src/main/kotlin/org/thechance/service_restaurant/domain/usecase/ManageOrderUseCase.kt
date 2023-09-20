@@ -28,13 +28,11 @@ interface IManageOrderUseCase {
     suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order>
 
     suspend fun getOrdersCountByDaysBefore(
-        restaurantId: String,
-        daysBack: Int
+        restaurantId: String, daysBack: Int
     ): List<Map<Int, Int>> // list of maps (dayOfWeek, count) { dayOfWeek 0 - 6 (Sunday - Saturday) }
 
     suspend fun getOrdersRevenueByDaysBefore(
-        restaurantId: String,
-        daysBack: Int
+        restaurantId: String, daysBack: Int
     ): List<Map<Int, Double>> // list of maps (dayOfWeek, prices) { dayOfWeek 0 - 6 (Sunday - Saturday) }
 
 }

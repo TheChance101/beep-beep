@@ -22,10 +22,15 @@ class EnglishLocalizedMessages() : LocalizedMessages {
     override val unknownError: String = "Unknown error `¯\\_(ツ)_/¯`"
     override val userNotFound: String = "User not found"
     override val invalidPermission: String = "Invalid permission"
+    override val alreadyInFavorite: String = "already in your favorite list"
     // endregion
 
     // region taxi
     override val taxiCreatedSuccessfully: String = "Taxi created successfully 🎉"
+    override val tripCreatedSuccessfully: String = "Trip Created Successfully"
+    override val tripApproved: String = "Trip Approved"
+    override val tripCanceled: String = "Trip Canceled"
+    override val tripFinished: String = "Trip Finished Successfully"
     override val taxiUpdateSuccessfully: String = "Taxi updated successfully 🎉"
     override val taxiDeleteSuccessfully: String = "Taxi deleted successfully 🎉"
     override val invalidId: String = "Invalid id"
