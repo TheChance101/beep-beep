@@ -17,10 +17,10 @@ class CuisinesScreenModel(
     override val viewModelScope: CoroutineScope = coroutineScope
 
     init {
-        getDate()
+        getData()
     }
 
-    private fun getDate() {
+    private fun getData() {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
             getCuisinesUseCase::getCuisines,
