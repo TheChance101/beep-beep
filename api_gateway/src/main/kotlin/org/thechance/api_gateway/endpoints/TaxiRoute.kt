@@ -37,8 +37,7 @@ fun Route.taxiRoutes() {
                 val language = extractLocalizationHeader()
                 val user = identityService.getUserByUsername(taxiDto.driverUsername, language)
                 val result = taxiService.createTaxi(taxiDto.copy(driverId = user.id), language)
-                val successMessage =
-                    localizedMessagesFactory.createLocalizedMessages(language).taxiCreatedSuccessfully
+                val successMessage = localizedMessagesFactory.createLocalizedMessages(language).taxiCreatedSuccessfully
 
                 respondWithResult(HttpStatusCode.Created, result, successMessage)
             }
