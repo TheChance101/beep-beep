@@ -61,19 +61,18 @@ class OrderRemoteGateway(client: HttpClient) : IOrderRemoteGateway,
     override suspend fun getOrdersRevenueByDaysBefore(
         restaurantId: String,
         daysBack: Int
-    ): List<Map<Int, Double>> {
-        return tryToExecute<BaseResponse<List<Map<Int, Double>>>> {
-            get("/order/revenue-by-days-back?restaurantId=$restaurantId&&daysBack=$daysBack")
+    ): List<Map<String, Double>> {
+        return tryToExecute<BaseResponse<List<Map<String, Double>>>> {
+            get("/orders/revenue-by-days-back?restaurantId=$restaurantId&&daysBack=$daysBack")
         }.value ?: emptyList()
     }
 
     override suspend fun getOrdersCountByDaysBefore(
         restaurantId: String,
         daysBack: Int
-    ): List<Map<Int, Int>> {
-        return tryToExecute<BaseResponse<List<Map<Int, Int>>>> {
-            get("/order/count-by-days-back?restaurantId=$restaurantId&&daysBack=$daysBack")
+    ): List<Map<String, Int>> {
+        return tryToExecute<BaseResponse<List<Map<String, Int>>>> {
+            get("/orders/count-by-days-back?restaurantId=$restaurantId&&daysBack=$daysBack")
         }.value ?: emptyList()
     }
-
 }
