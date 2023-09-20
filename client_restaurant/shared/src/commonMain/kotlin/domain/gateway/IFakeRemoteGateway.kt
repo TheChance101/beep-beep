@@ -5,7 +5,6 @@ import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
-import domain.entity.Statistics
 
 interface IFakeRemoteGateway {
 
@@ -43,14 +42,20 @@ interface IFakeRemoteGateway {
 
     suspend fun getCuisinesInMeal(mealId: String): List<Cuisine>
 
-    suspend fun getCuisineByRestaurantId (restaurantId: String): List<Cuisine>
+    suspend fun getCuisineByRestaurantId(restaurantId: String): List<Cuisine>
 
     suspend fun getMealsByCuisineId(id: String): List<Meal>
 
     //endregion Cuisine
 
     //region stats
-    suspend fun getStatistics(): Statistics
+    suspend fun getOrdersRevenueByDaysBefore(
+    restaurantId: String, daysBack: Int
+     ): List<Map<String, Double>>
+
+    suspend fun getOrdersCountByDaysBefore(
+    restaurantId: String, daysBack: Int
+        ): List<Map<String,Int>>
 
     //endregion stats
 }

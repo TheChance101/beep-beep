@@ -9,12 +9,10 @@ import data.remote.model.OrderDto
 import data.remote.model.RestaurantDto
 import domain.entity.Category
 import domain.entity.Cuisine
-import domain.entity.DataSet
 import domain.entity.Location
 import domain.entity.Meal
 import domain.entity.Order
 import domain.entity.Restaurant
-import domain.entity.Statistics
 import domain.gateway.IFakeRemoteGateway
 import presentation.base.InvalidPasswordException
 import presentation.base.RequestException
@@ -575,20 +573,28 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
         )
     )
 
-    private val xAxisData = listOf("sun", "mon", "tus", "wed", "thu", "fri", "sat")
-    private val dataSets : List<DataSet> = listOf(
-        DataSet(
-            label = "revenue",
-            data = listOf(200.0, 300.0, 150.0, 250.0, 100.500, 400.0, 100.0)
-        ),
-        DataSet(
-            label = "Completed",
-            data = listOf(0.6, 10.6, 80.0, 50.6, 44.0, 100.6, 10.0),
+    private val ordersCount : List<Map<String, Int>> = listOf(
+        mapOf(
+            "sat" to 500,
+            "sun" to 800,
+            "mon" to 900,
+            "thu" to 700,
+            "wed" to 300,
+            "thr" to 200,
+            "fri" to 100,
         )
     )
-    private val statistics : Statistics = Statistics(
-        dataSets = dataSets,
-        xAxisData = xAxisData
+
+    private val revenue : List<Map<String, Double>> = listOf(
+        mapOf(
+            "sat" to 500.0,
+            "sun" to 800.0,
+            "mon" to 900.0,
+            "thu" to 700.0,
+            "wed" to 300.0,
+            "thr" to 200.0,
+            "fri" to 100.0,
+        )
     )
 
 
@@ -706,8 +712,18 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
 
 
     //region charts
-    override suspend fun getStatistics(): Statistics {
-        return statistics
+    override suspend fun getOrdersRevenueByDaysBefore(
+        restaurantId: String,
+        daysBack: Int
+    ): List<Map<String, Double>> {
+        return revenue
+    }
+
+    override suspend fun getOrdersCountByDaysBefore(
+        restaurantId: String,
+        daysBack: Int
+    ): List<Map<String, Int>> {
+        return ordersCount
     }
 
     //endregion charts

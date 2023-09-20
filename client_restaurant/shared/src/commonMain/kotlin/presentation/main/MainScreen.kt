@@ -131,17 +131,17 @@ class MainScreen(private val restaurantId: String) :
                 item {
                     ChartItem(
                         imagePainter = painterResource(Resources.images.revenue),
-                        title = state.chartsItemUiState.dataSets[0].label,
+                        title = state.orderUiState.label,
                     ) {
                         BarChart(
                             chartParameters = listOf(
                                 BarParameters(
-                                    dataName = state.chartsItemUiState.dataSets[0].label,
-                                    data = state.chartsItemUiState.dataSets[0].data,
+                                    dataName = state.orderUiState.label,
+                                    data = state.orderUiState.yAxisData,
                                     barColor = Theme.colors.primary
                                 )
                             ),
-                            xAxisData = state.chartsItemUiState.xAxisData,
+                            xAxisData = state.orderUiState.xAxisData,
                             legendPosition = LegendPosition.DISAPPEAR,
                             yAxisRange = 5,
                             barCornerRadius = 8.dp
@@ -151,19 +151,19 @@ class MainScreen(private val restaurantId: String) :
                 item {
                     ChartItem(
                         imagePainter = painterResource(Resources.images.orders),
-                        title = state.chartsItemUiState.dataSets[1].label,
+                        title = state.revenueUiState.label,
                     ) {
                         LineChart(
                             linesParameters = listOf(
                                 LineParameters(
-                                    label = state.chartsItemUiState.dataSets[1].label,
-                                    data = state.chartsItemUiState.dataSets[1].data,
+                                    label = state.revenueUiState.label,
+                                    data = state.revenueUiState.yAxisData,
                                     lineColor = Theme.colors.primary,
                                     lineType = LineType.CURVED_LINE,
                                     lineShadow = true,
                                 )
                             ),
-                            xAxisData = state.chartsItemUiState.xAxisData,
+                            xAxisData = state.revenueUiState.xAxisData,
                             legendPosition = LegendPosition.DISAPPEAR,
                             yAxisRange = 5
                         )

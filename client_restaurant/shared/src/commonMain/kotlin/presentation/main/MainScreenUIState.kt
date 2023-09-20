@@ -1,7 +1,5 @@
 package presentation.main
 
-import domain.entity.DataSet
-import domain.entity.Statistics
 import presentation.base.ErrorState
 import presentation.restaurantSelection.RestaurantUIState
 
@@ -12,9 +10,15 @@ data class MainScreenUIState(
     val restaurants: List<RestaurantUIState> = emptyList(),
     val selectedRestaurantId: String = "",
 
-    val chartsItemUiState: ChartsItemUiState = ChartsItemUiState(
-        dataSets = emptyList(),
-        xAxisData = emptyList()
+    val orderUiState: ChartsItemUiState = ChartsItemUiState(
+        yAxisData = emptyList(),
+        xAxisData = emptyList(),
+        label = "Orders"
+    ),
+    val revenueUiState: ChartsItemUiState = ChartsItemUiState(
+        yAxisData = emptyList(),
+        xAxisData = emptyList(),
+        label = "Revenue"
     )
 ) {
     val selectedRestaurant: RestaurantUIState
@@ -22,12 +26,16 @@ data class MainScreenUIState(
 }
 
 data class ChartsItemUiState(
-    val dataSets: List<DataSet> = emptyList(),
+    val yAxisData: List<Double> = emptyList(),
     val xAxisData: List<String> = emptyList(),
+    val label : String = "",
     )
 
+fun List<Pair<String, Double>>.toChartsItemUiState(): ChartsItemUiState {
+    val yAxisData = this.map { it.second }
+    val xAxisData = this.map { it.first }
+    return ChartsItemUiState(yAxisData, xAxisData,)
+}
 
-fun Statistics.toChartsItemUiState() = ChartsItemUiState(
-    dataSets = dataSets,
-    xAxisData = xAxisData
-)
+
+
