@@ -73,4 +73,5 @@ interface IStringResources {
     val trackYourOrder: String
     val logout: String
     val address: String
+    val save: String
 }

@@ -74,5 +74,7 @@ data class ArabicIQ(
     override val tryAgain: String = "حاول مجدداً",
     override val trackYourOrder: String = "تتبع طلبك",
     override val logout: String= "تسجيل الخروج",
-    override val address: String = "العنوان"
+    override val address: String = "العنوان",
+    override val save: String= "حفظ",
+
 ) : IStringResources

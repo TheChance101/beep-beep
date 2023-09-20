@@ -6,6 +6,11 @@ data class ProfileUIState(
     val phoneNumber: String = "",
     val snackBarMessage: String = "",
     val showSnackBar: Boolean = false,
+    val isFullNameError: Boolean = false,
+    val isPhoneNumberError: Boolean = false,
+    val fullNameErrorMsg: String = "",
+    val mobileNumberErrorMsg: String = "",
+    val isButtonEnabled: Boolean = false,
 )
 
 data class UserUIState(

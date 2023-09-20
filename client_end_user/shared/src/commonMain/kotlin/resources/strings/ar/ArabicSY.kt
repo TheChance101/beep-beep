@@ -75,4 +75,5 @@ data class ArabicSY(
     override val trackYourOrder: String = "تتبع طلبك",
     override val logout: String= "تسجيل الخروج",
     override val address: String = "العنوان",
+    override val save: String= "حفظ",
 ) : IStringResources

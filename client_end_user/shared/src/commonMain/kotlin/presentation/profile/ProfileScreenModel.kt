@@ -15,7 +15,7 @@ class ProfileScreenModel :BaseScreenModel<ProfileUIState, ProfileUIEffect >(Prof
         TODO("Not yet implemented")
     }
 
-    override fun onSaveProfileInfo(fullName: String, phoneNumber: String) {
+    override fun onSaveProfileInfo() {
         TODO("Not yet implemented")
     }
 

@@ -74,5 +74,7 @@ data class ArabicEG(
     override val tryAgain: String = "حاول تاني",
     override val trackYourOrder: String = "تابع الاوردر",
     override val logout: String= "تسجيل الخروج",
-    override val address: String = "العنوان"
+    override val address: String = "العنوان",
+    override val save: String= "حفظ",
+
 ) : IStringResources

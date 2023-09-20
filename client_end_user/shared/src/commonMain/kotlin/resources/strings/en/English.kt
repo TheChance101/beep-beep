@@ -75,4 +75,5 @@ data class English(
     override val trackYourOrder: String = "Track Your Order",
     override val logout: String = "Logout",
     override val address: String = "Address",
+    override val save: String = "Save",
 ) : IStringResources

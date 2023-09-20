@@ -6,7 +6,7 @@ interface ProfileInteractionListener :BaseInteractionListener {
 
   fun  onFullNameChanged(username: String)
   fun  onPhoneNumberChanged(phone: String)
-  fun onSaveProfileInfo(fullName: String, phoneNumber: String)
+  fun onSaveProfileInfo()
 
   fun onLogout()
 }

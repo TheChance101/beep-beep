@@ -74,5 +74,7 @@ data class ArabicPS(
     override val tryAgain: String = "حاول تاني",
     override val trackYourOrder: String = "تابع طلبك",
     override val logout: String= "تسجيل الخروج",
-    override val address: String = "العنوان"
+    override val address: String = "العنوان",
+    override val save: String= "حفظ",
+
 ) : IStringResources
