@@ -73,4 +73,6 @@ data class Arabic(
     override val thisWeek: String = "هذا الأسبوع",
     override val tryAgain: String = "حاول مجدداً",
     override val trackYourOrder: String = "تتبع طلبك",
+    override val logout: String= "تسجيل الخروج",
+    override val address: String = "العنوان"
 ) : IStringResources

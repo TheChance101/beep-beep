@@ -71,4 +71,6 @@ interface IStringResources {
     val thisWeek: String
     val tryAgain: String
     val trackYourOrder: String
+    val logout: String
+    val address: String
 }
