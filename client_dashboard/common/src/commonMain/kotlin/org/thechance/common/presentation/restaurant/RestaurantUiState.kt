@@ -1,6 +1,8 @@
 package org.thechance.common.presentation.restaurant
 
 import org.thechance.common.domain.entity.Cuisine
+import org.thechance.common.domain.entity.NewRestaurantInfo
+import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.presentation.composables.table.Header
 
 
@@ -35,11 +37,25 @@ data class RestaurantUiState(
         val ownerUsername: String,
         val phone: String,
         val rate: Double,
-        val priceLevel: String,
+        val priceLevel: Int,
         val openingTime: String,
         val closingTime: String,
     )
 }
+
+fun Restaurant.toUiState(): RestaurantUiState.RestaurantDetailsUiState =
+    RestaurantUiState.RestaurantDetailsUiState(
+        id = id,
+        name = name,
+        ownerUsername = ownerUsername,
+        phone = phone,
+        rate = rate,
+        priceLevel = priceLevel.count { it == '$' } ,
+        openingTime = openingTime,
+        closingTime = closingTime,
+    )
+
+fun List<Restaurant>.toUiState() = map(Restaurant::toUiState)
 
 data class NewRestaurantInfoUiState(
     val name: String = "",
@@ -59,6 +75,15 @@ data class NewRestaurantInfoUiState(
     val buttonEnabled: Boolean = false
 )
 
+fun NewRestaurantInfoUiState.toEntity() = NewRestaurantInfo(
+    name = name,
+    ownerUsername = ownerUsername,
+    phoneNumber = phoneNumber,
+    location = location,
+    openingTime = openingTime,
+    closingTime = closingTime,
+)
+
 data class ErrorWrapper(
     val errorMessage: String = "",
     val isError: Boolean = false
@@ -67,7 +92,7 @@ data class ErrorWrapper(
 data class RestaurantFilterDropdownMenuUiState(
     val isFilterDropdownMenuExpanded: Boolean = false,
     val filterRating: Double = 0.0,
-    val filterPriceLevel: Int = 1,
+    val filterPriceLevel: Int = 0,
     val isFiltered: Boolean = false,
 )
 
