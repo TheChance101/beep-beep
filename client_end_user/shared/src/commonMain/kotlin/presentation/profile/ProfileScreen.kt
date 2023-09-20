@@ -1,18 +1,27 @@
 package presentation.profile
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.main.MainContainer
 import resources.Resources
@@ -32,6 +41,7 @@ class ProfileScreen:
     }
 
 
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun onRender(state: ProfileUIState, listener: ProfileInteractionListener) {
         whiteCard {
@@ -44,6 +54,21 @@ class ProfileScreen:
             title( Resources.strings.email)
             subTitle("Email@gmail.com")
         }
+        whiteCard {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ){
+                Icon(
+                    painter = painterResource(Resources.images.logout),
+                    contentDescription = Resources.strings.logout,
+                    tint = Theme.colors.primary,
+                )
+                Text(
+                    text =  Resources.strings.logout,
+                    style = Theme.typography.title,
+                    color= Theme.colors.primary,
+                )
+            }
+        }
     }
 
     @Composable
@@ -52,7 +77,7 @@ class ProfileScreen:
             modifier = Modifier.fillMaxWidth().padding(16.dp)
                 .clip(shape = RoundedCornerShape(Theme.radius.medium))
                 .background(Theme.colors.surface)
-                .padding(horizontal = 16.dp, vertical = 32.dp)
+                .padding(16.dp)
         ) {
             content()
         }
