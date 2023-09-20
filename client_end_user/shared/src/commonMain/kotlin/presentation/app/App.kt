@@ -14,26 +14,20 @@ import kotlinx.coroutines.runBlocking
 import presentation.main.MainContainer
 import presentation.pickLanguage.PickLanguageScreen
 import resources.BeepBeepTheme
+import util.LanguageCode
 
 @Composable
-fun App() {
-    Navigator(App)
-}
+fun App() { Navigator(MainApp) }
 
-object App: Screen {
+object MainApp : Screen {
     @Composable
     override fun Content() {
         val appScreenModel = getScreenModel<AppScreenModel>()
-        var isFirstTime by remember { mutableStateOf(true) }
-
-        runBlocking {
-            //isFirstTime = appScreenModel.getInitScreen()
-        }
 
         val userLanguage by appScreenModel.language.collectAsState()
 
         BeepBeepTheme(languageCode = userLanguage) {
-            if (isFirstTime) {
+            if (true) {
                 Navigator(PickLanguageScreen) {
                     SlideTransition(it)
                 }

@@ -1,12 +1,18 @@
 package presentation.app
 
+import androidx.compose.runtime.collectAsState
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.usecase.IManageUserUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -14,23 +20,22 @@ import util.LanguageCode
 
 class AppScreenModel(private val manageUser: IManageUserUseCase) : ScreenModel {
 
-    val language = MutableStateFlow(LanguageCode.EN)
+    private val _language: MutableStateFlow<LanguageCode> = MutableStateFlow(LanguageCode.EG)
+    val language: StateFlow<LanguageCode> = _language.asStateFlow()
+
 
     init {
-        println("AppScreenModel: ${this.hashCode()}")
-        println("AppScreenModel: init screen model")
-        coroutineScope.launch {
-            println("iAppScreenModel: before update")
-            delay(5000)
-            language.update { LanguageCode.AR }
-            println("AppScreenModel: after update")
-
-        }
+        getUserLanguageCode()
     }
 
-    suspend fun getUserLanguageCode(): String {
-        return withContext(Dispatchers.IO) {
-            manageUser.getUserLanguageCode()
+    private fun getUserLanguageCode() {
+        coroutineScope.launch(Dispatchers.IO) {
+            manageUser.getUserLanguageCode().distinctUntilChanged().collect { lang ->
+                _language.update {
+                    LanguageCode.entries.find { languageCode -> languageCode.value == lang }
+                        ?: LanguageCode.EG
+                }
+            }
         }
     }
 

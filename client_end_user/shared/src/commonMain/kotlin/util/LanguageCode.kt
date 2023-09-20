@@ -1,10 +1,10 @@
 package util
 
-enum class LanguageCode {
-    EN,
-    AR,
-    IQ,
-    SY,
-    EG,
-    PS,
+enum class LanguageCode(val value: String) {
+    EN("en"),
+    AR("ar"),
+    IQ("iq"),
+    SY("sy"),
+    EG("eg"),
+    PS("ps"),
 }

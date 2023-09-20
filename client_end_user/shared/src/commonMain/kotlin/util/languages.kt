@@ -6,32 +6,32 @@ val langs: List<LanguageUIState> = listOf(
 
     LanguageUIState(
         name = "عربي",
-        code = "ar",
+        code = LanguageCode.AR.value,
         image = "ar.jpg"
     ),
     LanguageUIState(
         name = "English",
-        code = "en",
+        code = LanguageCode.EN.value,
         image = "en.jpg"
     ),
     LanguageUIState(
         name = "فلسطيني",
-        code = "ps",
+        code = LanguageCode.PS.value,
         image = "ps.jpg"
     ),
     LanguageUIState(
         name = "عراقي",
-        code = "iq",
+        code = LanguageCode.IQ.value,
         image = "iq.jpg"
     ),
     LanguageUIState(
         name = "سوري",
-        code = "sy",
+        code = LanguageCode.SY.value,
         image = "sy.jpg"
     ),
     LanguageUIState(
         name = "مصري",
-        code = "eg",
+        code = LanguageCode.EG.value,
         image = "eg.jpg"
     ),
-    )
+)

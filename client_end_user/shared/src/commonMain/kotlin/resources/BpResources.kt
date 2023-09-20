@@ -20,7 +20,7 @@ private val localStringResources = staticCompositionLocalOf<IStringResources> {
 @Composable
 fun BeepBeepTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
-    languageCode: LanguageCode = LanguageCode.EN,
+    languageCode: LanguageCode,
     content: @Composable () -> Unit,
 ) {
     val drawableResources = if (useDarkTheme) BpDrawableDarkResources else DrawableResources()

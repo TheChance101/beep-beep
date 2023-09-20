@@ -22,8 +22,6 @@ import presentation.base.BaseScreen
 import presentation.composable.LanguageCard
 import presentation.composable.HeadFirstCard
 import resources.Resources
-import util.setAppLanguage
-
 
 object PickLanguageScreen :
     BaseScreen<PickLanguageScreenModel, PickLanguageUIState, PickLanguageUIEffect, PickLanguageInteractionListener>() {
@@ -35,7 +33,6 @@ object PickLanguageScreen :
     override fun onEffect(effect: PickLanguageUIEffect, navigator: Navigator) {
         when (effect) {
             is PickLanguageUIEffect.onGoToPreferredLanguage -> navigator.push(PreferredFoodScreen)
-
         }
     }
 
@@ -66,17 +63,11 @@ object PickLanguageScreen :
                     items(state.languages.size) { index ->
                         LanguageCard(
                             state = state.languages[index],
-                            onClick = {
-                                setAppLanguage(state.languages[index].code)
-                                listener.onLanguageSelected(state.languages[index])
-                            }
+                            onClick = { listener.onLanguageSelected(state.languages[index]) }
                         )
                     }
                 }
-
             }
         }
     }
-
-
 }
