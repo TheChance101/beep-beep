@@ -68,6 +68,16 @@ fun Route.orderRoutes() {
             call.respond(HttpStatusCode.OK, result.map { it.toDto() })
         }
 
+        get("/history") {
+            val parameters = call.receiveParameters()
+            val userId = parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
+            val page = parameters["page"]?.toInt() ?: 1
+            val limit = parameters["limit"]?.toInt() ?: 10
+
+            val result = manageOrder.getOrdersHistoryForUser(userId = userId, page = page, limit = limit)
+            call.respond(HttpStatusCode.OK, result.map { it.toDto() })
+        }
+
         get("/{restaurantId}/orders") {
             val id = call.parameters["restaurantId"] ?: throw MultiErrorException(listOf(NOT_FOUND))
             val result = manageOrder.getActiveOrdersByRestaurantId(restaurantId = id)
