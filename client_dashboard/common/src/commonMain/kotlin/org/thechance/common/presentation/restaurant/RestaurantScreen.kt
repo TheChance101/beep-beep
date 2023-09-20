@@ -175,7 +175,7 @@ class RestaurantScreen :
     private fun RowScope.RestaurantRow(
         onClickEditRestaurant: (restaurantId: String) -> Unit,
         onEditRestaurantDismiss: (String) -> Unit,
-        onClickEditRestaurantMenuItem: (RestaurantUiState.RestaurantDetailsUiState) -> Unit,
+        onClickEditRestaurantMenuItem: (restaurantId: String) -> Unit,
         onClickDeleteRestaurantMenuItem: (id: String) -> Unit,
         position: Int,
         restaurant: RestaurantUiState.RestaurantDetailsUiState,
@@ -243,7 +243,7 @@ class RestaurantScreen :
             )
             EditRestaurantDropdownMenu(
                 restaurant = restaurant,
-                onClickEdit = onClickEditRestaurantMenuItem,
+                onClickEdit = { onClickEditRestaurantMenuItem(restaurant.id) },
                 onClickDelete = onClickDeleteRestaurantMenuItem,
                 onDismissRequest = onEditRestaurantDismiss,
             )

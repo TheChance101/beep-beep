@@ -25,7 +25,7 @@ class RestaurantScreenModel(
     init {
         getRestaurants()
         getCuisines()
-        if (state.value.newRestaurantInfoUiState.lat.isEmpty())
+        if (state.value.restaurantInformationUIState.latitude.isEmpty())
             getCurrentLocation()
     }
 
@@ -85,7 +85,7 @@ class RestaurantScreenModel(
                 val errorStates = error.errors
                 updateState {
                     it.copy(
-                        newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
+                        restaurantInformationUIState = it.restaurantInformationUIState.copy(
                             nameError = errorStates.firstInstanceOfOrNull<ErrorState.RestaurantInvalidName>()
                                 ?.let { error ->
                                     ErrorWrapper(error.errorMessage, true)
@@ -218,9 +218,9 @@ class RestaurantScreenModel(
     private fun onGetCurrentLocationSuccess(location: LocationInfo) {
         updateState {
             it.copy(
-                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
-                    lat = location.latitude.toString(),
-                    lng = location.longitude.toString(),
+                restaurantInformationUIState = it.restaurantInformationUIState.copy(
+                    latitude = location.latitude.toString(),
+                    longitude = location.longitude.toString(),
                 )
             )
         }
@@ -235,7 +235,7 @@ class RestaurantScreenModel(
     private fun clearAddRestaurantInfo() {
         updateState {
             it.copy(
-                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
+                restaurantInformationUIState = it.restaurantInformationUIState.copy(
                     name = "",
                     ownerUsername = "",
                     phoneNumber = "",
@@ -249,7 +249,7 @@ class RestaurantScreenModel(
     override fun onRestaurantNameChange(name: String) {
         updateState {
             it.copy(
-                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
+                restaurantInformationUIState = it.restaurantInformationUIState.copy(
                     name = name,
                 )
             )
@@ -259,22 +259,22 @@ class RestaurantScreenModel(
     override fun onOwnerUserNameChange(name: String) {
         updateState {
             it.copy(
-                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(ownerUsername = name)
+                restaurantInformationUIState = it.restaurantInformationUIState.copy(ownerUsername = name)
             )
         }
     }
 
     override fun onPhoneNumberChange(number: String) {
         updateState {
-            it.copy(newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(phoneNumber = number))
+            it.copy(restaurantInformationUIState = it.restaurantInformationUIState.copy(phoneNumber = number))
         }
     }
 
     override fun onWorkingStartHourChange(hour: String) {
         updateState {
-            it.copy(newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(openingTime = hour))
+            it.copy(restaurantInformationUIState = it.restaurantInformationUIState.copy(openingTime = hour))
             it.copy(
-                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
+                restaurantInformationUIState = it.restaurantInformationUIState.copy(
                     openingTime = hour,
 //                    startTimeError = ErrorWrapper(
 //                        "write in valid format 00:00",
@@ -287,14 +287,14 @@ class RestaurantScreenModel(
 
     override fun onWorkingEndHourChange(hour: String) {
         updateState {
-            it.copy(newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(closingTime = hour))
+            it.copy(restaurantInformationUIState = it.restaurantInformationUIState.copy(closingTime = hour))
         }
     }
 
     override fun onLocationChange(location: String) {
         updateState {
             it.copy(
-                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
+                restaurantInformationUIState = it.restaurantInformationUIState.copy(
                     location = location,
                 )
             )
@@ -324,6 +324,11 @@ class RestaurantScreenModel(
 
     override fun onClickEditRestaurantMenuItem(restaurant: RestaurantUiState.RestaurantDetailsUiState) {
         TODO("navigate to restaurant details screen")
+
+    override fun onClickEditRestaurantMenuItem(restaurantId: String) {
+        getRestaurantById(restaurantId)
+        setTaxiMenuVisibility(restaurantId, false)
+        updateState { it.copy(isNewRestaurantInfoDialogVisible = true) }
     }
 
     override fun onClickDeleteRestaurantMenuItem(id: String) {
@@ -349,7 +354,7 @@ class RestaurantScreenModel(
     override fun onCreateNewRestaurantClicked() {
         clearRestaurantInfoErrorState()
         tryToExecute(
-            { manageRestaurant.createRestaurant(state.value.newRestaurantInfoUiState.toEntity()) },
+            { manageRestaurant.createRestaurant(state.value.restaurantInformationUIState.toEntity()) },
             ::onCreateRestaurantSuccessfully,
             ::onError,
         )
@@ -373,7 +378,7 @@ class RestaurantScreenModel(
     private fun clearRestaurantInfoErrorState() {
         updateState {
             it.copy(
-                newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
+                restaurantInformationUIState = it.restaurantInformationUIState.copy(
                     nameError = ErrorWrapper(),
                     userNameError = ErrorWrapper(),
                     phoneNumberError = ErrorWrapper(),

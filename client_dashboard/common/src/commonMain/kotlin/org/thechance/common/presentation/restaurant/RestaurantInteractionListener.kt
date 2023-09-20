@@ -19,7 +19,7 @@ interface RestaurantInteractionListener : BaseInteractionListener, AddCuisineInt
 
     fun onHideRestaurantMenu(restaurantId: String)
 
-    fun onClickEditRestaurantMenuItem(restaurant: RestaurantUiState.RestaurantDetailsUiState)
+    fun onClickEditRestaurantMenuItem(restaurantId: String)
 
     fun onClickDeleteRestaurantMenuItem(id: String)
 
