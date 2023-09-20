@@ -15,9 +15,9 @@ interface RestaurantInteractionListener : BaseInteractionListener, AddCuisineInt
 
     fun onItemPerPageChange(numberOfRestaurantsInPage: Int)
 
-    fun showEditRestaurantMenu(restaurantName: String)
+    fun onShowRestaurantMenu(restaurantId: String)
 
-    fun hideEditRestaurantMenu()
+    fun onHideRestaurantMenu(restaurantId: String)
 
     fun onClickEditRestaurantMenuItem(restaurant: RestaurantUiState.RestaurantDetailsUiState)
 

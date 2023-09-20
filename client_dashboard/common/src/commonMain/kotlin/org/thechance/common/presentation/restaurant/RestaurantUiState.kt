@@ -40,6 +40,7 @@ data class RestaurantUiState(
         val priceLevel: Int,
         val openingTime: String,
         val closingTime: String,
+        val isExpanded: Boolean = false,
     )
 }
 

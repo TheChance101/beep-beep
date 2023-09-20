@@ -37,8 +37,8 @@ class RestaurantScreenModel(
                     currentState.selectedPageNumber,
                     currentState.numberOfRestaurantsInPage,
                     currentState.searchQuery,
-                        currentState.restaurantFilterDropdownMenuUiState.filterRating ,
-                        currentState.restaurantFilterDropdownMenuUiState.filterPriceLevel,
+                    currentState.restaurantFilterDropdownMenuUiState.filterRating,
+                    currentState.restaurantFilterDropdownMenuUiState.filterPriceLevel,
                 )
             },
             ::onGetRestaurantSuccessfully,
@@ -114,6 +114,7 @@ class RestaurantScreenModel(
                     )
                 }
             }
+
             else -> {}
         }
     }
@@ -300,12 +301,25 @@ class RestaurantScreenModel(
         }
     }
 
-    override fun showEditRestaurantMenu(restaurantName: String) {
-        updateState { it.copy(editRestaurantMenu = restaurantName) }
+    override fun onShowRestaurantMenu(restaurantId: String) {
+        setTaxiMenuVisibility(restaurantId, true)
     }
 
-    override fun hideEditRestaurantMenu() {
-        updateState { it.copy(editRestaurantMenu = "") }
+    override fun onHideRestaurantMenu(restaurantId: String) {
+        setTaxiMenuVisibility(restaurantId, false)
+    }
+
+    private fun setTaxiMenuVisibility(id: String, isExpanded: Boolean) {
+        println("setTaxiMenuVisibility: $id, $isExpanded")
+        val currentRestaurantState = state.value.restaurants
+        val selectedTaxiState = currentRestaurantState.first { it.id == id }
+        val updatedTaxiState = selectedTaxiState.copy(isExpanded = isExpanded)
+        updateState {
+            it.copy(
+                restaurants = currentRestaurantState.toMutableList()
+                    .apply { set(indexOf(selectedTaxiState), updatedTaxiState) }
+            )
+        }
     }
 
     override fun onClickEditRestaurantMenuItem(restaurant: RestaurantUiState.RestaurantDetailsUiState) {
@@ -315,7 +329,7 @@ class RestaurantScreenModel(
     override fun onClickDeleteRestaurantMenuItem(id: String) {
         tryToExecute(
             { manageRestaurant.deleteRestaurant(id) },
-            ::onDeleteRestaurantSuccessfully,
+            { onDeleteRestaurantSuccessfully(id) },
             ::onError
         )
     }
@@ -350,9 +364,9 @@ class RestaurantScreenModel(
         }
     }
 
-    private fun onDeleteRestaurantSuccessfully(isDeleted: Boolean) {
+    private fun onDeleteRestaurantSuccessfully(id: String) {
         updateState { it.copy(isLoading = false) }
-        hideEditRestaurantMenu()
+        setTaxiMenuVisibility(id, false)
         getRestaurants()
     }
 
@@ -446,8 +460,12 @@ class RestaurantScreenModel(
 
     override fun onChangeCuisineName(cuisineName: String) {
         clearCuisineErrorState()
-        updateState { it.copy(restaurantAddCuisineDialogUiState =
-        it.restaurantAddCuisineDialogUiState.copy(cuisineName = cuisineName)) }
+        updateState {
+            it.copy(
+                restaurantAddCuisineDialogUiState =
+                it.restaurantAddCuisineDialogUiState.copy(cuisineName = cuisineName)
+            )
+        }
     }
 
     // endregion
