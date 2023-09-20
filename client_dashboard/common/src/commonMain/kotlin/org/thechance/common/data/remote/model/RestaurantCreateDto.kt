@@ -17,13 +17,5 @@ data class RestaurantCreateDto(
     @SerialName("phone")
     val phone: String?,
     @SerialName("location")
-    val location: Location?
-)
-
-@Serializable
-data class Location(
-    @SerialName("latitude")
-    val latitude: Double?,
-    @SerialName("longitude")
-    val longitude: Double?
+    val location: LocationDto?
 )

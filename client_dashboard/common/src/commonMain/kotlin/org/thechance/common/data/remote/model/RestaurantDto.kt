@@ -39,9 +39,9 @@ data class RestaurantDto(
 
 @Serializable
 data class LocationDto(
-    @SerializedName("lat")
+    @SerializedName("latitude")
     val latitude: Double,
-    @SerializedName("lng")
+    @SerializedName("longitude")
     val longitude: Double,
 )
 
