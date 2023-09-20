@@ -575,25 +575,25 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
 
     private val ordersCount : List<Map<String, Int>> = listOf(
         mapOf(
-            "sat" to 500,
-            "sun" to 800,
-            "mon" to 900,
-            "thu" to 700,
-            "wed" to 300,
-            "thr" to 200,
-            "fri" to 100,
+            "1" to 500,
+            "2" to 800,
+            "3" to 900,
+            "4" to 700,
+            "5" to 300,
+            "6" to 200,
+            "7" to 100,
         )
     )
 
     private val revenue : List<Map<String, Double>> = listOf(
         mapOf(
-            "sat" to 500.0,
-            "sun" to 800.0,
-            "mon" to 900.0,
-            "thu" to 700.0,
-            "wed" to 300.0,
-            "thr" to 200.0,
-            "fri" to 100.0,
+            "1" to 500.0,
+            "2" to 800.0,
+            "3" to 900.0,
+            "4" to 700.0,
+            "5" to 300.0,
+            "6" to 200.0,
+            "7" to 100.0,
         )
     )
 

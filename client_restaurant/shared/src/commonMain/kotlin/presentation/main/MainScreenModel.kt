@@ -45,7 +45,7 @@ class MainScreenModel(
         )
     }
     private  fun onGetOrdersCountByDaysSuccessfully(data: List<Pair<String,Double>>){
-        updateState { it.copy( orderUiState = data.toChartsItemUiState(), isLoading = false) }
+        updateState { it.copy( orderUiState = data.toChartsItemUiState("Orders"), isLoading = false) }
     }
 
 
@@ -60,7 +60,7 @@ class MainScreenModel(
         )
     }
     private  fun onGetOrdersRevenueByDaysBeforeSuccessfully(data: List<Pair<String,Double>>){
-        updateState { it.copy( revenueUiState = data.toChartsItemUiState(), isLoading = false) }
+        updateState { it.copy( revenueUiState = data.toChartsItemUiState("Revenue"), isLoading = false) }
     }
 
 

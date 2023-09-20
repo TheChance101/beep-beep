@@ -31,10 +31,10 @@ data class ChartsItemUiState(
     val label : String = "",
     )
 
-fun List<Pair<String, Double>>.toChartsItemUiState(): ChartsItemUiState {
+fun List<Pair<String, Double>>.toChartsItemUiState(label:String): ChartsItemUiState {
     val yAxisData = this.map { it.second }
     val xAxisData = this.map { it.first }
-    return ChartsItemUiState(yAxisData, xAxisData,)
+    return ChartsItemUiState(yAxisData, xAxisData,label)
 }
 
 
