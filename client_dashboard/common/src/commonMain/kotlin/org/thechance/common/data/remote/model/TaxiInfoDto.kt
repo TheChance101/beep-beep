@@ -10,4 +10,5 @@ data class TaxiInfoDto(
     @SerialName("color") val color: String,
     @SerialName("type") val type: String,
     @SerialName("seats") val seats: Int,
+    @SerialName("driverId") val driverId: String? = null,
 )

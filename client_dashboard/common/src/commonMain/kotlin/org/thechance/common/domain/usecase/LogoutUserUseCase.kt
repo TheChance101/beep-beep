@@ -1,6 +1,6 @@
 package org.thechance.common.domain.usecase
 
-import org.thechance.common.domain.getway.IIdentityGateway
+import org.thechance.common.domain.getway.IUserLocalGateway
 
 interface ILogoutUserUseCase {
 
@@ -8,10 +8,10 @@ interface ILogoutUserUseCase {
 
 }
 
-class LogoutUserUseCase(private val identityGateway: IIdentityGateway) : ILogoutUserUseCase {
+class LogoutUserUseCase(private val userLocalGateway: IUserLocalGateway) : ILogoutUserUseCase {
 
     override suspend fun logoutUser() {
-        identityGateway.clearConfiguration()
+        userLocalGateway.clearConfiguration()
     }
 
 }
