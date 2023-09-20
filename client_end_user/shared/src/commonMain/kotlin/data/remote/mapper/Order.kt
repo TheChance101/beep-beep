@@ -9,7 +9,7 @@ fun OrderDto.toOrderEntity(): Order {
         userId = userId,
         restaurantId = restaurantId,
         restaurantName = restaurantName,
-        restaurantImageUrl = restaurantImageUrl ?: "",
+        restaurantImageUrl = restaurantImageUrl ?: "https://takethemameal.com/files_images_v2/stam.jpg",
         meals = meals.toEntity(),
         totalPrice = totalPrice ?: 0.0,
         createdAt = createdAt ?: 0L,

@@ -7,15 +7,18 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import presentation.composable.BpImageLoader
 import presentation.orderHistory.OrderHistoryUiState
 import resources.Resources
 
@@ -34,11 +37,12 @@ fun MealOrderItem(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                modifier = modifier.size(64.dp),
-                painter = painterResource(Resources.images.orderImage),
-                contentDescription = "${orders.restaurantName} image",
-                contentScale = ContentScale.Crop,
+            BpImageLoader(
+                modifier = modifier
+                    .size(64.dp)
+                    .clip(shape = RoundedCornerShape(Theme.radius.medium)),
+                imageUrl = orders.restaurantImageUrl,
+                contentScale = ContentScale.Crop
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),

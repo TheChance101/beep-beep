@@ -29,6 +29,81 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                 taxiId = "taxi789",
                 taxiPlateNumber = "XYZ456",
                 driverId = "driver789",
+                driverName = "Mohamed Ali",
+                clientId = "client101",
+                startPoint = Location(37.7802, -122.4212),
+                destination = Location(37.7915, -122.4017),
+                rate = 4.2,
+                price = 20.0,
+                startDate = "2023-09-20 10:00:00",
+                endDate = "2023-09-20 10:25:00",
+                timeToArriveInMints = 25
+            ),
+            Trip(
+                id = "trip2",
+                taxiId = "taxi789",
+                taxiPlateNumber = "XYZ456",
+                driverId = "driver789",
+                driverName = "Said Hafez",
+                clientId = "client101",
+                startPoint = Location(37.7802, -122.4212),
+                destination = Location(37.7915, -122.4017),
+                rate = 4.2,
+                price = 20.0,
+                startDate = "2023-09-20 10:00:00",
+                endDate = "2023-09-20 10:25:00",
+                timeToArriveInMints = 25
+            ),
+            Trip(
+                id = "trip2",
+                taxiId = "taxi789",
+                taxiPlateNumber = "XYZ456",
+                driverId = "driver789",
+                driverName = "Sayed Ali",
+                clientId = "client101",
+                startPoint = Location(37.7802, -122.4212),
+                destination = Location(37.7915, -122.4017),
+                rate = 4.2,
+                price = 20.0,
+                startDate = "2023-09-20 10:00:00",
+                endDate = "2023-09-20 10:25:00",
+                timeToArriveInMints = 25
+            ),
+            Trip(
+                id = "trip2",
+                taxiId = "taxi789",
+                taxiPlateNumber = "XYZ456",
+                driverId = "driver789",
+                driverName = "Ahmed Hassan",
+                clientId = "client101",
+                startPoint = Location(37.7802, -122.4212),
+                destination = Location(37.7915, -122.4017),
+                rate = 4.2,
+                price = 20.0,
+                startDate = "2023-09-20 10:00:00",
+                endDate = "2023-09-20 10:25:00",
+                timeToArriveInMints = 25
+            ),
+            Trip(
+                id = "trip2",
+                taxiId = "taxi789",
+                taxiPlateNumber = "XYZ456",
+                driverId = "driver789",
+                driverName = "Ahmed Hassan",
+                clientId = "client101",
+                startPoint = Location(37.7802, -122.4212),
+                destination = Location(37.7915, -122.4017),
+                rate = 4.2,
+                price = 20.0,
+                startDate = "2023-09-20 10:00:00",
+                endDate = "2023-09-20 10:25:00",
+                timeToArriveInMints = 25
+            ),
+            Trip(
+                id = "trip2",
+                taxiId = "taxi789",
+                taxiPlateNumber = "XYZ456",
+                driverId = "driver789",
                 driverName = "Ahmed Hassan",
                 clientId = "client101",
                 startPoint = Location(37.7802, -122.4212),
@@ -49,7 +124,7 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                 userId = "user123",
                 restaurantId = "restaurant456",
                 restaurantName = "Burger king",
-                restaurantImageUrl = "",
+                restaurantImageUrl = "https://thecarefreekitchen.com/wp-content/uploads/2021/10/Buffalo-Chicken-Taquitos-1024x1024.jpg",
                 meals = listOf(
                     Order.Meal(
                         mealId = "meal1",
@@ -71,7 +146,7 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                 id = "order2",
                 userId = "user456",
                 restaurantId = "restaurant789",
-                restaurantImageUrl = "",
+                restaurantImageUrl = "https://www.freshnlean.com/wp-content/uploads/2021/03/Meal-Plan-plate-protein.png",
                 restaurantName = "Zeko Talawoth",
                 meals = listOf(
                     Order.Meal(
@@ -95,7 +170,7 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                 userId = "user123",
                 restaurantId = "restaurant456",
                 restaurantName = "Kebdaki",
-                restaurantImageUrl = "",
+                restaurantImageUrl = "https://www.foodandwine.com/thmb/bRz199ONebY-5h5gcvpOcHRxAkA=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Web_4000-Trifecta-Chicken-Breast-Sweet-Potato-Mixed-Vegetable_04-72a24aaee5584c06a26451603daec5c9.jpg",
                 meals = listOf(
                     Order.Meal(
                         mealId = "meal1",
@@ -118,7 +193,7 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                 userId = "user123",
                 restaurantId = "restaurant456",
                 restaurantName = "Elza3em",
-                restaurantImageUrl = "",
+                restaurantImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                 meals = listOf(
                     Order.Meal(
                         mealId = "meal1",
@@ -141,7 +216,7 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                 userId = "user123",
                 restaurantId = "restaurant456",
                 restaurantName = "Burger king",
-                restaurantImageUrl = "",
+                restaurantImageUrl = "https://cdn.apartmenttherapy.info/image/upload/v1558635037/k/archive/388e39a6ca67e257cb7bef6bde6a98aef1bcd434.jpg",
                 meals = listOf(
                     Order.Meal(
                         mealId = "meal1",
@@ -164,7 +239,7 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                 userId = "user123",
                 restaurantId = "restaurant456",
                 restaurantName = "Burger king",
-                restaurantImageUrl = "",
+                restaurantImageUrl = "https://ichef.bbci.co.uk/food/ic/food_16x9_832/recipes/roast_chicken_for_one_41998_16x9.jpg",
                 meals = listOf(
                     Order.Meal(
                         mealId = "meal1",
@@ -187,7 +262,7 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                 userId = "user123",
                 restaurantId = "restaurant456",
                 restaurantName = "Burger king",
-                restaurantImageUrl = "",
+                restaurantImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                 meals = listOf(
                     Order.Meal(
                         mealId = "meal1",
@@ -210,7 +285,7 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                 userId = "user123",
                 restaurantId = "restaurant456",
                 restaurantName = "Burger king",
-                restaurantImageUrl = "",
+                restaurantImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                 meals = listOf(
                     Order.Meal(
                         mealId = "meal1",
@@ -233,7 +308,7 @@ class FakeOrderRemoteGateway : IOrderRemoteGateway {
                 userId = "user123",
                 restaurantId = "restaurant456",
                 restaurantName = "Burger king",
-                restaurantImageUrl = "",
+                restaurantImageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
                 meals = listOf(
                     Order.Meal(
                         mealId = "meal1",
