@@ -81,23 +81,17 @@ class TaxiScreenModel(
             ErrorState.NoConnection -> {
                 updateState { it.copy(isNoInternetConnection = true) }
             }
+
             is ErrorState.TaxiAlreadyExists -> {
                 updateState {
                     it.copy(
-                            newTaxiInfo = it.newTaxiInfo.copy(
-                                    plateNumberError = ErrorWrapper(error.errorMessage, true)
-                            )
+                        newTaxiInfo = it.newTaxiInfo.copy(
+                            plateNumberError = ErrorWrapper(error.errorMessage, true)
+                        )
                     )
                 }
             }
-            is ErrorState.UserNotExist -> {
-                updateState { it.copy(newTaxiInfo = it.newTaxiInfo.copy(
-                        driverUserNameError = ErrorWrapper(error.errorMessage, true),
-                )
-                )
-                }
-            }
-            is ErrorState.TaxiNotFound -> println("error is taxi not found: ${error.errorMessage}")
+
             else -> {}
         }
 
@@ -200,7 +194,7 @@ class TaxiScreenModel(
     override fun onSaveClicked() {
         val newTaxi = mutableState.value.newTaxiInfo
         tryToExecute(
-            { manageTaxis.updateTaxi(newTaxi.toEntity(),newTaxi.id) },
+            { manageTaxis.updateTaxi(newTaxi.toEntity(), newTaxi.id) },
             ::onUpdateTaxiSuccessfully,
             ::onError
         )
@@ -220,7 +214,7 @@ class TaxiScreenModel(
     }
 
     override fun onCreateTaxiClicked() {
-        clearTaxiInfoErrorState()
+        clearAddTaxiErrorState()
         tryToExecute(
             { manageTaxis.createTaxi(mutableState.value.newTaxiInfo.toEntity()) },
             ::onCreateTaxiSuccessfully,
