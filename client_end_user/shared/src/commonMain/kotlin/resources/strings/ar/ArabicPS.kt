@@ -73,6 +73,7 @@ data class ArabicPS(
     override val thisWeek: String = "هذا الأسبوع",
     override val tryAgain: String = "حاول مرة أخرى",
     override val trackYourOrder: String = "تابع طلبك",
+    override val history: String = "سجل الطلبات",
     override val invalidPassword: String = "كلمة المرور غير صالحة",
     override val unknownError: String = "خطأ غير معروف",
     override val wifiDisabled: String = "تم تعطيل الواي فاي",
