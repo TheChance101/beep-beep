@@ -26,16 +26,11 @@ class LoginScreenModel(
                 login.loginUser(
                     username = currentState.username,
                     password = currentState.password,
-                    keepLoggedIn = currentState.keepLoggedIn
                 )
             },
             onSuccess = { onLoginSuccess() },
             onError = ::onError
         )
-    }
-
-    override fun onKeepLoggedInClicked() {
-        updateState { it.copy(keepLoggedIn = !it.keepLoggedIn) }
     }
 
     private fun onLoginSuccess() {

@@ -85,7 +85,6 @@ class RestaurantScreenModel(
         when (error) {
             is ErrorState.MultipleErrors -> {
                 val errorStates = error.errors
-                println("MultipleErrors: $errorStates")
                 updateState {
                     it.copy(
                         newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
@@ -204,6 +203,8 @@ class RestaurantScreenModel(
     }
 
     override fun onAddNewRestaurantClicked() {
+        clearRestaurantInfoErrorState()
+        clearAddRestaurantInfo()
         updateState { it.copy(isNewRestaurantInfoDialogVisible = true) }
     }
 
@@ -228,7 +229,7 @@ class RestaurantScreenModel(
 
     override fun onCancelCreateRestaurantClicked() {
         clearAddRestaurantInfo()
-        clearAddRestaurantErrorInfo()
+        clearRestaurantInfoErrorState()
         updateState { it.copy(isNewRestaurantInfoDialogVisible = false) }
     }
 
@@ -334,8 +335,7 @@ class RestaurantScreenModel(
     }
 
     override fun onCreateNewRestaurantClicked() {
-        clearAddRestaurantErrorInfo()
-        updateState { it.copy(isNewRestaurantInfoDialogVisible = true) }
+        clearRestaurantInfoErrorState()
         tryToExecute(
             { manageRestaurant.createRestaurant(state.value.newRestaurantInfoUiState.toEntity()) },
             ::onCreateRestaurantSuccessfully,
@@ -358,7 +358,7 @@ class RestaurantScreenModel(
         getRestaurants()
     }
 
-    private fun clearAddRestaurantErrorInfo() {
+    private fun clearRestaurantInfoErrorState() {
         updateState {
             it.copy(
                 newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(

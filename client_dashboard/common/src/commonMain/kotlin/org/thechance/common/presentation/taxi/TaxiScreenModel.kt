@@ -78,6 +78,26 @@ class TaxiScreenModel(
                 }
             }
 
+            ErrorState.NoConnection -> {
+                updateState { it.copy(isNoInternetConnection = true) }
+            }
+            is ErrorState.TaxiAlreadyExists -> {
+                updateState {
+                    it.copy(
+                            newTaxiInfo = it.newTaxiInfo.copy(
+                                    plateNumberError = ErrorWrapper(error.errorMessage, true)
+                            )
+                    )
+                }
+            }
+            is ErrorState.UserNotExist -> {
+                updateState { it.copy(newTaxiInfo = it.newTaxiInfo.copy(
+                        driverUserNameError = ErrorWrapper(error.errorMessage, true),
+                )
+                )
+                }
+            }
+            is ErrorState.TaxiNotFound -> println("error is taxi not found: ${error.errorMessage}")
             else -> {}
         }
 
@@ -135,7 +155,7 @@ class TaxiScreenModel(
 
     //region add new taxi listener
     override fun onCancelClicked() {
-        clearAddNewTaxiDialogState()
+        clearTaxiInfoState()
         updateState { it.copy(isAddNewTaxiDialogVisible = false) }
     }
 
@@ -178,8 +198,9 @@ class TaxiScreenModel(
     }
 
     override fun onSaveClicked() {
+        val newTaxi = mutableState.value.newTaxiInfo
         tryToExecute(
-            { manageTaxis.updateTaxi(mutableState.value.newTaxiInfo.toEntity()) },
+            { manageTaxis.updateTaxi(newTaxi.toEntity(),newTaxi.id) },
             ::onUpdateTaxiSuccessfully,
             ::onError
         )
@@ -199,7 +220,7 @@ class TaxiScreenModel(
     }
 
     override fun onCreateTaxiClicked() {
-        clearAddTaxiErrorState()
+        clearTaxiInfoErrorState()
         tryToExecute(
             { manageTaxis.createTaxi(mutableState.value.newTaxiInfo.toEntity()) },
             ::onCreateTaxiSuccessfully,
@@ -212,16 +233,16 @@ class TaxiScreenModel(
         val newTaxi =
             mutableState.value.taxis.toMutableList().apply { add(taxi.toDetailsUiState()) }
         updateState { it.copy(taxis = newTaxi, isLoading = false) }
-        clearAddNewTaxiDialogState()
+        clearTaxiInfoState()
         getTaxis()
     }
 
     override fun onAddNewTaxiClicked() {
-        clearAddNewTaxiDialogState()
+        clearTaxiInfoState()
         updateState { it.copy(isAddNewTaxiDialogVisible = true, isEditMode = false) }
     }
 
-    private fun clearAddNewTaxiDialogState() {
+    private fun clearTaxiInfoState() {
         updateState {
             it.copy(
                 newTaxiInfo = it.newTaxiInfo.copy(

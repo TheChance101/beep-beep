@@ -47,6 +47,7 @@ data class TaxiDetailsUiState(
     val type: String = "",
     val seats: Int = 4,
     val username: String = "",
+    val driverId: String? = null,
     val status: TaxiStatus = ONLINE,
     val trips: String = "1",
     val isTaxiMenuExpanded: Boolean = false,
@@ -90,6 +91,7 @@ data class TaxiInfoUiState(
     val id: String = "",
     val plateNumber: String = "",
     val driverUserName: String = "",
+    val driverId: String = "",
     val carModel: String = "",
     val selectedCarColor: CarColor = CarColor.WHITE,
     val seats: Int = 0,
@@ -116,6 +118,7 @@ fun Taxi.toDetailsUiState(): TaxiDetailsUiState = TaxiDetailsUiState(
     username = username,
     status = status,
     trips = trips,
+    driverId = driverId
 )
 
 fun List<Taxi>.toDetailsUiState() = map { it.toDetailsUiState() }
@@ -123,6 +126,7 @@ fun List<Taxi>.toDetailsUiState() = map { it.toDetailsUiState() }
 fun TaxiInfoUiState.toEntity() = NewTaxiInfo(
     plateNumber = plateNumber,
     driverUserName = driverUserName,
+    driverId = driverId,
     carModel = carModel,
     selectedCarColor = selectedCarColor,
     seats = seats
@@ -137,6 +141,7 @@ fun TaxiDetailsUiState.toEntity(): Taxi = Taxi(
     username = username,
     status = status,
     trips = trips,
+    driverId = driverId
 )
 
 fun List<TaxiDetailsUiState>.toEntity() = map { it.toEntity() }
@@ -147,5 +152,6 @@ fun Taxi.toUiState(): TaxiInfoUiState = TaxiInfoUiState(
     driverUserName = username,
     carModel = type,
     selectedCarColor = color,
-    seats = seats
+    seats = seats,
+    driverId = driverId ?: ""
 )

@@ -10,6 +10,7 @@ fun RestaurantDto.toEntity() = Restaurant(
         id = id ?: "",
         name = name ?: "",
         ownerId = ownerId ?: "",
+        ownerUsername = ownerUserName ?: "",
         phone = phone ?: "",
         rate = rate ?: 0.0,
         priceLevel = priceLevel ?: "",
