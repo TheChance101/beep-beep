@@ -43,6 +43,7 @@ import presentation.order.OrderScreen
 import presentation.order.orderHistory.OrdersHistoryScreen
 import presentation.restaurantSelection.RestaurantUIState
 import resources.Resources
+import util.toWeekDay
 
 class MainScreen(private val restaurantId: String) :
     BaseScreen<MainScreenModel, MainScreenUIState, MainScreenUIEffect, MainScreenInteractionListener>() {
@@ -141,7 +142,7 @@ class MainScreen(private val restaurantId: String) :
                                     barColor = Theme.colors.primary
                                 )
                             ),
-                            xAxisData = state.orderUiState.xAxisData,
+                            xAxisData = state.orderUiState.xAxisData.toWeekDay(),
                             legendPosition = LegendPosition.DISAPPEAR,
                             yAxisRange = 5,
                             barCornerRadius = 8.dp
@@ -163,7 +164,7 @@ class MainScreen(private val restaurantId: String) :
                                     lineShadow = true,
                                 )
                             ),
-                            xAxisData = state.revenueUiState.xAxisData,
+                            xAxisData = state.revenueUiState.xAxisData.toWeekDay(),
                             legendPosition = LegendPosition.DISAPPEAR,
                             yAxisRange = 5
                         )
