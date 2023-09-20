@@ -18,6 +18,7 @@ fun TaxiDto.toEntity() = Taxi(
     status = getTaxiStatus(isAvailable ?: false),
     username = driverUsername ?: "",
     trips = trips ?: "0",
+    driverId = driverId ?: "",
 )
 
 fun NewTaxiInfo.toDto(): TaxiInfoDto {
@@ -27,6 +28,7 @@ fun NewTaxiInfo.toDto(): TaxiInfoDto {
         type = carModel,
         seats = seats,
         driverUsername = driverUserName,
+        driverId = driverId,
     )
 }
 

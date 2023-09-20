@@ -7,7 +7,7 @@ fun Restaurant.toUiState(): RestaurantUiState.RestaurantDetailsUiState =
     RestaurantUiState.RestaurantDetailsUiState(
         id = id,
         name = name,
-        ownerUsername = ownerId,
+        ownerUsername = ownerUsername,
         phone = phone,
         rate = rate,
         priceLevel = priceLevel,

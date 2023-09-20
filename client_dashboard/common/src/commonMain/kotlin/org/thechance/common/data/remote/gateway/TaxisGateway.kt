@@ -16,6 +16,9 @@ import org.thechance.common.domain.getway.ITaxisGateway
 import org.thechance.common.domain.util.NotFoundException
 
 class TaxisGateway(private val client: HttpClient) : BaseGateway(), ITaxisGateway {
+    override suspend fun getPdfTaxiReport() {
+        TODO("Not yet implemented")
+    }
 
     override suspend fun getTaxis(
         username: String?,
@@ -29,12 +32,7 @@ class TaxisGateway(private val client: HttpClient) : BaseGateway(), ITaxisGatewa
                 parameter("limit", limit)
             }
         }.value
-
-        return DataWrapper(
-            totalPages = result?.total?.div(limit) ?: 0,
-            numberOfResult = result?.total ?: 0,
-            result = result?.items?.toEntity() ?: throw UnknownError()
-        )
+        return paginateData(result?.items?.toEntity() ?: emptyList(), limit, result?.total ?: 0)
     }
 
     override suspend fun createTaxi(taxi: NewTaxiInfo): Taxi {
@@ -46,9 +44,10 @@ class TaxisGateway(private val client: HttpClient) : BaseGateway(), ITaxisGatewa
         return result?.toEntity() ?: throw UnknownError()
     }
 
-    override suspend fun updateTaxi(taxi: NewTaxiInfo): Taxi {
-        val result = tryToExecute<ServerResponse<TaxiDto>>(client){
-            put(urlString = "/taxi/{taxiId}"){
+    override suspend fun updateTaxi(taxi: NewTaxiInfo,taxiId:String): Taxi {
+        println("updateTaxi: $taxiId")
+        val result = tryToExecute<ServerResponse<TaxiDto>>(client) {
+            put(urlString = "/taxi/$taxiId") {
                 contentType(ContentType.Application.Json)
                 setBody(taxi.toDto())
             }
@@ -56,8 +55,10 @@ class TaxisGateway(private val client: HttpClient) : BaseGateway(), ITaxisGatewa
         return result?.toEntity() ?: throw UnknownError()
     }
 
-    override suspend fun deleteTaxi(taxiId: String): Boolean {
-        TODO("deleteTaxi")
+    override suspend fun deleteTaxi(taxiId: String): Taxi {
+        return tryToExecute<ServerResponse<TaxiDto>>(client) {
+            delete(urlString = "/taxi") { url { appendPathSegments(taxiId) } }
+        }.value?.toEntity() ?: throw NotFoundException("Taxi not found")
     }
 
     override suspend fun getTaxiById(taxiId: String): Taxi {
