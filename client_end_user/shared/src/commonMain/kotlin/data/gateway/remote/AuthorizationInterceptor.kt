@@ -16,9 +16,11 @@ fun Scope.authorizationIntercept(client: HttpClient) {
 
         val accessToken = localConfigurationGateway.getAccessToken()
         val refreshToken = localConfigurationGateway.getRefreshToken()
+        val languageCode = localConfigurationGateway.getLanguageCode()
 
         request.headers {
             append("Authorization", "Bearer $accessToken")
+            append("Accept-Language", languageCode)
         }
 
         val originalCall = execute(request)
