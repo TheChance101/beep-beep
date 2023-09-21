@@ -63,6 +63,10 @@ class RestaurantFakeGateway : IRestaurantGateway {
         return restaurants.find { it.id == id }?.toEntity() ?: throw UnknownError()
     }
 
+    override suspend fun updateRestaurant(restaurant: Restaurant): Restaurant {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun createRestaurant(restaurant: NewRestaurantInfo): Restaurant {
         return Restaurant(
             id = "7",

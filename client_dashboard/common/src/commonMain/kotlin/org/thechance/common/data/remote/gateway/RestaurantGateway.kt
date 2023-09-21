@@ -84,5 +84,9 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
         }.value?.toEntity() ?: throw UnknownError()
     }
 
+    override suspend fun updateRestaurant(restaurant: Restaurant): Restaurant {
+        TODO("Not yet implemented")
+    }
+
 }
 
