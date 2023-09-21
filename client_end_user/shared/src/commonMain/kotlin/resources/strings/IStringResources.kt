@@ -80,4 +80,5 @@ interface IStringResources {
     val thisWeek: String
     val tryAgain: String
     val trackYourOrder: String
+    val history: String
 }

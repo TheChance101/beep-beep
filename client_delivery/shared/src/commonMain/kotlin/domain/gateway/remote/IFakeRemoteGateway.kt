@@ -1,4 +1,4 @@
-package domain.gateway
+package domain.gateway.remote
 
 interface IFakeRemoteGateway {
 

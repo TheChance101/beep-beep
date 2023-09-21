@@ -5,7 +5,10 @@ import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpSend
 import io.ktor.client.plugins.plugin
 import io.ktor.client.request.headers
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.map
 import org.koin.core.scope.Scope
+import util.LanguageCode
 
 fun Scope.authorizationIntercept(client: HttpClient) {
 
@@ -16,7 +19,8 @@ fun Scope.authorizationIntercept(client: HttpClient) {
 
         val accessToken = localConfigurationGateway.getAccessToken()
         val refreshToken = localConfigurationGateway.getRefreshToken()
-        val languageCode = localConfigurationGateway.getLanguageCode()
+        var languageCode = LanguageCode.EN.value
+        localConfigurationGateway.getLanguageCode().collectLatest { languageCode = it }
 
         request.headers {
             append("Authorization", "Bearer $accessToken")

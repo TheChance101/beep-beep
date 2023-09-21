@@ -11,4 +11,3 @@ val ScreenModelModule = module {
     factoryOf(::MainScreenModel)
     factoryOf(::MapScreenModel)
 }
-
