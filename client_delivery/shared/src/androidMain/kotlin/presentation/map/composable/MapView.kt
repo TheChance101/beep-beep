@@ -2,43 +2,37 @@ package presentation.map.composable
 
 import android.annotation.SuppressLint
 import android.webkit.WebView
-import android.webkit.WebViewClient
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
-import kotlinx.coroutines.delay
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-actual fun MapView(modifier: Modifier) {
+actual fun MapView(
+    modifier: Modifier,
+    currentLocation: Pair<Double, Double>,
+    destination: Pair<Double, Double>?,
+) {
 
     var webView: WebView? by remember { mutableStateOf(null) }
-    var latitude2 by remember { mutableDoubleStateOf(40.6740229) }
 
+    AnimatedVisibility(destination == null) {
+        val jsCode = "createInfiniteLoopFunction(${currentLocation.first},${currentLocation.second})()"
+        webView?.evaluateJavascript(jsCode, null)
+        webView?.evaluateJavascript("GetMap(${currentLocation.first},${currentLocation.second})", null)
+    }
+    destination?.let { location ->
+        webView?.evaluateJavascript("clearMap()", null)
 
-    LaunchedEffect(Unit) {
-        while (true) {
-            // Update latitude and longitude values here
-            latitude2 += .00002
-            if (latitude2 >= 180)
-                latitude2 = 0.0
-
-            // Send updated values to the JavaScript function
-
-            val jsCode = "createInfiniteLoopFunction($latitude2)()"
-
-            webView?.evaluateJavascript(jsCode, null)
-            // Delay for a specified interval before the next update (e.g., 5 seconds)
-
-            delay(1000)
-
-        }
+        webView?.evaluateJavascript(
+            "getDirections(${location.first},${location.second})",
+            null
+        )
     }
 
     AndroidView(
@@ -47,18 +41,11 @@ actual fun MapView(modifier: Modifier) {
             WebView(context).apply {
                 webView = this
                 settings.javaScriptEnabled = true
-                webViewClient = object : WebViewClient() {
-                    override fun onPageFinished(view: WebView?, url: String?) {
-                        super.onPageFinished(view, url)
-                        webView?.evaluateJavascript("GetMap()", null)
-                    }
-                }
             }
         }
     ) {
         it.loadUrl(MAP_URL)
     }
-
 }
 
 private const val MAP_URL = "File:///android_asset/bing_map/map/index2.html"
