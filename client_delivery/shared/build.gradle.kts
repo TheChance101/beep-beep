@@ -63,7 +63,7 @@ kotlin {
                 implementation(libs.kotlin.serialization)
 
                 api(libs.calf)
-
+                api(libs.moko.geo)
             }
         }
         val androidMain by getting {
