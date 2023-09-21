@@ -4,7 +4,7 @@ import org.thechance.common.data.remote.model.LocationDto
 import org.thechance.common.data.remote.model.RestaurantCreateDto
 import org.thechance.common.data.remote.model.RestaurantDto
 import org.thechance.common.domain.entity.Location
-import org.thechance.common.domain.entity.NewRestaurantInfo
+import org.thechance.common.domain.entity.RestaurantInformation
 import org.thechance.common.domain.entity.Restaurant
 
 fun RestaurantDto.toEntity() = Restaurant(
@@ -27,7 +27,7 @@ fun LocationDto.toEntity() = Location(
 
 fun List<RestaurantDto>.toEntity() = map(RestaurantDto::toEntity)
 
-fun NewRestaurantInfo.toDto(): RestaurantCreateDto {
+fun RestaurantInformation.toDto(): RestaurantCreateDto {
     return RestaurantCreateDto(
         name = name,
         ownerUserName = ownerUsername,

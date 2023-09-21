@@ -1,7 +1,7 @@
 package org.thechance.common.presentation.restaurant
 
 import org.thechance.common.domain.entity.Cuisine
-import org.thechance.common.domain.entity.NewRestaurantInfo
+import org.thechance.common.domain.entity.RestaurantInformation
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.presentation.composables.table.Header
 
@@ -85,7 +85,7 @@ fun Restaurant.toUIState() = RestaurantInformationUIState(
     location = location.latitude.toString() + "," + location.longitude.toString()
 )
 
-fun RestaurantInformationUIState.toEntity() = NewRestaurantInfo(
+fun RestaurantInformationUIState.toEntity() = RestaurantInformation(
     name = name,
     ownerUsername = ownerUsername,
     phoneNumber = phoneNumber,

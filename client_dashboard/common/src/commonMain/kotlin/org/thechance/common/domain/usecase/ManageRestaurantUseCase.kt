@@ -1,14 +1,14 @@
 package org.thechance.common.domain.usecase
 
 import org.thechance.common.domain.entity.DataWrapper
-import org.thechance.common.domain.entity.NewRestaurantInfo
+import org.thechance.common.domain.entity.RestaurantInformation
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.getway.IRestaurantGateway
 
 
 interface IManageRestaurantUseCase {
 
-    suspend fun createRestaurant(restaurant: NewRestaurantInfo): Restaurant
+    suspend fun createRestaurant(restaurant: RestaurantInformation): Restaurant
 
     suspend fun getRestaurant(
         pageNumber: Int,
@@ -22,7 +22,7 @@ interface IManageRestaurantUseCase {
 
     suspend fun getRestaurantById(id: String): Restaurant
 
-    suspend fun updateRestaurant(restaurant: Restaurant): Restaurant
+    suspend fun updateRestaurant(restaurantId: String, restaurant: RestaurantInformation): Restaurant
 
 }
 
@@ -30,7 +30,7 @@ interface IManageRestaurantUseCase {
 class ManageRestaurantUseCase(private val restaurantGateway: IRestaurantGateway) :
     IManageRestaurantUseCase {
 
-    override suspend fun createRestaurant(restaurant: NewRestaurantInfo): Restaurant {
+    override suspend fun createRestaurant(restaurant: RestaurantInformation): Restaurant {
         return restaurantGateway.createRestaurant(restaurant)
     }
 
@@ -58,8 +58,8 @@ class ManageRestaurantUseCase(private val restaurantGateway: IRestaurantGateway)
         return restaurantGateway.getRestaurantById(id)
     }
 
-    override suspend fun updateRestaurant(restaurant: Restaurant): Restaurant {
-        return restaurantGateway.updateRestaurant(restaurant)
+    override suspend fun updateRestaurant(restaurantId: String, restaurant: RestaurantInformation): Restaurant {
+        return restaurantGateway.updateRestaurant(restaurantId, restaurant)
     }
 
 }
