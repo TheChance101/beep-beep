@@ -61,7 +61,7 @@ data class TaxiDetailsUiState(
 
 data class TaxiFilterUiState(
     val carColor: CarColor? = null,
-    val seats: Int = -1,
+    val seats: Int? = null,
     val status: TaxiStatus? = null
 ) {
     fun toEntity(): TaxiFiltration {

@@ -33,13 +33,12 @@ class TaxiScreenModel(
 
     private fun getTaxis() {
         tryToExecute(
-            {
-                manageTaxis.getTaxis(
-                    state.value.searchQuery.trim(),
-                    state.value.taxiFilterUiState.toEntity(),
-                    state.value.currentPage,
-                    state.value.specifiedTaxis
-                )
+            { manageTaxis.getTaxis(
+                username=  mutableState.value.searchQuery.trim(),
+                taxiFiltration= mutableState.value.taxiFilterUiState.toEntity(),
+                page=  mutableState.value.currentPage,
+                limit=  mutableState.value.specifiedTaxis
+            )
             },
             ::onGetTaxisSuccessfully,
             ::onError
@@ -48,8 +47,8 @@ class TaxiScreenModel(
 
     private fun onGetTaxisSuccessfully(taxis: DataWrapper<Taxi>) {
         updateState { it.copy(pageInfo = taxis.toDetailsUiState(), isLoading = false) }
-        if (state.value.currentPage > state.value.pageInfo.totalPages) {
-            onPageClick(state.value.pageInfo.totalPages)
+        if (mutableState.value.currentPage > mutableState.value.pageInfo.totalPages) {
+            onPageClick(mutableState.value.pageInfo.totalPages)
         }
     }
 
@@ -288,7 +287,7 @@ class TaxiScreenModel(
             it.copy(
                 taxiFilterUiState = TaxiFilterUiState(
                     carColor = null,
-                    seats = -1,
+                    seats =null,
                     status = null
                 )
             )
@@ -361,12 +360,12 @@ class TaxiScreenModel(
     }
 
     private fun setTaxiMenuVisibility(id: String, isExpanded: Boolean) {
-        val currentTaxisState = state.value.pageInfo.data
+        val currentTaxisState = mutableState.value.pageInfo.data
         val selectedTaxiState = currentTaxisState.first { it.id == id }
         val updatedTaxiState = selectedTaxiState.copy(isTaxiMenuExpanded = isExpanded)
         updateState {
             it.copy(
-                pageInfo = state.value.pageInfo.copy(data = currentTaxisState.toMutableList()
+                pageInfo = mutableState.value.pageInfo.copy(data = currentTaxisState.toMutableList()
                     .apply { set(indexOf(selectedTaxiState), updatedTaxiState) })
             )
         }
