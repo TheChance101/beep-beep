@@ -573,6 +573,31 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
         )
     )
 
+    private val ordersCount : List<Map<String, Int>> = listOf(
+        mapOf(
+            "1" to 500,
+            "2" to 800,
+            "3" to 900,
+            "4" to 700,
+            "5" to 300,
+            "6" to 200,
+            "7" to 100,
+        )
+    )
+
+    private val revenue : List<Map<String, Double>> = listOf(
+        mapOf(
+            "1" to 500.0,
+            "2" to 800.0,
+            "3" to 900.0,
+            "4" to 700.0,
+            "5" to 300.0,
+            "6" to 200.0,
+            "7" to 100.0,
+        )
+    )
+
+
     override suspend fun loginUser(userName: String, password: String): Pair<String, String> {
         if (userName != "theChance") {
             throw InvalidPasswordException()
@@ -597,10 +622,10 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
     override suspend fun getRestaurantInfo(restaurantId: String): Restaurant {
         return getRestaurantsByOwnerId("7bf7ef77d907").find { it.id == restaurantId }
             ?: Restaurant(
-                id  = "",
+                id = "",
                 ownerId = "",
                 address = "",
-                location = Location(0.0,0.0),
+                location = Location(0.0, 0.0),
                 phone = "",
                 openingTime = "",
                 closingTime = "",
@@ -684,5 +709,24 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
 
 
     //endregion cuisines
+
+
+    //region charts
+    override suspend fun getOrdersRevenueByDaysBefore(
+        restaurantId: String,
+        daysBack: Int
+    ): List<Map<String, Double>> {
+        return revenue
+    }
+
+    override suspend fun getOrdersCountByDaysBefore(
+        restaurantId: String,
+        daysBack: Int
+    ): List<Map<String, Int>> {
+        return ordersCount
+    }
+
+    //endregion charts
+
 
 }

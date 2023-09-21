@@ -1,9 +1,9 @@
 package org.thechance.common.data.remote.gateway
 
-import io.ktor.client.*
+import io.ktor.client.HttpClient
 import io.ktor.client.call.*
-import io.ktor.client.plugins.*
-import io.ktor.client.statement.*
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.statement.HttpResponse
 import org.thechance.common.data.remote.model.ServerResponse
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.util.*
@@ -18,8 +18,9 @@ abstract class BaseGateway {
         try {
             return client.method().body()
         } catch (e: ClientRequestException) {
-            val errorMessages = e.response.body<ServerResponse<String>>().status?.errorMessages
-            errorMessages?.let(::throwMatchingException)
+            val errorResponse = e.response.body<ServerResponse<String>>()
+            val errorMessages = errorResponse.status?.errorMessages
+            errorMessages?.let { throwMatchingException(it) }
             throw UnknownErrorException(e.message)
         } catch (e: ConnectException) {
             throw NoInternetException()
@@ -29,103 +30,79 @@ abstract class BaseGateway {
     }
 
     fun throwMatchingException(errorMessages: Map<String, String>) {
-        when {
-            errorMessages.containsErrors(WRONG_PASSWORD) ->
-                throw InvalidPasswordException(errorMessages.getOrEmpty(WRONG_PASSWORD))
+        val exceptions = mutableListOf<BpError>()
 
-            errorMessages.containsErrors(INVALID_USERNAME) ->
-                throw InvalidUserNameException(errorMessages.getOrEmpty(INVALID_USERNAME))
+        for (errorCode in errorCodes) {
+            val errorMessage = errorMessages[errorCode] ?: continue
 
-            errorMessages.containsErrors(USER_NOT_EXIST) ->
-                throw InvalidUserNameException(errorMessages.getOrEmpty(USER_NOT_EXIST))
+            val exception = when (errorCode) {
+                WRONG_PASSWORD -> BpError.InvalidPassword(errorMessage)
+                INVALID_USERNAME, USER_NOT_EXIST -> BpError.InvalidUserName(errorMessage)
+                INVALID_TAXI_ID -> BpError.InvalidTaxiId(errorMessage)
+                INVALID_TAXI_PLATE -> BpError.InvalidTaxiPlate(errorMessage)
+                INVALID_TAXI_COLOR -> BpError.InvalidTaxiColor(errorMessage)
+                INVALID_CAR_TYPE -> BpError.InvalidCarType(errorMessage)
+                SEAT_OUT_OF_RANGE -> BpError.SeatOutOfRange(errorMessage)
+                ALREADY_TAXI_EXIST -> BpError.TaxiAlreadyExists(errorMessage)
+                TAXI_NOT_FOUND -> BpError.TaxiNotFound(errorMessage)
+                RESTAURANT_INVALID_ID -> BpError.RestaurantInvalidId(errorMessage)
+                RESTAURANT_INVALID_NAME -> BpError.RestaurantInvalidName(errorMessage)
+                RESTAURANT_INVALID_LOCATION -> BpError.RestaurantInvalidLocation(errorMessage)
+                RESTAURANT_INVALID_DESCRIPTION -> BpError.RestaurantInvalidDescription(errorMessage)
+                RESTAURANT_INVALID_PHONE -> BpError.RestaurantInvalidPhone(errorMessage)
+                RESTAURANT_INVALID_TIME -> BpError.RestaurantInvalidTime(errorMessage)
+                RESTAURANT_INVALID_PAGE -> BpError.RestaurantInvalidPage(errorMessage)
+                RESTAURANT_INVALID_PAGE_LIMIT -> BpError.RestaurantInvalidPageLimit(errorMessage)
+                RESTAURANT_INVALID_UPDATE_PARAMETER -> BpError.RestaurantInvalidUpdateParameter(errorMessage)
+                RESTAURANT_INVALID_ADDRESS -> BpError.RestaurantInvalidAddress(errorMessage)
+                RESTAURANT_INVALID_REQUEST_PARAMETER -> BpError.RestaurantInvalidRequestParameter(errorMessage)
+                RESTAURANT_NOT_FOUND -> BpError.RestaurantNotFound(errorMessage)
+                RESTAURANT_ERROR_ADD -> BpError.RestaurantErrorAdd(errorMessage)
+                RESTAURANT_CLOSED -> BpError.RestaurantClosed(errorMessage)
+                CUISINE_NAME_ALREADY_EXISTED -> BpError.CuisineNameAlreadyExisted(errorMessage)
+                USERNAME_CANNOT_BE_BLANK -> BpError.UsernameCannotBeBlank(errorMessage)
+                PASSWORD_CANNOT_BE_BLANK -> BpError.PasswordCannotBeBlank(errorMessage)
+                else -> BpError.UnknownError(errorMessage)
+            }
+            exceptions.add(exception)
+        }
 
-            errorMessages.containsErrors(INVALID_TAXI_ID) ->
-                throw InvalidTaxiIdException(errorMessages.getOrEmpty(INVALID_TAXI_ID))
-
-            errorMessages.containsErrors(INVALID_TAXI_PLATE) ->
-                throw InvalidTaxiPlateException(errorMessages.getOrEmpty(INVALID_TAXI_PLATE))
-
-            errorMessages.containsErrors(INVALID_TAXI_COLOR) ->
-                throw InvalidTaxiColorException(errorMessages.getOrEmpty(INVALID_TAXI_COLOR))
-
-            errorMessages.containsErrors(INVALID_CAR_TYPE) ->
-                throw InvalidCarTypeException(errorMessages.getOrEmpty(INVALID_CAR_TYPE))
-
-            errorMessages.containsErrors(SEAT_OUT_OF_RANGE) ->
-                throw SeatOutOfRangeException(errorMessages.getOrEmpty(SEAT_OUT_OF_RANGE))
-
-            errorMessages.containsErrors(ALREADY_TAXI_EXIST) ->
-                throw TaxiAlreadyExistsException(errorMessages.getOrEmpty(ALREADY_TAXI_EXIST))
-
-            errorMessages.containsErrors(INVALID_TAXI_REQUEST_PARAMETER) ->
-                throw InvalidTaxiRequestParameterException(errorMessages.getOrEmpty(INVALID_TAXI_REQUEST_PARAMETER))
-
-            errorMessages.containsErrors(TAXI_NOT_FOUND) ->
-                throw TaxiNotFoundException(errorMessages.getOrEmpty(TAXI_NOT_FOUND))
-
-            errorMessages.containsErrors(RESTAURANT_INVALID_ID) ->
-                throw RestaurantInvalidIdException(errorMessages.getOrEmpty(RESTAURANT_INVALID_ID))
-
-            errorMessages.containsErrors(RESTAURANT_INVALID_NAME) ->
-                throw RestaurantInvalidNameException(errorMessages.getOrEmpty(RESTAURANT_INVALID_NAME))
-
-            errorMessages.containsErrors(RESTAURANT_INVALID_LOCATION) ->
-                throw RestaurantInvalidLocationException(errorMessages.getOrEmpty(RESTAURANT_INVALID_LOCATION))
-
-            errorMessages.containsErrors(RESTAURANT_INVALID_DESCRIPTION) ->
-                throw RestaurantInvalidDescriptionException(errorMessages.getOrEmpty(RESTAURANT_INVALID_DESCRIPTION))
-
-            errorMessages.containsErrors(RESTAURANT_INVALID_PHONE) ->
-                throw RestaurantInvalidPhoneException(errorMessages.getOrEmpty(RESTAURANT_INVALID_PHONE))
-
-            errorMessages.containsErrors(RESTAURANT_INVALID_TIME) ->
-                throw RestaurantInvalidTimeException(errorMessages.getOrEmpty(RESTAURANT_INVALID_TIME))
-
-            errorMessages.containsErrors(RESTAURANT_INVALID_PAGE) ->
-                throw RestaurantInvalidPageException(errorMessages.getOrEmpty(RESTAURANT_INVALID_PAGE))
-
-            errorMessages.containsErrors(RESTAURANT_INVALID_PAGE_LIMIT) ->
-                throw RestaurantInvalidPageLimitException(errorMessages.getOrEmpty(RESTAURANT_INVALID_PAGE_LIMIT))
-
-            errorMessages.containsErrors(RESTAURANT_INVALID_UPDATE_PARAMETER) ->
-                throw RestaurantInvalidUpdateParameterException(
-                    errorMessages.getOrEmpty(
-                        RESTAURANT_INVALID_UPDATE_PARAMETER
-                    )
-                )
-
-            errorMessages.containsErrors(RESTAURANT_INVALID_ADDRESS) ->
-                throw RestaurantInvalidAddressException(errorMessages.getOrEmpty(RESTAURANT_INVALID_ADDRESS))
-
-            errorMessages.containsErrors(RESTAURANT_INVALID_REQUEST_PARAMETER) ->
-                throw RestaurantInvalidRequestParameterException(
-                    errorMessages.getOrEmpty(
-                        RESTAURANT_INVALID_REQUEST_PARAMETER
-                    )
-                )
-
-            errorMessages.containsErrors(RESTAURANT_NOT_FOUND) ->
-                throw RestaurantNotFoundException(errorMessages.getOrEmpty(RESTAURANT_NOT_FOUND))
-
-            errorMessages.containsErrors(RESTAURANT_ERROR_ADD) ->
-                throw RestaurantErrorAddException(errorMessages.getOrEmpty(RESTAURANT_ERROR_ADD))
-
-            errorMessages.containsErrors(RESTAURANT_CLOSED) ->
-                throw RestaurantClosedException(errorMessages.getOrEmpty(RESTAURANT_CLOSED))
-
-            errorMessages.containsErrors(CUISINE_NAME_ALREADY_EXISTED) ->
-                throw CuisineNameAlreadyExistedException(errorMessages.getOrEmpty(CUISINE_NAME_ALREADY_EXISTED))
-
-            errorMessages.containsErrors(USERNAME_CANNOT_BE_BLANK) ->
-                throw UsernameCannotBeBlankException(errorMessages.getOrEmpty(USERNAME_CANNOT_BE_BLANK))
-
-            errorMessages.containsErrors(PASSWORD_CANNOT_BE_BLANK) ->
-                throw PasswordCannotBeBlankException(errorMessages.getOrEmpty(PASSWORD_CANNOT_BE_BLANK))
-
-            errorMessages.containsErrors(INVALID_USER_REQUEST_PARAMETER) ->
-                throw InvalidUserRequestParameterException(errorMessages.getOrEmpty(INVALID_USER_REQUEST_PARAMETER))
+        if (exceptions.isNotEmpty()) {
+            throw MultipleErrorException(exceptions)
         }
     }
+
+    val errorCodes: List<String> = listOf(
+        WRONG_PASSWORD,
+        INVALID_USERNAME,
+        USER_NOT_EXIST,
+        INVALID_TAXI_ID,
+        INVALID_TAXI_PLATE,
+        INVALID_TAXI_COLOR,
+        INVALID_CAR_TYPE,
+        SEAT_OUT_OF_RANGE,
+        ALREADY_TAXI_EXIST,
+        INVALID_TAXI_REQUEST_PARAMETER,
+        TAXI_NOT_FOUND,
+        RESTAURANT_INVALID_ID,
+        RESTAURANT_INVALID_NAME,
+        RESTAURANT_INVALID_LOCATION,
+        RESTAURANT_INVALID_DESCRIPTION,
+        RESTAURANT_INVALID_PHONE,
+        RESTAURANT_INVALID_TIME,
+        RESTAURANT_INVALID_PAGE,
+        RESTAURANT_INVALID_PAGE_LIMIT,
+        RESTAURANT_INVALID_UPDATE_PARAMETER,
+        RESTAURANT_INVALID_ADDRESS,
+        RESTAURANT_INVALID_REQUEST_PARAMETER,
+        RESTAURANT_NOT_FOUND,
+        RESTAURANT_ERROR_ADD,
+        RESTAURANT_CLOSED,
+        CUISINE_NAME_ALREADY_EXISTED,
+        USERNAME_CANNOT_BE_BLANK,
+        PASSWORD_CANNOT_BE_BLANK,
+        INVALID_USER_REQUEST_PARAMETER
+    )
 
     private fun Map<String, String>.containsErrors(vararg errorCodes: String): Boolean =
         keys.containsAll(errorCodes.toList())
@@ -133,6 +110,7 @@ abstract class BaseGateway {
     private fun Map<String, String>.getOrEmpty(key: String): String = get(key) ?: ""
 
     companion object {
+
         const val WRONG_PASSWORD = "1013"
         const val USER_NOT_EXIST = "1043"
         const val INVALID_USERNAME = "1003"
