@@ -46,13 +46,13 @@ fun Route.orderRoutes() {
         }
 
         get("/restaurant/history") {
-            val parameters = call.parameters
-            val id = parameters["id"]?.trim().toString()
+            val parameters = call.receiveParameters()
+            val restaurantId = parameters["id"]?.trim().toString()
             val page = parameters["page"]?.trim()?.toInt() ?: 1
             val limit = parameters["limit"]?.trim()?.toInt() ?: 10
             val language = extractLocalizationHeader()
             val result = restaurantService.getOrdersHistoryInRestaurant(
-                restaurantId = id,
+                restaurantId = restaurantId,
                 page = page,
                 limit = limit,
                 languageCode = language
@@ -61,7 +61,7 @@ fun Route.orderRoutes() {
         }
 
         get("/user/history") {
-            val parameters = call.parameters
+            val parameters = call.receiveParameters()
             val tokenClaim = call.principal<JWTPrincipal>()
             val userId = tokenClaim?.get(Claim.USER_ID).toString()
             val page = parameters["page"]?.trim()?.toInt() ?: 1

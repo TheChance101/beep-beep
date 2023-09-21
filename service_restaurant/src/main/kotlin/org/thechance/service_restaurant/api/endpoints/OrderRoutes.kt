@@ -74,7 +74,7 @@ fun Route.orderRoutes() {
 
         get("/user/history") {
             val parameters = call.receiveParameters()
-            val userId = parameters["id"]?.trim()  ?: throw MultiErrorException(listOf(NOT_FOUND))
+            val userId = parameters["id"]?.trim() ?: throw MultiErrorException(listOf(NOT_FOUND))
             val page = parameters["page"]?.toInt() ?: 1
             val limit = parameters["limit"]?.toInt() ?: 10
             val result = manageOrder.getOrdersHistoryForUser(userId = userId, page = page, limit = limit)

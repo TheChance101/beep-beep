@@ -316,6 +316,7 @@ class RestaurantService(
             }
         }
     }
+
     @OptIn(InternalAPI::class)
     suspend fun getOrdersHistoryForUser(userId: String, page: Int, limit: Int, languageCode: String): List<OrderDto> {
         return client.tryToExecute(
