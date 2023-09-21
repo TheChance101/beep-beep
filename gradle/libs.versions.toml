@@ -30,6 +30,8 @@ image-loader = "1.2.8"
 kotlin-realm = "1.10.0"
 realm-version = "1.10.0"
 kotlinx-serialization-version = "1.9.0"
+moko-geo-version = "0.6.0"
+
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
@@ -82,6 +84,7 @@ koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin-ver
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.4.0" }
 androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version = "1.5.1" }
 calf = { module = "com.mohamedrejeb.calf:calf-ui", version.ref = "calf" }
+moko-geo = {module = "dev.icerock.moko:geo", version.ref = "moko-geo-version"}
 
 [bundles]
 voyager = ["voyager-navigator", "voyager-koin", "voyager-transitions"]
