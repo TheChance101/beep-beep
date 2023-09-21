@@ -191,7 +191,7 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
             lookup(
                 localField = UserCollection::id.name,
                 from = DataBaseContainer.USER_DETAILS_COLLECTION,
-                foreignField = UserDetailsCollection::userId.name,
+                foreignField = "_id",
                 newAs = DetailedUserCollection::details.name
             )
         ).toList().toUserEntity(
