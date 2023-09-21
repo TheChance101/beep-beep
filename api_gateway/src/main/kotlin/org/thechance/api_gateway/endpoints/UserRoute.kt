@@ -46,6 +46,13 @@ fun Route.userRoutes() {
                 val result = identityService.getUserById(id, language)
                 respondWithResult(HttpStatusCode.OK, result)
           }
+            put("profile/{id}") {
+                val id = call.parameters["id"] ?: ""
+                val language = extractLocalizationHeader()
+                val user = call.receive<UserDetailsDto>()
+                val result = identityService.updateUser(id, user, language)
+                respondWithResult(HttpStatusCode.OK, result)
+            }
         }
 
         authenticateWithRole(Role.DASHBOARD_ADMIN) {

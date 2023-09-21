@@ -194,10 +194,15 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
                 foreignField = UserDetailsCollection::userId.name,
                 newAs = DetailedUserCollection::details.name
             )
-        ).toList().toUserEntity(wallet.walletBalance, wallet.currency, userAddresses, country, userPermission).firstOrNull()
+        ).toList().toUserEntity(
+            wallet.walletBalance,
+            wallet.currency,
+            userAddresses,
+            country,
+            userPermission
+        ).firstOrNull()
             ?: throw ResourceNotFoundException(NOT_FOUND)
     }
-
 
 
     override suspend fun getUsers(page: Int, limit: Int, searchTerm: String): List<UserManagement> {
@@ -262,6 +267,7 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
             throw UserAlreadyExistsException(USER_ALREADY_EXISTS)
         }
     }
+
     override suspend fun updateUserProfile(
         id: String, fullName: String?,
     ): Boolean {
@@ -311,7 +317,10 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         ).sort(Sorts.descending("_id")).limit(limit).toList().toManagedEntity()
     }
 
-    override suspend fun searchUsers(searchTerm: String, filterByPermission: List<Int>): List<UserManagement> {
+    override suspend fun searchUsers(
+        searchTerm: String,
+        filterByPermission: List<Int>
+    ): List<UserManagement> {
         val orConditions = filterByPermission.map { permission ->
             or(
                 UserCollection::permission eq permission,
@@ -396,7 +405,8 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
     }
 
     override suspend fun getUserPermissionByUsername(username: String): Int {
-        return dataBaseContainer.userCollection.findOne(UserCollection::username eq username)?.permission ?: 1
+        return dataBaseContainer.userCollection.findOne(UserCollection::username eq username)?.permission
+            ?: 1
     }
     // endregion: user permission management
 
