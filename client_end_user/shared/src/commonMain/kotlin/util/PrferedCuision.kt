@@ -1,6 +1,6 @@
 package util
 
-import presentation.PreferredFood.FoodUIState
+import presentation.preferredFood.FoodUIState
 
 val preferredCuisine: List<FoodUIState> = listOf(
 

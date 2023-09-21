@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import presentation.PreferredFood.FoodUIState
+import presentation.preferredFood.FoodUIState
 
 
 @OptIn(ExperimentalResourceApi::class)

@@ -16,12 +16,14 @@ import presentation.base.ErrorState.NoInternet
 import presentation.base.ErrorState.RequestFailed
 import presentation.base.ErrorState.UserAlreadyExists
 import presentation.base.ErrorState.WifiDisabled
+import resources.strings.IStringResources
 
 class RegistrationSubmitScreenModel(
     private val username: String,
     private val password: String,
     private val validation: IValidationUseCase,
-    private val manageAuthentication: IManageAuthenticationUseCase
+    private val manageAuthentication: IManageAuthenticationUseCase,
+    private val stringResources: IStringResources
 ) : BaseScreenModel<RegistrationSubmitUIState, RegistrationSubmitScreenEffect>(
     RegistrationSubmitUIState()
 ),
@@ -60,7 +62,7 @@ class RegistrationSubmitScreenModel(
         if (success) {
             sendNewEffect(RegistrationSubmitScreenEffect.NavigateToLoginScreen)
         } else {
-            showSnackbar("Opps, Registration not completed")
+            showSnackbar(stringResources.oppsRegistrationNotCompleted)
         }
     }
 
@@ -68,22 +70,22 @@ class RegistrationSubmitScreenModel(
         clearErrors()
         when (error) {
             InvalidFullName -> updateState {
-                it.copy(fullErrorMsg = "Invalid Name", isFullNameError = true)
+                it.copy(fullErrorMsg = stringResources.invalidFullName, isFullNameError = true)
             }
 
             InvalidEmail -> updateState {
-                it.copy(emailErrorMsg = "Invalid Email", isEmailError = true)
+                it.copy(emailErrorMsg = stringResources.invalidEmail, isEmailError = true)
             }
 
             InvalidPhone -> updateState {
-                it.copy(phoneErrorMsg = "Invalid Phone Number", isPhoneError = true)
+                it.copy(phoneErrorMsg = stringResources.invalidPhoneNumber, isPhoneError = true)
             }
 
-            NoInternet -> showSnackbar("No Internet Connection")
-            RequestFailed -> showSnackbar("Request Failed")
+            NoInternet -> showSnackbar(stringResources.noInternet)
+            RequestFailed -> showSnackbar(stringResources.requestFailed)
             is UserAlreadyExists -> showSnackbar(error.message)
-            WifiDisabled -> showSnackbar("WIFI Disabled")
-            else -> { showSnackbar("Unknown Error") }
+            WifiDisabled -> showSnackbar(stringResources.wifiDisabled)
+            else -> { showSnackbar(stringResources.unknownError) }
         }
     }
 
@@ -97,14 +99,14 @@ class RegistrationSubmitScreenModel(
         try {
             block()
         } catch (e: AuthorizationException.InvalidFullNameException) {
-            updateState { it.copy(fullErrorMsg = e.message ?: "Invalid Name", isFullNameError = true) }
+            updateState { it.copy(fullErrorMsg = e.message ?: stringResources.invalidFullName, isFullNameError = true) }
         } catch (e: AuthorizationException.InvalidEmailException) {
             updateState {
-                it.copy(emailErrorMsg = e.message ?: "Invalid Email", isEmailError = true)
+                it.copy(emailErrorMsg = e.message ?: stringResources.invalidEmail, isEmailError = true)
             }
         } catch (e: AuthorizationException.InvalidPhoneException) {
             updateState {
-                it.copy(phoneErrorMsg = e.message ?: "Invalid Phone Number", isPhoneError = true)
+                it.copy(phoneErrorMsg = e.message ?: stringResources.invalidPhoneNumber, isPhoneError = true)
             }
         }
     }

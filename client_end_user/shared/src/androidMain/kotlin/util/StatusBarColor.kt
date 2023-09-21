@@ -14,8 +14,12 @@ import java.lang.reflect.Modifier
 @Composable
 actual fun setInsetsController(isDark: Boolean) {
     val window = (getPlatformContext().androidContext as Activity).window
+
     WindowCompat.getInsetsController(window, window.decorView)
         .isAppearanceLightStatusBars = !isDark
+
+    WindowCompat.getInsetsController(window, window.decorView)
+        .isAppearanceLightNavigationBars = !isDark
 }
 
 @Composable

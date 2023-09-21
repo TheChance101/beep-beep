@@ -1,4 +1,4 @@
-package data.gateway.remote
+package data.gateway.fake
 
 import data.remote.mapper.toEntity
 import data.remote.model.AddressDto
