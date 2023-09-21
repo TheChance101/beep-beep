@@ -73,7 +73,7 @@ class MealsScreenModel(
     }
 
     override fun onAddMeaClick() {
-        sendNewEffect(MealsScreenUIEffect.NavigateToAddMeal)
+        sendNewEffect(MealsScreenUIEffect.NavigateToAddMeal(restaurantId))
     }
 
     override fun onClickCuisineType(type: CuisineUIState) {

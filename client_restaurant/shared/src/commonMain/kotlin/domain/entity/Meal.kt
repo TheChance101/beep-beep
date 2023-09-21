@@ -13,8 +13,16 @@ data class Meal(
 
 data class MealAddition(
     val name: String,
-    val image: ByteArray?,
     val description: String,
     val price: Double,
-    val cuisines: List<Cuisine>
+    val cuisines: List<String>,
+    val restaurantId: String
 )
+data class MealUpdate(
+    val name: String,
+    val description: String,
+    val price: Double,
+    val cuisines: List<String>,
+    val restaurantId: String,
+    val id: String,
+    )

@@ -5,10 +5,10 @@ import presentation.mealManagement.model.IMealEditorScreenModel
 
 
 class MealScreenModelFactory {
-    fun create(screenMode: ScreenMode, mealId: String): IMealBehavior {
+    fun create(screenMode: ScreenMode, mealId: String,restaurantId: String): IMealBehavior {
         return when (screenMode) {
-            ScreenMode.CREATION -> IMealCreationScreenModel()
-            ScreenMode.EDIT -> IMealEditorScreenModel(mealId)
+            ScreenMode.CREATION -> IMealCreationScreenModel(restaurantId)
+            ScreenMode.EDIT -> IMealEditorScreenModel(mealId,restaurantId)
         }
     }
 }

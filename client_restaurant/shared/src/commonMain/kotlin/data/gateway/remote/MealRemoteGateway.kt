@@ -2,11 +2,15 @@ package data.gateway.remote
 
 import data.remote.mapper.toDto
 import data.remote.mapper.toEntity
+import data.remote.model.MealModificationDto
 import data.remote.model.BaseResponse
 import data.remote.model.MealDto
 import domain.entity.Meal
+import domain.entity.MealAddition
+import domain.entity.MealUpdate
 import domain.gateway.remote.IMealRemoteGateway
 import io.ktor.client.HttpClient
+import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.get
 import io.ktor.client.request.header
@@ -15,7 +19,6 @@ import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
-import io.ktor.util.InternalAPI
 import kotlinx.serialization.json.Json
 
 
@@ -48,24 +51,34 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
         }.value?.toEntity() ?: throw Exception("meal not found")
     }
 
-    override suspend fun addMeal(meal: Meal): Boolean {
+    override suspend fun addMeal(meal: MealAddition): Boolean {
         return tryToExecute<BaseResponse<Boolean>> {
-            post("/meal") { setBody(meal.toDto()) }
+            post("/meal") {
+                setBody(
+                    MultiPartFormDataContent(
+                        formData {
+                            header("Content-Type", ContentType.MultiPart.FormData.toString())
+                            append("data", Json.encodeToString(MealModificationDto.serializer(), meal.toDto()))
+                        }
+                    )
+                )
+            }
         }.value ?: false
     }
 
-    @OptIn(InternalAPI::class)
-    override suspend fun updateMeal(meal: Meal): Boolean {
-        val formData = formData {
-            val mealDto = meal.toDto() // Assuming toDto() converts Meal to MealDto
-            append("data", Json.encodeToString(MealDto.serializer(), mealDto))
-        }
+    override suspend fun updateMeal(meal: MealUpdate): Boolean {
         return tryToExecute<BaseResponse<Boolean>> {
             put("/meal") {
-                body = formData
-                header("Content-Type", ContentType.MultiPart.FormData.toString())
+                setBody(
+                    MultiPartFormDataContent(
+                        formData {
+                            header("Content-Type", ContentType.MultiPart.FormData.toString())
+                            append("data", Json.encodeToString(MealModificationDto.serializer(), meal.toDto()))
+                        }
+                    )
+                )
             }
-        }.value ?: false
+        }.value == true
     }
 
 

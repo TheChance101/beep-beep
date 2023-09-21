@@ -2,12 +2,13 @@ package domain.usecase
 
 import domain.entity.Meal
 import domain.entity.MealAddition
+import domain.entity.MealUpdate
 import domain.gateway.remote.ICuisineRemoteGateway
 import domain.gateway.remote.IMealRemoteGateway
 
 interface IManageMealUseCase {
     suspend fun addMeal(meal: MealAddition): Boolean
-    suspend fun updateMeal(meal: Meal): Boolean
+    suspend fun updateMeal(meal: MealUpdate): Boolean
     suspend fun getMealById(mealId: String): Meal
     suspend fun isValidMeal(meal: Meal): Boolean
     suspend fun getAllMeals(
@@ -22,10 +23,10 @@ class ManageMealUseCase(
     private val cuisineRemoteGateway: ICuisineRemoteGateway
 ) : IManageMealUseCase {
     override suspend fun addMeal(meal: MealAddition): Boolean {
-        return mealRemoteGateway.addMeal(meal as Meal)
+        return mealRemoteGateway.addMeal(meal)
     }
 
-    override suspend fun updateMeal(meal: Meal): Boolean {
+    override suspend fun updateMeal(meal: MealUpdate): Boolean {
         return mealRemoteGateway.updateMeal(meal)
     }
 

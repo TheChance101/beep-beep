@@ -1,6 +1,8 @@
 package domain.gateway.remote
 
 import domain.entity.Meal
+import domain.entity.MealAddition
+import domain.entity.MealUpdate
 
 
 interface IMealRemoteGateway {
@@ -12,7 +14,7 @@ interface IMealRemoteGateway {
 
     suspend fun getMealsByCuisineId(mealId: String): List<Meal>
     suspend fun getMealById(mealId: String): Meal
-    suspend fun addMeal(meal: Meal): Boolean
-    suspend fun updateMeal(meal: Meal): Boolean
+    suspend fun addMeal(meal: MealAddition): Boolean
+    suspend fun updateMeal(meal: MealUpdate): Boolean
 
 }

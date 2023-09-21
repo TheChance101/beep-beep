@@ -2,7 +2,7 @@ package presentation.mealManagement
 
 
 data class MealDetails(
-    val id : String = "",
+    val id: String = "",
     val restaurantId : String = "",
     val name: String = "",
     val description: String = "",
