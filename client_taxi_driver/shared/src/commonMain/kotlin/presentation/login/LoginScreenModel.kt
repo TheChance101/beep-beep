@@ -144,7 +144,6 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
 
 
     private fun onAskForPermissionFailed(error: ErrorState) {
-        onDismissSheet()
         // todo send effect for that to show toast or something
     }
 

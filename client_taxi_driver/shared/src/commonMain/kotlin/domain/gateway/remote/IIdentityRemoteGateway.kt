@@ -14,7 +14,7 @@ interface IIdentityRemoteGateway {
         driverFullName: String,
         driverEmail: String,
         description: String,
-    ): Boolean
+    )
 
     suspend fun getTaxiDriverName(): String
 }
