@@ -13,7 +13,6 @@ import presentation.orderHistory.OrderHistoryScreenModel
 import presentation.pickLanguage.PickLanguageScreenModel
 import presentation.preferredMeal.PreferredScreenModel
 import presentation.preferredRide.PreferredRideScreenModel
-import presentation.notification.NotificationScreenModel
 import presentation.app.AppScreenModel
 
 val screenModelsModule = module {
