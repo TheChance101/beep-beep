@@ -10,6 +10,7 @@ import presentation.cuisines.CuisinesScreenModel
 import presentation.home.HomeScreenModel
 import presentation.main.MainScreenModel
 import presentation.notification.NotificationScreenModel
+import presentation.orderHistory.OrderHistoryScreenModel
 import presentation.pickLanguage.PickLanguageScreenModel
 import presentation.preferredMeal.PreferredScreenModel
 import presentation.preferredRide.PreferredRideScreenModel
@@ -18,6 +19,7 @@ val screenModelsModule = module {
     factoryOf(::LoginScreenModel)
     factoryOf(::HomeScreenModel)
     factoryOf(::MainScreenModel)
+    factoryOf(::OrderHistoryScreenModel)
     factoryOf(::PreferredFoodScreenModel)
     factoryOf(::RegistrationScreenModel)
     factoryOf(::RegistrationSubmitScreenModel)

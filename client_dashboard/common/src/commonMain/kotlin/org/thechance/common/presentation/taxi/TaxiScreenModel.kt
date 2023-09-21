@@ -11,7 +11,7 @@ import org.thechance.common.presentation.restaurant.ErrorWrapper
 import org.thechance.common.presentation.util.ErrorState
 
 class TaxiScreenModel(
-    private val manageTaxis: IManageTaxisUseCase,
+    private val manageTaxis: IManageTaxisUseCase
 ) : BaseScreenModel<TaxiUiState, TaxiUiEffect>(TaxiUiState()), TaxiInteractionListener {
 
     private var searchJob: Job? = null
@@ -56,16 +56,33 @@ class TaxiScreenModel(
     private fun onError(error: ErrorState) {
         updateState { it.copy(isLoading = false) }
         when (error) {
-            is ErrorState.InvalidCarType -> {
+            is ErrorState.MultipleErrors -> {
+                val errorStates = error.errors
                 updateState {
                     it.copy(
                         newTaxiInfo = it.newTaxiInfo.copy(
-                            carModelError = ErrorWrapper(error.errorMessage, true)
+                            plateNumberError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidTaxiPlate>()
+                                ?.let { error ->
+                                    ErrorWrapper(error.errorMessage, true)
+                                },
+                            driverUserNameError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidUserName>()
+                                ?.let { error ->
+                                    ErrorWrapper(error.errorMessage, true)
+                                },
+                            carModelError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidCarType>()
+                                ?.let { error ->
+                                    ErrorWrapper(error.errorMessage, true)
+                                },
                         )
                     )
                 }
             }
-            is ErrorState.InvalidTaxiPlate -> {
+
+            ErrorState.NoConnection -> {
+                updateState { it.copy(isNoInternetConnection = true) }
+            }
+
+            is ErrorState.TaxiAlreadyExists -> {
                 updateState {
                     it.copy(
                         newTaxiInfo = it.newTaxiInfo.copy(
@@ -74,31 +91,13 @@ class TaxiScreenModel(
                     )
                 }
             }
-            ErrorState.NoConnection -> {
-                updateState { it.copy(isNoInternetConnection = true) }
-            }
-            is ErrorState.TaxiAlreadyExists -> {
-                updateState {
-                    it.copy(
-                            newTaxiInfo = it.newTaxiInfo.copy(
-                                    plateNumberError = ErrorWrapper(error.errorMessage, true)
-                            )
-                    )
-                }
-            }
-            is ErrorState.UserNotExist -> {
-                updateState { it.copy(newTaxiInfo = it.newTaxiInfo.copy(
-                        driverUserNameError = ErrorWrapper(error.errorMessage, true),
-                )
-                )
-                }
-            }
-            is ErrorState.TaxiNotFound -> println("error is taxi not found: ${error.errorMessage}")
+
             else -> {}
         }
+
     }
 
-    private fun clearTaxiInfoErrorState() =
+    private fun clearAddTaxiErrorState() =
         updateState {
             it.copy(
                 newTaxiInfo = it.newTaxiInfo.copy(
@@ -195,14 +194,14 @@ class TaxiScreenModel(
     override fun onSaveClicked() {
         val newTaxi = mutableState.value.newTaxiInfo
         tryToExecute(
-            { manageTaxis.updateTaxi(newTaxi.toEntity(),newTaxi.id) },
+            { manageTaxis.updateTaxi(newTaxi.toEntity(), newTaxi.id) },
             ::onUpdateTaxiSuccessfully,
             ::onError
         )
     }
 
     private fun onUpdateTaxiSuccessfully(taxi: Taxi) {
-        updateState { it.copy(isAddNewTaxiDialogVisible = false,) }
+        updateState { it.copy(isAddNewTaxiDialogVisible = false) }
         setTaxiMenuVisibility(taxi.id, false)
         mutableState.value.pageInfo.data.find { it.id == taxi.id }?.let { taxiDetailsUiState ->
             val index = mutableState.value.pageInfo.data.indexOf(taxiDetailsUiState)
@@ -215,7 +214,7 @@ class TaxiScreenModel(
     }
 
     override fun onCreateTaxiClicked() {
-        clearTaxiInfoErrorState()
+        clearAddTaxiErrorState()
         tryToExecute(
             { manageTaxis.createTaxi(mutableState.value.newTaxiInfo.toEntity()) },
             ::onCreateTaxiSuccessfully,

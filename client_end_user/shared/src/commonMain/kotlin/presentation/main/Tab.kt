@@ -8,7 +8,7 @@ import cafe.adriel.voyager.navigator.tab.TabOptions
 import cafe.adriel.voyager.transitions.SlideTransition
 import presentation.home.HomeScreen
 import presentation.notification.NotificationScreen
-import presentation.orders.OrderScreen
+import presentation.orderHistory.OrderHistoryScreen
 import presentation.profile.ProfileScreen
 import presentation.search.SearchScreen
 import resources.Resources
@@ -54,7 +54,7 @@ object OrdersTab : Tab {
 
     @Composable
     override fun Content() {
-        Navigator(screen = OrderScreen()) {
+        Navigator(screen = OrderHistoryScreen()) {
             SlideTransition(it)
         }
     }

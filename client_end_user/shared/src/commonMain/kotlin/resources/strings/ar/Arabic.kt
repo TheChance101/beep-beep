@@ -83,4 +83,5 @@ data class Arabic(
     override val invalidFullName: String = "الاسم الكامل غير صالح",
     override val oppsRegistrationNotCompleted: String = "عفوًا ، لم يتم الانتهاء من التسجيل",
     override val allCuisines: String = "المطابخ",
+    override val history: String = "سجل الطلبات"
 ) : IStringResources

@@ -33,6 +33,7 @@ data class DrawableResources(
     val wishDishHigh: String = "wish_dish_high.png",
     val quickRide: String = "quick_ride.png",
     val slowRide: String = "slow_ride.png",
+    val transferIcon:String = "icon_from_to.xml"
 )
 
 val BpDrawableDarkResources = DrawableResources(

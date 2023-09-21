@@ -73,6 +73,7 @@ data class English(
     override val thisWeek: String = "This Week",
     override val tryAgain: String = "Try again",
     override val trackYourOrder: String = "Track Your Order",
+    override val history: String = "History",
     override val invalidPassword: String = "Invalid Password",
     override val unknownError: String = "Unknown Error",
     override val wifiDisabled: String = "WIFI Disabled",
