@@ -7,16 +7,16 @@ import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
 
 @Serializable
-data class ChatCollection(
-    val ticketId : String,
+data class TicketCollection(
+    val ticketId: String,
     val userId: String,
     val supportId: String,
-    val time : Long
-){
+    val time: Long
+) {
     @BsonId
     @Contextual
     @SerialName("_id")
     val id: ObjectId = ObjectId()
 
-    val messages : List<MessageCollection> = emptyList()
+    val messages: List<MessageCollection> = emptyList()
 }
