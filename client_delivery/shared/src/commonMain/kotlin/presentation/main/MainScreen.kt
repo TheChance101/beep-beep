@@ -1,5 +1,8 @@
 package presentation.main
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -19,6 +22,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
+import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -38,6 +42,8 @@ class MainScreen :
             MainScreenUiEffect.Start -> {
                 // todo navigate to map screen
             }
+
+            else -> {}
         }
     }
 
@@ -85,6 +91,24 @@ class MainScreen :
                     onClick = listener::onClickStart,
                     enabled = !state.isLoading
                 )
+            }
+
+            AnimatedVisibility(
+                visible = state.showSnackBar,
+                enter = slideInVertically { it },
+                exit = slideOutVertically { it },
+                modifier = Modifier.align(Alignment.BottomCenter)
+            ) {
+                BPSnackBar(
+                    icon = painterResource(Resources.images.warningIcon),
+                    iconBackgroundColor = Theme.colors.warningContainer,
+                    iconTint = Theme.colors.warning
+                ) {
+                    Text(
+                        text = state.snackBarMessage,
+                        style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
+                    )
+                }
             }
         }
     }
