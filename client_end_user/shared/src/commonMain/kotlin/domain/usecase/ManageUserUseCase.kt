@@ -7,6 +7,8 @@ import domain.gateway.local.ILocalConfigurationGateway
 import domain.utils.AuthorizationException
 import data.local.mapper.toFormattedString
 import data.local.mapper.toPreferredRide
+import domain.entity.UserDetails
+import domain.gateway.IFakeRemoteGateway
 
 interface IManageUserUseCase {
 
@@ -21,11 +23,14 @@ interface IManageUserUseCase {
     suspend fun getIsFirstTimeUseApp(): Boolean
     suspend fun getUserLanguageCode(): String
 
+    suspend fun getUserProfile(): UserDetails
+
 }
 
 class ManageUserUseCase(
     private val localGateway: ILocalConfigurationGateway,
-    private val remoteGateway: FakeRemoteGateway
+    private val remoteGateway: FakeRemoteGateway,
+    private val fakeRemoteGateway: IFakeRemoteGateway
 ) : IManageUserUseCase {
 
     override suspend fun getUserWallet(): User {
@@ -61,6 +66,10 @@ class ManageUserUseCase(
 
     override suspend fun getUserLanguageCode(): String {
         return localGateway.getLanguageCode()
+    }
+
+    override suspend fun getUserProfile(): UserDetails {
+       return fakeRemoteGateway.getUserProfile()
     }
 
 
