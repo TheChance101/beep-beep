@@ -62,6 +62,8 @@ kotlin {
                 implementation(libs.ktor.client.cio)
                 implementation(libs.kotlin.serialization)
 
+                //moko
+                api(libs.moko.geo)
             }
         }
         val androidMain by getting {
