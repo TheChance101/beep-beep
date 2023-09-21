@@ -8,8 +8,6 @@ class NoInternetException(message: String) : BeepBeepException(message)
 
 class NotFoundException(message: String) : BeepBeepException(message)
 
-class NoInternetException : BeepBeepException("No internet connection")
-
 class MultipleErrorException(val errors: List<BpError>) : BeepBeepException("Multiple exceptions occurred")
 
 sealed interface BpError{

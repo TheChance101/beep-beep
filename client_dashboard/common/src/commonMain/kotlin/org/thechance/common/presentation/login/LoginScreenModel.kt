@@ -51,27 +51,42 @@ class LoginScreenModel(
                 val errorStates = error.errors
                 updateState {
                     it.copy(
-                        isPasswordError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidPassword>()?.let {error ->
-                            ErrorWrapper(error.errorMessage, true)
-                        },
-                        isUserError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidUserName>()?.let {error ->
+                        isPasswordError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidPassword>()
+                            ?.let { error ->
+                                ErrorWrapper(error.errorMessage, true)
+                            },
+                        isUserError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidUserName>()?.let { error ->
                             ErrorWrapper(error.errorMessage, true)
                         }
                     )
                 }
+            }
+
             is ErrorState.InvalidPassword -> {
-                updateState { it.copy(isLoading = false, error = error, isPasswordError = ErrorWrapper(error.errorMessage,true)) }
+                updateState {
+                    it.copy(
+                        isLoading = false,
+                        error = error,
+                        isPasswordError = ErrorWrapper(error.errorMessage, true)
+                    )
+                }
             }
 
             is ErrorState.UserNotExist -> {
-                updateState { it.copy(isLoading = false, error = error, isUserError = ErrorWrapper(error.errorMessage,true)) }
+                updateState {
+                    it.copy(
+                        isLoading = false,
+                        error = error,
+                        isUserError = ErrorWrapper(error.errorMessage, true)
+                    )
+                }
             }
 
             ErrorState.NoConnection -> {
                 updateState { it.copy(hasInternetConnection = false) }
             }
-            else -> {}
 
+            else -> {}
         }
     }
 
