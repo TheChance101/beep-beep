@@ -2,7 +2,7 @@ package domain.gateway
 
 import kotlinx.coroutines.flow.Flow
 
-interface IBpLocationDataSource {
+interface ILocationDataSource {
     suspend fun getCurrentLocation(): Flow<Pair<Double, Double>>
     fun stopTracking()
 }

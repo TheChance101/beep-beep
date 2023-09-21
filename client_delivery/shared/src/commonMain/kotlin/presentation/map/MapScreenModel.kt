@@ -9,8 +9,6 @@ import presentation.base.BaseScreenModel
 
 class MapScreenModel(
     private val currentLocation: IManageCurrentLocationUseCase,
-    // identity , to get the driver name
-    //
 ):BaseScreenModel<MapScreenUiState,MapScreenUiEffect>(MapScreenUiState()),MapScreenInteractionsListener {
 
     override val viewModelScope: CoroutineScope = coroutineScope

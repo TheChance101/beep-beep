@@ -4,11 +4,11 @@ import dev.icerock.moko.geo.LocationTracker
 import dev.icerock.moko.permissions.PermissionsController
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
-import data.gateway.remote.BpLocationDataSource
-import domain.gateway.IBpLocationDataSource
+import data.gateway.remote.LocationDataSource
+import domain.gateway.ILocationDataSource
 
 val locationDataSourceModule = module {
-    single<IBpLocationDataSource> { BpLocationDataSource(get()) }
+    single<ILocationDataSource> { LocationDataSource(get()) }
 }
 
 val locationTrackerModule = module {

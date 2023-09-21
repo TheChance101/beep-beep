@@ -1,6 +1,6 @@
 package domain.usecase
 
-import domain.gateway.IBpLocationDataSource
+import domain.gateway.ILocationDataSource
 import kotlinx.coroutines.flow.Flow
 
 interface IManageCurrentLocationUseCase {
@@ -9,7 +9,7 @@ interface IManageCurrentLocationUseCase {
 }
 
 class ManageCurrentLocationUseCase(
-    private val currentLocation: IBpLocationDataSource
+    private val currentLocation: ILocationDataSource
 ) : IManageCurrentLocationUseCase {
 
     override suspend fun trackCurrentLocation(): Flow<Pair<Double, Double>> {
