@@ -10,6 +10,7 @@ fun RestaurantDto.toEntity() = Restaurant(
         id = id ?: "",
         name = name ?: "",
         ownerId = ownerId ?: "",
+        ownerUsername = ownerUserName ?: "",
         phone = phone ?: "",
         rate = rate ?: 0.0,
         priceLevel = priceLevel ?: "",
@@ -19,10 +20,11 @@ fun RestaurantDto.toEntity() = Restaurant(
 
 
 fun List<RestaurantDto>.toEntity() = map(RestaurantDto::toEntity)
+
 fun NewRestaurantInfo.toDto(): RestaurantCreateDto {
-    val result = RestaurantCreateDto(
+    return RestaurantCreateDto(
             name = name,
-            username = ownerUsername,
+            ownerUserName = ownerUsername,
             openingTime = openingTime,
             closingTime = closingTime,
             phone = phoneNumber,
@@ -31,6 +33,4 @@ fun NewRestaurantInfo.toDto(): RestaurantCreateDto {
                     longitude = location.split(",")[1].toDouble()
             )
     )
-    println(result.toString())
-    return result
 }

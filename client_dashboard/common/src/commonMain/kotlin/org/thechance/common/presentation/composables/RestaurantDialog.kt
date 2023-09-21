@@ -93,8 +93,8 @@ private fun RestaurantDialog(
                         text = state.name,
                         label = Resources.Strings.restaurantName,
                         hint = "",
-                        errorMessage = state.nameError.errorMessage,
-                        isError = state.nameError.isError
+                        errorMessage = state.nameError?.errorMessage ?: "",
+                        isError = state.nameError?.isError ?: false
                     )
 
                     BpTextField(
@@ -103,8 +103,8 @@ private fun RestaurantDialog(
                         label = Resources.Strings.ownerUsername,
                         modifier = Modifier.padding(top = Theme.dimens.space16),
                         hint = "",
-                        errorMessage = state.userNameError.errorMessage,
-                        isError = state.userNameError.isError
+                        errorMessage = state.userNameError?.errorMessage ?: "",
+                        isError = state.userNameError?.isError ?: false
                     )
 
                     BpTextField(
@@ -113,8 +113,8 @@ private fun RestaurantDialog(
                         label = Resources.Strings.phoneNumber,
                         modifier = Modifier.padding(top = Theme.dimens.space16),
                         hint = "",
-                        errorMessage = state.phoneNumberError.errorMessage,
-                        isError = state.phoneNumberError.isError
+                        errorMessage = state.phoneNumberError?.errorMessage ?: "",
+                        isError = state.phoneNumberError?.isError ?: false
                     )
                     Row(
                         modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
@@ -126,8 +126,8 @@ private fun RestaurantDialog(
                             modifier = Modifier.weight(1f),
                             label = Resources.Strings.workingHours,
                             hint = Resources.Strings.workStartHourHint,
-                            errorMessage = state.startTimeError.errorMessage,
-                            isError = state.startTimeError.isError
+                            errorMessage = state.startTimeError?.errorMessage ?: "",
+                            isError = state.startTimeError?.isError ?: false
                         )
                         BpTextField(
                             onValueChange = onWorkingEndHourChange,
@@ -135,8 +135,8 @@ private fun RestaurantDialog(
                             modifier = Modifier.weight(1f),
                             label = "",
                             hint = Resources.Strings.workEndHourHint,
-                            errorMessage = state.endTimeError.errorMessage,
-                            isError = state.endTimeError.isError
+                            errorMessage = state.endTimeError?.errorMessage ?: "",
+                            isError = state.endTimeError?.isError  ?: false
                         )
                     }
                     BpTextField(
@@ -145,8 +145,8 @@ private fun RestaurantDialog(
                         label = Resources.Strings.location,
                         modifier = Modifier.padding(top = Theme.dimens.space16),
                         hint = "",
-                        errorMessage = state.locationError.errorMessage,
-                        isError = state.locationError.isError
+                        errorMessage = state.locationError?.errorMessage ?: "",
+                        isError = state.locationError?.isError ?: false
                     )
                 }
                 Column(

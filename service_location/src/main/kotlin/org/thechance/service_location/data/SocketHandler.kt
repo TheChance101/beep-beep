@@ -21,7 +21,9 @@ class SocketHandler {
             locations
                 ?.drop(1)
                 ?.flowOn(Dispatchers.IO)
-                ?.collect { location -> ownerSession?.sendSerialized(location) }
+                ?.collect { location ->
+                    ownerSession?.sendSerialized(location)
+                }
         } catch (e: MultiErrorException) {
             ownerSession?.send(e.errorCodes.toString())
             ownerSession?.close(CloseReason(CloseReason.Codes.NORMAL, e.errorCodes.toString()))

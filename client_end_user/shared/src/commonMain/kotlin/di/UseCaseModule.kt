@@ -3,9 +3,11 @@ package di
 import domain.usecase.GetCuisinesUseCase
 import domain.usecase.GetFavoriteRestaurantsUseCase
 import domain.usecase.GetNewOffersUserCase
+import domain.usecase.GetOrderHistoryUseCase
 import domain.usecase.IGetCuisinesUseCase
 import domain.usecase.IGetFavoriteRestaurantsUseCase
 import domain.usecase.IGetNewOffersUserCase
+import domain.usecase.IGetOrderHistoryUseCase
 import domain.usecase.IInProgressTrackerUseCase
 import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.IManageNotificationsUseCase
@@ -35,4 +37,5 @@ val useCaseModule = module {
     singleOf(::ValidationUseCaseUseCase) { bind<IValidationUseCase>() }
     singleOf(::MangeLanguageUseCase) { bind<IMangeLanguageUseCase>() }
     singleOf(::ManageNotificationsUseCase) { bind<IManageNotificationsUseCase>() }
+    singleOf(::GetOrderHistoryUseCase) { bind<IGetOrderHistoryUseCase>() }
 }

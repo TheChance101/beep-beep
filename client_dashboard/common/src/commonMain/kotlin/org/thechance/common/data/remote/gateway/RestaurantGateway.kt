@@ -3,8 +3,6 @@ package org.thechance.common.data.remote.gateway
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
-import io.ktor.client.request.get
-import io.ktor.client.request.parameter
 import io.ktor.http.*
 import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
@@ -58,19 +56,18 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
         rating: Double?,
         priceLevel: String?
     ): DataWrapper<Restaurant> {
-
-        return tryToExecute<ServerResponse<RestaurantResponse>>(client) {
+        val result = tryToExecute<ServerResponse<RestaurantResponse>>(client) {
             get(urlString = "/restaurants") {
                 parameter("page", pageNumber)
                 parameter("limit", numberOfRestaurantsInPage)
             }
-        }.value?.let {
-            DataWrapper(
-                totalPages = it.restaurants.size.div(numberOfRestaurantsInPage),
-                numberOfResult = it.total,
-                result = it.restaurants.toEntity()
-            )
-        } ?: throw UnknownError()
+        }.value
+
+        return paginateData(
+            result?.restaurants?.toEntity() ?: emptyList(),
+            numberOfRestaurantsInPage,
+            result?.total ?: 0
+        )
     }
 
 }

@@ -14,7 +14,7 @@ import presentation.restaurantSelection.RestaurantSelectionScreenModel
 
 val screenModelModule = module {
     factoryOf(::LoginScreenModel)
-    factory { (restaurantId: String) -> MainScreenModel(restaurantId, get()) }
+    factory { (restaurantId: String) -> MainScreenModel(restaurantId, get(),get()) }
     factoryOf(::IMealCreationScreenModel)
     factoryOf(::OrderScreenModel)
     factoryOf(::RestaurantInformationScreenModel)
