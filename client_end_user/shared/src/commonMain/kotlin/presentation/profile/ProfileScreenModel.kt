@@ -8,15 +8,15 @@ import presentation.main.MainScreenUiEffect
 class ProfileScreenModel :BaseScreenModel<ProfileUIState, ProfileUIEffect >(ProfileUIState()) ,ProfileInteractionListener{
     override val viewModelScope: CoroutineScope = coroutineScope
     override fun onFullNameChanged(username: String) {
-        TODO("Not yet implemented")
+        updateState { it.copy(fullName = username) }
     }
 
     override fun onPhoneNumberChanged(phone: String) {
-        TODO("Not yet implemented")
+        updateState { it.copy(phoneNumber = phone) }
     }
 
     override fun onSaveProfileInfo() {
-        TODO("Not yet implemented")
+
     }
 
     override fun onLogout() {
