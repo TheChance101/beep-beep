@@ -8,6 +8,8 @@ data class StringResources(
     val loginPassword: String = "Password",
     val loginKeepMeLoggedIn: String = "Keep me logged in",
     //endregion Login
+
+    val logout: String = "Logout",
 )
 
 val englishStrings = StringResources()
