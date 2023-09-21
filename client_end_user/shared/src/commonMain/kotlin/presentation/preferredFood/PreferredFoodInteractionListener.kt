@@ -1,4 +1,4 @@
-package presentation.PreferredFood
+package presentation.preferredFood
 
 import presentation.base.BaseInteractionListener
 
