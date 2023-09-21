@@ -104,8 +104,8 @@ class LoginScreen :
                         text = state.username,
                         label = Resources.Strings.loginUsername,
                         modifier = Modifier.padding(top = 40.kms),
-                        errorMessage = state.isUserError.errorMessage,
-                        isError = state.isUserError.isError,
+                        errorMessage = state.isUserError?.errorMessage ?: "",
+                        isError = state.isUserError?.isError ?: false,
                         hint = ""
                     )
                     BpTextField(
@@ -114,8 +114,8 @@ class LoginScreen :
                         label = Resources.Strings.loginPassword,
                         keyboardType = KeyboardType.Password,
                         modifier = Modifier.padding(top = 16.kms),
-                        errorMessage = state.isPasswordError.errorMessage,
-                        isError = state.isPasswordError.isError,
+                        errorMessage = state.isPasswordError?.errorMessage ?: "",
+                        isError = state.isPasswordError?.isError ?: false,
                         hint = ""
                     )
                     BpButton(

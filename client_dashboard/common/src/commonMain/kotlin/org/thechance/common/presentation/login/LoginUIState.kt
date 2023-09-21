@@ -9,8 +9,8 @@ data class LoginUIState(
     val password: String = "",
     val isLoading: Boolean = true,
     val error: ErrorState? = null,
-    val isUserError: ErrorWrapper = ErrorWrapper(),
-    val isPasswordError: ErrorWrapper = ErrorWrapper(),
+    val isUserError: ErrorWrapper? = null,
+    val isPasswordError: ErrorWrapper? = null,
     val isAbleToLogin: Boolean = false
     val hasInternetConnection: Boolean = true
 )
