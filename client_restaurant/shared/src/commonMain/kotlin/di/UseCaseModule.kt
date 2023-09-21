@@ -33,5 +33,4 @@ val UseCaseModule = module {
     singleOf(::LogoutUserUseCase) { bind<ILogoutUserUseCase>() }
     singleOf(::ValidateRestaurantInfoUseCase) { bind<IValidateRestaurantInfoUseCase>() }
     singleOf(::ValidateManageMealUseCase) { bind<IValidateManageMealUseCase>() }
-
 }

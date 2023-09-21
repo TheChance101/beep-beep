@@ -5,15 +5,13 @@ import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Taxi
 import org.thechance.common.domain.usecase.IManageTaxisUseCase
-import org.thechance.common.domain.usecase.ITaxiValidationUseCase
 import org.thechance.common.domain.util.TaxiStatus
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.restaurant.ErrorWrapper
 import org.thechance.common.presentation.util.ErrorState
 
 class TaxiScreenModel(
-    private val manageTaxis: IManageTaxisUseCase,
-    private val taxiValidation: ITaxiValidationUseCase,
+    private val manageTaxis: IManageTaxisUseCase
 ) : BaseScreenModel<TaxiUiState, TaxiUiEffect>(TaxiUiState()), TaxiInteractionListener {
 
     private var searchJob: Job? = null
@@ -58,21 +56,23 @@ class TaxiScreenModel(
     private fun onError(error: ErrorState) {
         updateState { it.copy(isLoading = false) }
         when (error) {
-            is ErrorState.InvalidCarType -> {
+            is ErrorState.MultipleErrors -> {
+                val errorStates = error.errors
                 updateState {
                     it.copy(
                         newTaxiInfo = it.newTaxiInfo.copy(
-                            carModelError = ErrorWrapper(error.errorMessage, true)
-                        )
-                    )
-                }
-            }
-
-            is ErrorState.InvalidTaxiPlate -> {
-                updateState {
-                    it.copy(
-                        newTaxiInfo = it.newTaxiInfo.copy(
-                            plateNumberError = ErrorWrapper(error.errorMessage, true)
+                            plateNumberError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidTaxiPlate>()
+                                ?.let { error ->
+                                    ErrorWrapper(error.errorMessage, true)
+                                },
+                            driverUserNameError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidUserName>()
+                                ?.let { error ->
+                                    ErrorWrapper(error.errorMessage, true)
+                                },
+                            carModelError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidCarType>()
+                                ?.let { error ->
+                                    ErrorWrapper(error.errorMessage, true)
+                                },
                         )
                     )
                 }
@@ -82,29 +82,19 @@ class TaxiScreenModel(
                 updateState { it.copy(isNoInternetConnection = true) }
             }
 
-            ErrorState.UnKnownError -> println("error is unknown error: ${error}")
-            is ErrorState.InvalidTaxiColor -> println("error is invalid taxi color: ${error.errorMessage}")
-            is ErrorState.InvalidTaxiId -> println("error is invalid taxi id: ${error.errorMessage}")
-            is ErrorState.SeatOutOfRange -> println("error is seat out of range: ${error.errorMessage}")
             is ErrorState.TaxiAlreadyExists -> {
                 updateState {
                     it.copy(
-                            newTaxiInfo = it.newTaxiInfo.copy(
-                                    plateNumberError = ErrorWrapper(error.errorMessage, true)
-                            )
+                        newTaxiInfo = it.newTaxiInfo.copy(
+                            plateNumberError = ErrorWrapper(error.errorMessage, true)
+                        )
                     )
                 }
             }
-            is ErrorState.TaxiNotFound -> println("error is taxi not found: ${error.errorMessage}")
-            is ErrorState.UserNotExist -> {
-                updateState { it.copy(newTaxiInfo = it.newTaxiInfo.copy(
-                                    driverUserNameError = ErrorWrapper(error.errorMessage, true),
-                            )
-                    )
-                }
-            }
+
             else -> {}
         }
+
     }
 
     private fun clearAddTaxiErrorState() =
@@ -159,7 +149,7 @@ class TaxiScreenModel(
 
     //region add new taxi listener
     override fun onCancelClicked() {
-        clearAddNewTaxiDialogState()
+        clearTaxiInfoState()
         updateState { it.copy(isAddNewTaxiDialogVisible = false) }
     }
 
@@ -202,15 +192,16 @@ class TaxiScreenModel(
     }
 
     override fun onSaveClicked() {
+        val newTaxi = mutableState.value.newTaxiInfo
         tryToExecute(
-            { manageTaxis.updateTaxi(mutableState.value.newTaxiInfo.toEntity()) },
+            { manageTaxis.updateTaxi(newTaxi.toEntity(), newTaxi.id) },
             ::onUpdateTaxiSuccessfully,
             ::onError
         )
     }
 
     private fun onUpdateTaxiSuccessfully(taxi: Taxi) {
-        updateState { it.copy(isAddNewTaxiDialogVisible = false,) }
+        updateState { it.copy(isAddNewTaxiDialogVisible = false) }
         setTaxiMenuVisibility(taxi.id, false)
         mutableState.value.pageInfo.data.find { it.id == taxi.id }?.let { taxiDetailsUiState ->
             val index = mutableState.value.pageInfo.data.indexOf(taxiDetailsUiState)
@@ -236,16 +227,16 @@ class TaxiScreenModel(
         val newTaxi =
             mutableState.value.taxis.toMutableList().apply { add(taxi.toDetailsUiState()) }
         updateState { it.copy(taxis = newTaxi, isLoading = false) }
-        clearAddNewTaxiDialogState()
+        clearTaxiInfoState()
         getTaxis()
     }
 
     override fun onAddNewTaxiClicked() {
-        clearAddNewTaxiDialogState()
+        clearTaxiInfoState()
         updateState { it.copy(isAddNewTaxiDialogVisible = true, isEditMode = false) }
     }
 
-    private fun clearAddNewTaxiDialogState() {
+    private fun clearTaxiInfoState() {
         updateState {
             it.copy(
                 newTaxiInfo = it.newTaxiInfo.copy(
