@@ -86,4 +86,6 @@ interface IDataBaseGateway {
 
     suspend fun searchUsers(searchTerm: String, filterByPermission: List<Int>): List<UserManagement>
 
+     suspend fun updateUserProfile(id: String, fullName: String?, ): Boolean
+
 }

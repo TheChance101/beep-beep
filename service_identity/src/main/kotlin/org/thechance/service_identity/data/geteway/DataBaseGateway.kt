@@ -150,7 +150,6 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         val userPermission = getUserPermission(id)
         val location = userAddresses.firstOrNull()?.location
         val country = getCountryForLocation(location)
-
         return dataBaseContainer.userCollection.aggregate<DetailedUserCollection>(
             match(
                 UserCollection::id eq ObjectId(id),
@@ -221,6 +220,22 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
                     UserCollection::username setTo username,
                     UserCollection::fullName setTo fullName,
                     UserCollection::email setTo email,
+                ),
+                updateOnlyNotNullProperties = true
+            ).isUpdatedSuccessfully()
+        } catch (exception: MongoWriteException) {
+            throw UserAlreadyExistsException(USER_ALREADY_EXISTS)
+        }
+    }
+    override suspend fun updateUserProfile(
+        id: String, fullName: String?,
+    ): Boolean {
+        try {
+            dataBaseContainer.userCollection.find(filter = (UserCollection::id eq ObjectId(id)))
+            return dataBaseContainer.userCollection.updateOneById(
+                ObjectId(id),
+                set(
+                    UserCollection::fullName setTo fullName,
                 ),
                 updateOnlyNotNullProperties = true
             ).isUpdatedSuccessfully()
@@ -386,3 +401,5 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
 
     // endregion
 }
+
+
