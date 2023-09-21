@@ -47,8 +47,7 @@ class IdentityRemoteGateway(client: HttpClient) : IIdentityRemoteGateway,
         driverFullName: String,
         driverEmail: String,
         description: String,
-    ): Boolean {
+    ) {
         // TODO: add create request permission end point when backend is done
-        return false
     }
 }

@@ -14,6 +14,6 @@ interface IIdentityRemoteGateway {
         driverFullName: String,
         driverEmail: String,
         description: String,
-    ): Boolean
+    )
 }
 

@@ -31,7 +31,5 @@ class IdentityFakeGateway: IIdentityRemoteGateway {
         driverFullName: String,
         driverEmail: String,
         description: String
-    ): Boolean {
-       return true
-    }
+    ) {}
 }

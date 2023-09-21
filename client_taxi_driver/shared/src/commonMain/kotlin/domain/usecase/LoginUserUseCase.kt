@@ -18,7 +18,7 @@ interface ILoginUserUseCase {
         driverFullName: String,
         driverEmail: String,
         description: String
-    ): Boolean
+    )
 }
 
 class LoginUserUseCase(
@@ -31,12 +31,11 @@ class LoginUserUseCase(
         password: String,
         isKeepMeLoggedInChecked: Boolean
     ) {
-        if (validateLoginFields(userName, password)) {
-            val userTokens = remoteGateway.loginUser(userName, password)
-            localGateWay.saveAccessToken(userTokens.accessToken)
-            localGateWay.saveRefreshToken(userTokens.refreshToken)
-            localGateWay.saveKeepMeLoggedInFlag(isKeepMeLoggedInChecked)
-        }
+        checkValidationLoginFields(userName, password)
+        val userTokens = remoteGateway.loginUser(userName, password)
+        localGateWay.saveAccessToken(userTokens.accessToken)
+        localGateWay.saveRefreshToken(userTokens.refreshToken)
+        localGateWay.saveKeepMeLoggedInFlag(isKeepMeLoggedInChecked)
     }
 
     override suspend fun getKeepMeLoggedInFlag(): Boolean {
@@ -45,33 +44,42 @@ class LoginUserUseCase(
 
     override suspend fun requestPermission(
         driverFullName: String, driverEmail: String, description: String
-    ): Boolean {
-        return if (validatePermissionFields(driverFullName, driverEmail, description)) {
-             remoteGateway.createRequestPermission(
-                driverFullName,
-                driverEmail,
-                description
-            )
-        } else false
+    ) {
+        checkValidationPermissionFields(driverFullName, driverEmail, description)
+
+        remoteGateway.createRequestPermission(
+            driverFullName,
+            driverEmail,
+            description
+        )
     }
 
 
-    private fun validateLoginFields(username: String, password: String): Boolean {
-        if (username.isBlank()) {
-            throw InvalidUserNameException("")
-        } else if (password.isBlank()) {
-            throw InvalidPasswordException("")
-        } else return true
+    private fun checkValidationLoginFields(username: String, password: String) {
+        when {
+            username.isBlank() -> {
+                throw InvalidUserNameException("")
+            }
+
+            password.isBlank() -> {
+                throw InvalidPasswordException("")
+            }
+        }
     }
 
-    private fun validatePermissionFields(driverFullName: String, driverEmail: String, description: String): Boolean {
-        if (driverFullName.isBlank()) {
-            throw InvalidDriverNameException("")
-        } else if (driverEmail.isBlank()) {
-            throw InvalidDriverEmailException("")
-        } else if (description.isBlank()) {
-            throw InvalidDescriptionException("")
-        } else return true
-    }
+    private fun checkValidationPermissionFields(driverFullName: String, driverEmail: String, description: String) {
+        when {
+            driverFullName.isBlank() -> {
+                throw InvalidDriverNameException("")
+            }
 
+            driverEmail.isBlank() -> {
+                throw InvalidDriverEmailException("")
+            }
+
+            description.isBlank() -> {
+                throw InvalidDescriptionException("")
+            }
+        }
+    }
 }
