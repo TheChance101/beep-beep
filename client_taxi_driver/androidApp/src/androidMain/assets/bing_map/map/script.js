@@ -1,10 +1,10 @@
 var latitude2 = 0
 var map,directionsManager;
 
-function GetMap(lat,lng) {
+function GetMap() {
 map = new Microsoft.Maps.Map('#myMap', {
     credentials: 'Access_token',
-    center: new Microsoft.Maps.Location(lat,lng),
+    center: new Microsoft.Maps.Location(0,0),
     mapTypeId: Microsoft.Maps.MapTypeId.road,
     minZoom: 16,
     maxZoom: 18

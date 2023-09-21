@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
@@ -27,11 +26,9 @@ actual fun MapWebView(
             "createInfiniteLoopFunction(${currentLocation.lat},${currentLocation.lng})()",
             null
         )
-        webView?.evaluateJavascript("GetMap(${currentLocation.lat},${currentLocation.lng})", null)
     }
     destination?.let { location ->
         webView?.evaluateJavascript("clearMap()", null)
-
         webView?.evaluateJavascript(
             "getDirections(${location.lat},${location.lng})",
             null
