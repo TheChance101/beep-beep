@@ -14,7 +14,7 @@ import org.thechance.common.domain.getway.IRestaurantGateway
 
 class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestaurantGateway {
 
-    override suspend fun createRestaurant(restaurant: NewRestaurantInfo): Restaurant {
+    override suspend fun createRestaurant(restaurant: RestaurantInformation): Restaurant {
         return tryToExecute<ServerResponse<RestaurantDto>>(client) {
             post(urlString = "/restaurant") {
                 setBody(restaurant.toDto())
@@ -84,8 +84,13 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
         }.value?.toEntity() ?: throw UnknownError()
     }
 
-    override suspend fun updateRestaurant(restaurant: Restaurant): Restaurant {
-        TODO("Not yet implemented")
+    override suspend fun updateRestaurant(restaurantId: String, restaurant: RestaurantInformation): Restaurant {
+        return tryToExecute<ServerResponse<RestaurantDto>>(client) {
+            put(urlString = "/restaurant") {
+                url { appendPathSegments(restaurantId) }
+                setBody(restaurant.toDto())
+            }
+        }.value?.toEntity() ?: throw UnknownError()
     }
 
 }
