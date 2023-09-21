@@ -1,25 +1,58 @@
 package org.thechance.service_identity.data.geteway
 
 import com.mongodb.MongoWriteException
-import com.mongodb.client.model.*
+import com.mongodb.client.model.Filters
+import com.mongodb.client.model.FindOneAndUpdateOptions
+import com.mongodb.client.model.IndexOptions
+import com.mongodb.client.model.Indexes
+import com.mongodb.client.model.ReturnDocument
+import com.mongodb.client.model.Sorts
+import com.mongodb.client.model.Updates
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
-import org.litote.kmongo.*
+import org.litote.kmongo.addToSet
+import org.litote.kmongo.and
+import org.litote.kmongo.bitsAllSet
 import org.litote.kmongo.coroutine.aggregate
+import org.litote.kmongo.eq
+import org.litote.kmongo.inc
+import org.litote.kmongo.lookup
+import org.litote.kmongo.match
+import org.litote.kmongo.or
+import org.litote.kmongo.pull
+import org.litote.kmongo.regex
+import org.litote.kmongo.set
+import org.litote.kmongo.setTo
+import org.litote.kmongo.setValue
 import org.thechance.service_identity.data.DataBaseContainer
-import org.thechance.service_identity.data.collection.*
+import org.thechance.service_identity.data.collection.AddressCollection
+import org.thechance.service_identity.data.collection.DetailedUserCollection
+import org.thechance.service_identity.data.collection.UserCollection
+import org.thechance.service_identity.data.collection.UserDetailsCollection
+import org.thechance.service_identity.data.collection.WalletCollection
 import org.thechance.service_identity.data.collection.mappers.toCollection
 import org.thechance.service_identity.data.collection.mappers.toEntity
 import org.thechance.service_identity.data.collection.mappers.toManagedEntity
+import org.thechance.service_identity.data.collection.mappers.toUserEntity
 import org.thechance.service_identity.data.util.isUpdatedSuccessfully
 import org.thechance.service_identity.data.util.paginate
-import org.thechance.service_identity.domain.entity.*
+import org.thechance.service_identity.domain.entity.Address
+import org.thechance.service_identity.domain.entity.Location
+import org.thechance.service_identity.domain.entity.User
+import org.thechance.service_identity.domain.entity.UserManagement
+import org.thechance.service_identity.domain.entity.Wallet
 import org.thechance.service_identity.domain.gateway.IDataBaseGateway
 import org.thechance.service_identity.domain.security.SaltedHash
-import org.thechance.service_identity.domain.util.*
+import org.thechance.service_identity.domain.util.ERROR_IN_DB
+import org.thechance.service_identity.domain.util.NOT_FOUND
+import org.thechance.service_identity.domain.util.ResourceNotFoundException
+import org.thechance.service_identity.domain.util.USER_ALREADY_EXISTS
+import org.thechance.service_identity.domain.util.USER_NOT_FOUND
+import org.thechance.service_identity.domain.util.UserAlreadyExistsException
+import org.thechance.service_identity.domain.util.getCountryForLocation
 
 @Single
 class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataBaseGateway {
@@ -161,9 +194,11 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
                 foreignField = UserDetailsCollection::userId.name,
                 newAs = DetailedUserCollection::details.name
             )
-        ).toList().toEntity(wallet.walletBalance, wallet.currency, userAddresses, country, userPermission).firstOrNull()
+        ).toList().toUserEntity(wallet.walletBalance, wallet.currency, userAddresses, country, userPermission).firstOrNull()
             ?: throw ResourceNotFoundException(NOT_FOUND)
     }
+
+
 
     override suspend fun getUsers(page: Int, limit: Int, searchTerm: String): List<UserManagement> {
         val searchQuery = or(
@@ -401,5 +436,7 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
 
     // endregion
 }
+
+
 
 
