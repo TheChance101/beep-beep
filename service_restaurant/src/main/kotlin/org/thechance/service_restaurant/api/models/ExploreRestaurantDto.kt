@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ExploreRestaurantDto (
     @SerialName("restaurants") val restaurants :List<RestaurantDto>,
-    @SerialName("meals") val meals :List<MealWithCuisineDto>,
+    @SerialName("meals") val meals :List<MealDto>,
 )

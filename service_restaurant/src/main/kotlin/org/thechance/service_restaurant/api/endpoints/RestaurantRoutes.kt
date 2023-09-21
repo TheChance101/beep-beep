@@ -63,7 +63,7 @@ fun Route.restaurantRoutes() {
             val meals = search.searchMeal(query, page = page, limit = limit)
             call.respond(
                 HttpStatusCode.OK,
-                ExploreRestaurantDto(restaurants = restaurants.toDto(), meals = meals.toDto())
+                ExploreRestaurantDto(restaurants = restaurants.toDto(), meals = meals.toMealDto())
             )
         }
     }

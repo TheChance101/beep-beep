@@ -163,7 +163,7 @@ class RestaurantService(
 
     suspend fun getMealsByRestaurantId(
         restaurantId: String, page: Int, limit: Int, languageCode: String
-    ): List<MealDto> {
+    ): List<MealWithCuisineDto> {
         return client.tryToExecute(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
@@ -178,7 +178,7 @@ class RestaurantService(
         }
     }
 
-    suspend fun getMealsByCuisineId(cuisineId: String, languageCode: String): List<MealDto> {
+    suspend fun getMealsByCuisineId(cuisineId: String, languageCode: String): List<MealWithCuisineDto> {
         return client.tryToExecute(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
@@ -191,7 +191,7 @@ class RestaurantService(
     }
 
     @OptIn(InternalAPI::class)
-    suspend fun addMeal(mealDto: MealDto, languageCode: String): MealDto {
+    suspend fun addMeal(mealDto: MealWithCuisineDto, languageCode: String): MealWithCuisineDto {
         return client.tryToExecute(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
@@ -200,13 +200,13 @@ class RestaurantService(
             }
         ) {
             post("/meal") {
-                body = Json.encodeToString(MealDto.serializer(), mealDto)
+                body = Json.encodeToString(MealWithCuisineDto.serializer(), mealDto)
             }
         }
     }
 
     @OptIn(InternalAPI::class)
-    suspend fun updateMeal(mealDto: MealDto, languageCode: String): MealDto {
+    suspend fun updateMeal(mealDto: MealWithCuisineDto, languageCode: String): MealWithCuisineDto {
         return client.tryToExecute(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
@@ -214,7 +214,7 @@ class RestaurantService(
                 errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             }
         ) {
-            put("/meal") { body = Json.encodeToString(MealDto.serializer(), mealDto) }
+            put("/meal") { body = Json.encodeToString(MealWithCuisineDto.serializer(), mealDto) }
         }
     }
 
