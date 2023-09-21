@@ -2,6 +2,7 @@ package org.thechance.common.data.remote.fakegateway
 
 import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.DataWrapperDto
+import org.thechance.common.data.remote.model.LocationDto
 import org.thechance.common.data.remote.model.RestaurantDto
 import org.thechance.common.data.remote.model.toEntity
 import org.thechance.common.domain.entity.*
@@ -63,11 +64,22 @@ class RestaurantFakeGateway : IRestaurantGateway {
         return restaurants.find { it.id == id }?.toEntity() ?: throw UnknownError()
     }
 
-    override suspend fun updateRestaurant(restaurant: Restaurant): Restaurant {
-        TODO("Not yet implemented")
+    override suspend fun updateRestaurant(restaurantId: String, restaurant: RestaurantInformation): Restaurant {
+        val index = restaurants.indexOfFirst { it.id == restaurantId }
+        restaurants[index] = restaurants[index].copy(
+            name = restaurant.name,
+            phone = restaurant.phoneNumber,
+            openingTime = restaurant.openingTime,
+            closingTime = restaurant.closingTime,
+            location = LocationDto(
+                latitude = restaurant.location.split(",")[0].toDouble(),
+                longitude = restaurant.location.split(",")[1].toDouble()
+            )
+        )
+        return restaurants[index].toEntity()
     }
 
-    override suspend fun createRestaurant(restaurant: NewRestaurantInfo): Restaurant {
+    override suspend fun createRestaurant(restaurant: RestaurantInformation): Restaurant {
         return Restaurant(
             id = "7",
             name = restaurant.name,
