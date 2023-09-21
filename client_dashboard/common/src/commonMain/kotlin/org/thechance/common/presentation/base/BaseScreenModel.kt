@@ -54,114 +54,16 @@ abstract class BaseScreenModel<S, E>(initialState: S) : StateScreenModel<S>(init
         return inScope.launch(Dispatchers.IO) {
             try {
                 callee()
-            } catch (exception: TaxiException) {
-                handleTaxiException(exception, onError)
-            } catch (exception: RestaurantException) {
-                handleRestaurantException(exception, onError)
-            } catch (exception: IdentityException) {
-                handleIdentityException(exception, onError)
+            } catch (exception: MultipleErrorException) {
+                exception.errors.toErrorState().let(onError)
             } catch (exception: NoInternetException) {
                 onError(ErrorState.NoConnection)
-            }catch (exception: UnknownErrorException) {
+            } catch (exception: UnknownErrorException) {
                 println("UnknownErrorException: ${exception.message}")
                 onError(ErrorState.UnKnownError)
             } catch (exception: Exception) {
                 onError(ErrorState.UnKnownError)
             }
-        }
-    }
-
-    private inline fun handleIdentityException(
-        exception: IdentityException,
-        onError: (ErrorState) -> Unit
-    ) {
-        when (exception) {
-            is InvalidPasswordException -> onError(ErrorState.InvalidPassword(exception.message.toString()))
-            is InvalidUserNameException -> onError(ErrorState.UserNotExist(exception.message.toString()))
-            is UsernameCannotBeBlankException -> onError(ErrorState.UsernameCannotBeBlank(exception.message.toString()))
-            is InvalidUserRequestParameterException -> onError(
-                ErrorState.InvalidUserRequestParameter(
-                    exception.message.toString()
-                )
-            )
-        }
-    }
-
-   private inline fun handleRestaurantException(
-        exception: RestaurantException,
-        onError: (ErrorState) -> Unit
-    ) {
-        when (exception) {
-            is RestaurantInvalidIdException -> onError(ErrorState.RestaurantInvalidId(exception.message.toString()))
-            is RestaurantInvalidNameException -> onError(ErrorState.RestaurantInvalidName(exception.message.toString()))
-            is RestaurantInvalidLocationException -> onError(
-                ErrorState.RestaurantInvalidLocation(
-                    exception.message.toString()
-                )
-            )
-
-            is RestaurantInvalidDescriptionException -> onError(
-                ErrorState.RestaurantInvalidDescription(
-                    exception.message.toString()
-                )
-            )
-
-            is RestaurantInvalidPhoneException -> onError(
-                ErrorState.RestaurantInvalidPhone(
-                    exception.message.toString()
-                )
-            )
-
-            is RestaurantInvalidTimeException -> onError(ErrorState.RestaurantInvalidTime(exception.message.toString()))
-            is RestaurantInvalidPageException -> onError(ErrorState.RestaurantInvalidPage(exception.message.toString()))
-            is RestaurantInvalidPageLimitException -> onError(
-                ErrorState.RestaurantInvalidPageLimit(
-                    exception.message.toString()
-                )
-            )
-
-            is RestaurantInvalidUpdateParameterException -> onError(
-                ErrorState.RestaurantInvalidUpdateParameter(
-                    exception.message.toString()
-                )
-            )
-
-            is RestaurantInvalidAddressException -> onError(
-                ErrorState.RestaurantInvalidAddress(
-                    exception.message.toString()
-                )
-            )
-
-            is RestaurantInvalidRequestParameterException -> onError(
-                ErrorState.RestaurantInvalidRequestParameter(
-                    exception.message.toString()
-                )
-            )
-
-            is RestaurantNotFoundException -> onError(ErrorState.RestaurantNotFound(exception.message.toString()))
-            is RestaurantErrorAddException -> onError(ErrorState.RestaurantErrorAdd(exception.message.toString()))
-            is RestaurantClosedException -> onError(ErrorState.RestaurantClosed(exception.message.toString()))
-            is CuisineNameAlreadyExistedException -> onError(
-                ErrorState.CuisineNameAlreadyExisted(
-                    exception.message.toString()
-                )
-            )
-        }
-    }
-
-   private inline fun handleTaxiException(
-        exception: TaxiException,
-        onError: (ErrorState) -> Unit
-    ) {
-        when (exception) {
-            is TaxiAlreadyExistsException -> { onError(ErrorState.TaxiAlreadyExists(exception.message.toString())) }
-            is InvalidTaxiRequestParameterException -> { onError(ErrorState.InvalidTaxiRequestParameter(exception.message.toString())) }
-            is InvalidTaxiIdException -> { onError(ErrorState.InvalidTaxiId(exception.message.toString())) }
-            is InvalidTaxiColorException -> { onError(ErrorState.InvalidTaxiColor(exception.message.toString())) }
-            is TaxiNotFoundException -> { onError(ErrorState.TaxiNotFound(exception.message.toString())) }
-            is InvalidTaxiPlateException -> { onError(ErrorState.InvalidTaxiPlate(exception.message.toString())) }
-            is InvalidCarTypeException -> { onError(ErrorState.InvalidCarType(exception.message.toString())) }
-            is SeatOutOfRangeException -> { onError(ErrorState.SeatOutOfRange(exception.message.toString())) }
         }
     }
 
@@ -196,4 +98,49 @@ abstract class BaseScreenModel<S, E>(initialState: S) : StateScreenModel<S>(init
             block()
         }
     }
+
+    private fun List<BpError>.toErrorState(): ErrorState.MultipleErrors {
+        val errorStates = mutableListOf<ErrorState>()
+        forEach { error ->
+            val errorState = when (error) {
+                is BpError.CuisineNameAlreadyExisted -> ErrorState.CuisineNameAlreadyExisted(error.message)
+                is BpError.InvalidCarType -> ErrorState.InvalidCarType(error.message)
+                is BpError.InvalidPassword -> ErrorState.InvalidPassword(error.message)
+                is BpError.InvalidTaxiColor -> ErrorState.InvalidTaxiColor(error.message)
+                is BpError.InvalidTaxiId -> ErrorState.InvalidTaxiId(error.message)
+                is BpError.InvalidTaxiPlate -> ErrorState.InvalidTaxiPlate(error.message)
+                is BpError.TaxiAlreadyExists -> ErrorState.TaxiAlreadyExists(error.message)
+                is BpError.InvalidUserName -> ErrorState.InvalidUserName(error.message)
+                is BpError.NoInternetConnection -> ErrorState.NoConnection
+                is BpError.NotFoundException -> ErrorState.UnKnownError
+                is BpError.PasswordCannotBeBlank -> ErrorState.PasswordCannotBeBlank(error.message)
+                is BpError.RestaurantClosed -> ErrorState.RestaurantClosed(error.message)
+                is BpError.RestaurantErrorAdd -> ErrorState.RestaurantErrorAdd(error.message)
+                is BpError.RestaurantInvalidAddress -> ErrorState.RestaurantInvalidAddress(error.message)
+                is BpError.RestaurantInvalidDescription -> ErrorState.RestaurantInvalidDescription(error.message)
+                is BpError.RestaurantInvalidId -> ErrorState.RestaurantInvalidId(error.message)
+                is BpError.RestaurantInvalidLocation -> ErrorState.RestaurantInvalidLocation(error.message)
+                is BpError.RestaurantInvalidName -> ErrorState.RestaurantInvalidName(error.message)
+                is BpError.RestaurantInvalidPage -> ErrorState.RestaurantInvalidPage(error.message)
+                is BpError.RestaurantInvalidPageLimit -> ErrorState.RestaurantInvalidPageLimit(error.message)
+                is BpError.RestaurantInvalidPhone -> ErrorState.RestaurantInvalidPhone(error.message)
+                is BpError.RestaurantInvalidRequestParameter ->
+                    ErrorState.RestaurantInvalidRequestParameter(error.message)
+                is BpError.RestaurantInvalidTime -> ErrorState.RestaurantInvalidTime(error.message)
+                is BpError.RestaurantInvalidUpdateParameter ->
+                    ErrorState.RestaurantInvalidUpdateParameter(error.message)
+                is BpError.RestaurantNotFound -> ErrorState.RestaurantNotFound(error.message)
+                is BpError.TaxiNotFound -> ErrorState.TaxiNotFound(error.message)
+                is BpError.SeatOutOfRange -> ErrorState.SeatOutOfRange(error.message)
+                is BpError.UnknownError -> ErrorState.UnKnownError
+                is BpError.UsernameCannotBeBlank -> ErrorState.UsernameCannotBeBlank(error.message)
+            }
+            errorStates.add(errorState)
+        }
+        return ErrorState.MultipleErrors(errorStates)
+    }
+
+    protected inline fun <reified T : ErrorState> List<ErrorState>.firstInstanceOfOrNull() =
+        filterIsInstance<T>().firstOrNull()
+
 }

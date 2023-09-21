@@ -16,9 +16,9 @@ data class BaseResponse<T>(
 @Serializable
 data class ResponseStatus(
     @SerialName("errorMessages")
-    val errorMessages: Map<String, String>? = null,
+    val errorMessages: Map<String, String>?,
     @SerialName("successMessage")
-    val successMessage: String? = null,
+    val successMessage: String?,
     @SerialName("code")
     val code: Int?
 )

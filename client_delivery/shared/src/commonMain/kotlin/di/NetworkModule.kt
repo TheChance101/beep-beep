@@ -1,5 +1,6 @@
 package di
 
+import data.gateway.remote.authorizationIntercept
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -40,8 +41,7 @@ val networkModule = module {
                 )
             }
         }
-        // todo 1 implement this interceptor
-//        authorizationIntercept(client)
+        authorizationIntercept(client)
         client
     }
 }

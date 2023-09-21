@@ -1,6 +1,6 @@
 package domain.usecase
 
-import data.gateway.remote.FakeRemoteGateway
+import data.gateway.fake.FakeRemoteGateway
 import domain.entity.Restaurant
 
 interface IGetFavoriteRestaurantsUseCase {
