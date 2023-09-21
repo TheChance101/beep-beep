@@ -19,15 +19,12 @@ data class ProfileUIState(
 
 data class UserUIState(
     val addresses: List<AddressUIState>? = emptyList(),
-    val country: String = "",
-    val currency: String = "",
     val email: String = "",
-    val fullName: String = "",
     val id: String ="",
-    val permission: Int = 1,
     val username: String ="",
     val walletBalance: Double =0.0,
-    val phoneNumber: String =""
+    val  fullName: String = "",
+    val  phoneNumber: String = ""
 )
 
 data class AddressUIState(
@@ -44,14 +41,11 @@ data class LocationUIState(
 fun UserDetails.toUIState(): UserUIState {
     return UserUIState(
         addresses = addresses?.map { it.toUIState() },
-        country = country ?: "",
-        currency = currency ?: "",
         email = email ?: "",
-        fullName = fullName ?: "",
         id = id ?: "",
-        permission = permission ?: 1,
         username = username ?: "",
         walletBalance = walletBalance ?: 0.0,
+        fullName = fullName ?: "",
         phoneNumber = phoneNumber ?: ""
     )
 }

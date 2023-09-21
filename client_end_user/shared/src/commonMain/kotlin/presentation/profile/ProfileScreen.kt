@@ -51,18 +51,19 @@ class ProfileScreen:
     @Composable
     override fun onRender(state: ProfileUIState, listener: ProfileInteractionListener) {
         Column (
-            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+            modifier = Modifier.fillMaxSize().background(Theme.colors.background)
+            .verticalScroll(rememberScrollState()),
 
         ){
             whiteCard {
                 title(Resources.strings.wallet)
-                subTitle("\$30.00", Theme.colors.primary)
+                subTitle(state.user?.walletBalance.toString(), Theme.colors.primary)
                 title(Resources.strings.username)
-                subTitle("@Ali_ahmed")
+                subTitle("@${state.user?.username}")
                 title(Resources.strings.address)
-                subTitle("Park gavin, 123 street")
+                subTitle(state.user?.addresses?.firstOrNull()?.address ?: "")
                 title(Resources.strings.email)
-                subTitle("Email@gmail.com")
+                subTitle(state.user?.email ?:"")
             }
             whiteCard {
                 BpTextField(
