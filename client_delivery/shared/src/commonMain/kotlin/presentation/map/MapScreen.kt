@@ -35,7 +35,12 @@ class MapScreen:BaseScreen<MapScreenModel,MapScreenUiState,MapScreenUiEffect,Map
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            MapView(modifier = Modifier.fillMaxSize())
+            // TODO("change this to latLong data class ok not just pair to my e self")
+            MapView(
+                modifier = Modifier.fillMaxSize(),
+                Pair(1.2,2.1),
+                Pair(0.0, 0.1)
+            )
             BpAppBar(
                 isBackIconVisible = false,
                 title = "${Resources.strings.welcome}${state.username}"
