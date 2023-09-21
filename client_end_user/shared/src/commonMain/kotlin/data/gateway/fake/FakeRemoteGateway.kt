@@ -51,7 +51,8 @@ class FakeRemoteGateway : IFakeRemoteGateway {
         id = "64f3663e5ddbc15bfd1efcfa",
         permission = 1,
         username = "ay0o5h",
-        walletBalance = 0.0
+        walletBalance = 0.0,
+        phoneNumber = "1234567890"
 
     )
 

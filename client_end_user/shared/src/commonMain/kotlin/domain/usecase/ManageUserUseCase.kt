@@ -30,13 +30,12 @@ interface IManageUserUseCase {
 
 class ManageUserUseCase(
     private val localGateway: ILocalConfigurationGateway,
-    private val remoteGateway: FakeRemoteGateway,
     private val fakeRemoteGateway: IFakeRemoteGateway
 ) : IManageUserUseCase {
 
     override suspend fun getUserWallet(): User {
         return if (localGateway.getAccessToken().isNotEmpty()) {
-            remoteGateway.getUsrWallet()
+            fakeRemoteGateway.getUsrWallet()
         } else {
             throw AuthorizationException.UnAuthorizedException
         }
