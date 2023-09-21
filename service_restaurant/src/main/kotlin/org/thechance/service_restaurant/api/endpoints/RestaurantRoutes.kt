@@ -33,7 +33,7 @@ fun Route.restaurantRoutes() {
             val restaurantOptions = call.receive<RestaurantOptionsDto>()
             val restaurants = discoverRestaurant.getRestaurants(restaurantOptions.toEntity()).toDto()
             val total = controlRestaurant.getTotalNumberOfRestaurant()
-            call.respond(HttpStatusCode.OK, BasePaginationResponseDto(result = restaurants, total = total))
+            call.respond(HttpStatusCode.OK, BasePaginationResponseDto(items = restaurants, total = total))
         }
 
         get("/{ownerId}") {

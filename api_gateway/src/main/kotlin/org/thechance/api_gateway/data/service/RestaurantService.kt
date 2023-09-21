@@ -292,49 +292,46 @@ class RestaurantService(
         }
     }
 
-    @OptIn(InternalAPI::class)
     suspend fun getOrdersHistoryInRestaurant(
         restaurantId: String,
         page: Int,
         limit: Int,
         languageCode: String
-    ): List<OrderDto> {
-        return client.tryToExecute(
+    ): PaginationResponse<OrderDto> {
+        return client.tryToExecute<PaginationResponse<OrderDto>>(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
-            }
-        ) {
-            val formData = FormDataContent(Parameters.build {
-                append("id", restaurantId)
-                append("page", page.toString())
-                append("limit", limit.toString())
-            })
-            get("/order/restaurant/history") {
-                body = formData
-            }
-        }
+            },
+            method = { get("/order/restaurant/$restaurantId/history?page=$page&&limit=$limit") }
+        )
     }
 
-    @OptIn(InternalAPI::class)
-    suspend fun getOrdersHistoryForUser(userId: String, page: Int, limit: Int, languageCode: String): List<OrderDto> {
-        return client.tryToExecute(
+    suspend fun getOrdersHistoryForUser(
+        userId: String,
+        page: Int,
+        limit: Int,
+        languageCode: String
+    ): PaginationResponse<OrderDto> {
+        return client.tryToExecute<PaginationResponse<OrderDto>>(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
-            }
-        ) {
-            val formData = FormDataContent(Parameters.build {
-                append("id", userId)
-                append("page", page.toString())
-                append("limit", limit.toString())
-            })
-            get("/order/user/history") {
-                body = formData
-            }
-        }
+            },
+            method = { get("/order/user/$userId/history?page=$page&&limit=$limit") }
+        )
+//        {
+//            val formData = FormDataContent(Parameters.build {
+//                append("id", userId)
+//                append("page", page.toString())
+//                append("limit", limit.toString())
+//            })
+//            get("/order/user/history") {
+//                body = formData
+//            }
+//        }
     }
 
     suspend fun getOrdersCountByDaysBefore(

@@ -63,7 +63,9 @@ fun Route.orderRoutes() {
         get("/user/history") {
             val parameters = call.receiveParameters()
             val tokenClaim = call.principal<JWTPrincipal>()
-            val userId = tokenClaim?.get(Claim.USER_ID).toString()
+            val userId = tokenClaim?.payload?.getClaim(Claim.USER_ID).toString()
+            println("userrrrrr : $userId")
+//            val userId = parameters["id"]?.trim().toString()
             val page = parameters["page"]?.trim()?.toInt() ?: 1
             val limit = parameters["limit"]?.trim()?.toInt() ?: 10
             val language = extractLocalizationHeader()
