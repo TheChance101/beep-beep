@@ -39,6 +39,15 @@ fun Route.userRoutes() {
     }
 
     route("/user") {
+        authenticateWithRole(Role.END_USER) {
+          get("/{id}"){
+                val id = call.parameters["id"] ?: ""
+                val language = extractLocalizationHeader()
+                val result = identityService.getUserById(id, language)
+                respondWithResult(HttpStatusCode.OK, result)
+          }
+        }
+
         authenticateWithRole(Role.DASHBOARD_ADMIN) {
             get("/last-register") {
                 val limit = call.parameters["limit"]?.toInt() ?: 4
