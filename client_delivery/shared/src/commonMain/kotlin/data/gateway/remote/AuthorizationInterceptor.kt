@@ -12,7 +12,6 @@ fun Scope.authorizationIntercept(client: HttpClient) {
     client.plugin(HttpSend).intercept { request ->
 
         val localConfigurationGateway = get<LocalConfigurationGateway>()
-        // todo add identity gate way to fix this error
         val remoteIdentityGateway = get<IdentityRemoteGateway>()
 
         val accessToken = localConfigurationGateway.getAccessToken()
