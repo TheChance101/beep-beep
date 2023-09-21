@@ -1,14 +1,17 @@
 package data.gateway.remote
 
 import data.remote.mapper.toEntity
+import data.remote.model.AddressDto
 import data.remote.model.LocationDto
 import data.remote.model.NotificationDto
 import data.remote.model.OfferDto
 import data.remote.model.RestaurantDto
+import data.remote.model.UserDetailsDto
 import domain.entity.Notification
 import domain.entity.Offer
 import domain.entity.Restaurant
 import domain.entity.User
+import domain.entity.UserDetails
 import domain.gateway.IFakeRemoteGateway
 
 class FakeRemoteGateway : IFakeRemoteGateway {
@@ -28,6 +31,29 @@ class FakeRemoteGateway : IFakeRemoteGateway {
     override suspend fun getNotificationHistory(): List<Notification> {
         return notifications.map{ it.toEntity() }
     }
+
+    override suspend fun getUserProfile(): UserDetails {
+        return userProfile.toEntity()
+    }
+
+    private val userProfile = UserDetailsDto(
+        addresses = listOf(
+            AddressDto(
+                id = "64f372095fecc11e6d917656",
+                address = "Main street, 123",
+                location = LocationDto(22.0, 10.5)
+            )
+        ),
+        country = "iraq",
+        currency = "IQD",
+        email = "aya@gmail.com",
+        fullName = "aya",
+        id = "64f3663e5ddbc15bfd1efcfa",
+        permission = 1,
+        username = "ay0o5h",
+        walletBalance = 0.0
+
+    )
 
     private val restaurants = listOf(
         RestaurantDto(
