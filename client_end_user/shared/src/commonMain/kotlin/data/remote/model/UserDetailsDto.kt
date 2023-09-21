@@ -22,5 +22,8 @@ data class UserDetailsDto(
     @SerialName("username")
     val username: String?,
     @SerialName("walletBalance")
-    val walletBalance: Double?
+    val walletBalance: Double?,
+    @SerialName("phoneNumber")
+    val phoneNumber: String?
+
 )

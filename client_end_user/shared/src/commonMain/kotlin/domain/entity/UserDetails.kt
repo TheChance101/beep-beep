@@ -11,5 +11,6 @@ data class UserDetails(
     val id: String?,
     val permission: Int?,
     val username: String?,
-    val walletBalance: Double?
+    val walletBalance: Double?,
+    val phoneNumber: String?
 )

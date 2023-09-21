@@ -15,7 +15,8 @@ fun UserDetailsDto.toEntity (): UserDetails {
         permission = permission ?: 1,
         username = username ?: "",
         walletBalance = walletBalance ?: 0.0,
-        addresses = addresses?.map { it!!.toEntity() } ?: emptyList()
+        addresses = addresses?.map { it!!.toEntity() } ?: emptyList(),
+         phoneNumber=phoneNumber?:""
     )
 }
 
