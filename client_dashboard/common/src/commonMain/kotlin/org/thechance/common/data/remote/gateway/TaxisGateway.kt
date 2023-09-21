@@ -50,7 +50,6 @@ class TaxisGateway(private val client: HttpClient) : BaseGateway(), ITaxisGatewa
     }
 
     override suspend fun updateTaxi(taxi: NewTaxiInfo,taxiId:String): Taxi {
-        println("updateTaxi: $taxiId")
         val result = tryToExecute<ServerResponse<TaxiDto>>(client) {
             put(urlString = "/taxi/$taxiId") {
                 contentType(ContentType.Application.Json)

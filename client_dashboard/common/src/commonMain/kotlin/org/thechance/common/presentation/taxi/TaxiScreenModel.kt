@@ -283,15 +283,7 @@ class TaxiScreenModel(
     }
 
     override fun onClearAllClicked() {
-        updateState {
-            it.copy(
-                taxiFilterUiState = TaxiFilterUiState(
-                    carColor = null,
-                    seats =null,
-                    status = null
-                )
-            )
-        }
+        updateState { it.copy(taxiFilterUiState = TaxiFilterUiState()) }
     }
 
     override fun onCancelFilterClicked() {

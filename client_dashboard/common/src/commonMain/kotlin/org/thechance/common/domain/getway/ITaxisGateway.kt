@@ -9,7 +9,7 @@ interface ITaxisGateway {
 
     suspend fun getPdfTaxiReport()
     suspend fun getTaxis(
-        username: String?= null,
+        username: String?,
         taxiFiltration: TaxiFiltration,
         page: Int,
         limit: Int
