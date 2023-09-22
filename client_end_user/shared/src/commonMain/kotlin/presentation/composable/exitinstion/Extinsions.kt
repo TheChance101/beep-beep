@@ -62,12 +62,11 @@ fun Modifier.topBorder(strokeWidth: Dp, color: Color) = composed(
 
         Modifier.drawBehind {
             val width = size.width
-            val height = size.height - strokeWidthPx / 2
 
             drawLine(
                 color = color,
-                start = Offset(x = width, y = 0f),
-                end = Offset(x = width, y = height),
+                start = Offset(x = 0f, y = 0f),
+                end = Offset(x = width, y = 0f),
                 strokeWidth = strokeWidthPx
             )
         }
