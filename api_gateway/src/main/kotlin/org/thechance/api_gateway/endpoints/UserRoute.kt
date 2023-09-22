@@ -39,21 +39,6 @@ fun Route.userRoutes() {
     }
 
     route("/user") {
-        authenticateWithRole(Role.END_USER) {
-          get("/{id}"){
-                val id = call.parameters["id"] ?: ""
-                val language = extractLocalizationHeader()
-                val result = identityService.getUserById(id, language)
-                respondWithResult(HttpStatusCode.OK, result)
-          }
-            put("profile/{id}") {
-                val id = call.parameters["id"] ?: ""
-                val language = extractLocalizationHeader()
-                val user = call.receive<UserDetailsDto>()
-                val result = identityService.updateUser(id, user, language)
-                respondWithResult(HttpStatusCode.OK, result)
-            }
-        }
 
         authenticateWithRole(Role.DASHBOARD_ADMIN) {
             get("/last-register") {
@@ -92,6 +77,15 @@ fun Route.userRoutes() {
                 val language = extractLocalizationHeader()
                 val user = identityService.getUserById(userId, language)
                 respondWithResult(HttpStatusCode.OK, user)
+            }
+            put("profile/{id}") {
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val userId = tokenClaim?.get(Claim.USER_ID).toString()
+                val language = extractLocalizationHeader()
+                val params = call.receiveParameters()
+                val fullName = params["fullName"]?.trim().toString()
+                val result = identityService.updateUser(userId, fullName, language)
+                respondWithResult(HttpStatusCode.OK, result)
             }
 
             put("/location") {
