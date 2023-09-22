@@ -57,7 +57,7 @@ class ProfileScreen:
         ){
             whiteCard {
                 title(Resources.strings.wallet)
-                subTitle(state.user?.walletBalance.toString(), Theme.colors.primary)
+                subTitle("${state.user?.currency} ${state.user?.walletBalance}", Theme.colors.primary)
                 title(Resources.strings.username)
                 subTitle("@${state.user?.username}")
                 title(Resources.strings.address)

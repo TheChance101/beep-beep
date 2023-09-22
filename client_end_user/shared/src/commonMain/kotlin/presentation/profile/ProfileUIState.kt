@@ -25,6 +25,7 @@ data class UserUIState(
     val walletBalance: Double = 0.0,
     val fullName: String = "",
     val phoneNumber: String = "",
+    val currency: String = ""
 )
 
 data class AddressUIState(
@@ -46,7 +47,8 @@ fun UserDetails.toUIState(): UserUIState {
         username = username ?: "",
         walletBalance = walletBalance ?: 0.0,
         fullName = fullName ?: "",
-        phoneNumber = phoneNumber ?: ""
+        phoneNumber = phoneNumber ?: "",
+        currency = currency ?: ""
     )
 }
 
