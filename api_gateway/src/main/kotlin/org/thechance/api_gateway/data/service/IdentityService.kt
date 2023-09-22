@@ -10,13 +10,11 @@ import io.ktor.http.*
 import io.ktor.util.*
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.*
 import org.thechance.api_gateway.data.model.authenticate.TokenConfiguration
 import org.thechance.api_gateway.data.model.authenticate.TokenType
-import org.thechance.api_gateway.data.model.restaurant.RestaurantDto
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.tryToExecute
 import org.thechance.api_gateway.util.APIs
@@ -112,9 +110,6 @@ class IdentityService(
     suspend fun updateUserProfile(
         id: String,
         fullName: String,
-        username: String,
-        email: String,
-        country: String,
         languageCode: String
     ): UserDetailsDto {
         return client.tryToExecute<UserDetailsDto>(
@@ -124,7 +119,7 @@ class IdentityService(
                 errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             }
         ) {
-            submitForm("/user/$id",
+            submitForm("/user/profile/$id",
                 formParameters = parameters {
                     append("fullName", fullName)
                 }
