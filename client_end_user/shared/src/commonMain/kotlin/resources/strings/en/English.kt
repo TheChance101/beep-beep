@@ -83,4 +83,7 @@ data class English(
     override val invalidEmail: String = "Invalid Email",
     override val invalidFullName: String = "Invalid Full Name",
     override val oppsRegistrationNotCompleted: String = "Opps, Registration Not Completed",
+    override val orderNow: String = "Order Now",
+    override val total: String = "Total:",
+    override val yourCart: String = "Your cart",
 ) : IStringResources
