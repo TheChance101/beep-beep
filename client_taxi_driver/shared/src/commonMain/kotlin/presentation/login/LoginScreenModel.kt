@@ -62,21 +62,9 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
 
     private fun handleErrorState(error: ErrorState) {
         when (error) {
-            ErrorState.NoInternet -> {/* TODO: */
-            }
-
-            ErrorState.UnAuthorized -> {/* TODO: */
-            }
 
             ErrorState.HasNoPermission -> {
                 state.value.bottomSheetUiState.sheetState.show()
-            }
-
-
-            is ErrorState.UnknownError -> {/* TODO: */
-            }
-
-            is ErrorState.ServerError -> {/* TODO: */
             }
 
             is ErrorState.InvalidCredentials -> {
@@ -126,6 +114,8 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
                     )
                 }
             }
+
+            else -> {}
         }
     }
 
