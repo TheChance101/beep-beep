@@ -1,7 +1,9 @@
 package org.thechance.common.presentation.restaurant
 
+import org.thechance.common.domain.entity.Cuisine
+import org.thechance.common.domain.entity.NewRestaurantInfo
+import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.presentation.composables.table.Header
-import org.thechance.common.presentation.util.ErrorState
 
 
 data class RestaurantUiState(
@@ -35,28 +37,51 @@ data class RestaurantUiState(
         val ownerUsername: String,
         val phone: String,
         val rate: Double,
-        val priceLevel: String,
+        val priceLevel: Int,
         val openingTime: String,
         val closingTime: String,
     )
 }
 
+fun Restaurant.toUiState(): RestaurantUiState.RestaurantDetailsUiState =
+    RestaurantUiState.RestaurantDetailsUiState(
+        id = id,
+        name = name,
+        ownerUsername = ownerUsername,
+        phone = phone,
+        rate = rate,
+        priceLevel = priceLevel.count { it == '$' } ,
+        openingTime = openingTime,
+        closingTime = closingTime,
+    )
+
+fun List<Restaurant>.toRestaurantsUIState() = map(Restaurant::toUiState)
+
 data class NewRestaurantInfoUiState(
     val name: String = "",
-    val nameError: ErrorWrapper = ErrorWrapper(),
+    val nameError: ErrorWrapper? = null,
     val ownerUsername: String = "",
-    val userNameError: ErrorWrapper = ErrorWrapper(),
+    val userNameError: ErrorWrapper? = null,
     val phoneNumber: String = "",
-    val phoneNumberError: ErrorWrapper = ErrorWrapper(),
+    val phoneNumberError: ErrorWrapper? = null,
     val openingTime: String = "",
-    val startTimeError: ErrorWrapper = ErrorWrapper(),
+    val startTimeError: ErrorWrapper? = null,
     val closingTime: String = "",
-    val endTimeError: ErrorWrapper = ErrorWrapper(),
+    val endTimeError: ErrorWrapper? = null,
     val location: String = "",
-    val locationError: ErrorWrapper = ErrorWrapper(),
+    val locationError: ErrorWrapper? = null,
     val lat: String = "",
     val lng: String = "",
-    val buttonEnabled: Boolean = false
+    val buttonEnabled: Boolean = true
+)
+
+fun NewRestaurantInfoUiState.toEntity() = NewRestaurantInfo(
+    name = name,
+    ownerUsername = ownerUsername,
+    phoneNumber = phoneNumber,
+    location = location,
+    openingTime = openingTime,
+    closingTime = closingTime,
 )
 
 data class ErrorWrapper(
@@ -67,12 +92,29 @@ data class ErrorWrapper(
 data class RestaurantFilterDropdownMenuUiState(
     val isFilterDropdownMenuExpanded: Boolean = false,
     val filterRating: Double = 0.0,
-    val filterPriceLevel: Int = 1,
+    val filterPriceLevel: Int = 0,
     val isFiltered: Boolean = false,
 )
 
 data class RestaurantAddCuisineDialogUiState(
     val isVisible: Boolean = false,
     val cuisineName: String = "",
-    val cuisines: List<String> = emptyList(),
+    val cuisines: List<CuisineUiState> = emptyList(),
+    val cuisineNameError: ErrorWrapper = ErrorWrapper(),
 )
+
+data class CuisineUiState(
+    val id: String,
+    val name: String,
+)
+
+fun Cuisine.toUiState(): CuisineUiState {
+    return CuisineUiState(
+        id = id,
+        name = name,
+    )
+}
+
+fun List<Cuisine>.toUiState(): List<CuisineUiState> {
+    return map(Cuisine::toUiState)
+}

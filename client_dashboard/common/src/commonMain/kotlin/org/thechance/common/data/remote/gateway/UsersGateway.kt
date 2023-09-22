@@ -20,8 +20,6 @@ import org.thechance.common.domain.getway.IUsersGateway
 
 class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGateway {
 
-    override suspend fun getUserData(): String = "aaaa"
-
     override suspend fun getUsers(
         query: String?,
         byPermissions: List<Permission>,
@@ -36,34 +34,27 @@ class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGatewa
             }
         }.value
 
-        return DataWrapper(
-                totalPages = result?.total?.div(numberOfUsers) ?: 0,
-                numberOfResult = result?.total ?: 0,
-                result = result?.users?.toEntity() ?: emptyList()
-        )
+        return paginateData(result?.users?.toEntity() ?: emptyList(), numberOfUsers, result?.total ?: 0)
     }
 
     override suspend fun loginUser(username: String, password: String): Pair<String, String> {
         val result = tryToExecute<ServerResponse<UserTokensRemoteDto>>(client) {
             submitForm(
-                    formParameters = Parameters.build {
-                        append("username", username)
-                        append("password", password)
-                    }
+                formParameters = Parameters.build {
+                    append("username", username)
+                    append("password", password)
+                }
             ) {
                 url("/login")
-                header("Accept-Language", "ar")
-                header("Country-Code", "EG")
-                header("Application-Id", "3000")
             }
         }.value
 
         return Pair(result?.accessToken ?: "", result?.refreshToken ?: "")
     }
 
-    override suspend fun deleteUser(id: String): Boolean {
+    override suspend fun deleteUser(userId: String): Boolean {
         return tryToExecute<ServerResponse<Boolean>>(client) {
-            delete(urlString = "/user") { url { appendPathSegments(id) } }
+            delete(urlString = "/user") { url { appendPathSegments(userId) } }
         }.value ?: false
     }
 
@@ -82,10 +73,10 @@ class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGatewa
         return tryToExecute<ServerResponse<UserDto>>(client) {
             put(urlString = "/user/$userId/permission") {
                 setBody(
-                        Json.encodeToString(
-                                ListSerializer(Int.serializer()),
-                                mapPermissionsToInt(permissions)
-                        )
+                    Json.encodeToString(
+                        ListSerializer(Int.serializer()),
+                        mapPermissionsToInt(permissions)
+                    )
                 )
             }
         }.value?.toEntity() ?: throw UnknownError()
