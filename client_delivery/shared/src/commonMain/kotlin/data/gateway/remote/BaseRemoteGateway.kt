@@ -9,9 +9,16 @@ import domain.utils.UserNotFoundException
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.websocket.receiveDeserialized
+import io.ktor.client.plugins.websocket.sendSerialized
+import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.client.statement.HttpResponse
 import io.ktor.util.network.UnresolvedAddressException
-
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 abstract class BaseRemoteGateway(val client: HttpClient) {
 
@@ -28,6 +35,27 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
             throw NoInternetException()
         } catch (e: Exception) {
             throw UnknownErrorException()
+        }
+    }
+
+    suspend inline fun <reified T> HttpClient.tryToExecuteFromWebSocket(
+        path: String
+    ): Flow<T> {
+        return flow {
+            webSocket(path = path) {
+                while (true) {
+                    emit(receiveDeserialized<T>())
+                }
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+   protected suspend inline fun <reified T> HttpClient.tryToSendWebSocketData(
+        data: T,
+        path: String,
+    ) {
+        webSocket(path = path) {
+            sendSerialized(data)
         }
     }
 
