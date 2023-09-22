@@ -36,8 +36,8 @@ class CartScreen :
         Scaffold(
             topBar = {
                 BpAppBar(
-                    onNavigateUp = {},
-                    title = "Your cart",
+                    onNavigateUp = { listener.onClickBack() },
+                    title = Resources.strings.yourCart,
                     isBackIconVisible = true,
                     painterResource = painterResource(Resources.images.iconBack),
                     modifier = Modifier.bottomBorder(1.dp, Theme.colors.divider)
@@ -45,7 +45,7 @@ class CartScreen :
             },
             bottomBar = {
                 OrderInfoCard(
-                    onClickOrderNow = {},
+                    onClickOrderNow = { listener.onClickOrderNow() },
                     totalPrice = "${state.currency} ${state.totalPrice}"
                 )
             }

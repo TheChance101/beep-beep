@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.composable.exitinstion.topBorder
+import resources.Resources
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,7 +30,7 @@ fun OrderInfoCard(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                "Total:",
+                Resources.strings.total,
                 style = Theme.typography.body,
                 color = Theme.colors.contentSecondary,
                 modifier = Modifier.padding(bottom = 4.dp)
@@ -38,7 +39,7 @@ fun OrderInfoCard(
         }
         Spacer(modifier = Modifier.weight(1f))
         BpButton(
-            title = "Order Now",
+            title = Resources.strings.orderNow,
             onClick = { onClickOrderNow() },
             modifier = Modifier.width(208.dp).padding(end = 16.dp, top = 16.dp)
         )
