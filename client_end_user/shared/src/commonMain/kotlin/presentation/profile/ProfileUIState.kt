@@ -20,11 +20,11 @@ data class ProfileUIState(
 data class UserUIState(
     val addresses: List<AddressUIState>? = emptyList(),
     val email: String = "",
-    val id: String ="",
-    val username: String ="",
-    val walletBalance: Double =0.0,
-    val  fullName: String = "",
-    val  phoneNumber: String = ""
+    val id: String = "",
+    val username: String = "",
+    val walletBalance: Double = 0.0,
+    val fullName: String = "",
+    val phoneNumber: String = "",
 )
 
 data class AddressUIState(

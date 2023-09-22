@@ -3,13 +3,18 @@ package presentation.profile
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.UserDetails
 import domain.usecase.IManageUserUseCase
+import domain.usecase.validation.IValidationUseCase
+import domain.utils.AuthorizationException
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 import presentation.main.MainScreenUiEffect
+import resources.strings.IStringResources
 
 class ProfileScreenModel(
-  private val  manageUser: IManageUserUseCase
+    private val validation: IValidationUseCase,
+    private val  manageUser: IManageUserUseCase,
+    private val stringResources: IStringResources
 ) :BaseScreenModel<ProfileUIState, ProfileUIEffect >(ProfileUIState()) ,ProfileInteractionListener{
 
     override val viewModelScope: CoroutineScope = coroutineScope
@@ -36,14 +41,50 @@ class ProfileScreenModel(
         println(errorState)
     }
 
-    override fun onFullNameChanged(username: String) {
-        updateState { it.copy(fullName = username,isButtonEnabled = true,) }
+    override fun onFullNameChanged(fullName: String) {
+        updateState { it.copy(fullName = fullName,isButtonEnabled = true,) }
+        tryCatch {
+            validation.validateFullName(fullName)
+            clearErrors()
+        }
     }
 
     override fun onPhoneNumberChanged(phone: String) {
         updateState { it.copy(phoneNumber = phone,isButtonEnabled = true,) }
+        tryCatch {
+            validation.validatePhone(phone)
+            clearErrors()
+        }
     }
-
+    private fun tryCatch(block: () -> Unit) {
+        try {
+            block()
+        } catch (e: AuthorizationException.InvalidFullNameException) {
+            updateState {
+                it.copy(
+                    fullNameErrorMsg = e.message ?: stringResources.invalidFullName,
+                    isFullNameError = true
+                )
+            }
+        } catch (e: AuthorizationException.InvalidPhoneException) {
+            updateState {
+                it.copy(
+                    mobileNumberErrorMsg = e.message ?: stringResources.invalidPhoneNumber,
+                    isPhoneNumberError = true
+                )
+            }
+        }
+    }
+    private fun clearErrors() {
+        updateState {
+            it.copy(
+                fullNameErrorMsg = "",
+                mobileNumberErrorMsg = "",
+                isFullNameError = false,
+                isPhoneNumberError = false
+            )
+        }
+    }
     override fun onSaveProfileInfo() {
         updateState { it.copy(isButtonEnabled = true) }
 
