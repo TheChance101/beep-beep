@@ -67,7 +67,7 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
                 .border(1.kms, Theme.colors.divider, RoundedCornerShape(Theme.radius.medium))
         ) {
             Column {
-                ChatHeader(state.ticket)
+                ChatHeader(state.ticket, listener)
                 ChatMessages(state.messages, modifier = Modifier.weight(1f))
                 Divider(color = Theme.colors.divider, thickness = 1.kms)
                 BpSimpleTextField(
@@ -84,7 +84,7 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
     }
 
     @Composable
-    private fun ChatHeader(ticket: ChatUIState.TicketUIState) {
+    private fun ChatHeader(ticket: ChatUIState.TicketUIState, listener: ChatInteractionListener) {
         Column {
             Row(
                 modifier = Modifier.padding(24.kms),
@@ -114,7 +114,7 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
                 )
                 BpOutlinedButton(
                     title = Resources.Strings.closeTicket,
-                    onClick = { },
+                    onClick = listener::onCloseTicketClicked,
                 )
             }
             Divider(color = Theme.colors.divider, thickness = 1.kms)
