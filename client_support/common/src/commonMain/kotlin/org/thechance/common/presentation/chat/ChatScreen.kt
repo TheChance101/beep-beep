@@ -127,7 +127,7 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
             items(messages) { message ->
                 val currentMessage = messages.indexOf(message)
                 val nextMessage = messages.getOrNull(currentMessage + 1)
-                val showAvatar = nextMessage?.isMe == true && !message.isMe
+                val showAvatar = nextMessage?.isMe != message.isMe && !message.isMe
                 Message(message.copy(showAvatar = showAvatar))
             }
         }
