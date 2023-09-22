@@ -3,6 +3,10 @@ package presentation.base
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.InvalidCredentialsException
+import domain.InvalidDriverEmailException
+import domain.InvalidDriverNameException
+import domain.InvalidPasswordException
+import domain.InvalidUserNameException
 import domain.LocationPermissionDeniedAlwaysException
 import domain.LocationPermissionDeniedException
 import domain.NoInternetException
@@ -97,6 +101,15 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
 
                     is InvalidCredentialsException -> onError(
                         ErrorState.InvalidCredentials(
+                            exception.message.toString()
+                        )
+                    )
+
+                    is InvalidUserNameException -> onError(ErrorState.InvalidUserName(exception.message.toString()))
+                    is InvalidPasswordException -> onError(ErrorState.InvalidPassword(exception.message.toString()))
+                    is InvalidDriverNameException -> onError(ErrorState.InvalidDriverName(exception.message.toString()))
+                    is InvalidDriverEmailException -> onError(
+                        ErrorState.InvalidDriverEmail(
                             exception.message.toString()
                         )
                     )

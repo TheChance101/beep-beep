@@ -65,13 +65,10 @@ class LoginScreen :
                     if (state.bottomSheetUiState.showPermissionSheet) {
                         PermissionBottomSheetContent(
                             listener = listener,
-                            state = state
+                            state = state.bottomSheetUiState
                         )
-                    } else {
-                        WrongPermissionBottomSheet(
-                            listener
-                        )
-                    }
+                    } else WrongPermissionBottomSheet(listener)
+
                 },
                 sheetBackgroundColor = Theme.colors.background,
                 onBackGroundClicked = listener::onDismissSheet,
@@ -111,7 +108,7 @@ private fun LoginScreenContent(
                 label = Resources.strings.username,
                 keyboardType = KeyboardType.Text,
                 errorMessage = state.usernameErrorMsg,
-                isError = state.isUsernameError,
+                isError = state.usernameErrorMsg.isNotEmpty(),
             )
             BpTextField(
                 modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
@@ -120,7 +117,7 @@ private fun LoginScreenContent(
                 label = Resources.strings.password,
                 keyboardType = KeyboardType.Password,
                 errorMessage = state.passwordErrorMsg,
-                isError = state.isPasswordError
+                isError = state.passwordErrorMsg.isNotEmpty()
 
             )
             BpCheckBox(
@@ -206,7 +203,7 @@ private fun CardHeader(
 fun PermissionBottomSheetContent(
     listener: LoginScreenBottomSheetInteractionListener,
     modifier: Modifier = Modifier,
-    state: LoginScreenUIState
+    state: LoginScreenBottomSheetUiState
 ) {
 
     Column(
@@ -219,21 +216,25 @@ fun PermissionBottomSheetContent(
             style = Theme.typography.headlineLarge,
         )
         BpTextField(
-            text = state.bottomSheetUiState.driverFullName,
+            text = state.driverFullName,
             onValueChange = listener::onDriverFullNameChanged,
             label = Resources.strings.fullName,
             keyboardType = KeyboardType.Text,
+            errorMessage = state.driverFullNameErrorMsg,
+            isError = state.driverFullNameErrorMsg.isNotEmpty(),
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
         )
         BpTextField(
-            text = state.bottomSheetUiState.driverEmail,
+            text = state.driverEmail,
             onValueChange = listener::onOwnerEmailChanged,
             label = Resources.strings.userEmail,
             keyboardType = KeyboardType.Text,
+            errorMessage = state.driverEmailErrorMsg,
+            isError = state.driverEmailErrorMsg.isNotEmpty(),
             modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space16),
         )
         BpExpandableTextField(
-            text = state.bottomSheetUiState.description,
+            text = state.description,
             onValueChange = listener::onDescriptionChanged,
             label = Resources.strings.whyBeepBeep,
             hint = Resources.strings.describeWhyYouWantToJoinUs,
@@ -243,9 +244,9 @@ fun PermissionBottomSheetContent(
         BpButton(
             onClick = {
                 listener.onSubmitClicked(
-                    state.bottomSheetUiState.driverFullName,
-                    state.bottomSheetUiState.driverEmail,
-                    state.bottomSheetUiState.description
+                    state.driverFullName,
+                    state.driverEmail,
+                    state.description
                 )
             },
             title = Resources.strings.submit,

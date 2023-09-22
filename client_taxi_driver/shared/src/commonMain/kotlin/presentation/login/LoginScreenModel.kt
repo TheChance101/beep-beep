@@ -62,35 +62,54 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
 
     private fun handleErrorState(error: ErrorState) {
         when (error) {
-            ErrorState.NoInternet -> {/* TODO: */
-            }
-
-            ErrorState.UnAuthorized -> {/* TODO: */
-            }
-
-            ErrorState.HasNoPermission -> state.value.bottomSheetUiState.sheetState.show()
-
-
-            is ErrorState.UnknownError -> {/* TODO: */
-            }
-
-            is ErrorState.ServerError -> {/* TODO: */
+            ErrorState.HasNoPermission -> {
+                state.value.bottomSheetUiState.sheetState.show()
             }
 
             is ErrorState.InvalidCredentials -> {
+                updateState { it.copy(passwordErrorMsg = error.errorMessage) }
+            }
+
+            is ErrorState.NotFound -> {
+                updateState { it.copy(usernameErrorMsg = error.errorMessage) }
+            }
+
+            is ErrorState.InvalidUserName -> {
                 updateState {
                     it.copy(
-                        passwordErrorMsg = error.errorMessage,
-                        isPasswordError = true,
+                        usernameErrorMsg = error.errorMessage,
+                        passwordErrorMsg = ""
                     )
                 }
             }
 
-            is ErrorState.NotFound -> {
+            is ErrorState.InvalidPassword -> {
                 updateState {
                     it.copy(
-                        usernameErrorMsg = error.errorMessage,
-                        isUsernameError = true
+                        passwordErrorMsg = error.errorMessage,
+                        usernameErrorMsg = ""
+                    )
+                }
+            }
+
+            is ErrorState.InvalidDriverName -> {
+                updateState {
+                    it.copy(
+                        bottomSheetUiState = it.bottomSheetUiState.copy(
+                            driverFullNameErrorMsg = error.errorMessage,
+                            driverEmailErrorMsg =  ""
+                        )
+                    )
+                }
+            }
+
+            is ErrorState.InvalidDriverEmail -> {
+                updateState {
+                    it.copy(
+                        bottomSheetUiState = it.bottomSheetUiState.copy(
+                            driverEmailErrorMsg = error.errorMessage,
+                            driverFullNameErrorMsg = ""
+                        )
                     )
                 }
             }
@@ -135,17 +154,20 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
                 )
             },
             { onAskForPermissionSuccess() },
-            ::onAskForPermissionFailed
+            ::onLoginFailed
         )
     }
 
     private fun onAskForPermissionSuccess() {
+        updateState {
+            it.copy(
+                bottomSheetUiState = it.bottomSheetUiState.copy(
+                    driverEmailErrorMsg = "",
+                    driverFullNameErrorMsg = ""
+                )
+            )
+        }
         onDismissSheet()
-        // todo send effect for that to show toast or something
-    }
-
-
-    private fun onAskForPermissionFailed(error: ErrorState) {
         // todo send effect for that to show toast or something
     }
 

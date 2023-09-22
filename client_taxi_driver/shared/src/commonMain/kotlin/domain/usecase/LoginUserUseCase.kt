@@ -45,7 +45,7 @@ class LoginUserUseCase(
     override suspend fun requestPermission(
         driverFullName: String, driverEmail: String, description: String
     ) {
-        checkValidationPermissionFields(driverFullName, driverEmail, description)
+        checkValidationPermissionFields(driverFullName, driverEmail)
 
         remoteGateway.createRequestPermission(
             driverFullName,
@@ -56,30 +56,26 @@ class LoginUserUseCase(
 
 
     private fun checkValidationLoginFields(username: String, password: String) {
+        val validUserNameRegex = "[a-zA-Z0-9_]+".toRegex()
         when {
-            username.isBlank() -> {
-                throw InvalidUserNameException("")
-            }
-
-            password.isBlank() -> {
-                throw InvalidPasswordException("")
-            }
+            username.isBlank() -> throw InvalidUserNameException("username cannot be empty")
+            !(username.matches(validUserNameRegex)) -> throw InvalidUserNameException("Invalid username")
+        }
+        when {
+            password.isBlank() -> throw InvalidPasswordException("password cannot be empty")
+            password.length < 8 -> throw InvalidPasswordException("Invalid password")
         }
     }
 
-    private fun checkValidationPermissionFields(driverFullName: String, driverEmail: String, description: String) {
+    private fun checkValidationPermissionFields(driverFullName: String, driverEmail: String) {
+        val validEmailRegex = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})".toRegex()
+
+        if (driverFullName.isBlank()) throw InvalidDriverNameException("FullName cannot be empty")
+
         when {
-            driverFullName.isBlank() -> {
-                throw InvalidDriverNameException("")
-            }
+            driverEmail.isBlank() -> throw InvalidDriverEmailException("Email cannot be empty")
 
-            driverEmail.isBlank() -> {
-                throw InvalidDriverEmailException("")
-            }
-
-            description.isBlank() -> {
-                throw InvalidDescriptionException("")
-            }
+            !(driverEmail.matches(validEmailRegex)) -> throw InvalidDriverEmailException("Invalid Email")
         }
     }
 }
