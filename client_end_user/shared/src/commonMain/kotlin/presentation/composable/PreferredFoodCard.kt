@@ -1,6 +1,5 @@
 package presentation.composable
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -20,7 +19,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
-import com.seiko.imageloader.rememberAsyncImagePainter
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import presentation.cuisines.CuisineUiState
 
@@ -50,8 +48,8 @@ fun PreferredFoodCard(
             style = Theme.typography.title,
             modifier = Modifier.padding(start = 12.dp, top = 12.dp, bottom = 4.dp)
         )
-        Image(
-            painter = rememberAsyncImagePainter(state.cuisineImageUrl),
+        BpImageLoader(
+            imageUrl = state.cuisineImageUrl,
             contentDescription = "${state.cuisineName} Picture",
             contentScale = ContentScale.Crop,
             modifier = Modifier.size(88.dp).clip(shape = MaterialTheme.shapes.medium)
