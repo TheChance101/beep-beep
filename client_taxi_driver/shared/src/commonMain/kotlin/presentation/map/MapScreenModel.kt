@@ -61,6 +61,7 @@ class MapScreenModel(
     private fun onGetLiveLocationSuccess(location: Location) {
         updateState {
             it.copy(
+                isLoading = true,
                 error = null,
                 currentLocation = location.toUiState()
             )
