@@ -3,6 +3,7 @@ package domain.gateway.remote
 import data.remote.model.LocationDto
 import data.remote.model.TripDto
 
+//TODO IMPORTANT, AFTER ADDING THE ENTITY RETURN TRIP INSTEAD OF TRIPDTO
 
 interface IMapRemoteGateway {
     suspend fun sendLocation(location: LocationDto, tripId: String)

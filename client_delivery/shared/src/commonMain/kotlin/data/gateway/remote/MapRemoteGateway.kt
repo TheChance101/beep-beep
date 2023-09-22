@@ -12,7 +12,7 @@ import io.ktor.client.request.put
 import io.ktor.http.Parameters
 import io.ktor.util.InternalAPI
 
-
+//TODO IMPORTANT, AFTER ADDING THE ENTITY RETURN TRIP INSTEAD OF TRIPDTO
 class MapRemoteGateway(client: HttpClient) : IMapRemoteGateway,
     BaseRemoteGateway(client = client) {
     override suspend fun sendLocation(location: LocationDto, tripId: String) {

@@ -31,6 +31,7 @@ class ManageOrderUseCase(private val remoteGateway: IMapRemoteGateway) : IManage
 
     override suspend fun deleteTrip(tripId: String): Trip {
         TODO("Not yet implemented")
+        // return remoteGateway.deleteTrip(tripId)
     }
 
 }
