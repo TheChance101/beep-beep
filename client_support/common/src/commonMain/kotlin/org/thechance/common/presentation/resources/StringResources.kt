@@ -11,7 +11,8 @@ data class StringResources(
 
     val logout: String = "Logout",
     val profileImage: String = "Profile Image",
-    val closeTicket: String = "Close Ticket"
+    val closeTicket: String = "Close Ticket",
+    val writeYourMessage: String = "Write your message",
 )
 
 val englishStrings = StringResources()
