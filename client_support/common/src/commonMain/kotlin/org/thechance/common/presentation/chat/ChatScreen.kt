@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
+import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.base.BaseScreen
 import org.thechance.common.presentation.composable.MainAppbar
@@ -24,6 +25,7 @@ import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.kms
 
 class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatInteractionListener>() {
+
     override fun onEffect(effect: ChatUIEffect, navigator: Navigator) {
         when (effect) {
             ChatUIEffect.NavigateToLogin -> navigator.replaceAll(LoginScreen())
@@ -44,7 +46,7 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
                 onDismissDropDownMenu = listener::onDismissDropdownMenu,
                 onLogOut = listener::onClickLogOut,
             )
-            ChatScreenContent(state)
+            ChatScreenContent(state, listener)
         }
     }
 
@@ -56,19 +58,27 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
     @Composable
     private fun ChatScreenContent(
         state: ChatUIState,
+        listener: ChatInteractionListener,
     ) {
         Box(
             modifier = Modifier
-                .fillMaxSize()
                 .background(Theme.colors.surface)
                 .padding(40.kms)
                 .border(1.kms, Theme.colors.divider, RoundedCornerShape(Theme.radius.medium))
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize()
-            ) {
+            Column {
                 ChatHeader(state.ticket)
-                ChatMessages(state.messages)
+                ChatMessages(state.messages, modifier = Modifier.weight(1f))
+                Divider(color = Theme.colors.divider, thickness = 1.kms)
+                BpSimpleTextField(
+                    text = state.message,
+                    onValueChange = listener::onMessageChange,
+                    modifier = Modifier.padding(24.kms),
+                    hint = Resources.Strings.writeYourMessage,
+                    trailingPainter = painterResource(Resources.Drawable.send),
+                    leadingPainter = null,
+                    onTrailingIconClick = listener::onSendMessageClicked,
+                )
             }
         }
     }
@@ -112,8 +122,8 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
     }
 
     @Composable
-    private fun ChatMessages(messages: List<ChatUIState.MessageUIState>) {
-        LazyColumn {
+    private fun ChatMessages(messages: List<ChatUIState.MessageUIState>, modifier: Modifier = Modifier) {
+        LazyColumn(modifier = modifier) {
             items(messages) { message ->
                 val currentMessage = messages.indexOf(message)
                 val nextMessage = messages.getOrNull(currentMessage + 1)
@@ -150,4 +160,5 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
             )
         }
     }
+
 }

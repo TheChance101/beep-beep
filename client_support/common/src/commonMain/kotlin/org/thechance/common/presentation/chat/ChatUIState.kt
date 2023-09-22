@@ -4,6 +4,7 @@ data class ChatUIState(
     val ticket: TicketUIState = TicketUIState(),
     val messages: List<MessageUIState> = emptyList(),
     val appbar: AppbarUIState = AppbarUIState(),
+    val message: String = "",
     val loading: Boolean = false,
 ) {
     data class TicketUIState(
