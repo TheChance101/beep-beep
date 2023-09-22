@@ -7,14 +7,18 @@ object LocalizationManager {
 
     fun getStringResources(languageCode: String): StringResources {
         return when (languageCode) {
-            "ar" -> arabic
-            else -> english
+            "ar" -> Arabic
+            "iq" -> Iraq
+            "ps" -> Palestine
+            "sy" -> Syria
+            "eg" -> Egypt
+            else -> English
         }
     }
 
     fun getLayoutDirection(languageCode: String): LayoutDirection {
         return when (languageCode) {
-            "en" -> LayoutDirection.Ltr
+            "us" -> LayoutDirection.Ltr
             else -> LayoutDirection.Rtl
         }
     }

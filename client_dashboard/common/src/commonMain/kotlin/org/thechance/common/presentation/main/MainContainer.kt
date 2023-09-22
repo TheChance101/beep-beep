@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.boundsInParent
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -69,8 +70,7 @@ object MainContainer :
                                     mainMenuIsExpanded = mainMenuIsExpanded,
                                     sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
                                     modifier = Modifier.onGloballyPositioned {
-                                        itemHeight(it.boundsInParent().height)
-                                    }
+                                        itemHeight(it.boundsInParent().height) }
                             )
                             TabNavigationItem(
                                     tab = TaxisTab,
@@ -79,8 +79,7 @@ object MainContainer :
                                     mainMenuIsExpanded = mainMenuIsExpanded,
                                     sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
                                     modifier = Modifier.onGloballyPositioned {
-                                        itemHeight(it.boundsInParent().height)
-                                    }
+                                            itemHeight(it.boundsInParent().height) }
                             )
                             TabNavigationItem(
                                     tab = RestaurantsTab,
@@ -89,7 +88,7 @@ object MainContainer :
                                     mainMenuIsExpanded = mainMenuIsExpanded,
                                     sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
                                     modifier = Modifier.onGloballyPositioned {
-                                        itemHeight(it.boundsInParent().height)
+                                            itemHeight(it.boundsInParent().height)
                                     }
                             )
                             TabNavigationItem(

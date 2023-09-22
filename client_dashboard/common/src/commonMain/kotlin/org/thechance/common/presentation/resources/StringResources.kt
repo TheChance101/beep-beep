@@ -111,8 +111,8 @@ data class StringResources(
     val unKnownError: String = "Unknown error please retry again!",
 )
 
-val english: StringResources = StringResources()
-val arabic: StringResources = StringResources(
+val English: StringResources = StringResources()
+val Arabic: StringResources = StringResources(
         //region Login
         login = "تسجيل الدخول",
         loginTitle = "استخدم حساب المشرف لتسجيل الدخول",
@@ -125,11 +125,11 @@ val arabic: StringResources = StringResources(
         //region Restaurant
         searchForRestaurants = "ابحث عن مطاعم",
         export = "تصدير",
-        addCuisine = "اضف مطب",
+        addCuisine = "اضف مطبخ",
         newRestaurant = "مطعم جديد",
         restaurant = "مطعم",
         save = "احفض",
-        cancel = "الغي",
+        cancel = "الغاء",
         priceLevel = "مستوى السعر",
         rating = "تقييم",
         filter = "تصفية",
@@ -185,7 +185,7 @@ val arabic: StringResources = StringResources(
 
         //region table
         outOf = "من",
-        pluralLetter = "s",
+        pluralLetter = "ات",
 //endregion table
 
         //region overview
@@ -214,11 +214,442 @@ val arabic: StringResources = StringResources(
 // endregion overview
 
         clearAll = "امسح الكل",
-        noMatchesFound = "اوبس ماكو اتصال بالانترنيت",
+        noMatchesFound = "اوبس لايوجد اتصال بالانترنيت",
         invalidPlateNumber = "رقم اللوحة غير صحيح",
-        invalidCarModel = "موديل السيارة غير صحيح",
+        invalidCarModel = "نوع السيارة غير صحيح",
+
+        noInternet = "لايوجد اتصال بالانترنيت!",
+        unKnownError = "خطأ غير معروف من فضلك حاول مرة اخرى!")
+val Egypt: StringResources = StringResources(
+        //region Login
+        login = "تسجيل الدخول",
+        loginTitle = "استخدم حساب المشرف لتسجيل الدخول",
+        loginUsername = "اسم المستخدم",
+        loginPassword = "كلمة السر",
+        loginButton = "تسجيل الدخول",
+        loginKeepMeLoggedIn = "البقاء قيد التسجيل",
+//endregion Login
+
+        //region Restaurant
+        searchForRestaurants = "ابحث عن مطاعم",
+        export = "تصدير",
+        addCuisine = "اضف مطبخ",
+        newRestaurant = "مطعم جديد",
+        restaurant = "مطعم",
+        save = "احفض",
+        cancel = "الغاء",
+        priceLevel = "مستوى السعر",
+        rating = "تقييم",
+        filter = "تصفية",
+        restaurantName = "اسم المطعم",
+        ownerUsername = "اسم المالك",
+        phoneNumber = "رقم الهاتف",
+        workingHours = "ساعات العمل",
+        location = "موقعك",
+        create = "انشئ",
+        workStartHourHint = "1:00",
+        workEndHourHint = "24:00",
+        restaurants = "مطاعم",
+        cuisines = "مطابخ",
+        enterCuisineName = "ادخل اسم المطبخ",
+        add = "اضف",
+//endregion Restaurant
+
+        //region Taxi
+        searchForTaxis = "ابحث عن سيارة اجرة",
+        newTaxi = "سيارة اجرة جديدة",
+        taxi = "سيارة اجرة",
+        downloadSuccessMessage = "تم تحميل الملف بنجاح",
+        seats = "مقاعد",
+        status = "الحالة",
+        carModel = "نوع السيارة",
+        carColor = "لون السيارة",
+        driverUsername = "اسم السائق",
+        taxiPlateNumber = "رقم اللوحة",
+        createNewTaxi = "انشئ سيارة اجرة جديدة",
+        taxis = "سيارات اجرة",
+        offline = "غير متصل",
+        online = "متصل",
+        onRide = "في رحلة",
+//endregion Taxi
+
+        //region User
+        user = "مستخدم",
+        permission = "صلاحية",
+        country = "بلد",
+        searchForUsers = "ابحث عن مستخدمين",
+        edit = "عدل",
+        delete = "احذف",
+        disable = "تعطيل",
+        permissions = "صلاحيات",
+        users = "مستخدمين",
+//endregion User
+
+        //region scaffold
+        logout = "خروج",
+        darkTheme = "الوضع الليلي",
+        dropDownMenu = "قائمة منسدلة",
+//endregion scaffold
+
+        //region table
+        outOf = "من",
+        pluralLetter = "ات",
+//endregion table
+
+        //region overview
+        overview = "نظرة عامة",
+        revenueShare = "نسبة الارباح",
+        viewMore = "عرض المزيد",
+        taxiLabel = "سيارة اجرة",
+        restaurantLabel = "مطعم",
+        restaurantPermission = "مالك مطعم",
+        taxiPermission = "سواق تكسي",
+        endUserPermission = "مستخدم",
+        supportPermission = "دعم",
+        deliveryPermission = "توصيل",
+        adminPermission = "مشرف",
+        revenue = "ارباح",
+        earnings = "الايرادات",
+        trip = "رحله",
+        accepted = "مقبول",
+        pending = "قيد الانتظار",
+        rejected = "مرفوض",
+        canceled = "ملغي",
+        completed = "مكتمل",
+        inTheWay = "في الطريق",
+        orders = "طلبات",
+
+// endregion overview
+
+        clearAll = "امسح الكل",
+        noMatchesFound = "اوبس لايوجد اتصال بالانترنيت",
+        invalidPlateNumber = "رقم اللوحة غير صحيح",
+        invalidCarModel = "نوع السيارة غير صحيح",
+
+        noInternet = "لايوجد اتصال بالانترنيت!",
+        unKnownError = "خطأ غير معروف من فضلك حاول مرة اخرى!")
+val Palestine: StringResources = StringResources(
+        //region Login
+        login = "تسجيل الدخول",
+        loginTitle = "استخدم حساب المشرف لتسجيل الدخول",
+        loginUsername = "اسم المستخدم",
+        loginPassword = "كلمة السر",
+        loginButton = "تسجيل الدخول",
+        loginKeepMeLoggedIn = "البقاء قيد التسجيل",
+//endregion Login
+
+        //region Restaurant
+        searchForRestaurants = "ابحث عن مطاعم",
+        export = "تصدير",
+        addCuisine = "اضف مطبخ",
+        newRestaurant = "مطعم جديد",
+        restaurant = "مطعم",
+        save = "احفض",
+        cancel = "الغاء",
+        priceLevel = "مستوى السعر",
+        rating = "تقييم",
+        filter = "تصفية",
+        restaurantName = "اسم المطعم",
+        ownerUsername = "اسم المالك",
+        phoneNumber = "رقم الهاتف",
+        workingHours = "ساعات العمل",
+        location = "موقعك",
+        create = "انشئ",
+        workStartHourHint = "1:00",
+        workEndHourHint = "24:00",
+        restaurants = "مطاعم",
+        cuisines = "مطابخ",
+        enterCuisineName = "ادخل اسم المطبخ",
+        add = "اضف",
+//endregion Restaurant
+
+        //region Taxi
+        searchForTaxis = "ابحث عن سيارة اجرة",
+        newTaxi = "سيارة اجرة جديدة",
+        taxi = "سيارة اجرة",
+        downloadSuccessMessage = "تم تحميل الملف بنجاح",
+        seats = "مقاعد",
+        status = "الحالة",
+        carModel = "نوع السيارة",
+        carColor = "لون السيارة",
+        driverUsername = "اسم السائق",
+        taxiPlateNumber = "رقم اللوحة",
+        createNewTaxi = "انشئ سيارة اجرة جديدة",
+        taxis = "سيارات اجرة",
+        offline = "غير متصل",
+        online = "متصل",
+        onRide = "في رحلة",
+//endregion Taxi
+
+        //region User
+        user = "مستخدم",
+        permission = "صلاحية",
+        country = "بلد",
+        searchForUsers = "ابحث عن مستخدمين",
+        edit = "عدل",
+        delete = "احذف",
+        disable = "تعطيل",
+        permissions = "صلاحيات",
+        users = "مستخدمين",
+//endregion User
+
+        //region scaffold
+        logout = "خروج",
+        darkTheme = "الوضع الليلي",
+        dropDownMenu = "قائمة منسدلة",
+//endregion scaffold
+
+        //region table
+        outOf = "من",
+        pluralLetter = "ات",
+//endregion table
+
+        //region overview
+        overview = "نظرة عامة",
+        revenueShare = "نسبة الارباح",
+        viewMore = "عرض المزيد",
+        taxiLabel = "سيارة اجرة",
+        restaurantLabel = "مطعم",
+        restaurantPermission = "مالك مطعم",
+        taxiPermission = "سواق تكسي",
+        endUserPermission = "مستخدم",
+        supportPermission = "دعم",
+        deliveryPermission = "توصيل",
+        adminPermission = "مشرف",
+        revenue = "ارباح",
+        earnings = "الايرادات",
+        trip = "رحله",
+        accepted = "مقبول",
+        pending = "قيد الانتظار",
+        rejected = "مرفوض",
+        canceled = "ملغي",
+        completed = "مكتمل",
+        inTheWay = "في الطريق",
+        orders = "طلبات",
+
+// endregion overview
+
+        clearAll = "امسح الكل",
+        noMatchesFound = "اوبس لايوجد اتصال بالانترنيت",
+        invalidPlateNumber = "رقم اللوحة غير صحيح",
+        invalidCarModel = "نوع السيارة غير صحيح",
+
+        noInternet = "لايوجد اتصال بالانترنيت!",
+        unKnownError = "خطأ غير معروف من فضلك حاول مرة اخرى!")
+val Syria: StringResources = StringResources(
+        //region Login
+        login = "تسجيل الدخول",
+        loginTitle = "استخدم حساب المشرف لتسجيل الدخول",
+        loginUsername = "اسم المستخدم",
+        loginPassword = "كلمة السر",
+        loginButton = "تسجيل الدخول",
+        loginKeepMeLoggedIn = "البقاء قيد التسجيل",
+//endregion Login
+
+        //region Restaurant
+        searchForRestaurants = "ابحث عن مطاعم",
+        export = "تصدير",
+        addCuisine = "اضف مطبخ",
+        newRestaurant = "مطعم جديد",
+        restaurant = "مطعم",
+        save = "احفض",
+        cancel = "الغاء",
+        priceLevel = "مستوى السعر",
+        rating = "تقييم",
+        filter = "تصفية",
+        restaurantName = "اسم المطعم",
+        ownerUsername = "اسم المالك",
+        phoneNumber = "رقم الهاتف",
+        workingHours = "ساعات العمل",
+        location = "موقعك",
+        create = "انشئ",
+        workStartHourHint = "1:00",
+        workEndHourHint = "24:00",
+        restaurants = "مطاعم",
+        cuisines = "مطابخ",
+        enterCuisineName = "ادخل اسم المطبخ",
+        add = "اضف",
+//endregion Restaurant
+
+        //region Taxi
+        searchForTaxis = "ابحث عن سيارة اجرة",
+        newTaxi = "سيارة اجرة جديدة",
+        taxi = "سيارة اجرة",
+        downloadSuccessMessage = "تم تحميل الملف بنجاح",
+        seats = "مقاعد",
+        status = "الحالة",
+        carModel = "نوع السيارة",
+        carColor = "لون السيارة",
+        driverUsername = "اسم السائق",
+        taxiPlateNumber = "رقم اللوحة",
+        createNewTaxi = "انشئ سيارة اجرة جديدة",
+        taxis = "سيارات اجرة",
+        offline = "غير متصل",
+        online = "متصل",
+        onRide = "في رحلة",
+//endregion Taxi
+
+        //region User
+        user = "مستخدم",
+        permission = "صلاحية",
+        country = "بلد",
+        searchForUsers = "ابحث عن مستخدمين",
+        edit = "عدل",
+        delete = "احذف",
+        disable = "تعطيل",
+        permissions = "صلاحيات",
+        users = "مستخدمين",
+//endregion User
+
+        //region scaffold
+        logout = "خروج",
+        darkTheme = "الوضع الليلي",
+        dropDownMenu = "قائمة منسدلة",
+//endregion scaffold
+
+        //region table
+        outOf = "من",
+        pluralLetter = "ات",
+//endregion table
+
+        //region overview
+        overview = "نظرة عامة",
+        revenueShare = "نسبة الارباح",
+        viewMore = "عرض المزيد",
+        taxiLabel = "سيارة اجرة",
+        restaurantLabel = "مطعم",
+        restaurantPermission = "مالك مطعم",
+        taxiPermission = "سواق تكسي",
+        endUserPermission = "مستخدم",
+        supportPermission = "دعم",
+        deliveryPermission = "توصيل",
+        adminPermission = "مشرف",
+        revenue = "ارباح",
+        earnings = "الايرادات",
+        trip = "رحله",
+        accepted = "مقبول",
+        pending = "قيد الانتظار",
+        rejected = "مرفوض",
+        canceled = "ملغي",
+        completed = "مكتمل",
+        inTheWay = "في الطريق",
+        orders = "طلبات",
+
+// endregion overview
+
+        clearAll = "امسح الكل",
+        noMatchesFound = "اوبس لايوجد اتصال بالانترنيت",
+        invalidPlateNumber = "رقم اللوحة غير صحيح",
+        invalidCarModel = "نوع السيارة غير صحيح",
+
+        noInternet = "لايوجد اتصال بالانترنيت!",
+        unKnownError = "خطأ غير معروف من فضلك حاول مرة اخرى!")
+val Iraq: StringResources = StringResources(
+        //region Login
+        login = "تسجيل الدخول",
+        loginTitle = "استخدم حساب المشرف حتى تكدر تسجل دخول",
+        loginUsername = "اسم المستخدم مال حضرتك",
+        loginPassword = "باسوردك لو سمحت",
+        loginButton = "ادخل في امان الله",
+        loginKeepMeLoggedIn = "ابقى مسجل",
+//endregion Login
+
+        //region Restaurant
+        searchForRestaurants = "دور على مطاعم",
+        export = "تصدير",
+        addCuisine = "ضيف مطبخ",
+        newRestaurant = "مطعم جديد",
+        restaurant = "مطعم",
+        save = "احفض",
+        cancel = "الغي",
+        priceLevel = "مستوى السعر",
+        rating = "تقييم",
+        filter = "فلتر",
+        restaurantName = "اسم المطعم",
+        ownerUsername = "اسم المالك",
+        phoneNumber = "رقم التفلون",
+        workingHours = "ساعات وقت الشغل",
+        location = "موقعك",
+        create = "انشئ",
+        workStartHourHint = "1:00",
+        workEndHourHint = "24:00",
+        restaurants = "مطاعم",
+        cuisines = "مطابخ",
+        enterCuisineName = "اكتب اسم المطبخ",
+        add = "ضيف",
+//endregion Restaurant
+
+        //region Taxi
+        searchForTaxis = "دور عن سائق تكسي ",
+        newTaxi = "تكسي جديد",
+        taxi = "تكسي",
+        downloadSuccessMessage = "نزل الملف بنجاح",
+        seats = "كراسي",
+        status = "الحالة",
+        carModel = "نوع السيارة",
+        carColor = "لون السيارة",
+        driverUsername = "اسم السائق",
+        taxiPlateNumber = "رقم اللوحة",
+        createNewTaxi = "انشئ تكسي جديد",
+        taxis = "تكسيات",
+        offline = "ما متصل",
+        online = "متصل",
+        onRide = "بالطريق",
+//endregion Taxi
+
+        //region User
+        user = "مستخدم",
+        permission = "صلاحية",
+        country = "بلد",
+        searchForUsers = "دور عن مستخدمين",
+        edit = "عدل",
+        delete = "احذف",
+        disable = "تعطيل",
+        permissions = "صلاحيات",
+        users = "مستخدمين",
+//endregion User
+
+        //region scaffold
+        logout = "خروج",
+        darkTheme = "الوضع الليلي",
+        dropDownMenu = "قائمة منسدلة",
+//endregion scaffold
+
+        //region table
+        outOf = "من",
+        pluralLetter = "ات",
+//endregion table
+
+        //region overview
+        overview = "نظرة عامة",
+        revenueShare = "نسبة الارباح",
+        viewMore = "طلع الكل",
+        taxiLabel = "تكسيات",
+        restaurantLabel = "مطاعم",
+        restaurantPermission = "ابو مطعم",
+        taxiPermission = "سايق تكسي",
+        endUserPermission = "مستخدم",
+        supportPermission = "دعم",
+        deliveryPermission = "توصيل",
+        adminPermission = "المدير",
+        revenue = "ارباح",
+        earnings = "الايرادات",
+        trip = "رحله",
+        accepted = "مقبول",
+        pending = "تحت الانتضار",
+        rejected = "مرفوض",
+        canceled = "ملغي",
+        completed = "مكتمل",
+        inTheWay = "بالطريق",
+        orders = "طلبات",
+
+// endregion overview
+
+        clearAll = "امسح كلشي",
+        noMatchesFound = "اوبس ماكو اتصال بالانترنيت",
+        invalidPlateNumber = "رقم اللوحة مو صحيح",
+        invalidCarModel = "موديل السيارة مو صحيح",
 
         noInternet = "ماكو اتصال بالانترنيت!",
-        unKnownError = "خطأ غير معروف من فضلك حاول مرة اخرى!"
-)
+        unKnownError = "خطأ ما معروف ,رجائا حاول مرة ثانية!")
 

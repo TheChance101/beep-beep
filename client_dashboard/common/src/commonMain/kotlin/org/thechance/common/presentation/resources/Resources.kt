@@ -35,10 +35,10 @@ fun ProvideResources(
     isSystemInDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
-    val localLanguage  = Locale.current.language
+    val localLanguage  = Locale.current.toLanguageTag().split("-")[1].lowercase()
     val drawableResources = if (isSystemInDarkTheme) darkDrawableResource else lightDrawableResource
     CompositionLocalProvider(
-            stringResources provides LocalizationManager.getStringResources(languageCode =localLanguage ),
+            stringResources provides LocalizationManager.getStringResources(languageCode = localLanguage),
             LocalLayoutDirection provides LocalizationManager.getLayoutDirection(languageCode=localLanguage),
             drawables provides drawableResources,
     ) {
