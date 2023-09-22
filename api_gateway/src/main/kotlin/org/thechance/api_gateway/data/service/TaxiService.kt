@@ -169,7 +169,7 @@ class TaxiService(
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             },
-            method = { get("/trip/client/$userId&page=$page&limit=$limit") }
+            method = { get("/trip/client/$userId?page=$page&&limit=$limit") }
         )
     }
 

@@ -92,8 +92,7 @@ fun Route.orderRoutes() {
         }
 
         post {
-            val order = call.receive<OrderDto>()
-                .copy(id = ObjectId().toString(), createdAt = currentDateTime().toMillis())
+            val order = call.receive<OrderDto>().copy(id = ObjectId().toString(), createdAt = currentDateTime().toMillis())
             val isOrderInserted = manageOrder.addOrder(order.toEntity())
             isOrderInserted.takeIf { it }.apply {
                 socketHandler.restaurants[order.restaurantId]?.orders?.emit(order)
