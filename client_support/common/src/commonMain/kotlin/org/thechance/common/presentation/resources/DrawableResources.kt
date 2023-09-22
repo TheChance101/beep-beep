@@ -6,6 +6,7 @@ data class DrawableResources(
     val dropDownArrow: String = "ic_drop_down_arrow_light.svg",
     val logout: String = "ic_logout.svg",
     val send: String = "ic_send.svg",
+    val idle: String = "idle.png",
 )
 
 
@@ -13,6 +14,7 @@ val darkDrawableResource = DrawableResources(
     login = "img_login_dark.png",
     dropDownArrow = "ic_drop_down_arrow_dark.svg",
     send = "ic_send.svg",
+    idle = "idle.png",
 )
 
 val lightDrawableResource = DrawableResources()

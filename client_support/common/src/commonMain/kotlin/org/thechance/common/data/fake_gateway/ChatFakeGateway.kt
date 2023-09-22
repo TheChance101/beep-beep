@@ -62,8 +62,8 @@ class ChatFakeGateway : IChatGateway {
         )
     )
 
-    override fun getTickets(): Flow<Ticket> {
-        return tickets.map { it.first().toEntity() }
+    override fun getTickets(): Flow<Ticket?> {
+        return tickets.map { it.firstOrNull()?.toEntity() }
     }
 
     override suspend fun closeTicket(ticketId: String) {

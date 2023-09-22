@@ -7,7 +7,7 @@ import org.thechance.common.domain.entity.Ticket
 
 interface IChatGateway {
 
-    fun getTickets(): Flow<Ticket>
+    fun getTickets(): Flow<Ticket?>
 
     suspend fun closeTicket(ticketId: String)
 

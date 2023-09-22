@@ -25,11 +25,14 @@ class ChatScreenModel(
         )
     }
 
-    private fun onGetTicketsSuccess(ticket: Ticket) {
+    private fun onGetTicketsSuccess(ticket: Ticket?) {
         updateState {
-            it.copy(ticket = ticket.toUIState())
+            it.copy(
+                ticket = ticket?.toUIState() ?: it.ticket,
+                idle = ticket == null,
+            )
         }
-        getMessages(ticket.id)
+        ticket?.let { getMessages(it.id) }
     }
 
     private fun getMessages(ticketId: String) {

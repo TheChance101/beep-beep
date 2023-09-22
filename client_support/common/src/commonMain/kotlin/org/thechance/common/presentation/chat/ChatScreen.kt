@@ -46,7 +46,7 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
                 onDismissDropDownMenu = listener::onDismissDropdownMenu,
                 onLogOut = listener::onClickLogOut,
             )
-            ChatScreenContent(state, listener)
+            if (state.idle) Idle() else ChatScreenContent(state, listener)
         }
     }
 
@@ -161,4 +161,33 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
         }
     }
 
+    @Composable
+    private fun Idle() {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(40.kms),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Image(
+                painterResource(Resources.Drawable.idle),
+                contentDescription = Resources.Strings.idle,
+                modifier = Modifier
+                    .size(250.kms)
+                    .align(Alignment.CenterHorizontally)
+            )
+            Text(
+                text = Resources.Strings.idleTitle,
+                style = Theme.typography.headline,
+                color = Theme.colors.contentPrimary,
+                modifier = Modifier.padding(vertical = 24.kms)
+            )
+            Text(
+                text = Resources.Strings.idleSubtitle,
+                style = Theme.typography.body,
+                color = Theme.colors.contentSecondary
+            )
+        }
+    }
 }
