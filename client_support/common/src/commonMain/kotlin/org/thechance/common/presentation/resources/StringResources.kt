@@ -10,6 +10,8 @@ data class StringResources(
     //endregion Login
 
     val logout: String = "Logout",
+    val profileImage: String = "Profile Image",
+    val closeTicket: String = "Close Ticket"
 )
 
 val englishStrings = StringResources()
