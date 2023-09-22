@@ -49,6 +49,14 @@ class CartScreenModel(private val cartManagement: ManageCartUseCase) :
         }
     }
 
+    override fun onClickOrderNow() {
+        println("make order")
+    }
+
+    override fun onClickBack() {
+        sendNewEffect(CartUiEffect.NavigateUp)
+    }
+
     private fun onGetCartMealsSuccess(cart: Cart) {
         val cartUiState = cart.toUiState()
         updateState {

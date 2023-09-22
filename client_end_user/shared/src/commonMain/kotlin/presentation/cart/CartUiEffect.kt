@@ -1,3 +1,5 @@
 package presentation.cart
 
-sealed class CartUiEffect
+sealed class CartUiEffect{
+    data object NavigateUp: CartUiEffect()
+}
