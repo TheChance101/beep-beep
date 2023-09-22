@@ -94,6 +94,8 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
                     )
                 }
             }
+
+            else -> {}
         }
     }
 

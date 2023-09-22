@@ -3,6 +3,8 @@ package presentation.base
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.InvalidCredentialsException
+import domain.LocationPermissionDeniedAlwaysException
+import domain.LocationPermissionDeniedException
 import domain.NoInternetException
 import domain.NotFoundedException
 import domain.PermissionDenied
@@ -97,6 +99,14 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
                         ErrorState.InvalidCredentials(
                             exception.message.toString()
                         )
+                    )
+
+                    is LocationPermissionDeniedAlwaysException -> onError(
+                        ErrorState.LocationPermissionDenied(message = exception.message.toString())
+                    )
+
+                    is LocationPermissionDeniedException -> onError(
+                        ErrorState.LocationPermissionDenied(message = exception.message.toString())
                     )
 
                     else -> onError(ErrorState.UnknownError(exception.message.toString()))

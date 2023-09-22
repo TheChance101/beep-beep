@@ -3,7 +3,7 @@ package presentation.map
 import presentation.base.ErrorState
 
 data class MapScreenUiState(
-    val isLoading: Boolean = true,
+    val isLoading: Boolean = false,
     val error: ErrorState? = null,
     val userName: String = "",
     val currentLocation: LocationInfoUiState = LocationInfoUiState(),

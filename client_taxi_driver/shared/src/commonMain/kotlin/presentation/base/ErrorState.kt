@@ -8,4 +8,5 @@ sealed interface ErrorState {
     data class InvalidCredentials(val errorMessage: String) : ErrorState
     data class UnknownError(val errorMessage: String) : ErrorState
     data class NotFound(val errorMessage: String) : ErrorState
+    data class LocationPermissionDenied(val message: String) : ErrorState
 }
