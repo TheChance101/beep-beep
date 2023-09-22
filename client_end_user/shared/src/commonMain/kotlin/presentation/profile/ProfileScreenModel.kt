@@ -62,14 +62,14 @@ class ProfileScreenModel(
         } catch (e: AuthorizationException.InvalidFullNameException) {
             updateState {
                 it.copy(
-                    fullNameErrorMsg = e.message ?: stringResources.invalidFullName,
+                    fullNameErrorMsg = e.message ?: "Invalid Full Name",
                     isFullNameError = true
                 )
             }
         } catch (e: AuthorizationException.InvalidPhoneException) {
             updateState {
                 it.copy(
-                    mobileNumberErrorMsg = e.message ?: stringResources.invalidPhoneNumber,
+                    mobileNumberErrorMsg = e.message ?: "Invalid Phone Number",
                     isPhoneNumberError = true
                 )
             }
