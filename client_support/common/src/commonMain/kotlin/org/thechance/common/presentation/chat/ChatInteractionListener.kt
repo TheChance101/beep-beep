@@ -14,4 +14,5 @@ interface ChatInteractionListener : BaseInteractionListener {
 
     fun onSendMessageClicked()
 
+    fun onCloseTicketClicked()
 }
