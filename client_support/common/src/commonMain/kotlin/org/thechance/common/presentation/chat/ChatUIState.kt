@@ -1,5 +1,8 @@
 package org.thechance.common.presentation.chat
 
+import org.thechance.common.domain.entity.Message
+import org.thechance.common.domain.entity.Ticket
+
 data class ChatUIState(
     val ticket: TicketUIState = TicketUIState(),
     val messages: List<MessageUIState> = emptyList(),
@@ -23,7 +26,33 @@ data class ChatUIState(
     )
 
     data class AppbarUIState(
-        val username: String = "",
+        val username: String = "John Doe",
         val isDropdownMenuExpanded: Boolean = false,
     )
 }
+
+// region Mappers
+
+fun Message.toUIState(): ChatUIState.MessageUIState {
+    return ChatUIState.MessageUIState(
+        id = id,
+        message = message,
+        isMe = isMe,
+        avatarUrl = avatarUrl,
+    )
+}
+
+fun Ticket.toUIState(): ChatUIState.TicketUIState {
+    return ChatUIState.TicketUIState(
+        id = id,
+        username = username,
+        userAvatarUrl = avatar,
+        openedAt = openedAt,
+    )
+}
+
+fun List<Ticket>.toUIState(): List<ChatUIState.TicketUIState> {
+    return map { it.toUIState() }
+}
+
+// endregion
