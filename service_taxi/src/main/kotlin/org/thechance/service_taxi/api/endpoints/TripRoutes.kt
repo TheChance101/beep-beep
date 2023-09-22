@@ -42,7 +42,7 @@ fun Route.tripRoutes() {
             val limit = call.parameters["limit"]?.toInt() ?: 20
             val result = driverTripsManagementUseCase.getTripsByDriverId(id, page, limit).toDto()
             val total = driverTripsManagementUseCase.getNumberOfTripsByDriverId(id)
-            call.respond(HttpStatusCode.OK, BasePaginationResponse(result, total))
+            call.respond(HttpStatusCode.OK, BasePaginationResponse(items = result, total = total))
         }
 
         get("/client/{clientId}") {
@@ -51,7 +51,7 @@ fun Route.tripRoutes() {
             val limit = call.parameters["limit"]?.toInt() ?: 20
             val result = clientTripsManagementUseCase.getTripsByClientId(id, page, limit).toDto()
             val total = clientTripsManagementUseCase.getNumberOfTripsByClientId(id)
-            call.respond(HttpStatusCode.OK, BasePaginationResponse(result, total))
+            call.respond(HttpStatusCode.OK, BasePaginationResponse(items = result, total = total))
         }
 
         post {

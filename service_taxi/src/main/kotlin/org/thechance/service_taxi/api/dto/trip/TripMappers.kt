@@ -30,6 +30,20 @@ fun LocationCollection.toEntity(): Location {
     )
 }
 
+fun TripDto.LocationDto.toEntity(): Location {
+    return Location(
+        latitude = latitude,
+        longitude = longitude
+    )
+}
+
+fun Location.toDto(): TripDto.LocationDto {
+    return TripDto.LocationDto(
+        latitude = latitude,
+        longitude = longitude
+    )
+}
+
 fun Location.toCollection(): LocationCollection {
     return LocationCollection(
         latitude = latitude,
@@ -43,8 +57,8 @@ fun Trip.toDto(): TripDto {
         taxiId = taxiId,
         driverId = driverId,
         clientId = clientId,
-        startPoint = startPoint.toCollection(),
-        destination = destination?.toCollection(),
+        startPoint = startPoint.toDto(),
+        destination = destination?.toDto(),
         rate = rate,
         price = price,
         startDate = startDate?.toString(),

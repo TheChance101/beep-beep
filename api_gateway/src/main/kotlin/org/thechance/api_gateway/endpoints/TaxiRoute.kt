@@ -98,19 +98,21 @@ fun Route.taxiRoutes() {
             respondWithResult(HttpStatusCode.OK, trip)
         }
 
-        get("/history") {
-            val tokenClaim = call.principal<JWTPrincipal>()
-            val userId = tokenClaim?.get(Claim.USER_ID).toString()
-            val page = call.parameters["page"]?.trim()?.toInt() ?: 1
-            val limit = call.parameters["limit"]?.trim()?.toInt() ?: 10
-            val language = extractLocalizationHeader()
-            val result = taxiService.getTripsHistoryForUser(
-                userId = userId,
-                page = page,
-                limit = limit,
-                languageCode = language
-            )
-            respondWithResult(HttpStatusCode.OK, result)
+        authenticateWithRole(Role.END_USER) {
+            get("/history") {
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val userId = tokenClaim?.get(Claim.USER_ID).toString()
+                val page = call.parameters["page"]?.trim()?.toInt() ?: 1
+                val limit = call.parameters["limit"]?.trim()?.toInt() ?: 10
+                val language = extractLocalizationHeader()
+                val result = taxiService.getTripsHistoryForUser(
+                    userId = userId,
+                    page = page,
+                    limit = limit,
+                    languageCode = language
+                )
+                respondWithResult(HttpStatusCode.OK, result)
+            }
         }
 
         post {

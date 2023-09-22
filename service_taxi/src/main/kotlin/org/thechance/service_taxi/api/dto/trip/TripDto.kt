@@ -9,10 +9,16 @@ data class TripDto(
     val taxiId: String? = null,
     val driverId: String? = null,
     val clientId: String? = null,
-    val startPoint: LocationCollection? = null,
-    val destination: LocationCollection? = null,
+    val startPoint: LocationDto? = null,
+    val destination: LocationDto? = null,
     val rate: Double? = null,
     val price: Double? = null,
     val startDate: String? = null,
     val endDate: String? = null,
-)
+) {
+    @Serializable
+    data class LocationDto(
+        val latitude: Double,
+        val longitude: Double
+    )
+}
