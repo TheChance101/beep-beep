@@ -2,7 +2,7 @@ package di
 
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
-import presentation.PreferredFood.PreferredFoodScreenModel
+import presentation.preferredFood.PreferredFoodScreenModel
 import presentation.auth.login.LoginScreenModel
 import presentation.auth.signup.registration.RegistrationScreenModel
 import presentation.auth.signup.registrationSubmit.RegistrationSubmitScreenModel
@@ -13,6 +13,7 @@ import presentation.orderHistory.OrderHistoryScreenModel
 import presentation.pickLanguage.PickLanguageScreenModel
 import presentation.preferredMeal.PreferredScreenModel
 import presentation.preferredRide.PreferredRideScreenModel
+import presentation.app.AppScreenModel
 
 val screenModelsModule = module {
     factoryOf(::LoginScreenModel)
@@ -26,4 +27,5 @@ val screenModelsModule = module {
     factoryOf(::PickLanguageScreenModel)
     factoryOf(::PreferredRideScreenModel)
     factoryOf(::NotificationScreenModel)
+    factory { AppScreenModel(get()) }
 }

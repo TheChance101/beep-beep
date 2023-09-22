@@ -14,8 +14,8 @@ interface IManageRestaurantUseCase {
         pageNumber: Int,
         numberOfRestaurantsInPage: Int,
         restaurantName: String,
-        rating: Double?,
-        priceLevel: String?
+        rating: Double,
+        priceLevel: Int
     ): DataWrapper<Restaurant>
 
     suspend fun deleteRestaurant(id: String): Boolean
@@ -34,8 +34,8 @@ class ManageRestaurantUseCase(private val restaurantGateway: IRestaurantGateway)
         pageNumber: Int,
         numberOfRestaurantsInPage: Int,
         restaurantName: String,
-        rating: Double?,
-        priceLevel: String?
+        rating: Double,
+        priceLevel: Int
     ): DataWrapper<Restaurant> {
         return restaurantGateway.getRestaurants(
             pageNumber,
