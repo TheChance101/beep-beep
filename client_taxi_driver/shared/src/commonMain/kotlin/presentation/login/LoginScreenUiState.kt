@@ -10,8 +10,6 @@ data class LoginScreenUIState(
     val isLoading: Boolean = false,
     val isSuccess: Boolean = false,
     val error: ErrorState? = null,
-    val isUsernameError: Boolean = false,
-    val isPasswordError: Boolean = false,
     val usernameErrorMsg: String = "",
     val passwordErrorMsg: String = "",
     val bottomSheetUiState: LoginScreenBottomSheetUiState = LoginScreenBottomSheetUiState()
@@ -24,4 +22,6 @@ data class LoginScreenBottomSheetUiState(
     val hasPermission: Boolean = false,
     val sheetState: ModalBottomSheetState = ModalBottomSheetState(),
     val showPermissionSheet: Boolean = false,
+    val driverFullNameErrorMsg: String = "",
+    val driverEmailErrorMsg: String = "",
 )
