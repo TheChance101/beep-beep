@@ -37,10 +37,8 @@ class RestaurantScreenModel(
                     currentState.selectedPageNumber,
                     currentState.numberOfRestaurantsInPage,
                     currentState.searchQuery,
-                    if (currentState.restaurantFilterDropdownMenuUiState.isFiltered)
-                        currentState.restaurantFilterDropdownMenuUiState.filterRating else null,
-                    if (currentState.restaurantFilterDropdownMenuUiState.isFiltered)
-                        currentState.restaurantFilterDropdownMenuUiState.filterPriceLevel.toString() else null,
+                        currentState.restaurantFilterDropdownMenuUiState.filterRating ,
+                        currentState.restaurantFilterDropdownMenuUiState.filterPriceLevel,
                 )
             },
             ::onGetRestaurantSuccessfully,
@@ -51,7 +49,7 @@ class RestaurantScreenModel(
     private fun onGetRestaurantSuccessfully(restaurants: DataWrapper<Restaurant>) {
         updateState {
             it.copy(
-                restaurants = restaurants.result.toUiState(),
+                restaurants = restaurants.result.toRestaurantsUIState(),
                 isLoading = false,
                 numberOfRestaurants = restaurants.numberOfResult,
                 maxPageCount = restaurants.totalPages
