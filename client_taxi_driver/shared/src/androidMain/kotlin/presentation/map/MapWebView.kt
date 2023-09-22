@@ -23,6 +23,7 @@ actual fun MapWebView(
 ) {
     var webView: WebView? by remember { mutableStateOf(null) }
     AnimatedVisibility(destination == null) {
+        webView?.evaluateJavascript("GetMap(${currentLocation.lat},${currentLocation.lng})", null)
         webView?.evaluateJavascript(
             "createInfiniteLoopFunction(${currentLocation.lat},${currentLocation.lng})()",
             null
