@@ -10,4 +10,8 @@ interface ChatInteractionListener : BaseInteractionListener {
 
     fun onClickLogOut()
 
+    fun onMessageChange(message: String)
+
+    fun onSendMessageClicked()
+
 }
