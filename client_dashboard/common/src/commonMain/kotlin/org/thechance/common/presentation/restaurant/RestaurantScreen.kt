@@ -222,7 +222,7 @@ class RestaurantScreen :
             iconsSize = 16.kms
         )
         PriceBar(
-            priceLevel = 1,
+            priceLevel = restaurant.priceLevel,
             icon = painterResource(Resources.Drawable.dollarSign),
             iconColor = Theme.colors.success,
             modifier = Modifier.weight(otherColumnsWeight),

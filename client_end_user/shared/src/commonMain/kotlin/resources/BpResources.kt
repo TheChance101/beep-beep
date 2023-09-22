@@ -8,6 +8,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalLayoutDirection
 import com.beepbeep.designSystem.ui.theme.BpTheme
 import resources.strings.IStringResources
+import util.LanguageCode
 import util.LocalizationManager
 import util.setInsetsController
 
@@ -16,11 +17,10 @@ private val localStringResources = staticCompositionLocalOf<IStringResources> {
     error("CompositionLocal IStringResources not present")
 }
 
-
 @Composable
 fun BeepBeepTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
-    languageCode: String = "en",
+    languageCode: LanguageCode,
     content: @Composable () -> Unit,
 ) {
     val drawableResources = if (useDarkTheme) BpDrawableDarkResources else DrawableResources()

@@ -1,12 +1,7 @@
-package presentation.PreferredFood
+package presentation.preferredFood
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.usecase.IMangePreferredFoodUseCase
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import presentation.PreferredFood.FoodUIState
-import presentation.PreferredFood.PreferredFoodInteractionListener
-import presentation.PreferredFood.PreferredFoodUIEffect
-import presentation.PreferredFood.PreferredFoodUIState
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
