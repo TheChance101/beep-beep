@@ -8,7 +8,8 @@ import domain.entity.CartMeal
 fun CartDto.toEntity(): Cart {
     return Cart(
         meals = meals?.map { it.toEntity() } ?: emptyList(),
-        totalPrice = totalPrice ?: 0.0
+        totalPrice = totalPrice ?: 0.0,
+        currency = currency ?: ""
     )
 }
 
