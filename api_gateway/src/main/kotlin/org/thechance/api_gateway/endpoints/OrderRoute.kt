@@ -12,23 +12,16 @@ import org.thechance.api_gateway.data.model.restaurant.OrderDto
 import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.endpoints.utils.*
 import org.thechance.api_gateway.util.Claim
+import org.thechance.api_gateway.util.Role
 
 fun Route.orderRoutes() {
 
     val webSocketServerHandler: WebSocketServerHandler by inject()
     val restaurantService: RestaurantService by inject()
 
-//    authenticateWithRole(Role.RESTAURANT_OWNER) {
-    route("/orders") {
+    authenticateWithRole(Role.RESTAURANT_OWNER) {
 
-        post {
-            val language = extractLocalizationHeader()
-            val order = call.receive<OrderDto>()
-            val result = restaurantService.createOrder(order, language)
-            respondWithResult(HttpStatusCode.Created, result)
-        }
-
-        webSocket("/{restaurantId}") {
+        webSocket("orders/{restaurantId}") {
             val restaurantId = call.parameters["restaurantId"]?.trim().orEmpty()
             val language = extractLocalizationHeaderFromWebSocket()
             val orders = restaurantService.restaurantOrders(restaurantId, language)
@@ -38,18 +31,17 @@ fun Route.orderRoutes() {
             }
         }
 
-        get("/{restaurantId}") {
+        get("orders/active/{restaurantId}") {
             val restaurantId = call.parameters["restaurantId"]?.trim().orEmpty()
             val language = extractLocalizationHeader()
             val result = restaurantService.getActiveOrders(restaurantId, language)
             respondWithResult(HttpStatusCode.OK, result)
         }
 
-        get("/restaurant/history") {
-            val parameters = call.receiveParameters()
-            val restaurantId = parameters["id"]?.trim().toString()
-            val page = parameters["page"]?.trim()?.toInt() ?: 1
-            val limit = parameters["limit"]?.trim()?.toInt() ?: 10
+        get("orders/restaurant/{restaurantId}/history") {
+            val restaurantId = call.parameters["restaurantId"]?.trim().toString()
+            val page = call.parameters["page"]?.trim()?.toInt() ?: 1
+            val limit = call.parameters["limit"]?.trim()?.toInt() ?: 10
             val language = extractLocalizationHeader()
             val result = restaurantService.getOrdersHistoryInRestaurant(
                 restaurantId = restaurantId,
@@ -60,25 +52,7 @@ fun Route.orderRoutes() {
             respondWithResult(HttpStatusCode.OK, result)
         }
 
-        get("/user/history") {
-            val parameters = call.receiveParameters()
-            val tokenClaim = call.principal<JWTPrincipal>()
-            val userId = tokenClaim?.payload?.getClaim(Claim.USER_ID).toString()
-            println("userrrrrr : $userId")
-//            val userId = parameters["id"]?.trim().toString()
-            val page = parameters["page"]?.trim()?.toInt() ?: 1
-            val limit = parameters["limit"]?.trim()?.toInt() ?: 10
-            val language = extractLocalizationHeader()
-            val result = restaurantService.getOrdersHistoryForUser(
-                userId = userId,
-                page = page,
-                limit = limit,
-                languageCode = language
-            )
-            respondWithResult(HttpStatusCode.OK, result)
-        }
-
-        get("/count-by-days-back") {
+        get("orders/{restaurantId}/count-by-days-back") {
             val id = call.parameters["restaurantId"]?.trim().toString()
             val daysBack = call.parameters["daysBack"]?.trim()?.toInt() ?: 7
             val language = extractLocalizationHeader()
@@ -90,7 +64,7 @@ fun Route.orderRoutes() {
             respondWithResult(HttpStatusCode.OK, result)
         }
 
-        get("/revenue-by-days-back") {
+        get("orders/{restaurantId}/revenue-by-days-back") {
             val id = call.parameters["restaurantId"]?.trim().toString()
             val daysBack = call.parameters["daysBack"]?.trim()?.toInt() ?: 7
             val language = extractLocalizationHeader()
@@ -102,22 +76,38 @@ fun Route.orderRoutes() {
             respondWithResult(HttpStatusCode.OK, result)
         }
 
-        put("/{id}/status") {
-            val id = call.parameters["id"]?.trim().toString()
-            val params = call.receiveParameters()
-            val status = params["status"]?.trim()?.toInt() ?: 0
+        put("order/{orderId}") {
+            val orderId = call.parameters["orderId"]?.trim().toString()
+            val status = call.parameters["status"]?.trim()?.toInt() ?: 0
             val language = extractLocalizationHeader()
-            val result = restaurantService.updateOrderStatus(id, status, language)
+            val result = restaurantService.updateOrderStatus(orderId, status, language)
             respondWithResult(HttpStatusCode.OK, result)
         }
 
-        delete("/{restaurantId}") {
-            val restaurantId = call.parameters["restaurantId"]?.trim().toString()
+    }
+
+    authenticateWithRole(Role.END_USER) {
+
+        post("order") {
             val language = extractLocalizationHeader()
-            val result = restaurantService.deleteRestaurant(restaurantId, language)
+            val order = call.receive<OrderDto>()
+            val result = restaurantService.createOrder(order, language)
+            respondWithResult(HttpStatusCode.Created, result)
+        }
+
+        get("orders/user/history") {
+            val tokenClaim = call.principal<JWTPrincipal>()
+            val userId = tokenClaim?.get(Claim.USER_ID).toString()
+            val page = call.parameters["page"]?.trim()?.toInt() ?: 1
+            val limit = call.parameters["limit"]?.trim()?.toInt() ?: 10
+            val language = extractLocalizationHeader()
+            val result = restaurantService.getOrdersHistoryForUser(
+                userId = userId,
+                page = page,
+                limit = limit,
+                languageCode = language
+            )
             respondWithResult(HttpStatusCode.OK, result)
         }
     }
-//    }
-
 }

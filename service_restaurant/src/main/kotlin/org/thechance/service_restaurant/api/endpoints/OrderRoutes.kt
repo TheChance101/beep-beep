@@ -51,12 +51,10 @@ fun Route.orderRoutes() {
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
-        put("/{id}/status") {
+        put("/{id}") {
             val id = call.parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
-            val status = call.receiveParameters()["status"]?.toInt() ?: throw MultiErrorException(
-                listOf(INVALID_REQUEST_PARAMETER)
-            )
-            val result = manageOrder.updateOrderStatus(orderId = id, state = Order.Status.getOrderStatus(status))
+            val status = call.parameters["status"]?.toInt() ?: throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER))
+            val result = manageOrder.updateOrderStatus(orderId = id, state = Order.Status.getOrderStatus(status)).toDto()
             call.respond(HttpStatusCode.OK, result)
         }
 
