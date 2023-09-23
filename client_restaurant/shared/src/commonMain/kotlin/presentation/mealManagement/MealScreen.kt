@@ -20,6 +20,7 @@ import util.getPlatformContext
 class MealScreen(
     private val screenMode: ScreenMode,
     private val mealId: String = "",
+    private val restaurantId: String = ""
 ) :
     BaseScreen<IMealBehavior, MealEditorUIState, MealScreenUIEffect, MealScreenInteractionListener>(),
     KoinComponent {
@@ -29,8 +30,9 @@ class MealScreen(
 
     @Composable
     override fun Content() {
-        val screenModel = rememberScreenModel { mealScreenModelFactory.create(screenMode, mealId) }
+        val screenModel = rememberScreenModel { mealScreenModelFactory.create(screenMode, mealId,restaurantId) }
         initScreen(screenModel)
+        println("mealId: $mealId")
     }
 
     @Composable
@@ -56,6 +58,7 @@ class MealScreen(
             onBackGroundClicked = { listener.onBackgroundClicked() },
             sheetState = sheetState,
         ) {
+            println("meal state : ${state.meal}")
             MealContent(
                 state.meal,
                 listener,

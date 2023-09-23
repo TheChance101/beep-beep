@@ -21,5 +21,6 @@ fun Application.configureRouting(tokenConfiguration: TokenConfiguration) {
         mealRoute()
         orderRoutes()
         notificationRoute()
+        locationRoute()
     }
 }

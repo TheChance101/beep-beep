@@ -1,6 +1,5 @@
 package domain.usecase
 
-import domain.entity.Cuisine
 
 interface IValidateManageMealUseCase {
     fun isMealNameValid(name: String): Boolean
@@ -13,7 +12,7 @@ interface IValidateManageMealUseCase {
     fun isMealInformationValid(
         name: String,
         description: String,
-        cuisines: List<Cuisine>,
+        cuisines: List<String>,
         price: Double,
     ): Boolean
 
@@ -44,7 +43,7 @@ class ValidateManageMealUseCase : IValidateManageMealUseCase {
     override fun isMealInformationValid(
         name: String,
         description: String,
-        cuisines: List<Cuisine>,
+        cuisines: List<String>,
         price: Double
     ): Boolean {
         return isMealNameValid(name) &&

@@ -360,7 +360,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             imageUrl = "https://www.deliciouslycleaneats.com.au/wp-content/uploads/2018/08/Meal-Plan-Spread1.jpg",
             description = "A delicious platter of hummus served with pita bread.",
             price = 8.99,
-            cuisines = cuisines.subList(0, 3).map { it.id }
+            cuisines = cuisines.subList(0, 3)
 
         ),
         MealDto(
@@ -370,7 +370,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             imageUrl = "https://ichef.bbci.co.uk/food/ic/food_16x9_832/recipes/roast_chicken_for_one_41998_16x9.jpg",
             description = "A spicy roll made with fresh tuna and spicy mayo.",
             price = 12.49,
-            cuisines = cuisines.subList(0, 3).map { it.id }
+            cuisines = cuisines.subList(0, 3)
         ),
         MealDto(
             id = "b39e9f1e-0dc7-43b7-90e2-0a075b818dc5",
@@ -379,7 +379,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             imageUrl = "https://realfood.tesco.com/media/images/472x310-Teriyaki-glazed-sausages-6c3c4a03-b353-49c9-85a3-978f326ba592-0-472x310.jpg",
             description = "A delightful sampler of beignets with different toppings.",
             price = 9.99,
-            cuisines = cuisines.subList(0, 4).map { it.id }
+            cuisines = cuisines.subList(0, 4)
         ),
         MealDto(
             id = "4d1c8f5e-7f24-4df3-9835-06f0d63f8eb1",
@@ -388,7 +388,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             imageUrl = "https://img.taste.com.au/k1UFa9O6/w720-h480-cfill-q80/taste/2022/12/one-pan-piri-piri-chicken-183821-2.jpg",
             description = "A wrap filled with crispy falafel balls and fresh veggies.",
             price = 7.95,
-            cuisines = cuisines.subList(4, 6).map { it.id }
+            cuisines = cuisines.subList(4, 6)
         ),
         MealDto(
             id = "8a2a4387-1cc2-4b68-9df1-3f497ddc94a2",
@@ -397,7 +397,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             imageUrl = "https://i.pinimg.com/1200x/b8/7b/c7/b87bc72f970fe00c115e3d1471956c4d.jpg",
             description = "Fresh salmon slices on bite-sized beds of seasoned rice.",
             price = 10.99,
-            cuisines = cuisines.subList(4, 6).map { it.id }
+            cuisines = cuisines.subList(4, 6)
         ),
         MealDto(
             id = "a1ebe83d-617a-4e14-9e27-4d0367c4e0d2",
@@ -406,7 +406,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             imageUrl = "https://www.southernliving.com/thmb/iL2CEgCAMqC4cpp6taRqwYQI1gs=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/27162_FGFsuperbowl_0359_16x9-2000-5dd253dc23044ee78aacd9673f5befbc.jpg",
             description = "A hearty stew with a mix of meats, seafood, and vegetables.",
             price = 14.75,
-            cuisines = cuisines.subList(4, 10).map { it.id }
+            cuisines = cuisines.subList(4, 10)
         ),
         MealDto(
             id = "ba9b9700-6d24-434b-8d67-daf9e45e1063",
@@ -415,7 +415,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             imageUrl = "https://media.theeverygirl.com/wp-content/uploads/2022/05/healthy-meal-prep-dinners-teg-new-gallery.jpeg",
             description = "A plate of mouthwatering shawarma served with garlic sauce.",
             price = 13.75,
-            cuisines = cuisines.subList(4, 10).map { it.id }
+            cuisines = cuisines.subList(4, 10)
         ),
         MealDto(
             id = "2d5bbf8a-4854-49c6-99ed-ef09899c2d8e",
@@ -424,7 +424,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             imageUrl = "https://www.foodandwine.com/thmb/bRz199ONebY-5h5gcvpOcHRxAkA=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Web_4000-Trifecta-Chicken-Breast-Sweet-Potato-Mixed-Vegetable_04-72a24aaee5584c06a26451603daec5c9.jpg",
             description = "An exquisite roll with eel, avocado, and a sweet soy glaze.",
             price = 15.99,
-            cuisines = cuisines.subList(4, 10).map { it.id }
+            cuisines = cuisines.subList(4, 10)
         ),
         MealDto(
             id = "e772ad66-0251-412f-99a1-4a10435f9a07",
@@ -433,7 +433,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
             imageUrl = "https://takethemameal.com/files_images_v2/stam.jpg",
             description = "A spicy Cajun dish with rice, sausage, chicken, and shrimp.",
             price = 16.50,
-            cuisines = cuisines.subList(4, 10).map { it.id }
+            cuisines = cuisines.subList(4, 10)
         )
     )
 
@@ -573,6 +573,31 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
         )
     )
 
+    private val ordersCount : List<Map<String, Int>> = listOf(
+        mapOf(
+            "1" to 500,
+            "2" to 800,
+            "3" to 900,
+            "4" to 700,
+            "5" to 300,
+            "6" to 200,
+            "7" to 100,
+        )
+    )
+
+    private val revenue : List<Map<String, Double>> = listOf(
+        mapOf(
+            "1" to 500.0,
+            "2" to 800.0,
+            "3" to 900.0,
+            "4" to 700.0,
+            "5" to 300.0,
+            "6" to 200.0,
+            "7" to 100.0,
+        )
+    )
+
+
     override suspend fun loginUser(userName: String, password: String): Pair<String, String> {
         if (userName != "theChance") {
             throw InvalidPasswordException()
@@ -597,10 +622,10 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
     override suspend fun getRestaurantInfo(restaurantId: String): Restaurant {
         return getRestaurantsByOwnerId("7bf7ef77d907").find { it.id == restaurantId }
             ?: Restaurant(
-                id  = "",
+                id = "",
                 ownerId = "",
                 address = "",
-                location = Location(0.0,0.0),
+                location = Location(0.0, 0.0),
                 phone = "",
                 openingTime = "",
                 closingTime = "",
@@ -665,7 +690,7 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
     override suspend fun getCuisinesInMeal(mealId: String): List<Cuisine> {
         val mealCuisines = meals.find { it.id == mealId }?.cuisines
         return if (mealCuisines != null) {
-            val cuisines = cuisines.filter { it.id in mealCuisines }
+            val cuisines = cuisines.filter { it.id in mealCuisines.map { it.id } }
             cuisines.toEntity()
         } else {
             throw Throwable()
@@ -678,11 +703,30 @@ class FakeRemoteGateWay : IFakeRemoteGateway {
 
     override suspend fun getMealsByCuisineId(id: String): List<Meal> {
         return meals.filter { meal ->
-            meal.cuisines?.find { it == id } != null
+            meal.cuisines?.find { it.id == id } != null
         }.toEntity()
     }
 
 
     //endregion cuisines
+
+
+    //region charts
+    override suspend fun getOrdersRevenueByDaysBefore(
+        restaurantId: String,
+        daysBack: Int
+    ): List<Map<String, Double>> {
+        return revenue
+    }
+
+    override suspend fun getOrdersCountByDaysBefore(
+        restaurantId: String,
+        daysBack: Int
+    ): List<Map<String, Int>> {
+        return ordersCount
+    }
+
+    //endregion charts
+
 
 }

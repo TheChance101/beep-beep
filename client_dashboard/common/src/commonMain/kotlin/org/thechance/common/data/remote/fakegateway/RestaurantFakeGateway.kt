@@ -4,10 +4,12 @@ import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.DataWrapperDto
 import org.thechance.common.data.remote.model.RestaurantDto
 import org.thechance.common.data.remote.model.toEntity
+import org.thechance.common.domain.entity.Cuisine
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.NewRestaurantInfo
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.domain.getway.IRestaurantGateway
+import java.util.UUID
 import kotlin.math.ceil
 
 class RestaurantFakeGateway : IRestaurantGateway {
@@ -16,10 +18,11 @@ class RestaurantFakeGateway : IRestaurantGateway {
         pageNumber: Int,
         numberOfRestaurantsInPage: Int,
         restaurantName: String,
-        rating: Double?,
-        priceLevel: String?,
+        rating: Double,
+        priceLevel: Int,
     ): DataWrapper<Restaurant> {
         var restaurants = restaurants.toEntity()
+        val priceLevelFilter = if (priceLevel != 0) "$".repeat(priceLevel) else null
         if (restaurantName.isNotEmpty()) {
             restaurants = restaurants.filter {
                 it.name.startsWith(
@@ -28,11 +31,19 @@ class RestaurantFakeGateway : IRestaurantGateway {
                 )
             }
         }
-        if (rating != null && priceLevel != null) {
+
+        if (rating > 0.0) {
             restaurants = restaurants.filter {
-                it.priceLevel == priceLevel
+                it.rate == rating
             }
         }
+
+        if (priceLevel > 0) {
+            restaurants = restaurants.filter {
+                it.priceLevel == priceLevelFilter
+            }
+        }
+
         val startIndex = (pageNumber - 1) * numberOfRestaurantsInPage
         val endIndex = startIndex + numberOfRestaurantsInPage
         val numberOfPages = ceil(restaurants.size / (numberOfRestaurantsInPage * 1.0)).toInt()
@@ -61,6 +72,7 @@ class RestaurantFakeGateway : IRestaurantGateway {
             closingTime = restaurant.closingTime,
             rate = 0.0,
             priceLevel = "",
+            ownerUsername = restaurant.ownerUsername
         )
     }
 
@@ -69,43 +81,44 @@ class RestaurantFakeGateway : IRestaurantGateway {
         return true
     }
 
-    override suspend fun getCuisines(): List<String> {
+    override suspend fun getCuisines(): List<Cuisine> {
         return cuisines
     }
 
-    override suspend fun createCuisine(cuisineName: String): String {
-        return if (cuisineName !in cuisines && cuisineName.isNotBlank()) {
-            cuisines.add(0, cuisineName)
-            cuisineName
-        } else ""
+
+    override suspend fun createCuisine(cuisineName: String): Cuisine {
+        val newCuisine = Cuisine(UUID.randomUUID().toString(), cuisineName)
+        cuisines.add(newCuisine)
+        return newCuisine
     }
 
-    override suspend fun deleteCuisine(cuisineName: String): String {
-        cuisines.remove(cuisineName)
-        return cuisineName
+    override suspend fun deleteCuisine(cuisineId: String) {
+        cuisines.find { it.id == cuisineId }?.let {
+            cuisines.remove(it)
+        }
     }
 
-    private val cuisines = mutableListOf(
-        "Angolan cuisine",
-        "Cameroonian cuisine",
-        "Chadian cuisine",
-        "Congolese cuisine",
-        "Centrafrican cuisine",
-        "Equatorial Guinea cuisine",
-        "Gabonese cuisine",
-        "Santomean cuisine",
-        "Burundian cuisine",
-        "Djiboutian cuisine",
-        "Eritrean cuisine",
-        "Ethiopian cuisine",
-        "Kenyan cuisine",
-        "Maasai cuisine",
-        "Rwandan cuisine",
-        "Somali cuisine",
-        "South Sudanese cuisine",
-        "Tanzanian cuisine",
-        "Zanzibari cuisine",
-        "Ugandan cuisine",
+    private val cuisines = mutableListOf<Cuisine>(
+        Cuisine("1", "Angolan cuisine"),
+        Cuisine("", "Cameroonian cuisine"),
+        Cuisine("", "Chadian cuisine"),
+        Cuisine("", "Congolese cuisine"),
+        Cuisine("", "Centrafrican cuisine"),
+        Cuisine("", "Equatorial Guinea cuisine"),
+        Cuisine("", "Gabonese cuisine"),
+        Cuisine("", "Santomean cuisine"),
+        Cuisine("", "Burundian cuisine"),
+        Cuisine("", "Djiboutian cuisine"),
+        Cuisine("", "Eritrean cuisine"),
+        Cuisine("", "Ethiopian cuisine"),
+        Cuisine("", "Kenyan cuisine"),
+        Cuisine("", "Maasai cuisine"),
+        Cuisine("", "Rwandan cuisine"),
+        Cuisine("", "Somali cuisine"),
+        Cuisine("", "South Sudanese cuisine"),
+        Cuisine("", "Tanzanian cuisine"),
+        Cuisine("", "Zanzibari cuisine"),
+        Cuisine("", "Ugandan cuisine"),
     )
 
     private val restaurants = mutableListOf(
@@ -159,8 +172,25 @@ class RestaurantFakeGateway : IRestaurantGateway {
             name = "Kamel Restaurant",
             ownerId = "kamel",
             phone = "0528242235",
-            rate = 4.9,
+            rate = 3.0,
             priceLevel = "",
+            openingTime = "06:30 - 22:30"
+        ),
+        RestaurantDto(
+            id = "7a1bfe39-4b2c-4f76-bde0-82da2eaf9e55",
+            name = "Kamel Restaurant",
+            ownerId = "kamel",
+            phone = "0528242235",
+            rate = 4.9,
+            priceLevel = "$",
+            openingTime = "06:30 - 22:30"
+        ),        RestaurantDto(
+            id = "7a1bfe39-4b2c-4f76-bde0-82da2eaf9e89",
+            name = "Kamel Restaurant",
+            ownerId = "kamel",
+            phone = "0528242235",
+            rate = 5.0,
+            priceLevel = "$$",
             openingTime = "06:30 - 22:30"
         ),
     )

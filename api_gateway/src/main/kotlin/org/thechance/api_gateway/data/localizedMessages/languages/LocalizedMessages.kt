@@ -45,6 +45,14 @@ interface LocalizedMessages {
     // region taxi
     val taxiCreatedSuccessfully: String
 
+    val tripCreatedSuccessfully: String
+
+    val tripApproved: String
+
+    val tripCanceled: String
+
+    val tripFinished: String
+
     val taxiUpdateSuccessfully: String
 
     val taxiDeleteSuccessfully: String
