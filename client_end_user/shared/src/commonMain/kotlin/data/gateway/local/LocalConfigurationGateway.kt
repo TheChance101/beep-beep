@@ -79,6 +79,20 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
             .find()?.preferredFood?.toList() ?: emptyList()
     }
 
+    override suspend fun removeAccessToken() {
+        realm.write {
+            query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+                .find()?.accessToken = ""
+        }
+    }
+
+    override suspend fun removeRefreshToken() {
+        realm.write {
+            query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+                .find()?.refreshToken = ""
+        }
+    }
+
     override suspend fun savePriceLevel(priceLevel: String) {
         realm.write {
             query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()

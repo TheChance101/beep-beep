@@ -21,4 +21,7 @@ interface ILocalConfigurationGateway {
     suspend fun getIsFirstTimeUseApp(): Boolean
     suspend fun savePreferredFood(food: List<String>)
     suspend fun getPreferredFood(): List<String>
+
+    suspend fun removeAccessToken()
+    suspend fun removeRefreshToken()
 }

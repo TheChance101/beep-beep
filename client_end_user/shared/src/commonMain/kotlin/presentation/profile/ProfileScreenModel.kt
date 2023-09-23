@@ -2,10 +2,12 @@ package presentation.profile
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.UserDetails
+import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.IManageUserUseCase
 import domain.usecase.validation.IValidationUseCase
 import domain.utils.AuthorizationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 import presentation.main.MainScreenUiEffect
@@ -14,7 +16,7 @@ import resources.strings.IStringResources
 class ProfileScreenModel(
     private val validation: IValidationUseCase,
     private val  manageUser: IManageUserUseCase,
-    private val stringResources: IStringResources
+    private val manageAuthentication: IManageAuthenticationUseCase
 ) :BaseScreenModel<ProfileUIState, ProfileUIEffect >(ProfileUIState()) ,ProfileInteractionListener{
 
     override val viewModelScope: CoroutineScope = coroutineScope
@@ -91,6 +93,11 @@ class ProfileScreenModel(
     }
 
     override fun onLogout() {
+        viewModelScope.launch {
+            manageAuthentication.removeAccessToken()
+            manageAuthentication.removeRefreshToken()
+        }
+
         sendNewEffect(ProfileUIEffect.Logout)
     }
 }

@@ -13,6 +13,10 @@ interface IManageAuthenticationUseCase {
     ): Boolean
 
     suspend fun loginUser(username: String, password: String, keepLoggedIn: Boolean): Boolean
+
+    suspend fun removeAccessToken()
+
+    suspend fun  removeRefreshToken()
 }
 
 class ManageAuthenticationUseCase(
@@ -45,6 +49,14 @@ class ManageAuthenticationUseCase(
         localGateway.saveRefreshToken(session.refreshToken)
         localGateway.saveKeepMeLoggedInFlag(keepLoggedIn)
         return true
+    }
+
+    override suspend fun removeAccessToken() {
+        return localGateway.removeAccessToken()
+    }
+
+    override suspend fun removeRefreshToken()  {
+        return localGateway.removeRefreshToken()
     }
 
 }

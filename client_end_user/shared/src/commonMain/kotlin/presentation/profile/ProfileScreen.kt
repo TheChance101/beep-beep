@@ -2,6 +2,8 @@ package presentation.profile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +17,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,7 +35,7 @@ import presentation.base.BaseScreen
 import presentation.main.MainContainer
 import resources.Resources
 
-class ProfileScreen:
+class ProfileScreen :
     BaseScreen<ProfileScreenModel, ProfileUIState, ProfileUIEffect, ProfileInteractionListener>() {
 
     @Composable
@@ -41,7 +44,7 @@ class ProfileScreen:
     }
 
     override fun onEffect(effect: ProfileUIEffect, navigator: Navigator) {
-        when(effect){
+        when (effect) {
             is ProfileUIEffect.Logout -> navigator.replaceAll(MainContainer)
         }
     }
@@ -50,20 +53,23 @@ class ProfileScreen:
     @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
     @Composable
     override fun onRender(state: ProfileUIState, listener: ProfileInteractionListener) {
-        Column (
+        Column(
             modifier = Modifier.fillMaxSize().background(Theme.colors.background)
-            .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState()),
 
-        ){
+            ) {
             whiteCard {
                 title(Resources.strings.wallet)
-                subTitle("${state.user?.currency} ${state.user?.walletBalance}", Theme.colors.primary)
+                subTitle(
+                    "${state.user?.currency} ${state.user?.walletBalance}",
+                    Theme.colors.primary
+                )
                 title(Resources.strings.username)
                 subTitle("@${state.user?.username}")
                 title(Resources.strings.address)
                 subTitle(state.user?.addresses?.firstOrNull()?.address ?: "")
                 title(Resources.strings.email)
-                subTitle(state.user?.email ?:"")
+                subTitle(state.user?.email ?: "")
             }
             whiteCard {
                 BpTextField(
@@ -95,6 +101,10 @@ class ProfileScreen:
             }
             whiteCard {
                 Row(
+                    modifier = Modifier.clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                    ) { listener.onLogout() },
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Icon(
@@ -113,7 +123,7 @@ class ProfileScreen:
     }
 
     @Composable
-    private fun whiteCard(content: @Composable () -> Unit){
+    private fun whiteCard(content: @Composable () -> Unit) {
         Column(
             modifier = Modifier.fillMaxWidth().padding(16.dp)
                 .clip(shape = RoundedCornerShape(Theme.radius.medium))
@@ -125,20 +135,20 @@ class ProfileScreen:
     }
 
     @Composable
-    private fun title(text: String){
+    private fun title(text: String) {
         Text(
             text = text,
             style = Theme.typography.caption,
-            color= Theme.colors.contentTertiary,
-            modifier = Modifier.padding(top= 16.dp,bottom = 8.dp)
+            color = Theme.colors.contentTertiary,
+            modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
         )
     }
 
     @Composable
-    private fun subTitle(text: String,color: Color = Theme.colors.contentPrimary){
+    private fun subTitle(text: String, color: Color = Theme.colors.contentPrimary) {
         Text(
             text = text,
-            color=color,
+            color = color,
             style = Theme.typography.body,
         )
     }
