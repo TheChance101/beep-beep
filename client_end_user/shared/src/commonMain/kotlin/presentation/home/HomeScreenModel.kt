@@ -102,6 +102,10 @@ class HomeScreenModel(
         sendNewEffect(HomeScreenUiEffect.NavigateLoginScreen)
     }
 
+    override fun onClickCartCard() {
+        sendNewEffect(HomeScreenUiEffect.NavigateToCart)
+    }
+
     private fun getRecommendedCuisines() {
         tryToExecute(
             { cuisineUseCase.getCuisines().toCuisineUiState() },
