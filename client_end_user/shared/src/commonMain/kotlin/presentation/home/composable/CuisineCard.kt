@@ -40,7 +40,7 @@ fun CuisineCard(
     onClickCuisine: (cuisineId: String) -> Unit,
     modifier: Modifier = Modifier,
     width: Dp = 76.dp,
-    backGround: Color = Theme.colors.secondary,
+    backGroundColor: Color = Theme.colors.secondary,
     imagePadding: PaddingValues = PaddingValues(8.dp),
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
@@ -55,7 +55,7 @@ fun CuisineCard(
             modifier
                 .fillMaxWidth()
                 .clip(shape = RoundedCornerShape(Theme.radius.medium))
-                .background(backGround)
+                .background(backGroundColor)
                 .clickable(
                     interactionSource,
                     indication = null,
