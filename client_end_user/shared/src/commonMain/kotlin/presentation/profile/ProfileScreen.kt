@@ -58,7 +58,7 @@ class ProfileScreen :
                 .verticalScroll(rememberScrollState()),
 
             ) {
-            whiteCard {
+            WhiteCard {
                 Title(Resources.strings.wallet)
                 SubTitle(
                     "${state.user?.currency} ${state.user?.walletBalance}",
@@ -71,7 +71,7 @@ class ProfileScreen :
                 Title(Resources.strings.email)
                 SubTitle(state.user?.email ?: "")
             }
-            whiteCard {
+            WhiteCard {
                 BpTextField(
                     modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
                     text = state.fullName,
@@ -99,7 +99,7 @@ class ProfileScreen :
                     },
                 )
             }
-            whiteCard {
+            WhiteCard {
                 Row(
                     modifier = Modifier.clickable(
                         indication = null,
@@ -123,7 +123,7 @@ class ProfileScreen :
     }
 
     @Composable
-    private fun whiteCard(content: @Composable () -> Unit) {
+    private fun WhiteCard(content: @Composable () -> Unit) {
         Column(
             modifier = Modifier.fillMaxWidth().padding(16.dp)
                 .clip(shape = RoundedCornerShape(Theme.radius.medium))
