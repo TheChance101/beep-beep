@@ -32,7 +32,6 @@ class RegistrationSubmitScreenModel(
     private val validation: IValidationUseCase,
     private val manageAuthentication: IManageAuthenticationUseCase,
     private val manageUser: IManageUserUseCase,
-    private val stringResources: IStringResources
 ) : BaseScreenModel<RegistrationSubmitUIState, RegistrationSubmitScreenEffect>(
     RegistrationSubmitUIState()
 ),
