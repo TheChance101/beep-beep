@@ -20,8 +20,8 @@ class OrderFakeGateway : IOrderGateway {
                 addressName = "45, Faisal St., Riyadh, KSA",
             ),
             dropOffAddress = LocationDto(
-                lat = 40.6740229,
-                lng = -73.8740306,
+                lat = 30.8859508,
+                lng = 31.4453136,
                 addressName = "Nirmala,girsls HSS",
             ),
         ).toEntity()

@@ -1,12 +1,12 @@
 var latitude2 = 0
 var map,directionsManager;
 
-function GetMap(lat,lng) {
+function GetMap() {
 map = new Microsoft.Maps.Map('#myMap', {
     credentials: 'Access_token',
-    center: new Microsoft.Maps.Location(lat,lng),
+    center: new Microsoft.Maps.Location(0,0),
     mapTypeId: Microsoft.Maps.MapTypeId.road,
-    minZoom: 2,
+    minZoom: 4,
     maxZoom: 18
 });
     var center = map.getCenter();
@@ -19,22 +19,27 @@ function getPin(){
     var pushpin = new Microsoft.Maps.Pushpin(map.getCenter(), null);
     map.entities.push(pushpin);
 }
-function getDirections(lat,lng){
+function getDirections(lat,lng,latt,lngg){
 Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
     directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
     directionsManager.setRequestOptions({ routeMode: Microsoft.Maps.Directions.RouteMode.driving,routeDraggable: false,autoUpdateMapView: false });
-    var waypoint1 = new Microsoft.Maps.Directions.Waypoint({ location: new Microsoft.Maps.Location(33.3152, 44.3661) });
+    directionsManager.setRenderOptions({
+                   drivingPolylineOptions: {
+                       strokeColor: 'red',
+                       strokeThickness: 8
+                   },
+                   autoUpdateMapView:false
+               });
+    var waypoint1 = new Microsoft.Maps.Directions.Waypoint({ location: new Microsoft.Maps.Location(latt,lngg) });
     var waypoint2 = new Microsoft.Maps.Directions.Waypoint({ location: new Microsoft.Maps.Location(lat,lng) });
     directionsManager.addWaypoint(waypoint1);
     directionsManager.addWaypoint(waypoint2);
     directionsManager.calculateDirections();
 });
 }
-function updateDirections(newLat,newLng) {
-directionsManager.removeWaypoint(1);
-  var waypoint2 = new Microsoft.Maps.Directions.Waypoint({ location: new Microsoft.Maps.Location(newLat,newLng) });
-   directionsManager.addWaypoint(waypoint2);
-    directionsManager.calculateDirections();
+function clearDirections() {
+directionsManager.clearAll();
+directionsManager.clearDisplay();
 }
 
 var xhttp = new XMLHttpRequest();
@@ -44,7 +49,6 @@ var co = 0;
 function createInfiniteLoopFunction(latitude,lng) {
             return function() {
             clearMap()
-            getDirections(latitude,lng)
     var pushpin = new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(latitude,lng), {
         icon: 'user_pin.svg',
      anchor: new Microsoft.Maps.Point(20, 20)

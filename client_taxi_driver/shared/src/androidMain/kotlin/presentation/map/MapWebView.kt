@@ -8,10 +8,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import domain.entity.Location
+import kotlinx.coroutines.launch
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
@@ -22,21 +24,27 @@ actual fun MapWebView(
     destination: Location?,
 ) {
     var webView: WebView? by remember { mutableStateOf(null) }
+    val scope = rememberCoroutineScope()
     AnimatedVisibility(destination == null) {
-        webView?.evaluateJavascript("GetMap(${currentLocation.lat},${currentLocation.lng})", null)
+        LaunchedEffect(true) {
+            webView?.evaluateJavascript(" GetMap()", null)
+            webView?.evaluateJavascript("clearDirections()", null)
+        }
         webView?.evaluateJavascript(
             "createInfiniteLoopFunction(${currentLocation.lat},${currentLocation.lng})()",
             null
         )
     }
-
-    LaunchedEffect(key1 = destination) {
+    LaunchedEffect(key1 = currentLocation) {
         destination?.let { location ->
-            webView?.evaluateJavascript("clearMap()", null)
-            webView?.evaluateJavascript(
-                "getDirections(${location.lat},${location.lng})",
-                null
-            )
+            webView?.evaluateJavascript(" clearMap()", null)
+            scope.launch {
+                webView?.evaluateJavascript(
+                    "getDirections(${currentLocation.lat},${currentLocation.lng},${location.lat},${location.lng})",
+                    null
+                )
+                webView?.evaluateJavascript("clearDirections()", null)
+            }
         }
     }
 
