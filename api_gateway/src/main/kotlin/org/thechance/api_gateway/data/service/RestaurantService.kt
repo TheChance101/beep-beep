@@ -353,6 +353,15 @@ class RestaurantService(
             get("/order/$restaurantId/orders")
         }
     }
+
+    suspend fun deleteRestaurantByOwnerUsername(username: String): RestaurantDto {
+        return client.tryToExecute<RestaurantDto>(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+        ) {
+            delete("/restaurant/owner/$username") // TODO: add this endpoint to restaurant service
+        }
+    }
     //endregion
 
 
