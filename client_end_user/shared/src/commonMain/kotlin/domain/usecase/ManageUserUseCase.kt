@@ -66,7 +66,7 @@ class ManageUserUseCase(
     }
 
     override suspend fun getUserLanguageCode(): Flow<String> {
-        return localGateway.getLanguageCode()
+        return localGateway.getLanguageCodeFlow()
     }
 
     override suspend fun getUserProfile(): UserDetails {

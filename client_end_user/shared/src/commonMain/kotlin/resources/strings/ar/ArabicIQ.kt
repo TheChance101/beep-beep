@@ -83,6 +83,7 @@ data class ArabicIQ(
     override val invalidEmail: String = "البريد الإلكتروني مش صالح",
     override val invalidFullName: String = "الاسم الكامل مش صالح",
     override val oppsRegistrationNotCompleted: String = "عفوًا، التسجيل ما اكتمل",
+    override val allCuisines: String = "المطابخ",
     override val logout: String= "تسجيل الخروج",
     override val address: String = "العنوان",
     override val save: String= "حفظ",

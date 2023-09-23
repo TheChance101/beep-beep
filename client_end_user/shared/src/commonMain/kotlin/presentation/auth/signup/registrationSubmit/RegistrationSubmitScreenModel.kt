@@ -21,8 +21,6 @@ import presentation.base.ErrorState
 import presentation.base.ErrorState.InvalidEmail
 import presentation.base.ErrorState.InvalidFullName
 import presentation.base.ErrorState.InvalidPhone
-import presentation.base.ErrorState.NoInternet
-import presentation.base.ErrorState.RequestFailed
 import presentation.base.ErrorState.UserAlreadyExists
 import presentation.base.ErrorState.WifiDisabled
 import resources.strings.IStringResources
@@ -85,33 +83,20 @@ class RegistrationSubmitScreenModel(
     }
 
     private fun onRegistrationSuccess(success: Boolean) {
-        if (success) {
-            sendNewEffect(RegistrationSubmitScreenEffect.NavigateToLoginScreen)
-        } else {
-            showSnackbar(stringResources.oppsRegistrationNotCompleted)
-        }
+        sendNewEffect(RegistrationSubmitScreenEffect.NavigateToLoginScreen)
     }
 
     private fun onError(error: ErrorState) {
         clearErrors()
         when (error) {
-            InvalidFullName -> updateState {
-                it.copy(fullErrorMsg = stringResources.invalidFullName, isFullNameError = true)
-            }
+            InvalidFullName -> updateState { it.copy(isFullNameError = true) }
 
-            InvalidEmail -> updateState {
-                it.copy(emailErrorMsg = stringResources.invalidEmail, isEmailError = true)
-            }
+            InvalidEmail -> updateState { it.copy(isEmailError = true) }
 
-            InvalidPhone -> updateState {
-                it.copy(phoneErrorMsg = stringResources.invalidPhoneNumber, isPhoneError = true)
-            }
+            InvalidPhone -> updateState { it.copy(isPhoneError = true) }
 
-            NoInternet -> showSnackbar(stringResources.noInternet)
-            RequestFailed -> showSnackbar(stringResources.requestFailed)
             is UserAlreadyExists -> showSnackbar(error.message)
-            WifiDisabled -> showSnackbar(stringResources.wifiDisabled)
-            else -> { showSnackbar(stringResources.unknownError) }
+            else -> {}
         }
     }
 
@@ -125,14 +110,14 @@ class RegistrationSubmitScreenModel(
         try {
             block()
         } catch (e: AuthorizationException.InvalidFullNameException) {
-            updateState { it.copy(fullErrorMsg = e.message ?: stringResources.invalidFullName, isFullNameError = true) }
+            updateState { it.copy(isFullNameError = true) }
         } catch (e: AuthorizationException.InvalidEmailException) {
             updateState {
-                it.copy(emailErrorMsg = e.message ?: stringResources.invalidEmail, isEmailError = true)
+                it.copy(isEmailError = true)
             }
         } catch (e: AuthorizationException.InvalidPhoneException) {
             updateState {
-                it.copy(phoneErrorMsg = e.message ?: stringResources.invalidPhoneNumber, isPhoneError = true)
+                it.copy(isPhoneError = true)
             }
         }
     }
@@ -140,11 +125,8 @@ class RegistrationSubmitScreenModel(
     private fun clearErrors() {
         updateState {
             it.copy(
-                fullErrorMsg = "",
                 isFullNameError = false,
-                emailErrorMsg = "",
                 isEmailError = false,
-                phoneErrorMsg = "",
                 isPhoneError = false,
                 isLoading = false
             )

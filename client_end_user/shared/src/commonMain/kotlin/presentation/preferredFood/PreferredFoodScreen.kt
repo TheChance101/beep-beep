@@ -25,6 +25,7 @@ import presentation.composable.PreferredFoodCard
 import presentation.preferredRide.PreferredRideScreen
 import resources.Resources
 
+
 object PreferredFoodScreen :
     BaseScreen<PreferredFoodScreenModel, PreferredFoodUIState, PreferredFoodUIEffect, PreferredFoodInteractionListener>() {
 
@@ -60,28 +61,20 @@ object PreferredFoodScreen :
                     contentPadding = PaddingValues(top = 24.dp),
                     columns = GridCells.Adaptive(144.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-
-                    ) {
-
-
-                    items(count = if (state.preferredFood.size > 4) 4 else state.preferredFood.size,
-                        key = { index ->
-                            state.preferredFood[index].name
-
-                        }) { index ->
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(
+                        count = if (state.preferredFood.size > 4) 4 else state.preferredFood.size,
+                        key = { index -> state.preferredFood[index].cuisineId }
+                    ) { index ->
                         PreferredFoodCard(
                             state = state.preferredFood[index],
-                            onClick = { listener.onPreferredFoodClicked(state.preferredFood[index]) },
-                            modifier = Modifier.animateItemPlacement(
-                                animationSpec = tween(500),
-                            )
+                            onClick = { listener.onPreferredFoodClicked(it) },
+                            modifier = Modifier.animateItemPlacement(animationSpec = tween(500))
                         )
                     }
                 }
             }
         }
     }
-
-
 }

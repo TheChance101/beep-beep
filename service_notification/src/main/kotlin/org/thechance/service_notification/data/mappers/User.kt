@@ -9,6 +9,7 @@ fun User.toCollection(): UserCollection {
     return UserCollection(
         id = ObjectId(id),
         deviceTokens = deviceTokens,
+
     )
 }
 fun User.toDto(): UserDto {
