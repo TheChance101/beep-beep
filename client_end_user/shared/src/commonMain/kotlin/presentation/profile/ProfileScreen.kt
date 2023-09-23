@@ -59,17 +59,17 @@ class ProfileScreen :
 
             ) {
             whiteCard {
-                title(Resources.strings.wallet)
-                subTitle(
+                Title(Resources.strings.wallet)
+                SubTitle(
                     "${state.user?.currency} ${state.user?.walletBalance}",
                     Theme.colors.primary
                 )
-                title(Resources.strings.username)
-                subTitle("@${state.user?.username}")
-                title(Resources.strings.address)
-                subTitle(state.user?.addresses?.firstOrNull()?.address ?: "")
-                title(Resources.strings.email)
-                subTitle(state.user?.email ?: "")
+                Title(Resources.strings.username)
+                SubTitle("@${state.user?.username}")
+                Title(Resources.strings.address)
+                SubTitle(state.user?.addresses?.firstOrNull()?.address ?: "")
+                Title(Resources.strings.email)
+                SubTitle(state.user?.email ?: "")
             }
             whiteCard {
                 BpTextField(
@@ -135,7 +135,7 @@ class ProfileScreen :
     }
 
     @Composable
-    private fun title(text: String) {
+    private fun Title(text: String) {
         Text(
             text = text,
             style = Theme.typography.caption,
@@ -145,7 +145,7 @@ class ProfileScreen :
     }
 
     @Composable
-    private fun subTitle(text: String, color: Color = Theme.colors.contentPrimary) {
+    private fun SubTitle(text: String, color: Color = Theme.colors.contentPrimary) {
         Text(
             text = text,
             color = color,
