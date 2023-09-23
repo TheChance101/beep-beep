@@ -14,10 +14,21 @@ abstract class IMealBehavior : BaseScreenModel<MealEditorUIState, MealScreenUIEf
 
 
     protected abstract suspend fun addMeal(): Boolean
+    protected abstract suspend fun updateMeal(): Boolean
 
     override fun onAddMeal() {
+        updateState { it.copy(isLoading = true) }
         tryToExecute(
             { addMeal() },
+            ::onMealAddedSuccessfully,
+            ::onError
+        )
+    }
+
+    override fun onUpdateMeal() {
+        updateState { it.copy(isLoading = true) }
+        tryToExecute(
+            {updateMeal()},
             ::onMealAddedSuccessfully,
             ::onError
         )

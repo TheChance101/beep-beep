@@ -23,13 +23,16 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
             errorMessages?.let(::throwMatchingException)
             throw UnknownErrorException(e.message)
         } catch (e: ServerSideException) {
+            println("${e.message}")
             throw NoInternetException()
         } catch (e: Exception) {
+            println("${e.message}")
             throw NoInternetException()
         }
     }
 
     fun throwMatchingException(errorMessages: Map<String, String>) {
+        println("errors: ${ errorMessages.keys.toString() }")
         when {
             errorMessages.containsErrors(WRONG_PASSWORD) ->
                 throw WrongPasswordException(
