@@ -13,7 +13,7 @@ import org.thechance.common.presentation.restaurant.ErrorWrapper
 
 data class TaxiUiState(
     val isLoading: Boolean = true,
-    val isNoInternetConnection: Boolean = false,
+    val hasConnection: Boolean = true,
     val isAddNewTaxiDialogVisible: Boolean = false,
     val newTaxiInfo: TaxiInfoUiState = TaxiInfoUiState(),
     val taxiFilterUiState: TaxiFilterUiState = TaxiFilterUiState(),
