@@ -86,4 +86,5 @@ data class ArabicIQ(
     override val orderNow: String = "أطلب هسه",
     override val total: String = "المجموع:",
     override val yourCart: String = "العربة",
+    override val allCuisines: String = "المطابخ",
 ) : IStringResources

@@ -7,6 +7,7 @@ import domain.gateway.local.ILocalConfigurationGateway
 import domain.utils.AuthorizationException
 import data.local.mapper.toFormattedString
 import data.local.mapper.toPreferredRide
+import kotlinx.coroutines.flow.Flow
 
 interface IManageUserUseCase {
 
@@ -19,7 +20,7 @@ interface IManageUserUseCase {
     suspend fun saveIsFirstTimeUseApp(isFirstTimeUseApp: Boolean)
 
     suspend fun getIsFirstTimeUseApp(): Boolean
-    suspend fun getUserLanguageCode(): String
+    suspend fun getUserLanguageCode(): Flow<String>
 
 }
 
@@ -51,16 +52,17 @@ class ManageUserUseCase(
     override suspend fun getPreferredRide(): PreferredRide {
         return localGateway.getPreferredRideQuality().toPreferredRide()
     }
+
     override suspend fun saveIsFirstTimeUseApp(isFirstTimeUseApp: Boolean) {
-       return localGateway.saveIsFirstTimeUseApp(isFirstTimeUseApp)
+        return localGateway.saveIsFirstTimeUseApp(isFirstTimeUseApp)
     }
 
     override suspend fun getIsFirstTimeUseApp(): Boolean {
         return localGateway.getIsFirstTimeUseApp()
     }
 
-    override suspend fun getUserLanguageCode(): String {
-        return localGateway.getLanguageCode()
+    override suspend fun getUserLanguageCode(): Flow<String> {
+        return localGateway.getLanguageCodeFlow()
     }
 
 

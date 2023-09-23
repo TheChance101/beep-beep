@@ -1,6 +1,6 @@
 package domain.gateway.local
 
-import io.realm.kotlin.types.RealmList
+import kotlinx.coroutines.flow.Flow
 
 interface ILocalConfigurationGateway {
 
@@ -12,6 +12,7 @@ interface ILocalConfigurationGateway {
     suspend fun getKeepMeLoggedInFlag(): Boolean
     suspend fun clearTokens()
     suspend fun saveLanguageCode(code: String)
+    suspend fun getLanguageCodeFlow(): Flow<String>
     suspend fun getLanguageCode(): String
     suspend fun savePriceLevel(priceLevel: String)
     suspend fun getPriceLevel(): String

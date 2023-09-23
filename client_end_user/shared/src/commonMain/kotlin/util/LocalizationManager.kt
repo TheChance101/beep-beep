@@ -12,20 +12,20 @@ import resources.strings.en.English
 
 object LocalizationManager {
 
-    fun getStringResources(languageCode: String): IStringResources {
-        return when (languageCode.ifEmpty { "en" }) {
-            "ar" -> Arabic()
-            "ps" -> ArabicPS()
-            "iq" -> ArabicIQ()
-            "sy" -> ArabicSY()
-            "eg" -> ArabicEG()
-            else -> English()
+    fun getStringResources(languageCode: LanguageCode): IStringResources {
+        return when (languageCode) {
+            LanguageCode.EN -> English()
+            LanguageCode.AR -> Arabic()
+            LanguageCode.IQ -> ArabicIQ()
+            LanguageCode.SY -> ArabicSY()
+            LanguageCode.EG -> ArabicEG()
+            LanguageCode.PS -> ArabicPS()
         }
     }
 
-    fun getLayoutDirection(languageCode: String): LayoutDirection {
-        return when (languageCode.ifEmpty { "en" }) {
-            "en" -> LayoutDirection.Ltr
+    fun getLayoutDirection(languageCode: LanguageCode): LayoutDirection {
+        return when (languageCode) {
+            LanguageCode.EN -> LayoutDirection.Ltr
             else -> LayoutDirection.Rtl
         }
     }
