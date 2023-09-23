@@ -218,11 +218,11 @@ class TaxiService(
         )
     }
 
-    suspend fun deleteTaxiByDriverUsername(username: String): TaxiDto {
-        return client.tryToExecute<TaxiDto>(
+    suspend fun deleteTaxiByDriverUsername(username: String): List<TaxiDto> {
+        return client.tryToExecute<List<TaxiDto>>(
             api = APIs.TAXI_API,
             attributes = attributes,
-            method = { delete("/taxi/driver/$username") } //todo: add this endpoint to taxi service
+            method = { delete("/taxi/driver/$username") }
         )
     }
 }
