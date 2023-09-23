@@ -25,6 +25,7 @@ interface IStringResources {
     val notification: String
     val profile: String
     val cuisineImageDescription: String
+    val allCuisines: String
     val viewAll: String
     val seeAllDescription: String
     val cuisineSectionTitle: String

@@ -9,6 +9,7 @@ import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -23,12 +24,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 import com.seiko.imageloader.rememberAsyncImagePainter
-import presentation.home.CuisineUiState
+import presentation.cuisines.CuisineUiState
 import resources.Resources
 
 @Composable
@@ -36,12 +39,15 @@ fun CuisineCard(
     cuisine: CuisineUiState,
     onClickCuisine: (cuisineId: String) -> Unit,
     modifier: Modifier = Modifier,
+    width: Dp = 76.dp,
+    backGroundColor: Color = Theme.colors.secondary,
+    imagePadding: PaddingValues = PaddingValues(8.dp),
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
     val isPressed by interactionSource.collectIsPressedAsState()
     val animatedFloat by animateFloatAsState(targetValue = if (isPressed) 1.02f else 1f)
     Column(
-        modifier = modifier.width(76.dp).wrapContentHeight(),
+        modifier = modifier.width(width).wrapContentHeight(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -49,12 +55,12 @@ fun CuisineCard(
             modifier
                 .fillMaxWidth()
                 .clip(shape = RoundedCornerShape(Theme.radius.medium))
-                .background(Theme.colors.secondary)
+                .background(backGroundColor)
                 .clickable(
                     interactionSource,
                     indication = null,
                     onClick = { onClickCuisine(cuisine.cuisineId) }
-                ).padding(8.dp),
+                ).padding(imagePadding),
             contentAlignment = Alignment.Center
         ) {
             Image(
