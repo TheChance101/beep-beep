@@ -359,8 +359,8 @@ class HomeScreen :
 
     @Composable
     private fun Wallet(
+        value: String,
         modifier: Modifier = Modifier,
-        value: String
     ) {
         Column(modifier = modifier.padding(end = 16.dp)) {
             Text(

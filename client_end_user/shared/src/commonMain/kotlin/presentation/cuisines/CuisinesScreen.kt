@@ -49,7 +49,7 @@ class CuisinesScreen : BaseScreen<CuisinesScreenModel, CuisinesUiState,
                         onClickCuisine = { listener.onCuisineClicked(it) },
                         width = 104.dp,
                         imagePadding = PaddingValues(vertical = 24.dp),
-                        backGround = Theme.colors.surface
+                        backGroundColor = Theme.colors.surface
                     )
                 }
             }
