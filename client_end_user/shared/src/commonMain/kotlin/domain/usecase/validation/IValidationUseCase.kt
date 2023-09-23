@@ -16,10 +16,9 @@ interface IValidationUseCase {
     fun validateEmail(email: String)
 
     @Throws(AuthorizationException.InvalidPhoneException::class)
-    fun validatePhone(phone: String)
+    fun validatePhone(phone: String,currency: String)
 
-    @Throws(AuthorizationException.InvalidPhoneException::class)
-    fun isValidPhone(phone: String,currency: String)
+
 }
 
 class ValidationUseCaseUseCase : IValidationUseCase {
@@ -47,18 +46,13 @@ class ValidationUseCaseUseCase : IValidationUseCase {
         }
     }
 
-    override fun validatePhone(phone: String) {
-        if (phoneRegex.any { it.matches(phone) }.not()) {
-            throw AuthorizationException.InvalidPhoneException
-        }
-    }
-
-    override fun isValidPhone(phone: String, currency: String) {
+    override fun validatePhone(phone: String, currency: String) {
         val phoneRegex = getPhoneRegex(currency)
         if(phone.matches(Regex(phoneRegex)).not()){
             throw AuthorizationException.InvalidPhoneException
         }
     }
+
 
     private fun getPhoneRegex(currency: String): String {
         return when (currency) {
@@ -73,12 +67,5 @@ class ValidationUseCaseUseCase : IValidationUseCase {
     private companion object {
         val fullNameRegex = "^[\\p{L}'-]+(?: [\\p{L}'-]+)*\$".toRegex()
         val emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$".toRegex()
-        val phoneRegex = listOf(
-            "^01\\d{9}\$".toRegex(),
-            "^07\\d{9}\$".toRegex(),
-            "^09\\d{9}\$".toRegex(),
-            "^(05|09)\\d{9}\$".toRegex(),
-            "^\\d{10}\$\n".toRegex()
-        )
     }
 }
