@@ -44,7 +44,7 @@ class ProfileScreenModel(
 
     override fun onFullNameChanged(fullName: String) {
         updateState { it.copy(fullName = fullName,isButtonEnabled = true,) }
-        tryCatch {
+        checkValidate {
             validation.validateFullName(fullName)
             clearErrors()
         }
@@ -52,12 +52,12 @@ class ProfileScreenModel(
 
     override fun onPhoneNumberChanged(phone: String) {
         updateState { it.copy(phoneNumber = phone,isButtonEnabled = true,) }
-        tryCatch {
+        checkValidate {
             validation.validatePhone(phone,state.value.user?.currency!!)
             clearErrors()
         }
     }
-    private fun tryCatch(block: () -> Unit) {
+    private fun checkValidate(block: () -> Unit) {
         try {
             block()
         } catch (e: AuthorizationException.InvalidFullNameException) {
