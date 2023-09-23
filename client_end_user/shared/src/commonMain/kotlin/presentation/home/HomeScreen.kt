@@ -42,6 +42,7 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
+import presentation.cart.CartScreen
 import presentation.composable.BpImageLoader
 import presentation.composable.ImageSlider
 import presentation.composable.ItemSection
@@ -73,6 +74,7 @@ class HomeScreen :
             is HomeScreenUiEffect.NavigateToOfferItem -> println("Navigate to offer item details ${effect.offerId}")
             is HomeScreenUiEffect.NavigateToSearch -> println("Navigate to Search Screen")
             is HomeScreenUiEffect.NavigateToOrderDetails ->  println("Navigate to order details ${effect.orderId}")
+            is HomeScreenUiEffect.NavigateToCart -> navigator.root?.push(CartScreen())
             is HomeScreenUiEffect.NavigateLoginScreen -> navigator.root?.push(LoginScreen())
         }
     }
@@ -134,7 +136,7 @@ class HomeScreen :
             }
 
             item {
-                CartCard(onClick = {})
+                CartCard(onClick = { listener.onClickCartCard() })
             }
 
             if (state.hasProgress) {

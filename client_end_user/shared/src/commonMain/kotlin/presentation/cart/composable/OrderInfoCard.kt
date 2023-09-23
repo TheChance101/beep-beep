@@ -22,10 +22,11 @@ import resources.Resources
 @Composable
 fun OrderInfoCard(
     onClickOrderNow: () -> Unit,
-    totalPrice: String
+    totalPrice: String,
+    modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth().height(96.dp).background(Theme.colors.surface)
+        modifier = modifier.fillMaxWidth().height(96.dp).background(Theme.colors.surface)
             .topBorder(1.dp, Theme.colors.divider)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
