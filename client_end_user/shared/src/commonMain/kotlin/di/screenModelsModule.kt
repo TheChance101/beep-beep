@@ -14,7 +14,6 @@ import presentation.pickLanguage.PickLanguageScreenModel
 import presentation.preferredFood.PreferredFoodScreenModel
 import presentation.preferredMeal.PreferredScreenModel
 import presentation.preferredRide.PreferredRideScreenModel
-import presentation.app.AppScreenModel
 import presentation.profile.ProfileScreenModel
 
 val screenModelsModule = module {

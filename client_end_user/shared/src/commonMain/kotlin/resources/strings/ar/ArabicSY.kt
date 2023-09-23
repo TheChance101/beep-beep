@@ -83,7 +83,6 @@ data class ArabicSY(
     override val invalidFullName: String = "الاسم الكامل غير صالح",
     override val oppsRegistrationNotCompleted: String = "عذرًا، لم يتم الانتهاء من عملية التسجيل",
     override val allCuisines: String = "المطابخ",
-    override val history: String = "سجل الطلبات"
     override val history: String = "سجل الطلبات",
     override val logout: String= "تسجيل الخروج",
     override val address: String = "العنوان",
