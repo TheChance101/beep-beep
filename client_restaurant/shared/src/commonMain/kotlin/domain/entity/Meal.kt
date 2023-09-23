@@ -11,10 +11,11 @@ data class Meal(
 )
 
 
-data class MealAddition(
+data class MealModification(
     val name: String,
-    val image: ByteArray?,
     val description: String,
     val price: Double,
-    val cuisines: List<Cuisine>
+    val cuisines: List<String>,
+    val restaurantId: String,
+    val id: String? = "",
 )

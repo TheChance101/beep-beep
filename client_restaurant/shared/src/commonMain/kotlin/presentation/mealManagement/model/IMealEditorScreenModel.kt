@@ -5,28 +5,47 @@ import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.usecase.IManageCuisineUseCase
 import domain.usecase.IManageMealUseCase
+import domain.usecase.IValidateManageMealUseCase
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.component.inject
 import presentation.mealManagement.CuisineUIState
 import presentation.mealManagement.IMealBehavior
 import presentation.mealManagement.toMealAddition
+import presentation.mealManagement.toMealUpdate
 import presentation.mealManagement.toUIState
 
 
-class IMealEditorScreenModel(private val mealId: String) : IMealBehavior() {
+class IMealEditorScreenModel(private val mealId: String,
+private val restaurantId:String) : IMealBehavior() {
 
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
 
     private val manageMeal: IManageMealUseCase by inject()
     private val cuisines: IManageCuisineUseCase by inject()
+    private val restaurantMealValidation: IValidateManageMealUseCase by inject()
+
 
     init {
         getMeal()
     }
 
     override suspend fun addMeal(): Boolean {
-        return manageMeal.addMeal(state.value.meal.toMealAddition())
+        return manageMeal.addMeal(state.value.meal.toMealAddition(restaurantId))
+    }
+
+    override suspend fun updateMeal(): Boolean {
+        val state = state.value.meal.toMealUpdate(mealId)
+        val validationResult = restaurantMealValidation.isMealInformationValid(
+            name = state.name,
+            price = state.price,
+            cuisines = state.cuisines,
+            description = state.description,
+        )
+        if (validationResult) {
+            return manageMeal.updateMeal(state)
+        }
+        return false
     }
 
 
