@@ -10,11 +10,11 @@ class RestaurantScreenModel() : BaseScreenModel<RestaurantUIState, RestaurantUIE
 
     }
 
-     fun onBack() {
+    override fun onBack() {
         sendNewEffect(RestaurantUIEffect.onBack)
     }
 
-     fun onGoToDetails() {
+    override  fun onGoToDetails() {
         sendNewEffect(RestaurantUIEffect.onGoToDetails)
     }
 

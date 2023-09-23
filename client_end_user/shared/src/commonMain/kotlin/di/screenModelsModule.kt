@@ -13,6 +13,7 @@ import presentation.orderHistory.OrderHistoryScreenModel
 import presentation.pickLanguage.PickLanguageScreenModel
 import presentation.preferredMeal.PreferredScreenModel
 import presentation.preferredRide.PreferredRideScreenModel
+import presentation.resturantDetails.RestaurantScreenModel
 import presentation.app.AppScreenModel
 
 val screenModelsModule = module {
@@ -27,5 +28,6 @@ val screenModelsModule = module {
     factoryOf(::PickLanguageScreenModel)
     factoryOf(::PreferredRideScreenModel)
     factoryOf(::NotificationScreenModel)
+    factoryOf(::RestaurantScreenModel)
     factory { AppScreenModel(get()) }
 }

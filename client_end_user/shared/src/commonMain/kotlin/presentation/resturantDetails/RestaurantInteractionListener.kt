@@ -6,4 +6,8 @@ interface RestaurantInteractionListener :BaseInteractionListener  {
 
     fun onAddToFavourite()
 
+    fun onBack()
+
+    fun onGoToDetails()
+
 }
