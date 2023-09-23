@@ -64,6 +64,11 @@ data class StringResources(
     val disable: String = "Disable",
     val permissions: String = "Permissions",
     val users: String = "Users",
+    val iraq: String = "Iraq",
+    val syria: String = "Syria",
+    val palestine: String = "Palestine",
+    val jordan: String = "Jordan",
+    val egypt: String = "Egypt",
         //endregion User
 
         //region scaffold
@@ -75,6 +80,15 @@ data class StringResources(
         //region table
     val outOf: String = "out of",
     val pluralLetter: String = "s",
+    val number: String = "No.",
+    val username: String = "Username",
+    val email: String = "Email",
+    val plateNumber: String = "Plate number",
+    val trips: String = "Trips",
+    val name: String = "Name",
+    val phone: String = "Phone",
+    val rate: String = "Rate",
+    val price: String = "Price",
         //endregion table
 
         //region overview
@@ -99,6 +113,9 @@ data class StringResources(
     val completed: String = "Completed",
     val inTheWay: String = "In the way",
     val orders: String = "Orders",
+    val monthly: String = "Monthly",
+    val weekly: String = "Weekly",
+    val daily: String = "Daily",
 
         // endregion overview
 
@@ -175,6 +192,11 @@ val Arabic: StringResources = StringResources(
         disable = "تعطيل",
         permissions = "صلاحيات",
         users = "مستخدمين",
+        iraq = "العراق",
+        syria = "سوريا",
+        palestine = "فلسطين",
+        jordan = "الاردن",
+        egypt = "مصر",
 //endregion User
 
         //region scaffold
@@ -186,6 +208,15 @@ val Arabic: StringResources = StringResources(
         //region table
         outOf = "من",
         pluralLetter = "ات",
+        number = "الرقم",
+        username = "اسم المستخدم",
+        email = "الايميل",
+        plateNumber = "رقم اللوحة",
+        trips = "الرحلات",
+        name = "الاسم",
+        phone = "الهاتف",
+        rate = "التقييم",
+        price = "السعر",
 //endregion table
 
         //region overview
@@ -210,6 +241,9 @@ val Arabic: StringResources = StringResources(
         completed = "مكتمل",
         inTheWay = "في الطريق",
         orders = "طلبات",
+        monthly = "شهريا",
+        weekly = "اسبوعيا",
+        daily = "يوميا",
 
 // endregion overview
 
@@ -283,6 +317,11 @@ val Egypt: StringResources = StringResources(
         disable = "تعطيل",
         permissions = "صلاحيات",
         users = "مستخدمين",
+        iraq = "العراق",
+        syria = "سوريا",
+        palestine = "فلسطين",
+        jordan = "الاردن",
+        egypt = "مصر",
 //endregion User
 
         //region scaffold
@@ -294,6 +333,15 @@ val Egypt: StringResources = StringResources(
         //region table
         outOf = "من",
         pluralLetter = "ات",
+        number = "الرقم",
+        username = "اسم المستخدم",
+        email = "الايميل",
+        plateNumber = "رقم اللوحة",
+        trips = "الرحلات",
+        name = "الاسم",
+        phone = "الهاتف",
+        rate = "التقييم",
+        price = "السعر",
 //endregion table
 
         //region overview
@@ -318,6 +366,9 @@ val Egypt: StringResources = StringResources(
         completed = "مكتمل",
         inTheWay = "في الطريق",
         orders = "طلبات",
+        monthly = "شهريا",
+        weekly = "اسبوعيا",
+        daily = "يوميا",
 
 // endregion overview
 
@@ -391,6 +442,11 @@ val Palestine: StringResources = StringResources(
         disable = "تعطيل",
         permissions = "صلاحيات",
         users = "مستخدمين",
+        iraq = "العراق",
+        syria = "سوريا",
+        palestine = "فلسطين",
+        jordan = "الاردن",
+        egypt = "مصر",
 //endregion User
 
         //region scaffold
@@ -402,6 +458,15 @@ val Palestine: StringResources = StringResources(
         //region table
         outOf = "من",
         pluralLetter = "ات",
+        number = "الرقم",
+        username = "اسم المستخدم",
+        email = "الايميل",
+        plateNumber = "رقم اللوحة",
+        trips = "الرحلات",
+        name = "الاسم",
+        phone = "الهاتف",
+        rate = "التقييم",
+        price = "السعر",
 //endregion table
 
         //region overview
@@ -426,6 +491,9 @@ val Palestine: StringResources = StringResources(
         completed = "مكتمل",
         inTheWay = "في الطريق",
         orders = "طلبات",
+        monthly = "شهريا",
+        weekly = "اسبوعيا",
+        daily = "يوميا",
 
 // endregion overview
 
@@ -499,6 +567,11 @@ val Syria: StringResources = StringResources(
         disable = "تعطيل",
         permissions = "صلاحيات",
         users = "مستخدمين",
+        iraq = "العراق",
+        syria = "سوريا",
+        palestine = "فلسطين",
+        jordan = "الاردن",
+        egypt = "مصر",
 //endregion User
 
         //region scaffold
@@ -510,6 +583,15 @@ val Syria: StringResources = StringResources(
         //region table
         outOf = "من",
         pluralLetter = "ات",
+        number = "الرقم",
+        username = "اسم المستخدم",
+        email = "الايميل",
+        plateNumber = "رقم اللوحة",
+        trips = "الرحلات",
+        name = "الاسم",
+        phone = "الهاتف",
+        rate = "التقييم",
+        price = "السعر",
 //endregion table
 
         //region overview
@@ -534,6 +616,9 @@ val Syria: StringResources = StringResources(
         completed = "مكتمل",
         inTheWay = "في الطريق",
         orders = "طلبات",
+        monthly = "شهريا",
+        weekly = "اسبوعيا",
+        daily = "يوميا",
 
 // endregion overview
 
@@ -607,6 +692,11 @@ val Iraq: StringResources = StringResources(
         disable = "تعطيل",
         permissions = "صلاحيات",
         users = "مستخدمين",
+        iraq = "العراق",
+        syria = "سوريا",
+        palestine = "فلسطين",
+        jordan = "الاردن",
+        egypt = "مصر",
 //endregion User
 
         //region scaffold
@@ -618,6 +708,15 @@ val Iraq: StringResources = StringResources(
         //region table
         outOf = "من",
         pluralLetter = "ات",
+        number = "الرقم",
+        username = "اسم المستخدم",
+        email = "الايميل",
+        plateNumber = "رقم اللوحة",
+        trips = "الرحلات",
+        name = "الاسم",
+        phone = "الهاتف",
+        rate = "التقييم",
+        price = "السعر",
 //endregion table
 
         //region overview
@@ -642,6 +741,9 @@ val Iraq: StringResources = StringResources(
         completed = "مكتمل",
         inTheWay = "بالطريق",
         orders = "طلبات",
+        monthly = "شهريا",
+        weekly = "اسبوعيا",
+        daily = "يوميا",
 
 // endregion overview
 
@@ -651,5 +753,6 @@ val Iraq: StringResources = StringResources(
         invalidCarModel = "موديل السيارة مو صحيح",
 
         noInternet = "ماكو اتصال بالانترنيت!",
-        unKnownError = "خطأ ما معروف ,رجائا حاول مرة ثانية!")
+        unKnownError = "خطأ ما معروف ,رجائا حاول مرة ثانية!"
+)
 

@@ -28,6 +28,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.composables.BpLogo
 import org.thechance.common.presentation.composables.modifier.centerItem
 import org.thechance.common.presentation.composables.pxToDp
+import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.kms
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -115,7 +116,7 @@ fun DashboardSideBar(
                     exit = fadeOut()
                 ) {
                     Text(
-                        "Dark theme",
+                        Resources.Strings.darkTheme,
                         maxLines = 1,
                         style = Theme.typography.titleMedium,
                         color = Theme.colors.contentPrimary

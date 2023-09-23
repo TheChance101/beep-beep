@@ -27,15 +27,16 @@ data class TaxiUiState(
     val isEditMode: Boolean = false,
 
     ) {
-    val tabHeader = listOf(
-        Header("No.", 1f),
-        Header("Plate number", 3f),
-        Header("Driver username", 3f),
-        Header("Status", 3f),
-        Header("Car model", 3f),
-        Header("Car color", 3f),
-        Header("Seats", 3f),
-        Header("Trips", 3f),
+    val tabHeader
+       @Composable get() = listOf(
+        Header(Resources.Strings.number, 1f),
+        Header(Resources.Strings.plateNumber, 3f),
+        Header(Resources.Strings.driverUsername, 3f),
+        Header(Resources.Strings.status, 3f),
+        Header(Resources.Strings.carModel, 3f),
+        Header(Resources.Strings.carColor, 3f),
+        Header(Resources.Strings.seats, 3f),
+        Header(Resources.Strings.trips, 3f),
         Header("", 1f),
     )
 }
