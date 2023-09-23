@@ -20,7 +20,15 @@ class UserScreenModel(
     }
 
     private fun onError(error: ErrorState) {
-        updateState { it.copy(error = error, isLoading = false) }
+        when(error){
+            is ErrorState.NoConnection -> {
+                updateState { it.copy(hasConnection = false) }
+            }
+            else -> {
+                updateState { it.copy(error = error, isLoading = false) }
+            }
+        }
+
     }
 
     private fun getUpdatedPermissions(
@@ -85,7 +93,7 @@ class UserScreenModel(
     }
 
     private fun onSearchUsersSuccessfully(users: DataWrapper<User>) {
-        updateState { it.copy(pageInfo = users.toUiState(), isLoading = false) }
+        updateState { it.copy(pageInfo = users.toUiState(), isLoading = false, hasConnection = true) }
         if (state.value.currentPage > state.value.pageInfo.totalPages) {
             onPageClick(state.value.pageInfo.totalPages)
         }
@@ -203,6 +211,7 @@ class UserScreenModel(
     private fun onUpdatePermissionsSuccessfully(user: UserScreenUiState.UserUiState) {
         updateState {
             it.copy(
+                hasConnection = true,
                 isLoading = false,
                 pageInfo = it.pageInfo.copy(
                     data = it.pageInfo.data.map { userUiState ->
