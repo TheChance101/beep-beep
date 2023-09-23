@@ -28,6 +28,7 @@ import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.base.BaseScreen
+import org.thechance.common.presentation.composables.BpNoInternetConnection
 import org.thechance.common.presentation.composables.OverviewDropDown
 import org.thechance.common.presentation.main.RestaurantsTab
 import org.thechance.common.presentation.main.TaxisTab
@@ -47,14 +48,8 @@ object OverviewScreen :
     override fun OnRender(state: OverviewUiState, listener: OverviewInteractionListener) {
 
         val scrollState = rememberScrollState()
-        AnimatedVisibility(!state.hasInternetConnection){
-            Image(
-                painter = painterResource(Resources.Drawable.noConnection),
-                contentDescription = null,
-                alignment = Alignment.CenterStart,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
+        BpNoInternetConnection(hasConnection = !state.hasInternetConnection){
+            listener.onRetry()
         }
         AnimatedVisibility(state.hasInternetConnection){
             Column(

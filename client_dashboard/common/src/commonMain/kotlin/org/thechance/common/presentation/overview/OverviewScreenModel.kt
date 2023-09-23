@@ -18,10 +18,17 @@ class OverviewScreenModel(
     OverviewInteractionListener {
 
     init {
+        initOverviewScreenData()
+    }
+
+    override fun onRetry() {
+        initOverviewScreenData()
+    }
+
+    private fun initOverviewScreenData() {
         getLatestRegisteredUsers()
         getRevenueShare(RevenueShareDate.MONTHLY)
         getDashboardRevenueShare()
-
     }
 
     private fun getRevenueShare(revenueShareDate: RevenueShareDate) {
