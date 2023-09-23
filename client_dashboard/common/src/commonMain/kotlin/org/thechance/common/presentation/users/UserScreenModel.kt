@@ -31,6 +31,10 @@ class UserScreenModel(
 
     }
 
+    override fun onRetry() {
+        getUsers()
+    }
+
     private fun getUpdatedPermissions(
         permissions: List<UserScreenUiState.PermissionUiState>,
         permissionUiState: UserScreenUiState.PermissionUiState

@@ -48,6 +48,7 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
         listener: UserScreenInteractionListener
     ) {
         UserContent(
+            onRetry = listener::onRetry,
             state = state,
             pageListener = listener,
             editMenuListener = listener,
@@ -64,6 +65,7 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
 
     @Composable
     private fun UserContent(
+        onRetry: () -> Unit,
         state: UserScreenUiState,
         pageListener: PageListener,
         editMenuListener: EditUserMenuListener,
@@ -101,6 +103,7 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
 
                 UsersTable(
                     hasConnection = state.hasConnection,
+                    onRetry = {onRetry()},
                     users = state.pageInfo.data,
                     headers = state.tableHeader,
                     selectedPage = state.currentPage,
@@ -123,6 +126,7 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
     @Composable
     private fun ColumnScope.UsersTable(
         hasConnection: Boolean,
+        onRetry: () -> Unit,
         users: List<UserScreenUiState.UserUiState>,
         headers: List<Header>,
         selectedPage: Int,
@@ -137,14 +141,8 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
         onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
         onDeleteUserMenuItemClicked: (String) -> Unit,
     ) {
-        AnimatedVisibility(visible = !hasConnection) {
-            Image(
-                painter = painterResource(Resources.Drawable.noConnection),
-                contentDescription = null,
-                alignment = Alignment.Center,
-                contentScale = ContentScale.Inside,
-                modifier = Modifier.fillMaxSize()
-            )
+        BpNoInternetConnection(hasConnection = !hasConnection){
+            onRetry()
         }
 
         AnimatedVisibility(visible = hasConnection){
