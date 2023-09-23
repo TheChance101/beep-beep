@@ -21,6 +21,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
+import presentation.map.MapScreen
 import presentation.resources.Resources
 
 class MainScreen :
@@ -72,7 +73,7 @@ class MainScreen :
 
                     BpButton(
                         title = Resources.strings.start,
-                        onClick = {},
+                        onClick = listener::onCLickStart,
                         modifier = Modifier.fillMaxWidth().padding(top = 24.dp, bottom = 22.dp)
                     )
                 }
@@ -81,6 +82,9 @@ class MainScreen :
     }
 
     override fun onEffect(effect: MainUiEffect, navigator: Navigator) {
+        when(effect){
+            MainUiEffect.MainEffect -> navigator.push(MapScreen())
+        }
 
     }
 
