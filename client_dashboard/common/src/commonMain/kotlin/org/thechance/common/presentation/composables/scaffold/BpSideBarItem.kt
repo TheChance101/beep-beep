@@ -64,7 +64,6 @@ fun ColumnScope.BpSideBarItem(
                 tint = if (isSelected) Theme.colors.primary else Theme.colors.contentSecondary,
                 modifier = Modifier
                     .size(iconSize)
-
                     .graphicsLayer { translationX=translationsX }
         )
         AnimatedVisibility(
