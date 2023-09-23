@@ -362,7 +362,8 @@ class RestaurantService(
                 errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             }
         ) {
-            get("/restaurants/search/$query") {
+            get("/restaurants/search") {
+                parameter("query", query)
                 parameter("page", page)
                 parameter("limit", limit)
             }

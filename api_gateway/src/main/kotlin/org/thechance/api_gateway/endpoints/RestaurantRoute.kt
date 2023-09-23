@@ -45,7 +45,7 @@ fun Route.restaurantRoutes() {
             }
         }
 
-        get("/search/{query}") {
+        get("/search") {
             val query = call.parameters["query"]
             val page = call.parameters["page"]
             val limit = call.parameters["limit"]
