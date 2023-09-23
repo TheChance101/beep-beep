@@ -4,6 +4,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toKotlinLocalDateTime
 import org.thechance.service_restaurant.domain.entity.Order
+import org.thechance.service_restaurant.domain.entity.OrderMealsHistory
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
 import org.thechance.service_restaurant.domain.usecase.validation.IOrderValidationUseCase
@@ -23,7 +24,8 @@ interface IManageOrderUseCase {
 
     suspend fun getOrderById(orderId: String): Order
 
-    suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<Order>
+//    suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<Order>
+    suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<OrderMealsHistory>
 
     suspend fun getOrdersHistoryForUser(userId: String, page: Int, limit: Int): List<Order>
 
@@ -72,7 +74,7 @@ class ManageOrderUseCase(
         return optionsGateway.updateOrderStatus(orderId = orderId, status = state)!!
     }
 
-    override suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<Order> {
+    override suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<OrderMealsHistory> {
         return optionsGateway.getOrdersHistoryForRestaurant(restaurantId = restaurantId, page = page, limit = limit)
     }
 

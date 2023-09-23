@@ -3,6 +3,7 @@ package org.thechance.service_restaurant.data.gateway
 import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.client.model.ReturnDocument
 import com.mongodb.client.model.Updates
+import kotlinx.datetime.LocalDateTime
 import org.bson.types.ObjectId
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
@@ -12,6 +13,7 @@ import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.collection.relationModels.CategoryRestaurant
 import org.thechance.service_restaurant.data.collection.relationModels.MealCuisines
+import org.thechance.service_restaurant.data.collection.relationModels.OrderMeals
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
 import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.data.utils.toObjectIds
@@ -75,6 +77,59 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
             )
         ).toList().first().categories.filterNot { it.isDeleted }.toEntity()
     }
+
+    override suspend fun getOrdersHistoryForRestaurant(
+        restaurantId: String,
+        page: Int,
+        limit: Int
+    ): List<OrderMealsHistory> {
+        return container.orderCollection.aggregate<OrderMeals>(
+            match(
+                OrderCollection::restaurantId eq ObjectId(restaurantId),
+                OrderCollection::orderStatus `in` listOf(Order.Status.DONE.statusCode, Order.Status.CANCELED.statusCode)
+            ),
+            lookup(
+                from = DataBaseContainer.ORDER_COLLECTION,
+                localField = OrderCollection::id.name,
+                foreignField = "_id",
+                newAs = OrderMeals::orders.name
+            ),
+            project(
+                OrderCollection::id,
+                OrderCollection::userId,
+                RestaurantCollection::id,
+                RestaurantCollection::name,
+                RestaurantCollection::restaurantImage,
+                OrderCollection::meals,
+                OrderCollection::totalPrice,
+                OrderCollection::createdAt,
+                OrderCollection::orderStatus
+            )
+        ).toList().map { it.toOrderMealHistoryEntity() }
+    }
+
+
+    fun OrderMeals.toOrderMealHistoryEntity(): OrderMealsHistory {
+        return OrderMealsHistory(
+            id = orders.id.toString(),
+            userId = orders.userId.toString(),
+            restaurantId = orders.restaurantId.toString(),
+            restaurantName = restaurants.name,
+            restaurantImage = restaurants.restaurantImage,
+            meals = orders.meals.map { it.toMealHistoryEntity() },
+            totalPrice = orders.totalPrice,
+            createdAt = orders.createdAt,
+            status = orders.orderStatus
+        )
+    }
+
+    fun OrderCollection.MealCollection.toMealHistoryEntity(): OrderMealsHistory.Meal {
+        return OrderMealsHistory.Meal(
+            meadId = mealId.toString(),
+            quantity = quantity
+        )
+    }
+
 
     override suspend fun addCategory(category: Category): Category {
         val addedCategory = category.toCollection()
@@ -197,7 +252,8 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
     }
 
     override suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order> {
-        return container.orderCollection.find(OrderCollection::restaurantId eq ObjectId(restaurantId)
+        return container.orderCollection.find(
+            OrderCollection::restaurantId eq ObjectId(restaurantId)
         ).toList().toEntity()
     }
 
@@ -220,16 +276,17 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         return updatedOrder?.toEntity()
     }
 
-    override suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<Order> {
-        return container.orderCollection
-            .find(
-                OrderCollection::restaurantId eq ObjectId(restaurantId),
-                OrderCollection::orderStatus `in` listOf(Order.Status.DONE.statusCode, Order.Status.CANCELED.statusCode)
+    /*    override suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<Order> {
+            return container.orderCollection
+                .find(
+                    OrderCollection::restaurantId eq ObjectId(restaurantId),
+                    OrderCollection::orderStatus `in` listOf(Order.Status.DONE.statusCode, Order.Status.CANCELED.statusCode)
 
-            )
-            .sort(descending(OrderCollection::createdAt))
-            .paginate(page, limit).toList().toEntity()
-    }
+                )
+                .sort(descending(OrderCollection::createdAt))
+                .paginate(page, limit).toList().toEntity()
+        }*/
+
 
     override suspend fun getOrdersHistoryForUser(userId: String, page: Int, limit: Int): List<Order> {
         return container.orderCollection

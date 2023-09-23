@@ -7,6 +7,7 @@ data class RestaurantDetailsDto(
     val id: String,
     val ownerUserName: String,
     val name: String,
+    val restaurantImage: String,
     val description: String?,
     val priceLevel: String?,
     val rate: Double?,

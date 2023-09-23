@@ -13,6 +13,7 @@ import org.thechance.service_restaurant.api.models.OrderDto
 import org.thechance.service_restaurant.api.models.WebSocketRestaurant
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
+import org.thechance.service_restaurant.api.models.mappers.toOrderHistoryDto
 import org.thechance.service_restaurant.api.utils.SocketHandler
 import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.usecase.IManageOrderUseCase
@@ -67,7 +68,7 @@ fun Route.orderRoutes() {
                     restaurantId = restaurantId,
                     page = page,
                     limit = limit
-                ).map { it.toDto() }
+                ).map { it.toOrderHistoryDto() }
             val total = manageOrder.getNumberOfOrdersHistoryInRestaurant(restaurantId)
             call.respond(HttpStatusCode.OK, BasePaginationResponseDto(items = result, total = total))
         }
