@@ -54,7 +54,7 @@ class ProfileScreenModel(
     override fun onPhoneNumberChanged(phone: String) {
         updateState { it.copy(phoneNumber = phone,isButtonEnabled = true,) }
         tryCatch {
-            validation.validatePhone(phone)
+            validation.isValidPhone(phone,state.value.user?.currency!!)
             clearErrors()
         }
     }

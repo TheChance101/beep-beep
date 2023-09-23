@@ -17,6 +17,9 @@ interface IValidationUseCase {
 
     @Throws(AuthorizationException.InvalidPhoneException::class)
     fun validatePhone(phone: String)
+
+    @Throws(AuthorizationException.InvalidPhoneException::class)
+    fun isValidPhone(phone: String,currency: String)
 }
 
 class ValidationUseCaseUseCase : IValidationUseCase {
@@ -47,6 +50,23 @@ class ValidationUseCaseUseCase : IValidationUseCase {
     override fun validatePhone(phone: String) {
         if (phoneRegex.any { it.matches(phone) }.not()) {
             throw AuthorizationException.InvalidPhoneException
+        }
+    }
+
+    override fun isValidPhone(phone: String, currency: String) {
+        val phoneRegex = getPhoneRegex(currency)
+        if(phone.matches(Regex(phoneRegex)).not()){
+            throw AuthorizationException.InvalidPhoneException
+        }
+    }
+
+    private fun getPhoneRegex(currency: String): String {
+        return when (currency) {
+            "EGP" -> "^01\\d{9}\$"
+            "IQD" -> "^07\\d{9}\$"
+            "SYP" -> "^09\\d{9}\$"
+            "ILS" -> "^(05|09)\\d{9}\$"
+            else -> "^\\d{10}\$"
         }
     }
 
