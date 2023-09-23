@@ -84,7 +84,7 @@ fun Route.userRoutes() {
                 val language = extractLocalizationHeader()
                 val params = call.receiveParameters()
                 val fullName = params["fullName"]?.trim().toString()
-                val result = identityService.updateUser(userId, fullName, language)
+                val result = identityService.updateUserProfile(userId, fullName, language)
                 respondWithResult(HttpStatusCode.OK, result)
             }
 
