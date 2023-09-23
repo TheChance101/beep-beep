@@ -12,8 +12,6 @@ data class ProfileUIState(
     val showSnackBar: Boolean = false,
     val isFullNameError: Boolean = false,
     val isPhoneNumberError: Boolean = false,
-    val fullNameErrorMsg: String = "",
-    val mobileNumberErrorMsg: String = "",
     val isButtonEnabled: Boolean = false,
 )
 

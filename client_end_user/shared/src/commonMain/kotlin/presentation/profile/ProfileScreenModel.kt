@@ -10,8 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
-import presentation.main.MainScreenUiEffect
-import resources.strings.IStringResources
+
 
 class ProfileScreenModel(
     private val validation: IValidationUseCase,
@@ -54,7 +53,7 @@ class ProfileScreenModel(
     override fun onPhoneNumberChanged(phone: String) {
         updateState { it.copy(phoneNumber = phone,isButtonEnabled = true,) }
         tryCatch {
-            validation.isValidPhone(phone,state.value.user?.currency!!)
+            validation.validatePhone(phone,state.value.user?.currency!!)
             clearErrors()
         }
     }
@@ -62,26 +61,16 @@ class ProfileScreenModel(
         try {
             block()
         } catch (e: AuthorizationException.InvalidFullNameException) {
-            updateState {
-                it.copy(
-                    fullNameErrorMsg = e.message ?: "Invalid Full Name",
-                    isFullNameError = true
-                )
+            updateState { it.copy(isFullNameError = true)
             }
         } catch (e: AuthorizationException.InvalidPhoneException) {
-            updateState {
-                it.copy(
-                    mobileNumberErrorMsg = e.message ?: "Invalid Phone Number",
-                    isPhoneNumberError = true
-                )
+            updateState { it.copy(isPhoneNumberError = true)
             }
         }
     }
     private fun clearErrors() {
         updateState {
             it.copy(
-                fullNameErrorMsg = "",
-                mobileNumberErrorMsg = "",
                 isFullNameError = false,
                 isPhoneNumberError = false
             )

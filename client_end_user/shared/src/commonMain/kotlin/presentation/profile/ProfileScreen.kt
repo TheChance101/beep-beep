@@ -78,7 +78,7 @@ class ProfileScreen :
                     onValueChange = listener::onFullNameChanged,
                     label = Resources.strings.fullName,
                     keyboardType = KeyboardType.Text,
-                    errorMessage = state.fullNameErrorMsg,
+                    errorMessage =  if (state.isFullNameError) Resources.strings.invalidFullName else "",
                     isError = state.isFullNameError,
                 )
                 BpTextField(
@@ -87,7 +87,7 @@ class ProfileScreen :
                     onValueChange = listener::onPhoneNumberChanged,
                     label = Resources.strings.mobileNumber,
                     keyboardType = KeyboardType.Text,
-                    errorMessage = state.mobileNumberErrorMsg,
+                    errorMessage =  if (state.isPhoneNumberError) Resources.strings.invalidPhoneNumber else "",
                     isError = state.isPhoneNumberError,
                 )
                 BpButton(
