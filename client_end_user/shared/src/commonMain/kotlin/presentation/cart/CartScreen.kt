@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Scaffold
@@ -22,6 +23,7 @@ import presentation.cart.composable.ItemCart
 import presentation.cart.composable.OrderInfoCard
 import presentation.composable.exitinstion.bottomBorder
 import resources.Resources
+import util.getNavigationBarPadding
 
 class CartScreen :
     BaseScreen<CartScreenModel, CartUiState, CartUiEffect, CartInteractionListener>() {
@@ -46,15 +48,21 @@ class CartScreen :
             bottomBar = {
                 OrderInfoCard(
                     onClickOrderNow = { listener.onClickOrderNow() },
-                    totalPrice = "${state.currency} ${state.totalPrice}"
+                    totalPrice = "${state.currency} ${state.totalPrice}",
+                    modifier = Modifier.padding(bottom = getNavigationBarPadding().calculateBottomPadding())
                 )
             }
         ) { paddingValues ->
+            val navigationBarPadding = getNavigationBarPadding()
             LazyColumn(
-                modifier = Modifier.fillMaxSize().background(Theme.colors.background),
+                modifier = Modifier.fillMaxSize()
+                    .padding(bottom = navigationBarPadding.calculateBottomPadding())
+                    .background(Theme.colors.background),
                 contentPadding = PaddingValues(
-                    top = paddingValues.calculateTopPadding() + 16.dp,
-                    bottom = paddingValues.calculateBottomPadding() + 16.dp,
+                    top = paddingValues.calculateTopPadding()
+                            + getNavigationBarPadding().calculateTopPadding()
+                            + 16.dp,
+                    bottom = paddingValues.calculateTopPadding() + 16.dp,
                     start = paddingValues.calculateStartPadding(LocalLayoutDirection.current),
                     end = paddingValues.calculateEndPadding(LocalLayoutDirection.current)
                 )
@@ -82,7 +90,7 @@ class CartScreen :
     }
 
     override fun onEffect(effect: CartUiEffect, navigator: Navigator) {
-        when(effect){
+        when (effect) {
             CartUiEffect.NavigateUp -> navigator.pop()
         }
     }
