@@ -3,8 +3,7 @@ package data.remote.mapper
 import data.remote.model.MealModificationDto
 import data.remote.model.MealDto
 import domain.entity.Meal
-import domain.entity.MealAddition
-import domain.entity.MealUpdate
+import domain.entity.MealModification
 
 fun List<MealDto>.toEntity(): List<Meal> = map { it.toEntity() }
 
@@ -19,8 +18,7 @@ fun MealDto.toEntity(): Meal {
         cuisines = emptyList(),
     )
 }
-
-fun MealUpdate.toDto(): MealModificationDto{
+fun MealModification.toDtoUpdate(): MealModificationDto{
     return MealModificationDto(
         id = id,
         restaurantId = restaurantId,
@@ -29,9 +27,7 @@ fun MealUpdate.toDto(): MealModificationDto{
         price = price ,
         cuisines = cuisines
     )
-}
-
-fun MealAddition.toDto():MealModificationDto{
+}fun MealModification.toDto():MealModificationDto{
     return MealModificationDto(
         restaurantId = restaurantId,
         cuisines = cuisines,

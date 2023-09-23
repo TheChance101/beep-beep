@@ -1,13 +1,13 @@
 package data.gateway.remote
 
 import data.remote.mapper.toDto
+import data.remote.mapper.toDtoUpdate
 import data.remote.mapper.toEntity
 import data.remote.model.MealModificationDto
 import data.remote.model.BaseResponse
 import data.remote.model.MealDto
 import domain.entity.Meal
-import domain.entity.MealAddition
-import domain.entity.MealUpdate
+import domain.entity.MealModification
 import domain.gateway.remote.IMealRemoteGateway
 import io.ktor.client.HttpClient
 import io.ktor.client.request.forms.MultiPartFormDataContent
@@ -51,7 +51,7 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
         }.value?.toEntity() ?: throw Exception("meal not found")
     }
 
-    override suspend fun addMeal(meal: MealAddition): Boolean {
+    override suspend fun addMeal(meal: MealModification): Boolean {
         return tryToExecute<BaseResponse<Boolean>> {
             post("/meal") {
                 setBody(
@@ -66,14 +66,15 @@ class MealRemoteGateway(client: HttpClient) : IMealRemoteGateway,
         }.value ?: false
     }
 
-    override suspend fun updateMeal(meal: MealUpdate): Boolean {
+    override suspend fun updateMeal(meal: MealModification): Boolean {
         return tryToExecute<BaseResponse<Boolean>> {
+            println(Json.encodeToString(MealModificationDto.serializer(), meal.toDto()))
             put("/meal") {
                 setBody(
                     MultiPartFormDataContent(
                         formData {
                             header("Content-Type", ContentType.MultiPart.FormData.toString())
-                            append("data", Json.encodeToString(MealModificationDto.serializer(), meal.toDto()))
+                            append("data", Json.encodeToString(MealModificationDto.serializer(), meal.toDtoUpdate()))
                         }
                     )
                 )

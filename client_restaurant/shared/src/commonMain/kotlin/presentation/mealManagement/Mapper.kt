@@ -2,8 +2,7 @@ package presentation.mealManagement
 
 import domain.entity.Cuisine
 import domain.entity.Meal
-import domain.entity.MealAddition
-import domain.entity.MealUpdate
+import domain.entity.MealModification
 
 fun Cuisine.toUIState(): CuisineUIState {
     return CuisineUIState(
@@ -26,7 +25,7 @@ fun CuisineUIState.toCuisineEntity() = Cuisine(id = id, name = name)
 fun List<CuisineUIState>.toCuisineEntity() = map { it.toCuisineEntity() }
 
 
-fun MealDetails.toMealAddition(restaurantId: String) = MealAddition(
+fun MealDetails.toMealAddition(restaurantId: String) = MealModification(
     name = name,
     description = description,
     price = price.toDouble(),
@@ -43,7 +42,7 @@ fun Meal.toUIState() = MealDetails(
     mealCuisines = cuisines.toUIState()
 )
 
-fun MealDetails.toMealUpdate(mealId: String) = MealUpdate(
+fun MealDetails.toMealUpdate(mealId: String) = MealModification(
     name = name,
     description = description,
     price = price.toDouble(),
