@@ -6,8 +6,6 @@ data class RegistrationUIState(
     val isLoading: Boolean = false,
     val isUsernameError: Boolean = false,
     val isPasswordError: Boolean = false,
-    val usernameErrorMsg: String = "",
-    val passwordErrorMsg: String = "",
     val snackbarMessage: String = "",
     val showSnackbar: Boolean = false,
 )

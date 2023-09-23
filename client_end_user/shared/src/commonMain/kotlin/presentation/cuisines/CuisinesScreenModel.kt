@@ -7,11 +7,9 @@ import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 import presentation.base.ErrorState.NoInternet
-import resources.strings.IStringResources
 
 class CuisinesScreenModel(
     private val getCuisinesUseCase: GetCuisinesUseCase,
-    private val strResources: IStringResources
 ) : BaseScreenModel<CuisinesUiState, CuisinesUiEffect>(CuisinesUiState()),
     CuisinesInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
@@ -32,7 +30,7 @@ class CuisinesScreenModel(
     private fun onGetCuisinesSuccess(cuisines: List<Cuisine>) {
         updateState {
             it.copy(
-                error = "",
+                error = null,
                 isLoading = false,
                 cuisines = cuisines.toCuisineUiState()
             )
@@ -43,11 +41,11 @@ class CuisinesScreenModel(
         updateState { it.copy(isLoading = false) }
         when (errorState) {
             is NoInternet -> {
-                updateState { it.copy(error = strResources.noInternet) }
+                updateState { it.copy(error = errorState) }
             }
 
             else -> {
-                updateState { it.copy(error = strResources.unknownError) }
+                updateState { it.copy(error = errorState) }
             }
         }
     }
