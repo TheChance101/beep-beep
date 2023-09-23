@@ -14,7 +14,10 @@ import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.collection.relationModels.MealCuisines
 import org.thechance.service_restaurant.data.collection.relationModels.MealWithCuisines
 import org.thechance.service_restaurant.data.collection.relationModels.RestaurantCuisine
-import org.thechance.service_restaurant.data.utils.*
+import org.thechance.service_restaurant.data.utils.getNonEmptyFieldsMap
+import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
+import org.thechance.service_restaurant.data.utils.paginate
+import org.thechance.service_restaurant.data.utils.toObjectIds
 import org.thechance.service_restaurant.domain.entity.*
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.utils.exceptions.ERROR_ADD
@@ -315,5 +318,20 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
             pull(MealCollection::cuisines, ObjectId(cuisineId)),
         ).wasAcknowledged()
     }
-//endregion
+
+    override suspend fun deleteRestaurantsByOwner(username: String): List<Restaurant> {
+        val restaurants = container.restaurantCollection.find(
+            RestaurantCollection::ownerUserName eq username,
+            RestaurantCollection::isDeleted eq false
+        ).toList().toEntity()
+        container.restaurantCollection.updateMany(
+            filter = and(
+                RestaurantCollection::ownerUserName eq username,
+                RestaurantCollection::isDeleted eq false
+            ),
+            update = set(RestaurantCollection::isDeleted setTo true),
+        )
+        return restaurants
+    }
+    //endregion
 }

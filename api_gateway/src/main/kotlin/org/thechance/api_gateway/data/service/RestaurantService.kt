@@ -354,12 +354,12 @@ class RestaurantService(
         }
     }
 
-    suspend fun deleteRestaurantByOwnerUsername(username: String): RestaurantDto {
-        return client.tryToExecute<RestaurantDto>(
+    suspend fun deleteRestaurantByOwnerUsername(username: String): List<RestaurantDto> {
+        return client.tryToExecute<List<RestaurantDto>>(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
         ) {
-            delete("/restaurant/owner/$username") // TODO: add this endpoint to restaurant service
+            delete("/restaurant/owner/$username")
         }
     }
     //endregion

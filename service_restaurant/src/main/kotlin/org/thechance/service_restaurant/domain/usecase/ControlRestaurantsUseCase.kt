@@ -16,6 +16,7 @@ interface IControlRestaurantsUseCase {
     suspend fun updateRestaurant(restaurant: Restaurant): Restaurant
     suspend fun deleteRestaurant(restaurantId: String): Boolean
     suspend fun getTotalNumberOfRestaurant(): Long
+    suspend fun deleteRestaurantsByOwner(username: String): List<Restaurant>
 }
 
 class ControlRestaurantsUseCase(
@@ -51,6 +52,10 @@ class ControlRestaurantsUseCase(
 
     override suspend fun getTotalNumberOfRestaurant(): Long {
         return restaurantGateway.getTotalNumberOfRestaurant()
+    }
+
+    override suspend fun deleteRestaurantsByOwner(username: String): List<Restaurant> {
+        return restaurantGateway.deleteRestaurantsByOwner(username)
     }
 
     private suspend fun checkIfRestaurantIsExist(restaurantId: String) {
