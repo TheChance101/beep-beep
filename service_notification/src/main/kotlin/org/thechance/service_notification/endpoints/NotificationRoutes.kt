@@ -23,11 +23,21 @@ fun Route.notificationRoutes() {
     val topicManagement: ITopicManagementUseCase by inject()
 
     route("tokens") {
-        post("/register") {
+        post("/save-token") {
             val receivedData = call.receive<TokenRegistrationDto>()
-            val result = registerToken(receivedData.userId, receivedData.token)
+            val result = registerToken.saveToken(receivedData.userId, receivedData.token)
             if (!result) throw InternalServerErrorException(TOKEN_NOT_REGISTERED)
             call.respond(HttpStatusCode.OK, "Token registered successfully")
+        }
+        get("/user/{userId}") {
+            val userId = call.parameters.requireNotEmpty("userId")
+            val result = registerToken.getUserTokens(userId)
+            call.respond(HttpStatusCode.OK, result)
+        }
+        post("/users") {
+            val userIds  : List<String> = call.receive<List<String>>()
+            val result = registerToken.getAllUsersTokens(userIds)
+            call.respond(HttpStatusCode.OK, result)
         }
     }
 

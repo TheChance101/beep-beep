@@ -59,6 +59,8 @@ kotlin {
                 implementation(libs.kotlin.coroutines)
                 //date time
                 implementation(libs.kotlinx.datetime)
+
+                api(libs.moko.geo)
             }
         }
         val androidMain by getting {

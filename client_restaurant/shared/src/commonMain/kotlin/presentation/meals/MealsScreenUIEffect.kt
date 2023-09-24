@@ -6,6 +6,6 @@ sealed class MealsScreenUIEffect {
 
     class NavigateToMealDetails(val mealId: String) : MealsScreenUIEffect()
 
-    object NavigateToAddMeal : MealsScreenUIEffect()
+    class NavigateToAddMeal (val restaurantId: String) : MealsScreenUIEffect()
 
 }

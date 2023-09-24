@@ -4,6 +4,8 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
+import org.thechance.common.data.remote.mapper.getPriceLevelOrNull
+import org.thechance.common.data.remote.mapper.getRatingOrNull
 import org.thechance.common.data.remote.mapper.toDto
 import org.thechance.common.data.remote.mapper.toEntity
 import org.thechance.common.data.remote.model.*
@@ -27,9 +29,9 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
     }
 
     override suspend fun getCuisines(): List<Cuisine> {
-       return tryToExecute<ServerResponse<List<CuisineDto>>>(client) {
+        return tryToExecute<ServerResponse<List<CuisineDto>>>(client) {
             get(urlString = "/cuisines")
-        }.value?.toEntity()?: throw UnknownError()
+        }.value?.toEntity() ?: throw UnknownError()
     }
 
     override suspend fun createCuisine(cuisineName: String): Cuisine {
@@ -44,7 +46,7 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
     }
 
     override suspend fun deleteCuisine(cuisineId: String) {
-       tryToExecute<ServerResponse<Boolean>>(client) {
+        tryToExecute<ServerResponse<Boolean>>(client) {
             delete(urlString = "/cuisine") { url { appendPathSegments(cuisineId) } }
         }.isSuccess ?: false
     }
@@ -53,13 +55,19 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
         pageNumber: Int,
         numberOfRestaurantsInPage: Int,
         restaurantName: String,
-        rating: Double?,
-        priceLevel: String?
+        rating: Double,
+        priceLevel: Int,
     ): DataWrapper<Restaurant> {
+        val filteredRating = getRatingOrNull(rating)
+        val filteredPriceLevel = getPriceLevelOrNull(priceLevel)
+
         val result = tryToExecute<ServerResponse<RestaurantResponse>>(client) {
             get(urlString = "/restaurants") {
                 parameter("page", pageNumber)
                 parameter("limit", numberOfRestaurantsInPage)
+                parameter("query", restaurantName)
+                parameter("rating", filteredRating)
+                parameter("priceLevel", filteredPriceLevel)
             }
         }.value
 

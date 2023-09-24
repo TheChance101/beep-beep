@@ -55,6 +55,7 @@ class MealsScreenModel(
     }
 
     private fun onGetMealSuccessfully(meals: List<Meal>) {
+        println("meals : $meals")
         updateState { it.copy(meals = meals.toMealUIState(), isLoading = false) }
     }
 
@@ -72,7 +73,7 @@ class MealsScreenModel(
     }
 
     override fun onAddMeaClick() {
-        sendNewEffect(MealsScreenUIEffect.NavigateToAddMeal)
+        sendNewEffect(MealsScreenUIEffect.NavigateToAddMeal(restaurantId))
     }
 
     override fun onClickCuisineType(type: CuisineUIState) {
