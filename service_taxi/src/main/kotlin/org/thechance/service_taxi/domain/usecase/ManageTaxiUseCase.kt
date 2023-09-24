@@ -22,7 +22,7 @@ interface IManageTaxiUseCase {
         query: String?
     ): List<Taxi>
 
-    suspend fun deleteTaxiByDriver(username: String): List<Taxi>
+    suspend fun deleteTaxiByDriver(username: String): Boolean
 }
 
 class ManageTaxiUseCase(
@@ -69,7 +69,7 @@ class ManageTaxiUseCase(
         return taxiGateway.findTaxisWithFilters(page, limit, status, color, seats, query)
     }
 
-    override suspend fun deleteTaxiByDriver(username: String): List<Taxi> {
+    override suspend fun deleteTaxiByDriver(username: String): Boolean {
         return taxiGateway.deleteTaxiByDriver(username)
     }
 

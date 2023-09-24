@@ -319,19 +319,15 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
         ).wasAcknowledged()
     }
 
-    override suspend fun deleteRestaurantsByOwner(username: String): List<Restaurant> {
-        val restaurants = container.restaurantCollection.find(
-            RestaurantCollection::ownerUserName eq username,
-            RestaurantCollection::isDeleted eq false
-        ).toList().toEntity()
-        container.restaurantCollection.updateMany(
+    override suspend fun deleteRestaurantsByOwner(username: String): Boolean {
+
+        return container.restaurantCollection.updateMany(
             filter = and(
                 RestaurantCollection::ownerUserName eq username,
                 RestaurantCollection::isDeleted eq false
             ),
             update = set(RestaurantCollection::isDeleted setTo true),
-        )
-        return restaurants
+        ).isSuccessfullyUpdated()
     }
     //endregion
 }

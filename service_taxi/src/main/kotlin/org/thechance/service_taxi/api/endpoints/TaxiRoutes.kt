@@ -53,7 +53,7 @@ fun Route.taxiRoutes() {
         delete("/driver/{username}") {
             val username = call.parameters["username"] ?: throw MissingParameterException
             val result = manageTaxiUseCase.deleteTaxiByDriver(username)
-            call.respond(HttpStatusCode.OK, result.toDto())
+            call.respond(HttpStatusCode.OK, result)
         }
     }
 

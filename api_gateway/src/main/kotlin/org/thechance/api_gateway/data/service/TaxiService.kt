@@ -218,8 +218,8 @@ class TaxiService(
         )
     }
 
-    suspend fun deleteTaxiByDriverUsername(username: String): List<TaxiDto> {
-        return client.tryToExecute<List<TaxiDto>>(
+    suspend fun deleteTaxiByDriverUsername(username: String): Boolean {
+        return client.tryToExecute<Boolean>(
             api = APIs.TAXI_API,
             attributes = attributes,
             method = { delete("/taxi/driver/$username") }

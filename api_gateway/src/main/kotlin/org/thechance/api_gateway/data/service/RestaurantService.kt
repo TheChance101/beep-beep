@@ -354,8 +354,8 @@ class RestaurantService(
         }
     }
 
-    suspend fun deleteRestaurantByOwnerUsername(username: String): List<RestaurantDto> {
-        return client.tryToExecute<List<RestaurantDto>>(
+    suspend fun deleteRestaurantByOwnerUsername(username: String): Boolean {
+        return client.tryToExecute<Boolean>(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
         ) {

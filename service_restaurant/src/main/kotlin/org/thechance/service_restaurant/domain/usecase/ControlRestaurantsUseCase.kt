@@ -16,7 +16,7 @@ interface IControlRestaurantsUseCase {
     suspend fun updateRestaurant(restaurant: Restaurant): Restaurant
     suspend fun deleteRestaurant(restaurantId: String): Boolean
     suspend fun getTotalNumberOfRestaurant(): Long
-    suspend fun deleteRestaurantsByOwner(username: String): List<Restaurant>
+    suspend fun deleteRestaurantsByOwner(username: String): Boolean
 }
 
 class ControlRestaurantsUseCase(
@@ -54,7 +54,7 @@ class ControlRestaurantsUseCase(
         return restaurantGateway.getTotalNumberOfRestaurant()
     }
 
-    override suspend fun deleteRestaurantsByOwner(username: String): List<Restaurant> {
+    override suspend fun deleteRestaurantsByOwner(username: String): Boolean {
         return restaurantGateway.deleteRestaurantsByOwner(username)
     }
 

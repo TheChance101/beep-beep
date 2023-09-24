@@ -15,6 +15,7 @@ import org.thechance.service_taxi.api.dto.trip.toEntity
 import org.thechance.service_taxi.data.DataBaseContainer
 import org.thechance.service_taxi.data.collection.TaxiCollection
 import org.thechance.service_taxi.data.collection.TripCollection
+import org.thechance.service_taxi.data.utils.isSuccessfullyUpdated
 import org.thechance.service_taxi.data.utils.paginate
 import org.thechance.service_taxi.domain.entity.Taxi
 import org.thechance.service_taxi.domain.entity.Trip
@@ -218,18 +219,11 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
         )
     }
 
-    override suspend fun deleteTaxiByDriver(username: String): List<Taxi> {
-        val taxi = container.taxiCollection.find(
-            and(
-                TaxiCollection::driverUsername eq username,
-                TaxiCollection::isDeleted ne true
-            )
-        ).toList()
-        container.taxiCollection.updateMany(
+    override suspend fun deleteTaxiByDriver(username: String): Boolean {
+        return container.taxiCollection.updateMany(
             filter = TaxiCollection::driverUsername eq username,
             update = set(TaxiCollection::isDeleted setTo true),
-        )
-        return taxi.toEntity()
+        ).isSuccessfullyUpdated()
     }
     //endregion
 }

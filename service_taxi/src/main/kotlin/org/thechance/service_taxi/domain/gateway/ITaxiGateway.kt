@@ -28,6 +28,6 @@ interface ITaxiGateway {
     suspend fun rateTrip(tripId: String, rate: Double): Trip?
     suspend fun getNumberOfTripsByDriverId(id: String): Long
     suspend fun getNumberOfTripsByClientId(id: String): Long
-    suspend fun deleteTaxiByDriver(username: String): List<Taxi>
+    suspend fun deleteTaxiByDriver(username: String): Boolean
     //endregion
 }
