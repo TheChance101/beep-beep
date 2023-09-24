@@ -16,6 +16,7 @@ import util.getPlatformContext
 fun BpImageLoader(
     imageUrl: String,
     modifier: Modifier = Modifier,
+    contentDescription: String? = null,
     contentScale: ContentScale = ContentScale.Crop,
 ) {
     val context = getPlatformContext()
@@ -23,7 +24,7 @@ fun BpImageLoader(
         Image(
             modifier = modifier.fillMaxSize(),
             painter = rememberAsyncImagePainter(imageUrl, contentScale = contentScale),
-            contentDescription = null,
+            contentDescription = contentDescription,
             contentScale = contentScale
         )
     }
