@@ -14,7 +14,7 @@ data class RestaurantCollection(
     val ownerId: ObjectId,
     val ownerUserName: String? = null,
     val name: String,
-    val restaurantImage: String,
+    val restaurantImage: String = "",
     val description: String?,
     val priceLevel: String?,
     val rate: Double?,

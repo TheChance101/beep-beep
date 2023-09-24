@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class OrderHistoryDto(
     val id: String? = null,
-    val userId: String? = null,
     val restaurantId: String? = null,
     val restaurantName: String? = null,
     val restaurantImage: String? = null,

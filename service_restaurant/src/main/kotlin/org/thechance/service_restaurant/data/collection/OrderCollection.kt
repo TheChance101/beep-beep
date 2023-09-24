@@ -21,7 +21,7 @@ data class OrderCollection(
     val totalPrice: Double,
     val createdAt: Long,
     val orderStatus: Int
-){
+) {
     @Serializable
     data class MealCollection(
         @Contextual

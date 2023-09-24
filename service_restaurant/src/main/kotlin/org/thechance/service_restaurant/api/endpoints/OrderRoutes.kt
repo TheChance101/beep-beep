@@ -54,8 +54,10 @@ fun Route.orderRoutes() {
 
         put("/{id}") {
             val id = call.parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
-            val status = call.parameters["status"]?.toInt() ?: throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER))
-            val result = manageOrder.updateOrderStatus(orderId = id, state = Order.Status.getOrderStatus(status)).toDto()
+            val status =
+                call.parameters["status"]?.toInt() ?: throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER))
+            val result =
+                manageOrder.updateOrderStatus(orderId = id, state = Order.Status.getOrderStatus(status)).toDto()
             call.respond(HttpStatusCode.OK, result)
         }
 
@@ -65,9 +67,7 @@ fun Route.orderRoutes() {
             val limit = call.parameters["limit"]?.toInt() ?: 10
             val result =
                 manageOrder.getOrdersHistoryForRestaurant(
-                    restaurantId = restaurantId,
-                    page = page,
-                    limit = limit
+                    restaurantId = restaurantId, page = page, limit = limit
                 ).map { it.toOrderHistoryDto() }
             val total = manageOrder.getNumberOfOrdersHistoryInRestaurant(restaurantId)
             call.respond(HttpStatusCode.OK, BasePaginationResponseDto(items = result, total = total))
@@ -78,10 +78,8 @@ fun Route.orderRoutes() {
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 10
             val result = manageOrder.getOrdersHistoryForUser(
-                userId = userId,
-                page = page,
-                limit = limit
-            ).map { it.toDto() }
+                userId = userId, page = page, limit = limit
+            ).map { it.toOrderHistoryDto() }
             val total = manageOrder.getNumberOfOrdersHistoryForUser(userId)
             call.respond(HttpStatusCode.OK, BasePaginationResponseDto(items = result, total = total))
         }
@@ -93,7 +91,8 @@ fun Route.orderRoutes() {
         }
 
         post {
-            val order = call.receive<OrderDto>().copy(id = ObjectId().toString(), createdAt = currentDateTime().toMillis())
+            val order =
+                call.receive<OrderDto>().copy(id = ObjectId().toString(), createdAt = currentDateTime().toMillis())
             val isOrderInserted = manageOrder.addOrder(order.toEntity())
             isOrderInserted.takeIf { it }.apply {
                 socketHandler.restaurants[order.restaurantId]?.orders?.emit(order)

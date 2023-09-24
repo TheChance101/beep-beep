@@ -27,7 +27,7 @@ interface IManageOrderUseCase {
 //    suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<Order>
     suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<OrderMealsHistory>
 
-    suspend fun getOrdersHistoryForUser(userId: String, page: Int, limit: Int): List<Order>
+    suspend fun getOrdersHistoryForUser(userId: String, page: Int, limit: Int): List<OrderMealsHistory>
 
     suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order>
 
@@ -62,11 +62,15 @@ class ManageOrderUseCase(
     }
 
     override suspend fun addOrder(order: Order): Boolean {
-        return if (isRestaurantOpened(order.restaurantId)) {
+        //FOR TEST
+
+       return optionsGateway.addOrder(order = order)
+
+        /*return if (isRestaurantOpened(order.restaurantId)) {
             optionsGateway.addOrder(order = order)
         } else {
             throw MultiErrorException(listOf(RESTAURANT_CLOSED))
-        }
+        }*/
     }
 
     override suspend fun updateOrderStatus(orderId: String, state: Order.Status): Order {
@@ -78,7 +82,7 @@ class ManageOrderUseCase(
         return optionsGateway.getOrdersHistoryForRestaurant(restaurantId = restaurantId, page = page, limit = limit)
     }
 
-    override suspend fun getOrdersHistoryForUser(userId: String, page: Int, limit: Int): List<Order> {
+    override suspend fun getOrdersHistoryForUser(userId: String, page: Int, limit: Int): List<OrderMealsHistory> {
         return optionsGateway.getOrdersHistoryForUser(userId = userId, page = page, limit = limit)
     }
 

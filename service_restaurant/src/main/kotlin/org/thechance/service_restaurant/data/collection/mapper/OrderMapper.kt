@@ -4,6 +4,7 @@ import kotlinx.datetime.LocalDateTime
 import org.bson.types.ObjectId
 import org.thechance.service_restaurant.data.collection.OrderCollection
 import org.thechance.service_restaurant.domain.entity.Order
+import org.thechance.service_restaurant.domain.entity.OrderMealsHistory
 import org.thechance.service_restaurant.domain.utils.fromEpochMilliseconds
 import org.thechance.service_restaurant.domain.utils.toMillis
 
@@ -47,3 +48,11 @@ fun Order.Meal.toCollection(): OrderCollection.MealCollection {
 }
 
 fun List<OrderCollection>.toEntity(): List<Order> = map { it.toEntity() }
+
+
+fun OrderCollection.MealCollection.toMealHistoryEntity() = OrderMealsHistory.Meal(
+    meadId = mealId.toString(),
+    quantity = quantity
+)
+
+fun List<OrderCollection.MealCollection>.toMealHistoryEntity() = map { it.toMealHistoryEntity() }

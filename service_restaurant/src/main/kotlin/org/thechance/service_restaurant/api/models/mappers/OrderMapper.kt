@@ -60,8 +60,9 @@ fun OrderMealsHistory.Meal.toOrderMealDto(): OrderHistoryDto.MealDto {
 fun OrderMealsHistory.toOrderHistoryDto(): OrderHistoryDto {
     return OrderHistoryDto(
         id = id,
-        userId = userId,
         restaurantId = restaurantId,
+        restaurantName= restaurantName,
+        restaurantImage= restaurantImage,
         meals = meals.map { it.toOrderMealDto() },
         totalPrice = totalPrice,
         createdAt = createdAt,
