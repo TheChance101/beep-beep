@@ -1,14 +1,11 @@
 package presentation.resturantDetails
 
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,23 +13,33 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
+import domain.entity.PriceLevel
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
+import presentation.composable.BpImageCard
+import presentation.composable.BpPriceLevel
+import presentation.composable.SectionHeader
 import presentation.composable.modifier.noRippleEffect
 import resources.Resources
-import util.getStatusBarPadding
 
 object RestaurantScreen :
     BaseScreen<RestaurantScreenModel, RestaurantUIState, RestaurantUIEffect, RestaurantInteractionListener>() {
@@ -84,17 +91,17 @@ object RestaurantScreen :
                     )
                 }
             }
-
             Column(
                 modifier = Modifier.fillMaxWidth().fillMaxHeight(.7f)
+                    .verticalScroll(rememberScrollState())
                     .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
                     .background(Theme.colors.surface).align(Alignment.BottomCenter)
-                    .padding(16.dp)
+
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                        .padding(top = 16.dp, start = 16.dp, end = 16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -109,30 +116,153 @@ object RestaurantScreen :
                         modifier = Modifier.size(24.dp)
                     )
                 }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth().padding(vertical = 8.dp, horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(Resources.images.mapPoint),
+                        contentDescription = null,
+                        tint = Theme.colors.contentTertiary,
+                    )
+                    Text(
+                        text = "Yummies restaurant",
+                        style = Theme.typography.caption,
+                        color = Theme.colors.contentTertiary
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth().padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
 
-//                Row(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(start = 16.dp, end = 16.dp,top=16.dp),
-//                    horizontalArrangement = Arrangement.SpaceBetween,
-//                    verticalAlignment = Alignment.CenterVertically
-//                ) {
-//                    Text(
-//                        text = "Restaurant Name",
-//                        style = Theme.typography.headline,
-//                        color = Theme.colors.contentPrimary
-//                    )
-//                    Image(
-//                        painter = painterResource(Resources.images.heart),
-//                        contentDescription = null,
-//                        modifier = Modifier.size(16.dp)
-//
-//                    )
-//
-//                }
+                    ) {
+                    RatingBar(
+                        maxRating = 5,
+                        currentRating = 3.5f,
+                    )
+                    BpPriceLevel(PriceLevel.MEDIUM)
+                }
+                Text(
+                    text = "Lorem ipsum dolor sit amet consectetur. Morbi velit mollis ut eros vitae.",
+                    style = Theme.typography.body,
+                    color = Theme.colors.contentSecondary,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier.padding(16.dp)
+                )
+                Row(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Box(
+                        modifier = Modifier
+
+                            .background(
+                                color = Theme.colors.secondary,
+                                shape = RoundedCornerShape(size = Theme.radius.small)
+                            )
+                            .padding(start = 4.dp, top = 2.dp, end = 4.dp, bottom = 2.dp)
+                    ) {
+                        Text(
+                            text = "15 % Off",
+                            style = Theme.typography.body,
+                            color = Theme.colors.primary,
+                        )
+                    }
+                    Box(
+                        modifier = Modifier
+
+                            .background(
+                                color = Theme.colors.successContainer,
+                                shape = RoundedCornerShape(size = Theme.radius.small)
+                            )
+                            .padding(start = 4.dp, top = 2.dp, end = 4.dp, bottom = 2.dp)
+                    ) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Icon(
+                                painter = painterResource(Resources.images.scooter),
+                                contentDescription = null,
+                                tint = Theme.colors.success,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Text(
+                                text = "4.5",
+                                style = Theme.typography.body,
+                                color = Theme.colors.success,
+                            )
+                        }
+                    }
+                }
+                Divider(
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
+                    color = Theme.colors.contentBorder
+                )
+
+                SectionHeader(
+                    "Most ordered",
+                    modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
+                )
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp)
+                ) {
+                    items(state.mostOrders.size) { index ->
+                        BpImageCard(
+                            title = state.mostOrders[index].name,
+                            painter = painterResource(Resources.images.placeholder),
+                            priceLevel = PriceLevel.LOW,
+                            rate = 3.5
+                        )
+                    }
+                }
+                SectionHeader(
+                    "Sweets",
+                    modifier = Modifier.padding(start = 16.dp, bottom = 8.dp, top = 28.dp)
+                )
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp)
+                ) {
+                    items(state.sweets.size) { index ->
+                        BpImageCard(
+                            title = state.sweets[index].name,
+                            painter = painterResource(Resources.images.placeholder),
+                            priceLevel = PriceLevel.LOW,
+                            rate = 4.5
+                        )
+                    }
+                }
             }
         }
     }
 
+    @OptIn(ExperimentalResourceApi::class)
+    @Composable
+    fun RatingBar(maxRating: Int, currentRating: Float) {
+        Row {
+            for (i in 1..maxRating) {
+                when {
+                    currentRating >= i -> Icon(
+                        painter = painterResource("star.xml"),
+                        contentDescription = null,
+                        tint = Theme.colors.warning
+                    )
 
+                    currentRating >= i - 0.5f -> Icon(
+                        painter = painterResource("star_half.xml"),
+                        contentDescription = null,
+                        tint = Theme.colors.warning
+                    )
+
+                    else -> Icon(
+                        painter = painterResource("star.xml"),
+                        contentDescription = null,
+                        tint = Theme.colors.contentBorder
+                    )
+                }
+            }
+        }
+    }
 }
