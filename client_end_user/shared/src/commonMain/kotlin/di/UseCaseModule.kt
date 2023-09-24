@@ -14,6 +14,9 @@ import domain.usecase.IManageNotificationsUseCase
 import domain.usecase.IManageUserUseCase
 import domain.usecase.IMangeLanguageUseCase
 import domain.usecase.IMangePreferredFoodUseCase
+import domain.usecase.IMangeRestaurantDetailsUseCase
+import domain.usecase.MangeRestaurantDetailsUseCase
+
 import domain.usecase.InProgressTrackerUseCase
 import domain.usecase.ManageAuthenticationUseCase
 import domain.usecase.ManageNotificationsUseCase
@@ -38,4 +41,5 @@ val useCaseModule = module {
     singleOf(::MangeLanguageUseCase) { bind<IMangeLanguageUseCase>() }
     singleOf(::ManageNotificationsUseCase) { bind<IManageNotificationsUseCase>() }
     singleOf(::GetOrderHistoryUseCase) { bind<IGetOrderHistoryUseCase>() }
+    singleOf(::MangeRestaurantDetailsUseCase) { bind<IMangeRestaurantDetailsUseCase>() }
 }
