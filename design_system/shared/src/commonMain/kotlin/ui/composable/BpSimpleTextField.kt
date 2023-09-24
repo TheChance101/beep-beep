@@ -49,7 +49,7 @@ fun BpSimpleTextField(
                     hint,
                     style = Theme.typography.body,
                     color = hintColor,
-                    modifier = Modifier.fillMaxWidth().noRippleEffect(onClick)
+                    modifier = Modifier.noRippleEffect(onClick)
                 )
             },
             onValueChange = onValueChange,
