@@ -26,6 +26,8 @@ data class OrderCollection(
     data class MealCollection(
         @Contextual
         val mealId: ObjectId,
+        val name: String = "",
+        val image: String = "",
         val quantity: Int
     )
 }

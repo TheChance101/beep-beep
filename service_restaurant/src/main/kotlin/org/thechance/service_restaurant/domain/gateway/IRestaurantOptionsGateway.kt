@@ -1,6 +1,5 @@
 package org.thechance.service_restaurant.domain.gateway
 
-import org.thechance.service_restaurant.data.collection.relationModels.OrderWithRestaurant
 import org.thechance.service_restaurant.domain.entity.*
 
 interface IRestaurantOptionsGateway {
@@ -35,9 +34,8 @@ interface IRestaurantOptionsGateway {
     suspend fun getOrderById(orderId: String): Order?
     suspend fun addOrder(order: Order): Boolean
     suspend fun updateOrderStatus(orderId: String, status: Order.Status): Order?
-//    suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<Order>
-    suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<OrderMealsHistory>
-    suspend fun getOrdersHistoryForUser(userId: String, page: Int, limit: Int): List<OrderMealsHistory>
+    suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<OrderHistory>
+    suspend fun getOrdersHistoryForUser(userId: String, page: Int, limit: Int): List<OrderHistory>
     suspend fun getNumberOfOrdersHistoryInRestaurant(restaurantId: String): Long
     suspend fun getNumberOfOrdersHistoryForUser(userId: String): Long
     //endregion

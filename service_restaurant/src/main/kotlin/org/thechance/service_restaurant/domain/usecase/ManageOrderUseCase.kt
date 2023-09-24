@@ -4,7 +4,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toKotlinLocalDateTime
 import org.thechance.service_restaurant.domain.entity.Order
-import org.thechance.service_restaurant.domain.entity.OrderMealsHistory
+import org.thechance.service_restaurant.domain.entity.OrderHistory
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
 import org.thechance.service_restaurant.domain.usecase.validation.IOrderValidationUseCase
@@ -13,7 +13,6 @@ import org.thechance.service_restaurant.domain.utils.currentDateTime
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
-import org.thechance.service_restaurant.domain.utils.exceptions.RESTAURANT_CLOSED
 
 interface IManageOrderUseCase {
     suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order>
@@ -24,10 +23,9 @@ interface IManageOrderUseCase {
 
     suspend fun getOrderById(orderId: String): Order
 
-//    suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<Order>
-    suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<OrderMealsHistory>
+    suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<OrderHistory>
 
-    suspend fun getOrdersHistoryForUser(userId: String, page: Int, limit: Int): List<OrderMealsHistory>
+    suspend fun getOrdersHistoryForUser(userId: String, page: Int, limit: Int): List<OrderHistory>
 
     suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order>
 
@@ -78,11 +76,11 @@ class ManageOrderUseCase(
         return optionsGateway.updateOrderStatus(orderId = orderId, status = state)!!
     }
 
-    override suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<OrderMealsHistory> {
+    override suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<OrderHistory> {
         return optionsGateway.getOrdersHistoryForRestaurant(restaurantId = restaurantId, page = page, limit = limit)
     }
 
-    override suspend fun getOrdersHistoryForUser(userId: String, page: Int, limit: Int): List<OrderMealsHistory> {
+    override suspend fun getOrdersHistoryForUser(userId: String, page: Int, limit: Int): List<OrderHistory> {
         return optionsGateway.getOrdersHistoryForUser(userId = userId, page = page, limit = limit)
     }
 

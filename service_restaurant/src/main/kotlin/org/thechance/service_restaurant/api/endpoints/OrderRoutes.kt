@@ -10,10 +10,11 @@ import org.bson.types.ObjectId
 import org.koin.ktor.ext.inject
 import org.thechance.service_restaurant.api.models.BasePaginationResponseDto
 import org.thechance.service_restaurant.api.models.OrderDto
+import org.thechance.service_restaurant.api.models.OrderHistoryDto
 import org.thechance.service_restaurant.api.models.WebSocketRestaurant
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
-import org.thechance.service_restaurant.api.models.mappers.toOrderHistoryDto
+import org.thechance.service_restaurant.api.models.mappers.toHistoryDto
 import org.thechance.service_restaurant.api.utils.SocketHandler
 import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.usecase.IManageOrderUseCase
@@ -61,27 +62,29 @@ fun Route.orderRoutes() {
             call.respond(HttpStatusCode.OK, result)
         }
 
-        get("/restaurant/{restaurantId}/history") {
+        get("/{restaurantId}/history") {
             val restaurantId = call.parameters["restaurantId"]?.trim() ?: throw MultiErrorException(listOf(NOT_FOUND))
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 10
             val result =
-                manageOrder.getOrdersHistoryForRestaurant(
-                    restaurantId = restaurantId, page = page, limit = limit
-                ).map { it.toOrderHistoryDto() }
+                manageOrder.getOrdersHistoryForRestaurant(restaurantId = restaurantId, page = page, limit = limit)
+                    .toHistoryDto()
             val total = manageOrder.getNumberOfOrdersHistoryInRestaurant(restaurantId)
-            call.respond(HttpStatusCode.OK, BasePaginationResponseDto(items = result, total = total))
+            call.respond(
+                HttpStatusCode.OK, BasePaginationResponseDto<OrderHistoryDto>(items = result, total = total)
+            )
         }
 
         get("/user/{userId}/history") {
             val userId = call.parameters["userId"]?.trim() ?: throw MultiErrorException(listOf(NOT_FOUND))
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 10
-            val result = manageOrder.getOrdersHistoryForUser(
-                userId = userId, page = page, limit = limit
-            ).map { it.toOrderHistoryDto() }
+            val result =
+                manageOrder.getOrdersHistoryForUser(userId = userId, page = page, limit = limit).toHistoryDto()
             val total = manageOrder.getNumberOfOrdersHistoryForUser(userId)
-            call.respond(HttpStatusCode.OK, BasePaginationResponseDto(items = result, total = total))
+            call.respond(
+                HttpStatusCode.OK, BasePaginationResponseDto<OrderHistoryDto>(items = result, total = total)
+            )
         }
 
         get("/{restaurantId}/orders") {

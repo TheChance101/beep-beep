@@ -8,15 +8,8 @@ data class OrderHistoryDto(
     val restaurantId: String? = null,
     val restaurantName: String? = null,
     val restaurantImage: String? = null,
-    val meals: List<MealDto>? = null,
+    val meals: List<OrderedMealDto>? = null,
     val totalPrice: Double? = null,
     val createdAt: Long? = null,
     val status: Int? = null
-) {
-    @Serializable
-    data class MealDto(
-        val meadId: String,
-//        val mealName: String,
-        val quantity: Int
-    )
-}
+)
