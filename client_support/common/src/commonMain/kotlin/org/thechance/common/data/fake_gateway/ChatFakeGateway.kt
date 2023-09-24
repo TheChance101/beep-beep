@@ -24,18 +24,6 @@ class ChatFakeGateway : IChatGateway {
                 avatar = "",
                 openedAt = "2:30 PM",
             ),
-            TicketDto(
-                id = "ABC124",
-                username = "Mary Doe",
-                avatar = "",
-                openedAt = "3:55 PM",
-            ),
-            TicketDto(
-                id = "ABC125",
-                username = "Alex Doe",
-                avatar = "",
-                openedAt = "5:12 PM",
-            ),
         )
     )
     private val messages = MutableStateFlow(
@@ -45,20 +33,6 @@ class ChatFakeGateway : IChatGateway {
                 ticketId = "ABC123",
                 message = "Hello, I have a problem with my order.",
                 senderId = "123",
-                senderAvatar = ""
-            ),
-            MessageDto(
-                id = "2",
-                ticketId = "ABC124",
-                message = "Good morning, I have forgotten my password.",
-                senderId = "124",
-                senderAvatar = ""
-            ),
-            MessageDto(
-                id = "3",
-                ticketId = "ABC125",
-                message = "Could you please help me?, I can't login.",
-                senderId = "125",
                 senderAvatar = ""
             ),
         )

@@ -100,7 +100,7 @@ class ChatScreenModel(
     }
 
     private fun onCloseTicketSuccess(unit: Unit) {
-        getTickets()
+        updateState { it.copy(loading = false) }
     }
 
     private fun onSendMessageSuccess(unit: Unit) {
