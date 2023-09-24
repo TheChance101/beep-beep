@@ -6,10 +6,12 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,6 +25,7 @@ import org.thechance.common.presentation.composable.MainAppbar
 import org.thechance.common.presentation.login.LoginScreen
 import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.kms
+import kotlin.math.abs
 
 class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatInteractionListener>() {
 
@@ -123,7 +126,11 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
 
     @Composable
     private fun ChatMessages(messages: List<ChatUIState.MessageUIState>, modifier: Modifier = Modifier) {
-        LazyColumn(modifier = modifier) {
+        val scrollState = rememberLazyListState()
+        LaunchedEffect(messages.size) {
+            scrollState.animateScrollToItem(abs(messages.size - 1))
+        }
+        LazyColumn(modifier = modifier, state = scrollState) {
             items(messages) { message ->
                 val currentMessage = messages.indexOf(message)
                 val nextMessage = messages.getOrNull(currentMessage + 1)
