@@ -1,5 +1,6 @@
 package org.thechance.common.presentation.chat
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -49,7 +50,8 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
                 onDismissDropDownMenu = listener::onDismissDropdownMenu,
                 onLogOut = listener::onClickLogOut,
             )
-            AnimatedVisibilty (state.idle) IdlePlaceholder() else ChatScreenContent(state, listener)
+            AnimatedVisibility(visible = state.idle) { IdlePlaceholder() }
+            AnimatedVisibility(visible = !state.idle) { ChatScreenContent(state, listener) }
         }
     }
 
