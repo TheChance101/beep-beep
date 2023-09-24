@@ -12,7 +12,6 @@ import org.thechance.common.data.mapper.getPriceLevelOrNull
 import org.thechance.common.data.mapper.getRatingOrNull
 import org.thechance.common.data.mapper.toDto
 import org.thechance.common.data.mapper.toEntity
-import org.thechance.common.data.remote.model.*
 import org.thechance.common.domain.entity.*
 import org.thechance.common.domain.getway.IRestaurantGateway
 
