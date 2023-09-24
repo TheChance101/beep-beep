@@ -81,6 +81,10 @@ data class ArabicEG(
     override val invalidEmail: String = "البريد الإلكتروني غير صالح",
     override val invalidFullName: String = "الاسم الكامل غير صالح",
     override val oppsRegistrationNotCompleted: String = "عفوًا، لم يتم الانتهاء من التسجيل",
+    override val allCuisines: String = "المطابخ",
     override val trackYourOrder: String = "تابع الاوردر",
-    override val history: String = "سجل الطلبات"
+    override val history: String = "سجل الطلبات",
+    override val orderNow: String = "أطلب دلوقتي",
+    override val total: String = "المجموع:",
+    override val yourCart: String = "العربة",
 ) : IStringResources

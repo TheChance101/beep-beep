@@ -46,9 +46,9 @@ class MealsScreen(private val restaurantId: String) :
         when (effect) {
             is MealsScreenUIEffect.Back -> navigator.pop()
             is MealsScreenUIEffect.NavigateToMealDetails ->
-                navigator.push(MealScreen(ScreenMode.EDIT, effect.mealId))
+                navigator.push(MealScreen(ScreenMode.EDIT, effect.mealId,restaurantId = restaurantId))
 
-            is MealsScreenUIEffect.NavigateToAddMeal -> navigator.push(MealScreen(ScreenMode.CREATION))
+            is MealsScreenUIEffect.NavigateToAddMeal -> navigator.push(MealScreen(ScreenMode.CREATION,restaurantId =effect.restaurantId))
         }
     }
 
