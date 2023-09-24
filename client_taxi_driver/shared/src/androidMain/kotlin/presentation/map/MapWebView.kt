@@ -34,6 +34,10 @@ actual fun MapWebView(
             "createInfiniteLoopFunction(${currentLocation.lat},${currentLocation.lng})()",
             null
         )
+        webView?.evaluateJavascript(
+            "getDirections(${currentLocation.lat},${currentLocation.lng})",
+            null
+        )
     }
     LaunchedEffect(key1 = currentLocation) {
         destination?.let { location ->

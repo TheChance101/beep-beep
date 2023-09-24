@@ -62,6 +62,7 @@ kotlin {
                 implementation(libs.kotlinx.datetime)
 
                 api(libs.moko.geo)
+                api("com.mohamedrejeb.calf:calf-ui:0.2.0")
             }
         }
         val androidMain by getting {

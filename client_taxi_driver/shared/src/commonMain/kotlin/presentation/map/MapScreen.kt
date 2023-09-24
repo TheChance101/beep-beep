@@ -56,6 +56,12 @@ class MapScreen :
                 currentLocation = state.currentLocation.toEntity(),
                 destination = state.orderInfoUiState.dropOffAddress?.toEntity(),
             )
+            CalfMapWebView(
+                modifier = Modifier,
+                url = MAP_URL,
+                currentLocation = state.currentLocation.toEntity(),
+                destination = state.orderInfoUiState.dropOffAddress?.toEntity(),
+            )
             BpAppBar(
                 isBackIconVisible = false,
                 title = "${Resources.strings.mapScreenAppBarTitle}${state.userName}!"
