@@ -1,5 +1,6 @@
 package domain.gateway
 
+import domain.entity.Meal
 import domain.entity.Notification
 import domain.entity.Restaurant
 import domain.entity.Offer
@@ -11,4 +12,10 @@ interface IFakeRemoteGateway {
     suspend fun getUsrWallet():User
     fun getNewOffers(): List<Offer>
     suspend fun getNotificationHistory(): List<Notification>
+
+
+    suspend fun getMostOrdersMeal(restaurantId: String): List<Meal>
+
+    suspend fun getSweets(restaurantId: String): List<Meal>
+
 }

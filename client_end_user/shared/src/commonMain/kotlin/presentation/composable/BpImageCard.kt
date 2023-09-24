@@ -37,7 +37,7 @@ fun BpImageCard(
     painter: Painter,
     rate: Double,
     title: String,
-    priceLevel: PriceLevel,
+    priceLevel: PriceLevel = PriceLevel.MEDIUM,
     modifier: Modifier = Modifier,
     hasOffer: Boolean = false,
     offer: String = "",
