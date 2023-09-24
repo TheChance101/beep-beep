@@ -43,7 +43,7 @@ data class ArabicEG(
     override val lastOrder: String = "الطلب الأخير",
     override val orderAgain: String = "اطلب مرة أخرى",
     override val dishPreferredTitle: String = "أي طبق تفضل؟",
-    override val dishPreferredSubTitle: String = "قل لنا تفضيلاتك لمساعدتك.",
+    override val dishPreferredSubTitle: String = "قول لنا تفضيلاتك عشان نساعدك.",
     override val lowPriceLevel: String = "$",
     override val mediumPriceLevel: String = "$$",
     override val highPriceLevel: String = "$$$",
@@ -87,5 +87,7 @@ data class ArabicEG(
     override val logout: String= "تسجيل الخروج",
     override val address: String = "العنوان",
     override val save: String= "حفظ",
-
+    override val orderNow: String = "أطلب دلوقتي",
+    override val total: String = "المجموع:",
+    override val yourCart: String = "العربة",
 ) : IStringResources

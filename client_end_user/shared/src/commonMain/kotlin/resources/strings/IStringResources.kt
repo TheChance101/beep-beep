@@ -85,4 +85,7 @@ interface IStringResources {
     val address: String
     val save: String
     val history: String
+    val orderNow: String
+    val total: String
+    val yourCart: String
 }
