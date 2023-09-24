@@ -17,8 +17,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -26,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
@@ -37,6 +34,7 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.composable.BpImageCard
 import presentation.composable.BpPriceLevel
+import presentation.composable.RatingBar
 import presentation.composable.SectionHeader
 import presentation.composable.modifier.noRippleEffect
 import resources.Resources
@@ -139,10 +137,7 @@ object RestaurantScreen :
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
 
                     ) {
-                    RatingBar(
-                        maxRating = 5,
-                        currentRating = 3.5f,
-                    )
+                    RatingBar(currentRating = 3.5f,)
                     BpPriceLevel(PriceLevel.MEDIUM)
                 }
                 Text(
@@ -233,34 +228,6 @@ object RestaurantScreen :
                             rate = 4.5
                         )
                     }
-                }
-            }
-        }
-    }
-
-    @OptIn(ExperimentalResourceApi::class)
-    @Composable
-    fun RatingBar(maxRating: Int, currentRating: Float) {
-        Row {
-            for (i in 1..maxRating) {
-                when {
-                    currentRating >= i -> Icon(
-                        painter = painterResource("star.xml"),
-                        contentDescription = null,
-                        tint = Theme.colors.warning
-                    )
-
-                    currentRating >= i - 0.5f -> Icon(
-                        painter = painterResource("star_half.xml"),
-                        contentDescription = null,
-                        tint = Theme.colors.warning
-                    )
-
-                    else -> Icon(
-                        painter = painterResource("star.xml"),
-                        contentDescription = null,
-                        tint = Theme.colors.contentBorder
-                    )
                 }
             }
         }
