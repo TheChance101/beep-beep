@@ -66,7 +66,7 @@ object RestaurantScreen :
             Row(
                 modifier = Modifier.padding(16.dp).height(56.dp).fillMaxWidth()
                     .align(Alignment.TopCenter)
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                    .padding(vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
@@ -79,7 +79,7 @@ object RestaurantScreen :
                     Icon(
                         painter = painterResource(Resources.images.iconBack),
                         contentDescription = null,
-                        tint = Theme.colors.primary,
+                        tint = Theme.colors.contentPrimary,
                         modifier = Modifier.size(16.dp)
                     )
                 }
@@ -91,11 +91,25 @@ object RestaurantScreen :
                     .background(Theme.colors.surface).align(Alignment.BottomCenter)
                     .padding(16.dp)
             ) {
-                Text(
-                    text = "Restaurant Name",
-                    style = Theme.typography.headline,
-                    color = Theme.colors.contentPrimary
-                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Restaurant Name",
+                        style = Theme.typography.headline,
+                        color = Theme.colors.contentPrimary
+                    )
+                    Image(
+                        painter = painterResource(Resources.images.heart),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+
 //                Row(
 //                    modifier = Modifier
 //                        .fillMaxWidth()
