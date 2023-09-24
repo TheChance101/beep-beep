@@ -34,6 +34,10 @@ data class DrawableResources(
     val slowRide: String = "slow_ride.png",
     val transferIcon:String = "icon_from_to.xml",
     val heart: String = "Heart.png",
+    val mapPoint: String = "map_point.xml",
+    val star : String = "star.xml",
+    val starHalf : String = "star_half.xml",
+
 )
 
 val BpDrawableDarkResources = DrawableResources(
