@@ -10,6 +10,7 @@ interface IUserLocalGateway {
     suspend fun saveCountryCode(languageCode: String)
     suspend fun getCountryCode(): String
     suspend fun getUserName(): String
+
     suspend fun saveRefreshToken(token: String)
 
     suspend fun getAccessToken(): String

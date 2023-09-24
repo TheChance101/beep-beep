@@ -11,11 +11,11 @@ class LoginScreenModel(
 ) : BaseScreenModel<LoginUIState, LoginUIEffect>(LoginUIState()), LoginInteractionListener {
 
     override fun onPasswordChange(password: String) {
-        updateState { it.copy(password = password,isAbleToLogin = password.isNotBlank()) }
+        updateState { it.copy(password = password, isAbleToLogin = password.isNotBlank()) }
     }
 
     override fun onUsernameChange(username: String) {
-        updateState { it.copy(username = username,isAbleToLogin = username.isNotBlank()) }
+        updateState { it.copy(username = username, isAbleToLogin = username.isNotBlank()) }
     }
 
     override fun onLoginClicked() {
@@ -29,7 +29,7 @@ class LoginScreenModel(
                 )
             },
             onSuccess = { onLoginSuccess() },
-            onError = ::onLoginError
+            onError = ::onError
         )
     }
 
@@ -38,31 +38,29 @@ class LoginScreenModel(
         sendNewEffect(LoginUIEffect.LoginSuccess)
     }
 
-    private fun onLoginError(error: ErrorState) {
+    private fun onError(error: ErrorState) {
         updateState { it.copy(isLoading = false, error = error) }
         handleErrorState(error)
     }
 
     private fun handleErrorState(error: ErrorState) {
+        updateState { it.copy(isLoading = false) }
         when (error) {
-            is ErrorState.InvalidPassword -> {
-                updateState { it.copy(isLoading = false, error = error, isPasswordError = ErrorWrapper(error.errorMessage,true)) }
+            is ErrorState.MultipleErrors -> {
+                val errorStates = error.errors
+                updateState {
+                    it.copy(
+                        isPasswordError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidPassword>()?.let {error ->
+                            ErrorWrapper(error.errorMessage, true)
+                        },
+                        isUserError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidUserName>()?.let {error ->
+                            ErrorWrapper(error.errorMessage, true)
+                        }
+                    )
+                }
             }
+            else -> {}
 
-            is ErrorState.UserNotExist -> {
-                updateState { it.copy(isLoading = false, error = error, isUserError = ErrorWrapper(error.errorMessage,true)) }
-            }
-
-            ErrorState.NoConnection -> {
-
-            }
-
-            ErrorState.UnKnownError -> {
-
-            }
-            else -> {
-
-            }
         }
     }
 

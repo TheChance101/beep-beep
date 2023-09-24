@@ -6,8 +6,8 @@ import domain.utils.AuthorizationException
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
 
-class RegistrationScreenModel(private val validation: IValidationUseCase) :
-    BaseScreenModel<RegistrationUIState, RegistrationScreenEffect>(RegistrationUIState()),
+class RegistrationScreenModel(private val validation: IValidationUseCase)
+    : BaseScreenModel<RegistrationUIState, RegistrationScreenEffect>(RegistrationUIState()),
     RegistrationInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
 
@@ -49,31 +49,14 @@ class RegistrationScreenModel(private val validation: IValidationUseCase) :
         try {
             block()
         } catch (e: AuthorizationException.InvalidUsernameException) {
-            updateState {
-                it.copy(
-                    usernameErrorMsg = e.message ?: "Invalid Username",
-                    isUsernameError = true
-                )
-            }
+            updateState { it.copy(isUsernameError = true) }
         } catch (e: AuthorizationException.InvalidPasswordException) {
-            updateState {
-                it.copy(
-                    passwordErrorMsg = e.message ?: "Invalid Password",
-                    isPasswordError = true
-                )
-            }
+            updateState { it.copy(isPasswordError = true) }
         }
     }
 
     private fun clearErrors() {
-        updateState {
-            it.copy(
-                usernameErrorMsg = "",
-                passwordErrorMsg = "",
-                isUsernameError = false,
-                isPasswordError = false
-            )
-        }
+        updateState { it.copy(isUsernameError = false, isPasswordError = false) }
     }
     // endregion
 }

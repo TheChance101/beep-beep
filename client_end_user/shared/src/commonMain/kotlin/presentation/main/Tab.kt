@@ -5,9 +5,10 @@ import androidx.compose.runtime.remember
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import cafe.adriel.voyager.transitions.SlideTransition
 import presentation.home.HomeScreen
 import presentation.notification.NotificationScreen
-import presentation.orders.OrderScreen
+import presentation.orderHistory.OrderHistoryScreen
 import presentation.profile.ProfileScreen
 import presentation.search.SearchScreen
 import resources.Resources
@@ -21,7 +22,9 @@ object HomeTab : Tab {
 
     @Composable
     override fun Content() {
-        Navigator(screen = HomeScreen())
+        Navigator(screen = HomeScreen()) {
+            SlideTransition(it)
+        }
     }
 
 }
@@ -36,7 +39,9 @@ object SearchTab : Tab {
 
     @Composable
     override fun Content() {
-        Navigator(screen = SearchScreen())
+        Navigator(screen = SearchScreen()) {
+            SlideTransition(it)
+        }
     }
 }
 
@@ -49,7 +54,9 @@ object OrdersTab : Tab {
 
     @Composable
     override fun Content() {
-        Navigator(screen = OrderScreen())
+        Navigator(screen = OrderHistoryScreen()) {
+            SlideTransition(it)
+        }
     }
 }
 
@@ -62,7 +69,9 @@ object NotificationsTab : Tab {
 
     @Composable
     override fun Content() {
-        Navigator(screen = NotificationScreen())
+        Navigator(screen = NotificationScreen()) {
+            SlideTransition(it)
+        }
     }
 }
 
@@ -75,12 +84,14 @@ object ProfileTab : Tab {
 
     @Composable
     override fun Content() {
-        Navigator(screen = ProfileScreen())
+        Navigator(screen = ProfileScreen()) {
+            SlideTransition(it)
+        }
     }
 }
 
 @Composable
-fun rememberTabsContainer(): List<TabContainer>{
+fun rememberTabsContainer(): List<TabContainer> {
     val images = Resources.images
     return remember {
         listOf(

@@ -96,9 +96,9 @@ data class TaxiInfoUiState(
     val carModel: String = "",
     val selectedCarColor: CarColor = CarColor.WHITE,
     val seats: Int = 0,
-    val plateNumberError: ErrorWrapper = ErrorWrapper(),
-    val carModelError: ErrorWrapper = ErrorWrapper(),
-    val driverUserNameError: ErrorWrapper = ErrorWrapper(),
+    val plateNumberError: ErrorWrapper? = null,
+    val carModelError: ErrorWrapper? = null,
+    val driverUserNameError: ErrorWrapper? = null,
     val isFormValid: Boolean = false,
 )
 

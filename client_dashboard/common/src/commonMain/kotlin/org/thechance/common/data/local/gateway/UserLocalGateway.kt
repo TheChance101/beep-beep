@@ -61,6 +61,7 @@ class UserLocalGateway(private val realm: Realm) : IUserLocalGateway {
     override suspend fun clearConfiguration() {
         realm.write { delete(query<ConfigurationCollection>()) }
     }
+
     override suspend fun getThemeMode(): Flow<Boolean> {
         return realm.query<ConfigurationCollection>(
             "$ID == $CONFIGURATION_ID"
