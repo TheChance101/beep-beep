@@ -39,8 +39,6 @@ androidx-material3-version = "1.1.1"
 koin-compose-version = "1.0.4"
 moko-geo-version = "0.6.0"
 
-moko-geo-version = "0.6.0"
-
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
@@ -97,11 +95,8 @@ moko-geo = {module = "dev.icerock.moko:geo", version.ref = "moko-geo-version"}
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlin-datetime-version" }
 androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "androidx-foundation-layout-android-version" }
 
-moko-geo = {module = "dev.icerock.moko:geo", version.ref = "moko-geo-version"}
-
 [bundles]
 voyager = ["voyager-navigator", "voyager-koin", "voyager-transitions"]
-
 
 [plugins]
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

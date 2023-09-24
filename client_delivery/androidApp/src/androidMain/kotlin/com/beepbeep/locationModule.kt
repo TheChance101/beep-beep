@@ -1,14 +1,14 @@
 package com.beepbeep
 
+import data.gateway.local.LocationGateway
 import dev.icerock.moko.geo.LocationTracker
 import dev.icerock.moko.permissions.PermissionsController
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
-import data.gateway.remote.LocationDataSource
-import domain.gateway.ILocationDataSource
+import domain.gateway.local.ILocationGateway
 
 val locationDataSourceModule = module {
-    single<ILocationDataSource> { LocationDataSource(get()) }
+    single<ILocationGateway> { LocationGateway(get()) }
 }
 
 val locationTrackerModule = module {
