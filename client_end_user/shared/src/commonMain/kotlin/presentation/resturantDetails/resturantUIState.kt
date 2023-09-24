@@ -22,7 +22,6 @@ fun Meal.toUIState() = MealUIState(
     name = name,
     price = price,
     image = image,
-    discount = discount,
 )
 
 data class RestaurantInfoUIState(
