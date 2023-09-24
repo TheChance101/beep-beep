@@ -94,7 +94,7 @@ fun BpSimpleTextField(
         AnimatedVisibility(isError) {
             Text(
                 text = errorMessage,
-                modifier = Modifier.padding(top = Theme.dimens.space8),
+                modifier = Modifier.padding(top = 8.dp),
                 style = Theme.typography.caption,
                 color = Theme.colors.primary
             )
