@@ -49,7 +49,7 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
                 onDismissDropDownMenu = listener::onDismissDropdownMenu,
                 onLogOut = listener::onClickLogOut,
             )
-            if (state.idle) Idle() else ChatScreenContent(state, listener)
+            if (state.idle) IdlePlaceholder() else ChatScreenContent(state, listener)
         }
     }
 
@@ -81,6 +81,7 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
                     trailingPainter = painterResource(Resources.Drawable.send),
                     leadingPainter = null,
                     onTrailingIconClick = listener::onSendMessageClicked,
+                    trailingIconEnabled = state.message.isNotEmpty(),
                 )
             }
         }
@@ -169,7 +170,7 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
     }
 
     @Composable
-    private fun Idle() {
+    private fun IdlePlaceholder() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
