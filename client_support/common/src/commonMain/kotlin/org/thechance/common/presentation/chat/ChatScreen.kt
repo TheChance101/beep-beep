@@ -49,7 +49,7 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
                 onDismissDropDownMenu = listener::onDismissDropdownMenu,
                 onLogOut = listener::onClickLogOut,
             )
-            if (state.idle) IdlePlaceholder() else ChatScreenContent(state, listener)
+            AnimatedVisibilty (state.idle) IdlePlaceholder() else ChatScreenContent(state, listener)
         }
     }
 
