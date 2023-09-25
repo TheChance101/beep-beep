@@ -1,28 +1,31 @@
 package org.thechance.service_restaurant.data.collection.mapper
 
-import org.thechance.service_restaurant.data.collection.OrderCollection
+import org.thechance.service_restaurant.data.collection.CartCollection
 import org.thechance.service_restaurant.data.collection.relationModels.OrderWithRestaurant
-import org.thechance.service_restaurant.domain.entity.OrderHistory
+import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.entity.OrderedMeal
 
-fun OrderWithRestaurant.toHistoryEntity() = OrderHistory(
+fun OrderWithRestaurant.toHistoryEntity() = Order(
     id = id.toString(),
+    userId = userId.toString(),
     restaurantId = restaurant.id.toString(),
     restaurantName = restaurant.name,
     restaurantImage = restaurant.restaurantImage,
     totalPrice = totalPrice,
-    status = orderStatus,
+    status = Order.Status.getOrderStatus(orderStatus),
     createdAt = createdAt,
-    meals = meals.map {it.toMealHistoryEntity()}
+    currency = restaurant.currency,
+    meals = meals.map { it.toMealHistoryEntity() },
 )
 
 fun List<OrderWithRestaurant>.toHistoryEntity() = map { it.toHistoryEntity() }
 
 
-fun OrderCollection.MealCollection.toMealHistoryEntity() = OrderedMeal(
+fun CartCollection.MealCollection.toMealHistoryEntity() = OrderedMeal(
     meadId = mealId.toString(),
     quantity = quantity,
     image = image,
-    name = name
+    name = name,
+    price = price
 )
 
