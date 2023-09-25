@@ -2,6 +2,7 @@ package presentation.resturantDetails
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -112,7 +113,7 @@ object RestaurantScreen :
                     Image(
                         painter = painterResource(Resources.images.heart),
                         contentDescription = null,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(24.dp).clickable { listener.onAddToFavourite() }
                     )
                 }
                 Row(

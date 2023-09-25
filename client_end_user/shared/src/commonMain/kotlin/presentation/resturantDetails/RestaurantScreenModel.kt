@@ -3,6 +3,7 @@ package presentation.resturantDetails
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Meal
 import domain.entity.Restaurant
+import domain.usecase.IManageFavouriteUseCase
 import domain.usecase.IMangeRestaurantDetailsUseCase
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
@@ -10,6 +11,7 @@ import presentation.base.ErrorState
 
 class RestaurantScreenModel(
    private val mangeRestaurantDetails: IMangeRestaurantDetailsUseCase,
+    private val manageFavourite: IManageFavouriteUseCase,
 ) : BaseScreenModel<RestaurantUIState, RestaurantUIEffect>(RestaurantUIState()),RestaurantInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
 
@@ -49,6 +51,25 @@ class RestaurantScreenModel(
         }
     }
 
+   private  fun addToFavourite(restaurantId: String) {
+        tryToExecute(
+            { manageFavourite.addRestaurantToFavorites(restaurantId) },
+            ::onAddToFavouriteSuccess,
+            ::onError
+        )
+    }
+    private fun removeFromFavourite(restaurantId: String) {
+        tryToExecute(
+            { manageFavourite.removeRestaurantFromFavorites(restaurantId) },
+            ::onAddToFavouriteSuccess,
+            ::onError
+        )
+    }
+
+    private fun onAddToFavouriteSuccess(isAdded: Boolean) {
+        updateState { it.copy(isFavourite = isAdded) }
+    }
+
     private fun getMostOrders(restaurantId: String) {
         tryToExecute(
             { mangeRestaurantDetails.getRestaurantMostOrders(restaurantId) },
@@ -64,7 +85,6 @@ class RestaurantScreenModel(
             ::onGetSweetsSuccess,
             ::onError
         )
-
     }
 
     private  fun onGetMostOrdersSuccess(meals:List<Meal>) {
@@ -82,6 +102,12 @@ class RestaurantScreenModel(
 
 
     override fun onAddToFavourite() {
+        updateState { it.copy(isFavourite = !state.value.isFavourite) }
+        if (state.value.isFavourite) {
+            removeFromFavourite("64fa315fb7c56f626e24d852")
+        } else {
+            addToFavourite("64fa315fb7c56f626e24d852")
+        }
 
     }
 
