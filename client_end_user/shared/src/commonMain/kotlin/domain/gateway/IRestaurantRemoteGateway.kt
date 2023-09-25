@@ -9,4 +9,9 @@ interface IRestaurantRemoteGateway {
     suspend fun getInProgress(): InProgressWrapper
 
     suspend fun getRestaurantDetails(restaurantId: String): Restaurant
+
+
+    suspend fun addRestaurantToFavorites(restaurantId: String): Boolean
+
+    suspend fun removeRestaurantFromFavorites(restaurantId: String): Boolean
 }
