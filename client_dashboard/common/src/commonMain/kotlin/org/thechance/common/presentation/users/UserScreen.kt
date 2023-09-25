@@ -1,5 +1,6 @@
 package org.thechance.common.presentation.users
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -11,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
@@ -46,6 +48,7 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
         listener: UserScreenInteractionListener
     ) {
         UserContent(
+            onRetry = listener::onRetry,
             state = state,
             pageListener = listener,
             editMenuListener = listener,
@@ -62,6 +65,7 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
 
     @Composable
     private fun UserContent(
+        onRetry: () -> Unit,
         state: UserScreenUiState,
         pageListener: PageListener,
         editMenuListener: EditUserMenuListener,
@@ -98,6 +102,8 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
                 )
 
                 UsersTable(
+                    hasConnection = state.hasConnection,
+                    onRetry = {onRetry()},
                     users = state.pageInfo.data,
                     headers = state.tableHeader,
                     selectedPage = state.currentPage,
@@ -119,6 +125,8 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
     //region UserTable
     @Composable
     private fun ColumnScope.UsersTable(
+        hasConnection: Boolean,
+        onRetry: () -> Unit,
         users: List<UserScreenUiState.UserUiState>,
         headers: List<Header>,
         selectedPage: Int,
@@ -133,21 +141,27 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
         onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
         onDeleteUserMenuItemClicked: (String) -> Unit,
     ) {
-        BpTable(
-            data = users,
-            key = UserScreenUiState.UserUiState::username,
-            headers = headers,
-            modifier = Modifier.fillMaxWidth(),
-        ) { user ->
-            UserRow(
-                onUserMenuClicked = onUserMenuClicked,
-                user = user,
-                position = users.indexOf(user) + 1,
-                editUserMenu = editUserMenu,
-                onEditUserDismiss = onEditUserDismiss,
-                onEditUserMenuItemClicked = onEditUserMenuItemClicked,
-                onDeleteUserMenuItemClicked = onDeleteUserMenuItemClicked,
-            )
+        BpNoInternetConnection(hasConnection = !hasConnection){
+            onRetry()
+        }
+
+        AnimatedVisibility(visible = hasConnection){
+            BpTable(
+                data = users,
+                key = UserScreenUiState.UserUiState::username,
+                headers = headers,
+                modifier = Modifier.fillMaxWidth(),
+            ) { user ->
+                UserRow(
+                    onUserMenuClicked = onUserMenuClicked,
+                    user = user,
+                    position = users.indexOf(user) + 1,
+                    editUserMenu = editUserMenu,
+                    onEditUserDismiss = onEditUserDismiss,
+                    onEditUserMenuItemClicked = onEditUserMenuItemClicked,
+                    onDeleteUserMenuItemClicked = onDeleteUserMenuItemClicked,
+                )
+            }
         }
 
         UsersTableFooter(

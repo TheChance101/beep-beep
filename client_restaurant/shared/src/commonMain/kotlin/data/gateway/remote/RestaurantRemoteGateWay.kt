@@ -8,7 +8,7 @@ import domain.entity.Restaurant
 import domain.gateway.remote.IRestaurantRemoteGateway
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
-import io.ktor.client.request.post
+import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import presentation.base.NotFoundedException
 
@@ -24,7 +24,7 @@ class RestaurantRemoteGateWay(client: HttpClient) : BaseRemoteGateway(client),
 
     override suspend fun updateRestaurantInfo(restaurant: Restaurant): Boolean {
         return tryToExecute<BaseResponse<Boolean>> {
-            post("/restaurant") { setBody(restaurant.toDto()) }
+            put("/restaurant/details") { setBody(restaurant.toDto()) }
         }.value ?: false
     }
 
