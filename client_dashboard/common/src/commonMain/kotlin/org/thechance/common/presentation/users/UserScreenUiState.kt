@@ -7,6 +7,7 @@ import org.thechance.common.presentation.composables.table.Header
 import org.thechance.common.presentation.util.ErrorState
 
 data class UserScreenUiState(
+    val hasConnection: Boolean = true,
     val tableHeader: List<Header> = listOf(
         Header("No.", 1f),
         Header("Users", 3f),

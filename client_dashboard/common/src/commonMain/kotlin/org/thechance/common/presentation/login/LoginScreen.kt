@@ -1,25 +1,32 @@
 package org.thechance.common.presentation.login
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import cafe.adriel.voyager.navigator.Navigator
+import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpCheckBox
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
+import kotlinx.coroutines.delay
 import org.thechance.common.presentation.base.BaseScreen
 import org.thechance.common.presentation.composables.BpLogo
 import org.thechance.common.presentation.main.MainContainer
@@ -40,6 +47,7 @@ class LoginScreen :
             is LoginUIEffect.LoginSuccess -> {
                 navigator.replaceAll(MainContainer)
             }
+
             is LoginUIEffect.LoginFailed -> {
                 println(effect.errorMessage)
             }
@@ -56,7 +64,8 @@ class LoginScreen :
                     start = 40.kms,
                     bottom = 40.kms
                 ),
-            horizontalArrangement = Arrangement.Center
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Box(Modifier.weight(1f)) {
                 Image(
@@ -76,10 +85,11 @@ class LoginScreen :
                     modifier = Modifier.align(Alignment.TopStart).padding(32.kms)
                 )
             }
-            Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
+            Box(Modifier.weight(1f), contentAlignment = Alignment.Center,) {
                 Column(
                     Modifier.fillMaxHeight().width(450.kms),
                     verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
                         Resources.Strings.login,
@@ -117,8 +127,22 @@ class LoginScreen :
                         modifier = Modifier.padding(top = 24.kms).fillMaxWidth(),
                         enabled = state.isAbleToLogin
                     )
+
+                    AnimatedVisibility(!state.hasInternetConnection) {
+                        BPSnackBar(icon = painterResource(Resources.Drawable.infoIcon)) {
+                            Text(
+                                text = Resources.Strings.noInternet,
+                                style = Theme.typography.titleMedium,
+                                color = Theme.colors.primary,
+                            )
+                        }
+                    }
                 }
             }
+        }
+        LaunchedEffect(!state.hasInternetConnection) {
+            delay(1500)
+            listener.onSnackBarDismiss()
         }
     }
 }
