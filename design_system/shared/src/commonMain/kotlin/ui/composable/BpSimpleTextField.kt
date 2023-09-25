@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.modifier.noRippleEffect
 import com.beepbeep.designSystem.ui.theme.Theme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BpSimpleTextField(
     text: String,
@@ -34,10 +33,11 @@ fun BpSimpleTextField(
     radius: Dp = Theme.radius.medium,
     errorMessage: String = "",
     isError: Boolean = errorMessage.isNotEmpty(),
+    outlinedTextFieldDefaults: TextFieldColors = OutlinedTextFieldColorDefaults()
 ) {
     Column(
-            modifier = modifier,
-            horizontalAlignment = Alignment.Start
+        modifier = modifier,
+        horizontalAlignment = Alignment.Start
     ) {
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth().height(56.dp),
@@ -75,22 +75,28 @@ fun BpSimpleTextField(
                     )
                 }
             },
-            colors = OutlinedTextFieldDefaults.colors(
-                cursorColor = Theme.colors.contentTertiary,
-                errorCursorColor = Theme.colors.primary,
-                focusedBorderColor = Theme.colors.contentTertiary.copy(alpha = 0.2f),
-                unfocusedBorderColor = Theme.colors.contentBorder.copy(alpha = 0.1f),
-                errorBorderColor = Theme.colors.primary.copy(alpha = 0.5f),
-            ),
+            colors = outlinedTextFieldDefaults,
         )
         AnimatedVisibility(isError) {
             Text(
-                    text = errorMessage,
-                    modifier = Modifier.padding(top = Theme.dimens.space8),
-                    style = Theme.typography.caption,
-                    color = Theme.colors.primary
+                text = errorMessage,
+                modifier = Modifier.padding(top = Theme.dimens.space8),
+                style = Theme.typography.caption,
+                color = Theme.colors.primary
             )
         }
     }
 
 }
+
+@Composable
+fun OutlinedTextFieldColorDefaults() = OutlinedTextFieldDefaults.colors(
+    focusedContainerColor = Theme.colors.surface,
+    unfocusedContainerColor = Theme.colors.surface,
+    cursorColor = Theme.colors.contentTertiary,
+    errorCursorColor = Theme.colors.primary,
+    focusedBorderColor = Theme.colors.contentTertiary.copy(alpha = 0.2f),
+    unfocusedBorderColor = Theme.colors.contentBorder.copy(alpha = 0.1f),
+    errorBorderColor = Theme.colors.primary.copy(alpha = 0.5f),
+)
+
