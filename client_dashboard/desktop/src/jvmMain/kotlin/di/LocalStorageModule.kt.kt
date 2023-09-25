@@ -3,7 +3,7 @@ package di
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import org.koin.dsl.module
-import org.thechance.common.data.model.ConfigurationCollection
+import org.thechance.common.data.local.model.ConfigurationCollection
 
 
 val LocalStorageModule = module {
