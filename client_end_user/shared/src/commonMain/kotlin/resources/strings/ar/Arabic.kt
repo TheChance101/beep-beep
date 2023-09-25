@@ -82,9 +82,14 @@ data class Arabic(
     override val invalidEmail: String = "البريد الإلكتروني غير صالح",
     override val invalidFullName: String = "الاسم الكامل غير صالح",
     override val oppsRegistrationNotCompleted: String = "عفوًا ، لم يتم الانتهاء من التسجيل",
-    override val history: String = "سجل الطلبات",
     override val orderNow: String = "أطلب الأن",
     override val total: String = "المجموع:",
     override val yourCart: String = "العربة",
     override val allCuisines: String = "المطابخ",
+    override val history: String = "سجل الطلبات",
+    override val logout: String= "تسجيل الخروج",
+    override val address: String = "العنوان",
+    override val save: String= "حفظ",
+    override val pleaseLogin: String="الرجاء تسجيل الدخول للوصول الى ملفك الشخصي"
+
 ) : IStringResources
