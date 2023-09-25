@@ -11,6 +11,7 @@ import domain.usecase.IGetOrderHistoryUseCase
 import domain.usecase.IInProgressTrackerUseCase
 import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.IManageCartUseCase
+import domain.usecase.IManageFavouriteUseCase
 import domain.usecase.ManageCartUseCase
 import domain.usecase.IManageNotificationsUseCase
 import domain.usecase.IManageUserUseCase
@@ -18,7 +19,7 @@ import domain.usecase.IMangeLanguageUseCase
 import domain.usecase.IMangePreferredFoodUseCase
 import domain.usecase.IMangeRestaurantDetailsUseCase
 import domain.usecase.MangeRestaurantDetailsUseCase
-
+import domain.usecase.ManageFavouriteUseCase
 import domain.usecase.InProgressTrackerUseCase
 import domain.usecase.ManageAuthenticationUseCase
 import domain.usecase.ManageNotificationsUseCase
@@ -45,4 +46,5 @@ val useCaseModule = module {
     singleOf(::GetOrderHistoryUseCase) { bind<IGetOrderHistoryUseCase>() }
     singleOf(::MangeRestaurantDetailsUseCase) { bind<IMangeRestaurantDetailsUseCase>() }
     singleOf(::ManageCartUseCase) { bind<IManageCartUseCase>() }
+    singleOf(::ManageFavouriteUseCase) { bind<IManageFavouriteUseCase>() }
 }
