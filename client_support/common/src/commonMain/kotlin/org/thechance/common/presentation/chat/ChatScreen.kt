@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,8 +51,10 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
                 onDismissDropDownMenu = listener::onDismissDropdownMenu,
                 onLogOut = listener::onClickLogOut,
             )
-            AnimatedContent(targetState = state.idle) { idle ->
-                if (idle) IdlePlaceholder() else ChatScreenContent(state, listener)
+            AnimatedContent(targetState = state) { state ->
+                if (state.loading) LoadingIndicator()
+                else if (state.idle) IdlePlaceholder()
+                else ChatScreenContent(state, listener)
             }
         }
     }
@@ -198,6 +201,16 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
                 text = Resources.Strings.idleSubtitle,
                 style = Theme.typography.body,
                 color = Theme.colors.contentSecondary
+            )
+        }
+    }
+
+    @Composable
+    private fun LoadingIndicator(modifier: Modifier = Modifier) {
+        Box(modifier = modifier.fillMaxSize()) {
+            CircularProgressIndicator(
+                color = Theme.colors.primary,
+                modifier = Modifier.align(Alignment.Center)
             )
         }
     }
