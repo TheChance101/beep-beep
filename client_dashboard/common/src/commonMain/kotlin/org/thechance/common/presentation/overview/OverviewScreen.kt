@@ -51,14 +51,15 @@ object OverviewScreen :
         Column(
                 modifier = Modifier
                     .background(Theme.colors.surface)
+                    .padding(paddingValues = PaddingValues(horizontal = 40.kms))
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(24.kms)
+                verticalArrangement = Arrangement.spacedBy(24.kms),
         ) {
 
-            RevenueCard(listener = listener, state = state )
+            RevenueCard(listener = listener, state = state ,modifier= Modifier.padding(paddingValues = PaddingValues(top = 40.kms)))
             Row(
-                    modifier = Modifier.height(340.dp),
+                    modifier = Modifier.padding(paddingValues = PaddingValues(bottom = 40.kms)).height(340.dp),
                     horizontalArrangement = Arrangement.spacedBy(24.kms)
             ) {
                 OverviewCard(

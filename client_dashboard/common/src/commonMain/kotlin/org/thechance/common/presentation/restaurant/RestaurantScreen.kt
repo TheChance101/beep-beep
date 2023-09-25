@@ -67,7 +67,7 @@ class RestaurantScreen :
         )
 
         Column(
-                Modifier.background(Theme.colors.surface).fillMaxSize(),
+                Modifier.background(Theme.colors.surface).padding(40.kms).fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.kms),
         ) {

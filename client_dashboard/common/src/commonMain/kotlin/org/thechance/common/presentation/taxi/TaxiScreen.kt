@@ -66,7 +66,7 @@ class TaxiScreen :
             isEditMode = state.isEditMode
         )
         Box(
-            modifier = Modifier.background(Theme.colors.surface).fillMaxSize(),
+            modifier = Modifier.background(Theme.colors.surface).padding(40.kms).fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
 

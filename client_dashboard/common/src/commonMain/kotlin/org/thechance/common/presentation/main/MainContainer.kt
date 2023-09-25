@@ -105,7 +105,7 @@ object MainContainer :
                         }
                     },
                     content = {
-                        Box(Modifier.background(Theme.colors.surface).padding(it)) {
+                        Box(Modifier.background(Theme.colors.surface)) {
                             CurrentTab()
                         }
                     },
