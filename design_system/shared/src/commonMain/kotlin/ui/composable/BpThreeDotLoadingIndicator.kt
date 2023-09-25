@@ -50,10 +50,10 @@ fun BpThreeDotLoadingIndicator(
         }
     }
 
-    Row {
+    Row(modifier = modifier) {
         circles.forEach { animatable ->
             Box(
-                modifier = modifier
+                modifier = Modifier
                     .padding(dotPadding)
                     .size(dotSize)
                     .clip(CircleShape)
