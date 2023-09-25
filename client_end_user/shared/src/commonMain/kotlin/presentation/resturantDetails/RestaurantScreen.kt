@@ -193,7 +193,10 @@ object RestaurantScreen :
                             title = state.mostOrders[index].name,
                             painter = painterResource(Resources.images.placeholder),
                             priceLevel = PriceLevel.LOW,
-                            rate = 3.5
+                            hasPriceLevel = false,
+                            hasPrice = true,
+                            hasRate = false,
+                            price =state.mostOrders[index].price ,
                         )
                     }
                 }
@@ -210,7 +213,10 @@ object RestaurantScreen :
                             title = state.sweets[index].name,
                             painter = painterResource(Resources.images.placeholder),
                             priceLevel = PriceLevel.LOW,
-                            rate = 4.5
+                            hasPriceLevel = false,
+                            hasPrice = true,
+                            price =state.mostOrders[index].price ,
+                            hasRate = false,
                         )
                     }
                 }

@@ -35,14 +35,18 @@ import resources.Resources
 @Composable
 fun BpImageCard(
     painter: Painter,
-    rate: Double,
     title: String,
+    rate: Double =0.0,
     priceLevel: PriceLevel = PriceLevel.MEDIUM,
     modifier: Modifier = Modifier,
     hasOffer: Boolean = false,
+    hasRate: Boolean = true,
     offer: String = "",
     hasDeliveryPrice: Boolean = false,
-    deliveryPrice: String = ""
+    deliveryPrice: String = "",
+    hasPriceLevel: Boolean = true,
+    hasPrice: Boolean = false,
+    price: Double = 0.0,
 ) {
     Card(
         modifier = modifier,
@@ -58,6 +62,7 @@ fun BpImageCard(
                 contentScale = ContentScale.Crop,
                 contentDescription = null
             )
+            if(hasRate)
             Row(
                 modifier = Modifier.padding(start = 179.dp, top = 8.dp)
                     .clip(RoundedCornerShape(4.dp)).background(Theme.colors.surface),
@@ -85,7 +90,9 @@ fun BpImageCard(
                 color = Theme.colors.contentPrimary
             )
             Spacer(Modifier.weight(1f))
-            BpPriceLevel(priceLevel)
+            if(hasPriceLevel)  BpPriceLevel(priceLevel)
+            if(hasPrice) Text(price.toString(), style=Theme.typography.body, color = Theme.colors.primary)
+
         }
         AnimatedVisibility(hasOffer) {
             Row(
