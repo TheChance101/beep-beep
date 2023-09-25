@@ -6,8 +6,11 @@ data class Order(
     val id: String,
     val userId: String,
     val restaurantId: String,
+    val restaurantName: String,
+    val restaurantImage: String,
     val meals: List<OrderedMeal>,
     val totalPrice: Double,
+    val currency: String,
     val createdAt: LocalDateTime,
     val status: Status
 ) {
