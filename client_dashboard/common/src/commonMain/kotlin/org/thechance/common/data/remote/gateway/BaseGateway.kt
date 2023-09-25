@@ -1,13 +1,15 @@
 package org.thechance.common.data.remote.gateway
 
 import io.ktor.client.HttpClient
-import io.ktor.client.call.*
+import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.statement.HttpResponse
 import org.thechance.common.data.remote.model.ServerResponse
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.util.*
 import java.net.ConnectException
+import java.net.UnknownHostException
+import java.nio.channels.UnresolvedAddressException
 
 abstract class BaseGateway {
 
@@ -18,15 +20,17 @@ abstract class BaseGateway {
         try {
             return client.method().body()
         } catch (e: ClientRequestException) {
-            val errorResponse = e.response.body<ServerResponse<String>>()
-            val errorMessages = errorResponse.status?.errorMessages
-            errorMessages?.let { throwMatchingException(it) }
-            throw UnknownErrorException(e.message)
-        } catch (e: ConnectException) {
-            throw NoInternetException()
+            val errorMessages = e.response.body<ServerResponse<String>>().status?.errorMessages
+            errorMessages?.let(::throwMatchingException)
         } catch (e: Exception) {
-            throw UnknownErrorException(e.message.toString())
+            when (e) {
+                is UnresolvedAddressException,
+                is ConnectException,
+                is UnknownHostException -> throw NoInternetException(e.message.toString())
+                else -> throw UnknownErrorException(e.message.toString())
+            }
         }
+        throw UnknownErrorException("Unknown Error Exception")
     }
 
     fun throwMatchingException(errorMessages: Map<String, String>) {

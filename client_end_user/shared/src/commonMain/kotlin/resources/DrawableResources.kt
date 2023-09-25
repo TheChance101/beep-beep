@@ -34,6 +34,8 @@ data class DrawableResources(
     val quickRide: String = "quick_ride.png",
     val slowRide: String = "slow_ride.png",
     val transferIcon:String = "icon_from_to.xml",
+    val logout : String = "logout_2.xml",
+    val needLogin : String = "need_login.png",
     val heart: String = "Heart.png",
     val mapPoint: String = "map_point.xml",
     val star : String = "star.xml",

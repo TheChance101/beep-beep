@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -16,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
@@ -55,21 +57,21 @@ class RestaurantScreen :
     override fun OnRender(state: RestaurantUiState, listener: RestaurantInteractionListener) {
         AnimatedVisibility(visible = state.isNewRestaurantInfoDialogVisible) {
             NewRestaurantInfoDialog(
-                    modifier = Modifier,
-                    state = state,
-                    listener = listener,
+                modifier = Modifier,
+                state = state,
+                listener = listener,
             )
         }
 
         RestaurantAddCuisineDialog(
-                listener = listener,
-                state = state.restaurantAddCuisineDialogUiState
+            listener = listener,
+            state = state.restaurantAddCuisineDialogUiState
         )
 
         Column(
-                Modifier.background(Theme.colors.surface).fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.kms),
+            Modifier.background(Theme.colors.surface).fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.kms),
         ) {
             RestaurantScreenTopRow(state = state, listener = listener)
 
@@ -86,17 +88,17 @@ class RestaurantScreen :
         listener: RestaurantInteractionListener,
     ) {
         Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.kms),
-                verticalAlignment = Alignment.Top
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.kms),
+            verticalAlignment = Alignment.Top
         ) {
             BpSimpleTextField(
-                    modifier = Modifier.widthIn(min = 340.kms, max = 440.kms),
-                    hint = Resources.Strings.searchForRestaurants,
-                    onValueChange = listener::onSearchChange,
-                    text = state.searchQuery,
-                    keyboardType = KeyboardType.Text,
-                    trailingPainter = painterResource(Resources.Drawable.search)
+                modifier = Modifier.widthIn(min = 340.kms, max = 440.kms),
+                hint = Resources.Strings.searchForRestaurants,
+                onValueChange = listener::onSearchChange,
+                text = state.searchQuery,
+                keyboardType = KeyboardType.Text,
+                trailingPainter = painterResource(Resources.Drawable.search)
             )
 
             RestaurantFilterRow(state, listener)
@@ -129,24 +131,30 @@ class RestaurantScreen :
         state: RestaurantUiState,
         listener: RestaurantInteractionListener,
     ) {
-        BpTable(
-            data = state.restaurants,
-            key = { it.id },
-            headers = state.tableHeader,
-            modifier = Modifier.fillMaxWidth(),
-            rowContent = { restaurant ->
-                RestaurantRow(
-                    onClickEditRestaurant = listener::showEditRestaurantMenu,
-                    onEditRestaurantDismiss = listener::hideEditRestaurantMenu,
-                    onClickDeleteRestaurantMenuItem = listener::onClickDeleteRestaurantMenuItem,
-                    onClickEditRestaurantMenuItem = listener::onClickEditRestaurantMenuItem,
-                    position = state.restaurants.indexOf(restaurant) + 1,
-                    restaurant = restaurant,
-                    editRestaurantMenu = state.editRestaurantMenu
-                )
-            },
-        )
+        AnimatedVisibility(visible = state.hasConnection) {
+            BpTable(
+                data = state.restaurants,
+                key = { it.id },
+                headers = state.tableHeader,
+                modifier = Modifier.fillMaxWidth(),
+                rowContent = { restaurant ->
+                    RestaurantRow(
+                        onClickEditRestaurant = listener::showEditRestaurantMenu,
+                        onEditRestaurantDismiss = listener::hideEditRestaurantMenu,
+                        onClickDeleteRestaurantMenuItem = listener::onClickDeleteRestaurantMenuItem,
+                        onClickEditRestaurantMenuItem = listener::onClickEditRestaurantMenuItem,
+                        position = state.restaurants.indexOf(restaurant) + 1,
+                        restaurant = restaurant,
+                        editRestaurantMenu = state.editRestaurantMenu
+                    )
+                },
+            )
+        }
+        BpNoInternetConnection(!state.hasConnection){
+            listener.onRetry()
+        }
     }
+
 
     @Composable
     private fun RestaurantPagingRow(
@@ -363,21 +371,21 @@ class RestaurantScreen :
         state: RestaurantAddCuisineDialogUiState
     ) {
         Dialog(
-                visible = state.isVisible,
-                transparent = true,
-                undecorated = true,
-                resizable = false,
-                onCloseRequest = listener::onCloseAddCuisineDialog,
+            visible = state.isVisible,
+            transparent = true,
+            undecorated = true,
+            resizable = false,
+            onCloseRequest = listener::onCloseAddCuisineDialog,
         ) {
             window.minimumSize = Dimension(400, 420)
             Column(
-                    modifier = Modifier
-                        .background(Theme.colors.surface, RoundedCornerShape(8.kms))
-                        .border(
-                                1.kms,
-                                Theme.colors.divider,
-                                RoundedCornerShape(Theme.radius.medium)
-                        )
+                modifier = Modifier
+                    .background(Theme.colors.surface, RoundedCornerShape(8.kms))
+                    .border(
+                        1.kms,
+                        Theme.colors.divider,
+                        RoundedCornerShape(Theme.radius.medium)
+                    )
             ) {
                 Text(
                     text = Resources.Strings.cuisines,
@@ -386,17 +394,17 @@ class RestaurantScreen :
                     modifier = Modifier.padding(top = 24.kms, start = 24.kms)
                 )
                 BpSimpleTextField(
-                        text = state.cuisineName,
-                        hint = Resources.Strings.enterCuisineName,
-                        onValueChange = listener::onChangeCuisineName,
-                        modifier = Modifier.padding(top =24.kms, start = 24.kms, end = 24.kms),
-                        isError = state.cuisineNameError.isError,
-                        errorMessage = state.cuisineNameError.errorMessage,
+                    text = state.cuisineName,
+                    hint = Resources.Strings.enterCuisineName,
+                    onValueChange = listener::onChangeCuisineName,
+                    modifier = Modifier.padding(top = 24.kms, start = 24.kms, end = 24.kms),
+                    isError = state.cuisineNameError.isError,
+                    errorMessage = state.cuisineNameError.errorMessage,
                 )
                 LazyColumn(
-                        modifier = Modifier.padding(top = 16.kms)
-                            .background(Theme.colors.background)
-                            .fillMaxWidth().heightIn(min = 64.kms, max = 256.kms)
+                    modifier = Modifier.padding(top = 16.kms)
+                        .background(Theme.colors.background)
+                        .fillMaxWidth().heightIn(min = 64.kms, max = 256.kms)
                 ) {
                     items(state.cuisines) { cuisine ->
                         Row(
@@ -404,7 +412,7 @@ class RestaurantScreen :
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text= cuisine.name,
+                                text = cuisine.name,
                                 style = Theme.typography.caption,
                                 color = Theme.colors.contentPrimary,
                             )

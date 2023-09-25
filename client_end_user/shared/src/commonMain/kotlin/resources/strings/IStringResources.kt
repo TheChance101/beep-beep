@@ -81,10 +81,14 @@ interface IStringResources {
     val thisWeek: String
     val tryAgain: String
     val trackYourOrder: String
+    val logout: String
+    val address: String
+    val save: String
     val history: String
     val orderNow: String
     val total: String
     val yourCart: String
+    val pleaseLogin: String
     val mostOrdered: String
     val sweets: String
     val free: String
