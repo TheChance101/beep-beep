@@ -8,7 +8,7 @@ data class ChatUIState(
     val messages: List<MessageUIState> = emptyList(),
     val appbar: AppbarUIState = AppbarUIState(),
     val message: String = "",
-    val loading: Boolean = false,
+    val loading: Boolean = true,
     val idle: Boolean = false,
 ) {
     data class TicketUIState(

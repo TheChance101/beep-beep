@@ -30,6 +30,7 @@ class ChatScreenModel(
             it.copy(
                 ticket = ticket?.toUIState() ?: it.ticket,
                 idle = ticket == null,
+                loading = false,
             )
         }
         ticket?.let { getMessages(it.id) }
@@ -50,7 +51,9 @@ class ChatScreenModel(
     }
 
     private fun onError(error: ErrorState) {
-        println("Error: $error")
+        updateState {
+            it.copy(loading = false)
+        }
     }
 
     override fun onClickDropdownMenu() {
@@ -92,6 +95,7 @@ class ChatScreenModel(
     }
 
     override fun onCloseTicketClicked() {
+        updateState { it.copy(loading = true) }
         tryToExecute(
             { manageTicketsUseCase.closeTicket(state.value.ticket.id) },
             ::onCloseTicketSuccess,
