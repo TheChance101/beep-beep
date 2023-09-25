@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -17,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
@@ -138,23 +140,28 @@ class RestaurantScreen :
         state: RestaurantUiState,
         listener: RestaurantInteractionListener,
     ) {
-        BpTable(
-            data = state.restaurants,
-            key = { it.id },
-            headers = state.tableHeader,
-            modifier = Modifier.fillMaxWidth(),
-            rowContent = { restaurant ->
-                RestaurantRow(
-                    onClickEditRestaurant = listener::showEditRestaurantMenu,
-                    onEditRestaurantDismiss = listener::hideEditRestaurantMenu,
-                    onClickDeleteRestaurantMenuItem = listener::onClickDeleteRestaurantMenuItem,
-                    onClickEditRestaurantMenuItem = listener::onClickEditRestaurantMenuItem,
-                    position = state.restaurants.indexOf(restaurant) + 1,
-                    restaurant = restaurant,
-                    editRestaurantMenu = state.editRestaurantMenu
-                )
-            },
-        )
+        AnimatedVisibility(visible = state.hasConnection) {
+            BpTable(
+                data = state.restaurants,
+                key = { it.id },
+                headers = state.tableHeader,
+                modifier = Modifier.fillMaxWidth(),
+                rowContent = { restaurant ->
+                    RestaurantRow(
+                        onClickEditRestaurant = listener::showEditRestaurantMenu,
+                        onEditRestaurantDismiss = listener::hideEditRestaurantMenu,
+                        onClickDeleteRestaurantMenuItem = listener::onClickDeleteRestaurantMenuItem,
+                        onClickEditRestaurantMenuItem = listener::onClickEditRestaurantMenuItem,
+                        position = state.restaurants.indexOf(restaurant) + 1,
+                        restaurant = restaurant,
+                        editRestaurantMenu = state.editRestaurantMenu
+                    )
+                },
+            )
+        }
+        BpNoInternetConnection(!state.hasConnection){
+            listener.onRetry()
+        }
     }
 
     @Composable

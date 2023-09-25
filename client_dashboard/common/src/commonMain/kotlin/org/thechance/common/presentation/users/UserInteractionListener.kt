@@ -9,6 +9,8 @@ interface UserScreenInteractionListener : BaseInteractionListener, FilterMenuLis
 
     fun onSearchInputChange(text: String)
 
+    fun onRetry()
+
 }
 
 interface EditUserMenuListener {

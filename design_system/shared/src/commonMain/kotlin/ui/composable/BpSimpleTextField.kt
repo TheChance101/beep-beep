@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.modifier.noRippleEffect
 import com.beepbeep.designSystem.ui.theme.Theme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BpSimpleTextField(
     text: String,
@@ -33,6 +34,8 @@ fun BpSimpleTextField(
     radius: Dp = Theme.radius.medium,
     errorMessage: String = "",
     isError: Boolean = errorMessage.isNotEmpty(),
+    onTrailingIconClick: () -> Unit = {},
+    trailingIconEnabled: Boolean = onTrailingIconClick != {},
     outlinedTextFieldDefaults: TextFieldColors = OutlinedTextFieldColorDefaults()
 ) {
     Column(
@@ -47,7 +50,7 @@ fun BpSimpleTextField(
                     hint,
                     style = Theme.typography.body,
                     color = hintColor,
-                    modifier = Modifier.fillMaxWidth().noRippleEffect(onClick)
+                    modifier = Modifier.noRippleEffect(onClick)
                 )
             },
             onValueChange = onValueChange,
@@ -58,15 +61,20 @@ fun BpSimpleTextField(
             isError = isError,
             trailingIcon = {
                 trailingPainter?.let {
-                    Icon(
-                        painter = trailingPainter,
-                        contentDescription = "trailing icon",
-                        tint = Theme.colors.contentTertiary
-                    )
+                    IconButton(
+                        onClick = onTrailingIconClick,
+                        enabled = trailingIconEnabled,
+                    ) {
+                        Icon(
+                            painter = trailingPainter,
+                            contentDescription = "trailing icon",
+                            tint = Theme.colors.contentTertiary
+                        )
+                    }
                 }
             },
-            leadingIcon = {
-                leadingPainter?.let {
+            leadingIcon = if (leadingPainter != null) {
+                {
                     Icon(
                         painter = leadingPainter,
                         contentDescription = "leading icon",
@@ -74,13 +82,13 @@ fun BpSimpleTextField(
                         modifier = Modifier.noRippleEffect(onClick)
                     )
                 }
-            },
+            } else null,
             colors = outlinedTextFieldDefaults,
         )
         AnimatedVisibility(isError) {
             Text(
                 text = errorMessage,
-                modifier = Modifier.padding(top = Theme.dimens.space8),
+                modifier = Modifier.padding(top = 8.dp),
                 style = Theme.typography.caption,
                 color = Theme.colors.primary
             )
