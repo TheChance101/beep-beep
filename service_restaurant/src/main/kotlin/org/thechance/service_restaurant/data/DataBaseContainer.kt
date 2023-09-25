@@ -19,6 +19,8 @@ class DataBaseContainer(client: MongoClient) {
 
     val orderCollection: CoroutineCollection<OrderCollection> = database.getCollection(ORDER_COLLECTION)
 
+    val cartCollection: CoroutineCollection<CartCollection> = database.getCollection(CART_COLLECTION)
+
     val restaurantPermissionRequestCollection: CoroutineCollection<RestaurantPermissionRequestCollection> =
         database.getCollection(RESTAURANT_PERMISSION_REQUEST_COLLECTION)
 
@@ -30,5 +32,6 @@ class DataBaseContainer(client: MongoClient) {
         const val CUISINE_COLLECTION = "cuisine"
         const val ORDER_COLLECTION = "order"
         const val RESTAURANT_PERMISSION_REQUEST_COLLECTION = "restaurantPermissionRequest"
+        const val CART_COLLECTION = "cart"
     }
 }
