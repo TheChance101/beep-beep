@@ -1,9 +1,11 @@
 package org.thechance.common.data.fake_gateway
 
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.sample
 import org.thechance.common.data.mapper.toDto
 import org.thechance.common.data.mapper.toEntity
 import org.thechance.common.data.remote.model.MessageDto
@@ -26,6 +28,7 @@ class ChatFakeGateway : IChatGateway {
             ),
         )
     )
+
     private val messages = MutableStateFlow(
         listOf(
             MessageDto(
@@ -38,8 +41,9 @@ class ChatFakeGateway : IChatGateway {
         )
     )
 
+    @OptIn(FlowPreview::class)
     override fun getTickets(): Flow<Ticket?> {
-        return tickets.map { it.firstOrNull()?.toEntity() }
+        return tickets.sample(1500).map { it.firstOrNull()?.toEntity() }
     }
 
     override suspend fun closeTicket(ticketId: String) {
