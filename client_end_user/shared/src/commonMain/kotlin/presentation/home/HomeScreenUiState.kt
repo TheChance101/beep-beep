@@ -2,6 +2,7 @@ package presentation.home
 
 import domain.entity.InProgressWrapper
 import domain.entity.PriceLevel
+import presentation.cuisines.CuisineUiState
 
 data class HomeScreenUiState(
     val offers: List<OfferUiState> = emptyList(),
@@ -9,6 +10,7 @@ data class HomeScreenUiState(
     val favoriteRestaurants: List<RestaurantUiState> = emptyList(),
     val inProgressWrapper: InProgressWrapper = InProgressWrapper(),
     val lastOrder : OrderUiState = OrderUiState(),
+    val user: UserUiState = UserUiState(),
 ) {
     val hasProgress: Boolean
         get() = inProgressWrapper.taxisOnTheWay.isNotEmpty() ||
@@ -27,20 +29,21 @@ data class OrderUiState(
     val date : String = "Jan 5"
 )
 
-data class CuisineUiState(
-    val cuisineId: String = "",
-    val cuisineName: String = "",
-    val cuisineImageUrl: String = ""
-)
-
 data class OfferUiState(
     val id: String,
     val image: String
 )
-
 
 data class RestaurantUiState(
     val name: String = "",
     val rating: Double = 0.0,
     val priceLevel: PriceLevel = PriceLevel.LOW
 )
+
+data class UserUiState(
+    val username: String = "",
+    val isLogin: Boolean = false,
+    val wallet: Double = 0.0,
+    val currency: String = ""
+)
+
