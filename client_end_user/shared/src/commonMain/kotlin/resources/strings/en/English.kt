@@ -87,4 +87,7 @@ data class English(
     override val total: String = "Total:",
     override val yourCart: String = "Your cart",
     override val allCuisines: String = "All Cuisines",
+    override val mostOrdered: String = "Most Ordered",
+    override val sweets: String = "Sweets",
+    override val free: String= "Free",
 ) : IStringResources

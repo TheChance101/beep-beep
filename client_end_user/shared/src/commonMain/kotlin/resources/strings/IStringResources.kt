@@ -85,4 +85,7 @@ interface IStringResources {
     val orderNow: String
     val total: String
     val yourCart: String
+    val mostOrdered: String
+    val sweets: String
+    val free: String
 }

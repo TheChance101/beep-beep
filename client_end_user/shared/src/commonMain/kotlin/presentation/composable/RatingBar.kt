@@ -9,7 +9,7 @@ import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun RatingBar(maxRating: Int = 5, currentRating: Float) {
+fun RatingBar(maxRating: Int = 5, currentRating: Double) {
     Row {
         for (i in 1..maxRating) {
             when {
@@ -19,7 +19,7 @@ fun RatingBar(maxRating: Int = 5, currentRating: Float) {
                     tint = Theme.colors.warning
                 )
 
-                currentRating >= i - 0.5f -> Icon(
+                currentRating >= i - 0.5 -> Icon(
                     painter = painterResource("star_half.xml"),
                     contentDescription = null,
                     tint = Theme.colors.warning

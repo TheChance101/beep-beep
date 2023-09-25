@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
@@ -104,7 +105,7 @@ object RestaurantScreen :
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Restaurant Name",
+                        text = state.restaurantInfo.name,
                         style = Theme.typography.headline,
                         color = Theme.colors.contentPrimary
                     )
@@ -126,7 +127,7 @@ object RestaurantScreen :
                         tint = Theme.colors.contentTertiary,
                     )
                     Text(
-                        text = "Yummies restaurant",
+                        text = state.restaurantInfo.address,
                         style = Theme.typography.caption,
                         color = Theme.colors.contentTertiary
                     )
@@ -137,11 +138,11 @@ object RestaurantScreen :
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
 
                     ) {
-                    RatingBar(currentRating = 3.5f,)
-                    BpPriceLevel(PriceLevel.MEDIUM)
+                    RatingBar(currentRating = state.restaurantInfo.rating)
+                    BpPriceLevel(state.restaurantInfo.priceLevel)
                 }
                 Text(
-                    text = "Lorem ipsum dolor sit amet consectetur. Morbi velit mollis ut eros vitae.",
+                    text = state.restaurantInfo.description,
                     style = Theme.typography.body,
                     color = Theme.colors.contentSecondary,
                     textAlign = TextAlign.Start,
@@ -151,30 +152,14 @@ object RestaurantScreen :
                     modifier = Modifier.padding(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    Box(
-                        modifier = Modifier
-
-                            .background(
-                                color = Theme.colors.secondary,
-                                shape = RoundedCornerShape(size = Theme.radius.small)
-                            )
-                            .padding(start = 4.dp, top = 2.dp, end = 4.dp, bottom = 2.dp)
-                    ) {
+                    Chip(color = Theme.colors.secondary) {
                         Text(
-                            text = "15 % Off",
+                            text = "${state.restaurantInfo.discount }% ${Resources.strings.off}",
                             style = Theme.typography.body,
                             color = Theme.colors.primary,
                         )
                     }
-                    Box(
-                        modifier = Modifier
-
-                            .background(
-                                color = Theme.colors.successContainer,
-                                shape = RoundedCornerShape(size = Theme.radius.small)
-                            )
-                            .padding(start = 4.dp, top = 2.dp, end = 4.dp, bottom = 2.dp)
-                    ) {
+                    Chip(color = Theme.colors.successContainer) {
                         Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                             Icon(
                                 painter = painterResource(Resources.images.scooter),
@@ -183,7 +168,7 @@ object RestaurantScreen :
                                 modifier = Modifier.size(16.dp)
                             )
                             Text(
-                                text = "4.5",
+                                text = Resources.strings.free,
                                 style = Theme.typography.body,
                                 color = Theme.colors.success,
                             )
@@ -196,7 +181,7 @@ object RestaurantScreen :
                 )
 
                 SectionHeader(
-                    "Most ordered",
+                    Resources.strings.mostOrdered,
                     modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
                 )
                 LazyRow(
@@ -213,7 +198,7 @@ object RestaurantScreen :
                     }
                 }
                 SectionHeader(
-                    "Sweets",
+                    Resources.strings.sweets,
                     modifier = Modifier.padding(start = 16.dp, bottom = 8.dp, top = 28.dp)
                 )
                 LazyRow(
@@ -232,4 +217,24 @@ object RestaurantScreen :
             }
         }
     }
+}
+
+
+@Composable
+private fun Chip(
+    color: Color,
+    content: @Composable () -> Unit
+) {
+    Box(
+        modifier = Modifier
+
+            .background(
+                color = color,
+                shape = RoundedCornerShape(size = Theme.radius.small)
+            )
+            .padding(start = 4.dp, top = 2.dp, end = 4.dp, bottom = 2.dp)
+    ) {
+        content()
+    }
+
 }

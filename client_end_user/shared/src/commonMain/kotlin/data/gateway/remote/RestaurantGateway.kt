@@ -16,13 +16,16 @@ import domain.gateway.IRestaurantRemoteGateway
 import domain.utils.GeneralException
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import kotlinx.datetime.Clock
 
 class RestaurantGateway(client: HttpClient) : BaseGateway(client = client),
     IRestaurantRemoteGateway {
     override suspend fun getCuisines(): List<Cuisine> {
         return tryToExecute<ServerResponse<List<CuisineDto>>> {
-            get("/cuisines")
+            get("/cuisines"){
+
+            }
         }.value?.toCuisineEntity() ?: throw GeneralException.NotFoundException
     }
 
@@ -38,6 +41,7 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client),
     override suspend fun getRestaurantDetails(restaurantId: String): Restaurant {
         return tryToExecute<ServerResponse<RestaurantDto>> {
             get("/restaurant/$restaurantId")
+
         }.value?.toEntity() ?: throw GeneralException.NotFoundException
     }
 

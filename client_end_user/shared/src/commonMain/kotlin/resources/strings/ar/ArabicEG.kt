@@ -87,4 +87,7 @@ data class ArabicEG(
     override val orderNow: String = "أطلب دلوقتي",
     override val total: String = "المجموع:",
     override val yourCart: String = "العربة",
+    override val mostOrdered: String = "الأكثر طلباً",
+    override val sweets: String= "حلويات",
+    override val free: String= "مجاناً",
 ) : IStringResources

@@ -2,6 +2,7 @@ package presentation.resturantDetails
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Meal
+import domain.entity.Restaurant
 import domain.usecase.IMangeRestaurantDetailsUseCase
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
@@ -14,10 +15,39 @@ class RestaurantScreenModel(
 
 
     init {
-        getMostOrders("1")
-        getSweets("1")
+        getRestaurantDetails("64fa315fb7c56f626e24d852")
+        getMostOrders("64fa315fb7c56f626e24d852")
+        getSweets("64fa315fb7c56f626e24d852")
     }
 
+    private fun getRestaurantDetails(restaurantId: String) {
+        updateState { it.copy(isLoading = true) }
+        tryToExecute(
+            { mangeRestaurantDetails.getRestaurantDetails(restaurantId) },
+            ::onGetRestaurantDetailsSuccess,
+            ::onGetRestaurantDetailsError
+        )
+
+    }
+
+    private  fun onGetRestaurantDetailsSuccess(restaurant: Restaurant) {
+        println("AYA2 $restaurant")
+        updateState { it.copy(restaurantInfo = restaurant.toUIState()) }
+    }
+
+    private fun onGetRestaurantDetailsError(errorState: ErrorState) {
+        println("AYA $errorState")
+        updateState { it.copy(isLoading = false) }
+        when (errorState) {
+            is ErrorState.NoInternet -> {
+                updateState { it.copy(error = errorState) }
+            }
+
+            else -> {
+                updateState { it.copy(error = errorState) }
+            }
+        }
+    }
 
     private fun getMostOrders(restaurantId: String) {
         tryToExecute(
