@@ -51,9 +51,9 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
                 onDismissDropDownMenu = listener::onDismissDropdownMenu,
                 onLogOut = listener::onClickLogOut,
             )
-            AnimatedContent(targetState = state) { state ->
+            AnimatedContent(targetState = state.idle) { idle ->
                 if (state.loading) LoadingIndicator()
-                else if (state.idle) IdlePlaceholder()
+                else if (idle) IdlePlaceholder()
                 else ChatScreenContent(state, listener)
             }
         }
