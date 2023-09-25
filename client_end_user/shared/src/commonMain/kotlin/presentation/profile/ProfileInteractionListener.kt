@@ -9,4 +9,6 @@ interface ProfileInteractionListener :BaseInteractionListener {
   fun onSaveProfileInfo()
 
   fun onLogout()
+
+  fun onLogin()
 }

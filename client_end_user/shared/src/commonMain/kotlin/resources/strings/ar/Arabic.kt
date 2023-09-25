@@ -90,5 +90,6 @@ data class Arabic(
     override val logout: String= "تسجيل الخروج",
     override val address: String = "العنوان",
     override val save: String= "حفظ",
+    override val pleaseLogin: String="الرجاء تسجيل الدخول للوصول الى ملفك الشخصي"
 
 ) : IStringResources

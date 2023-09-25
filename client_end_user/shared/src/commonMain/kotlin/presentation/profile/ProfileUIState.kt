@@ -13,6 +13,7 @@ data class ProfileUIState(
     val isFullNameError: Boolean = false,
     val isPhoneNumberError: Boolean = false,
     val isButtonEnabled: Boolean = false,
+    val isLogin : Boolean = false
 )
 
 data class UserUIState(

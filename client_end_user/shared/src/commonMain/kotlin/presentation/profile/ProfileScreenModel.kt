@@ -35,11 +35,12 @@ class ProfileScreenModel(
 
     private fun onGetUserProfileSuccess (userDetails: UserDetails) {
         val result= userDetails.toUIState()
-        updateState { it.copy(user = result, fullName = result.fullName, phoneNumber = result.phoneNumber ) }
+        updateState { it.copy(user = result, isLogin = true ,fullName = result.fullName, phoneNumber = result.phoneNumber ) }
     }
 
     private fun onGetUserProfileError (errorState: ErrorState) {
-        println(errorState)
+        updateState { it.copy( isLogin = false)}
+                println(errorState)
     }
 
     override fun onFullNameChanged(fullName: String) {
@@ -82,11 +83,14 @@ class ProfileScreenModel(
     }
 
     override fun onLogout() {
+        updateState { it.copy( isLogin = false)}
         viewModelScope.launch {
             manageAuthentication.removeAccessToken()
             manageAuthentication.removeRefreshToken()
         }
 
-        sendNewEffect(ProfileUIEffect.Logout)
+    }
+    override fun onLogin(){
+        sendNewEffect ( ProfileUIEffect.Login )
     }
 }

@@ -35,6 +35,7 @@ data class DrawableResources(
     val slowRide: String = "slow_ride.png",
     val transferIcon:String = "icon_from_to.xml",
     val logout : String = "logout_2.xml",
+    val needLogin : String = "need_login.png",
 )
 
 val BpDrawableDarkResources = DrawableResources(
