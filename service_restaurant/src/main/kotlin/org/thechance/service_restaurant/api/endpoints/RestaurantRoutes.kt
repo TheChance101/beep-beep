@@ -102,9 +102,7 @@ fun Route.restaurantRoutes() {
         delete("/{id}/categories") {
             val restaurantId =
                 call.parameters.extractString("id") ?: throw MultiErrorException(
-                    listOf(
-                        INVALID_REQUEST_PARAMETER
-                    )
+                    listOf(INVALID_REQUEST_PARAMETER)
                 )
             val categoryIds = call.receive<List<String>>()
             val result =

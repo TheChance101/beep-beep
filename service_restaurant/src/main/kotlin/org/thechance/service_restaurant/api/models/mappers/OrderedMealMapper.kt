@@ -7,17 +7,8 @@ fun OrderedMeal.toDto() = OrderedMealDto(
     mealId = meadId,
     quantity = quantity,
     image = image,
-    name = name
+    name = name,
+    price = price
 )
 
 fun List<OrderedMeal>.toDto() = map { it.toDto() }
-
-
-fun OrderedMealDto.toEntity() = OrderedMeal(
-    meadId = mealId ?: "",
-    quantity = quantity ?: 0,
-    image = image ?: "",
-    name = name ?: ""
-)
-
-fun List<OrderedMealDto>.toEntity() = map { it.toEntity() }
