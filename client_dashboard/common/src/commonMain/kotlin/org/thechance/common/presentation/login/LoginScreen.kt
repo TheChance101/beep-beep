@@ -7,23 +7,19 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.composable.BpButton
-import com.beepbeep.designSystem.ui.composable.BpCheckBox
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import kotlinx.coroutines.delay
@@ -85,7 +81,7 @@ class LoginScreen :
                     modifier = Modifier.align(Alignment.TopStart).padding(32.kms)
                 )
             }
-            Box(Modifier.weight(1f), contentAlignment = Alignment.Center,) {
+            Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
                 Column(
                     Modifier.fillMaxHeight().width(450.kms),
                     verticalArrangement = Arrangement.Center,
@@ -125,9 +121,9 @@ class LoginScreen :
                         title = Resources.Strings.loginButton,
                         onClick = { listener.onLoginClicked() },
                         modifier = Modifier.padding(top = 24.kms).fillMaxWidth(),
-                        enabled = state.isAbleToLogin
+                        enabled = state.isAbleToLogin,
+                        isLoading = state.isLoading
                     )
-
                     AnimatedVisibility(!state.hasInternetConnection) {
                         BPSnackBar(icon = painterResource(Resources.Drawable.infoIcon)) {
                             Text(

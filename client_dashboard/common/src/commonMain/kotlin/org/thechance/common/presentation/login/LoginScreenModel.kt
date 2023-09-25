@@ -1,6 +1,5 @@
 package org.thechance.common.presentation.login
 
-import kotlinx.coroutines.delay
 import org.thechance.common.domain.usecase.ILoginUserUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.restaurant.ErrorWrapper
@@ -22,6 +21,7 @@ class LoginScreenModel(
     override fun onLoginClicked() {
         val currentState = mutableState.value
         clearErrorState()
+        updateState { it.copy(isLoading = true) }
         tryToExecute(
             {
                 login.loginUser(
