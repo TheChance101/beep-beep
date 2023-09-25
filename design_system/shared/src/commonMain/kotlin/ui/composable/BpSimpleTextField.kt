@@ -40,49 +40,41 @@ fun BpSimpleTextField(
             horizontalAlignment = Alignment.Start
     ) {
         OutlinedTextField(
-                modifier = Modifier.fillMaxWidth().height(56.dp),
-                value = text,
-                placeholder = {
-                    Text(
-                            hint,
-                            style = Theme.typography.body,
-                            color = hintColor,
-                            modifier = Modifier.fillMaxWidth().noRippleEffect(onClick)
+            modifier = Modifier.fillMaxWidth().height(56.dp),
+            value = text,
+            placeholder = {
+                Text(
+                    hint,
+                    style = Theme.typography.body,
+                    color = hintColor,
+                    modifier = Modifier.fillMaxWidth().noRippleEffect(onClick)
+                )
+            },
+            onValueChange = onValueChange,
+            shape = RoundedCornerShape(radius),
+            textStyle = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+            isError = isError,
+            trailingIcon = {
+                trailingPainter?.let {
+                    Icon(
+                        painter = trailingPainter,
+                        contentDescription = "trailing icon",
+                        tint = Theme.colors.contentTertiary
                     )
-                },
-                onValueChange = onValueChange,
-                shape = RoundedCornerShape(radius),
-                textStyle = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-                isError = isError,
-                trailingIcon = {
-                    trailingPainter?.let {
-                        Icon(
-                                painter = trailingPainter,
-                                contentDescription = "trailing icon",
-                                tint = Theme.colors.contentTertiary
-                        )
-                    }
-                },
-                leadingIcon = {
-                    leadingPainter?.let {
-                        Icon(
-                                painter = leadingPainter,
-                                contentDescription = "leading icon",
-                                tint = Theme.colors.contentSecondary,
-                                modifier = Modifier.noRippleEffect(onClick)
-                        )
-                    }
-                },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                        containerColor = Theme.colors.surface,
-                        unfocusedBorderColor = Theme.colors.contentBorder.copy(alpha = 0.1f),
-                        focusedBorderColor = Theme.colors.contentTertiary.copy(alpha = 0.2f),
-                        errorBorderColor = Theme.colors.primary.copy(alpha = 0.5f),
-                        errorCursorColor = Theme.colors.primary,
-                        cursorColor = Theme.colors.contentTertiary,
-                ),
+                }
+            },
+            leadingIcon = {
+                leadingPainter?.let {
+                    Icon(
+                        painter = leadingPainter,
+                        contentDescription = "leading icon",
+                        tint = Theme.colors.contentSecondary,
+                        modifier = Modifier.noRippleEffect(onClick)
+                    )
+                }
+            },
             colors = OutlinedTextFieldDefaults.colors(
                 cursorColor = Theme.colors.contentTertiary,
                 errorCursorColor = Theme.colors.primary,
