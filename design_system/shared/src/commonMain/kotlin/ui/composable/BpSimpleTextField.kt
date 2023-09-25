@@ -7,11 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -87,6 +83,13 @@ fun BpSimpleTextField(
                         errorCursorColor = Theme.colors.primary,
                         cursorColor = Theme.colors.contentTertiary,
                 ),
+            colors = OutlinedTextFieldDefaults.colors(
+                cursorColor = Theme.colors.contentTertiary,
+                errorCursorColor = Theme.colors.primary,
+                focusedBorderColor = Theme.colors.contentTertiary.copy(alpha = 0.2f),
+                unfocusedBorderColor = Theme.colors.contentBorder.copy(alpha = 0.1f),
+                errorBorderColor = Theme.colors.primary.copy(alpha = 0.5f),
+            ),
         )
         AnimatedVisibility(isError) {
             Text(
