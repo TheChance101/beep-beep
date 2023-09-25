@@ -1,12 +1,15 @@
 package data.gateway.remote
 
 import data.remote.mapper.toCuisineEntity
+import data.remote.mapper.toEntity
 import data.remote.model.CuisineDto
+import data.remote.model.RestaurantDto
 import data.remote.model.ServerResponse
 import domain.entity.Cuisine
 import domain.entity.InProgressWrapper
 import domain.entity.Location
 import domain.entity.Order
+import domain.entity.Restaurant
 import domain.entity.Taxi
 import domain.entity.Trip
 import domain.gateway.IRestaurantRemoteGateway
@@ -30,6 +33,12 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client),
             tripsOnTheWay = getActiveRide(),
             ordersOnTheWay = getActiveOrder(),
         )
+    }
+
+    override suspend fun getRestaurantDetails(restaurantId: String): Restaurant {
+        return tryToExecute<ServerResponse<RestaurantDto>> {
+            get("/restaurant/$restaurantId")
+        }.value?.toEntity() ?: throw GeneralException.NotFoundException
     }
 
     private fun getActiveRide(): List<Trip> {

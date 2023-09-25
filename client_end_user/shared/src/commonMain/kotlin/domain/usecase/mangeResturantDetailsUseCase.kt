@@ -3,6 +3,7 @@ package domain.usecase
 import domain.entity.Meal
 import domain.entity.Restaurant
 import domain.gateway.IFakeRemoteGateway
+import domain.gateway.IRestaurantRemoteGateway
 
 interface IMangeRestaurantDetailsUseCase {
 
@@ -13,9 +14,11 @@ interface IMangeRestaurantDetailsUseCase {
     suspend fun getRestaurantSweets(restaurantId: String) : List<Meal>
 }
 
-class MangeRestaurantDetailsUseCase(private val fakeRemoteGateway: IFakeRemoteGateway) : IMangeRestaurantDetailsUseCase{
+class MangeRestaurantDetailsUseCase(
+    private val restaurantRemoteGateway: IRestaurantRemoteGateway,
+    private val fakeRemoteGateway: IFakeRemoteGateway) : IMangeRestaurantDetailsUseCase{
     override suspend fun getRestaurantDetails(restaurantId: String): Restaurant {
-        return fakeRemoteGateway.getFavoriteRestaurants().first { it.id == restaurantId }
+        return restaurantRemoteGateway.getRestaurantDetails(restaurantId)
     }
 
     override suspend fun getRestaurantMostOrders(restaurantId: String): List<Meal> {
