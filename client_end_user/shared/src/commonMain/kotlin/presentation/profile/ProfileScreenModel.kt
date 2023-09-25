@@ -22,12 +22,29 @@ class ProfileScreenModel(
 
     init {
         getUserProfile()
+        onCheckLogin ()
+    }
+
+    private fun onCheckLogin () {
+        tryToExecute(
+            { manageAuthentication.getAccessToken() } ,
+            ::onCheckLoginSuccess,
+            ::onCheckLoginError
+        )
+    }
+
+    private fun onCheckLoginSuccess (accessToken: String) {
+        if(accessToken.isNotEmpty()){
+            updateState { it.copy(isLogin = true) }
+        }
+    }
+    private fun onCheckLoginError (errorState: ErrorState) {
+        updateState { it.copy( isLogin = false)}
     }
 
     private fun getUserProfile () {
         tryToExecute(
             { manageUser.getUserProfile() } ,
-
             ::onGetUserProfileSuccess,
             ::onGetUserProfileError
         )
@@ -35,7 +52,7 @@ class ProfileScreenModel(
 
     private fun onGetUserProfileSuccess (userDetails: UserDetails) {
         val result= userDetails.toUIState()
-        updateState { it.copy(user = result, isLogin = true ,fullName = result.fullName, phoneNumber = result.phoneNumber ) }
+        updateState { it.copy(user = result ,fullName = result.fullName, phoneNumber = result.phoneNumber ) }
     }
 
     private fun onGetUserProfileError (errorState: ErrorState) {
