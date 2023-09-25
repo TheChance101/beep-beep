@@ -31,6 +31,7 @@ data class Header(val text: String, val weight: Float = 1f)
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun <T> ColumnScope.BpTable(
+    hasConnection: Boolean = true,
     data: List<T>,
     headers: List<Header>,
     modifier: Modifier = Modifier,
@@ -90,7 +91,7 @@ fun <T> ColumnScope.BpTable(
                 }
             }
 
-            if (data.isEmpty()) {
+            if (data.isEmpty() && hasConnection) {
                 item {
                     Box(modifier = Modifier.fillParentMaxSize()) {
                         Text(
