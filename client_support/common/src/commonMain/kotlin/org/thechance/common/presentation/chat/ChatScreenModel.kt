@@ -17,6 +17,25 @@ class ChatScreenModel(
         getTickets()
     }
 
+    // region appbar
+    override fun onClickDropdownMenu() {
+        updateState {
+            it.copy(appbar = it.appbar.copy(isDropdownMenuExpanded = !it.appbar.isDropdownMenuExpanded))
+        }
+    }
+
+    override fun onDismissDropdownMenu() {
+        updateState {
+            it.copy(appbar = it.appbar.copy(isDropdownMenuExpanded = false))
+        }
+    }
+
+    override fun onClickLogOut() {
+        sendNewEffect(ChatUIEffect.NavigateToLogin)
+    }
+    // endregion
+
+    // region ticket
     private fun getTickets() {
         tryToCollect(
             manageTicketsUseCase::getTickets,
@@ -36,6 +55,21 @@ class ChatScreenModel(
         ticket?.let { getMessages(it.id) }
     }
 
+    override fun onCloseTicketClicked() {
+        updateState { it.copy(loading = true) }
+        tryToExecute(
+            { manageTicketsUseCase.closeTicket(state.value.ticket.id) },
+            ::onCloseTicketSuccess,
+            ::onError
+        )
+    }
+
+    private fun onCloseTicketSuccess(unit: Unit) {
+        updateState { it.copy(loading = false) }
+    }
+    // endregion
+
+    // region messages
     private fun getMessages(ticketId: String) {
         tryToCollect(
             { manageChatUseCase.getMessages(ticketId) },
@@ -48,28 +82,6 @@ class ChatScreenModel(
         updateState {
             it.copy(messages = message.map { message -> message.toUIState() })
         }
-    }
-
-    private fun onError(error: ErrorState) {
-        updateState {
-            it.copy(loading = false)
-        }
-    }
-
-    override fun onClickDropdownMenu() {
-        updateState {
-            it.copy(appbar = it.appbar.copy(isDropdownMenuExpanded = !it.appbar.isDropdownMenuExpanded))
-        }
-    }
-
-    override fun onDismissDropdownMenu() {
-        updateState {
-            it.copy(appbar = it.appbar.copy(isDropdownMenuExpanded = false))
-        }
-    }
-
-    override fun onClickLogOut() {
-        sendNewEffect(ChatUIEffect.NavigateToLogin)
     }
 
     override fun onMessageChange(message: String) {
@@ -94,22 +106,17 @@ class ChatScreenModel(
         )
     }
 
-    override fun onCloseTicketClicked() {
-        updateState { it.copy(loading = true) }
-        tryToExecute(
-            { manageTicketsUseCase.closeTicket(state.value.ticket.id) },
-            ::onCloseTicketSuccess,
-            ::onError
-        )
-    }
-
-    private fun onCloseTicketSuccess(unit: Unit) {
-        updateState { it.copy(loading = false) }
-    }
-
     private fun onSendMessageSuccess(unit: Unit) {
         updateState {
             it.copy(message = "")
         }
     }
+    // endregion
+
+    private fun onError(error: ErrorState) {
+        updateState {
+            it.copy(loading = false)
+        }
+    }
+
 }
