@@ -218,11 +218,11 @@ class TaxiService(
         )
     }
 
-    suspend fun deleteTaxiByDriverUsername(username: String): Boolean {
+    suspend fun deleteTaxiByDriverId(id: String): Boolean {
         return client.tryToExecute<Boolean>(
             api = APIs.TAXI_API,
             attributes = attributes,
-            method = { delete("/taxi/driver/$username") }
+            method = { delete("/taxi/driver/$id") }
         )
     }
 }

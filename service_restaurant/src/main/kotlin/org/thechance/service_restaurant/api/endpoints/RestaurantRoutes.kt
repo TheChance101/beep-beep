@@ -122,10 +122,10 @@ fun Route.restaurantRoutes() {
             call.respond(HttpStatusCode.OK, result)
         }
 
-        delete("/owner/{username}"){
-            val username = call.parameters["username"]
+        delete("/owner/{ownerId}") {
+            val ownerId = call.parameters["ownerId"]
                 ?: throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER))
-            val result = controlRestaurant.deleteRestaurantsByOwner(username)
+            val result = controlRestaurant.deleteRestaurantsByOwnerId(ownerId)
             call.respond(HttpStatusCode.OK, result)
         }
     }

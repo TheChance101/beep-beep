@@ -47,6 +47,6 @@ interface IRestaurantGateway {
     suspend fun updateMeal(meal: MealDetails): Meal
     suspend fun deleteMealById(id: String): Boolean
     suspend fun deleteCuisineFromMeal(mealId: String, cuisineId: String): Boolean
-    suspend fun deleteRestaurantsByOwner(username: String): Boolean
+    suspend fun deleteRestaurantsByOwnerId(ownerId: String): Boolean
     //endregion
 }

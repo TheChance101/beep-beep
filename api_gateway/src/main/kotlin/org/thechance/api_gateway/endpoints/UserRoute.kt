@@ -71,9 +71,9 @@ fun Route.userRoutes() {
                 val result = identityService.deleteUser(userId = id, language)
                 if (result) {
                     if (hasPermission(user.permission, Role.TAXI_DRIVER))
-                        taxiService.deleteTaxiByDriverUsername(user.username)
+                        taxiService.deleteTaxiByDriverId(user.id)
                     if (hasPermission(user.permission, Role.RESTAURANT_OWNER))
-                        restaurantService.deleteRestaurantByOwnerUsername(user.username)
+                        restaurantService.deleteRestaurantByOwnerId(user.id)
                 }
                 respondWithResult(HttpStatusCode.OK, result)
             }
