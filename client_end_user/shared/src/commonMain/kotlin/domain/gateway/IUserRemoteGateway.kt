@@ -10,7 +10,9 @@ interface IUserRemoteGateway {
         fullName: String,
         username: String,
         password: String,
-        email: String
+        email: String,
+        phone: String,
+        address: String,
     ): User
 
     suspend fun loginUser(username: String, password: String): Session

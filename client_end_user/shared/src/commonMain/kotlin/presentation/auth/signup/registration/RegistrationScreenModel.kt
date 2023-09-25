@@ -6,8 +6,8 @@ import domain.utils.AuthorizationException
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
 
-class RegistrationScreenModel(private val validation: IValidationUseCase)
-    : BaseScreenModel<RegistrationUIState, RegistrationScreenEffect>(RegistrationUIState()),
+class RegistrationScreenModel(private val validation: IValidationUseCase) :
+    BaseScreenModel<RegistrationUIState, RegistrationScreenEffect>(RegistrationUIState()),
     RegistrationInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
 
@@ -18,6 +18,11 @@ class RegistrationScreenModel(private val validation: IValidationUseCase)
             validation.validateUsername(username)
             clearErrors()
         }
+    }
+
+    override fun onEmailChanged(email: String) {
+        updateState { it.copy(email = email) }
+        tryCatch { validation.validateEmail(email); clearErrors() }
     }
 
     override fun onPasswordChanged(password: String) {
@@ -33,7 +38,11 @@ class RegistrationScreenModel(private val validation: IValidationUseCase)
             tryCatch {
                 validation.validateUsername(username); validation.validatePassword(password)
                 sendNewEffect(
-                    RegistrationScreenEffect.NavigateToSubmitRegistrationScreen(username, password)
+                    RegistrationScreenEffect.NavigateToSubmitRegistrationScreen(
+                        username,
+                        email,
+                        password
+                    )
                 )
             }
         }
@@ -50,13 +59,23 @@ class RegistrationScreenModel(private val validation: IValidationUseCase)
             block()
         } catch (e: AuthorizationException.InvalidUsernameException) {
             updateState { it.copy(isUsernameError = true) }
+        } catch (e: AuthorizationException.InvalidEmailException) {
+            updateState {
+                it.copy(isEmailError = true)
+            }
         } catch (e: AuthorizationException.InvalidPasswordException) {
             updateState { it.copy(isPasswordError = true) }
         }
     }
 
     private fun clearErrors() {
-        updateState { it.copy(isUsernameError = false, isPasswordError = false) }
+        updateState {
+            it.copy(
+                isUsernameError = false,
+                isPasswordError = false,
+                isEmailError = false,
+            )
+        }
     }
     // endregion
 }

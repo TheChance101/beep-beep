@@ -9,7 +9,9 @@ interface IManageAuthenticationUseCase {
         fullName: String,
         username: String,
         password: String,
-        email: String
+        email: String,
+        phone: String,
+        address: String,
     ): Boolean
 
     suspend fun loginUser(username: String, password: String, keepLoggedIn: Boolean): Boolean
@@ -31,13 +33,15 @@ class ManageAuthenticationUseCase(
         fullName: String,
         username: String,
         password: String,
-        email: String
+        email: String,
+        phone: String,
+        address: String,
     ): Boolean {
         with(validation) {
             validateFullName(fullName); validateUsername(username); validatePassword(password)
-            validateEmail(email)
+            validateEmail(email); validatePhone(phone); validateAddress(address)
         }
-        return remoteGateway.createUser(fullName, username, password, email).name.isNotEmpty()
+        return remoteGateway.createUser(fullName, username, password, email, phone, address).name.isNotEmpty()
     }
 
     override suspend fun loginUser(

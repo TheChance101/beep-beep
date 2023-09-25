@@ -21,7 +21,9 @@ class UserRemoteRemoteGateway(client: HttpClient) : BaseGateway(client), IUserRe
         fullName: String,
         username: String,
         password: String,
-        email: String
+        email: String,
+        phone: String,
+        address: String,
     ): User {
         return tryToExecute<ServerResponse<UserDto>> {
             submitForm(
@@ -31,6 +33,8 @@ class UserRemoteRemoteGateway(client: HttpClient) : BaseGateway(client), IUserRe
                     append("username", username)
                     append("password", password)
                     append("email", email)
+                    append("phone", phone) // todo: remove this todo when phone is added to the backend
+                    append("address", address) // todo: remove this todo when address is added to the backend
                 }
             ){
                 method = HttpMethod.Post
@@ -47,6 +51,7 @@ class UserRemoteRemoteGateway(client: HttpClient) : BaseGateway(client), IUserRe
                     append("password", password)
                 }
             ){
+                headers.append("Application-Id", "1000") // todo: remove this line in next deploy when the backend is updated
                 method = HttpMethod.Post
             }
         }.value?.toSessionEntity() ?: throw AuthorizationException.InvalidCredentialsException("Invalid Credential")

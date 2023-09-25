@@ -18,24 +18,21 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
-import presentation.base.ErrorState.InvalidEmail
 import presentation.base.ErrorState.InvalidFullName
 import presentation.base.ErrorState.InvalidPhone
 import presentation.base.ErrorState.UserAlreadyExists
-import presentation.base.ErrorState.WifiDisabled
-import resources.strings.IStringResources
 import util.LanguageCode
 
 class RegistrationSubmitScreenModel(
     private val username: String,
+    private val email: String,
     private val password: String,
     private val validation: IValidationUseCase,
     private val manageAuthentication: IManageAuthenticationUseCase,
     private val manageUser: IManageUserUseCase,
 ) : BaseScreenModel<RegistrationSubmitUIState, RegistrationSubmitScreenEffect>(
     RegistrationSubmitUIState()
-),
-    RegistrationSubmitInteractionListener {
+), RegistrationSubmitInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
     private val _language: MutableStateFlow<LanguageCode> = MutableStateFlow(LanguageCode.EN)
     val language: StateFlow<LanguageCode> = _language.asStateFlow()
@@ -60,21 +57,21 @@ class RegistrationSubmitScreenModel(
         tryCatch { validation.validateFullName(fullName); clearErrors() }
     }
 
-    override fun onEmailChanged(email: String) {
-        updateState { it.copy(email = email) }
-        tryCatch { validation.validateEmail(email); clearErrors() }
-    }
-
     override fun onPhoneChanged(phone: String) {
         updateState { it.copy(phone = phone) }
         tryCatch { validation.validatePhone(phone,_language.value.value); clearErrors() }
+    }
+
+    override fun onAddressChanged(address: String) {
+        updateState { it.copy(address = address) }
+        tryCatch { validation.validateAddress(address); clearErrors() }
     }
 
     override fun onSignUpButtonClicked() {
         with(state.value) {
             updateState { it.copy(isLoading = true) }
             tryToExecute(
-                function = { manageAuthentication.createUser(fullName, username, password, email) },
+                function = { manageAuthentication.createUser(fullName, username, password, email, phone, address) },
                 onSuccess = ::onRegistrationSuccess,
                 onError = ::onError
             )
@@ -89,8 +86,6 @@ class RegistrationSubmitScreenModel(
         clearErrors()
         when (error) {
             InvalidFullName -> updateState { it.copy(isFullNameError = true) }
-
-            InvalidEmail -> updateState { it.copy(isEmailError = true) }
 
             InvalidPhone -> updateState { it.copy(isPhoneError = true) }
 
@@ -110,13 +105,13 @@ class RegistrationSubmitScreenModel(
             block()
         } catch (e: AuthorizationException.InvalidFullNameException) {
             updateState { it.copy(isFullNameError = true) }
-        } catch (e: AuthorizationException.InvalidEmailException) {
-            updateState {
-                it.copy(isEmailError = true)
-            }
         } catch (e: AuthorizationException.InvalidPhoneException) {
             updateState {
                 it.copy(isPhoneError = true)
+            }
+        } catch (e: AuthorizationException.InvalidAddressException){
+            updateState {
+                it.copy(isAddressError = true)
             }
         }
     }
@@ -125,8 +120,8 @@ class RegistrationSubmitScreenModel(
         updateState {
             it.copy(
                 isFullNameError = false,
-                isEmailError = false,
                 isPhoneError = false,
+                isAddressError = false,
                 isLoading = false
             )
         }
