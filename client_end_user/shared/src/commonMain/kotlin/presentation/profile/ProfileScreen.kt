@@ -32,8 +32,10 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
+import presentation.home.HomeScreen
 import presentation.main.MainContainer
 import resources.Resources
+import util.getStatusBarPadding
 
 class ProfileScreen :
     BaseScreen<ProfileScreenModel, ProfileUIState, ProfileUIEffect, ProfileInteractionListener>() {
@@ -45,7 +47,7 @@ class ProfileScreen :
 
     override fun onEffect(effect: ProfileUIEffect, navigator: Navigator) {
         when (effect) {
-            is ProfileUIEffect.Logout -> navigator.replaceAll(MainContainer)
+            is ProfileUIEffect.Logout -> navigator.push(HomeScreen())
         }
     }
 
@@ -54,7 +56,7 @@ class ProfileScreen :
     @Composable
     override fun onRender(state: ProfileUIState, listener: ProfileInteractionListener) {
         Column(
-            modifier = Modifier.fillMaxSize().background(Theme.colors.background)
+            modifier = Modifier.fillMaxSize().padding(getStatusBarPadding()).background(Theme.colors.background)
                 .verticalScroll(rememberScrollState()),
 
             ) {
