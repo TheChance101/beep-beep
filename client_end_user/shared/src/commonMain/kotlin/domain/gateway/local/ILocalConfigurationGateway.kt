@@ -12,7 +12,8 @@ interface ILocalConfigurationGateway {
     suspend fun getKeepMeLoggedInFlag(): Boolean
     suspend fun clearTokens()
     suspend fun saveLanguageCode(code: String)
-    suspend fun getLanguageCode(): Flow<String>
+    suspend fun getLanguageCodeFlow(): Flow<String>
+    suspend fun getLanguageCode(): String
     suspend fun savePriceLevel(priceLevel: String)
     suspend fun getPriceLevel(): String
     suspend fun savePreferredRideQuality(rideQuality: String)

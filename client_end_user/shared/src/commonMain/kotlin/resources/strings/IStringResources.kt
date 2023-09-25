@@ -25,6 +25,7 @@ interface IStringResources {
     val notification: String
     val profile: String
     val cuisineImageDescription: String
+    val allCuisines: String
     val viewAll: String
     val seeAllDescription: String
     val cuisineSectionTitle: String
@@ -81,4 +82,7 @@ interface IStringResources {
     val tryAgain: String
     val trackYourOrder: String
     val history: String
+    val orderNow: String
+    val total: String
+    val yourCart: String
 }

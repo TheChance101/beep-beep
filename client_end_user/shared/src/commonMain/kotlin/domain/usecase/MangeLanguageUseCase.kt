@@ -16,6 +16,6 @@ class MangeLanguageUseCase(
     }
 
     override suspend fun getLanguageCode(): Flow<String> {
-        return localGateway.getLanguageCode()
+        return localGateway.getLanguageCodeFlow()
     }
 }

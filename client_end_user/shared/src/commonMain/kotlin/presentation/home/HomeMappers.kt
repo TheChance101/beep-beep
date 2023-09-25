@@ -1,8 +1,8 @@
 package presentation.home
 
-import domain.entity.Cuisine
 import domain.entity.Offer
 import domain.entity.Restaurant
+import domain.entity.User
 
 fun Offer.toUiState(): OfferUiState {
     return OfferUiState(
@@ -10,17 +10,6 @@ fun Offer.toUiState(): OfferUiState {
         image = image
     )
 }
-
-fun Cuisine.toCuisineUiState(): CuisineUiState {
-    return CuisineUiState(
-        cuisineId = cuisineId,
-        cuisineName = cuisineName,
-        cuisineImageUrl = cuisineImageUrl,
-    )
-}
-
-fun List<Cuisine>.toCuisineUiState() = map { it.toCuisineUiState() }
-
 
 fun Restaurant.toRestaurantUiState(): RestaurantUiState {
     return RestaurantUiState(
@@ -31,3 +20,13 @@ fun Restaurant.toRestaurantUiState(): RestaurantUiState {
 }
 
 fun List<Restaurant>.toRestaurantUiState() = map { it.toRestaurantUiState() }
+
+
+
+fun User.toUIState() = UserUiState(
+    username = name,
+    wallet = walletValue,
+    currency = currency,
+    isLogin = true
+)
+
