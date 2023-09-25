@@ -14,9 +14,9 @@ class CartValidationUseCase(private val basicValidation: IValidation) : ICartVal
     override fun validateUpdateCart(userId: String, restaurantId: String, mealId: String, quantity: Int) {
         val validationErrors = mutableListOf<Int>()
 
-        if (basicValidation.isValidId(userId) ||
-            basicValidation.isValidId(restaurantId) ||
-            basicValidation.isValidId(mealId)
+        if (!basicValidation.isValidId(userId) ||
+            !basicValidation.isValidId(restaurantId) ||
+            !basicValidation.isValidId(mealId)
         ) {
             validationErrors.add(INVALID_ID)
         }
