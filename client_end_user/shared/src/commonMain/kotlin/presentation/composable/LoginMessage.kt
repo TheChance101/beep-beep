@@ -35,7 +35,7 @@ fun LoginMessage(
             painter = painterResource(Resources.images.needLogin),
             contentDescription = Resources.strings.login,
             contentScale = ContentScale.Crop,
-            modifier = Modifier.height(120.dp)
+            modifier = Modifier.height(120.dp,).padding(bottom = 8.dp)
 
         )
         Text(
@@ -44,7 +44,7 @@ fun LoginMessage(
             color = Theme.colors.contentTertiary,
         )
         TextOutLineButton(
-            modifier = Modifier.padding(top = 16.dp),
+            modifier = Modifier.padding(top = 24.dp),
             text = Resources.strings.login,
             onClick = {
                 onClick()
