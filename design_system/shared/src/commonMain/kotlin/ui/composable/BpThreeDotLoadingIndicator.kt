@@ -22,7 +22,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import kotlinx.coroutines.delay
 
 @Composable
-fun ThreeDotLoadingIndicator(
+fun BpThreeDotLoadingIndicator(
     modifier: Modifier = Modifier,
     dotSize: Dp = 12.dp,
     dotPadding: Dp = 2.dp,
