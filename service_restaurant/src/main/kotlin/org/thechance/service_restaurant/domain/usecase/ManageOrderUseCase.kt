@@ -4,28 +4,21 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toKotlinLocalDateTime
 import org.thechance.service_restaurant.domain.entity.Order
-import org.thechance.service_restaurant.domain.entity.OrderHistory
-import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
-import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
+import org.thechance.service_restaurant.domain.gateway.IRestaurantManagementGateway
 import org.thechance.service_restaurant.domain.usecase.validation.IOrderValidationUseCase
 import org.thechance.service_restaurant.domain.utils.IValidation
 import org.thechance.service_restaurant.domain.utils.currentDateTime
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
-import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 
 interface IManageOrderUseCase {
     suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order>
-
-    suspend fun addOrder(order: Order): Boolean
 
     suspend fun updateOrderStatus(orderId: String, state: Order.Status): Order
 
     suspend fun getOrderById(orderId: String): Order
 
-    suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<OrderHistory>
-
-    suspend fun getOrdersHistoryForUser(userId: String, page: Int, limit: Int): List<OrderHistory>
+    suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<Order>
 
     suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order>
 
@@ -42,59 +35,42 @@ interface IManageOrderUseCase {
 }
 
 class ManageOrderUseCase(
-    private val optionsGateway: IRestaurantOptionsGateway,
-    private val restaurantGateway: IRestaurantGateway,
+    private val restaurantOperationGateway: IRestaurantManagementGateway,
     private val basicValidation: IValidation,
     private val orderValidationUseCase: IOrderValidationUseCase
 ) : IManageOrderUseCase {
 
     override suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order> {
-        return optionsGateway.getOrdersByRestaurantId(restaurantId = restaurantId)
+        return restaurantOperationGateway.getOrdersByRestaurantId(restaurantId = restaurantId)
     }
 
     override suspend fun getOrderById(orderId: String): Order {
         if (!basicValidation.isValidId(orderId)) {
             throw MultiErrorException(listOf(INVALID_ID))
         }
-        return optionsGateway.getOrderById(orderId = orderId)!!
-    }
-
-    override suspend fun addOrder(order: Order): Boolean {
-        //FOR TEST
-
-       return optionsGateway.addOrder(order = order)
-
-        /*return if (isRestaurantOpened(order.restaurantId)) {
-            optionsGateway.addOrder(order = order)
-        } else {
-            throw MultiErrorException(listOf(RESTAURANT_CLOSED))
-        }*/
+        return restaurantOperationGateway.getOrderById(orderId = orderId)!!
     }
 
     override suspend fun updateOrderStatus(orderId: String, state: Order.Status): Order {
         orderValidationUseCase.validateUpdateOrder(orderId = orderId, status = state)
-        return optionsGateway.updateOrderStatus(orderId = orderId, status = state)!!
+        return restaurantOperationGateway.updateOrderStatus(orderId = orderId, status = state)!!
     }
 
-    override suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<OrderHistory> {
-        return optionsGateway.getOrdersHistoryForRestaurant(restaurantId = restaurantId, page = page, limit = limit)
-    }
-
-    override suspend fun getOrdersHistoryForUser(userId: String, page: Int, limit: Int): List<OrderHistory> {
-        return optionsGateway.getOrdersHistoryForUser(userId = userId, page = page, limit = limit)
+    override suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<Order> {
+        return restaurantOperationGateway.getOrdersHistoryForRestaurant(restaurantId = restaurantId, page = page, limit = limit)
     }
 
     override suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order> {
         if (!basicValidation.isValidId(restaurantId)) {
             throw MultiErrorException(listOf(INVALID_ID))
         }
-        return optionsGateway.getActiveOrdersByRestaurantId(restaurantId = restaurantId)
+        return restaurantOperationGateway.getActiveOrdersByRestaurantId(restaurantId = restaurantId)
     }
 
     override suspend fun getOrdersCountByDaysBefore(restaurantId: String, daysBack: Int): List<Map<Int, Int>> {
         basicValidation.isValidId(restaurantId).takeIf { it }?.let {
             return doInRangeWithDaysBack(daysBack) { daysOfYearRange, currentDateTime ->
-                val groupedOrdersByDayOfYear = optionsGateway.getOrdersByRestaurantId(restaurantId = restaurantId)
+                val groupedOrdersByDayOfYear = restaurantOperationGateway.getOrdersByRestaurantId(restaurantId = restaurantId)
                     .filter { it.createdAt.dayOfYear in daysOfYearRange }.groupBy { it.createdAt.dayOfYear }
 
                 daysOfYearRange.map {
@@ -108,7 +84,7 @@ class ManageOrderUseCase(
     override suspend fun getOrdersRevenueByDaysBefore(restaurantId: String, daysBack: Int): List<Map<Int, Double>> {
         basicValidation.isValidId(restaurantId).takeIf { it }?.let {
             return doInRangeWithDaysBack(daysBack) { daysOfYearRange, currentDateTime ->
-                val groupedOrdersByDayOfYear = optionsGateway.getOrdersByRestaurantId(restaurantId = restaurantId)
+                val groupedOrdersByDayOfYear = restaurantOperationGateway.getOrdersByRestaurantId(restaurantId = restaurantId)
                     .filter { it.createdAt.dayOfYear in daysOfYearRange && it.status == Order.Status.DONE }
                     .groupBy { it.createdAt.dayOfYear }
 
@@ -123,16 +99,11 @@ class ManageOrderUseCase(
     }
 
     override suspend fun getNumberOfOrdersHistoryInRestaurant(restaurantId: String): Long {
-        return optionsGateway.getNumberOfOrdersHistoryInRestaurant(restaurantId)
+        return restaurantOperationGateway.getNumberOfOrdersHistoryInRestaurant(restaurantId)
     }
 
     override suspend fun getNumberOfOrdersHistoryForUser(userId: String): Long {
-        return optionsGateway.getNumberOfOrdersHistoryForUser(userId)
-    }
-
-    private suspend fun isRestaurantOpened(restaurantId: String): Boolean {
-        val restaurant = restaurantGateway.getRestaurant(id = restaurantId)
-        return restaurant?.isRestaurantOpen() ?: throw MultiErrorException(listOf(NOT_FOUND))
+        return restaurantOperationGateway.getNumberOfOrdersHistoryForUser(userId)
     }
 
     private suspend fun <T> doInRangeWithDaysBack(daysBack: Int, function: suspend (IntRange, LocalDateTime) -> T): T {
