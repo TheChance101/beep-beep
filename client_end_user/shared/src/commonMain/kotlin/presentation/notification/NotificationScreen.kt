@@ -28,7 +28,7 @@ class NotificationScreen :
     override fun onRender(state: NotificationsUiState, listener: NotificationInteractionListener) {
         LazyColumn(
             modifier = Modifier.fillMaxSize().background(Theme.colors.background),
-            contentPadding = PaddingValues(vertical = 24.dp)
+            contentPadding = PaddingValues(top = 56.dp , bottom = 24.dp)
         ) {
             itemsIndexed(state.todayNotifications) { index, item ->
                 val showDate = index == 0
