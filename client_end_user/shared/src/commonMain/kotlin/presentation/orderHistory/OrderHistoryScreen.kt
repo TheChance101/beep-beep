@@ -21,6 +21,7 @@ import presentation.base.BaseScreen
 import presentation.orderHistory.composable.HorizontalDivider
 import presentation.orderHistory.composable.MealOrderItem
 import presentation.orderHistory.composable.TripHistoryItem
+import resources.Resources
 import util.capitalizeFirstLetter
 
 class OrderHistoryScreen :
@@ -39,8 +40,8 @@ class OrderHistoryScreen :
             modifier = Modifier.fillMaxSize().background(Theme.colors.background),
         ) {
             Text(
-                modifier = Modifier.padding(top = 24.dp, bottom = 16.dp, start = 16.dp),
-                text = "History",
+                modifier = Modifier.padding(top = 56.dp, bottom = 16.dp, start = 16.dp),
+                text = Resources.strings.history,
                 style = Theme.typography.headline,
                 color = Theme.colors.contentPrimary
             )
@@ -65,7 +66,6 @@ class OrderHistoryScreen :
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(vertical = 24.dp)
             ) {
-
                 when (state.selectedType) {
                     OrderScreenUiState.OrderSelectType.MEALS -> {
                         items(state.ordersHistory) {
@@ -81,10 +81,7 @@ class OrderHistoryScreen :
                         }
                     }
                 }
-
             }
         }
-
     }
-
 }
