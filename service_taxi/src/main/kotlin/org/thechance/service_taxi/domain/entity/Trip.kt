@@ -6,6 +6,8 @@ data class Trip(
     val id: String,
     val taxiId: String? = null,
     val driverId: String? = null,
+    val taxiPlateNumber: String? = null,
+    val driverName: String? = null,
     val clientId: String,
     val startPoint: Location,
     val destination: Location?,
