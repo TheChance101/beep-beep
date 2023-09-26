@@ -134,7 +134,5 @@ fun Route.userRoutes() {
             }
         }
     }
-
-
 }
 

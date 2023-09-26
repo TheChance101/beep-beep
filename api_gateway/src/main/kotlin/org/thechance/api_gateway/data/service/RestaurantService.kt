@@ -313,5 +313,13 @@ class RestaurantService(
         )
     }
 
+    suspend fun deleteRestaurantByOwnerId(id: String): Boolean {
+        return client.tryToExecute<Boolean>(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+            method = { delete("/restaurant/owner/$id") }
+        )
+    }
+
     //endregion
 }
