@@ -59,7 +59,7 @@ object OverviewScreen :
 
             RevenueCard(listener = listener, state = state ,modifier= Modifier.padding(paddingValues = PaddingValues(top = 40.kms)))
             Row(
-                    modifier = Modifier.padding(paddingValues = PaddingValues(bottom = 40.kms)).height(340.dp),
+                    modifier = Modifier.padding(paddingValues = PaddingValues(bottom = 40.kms)).height(380.dp),
                     horizontalArrangement = Arrangement.spacedBy(24.kms)
             ) {
                 OverviewCard(
@@ -233,7 +233,6 @@ object OverviewScreen :
                         modifier = Modifier.weight(1f).height(32.dp),
                 )
             }
-
             content()
         }
     }
