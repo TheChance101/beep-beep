@@ -3,7 +3,6 @@ package org.thechance.common.presentation.main
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,7 +25,7 @@ import org.thechance.common.presentation.resources.Resources
 
 object MainContainer :
     BaseScreen<MainScreenModel, MainUiEffect, MainUiState, MainInteractionListener>() {
-    
+
     @Composable
     override fun Content() {
         Init(getScreenModel())
@@ -63,7 +62,28 @@ object MainContainer :
                                 onSwitchTheme = listener::onSwitchTheme,
                                 darkTheme = state.isDarkMode
                         ) { sideBarUnexpandedWidthInKms, mainMenuIsExpanded, itemHeight ->
-                            TabNavigationItem(
+                            SideBarItems(
+                                    mainMenuIsExpanded = mainMenuIsExpanded,
+                                    sideBarUnexpandedWidthInKms = sideBarUnexpandedWidthInKms,
+                                    itemHeight = itemHeight
+                            )
+                        }
+                    },
+                    content = {
+                        Box(Modifier.background(Theme.colors.surface)) {
+                            CurrentTab()
+                        }
+                    },
+            )
+        }
+    }
+
+    @Composable
+    private fun ColumnScope.SideBarItems(
+        mainMenuIsExpanded: Boolean,
+        sideBarUnexpandedWidthInKms: Dp,
+        itemHeight: (itemHeight: Float) -> Unit
+    ) {TabNavigationItem(
                                     tab = OverviewTab,
                                     selectedIconResource = Resources.Drawable.overviewFilled,
                                     unSelectedIconResource = Resources.Drawable.overviewOutlined,
@@ -101,15 +121,7 @@ object MainContainer :
                                         itemHeight(it.boundsInParent().height)
                                     }
                             )
-                        }
-                    },
-                    content = {
-                        Box(Modifier.background(Theme.colors.surface).padding(it)) {
-                            CurrentTab()
-                        }
-                    },
-            )
-        }
+
     }
 
     @Composable

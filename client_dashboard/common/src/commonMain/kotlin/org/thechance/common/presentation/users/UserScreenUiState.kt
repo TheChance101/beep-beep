@@ -9,6 +9,7 @@ import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.ErrorState
 
 data class UserScreenUiState(
+    val hasConnection: Boolean = true,
     val pageInfo: UserPageInfoUiState = UserPageInfoUiState(),
     val specifiedUsers: Int = 10,
     val currentPage: Int = 1,

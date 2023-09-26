@@ -81,6 +81,7 @@ class RestaurantInformationScreen(private val id: String) : BaseScreen<
             RestaurantInformationUiEffect.ShowNoInternetError -> {}
             RestaurantInformationUiEffect.ShowUnknownError -> {}
             RestaurantInformationUiEffect.UpdateInformationSuccess -> {}
+            else -> {}
         }
     }
 

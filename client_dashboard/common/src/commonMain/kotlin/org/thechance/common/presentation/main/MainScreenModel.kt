@@ -12,7 +12,7 @@ import org.thechance.common.presentation.util.ErrorState
 
 
 class MainScreenModel(
-    private val getUsersUseCase: IUsersManagementUseCase,
+    private val userManagement: IUsersManagementUseCase,
     private val logout: ILogoutUserUseCase,
     private val themeManagement: IThemeManagementUseCase
 ) : BaseScreenModel<MainUiState, MainUiEffect>(MainUiState()), MainInteractionListener {
@@ -25,7 +25,7 @@ class MainScreenModel(
 
     private fun getUserInfo() {
         tryToExecute(
-            getUsersUseCase::getUserInfo,
+            userManagement::getUserInfo,
             ::onGetUserInfoSuccessfully,
             ::onError
         )
@@ -35,13 +35,21 @@ class MainScreenModel(
         updateState {
             it.copy(
                 username = username,
-                firstUsernameLetter = username.first().uppercase()
+                firstUsernameLetter = username.first().uppercase(),
+                hasInternetConnection = true
             )
         }
     }
 
     private fun onError(error: ErrorState) {
-        updateState { it.copy(error = error) }
+        when(error){
+            is ErrorState.NoConnection -> {
+                updateState { it.copy(error = error, hasInternetConnection = true) }
+            }
+            else -> {
+                updateState { it.copy(error = error) }
+            }
+        }
     }
 
     override fun onClickDropDownMenu() {

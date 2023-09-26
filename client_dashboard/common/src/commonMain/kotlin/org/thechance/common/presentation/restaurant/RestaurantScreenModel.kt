@@ -23,6 +23,10 @@ class RestaurantScreenModel(
     private var limitJob: Job? = null
 
     init {
+        initRestaurantScreen()
+    }
+
+    private fun initRestaurantScreen() {
         getRestaurants()
         getCuisines()
         if (state.value.newRestaurantInfoUiState.lat.isEmpty())
@@ -49,6 +53,7 @@ class RestaurantScreenModel(
     private fun onGetRestaurantSuccessfully(restaurants: DataWrapper<Restaurant>) {
         updateState {
             it.copy(
+                hasConnection = true,
                 restaurants = restaurants.result.toRestaurantsUIState(),
                 isLoading = false,
                 numberOfRestaurants = restaurants.numberOfResult,
@@ -112,6 +117,11 @@ class RestaurantScreenModel(
                                 },
                         )
                     )
+                }
+            }
+            is ErrorState.NoConnection -> {
+                updateState {
+                    it.copy(hasConnection = false)
                 }
             }
             else -> {}
@@ -204,6 +214,10 @@ class RestaurantScreenModel(
         clearRestaurantInfoErrorState()
         clearAddRestaurantInfo()
         updateState { it.copy(isNewRestaurantInfoDialogVisible = true) }
+    }
+
+    override fun onRetry() {
+        initRestaurantScreen()
     }
 
     private fun getCurrentLocation() {

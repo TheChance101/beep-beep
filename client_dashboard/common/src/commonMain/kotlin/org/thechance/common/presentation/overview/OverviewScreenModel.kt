@@ -6,6 +6,7 @@ import org.thechance.common.domain.entity.TotalRevenueShare
 import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.usecase.IManageRevenueShareUseCase
 import org.thechance.common.domain.usecase.IUsersManagementUseCase
+import org.thechance.common.domain.util.NoInternetException
 import org.thechance.common.domain.util.RevenueShareDate
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.util.ErrorState
@@ -17,10 +18,17 @@ class OverviewScreenModel(
     OverviewInteractionListener {
 
     init {
+        initOverviewScreenData()
+    }
+
+    override fun onRetry() {
+        initOverviewScreenData()
+    }
+
+    private fun initOverviewScreenData() {
         getLatestRegisteredUsers()
         getRevenueShare(RevenueShareDate.MONTHLY)
         getDashboardRevenueShare()
-
     }
 
     private fun getRevenueShare(revenueShareDate: RevenueShareDate) {
@@ -117,12 +125,19 @@ class OverviewScreenModel(
     private fun onGetUsersSuccessfully(users: List<User>) {
         val latestRegisteredUsers = users.toLatestUsersUiState()
         updateState {
-            it.copy(users = latestRegisteredUsers, isLoading = false)
+            it.copy(users = latestRegisteredUsers, isLoading = false, hasInternetConnection = true)
         }
     }
 
     private fun onError(error: ErrorState) {
-        updateState { it.copy(error = error, isLoading = false) }
+        when (error) {
+            is ErrorState.NoConnection -> {
+                updateState { it.copy(hasInternetConnection = false) }
+            }
+            else -> {
+                updateState { it.copy(error = error, isLoading = false) }
+            }
+        }
     }
 
 }

@@ -10,7 +10,7 @@ import org.thechance.common.presentation.resources.Resources
 
 data class RestaurantUiState(
     val isLoading: Boolean = true,
-    val isNoInternetConnection: Boolean = false,
+    val hasConnection: Boolean = true,
     val isNewRestaurantInfoDialogVisible: Boolean = false,
     val newRestaurantInfoUiState: NewRestaurantInfoUiState = NewRestaurantInfoUiState(),
     val restaurantAddCuisineDialogUiState: RestaurantAddCuisineDialogUiState = RestaurantAddCuisineDialogUiState(),
