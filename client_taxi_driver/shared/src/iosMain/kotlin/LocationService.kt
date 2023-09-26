@@ -1,5 +1,8 @@
 import data.service.ILocationService
 import platform.CoreLocation.CLLocationManager
+import platform.Foundation.NSURL
+import platform.UIKit.UIApplication
+import platform.UIKit.UIApplicationOpenSettingsURLString
 
 class LocationService(
     private val locationManger: CLLocationManager = CLLocationManager()
@@ -9,7 +12,8 @@ class LocationService(
     }
 
     override fun openLocationSettings() {
-        println("Open location Settings")
+        NSURL.URLWithString(UIApplicationOpenSettingsURLString)
+            ?.let { UIApplication.sharedApplication.openURL(it) }
     }
 
 
