@@ -139,19 +139,6 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
         ).paginate(page, limit).toList().toEntity()
     }
 
-    /*        override suspend fun getClientTripsHistory(
-                clientId: String,
-                page: Int,
-                limit: Int
-            ): List<Trip> {
-                return container.tripCollection.find(
-                    and(
-                        TripCollection::isCanceled ne true,
-                        TripCollection::clientId eq ObjectId(clientId)
-                    )
-                ).paginate(page, limit).toList().toEntity()
-            }*/
-
     override suspend fun getClientTripsHistory(clientId: String, page: Int, limit: Int): List<Trip> {
         return container.tripCollection.aggregate<TripWithTaxi>(
             match(
@@ -196,9 +183,6 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
     }
 
     override suspend fun approveTrip(tripId: String, taxiId: String, driverId: String): Trip? {
-        val taxi = getTaxiById(taxiId)
-        val driverUsername = taxi?.driverUsername
-        val taxiPlateNumber = taxi?.plateNumber
         return container.tripCollection.findOneAndUpdate(
             filter = and(
                 TripCollection::isCanceled ne true,
@@ -207,8 +191,6 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
             update = Updates.combine(
                 Updates.set(TripCollection::taxiId.name, ObjectId(taxiId)),
                 Updates.set(TripCollection::driverId.name, ObjectId(driverId)),
-                Updates.set(TaxiCollection::driverUsername.name, driverUsername),
-                Updates.set(TaxiCollection::plateNumber.name, taxiPlateNumber),
                 Updates.set(
                     TripCollection::startDate.name, Clock.System.now().toLocalDateTime(
                         TimeZone.currentSystemDefault()
