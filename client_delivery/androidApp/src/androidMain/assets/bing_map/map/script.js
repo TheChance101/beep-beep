@@ -20,10 +20,10 @@ map = new Microsoft.Maps.Map('#myMap', {
 function getDirections(lat,lng,latt,lngg){
 Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
     directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
-    directionsManager.setRequestOptions({ 
+    directionsManager.setRequestOptions({
         routeMode: Microsoft.Maps.Directions.RouteMode.driving,
         routeDraggable: false,
-        autoUpdateMapView: false 
+        autoUpdateMapView: false
     });
     directionsManager.setRenderOptions({
                    drivingPolylineOptions: {
