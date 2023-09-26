@@ -10,13 +10,10 @@ import org.thechance.service_identity.endpoints.model.mapper.toDto
 import org.thechance.service_identity.domain.util.MissingParameterException
 import org.thechance.service_identity.domain.usecases.IUserManagementUseCase
 import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
-import org.thechance.service_identity.domain.util.Role
 import org.thechance.service_identity.endpoints.model.UserOptionsDto
-
-import org.thechance.service_identity.endpoints.model.UsersManagementDto
 import org.thechance.service_identity.endpoints.model.mapper.toEntity
+import org.thechance.service_identity.endpoints.model.BasePagingResponse
 import org.thechance.service_identity.endpoints.util.extractInt
-import org.thechance.service_identity.endpoints.util.toIntListOrNull
 
 fun Route.userManagementRoutes() {
 
@@ -25,10 +22,10 @@ fun Route.userManagementRoutes() {
     route("/dashboard/user") {
 
         post {
-            val options = call.receive<UserOptionsDto>()
-            val restaurants = userManagement.getUsers(options.toEntity()).toDto()
+            val options = call.receive<UserOptionsDto>().toEntity()
+            val restaurants = userManagement.getUsers(options).toDto()
             val total = userManagement.getNumberOfUsers()
-            call.respond(HttpStatusCode.OK, UsersManagementDto(restaurants, total))
+            call.respond(HttpStatusCode.OK, BasePagingResponse(restaurants, page = options.page, total))
         }
 
         get("/last-register") {
