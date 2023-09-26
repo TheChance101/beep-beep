@@ -11,7 +11,7 @@ import data.service.ILocationService
 
 class LocationService(private val context: Context): ILocationService {
 
-    override fun isGPSEnabled(): Boolean {
+    override suspend fun isGPSEnabled(): Boolean {
         val locationManager = getSystemService(context, LocationManager::class.java)
         val isGPSEnabled = locationManager?.isProviderEnabled(LocationManager.GPS_PROVIDER)
         return isGPSEnabled == true
