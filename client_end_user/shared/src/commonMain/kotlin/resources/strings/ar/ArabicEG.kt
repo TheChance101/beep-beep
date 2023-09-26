@@ -90,7 +90,7 @@ data class ArabicEG(
     override val orderNow: String = "أطلب دلوقتي",
     override val total: String = "المجموع:",
     override val yourCart: String = "العربة",
-    override val pleaseLogin: String="سجل دخول يا اسطا وشوفك  حسابك",
+    override val pleaseLogin: String="سجل دخول يا اسطا وشوفك حسابك",
     override val invalidAddress: String = "عنوانك مش صح",
     override val yourAddress: String = "عنوانك",
 ) : IStringResources
