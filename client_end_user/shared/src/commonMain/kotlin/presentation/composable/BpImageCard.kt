@@ -47,6 +47,7 @@ fun BpImageCard(
     hasPriceLevel: Boolean = true,
     hasPrice: Boolean = false,
     price: Double = 0.0,
+    currency: String = "$",
 ) {
     Card(
         modifier = modifier,
@@ -91,7 +92,7 @@ fun BpImageCard(
             )
             Spacer(Modifier.weight(1f))
             if(hasPriceLevel)  BpPriceLevel(priceLevel)
-            if(hasPrice) Text(price.toString(), style=Theme.typography.body, color = Theme.colors.primary)
+            if(hasPrice) Text("$price $currency", style=Theme.typography.body, color = Theme.colors.primary)
 
         }
         AnimatedVisibility(hasOffer) {

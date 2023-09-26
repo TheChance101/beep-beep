@@ -24,6 +24,7 @@ data class MealUIState(
     val price: Double = 0.0,
     val image: String = "",
     val discount: Double = 0.0,
+    val currency: String = "$",
 )
 
 fun Meal.toUIState() = MealUIState(
@@ -31,6 +32,7 @@ fun Meal.toUIState() = MealUIState(
     name = name,
     price = price,
     image = image,
+    currency = currency,
 )
 
 data class RestaurantInfoUIState(

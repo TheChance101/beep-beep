@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
@@ -120,8 +121,7 @@ object RestaurantScreen :
                     }
                 }
                 Column(
-                    modifier = Modifier.fillMaxWidth().fillMaxHeight(.7f)
-
+                    modifier = Modifier.fillMaxWidth().fillMaxHeight(.75f)
                         .verticalScroll(rememberScrollState())
                         .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
                         .background(Theme.colors.surface).align(Alignment.BottomCenter)
@@ -234,6 +234,7 @@ object RestaurantScreen :
                                 hasPrice = true,
                                 hasRate = false,
                                 price = state.mostOrders[index].price,
+                                currency = state.mostOrders[index].currency
                             )
                         }
                     }
@@ -254,6 +255,7 @@ object RestaurantScreen :
                                 hasPriceLevel = false,
                                 hasPrice = true,
                                 price = state.mostOrders[index].price,
+                                currency = state.sweets[index].currency,
                                 hasRate = false,
                             )
                         }
