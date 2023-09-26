@@ -94,4 +94,5 @@ data class ArabicPS(
     override val mostOrdered: String = "الأكثر طلباً",
     override val sweets: String= "حلويات",
     override val free: String= "مجاناً",
+    override val loginToAddToFavourite: String= "الرجاء تسجيل الدخول مشان تضيف المطاعم المفضلة",
 ) : IStringResources

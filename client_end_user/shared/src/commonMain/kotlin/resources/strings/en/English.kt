@@ -94,4 +94,5 @@ data class English(
     override val mostOrdered: String = "Most Ordered",
     override val sweets: String = "Sweets",
     override val free: String= "Free",
+    override val loginToAddToFavourite: String="Please log in to add this to your favorites."
 ) : IStringResources

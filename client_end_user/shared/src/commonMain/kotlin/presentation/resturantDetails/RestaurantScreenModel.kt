@@ -7,6 +7,8 @@ import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.IManageFavouriteUseCase
 import domain.usecase.IMangeRestaurantDetailsUseCase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
@@ -143,5 +145,27 @@ class RestaurantScreenModel(
     override  fun onGoToDetails() {
         sendNewEffect(RestaurantUIEffect.onGoToDetails)
     }
+    override fun onDismissSheet() {
+        state.value.sheetState.dismiss()
+        coroutineScope.launch {
+            delayAndChangePermissionSheetState(false)
+        }
+    }
 
+    override fun onShowSheet() {
+        coroutineScope.launch {
+            state.value.sheetState.dismiss()
+            delayAndChangePermissionSheetState(true)
+            state.value.sheetState.show()
+        }
+    }
+
+    override fun onGoToLogin() {
+        sendNewEffect(RestaurantUIEffect.onGoToLogin)
+    }
+
+    private suspend fun delayAndChangePermissionSheetState(show: Boolean) {
+        delay(300)
+        updateState { it.copy(showSheet = show) }
+    }
 }

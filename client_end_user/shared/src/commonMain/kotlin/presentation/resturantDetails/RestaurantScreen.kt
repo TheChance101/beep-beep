@@ -18,10 +18,20 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.BottomSheetDefaults
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,17 +39,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
+import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import domain.entity.PriceLevel
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
+import presentation.composable.BottomSheet
 import presentation.composable.BpImageCard
 import presentation.composable.BpPriceLevel
 import presentation.composable.RatingBar
 import presentation.composable.SectionHeader
 import presentation.composable.modifier.noRippleEffect
 import resources.Resources
+import util.getStatusBarPadding
 
 object RestaurantScreen :
     BaseScreen<RestaurantScreenModel, RestaurantUIState, RestaurantUIEffect, RestaurantInteractionListener>() {
@@ -49,6 +64,7 @@ object RestaurantScreen :
         when (effect) {
             is RestaurantUIEffect.onBack -> navigator.pop()
             is RestaurantUIEffect.onGoToDetails -> {}
+            is RestaurantUIEffect.onGoToLogin -> navigator.push(LoginScreen())
         }
     }
 
@@ -57,168 +73,190 @@ object RestaurantScreen :
         initScreen(getScreenModel())
     }
 
-    @OptIn(ExperimentalResourceApi::class)
+    @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
     @Composable
     override fun onRender(state: RestaurantUIState, listener: RestaurantInteractionListener) {
-
-
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.TopCenter
-        ) {
-            Image(
-                painter = painterResource(Resources.images.placeholder),
-                contentDescription = "background"
-            )
-            Row(
-                modifier = Modifier.padding(16.dp).height(56.dp).fillMaxWidth()
-                    .align(Alignment.TopCenter)
-                    .padding(vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.TopCenter
             ) {
-
-                Box(
-                    Modifier.size(40.dp).clip(RoundedCornerShape(Theme.radius.medium))
-                        .background(color = Theme.colors.surface)
-                        .noRippleEffect { listener.onBack() },
-                    contentAlignment = Alignment.Center
+                BottomSheet(
+                    sheetContent = {
+                        NeedToLoginSheet(
+                            onClick = {
+                                listener.onDismissSheet()
+                                listener.onGoToLogin()
+                            }
+                        )
+                    },
+                    sheetBackgroundColor = Theme.colors.background,
+                    onBackGroundClicked = listener::onDismissSheet,
+                    sheetState = state.sheetState,
                 ) {
-                    Icon(
-                        painter = painterResource(Resources.images.iconBack),
-                        contentDescription = null,
-                        tint = Theme.colors.contentPrimary,
-                        modifier = Modifier.size(16.dp)
-                    )
-                }
-            }
-            Column(
-                modifier = Modifier.fillMaxWidth().fillMaxHeight(.7f)
-                    .verticalScroll(rememberScrollState())
-                    .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
-                    .background(Theme.colors.surface).align(Alignment.BottomCenter)
+                Image(
+                    painter = painterResource(Resources.images.placeholder),
+                    contentDescription = "background",
 
-            ) {
+                    )
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp, start = 16.dp, end = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.padding(16.dp).height(56.dp).fillMaxWidth()
+                        .align(Alignment.TopCenter)
+                        .padding(vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = state.restaurantInfo.name,
-                        style = Theme.typography.headline,
-                        color = Theme.colors.contentPrimary
-                    )
-                    Image(
-                        painter = painterResource(if(state.isFavourite) Resources.images.heartFilled else Resources.images.heart),
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp).clickable { listener.onAddToFavourite() }
-                    )
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth().padding(vertical = 8.dp, horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        painter = painterResource(Resources.images.mapPoint),
-                        contentDescription = null,
-                        tint = Theme.colors.contentTertiary,
-                    )
-                    Text(
-                        text = state.restaurantInfo.address,
-                        style = Theme.typography.caption,
-                        color = Theme.colors.contentTertiary
-                    )
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth().padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
 
+                    Box(
+                        Modifier.size(40.dp).clip(RoundedCornerShape(Theme.radius.medium))
+                            .background(color = Theme.colors.surface)
+                            .noRippleEffect { listener.onBack() },
+                        contentAlignment = Alignment.Center
                     ) {
-                    RatingBar(currentRating = state.restaurantInfo.rating)
-                    BpPriceLevel(state.restaurantInfo.priceLevel)
-                }
-                Text(
-                    text = state.restaurantInfo.description,
-                    style = Theme.typography.body,
-                    color = Theme.colors.contentSecondary,
-                    textAlign = TextAlign.Start,
-                    modifier = Modifier.padding(16.dp)
-                )
-                Row(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    Chip(color = Theme.colors.secondary) {
-                        Text(
-                            text = "${state.restaurantInfo.discount }% ${Resources.strings.off}",
-                            style = Theme.typography.body,
-                            color = Theme.colors.primary,
+                        Icon(
+                            painter = painterResource(Resources.images.iconBack),
+                            contentDescription = null,
+                            tint = Theme.colors.contentPrimary,
+                            modifier = Modifier.size(16.dp)
                         )
                     }
-                    Chip(color = Theme.colors.successContainer) {
-                        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                            Icon(
-                                painter = painterResource(Resources.images.scooter),
-                                contentDescription = null,
-                                tint = Theme.colors.success,
-                                modifier = Modifier.size(16.dp)
-                            )
+                }
+                Column(
+                    modifier = Modifier.fillMaxWidth().fillMaxHeight(.7f)
+
+                        .verticalScroll(rememberScrollState())
+                        .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
+                        .background(Theme.colors.surface).align(Alignment.BottomCenter)
+
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp, start = 16.dp, end = 16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = state.restaurantInfo.name,
+                            style = Theme.typography.headline,
+                            color = Theme.colors.contentPrimary
+                        )
+                        Image(
+                            painter = painterResource(if (state.isFavourite) Resources.images.heartFilled else Resources.images.heart),
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp)
+                                .noRippleEffect {
+                                    if (state.isLogin) {
+                                        listener.onAddToFavourite()
+                                    } else {
+                                        listener.onShowSheet()
+                                    }
+                                }
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth().padding(vertical = 8.dp, horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = painterResource(Resources.images.mapPoint),
+                            contentDescription = null,
+                            tint = Theme.colors.contentTertiary,
+                        )
+                        Text(
+                            text = state.restaurantInfo.address,
+                            style = Theme.typography.caption,
+                            color = Theme.colors.contentTertiary
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth().padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+
+                        ) {
+                        RatingBar(currentRating = state.restaurantInfo.rating)
+                        BpPriceLevel(state.restaurantInfo.priceLevel)
+                    }
+                    Text(
+                        text = state.restaurantInfo.description,
+                        style = Theme.typography.body,
+                        color = Theme.colors.contentSecondary,
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                    Row(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        Chip(color = Theme.colors.secondary) {
                             Text(
-                                text = Resources.strings.free,
+                                text = "${state.restaurantInfo.discount}% ${Resources.strings.off}",
                                 style = Theme.typography.body,
-                                color = Theme.colors.success,
+                                color = Theme.colors.primary,
+                            )
+                        }
+                        Chip(color = Theme.colors.successContainer) {
+                            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                Icon(
+                                    painter = painterResource(Resources.images.scooter),
+                                    contentDescription = null,
+                                    tint = Theme.colors.success,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                Text(
+                                    text = Resources.strings.free,
+                                    style = Theme.typography.body,
+                                    color = Theme.colors.success,
+                                )
+                            }
+                        }
+                    }
+                    Divider(
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
+                        color = Theme.colors.contentBorder
+                    )
+
+                    SectionHeader(
+                        Resources.strings.mostOrdered,
+                        modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
+                    )
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding = PaddingValues(horizontal = 16.dp)
+                    ) {
+                        items(state.mostOrders.size) { index ->
+                            BpImageCard(
+                                title = state.mostOrders[index].name,
+                                painter = painterResource(Resources.images.placeholder),
+                                priceLevel = PriceLevel.LOW,
+                                hasPriceLevel = false,
+                                hasPrice = true,
+                                hasRate = false,
+                                price = state.mostOrders[index].price,
                             )
                         }
                     }
-                }
-                Divider(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
-                    color = Theme.colors.contentBorder
-                )
-
-                SectionHeader(
-                    Resources.strings.mostOrdered,
-                    modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
-                )
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(horizontal = 16.dp)
-                ) {
-                    items(state.mostOrders.size) { index ->
-                        BpImageCard(
-                            title = state.mostOrders[index].name,
-                            painter = painterResource(Resources.images.placeholder),
-                            priceLevel = PriceLevel.LOW,
-                            hasPriceLevel = false,
-                            hasPrice = true,
-                            hasRate = false,
-                            price =state.mostOrders[index].price ,
-                        )
-                    }
-                }
-                SectionHeader(
-                    Resources.strings.sweets,
-                    modifier = Modifier.padding(start = 16.dp, bottom = 8.dp, top = 28.dp)
-                )
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(horizontal = 16.dp)
-                ) {
-                    items(state.sweets.size) { index ->
-                        BpImageCard(
-                            title = state.sweets[index].name,
-                            painter = painterResource(Resources.images.placeholder),
-                            priceLevel = PriceLevel.LOW,
-                            hasPriceLevel = false,
-                            hasPrice = true,
-                            price =state.mostOrders[index].price ,
-                            hasRate = false,
-                        )
+                    SectionHeader(
+                        Resources.strings.sweets,
+                        modifier = Modifier.padding(start = 16.dp, bottom = 8.dp, top = 28.dp)
+                    )
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding = PaddingValues(horizontal = 16.dp),
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    ) {
+                        items(state.sweets.size) { index ->
+                            BpImageCard(
+                                title = state.sweets[index].name,
+                                painter = painterResource(Resources.images.placeholder),
+                                priceLevel = PriceLevel.LOW,
+                                hasPriceLevel = false,
+                                hasPrice = true,
+                                price = state.mostOrders[index].price,
+                                hasRate = false,
+                            )
+                        }
                     }
                 }
             }
@@ -226,6 +264,23 @@ object RestaurantScreen :
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun NeedToLoginSheet(onClick: () -> Unit) {
+    Column (modifier = Modifier.fillMaxWidth()){
+        Text(
+            text = Resources.strings.loginToAddToFavourite ,
+            style=Theme.typography.title,
+            modifier = Modifier.padding(top=24.dp,start=16.dp,end=16.dp),
+            color=Theme.colors.contentPrimary
+        )
+        BpButton(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            title = Resources.strings.login,
+            onClick = { onClick() },
+        )
+    }
+}
 
 @Composable
 private fun Chip(
@@ -234,7 +289,6 @@ private fun Chip(
 ) {
     Box(
         modifier = Modifier
-
             .background(
                 color = color,
                 shape = RoundedCornerShape(size = Theme.radius.small)

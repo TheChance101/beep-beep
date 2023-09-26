@@ -4,6 +4,7 @@ import domain.entity.Meal
 import domain.entity.PriceLevel
 import domain.entity.Restaurant
 import presentation.base.ErrorState
+import presentation.composable.ModalBottomSheetState
 
 data class RestaurantUIState(
     val restaurantInfo: RestaurantInfoUIState = RestaurantInfoUIState(),
@@ -13,6 +14,8 @@ data class RestaurantUIState(
     val isLoading: Boolean = false,
     val error: ErrorState? = null,
     val isLogin :Boolean = false,
+    val sheetState: ModalBottomSheetState = ModalBottomSheetState(),
+    val showSheet: Boolean = false,
 )
 
 data class MealUIState(

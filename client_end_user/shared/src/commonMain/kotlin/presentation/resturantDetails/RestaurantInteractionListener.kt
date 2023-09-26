@@ -10,4 +10,10 @@ interface RestaurantInteractionListener :BaseInteractionListener  {
 
     fun onGoToDetails()
 
+    fun onDismissSheet()
+
+    fun onShowSheet()
+
+    fun onGoToLogin()
+
 }

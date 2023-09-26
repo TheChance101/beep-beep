@@ -6,5 +6,7 @@ sealed class RestaurantUIEffect{
 
     object onGoToDetails : RestaurantUIEffect()
 
+    object onGoToLogin : RestaurantUIEffect()
+
 
 }

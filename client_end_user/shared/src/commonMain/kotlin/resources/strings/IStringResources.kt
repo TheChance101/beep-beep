@@ -92,4 +92,5 @@ interface IStringResources {
     val mostOrdered: String
     val sweets: String
     val free: String
+    val loginToAddToFavourite: String
 }
