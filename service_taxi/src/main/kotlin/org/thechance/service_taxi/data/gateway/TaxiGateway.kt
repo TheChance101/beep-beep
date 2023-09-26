@@ -245,5 +245,12 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
             )
         )
     }
+
+    override suspend fun deleteTaxiByDriverId(driverId: String): Boolean {
+        return container.taxiCollection.updateMany(
+            filter = TaxiCollection::driverId eq ObjectId(driverId),
+            update = set(TaxiCollection::isDeleted setTo true),
+        ).isSuccessfullyUpdated()
+    }
     //endregion
 }

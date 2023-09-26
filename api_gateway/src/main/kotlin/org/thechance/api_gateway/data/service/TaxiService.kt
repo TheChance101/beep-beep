@@ -231,4 +231,12 @@ class TaxiService(
             method = { delete("/trip/$tripId") }
         )
     }
+
+    suspend fun deleteTaxiByDriverId(id: String): Boolean {
+        return client.tryToExecute<Boolean>(
+            api = APIs.TAXI_API,
+            attributes = attributes,
+            method = { delete("/taxi/driver/$id") }
+        )
+    }
 }
