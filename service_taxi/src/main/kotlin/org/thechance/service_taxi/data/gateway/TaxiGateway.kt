@@ -41,6 +41,7 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
             filter = TaxiCollection::id eq ObjectId(taxiId),
             update = Updates.combine(
                 set(TaxiCollection::plateNumber setTo taxiCollection.plateNumber),
+                set(TaxiCollection::driverUsername setTo taxiCollection.driverUsername),
                 set(TaxiCollection::color setTo taxiCollection.color),
                 set(TaxiCollection::type setTo taxiCollection.type),
                 set(TaxiCollection::driverId setTo taxiCollection.driverId),
