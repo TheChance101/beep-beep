@@ -1,6 +1,5 @@
 package org.thechance.common.presentation.login
 
-import kotlinx.coroutines.delay
 import org.thechance.common.domain.usecase.ILoginUserUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.restaurant.ErrorWrapper
@@ -20,32 +19,29 @@ class LoginScreenModel(
     }
 
     override fun onLoginClicked() {
-        val currentState = mutableState.value
+        updateState { it.copy(isLoading = true) }
         clearErrorState()
-        tryToExecute(
-            {
-                login.loginUser(
-                    username = currentState.username,
-                    password = currentState.password,
-                )
-            },
-            onSuccess = { onLoginSuccess() },
-            onError = ::onError
-        )
+        mutableState.value.apply {
+            tryToExecute(
+                    { login.loginUser(username = username, password = password) },
+                    { onLoginSuccess() },
+                    ::onError
+            )
+        }
+
     }
 
     private fun onLoginSuccess() {
-        updateState { it.copy(isLoading = false, error = null, hasInternetConnection = true) }
+        updateState { it.copy(isLoading = false, hasInternetConnection = true) }
         sendNewEffect(LoginUIEffect.LoginSuccess)
     }
 
     private fun onError(error: ErrorState) {
-        updateState { it.copy(isLoading = false, error = error) }
+        updateState { it.copy(isLoading = false) }
         handleErrorState(error)
     }
 
     private fun handleErrorState(error: ErrorState) {
-        updateState { it.copy(isLoading = false) }
         when (error) {
             is ErrorState.MultipleErrors -> {
                 val errorStates = error.errors
@@ -65,8 +61,6 @@ class LoginScreenModel(
             is ErrorState.InvalidPassword -> {
                 updateState {
                     it.copy(
-                        isLoading = false,
-                        error = error,
                         isPasswordError = ErrorWrapper(error.errorMessage, true)
                     )
                 }
@@ -75,8 +69,6 @@ class LoginScreenModel(
             is ErrorState.UserNotExist -> {
                 updateState {
                     it.copy(
-                        isLoading = false,
-                        error = error,
                         isUserError = ErrorWrapper(error.errorMessage, true)
                     )
                 }
@@ -86,7 +78,9 @@ class LoginScreenModel(
                 updateState { it.copy(hasInternetConnection = false) }
             }
 
-            else -> {}
+            else -> {
+                updateState { it.copy(hasInternetConnection = false) }
+            }
         }
     }
 
@@ -97,7 +91,6 @@ class LoginScreenModel(
     private fun clearErrorState() =
         updateState {
             it.copy(
-                error = null,
                 isLoading = false,
                 isPasswordError = ErrorWrapper(),
                 isUserError = ErrorWrapper()
