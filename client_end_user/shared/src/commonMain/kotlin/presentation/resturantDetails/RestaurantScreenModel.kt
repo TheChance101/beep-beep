@@ -3,6 +3,7 @@ package presentation.resturantDetails
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Meal
 import domain.entity.Restaurant
+import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.IManageFavouriteUseCase
 import domain.usecase.IMangeRestaurantDetailsUseCase
 import kotlinx.coroutines.CoroutineScope
@@ -12,14 +13,32 @@ import presentation.base.ErrorState
 class RestaurantScreenModel(
    private val mangeRestaurantDetails: IMangeRestaurantDetailsUseCase,
     private val manageFavourite: IManageFavouriteUseCase,
+   private val manageAuthentication: IManageAuthenticationUseCase
 ) : BaseScreenModel<RestaurantUIState, RestaurantUIEffect>(RestaurantUIState()),RestaurantInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
 
 
     init {
+        onCheckLogin ()
         getRestaurantDetails("64fa315fb7c56f626e24d852")
         getMostOrders("64fa315fb7c56f626e24d852")
         getSweets("64fa315fb7c56f626e24d852")
+    }
+    private fun onCheckLogin () {
+        tryToExecute(
+            { manageAuthentication.getAccessToken() } ,
+            ::onCheckLoginSuccess,
+            ::onCheckLoginError
+        )
+    }
+
+    private fun onCheckLoginSuccess (accessToken: String) {
+        if(accessToken.isNotEmpty()){
+            updateState { it.copy(isLogin = true) }
+        }
+    }
+    private fun onCheckLoginError (errorState: ErrorState) {
+        updateState { it.copy( isLogin = false)}
     }
 
     private fun getRestaurantDetails(restaurantId: String) {

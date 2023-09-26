@@ -12,6 +12,7 @@ data class RestaurantUIState(
     val sweets :List<MealUIState> = emptyList(),
     val isLoading: Boolean = false,
     val error: ErrorState? = null,
+    val isLogin :Boolean = false,
 )
 
 data class MealUIState(
