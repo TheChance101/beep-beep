@@ -7,18 +7,21 @@ import org.bson.types.ObjectId
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
 import org.thechance.service_restaurant.data.DataBaseContainer
-import org.thechance.service_restaurant.data.DataBaseContainer.Companion.RESTAURANT_COLLECTION
-import org.thechance.service_restaurant.data.collection.*
+import org.thechance.service_restaurant.data.collection.CategoryCollection
+import org.thechance.service_restaurant.data.collection.CuisineCollection
+import org.thechance.service_restaurant.data.collection.MealCollection
+import org.thechance.service_restaurant.data.collection.RestaurantCollection
 import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
-import org.thechance.service_restaurant.data.collection.mapper.toHistoryEntity
 import org.thechance.service_restaurant.data.collection.relationModels.CategoryRestaurant
 import org.thechance.service_restaurant.data.collection.relationModels.MealCuisines
-import org.thechance.service_restaurant.data.collection.relationModels.OrderWithRestaurant
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
 import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.data.utils.toObjectIds
-import org.thechance.service_restaurant.domain.entity.*
+import org.thechance.service_restaurant.domain.entity.Category
+import org.thechance.service_restaurant.domain.entity.Cuisine
+import org.thechance.service_restaurant.domain.entity.Meal
+import org.thechance.service_restaurant.domain.entity.Restaurant
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
@@ -191,6 +194,10 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
 
     override suspend fun getCuisineByName(cuisineName: String): Cuisine? {
         return container.cuisineCollection.findOne(CuisineCollection::name eq cuisineName)?.toEntity()
+    }
+
+    override suspend fun getTotalNumberOfCategories(): Long {
+        return container.categoryCollection.countDocuments(CategoryCollection::isDeleted eq false)
     }
 
     //endregion

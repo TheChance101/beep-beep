@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class BasePaginationResponseDto<T>(
-    val total: Long,
     val items: List<T>,
+    val page: Int,
+    val total: Long
 )

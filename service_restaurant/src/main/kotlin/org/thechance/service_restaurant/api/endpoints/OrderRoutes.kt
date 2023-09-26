@@ -2,16 +2,13 @@ package org.thechance.service_restaurant.api.endpoints
 
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import org.koin.ktor.ext.inject
 import org.thechance.service_restaurant.api.models.BasePaginationResponseDto
-import org.thechance.service_restaurant.api.models.OrderDto
 import org.thechance.service_restaurant.api.models.WebSocketRestaurant
 import org.thechance.service_restaurant.api.models.mappers.toDto
-//import org.thechance.service_restaurant.api.models.mappers.toHistoryDto
 import org.thechance.service_restaurant.api.utils.SocketHandler
 import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.usecase.IManageOrderUseCase
@@ -66,7 +63,7 @@ fun Route.orderRoutes() {
                     .map { it.toDto() }
             val total = manageOrder.getNumberOfOrdersHistoryInRestaurant(restaurantId)
             call.respond(
-                HttpStatusCode.OK, BasePaginationResponseDto<OrderDto>(items = result, total = total)
+                HttpStatusCode.OK, BasePaginationResponseDto(items = result, page = page,total = total)
             )
         }
 
@@ -78,7 +75,7 @@ fun Route.orderRoutes() {
                 manageCart.getOrdersHistoryForUser(userId = userId, page = page, limit = limit).map { it.toDto() }
             val total = manageOrder.getNumberOfOrdersHistoryForUser(userId)
             call.respond(
-                HttpStatusCode.OK, BasePaginationResponseDto<OrderDto>(items = result, total = total)
+                HttpStatusCode.OK, BasePaginationResponseDto(items = result, page = page,total = total)
             )
         }
 
