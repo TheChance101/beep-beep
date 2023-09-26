@@ -1,9 +1,9 @@
 package org.thechance.common.data.gateway.fake
 
-import org.thechance.common.data.remote.mapper.toEntity
-import org.thechance.common.data.remote.model.DataWrapperDto
-import org.thechance.common.data.remote.model.RestaurantDto
-import org.thechance.common.data.remote.model.toEntity
+import org.thechance.common.data.gateway.remote.mapper.toEntity
+import org.thechance.common.data.gateway.remote.model.DataWrapperDto
+import org.thechance.common.data.gateway.remote.model.RestaurantDto
+import org.thechance.common.data.gateway.remote.model.toEntity
 import org.thechance.common.domain.entity.Cuisine
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.NewRestaurantInfo

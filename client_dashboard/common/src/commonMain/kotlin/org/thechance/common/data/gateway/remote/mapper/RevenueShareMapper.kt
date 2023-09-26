@@ -1,8 +1,8 @@
-package org.thechance.common.data.remote.mapper
+package org.thechance.common.data.gateway.remote.mapper
 
-import org.thechance.common.data.remote.model.OrdersRevenueDto
-import org.thechance.common.data.remote.model.RevenueShareDto
-import org.thechance.common.data.remote.model.TripsRevenueDto
+import org.thechance.common.data.gateway.remote.model.OrdersRevenueDto
+import org.thechance.common.data.gateway.remote.model.RevenueShareDto
+import org.thechance.common.data.gateway.remote.model.TripsRevenueDto
 import org.thechance.common.domain.entity.OrdersRevenue
 import org.thechance.common.domain.entity.RevenueShare
 import org.thechance.common.domain.entity.TripsRevenue

@@ -4,14 +4,14 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
-import org.thechance.common.data.remote.model.CuisineDto
-import org.thechance.common.data.remote.model.RestaurantDto
-import org.thechance.common.data.remote.model.RestaurantResponse
-import org.thechance.common.data.remote.model.ServerResponse
-import org.thechance.common.data.remote.mapper.getPriceLevelOrNull
-import org.thechance.common.data.remote.mapper.getRatingOrNull
-import org.thechance.common.data.remote.mapper.toDto
-import org.thechance.common.data.remote.mapper.toEntity
+import org.thechance.common.data.gateway.remote.model.CuisineDto
+import org.thechance.common.data.gateway.remote.model.RestaurantDto
+import org.thechance.common.data.gateway.remote.model.RestaurantResponse
+import org.thechance.common.data.gateway.remote.model.ServerResponse
+import org.thechance.common.data.gateway.remote.mapper.getPriceLevelOrNull
+import org.thechance.common.data.gateway.remote.mapper.getRatingOrNull
+import org.thechance.common.data.gateway.remote.mapper.toDto
+import org.thechance.common.data.gateway.remote.mapper.toEntity
 import org.thechance.common.domain.entity.*
 import org.thechance.common.domain.getway.IRestaurantGateway
 

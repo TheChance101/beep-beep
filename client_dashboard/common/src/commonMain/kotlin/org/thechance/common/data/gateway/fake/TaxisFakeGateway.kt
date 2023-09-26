@@ -5,11 +5,11 @@ import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
-import org.thechance.common.data.remote.mapper.toDto
-import org.thechance.common.data.remote.mapper.toEntity
-import org.thechance.common.data.remote.model.DataWrapperDto
-import org.thechance.common.data.remote.model.TaxiDto
-import org.thechance.common.data.remote.model.toEntity
+import org.thechance.common.data.gateway.remote.mapper.toDto
+import org.thechance.common.data.gateway.remote.mapper.toEntity
+import org.thechance.common.data.gateway.remote.model.DataWrapperDto
+import org.thechance.common.data.gateway.remote.model.TaxiDto
+import org.thechance.common.data.gateway.remote.model.toEntity
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.NewTaxiInfo
 import org.thechance.common.domain.entity.Taxi

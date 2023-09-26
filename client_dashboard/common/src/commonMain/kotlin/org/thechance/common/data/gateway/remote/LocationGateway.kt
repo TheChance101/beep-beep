@@ -4,8 +4,8 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 import org.koin.core.qualifier.named
 import org.koin.java.KoinJavaComponent.inject
-import org.thechance.common.data.remote.mapper.toEntity
-import org.thechance.common.data.remote.model.LocationInfoDto
+import org.thechance.common.data.gateway.remote.mapper.toEntity
+import org.thechance.common.data.gateway.remote.model.LocationInfoDto
 import org.thechance.common.domain.entity.LocationInfo
 import org.thechance.common.domain.getway.ILocationGateway
 

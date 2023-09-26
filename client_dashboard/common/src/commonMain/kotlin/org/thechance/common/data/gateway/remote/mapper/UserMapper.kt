@@ -1,6 +1,6 @@
-package org.thechance.common.data.remote.mapper
+package org.thechance.common.data.gateway.remote.mapper
 
-import org.thechance.common.data.remote.model.UserDto
+import org.thechance.common.data.gateway.remote.model.UserDto
 import org.thechance.common.domain.entity.Permission
 import org.thechance.common.domain.entity.User
 

@@ -1,4 +1,4 @@
-package org.thechance.common.data.remote.model
+package org.thechance.common.data.gateway.remote.model
 
 import kotlinx.serialization.Serializable
 

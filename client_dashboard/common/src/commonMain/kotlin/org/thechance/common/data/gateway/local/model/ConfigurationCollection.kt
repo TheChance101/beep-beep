@@ -1,4 +1,4 @@
-package org.thechance.common.data.local.model
+package org.thechance.common.data.gateway.local.model
 
 import io.realm.kotlin.types.RealmObject
 

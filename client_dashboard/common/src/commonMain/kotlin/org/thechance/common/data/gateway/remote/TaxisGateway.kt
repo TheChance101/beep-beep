@@ -3,11 +3,11 @@ package org.thechance.common.data.gateway.remote
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.http.*
-import org.thechance.common.data.remote.mapper.toDto
-import org.thechance.common.data.remote.mapper.toEntity
-import org.thechance.common.data.remote.model.PaginationResponse
-import org.thechance.common.data.remote.model.ServerResponse
-import org.thechance.common.data.remote.model.TaxiDto
+import org.thechance.common.data.gateway.remote.mapper.toDto
+import org.thechance.common.data.gateway.remote.mapper.toEntity
+import org.thechance.common.data.gateway.remote.model.PaginationResponse
+import org.thechance.common.data.gateway.remote.model.ServerResponse
+import org.thechance.common.data.gateway.remote.model.TaxiDto
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.NewTaxiInfo
 import org.thechance.common.domain.entity.Taxi

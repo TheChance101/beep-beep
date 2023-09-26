@@ -4,7 +4,7 @@ import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import org.thechance.common.data.local.model.ConfigurationCollection
+import org.thechance.common.data.gateway.local.model.ConfigurationCollection
 import org.thechance.common.domain.getway.IUserLocalGateway
 
 class UserLocalGateway(private val realm: Realm) : IUserLocalGateway {

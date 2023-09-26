@@ -1,8 +1,8 @@
-package org.thechance.common.data.remote.mapper
+package org.thechance.common.data.gateway.remote.mapper
 
-import org.thechance.common.data.remote.model.TaxiDto
-import org.thechance.common.data.remote.model.TaxiFiltrationDto
-import org.thechance.common.data.remote.model.TaxiInfoDto
+import org.thechance.common.data.gateway.remote.model.TaxiDto
+import org.thechance.common.data.gateway.remote.model.TaxiFiltrationDto
+import org.thechance.common.data.gateway.remote.model.TaxiInfoDto
 import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.domain.entity.NewTaxiInfo
 import org.thechance.common.domain.entity.Taxi
