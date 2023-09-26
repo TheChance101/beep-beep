@@ -11,13 +11,13 @@ data class MainScreenUIState(
     val selectedRestaurantId: String = "",
 
     val orderUiState: ChartsItemUiState = ChartsItemUiState(
-        yAxisData = emptyList(),
-        xAxisData = emptyList(),
+        yAxisData = listOf(0.0,0.0),
+        xAxisData = listOf("1","2"),
         label = "Orders"
     ),
     val revenueUiState: ChartsItemUiState = ChartsItemUiState(
-        yAxisData = emptyList(),
-        xAxisData = emptyList(),
+        yAxisData = listOf(0.0,0.0),
+        xAxisData = listOf("1","2"),
         label = "Revenue"
     )
 ) {
