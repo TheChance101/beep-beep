@@ -1,10 +1,10 @@
 package org.thechance.common.presentation.main
 
+import LoginScreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.boundsInParent
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -20,7 +20,6 @@ import org.thechance.common.presentation.composables.scaffold.BpSideBarItem
 import org.thechance.common.presentation.composables.scaffold.DashBoardScaffold
 import org.thechance.common.presentation.composables.scaffold.DashboardAppbar
 import org.thechance.common.presentation.composables.scaffold.DashboardSideBar
-import org.thechance.common.presentation.login.LoginScreen
 import org.thechance.common.presentation.resources.Resources
 
 object MainContainer :
@@ -83,44 +82,47 @@ object MainContainer :
         mainMenuIsExpanded: Boolean,
         sideBarUnexpandedWidthInKms: Dp,
         itemHeight: (itemHeight: Float) -> Unit
-    ) {TabNavigationItem(
-                                    tab = OverviewTab,
-                                    selectedIconResource = Resources.Drawable.overviewFilled,
-                                    unSelectedIconResource = Resources.Drawable.overviewOutlined,
-                                    mainMenuIsExpanded = mainMenuIsExpanded,
-                                    sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
-                                    modifier = Modifier.onGloballyPositioned {
-                                        itemHeight(it.boundsInParent().height) }
-                            )
-                            TabNavigationItem(
-                                    tab = TaxisTab,
-                                    selectedIconResource = Resources.Drawable.taxiFilled,
-                                    unSelectedIconResource = Resources.Drawable.taxiOutlined,
-                                    mainMenuIsExpanded = mainMenuIsExpanded,
-                                    sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
-                                    modifier = Modifier.onGloballyPositioned {
-                                            itemHeight(it.boundsInParent().height) }
-                            )
-                            TabNavigationItem(
-                                    tab = RestaurantsTab,
-                                    selectedIconResource = Resources.Drawable.restaurantFilled,
-                                    unSelectedIconResource = Resources.Drawable.restaurantOutlined,
-                                    mainMenuIsExpanded = mainMenuIsExpanded,
-                                    sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
-                                    modifier = Modifier.onGloballyPositioned {
-                                            itemHeight(it.boundsInParent().height)
-                                    }
-                            )
-                            TabNavigationItem(
-                                    tab = UsersTab,
-                                    selectedIconResource = Resources.Drawable.usersFilled,
-                                    unSelectedIconResource = Resources.Drawable.usersOutlined,
-                                    mainMenuIsExpanded = mainMenuIsExpanded,
-                                    sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
-                                    modifier = Modifier.onGloballyPositioned {
-                                        itemHeight(it.boundsInParent().height)
-                                    }
-                            )
+    ) {
+        TabNavigationItem(
+                tab = OverviewTab,
+                selectedIconResource = Resources.Drawable.overviewFilled,
+                unSelectedIconResource = Resources.Drawable.overviewOutlined,
+                mainMenuIsExpanded = mainMenuIsExpanded,
+                sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
+                modifier = Modifier.onGloballyPositioned {
+                    itemHeight(it.boundsInParent().height)
+                }
+        )
+        TabNavigationItem(
+                tab = TaxisTab,
+                selectedIconResource = Resources.Drawable.taxiFilled,
+                unSelectedIconResource = Resources.Drawable.taxiOutlined,
+                mainMenuIsExpanded = mainMenuIsExpanded,
+                sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
+                modifier = Modifier.onGloballyPositioned {
+                    itemHeight(it.boundsInParent().height)
+                }
+        )
+        TabNavigationItem(
+                tab = RestaurantsTab,
+                selectedIconResource = Resources.Drawable.restaurantFilled,
+                unSelectedIconResource = Resources.Drawable.restaurantOutlined,
+                mainMenuIsExpanded = mainMenuIsExpanded,
+                sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
+                modifier = Modifier.onGloballyPositioned {
+                    itemHeight(it.boundsInParent().height)
+                }
+        )
+        TabNavigationItem(
+                tab = UsersTab,
+                selectedIconResource = Resources.Drawable.usersFilled,
+                unSelectedIconResource = Resources.Drawable.usersOutlined,
+                mainMenuIsExpanded = mainMenuIsExpanded,
+                sideBarUnexpandedWidth = sideBarUnexpandedWidthInKms,
+                modifier = Modifier.onGloballyPositioned {
+                    itemHeight(it.boundsInParent().height)
+                }
+        )
 
     }
 
