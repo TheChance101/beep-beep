@@ -55,14 +55,22 @@ object OverviewScreen :
             Column(
                 modifier = Modifier
                     .background(Theme.colors.surface)
+                    .padding(paddingValues = PaddingValues(horizontal = 40.kms))
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(24.kms)
+                verticalArrangement = Arrangement.spacedBy(24.kms),
         ) {
 
-            RevenueCard(listener = listener, state = state )
+            RevenueCard(
+                    listener = listener,
+                    state = state,
+                    modifier = Modifier.padding(paddingValues = PaddingValues(top = 40.kms))
+            )
+
+
             Row(
-                    modifier = Modifier.height(340.dp),
+                    modifier = Modifier.padding(paddingValues = PaddingValues(bottom = 40.kms))
+                        .height(380.dp),
                     horizontalArrangement = Arrangement.spacedBy(24.kms)
                 ) {
                     OverviewCard(
@@ -77,7 +85,30 @@ object OverviewScreen :
                         onLeadingButtonClicked = listener::onViewMoreTaxiClicked,
                         verticalArrangement = Arrangement.spacedBy(40.dp),
                         content = {
-                            TaxiChart(tripsRevenueShare = state.tripsRevenueShare)
+                            TaxiChart(
+                                    tripsRevenueShare = listOf(
+                                            PieChartData(
+                                                    partName = Resources.Strings.accepted,
+                                                    data = state.tripsRevenueShare.acceptedTrips,
+                                                    color = Theme.colors.primary,
+                                            ),
+                                            PieChartData(
+                                                    partName = Resources.Strings.pending,
+                                                    data = state.tripsRevenueShare.pendingTrips,
+                                                    color = Theme.colors.primary.copy(alpha = 0.5f),
+                                            ),
+                                            PieChartData(
+                                                    partName = Resources.Strings.rejected,
+                                                    data = state.tripsRevenueShare.rejectedTrips,
+                                                    color = Theme.colors.primary.copy(alpha = 0.3f),
+                                            ),
+                                            PieChartData(
+                                                    partName = Resources.Strings.canceled,
+                                                    data = state.tripsRevenueShare.canceledTrips,
+                                                    color = Theme.colors.primary.copy(alpha = 0.1f),
+                                            ),
+                                    )
+                            )
                         }
                     )
                     OverviewCard(
@@ -92,7 +123,25 @@ object OverviewScreen :
                         onLeadingButtonClicked = listener::onViewMoreRestaurantClicked,
                         verticalArrangement = Arrangement.spacedBy(40.dp),
                         content = {
-                            RestaurantsChart(ordersRevenueShare = state.ordersRevenueShare)
+                            RestaurantsChart(
+                                    ordersRevenueShare = listOf(
+                                            PieChartData(
+                                                    partName = Resources.Strings.completed,
+                                                    data = state.ordersRevenueShare.completedOrders,
+                                                    color = Theme.colors.primary,
+                                            ),
+                                            PieChartData(
+                                                    partName = Resources.Strings.inTheWay,
+                                                    data = state.ordersRevenueShare.inTheWayOrders,
+                                                    color = Theme.colors.primary.copy(alpha = 0.5f),
+                                            ),
+                                            PieChartData(
+                                                    partName = Resources.Strings.canceled,
+                                                    data = state.ordersRevenueShare.canceledOrders,
+                                                    color = Theme.colors.primary.copy(alpha = 0.1f),
+                                            ),
+                                    )
+                            )
                         }
                     )
                     OverviewCard(
@@ -130,15 +179,17 @@ object OverviewScreen :
                                             overflow = TextOverflow.Ellipsis,
                                         )
                                         FlowRow(
-                                            modifier = Modifier,
-                                            horizontalArrangement = Arrangement.spacedBy(8.kms)
+                                                modifier = Modifier,
+                                                horizontalArrangement = Arrangement.spacedBy(8.kms)
                                         ) {
                                             user.permission.forEach {
-                                                Icon(
-                                                    painter = painterResource(getPermissionIcon(it)),
-                                                    contentDescription = null,
-                                                    tint = Theme.colors.contentPrimary.copy(alpha = 0.87f),
-                                                    modifier = Modifier.size(24.kms)
+                                                Icon(painter = painterResource(
+                                                                getPermissionIcon(it)),
+                                                        contentDescription = null,
+                                                        tint = Theme.colors.contentPrimary.copy(
+                                                                alpha = 0.87f
+                                                        ),
+                                                        modifier = Modifier.size(24.kms)
                                                 )
                                             }
                                         }
@@ -236,7 +287,6 @@ object OverviewScreen :
                         modifier = Modifier.weight(1f).height(32.dp),
                 )
             }
-
             content()
         }
     }
@@ -276,21 +326,20 @@ object OverviewScreen :
                 )
             }
 
-            val testBarParameters: List<BarParameters> = listOf(
-                    BarParameters(
-                            dataName = Resources.Strings.revenue,
-                            data = state.revenueData,
-                            barColor = Theme.colors.primary,
-                    ),
-                    BarParameters(
-                            dataName = Resources.Strings.earnings,
-                            data = state.earningData,
-                            barColor = Theme.colors.secondary,
-                    ),
-            )
             Box(modifier = Modifier.fillMaxWidth().height(400.dp)) {
                 BarChart(
-                        chartParameters = testBarParameters,
+                        chartParameters = listOf(
+                                BarParameters(
+                                        dataName = Resources.Strings.revenue,
+                                        data = state.revenueData,
+                                        barColor = Theme.colors.primary,
+                                ),
+                                BarParameters(
+                                        dataName = Resources.Strings.earnings,
+                                        data = state.earningData,
+                                        barColor = Theme.colors.secondary,
+                                ),
+                        ),
                         gridColor = Theme.colors.divider,
                         xAxisData = state.revenueShare,
                         yAxisStyle = Theme.typography.caption.copy(color = Theme.colors.contentPrimary),
@@ -311,32 +360,10 @@ object OverviewScreen :
     //endregion
     @Composable
     fun ColumnScope.TaxiChart(
-        tripsRevenueShare: TripsRevenueShareUiState
+        tripsRevenueShare: List<PieChartData>
     ) {
-        val testPieChartData: List<PieChartData> = listOf(
-                PieChartData(
-                        partName = Resources.Strings.accepted,
-                        data = tripsRevenueShare.acceptedTrips,
-                        color = Theme.colors.primary,
-                ),
-                PieChartData(
-                        partName = Resources.Strings.pending,
-                        data = tripsRevenueShare.pendingTrips,
-                        color = Theme.colors.primary.copy(alpha = 0.5f),
-                ),
-                PieChartData(
-                        partName = Resources.Strings.rejected,
-                        data = tripsRevenueShare.rejectedTrips,
-                        color = Theme.colors.primary.copy(alpha = 0.3f),
-                ),
-                PieChartData(
-                        partName = Resources.Strings.canceled,
-                        data = tripsRevenueShare.canceledTrips,
-                        color = Theme.colors.primary.copy(alpha = 0.1f),
-                ),
-        )
         DonutChart(
-                pieChartData = testPieChartData,
+                pieChartData = tripsRevenueShare,
                 centerTitle = Resources.Strings.trip,
                 centerTitleStyle = Theme.typography.body.copy(color = Theme.colors.contentSecondary),
                 outerCircularColor = Theme.colors.contentBorder,
@@ -351,28 +378,10 @@ object OverviewScreen :
 
     @Composable
     fun ColumnScope.RestaurantsChart(
-        ordersRevenueShare: OrdersRevenueShareUiState
+        ordersRevenueShare: List<PieChartData>
     ) {
-        val testPieChartData: List<PieChartData> = listOf(
-                PieChartData(
-                        partName = Resources.Strings.completed,
-                        data = ordersRevenueShare.completedOrders,
-                        color = Theme.colors.primary,
-                ),
-                PieChartData(
-                        partName = Resources.Strings.inTheWay,
-                        data = ordersRevenueShare.inTheWayOrders,
-                        color = Theme.colors.primary.copy(alpha = 0.5f),
-                ),
-                PieChartData(
-                        partName = Resources.Strings.canceled,
-                        data = ordersRevenueShare.canceledOrders,
-                        color = Theme.colors.primary.copy(alpha = 0.1f),
-                ),
-        )
-
         DonutChart(
-                pieChartData = testPieChartData,
+                pieChartData = ordersRevenueShare,
                 centerTitle = Resources.Strings.orders,
                 centerTitleStyle = Theme.typography.body.copy(color = Theme.colors.contentSecondary),
                 outerCircularColor = Theme.colors.contentBorder,

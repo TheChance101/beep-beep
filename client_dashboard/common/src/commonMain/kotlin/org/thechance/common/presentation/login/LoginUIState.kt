@@ -8,7 +8,6 @@ data class LoginUIState(
     val username: String = "",
     val password: String = "",
     val isLoading: Boolean = true,
-    val error: ErrorState? = null,
     val isUserError: ErrorWrapper? = null,
     val isPasswordError: ErrorWrapper? = null,
     val isAbleToLogin: Boolean = false,
