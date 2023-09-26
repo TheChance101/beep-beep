@@ -16,4 +16,6 @@ interface OverviewInteractionListener : BaseInteractionListener {
 
     fun onViewMoreTaxiClicked()
 
+    fun onRetry()
+
 }

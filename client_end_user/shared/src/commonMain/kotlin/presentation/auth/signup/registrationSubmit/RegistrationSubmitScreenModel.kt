@@ -2,10 +2,19 @@ package presentation.auth.signup.registrationSubmit
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.usecase.IManageAuthenticationUseCase
+import domain.usecase.IManageUserUseCase
 import domain.usecase.validation.IValidationUseCase
 import domain.utils.AuthorizationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
@@ -13,17 +22,36 @@ import presentation.base.ErrorState.InvalidEmail
 import presentation.base.ErrorState.InvalidFullName
 import presentation.base.ErrorState.InvalidPhone
 import presentation.base.ErrorState.UserAlreadyExists
+import presentation.base.ErrorState.WifiDisabled
+import resources.strings.IStringResources
+import util.LanguageCode
 
 class RegistrationSubmitScreenModel(
     private val username: String,
     private val password: String,
     private val validation: IValidationUseCase,
     private val manageAuthentication: IManageAuthenticationUseCase,
+    private val manageUser: IManageUserUseCase,
 ) : BaseScreenModel<RegistrationSubmitUIState, RegistrationSubmitScreenEffect>(
     RegistrationSubmitUIState()
 ),
     RegistrationSubmitInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
+    private val _language: MutableStateFlow<LanguageCode> = MutableStateFlow(LanguageCode.EN)
+    val language: StateFlow<LanguageCode> = _language.asStateFlow()
+    init {
+        getUserLanguageCode()
+    }
+    private fun getUserLanguageCode() {
+        coroutineScope.launch(Dispatchers.IO) {
+            manageUser.getUserLanguageCode().distinctUntilChanged().collectLatest { lang ->
+                _language.update {
+                    LanguageCode.entries.find { languageCode -> languageCode.value == lang }
+                        ?: LanguageCode.EN
+                }
+            }
+        }
+    }
 
 
     // region interactions
@@ -39,7 +67,7 @@ class RegistrationSubmitScreenModel(
 
     override fun onPhoneChanged(phone: String) {
         updateState { it.copy(phone = phone) }
-        tryCatch { validation.validatePhone(phone); clearErrors() }
+        tryCatch { validation.validatePhone(phone,_language.value.value); clearErrors() }
     }
 
     override fun onSignUpButtonClicked() {

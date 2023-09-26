@@ -1,12 +1,9 @@
 package org.thechance.common.presentation.overview
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -14,6 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -25,9 +24,11 @@ import com.aay.compose.barChart.model.BarParameters
 import com.aay.compose.baseComponents.model.LegendPosition
 import com.aay.compose.donutChart.DonutChart
 import com.aay.compose.donutChart.model.PieChartData
+import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.base.BaseScreen
+import org.thechance.common.presentation.composables.BpNoInternetConnection
 import org.thechance.common.presentation.composables.OverviewDropDown
 import org.thechance.common.presentation.main.RestaurantsTab
 import org.thechance.common.presentation.main.TaxisTab
@@ -47,8 +48,11 @@ object OverviewScreen :
     override fun OnRender(state: OverviewUiState, listener: OverviewInteractionListener) {
 
         val scrollState = rememberScrollState()
-
-        Column(
+        BpNoInternetConnection(hasConnection = !state.hasInternetConnection){
+            listener.onRetry()
+        }
+        AnimatedVisibility(state.hasInternetConnection){
+            Column(
                 modifier = Modifier
                     .background(Theme.colors.surface)
                     .padding(paddingValues = PaddingValues(horizontal = 40.kms))
@@ -68,14 +72,14 @@ object OverviewScreen :
                     modifier = Modifier.padding(paddingValues = PaddingValues(bottom = 40.kms))
                         .height(380.dp),
                     horizontalArrangement = Arrangement.spacedBy(24.kms)
-            ) {
-                OverviewCard(
+                ) {
+                    OverviewCard(
                         modifier = Modifier.fillMaxHeight().background(Theme.colors.surface)
                             .weight(1f)
                             .border(
-                                    1.kms,
-                                    Theme.colors.divider,
-                                    RoundedCornerShape(Theme.radius.medium)
+                                1.kms,
+                                Theme.colors.divider,
+                                RoundedCornerShape(Theme.radius.medium)
                             ),
                         title = Resources.Strings.taxiLabel,
                         onLeadingButtonClicked = listener::onViewMoreTaxiClicked,
@@ -106,14 +110,14 @@ object OverviewScreen :
                                     )
                             )
                         }
-                )
-                OverviewCard(
+                    )
+                    OverviewCard(
                         modifier = Modifier.weight(1f).fillMaxHeight()
                             .background(Theme.colors.surface)
                             .border(
-                                    1.kms,
-                                    Theme.colors.divider,
-                                    RoundedCornerShape(Theme.radius.medium)
+                                1.kms,
+                                Theme.colors.divider,
+                                RoundedCornerShape(Theme.radius.medium)
                             ),
                         title = Resources.Strings.restaurantLabel,
                         onLeadingButtonClicked = listener::onViewMoreRestaurantClicked,
@@ -139,41 +143,40 @@ object OverviewScreen :
                                     )
                             )
                         }
-                )
-                OverviewCard(
+                    )
+                    OverviewCard(
                         modifier = Modifier.weight(1f)
                             .background(Theme.colors.surface)
                             .border(
-                                    1.kms,
-                                    Theme.colors.divider,
-                                    RoundedCornerShape(Theme.radius.medium)
+                                1.kms,
+                                Theme.colors.divider,
+                                RoundedCornerShape(Theme.radius.medium)
                             ),
                         title = Resources.Strings.users,
                         onLeadingButtonClicked = listener::onViewMoreUsersClicked,
                         content = {
-                            Column(modifier = Modifier
-                                .weight(1f)
-                                .fillMaxWidth()
-                                .verticalScroll(scrollState)
+                            Column(
+                                modifier = Modifier.weight(1f).fillMaxWidth()
+                                    .verticalScroll(scrollState)
                             ) {
                                 state.users.forEachIndexed { index, user ->
                                     Row(
-                                            modifier = Modifier.padding(16.kms),
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            horizontalArrangement = Arrangement.SpaceBetween
+                                        modifier = Modifier.padding(16.kms),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.SpaceBetween
                                     ) {
                                         Image(
-                                                modifier = Modifier.size(40.kms),
-                                                painter = painterResource(user.image),
-                                                contentDescription = null
+                                            modifier = Modifier.size(40.kms),
+                                            painter = painterResource(user.image),
+                                            contentDescription = null
                                         )
                                         Text(
-                                                text = user.name,
-                                                style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
-                                                modifier = Modifier.padding(start = 16.kms)
-                                                    .weight(1f),
-                                                maxLines = 1,
-                                                overflow = TextOverflow.Ellipsis,
+                                            text = user.name,
+                                            style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
+                                            modifier = Modifier.padding(start = 16.kms)
+                                                .weight(1f),
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
                                         )
                                         FlowRow(
                                                 modifier = Modifier,
@@ -193,14 +196,15 @@ object OverviewScreen :
                                     }
                                     if (index != state.users.lastIndex) {
                                         Divider(
-                                                modifier = Modifier,
-                                                color = Theme.colors.divider
+                                            modifier = Modifier,
+                                            color = Theme.colors.divider
                                         )
                                     }
                                 }
                             }
                         }
-                )
+                    )
+                }
             }
         }
     }
@@ -254,7 +258,6 @@ object OverviewScreen :
         verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(16.kms),
         content: @Composable ColumnScope.() -> Unit,
     ) {
-
         Column(
                 modifier = modifier
                     .background(Theme.colors.surface, RoundedCornerShape(8.kms))

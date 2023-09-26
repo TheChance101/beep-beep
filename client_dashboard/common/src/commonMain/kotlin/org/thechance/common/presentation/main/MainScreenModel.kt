@@ -35,13 +35,21 @@ class MainScreenModel(
         updateState {
             it.copy(
                 username = username,
-                firstUsernameLetter = username.first().uppercase()
+                firstUsernameLetter = username.first().uppercase(),
+                hasInternetConnection = true
             )
         }
     }
 
     private fun onError(error: ErrorState) {
-        updateState { it.copy(error = error) }
+        when(error){
+            is ErrorState.NoConnection -> {
+                updateState { it.copy(error = error, hasInternetConnection = true) }
+            }
+            else -> {
+                updateState { it.copy(error = error) }
+            }
+        }
     }
 
     override fun onClickDropDownMenu() {
