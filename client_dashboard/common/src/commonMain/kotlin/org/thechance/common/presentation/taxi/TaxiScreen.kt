@@ -132,28 +132,27 @@ class TaxiScreen :
                         modifier = Modifier.cursorHoverIconHand()
                     )
                 }
-                AnimatedVisibility(visible = state.hasConnection){
-                    BpTable(
-                        hasConnection = state.hasConnection,
-                        data = state.pageInfo.data,
-                        key = { it.id },
-                        headers = state.tabHeader,
-                        modifier = Modifier.fillMaxWidth(),
-                        rowContent = { taxi ->
-                            TaxiRow(
-                                taxi = taxi,
-                                position = state.pageInfo.data.indexOf(taxi) + 1,
-                                onDropdownMenuClicked = listener::onShowTaxiMenu,
-                                onDropdownMenuDismiss = listener::onHideTaxiMenu,
-                                onEditTaxiClicked = listener::onEditTaxiClicked,
-                                onDeleteTaxiClicked = listener::onDeleteTaxiClicked,
-                            )
-                        },
-                    )
-                }
                 BpNoInternetConnection(!state.hasConnection){
                     listener.onRetry()
                 }
+                BpTable(
+                    hasConnection = state.hasConnection,
+                    data = state.pageInfo.data,
+                    key = { it.id },
+                    isVisible = state.hasConnection,
+                    headers = state.tabHeader,
+                    modifier = Modifier.fillMaxWidth(),
+                    rowContent = { taxi ->
+                        TaxiRow(
+                            taxi = taxi,
+                            position = state.pageInfo.data.indexOf(taxi) + 1,
+                            onDropdownMenuClicked = listener::onShowTaxiMenu,
+                            onDropdownMenuDismiss = listener::onHideTaxiMenu,
+                            onEditTaxiClicked = listener::onEditTaxiClicked,
+                            onDeleteTaxiClicked = listener::onDeleteTaxiClicked,
+                        )
+                    },
+                )
                 TaxisTableFooter(
                     selectedPage = state.currentPage,
                     numberItemInPage = state.specifiedTaxis,

@@ -101,10 +101,9 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
                     onFilterSaved = filterMenuListener::onFilterMenuSaveButtonClicked,
                     onFilterClearAllClicked = filterMenuListener::onFilterClearAllClicked,
                 )
-
+                BpNoInternetConnection(hasConnection = !state.hasConnection,onRetry=onRetry)
                 UsersTable(
-                    hasConnection = state.hasConnection,
-                    onRetry = {onRetry()},
+                    hasConnection=state.hasConnection,
                     users = state.pageInfo.data,
                     headers = state.tableHeader,
                     selectedPage = state.currentPage,
@@ -127,7 +126,6 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
     @Composable
     private fun ColumnScope.UsersTable(
         hasConnection: Boolean,
-        onRetry: () -> Unit,
         users: List<UserScreenUiState.UserUiState>,
         headers: List<Header>,
         selectedPage: Int,
@@ -142,15 +140,11 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
         onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
         onDeleteUserMenuItemClicked: (String) -> Unit,
     ) {
-        BpNoInternetConnection(hasConnection = !hasConnection){
-            onRetry()
-        }
-
-        AnimatedVisibility(visible = hasConnection){
-            BpTable(
+         BpTable(
                 data = users,
                 key = UserScreenUiState.UserUiState::username,
                 headers = headers,
+                isVisible = hasConnection,
                 modifier = Modifier.fillMaxWidth(),
             ) { user ->
                 UserRow(
@@ -163,7 +157,7 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
                     onDeleteUserMenuItemClicked = onDeleteUserMenuItemClicked,
                 )
             }
-        }
+
 
         UsersTableFooter(
             numberItemInPage = numberItemInPage,

@@ -73,9 +73,10 @@ class RestaurantScreen :
             verticalArrangement = Arrangement.spacedBy(16.kms),
         ) {
             RestaurantScreenTopRow(state = state, listener = listener)
-
             RestaurantTable(state = state, listener = listener)
-
+            BpNoInternetConnection(!state.hasConnection){
+                listener.onRetry()
+            }
             RestaurantPagingRow(state = state, listener = listener)
         }
     }
@@ -138,12 +139,12 @@ class RestaurantScreen :
         state: RestaurantUiState,
         listener: RestaurantInteractionListener,
     ) {
-        AnimatedVisibility(visible = state.hasConnection) {
             BpTable(
                 data = state.restaurants,
                 key = { it.id },
                 headers = state.tableHeader,
                 modifier = Modifier.fillMaxWidth(),
+                isVisible = state.hasConnection,
                 rowContent = { restaurant ->
                     RestaurantRow(
                         onClickEditRestaurant = listener::showEditRestaurantMenu,
@@ -156,10 +157,6 @@ class RestaurantScreen :
                     )
                 },
             )
-        }
-        BpNoInternetConnection(!state.hasConnection){
-            listener.onRetry()
-        }
     }
 
     @Composable
