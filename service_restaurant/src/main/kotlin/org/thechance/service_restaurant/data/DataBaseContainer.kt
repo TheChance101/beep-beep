@@ -33,5 +33,6 @@ class DataBaseContainer(client: MongoClient) {
         const val ORDER_COLLECTION = "order"
         const val CART_COLLECTION = "cart"
         const val RESTAURANT_PERMISSION_REQUEST_COLLECTION = "restaurantPermissionRequest"
+        const val CART_COLLECTION = "cart"
     }
 }

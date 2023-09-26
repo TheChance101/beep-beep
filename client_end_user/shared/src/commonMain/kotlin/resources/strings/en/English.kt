@@ -73,6 +73,7 @@ data class English(
     override val thisWeek: String = "This Week",
     override val tryAgain: String = "Try again",
     override val trackYourOrder: String = "Track Your Order",
+    override val history: String = "History",
     override val invalidPassword: String = "Invalid Password",
     override val unknownError: String = "Unknown Error",
     override val wifiDisabled: String = "WIFI Disabled",
@@ -82,4 +83,8 @@ data class English(
     override val invalidEmail: String = "Invalid Email",
     override val invalidFullName: String = "Invalid Full Name",
     override val oppsRegistrationNotCompleted: String = "Opps, Registration Not Completed",
+    override val orderNow: String = "Order Now",
+    override val total: String = "Total:",
+    override val yourCart: String = "Your cart",
+    override val allCuisines: String = "All Cuisines",
 ) : IStringResources

@@ -71,7 +71,8 @@ data class ArabicIQ(
     override val slowerRoutesWithLowCosts: String = "مسارات بطيئة بتكلفة منخفضة",
     override val today: String = "اليوم",
     override val thisWeek: String = "هذا الأسبوع",
-    override val tryAgain: String = "حاول مرة تانية",
+    override val tryAgain: String = "حاول مجدداً",
+    override val history: String = "سجل الطلبات",
     override val trackYourOrder: String = "راقب طلبك",
     override val invalidPassword: String = "كلمة المرور مش صالحة",
     override val unknownError: String = "خطأ غير معروف",
@@ -82,4 +83,8 @@ data class ArabicIQ(
     override val invalidEmail: String = "البريد الإلكتروني مش صالح",
     override val invalidFullName: String = "الاسم الكامل مش صالح",
     override val oppsRegistrationNotCompleted: String = "عفوًا، التسجيل ما اكتمل",
+    override val orderNow: String = "أطلب هسه",
+    override val total: String = "المجموع:",
+    override val yourCart: String = "العربة",
+    override val allCuisines: String = "المطابخ",
 ) : IStringResources

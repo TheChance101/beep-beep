@@ -194,4 +194,111 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
     }
 
     //endregion
+    /*
+
+    //region Order
+    override suspend fun addOrder(order: Order): Boolean {
+        return container.orderCollection.insertOne(order.toCollection()).wasAcknowledged()
+    }
+
+    override suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order> {
+        return container.orderCollection.find(
+            OrderCollection::restaurantId
+                    eq ObjectId(restaurantId)
+        ).toList().toEntity()
+    }
+
+    override suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order> {
+        return container.orderCollection.find(
+            OrderCollection::restaurantId eq ObjectId(restaurantId),
+            OrderCollection::orderStatus ne Order.Status.CANCELED.statusCode,
+            OrderCollection::orderStatus ne Order.Status.DONE.statusCode
+        ).toList().toEntity()
+    }
+
+    override suspend fun getOrderById(orderId: String): Order? =
+        container.orderCollection.findOneById(ObjectId(orderId))?.toEntity()
+
+    override suspend fun updateOrderStatus(orderId: String, status: Order.Status): Order? {
+        val updateOperation = setValue(OrderCollection::orderStatus, status.statusCode)
+        val updatedOrder = container.orderCollection.findOneAndUpdate(
+            filter = OrderCollection::id eq ObjectId(orderId),
+            update = updateOperation
+        )
+        return updatedOrder?.toEntity()
+    }
+
+    override suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order> {
+        return container.orderCollection
+            .find(
+                OrderCollection::orderStatus eq Order.Status.DONE.statusCode,
+                OrderCollection::orderStatus eq Order.Status.CANCELED.statusCode,
+                OrderCollection::restaurantId eq ObjectId(restaurantId)
+            )
+            .sort(descending(OrderCollection::createdAt))
+            .paginate(page, limit).toList().toEntity()
+    }
+
+    //endregion
+
+    //region Cart
+    override suspend fun addMealToCart(meal: Meal, quantity: Int, userId: String): Boolean {
+        val existingCart = getUserCart(userId)
+        if (existingCart == null) {
+            val newCart = createCart(userId, meal.restaurantId) ?: return false
+            val updatedCart = newCart.copy(
+                meals = listOf(Cart.Meal(meal.id, quantity, meal.price)),
+                totalPrice = meal.price
+            )
+            return container.cartCollection.insertOne(updatedCart.toCollection()).wasAcknowledged()
+        } else {
+            if (meal.restaurantId == existingCart.restaurantId) {
+                val updatedCart = existingCart.copy(
+                    meals = listOf(Cart.Meal(meal.id, quantity, meal.price)),
+                    totalPrice = existingCart.totalPrice + meal.price
+                )
+                return container.cartCollection.insertOne(updatedCart.toCollection()).wasAcknowledged()
+            }
+        }
+        return false
+    }
+
+
+    override suspend fun deleteMealFromCart(cartId: String, mealId: String): Boolean {
+        val cartObjectId = ObjectId(cartId)
+        val mealObjectId = ObjectId(mealId)
+        val cartCollection = container.cartCollection
+        val cartWithMeal = cartCollection.findOne(CartCollection::id eq cartObjectId)
+
+        if (cartWithMeal != null) {
+            val mealToDelete = cartWithMeal.meals.find { it.mealId == mealObjectId }
+
+            if (mealToDelete != null) {
+                val updatedTotalPrice = setValue(CartCollection::totalPrice, cartWithMeal.totalPrice - mealToDelete.price)
+                val updatedMeals = setValue(CartCollection::meals, cartWithMeal.meals.filter { it.mealId != mealObjectId })
+
+                val filter = CartCollection::id eq cartObjectId
+                val combinedUpdate = combine(updatedTotalPrice, updatedMeals)
+
+                val updateResult = cartCollection.updateOne(filter, combinedUpdate)
+
+                return updateResult.wasAcknowledged()
+            }
+
+        }
+        return false
+    }
+
+
+    override suspend fun getUserCart(userId: String): Cart? {
+        return container.cartCollection.findOne(CartCollection::userId eq ObjectId(userId))?.toEntity()
+    }
+
+    private suspend fun createCart(userId: String, restaurantId: String): Cart? {
+        val cart = CartCollection(userId = ObjectId(userId), restaurantId = ObjectId(restaurantId))
+        val addedCart = container.cartCollection.insertOne(cart).wasAcknowledged()
+        return if (addedCart) cart.toEntity() else null
+    }
+    //endregion
+*/
 }

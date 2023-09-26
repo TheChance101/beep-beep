@@ -12,6 +12,7 @@ fun Application.configureRouting(
         mealRoutes()
         cuisineRoutes()
         orderRoutes()
+        cartRoutes()
         restaurantPermissionRequestRoutes()
         cartRoutes()
     }

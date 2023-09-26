@@ -21,31 +21,33 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
-import presentation.main.ChartItemUiState
 import resources.Resources
 
 @Composable
 fun ChartItem(
     imagePainter: Painter,
-    chartItemUiState: ChartItemUiState,
+    title: String,
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(Theme.radius.medium),
+    content: @Composable () -> Unit
 ) {
     Column(
         modifier.widthIn(max = 328.dp).clip(shape).background(Theme.colors.surface)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
-        with(chartItemUiState) {
-            Row(
-                Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+
+        Column(
+            Modifier.fillMaxWidth(),
+
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+
                 ) {
+                Column() {
                     Image(painter = imagePainter, contentDescription = null, Modifier.size(24.dp))
                     Text(
                         text = title,
@@ -57,7 +59,7 @@ fun ChartItem(
                     horizontalAlignment = Alignment.End
                 ) {
                     Text(
-                        text = "${sign ?: ""}$totalThisWeek",
+                        text = "$4700",
                         style = Theme.typography.title.copy(color = Theme.colors.contentPrimary)
                     )
                     Text(
@@ -66,7 +68,9 @@ fun ChartItem(
                     )
                 }
             }
-            Box(Modifier.fillMaxWidth().aspectRatio(1.58f).background(Theme.colors.secondary))
+            Box(Modifier.fillMaxWidth().aspectRatio(1f)) {
+                content()
+            }
         }
     }
 }
