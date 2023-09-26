@@ -91,7 +91,7 @@ object FakeGateway : ITaxiGateway {
         return trips.filter { it.clientId == clientId }
     }
 
-    override suspend fun cancelTrip(tripId: String): Trip? {
+    override suspend fun deleteTrip(tripId: String): Trip? {
         val trip = getTripById(tripId)
         trips.remove(trip)
         return trip

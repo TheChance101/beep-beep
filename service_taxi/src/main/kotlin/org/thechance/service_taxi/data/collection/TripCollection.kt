@@ -17,8 +17,8 @@ data class TripCollection(
     @Contextual
     val driverId: ObjectId? = null,
     @Contextual
-    val clientId: ObjectId?,
-    val isCanceled: Boolean = false,
+    val clientId: ObjectId,
+    val isDeleted: Boolean = false,
     val startPoint: LocationCollection? = null,
     val destination: LocationCollection? = null,
     val rate: Double? = null,

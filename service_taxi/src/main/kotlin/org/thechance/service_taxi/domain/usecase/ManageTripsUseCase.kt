@@ -19,7 +19,7 @@ class ManageTripsUseCase(
 
     override suspend fun deleteTrip(tripId: String): Trip {
         taxiGateway.getTripById(tripId) ?: throw ResourceNotFoundException
-        return taxiGateway.cancelTrip(tripId) ?: throw ResourceNotFoundException
+        return taxiGateway.deleteTrip(tripId) ?: throw ResourceNotFoundException
     }
 
     override suspend fun getTripById(tripId: String): Trip {

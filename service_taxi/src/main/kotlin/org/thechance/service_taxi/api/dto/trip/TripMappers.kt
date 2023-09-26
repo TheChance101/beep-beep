@@ -76,7 +76,7 @@ fun TripCollection.toEntity(): Trip {
         id = id.toString(),
         taxiId = taxiId?.toString(),
         driverId = driverId?.toString(),
-        clientId = clientId?.toString() ?: throw CantBeNullException,
+        clientId = clientId.toString(),
         startPoint = startPoint?.toEntity() ?: throw CantBeNullException,
         destination = destination?.toEntity(),
         rate = rate,
