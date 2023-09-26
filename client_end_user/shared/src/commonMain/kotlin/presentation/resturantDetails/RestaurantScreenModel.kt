@@ -61,14 +61,20 @@ class RestaurantScreenModel(
     private fun removeFromFavourite(restaurantId: String) {
         tryToExecute(
             { manageFavourite.removeRestaurantFromFavorites(restaurantId) },
-            ::onAddToFavouriteSuccess,
+            ::onRemoveFromFavouriteSuccess,
             ::onError
         )
     }
 
     private fun onAddToFavouriteSuccess(isAdded: Boolean) {
+        println("AYA $isAdded")
         updateState { it.copy(isFavourite = isAdded) }
     }
+    private fun onRemoveFromFavouriteSuccess(isAdded: Boolean) {
+        println("AYA $isAdded")
+        updateState { it.copy(isFavourite = false) }
+    }
+
 
     private fun getMostOrders(restaurantId: String) {
         tryToExecute(

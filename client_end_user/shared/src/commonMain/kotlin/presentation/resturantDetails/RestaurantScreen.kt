@@ -111,7 +111,7 @@ object RestaurantScreen :
                         color = Theme.colors.contentPrimary
                     )
                     Image(
-                        painter = painterResource(Resources.images.heart),
+                        painter = painterResource(if(state.isFavourite) Resources.images.heartFilled else Resources.images.heart),
                         contentDescription = null,
                         modifier = Modifier.size(24.dp).clickable { listener.onAddToFavourite() }
                     )
