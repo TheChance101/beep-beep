@@ -10,6 +10,8 @@ import io.ktor.server.routing.*
 import kotlinx.coroutines.async
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.model.LocationDto
+import org.thechance.api_gateway.data.model.getUserOptions
+import org.thechance.api_gateway.data.model.restaurant.getRestaurantOptions
 import org.thechance.api_gateway.data.service.IdentityService
 import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
@@ -25,16 +27,9 @@ fun Route.userRoutes() {
     authenticateWithRole(Role.DASHBOARD_ADMIN) {
         get("/users") {
             val language = extractLocalizationHeader()
-            val page = call.parameters["page"]?.toInt() ?: 1
-            val limit = call.parameters["limit"]?.toInt() ?: 20
-            val searchTerm = call.parameters["searchTerm"] ?: ""
-            val result = identityService.getUsers(
-                page = page,
-                limit = limit,
-                searchTerm = searchTerm,
-                language
-            )
-            respondWithResult(HttpStatusCode.OK, result)
+            val users =
+                identityService.getUsers(getUserOptions(call.parameters), languageCode = language)
+            respondWithResult(HttpStatusCode.OK, users)
         }
     }
 
@@ -46,12 +41,13 @@ fun Route.userRoutes() {
                 respondWithResult(HttpStatusCode.OK, result)
             }
 
-            get("/search") {
-                val searchTerm = call.request.queryParameters["query"]?.trim() ?: ""
-                val permission: List<Int> = call.receive<List<Int>>()
-                val users = identityService.searchUsers(searchTerm, permission)
-                respondWithResult(HttpStatusCode.OK, users)
-            }
+
+//            get("/search") {
+//                val searchTerm = call.request.queryParameters["query"]?.trim() ?: ""
+//                val permission: List<Int> = call.receive<List<Int>>()
+//                val users = identityService.searchUsers(searchTerm, permission)
+//                respondWithResult(HttpStatusCode.OK, users)
+//            }
 
             put("/{userId}/permission") {
                 val language = extractLocalizationHeader()
@@ -123,7 +119,6 @@ fun Route.userRoutes() {
             }
         }
     }
-
 
 }
 
