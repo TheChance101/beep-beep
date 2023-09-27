@@ -4,20 +4,10 @@ import org.thechance.common.domain.entity.Country
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Permission
 import org.thechance.common.domain.entity.User
-import org.thechance.common.presentation.composables.table.Header
 import org.thechance.common.presentation.util.ErrorState
 
 data class UserScreenUiState(
     val hasConnection: Boolean = true,
-    val tableHeader: List<Header> = listOf(
-        Header("No.", 1f),
-        Header("Users", 3f),
-        Header("Username", 3f),
-        Header("Email", 3f),
-        Header("Country", 3f),
-        Header("Permission", 3f),
-        Header("", 1f),
-    ),
     val pageInfo: UserPageInfoUiState = UserPageInfoUiState(),
     val specifiedUsers: Int = 10,
     val currentPage: Int = 1,
