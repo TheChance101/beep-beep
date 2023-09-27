@@ -142,10 +142,20 @@ class RestaurantScreenModel(
         sendNewEffect(RestaurantUIEffect.onBack)
     }
 
-    override  fun onGoToDetails() {
-        sendNewEffect(RestaurantUIEffect.onGoToDetails)
+    override  fun onGoToDetails(mealId: String) {
+        onShowMealSheet()
+        tryToExecute(
+            { mangeRestaurantDetails.getMealById(mealId) },
+            ::onGetMealDetailsSuccess,
+            ::onError
+        )
+    }
+    private fun onGetMealDetailsSuccess(meal: Meal) {
+        updateState { it.copy(meal = meal.toUIState()) }
+
     }
     override fun onDismissSheet() {
+
         state.value.sheetState.dismiss()
         coroutineScope.launch {
             delayAndChangePermissionSheetState(false)
@@ -153,6 +163,21 @@ class RestaurantScreenModel(
     }
 
     override fun onShowSheet() {
+        updateState { it.copy(showLoginSheet = true) }
+        coroutineScope.launch {
+            state.value.sheetState.dismiss()
+            delayAndChangePermissionSheetState(true)
+            state.value.sheetState.show()
+        }
+    }
+
+    override fun onGoToCart() {
+
+    }
+
+    override  fun onShowMealSheet() {
+        updateState { it.copy(showMealSheet = true) }
+
         coroutineScope.launch {
             state.value.sheetState.dismiss()
             delayAndChangePermissionSheetState(true)
@@ -164,8 +189,27 @@ class RestaurantScreenModel(
         sendNewEffect(RestaurantUIEffect.onGoToLogin)
     }
 
+    override fun onIncressQuantity() {
+        updateState { it.copy(
+            meal = state.value.meal.copy(
+                quantity = state.value.meal.quantity + 1,
+                price = state.value.meal.price * state.value.meal.quantity
+            )
+        ) }
+    }
+
+    override fun onDecressQuantity() {
+        if(state.value.meal.quantity == 1) return
+        updateState { it.copy(
+            meal = state.value.meal.copy(
+                quantity = state.value.meal.quantity - 1,
+                price = state.value.meal.price * state.value.meal.quantity
+            )
+        ) }
+    }
+
     private suspend fun delayAndChangePermissionSheetState(show: Boolean) {
         delay(300)
-        updateState { it.copy(showSheet = show) }
+        updateState { it.copy(showLoginSheet = show,showMealSheet=show) }
     }
 }

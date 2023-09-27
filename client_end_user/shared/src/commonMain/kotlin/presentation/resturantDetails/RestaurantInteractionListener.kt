@@ -8,12 +8,20 @@ interface RestaurantInteractionListener :BaseInteractionListener  {
 
     fun onBack()
 
-    fun onGoToDetails()
+    fun onGoToDetails(mealId: String)
 
     fun onDismissSheet()
 
     fun onShowSheet()
 
+    fun onGoToCart()
+
+    fun onShowMealSheet()
+
     fun onGoToLogin()
+
+    fun onIncressQuantity()
+
+    fun onDecressQuantity()
 
 }

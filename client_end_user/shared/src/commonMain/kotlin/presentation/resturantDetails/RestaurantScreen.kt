@@ -41,6 +41,7 @@ import presentation.composable.RatingBar
 import presentation.composable.SectionHeader
 import presentation.composable.modifier.noRippleEffect
 import presentation.resturantDetails.Composable.Chip
+import presentation.resturantDetails.Composable.MealBottomSheet
 import presentation.resturantDetails.Composable.NeedToLoginSheet
 import resources.Resources
 
@@ -70,12 +71,23 @@ object RestaurantScreen :
             ) {
                 BottomSheet(
                     sheetContent = {
-                        NeedToLoginSheet(
-                            onClick = {
-                                listener.onDismissSheet()
-                                listener.onGoToLogin()
-                            }
-                        )
+                        if(state.showMealSheet) {
+                            MealBottomSheet(
+                                meal = state.meal,
+                                onClick = {
+
+                                },
+                                listener = listener
+                            )
+                        }
+                        if(state.showLoginSheet && !state.isLogin) {
+                            NeedToLoginSheet(
+                                onClick = {
+                                    listener.onDismissSheet()
+                                    listener.onGoToLogin()
+                                }
+                            )
+                        }
                     },
                     sheetBackgroundColor = Theme.colors.background,
                     onBackGroundClicked = listener::onDismissSheet,
@@ -221,7 +233,10 @@ object RestaurantScreen :
                                 hasPrice = true,
                                 hasRate = false,
                                 price = state.mostOrders[index].price,
-                                currency = state.mostOrders[index].currency
+                                currency = state.mostOrders[index].currency,
+                                modifier = Modifier.noRippleEffect {
+                                 listener.onGoToDetails(state.mostOrders[index].id)
+                                }
                             )
                         }
                     }

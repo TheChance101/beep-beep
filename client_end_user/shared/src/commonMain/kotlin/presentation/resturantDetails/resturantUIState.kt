@@ -15,7 +15,9 @@ data class RestaurantUIState(
     val error: ErrorState? = null,
     val isLogin :Boolean = false,
     val sheetState: ModalBottomSheetState = ModalBottomSheetState(),
-    val showSheet: Boolean = false,
+    val showLoginSheet: Boolean = false,
+    val meal: MealUIState = MealUIState(),
+    val showMealSheet: Boolean = false,
 )
 
 data class MealUIState(
@@ -24,7 +26,9 @@ data class MealUIState(
     val price: Double = 0.0,
     val image: String = "",
     val discount: Double = 0.0,
-    val currency: String = "$",
+    val currency: String = "",
+    val quantity: Int = 1,
+    val description: String = "",
 )
 
 fun Meal.toUIState() = MealUIState(
@@ -33,6 +37,8 @@ fun Meal.toUIState() = MealUIState(
     price = price,
     image = image,
     currency = currency,
+    quantity = 1,
+    description = description,
 )
 
 data class RestaurantInfoUIState(
