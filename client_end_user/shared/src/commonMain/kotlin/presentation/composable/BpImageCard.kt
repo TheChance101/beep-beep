@@ -61,7 +61,7 @@ fun BpImageCard(
             Image(
                 painter = painter,
                 contentScale = ContentScale.Crop,
-                contentDescription = "background"
+                contentDescription = "$title image",
             )
             if(hasRate)
             Row(

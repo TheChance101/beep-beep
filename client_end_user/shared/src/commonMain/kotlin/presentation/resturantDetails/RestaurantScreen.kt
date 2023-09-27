@@ -83,7 +83,7 @@ object RestaurantScreen :
                 ) {
                 Image(
                     painter = painterResource(Resources.images.placeholder),
-                    contentDescription = "background",
+                    contentDescription =state.restaurantInfo.name,
 
                     )
                 Row(
