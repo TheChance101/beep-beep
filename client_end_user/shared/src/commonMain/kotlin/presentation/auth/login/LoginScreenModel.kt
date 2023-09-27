@@ -37,7 +37,6 @@ class LoginScreenModel(
     }
 
     private fun onLoginSuccess(isLoggedIn: Boolean) {
-        println("Ahmed Success : $isLoggedIn")
         clearErrors()
         if (isLoggedIn) {
             sendNewEffect(LoginScreenUIEffect.NavigateToHome)
@@ -45,7 +44,6 @@ class LoginScreenModel(
     }
 
     private fun onLoginError(errorState: ErrorState) {
-        println("Ahmed Error : $errorState")
         clearErrors()
         when (errorState) {
             ErrorState.InvalidPassword -> updateState { it.copy(isPasswordError = true) }
