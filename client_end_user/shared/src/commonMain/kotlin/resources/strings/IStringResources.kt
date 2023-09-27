@@ -93,4 +93,5 @@ interface IStringResources {
     val profileLoginMessage: String
     val ordersHistoryLoginMessage: String
     val notificationLoginMessage: String
+    val pleaseLogin: String
 }
