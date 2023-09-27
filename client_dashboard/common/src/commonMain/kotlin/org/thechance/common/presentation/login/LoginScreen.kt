@@ -1,5 +1,3 @@
-package org.thechance.common.presentation.login
-
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.fadeIn
@@ -8,11 +6,20 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,10 +35,13 @@ import kotlinx.coroutines.delay
 import org.thechance.common.presentation.base.BaseScreen
 import org.thechance.common.presentation.composables.BpLogo
 import org.thechance.common.presentation.composables.SnackBar
+import org.thechance.common.presentation.login.LoginInteractionListener
+import org.thechance.common.presentation.login.LoginScreenModel
+import org.thechance.common.presentation.login.LoginUIEffect
+import org.thechance.common.presentation.login.LoginUIState
 import org.thechance.common.presentation.main.MainContainer
 import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.kms
-
 
 class LoginScreen :
     BaseScreen<LoginScreenModel, LoginUIEffect, LoginUIState, LoginInteractionListener>() {
@@ -89,11 +99,11 @@ class LoginScreen :
                         modifier = Modifier.fillMaxHeight(),
                         verticalArrangement = Arrangement.Bottom,
                 ) {
-                    AnimatedVisibility(!state.hasInternetConnection,
+                    AnimatedVisibility( state.isSnackBarVisible,
                             modifier = Modifier.animateContentSize(),
                             enter = fadeIn(),
                             exit = fadeOut()
-                            ) {
+                    ) {
                         SnackBar(onDismiss = listener::onSnackBarDismiss, backgroundColor = Theme.colors.hover) {
                             Image(
                                     painter = painterResource(Resources.Drawable.infoIcon),
@@ -101,11 +111,11 @@ class LoginScreen :
                                     colorFilter = ColorFilter.tint(color = Theme.colors.primary),
                                     modifier = Modifier.padding(16.kms)
                             )
-                            Text(
-                                    text = Resources.Strings.noInternet,
-                                    style = Theme.typography.titleMedium,
-                                    color = Theme.colors.primary,
-                            )
+                                Text(
+                                        text = state.snackBarTitle?:Resources.Strings.noInternet,
+                                        style = Theme.typography.titleMedium,
+                                        color = Theme.colors.primary,
+                                )
                         }
                     }
 
@@ -154,7 +164,7 @@ class LoginScreen :
             }
         }
 
-        LaunchedEffect(!state.hasInternetConnection) {
+        LaunchedEffect(state.isSnackBarVisible) {
             delay(1500)
             listener.onSnackBarDismiss()
         }
