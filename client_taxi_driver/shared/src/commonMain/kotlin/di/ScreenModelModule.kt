@@ -8,6 +8,6 @@ import presentation.map.MapScreenModel
 
 val ScreenModelModule = module {
     factoryOf(::LoginScreenModel)
-    factory { MainScreenModel(get()) }
+    factoryOf(::MainScreenModel)
     factoryOf(::MapScreenModel)
 }
