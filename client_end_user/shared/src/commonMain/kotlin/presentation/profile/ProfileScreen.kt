@@ -36,8 +36,12 @@ import resources.Resources
 import util.getStatusBarPadding
 import util.root
 
-class ProfileScreen :
-    BaseScreen<ProfileScreenModel, ProfileUIState, ProfileUIEffect, ProfileInteractionListener>() {
+class ProfileScreen : BaseScreen<
+        ProfileScreenModel,
+        ProfileUIState,
+        ProfileUIEffect,
+        ProfileInteractionListener
+        >() {
 
     @Composable
     override fun Content() {

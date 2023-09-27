@@ -23,8 +23,12 @@ import resources.Resources
 import util.getStatusBarPadding
 import util.root
 
-class NotificationScreen :
-    BaseScreen<NotificationScreenModel, NotificationsUiState, NotificationUiEffect, NotificationInteractionListener>() {
+class NotificationScreen : BaseScreen<
+        NotificationScreenModel,
+        NotificationsUiState,
+        NotificationUiEffect,
+        NotificationInteractionListener
+        >() {
 
     @Composable
     override fun Content() {

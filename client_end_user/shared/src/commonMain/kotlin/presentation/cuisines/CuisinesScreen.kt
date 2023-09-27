@@ -20,8 +20,12 @@ import presentation.base.BaseScreen
 import presentation.home.composable.CuisineCard
 import resources.Resources
 
-class CuisinesScreen : BaseScreen<CuisinesScreenModel, CuisinesUiState,
-        CuisinesUiEffect, CuisinesInteractionListener>() {
+class CuisinesScreen : BaseScreen<
+        CuisinesScreenModel,
+        CuisinesUiState,
+        CuisinesUiEffect,
+        CuisinesInteractionListener
+        >() {
 
     @Composable
     override fun Content() {
