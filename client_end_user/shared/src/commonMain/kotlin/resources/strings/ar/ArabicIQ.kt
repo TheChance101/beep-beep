@@ -92,5 +92,8 @@ data class ArabicIQ(
     override val save: String = "حفظ",
     override val profileLoginMessage: String = "سجل دخول وشوف حسابك",
     override val ordersHistoryLoginMessage: String = "برجاء تسجيل الدخول للوصول إلى سجل طلباتك",
-    override val notificationLoginMessage: String = "برجاء تسجيل الدخول لمشاهدة الإشعارات"
+    override val notificationLoginMessage: String = "برجاء تسجيل الدخول لمشاهدة الإشعارات",
+    override val pleaseLogin: String = "سجل دخول وشوف حسابك",
+    override val invalidAddress: String = "العنوان مش صالح",
+    override val yourAddress: String = "عنوانك",
 ) : IStringResources

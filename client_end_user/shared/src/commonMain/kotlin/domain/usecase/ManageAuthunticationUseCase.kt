@@ -1,17 +1,13 @@
 package domain.usecase
 
+import domain.entity.UserCreation
 import domain.gateway.IUserRemoteGateway
 import domain.gateway.local.ILocalConfigurationGateway
 import domain.usecase.validation.IValidationUseCase
 import kotlinx.coroutines.flow.Flow
 
 interface IManageAuthenticationUseCase {
-    suspend fun createUser(
-        fullName: String,
-        username: String,
-        password: String,
-        email: String
-    ): Boolean
+    suspend fun createUser(userCreation: UserCreation): Boolean
 
     suspend fun loginUser(username: String, password: String, keepLoggedIn: Boolean): Boolean
 
@@ -28,17 +24,14 @@ class ManageAuthenticationUseCase(
     private val validation: IValidationUseCase,
 ) : IManageAuthenticationUseCase {
 
-    override suspend fun createUser(
-        fullName: String,
-        username: String,
-        password: String,
-        email: String
-    ): Boolean {
-        with(validation) {
-            validateFullName(fullName); validateUsername(username); validatePassword(password)
-            validateEmail(email)
+    override suspend fun createUser(userCreation: UserCreation): Boolean {
+        with(userCreation) {
+            with(validation) {
+                validateFullName(fullName); validateUsername(username); validatePassword(password)
+                validateEmail(email); validatePhone(phone); validateAddress(address)
+            }
         }
-        return remoteGateway.createUser(fullName, username, password, email).name.isNotEmpty()
+        return remoteGateway.createUser(userCreation).name.isNotEmpty()
     }
 
     override suspend fun loginUser(

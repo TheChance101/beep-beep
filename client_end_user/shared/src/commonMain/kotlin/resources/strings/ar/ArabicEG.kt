@@ -93,4 +93,7 @@ data class ArabicEG(
     override val profileLoginMessage: String="سجل دخول يا اسطا وشوفك  حسابك",
     override val ordersHistoryLoginMessage: String = "برجاء تسجيل الدخول للوصول إلى سجل طلباتك",
     override val notificationLoginMessage: String = "برجاء تسجيل الدخول لمشاهدة الإشعارات"
+    override val pleaseLogin: String="سجل دخول يا اسطا وشوفك حسابك",
+    override val invalidAddress: String = "عنوانك مش صح",
+    override val yourAddress: String = "عنوانك",
 ) : IStringResources
