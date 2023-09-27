@@ -261,7 +261,7 @@ class RestaurantService(
 
     //region order
     @OptIn(InternalAPI::class)
-    suspend fun createOrder(order: OrderDto, languageCode: String) : OrderDto {
+    suspend fun createOrder(order: OrderDto, languageCode: String): OrderDto {
         return client.tryToExecute<OrderDto>(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
@@ -360,6 +360,22 @@ class RestaurantService(
             attributes = attributes,
         ) {
             delete("/restaurant/owner/$id")
+        }
+    }
+
+    suspend fun search(query: String?, page: String?, limit: String?, languageCode: String): ExploreRestaurantDto {
+        return client.tryToExecute(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+            }
+        ) {
+            get("/restaurants/search") {
+                parameter("query", query)
+                parameter("page", page)
+                parameter("limit", limit)
+            }
         }
     }
     //endregion
