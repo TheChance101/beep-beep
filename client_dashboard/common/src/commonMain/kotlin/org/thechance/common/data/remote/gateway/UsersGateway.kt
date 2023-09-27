@@ -13,6 +13,7 @@ import org.thechance.common.data.remote.model.ServerResponse
 import org.thechance.common.data.remote.model.UserDto
 import org.thechance.common.data.remote.model.UserResponse
 import org.thechance.common.data.remote.model.UserTokensRemoteDto
+import org.thechance.common.domain.entity.Country
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Permission
 import org.thechance.common.domain.entity.User
@@ -23,7 +24,7 @@ class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGatewa
     override suspend fun getUsers(
         query: String?,
         byPermissions: List<Permission>,
-        byCountries: List<String>,
+        byCountries: List<Country>,
         page: Int,
         numberOfUsers: Int
     ): DataWrapper<User> {
