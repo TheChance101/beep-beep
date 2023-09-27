@@ -1,6 +1,7 @@
 package presentation.auth.signup.registrationSubmit
 
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.entity.UserCreation
 import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.IManageUserUseCase
 import domain.usecase.validation.IValidationUseCase
@@ -54,24 +55,35 @@ class RegistrationSubmitScreenModel(
     // region interactions
     override fun onFullNameChanged(fullName: String) {
         updateState { it.copy(fullName = fullName) }
-        tryCatch { validation.validateFullName(fullName); clearErrors() }
+        tryCatch { validation.validateFullName(fullName) }
     }
 
     override fun onPhoneChanged(phone: String) {
         updateState { it.copy(phone = phone) }
-        tryCatch { validation.validatePhone(phone,_language.value.value); clearErrors() }
+        tryCatch { validation.validatePhone(phone,_language.value.value) }
     }
 
     override fun onAddressChanged(address: String) {
         updateState { it.copy(address = address) }
-        tryCatch { validation.validateAddress(address); clearErrors() }
+        tryCatch { validation.validateAddress(address) }
     }
 
     override fun onSignUpButtonClicked() {
         with(state.value) {
             updateState { it.copy(isLoading = true) }
             tryToExecute(
-                function = { manageAuthentication.createUser(fullName, username, password, email, phone, address) },
+                function = {
+                    manageAuthentication.createUser(
+                        UserCreation(
+                            fullName,
+                            username,
+                            password,
+                            email,
+                            phone,
+                            address
+                        )
+                    )
+                },
                 onSuccess = ::onRegistrationSuccess,
                 onError = ::onError
             )
@@ -103,6 +115,7 @@ class RegistrationSubmitScreenModel(
     private fun tryCatch(block: () -> Unit) {
         try {
             block()
+            clearErrors()
         } catch (e: AuthorizationException.InvalidFullNameException) {
             updateState { it.copy(isFullNameError = true) }
         } catch (e: AuthorizationException.InvalidPhoneException) {

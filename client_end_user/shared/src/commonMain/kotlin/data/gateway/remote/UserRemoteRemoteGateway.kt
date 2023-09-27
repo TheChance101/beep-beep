@@ -7,6 +7,7 @@ import data.remote.model.SessionDto
 import data.remote.model.UserDto
 import domain.entity.Session
 import domain.entity.User
+import domain.entity.UserCreation
 import domain.gateway.IUserRemoteGateway
 import domain.utils.AuthorizationException
 import io.ktor.client.HttpClient
@@ -18,23 +19,18 @@ import io.ktor.http.Parameters
 class UserRemoteRemoteGateway(client: HttpClient) : BaseGateway(client), IUserRemoteGateway {
 
     override suspend fun createUser(
-        fullName: String,
-        username: String,
-        password: String,
-        email: String,
-        phone: String,
-        address: String,
+        userCreation: UserCreation,
     ): User {
         return tryToExecute<ServerResponse<UserDto>> {
             submitForm(
                 url = ("/signup"),
                 formParameters = Parameters.build {
-                    append("fullName", fullName)
-                    append("username", username)
-                    append("password", password)
-                    append("email", email)
-                    append("phone", phone) // todo: remove this todo when phone is added to the backend
-                    append("address", address) // todo: remove this todo when address is added to the backend
+                    append("fullName", userCreation.fullName)
+                    append("username", userCreation.username)
+                    append("password", userCreation.password)
+                    append("email", userCreation.email)
+                    append("phone", userCreation.phone) // todo: remove this todo when phone is added to the backend
+                    append("address", userCreation.address) // todo: remove this todo when address is added to the backend
                 }
             ){
                 method = HttpMethod.Post

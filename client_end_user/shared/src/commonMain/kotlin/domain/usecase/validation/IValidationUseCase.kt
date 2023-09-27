@@ -58,15 +58,13 @@ class ValidationUseCaseUseCase : IValidationUseCase {
 
     override fun validatePhone(phone: String, currency: String?) {
         if (currency == null) {
-            if (phoneRegexMap.values.any { it.matches(phone) }) {
-                return
-            } else {
+            phoneRegexMap.values.any { it.matches(phone) }.takeIf { it }
+                ?: throw AuthorizationException.InvalidPhoneException
+        } else {
+            val phoneRegex = getPhoneRegex(currency)
+            if (phone.matches(phoneRegex).not()) {
                 throw AuthorizationException.InvalidPhoneException
             }
-        }
-        val phoneRegex = getPhoneRegex(currency)
-        if (phone.matches(phoneRegex).not()) {
-            throw AuthorizationException.InvalidPhoneException
         }
     }
 
