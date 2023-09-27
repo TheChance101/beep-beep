@@ -10,6 +10,7 @@ import androidx.compose.ui.window.Dialog
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpTransparentButton
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.thechance.common.presentation.overview.PermissionUiState
 import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.users.UserScreenUiState
 import org.thechance.common.presentation.util.kms
@@ -18,9 +19,9 @@ import java.awt.Dimension
 @Composable
 fun PermissionsDialog(
     visible: Boolean,
-    allPermissions: List<UserScreenUiState.PermissionUiState>,
-    selectedPermissions: List<UserScreenUiState.PermissionUiState>,
-    onUserPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
+    allPermissions: List<PermissionUiState>,
+    selectedPermissions: List<PermissionUiState>,
+    onUserPermissionClicked: (PermissionUiState) -> Unit,
     onSaveUserPermissions: () -> Unit,
     onCancelUserPermissionsDialog: () -> Unit,
 ) {

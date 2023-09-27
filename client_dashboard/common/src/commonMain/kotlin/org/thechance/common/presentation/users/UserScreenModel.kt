@@ -63,7 +63,7 @@ class UserScreenModel(
 
     override fun onFilterMenuCountryClick(country: UserScreenUiState.CountryUiState) {
         val updatedCountries = mutableState.value.filter.countries.map {
-            if (it.name == country.name) it.copy(selected = !country.selected) else it
+            if (it.country == country.country) it.copy(isSelected = !country.isSelected) else it
         }
         updateState { it.copy(filter = it.filter.copy(countries = updatedCountries)) }
     }

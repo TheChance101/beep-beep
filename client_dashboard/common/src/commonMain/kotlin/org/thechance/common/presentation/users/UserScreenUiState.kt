@@ -54,7 +54,7 @@ data class UserScreenUiState(
 
     data class PermissionsDialogUiState(
         val show: Boolean = false,
-        val id:String = "",
+        val id: String = "",
         val permissions: List<PermissionUiState> = emptyList(),
     )
 
