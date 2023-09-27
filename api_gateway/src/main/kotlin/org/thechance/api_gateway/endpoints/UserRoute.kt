@@ -12,8 +12,10 @@ import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.model.LocationDto
 import org.thechance.api_gateway.data.service.IdentityService
 import org.thechance.api_gateway.data.service.RestaurantService
+import org.thechance.api_gateway.data.service.TaxiService
 import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
+import org.thechance.api_gateway.endpoints.utils.hasPermission
 import org.thechance.api_gateway.endpoints.utils.respondWithResult
 import org.thechance.api_gateway.util.Claim
 import org.thechance.api_gateway.util.Role
@@ -21,6 +23,7 @@ import org.thechance.api_gateway.util.Role
 fun Route.userRoutes() {
     val identityService: IdentityService by inject()
     val restaurantService: RestaurantService by inject()
+    val taxiService: TaxiService by inject()
 
     authenticateWithRole(Role.DASHBOARD_ADMIN) {
         get("/users") {
@@ -64,10 +67,18 @@ fun Route.userRoutes() {
             delete("/{id}") {
                 val id = call.parameters["id"] ?: ""
                 val language = extractLocalizationHeader()
+                val user = identityService.getUserById(id, language)
                 val result = identityService.deleteUser(userId = id, language)
+                if (result) {
+                    if (hasPermission(user.permission, Role.TAXI_DRIVER))
+                        taxiService.deleteTaxiByDriverId(user.id)
+                    if (hasPermission(user.permission, Role.RESTAURANT_OWNER))
+                        restaurantService.deleteRestaurantByOwnerId(user.id)
+                }
                 respondWithResult(HttpStatusCode.OK, result)
             }
         }
+
 
         authenticateWithRole(Role.END_USER) {
             get {

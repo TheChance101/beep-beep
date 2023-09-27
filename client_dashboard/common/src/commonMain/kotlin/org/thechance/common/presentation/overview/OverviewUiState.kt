@@ -1,13 +1,16 @@
 package org.thechance.common.presentation.overview
 
+import androidx.compose.runtime.Composable
 import org.thechance.common.domain.entity.OrdersRevenue
 import org.thechance.common.domain.entity.Permission
 import org.thechance.common.domain.entity.TripsRevenue
 import org.thechance.common.domain.entity.User
+import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.ErrorState
 
 
 data class OverviewUiState(
+    val hasInternetConnection: Boolean = true,
     val isLoading: Boolean = false,
     val error: ErrorState = ErrorState.UnKnownError,
     val users: List<LatestRegisteredUserUiState> = emptyList(),
@@ -40,9 +43,16 @@ data class LatestRegisteredUserUiState(
 
 data class DropdownMenuState(
     val isExpanded: Boolean = false,
-    val items: List<String> = listOf("Monthly", "Daily", "Weekly"),
     val selectedIndex: Int = 0,
-)
+){
+    val items: List<String>
+      @Composable get() = listOf(
+              Resources.Strings.monthly,
+              Resources.Strings.daily,
+              Resources.Strings.weekly
+      )
+
+}
 
 fun User.toLastUserUiState(): LatestRegisteredUserUiState {
     return LatestRegisteredUserUiState(

@@ -87,4 +87,8 @@ data class English(
     override val total: String = "Total:",
     override val yourCart: String = "Your cart",
     override val allCuisines: String = "All Cuisines",
+    override val logout: String = "Logout",
+    override val address: String = "Address",
+    override val save: String = "Save",
+    override val pleaseLogin: String="Please log in to access your profile"
 ) : IStringResources

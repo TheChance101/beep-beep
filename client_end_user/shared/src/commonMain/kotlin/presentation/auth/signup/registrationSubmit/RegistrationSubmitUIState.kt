@@ -10,4 +10,5 @@ data class RegistrationSubmitUIState(
     val isEmailError: Boolean = false,
     val isPhoneError: Boolean = false,
     val isLoading: Boolean = false,
+    val languageCode: String = "us",
 )
