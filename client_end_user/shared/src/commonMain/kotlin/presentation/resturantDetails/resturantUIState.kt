@@ -15,9 +15,11 @@ data class RestaurantUIState(
     val error: ErrorState? = null,
     val isLogin :Boolean = false,
     val sheetState: ModalBottomSheetState = ModalBottomSheetState(),
+    val sheetMealState: ModalBottomSheetState = ModalBottomSheetState(),
     val showLoginSheet: Boolean = false,
     val meal: MealUIState = MealUIState(),
     val showMealSheet: Boolean = false,
+    val showToast: Boolean = false,
 )
 
 data class MealUIState(

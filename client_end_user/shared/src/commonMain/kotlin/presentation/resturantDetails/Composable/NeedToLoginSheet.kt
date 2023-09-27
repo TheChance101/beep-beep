@@ -14,10 +14,10 @@ import resources.Resources
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NeedToLoginSheet(onClick: () -> Unit) {
+fun NeedToLoginSheet(onClick: () -> Unit,text : String) {
     Column (modifier = Modifier.fillMaxWidth()){
         Text(
-            text = Resources.strings.loginToAddToFavourite ,
+            text =  text ,
             style= Theme.typography.title,
             modifier = Modifier.padding(top=24.dp,start=16.dp,end=16.dp),
             color= Theme.colors.contentPrimary
