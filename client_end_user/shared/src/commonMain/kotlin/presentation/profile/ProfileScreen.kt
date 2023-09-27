@@ -29,7 +29,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
-import presentation.composable.LoginMessage
+import presentation.composable.LoginRequiredPlaceholder
 import resources.Resources
 import util.getStatusBarPadding
 
@@ -117,7 +117,7 @@ class ProfileScreen :
                     )
                 }
             }
-        } else LoginMessage(onClick = { listener.onLogin() })
+        } else LoginRequiredPlaceholder(onClickLogin = { listener.onLogin() })
     }
 
     @Composable
