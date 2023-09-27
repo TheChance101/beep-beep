@@ -12,6 +12,7 @@ import com.beepbeep.designSystem.ui.composable.BpChip
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.overview.PermissionUiState
 import org.thechance.common.presentation.resources.Resources
+import org.thechance.common.presentation.users.PermissionInfo
 import org.thechance.common.presentation.users.UserScreenUiState
 import org.thechance.common.presentation.util.kms
 
@@ -29,7 +30,6 @@ fun PermissionsFlowRow(
             .padding(8.kms)
     ) {
         allPermissions.forEach { permission ->
-            println("Permission: $permission")
             BpChip(
                 label = getPermissionInfo(permission).title,
                 modifier = Modifier.padding(8.kms),
@@ -42,7 +42,7 @@ fun PermissionsFlowRow(
 }
 
 @Composable
-fun getPermissionInfo(permission: UserScreenUiState.PermissionUiState): PermissionInfo {
+private fun getPermissionInfo(permission: UserScreenUiState.PermissionUiState): PermissionInfo {
     return when (permission) {
         UserScreenUiState.PermissionUiState.RESTAURANT_OWNER -> PermissionInfo(
             Resources.Drawable.restaurantOutlined,
@@ -76,7 +76,3 @@ fun getPermissionInfo(permission: UserScreenUiState.PermissionUiState): Permissi
     }
 }
 
-data class PermissionInfo(
-    val iconPath: String,
-    val title: String,
-)
