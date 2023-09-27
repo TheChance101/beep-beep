@@ -15,24 +15,6 @@ import androidx.compose.ui.unit.LayoutDirection
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.util.kms
 
-//@OptIn(ExperimentalFoundationApi::class)
-//@Composable
-//fun ArrowIcon(
-//    painter: Painter,
-//    contentDescription: String? = null,
-//    onClick: () -> Unit,
-//    enable: Boolean = true
-//) {
-//    Icon(
-//        painter = painter,
-//        contentDescription = contentDescription,
-//        modifier = Modifier
-//            .size(24.kms)
-//            .onClick(enabled = enable) { onClick() },
-//        tint = if (enable) Theme.colors.contentPrimary else Theme.colors.contentTertiary.copy(alpha = 0.35f)
-//    )
-//}
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ArrowIcon(
