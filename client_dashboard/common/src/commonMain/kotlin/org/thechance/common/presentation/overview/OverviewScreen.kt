@@ -1,12 +1,9 @@
 package org.thechance.common.presentation.overview
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -14,6 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -25,9 +24,11 @@ import com.aay.compose.barChart.model.BarParameters
 import com.aay.compose.baseComponents.model.LegendPosition
 import com.aay.compose.donutChart.DonutChart
 import com.aay.compose.donutChart.model.PieChartData
+import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.base.BaseScreen
+import org.thechance.common.presentation.composables.BpNoInternetConnection
 import org.thechance.common.presentation.composables.OverviewDropDown
 import org.thechance.common.presentation.main.RestaurantsTab
 import org.thechance.common.presentation.main.TaxisTab
@@ -47,108 +48,163 @@ object OverviewScreen :
     override fun OnRender(state: OverviewUiState, listener: OverviewInteractionListener) {
 
         val scrollState = rememberScrollState()
-
-        Column(
+        BpNoInternetConnection(hasConnection = !state.hasInternetConnection){
+            listener.onRetry()
+        }
+        AnimatedVisibility(state.hasInternetConnection){
+            Column(
                 modifier = Modifier
                     .background(Theme.colors.surface)
+                    .padding(paddingValues = PaddingValues(horizontal = 40.kms))
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(24.kms)
+                verticalArrangement = Arrangement.spacedBy(24.kms),
         ) {
 
-            RevenueCard(listener = listener, state = state )
+            RevenueCard(
+                    listener = listener,
+                    state = state,
+                    modifier = Modifier.padding(paddingValues = PaddingValues(top = 40.kms))
+            )
+
+
             Row(
-                    modifier = Modifier.height(340.dp),
+                    modifier = Modifier.padding(paddingValues = PaddingValues(bottom = 40.kms))
+                        .height(380.dp),
                     horizontalArrangement = Arrangement.spacedBy(24.kms)
-            ) {
-                OverviewCard(
+                ) {
+                    OverviewCard(
                         modifier = Modifier.fillMaxHeight().background(Theme.colors.surface)
                             .weight(1f)
                             .border(
-                                    1.kms,
-                                    Theme.colors.divider,
-                                    RoundedCornerShape(Theme.radius.medium)
+                                1.kms,
+                                Theme.colors.divider,
+                                RoundedCornerShape(Theme.radius.medium)
                             ),
                         title = Resources.Strings.taxiLabel,
                         onLeadingButtonClicked = listener::onViewMoreTaxiClicked,
                         verticalArrangement = Arrangement.spacedBy(40.dp),
                         content = {
-                            TaxiChart(tripsRevenueShare = state.tripsRevenueShare)
+                            TaxiChart(
+                                    tripsRevenueShare = listOf(
+                                            PieChartData(
+                                                    partName = Resources.Strings.accepted,
+                                                    data = state.tripsRevenueShare.acceptedTrips,
+                                                    color = Theme.colors.primary,
+                                            ),
+                                            PieChartData(
+                                                    partName = Resources.Strings.pending,
+                                                    data = state.tripsRevenueShare.pendingTrips,
+                                                    color = Theme.colors.primary.copy(alpha = 0.5f),
+                                            ),
+                                            PieChartData(
+                                                    partName = Resources.Strings.rejected,
+                                                    data = state.tripsRevenueShare.rejectedTrips,
+                                                    color = Theme.colors.primary.copy(alpha = 0.3f),
+                                            ),
+                                            PieChartData(
+                                                    partName = Resources.Strings.canceled,
+                                                    data = state.tripsRevenueShare.canceledTrips,
+                                                    color = Theme.colors.primary.copy(alpha = 0.1f),
+                                            ),
+                                    )
+                            )
                         }
-                )
-                OverviewCard(
+                    )
+                    OverviewCard(
                         modifier = Modifier.weight(1f).fillMaxHeight()
                             .background(Theme.colors.surface)
                             .border(
-                                    1.kms,
-                                    Theme.colors.divider,
-                                    RoundedCornerShape(Theme.radius.medium)
+                                1.kms,
+                                Theme.colors.divider,
+                                RoundedCornerShape(Theme.radius.medium)
                             ),
                         title = Resources.Strings.restaurantLabel,
                         onLeadingButtonClicked = listener::onViewMoreRestaurantClicked,
                         verticalArrangement = Arrangement.spacedBy(40.dp),
                         content = {
-                            RestaurantsChart(ordersRevenueShare = state.ordersRevenueShare)
+                            RestaurantsChart(
+                                    ordersRevenueShare = listOf(
+                                            PieChartData(
+                                                    partName = Resources.Strings.completed,
+                                                    data = state.ordersRevenueShare.completedOrders,
+                                                    color = Theme.colors.primary,
+                                            ),
+                                            PieChartData(
+                                                    partName = Resources.Strings.inTheWay,
+                                                    data = state.ordersRevenueShare.inTheWayOrders,
+                                                    color = Theme.colors.primary.copy(alpha = 0.5f),
+                                            ),
+                                            PieChartData(
+                                                    partName = Resources.Strings.canceled,
+                                                    data = state.ordersRevenueShare.canceledOrders,
+                                                    color = Theme.colors.primary.copy(alpha = 0.1f),
+                                            ),
+                                    )
+                            )
                         }
-                )
-                OverviewCard(
+                    )
+                    OverviewCard(
                         modifier = Modifier.weight(1f)
                             .background(Theme.colors.surface)
                             .border(
-                                    1.kms,
-                                    Theme.colors.divider,
-                                    RoundedCornerShape(Theme.radius.medium)
+                                1.kms,
+                                Theme.colors.divider,
+                                RoundedCornerShape(Theme.radius.medium)
                             ),
                         title = Resources.Strings.users,
                         onLeadingButtonClicked = listener::onViewMoreUsersClicked,
                         content = {
                             Column(
-                                    modifier = Modifier.weight(1f).fillMaxWidth()
-                                        .verticalScroll(scrollState)
+                                modifier = Modifier.weight(1f).fillMaxWidth()
+                                    .verticalScroll(scrollState)
                             ) {
                                 state.users.forEachIndexed { index, user ->
                                     Row(
-                                            modifier = Modifier.padding(16.kms),
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            horizontalArrangement = Arrangement.SpaceBetween
+                                        modifier = Modifier.padding(16.kms),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.SpaceBetween
                                     ) {
                                         Image(
-                                                modifier = Modifier.size(40.kms),
-                                                painter = painterResource(user.image),
-                                                contentDescription = null
+                                            modifier = Modifier.size(40.kms),
+                                            painter = painterResource(user.image),
+                                            contentDescription = null
                                         )
                                         Text(
-                                                text = user.name,
-                                                style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
-                                                modifier = Modifier.padding(start = 16.kms)
-                                                    .weight(1f),
-                                                maxLines = 1,
-                                                overflow = TextOverflow.Ellipsis,
+                                            text = user.name,
+                                            style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
+                                            modifier = Modifier.padding(start = 16.kms)
+                                                .weight(1f),
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
                                         )
                                         FlowRow(
-                                            modifier = Modifier,
-                                            horizontalArrangement = Arrangement.spacedBy(8.kms)
+                                                modifier = Modifier,
+                                                horizontalArrangement = Arrangement.spacedBy(8.kms)
                                         ) {
                                             user.permission.forEach {
-                                                Icon(
-                                                    painter = painterResource(getPermissionIcon(it)),
-                                                    contentDescription = null,
-                                                    tint = Theme.colors.contentPrimary.copy(alpha = 0.87f),
-                                                    modifier = Modifier.size(24.kms)
+                                                Icon(painter = painterResource(
+                                                                getPermissionIcon(it)),
+                                                        contentDescription = null,
+                                                        tint = Theme.colors.contentPrimary.copy(
+                                                                alpha = 0.87f
+                                                        ),
+                                                        modifier = Modifier.size(24.kms)
                                                 )
                                             }
                                         }
                                     }
                                     if (index != state.users.lastIndex) {
                                         Divider(
-                                                modifier = Modifier,
-                                                color = Theme.colors.divider
+                                            modifier = Modifier,
+                                            color = Theme.colors.divider
                                         )
                                     }
                                 }
                             }
                         }
-                )
+                    )
+                }
             }
         }
     }
@@ -202,7 +258,6 @@ object OverviewScreen :
         verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(16.kms),
         content: @Composable ColumnScope.() -> Unit,
     ) {
-
         Column(
                 modifier = modifier
                     .background(Theme.colors.surface, RoundedCornerShape(8.kms))
@@ -232,7 +287,6 @@ object OverviewScreen :
                         modifier = Modifier.weight(1f).height(32.dp),
                 )
             }
-
             content()
         }
     }
@@ -272,21 +326,20 @@ object OverviewScreen :
                 )
             }
 
-            val testBarParameters: List<BarParameters> = listOf(
-                    BarParameters(
-                            dataName = Resources.Strings.revenue,
-                            data = state.revenueData,
-                            barColor = Theme.colors.primary,
-                    ),
-                    BarParameters(
-                            dataName = Resources.Strings.earnings,
-                            data = state.earningData,
-                            barColor = Theme.colors.secondary,
-                    ),
-            )
             Box(modifier = Modifier.fillMaxWidth().height(400.dp)) {
                 BarChart(
-                        chartParameters = testBarParameters,
+                        chartParameters = listOf(
+                                BarParameters(
+                                        dataName = Resources.Strings.revenue,
+                                        data = state.revenueData,
+                                        barColor = Theme.colors.primary,
+                                ),
+                                BarParameters(
+                                        dataName = Resources.Strings.earnings,
+                                        data = state.earningData,
+                                        barColor = Theme.colors.secondary,
+                                ),
+                        ),
                         gridColor = Theme.colors.divider,
                         xAxisData = state.revenueShare,
                         yAxisStyle = Theme.typography.caption.copy(color = Theme.colors.contentPrimary),
@@ -307,32 +360,10 @@ object OverviewScreen :
     //endregion
     @Composable
     fun ColumnScope.TaxiChart(
-        tripsRevenueShare: TripsRevenueShareUiState
+        tripsRevenueShare: List<PieChartData>
     ) {
-        val testPieChartData: List<PieChartData> = listOf(
-                PieChartData(
-                        partName = Resources.Strings.accepted,
-                        data = tripsRevenueShare.acceptedTrips,
-                        color = Theme.colors.primary,
-                ),
-                PieChartData(
-                        partName = Resources.Strings.pending,
-                        data = tripsRevenueShare.pendingTrips,
-                        color = Theme.colors.primary.copy(alpha = 0.5f),
-                ),
-                PieChartData(
-                        partName = Resources.Strings.rejected,
-                        data = tripsRevenueShare.rejectedTrips,
-                        color = Theme.colors.primary.copy(alpha = 0.3f),
-                ),
-                PieChartData(
-                        partName = Resources.Strings.canceled,
-                        data = tripsRevenueShare.canceledTrips,
-                        color = Theme.colors.primary.copy(alpha = 0.1f),
-                ),
-        )
         DonutChart(
-                pieChartData = testPieChartData,
+                pieChartData = tripsRevenueShare,
                 centerTitle = Resources.Strings.trip,
                 centerTitleStyle = Theme.typography.body.copy(color = Theme.colors.contentSecondary),
                 outerCircularColor = Theme.colors.contentBorder,
@@ -347,28 +378,10 @@ object OverviewScreen :
 
     @Composable
     fun ColumnScope.RestaurantsChart(
-        ordersRevenueShare: OrdersRevenueShareUiState
+        ordersRevenueShare: List<PieChartData>
     ) {
-        val testPieChartData: List<PieChartData> = listOf(
-                PieChartData(
-                        partName = Resources.Strings.completed,
-                        data = ordersRevenueShare.completedOrders,
-                        color = Theme.colors.primary,
-                ),
-                PieChartData(
-                        partName = Resources.Strings.inTheWay,
-                        data = ordersRevenueShare.inTheWayOrders,
-                        color = Theme.colors.primary.copy(alpha = 0.5f),
-                ),
-                PieChartData(
-                        partName = Resources.Strings.canceled,
-                        data = ordersRevenueShare.canceledOrders,
-                        color = Theme.colors.primary.copy(alpha = 0.1f),
-                ),
-        )
-
         DonutChart(
-                pieChartData = testPieChartData,
+                pieChartData = ordersRevenueShare,
                 centerTitle = Resources.Strings.orders,
                 centerTitleStyle = Theme.typography.body.copy(color = Theme.colors.contentSecondary),
                 outerCircularColor = Theme.colors.contentBorder,
@@ -384,7 +397,7 @@ object OverviewScreen :
     @Composable
     fun getPermissionIcon(permission: PermissionUiState): String {
         return when (permission) {
-            PermissionUiState.RESTAURANT -> Resources.Drawable.restaurantOutlined
+            PermissionUiState.RESTAURANT_OWNER -> Resources.Drawable.restaurantOutlined
             PermissionUiState.DRIVER -> Resources.Drawable.taxiOutlined
             PermissionUiState.END_USER -> Resources.Drawable.endUser
             PermissionUiState.SUPPORT -> Resources.Drawable.support
