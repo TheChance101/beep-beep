@@ -16,7 +16,7 @@ interface IManageAuthenticationUseCase {
 
     suspend fun removeAccessToken()
 
-    suspend fun  removeRefreshToken()
+    suspend fun removeRefreshToken()
 
     suspend fun getAccessToken(): String
 }
@@ -57,7 +57,7 @@ class ManageAuthenticationUseCase(
         return localGateway.removeAccessToken()
     }
 
-    override suspend fun removeRefreshToken()  {
+    override suspend fun removeRefreshToken() {
         return localGateway.removeRefreshToken()
     }
 

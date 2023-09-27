@@ -17,7 +17,9 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpAnimatedTabLayout
 import com.beepbeep.designSystem.ui.theme.Theme
+import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
+import presentation.composable.LoginMessage
 import presentation.orderHistory.composable.HorizontalDivider
 import presentation.orderHistory.composable.MealOrderItem
 import presentation.orderHistory.composable.TripHistoryItem
@@ -36,7 +38,8 @@ class OrderHistoryScreen :
 
     @Composable
     override fun onRender(state: OrderScreenUiState, listener: OrderHistoryScreenInteractionListener) {
-        Column(
+        LoginMessage({})
+/*        Column(
             modifier = Modifier.fillMaxSize().background(Theme.colors.background),
         ) {
             Text(
@@ -82,6 +85,6 @@ class OrderHistoryScreen :
                     }
                 }
             }
-        }
+        }*/
     }
 }

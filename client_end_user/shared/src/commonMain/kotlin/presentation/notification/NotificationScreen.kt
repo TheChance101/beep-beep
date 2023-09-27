@@ -15,6 +15,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.base.BaseScreen
 import presentation.notification.combosable.NotificationCard
 import resources.Resources
+import util.getStatusBarPadding
 
 class NotificationScreen :
     BaseScreen<NotificationScreenModel, NotificationsUiState, NotificationUiEffect, NotificationInteractionListener>() {
@@ -27,8 +28,12 @@ class NotificationScreen :
     @Composable
     override fun onRender(state: NotificationsUiState, listener: NotificationInteractionListener) {
         LazyColumn(
-            modifier = Modifier.fillMaxSize().background(Theme.colors.background),
-            contentPadding = PaddingValues(top = 56.dp , bottom = 24.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Theme.colors.background)
+                .padding(getStatusBarPadding()
+            ),
+            contentPadding = PaddingValues(vertical = 24.dp)
         ) {
             itemsIndexed(state.todayNotifications) { index, item ->
                 val showDate = index == 0

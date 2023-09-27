@@ -26,16 +26,20 @@ fun LoginMessage(
     onClick: () -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxSize().padding(getStatusBarPadding())
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Theme.colors.background)
+            .padding(getStatusBarPadding()
+        )
             .background(Theme.colors.background),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(Resources.images.needLogin),
+            painter = painterResource(Resources.images.requireLoginToShowProfilePlaceholder),
             contentDescription = Resources.strings.login,
             contentScale = ContentScale.Crop,
-            modifier = Modifier.height(120.dp,).padding(bottom = 8.dp)
+            modifier = Modifier.height(120.dp).padding(bottom = 8.dp)
 
         )
         Text(
