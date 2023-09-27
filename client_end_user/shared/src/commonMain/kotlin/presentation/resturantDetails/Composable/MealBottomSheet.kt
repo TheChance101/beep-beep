@@ -30,43 +30,52 @@ import resources.Resources
 
 @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun MealBottomSheet(onClick: () -> Unit,meal : MealUIState,listener: RestaurantInteractionListener) {
-    Column (modifier = Modifier.fillMaxWidth()) {
-        Image(
-            painter = painterResource(Resources.images.placeholder),
-            contentScale = ContentScale.Crop,
-            contentDescription = null,
-            modifier= Modifier.height(240.dp).padding(bottom = 24.dp)
-        )
+fun MealBottomSheet(meal: MealUIState, listener: RestaurantInteractionListener) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Box(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Image(
+                painter = painterResource(Resources.images.placeholder),
+                contentScale = ContentScale.Crop,
+                contentDescription = "${meal.name} image",
+                modifier = Modifier.height(240.dp).padding(bottom = 24.dp)
+            )
+            CloseButton(
+                onClick = { listener.onDismissSheet() },
+                modifier = Modifier.align(Alignment.TopCenter),
+                horizontalArrangement = Arrangement.End,
+            )
+        }
         Text(
             text = meal.name,
-            style=Theme.typography.titleLarge,
-            color=Theme.colors.contentPrimary,
-            modifier= Modifier.padding(horizontal = 16.dp)
+            style = Theme.typography.titleLarge,
+            color = Theme.colors.contentPrimary,
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
         Text(
             text = meal.description,
-            style=Theme.typography.body,
-            color=Theme.colors.contentSecondary,
-            modifier= Modifier.padding(horizontal = 16.dp)
+            style = Theme.typography.body,
+            color = Theme.colors.contentSecondary,
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
-        Row (
-            modifier = Modifier.fillMaxWidth().padding(start=16.dp, end=16.dp ,top = 24.dp),
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 24.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         )
         {
             Text(
                 text = "${meal.currency} ${meal.price}",
-                style=Theme.typography.title,
-                color=Theme.colors.contentPrimary,
+                style = Theme.typography.title,
+                color = Theme.colors.contentPrimary,
             )
-            Row (
+            Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 quantityButton(onClick = {
                     listener.onDecressQuantity()
-                },icon = Resources.images.minus)
+                }, icon = Resources.images.minus)
                 Text(
                     text = "${meal.quantity}",
                     style = Theme.typography.title,
@@ -74,20 +83,20 @@ fun MealBottomSheet(onClick: () -> Unit,meal : MealUIState,listener: RestaurantI
                 )
                 quantityButton(onClick = {
                     listener.onIncressQuantity()
-                },icon = Resources.images.plus)
+                }, icon = Resources.images.plus)
             }
         }
         BpButton(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 24.dp),
-            title =Resources.strings.addToCart,
-            onClick = { onClick() },
+            title = Resources.strings.addToCart,
+            onClick = { listener.onAddToCart() },
         )
     }
 }
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-private fun quantityButton(onClick: () -> Unit,icon:String) {
+private fun quantityButton(onClick: () -> Unit, icon: String) {
     Box(
         modifier = Modifier
             .border(
@@ -96,10 +105,10 @@ private fun quantityButton(onClick: () -> Unit,icon:String) {
                 shape = RoundedCornerShape(size = Theme.radius.small)
             )
             .width(28.dp)
-            .height(28.dp).noRippleEffect {onClick()  }
+            .height(28.dp).noRippleEffect { onClick() }
     ) {
         Icon(
-            painter =   painterResource(icon),
+            painter = painterResource(icon),
             contentDescription = null,
             tint = Theme.colors.contentPrimary,
             modifier = Modifier.padding(4.dp)
