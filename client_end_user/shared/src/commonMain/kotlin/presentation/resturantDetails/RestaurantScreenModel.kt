@@ -115,11 +115,11 @@ class RestaurantScreenModel(
     }
 
     private  fun onGetMostOrdersSuccess(meals:List<Meal>) {
-        updateState { it.copy(mostOrders = meals.map { it.toUIState() }) }
+        updateState { it -> it.copy(mostOrders = meals.map { it.toUIState() }) }
     }
 
     private  fun onGetSweetsSuccess(meals:List<Meal>) {
-        updateState { it.copy(sweets = meals.map { it.toUIState() }) }
+        updateState { it -> it.copy(sweets = meals.map { it.toUIState() }) }
     }
 
     private fun onError(errorState: ErrorState) {
@@ -143,7 +143,6 @@ class RestaurantScreenModel(
     }
 
     override  fun onGoToDetails(mealId: String) {
-        onShowMealSheet()
         tryToExecute(
             { mangeRestaurantDetails.getMealById(mealId) },
             ::onGetMealDetailsSuccess,
@@ -151,36 +150,38 @@ class RestaurantScreenModel(
         )
     }
     private fun onGetMealDetailsSuccess(meal: Meal) {
-        updateState { it.copy(meal = meal.toUIState()) }
-
+        updateState { it.copy(meal = meal.toUIState(),) }
+        onShowMealSheet()
     }
     override fun onDismissSheet() {
-
         state.value.sheetState.dismiss()
         coroutineScope.launch {
             delayAndChangePermissionSheetState(false)
         }
     }
 
-    override fun onShowSheet() {
-        updateState { it.copy(showLoginSheet = true) }
+    override fun onShowLoginSheet() {
         coroutineScope.launch {
             state.value.sheetState.dismiss()
-            delayAndChangePermissionSheetState(true)
+            updateState { it.copy( showLoginSheet = true) }
             state.value.sheetState.show()
         }
     }
 
-    override fun onGoToCart() {
+    override fun onAddToCart() {
 
+        if(state.value.isLogin) {
+            onDismissSheet()
+            showToast()
+        }else{
+            updateState { it.copy(showMealSheet = false, showLoginSheet = true) }
+        }
     }
 
-    override  fun onShowMealSheet() {
-        updateState { it.copy(showMealSheet = true) }
-
+    override fun onShowMealSheet() {
         coroutineScope.launch {
             state.value.sheetState.dismiss()
-            delayAndChangePermissionSheetState(true)
+            updateState { it.copy(showMealSheet = true) }
             state.value.sheetState.show()
         }
     }
@@ -197,7 +198,6 @@ class RestaurantScreenModel(
             )
         ) }
     }
-
     override fun onDecressQuantity() {
         if(state.value.meal.quantity == 1) return
         updateState { it.copy(
@@ -207,9 +207,16 @@ class RestaurantScreenModel(
             )
         ) }
     }
-
     private suspend fun delayAndChangePermissionSheetState(show: Boolean) {
         delay(300)
         updateState { it.copy(showLoginSheet = show,showMealSheet=show) }
+    }
+    private fun showToast() {
+        viewModelScope.launch {
+            updateState { it.copy( showToast = true) }
+            delay(2000)
+            updateState { it.copy(showToast = false) }
+            delay(300)
+        }
     }
 }

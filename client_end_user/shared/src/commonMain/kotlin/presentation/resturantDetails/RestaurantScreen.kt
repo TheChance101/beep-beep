@@ -1,7 +1,11 @@
 package presentation.resturantDetails
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,25 +15,37 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
+import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.theme.Theme
 import domain.entity.PriceLevel
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.auth.login.LoginScreen
@@ -41,8 +57,10 @@ import presentation.composable.RatingBar
 import presentation.composable.SectionHeader
 import presentation.composable.modifier.noRippleEffect
 import presentation.resturantDetails.Composable.Chip
+import presentation.resturantDetails.Composable.CloseButton
 import presentation.resturantDetails.Composable.MealBottomSheet
 import presentation.resturantDetails.Composable.NeedToLoginSheet
+import presentation.resturantDetails.Composable.ToastMessage
 import resources.Resources
 
 object RestaurantScreen :
@@ -62,63 +80,43 @@ object RestaurantScreen :
         initScreen(getScreenModel())
     }
 
-    @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun onRender(state: RestaurantUIState, listener: RestaurantInteractionListener) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.TopCenter
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            BottomSheet(
+                sheetContent = {
+                    if (state.showMealSheet)
+                        MealBottomSheet(
+                            meal = state.meal,
+                            listener = listener,
+                        )
+                    if(state.showLoginSheet)
+                        NeedToLoginSheet(
+                            text = Resources.strings.loginToAddToFavourite,
+                            onClick = {
+                                listener.onDismissSheet()
+                                listener.onGoToLogin()
+                            }
+                        )
+                },
+                sheetBackgroundColor = Theme.colors.background,
+                onBackGroundClicked = listener::onDismissSheet,
+                sheetState =  state.sheetState,
             ) {
-                BottomSheet(
-                    sheetContent = {
-                        if(state.showMealSheet) {
-                            MealBottomSheet(
-                                meal = state.meal,
-                                onClick = {
 
-                                },
-                                listener = listener
-                            )
-                        }
-                        if(state.showLoginSheet && !state.isLogin) {
-                            NeedToLoginSheet(
-                                onClick = {
-                                    listener.onDismissSheet()
-                                    listener.onGoToLogin()
-                                }
-                            )
-                        }
-                    },
-                    sheetBackgroundColor = Theme.colors.background,
-                    onBackGroundClicked = listener::onDismissSheet,
-                    sheetState = state.sheetState,
-                ) {
                 Image(
                     painter = painterResource(Resources.images.placeholder),
-                    contentDescription = "background",
+                    contentDescription = "background",)
 
-                    )
-                Row(
-                    modifier = Modifier.padding(16.dp).height(56.dp).fillMaxWidth()
-                        .align(Alignment.TopCenter)
-                        .padding(vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-
-                    Box(
-                        Modifier.size(40.dp).clip(RoundedCornerShape(Theme.radius.medium))
-                            .background(color = Theme.colors.surface)
-                            .noRippleEffect { listener.onBack() },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            painter = painterResource(Resources.images.iconBack),
-                            contentDescription = null,
-                            tint = Theme.colors.contentPrimary,
-                            modifier = Modifier.size(16.dp)
-                        )
-                    }
-                }
+                CloseButton(
+                    onClick = {  listener.onBack()},
+                    modifier = Modifier.align(Alignment.TopCenter),
+                    icon=Resources.images.iconBack
+                )
                 Column(
                     modifier = Modifier.fillMaxWidth().fillMaxHeight(.75f)
                         .verticalScroll(rememberScrollState())
@@ -146,7 +144,7 @@ object RestaurantScreen :
                                     if (state.isLogin) {
                                         listener.onAddToFavourite()
                                     } else {
-                                        listener.onShowSheet()
+                                        listener.onShowLoginSheet()
                                     }
                                 }
                         )
@@ -235,7 +233,7 @@ object RestaurantScreen :
                                 price = state.mostOrders[index].price,
                                 currency = state.mostOrders[index].currency,
                                 modifier = Modifier.noRippleEffect {
-                                 listener.onGoToDetails(state.mostOrders[index].id)
+                                    listener.onGoToDetails(state.mostOrders[index].id)
                                 }
                             )
                         }
@@ -259,14 +257,24 @@ object RestaurantScreen :
                                 price = state.mostOrders[index].price,
                                 currency = state.sweets[index].currency,
                                 hasRate = false,
+                                modifier = Modifier.noRippleEffect {
+                                    listener.onGoToDetails(state.mostOrders[index].id)
+                                }
                             )
                         }
                     }
+
                 }
             }
+            ToastMessage(
+                state = state.showToast,
+                message = Resources.strings.mealAddedToYourCart,
+                modifier = Modifier.align(Alignment.BottomCenter)
+            )
         }
     }
 }
+
 
 
 
