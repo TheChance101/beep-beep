@@ -41,6 +41,8 @@ data class DrawableResources(
     val star : String = "star.xml",
     val starHalf : String = "star_half.xml",
     val heartFilled : String = "heart_fill.xml",
+    val plus: String = "plus_icon.xml",
+    val minus: String = "minus_icon.xml",
 
 )
 
