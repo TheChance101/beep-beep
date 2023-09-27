@@ -1,6 +1,7 @@
 package org.thechance.common.presentation.users
 
 import org.thechance.common.presentation.base.BaseInteractionListener
+import org.thechance.common.presentation.overview.PermissionUiState
 
 interface UserScreenInteractionListener : BaseInteractionListener, FilterMenuListener,
     EditUserMenuListener, PageListener {
@@ -15,20 +16,33 @@ interface UserScreenInteractionListener : BaseInteractionListener, FilterMenuLis
 
 interface EditUserMenuListener {
     fun showEditUserMenu(username: String)
+
     fun hideEditUserMenu()
+
     fun onEditUserMenuItemClicked(user: UserScreenUiState.UserUiState)
+
     fun onSaveUserPermissionsDialog()
+
     fun onCancelUserPermissionsDialog()
-    fun onUserPermissionClick(permission: UserScreenUiState.PermissionUiState)
+
+    fun onUserPermissionClick(permission: PermissionUiState)
+
 }
 
 interface FilterMenuListener {
+
     fun showFilterMenu()
+
     fun hideFilterMenu()
-    fun onFilterMenuPermissionClick(permission: UserScreenUiState.PermissionUiState)
+
+    fun onFilterMenuPermissionClick(permission: PermissionUiState)
+
     fun onFilterMenuCountryClick(country: UserScreenUiState.CountryUiState)
+
     fun onFilterMenuSaveButtonClicked()
+
     fun onFilterClearAllClicked()
+
 }
 
 interface PageListener {

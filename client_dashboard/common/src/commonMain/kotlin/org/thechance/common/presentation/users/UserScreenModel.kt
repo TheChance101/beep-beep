@@ -5,6 +5,7 @@ import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.usecase.IUsersManagementUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
+import org.thechance.common.presentation.overview.PermissionUiState
 import org.thechance.common.presentation.util.ErrorState
 
 class UserScreenModel(
@@ -36,9 +37,9 @@ class UserScreenModel(
     }
 
     private fun getUpdatedPermissions(
-        permissions: List<UserScreenUiState.PermissionUiState>,
-        permissionUiState: UserScreenUiState.PermissionUiState
-    ): List<UserScreenUiState.PermissionUiState> {
+        permissions: List<PermissionUiState>,
+        permissionUiState: PermissionUiState
+    ): List<PermissionUiState> {
         return if (permissions.contains(permissionUiState)) {
             permissions.filterNot { it == permissionUiState }
         } else {
@@ -55,9 +56,9 @@ class UserScreenModel(
         updateState { it.copy(filter = it.filter.copy(show = false)) }
     }
 
-    override fun onFilterMenuPermissionClick(permission: UserScreenUiState.PermissionUiState) {
-        val updatedPermissions = getUpdatedPermissions(mutableState.value.filter.permissions, permission)
-        updateState { it.copy(filter = it.filter.copy(permissions = updatedPermissions)) }
+    override fun onFilterMenuPermissionClick(permission: PermissionUiState) {
+        val updatedPermissions = getUpdatedPermissions(mutableState.value.filter.selectedPermissions, permission)
+        updateState { it.copy(filter = it.filter.copy(selectedPermissions = updatedPermissions)) }
     }
 
     override fun onFilterMenuCountryClick(country: UserScreenUiState.CountryUiState) {
@@ -76,8 +77,8 @@ class UserScreenModel(
         updateState {
             it.copy(
                 filter = it.filter.copy(
-                    permissions = emptyList(),
-                    countries = it.filter.countries.map { country -> country.copy(selected = false) }
+                    selectedPermissions = emptyList(),
+                    countries = it.filter.countries.map { country -> country.copy(isSelected = false) }
                 )
             )
         }
@@ -108,8 +109,8 @@ class UserScreenModel(
             {
                 userManagement.getUsers(
                     query = state.value.search.trim(),
-                    byPermissions = state.value.filter.permissions.toEntity(),
-                    byCountries = state.value.filter.countries.filter { it.selected }.map { it.name },
+                    byPermissions = state.value.filter.selectedPermissions.toEntity(),
+                    byCountries = state.value.filter.countries.filter { it.isSelected }.map { it.country }.toCountryEntity(),
                     page = state.value.currentPage,
                     numberOfUsers = state.value.specifiedUsers
                 )
@@ -181,9 +182,9 @@ class UserScreenModel(
         hideUserPermissionsDialog()
     }
 
-    override fun onUserPermissionClick(permission: UserScreenUiState.PermissionUiState) {
+    override fun onUserPermissionClick(permission: PermissionUiState) {
         val permissions = getUpdatedPermissions(mutableState.value.permissionsDialog.permissions, permission)
-        if (permission != UserScreenUiState.PermissionUiState.END_USER)
+        if (permission != PermissionUiState.END_USER)
             updateState {
                 it.copy(
                     permissionsDialog = it.permissionsDialog.copy(permissions = permissions)
@@ -203,7 +204,7 @@ class UserScreenModel(
     }
 
     private fun updateUserPermissions(
-        userId: String, permissions: List<UserScreenUiState.PermissionUiState>
+        userId: String, permissions: List<PermissionUiState>
     ) {
         tryToExecute(
             { userManagement.updateUserPermissions(userId, permissions.toEntity()) },
