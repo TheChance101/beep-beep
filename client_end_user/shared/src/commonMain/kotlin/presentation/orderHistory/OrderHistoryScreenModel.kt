@@ -16,6 +16,7 @@ class OrderHistoryScreenModel(
     override val viewModelScope: CoroutineScope = coroutineScope
 
     init {
+        checkIfLoggedIn()
         getOrdersHistory()
         getTripsHistory()
     }
