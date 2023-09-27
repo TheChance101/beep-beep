@@ -90,7 +90,7 @@ data class ArabicIQ(
     override val logout: String= "تسجيل الخروج",
     override val address: String = "العنوان",
     override val save: String= "حفظ",
-    override val pleaseLogin: String= "سجل دخول وشوف حسابك"
-
-
-    ) : IStringResources
+    override val pleaseLogin: String= "سجل دخول وشوف حسابك",
+    override val invalidAddress: String = "العنوان مش صالح",
+    override val yourAddress: String = "عنوانك",
+) : IStringResources

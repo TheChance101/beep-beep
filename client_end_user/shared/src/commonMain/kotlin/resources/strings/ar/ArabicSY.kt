@@ -90,5 +90,7 @@ data class ArabicSY(
     override val logout: String= "تسجيل الخروج",
     override val address: String = "العنوان",
     override val save: String= "حفظ",
-    override val pleaseLogin: String="سجل دخول حتى توصل حسابك يخوو"
+    override val pleaseLogin: String="سجل دخول حتى توصل حسابك يخوو",
+    override val invalidAddress: String = "العنوان مش صالح",
+    override val yourAddress: String = "عنوانك",
 ) : IStringResources
