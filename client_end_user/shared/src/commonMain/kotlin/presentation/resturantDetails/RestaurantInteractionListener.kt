@@ -12,9 +12,9 @@ interface RestaurantInteractionListener :BaseInteractionListener  {
 
     fun onDismissSheet()
 
-    fun onShowSheet()
+    fun onShowLoginSheet()
 
-    fun onGoToCart()
+    fun onAddToCart()
 
     fun onShowMealSheet()
 
@@ -23,5 +23,6 @@ interface RestaurantInteractionListener :BaseInteractionListener  {
     fun onIncressQuantity()
 
     fun onDecressQuantity()
+
 
 }
