@@ -1,4 +1,4 @@
-package org.thechance.common.data.remote.gateway
+package org.thechance.common.data.gateway.remote
 
 import io.ktor.client.*
 import io.ktor.client.request.*
@@ -7,12 +7,12 @@ import io.ktor.http.*
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
-import org.thechance.common.data.remote.mapper.mapPermissionsToInt
-import org.thechance.common.data.remote.mapper.toEntity
-import org.thechance.common.data.remote.model.ServerResponse
-import org.thechance.common.data.remote.model.UserDto
-import org.thechance.common.data.remote.model.UserResponse
-import org.thechance.common.data.remote.model.UserTokensRemoteDto
+import org.thechance.common.data.gateway.remote.mapper.mapPermissionsToInt
+import org.thechance.common.data.gateway.remote.mapper.toEntity
+import org.thechance.common.data.gateway.remote.model.ServerResponse
+import org.thechance.common.data.gateway.remote.model.UserDto
+import org.thechance.common.data.gateway.remote.model.UserResponse
+import org.thechance.common.data.gateway.remote.model.UserTokensRemoteDto
 import org.thechance.common.domain.entity.Country
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Permission
