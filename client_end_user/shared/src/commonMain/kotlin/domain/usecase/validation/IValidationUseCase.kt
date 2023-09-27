@@ -51,7 +51,7 @@ class ValidationUseCaseUseCase : IValidationUseCase {
 
     override fun validateAddress(address: String) {
         // todo: add address validation regex like this one: ^[A-Za-z0-9\s.,-]+$
-        if (address.isEmpty()) {
+        if (address.isBlank()) {
             throw AuthorizationException.InvalidAddressException
         }
     }
