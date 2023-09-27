@@ -2,6 +2,6 @@ package data.service
 
 
 interface ILocationService {
-    fun isGPSEnabled(): Boolean
+    fun isDeviceLocationEnabled(): Boolean
     fun openLocationSettings()
 }

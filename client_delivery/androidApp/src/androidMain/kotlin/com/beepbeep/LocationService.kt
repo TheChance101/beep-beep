@@ -1,6 +1,7 @@
 package com.beepbeep
 import android.annotation.SuppressLint
 import android.content.Context
+import android.provider.Settings
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.location.LocationManager
@@ -28,7 +29,7 @@ class LocationService(private val context: Context): ILocationService {
             //else _viewModel.showErrorMessage.value = getString(R.string.deny_to_open_location)
         }*/
 
-    override fun isGPSEnabled(): Boolean {
+    override fun isDeviceLocationEnabled(): Boolean {
         val locationManager = getSystemService(context, LocationManager::class.java)
         val isGPSEnabled = locationManager?.isProviderEnabled(LocationManager.GPS_PROVIDER)
         return isGPSEnabled == true
