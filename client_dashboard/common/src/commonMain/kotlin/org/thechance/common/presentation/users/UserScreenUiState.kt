@@ -25,11 +25,11 @@ data class UserScreenUiState(
     val filter: FilterUiState = FilterUiState(),
     val allPermissions: List<PermissionUiState> = listOf(
         PermissionUiState.RESTAURANT_OWNER,
-        PermissionUiState.TAXI_DRIVER,
+        PermissionUiState.DRIVER,
         PermissionUiState.END_USER,
         PermissionUiState.SUPPORT,
         PermissionUiState.DELIVERY,
-        PermissionUiState.DASHBOARD_ADMIN,
+        PermissionUiState.ADMIN,
     ),
     val error: ErrorState = ErrorState.UnKnownError,
     val isLoading: Boolean = true,
@@ -50,15 +50,6 @@ data class UserScreenUiState(
         val permissions: List<PermissionUiState> = emptyList(),
     )
 
-    enum class PermissionUiState(val iconPath: String) {
-        RESTAURANT_OWNER("outline_restaurants.xml"),
-        TAXI_DRIVER("ic_taxi.xml"),
-        END_USER("ic_end_user.xml"),
-        SUPPORT("ic_support.xml"),
-        DELIVERY("ic_delivery.xml"),
-        DASHBOARD_ADMIN("ic_admin.xml"),
-    }
-
     data class PermissionsDialogUiState(
         val show: Boolean = false,
         val id:String = "",
@@ -67,7 +58,7 @@ data class UserScreenUiState(
 
     data class FilterUiState(
         val show: Boolean = false,
-        val permissions: List<PermissionUiState> = emptyList(),
+        val selectedPermissions: List<PermissionUiState> = emptyList(),
         val countries: List<CountryUiState> = listOf(
             CountryUiState(
                 name = "Iraq",
@@ -107,12 +98,12 @@ fun User.toUiState(): UserScreenUiState.UserUiState {
         country = country,
         permissions = permission.map { permission ->
             when (permission) {
-                Permission.RESTAURANT_OWNER -> UserScreenUiState.PermissionUiState.RESTAURANT_OWNER
-                Permission.DRIVER -> UserScreenUiState.PermissionUiState.TAXI_DRIVER
-                Permission.END_USER -> UserScreenUiState.PermissionUiState.END_USER
-                Permission.SUPPORT -> UserScreenUiState.PermissionUiState.SUPPORT
-                Permission.DELIVERY -> UserScreenUiState.PermissionUiState.DELIVERY
-                Permission.ADMIN -> UserScreenUiState.PermissionUiState.DASHBOARD_ADMIN
+                Permission.RESTAURANT_OWNER -> PermissionUiState.RESTAURANT_OWNER
+                Permission.DRIVER -> PermissionUiState.DRIVER
+                Permission.END_USER -> PermissionUiState.END_USER
+                Permission.SUPPORT -> PermissionUiState.SUPPORT
+                Permission.DELIVERY -> PermissionUiState.DELIVERY
+                Permission.ADMIN -> PermissionUiState.ADMIN
             }
         },
     )
@@ -127,14 +118,14 @@ fun DataWrapper<User>.toUiState(): UserScreenUiState.UserPageInfoUiState {
     )
 }
 
-fun UserScreenUiState.PermissionUiState.toEntity(): Permission {
+fun PermissionUiState.toEntity(): Permission {
     return when (this) {
-        UserScreenUiState.PermissionUiState.END_USER -> Permission.END_USER
-        UserScreenUiState.PermissionUiState.DASHBOARD_ADMIN -> Permission.ADMIN
-        UserScreenUiState.PermissionUiState.SUPPORT -> Permission.SUPPORT
-        UserScreenUiState.PermissionUiState.DELIVERY -> Permission.DELIVERY
-        UserScreenUiState.PermissionUiState.RESTAURANT_OWNER -> Permission.RESTAURANT_OWNER
-        UserScreenUiState.PermissionUiState.TAXI_DRIVER -> Permission.DRIVER
+        PermissionUiState.END_USER -> Permission.END_USER
+        PermissionUiState.ADMIN -> Permission.ADMIN
+        PermissionUiState.SUPPORT -> Permission.SUPPORT
+        PermissionUiState.DELIVERY -> Permission.DELIVERY
+        PermissionUiState.RESTAURANT_OWNER -> Permission.RESTAURANT_OWNER
+        PermissionUiState.DRIVER -> Permission.DRIVER
     }
 }
 
