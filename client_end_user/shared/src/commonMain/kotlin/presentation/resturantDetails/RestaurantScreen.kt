@@ -2,7 +2,6 @@ package presentation.resturantDetails
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,32 +17,19 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.BottomSheetDefaults
-import androidx.compose.material3.BottomSheetScaffold
-import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
-import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import domain.entity.PriceLevel
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.auth.login.LoginScreen
@@ -54,8 +40,9 @@ import presentation.composable.BpPriceLevel
 import presentation.composable.RatingBar
 import presentation.composable.SectionHeader
 import presentation.composable.modifier.noRippleEffect
+import presentation.resturantDetails.Composable.Chip
+import presentation.resturantDetails.Composable.NeedToLoginSheet
 import resources.Resources
-import util.getStatusBarPadding
 
 object RestaurantScreen :
     BaseScreen<RestaurantScreenModel, RestaurantUIState, RestaurantUIEffect, RestaurantInteractionListener>() {
@@ -266,38 +253,5 @@ object RestaurantScreen :
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun NeedToLoginSheet(onClick: () -> Unit) {
-    Column (modifier = Modifier.fillMaxWidth()){
-        Text(
-            text = Resources.strings.loginToAddToFavourite ,
-            style=Theme.typography.title,
-            modifier = Modifier.padding(top=24.dp,start=16.dp,end=16.dp),
-            color=Theme.colors.contentPrimary
-        )
-        BpButton(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-            title = Resources.strings.login,
-            onClick = { onClick() },
-        )
-    }
-}
 
-@Composable
-private fun Chip(
-    color: Color,
-    content: @Composable () -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .background(
-                color = color,
-                shape = RoundedCornerShape(size = Theme.radius.small)
-            )
-            .padding(start = 4.dp, top = 2.dp, end = 4.dp, bottom = 2.dp)
-    ) {
-        content()
-    }
 
-}

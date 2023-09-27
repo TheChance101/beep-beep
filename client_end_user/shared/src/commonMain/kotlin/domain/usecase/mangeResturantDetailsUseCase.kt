@@ -12,6 +12,8 @@ interface IMangeRestaurantDetailsUseCase {
     suspend fun getRestaurantMostOrders(restaurantId: String) : List<Meal>
 
     suspend fun getRestaurantSweets(restaurantId: String) : List<Meal>
+
+    suspend fun getMealById(mealId: String): Meal
 }
 
 class MangeRestaurantDetailsUseCase(
@@ -27,6 +29,10 @@ class MangeRestaurantDetailsUseCase(
 
     override suspend fun getRestaurantSweets(restaurantId: String): List<Meal> {
         return fakeRemoteGateway.getSweets(restaurantId)
+    }
+
+    override suspend fun getMealById(mealId: String): Meal {
+        return fakeRemoteGateway.getMealById(mealId)
     }
 
 }
