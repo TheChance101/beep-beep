@@ -17,27 +17,52 @@ map = new Microsoft.Maps.Map('#myMap', {
            map.entities.push(pin);
 }
 
-function getDirections(lat,lng,latt,lngg){
-Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
-    directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
-    directionsManager.setRequestOptions({
-        routeMode: Microsoft.Maps.Directions.RouteMode.driving,
-        routeDraggable: false,
-        autoUpdateMapView: false
+function getDirections(startLat, startLng, endLat, endLng) {
+    // Load the Microsoft Maps Directions module
+    Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
+
+        // Initialize the DirectionsManager with the existing map
+        const directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
+
+        // Configure the request options for route calculation
+        const requestOptions = {
+            routeMode: Microsoft.Maps.Directions.RouteMode.driving,
+            routeDraggable: false,
+            autoUpdateMapView: false
+        };
+        directionsManager.setRequestOptions(requestOptions);
+
+        // Configure the render options for the route
+        const renderOptions = {
+            drivingPolylineOptions: {
+                strokeColor: 'red',
+                strokeThickness: 8
+            },
+            autoUpdateMapView: false
+        };
+        directionsManager.setRenderOptions(renderOptions);
+
+        // Create waypoints using the provided latitude and longitude
+        const startWaypoint = new Microsoft.Maps.Directions.Waypoint({
+            location: new Microsoft.Maps.Location(startLat, startLng)
+        });
+        const endWaypoint = new Microsoft.Maps.Directions.Waypoint({
+            location: new Microsoft.Maps.Location(endLat, endLng)
+
+        });
+
+        // Add the waypoints to the directions manager
+        directionsManager.addWaypoint(startWaypoint);
+        directionsManager.addWaypoint(endWaypoint);
+
+        // Calculate the directions
+        directionsManager.calculateDirections();
     });
-    directionsManager.setRenderOptions({
-                   drivingPolylineOptions: {
-                       strokeColor: 'red',
-                       strokeThickness: 8
-                   },
-                   autoUpdateMapView:false
-               });
-    var waypoint1 = new Microsoft.Maps.Directions.Waypoint({ location: new Microsoft.Maps.Location(latt,lngg) });
-    var waypoint2 = new Microsoft.Maps.Directions.Waypoint({ location: new Microsoft.Maps.Location(lat,lng) });
-    directionsManager.addWaypoint(waypoint1);
-    directionsManager.addWaypoint(waypoint2);
-    directionsManager.calculateDirections();
-});}
+}
+
+function getRouteTime() {
+    directionsManager.time
+}
 
 function clearDirections() {
 directionsManager.clearAll();
