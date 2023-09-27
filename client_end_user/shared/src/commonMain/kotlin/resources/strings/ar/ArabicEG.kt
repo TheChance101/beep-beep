@@ -95,4 +95,6 @@ data class ArabicEG(
     override val sweets: String= "حلويات",
     override val free: String= "مجاناً",
     override val loginToAddToFavourite: String= "الرجاء تسجيل الدخول عشان تضيف المطاعم المفضلة",
-) : IStringResources
+    override val addToCart: String= "أضف إلى العربة",
+
+    ) : IStringResources
