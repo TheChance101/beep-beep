@@ -40,6 +40,7 @@ abstract class BaseGateway {
             val errorMessage = errorMessages[errorCode] ?: continue
 
             val exception = when (errorCode) {
+                NO_PERMISSION -> BpError.InvalidPermission(errorMessage)
                 WRONG_PASSWORD -> BpError.InvalidPassword(errorMessage)
                 INVALID_USERNAME, USER_NOT_EXIST -> BpError.InvalidUserName(errorMessage)
                 INVALID_TAXI_ID -> BpError.InvalidTaxiId(errorMessage)
@@ -76,7 +77,8 @@ abstract class BaseGateway {
         }
     }
 
-    val errorCodes: List<String> = listOf(
+    private val errorCodes: List<String> = listOf(
+        NO_PERMISSION,
         WRONG_PASSWORD,
         INVALID_USERNAME,
         USER_NOT_EXIST,
@@ -116,6 +118,7 @@ abstract class BaseGateway {
     companion object {
 
         const val WRONG_PASSWORD = "1013"
+        const val NO_PERMISSION = "1014"
         const val USER_NOT_EXIST = "1043"
         const val INVALID_USERNAME = "1003"
         const val USERNAME_CANNOT_BE_BLANK = "1006"

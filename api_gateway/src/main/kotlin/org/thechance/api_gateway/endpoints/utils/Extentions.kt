@@ -61,12 +61,8 @@ fun Route.authenticateWithRole(role: Int, block: Route.() -> Unit) {
     }
 }
 
-private fun hasPermission(permission: Int, role: Int): Boolean {
+fun hasPermission(permission: Int, role: Int): Boolean {
     return (permission and role) == role
-}
-
-fun String?.toIntListOrNull(): List<Int>? {
-    return this?.split(",")?.mapNotNull { it.toIntOrNull() }
 }
 
 suspend inline fun <reified T> PipelineContext<Unit, ApplicationCall>.receiveMultipart(

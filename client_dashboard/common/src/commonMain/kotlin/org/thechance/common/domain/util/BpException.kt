@@ -21,6 +21,7 @@ sealed interface BpError{
     data class InvalidPassword(val message: String) : BpError
 
     data class InvalidUserName(val message: String) : BpError
+    data class InvalidPermission(val message: String) : BpError
 
     data class UsernameCannotBeBlank(val message: String) : BpError
 

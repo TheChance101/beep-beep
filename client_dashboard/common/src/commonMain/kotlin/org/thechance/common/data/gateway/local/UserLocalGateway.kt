@@ -28,6 +28,17 @@ class UserLocalGateway(private val realm: Realm) : IUserLocalGateway {
         }
     }
 
+    override suspend fun saveCountryCode(languageCode: String) {
+        realm.write {
+            query<ConfigurationCollection>("$ID == $CONFIGURATION_ID").first().find()?.languageCode = languageCode
+        }
+    }
+
+    override suspend fun getCountryCode(): String {
+        return realm.query<ConfigurationCollection>("$ID == $CONFIGURATION_ID").first().find()?.languageCode ?: ""
+    }
+
+
     override suspend fun getUserName(): String {
         return realm.query<ConfigurationCollection>("$ID == $CONFIGURATION_ID").first().find()?.username ?: ""
     }
