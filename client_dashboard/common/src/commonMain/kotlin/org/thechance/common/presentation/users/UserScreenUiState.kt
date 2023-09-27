@@ -1,9 +1,11 @@
 package org.thechance.common.presentation.users
 
+import org.thechance.common.domain.entity.Country
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Permission
 import org.thechance.common.domain.entity.User
 import org.thechance.common.presentation.composables.table.Header
+import org.thechance.common.presentation.overview.PermissionUiState
 import org.thechance.common.presentation.util.ErrorState
 
 data class UserScreenUiState(
@@ -60,34 +62,28 @@ data class UserScreenUiState(
         val show: Boolean = false,
         val selectedPermissions: List<PermissionUiState> = emptyList(),
         val countries: List<CountryUiState> = listOf(
-            CountryUiState(
-                name = "Iraq",
-                selected = false,
-            ),
-            CountryUiState(
-                name = "Palestine",
-                selected = false,
-            ),
-            CountryUiState(
-                name = "Jordan",
-                selected = false,
-            ),
-            CountryUiState(
-                name = "Syria",
-                selected = false,
-            ),
-            CountryUiState(
-                name = "Egypt",
-                selected = false,
-            ),
+            CountryUiState(Country.IRAQ),
+            CountryUiState(Country.EGYPT),
+            CountryUiState(Country.JORDAN),
+            CountryUiState(Country.PALESTINE),
+            CountryUiState(Country.SYRIA),
         ),
     )
 
     data class CountryUiState(
-        val name: String = "",
-        val selected: Boolean = false
+        val country: Country = Country.EGYPT,
+        val isSelected: Boolean = false
     )
+
+    enum class Country {
+        IRAQ,
+        PALESTINE,
+        JORDAN,
+        SYRIA,
+        EGYPT,
+    }
 }
+
 
 fun User.toUiState(): UserScreenUiState.UserUiState {
     return UserScreenUiState.UserUiState(
@@ -108,6 +104,7 @@ fun User.toUiState(): UserScreenUiState.UserUiState {
         },
     )
 }
+
 fun List<User>.toUiState(): List<UserScreenUiState.UserUiState> = map { it.toUiState() }
 
 fun DataWrapper<User>.toUiState(): UserScreenUiState.UserPageInfoUiState {
@@ -129,4 +126,16 @@ fun PermissionUiState.toEntity(): Permission {
     }
 }
 
-fun List<UserScreenUiState.PermissionUiState>.toEntity() = this.map { it.toEntity() }
+fun List<PermissionUiState>.toEntity() = this.map { it.toEntity() }
+
+fun UserScreenUiState.Country.toEntity(): Country {
+    return when (this) {
+        UserScreenUiState.Country.EGYPT -> Country.EGYPT
+        UserScreenUiState.Country.IRAQ -> Country.IRAQ
+        UserScreenUiState.Country.JORDAN -> Country.JORDAN
+        UserScreenUiState.Country.SYRIA -> Country.SYRIA
+        UserScreenUiState.Country.PALESTINE -> Country.PALESTINE
+    }
+}
+
+fun List<UserScreenUiState.Country>.toCountryEntity() = this.map { it.toEntity() }
