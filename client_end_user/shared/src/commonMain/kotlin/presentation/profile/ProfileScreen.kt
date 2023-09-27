@@ -34,6 +34,7 @@ import presentation.composable.ContentVisibility
 import presentation.composable.LoginRequiredPlaceholder
 import resources.Resources
 import util.getStatusBarPadding
+import util.root
 
 class ProfileScreen :
     BaseScreen<ProfileScreenModel, ProfileUIState, ProfileUIEffect, ProfileInteractionListener>() {
@@ -45,7 +46,7 @@ class ProfileScreen :
 
     override fun onEffect(effect: ProfileUIEffect, navigator: Navigator) {
         when (effect) {
-            ProfileUIEffect.NavigateToLoginScreen -> navigator.push(LoginScreen())
+            ProfileUIEffect.NavigateToLoginScreen -> navigator.root?.push(LoginScreen())
         }
     }
 

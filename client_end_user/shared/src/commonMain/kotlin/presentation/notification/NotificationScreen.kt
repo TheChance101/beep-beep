@@ -21,6 +21,7 @@ import presentation.composable.LoginRequiredPlaceholder
 import presentation.notification.combosable.NotificationCard
 import resources.Resources
 import util.getStatusBarPadding
+import util.root
 
 class NotificationScreen :
     BaseScreen<NotificationScreenModel, NotificationsUiState, NotificationUiEffect, NotificationInteractionListener>() {
@@ -34,7 +35,7 @@ class NotificationScreen :
         when (effect) {
             is NotificationUiEffect.MakeOrderAgain -> println("order again")
             is NotificationUiEffect.NavigateToTraceOrderScreen -> println("navigate to trace order screen")
-            NotificationUiEffect.NavigateToLoginScreen -> navigator.replace(LoginScreen())
+            NotificationUiEffect.NavigateToLoginScreen -> navigator.root?.push(LoginScreen())
         }
     }
 

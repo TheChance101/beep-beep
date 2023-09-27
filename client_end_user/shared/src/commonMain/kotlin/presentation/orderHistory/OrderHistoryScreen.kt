@@ -28,9 +28,14 @@ import presentation.orderHistory.composable.MealOrderItem
 import presentation.orderHistory.composable.TripHistoryItem
 import resources.Resources
 import util.capitalizeFirstLetter
+import util.root
 
-class OrderHistoryScreen :
-    BaseScreen<OrderHistoryScreenModel, OrderScreenUiState, OrderHistoryScreenUiEffect, OrderHistoryScreenInteractionListener>() {
+class OrderHistoryScreen : BaseScreen<
+        OrderHistoryScreenModel,
+        OrderScreenUiState,
+        OrderHistoryScreenUiEffect,
+        OrderHistoryScreenInteractionListener
+        >() {
 
     @Composable
     override fun Content() {
@@ -39,7 +44,7 @@ class OrderHistoryScreen :
 
     override fun onEffect(effect: OrderHistoryScreenUiEffect, navigator: Navigator) {
         when (effect) {
-            OrderHistoryScreenUiEffect.NavigateToLoginScreen -> navigator.push(LoginScreen())
+            OrderHistoryScreenUiEffect.NavigateToLoginScreen -> navigator.root?.push(LoginScreen())
         }
     }
 
