@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,7 +16,6 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import resources.Resources
 import util.getStatusBarPadding
 
@@ -38,7 +39,7 @@ fun LoginRequiredPlaceholder(
             painter = placeHolder,
             contentDescription = Resources.strings.login,
             contentScale = ContentScale.Crop,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.size(112.dp).padding(bottom = 8.dp)
         )
         Text(
             text = message,
@@ -46,7 +47,7 @@ fun LoginRequiredPlaceholder(
             color = Theme.colors.contentTertiary,
         )
         TextOutLineButton(
-            modifier = Modifier.padding(top = 24.dp),
+            modifier = Modifier.width(115.dp).padding(top = 24.dp),
             text = Resources.strings.login,
             onClick = { onClickLogin() }
         )
