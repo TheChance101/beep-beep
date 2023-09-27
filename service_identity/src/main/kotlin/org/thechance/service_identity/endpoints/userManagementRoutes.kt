@@ -26,9 +26,9 @@ fun Route.userManagementRoutes() {
 
         post {
             val options = call.receive<UserOptionsDto>()
-            val restaurants = userManagement.getUsers(options.toEntity()).toDto()
+            val users = userManagement.getUsers(options.toEntity()).toDto()
             val total = userManagement.getNumberOfUsers()
-            call.respond(HttpStatusCode.OK, UsersManagementDto(restaurants, total))
+            call.respond(HttpStatusCode.OK, UsersManagementDto(users, total))
         }
 
         get("/last-register") {
