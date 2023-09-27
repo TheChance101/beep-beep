@@ -3,6 +3,7 @@ package org.thechance.common.data.gateway.remote.mapper
 import org.thechance.common.data.gateway.remote.model.UserDto
 import org.thechance.common.domain.entity.Permission
 import org.thechance.common.domain.entity.User
+import org.thechance.common.presentation.users.UserScreenUiState
 
 
 fun UserDto.toEntity() = User(
