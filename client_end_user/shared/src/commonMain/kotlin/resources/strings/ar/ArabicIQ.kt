@@ -94,7 +94,7 @@ data class ArabicIQ(
     override val mostOrdered: String = "الأكثر طلباً",
     override val sweets: String= "حلويات",
     override val free: String= "مجاناً",
-    override val loginToAddToFavourite: String= "الرجاء تسجيل الدخول حتى تضيف المطاعم المفضلة",
+    override val loginToAddToFavourite: String= "الرجاء تسجيل الدخول للاضافه",
     override val addToCart: String= "أضف إلى العربة",
     override val mealAddedToYourCart: String= " ضفنالك الوجبة إلى عربة التسوق مالتك ",
 

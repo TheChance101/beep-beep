@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.composable.BpButton
@@ -40,6 +41,7 @@ fun MealBottomSheet(meal: MealUIState, listener: RestaurantInteractionListener) 
                 contentScale = ContentScale.Crop,
                 contentDescription = "${meal.name} image",
                 modifier = Modifier.height(240.dp).padding(bottom = 24.dp)
+                    .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
             )
             CloseButton(
                 onClick = { listener.onDismissSheet() },
