@@ -4,9 +4,7 @@ import data.local.model.UserConfigurationCollection
 import domain.gateway.local.ILocalConfigurationGateway
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
-import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.ext.toRealmList
-import io.realm.kotlin.types.RealmList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -45,12 +43,18 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
         }
     }
 
-    override suspend fun getLanguageCode(): Flow<String> {
+    override suspend fun getLanguageCodeFlow(): Flow<String> {
         return realm.query<UserConfigurationCollection>(
             "$ID == $CONFIGURATION_ID"
         ).asFlow().map { result ->
             result.list.find { it.languageCode.isNotEmpty() }?.languageCode ?: "en"
         }
+    }
+
+    override suspend fun getLanguageCode(): String {
+        return realm.query<UserConfigurationCollection>(
+            "$ID == $CONFIGURATION_ID"
+        ).first().find()?.languageCode ?: "en"
     }
 
     override suspend fun getAccessToken(): String {
@@ -77,6 +81,20 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
     override suspend fun getPreferredFood(): List<String> {
         return realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
             .find()?.preferredFood?.toList() ?: emptyList()
+    }
+
+    override suspend fun removeAccessToken() {
+        realm.write {
+            query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+                .find()?.accessToken = ""
+        }
+    }
+
+    override suspend fun removeRefreshToken() {
+        realm.write {
+            query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+                .find()?.refreshToken = ""
+        }
     }
 
     override suspend fun savePriceLevel(priceLevel: String) {

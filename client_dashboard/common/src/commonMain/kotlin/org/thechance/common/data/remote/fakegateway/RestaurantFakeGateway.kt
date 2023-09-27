@@ -18,10 +18,11 @@ class RestaurantFakeGateway : IRestaurantGateway {
         pageNumber: Int,
         numberOfRestaurantsInPage: Int,
         restaurantName: String,
-        rating: Double?,
-        priceLevel: String?,
+        rating: Double,
+        priceLevel: Int,
     ): DataWrapper<Restaurant> {
         var restaurants = restaurants.toEntity()
+        val priceLevelFilter = if (priceLevel != 0) "$".repeat(priceLevel) else null
         if (restaurantName.isNotEmpty()) {
             restaurants = restaurants.filter {
                 it.name.startsWith(
@@ -30,11 +31,19 @@ class RestaurantFakeGateway : IRestaurantGateway {
                 )
             }
         }
-        if (rating != null && priceLevel != null) {
+
+        if (rating > 0.0) {
             restaurants = restaurants.filter {
-                it.priceLevel == priceLevel
+                it.rate == rating
             }
         }
+
+        if (priceLevel > 0) {
+            restaurants = restaurants.filter {
+                it.priceLevel == priceLevelFilter
+            }
+        }
+
         val startIndex = (pageNumber - 1) * numberOfRestaurantsInPage
         val endIndex = startIndex + numberOfRestaurantsInPage
         val numberOfPages = ceil(restaurants.size / (numberOfRestaurantsInPage * 1.0)).toInt()
@@ -90,83 +99,100 @@ class RestaurantFakeGateway : IRestaurantGateway {
     }
 
     private val cuisines = mutableListOf<Cuisine>(
-            Cuisine("1", "Angolan cuisine"),
-            Cuisine("", "Cameroonian cuisine"),
-            Cuisine("", "Chadian cuisine"),
-            Cuisine("", "Congolese cuisine"),
-            Cuisine("", "Centrafrican cuisine"),
-            Cuisine("", "Equatorial Guinea cuisine"),
-            Cuisine("", "Gabonese cuisine"),
-            Cuisine("", "Santomean cuisine"),
-            Cuisine("", "Burundian cuisine"),
-            Cuisine("", "Djiboutian cuisine"),
-            Cuisine("", "Eritrean cuisine"),
-            Cuisine("", "Ethiopian cuisine"),
-            Cuisine("", "Kenyan cuisine"),
-            Cuisine("", "Maasai cuisine"),
-            Cuisine("", "Rwandan cuisine"),
-            Cuisine("", "Somali cuisine"),
-            Cuisine("", "South Sudanese cuisine"),
-            Cuisine("", "Tanzanian cuisine"),
-            Cuisine("", "Zanzibari cuisine"),
-            Cuisine("", "Ugandan cuisine"),
+        Cuisine("1", "Angolan cuisine"),
+        Cuisine("", "Cameroonian cuisine"),
+        Cuisine("", "Chadian cuisine"),
+        Cuisine("", "Congolese cuisine"),
+        Cuisine("", "Centrafrican cuisine"),
+        Cuisine("", "Equatorial Guinea cuisine"),
+        Cuisine("", "Gabonese cuisine"),
+        Cuisine("", "Santomean cuisine"),
+        Cuisine("", "Burundian cuisine"),
+        Cuisine("", "Djiboutian cuisine"),
+        Cuisine("", "Eritrean cuisine"),
+        Cuisine("", "Ethiopian cuisine"),
+        Cuisine("", "Kenyan cuisine"),
+        Cuisine("", "Maasai cuisine"),
+        Cuisine("", "Rwandan cuisine"),
+        Cuisine("", "Somali cuisine"),
+        Cuisine("", "South Sudanese cuisine"),
+        Cuisine("", "Tanzanian cuisine"),
+        Cuisine("", "Zanzibari cuisine"),
+        Cuisine("", "Ugandan cuisine"),
     )
 
     private val restaurants = mutableListOf(
-            RestaurantDto(
-                    id = "8c90c4c6-1e69-47f3-aa59-2edcd6f0057b",
-                    name = "Mujtaba Restaurant",
-                    ownerId = "mujtaba",
-                    phone = "0532465722",
-                    rate = 0.4,
-                    priceLevel = "",
-                    openingTime = "06:30 - 22:30"
-            ),
-            RestaurantDto(
-                    id = "6e21s4f-aw32-fs3e-fe43-aw56g4yr324",
-                    name = "Karrar Restaurant",
-                    ownerId = "karrar",
-                    phone = "0535232154",
-                    rate = 3.5,
-                    priceLevel = "",
-                    openingTime = "12:00 - 23:00"
-            ),
-            RestaurantDto(
-                    id = "7a33sax-aw32-fs3e-12df-42ad6x352zse",
-                    name = "Saif Restaurant",
-                    ownerId = "saif",
-                    phone = "0554627893",
-                    rate = 4.0,
-                    priceLevel = "",
-                    openingTime = "09:00 - 23:00"
-            ),
-            RestaurantDto(
-                    id = "7y1z47c-s2df-76de-dwe2-42ad6x352zse",
-                    name = "Nada Restaurant",
-                    ownerId = "nada",
-                    phone = "0524242766",
-                    rate = 3.4,
-                    priceLevel = "",
-                    openingTime = "01:00 - 23:00"
-            ),
-            RestaurantDto(
-                    id = "3e1f5d4a-8317-4f13-aa89-2c094652e6a3",
-                    name = "Asia Restaurant",
-                    ownerId = "asia",
-                    phone = "0528242165",
-                    rate = 2.9,
-                    priceLevel = "",
-                    openingTime = "09:30 - 21:30"
-            ),
-            RestaurantDto(
-                    id = "7a1bfe39-4b2c-4f76-bde0-82da2eaf9e99",
-                    name = "Kamel Restaurant",
-                    ownerId = "kamel",
-                    phone = "0528242235",
-                    rate = 4.9,
-                    priceLevel = "",
-                    openingTime = "06:30 - 22:30"
-            ),
+        RestaurantDto(
+            id = "8c90c4c6-1e69-47f3-aa59-2edcd6f0057b",
+            name = "Mujtaba Restaurant",
+            ownerId = "mujtaba",
+            phone = "0532465722",
+            rate = 0.4,
+            priceLevel = "",
+            openingTime = "06:30 - 22:30"
+        ),
+        RestaurantDto(
+            id = "6e21s4f-aw32-fs3e-fe43-aw56g4yr324",
+            name = "Karrar Restaurant",
+            ownerId = "karrar",
+            phone = "0535232154",
+            rate = 3.5,
+            priceLevel = "",
+            openingTime = "12:00 - 23:00"
+        ),
+        RestaurantDto(
+            id = "7a33sax-aw32-fs3e-12df-42ad6x352zse",
+            name = "Saif Restaurant",
+            ownerId = "saif",
+            phone = "0554627893",
+            rate = 4.0,
+            priceLevel = "",
+            openingTime = "09:00 - 23:00"
+        ),
+        RestaurantDto(
+            id = "7y1z47c-s2df-76de-dwe2-42ad6x352zse",
+            name = "Nada Restaurant",
+            ownerId = "nada",
+            phone = "0524242766",
+            rate = 3.4,
+            priceLevel = "",
+            openingTime = "01:00 - 23:00"
+        ),
+        RestaurantDto(
+            id = "3e1f5d4a-8317-4f13-aa89-2c094652e6a3",
+            name = "Asia Restaurant",
+            ownerId = "asia",
+            phone = "0528242165",
+            rate = 2.9,
+            priceLevel = "",
+            openingTime = "09:30 - 21:30"
+        ),
+        RestaurantDto(
+            id = "7a1bfe39-4b2c-4f76-bde0-82da2eaf9e99",
+            name = "Kamel Restaurant",
+            ownerId = "kamel",
+            phone = "0528242235",
+            rate = 3.0,
+            priceLevel = "",
+            openingTime = "06:30 - 22:30"
+        ),
+        RestaurantDto(
+            id = "7a1bfe39-4b2c-4f76-bde0-82da2eaf9e55",
+            name = "Kamel Restaurant",
+            ownerId = "kamel",
+            phone = "0528242235",
+            rate = 4.9,
+            priceLevel = "$",
+            openingTime = "06:30 - 22:30"
+        ),        RestaurantDto(
+            id = "7a1bfe39-4b2c-4f76-bde0-82da2eaf9e89",
+            name = "Kamel Restaurant",
+            ownerId = "kamel",
+            phone = "0528242235",
+            rate = 5.0,
+            priceLevel = "$$",
+            openingTime = "06:30 - 22:30"
+        ),
     )
 
 }

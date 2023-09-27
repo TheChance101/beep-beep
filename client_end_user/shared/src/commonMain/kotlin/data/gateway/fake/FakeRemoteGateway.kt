@@ -1,14 +1,20 @@
 package data.gateway.fake
 
 import data.remote.mapper.toEntity
+import data.remote.model.CartDto
+import data.remote.model.CartMealDto
+import data.remote.model.AddressDto
 import data.remote.model.LocationDto
 import data.remote.model.NotificationDto
 import data.remote.model.OfferDto
 import data.remote.model.RestaurantDto
+import domain.entity.Cart
+import data.remote.model.UserDetailsDto
 import domain.entity.Notification
 import domain.entity.Offer
 import domain.entity.Restaurant
 import domain.entity.User
+import domain.entity.UserDetails
 import domain.gateway.IFakeRemoteGateway
 
 class FakeRemoteGateway : IFakeRemoteGateway {
@@ -26,8 +32,40 @@ class FakeRemoteGateway : IFakeRemoteGateway {
     }
 
     override suspend fun getNotificationHistory(): List<Notification> {
-        return notifications.map{ it.toEntity() }
+        return notifications.map { it.toEntity() }
     }
+
+    override suspend fun getAllCartMeals(): Cart {
+        return CartDto(
+            meals = meals,
+            totalPrice = 255.0,
+            currency = "$"
+        ).toEntity()
+    }
+
+    override suspend fun getUserProfile(): UserDetails {
+        return userProfile.toEntity()
+    }
+
+    private val userProfile = UserDetailsDto(
+        addresses = listOf(
+            AddressDto(
+                id = "64f372095fecc11e6d917656",
+                address = "Main street, 123",
+                location = LocationDto(22.0, 10.5)
+            )
+        ),
+        country = "iraq",
+        currency = "IQD",
+        email = "aya@gmail.com",
+        fullName = "aya",
+        id = "64f3663e5ddbc15bfd1efcfa",
+        permission = 1,
+        username = "ay0o5h",
+        walletBalance = 0.0,
+        phoneNumber = "1234567890"
+
+    )
 
     private val restaurants = listOf(
         RestaurantDto(
@@ -133,6 +171,92 @@ class FakeRemoteGateway : IFakeRemoteGateway {
             date = 1695032732000,
             topic = "Order",
             userId = "64f3663e5ddbc15bfd1efcfa"
+        ),
+    )
+
+    private val meals = listOf(
+        CartMealDto(
+            id = "64f372095fecc11e6d917656",
+            price = 85.0,
+            count = 1,
+            restaurantName = "Burger king",
+            name = "Double cheese burger",
+            currency = "$",
+            image = "https://s3-alpha-sig.figma.com/img/87f1/a16c/e905155ab7f153570d77f67ecb3bf1f6?Expires=1696204800&Signature=DmxCysc92O0ScX-GO5hhNt2AmsVGk0-U9she4GbHwfhL8qwvl386HN-kur-Wmw-XGE4OptyvEvDLqhMhhaeypR3Bd8lh2SIk6-BxI2z1D1z35QHeHN-ZEVc6Lq1Ai23jtzRAXVfU3nLVLNKOKnupSdhIWQ1JYMaP8TbRokOQFy7cQR70bSEuhROd2urzy5UDq3zJFaqyt6OTleWf9jwJNv5frK0v351I6bdHR0ekSR6flLcCamfvz3skYu7VZ6VE8QLr-dLzX3KIeeYkiZrgEE4YyR054o5TcE~BJALxaLbbHbvKJnOZTp93Lga7Ki5cSFMx3GAYC87Okpz0GHScQA__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
+        ),
+        CartMealDto(
+            id = "64f372095fecc11e6d917656",
+            price = 85.0,
+            count = 1,
+            restaurantName = "Burger king",
+            name = "Double cheese burger",
+            currency = "$",
+            image = "https://s3-alpha-sig.figma.com/img/87f1/a16c/e905155ab7f153570d77f67ecb3bf1f6?Expires=1696204800&Signature=DmxCysc92O0ScX-GO5hhNt2AmsVGk0-U9she4GbHwfhL8qwvl386HN-kur-Wmw-XGE4OptyvEvDLqhMhhaeypR3Bd8lh2SIk6-BxI2z1D1z35QHeHN-ZEVc6Lq1Ai23jtzRAXVfU3nLVLNKOKnupSdhIWQ1JYMaP8TbRokOQFy7cQR70bSEuhROd2urzy5UDq3zJFaqyt6OTleWf9jwJNv5frK0v351I6bdHR0ekSR6flLcCamfvz3skYu7VZ6VE8QLr-dLzX3KIeeYkiZrgEE4YyR054o5TcE~BJALxaLbbHbvKJnOZTp93Lga7Ki5cSFMx3GAYC87Okpz0GHScQA__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
+        ),
+        CartMealDto(
+            id = "64f372095fecc11e6d917656",
+            price = 85.0,
+            count = 1,
+            restaurantName = "Burger king",
+            name = "Double cheese burger",
+            currency = "$",
+            image = "https://s3-alpha-sig.figma.com/img/87f1/a16c/e905155ab7f153570d77f67ecb3bf1f6?Expires=1696204800&Signature=DmxCysc92O0ScX-GO5hhNt2AmsVGk0-U9she4GbHwfhL8qwvl386HN-kur-Wmw-XGE4OptyvEvDLqhMhhaeypR3Bd8lh2SIk6-BxI2z1D1z35QHeHN-ZEVc6Lq1Ai23jtzRAXVfU3nLVLNKOKnupSdhIWQ1JYMaP8TbRokOQFy7cQR70bSEuhROd2urzy5UDq3zJFaqyt6OTleWf9jwJNv5frK0v351I6bdHR0ekSR6flLcCamfvz3skYu7VZ6VE8QLr-dLzX3KIeeYkiZrgEE4YyR054o5TcE~BJALxaLbbHbvKJnOZTp93Lga7Ki5cSFMx3GAYC87Okpz0GHScQA__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
+        ),CartMealDto(
+            id = "64f372095fecc11e6d917656",
+            price = 85.0,
+            count = 1,
+            restaurantName = "Burger king",
+            name = "Double cheese burger",
+            currency = "$",
+            image = "https://s3-alpha-sig.figma.com/img/87f1/a16c/e905155ab7f153570d77f67ecb3bf1f6?Expires=1696204800&Signature=DmxCysc92O0ScX-GO5hhNt2AmsVGk0-U9she4GbHwfhL8qwvl386HN-kur-Wmw-XGE4OptyvEvDLqhMhhaeypR3Bd8lh2SIk6-BxI2z1D1z35QHeHN-ZEVc6Lq1Ai23jtzRAXVfU3nLVLNKOKnupSdhIWQ1JYMaP8TbRokOQFy7cQR70bSEuhROd2urzy5UDq3zJFaqyt6OTleWf9jwJNv5frK0v351I6bdHR0ekSR6flLcCamfvz3skYu7VZ6VE8QLr-dLzX3KIeeYkiZrgEE4YyR054o5TcE~BJALxaLbbHbvKJnOZTp93Lga7Ki5cSFMx3GAYC87Okpz0GHScQA__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
+        ),CartMealDto(
+            id = "64f372095fecc11e6d917656",
+            price = 85.0,
+            count = 1,
+            restaurantName = "Burger king",
+            name = "Double cheese burger",
+            currency = "$",
+            image = "https://s3-alpha-sig.figma.com/img/87f1/a16c/e905155ab7f153570d77f67ecb3bf1f6?Expires=1696204800&Signature=DmxCysc92O0ScX-GO5hhNt2AmsVGk0-U9she4GbHwfhL8qwvl386HN-kur-Wmw-XGE4OptyvEvDLqhMhhaeypR3Bd8lh2SIk6-BxI2z1D1z35QHeHN-ZEVc6Lq1Ai23jtzRAXVfU3nLVLNKOKnupSdhIWQ1JYMaP8TbRokOQFy7cQR70bSEuhROd2urzy5UDq3zJFaqyt6OTleWf9jwJNv5frK0v351I6bdHR0ekSR6flLcCamfvz3skYu7VZ6VE8QLr-dLzX3KIeeYkiZrgEE4YyR054o5TcE~BJALxaLbbHbvKJnOZTp93Lga7Ki5cSFMx3GAYC87Okpz0GHScQA__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
+        ),CartMealDto(
+            id = "64f372095fecc11e6d917656",
+            price = 85.0,
+            count = 1,
+            restaurantName = "Burger king",
+            name = "Double cheese burger",
+            currency = "$",
+            image = "https://s3-alpha-sig.figma.com/img/87f1/a16c/e905155ab7f153570d77f67ecb3bf1f6?Expires=1696204800&Signature=DmxCysc92O0ScX-GO5hhNt2AmsVGk0-U9she4GbHwfhL8qwvl386HN-kur-Wmw-XGE4OptyvEvDLqhMhhaeypR3Bd8lh2SIk6-BxI2z1D1z35QHeHN-ZEVc6Lq1Ai23jtzRAXVfU3nLVLNKOKnupSdhIWQ1JYMaP8TbRokOQFy7cQR70bSEuhROd2urzy5UDq3zJFaqyt6OTleWf9jwJNv5frK0v351I6bdHR0ekSR6flLcCamfvz3skYu7VZ6VE8QLr-dLzX3KIeeYkiZrgEE4YyR054o5TcE~BJALxaLbbHbvKJnOZTp93Lga7Ki5cSFMx3GAYC87Okpz0GHScQA__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
+        ),CartMealDto(
+            id = "64f372095fecc11e6d917656",
+            price = 85.0,
+            count = 1,
+            restaurantName = "Burger king",
+            name = "Double cheese burger",
+            currency = "$",
+            image = "https://s3-alpha-sig.figma.com/img/87f1/a16c/e905155ab7f153570d77f67ecb3bf1f6?Expires=1696204800&Signature=DmxCysc92O0ScX-GO5hhNt2AmsVGk0-U9she4GbHwfhL8qwvl386HN-kur-Wmw-XGE4OptyvEvDLqhMhhaeypR3Bd8lh2SIk6-BxI2z1D1z35QHeHN-ZEVc6Lq1Ai23jtzRAXVfU3nLVLNKOKnupSdhIWQ1JYMaP8TbRokOQFy7cQR70bSEuhROd2urzy5UDq3zJFaqyt6OTleWf9jwJNv5frK0v351I6bdHR0ekSR6flLcCamfvz3skYu7VZ6VE8QLr-dLzX3KIeeYkiZrgEE4YyR054o5TcE~BJALxaLbbHbvKJnOZTp93Lga7Ki5cSFMx3GAYC87Okpz0GHScQA__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
+        ),CartMealDto(
+            id = "64f372095fecc11e6d917656",
+            price = 85.0,
+            count = 1,
+            restaurantName = "Burger king",
+            name = "Double cheese burger",
+            currency = "$",
+            image = "https://s3-alpha-sig.figma.com/img/87f1/a16c/e905155ab7f153570d77f67ecb3bf1f6?Expires=1696204800&Signature=DmxCysc92O0ScX-GO5hhNt2AmsVGk0-U9she4GbHwfhL8qwvl386HN-kur-Wmw-XGE4OptyvEvDLqhMhhaeypR3Bd8lh2SIk6-BxI2z1D1z35QHeHN-ZEVc6Lq1Ai23jtzRAXVfU3nLVLNKOKnupSdhIWQ1JYMaP8TbRokOQFy7cQR70bSEuhROd2urzy5UDq3zJFaqyt6OTleWf9jwJNv5frK0v351I6bdHR0ekSR6flLcCamfvz3skYu7VZ6VE8QLr-dLzX3KIeeYkiZrgEE4YyR054o5TcE~BJALxaLbbHbvKJnOZTp93Lga7Ki5cSFMx3GAYC87Okpz0GHScQA__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
+        ),CartMealDto(
+            id = "64f372095fecc11e6d917656",
+            price = 85.0,
+            count = 1,
+            restaurantName = "Burger king",
+            name = "Double cheese burger",
+            currency = "$",
+            image = "https://s3-alpha-sig.figma.com/img/87f1/a16c/e905155ab7f153570d77f67ecb3bf1f6?Expires=1696204800&Signature=DmxCysc92O0ScX-GO5hhNt2AmsVGk0-U9she4GbHwfhL8qwvl386HN-kur-Wmw-XGE4OptyvEvDLqhMhhaeypR3Bd8lh2SIk6-BxI2z1D1z35QHeHN-ZEVc6Lq1Ai23jtzRAXVfU3nLVLNKOKnupSdhIWQ1JYMaP8TbRokOQFy7cQR70bSEuhROd2urzy5UDq3zJFaqyt6OTleWf9jwJNv5frK0v351I6bdHR0ekSR6flLcCamfvz3skYu7VZ6VE8QLr-dLzX3KIeeYkiZrgEE4YyR054o5TcE~BJALxaLbbHbvKJnOZTp93Lga7Ki5cSFMx3GAYC87Okpz0GHScQA__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
+        ),CartMealDto(
+            id = "64f372095fecc11e6d917656",
+            price = 85.0,
+            count = 1,
+            restaurantName = "Burger king",
+            name = "Double cheese burger",
+            currency = "$",
+            image = "https://s3-alpha-sig.figma.com/img/87f1/a16c/e905155ab7f153570d77f67ecb3bf1f6?Expires=1696204800&Signature=DmxCysc92O0ScX-GO5hhNt2AmsVGk0-U9she4GbHwfhL8qwvl386HN-kur-Wmw-XGE4OptyvEvDLqhMhhaeypR3Bd8lh2SIk6-BxI2z1D1z35QHeHN-ZEVc6Lq1Ai23jtzRAXVfU3nLVLNKOKnupSdhIWQ1JYMaP8TbRokOQFy7cQR70bSEuhROd2urzy5UDq3zJFaqyt6OTleWf9jwJNv5frK0v351I6bdHR0ekSR6flLcCamfvz3skYu7VZ6VE8QLr-dLzX3KIeeYkiZrgEE4YyR054o5TcE~BJALxaLbbHbvKJnOZTp93Lga7Ki5cSFMx3GAYC87Okpz0GHScQA__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
         ),
     )
 }

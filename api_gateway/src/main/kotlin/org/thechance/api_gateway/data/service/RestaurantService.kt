@@ -354,6 +354,15 @@ class RestaurantService(
         }
     }
 
+    suspend fun deleteRestaurantByOwnerId(id: String): Boolean {
+        return client.tryToExecute<Boolean>(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+        ) {
+            delete("/restaurant/owner/$id")
+        }
+    }
+
     suspend fun search(query: String?, page: String?, limit: String?, languageCode: String): ExploreRestaurantDto {
         return client.tryToExecute(
             api = APIs.RESTAURANT_API,

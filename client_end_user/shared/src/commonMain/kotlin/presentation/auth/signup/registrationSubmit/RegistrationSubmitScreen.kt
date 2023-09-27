@@ -77,7 +77,7 @@ class RegistrationSubmitScreen(private val username: String, private val passwor
                     text = state.fullName,
                     onValueChange = listener::onFullNameChanged,
                     label = Resources.strings.fullName,
-                    errorMessage = state.fullErrorMsg,
+                    errorMessage = if (state.isFullNameError) Resources.strings.invalidFullName else "",
                     isError = state.isFullNameError,
                 )
                 BpTextField(
@@ -85,7 +85,7 @@ class RegistrationSubmitScreen(private val username: String, private val passwor
                     text = state.email,
                     onValueChange = listener::onEmailChanged,
                     label = Resources.strings.email,
-                    errorMessage = state.emailErrorMsg,
+                    errorMessage = if (state.isEmailError) Resources.strings.invalidEmail else "",
                     isError = state.isEmailError,
                 )
                 BpTextField(
@@ -93,7 +93,7 @@ class RegistrationSubmitScreen(private val username: String, private val passwor
                     text = state.phone,
                     onValueChange = listener::onPhoneChanged,
                     label = Resources.strings.mobileNumber,
-                    errorMessage = state.phoneErrorMsg,
+                    errorMessage = if (state.isPhoneError) Resources.strings.invalidPhoneNumber else "",
                     isError = state.isPhoneError,
                 )
                 BpButton(

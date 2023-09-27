@@ -1,12 +1,8 @@
 package presentation.preferredFood
 
-import util.preferredCuisine
+import presentation.cuisines.CuisineUiState
 
 data class PreferredFoodUIState(
-    val preferredFood : List<FoodUIState> = preferredCuisine,
+    val preferredFood : List<CuisineUiState> = emptyList(),
     val selectedPreferredFood :List<String> = emptyList()
-)
-data class FoodUIState(
-    val name: String = "",
-    val image: String = "",
 )
