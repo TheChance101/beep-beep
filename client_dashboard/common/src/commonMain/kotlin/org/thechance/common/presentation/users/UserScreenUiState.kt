@@ -148,7 +148,7 @@ fun UserScreenUiState.Country.toEntity(): Country {
 
 fun List<UserScreenUiState.Country>.toCountryEntity() = this.map { it.toEntity() }
 
-data class PermissionInfo(
+data class PermissionInformation(
     val iconPath: String,
     val title: String,
 )

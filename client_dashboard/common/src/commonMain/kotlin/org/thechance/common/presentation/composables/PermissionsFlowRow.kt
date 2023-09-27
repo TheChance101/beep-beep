@@ -10,9 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.beepbeep.designSystem.ui.composable.BpChip
 import com.beepbeep.designSystem.ui.theme.Theme
-import org.thechance.common.presentation.overview.PermissionUiState
 import org.thechance.common.presentation.resources.Resources
-import org.thechance.common.presentation.users.PermissionInfo
+import org.thechance.common.presentation.users.PermissionInformation
 import org.thechance.common.presentation.users.UserScreenUiState
 import org.thechance.common.presentation.util.kms
 
@@ -31,10 +30,10 @@ fun PermissionsFlowRow(
     ) {
         allPermissions.forEach { permission ->
             BpChip(
-                label = getPermissionInfo(permission).title,
+                label = getPermissionInformation(permission).title,
                 modifier = Modifier.padding(8.kms),
                 onClick = { onUserPermissionClicked(permission) },
-                painter = painterResource(getPermissionInfo(permission).iconPath),
+                painter = painterResource(getPermissionInformation(permission).iconPath),
                 isSelected = selectedPermissions.contains(permission)
             )
         }
@@ -42,34 +41,34 @@ fun PermissionsFlowRow(
 }
 
 @Composable
-private fun getPermissionInfo(permission: UserScreenUiState.PermissionUiState): PermissionInfo {
+fun getPermissionInformation(permission: UserScreenUiState.PermissionUiState): PermissionInformation {
     return when (permission) {
-        UserScreenUiState.PermissionUiState.RESTAURANT_OWNER -> PermissionInfo(
+        UserScreenUiState.PermissionUiState.RESTAURANT_OWNER -> PermissionInformation(
             Resources.Drawable.restaurantOutlined,
             Resources.Strings.restaurantPermission
         )
 
-        UserScreenUiState.PermissionUiState.DRIVER -> PermissionInfo(
+        UserScreenUiState.PermissionUiState.DRIVER -> PermissionInformation(
             Resources.Drawable.taxiOutlined,
             Resources.Strings.taxiPermission
         )
 
-        UserScreenUiState.PermissionUiState.END_USER -> PermissionInfo(
+        UserScreenUiState.PermissionUiState.END_USER -> PermissionInformation(
             Resources.Drawable.endUser,
             Resources.Strings.endUserPermission
         )
 
-        UserScreenUiState.PermissionUiState.SUPPORT -> PermissionInfo(
+        UserScreenUiState.PermissionUiState.SUPPORT -> PermissionInformation(
             Resources.Drawable.support,
             Resources.Strings.supportPermission
         )
 
-        UserScreenUiState.PermissionUiState.DELIVERY -> PermissionInfo(
+        UserScreenUiState.PermissionUiState.DELIVERY -> PermissionInformation(
             Resources.Drawable.delivery,
             Resources.Strings.deliveryPermission
         )
 
-        UserScreenUiState.PermissionUiState.ADMIN -> PermissionInfo(
+        UserScreenUiState.PermissionUiState.ADMIN -> PermissionInformation(
             Resources.Drawable.dashboardAdmin,
             Resources.Strings.adminPermission
         )

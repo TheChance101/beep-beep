@@ -30,7 +30,6 @@ import org.thechance.common.presentation.composables.table.BpPager
 import org.thechance.common.presentation.composables.table.BpTable
 import org.thechance.common.presentation.composables.table.Header
 import org.thechance.common.presentation.composables.table.TotalItemsIndicator
-import org.thechance.common.presentation.overview.PermissionUiState
 import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.kms
 
@@ -262,7 +261,7 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
         ) {
             user.permissions.forEach {
                 Icon(
-                    painter = painterResource(getPermissionInfo(it).iconPath),
+                    painter = painterResource(getPermissionInformation(it).iconPath),
                     contentDescription = null,
                     tint = Theme.colors.contentPrimary.copy(alpha = 0.87f),
                     modifier = Modifier.size(24.kms)
