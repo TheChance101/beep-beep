@@ -44,6 +44,7 @@ import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
 import presentation.cart.CartScreen
 import presentation.composable.BpImageLoader
+import presentation.composable.ContentVisibility
 import presentation.composable.ImageSlider
 import presentation.composable.ItemSection
 import presentation.composable.SectionHeader
@@ -141,7 +142,9 @@ class HomeScreen : BaseScreen<
             }
 
             item {
-                CartCard(onClick = { listener.onClickCartCard() })
+                ContentVisibility(state.showCart) {
+                    CartCard(onClick = { listener.onClickCartCard() })
+                }
             }
 
             if (state.hasProgress) {
