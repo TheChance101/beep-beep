@@ -1,5 +1,6 @@
 package data.gateway.local
 
+import data.service.ILocationService
 import dev.icerock.moko.geo.LocationTracker
 import dev.icerock.moko.permissions.DeniedAlwaysException
 import domain.entity.Location
@@ -8,11 +9,21 @@ import domain.utils.LocationAccessDeniedException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class LocationGateway(private val locationTracker: LocationTracker): ILocationGateway {
+class LocationGateway(
+    private val locationService: ILocationService,
+    private val locationTracker: LocationTracker
+) : ILocationGateway {
     override suspend fun startTracking() {
         try {
             locationTracker.startTracking()
-        }catch (e: DeniedAlwaysException){
+           if(locationService.isGPSEnabled()) {
+               println("Location is Enabled")
+           }
+           else{
+               locationService.openLocationSettings()
+               println("Not Location is Enabled")
+           }
+        } catch (e: DeniedAlwaysException) {
             throw LocationAccessDeniedException()
         }
     }
