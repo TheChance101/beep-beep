@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,11 +32,13 @@ fun BpThreeDotLoadingIndicator(
     initialAlpha: Float = 0.38f,
 ) {
 
-    val circles = listOf(
-        remember { Animatable(initialValue = initialAlpha) },
-        remember { Animatable(initialValue = initialAlpha) },
-        remember { Animatable(initialValue = initialAlpha) }
-    )
+    val circles = remember {
+        mutableStateListOf(
+            Animatable(initialValue = initialAlpha),
+            Animatable(initialValue = initialAlpha),
+            Animatable(initialValue = initialAlpha)
+        )
+    }
 
     circles.forEachIndexed { index, animatable ->
         LaunchedEffect(Unit) {
