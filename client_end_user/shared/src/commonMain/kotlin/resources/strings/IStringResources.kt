@@ -94,4 +94,5 @@ interface IStringResources {
     val free: String
     val loginToAddToFavourite: String
     val addToCart: String
+    val mealAddedToYourCart: String
 }

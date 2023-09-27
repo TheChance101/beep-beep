@@ -96,5 +96,6 @@ data class ArabicIQ(
     override val free: String= "مجاناً",
     override val loginToAddToFavourite: String= "الرجاء تسجيل الدخول حتى تضيف المطاعم المفضلة",
     override val addToCart: String= "أضف إلى العربة",
+    override val mealAddedToYourCart: String= " ضفنالك الوجبة إلى عربة التسوق مالتك ",
 
     ) : IStringResources
