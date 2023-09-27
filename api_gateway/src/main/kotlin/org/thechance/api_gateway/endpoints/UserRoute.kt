@@ -41,14 +41,6 @@ fun Route.userRoutes() {
                 respondWithResult(HttpStatusCode.OK, result)
             }
 
-
-//            get("/search") {
-//                val searchTerm = call.request.queryParameters["query"]?.trim() ?: ""
-//                val permission: List<Int> = call.receive<List<Int>>()
-//                val users = identityService.searchUsers(searchTerm, permission)
-//                respondWithResult(HttpStatusCode.OK, users)
-//            }
-
             put("/{userId}/permission") {
                 val language = extractLocalizationHeader()
                 val userId = call.parameters["userId"]?.trim().toString()
