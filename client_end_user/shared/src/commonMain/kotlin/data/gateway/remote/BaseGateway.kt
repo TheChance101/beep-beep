@@ -15,13 +15,8 @@ abstract class BaseGateway(val client: HttpClient) {
         method: HttpClient.() -> HttpResponse,
     ): T {
         try {
-            println("AYA1 ${client.method().bodyAsText()}}")
             return client.method().body()
         } catch (e: ClientRequestException) {
-            println("AYA1 ${e.response.status.value}}")
-            println("AYA1 ${e.response}}")
-            println("AYA1 ${e.response.body<ServerResponse<T>>().status.errorMessages}}")
-
 
             val errorMessages = e.response.body<ServerResponse<T>>().status.errorMessages
             errorMessages?.let(::throwMatchingException)
