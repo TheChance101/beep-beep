@@ -100,19 +100,15 @@ suspend inline fun <reified T> PipelineContext<Unit, ApplicationCall>.receiveMul
 }
 
 fun String?.toListOfIntOrNull(): List<Int>? {
-    return if (!this.isNullOrBlank()) {
-        val integerStrings = this.replace("[","").replace("]","").split(",")
-        integerStrings.mapNotNull { it.toIntOrNull() }
-    } else {
-        null
+    return takeIf { !it.isNullOrBlank() }?.run {
+        val integerStrings = this.replace("[", "").replace("]", "").split(",")
+        integerStrings.mapNotNull(String::toIntOrNull)
     }
 }
 
 fun String?.toListOfStringOrNull(): List<String>? {
-    return if (!this.isNullOrBlank()) {
-        val integerStrings = this.replace("[","").replace("]","").split(",")
-        integerStrings.map { it.trim() }
-    } else {
-        null
+    return takeIf { !it.isNullOrBlank() }?.run {
+        val integerStrings = this.replace("[", "").replace("]", "").split(",")
+        integerStrings.map(String::trim)
     }
 }
