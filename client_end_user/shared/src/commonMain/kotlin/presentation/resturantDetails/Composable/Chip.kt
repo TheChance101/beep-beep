@@ -21,7 +21,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
                 color = color,
                 shape = RoundedCornerShape(size = Theme.radius.small)
             )
-            .padding(start = 4.dp, top = 2.dp, end = 4.dp, bottom = 2.dp)
+            .padding(horizontal = 4.dp, vertical = 2.dp)
     ) {
         content()
     }

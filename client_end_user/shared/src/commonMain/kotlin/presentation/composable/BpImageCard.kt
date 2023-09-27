@@ -61,7 +61,7 @@ fun BpImageCard(
             Image(
                 painter = painter,
                 contentScale = ContentScale.Crop,
-                contentDescription = null
+                contentDescription = "background"
             )
             if(hasRate)
             Row(
@@ -78,7 +78,7 @@ fun BpImageCard(
                 Image(
                     modifier = Modifier.padding(top = 4.dp, bottom = 4.dp, end = 4.dp).size(16.dp),
                     painter = painterResource(Resources.images.filledStar),
-                    contentDescription = null
+                    contentDescription = "star"
                 )
             }
         }
