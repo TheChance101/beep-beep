@@ -20,8 +20,8 @@ class LocationService(private val context: Context): ILocationService {
             .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
             .setMinUpdateIntervalMillis(100).setMaxUpdates(1).build()
 
-      @SuppressLint("SuspiciousIndentation")
-  /*  private val locationSettingPermissionResultRequest =
+    @SuppressLint("SuspiciousIndentation")
+    /*  private val locationSettingPermissionResultRequest =
       registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                // getMyCurrentLocation()
@@ -31,8 +31,9 @@ class LocationService(private val context: Context): ILocationService {
 
     override fun isDeviceLocationEnabled(): Boolean {
         val locationManager = getSystemService(context, LocationManager::class.java)
-        val isGPSEnabled = locationManager?.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        return isGPSEnabled == true
+        return locationManager?.isProviderEnabled(LocationManager.GPS_PROVIDER) == true || locationManager?.isProviderEnabled(
+            LocationManager.NETWORK_PROVIDER
+        ) == true
     }
 
     @RequiresApi(Build.VERSION_CODES.S)

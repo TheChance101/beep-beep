@@ -16,12 +16,12 @@ class LocationGateway(
     override suspend fun startTracking() {
         try {
             locationTracker.startTracking()
-           if(locationService.isGPSEnabled()) {
+           if(locationService.isDeviceLocationEnabled()) {
+               //getCurrentLocation
                println("Location is Enabled")
            }
            else{
                locationService.openLocationSettings()
-               println("Not Location is Enabled")
            }
         } catch (e: DeniedAlwaysException) {
             throw LocationAccessDeniedException()
