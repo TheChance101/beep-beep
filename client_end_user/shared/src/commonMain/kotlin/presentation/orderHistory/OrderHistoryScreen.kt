@@ -1,9 +1,28 @@
 package presentation.orderHistory
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
+import com.beepbeep.designSystem.ui.composable.BpAnimatedTabLayout
+import com.beepbeep.designSystem.ui.theme.Theme
 import presentation.base.BaseScreen
-import presentation.composable.LoginRequiredPlaceholder
+import presentation.orderHistory.composable.HorizontalDivider
+import presentation.orderHistory.composable.MealOrderItem
+import presentation.orderHistory.composable.TripHistoryItem
+import resources.Resources
+import util.capitalizeFirstLetter
 
 class OrderHistoryScreen :
     BaseScreen<OrderHistoryScreenModel, OrderScreenUiState, OrderHistoryScreenUiEffect, OrderHistoryScreenInteractionListener>() {
@@ -16,9 +35,11 @@ class OrderHistoryScreen :
     override fun onEffect(effect: OrderHistoryScreenUiEffect, navigator: Navigator) {}
 
     @Composable
-    override fun onRender(state: OrderScreenUiState, listener: OrderHistoryScreenInteractionListener) {
-        LoginRequiredPlaceholder({})
-/*        Column(
+    override fun onRender(
+        state: OrderScreenUiState,
+        listener: OrderHistoryScreenInteractionListener
+    ) {
+        Column(
             modifier = Modifier.fillMaxSize().background(Theme.colors.background),
         ) {
             Text(
@@ -64,6 +85,6 @@ class OrderHistoryScreen :
                     }
                 }
             }
-        }*/
+        }
     }
 }

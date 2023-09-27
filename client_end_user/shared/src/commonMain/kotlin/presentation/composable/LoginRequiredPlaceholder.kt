@@ -23,8 +23,8 @@ import util.getStatusBarPadding
 fun LoginRequiredPlaceholder(
     placeHolder: Painter,
     message: String,
+    modifier: Modifier = Modifier,
     onClickLogin: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier

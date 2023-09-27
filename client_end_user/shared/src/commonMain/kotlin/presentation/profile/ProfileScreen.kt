@@ -28,8 +28,8 @@ import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
-import presentation.composable.LoginRequiredPlaceholder
 import resources.Resources
 import util.getStatusBarPadding
 
@@ -42,20 +42,21 @@ class ProfileScreen :
     }
 
     override fun onEffect(effect: ProfileUIEffect, navigator: Navigator) {
-
+        when (effect) {
+            ProfileUIEffect.NavigateToLoginScreen -> navigator.push(LoginScreen())
+        }
     }
-
 
     @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
     @Composable
     override fun onRender(state: ProfileUIState, listener: ProfileInteractionListener) {
-        if (state.isLogin) Column(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(getStatusBarPadding())
                 .background(Theme.colors.background)
                 .verticalScroll(rememberScrollState()),
-            ) {
+        ) {
             WhiteCard {
                 Title(Resources.strings.wallet)
                 SubTitle(
@@ -117,7 +118,7 @@ class ProfileScreen :
                     )
                 }
             }
-        } else LoginRequiredPlaceholder(onClickLogin = { listener.onLogin() })
+        }
     }
 
     @Composable
@@ -150,5 +151,4 @@ class ProfileScreen :
             style = Theme.typography.body,
         )
     }
-
 }
