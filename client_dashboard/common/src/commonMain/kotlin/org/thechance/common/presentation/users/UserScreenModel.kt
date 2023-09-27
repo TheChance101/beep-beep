@@ -37,9 +37,9 @@ class UserScreenModel(
     }
 
     private fun getUpdatedPermissions(
-        permissions: List<PermissionUiState>,
-        permissionUiState: PermissionUiState
-    ): List<PermissionUiState> {
+        permissions: List<UserScreenUiState.PermissionUiState>,
+        permissionUiState: UserScreenUiState.PermissionUiState
+    ): List<UserScreenUiState.PermissionUiState> {
         return if (permissions.contains(permissionUiState)) {
             permissions.filterNot { it == permissionUiState }
         } else {
@@ -56,7 +56,7 @@ class UserScreenModel(
         updateState { it.copy(filter = it.filter.copy(show = false)) }
     }
 
-    override fun onFilterMenuPermissionClick(permission: PermissionUiState) {
+    override fun onFilterMenuPermissionClick(permission: UserScreenUiState.PermissionUiState) {
         val updatedPermissions = getUpdatedPermissions(mutableState.value.filter.selectedPermissions, permission)
         updateState { it.copy(filter = it.filter.copy(selectedPermissions = updatedPermissions)) }
     }
@@ -182,9 +182,9 @@ class UserScreenModel(
         hideUserPermissionsDialog()
     }
 
-    override fun onUserPermissionClick(permission: PermissionUiState) {
+    override fun onUserPermissionClick(permission: UserScreenUiState.PermissionUiState) {
         val permissions = getUpdatedPermissions(mutableState.value.permissionsDialog.permissions, permission)
-        if (permission != PermissionUiState.END_USER)
+        if (permission != UserScreenUiState.PermissionUiState.END_USER)
             updateState {
                 it.copy(
                     permissionsDialog = it.permissionsDialog.copy(permissions = permissions)
@@ -204,7 +204,7 @@ class UserScreenModel(
     }
 
     private fun updateUserPermissions(
-        userId: String, permissions: List<PermissionUiState>
+        userId: String, permissions: List<UserScreenUiState.PermissionUiState>
     ) {
         tryToExecute(
             { userManagement.updateUserPermissions(userId, permissions.toEntity()) },

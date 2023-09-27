@@ -19,9 +19,9 @@ import java.awt.Dimension
 @Composable
 fun PermissionsDialog(
     visible: Boolean,
-    allPermissions: List<PermissionUiState>,
-    selectedPermissions: List<PermissionUiState>,
-    onUserPermissionClicked: (PermissionUiState) -> Unit,
+    allPermissions: List<UserScreenUiState.PermissionUiState>,
+    selectedPermissions: List<UserScreenUiState.PermissionUiState>,
+    onUserPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
     onSaveUserPermissions: () -> Unit,
     onCancelUserPermissionsDialog: () -> Unit,
 ) {

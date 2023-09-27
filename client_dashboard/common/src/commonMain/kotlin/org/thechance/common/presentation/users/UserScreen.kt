@@ -331,10 +331,10 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
     @Composable
     private fun UsersFilterDropdownMenu(
         isFilterDropdownMenuExpanded: Boolean,
-        allPermissions: List<PermissionUiState>,
+        allPermissions: List<UserScreenUiState.PermissionUiState>,
         countries: List<UserScreenUiState.CountryUiState>,
-        selectedPermissions: List<PermissionUiState>,
-        onFilterPermissionClicked: (PermissionUiState) -> Unit,
+        selectedPermissions: List<UserScreenUiState.PermissionUiState>,
+        onFilterPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
         onFilterCountryClicked: (UserScreenUiState.CountryUiState) -> Unit,
         onFilterMenuClicked: () -> Unit,
         onFilterMenuDismiss: () -> Unit,
@@ -408,11 +408,11 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
     @Composable
     private fun UsersFilteredSearch(
         searchText: String,
-        allPermissions: List<PermissionUiState>,
+        allPermissions: List<UserScreenUiState.PermissionUiState>,
         countries: List<UserScreenUiState.CountryUiState>,
-        selectedPermissions: List<PermissionUiState>,
+        selectedPermissions: List<UserScreenUiState.PermissionUiState>,
         isFilterDropdownMenuExpanded: Boolean,
-        onFilterPermissionClicked: (PermissionUiState) -> Unit,
+        onFilterPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
         onFilterCountryClicked: (UserScreenUiState.CountryUiState) -> Unit,
         onSearchInputChanged: (String) -> Unit,
         onFilterMenuClicked: () -> Unit,
@@ -459,7 +459,7 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
 }
 
 @Composable
-fun getCountryTitle(country: UserScreenUiState.Country): String {
+private fun getCountryTitle(country: UserScreenUiState.Country): String {
     return when (country) {
         UserScreenUiState.Country.EGYPT -> Resources.Strings.egypt
         UserScreenUiState.Country.IRAQ -> Resources.Strings.iraq

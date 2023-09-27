@@ -25,7 +25,7 @@ interface EditUserMenuListener {
 
     fun onCancelUserPermissionsDialog()
 
-    fun onUserPermissionClick(permission: PermissionUiState)
+    fun onUserPermissionClick(permission: UserScreenUiState.PermissionUiState)
 
 }
 
@@ -35,7 +35,7 @@ interface FilterMenuListener {
 
     fun hideFilterMenu()
 
-    fun onFilterMenuPermissionClick(permission: PermissionUiState)
+    fun onFilterMenuPermissionClick(permission: UserScreenUiState.PermissionUiState)
 
     fun onFilterMenuCountryClick(country: UserScreenUiState.CountryUiState)
 

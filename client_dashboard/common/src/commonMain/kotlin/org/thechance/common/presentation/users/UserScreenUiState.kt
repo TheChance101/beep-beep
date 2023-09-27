@@ -5,7 +5,6 @@ import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Permission
 import org.thechance.common.domain.entity.User
 import org.thechance.common.presentation.composables.table.Header
-import org.thechance.common.presentation.overview.PermissionUiState
 import org.thechance.common.presentation.util.ErrorState
 
 data class UserScreenUiState(
@@ -75,6 +74,15 @@ data class UserScreenUiState(
         val isSelected: Boolean = false
     )
 
+    enum class PermissionUiState {
+        RESTAURANT_OWNER,
+        DRIVER,
+        END_USER,
+        SUPPORT,
+        DELIVERY,
+        ADMIN,
+    }
+
     enum class Country {
         IRAQ,
         PALESTINE,
@@ -94,12 +102,12 @@ fun User.toUiState(): UserScreenUiState.UserUiState {
         country = country,
         permissions = permission.map { permission ->
             when (permission) {
-                Permission.RESTAURANT_OWNER -> PermissionUiState.RESTAURANT_OWNER
-                Permission.DRIVER -> PermissionUiState.DRIVER
-                Permission.END_USER -> PermissionUiState.END_USER
-                Permission.SUPPORT -> PermissionUiState.SUPPORT
-                Permission.DELIVERY -> PermissionUiState.DELIVERY
-                Permission.ADMIN -> PermissionUiState.ADMIN
+                Permission.RESTAURANT_OWNER -> UserScreenUiState.PermissionUiState.RESTAURANT_OWNER
+                Permission.DRIVER -> UserScreenUiState.PermissionUiState.DRIVER
+                Permission.END_USER -> UserScreenUiState.PermissionUiState.END_USER
+                Permission.SUPPORT -> UserScreenUiState.PermissionUiState.SUPPORT
+                Permission.DELIVERY -> UserScreenUiState.PermissionUiState.DELIVERY
+                Permission.ADMIN -> UserScreenUiState.PermissionUiState.ADMIN
             }
         },
     )
@@ -115,18 +123,18 @@ fun DataWrapper<User>.toUiState(): UserScreenUiState.UserPageInfoUiState {
     )
 }
 
-fun PermissionUiState.toEntity(): Permission {
+fun UserScreenUiState.PermissionUiState.toEntity(): Permission {
     return when (this) {
-        PermissionUiState.END_USER -> Permission.END_USER
-        PermissionUiState.ADMIN -> Permission.ADMIN
-        PermissionUiState.SUPPORT -> Permission.SUPPORT
-        PermissionUiState.DELIVERY -> Permission.DELIVERY
-        PermissionUiState.RESTAURANT_OWNER -> Permission.RESTAURANT_OWNER
-        PermissionUiState.DRIVER -> Permission.DRIVER
+        UserScreenUiState.PermissionUiState.END_USER -> Permission.END_USER
+        UserScreenUiState.PermissionUiState.ADMIN -> Permission.ADMIN
+        UserScreenUiState.PermissionUiState.SUPPORT -> Permission.SUPPORT
+        UserScreenUiState.PermissionUiState.DELIVERY -> Permission.DELIVERY
+        UserScreenUiState.PermissionUiState.RESTAURANT_OWNER -> Permission.RESTAURANT_OWNER
+        UserScreenUiState.PermissionUiState.DRIVER -> Permission.DRIVER
     }
 }
 
-fun List<PermissionUiState>.toEntity() = this.map { it.toEntity() }
+fun List<UserScreenUiState.PermissionUiState>.toEntity() = this.map { it.toEntity() }
 
 fun UserScreenUiState.Country.toEntity(): Country {
     return when (this) {
