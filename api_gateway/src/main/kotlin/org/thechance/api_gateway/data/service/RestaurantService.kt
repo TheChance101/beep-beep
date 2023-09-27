@@ -107,7 +107,7 @@ class RestaurantService(
                 errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             }
         ) {
-            post("/restaurants") {
+            post("/restaurants/favorite") {
                 body = Json.encodeToString(restaurantIds)
             }
         }
