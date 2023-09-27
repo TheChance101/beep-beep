@@ -140,23 +140,23 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
         onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
         onDeleteUserMenuItemClicked: (String) -> Unit,
     ) {
-         BpTable(
-                data = users,
-                key = UserScreenUiState.UserUiState::username,
-                headers = headers,
-                isVisible = hasConnection,
-                modifier = Modifier.fillMaxWidth(),
-            ) { user ->
-                UserRow(
-                    onUserMenuClicked = onUserMenuClicked,
-                    user = user,
-                    position = users.indexOf(user) + 1,
-                    editUserMenu = editUserMenu,
-                    onEditUserDismiss = onEditUserDismiss,
-                    onEditUserMenuItemClicked = onEditUserMenuItemClicked,
-                    onDeleteUserMenuItemClicked = onDeleteUserMenuItemClicked,
-                )
-            }
+        BpTable(
+            data = users,
+            key = UserScreenUiState.UserUiState::username,
+            headers = headers,
+            isVisible = hasConnection,
+            modifier = Modifier.fillMaxWidth(),
+        ) { user ->
+            UserRow(
+                onUserMenuClicked = onUserMenuClicked,
+                user = user,
+                position = users.indexOf(user) + 1,
+                editUserMenu = editUserMenu,
+                onEditUserDismiss = onEditUserDismiss,
+                onEditUserMenuItemClicked = onEditUserMenuItemClicked,
+                onDeleteUserMenuItemClicked = onDeleteUserMenuItemClicked,
+            )
+        }
 
 
         UsersTableFooter(
@@ -332,10 +332,10 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
     @Composable
     private fun UsersFilterDropdownMenu(
         isFilterDropdownMenuExpanded: Boolean,
-        allPermissions: List<UserScreenUiState.PermissionUiState>,
+        allPermissions: List<PermissionUiState>,
         countries: List<UserScreenUiState.CountryUiState>,
-        selectedPermissions: List<UserScreenUiState.PermissionUiState>,
-        onFilterPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
+        selectedPermissions: List<PermissionUiState>,
+        onFilterPermissionClicked: (PermissionUiState) -> Unit,
         onFilterCountryClicked: (UserScreenUiState.CountryUiState) -> Unit,
         onFilterMenuClicked: () -> Unit,
         onFilterMenuDismiss: () -> Unit,
@@ -409,11 +409,11 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
     @Composable
     private fun UsersFilteredSearch(
         searchText: String,
-        allPermissions: List<UserScreenUiState.PermissionUiState>,
+        allPermissions: List<PermissionUiState>,
         countries: List<UserScreenUiState.CountryUiState>,
-        selectedPermissions: List<UserScreenUiState.PermissionUiState>,
+        selectedPermissions: List<PermissionUiState>,
         isFilterDropdownMenuExpanded: Boolean,
-        onFilterPermissionClicked: (UserScreenUiState.PermissionUiState) -> Unit,
+        onFilterPermissionClicked: (PermissionUiState) -> Unit,
         onFilterCountryClicked: (UserScreenUiState.CountryUiState) -> Unit,
         onSearchInputChanged: (String) -> Unit,
         onFilterMenuClicked: () -> Unit,
