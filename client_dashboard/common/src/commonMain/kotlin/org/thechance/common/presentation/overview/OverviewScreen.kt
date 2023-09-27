@@ -397,7 +397,7 @@ object OverviewScreen :
     @Composable
     fun getPermissionIcon(permission: PermissionUiState): String {
         return when (permission) {
-            PermissionUiState.RESTAURANT -> Resources.Drawable.restaurantOutlined
+            PermissionUiState.RESTAURANT_OWNER -> Resources.Drawable.restaurantOutlined
             PermissionUiState.DRIVER -> Resources.Drawable.taxiOutlined
             PermissionUiState.END_USER -> Resources.Drawable.endUser
             PermissionUiState.SUPPORT -> Resources.Drawable.support
