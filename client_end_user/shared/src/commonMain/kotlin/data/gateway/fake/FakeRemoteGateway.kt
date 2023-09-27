@@ -53,6 +53,10 @@ class FakeRemoteGateway : IFakeRemoteGateway {
         return meals.map { it.toEntity() }
     }
 
+    override suspend fun getMealById(mealId: String): Meal {
+        return meals.first().toEntity()
+    }
+
     override suspend fun getUserProfile(): UserDetails {
         return userProfile.toEntity()
     }

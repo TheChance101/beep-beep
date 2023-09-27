@@ -22,4 +22,6 @@ interface IFakeRemoteGateway {
 
     suspend fun getSweets(restaurantId: String): List<Meal>
 
+    suspend fun getMealById(mealId: String): Meal
+
 }
