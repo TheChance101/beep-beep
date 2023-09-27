@@ -56,7 +56,7 @@ fun Route.restaurantRoutes() {
         }
 
         get("/search") {
-            val query = call.parameters.extractString("query") ?: throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER))
+            val query = call.parameters.extractString("query") ?: ""
             val page = call.parameters.extractInt("page") ?: 1
             val limit = call.parameters.extractInt("limit") ?: 10
             val restaurants = search.searchRestaurant(query, page = page, limit = limit)
