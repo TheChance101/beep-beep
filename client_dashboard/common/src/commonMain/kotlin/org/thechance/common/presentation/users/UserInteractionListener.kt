@@ -37,7 +37,7 @@ interface FilterMenuListener {
 
     fun onFilterMenuPermissionClick(permission: UserScreenUiState.PermissionUiState)
 
-    fun onFilterMenuCountryClick(country: UserScreenUiState.CountryUiState)
+    fun onFilterMenuCountryClick(countryUiState: UserScreenUiState.CountryUiState)
 
     fun onFilterMenuSaveButtonClicked()
 

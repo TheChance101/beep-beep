@@ -5,7 +5,6 @@ import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.usecase.IUsersManagementUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
-import org.thechance.common.presentation.overview.PermissionUiState
 import org.thechance.common.presentation.util.ErrorState
 
 class UserScreenModel(
@@ -61,9 +60,9 @@ class UserScreenModel(
         updateState { it.copy(filter = it.filter.copy(selectedPermissions = updatedPermissions)) }
     }
 
-    override fun onFilterMenuCountryClick(country: UserScreenUiState.CountryUiState) {
+    override fun onFilterMenuCountryClick(countryUiState: UserScreenUiState.CountryUiState) {
         val updatedCountries = mutableState.value.filter.countries.map {
-            if (it.country == country.country) it.copy(isSelected = !country.isSelected) else it
+            if (it.country == countryUiState.country) it.copy(isSelected = !countryUiState.isSelected) else it
         }
         updateState { it.copy(filter = it.filter.copy(countries = updatedCountries)) }
     }
