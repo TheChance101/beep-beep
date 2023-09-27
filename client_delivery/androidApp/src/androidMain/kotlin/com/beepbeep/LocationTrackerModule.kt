@@ -1,5 +1,6 @@
 package com.beepbeep
 
+import data.service.ILocationService
 import dev.icerock.moko.geo.LocationTracker
 import dev.icerock.moko.permissions.PermissionsController
 import org.koin.android.ext.koin.androidContext
@@ -11,4 +12,8 @@ val locationTrackerModule = module {
             PermissionsController(applicationContext = androidContext().applicationContext)
         )
     }
+}
+
+val locationServiceModule = module {
+    single<ILocationService> { LocationService(androidContext().applicationContext) }
 }

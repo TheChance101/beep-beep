@@ -9,8 +9,12 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         startKoin {
-            androidContext(this@App.applicationContext);
-            modules(appModule(), locationTrackerModule)
+            androidContext(this@App.applicationContext)
+            modules(
+                appModule(),
+                locationTrackerModule,
+                locationServiceModule
+            )
         }
     }
 }
