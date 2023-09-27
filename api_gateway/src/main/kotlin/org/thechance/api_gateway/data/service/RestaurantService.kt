@@ -353,6 +353,15 @@ class RestaurantService(
             get("/order/$restaurantId/orders")
         }
     }
+
+    suspend fun deleteRestaurantByOwnerId(id: String): Boolean {
+        return client.tryToExecute<Boolean>(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+        ) {
+            delete("/restaurant/owner/$id")
+        }
+    }
     //endregion
 
 

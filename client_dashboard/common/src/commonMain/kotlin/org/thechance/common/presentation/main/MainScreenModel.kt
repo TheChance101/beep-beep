@@ -12,7 +12,7 @@ import org.thechance.common.presentation.util.ErrorState
 
 
 class MainScreenModel(
-    private val getUsersUseCase: IUsersManagementUseCase,
+    private val userManagement: IUsersManagementUseCase,
     private val logout: ILogoutUserUseCase,
     private val themeManagement: IThemeManagementUseCase
 ) : BaseScreenModel<MainUiState, MainUiEffect>(MainUiState()), MainInteractionListener {
@@ -25,7 +25,7 @@ class MainScreenModel(
 
     private fun getUserInfo() {
         tryToExecute(
-            getUsersUseCase::getUserInfo,
+            userManagement::getUserInfo,
             ::onGetUserInfoSuccessfully,
             ::onError
         )

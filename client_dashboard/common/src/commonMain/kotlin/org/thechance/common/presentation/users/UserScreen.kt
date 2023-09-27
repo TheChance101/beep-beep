@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -82,7 +83,7 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
             onCancelUserPermissionsDialog = editMenuListener::onCancelUserPermissionsDialog,
         )
         Box(
-            modifier = Modifier.background(Theme.colors.surface).fillMaxSize(),
+            modifier = Modifier.background(Theme.colors.surface).padding(40.kms).fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
             Column(modifier = Modifier.fillMaxSize().align(Alignment.TopCenter)) {
@@ -100,10 +101,9 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
                     onFilterSaved = filterMenuListener::onFilterMenuSaveButtonClicked,
                     onFilterClearAllClicked = filterMenuListener::onFilterClearAllClicked,
                 )
-
+                BpNoInternetConnection(hasConnection = !state.hasConnection,onRetry=onRetry)
                 UsersTable(
-                    hasConnection = state.hasConnection,
-                    onRetry = {onRetry()},
+                    hasConnection=state.hasConnection,
                     users = state.pageInfo.data,
                     headers = state.tableHeader,
                     selectedPage = state.currentPage,
@@ -126,7 +126,6 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
     @Composable
     private fun ColumnScope.UsersTable(
         hasConnection: Boolean,
-        onRetry: () -> Unit,
         users: List<UserScreenUiState.UserUiState>,
         headers: List<Header>,
         selectedPage: Int,
@@ -141,15 +140,11 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
         onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
         onDeleteUserMenuItemClicked: (String) -> Unit,
     ) {
-        BpNoInternetConnection(hasConnection = !hasConnection){
-            onRetry()
-        }
-
-        AnimatedVisibility(visible = hasConnection){
-            BpTable(
+         BpTable(
                 data = users,
                 key = UserScreenUiState.UserUiState::username,
                 headers = headers,
+                isVisible = hasConnection,
                 modifier = Modifier.fillMaxWidth(),
             ) { user ->
                 UserRow(
@@ -162,7 +157,7 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
                     onDeleteUserMenuItemClicked = onDeleteUserMenuItemClicked,
                 )
             }
-        }
+
 
         UsersTableFooter(
             numberItemInPage = numberItemInPage,
@@ -437,7 +432,15 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
                 onValueChange = onSearchInputChanged,
                 text = searchText,
                 keyboardType = KeyboardType.Text,
-                trailingPainter = painterResource(Resources.Drawable.search)
+                trailingPainter = painterResource(Resources.Drawable.search),
+                outlinedTextFieldDefaults =  OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = Theme.colors.surface,
+                    cursorColor = Theme.colors.contentTertiary,
+                    errorCursorColor = Theme.colors.primary,
+                    focusedBorderColor = Theme.colors.contentTertiary.copy(alpha = 0.2f),
+                    unfocusedBorderColor = Theme.colors.contentBorder.copy(alpha = 0.1f),
+                    errorBorderColor = Theme.colors.primary.copy(alpha = 0.5f),
+                )
             )
 
             UsersFilterDropdownMenu(
