@@ -87,9 +87,10 @@ data class Arabic(
     override val yourCart: String = "العربة",
     override val allCuisines: String = "المطابخ",
     override val history: String = "سجل الطلبات",
-    override val logout: String= "تسجيل الخروج",
+    override val logout: String = "تسجيل الخروج",
     override val address: String = "العنوان",
-    override val save: String= "حفظ",
-    override val pleaseLogin: String="الرجاء تسجيل الدخول للوصول الى ملفك الشخصي"
-
+    override val save: String = "حفظ",
+    override val profileLoginMessage: String = "الرجاء تسجيل الدخول للوصول الى ملفك الشخصي",
+    override val ordersHistoryLoginMessage: String = "برجاء تسجيل الدخول للوصول إلى سجل طلباتك",
+    override val notificationLoginMessage: String = "برجاء تسجيل الدخول لمشاهدة الإشعارات"
 ) : IStringResources

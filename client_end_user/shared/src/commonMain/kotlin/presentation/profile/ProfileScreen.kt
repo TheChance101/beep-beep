@@ -30,6 +30,8 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
+import presentation.composable.ContentVisibility
+import presentation.composable.LoginRequiredPlaceholder
 import resources.Resources
 import util.getStatusBarPadding
 
@@ -50,72 +52,81 @@ class ProfileScreen :
     @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
     @Composable
     override fun onRender(state: ProfileUIState, listener: ProfileInteractionListener) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(getStatusBarPadding())
-                .background(Theme.colors.background)
-                .verticalScroll(rememberScrollState()),
-        ) {
-            WhiteCard {
-                Title(Resources.strings.wallet)
-                SubTitle(
-                    "${state.user?.currency} ${state.user?.walletBalance}",
-                    Theme.colors.primary
-                )
-                Title(Resources.strings.username)
-                SubTitle("@${state.user?.username}")
-                Title(Resources.strings.address)
-                SubTitle(state.user?.addresses?.firstOrNull()?.address ?: "")
-                Title(Resources.strings.email)
-                SubTitle(state.user?.email ?: "")
-            }
-            WhiteCard {
-                BpTextField(
-                    modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
-                    text = state.fullName,
-                    onValueChange = listener::onFullNameChanged,
-                    label = Resources.strings.fullName,
-                    keyboardType = KeyboardType.Text,
-                    errorMessage = if (state.isFullNameError) Resources.strings.invalidFullName else "",
-                    isError = state.isFullNameError,
-                )
-                BpTextField(
-                    modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
-                    text = state.phoneNumber,
-                    onValueChange = listener::onPhoneNumberChanged,
-                    label = Resources.strings.mobileNumber,
-                    keyboardType = KeyboardType.Text,
-                    errorMessage = if (state.isPhoneNumberError) Resources.strings.invalidPhoneNumber else "",
-                    isError = state.isPhoneNumberError,
-                )
-                BpButton(
-                    modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
-                    title = Resources.strings.save,
-                    enabled = state.isButtonEnabled,
-                    onClick = {
-                        listener.onSaveProfileInfo()
-                    },
-                )
-            }
-            WhiteCard {
-                Row(
-                    modifier = Modifier.clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() },
-                    ) { listener.onLogout() },
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    Icon(
-                        painter = painterResource(Resources.images.logout),
-                        contentDescription = Resources.strings.logout,
-                        tint = Theme.colors.primary,
+
+        LoginRequiredPlaceholder(
+            placeHolder = painterResource(Resources.images.requireLoginToShowProfilePlaceholder),
+            message = Resources.strings.profileLoginMessage,
+            onClickLogin = listener::onClickLogin
+        )
+
+        ContentVisibility(state.isLoggedIn) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(getStatusBarPadding())
+                    .background(Theme.colors.background)
+                    .verticalScroll(rememberScrollState()),
+            ) {
+                WhiteCard {
+                    Title(Resources.strings.wallet)
+                    SubTitle(
+                        "${state.user?.currency} ${state.user?.walletBalance}",
+                        Theme.colors.primary
                     )
-                    Text(
-                        text = Resources.strings.logout,
-                        style = Theme.typography.title,
-                        color = Theme.colors.primary,
+                    Title(Resources.strings.username)
+                    SubTitle("@${state.user?.username}")
+                    Title(Resources.strings.address)
+                    SubTitle(state.user?.addresses?.firstOrNull()?.address ?: "")
+                    Title(Resources.strings.email)
+                    SubTitle(state.user?.email ?: "")
+                }
+                WhiteCard {
+                    BpTextField(
+                        modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
+                        text = state.fullName,
+                        onValueChange = listener::onFullNameChanged,
+                        label = Resources.strings.fullName,
+                        keyboardType = KeyboardType.Text,
+                        errorMessage = if (state.isFullNameError) Resources.strings.invalidFullName else "",
+                        isError = state.isFullNameError,
                     )
+                    BpTextField(
+                        modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
+                        text = state.phoneNumber,
+                        onValueChange = listener::onPhoneNumberChanged,
+                        label = Resources.strings.mobileNumber,
+                        keyboardType = KeyboardType.Text,
+                        errorMessage = if (state.isPhoneNumberError) Resources.strings.invalidPhoneNumber else "",
+                        isError = state.isPhoneNumberError,
+                    )
+                    BpButton(
+                        modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
+                        title = Resources.strings.save,
+                        enabled = state.isButtonEnabled,
+                        onClick = {
+                            listener.onSaveProfileInfo()
+                        },
+                    )
+                }
+                WhiteCard {
+                    Row(
+                        modifier = Modifier.clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() },
+                        ) { listener.onLogout() },
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        Icon(
+                            painter = painterResource(Resources.images.logout),
+                            contentDescription = Resources.strings.logout,
+                            tint = Theme.colors.primary,
+                        )
+                        Text(
+                            text = Resources.strings.logout,
+                            style = Theme.typography.title,
+                            color = Theme.colors.primary,
+                        )
+                    }
                 }
             }
         }

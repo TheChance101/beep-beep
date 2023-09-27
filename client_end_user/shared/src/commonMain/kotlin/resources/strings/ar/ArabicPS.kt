@@ -87,9 +87,10 @@ data class ArabicPS(
     override val orderNow: String = "أطلب هلأ",
     override val total: String = "المجموع:",
     override val yourCart: String = "العربة",
-    override val logout: String= "تسجيل الخروج",
+    override val logout: String = "تسجيل الخروج",
     override val address: String = "العنوان",
-    override val save: String= "حفظ",
-    override val pleaseLogin: String="سجل دخول حتى توصل حسابك يخوو"
-
-    ) : IStringResources
+    override val save: String = "حفظ",
+    override val profileLoginMessage: String = "سجل دخول حتى توصل حسابك يخوو",
+    override val ordersHistoryLoginMessage: String = "برجاء تسجيل الدخول للوصول إلى سجل طلباتك",
+    override val notificationLoginMessage: String = "برجاء تسجيل الدخول لمشاهدة الإشعارات"
+) : IStringResources

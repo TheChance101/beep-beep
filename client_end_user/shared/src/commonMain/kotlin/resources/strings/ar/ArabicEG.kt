@@ -90,5 +90,7 @@ data class ArabicEG(
     override val orderNow: String = "أطلب دلوقتي",
     override val total: String = "المجموع:",
     override val yourCart: String = "العربة",
-    override val pleaseLogin: String="سجل دخول يا اسطا وشوفك  حسابك"
+    override val profileLoginMessage: String="سجل دخول يا اسطا وشوفك  حسابك",
+    override val ordersHistoryLoginMessage: String = "برجاء تسجيل الدخول للوصول إلى سجل طلباتك",
+    override val notificationLoginMessage: String = "برجاء تسجيل الدخول لمشاهدة الإشعارات"
 ) : IStringResources

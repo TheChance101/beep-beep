@@ -88,5 +88,7 @@ interface IStringResources {
     val orderNow: String
     val total: String
     val yourCart: String
-    val pleaseLogin: String
+    val profileLoginMessage: String
+    val ordersHistoryLoginMessage: String
+    val notificationLoginMessage: String
 }
