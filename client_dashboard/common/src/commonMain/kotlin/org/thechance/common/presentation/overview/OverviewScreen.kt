@@ -58,7 +58,8 @@ object OverviewScreen :
         }
 
         AnimatedContent(targetState = state.isLoading) { isLoading ->
-            if (isLoading) OverviewScreenLoading() else OverviewScreenContent(state, listener)
+            if (isLoading) OverviewScreenLoading()
+            else if (state.hasInternetConnection) OverviewScreenContent(state, listener)
         }
     }
 
