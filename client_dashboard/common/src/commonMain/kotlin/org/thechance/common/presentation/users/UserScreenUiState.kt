@@ -1,9 +1,12 @@
 package org.thechance.common.presentation.users
 
+import androidx.compose.runtime.Composable
 import org.thechance.common.domain.entity.Country
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Permission
 import org.thechance.common.domain.entity.User
+import org.thechance.common.presentation.composables.table.Header
+import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.ErrorState
 
 data class UserScreenUiState(
@@ -26,6 +29,16 @@ data class UserScreenUiState(
     val isLoading: Boolean = true,
     val userMenu: String = "",
 ) {
+    val tableHeader: List<Header>
+        @Composable get() = listOf(
+            Header(Resources.Strings.number, 1f),
+            Header(Resources.Strings.users, 3f),
+            Header(Resources.Strings.username, 3f),
+            Header(Resources.Strings.email, 3f),
+            Header(Resources.Strings.country, 3f),
+            Header(Resources.Strings.permission, 3f),
+            Header("", 1f),
+        )
     data class UserPageInfoUiState(
         val data: List<UserUiState> = emptyList(),
         val numberOfUsers: Int = 0,
