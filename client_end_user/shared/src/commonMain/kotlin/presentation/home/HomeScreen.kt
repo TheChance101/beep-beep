@@ -1,5 +1,6 @@
 package presentation.home
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -142,7 +143,7 @@ class HomeScreen : BaseScreen<
             }
 
             item {
-                ContentVisibility(state.showCart) {
+                AnimatedVisibility(state.showCart) {
                     CartCard(onClick = { listener.onClickCartCard() })
                 }
             }
