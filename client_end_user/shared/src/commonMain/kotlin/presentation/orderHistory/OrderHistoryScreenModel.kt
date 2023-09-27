@@ -4,6 +4,8 @@ import cafe.adriel.voyager.core.model.coroutineScope
 import domain.usecase.GetOrderHistoryUseCase
 import domain.usecase.IManageAuthenticationUseCase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
@@ -29,11 +31,15 @@ class OrderHistoryScreenModel(
         )
     }
 
-    private fun onCheckIfLoggedInSuccess(accessToken: String) {
-        if (accessToken.isNotEmpty()) {
-            updateState { it.copy(isLoggedIn = true) }
-        } else {
-            updateState { it.copy(isLoggedIn = false) }
+    private fun onCheckIfLoggedInSuccess(accessToken: Flow<String>) {
+        coroutineScope.launch {
+            accessToken.collect { token ->
+                if (token.isNotEmpty()) {
+                    updateState { it.copy(isLoggedIn = true) }
+                } else {
+                    updateState { it.copy(isLoggedIn = false) }
+                }
+            }
         }
     }
 

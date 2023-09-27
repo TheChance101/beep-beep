@@ -7,6 +7,7 @@ import domain.usecase.IManageUserUseCase
 import domain.usecase.validation.IValidationUseCase
 import domain.utils.AuthorizationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
@@ -32,11 +33,15 @@ class ProfileScreenModel(
         )
     }
 
-    private fun onCheckIfLoggedInSuccess(accessToken: String) {
-        if (accessToken.isNotEmpty()) {
-            updateState { it.copy(isLoggedIn = true) }
-        } else {
-            updateState { it.copy(isLoggedIn = false) }
+    private fun onCheckIfLoggedInSuccess(accessToken: Flow<String>) {
+        coroutineScope.launch {
+            accessToken.collect { token ->
+                if (token.isNotEmpty()) {
+                    updateState { it.copy(isLoggedIn = true) }
+                } else {
+                    updateState { it.copy(isLoggedIn = false) }
+                }
+            }
         }
     }
 

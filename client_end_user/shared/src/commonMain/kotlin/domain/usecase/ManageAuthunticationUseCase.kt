@@ -3,6 +3,7 @@ package domain.usecase
 import domain.gateway.IUserRemoteGateway
 import domain.gateway.local.ILocalConfigurationGateway
 import domain.usecase.validation.IValidationUseCase
+import kotlinx.coroutines.flow.Flow
 
 interface IManageAuthenticationUseCase {
     suspend fun createUser(
@@ -18,7 +19,7 @@ interface IManageAuthenticationUseCase {
 
     suspend fun removeRefreshToken()
 
-    suspend fun getAccessToken(): String
+    suspend fun getAccessToken(): Flow<String>
 }
 
 class ManageAuthenticationUseCase(
@@ -61,8 +62,8 @@ class ManageAuthenticationUseCase(
         return localGateway.removeRefreshToken()
     }
 
-    override suspend fun getAccessToken(): String {
-        return localGateway.getAccessToken()
+    override suspend fun getAccessToken(): Flow<String> {
+        return localGateway.getAccessTokenStream()
     }
 
 }
