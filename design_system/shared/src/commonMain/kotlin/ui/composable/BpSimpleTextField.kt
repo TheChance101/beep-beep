@@ -36,6 +36,7 @@ fun BpSimpleTextField(
     isError: Boolean = errorMessage.isNotEmpty(),
     onTrailingIconClick: () -> Unit = {},
     trailingIconEnabled: Boolean = onTrailingIconClick != {},
+    outlinedTextFieldDefaults: TextFieldColors = OutlinedTextFieldColorDefaults()
 ) {
     Column(
         modifier = modifier,
@@ -82,14 +83,7 @@ fun BpSimpleTextField(
                     )
                 }
             } else null,
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                containerColor = Theme.colors.surface,
-                unfocusedBorderColor = Theme.colors.contentBorder.copy(alpha = 0.1f),
-                focusedBorderColor = Theme.colors.contentTertiary.copy(alpha = 0.2f),
-                errorBorderColor = Theme.colors.primary.copy(alpha = 0.5f),
-                errorCursorColor = Theme.colors.primary,
-                cursorColor = Theme.colors.contentTertiary,
-            ),
+            colors = outlinedTextFieldDefaults,
         )
         AnimatedVisibility(isError) {
             Text(
@@ -102,3 +96,15 @@ fun BpSimpleTextField(
     }
 
 }
+
+@Composable
+fun OutlinedTextFieldColorDefaults() = OutlinedTextFieldDefaults.colors(
+    focusedContainerColor = Theme.colors.surface,
+    unfocusedContainerColor = Theme.colors.surface,
+    cursorColor = Theme.colors.contentTertiary,
+    errorCursorColor = Theme.colors.primary,
+    focusedBorderColor = Theme.colors.contentTertiary.copy(alpha = 0.2f),
+    unfocusedBorderColor = Theme.colors.contentBorder.copy(alpha = 0.1f),
+    errorBorderColor = Theme.colors.primary.copy(alpha = 0.5f),
+)
+

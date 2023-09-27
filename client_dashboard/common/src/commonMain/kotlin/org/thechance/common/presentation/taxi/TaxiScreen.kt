@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -66,7 +67,7 @@ class TaxiScreen :
             isEditMode = state.isEditMode
         )
         Box(
-            modifier = Modifier.background(Theme.colors.surface).fillMaxSize(),
+            modifier = Modifier.background(Theme.colors.surface).padding(40.kms).fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
 
@@ -84,6 +85,14 @@ class TaxiScreen :
                         text = state.searchQuery,
                         keyboardType = KeyboardType.Text,
                         trailingPainter = painterResource(Resources.Drawable.search),
+                        outlinedTextFieldDefaults =  OutlinedTextFieldDefaults.colors(
+                            focusedContainerColor = Theme.colors.surface,
+                            cursorColor = Theme.colors.contentTertiary,
+                            errorCursorColor = Theme.colors.primary,
+                            focusedBorderColor = Theme.colors.contentTertiary.copy(alpha = 0.2f),
+                            unfocusedBorderColor = Theme.colors.contentBorder.copy(alpha = 0.1f),
+                            errorBorderColor = Theme.colors.primary.copy(alpha = 0.5f),
+                        )
                     )
 
                     Column {
@@ -123,28 +132,27 @@ class TaxiScreen :
                         modifier = Modifier.cursorHoverIconHand()
                     )
                 }
-                AnimatedVisibility(visible = state.hasConnection){
-                    BpTable(
-                        hasConnection = state.hasConnection,
-                        data = state.pageInfo.data,
-                        key = { it.id },
-                        headers = state.tabHeader,
-                        modifier = Modifier.fillMaxWidth(),
-                        rowContent = { taxi ->
-                            TaxiRow(
-                                taxi = taxi,
-                                position = state.pageInfo.data.indexOf(taxi) + 1,
-                                onDropdownMenuClicked = listener::onShowTaxiMenu,
-                                onDropdownMenuDismiss = listener::onHideTaxiMenu,
-                                onEditTaxiClicked = listener::onEditTaxiClicked,
-                                onDeleteTaxiClicked = listener::onDeleteTaxiClicked,
-                            )
-                        },
-                    )
-                }
                 BpNoInternetConnection(!state.hasConnection){
                     listener.onRetry()
                 }
+                BpTable(
+                    hasConnection = state.hasConnection,
+                    data = state.pageInfo.data,
+                    key = { it.id },
+                    isVisible = state.hasConnection,
+                    headers = state.tabHeader,
+                    modifier = Modifier.fillMaxWidth(),
+                    rowContent = { taxi ->
+                        TaxiRow(
+                            taxi = taxi,
+                            position = state.pageInfo.data.indexOf(taxi) + 1,
+                            onDropdownMenuClicked = listener::onShowTaxiMenu,
+                            onDropdownMenuDismiss = listener::onHideTaxiMenu,
+                            onEditTaxiClicked = listener::onEditTaxiClicked,
+                            onDeleteTaxiClicked = listener::onDeleteTaxiClicked,
+                        )
+                    },
+                )
                 TaxisTableFooter(
                     selectedPage = state.currentPage,
                     numberItemInPage = state.specifiedTaxis,
