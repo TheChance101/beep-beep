@@ -40,6 +40,7 @@ Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
                      title: '',
                      subTitle: '',
                      text: '',
+                     color: 'black'
                    },
                     firstWaypointPushpinOptions: {
                        title: '',
