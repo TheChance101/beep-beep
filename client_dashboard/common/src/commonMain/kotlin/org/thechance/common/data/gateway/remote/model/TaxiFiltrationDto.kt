@@ -8,5 +8,5 @@ data class TaxiFiltrationDto(
     @SerialName("seats")
     val seats: Int?,
     @SerialName("status")
-    val status: Int?,
+    val status: Boolean?,
 )

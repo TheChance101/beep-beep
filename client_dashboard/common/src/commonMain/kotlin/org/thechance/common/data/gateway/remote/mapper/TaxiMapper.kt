@@ -84,10 +84,10 @@ fun getTaxiStatus(isAvailable: Boolean) =
     if (isAvailable) TaxiStatus.ONLINE else TaxiStatus.OFFLINE
 
 
-fun setTaxiStatus(status: TaxiStatus?): Int? {
+fun setTaxiStatus(status: TaxiStatus?): Boolean? {
     return when (status) {
-        TaxiStatus.ONLINE -> 1
-        TaxiStatus.OFFLINE -> 0
+        TaxiStatus.ONLINE -> true
+        TaxiStatus.OFFLINE -> false
         else -> null
     }
 }

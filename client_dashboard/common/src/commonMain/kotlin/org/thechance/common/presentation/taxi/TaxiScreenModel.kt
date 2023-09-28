@@ -33,13 +33,13 @@ class TaxiScreenModel(
 
     private fun getTaxis() {
         tryToExecute(
-            { manageTaxis.getTaxis(
-                username=  mutableState.value.searchQuery.trim(),
-                taxiFiltration= mutableState.value.taxiFilterUiState.toEntity(),
-                page=  mutableState.value.currentPage,
-                limit=  mutableState.value.specifiedTaxis
-            )
-            },
+            { state.value.run{
+                manageTaxis.getTaxis(
+                        username= searchQuery.trim(),
+                        taxiFiltration=taxiFilterUiState.toEntity(),
+                        page= currentPage,
+                        limit= specifiedTaxis)
+            } },
             ::onGetTaxisSuccessfully,
             ::onError
         )
@@ -47,8 +47,8 @@ class TaxiScreenModel(
 
     private fun onGetTaxisSuccessfully(taxis: DataWrapper<Taxi>) {
         updateState { it.copy(pageInfo = taxis.toDetailsUiState(), isLoading = false, hasConnection = true) }
-        if (mutableState.value.currentPage > mutableState.value.pageInfo.totalPages) {
-            onPageClick(mutableState.value.pageInfo.totalPages)
+        if (state.value.currentPage >state.value.pageInfo.totalPages) {
+            onPageClick(state.value.pageInfo.totalPages)
         }
     }
 
@@ -191,7 +191,7 @@ class TaxiScreenModel(
     }
 
     override fun onSaveClicked() {
-        val newTaxi = mutableState.value.newTaxiInfo
+        val newTaxi =state.value.newTaxiInfo
         tryToExecute(
             { manageTaxis.updateTaxi(newTaxi.toEntity(), newTaxi.id) },
             ::onUpdateTaxiSuccessfully,
@@ -202,20 +202,23 @@ class TaxiScreenModel(
     private fun onUpdateTaxiSuccessfully(taxi: Taxi) {
         updateState { it.copy(isAddNewTaxiDialogVisible = false) }
         setTaxiMenuVisibility(taxi.id, false)
-        mutableState.value.pageInfo.data.find { it.id == taxi.id }?.let { taxiDetailsUiState ->
-            val index = mutableState.value.pageInfo.data.indexOf(taxiDetailsUiState)
-            val newTaxi = mutableState.value.pageInfo.data.toMutableList().apply {
-                set(index, taxi.toDetailsUiState())
+        state.value.pageInfo.run{
+            data.find { it.id == taxi.id }?.let { taxiDetailsUiState ->
+                val index =data.indexOf(taxiDetailsUiState)
+                val newTaxi =data.toMutableList().apply {
+                    set(index, taxi.toDetailsUiState())
+                }
+                updateState { it.copy(pageInfo = it.pageInfo.copy(data = newTaxi)) }
+                //todo:show snack bar
             }
-            updateState { it.copy(pageInfo = it.pageInfo.copy(data = newTaxi)) }
-            //todo:show snack bar
         }
+
     }
 
     override fun onCreateTaxiClicked() {
         clearAddTaxiErrorState()
         tryToExecute(
-            { manageTaxis.createTaxi(mutableState.value.newTaxiInfo.toEntity()) },
+            { manageTaxis.createTaxi(state.value.newTaxiInfo.toEntity()) },
             ::onCreateTaxiSuccessfully,
             ::onError
         )
@@ -224,7 +227,7 @@ class TaxiScreenModel(
     private fun onCreateTaxiSuccessfully(taxi: Taxi) {
         updateState { it.copy(isAddNewTaxiDialogVisible = false) }
         val newTaxi =
-            mutableState.value.taxis.toMutableList().apply { add(taxi.toDetailsUiState()) }
+           state.value.taxis.toMutableList().apply { add(taxi.toDetailsUiState()) }
         updateState { it.copy(taxis = newTaxi, isLoading = false) }
         clearTaxiInfoState()
         getTaxis()
@@ -296,24 +299,8 @@ class TaxiScreenModel(
 
     override fun onSaveFilterClicked() {
         updateState { it.copy(isFilterDropdownMenuExpanded = false) }
-        tryToExecute(
-            {
-                manageTaxis.getTaxis(
-                    username = state.value.searchQuery,
-                    taxiFiltration = mutableState.value.taxiFilterUiState.toEntity(),
-                    page = mutableState.value.currentPage,
-                    limit = mutableState.value.specifiedTaxis
-                )
-            },
-            ::onFilterTaxiSuccessfully,
-            ::onError
-        )
+        getTaxis()
     }
-
-    private fun onFilterTaxiSuccessfully(taxis: DataWrapper<Taxi>) {
-        updateState { it.copy(pageInfo = taxis.toDetailsUiState(), isLoading = false) }
-    }
-
     //endregion
 
     //region taxi menu listener
@@ -356,7 +343,7 @@ class TaxiScreenModel(
     }
 
     private fun setTaxiMenuVisibility(id: String, isExpanded: Boolean) {
-        val currentTaxisState = mutableState.value.pageInfo.data
+        val currentTaxisState =state.value.pageInfo.data
         val selectedTaxiState = currentTaxisState.first { it.id == id }
         val updatedTaxiState = selectedTaxiState.copy(isTaxiMenuExpanded = isExpanded)
         updateState {
