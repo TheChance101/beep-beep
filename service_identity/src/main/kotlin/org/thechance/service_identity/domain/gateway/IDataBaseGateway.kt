@@ -28,7 +28,7 @@ interface IDataBaseGateway {
 
     suspend fun createUser(saltedHash: SaltedHash, country: String, user: UserInfo): UserManagement
 
-    suspend fun updateUser(userId: String, fullName: String?, email: String?): UserManagement
+    suspend fun updateUser(userId: String, fullName: String?, phone: String?): UserManagement
 
     suspend fun deleteUser(id: String): Boolean
 

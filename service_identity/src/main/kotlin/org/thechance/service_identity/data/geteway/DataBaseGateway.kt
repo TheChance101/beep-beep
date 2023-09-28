@@ -5,6 +5,7 @@ import com.mongodb.client.model.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.bson.conversions.Bson
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
 import org.litote.kmongo.*
@@ -176,14 +177,14 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         }
     }
 
-    override suspend fun updateUser(userId: String, fullName: String?, email: String?): UserManagement {
+    override suspend fun updateUser(userId: String, fullName: String?, phone: String?): UserManagement {
         try {
+            val fieldsToUpdate = mutableListOf<Bson>()
+            fullName?.let { fieldsToUpdate.add(Updates.set(UserCollection::fullName.name, it)) }
+            phone?.let { fieldsToUpdate.add(Updates.set(UserCollection::phone.name, it)) }
             return dataBaseContainer.userCollection.findOneAndUpdate(
                 filter = UserCollection::id eq ObjectId(userId),
-                update = Updates.combine(
-                    email?.let { Updates.set(UserCollection::email.name, it) },
-                    fullName?.let { Updates.set(UserCollection::fullName.name, it) },
-                ),
+                update = Updates.combine(fieldsToUpdate),
                 options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
             )?.toManagedEntity() ?: throw UserAlreadyExistsException(NOT_FOUND)
         } catch (exception: MongoWriteException) {

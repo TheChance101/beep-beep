@@ -18,10 +18,8 @@ import org.thechance.service_identity.endpoints.util.extractApplicationIdHeader
 import org.thechance.service_identity.endpoints.util.extractInt
 
 fun Route.userRoutes() {
-
     val manageUserAccount: IUserAccountManagementUseCase by inject()
     val manageWallet: IManageWalletUseCase by inject()
-
 
     route("/user") {
 
@@ -48,11 +46,8 @@ fun Route.userRoutes() {
             val id = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val params = call.receiveParameters()
             val fullName = params["fullName"]?.trim()
-            val email = params["email"]?.trim()
-
-            val result = manageUserAccount.updateUser(
-                id = id, fullName = fullName.toString(), email = email.toString()
-            )
+            val phone = params["phone"]?.trim()
+            val result = manageUserAccount.updateUser(id = id, fullName = fullName, phone = phone)
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 

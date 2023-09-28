@@ -9,7 +9,7 @@ interface IUserInfoValidationUseCase {
 
     fun validateUserInformation(user: UserInfo, password: String?)
 
-    fun validateUpdateUserInformation(fullName: String?, email: String?)
+    fun validateUpdateUserInformation(fullName: String?, phone: String?)
 
     fun validateUsernameIsNotEmpty(username: String): Boolean
 
@@ -65,7 +65,7 @@ class UserInfoValidationUseCase : IUserInfoValidationUseCase {
         }
     }
 
-    override fun validateUpdateUserInformation(fullName: String?, email: String?) {
+    override fun validateUpdateUserInformation(fullName: String?, phone: String?) {
         val reasons = mutableListOf<String>()
 
         fullName?.let {
@@ -74,10 +74,10 @@ class UserInfoValidationUseCase : IUserInfoValidationUseCase {
             }
         }
 
-        email?.let {
-            if (!validateEmail(it)) {
-                reasons.add(INVALID_EMAIL)
-            }
+        phone?.let {
+//            if (!v(it)) {
+//                reasons.add(INVALID_EMAIL)
+//            }
         }
 
         if (reasons.isNotEmpty()) {
