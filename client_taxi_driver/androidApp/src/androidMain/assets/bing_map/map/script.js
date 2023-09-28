@@ -9,29 +9,43 @@ map = new Microsoft.Maps.Map('#myMap', {
     maxZoom: 18
 });
     var center = map.getCenter();
-           var pin = new Microsoft.Maps.Pushpin(center, {
-               color: 'red',
-           });
-           map.entities.push(pin);
+          getPin();
 }
 
 function getPin(){
-    var pushpin = new Microsoft.Maps.Pushpin(map.getCenter(), null);
+    var pushpin =  new Microsoft.Maps.Pushpin(center, { color: 'red',});
     map.entities.push(pushpin);
 }
 
-function getDirections(lat,lng,latt,lngg){
+function getDirections(currentLat,currentLng,lat,lng){
+clearPin();
 Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
     directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
-//    directionsManager.setRequestOptions({ routeMode: Microsoft.Maps.Directions.RouteMode.driving,routeDraggable: false,autoUpdateMapView: false });
+    directionsManager.setRequestOptions({
+    routeMode: Microsoft.Maps.Directions.RouteMode.driving,
+    routeDraggable: false,
+    distanceUnit: Microsoft.Maps.Directions.DistanceUnit.km,
+    maxRoutes: 1,
+    routeOptimization: Microsoft.Maps.Directions.RouteOptimization.timeWithTraffic
+    });
     directionsManager.setRenderOptions({
                    drivingPolylineOptions: {
                        strokeColor: 'red',
-                       strokeThickness: 8
+                       strokeThickness: 8,
                    },
-                   autoUpdateMapView:false
+                   autoUpdateMapView:false,
+                   lastWaypointPushpinOptions: {
+                     title: '',
+                     subTitle: '',
+                     text: '',
+                   },
+                    firstWaypointPushpinOptions: {
+                       title: '',
+                       subTitle: '',
+                       text: '',
+                        },
                });
-    var waypoint1 = new Microsoft.Maps.Directions.Waypoint({ location: new Microsoft.Maps.Location(latt,lngg) });
+    var waypoint1 = new Microsoft.Maps.Directions.Waypoint({ location: new Microsoft.Maps.Location(currentLat,currentLng) });
     var waypoint2 = new Microsoft.Maps.Directions.Waypoint({ location: new Microsoft.Maps.Location(lat,lng) });
     directionsManager.addWaypoint(waypoint1);
     directionsManager.addWaypoint(waypoint2);
@@ -46,7 +60,7 @@ directionsManager.clearDisplay();
 
 function createInfiniteLoopFunction(latitude,lng) {
             return function() {
-            clearMap()
+            clearPin()
     var pushpin = new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(latitude,lng), {
         icon: 'user_pin.svg',
      anchor: new Microsoft.Maps.Point(20, 20)
@@ -65,7 +79,7 @@ function createCircle(center, radius, color) {
     return new Microsoft.Maps.Polygon(locs, { fillColor: color, strokeThickness: 0 });
 }
 
-function clearMap(){
+function clearPin(){
 map.entities.clear();
 }
 

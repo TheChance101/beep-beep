@@ -23,7 +23,6 @@ actual fun MapWebView(
     destination: Location?,
 ) {
     var webView: WebView? by remember { mutableStateOf(null) }
-    val scope = rememberCoroutineScope()
     AnimatedVisibility(destination == null) {
         LaunchedEffect(true) {
             webView?.evaluateJavascript(" GetMap()", null)
