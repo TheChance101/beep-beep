@@ -1,5 +1,6 @@
 package org.thechance.common.presentation.composables.table
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -44,62 +45,71 @@ fun <T> ColumnScope.BpTable(
     borderColor: Color = Theme.colors.contentBorder,
     headerColor: Color = Theme.colors.background,
     rowsColor: Color = Theme.colors.surface,
+    isVisible: Boolean = true,
     rowContent: @Composable RowScope.(T) -> Unit,
 ) {
     Box(modifier = Modifier.weight(1f).padding(bottom = 16.kms)) {
-        LazyColumn(
-            modifier = modifier
-                .clip(shape = shape)
-                .border(border, borderColor, shape),
-        ) {
-            stickyHeader {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(headerColor)
-                        .padding(rowPadding)
-                        .heightIn(max = maxHeight),
-                    verticalAlignment = Alignment.CenterVertically
+        Column(modifier = Modifier) {
+            AnimatedVisibility(visible = isVisible) {
+                LazyColumn(
+                        modifier = modifier
+                            .clip(shape = shape)
+                            .border(border, borderColor, shape),
                 ) {
-                    headers.forEach { header ->
-                        Text(
-                            header.text,
-                            style = headerTextStyle,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.weight(header.weight)
-                        )
+                    stickyHeader {
+                        Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(headerColor)
+                                    .padding(rowPadding)
+                                    .heightIn(max = maxHeight),
+                                verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            headers.forEach { header ->
+                                Text(
+                                        header.text,
+                                        style = headerTextStyle,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        modifier = Modifier.weight(header.weight)
+                                )
+                            }
+                        }
+                        Divider(Modifier.fillMaxWidth(), thickness = border, color = borderColor)
                     }
-                }
-                Divider(Modifier.fillMaxWidth(), thickness = border, color = borderColor)
-            }
 
-            if (data.isNotEmpty()) {
-                items(data, key = key) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(rowsColor)
-                            .padding(rowPadding)
-                            .heightIn(max = maxHeight),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(16.kms),
-                    ) {
-                        rowContent(it)
+                    if (data.isNotEmpty()) {
+                        items(data, key = key) {
+                            Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(rowsColor)
+                                        .padding(rowPadding)
+                                        .heightIn(max = maxHeight),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(16.kms),
+                            ) {
+                                rowContent(it)
+                            }
+                            Divider(
+                                    Modifier.fillMaxWidth(),
+                                    thickness = border,
+                                    color = borderColor
+                            )
+                        }
                     }
-                    Divider(Modifier.fillMaxWidth(), thickness = border, color = borderColor)
-                }
-            }
 
-            if (data.isEmpty() && hasConnection) {
-                item {
-                    Box(modifier = Modifier.fillParentMaxSize()) {
-                        Text(
-                            text = Resources.Strings.noMatchesFound,
-                            modifier = Modifier.align(Alignment.Center).padding(16.kms),
-                            style = Theme.typography.titleMedium,
-                            color = Theme.colors.contentSecondary,
-                        )
+                    if (data.isEmpty() && hasConnection) {
+                        item {
+                            Box(modifier = Modifier.fillParentMaxSize()) {
+                                Text(
+                                        text = Resources.Strings.noMatchesFound,
+                                        modifier = Modifier.align(Alignment.Center).padding(16.kms),
+                                        style = Theme.typography.titleMedium,
+                                        color = Theme.colors.contentSecondary,
+                                )
+                            }
+                        }
                     }
                 }
             }

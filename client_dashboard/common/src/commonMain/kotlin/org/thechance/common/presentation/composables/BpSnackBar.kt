@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import com.beepbeep.designSystem.ui.theme.Theme
@@ -19,13 +20,14 @@ import org.thechance.common.presentation.resources.Resources
 fun SnackBar(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
+    backgroundColor: Color = Theme.colors.surface,
     content: @Composable () -> Unit
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .background(color = Theme.colors.surface)
+            .background(color = backgroundColor)
             .width(512.kms)
             .border(
                 width = 1.kms, color = Theme.colors.divider,

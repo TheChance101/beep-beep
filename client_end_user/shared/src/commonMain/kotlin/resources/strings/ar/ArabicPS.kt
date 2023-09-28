@@ -95,4 +95,6 @@ data class ArabicPS(
     override val sweets: String= "حلويات",
     override val free: String= "مجاناً",
     override val loginToAddToFavourite: String= "الرجاء تسجيل الدخول مشان تضيف المطاعم المفضلة",
+    override val invalidAddress: String = "العنوان مو صالح",
+    override val yourAddress: String = "عنوانك",
 ) : IStringResources

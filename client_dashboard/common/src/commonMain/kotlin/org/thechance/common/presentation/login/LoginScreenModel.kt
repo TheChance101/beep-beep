@@ -1,6 +1,5 @@
 package org.thechance.common.presentation.login
 
-import kotlinx.coroutines.delay
 import org.thechance.common.domain.usecase.ILoginUserUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
 import org.thechance.common.presentation.restaurant.ErrorWrapper
@@ -20,32 +19,29 @@ class LoginScreenModel(
     }
 
     override fun onLoginClicked() {
-        val currentState = mutableState.value
-        clearErrorState()
-        tryToExecute(
-            {
-                login.loginUser(
-                    username = currentState.username,
-                    password = currentState.password,
-                )
-            },
-            onSuccess = { onLoginSuccess() },
-            onError = ::onError
-        )
+        updateState { it.copy(isLoading = true) }
+        clearState()
+        mutableState.value.apply {
+            tryToExecute(
+                    { login.loginUser(username = username, password = password) },
+                    { onLoginSuccess() },
+                    ::onError
+            )
+        }
+
     }
 
     private fun onLoginSuccess() {
-        updateState { it.copy(isLoading = false, error = null, hasInternetConnection = true) }
+        updateState { it.copy(isLoading = false) }
         sendNewEffect(LoginUIEffect.LoginSuccess)
     }
 
     private fun onError(error: ErrorState) {
-        updateState { it.copy(isLoading = false, error = error) }
+        updateState { it.copy(isLoading = false) }
         handleErrorState(error)
     }
 
     private fun handleErrorState(error: ErrorState) {
-        updateState { it.copy(isLoading = false) }
         when (error) {
             is ErrorState.MultipleErrors -> {
                 val errorStates = error.errors
@@ -57,50 +53,40 @@ class LoginScreenModel(
                             },
                         isUserError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidUserName>()?.let { error ->
                             ErrorWrapper(error.errorMessage, true)
-                        }
+                        },
                     )
                 }
-            }
-
-            is ErrorState.InvalidPassword -> {
+               val error= errorStates.firstInstanceOfOrNull<ErrorState.InvalidPermission>()
                 updateState {
-                    it.copy(
-                        isLoading = false,
-                        error = error,
-                        isPasswordError = ErrorWrapper(error.errorMessage, true)
-                    )
-                }
+                    it.copy(isSnackBarVisible =true, snackBarTitle =
+                    errorStates.firstInstanceOfOrNull<ErrorState.InvalidPermission>()?.errorMessage) }
             }
-
-            is ErrorState.UserNotExist -> {
-                updateState {
-                    it.copy(
-                        isLoading = false,
-                        error = error,
-                        isUserError = ErrorWrapper(error.errorMessage, true)
-                    )
-                }
-            }
-
             ErrorState.NoConnection -> {
-                updateState { it.copy(hasInternetConnection = false) }
+                updateState { it.copy(isSnackBarVisible =true, snackBarTitle = null,
+                        ) }
             }
 
-            else -> {}
+            else -> {
+                updateState { it.copy(isSnackBarVisible =true, snackBarTitle = null, ) }
+            }
         }
     }
 
     override fun onSnackBarDismiss() {
-        updateState { it.copy(hasInternetConnection = true) }
+        updateState { it.copy(
+                isSnackBarVisible =false,
+                ) }
     }
 
-    private fun clearErrorState() =
+    private fun clearState() =
         updateState {
             it.copy(
-                error = null,
                 isLoading = false,
                 isPasswordError = ErrorWrapper(),
-                isUserError = ErrorWrapper()
+                isUserError = ErrorWrapper(),
+                isSnackBarVisible =false,
+                snackBarTitle = null,
+
             )
         }
 }

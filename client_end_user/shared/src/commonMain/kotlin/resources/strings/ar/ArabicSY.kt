@@ -91,6 +91,8 @@ data class ArabicSY(
     override val address: String = "العنوان",
     override val save: String= "حفظ",
     override val pleaseLogin: String="سجل دخول حتى توصل حسابك يخوو",
+    override val invalidAddress: String = "العنوان مش صالح",
+    override val yourAddress: String = "عنوانك",
     override val mostOrdered: String = "الأكثر طلباً",
     override val sweets: String= "حلويات",
     override val free: String= "مجاناً",
