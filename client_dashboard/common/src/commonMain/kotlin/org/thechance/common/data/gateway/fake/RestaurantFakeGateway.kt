@@ -2,12 +2,10 @@ package org.thechance.common.data.gateway.fake
 
 import org.thechance.common.data.gateway.remote.mapper.toEntity
 import org.thechance.common.data.gateway.remote.model.DataWrapperDto
+import org.thechance.common.data.gateway.remote.model.LocationDto
 import org.thechance.common.data.gateway.remote.model.RestaurantDto
 import org.thechance.common.data.gateway.remote.model.toEntity
-import org.thechance.common.domain.entity.Cuisine
-import org.thechance.common.domain.entity.DataWrapper
-import org.thechance.common.domain.entity.NewRestaurantInfo
-import org.thechance.common.domain.entity.Restaurant
+import org.thechance.common.domain.entity.*
 import org.thechance.common.domain.getway.IRestaurantGateway
 import java.util.UUID
 import kotlin.math.ceil

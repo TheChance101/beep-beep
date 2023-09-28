@@ -1,10 +1,11 @@
 package org.thechance.common.data.gateway.remote.mapper
 
-import org.thechance.common.data.gateway.remote.model.Location
+import org.thechance.common.data.gateway.remote.model.LocationDto
 import org.thechance.common.data.gateway.remote.model.RestaurantCreateDto
 import org.thechance.common.data.gateway.remote.model.RestaurantDto
-import org.thechance.common.domain.entity.NewRestaurantInfo
+import org.thechance.common.domain.entity.Location
 import org.thechance.common.domain.entity.Restaurant
+import org.thechance.common.domain.entity.RestaurantInformation
 
 fun RestaurantDto.toEntity() = Restaurant(
     id = id ?: "",

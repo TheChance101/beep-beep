@@ -357,7 +357,9 @@ class RestaurantScreenModel(
     }
 
     private fun setRestaurantMenuVisibility(id: String, isExpanded: Boolean) {
+        println("setRestaurantMenuVisibility $id $isExpanded")
         val currentRestaurantState = state.value.restaurants
+        println("currentRestaurantState $currentRestaurantState")
         val selectedRestaurantState = currentRestaurantState.first { it.id == id }
         val updateRestaurantState = selectedRestaurantState.copy(isExpanded = isExpanded)
         updateState {
@@ -390,6 +392,7 @@ class RestaurantScreenModel(
     }
 
     override fun onClickEditRestaurantMenuItem(restaurantId: String) {
+        println("onClickEditRestaurantMenuItem $restaurantId")
         getRestaurantById(restaurantId)
         setRestaurantMenuVisibility(restaurantId, false)
         updateState { it.copy(isNewRestaurantInfoDialogVisible = true, isEditMode = true) }
