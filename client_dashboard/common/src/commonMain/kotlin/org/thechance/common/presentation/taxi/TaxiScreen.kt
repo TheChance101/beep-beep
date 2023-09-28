@@ -259,7 +259,7 @@ class TaxiScreen :
                         modifier = Modifier.padding(horizontal = 24.kms, vertical = 16.kms)
                     )
                     SeatsBar(
-                        selectedSeatsCount = taxi.seats,
+                        selectedSeatsCount = taxi.seats?: 0,
                         count = 6,
                         selectedIcon = painterResource(Resources.Drawable.seatFilled),
                         notSelectedIcon = painterResource(Resources.Drawable.seatOutlined),
