@@ -141,6 +141,8 @@ class TaxiScreen :
                     key = { it.id },
                     isVisible = state.hasConnection,
                     headers = state.tabHeader,
+                    limitItem=state.specifiedTaxis,
+                    isLoading = state. isLoading,
                     modifier = Modifier.fillMaxWidth(),
                     rowContent = { taxi ->
                         TaxiRow(

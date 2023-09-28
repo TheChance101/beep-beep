@@ -1,6 +1,10 @@
 package org.thechance.common.presentation.taxi
 
+import cafe.adriel.voyager.core.model.coroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.thechance.common.domain.entity.CarColor
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Taxi
@@ -32,6 +36,7 @@ class TaxiScreenModel(
     }
 
     private fun getTaxis() {
+        updateState { it.copy(isLoading = true) }
         tryToExecute(
             {
                 manageTaxis.getTaxis(
