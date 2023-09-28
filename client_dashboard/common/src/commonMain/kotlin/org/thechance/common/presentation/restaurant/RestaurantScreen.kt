@@ -74,7 +74,7 @@ class RestaurantScreen :
         ) {
             RestaurantScreenTopRow(state = state, listener = listener)
             RestaurantTable(state = state, listener = listener)
-            BpNoInternetConnection(!state.hasConnection){
+            BpNoInternetConnection(!state.hasConnection) {
                 listener.onRetry()
             }
             RestaurantPagingRow(state = state, listener = listener)
@@ -99,7 +99,7 @@ class RestaurantScreen :
                 text = state.searchQuery,
                 keyboardType = KeyboardType.Text,
                 trailingPainter = painterResource(Resources.Drawable.search),
-                outlinedTextFieldDefaults =  OutlinedTextFieldDefaults.colors(
+                outlinedTextFieldDefaults = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = Theme.colors.surface,
                     cursorColor = Theme.colors.contentTertiary,
                     errorCursorColor = Theme.colors.primary,
@@ -139,24 +139,23 @@ class RestaurantScreen :
         state: RestaurantUiState,
         listener: RestaurantInteractionListener,
     ) {
-            BpTable(
-                data = state.restaurants,
-                key = { it.id },
-                headers = state.tableHeader,
-                modifier = Modifier.fillMaxWidth(),
-                isVisible = state.hasConnection,
-                rowContent = { restaurant ->
-                    RestaurantRow(
-                        onClickEditRestaurant = listener::showEditRestaurantMenu,
-                        onEditRestaurantDismiss = listener::hideEditRestaurantMenu,
-                        onClickDeleteRestaurantMenuItem = listener::onClickDeleteRestaurantMenuItem,
-                        onClickEditRestaurantMenuItem = listener::onClickEditRestaurantMenuItem,
-                        position = state.restaurants.indexOf(restaurant) + 1,
-                        restaurant = restaurant,
-                        editRestaurantMenu = state.editRestaurantMenu
-                    )
-                },
-            )
+        BpTable(
+            data = state.restaurants,
+            key = { it.id },
+            headers = state.tableHeader,
+            modifier = Modifier.fillMaxWidth(),
+            isVisible = state.hasConnection,
+            rowContent = { restaurant ->
+                RestaurantRow(
+                    onClickEditRestaurant = listener::onShowRestaurantMenu,
+                    onEditRestaurantDismiss = listener::onHideRestaurantMenu,
+                    onClickDeleteRestaurantMenuItem = listener::onClickDeleteRestaurantMenuItem,
+                    onClickEditRestaurantMenuItem = { listener.onClickEditRestaurantMenuItem(it) },
+                    position = state.restaurants.indexOf(restaurant) + 1,
+                    restaurant = restaurant,
+                )
+            },
+        )
     }
 
     @Composable
@@ -250,15 +249,14 @@ class RestaurantScreen :
             Image(
                 painter = painterResource(Resources.Drawable.dots),
                 contentDescription = null,
-                modifier = Modifier.noRipple { onClickEditRestaurant(restaurant.name) },
+                modifier = Modifier.noRipple { onClickEditRestaurant(restaurant.id) },
                 colorFilter = ColorFilter.tint(color = Theme.colors.contentPrimary)
             )
             EditRestaurantDropdownMenu(
                 restaurant = restaurant,
-                onClickEdit = onClickEditRestaurantMenuItem,
+                onClickEdit = { onClickEditRestaurantMenuItem(it.id) },
                 onClickDelete = onClickDeleteRestaurantMenuItem,
                 onDismissRequest = onEditRestaurantDismiss,
-                editRestaurantMenu = editRestaurantMenu
             )
         }
     }
