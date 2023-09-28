@@ -1,54 +1,28 @@
 package org.thechance.service_identity.data.geteway
 
 import com.mongodb.MongoWriteException
-import com.mongodb.client.model.Filters
-import com.mongodb.client.model.FindOneAndUpdateOptions
-import com.mongodb.client.model.IndexOptions
-import com.mongodb.client.model.Indexes
-import com.mongodb.client.model.ReturnDocument
-import com.mongodb.client.model.Sorts
-import com.mongodb.client.model.Updates
+import com.mongodb.client.model.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.bson.types.ObjectId
 import org.koin.core.annotation.Single
-import org.litote.kmongo.addToSet
-import org.litote.kmongo.and
-import org.litote.kmongo.bitsAllSet
+import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
-import org.litote.kmongo.eq
-import org.litote.kmongo.inc
-import org.litote.kmongo.lookup
-import org.litote.kmongo.match
-import org.litote.kmongo.or
-import org.litote.kmongo.pull
-import org.litote.kmongo.regex
-import org.litote.kmongo.set
-import org.litote.kmongo.setTo
-import org.litote.kmongo.setValue
 import org.thechance.service_identity.data.DataBaseContainer
-import org.thechance.service_identity.data.collection.AddressCollection
-import org.thechance.service_identity.data.collection.DetailedUser
-import org.thechance.service_identity.data.collection.UserCollection
-import org.thechance.service_identity.data.collection.UserDetailsCollection
-import org.thechance.service_identity.data.collection.WalletCollection
+import org.thechance.service_identity.data.DataBaseContainer.Companion.ADDRESS_COLLECTION_NAME
+import org.thechance.service_identity.data.DataBaseContainer.Companion.WALLET_COLLECTION
+import org.thechance.service_identity.data.collection.*
 import org.thechance.service_identity.data.collection.mappers.toCollection
 import org.thechance.service_identity.data.collection.mappers.toEntity
 import org.thechance.service_identity.data.collection.mappers.toManagedEntity
-import org.thechance.service_identity.data.collection.mappers.toUserEntity
+import org.thechance.service_identity.data.util.getNonEmptyFieldsMap
 import org.thechance.service_identity.data.util.isUpdatedSuccessfully
 import org.thechance.service_identity.data.util.paginate
 import org.thechance.service_identity.domain.entity.*
 import org.thechance.service_identity.domain.gateway.IDataBaseGateway
 import org.thechance.service_identity.domain.security.SaltedHash
-import org.thechance.service_identity.domain.util.ERROR_IN_DB
-import org.thechance.service_identity.domain.util.NOT_FOUND
-import org.thechance.service_identity.domain.util.ResourceNotFoundException
-import org.thechance.service_identity.domain.util.USER_ALREADY_EXISTS
-import org.thechance.service_identity.domain.util.USER_NOT_FOUND
-import org.thechance.service_identity.domain.util.UserAlreadyExistsException
-import org.thechance.service_identity.domain.util.getCountryForLocation
+import org.thechance.service_identity.domain.util.*
 
 @Single
 class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataBaseGateway {
@@ -60,18 +34,13 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
     //region Address
     override suspend fun addLocation(userId: String, location: Location): Address {
         val address = AddressCollection(
-            userId = ObjectId(userId),
-            location = location.toCollection()
+            userId = ObjectId(userId), location = location.toCollection()
         )
-        dataBaseContainer.userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::userId eq ObjectId(userId),
-            update = Updates.addToSet(UserDetailsCollection::addressIds.name, address.id)
+        dataBaseContainer.userCollection.updateOne(
+            filter = UserCollection::id eq ObjectId(userId),
+            update = Updates.addToSet(UserCollection::addressIds.name, address.id)
         )
         return if (dataBaseContainer.addressCollection.insertOne(address).wasAcknowledged()) {
-            val addresses = getUserAddresses(userId)
-            if (addresses.size == 1) {
-                updateUserCountry(userId, getUserCountry(userId))
-            }
             address.toEntity()
         } else {
             throw ResourceNotFoundException(ERROR_IN_DB)
@@ -84,17 +53,11 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
             address = address.address,
             location = address.location?.toCollection()
         )
-        dataBaseContainer.userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::userId eq ObjectId(userId),
-            update = Updates.addToSet(UserDetailsCollection::addressIds.name, address.id)
+        dataBaseContainer.userCollection.updateOne(
+            filter = UserCollection::id eq ObjectId(userId),
+            update = Updates.addToSet(UserCollection::addressIds.name, addressCollection.id)
         )
-        return if (dataBaseContainer.addressCollection.insertOne(addressCollection)
-                .wasAcknowledged()
-        ) {
-            val addresses = getUserAddresses(userId)
-            if (addresses.size == 1) {
-                updateUserCountry(userId, getUserCountry(userId))
-            }
+        return if (dataBaseContainer.addressCollection.insertOne(addressCollection).wasAcknowledged()) {
             addressCollection.toEntity()
         } else {
             throw ResourceNotFoundException(ERROR_IN_DB)
@@ -133,25 +96,6 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         ).toList().toEntity()
     }
 
-    override suspend fun getUserCountry(userId: String): String {
-        val userAddresses = getUserAddresses(userId)
-        val location = userAddresses.firstOrNull()?.location
-        return getCountryForLocation(location)
-    }
-
-    override suspend fun updateUserCountry(userId: String, country: String): Boolean {
-        try {
-            dataBaseContainer.userCollection.find(filter = (UserCollection::id eq ObjectId(userId)))
-            return dataBaseContainer.userCollection.updateOneById(
-                ObjectId(userId),
-                set(UserCollection::country setTo country),
-                updateOnlyNotNullProperties = true
-            ).isUpdatedSuccessfully()
-        } catch (exception: MongoWriteException) {
-            throw UserAlreadyExistsException(USER_ALREADY_EXISTS)
-        }
-    }
-
     //endregion
 
     //region User
@@ -174,30 +118,27 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
     }
 
     override suspend fun getUserById(id: String): User {
-        val wallet = getWalletByUserId(id)
-        val userAddresses = getUserAddresses(id)
-        val userPermission = getUserPermission(id)
-        val location = userAddresses.firstOrNull()?.location
-        val country = getCountryForLocation(location)
         return dataBaseContainer.userCollection.aggregate<DetailedUser>(
             match(
-                UserCollection::id eq ObjectId(id),
-                UserCollection::isDeleted eq false
+                and(
+                    UserCollection::id eq ObjectId(id),
+                    UserCollection::isDeleted eq false
+                )
             ),
             lookup(
-                localField = UserCollection::id.name,
-                from = DataBaseContainer.USER_DETAILS_COLLECTION,
+                from = WALLET_COLLECTION,
+                localField = UserCollection::walletId.name,
                 foreignField = "_id",
-                newAs = DetailedUser::details.name
-            )
-        ).toList().toUserEntity(
-            wallet.walletBalance,
-            wallet.currency,
-            userAddresses,
-            country,
-            userPermission
-        ).firstOrNull()
-            ?: throw ResourceNotFoundException(NOT_FOUND)
+                newAs = "wallet"
+            ),
+            unwind("\$wallet"),
+            lookup(
+                from = ADDRESS_COLLECTION_NAME,
+                localField = UserCollection::addressIds.name,
+                foreignField = "_id",
+                newAs = "addresses"
+            ),
+        ).toList().firstOrNull()?.toEntity() ?: throw UserAlreadyExistsException(USER_NOT_FOUND)
     }
 
 
@@ -210,7 +151,7 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         val orConditions = options.permissions?.map { permission ->
             or(
                 UserCollection::permission eq permission,
-                UserCollection::permission.bitsAllSet(permission.toLong()) // Convert to Long
+                UserCollection::permission.bitsAllSet(permission.toLong())
             )
         }
 
@@ -220,22 +161,14 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
                 orConditions?.let { or(*orConditions.toTypedArray()) },
                 UserCollection::isDeleted eq false,
             )
-        ).projection(
-            UserCollection::id,
-            UserCollection::fullName,
-            UserCollection::username,
-            UserCollection::email,
-            UserCollection::country,
-            UserCollection::permission,
         ).paginate(options.page, options.limit).toList().toManagedEntity()
     }
 
-    override suspend fun createUser(saltedHash: SaltedHash, user: User): UserManagement {
+    override suspend fun createUser(saltedHash: SaltedHash, country: String, user: UserInfo): UserManagement {
         val userNameExist =
             dataBaseContainer.userCollection.findOne(UserCollection::username eq user.username)
         if (userNameExist == null) {
-            val userDocument = user.toCollection(hash = saltedHash.hash, salt = saltedHash.salt)
-            dataBaseContainer.userDetailsCollection.insertOne(UserDetailsCollection(userId = userDocument.id))
+            val userDocument = user.toCollection(hash = saltedHash.hash, salt = saltedHash.salt, country)
             dataBaseContainer.userCollection.insertOne(userDocument)
             return userDocument.toManagedEntity()
         } else {
@@ -243,39 +176,16 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         }
     }
 
-    override suspend fun updateUser(
-        id: String, saltedHash: SaltedHash?, fullName: String?, username: String?, email: String?
-    ): Boolean {
+    override suspend fun updateUser(userId: String, fullName: String?, email: String?): UserManagement {
         try {
-            dataBaseContainer.userCollection.find(filter = (UserCollection::username eq username))
-            return dataBaseContainer.userCollection.updateOneById(
-                ObjectId(id),
-                set(
-                    UserCollection::hashedPassword setTo saltedHash?.hash,
-                    UserCollection::salt setTo saltedHash?.salt,
-                    UserCollection::username setTo username,
-                    UserCollection::fullName setTo fullName,
-                    UserCollection::email setTo email,
+            return dataBaseContainer.userCollection.findOneAndUpdate(
+                filter = UserCollection::id eq ObjectId(userId),
+                update = Updates.combine(
+                    email?.let { Updates.set(UserCollection::email.name, it) },
+                    fullName?.let { Updates.set(UserCollection::fullName.name, it) },
                 ),
-                updateOnlyNotNullProperties = true
-            ).isUpdatedSuccessfully()
-        } catch (exception: MongoWriteException) {
-            throw UserAlreadyExistsException(USER_ALREADY_EXISTS)
-        }
-    }
-
-    override suspend fun updateUserProfile(
-        id: String, fullName: String?,
-    ): Boolean {
-        try {
-            dataBaseContainer.userCollection.find(filter = (UserCollection::id eq ObjectId(id)))
-            return dataBaseContainer.userCollection.updateOneById(
-                ObjectId(id),
-                set(
-                    UserCollection::fullName setTo fullName,
-                ),
-                updateOnlyNotNullProperties = true
-            ).isUpdatedSuccessfully()
+                options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
+            )?.toManagedEntity() ?: throw UserAlreadyExistsException(NOT_FOUND)
         } catch (exception: MongoWriteException) {
             throw UserAlreadyExistsException(USER_ALREADY_EXISTS)
         }
@@ -352,11 +262,11 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         )
     }
 
-    override suspend fun createWallet(userId: String): Wallet {
-        val wallet = WalletCollection(userId = ObjectId(userId))
-        dataBaseContainer.userDetailsCollection.updateOne(
-            filter = UserDetailsCollection::userId eq wallet.userId,
-            update = set(UserDetailsCollection::walletCollection setTo wallet)
+    override suspend fun createWallet(userId: String, currency: String): Wallet {
+        val wallet = WalletCollection(userId = ObjectId(userId), currency = currency)
+        dataBaseContainer.userCollection.updateOne(
+            filter = UserCollection::id eq wallet.userId,
+            update = set(UserCollection::walletId setTo wallet.id)
         )
         dataBaseContainer.walletCollection.insertOne(wallet)
         return wallet.toEntity()
@@ -397,24 +307,24 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
 
     // region: favorite
     override suspend fun getFavoriteRestaurants(userId: String): List<String> {
-        val user = dataBaseContainer.userDetailsCollection.findOne(
-            UserDetailsCollection::userId eq ObjectId(userId)
+        val user = dataBaseContainer.userCollection.findOne(
+            UserCollection::id eq ObjectId(userId)
         )
         return user?.favorite?.map(ObjectId::toString) ?: emptyList()
     }
 
     override suspend fun addToFavorite(userId: String, restaurantId: String): Boolean {
-        val result = dataBaseContainer.userDetailsCollection.updateOne(
-            UserDetailsCollection::userId eq ObjectId(userId),
-            addToSet(UserDetailsCollection::favorite, ObjectId(restaurantId))
+        val result = dataBaseContainer.userCollection.updateOne(
+            UserCollection::id eq ObjectId(userId),
+            addToSet(UserCollection::favorite, ObjectId(restaurantId))
         )
         return result.isUpdatedSuccessfully()
     }
 
     override suspend fun deleteFromFavorite(userId: String, restaurantId: String): Boolean {
-        val result = dataBaseContainer.userDetailsCollection.updateOne(
-            UserDetailsCollection::userId eq ObjectId(userId),
-            pull(UserDetailsCollection::favorite, ObjectId(restaurantId))
+        val result = dataBaseContainer.userCollection.updateOne(
+            UserCollection::id eq ObjectId(userId),
+            pull(UserCollection::favorite, ObjectId(restaurantId))
         )
         return result.isUpdatedSuccessfully()
     }
