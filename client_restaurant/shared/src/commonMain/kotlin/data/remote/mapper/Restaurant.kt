@@ -1,6 +1,7 @@
 package data.remote.mapper
 
 import data.remote.model.RestaurantDto
+import data.remote.model.UpdateRestaurantDto
 import domain.entity.Restaurant
 
 fun List<RestaurantDto>.toEntity():List<Restaurant> = map { it.toEntity() }
@@ -22,11 +23,9 @@ fun RestaurantDto.toEntity(): Restaurant {
     )
 }
 
-fun Restaurant.toDto(): RestaurantDto {
-    return RestaurantDto(
+fun Restaurant.toDto(): UpdateRestaurantDto {
+    return UpdateRestaurantDto(
         id = id,
-        ownerId = ownerId,
-        ownerUsername = ownerUsername,
         name = name,
         description = description,
         priceLevel = priceLevel,
@@ -34,7 +33,6 @@ fun Restaurant.toDto(): RestaurantDto {
         phone = phone,
         openingTime = openingTime,
         closingTime = closingTime,
-        location = location.toDto(),
         address = address
     )
 }

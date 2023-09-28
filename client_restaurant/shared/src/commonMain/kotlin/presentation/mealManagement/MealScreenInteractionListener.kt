@@ -7,6 +7,7 @@ interface MealScreenInteractionListener : BaseInteractionListener {
     fun onDescriptionChange(description: String)
     fun onPriceChange(price: String)
     fun onAddMeal()
+    fun onUpdateMeal()
     fun onCuisineClick()
     fun onSaveCuisineClick()
     fun onCuisineSelected(id: String)

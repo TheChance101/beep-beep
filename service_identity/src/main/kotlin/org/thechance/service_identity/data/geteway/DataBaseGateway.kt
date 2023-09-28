@@ -205,14 +205,25 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
     }
 
 
-    override suspend fun getUsers(page: Int, limit: Int, searchTerm: String): List<UserManagement> {
+    override suspend fun getUsers(options: UserOptions): List<UserManagement> {
         val searchQuery = or(
-            UserCollection::fullName regex searchTerm,
-            UserCollection::username regex searchTerm
+            options.query?.let { UserCollection::fullName regex it },
+            options.query?.let { UserCollection::username regex it }
         )
+
+        val orConditions = options.permissions?.map { permission ->
+            or(
+                UserCollection::permission eq permission,
+                UserCollection::permission.bitsAllSet(permission.toLong()) // Convert to Long
+            )
+        }
+
         return dataBaseContainer.userCollection.find(
-            searchQuery,
-            UserCollection::isDeleted eq false
+            and(
+                searchQuery,
+                orConditions?.let { or(*orConditions.toTypedArray()) },
+                UserCollection::isDeleted eq false,
+            )
         ).projection(
             UserCollection::id,
             UserCollection::fullName,
@@ -220,7 +231,7 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
             UserCollection::email,
             UserCollection::country,
             UserCollection::permission,
-        ).paginate(page, limit).toList().toManagedEntity()
+        ).paginate(options.page, options.limit).toList().toManagedEntity()
     }
 
     override suspend fun createUser(
@@ -315,29 +326,6 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         return dataBaseContainer.userCollection.find(
             UserCollection::isDeleted eq false
         ).sort(Sorts.descending("_id")).limit(limit).toList().toManagedEntity()
-    }
-
-    override suspend fun searchUsers(
-        searchTerm: String,
-        filterByPermission: List<Int>
-    ): List<UserManagement> {
-        val orConditions = filterByPermission.map { permission ->
-            or(
-                UserCollection::permission eq permission,
-                UserCollection::permission.bitsAllSet(permission.toLong()) // Convert to Long
-            )
-        }
-
-        return dataBaseContainer.userCollection.find(
-            and(
-                or(
-                    UserCollection::username.regex("^$searchTerm", "i"),
-                    UserCollection::email.regex("^$searchTerm", "i")
-                ),
-                or(*orConditions.toTypedArray()),
-                UserCollection::isDeleted eq false
-            )
-        ).toList().toManagedEntity() ?: throw ResourceNotFoundException(NOT_FOUND)
     }
 
     //endregion

@@ -1,6 +1,7 @@
 package di
 
 import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.thechance.common.presentation.app.AppScreenModel
 import org.thechance.common.presentation.login.LoginScreenModel
