@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
 
-
+//TODO: remove "" from image after clean DB
 @Serializable
 data class MealCollection(
     @BsonId
@@ -21,7 +21,7 @@ data class MealCollection(
     @Contextual
     val restaurantId: ObjectId,
     val cuisines: List<@Contextual ObjectId>,
-    val image : String
+    val image: String = ""
 )
 
 

@@ -10,6 +10,8 @@ interface IUserInfoValidationUseCase {
 
     fun validateUpdateUserInformation(fullName: String?, username: String?, password: String?, email: String?)
 
+    fun validateUpdateUserProfile(fullName: String?)
+
     fun validateUsernameIsNotEmpty(username: String): Boolean
 
     fun validateFullNameIsNotEmpty(fullName: String): Boolean
@@ -101,6 +103,18 @@ class UserInfoValidationUseCase : IUserInfoValidationUseCase {
             }
         }
 
+        if (reasons.isNotEmpty()) {
+            throw RequestValidationException(reasons)
+        }
+    }
+
+    override fun validateUpdateUserProfile(fullName: String?) {
+        val reasons = mutableListOf<String>()
+        fullName?.let {
+            if (!validateFullNameIsNotEmpty(it)) {
+                reasons.add(INVALID_FULLNAME)
+            }
+        }
         if (reasons.isNotEmpty()) {
             throw RequestValidationException(reasons)
         }

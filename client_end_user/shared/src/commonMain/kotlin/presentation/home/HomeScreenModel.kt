@@ -3,29 +3,51 @@ package presentation.home
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.InProgressWrapper
 import domain.entity.Restaurant
+import domain.entity.User
 import domain.usecase.GetFavoriteRestaurantsUseCase
 import domain.usecase.IGetCuisinesUseCase
 import domain.usecase.IGetNewOffersUserCase
 import domain.usecase.IInProgressTrackerUseCase
+import domain.usecase.IManageUserUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
+import presentation.cuisines.CuisineUiState
+import presentation.cuisines.toCuisineUiState
 
 class HomeScreenModel(
     private val cuisineUseCase: IGetCuisinesUseCase,
     private val getFavoriteRestaurantsUseCase: GetFavoriteRestaurantsUseCase,
     private val offers: IGetNewOffersUserCase,
     private val inProgressTrackerUseCase: IInProgressTrackerUseCase,
+    private val manageUserUseCase: IManageUserUseCase
 ) : BaseScreenModel<HomeScreenUiState, HomeScreenUiEffect>(HomeScreenUiState()),
     HomeScreenInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
 
     init {
+        getUserWallet()
         getInProgress()
         getRecommendedCuisines()
         getFavoriteRestaurants()
         getNewOffers()
+    }
+
+    private fun getUserWallet() {
+        tryToExecute(
+            { manageUserUseCase.getUserWallet() },
+            ::onGetUserWalletSuccess,
+            ::onGetUserWalletError
+        )
+    }
+
+    private fun onGetUserWalletError(errorState: ErrorState) {
+        updateState { it.copy(user = it.user.copy(isLogin = false)) }
+    }
+
+    private fun onGetUserWalletSuccess(user: User) {
+        updateState { it.copy(user = user.toUIState()) }
     }
 
     private fun getInProgress() {
@@ -74,6 +96,14 @@ class HomeScreenModel(
 
     override fun onClickOrderAgain(orderId: String) {
         sendNewEffect(HomeScreenUiEffect.NavigateToOrderDetails(orderId))
+    }
+
+    override fun onLoginClicked() {
+        sendNewEffect(HomeScreenUiEffect.NavigateLoginScreen)
+    }
+
+    override fun onClickCartCard() {
+        sendNewEffect(HomeScreenUiEffect.NavigateToCart)
     }
 
     private fun getRecommendedCuisines() {

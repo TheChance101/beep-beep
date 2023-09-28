@@ -1,3 +1,5 @@
 package presentation.main
 
-sealed interface MainUiEffect
+sealed interface MainUiEffect {
+    data object MainEffect : MainUiEffect
+}
