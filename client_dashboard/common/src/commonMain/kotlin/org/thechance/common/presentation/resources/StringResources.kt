@@ -34,6 +34,8 @@ data class StringResources(
     val cuisines: String = "Cuisines",
     val enterCuisineName: String = "Enter cuisine name",
     val add: String = "Add",
+    val update : String = "Update",
+    val updateRestaurant: String = "Update Restaurant",
         //endregion Restaurant
 
         //region Taxi
