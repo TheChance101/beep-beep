@@ -29,7 +29,7 @@ import org.litote.kmongo.setTo
 import org.litote.kmongo.setValue
 import org.thechance.service_identity.data.DataBaseContainer
 import org.thechance.service_identity.data.collection.AddressCollection
-import org.thechance.service_identity.data.collection.DetailedUserCollection
+import org.thechance.service_identity.data.collection.DetailedUser
 import org.thechance.service_identity.data.collection.UserCollection
 import org.thechance.service_identity.data.collection.UserDetailsCollection
 import org.thechance.service_identity.data.collection.WalletCollection
@@ -39,11 +39,7 @@ import org.thechance.service_identity.data.collection.mappers.toManagedEntity
 import org.thechance.service_identity.data.collection.mappers.toUserEntity
 import org.thechance.service_identity.data.util.isUpdatedSuccessfully
 import org.thechance.service_identity.data.util.paginate
-import org.thechance.service_identity.domain.entity.Address
-import org.thechance.service_identity.domain.entity.Location
-import org.thechance.service_identity.domain.entity.User
-import org.thechance.service_identity.domain.entity.UserManagement
-import org.thechance.service_identity.domain.entity.Wallet
+import org.thechance.service_identity.domain.entity.*
 import org.thechance.service_identity.domain.gateway.IDataBaseGateway
 import org.thechance.service_identity.domain.security.SaltedHash
 import org.thechance.service_identity.domain.util.ERROR_IN_DB
@@ -86,7 +82,7 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         val addressCollection = AddressCollection(
             userId = ObjectId(userId),
             address = address.address,
-            location = address.location.toCollection()
+            location = address.location?.toCollection()
         )
         dataBaseContainer.userDetailsCollection.updateOne(
             filter = UserDetailsCollection::userId eq ObjectId(userId),
@@ -183,7 +179,7 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         val userPermission = getUserPermission(id)
         val location = userAddresses.firstOrNull()?.location
         val country = getCountryForLocation(location)
-        return dataBaseContainer.userCollection.aggregate<DetailedUserCollection>(
+        return dataBaseContainer.userCollection.aggregate<DetailedUser>(
             match(
                 UserCollection::id eq ObjectId(id),
                 UserCollection::isDeleted eq false
@@ -192,7 +188,7 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
                 localField = UserCollection::id.name,
                 from = DataBaseContainer.USER_DETAILS_COLLECTION,
                 foreignField = "_id",
-                newAs = DetailedUserCollection::details.name
+                newAs = DetailedUser::details.name
             )
         ).toList().toUserEntity(
             wallet.walletBalance,
@@ -234,25 +230,14 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         ).paginate(options.page, options.limit).toList().toManagedEntity()
     }
 
-    override suspend fun createUser(
-        saltedHash: SaltedHash, fullName: String, username: String, email: String
-    ): UserManagement {
+    override suspend fun createUser(saltedHash: SaltedHash, user: User): UserManagement {
         val userNameExist =
-            dataBaseContainer.userCollection.findOne(UserCollection::username eq username)
+            dataBaseContainer.userCollection.findOne(UserCollection::username eq user.username)
         if (userNameExist == null) {
-            val userDocument = UserCollection(
-                hashedPassword = saltedHash.hash,
-                salt = saltedHash.salt,
-                username = username,
-                fullName = fullName,
-                email = email
-            )
-            val wallet = WalletCollection(userId = userDocument.id)
-            createWallet(wallet)
+            val userDocument = user.toCollection(hash = saltedHash.hash, salt = saltedHash.salt)
             dataBaseContainer.userDetailsCollection.insertOne(UserDetailsCollection(userId = userDocument.id))
             dataBaseContainer.userCollection.insertOne(userDocument)
             return userDocument.toManagedEntity()
-
         } else {
             throw UserAlreadyExistsException(USER_ALREADY_EXISTS)
         }
@@ -367,12 +352,14 @@ class DataBaseGateway(private val dataBaseContainer: DataBaseContainer) : IDataB
         )
     }
 
-    private suspend fun createWallet(wallet: WalletCollection): Boolean {
+    override suspend fun createWallet(userId: String): Wallet {
+        val wallet = WalletCollection(userId = ObjectId(userId))
         dataBaseContainer.userDetailsCollection.updateOne(
             filter = UserDetailsCollection::userId eq wallet.userId,
             update = set(UserDetailsCollection::walletCollection setTo wallet)
         )
-        return dataBaseContainer.walletCollection.insertOne(wallet).wasAcknowledged()
+        dataBaseContainer.walletCollection.insertOne(wallet)
+        return wallet.toEntity()
     }
 
     // endregion: wallet

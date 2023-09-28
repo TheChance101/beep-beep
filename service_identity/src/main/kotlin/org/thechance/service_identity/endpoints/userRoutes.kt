@@ -11,6 +11,8 @@ import org.thechance.service_identity.domain.util.MissingParameterException
 import org.thechance.service_identity.domain.usecases.IUserAccountManagementUseCase
 import org.thechance.service_identity.domain.usecases.IUserFavoriteUseCase
 import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
+import org.thechance.service_identity.endpoints.model.UserRegistrationDto
+import org.thechance.service_identity.endpoints.model.mapper.toEntity
 import org.thechance.service_identity.endpoints.util.extractApplicationIdHeader
 import org.thechance.service_identity.endpoints.util.extractInt
 
@@ -35,18 +37,8 @@ fun Route.userRoutes() {
         }
 
         post {
-            val params = call.receiveParameters()
-            val fullName = params["fullName"]?.trim()
-            val username = params["username"]?.trim()
-            val password = params["password"]?.trim()
-            val email = params["email"]?.trim()
-
-            val result = manageUserAccount.createUser(
-                fullName = fullName.toString(),
-                username = username.toString(),
-                password = password.toString(),
-                email = email.toString()
-            )
+            val newUser = call.receive<UserRegistrationDto>()
+            val result = manageUserAccount.createUser(password = newUser.password, user = newUser.toEntity())
             call.respond(HttpStatusCode.Created, result.toDto())
         }
 

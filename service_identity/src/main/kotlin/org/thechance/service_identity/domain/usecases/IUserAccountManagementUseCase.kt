@@ -12,7 +12,7 @@ import org.thechance.service_identity.domain.util.*
 
 interface IUserAccountManagementUseCase {
 
-    suspend fun createUser(fullName: String, username: String, password: String, email: String): UserManagement
+    suspend fun createUser(password: String, user: User): UserManagement
 
     suspend fun deleteUser(id: String): Boolean
 
@@ -43,13 +43,17 @@ class UserAccountManagementUseCase(
     private val hashingService: HashingService
 ) : IUserAccountManagementUseCase {
 
-    override suspend fun createUser(
-        fullName: String, username: String, password: String, email: String,
-    ): UserManagement {
-        userInfoValidationUseCase.validateUserInformation(fullName, username, password, email)
-
+    override suspend fun createUser(password: String, user: User): UserManagement {
+//        userInfoValidationUseCase.validateUserInformation(password, user)
+        val userCountry = getUserCountry(user.phone)
         val saltedHash = hashingService.generateSaltedHash(password)
-        return dataBaseGateway.createUser(saltedHash, fullName, username, email)
+        val newUser = dataBaseGateway.createUser(
+            saltedHash,
+            user.copy(country = userCountry.name, currency = userCountry.currency)
+        )
+        dataBaseGateway.createWallet(newUser.id)
+        dataBaseGateway.addAddress(newUser.id, user.addresses.first())
+        return newUser
     }
 
     override suspend fun getUserByUsername(username: String): UserManagement {
@@ -87,7 +91,7 @@ class UserAccountManagementUseCase(
 
     override suspend fun updateUserProfile(id: String, fullName: String?): Boolean {
         userInfoValidationUseCase.validateUpdateUserProfile(fullName)
-        return dataBaseGateway.updateUserProfile(id,fullName,)
+        return dataBaseGateway.updateUserProfile(id, fullName)
     }
 
     override suspend fun getUser(id: String): User {
@@ -122,6 +126,12 @@ class UserAccountManagementUseCase(
         map[ApplicationId.DELIVERY] = Pair(System.getenv(ApplicationId.DELIVERY).toString(), Role.DELIVERY)
         map[ApplicationId.SUPPORT] = Pair(System.getenv(ApplicationId.SUPPORT).toString(), Role.SUPPORT)
         return map
+    }
+
+    private fun getUserCountry(phone: String): CountryCurrency {
+        val matchingEntry = countryMap.entries.find { phone.startsWith(it.value) }
+        val countryName = matchingEntry?.key ?: "Unknown"
+        return CountryCurrency.valueOf(countryName)
     }
 
 }

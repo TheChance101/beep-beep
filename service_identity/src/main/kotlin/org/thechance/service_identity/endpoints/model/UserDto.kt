@@ -10,6 +10,7 @@ data class UserDto(
     val id: String? = null,
     val fullName: String? = null,
     val username: String? = null,
+    val phone: String? = null,
     val email: String? = null,
     val country: String? = null,
     val walletBalance: Double? = 0.0,

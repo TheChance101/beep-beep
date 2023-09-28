@@ -6,10 +6,9 @@ import kotlinx.serialization.Serializable
 
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
-import java.util.UUID
 
 @Serializable
-data class DetailedUserCollection(
+data class DetailedUser(
     @SerialName("_id")
     @BsonId
     @Contextual
@@ -17,6 +16,7 @@ data class DetailedUserCollection(
     val fullName: String,
     val username: String,
     val email: String,
+    val phone: String,
     val isDeleted: Boolean = false,
     val details: List<UserDetailsCollection>
 )
