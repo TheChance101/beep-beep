@@ -69,6 +69,7 @@ fun Route.userRoutes() {
 
 
         authenticateWithRole(Role.END_USER) {
+
             get {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val userId = tokenClaim?.get(Claim.USER_ID).toString()
@@ -76,13 +77,15 @@ fun Route.userRoutes() {
                 val user = identityService.getUserById(userId, language)
                 respondWithResult(HttpStatusCode.OK, user)
             }
-            put("profile") {
+
+            put("/profile") {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val userId = tokenClaim?.get(Claim.USER_ID).toString()
                 val language = extractLocalizationHeader()
                 val params = call.receiveParameters()
-                val fullName = params["fullName"]?.trim().toString()
-                val result = identityService.updateUserProfile(userId, fullName, language)
+                val fullName = params["fullName"]?.trim()
+                val phone = params["phone"]?.trim()
+                val result = identityService.updateUserProfile(userId, fullName, phone, language)
                 respondWithResult(HttpStatusCode.OK, result)
             }
 

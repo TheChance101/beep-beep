@@ -114,27 +114,22 @@ class IdentityService(
         APIs.IDENTITY_API, attributes = attributes, setErrorMessage = { errorCodes ->
             errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
         }
-    ) {
-        get("user/$id")
-    }
+    ) { get("user/$id") }
 
-    suspend fun updateUserProfile(
-        id: String,
-        fullName: String,
-        languageCode: String
-    ): UserDetailsDto {
-        return client.tryToExecute<UserDetailsDto>(
-            APIs.IDENTITY_API,
-            attributes = attributes,
-            setErrorMessage = { errorCodes ->
+    @OptIn(InternalAPI::class)
+    suspend fun updateUserProfile(id: String, fullName: String?, phone: String?, languageCode: String): UserDto {
+        return client.tryToExecute(
+            APIs.IDENTITY_API, attributes = attributes, setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             }
         ) {
-            submitForm("/user/profile/$id",
-                formParameters = parameters {
-                    append("fullName", fullName)
-                }
-            )
+            val formData = FormDataContent(Parameters.build {
+                fullName?.let { append("fullName", it) }
+                phone?.let { append("phone", it) }
+            })
+            put("/user/$id") {
+                body = formData
+            }
         }
     }
 
@@ -217,8 +212,10 @@ class IdentityService(
         val accessTokenExpirationDate = getExpirationDate(tokenConfiguration.accessTokenExpirationTimestamp)
         val refreshTokenExpirationDate = getExpirationDate(tokenConfiguration.refreshTokenExpirationTimestamp)
 
-        val refreshToken = generateToken(userId, username, userPermission, tokenConfiguration, TokenType.REFRESH_TOKEN)
-        val accessToken = generateToken(userId, username, userPermission, tokenConfiguration, TokenType.ACCESS_TOKEN)
+        val refreshToken =
+            generateToken(userId, username, userPermission, tokenConfiguration, TokenType.REFRESH_TOKEN)
+        val accessToken =
+            generateToken(userId, username, userPermission, tokenConfiguration, TokenType.ACCESS_TOKEN)
 
         return UserTokensResponse(
             accessTokenExpirationDate.time,
