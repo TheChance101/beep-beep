@@ -6,6 +6,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
+import org.thechance.service_identity.domain.usecases.IManageWalletUseCase
 import org.thechance.service_identity.endpoints.model.mapper.toDto
 import org.thechance.service_identity.domain.util.MissingParameterException
 import org.thechance.service_identity.domain.usecases.IUserAccountManagementUseCase
@@ -19,7 +20,8 @@ import org.thechance.service_identity.endpoints.util.extractInt
 fun Route.userRoutes() {
 
     val manageUserAccount: IUserAccountManagementUseCase by inject()
-    val favorite: IUserFavoriteUseCase by inject()
+    val manageWallet: IManageWalletUseCase by inject()
+
 
     route("/user") {
 
@@ -42,11 +44,23 @@ fun Route.userRoutes() {
             call.respond(HttpStatusCode.Created, result.toDto())
         }
 
+        put("/{userId}") {
+            val id = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            val params = call.receiveParameters()
+            val fullName = params["fullName"]?.trim()
+            val email = params["email"]?.trim()
+
+            val result = manageUserAccount.updateUser(
+                id = id, fullName = fullName.toString(), email = email.toString()
+            )
+            call.respond(HttpStatusCode.OK, result.toDto())
+        }
+
         post("/{id}/wallet/add") {
             val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val amount = call.receiveParameters()["amount"]?.toDouble()
                 ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val result = manageUserAccount.addToWallet(id, amount).toDto()
+            val result = manageWallet.addToWallet(id, amount).toDto()
             call.respond(HttpStatusCode.OK, result)
         }
 
@@ -54,7 +68,7 @@ fun Route.userRoutes() {
             val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val amount = call.receiveParameters()["amount"]?.toDouble()
                 ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val result = manageUserAccount.subtractFromWallet(id, amount).toDto()
+            val result = manageWallet.subtractFromWallet(id, amount).toDto()
             call.respond(HttpStatusCode.OK, result)
         }
 
@@ -66,61 +80,10 @@ fun Route.userRoutes() {
             call.respond(HttpStatusCode.OK, isLoggedIn)
         }
 
-        put("/{id}") {
-            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val params = call.receiveParameters()
-            val fullName = params["fullName"]?.trim()
-            val username = params["username"]?.trim()
-            val password = params["password"]?.trim()
-            val email = params["email"]?.trim()
-
-            val result = manageUserAccount.updateUser(
-                id = id,
-                fullName = fullName.toString(),
-                username = username.toString(),
-                password = password.toString(),
-                email = email.toString()
-            )
-            call.respond(HttpStatusCode.OK, result)
-        }
-        put("/profile/{id}") {
-            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-            val params = call.receiveParameters()
-            val fullName = params["fullName"]?.trim()
-
-            val result = manageUserAccount.updateUserProfile(
-                id = id,
-                fullName = fullName.toString(),
-            )
-            call.respond(HttpStatusCode.OK, result)
-        }
-
         delete("/{userId}") {
             val id = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
             val result = manageUserAccount.deleteUser(id)
             call.respond(HttpStatusCode.OK, result)
-        }
-
-        route("/{userId}/favorite") {
-            get {
-                val userId = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-                val restaurants = favorite.getFavoriteRestaurants(userId)
-                call.respond(HttpStatusCode.OK, restaurants)
-            }
-
-            post {
-                val userId = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-                val restaurantId = call.parameters["restaurantId"].orEmpty().trim()
-                val restaurant = favorite.addRestaurantsToFavorite(userId = userId, restaurantId = restaurantId)
-                call.respond(HttpStatusCode.OK, restaurant)
-            }
-
-            delete {
-                val userId = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
-                val restaurantId = call.parameters["restaurantId"].orEmpty().trim()
-                val restaurant = favorite.removeRestaurantsFromFavorite(userId = userId, restaurantId = restaurantId)
-                call.respond(HttpStatusCode.OK, restaurant)
-            }
         }
     }
 

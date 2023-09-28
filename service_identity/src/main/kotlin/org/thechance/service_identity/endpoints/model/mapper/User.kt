@@ -2,6 +2,7 @@ package org.thechance.service_identity.endpoints.model.mapper
 
 import org.thechance.service_identity.domain.entity.Address
 import org.thechance.service_identity.domain.entity.User
+import org.thechance.service_identity.domain.entity.UserInfo
 import org.thechance.service_identity.endpoints.model.UserDto
 import org.thechance.service_identity.endpoints.model.UserRegistrationDto
 
@@ -10,6 +11,7 @@ fun User.toDto() = UserDto(
     fullName = fullName,
     username = username,
     email = email,
+    phone = phone,
     walletBalance = walletBalance,
     currency = currency,
     country = country,
@@ -17,14 +19,11 @@ fun User.toDto() = UserDto(
     permission = permission
 )
 
-fun UserRegistrationDto.toEntity() = User(
+fun UserRegistrationDto.toEntity() = UserInfo(
     id = "",
     fullName = fullName,
     username = username,
     email = email,
     phone = phone,
-    walletBalance = 0.0,
-    currency = "",
-    country = "",
     addresses = listOf(Address(id = "", address = address)),
 )
