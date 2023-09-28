@@ -30,6 +30,7 @@ data class RestaurantUiState(
     val selectedPageNumber: Int = 1,
     val numberOfRestaurantsInPage: Int = 10,
     val editRestaurantMenu: String = "",
+    val isEditMode: Boolean = false,
 ) {
     data class RestaurantDetailsUiState(
         val id: String,
@@ -51,7 +52,7 @@ fun Restaurant.toUiState(): RestaurantUiState.RestaurantDetailsUiState =
         ownerUsername = ownerUsername,
         phone = phone,
         rate = rate,
-        priceLevel = priceLevel.count { it == '$' } ,
+        priceLevel = priceLevel.count { it == '$' },
         openingTime = openingTime,
         closingTime = closingTime,
     )
@@ -59,6 +60,8 @@ fun Restaurant.toUiState(): RestaurantUiState.RestaurantDetailsUiState =
 fun List<Restaurant>.toRestaurantsUIState() = map(Restaurant::toUiState)
 
 data class RestaurantInformationUIState(
+    val id: String = "",
+    val ownerId: String = "",
     val name: String = "",
     val nameError: ErrorWrapper? = null,
     val ownerUsername: String = "",
@@ -79,6 +82,7 @@ data class RestaurantInformationUIState(
 fun Restaurant.toUIState() = RestaurantInformationUIState(
     name = name,
     ownerUsername = ownerUsername,
+    ownerId = ownerId,
     phoneNumber = phone,
     openingTime = openingTime,
     closingTime = closingTime,

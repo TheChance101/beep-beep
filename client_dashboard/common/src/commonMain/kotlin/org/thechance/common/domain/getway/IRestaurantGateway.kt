@@ -27,6 +27,10 @@ interface IRestaurantGateway {
 
     suspend fun getRestaurantById(id: String): Restaurant
 
-    suspend fun updateRestaurant(restaurantId: String, restaurant: RestaurantInformation): Restaurant
+    suspend fun updateRestaurant(
+        restaurantId: String,
+        ownerId: String,
+        restaurant: RestaurantInformation
+    ): Restaurant
 
 }

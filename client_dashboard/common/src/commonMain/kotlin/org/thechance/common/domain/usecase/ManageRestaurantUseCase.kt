@@ -22,7 +22,11 @@ interface IManageRestaurantUseCase {
 
     suspend fun getRestaurantById(id: String): Restaurant
 
-    suspend fun updateRestaurant(restaurantId: String, restaurant: RestaurantInformation): Restaurant
+    suspend fun updateRestaurant(
+        restaurantId: String,
+        ownerId: String,
+        restaurant: RestaurantInformation
+    ): Restaurant
 
 }
 
@@ -58,8 +62,12 @@ class ManageRestaurantUseCase(private val restaurantGateway: IRestaurantGateway)
         return restaurantGateway.getRestaurantById(id)
     }
 
-    override suspend fun updateRestaurant(restaurantId: String, restaurant: RestaurantInformation): Restaurant {
-        return restaurantGateway.updateRestaurant(restaurantId, restaurant)
+    override suspend fun updateRestaurant(
+        restaurantId: String,
+        ownerId: String,
+        restaurant: RestaurantInformation
+    ): Restaurant {
+        return restaurantGateway.updateRestaurant(restaurantId, ownerId, restaurant)
     }
 
 }

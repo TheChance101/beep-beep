@@ -84,20 +84,19 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
         }.value?.toEntity() ?: throw UnknownError()
     }
 
-    override suspend fun updateRestaurant(restaurantId: String, restaurant: RestaurantInformation): Restaurant {
     override suspend fun updateRestaurant(
         restaurantId: String,
+        ownerId: String,
         restaurant: RestaurantInformation
     ): Restaurant {
         println("updateRestaurant :$restaurantId $ownerId")
         return tryToExecute<ServerResponse<RestaurantDto>>(client) {
             put(urlString = "/restaurant") {
-                url { appendPathSegments(restaurantId) }
-                setBody(restaurant.toDto())
                 setBody(
                     RestaurantDto(
                         id = restaurantId,
                         name = restaurant.name,
+                        ownerId = null,
                         ownerUserName = restaurant.ownerUsername,
                         openingTime = restaurant.openingTime,
                         closingTime = restaurant.closingTime,
@@ -113,4 +112,3 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
     }
 
 }
-

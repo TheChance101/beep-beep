@@ -64,7 +64,11 @@ class RestaurantFakeGateway : IRestaurantGateway {
         return restaurants.find { it.id == id }?.toEntity() ?: throw UnknownError()
     }
 
-    override suspend fun updateRestaurant(restaurantId: String, restaurant: RestaurantInformation): Restaurant {
+    override suspend fun updateRestaurant(
+        restaurantId: String,
+        ownerId: String,
+        restaurant: RestaurantInformation
+    ): Restaurant {
         val index = restaurants.indexOfFirst { it.id == restaurantId }
         restaurants[index] = restaurants[index].copy(
             name = restaurant.name,
