@@ -28,7 +28,7 @@ interface IDataBaseGateway {
     // region: user
     suspend fun getUserById(id: String): User
 
-    suspend fun getUsers(page: Int, limit: Int, searchTerm: String = ""): List<UserManagement>
+    suspend fun getUsers(options: UserOptions): List<UserManagement>
 
     suspend fun createUser(saltedHash: SaltedHash, fullName: String, username: String, email: String): UserManagement
 

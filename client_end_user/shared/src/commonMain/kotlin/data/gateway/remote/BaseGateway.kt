@@ -16,8 +16,7 @@ abstract class BaseGateway(val client: HttpClient) {
         try {
             return client.method().body()
         } catch (e: ClientRequestException) {
-            //TODO: replace ServerResponse<String> with ServerResponse<T> in next deployment
-            val errorMessages = e.response.body<ServerResponse<String>>().status.errorMessages
+            val errorMessages = e.response.body<ServerResponse<T>>().status.errorMessages
             errorMessages?.let(::throwMatchingException)
             throw GeneralException.UnknownErrorException
         } catch (e: InternetException.NoInternetException) {

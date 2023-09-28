@@ -166,6 +166,16 @@ class ErrorHandler(
         if(errorCodes.contains( 2503))
             errors[2503] = localizedMessages.cuisineNameAlreadyExisted
 
+
+        if(errorCodes.contains( 4001))
+            errors[4001] = localizedMessages.missingParameter
+
+        if(errorCodes.contains( 4002))
+            errors[4002] = localizedMessages.tokensNotFound
+
+        if(errorCodes.contains( 4003))
+            errors[4003] = localizedMessages.tokenNotRegister
+
         return errors
     }
 

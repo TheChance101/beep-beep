@@ -76,5 +76,9 @@ class EnglishLocalizedMessages() : LocalizedMessages {
     override val restaurantNotFound: String = "Sorry, we could not found this restaurant"
     override val deletedSuccessfully: String = "Deleted successfully "
     override val cuisineNameAlreadyExisted: String = "Cuisine name already existed"
+
+    override val missingParameter: String= "Missing parameter"
+    override val tokensNotFound: String = "Tokens not found"
+    override val tokenNotRegister: String = "Token not register"
     //endregion
 }
