@@ -51,7 +51,7 @@ class MapScreen :
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            MapWebView(
+            CalfMapWebView(
                 url = MAP_URL,
                 currentLocation = state.currentLocation.toEntity(),
                 destination = state.orderInfoUiState.dropOffAddress?.toEntity(),
