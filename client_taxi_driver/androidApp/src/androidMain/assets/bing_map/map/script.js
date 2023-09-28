@@ -50,10 +50,10 @@ Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
     directionsManager.addWaypoint(waypoint1);
     directionsManager.addWaypoint(waypoint2);
     directionsManager.calculateDirections();
-//     if(directionsManager.getAllWaypoints().length>2){
-//     directionsManager.removeWaypoint(0)
-//     directionsManager.removeWaypoint(1)
-//     }
+     if(directionsManager.getAllWaypoints().length>2){
+     directionsManager.removeWaypoint(0)
+     directionsManager.removeWaypoint(1)
+     }
 });
 }
 
