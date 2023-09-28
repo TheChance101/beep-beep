@@ -9,23 +9,25 @@ import androidx.compose.ui.Modifier
 import com.mohamedrejeb.calf.ui.web.WebView
 import com.mohamedrejeb.calf.ui.web.rememberWebViewState
 import domain.entity.Location
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
 fun CalfMapWebView(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     url: String,
     currentLocation: Location,
     destination: Location?,
 ) {
-    val state = rememberWebViewState(
-        url = "File:///android_asset/bing_map/map/index.html"
-    )
-    state.settings.javaScriptEnabled = true
+    val state = rememberWebViewState(url = url).apply {
+        settings.javaScriptEnabled = true
+    }
     val scope = rememberCoroutineScope()
     AnimatedVisibility(destination == null) {
         LaunchedEffect(true) {
-            state.evaluateJavascript(" GetMap()", null)
+            state.evaluateJavascript("GetMap()", null)
             state.evaluateJavascript("clearDirections()", null)
         }
         state.evaluateJavascript(
@@ -35,9 +37,10 @@ fun CalfMapWebView(
     }
     LaunchedEffect(key1 = currentLocation) {
         destination?.let { location ->
-            state.evaluateJavascript(" clearMap()", null)
-            scope.launch {
+            state.evaluateJavascript("clearMap()", null)
+            scope.launch(Dispatchers.IO) {
                 state.evaluateJavascript("clearDirections()", null)
+                delay(100)
                 state.evaluateJavascript(
                     "getDirections(${currentLocation.lat},${currentLocation.lng},${location.lat},${location.lng})",
                     null
@@ -47,7 +50,6 @@ fun CalfMapWebView(
     }
     WebView(
         state = state,
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = modifier.fillMaxSize()
     )
 }
