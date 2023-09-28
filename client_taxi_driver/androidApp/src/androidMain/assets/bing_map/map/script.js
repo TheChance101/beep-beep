@@ -1,5 +1,4 @@
 var map,directionsManager;
-
 function getMap() {
 map = new Microsoft.Maps.Map('#myMap', {
     credentials: 'Access_token',
@@ -19,6 +18,9 @@ function getPin(){
 
 function getDirections(currentLat,currentLng,lat,lng){
 clearPin();
+if(directionsManager!=null){
+clearDirections()
+}
 Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
     directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
     directionsManager.setRequestOptions({
@@ -50,10 +52,6 @@ Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
     directionsManager.addWaypoint(waypoint1);
     directionsManager.addWaypoint(waypoint2);
     directionsManager.calculateDirections();
-     if(directionsManager.getAllWaypoints().length>2){
-     directionsManager.removeWaypoint(0)
-     directionsManager.removeWaypoint(1)
-     }
 });
 }
 
@@ -65,6 +63,8 @@ directionsManager.clearDisplay();
 function createInfiniteLoopFunction(latitude,lng) {
             return function() {
             clearPin()
+            if(directionsManager!=null)
+            clearDirections()
     var pushpin = new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(latitude,lng), {
         icon: 'user_pin.svg',
      anchor: new Microsoft.Maps.Point(20, 20)

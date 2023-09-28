@@ -20,9 +20,6 @@ fun CalfMapWebView(
         settings.javaScriptEnabled = true
     }
     AnimatedVisibility(destination == null) {
-        LaunchedEffect(true) {
-            state.evaluateJavascript("clearDirections()", null)
-        }
         state.evaluateJavascript(
             "createInfiniteLoopFunction(${currentLocation.lat},${currentLocation.lng})()",
             null
