@@ -3,34 +3,18 @@ package org.thechance.service_identity.data.collection.mappers
 import org.thechance.service_identity.data.collection.DetailedUser
 import org.thechance.service_identity.domain.entity.Address
 import org.thechance.service_identity.domain.entity.User
+import org.thechance.service_identity.domain.entity.UserManagement
 
-fun DetailedUser.toEntity(
-    walletBalance: Double, currency: String, addresses: List<Address>, country: String, permission: Int
-) = User(
+
+fun DetailedUser.toEntity() = User(
     id = id.toString(),
     fullName = fullName,
     username = username,
     email = email,
     phone = phone,
-
-    walletBalance = walletBalance,
-    currency = currency,
-
-    addresses = addresses,
+    walletBalance = wallet.walletBalance,
+    currency = wallet.currency,
+    addresses = addresses.toEntity(),
     country = country,
-
     permission = permission,
 )
-
-
-fun List<DetailedUser>.toEntity(
-    walletBalance: Double, currency: String, addresses: List<Address>, country: String, permission: Int
-) = map { it.toEntity(walletBalance, currency, addresses, country, permission) }
-
-fun List<DetailedUser>.toUserEntity(
-    walletBalance: Double, currency: String, addresses: List<Address>, country: String, permission: Int
-): List<User> {
-    return this.map { detailedUser ->
-        detailedUser.toEntity(walletBalance, currency, addresses, country, permission)
-    }
-}
