@@ -7,6 +7,9 @@ import domain.gateway.local.ILocalConfigurationGateway
 import domain.utils.AuthorizationException
 import data.local.mapper.toFormattedString
 import data.local.mapper.toPreferredRide
+import kotlinx.coroutines.flow.Flow
+import domain.entity.UserDetails
+import domain.gateway.IFakeRemoteGateway
 
 interface IManageUserUseCase {
 
@@ -19,18 +22,20 @@ interface IManageUserUseCase {
     suspend fun saveIsFirstTimeUseApp(isFirstTimeUseApp: Boolean)
 
     suspend fun getIsFirstTimeUseApp(): Boolean
-    suspend fun getUserLanguageCode(): String
+    suspend fun getUserLanguageCode(): Flow<String>
+
+    suspend fun getUserProfile(): UserDetails
 
 }
 
 class ManageUserUseCase(
     private val localGateway: ILocalConfigurationGateway,
-    private val remoteGateway: FakeRemoteGateway
+    private val fakeRemoteGateway: IFakeRemoteGateway
 ) : IManageUserUseCase {
 
     override suspend fun getUserWallet(): User {
         return if (localGateway.getAccessToken().isNotEmpty()) {
-            remoteGateway.getUsrWallet()
+            fakeRemoteGateway.getUsrWallet()
         } else {
             throw AuthorizationException.UnAuthorizedException
         }
@@ -51,16 +56,21 @@ class ManageUserUseCase(
     override suspend fun getPreferredRide(): PreferredRide {
         return localGateway.getPreferredRideQuality().toPreferredRide()
     }
+
     override suspend fun saveIsFirstTimeUseApp(isFirstTimeUseApp: Boolean) {
-       return localGateway.saveIsFirstTimeUseApp(isFirstTimeUseApp)
+        return localGateway.saveIsFirstTimeUseApp(isFirstTimeUseApp)
     }
 
     override suspend fun getIsFirstTimeUseApp(): Boolean {
         return localGateway.getIsFirstTimeUseApp()
     }
 
-    override suspend fun getUserLanguageCode(): String {
-        return localGateway.getLanguageCode()
+    override suspend fun getUserLanguageCode(): Flow<String> {
+        return localGateway.getLanguageCodeFlow()
+    }
+
+    override suspend fun getUserProfile(): UserDetails {
+       return fakeRemoteGateway.getUserProfile()
     }
 
 

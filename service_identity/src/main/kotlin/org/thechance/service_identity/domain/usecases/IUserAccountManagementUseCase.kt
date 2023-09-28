@@ -20,6 +20,10 @@ interface IUserAccountManagementUseCase {
         id: String, fullName: String? = null, username: String? = null, password: String? = null, email: String? = null
     ): Boolean
 
+    suspend fun updateUserProfile(
+        id: String, fullName: String?
+    ): Boolean
+
     suspend fun getUser(id: String): User
     suspend fun addToWallet(userId: String, amount: Double): Wallet
 
@@ -79,6 +83,11 @@ class UserAccountManagementUseCase(
             hashingService.generateSaltedHash(it)
         }
         return dataBaseGateway.updateUser(id, saltedHash, fullName, username, email)
+    }
+
+    override suspend fun updateUserProfile(id: String, fullName: String?): Boolean {
+        userInfoValidationUseCase.validateUpdateUserProfile(fullName)
+        return dataBaseGateway.updateUserProfile(id,fullName,)
     }
 
     override suspend fun getUser(id: String): User {

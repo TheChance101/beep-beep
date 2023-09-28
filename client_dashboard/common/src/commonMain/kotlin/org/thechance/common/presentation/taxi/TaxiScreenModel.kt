@@ -46,7 +46,7 @@ class TaxiScreenModel(
     }
 
     private fun onGetTaxisSuccessfully(taxis: DataWrapper<Taxi>) {
-        updateState { it.copy(pageInfo = taxis.toDetailsUiState(), isLoading = false) }
+        updateState { it.copy(pageInfo = taxis.toDetailsUiState(), isLoading = false, hasConnection = true) }
         if (mutableState.value.currentPage > mutableState.value.pageInfo.totalPages) {
             onPageClick(mutableState.value.pageInfo.totalPages)
         }
@@ -77,8 +77,8 @@ class TaxiScreenModel(
                 }
             }
 
-            ErrorState.NoConnection -> {
-                updateState { it.copy(isNoInternetConnection = true) }
+            is ErrorState.NoConnection -> {
+                updateState { it.copy(hasConnection = false) }
             }
 
             is ErrorState.TaxiAlreadyExists -> {
@@ -233,6 +233,10 @@ class TaxiScreenModel(
     override fun onAddNewTaxiClicked() {
         clearTaxiInfoState()
         updateState { it.copy(isAddNewTaxiDialogVisible = true, isEditMode = false) }
+    }
+
+    override fun onRetry() {
+        getTaxis()
     }
 
     private fun clearTaxiInfoState() {

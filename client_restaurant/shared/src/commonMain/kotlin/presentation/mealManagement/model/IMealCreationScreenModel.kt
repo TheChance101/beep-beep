@@ -11,10 +11,11 @@ import presentation.base.ErrorState
 import presentation.mealManagement.IMealBehavior
 import presentation.mealManagement.MealScreenUIEffect
 import presentation.mealManagement.toMealAddition
+import presentation.mealManagement.toMealUpdate
 import presentation.mealManagement.toUIState
 
 class IMealCreationScreenModel(
-
+private val restaurantId : String
 ) : IMealBehavior() {
 
     override val viewModelScope: CoroutineScope
@@ -29,7 +30,7 @@ class IMealCreationScreenModel(
     }
 
     override suspend fun addMeal(): Boolean {
-        val state = state.value.meal.toMealAddition()
+        val state = state.value.meal.toMealAddition(restaurantId)
         val validationResult = restaurantMealValidation.isMealInformationValid(
             name = state.name,
             price = state.price,
@@ -40,6 +41,10 @@ class IMealCreationScreenModel(
             return manageMeal.addMeal(state)
         }
         return false
+    }
+
+    override suspend fun updateMeal(): Boolean {
+        return manageMeal.updateMeal(state.value.meal.toMealUpdate(mealId = ""))
     }
 
     fun getCuisines() {

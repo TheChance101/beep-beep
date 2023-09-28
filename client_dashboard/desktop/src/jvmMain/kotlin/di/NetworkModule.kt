@@ -58,11 +58,12 @@ fun Scope.intercept(client: HttpClient) {
 
         val accessToken = identityGateway.getAccessToken()
         val refreshToken = identityGateway.getRefreshToken()
+        val countryCode = identityGateway.getCountryCode()
 
         request.headers {
             append("Authorization", "Bearer $accessToken")
-            append("Accept-Language", "ar")
-            append("Country-Code", "EG")
+            append("Accept-Language", countryCode)
+            append("Country-Code", countryCode)
         }
         val originalCall = execute(request)
 
