@@ -61,7 +61,7 @@ dependencies {
     implementation("commons-codec:commons-codec:1.15")
     //ktor-client
     implementation("io.ktor:ktor-client-core:$ktor_version")
-    implementation("io.ktor:ktor-client-okhttp:$ktor_version")
+    implementation("io.ktor:ktor-client-cio:$ktor_version")
     implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
     implementation("io.ktor:ktor-client-logging-jvm:1.5.0")
     implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.11")
