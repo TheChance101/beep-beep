@@ -24,9 +24,9 @@ import java.awt.Dimension
 
 @Composable
 fun NewRestaurantInfoDialog(
-    modifier: Modifier = Modifier,
     state: RestaurantUiState,
     listener: RestaurantInteractionListener,
+    modifier: Modifier = Modifier,
 ) {
     RestaurantDialog(
         modifier = modifier,
@@ -40,6 +40,8 @@ fun NewRestaurantInfoDialog(
         state = state.restaurantInformationUIState,
         onCreateClicked = listener::onCreateNewRestaurantClicked,
         onLocationChange = listener::onLocationChange,
+        onUpdateRestaurantClicked = listener::onUpdateRestaurantClicked,
+        isEditMode = state.isEditMode
     )
 }
 
@@ -47,7 +49,6 @@ fun NewRestaurantInfoDialog(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RestaurantDialog(
-    modifier: Modifier = Modifier,
     state: RestaurantInformationUIState,
     isVisible: Boolean,
     onCreateClicked: () -> Unit,
@@ -58,6 +59,9 @@ private fun RestaurantDialog(
     onWorkingStartHourChange: (String) -> Unit,
     onWorkingEndHourChange: (String) -> Unit,
     onLocationChange: (String) -> Unit,
+    onUpdateRestaurantClicked : (String) -> Unit,
+    isEditMode: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     Dialog(
         visible = isVisible,
@@ -70,15 +74,15 @@ private fun RestaurantDialog(
             modifier.fillMaxSize()
                 .background(Theme.colors.surface)
                 .border(
-                        1.kms,
-                        Theme.colors.divider,
-                        RoundedCornerShape(Theme.radius.medium)
+                    1.kms,
+                    Theme.colors.divider,
+                    RoundedCornerShape(Theme.radius.medium)
                 )
                 .padding(24.kms)
 
         ) {
             Text(
-                text = Resources.Strings.newRestaurant,
+                text = if (isEditMode) Resources.Strings.updateRestaurant else Resources.Strings.newRestaurant,
                 style = Theme.typography.headlineLarge,
                 color = Theme.colors.contentPrimary
             )
@@ -135,7 +139,7 @@ private fun RestaurantDialog(
                             label = "",
                             hint = Resources.Strings.workEndHourHint,
                             errorMessage = state.endTimeError?.errorMessage ?: "",
-                            isError = state.endTimeError?.isError  ?: false
+                            isError = state.endTimeError?.isError ?: false
                         )
                     }
                     BpTextField(
@@ -153,22 +157,29 @@ private fun RestaurantDialog(
                     horizontalAlignment = Alignment.End,
                 ) {
                     GoogleMap(
-                            modifier =Modifier.fillMaxWidth().weight(5f),
-                            lat = state.latitude, lng = state.longitude,) { address ->
+                        modifier = Modifier.fillMaxWidth().weight(5f),
+                        lat = state.latitude, lng = state.longitude,
+                    ) { address ->
                         onLocationChange(address)
                     }
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(top =24.kms).weight(1f),
+                        modifier = Modifier.fillMaxWidth().padding(top = 24.kms).weight(1f),
                         horizontalArrangement = Arrangement.End,
                     ) {
                         BpOutlinedButton(
                             title = Resources.Strings.cancel,
-                            onClick =  onCancelClicked,
+                            onClick = onCancelClicked,
                             modifier = Modifier.padding(end = Theme.dimens.space16).width(120.kms)
                         )
                         BpButton(
-                            title = Resources.Strings.create,
-                            onClick =  onCreateClicked,
+                            title = if (isEditMode) Resources.Strings.update else Resources.Strings.create,
+                            onClick = {
+                                if (isEditMode) {
+                                    onUpdateRestaurantClicked(state.id)
+                                } else {
+                                    onCreateClicked()
+                                }
+                            },
                             modifier = Modifier.width(300.dp),
                             enabled = state.buttonEnabled
                         )
