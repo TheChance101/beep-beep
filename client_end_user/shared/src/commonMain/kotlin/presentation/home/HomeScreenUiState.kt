@@ -11,6 +11,7 @@ data class HomeScreenUiState(
     val inProgressWrapper: InProgressWrapper = InProgressWrapper(),
     val lastOrder : OrderUiState = OrderUiState(),
     val user: UserUiState = UserUiState(),
+    val searchTerm: String = "",
 ) {
     val hasProgress: Boolean
         get() = inProgressWrapper.taxisOnTheWay.isNotEmpty() ||

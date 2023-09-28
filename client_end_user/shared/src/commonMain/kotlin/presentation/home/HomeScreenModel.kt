@@ -106,6 +106,10 @@ class HomeScreenModel(
         sendNewEffect(HomeScreenUiEffect.NavigateToCart)
     }
 
+    override fun onChangeSearchText(searchText: String) {
+        updateState { it.copy(searchTerm = searchText) }
+    }
+
     private fun getRecommendedCuisines() {
         tryToExecute(
             { cuisineUseCase.getCuisines().toCuisineUiState() },

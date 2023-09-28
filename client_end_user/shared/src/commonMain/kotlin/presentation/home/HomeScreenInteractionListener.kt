@@ -13,4 +13,6 @@ interface HomeScreenInteractionListener : BaseInteractionListener {
     fun onClickOrderAgain(orderId : String)
     fun onLoginClicked()
     fun onClickCartCard()
+
+    fun onChangeSearchText(searchText : String)
 }

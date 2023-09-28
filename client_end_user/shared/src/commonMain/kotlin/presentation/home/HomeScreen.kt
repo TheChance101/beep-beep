@@ -34,6 +34,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import com.beepbeep.designSystem.ui.composable.BpAppBar
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
@@ -53,6 +54,8 @@ import presentation.home.composable.CartCard
 import presentation.home.composable.ChatSupportCard
 import presentation.home.composable.CuisineCard
 import presentation.home.composable.OrderCard
+import presentation.main.SearchTab
+import presentation.search.SearchScreen
 import resources.Resources
 import util.root
 
@@ -65,6 +68,7 @@ class HomeScreen :
     }
 
     override fun onEffect(effect: HomeScreenUiEffect, navigator: Navigator) {
+
         when (effect) {
             is HomeScreenUiEffect.NavigateToCuisineDetails -> println("Cuisine id ${effect.cuisineId}")
             is HomeScreenUiEffect.NavigateToCuisines -> navigator.root?.push(CuisinesScreen())
@@ -72,18 +76,20 @@ class HomeScreen :
             is HomeScreenUiEffect.NavigateToOrderTaxi -> println("Navigate to Order Taxi screen")
             is HomeScreenUiEffect.ScrollDownToRecommendedRestaurants -> println("Scroll down home screen")
             is HomeScreenUiEffect.NavigateToOfferItem -> println("Navigate to offer item details ${effect.offerId}")
-            is HomeScreenUiEffect.NavigateToSearch -> println("Navigate to Search Screen")
-            is HomeScreenUiEffect.NavigateToOrderDetails ->  println("Navigate to order details ${effect.orderId}")
+            is HomeScreenUiEffect.NavigateToSearch -> navigator.root?.push(SearchTab)
+            is HomeScreenUiEffect.NavigateToOrderDetails -> println("Navigate to order details ${effect.orderId}")
             is HomeScreenUiEffect.NavigateToCart -> navigator.root?.push(CartScreen())
             is HomeScreenUiEffect.NavigateLoginScreen -> navigator.root?.push(LoginScreen())
         }
     }
 
-    @OptIn(ExperimentalResourceApi::class, ExperimentalFoundationApi::class,
+    @OptIn(
+        ExperimentalResourceApi::class, ExperimentalFoundationApi::class,
         ExperimentalMaterial3Api::class
     )
     @Composable
     override fun onRender(state: HomeScreenUiState, listener: HomeScreenInteractionListener) {
+        val tabNavigator = LocalTabNavigator.current
         val painters = mutableListOf<Painter>()
         repeat(state.favoriteRestaurants.size) {
             painters.add(painterResource(Resources.images.placeholder))
@@ -125,11 +131,11 @@ class HomeScreen :
 
             item {
                 BpSimpleTextField(
-                    "",
+                    text = state.searchTerm,
                     hint = Resources.strings.searchHint,
                     hintColor = Theme.colors.contentSecondary,
-                    onValueChange = {},
-                    onClick = { listener.onClickSearch() },
+                    onValueChange = listener::onChangeSearchText,
+                    onClick = {  listener.onClickSearch() },
                     leadingPainter = painterResource(Resources.images.searchOutlined),
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
@@ -221,7 +227,7 @@ class HomeScreen :
                 }
             }
             item {
-                LastOrder(state.lastOrder,listener)
+                LastOrder(state.lastOrder, listener)
             }
             item {
                 Column(
@@ -332,16 +338,32 @@ class HomeScreen :
     @Composable
     private fun LastOrder(order: OrderUiState, listener: HomeScreenInteractionListener) {
         Column(modifier = Modifier.padding(start = 16.dp)) {
-            Text(Resources.strings.lastOrder, style = Theme.typography.titleLarge.copy(color = Theme.colors.contentPrimary))
+            Text(
+                Resources.strings.lastOrder,
+                style = Theme.typography.titleLarge.copy(color = Theme.colors.contentPrimary)
+            )
             Row(modifier = Modifier.fillMaxWidth().height(80.dp).padding(top = 8.dp)) {
                 BpImageLoader(
-                    modifier = Modifier.fillMaxHeight().width(104.dp).clip(RoundedCornerShape(8.dp)),
+                    modifier = Modifier.fillMaxHeight().width(104.dp)
+                        .clip(RoundedCornerShape(8.dp)),
                     imageUrl = order.image
                 )
-                Column(modifier = Modifier.padding(8.dp).fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
-                    Text(order.restaurantName, style = Theme.typography.title.copy(color = Theme.colors.contentPrimary))
-                    Text(order.date, style = Theme.typography.body.copy(color = Theme.colors.contentSecondary))
-                    Row(modifier = Modifier.clickable { listener.onClickOrderAgain(order.id) }, verticalAlignment = Alignment.CenterVertically) {
+                Column(
+                    modifier = Modifier.padding(8.dp).fillMaxSize(),
+                    verticalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        order.restaurantName,
+                        style = Theme.typography.title.copy(color = Theme.colors.contentPrimary)
+                    )
+                    Text(
+                        order.date,
+                        style = Theme.typography.body.copy(color = Theme.colors.contentSecondary)
+                    )
+                    Row(
+                        modifier = Modifier.clickable { listener.onClickOrderAgain(order.id) },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Text(
                             text = Resources.strings.orderAgain,
                             style = Theme.typography.body,
