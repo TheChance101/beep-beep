@@ -13,7 +13,8 @@ sealed interface ErrorState {
     data class UserNotExist(val errorMessage: String) : ErrorState
 
     data class UsernameCannotBeBlank(val errorMessage: String) : ErrorState
-    
+    data class InvalidPermission(val errorMessage: String) : ErrorState
+
     data class InvalidUserRequestParameter(val errorMessage: String) : ErrorState
 
     data class InvalidTaxiId(val errorMessage: String) : ErrorState

@@ -6,6 +6,7 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
+import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.model.restaurant.RestaurantDto
@@ -42,6 +43,17 @@ fun Route.restaurantRoutes() {
                 )
                 respondWithResult(HttpStatusCode.OK, result)
             }
+        }
+
+        get("/search") {
+            val query = call.parameters["query"]
+            val page = call.parameters["page"]
+            val limit = call.parameters["limit"]
+            val language = extractLocalizationHeader()
+            val result = restaurantService.search(
+                query, page, limit, languageCode = language
+            )
+            respondWithResult(HttpStatusCode.OK, result)
         }
     }
 

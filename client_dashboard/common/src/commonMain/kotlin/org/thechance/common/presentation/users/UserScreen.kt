@@ -1,6 +1,5 @@
 package org.thechance.common.presentation.users
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
@@ -90,7 +88,7 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
                 UsersFilteredSearch(
                     searchText = state.search,
                     allPermissions = state.allPermissions,
-                    selectedPermissions = state.filter.permissions,
+                    selectedPermissions = state.filter.selectedPermissions,
                     countries = state.filter.countries,
                     onFilterPermissionClicked = filterMenuListener::onFilterMenuPermissionClick,
                     isFilterDropdownMenuExpanded = state.filter.show,
@@ -101,9 +99,9 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
                     onFilterSaved = filterMenuListener::onFilterMenuSaveButtonClicked,
                     onFilterClearAllClicked = filterMenuListener::onFilterClearAllClicked,
                 )
-                BpNoInternetConnection(hasConnection = !state.hasConnection,onRetry=onRetry)
+                BpNoInternetConnection(hasConnection = !state.hasConnection, onRetry = onRetry)
                 UsersTable(
-                    hasConnection=state.hasConnection,
+                    hasConnection = state.hasConnection,
                     users = state.pageInfo.data,
                     headers = state.tableHeader,
                     selectedPage = state.currentPage,
@@ -140,23 +138,23 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
         onEditUserMenuItemClicked: (UserScreenUiState.UserUiState) -> Unit,
         onDeleteUserMenuItemClicked: (String) -> Unit,
     ) {
-         BpTable(
-                data = users,
-                key = UserScreenUiState.UserUiState::username,
-                headers = headers,
-                isVisible = hasConnection,
-                modifier = Modifier.fillMaxWidth(),
-            ) { user ->
-                UserRow(
-                    onUserMenuClicked = onUserMenuClicked,
-                    user = user,
-                    position = users.indexOf(user) + 1,
-                    editUserMenu = editUserMenu,
-                    onEditUserDismiss = onEditUserDismiss,
-                    onEditUserMenuItemClicked = onEditUserMenuItemClicked,
-                    onDeleteUserMenuItemClicked = onDeleteUserMenuItemClicked,
-                )
-            }
+        BpTable(
+            data = users,
+            key = UserScreenUiState.UserUiState::username,
+            headers = headers,
+            isVisible = hasConnection,
+            modifier = Modifier.fillMaxWidth(),
+        ) { user ->
+            UserRow(
+                onUserMenuClicked = onUserMenuClicked,
+                user = user,
+                position = users.indexOf(user) + 1,
+                editUserMenu = editUserMenu,
+                onEditUserDismiss = onEditUserDismiss,
+                onEditUserMenuItemClicked = onEditUserMenuItemClicked,
+                onDeleteUserMenuItemClicked = onDeleteUserMenuItemClicked,
+            )
+        }
 
 
         UsersTableFooter(
@@ -263,7 +261,7 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
         ) {
             user.permissions.forEach {
                 Icon(
-                    painter = painterResource(it.iconPath),
+                    painter = painterResource(getPermissionInformation(it).iconPath),
                     contentDescription = null,
                     tint = Theme.colors.contentPrimary.copy(alpha = 0.87f),
                     modifier = Modifier.size(24.kms)
@@ -394,9 +392,9 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
                         ) {
                             countries.forEach { country ->
                                 BpCheckBox(
-                                    label = country.name,
+                                    label = getCountryTitle(country.country),
                                     onCheck = { onFilterCountryClicked(country) },
-                                    isChecked = country.selected
+                                    isChecked = country.isSelected
                                 )
                             }
                         }
@@ -433,7 +431,7 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
                 text = searchText,
                 keyboardType = KeyboardType.Text,
                 trailingPainter = painterResource(Resources.Drawable.search),
-                outlinedTextFieldDefaults =  OutlinedTextFieldDefaults.colors(
+                outlinedTextFieldDefaults = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = Theme.colors.surface,
                     cursorColor = Theme.colors.contentTertiary,
                     errorCursorColor = Theme.colors.primary,
@@ -456,5 +454,16 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
                 onFilterClearAllClicked = onFilterClearAllClicked
             )
         }
+    }
+}
+
+@Composable
+private fun getCountryTitle(country: UserScreenUiState.Country): String {
+    return when (country) {
+        UserScreenUiState.Country.EGYPT -> Resources.Strings.egypt
+        UserScreenUiState.Country.IRAQ -> Resources.Strings.iraq
+        UserScreenUiState.Country.PALESTINE -> Resources.Strings.palestine
+        UserScreenUiState.Country.JORDAN -> Resources.Strings.jordan
+        UserScreenUiState.Country.SYRIA -> Resources.Strings.syria
     }
 }

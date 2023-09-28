@@ -1,5 +1,6 @@
 package org.thechance.common.presentation.main
 
+import LoginScreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
@@ -19,7 +20,6 @@ import org.thechance.common.presentation.composables.scaffold.BpSideBarItem
 import org.thechance.common.presentation.composables.scaffold.DashBoardScaffold
 import org.thechance.common.presentation.composables.scaffold.DashboardAppbar
 import org.thechance.common.presentation.composables.scaffold.DashboardSideBar
-import org.thechance.common.presentation.login.LoginScreen
 import org.thechance.common.presentation.resources.Resources
 
 object MainContainer :
@@ -123,6 +123,7 @@ object MainContainer :
                     itemHeight(it.boundsInParent().height)
                 }
         )
+
     }
 
     @Composable

@@ -153,11 +153,19 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         ).toList().first().meals.filterNot { it.isDeleted }.toEntity()
     }
 
-
     override suspend fun addCuisine(cuisine: Cuisine): Cuisine {
         val addedCuisine = cuisine.toCollection()
-        container.cuisineCollection.insertOne(addedCuisine)
-        return addedCuisine.toEntity()
+        val updatedCuisine = container.cuisineCollection.findOneAndUpdate(
+            filter = CuisineCollection::name eq cuisine.name,
+            update = set(CuisineCollection::isDeleted setTo false),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
+        )
+        return if (updatedCuisine != null) {
+            updatedCuisine.toEntity()
+        } else {
+            container.cuisineCollection.insertOne(addedCuisine)
+            addedCuisine.toEntity()
+        }
     }
 
     override suspend fun areCuisinesExist(cuisineIds: List<String>): Boolean {
@@ -186,7 +194,12 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         ).isSuccessfullyUpdated()
 
     override suspend fun getCuisineByName(cuisineName: String): Cuisine? {
-        return container.cuisineCollection.findOne(CuisineCollection::name eq cuisineName)?.toEntity()
+        return container.cuisineCollection.findOne(
+            and(
+                CuisineCollection::name eq cuisineName,
+                CuisineCollection::isDeleted eq false
+            )
+        )?.toEntity()
     }
 
     //endregion
