@@ -204,7 +204,29 @@ class RestaurantScreenModel(
     override fun onAddNewRestaurantClicked() {
         clearRestaurantInfoErrorState()
         clearAddRestaurantInfo()
-        updateState { it.copy(isNewRestaurantInfoDialogVisible = true) }
+        updateState { it.copy(isNewRestaurantInfoDialogVisible = true, isEditMode = false) }
+    }
+
+    private fun onUpdateRestaurantSuccessfully(restaurant: Restaurant) {
+        updateState { it.copy(isLoading = false, isNewRestaurantInfoDialogVisible = false) }
+        clearAddRestaurantInfo()
+        getRestaurants()
+    }
+
+    override fun onUpdateRestaurantClicked(restaurantId: String) {
+        updateState { it.copy(isLoading = true) }
+        clearRestaurantInfoErrorState()
+        tryToExecute(
+            {
+                manageRestaurant.updateRestaurant(
+                    restaurantId,
+                    state.value.restaurantInformationUIState.ownerId,
+                    state.value.restaurantInformationUIState.toEntity()
+                )
+            },
+            ::onUpdateRestaurantSuccessfully,
+            ::onError,
+        )
     }
 
     private fun getCurrentLocation() {
@@ -323,7 +345,15 @@ class RestaurantScreenModel(
 
     private fun onGetRestaurantByIdSuccessfully(restaurant: Restaurant) {
         val restaurantUiState = restaurant.toUIState()
-        updateState { it.copy(restaurantInformationUIState = restaurantUiState) }
+        updateState {
+            it.copy(restaurantInformationUIState = restaurantUiState)
+        }
+        updateState {
+            it.copy(
+                restaurantInformationUIState =
+                mutableState.value.restaurantInformationUIState.copy(ownerId = restaurant.ownerId)
+            )
+        }
     }
 
     private fun getRestaurantById(id: String) {
