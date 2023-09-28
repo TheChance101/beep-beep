@@ -89,14 +89,14 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
         ownerId: String,
         restaurant: RestaurantInformation
     ): Restaurant {
-        println("updateRestaurant :$restaurantId $ownerId")
+        println("updateRestaurant :$restaurantId")
         return tryToExecute<ServerResponse<RestaurantDto>>(client) {
             put(urlString = "/restaurant") {
                 setBody(
                     RestaurantDto(
                         id = restaurantId,
                         name = restaurant.name,
-                        ownerId = null,
+                        ownerId = ownerId,
                         ownerUserName = restaurant.ownerUsername,
                         openingTime = restaurant.openingTime,
                         closingTime = restaurant.closingTime,

@@ -83,6 +83,7 @@ data class RestaurantInformationUIState(
 )
 
 fun Restaurant.toUIState() = RestaurantInformationUIState(
+    id = id,
     name = name,
     ownerUsername = ownerUsername,
     ownerId = ownerId,
