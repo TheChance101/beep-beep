@@ -8,12 +8,9 @@ data class User(
     val username: String,
     val email: String,
     val phone: String,
-
     val walletBalance: Double,
     val currency: String,
-
     val addresses: List<Address> = emptyList(),
     val country: String,
-
     val permission: Int = Role.END_USER
 )
