@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -67,14 +68,15 @@ class RestaurantScreen :
         )
 
         Column(
-            Modifier.background(Theme.colors.surface).fillMaxSize(),
+            Modifier.background(Theme.colors.surface).padding(40.kms).fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.kms),
         ) {
             RestaurantScreenTopRow(state = state, listener = listener)
-
             RestaurantTable(state = state, listener = listener)
-
+            BpNoInternetConnection(!state.hasConnection){
+                listener.onRetry()
+            }
             RestaurantPagingRow(state = state, listener = listener)
         }
     }
@@ -96,7 +98,15 @@ class RestaurantScreen :
                 onValueChange = listener::onSearchChange,
                 text = state.searchQuery,
                 keyboardType = KeyboardType.Text,
-                trailingPainter = painterResource(Resources.Drawable.search)
+                trailingPainter = painterResource(Resources.Drawable.search),
+                outlinedTextFieldDefaults =  OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = Theme.colors.surface,
+                    cursorColor = Theme.colors.contentTertiary,
+                    errorCursorColor = Theme.colors.primary,
+                    focusedBorderColor = Theme.colors.contentTertiary.copy(alpha = 0.2f),
+                    unfocusedBorderColor = Theme.colors.contentBorder.copy(alpha = 0.1f),
+                    errorBorderColor = Theme.colors.primary.copy(alpha = 0.5f),
+                )
             )
 
             RestaurantFilterRow(state, listener)
@@ -129,22 +139,24 @@ class RestaurantScreen :
         state: RestaurantUiState,
         listener: RestaurantInteractionListener,
     ) {
-        BpTable(
-            data = state.restaurants,
-            key = { it.id },
-            headers = state.tableHeader,
-            modifier = Modifier.fillMaxWidth(),
-            rowContent = { restaurant ->
-                RestaurantRow(
-                    onClickEditRestaurant = listener::onShowRestaurantMenu,
-                    onEditRestaurantDismiss = listener::onHideRestaurantMenu,
-                    onClickDeleteRestaurantMenuItem = listener::onClickDeleteRestaurantMenuItem,
-                    onClickEditRestaurantMenuItem = listener::onClickEditRestaurantMenuItem,
-                    position = state.restaurants.indexOf(restaurant) + 1,
-                    restaurant = restaurant,
-                )
-            },
-        )
+            BpTable(
+                data = state.restaurants,
+                key = { it.id },
+                headers = state.tableHeader,
+                modifier = Modifier.fillMaxWidth(),
+                isVisible = state.hasConnection,
+                rowContent = { restaurant ->
+                    RestaurantRow(
+                        onClickEditRestaurant = listener::showEditRestaurantMenu,
+                        onEditRestaurantDismiss = listener::hideEditRestaurantMenu,
+                        onClickDeleteRestaurantMenuItem = listener::onClickDeleteRestaurantMenuItem,
+                        onClickEditRestaurantMenuItem = listener::onClickEditRestaurantMenuItem,
+                        position = state.restaurants.indexOf(restaurant) + 1,
+                        restaurant = restaurant,
+                        editRestaurantMenu = state.editRestaurantMenu
+                    )
+                },
+            )
     }
 
     @Composable
@@ -238,14 +250,15 @@ class RestaurantScreen :
             Image(
                 painter = painterResource(Resources.Drawable.dots),
                 contentDescription = null,
-                modifier = Modifier.noRipple { onClickEditRestaurant(restaurant.id) },
+                modifier = Modifier.noRipple { onClickEditRestaurant(restaurant.name) },
                 colorFilter = ColorFilter.tint(color = Theme.colors.contentPrimary)
             )
             EditRestaurantDropdownMenu(
                 restaurant = restaurant,
-                onClickEdit = { onClickEditRestaurantMenuItem(restaurant.id) },
+                onClickEdit = onClickEditRestaurantMenuItem,
                 onClickDelete = onClickDeleteRestaurantMenuItem,
                 onDismissRequest = onEditRestaurantDismiss,
+                editRestaurantMenu = editRestaurantMenu
             )
         }
     }

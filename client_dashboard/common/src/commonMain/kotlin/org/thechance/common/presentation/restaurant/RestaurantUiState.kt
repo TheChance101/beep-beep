@@ -1,29 +1,21 @@
 package org.thechance.common.presentation.restaurant
 
+import androidx.compose.runtime.Composable
 import org.thechance.common.domain.entity.Cuisine
 import org.thechance.common.domain.entity.RestaurantInformation
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.presentation.composables.table.Header
+import org.thechance.common.presentation.resources.Resources
 
 
 data class RestaurantUiState(
     val isLoading: Boolean = true,
-    val isNoInternetConnection: Boolean = false,
+    val hasConnection: Boolean = true,
     val isNewRestaurantInfoDialogVisible: Boolean = false,
     val restaurantInformationUIState: RestaurantInformationUIState = RestaurantInformationUIState(),
     val restaurantAddCuisineDialogUiState: RestaurantAddCuisineDialogUiState = RestaurantAddCuisineDialogUiState(),
     val restaurantFilterDropdownMenuUiState: RestaurantFilterDropdownMenuUiState = RestaurantFilterDropdownMenuUiState(),
     val restaurants: List<RestaurantDetailsUiState> = emptyList(),
-    val tableHeader: List<Header> = listOf(
-        Header("No.", 1f),
-        Header("Name", 3f),
-        Header("Owner Username", 3f),
-        Header("Phone", 3f),
-        Header("Rate", 3f),
-        Header("Price Level", 3f),
-        Header("Working Hours", 3f),
-        Header("", 1f),
-    ),
     val numberOfRestaurants: Int = 0,
     val searchQuery: String = "",
     val maxPageCount: Int = 1,
@@ -32,6 +24,17 @@ data class RestaurantUiState(
     val editRestaurantMenu: String = "",
     val isEditMode: Boolean = false,
 ) {
+    val tableHeader: List<Header>
+       @Composable get() = listOf(
+            Header(Resources.Strings.number, 1f),
+            Header(Resources.Strings.name, 3f),
+            Header(Resources.Strings.ownerUsername, 3f),
+            Header(Resources.Strings.phone, 3f),
+            Header(Resources.Strings.rate, 3f),
+            Header(Resources.Strings.priceLevel, 3f),
+            Header(Resources.Strings.workingHours, 3f),
+            Header("", 1f),
+    )
     data class RestaurantDetailsUiState(
         val id: String,
         val name: String,

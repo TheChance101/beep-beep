@@ -23,6 +23,10 @@ class RestaurantScreenModel(
     private var limitJob: Job? = null
 
     init {
+        initRestaurantScreen()
+    }
+
+    private fun initRestaurantScreen() {
         getRestaurants()
         getCuisines()
         if (state.value.restaurantInformationUIState.latitude.isEmpty())
@@ -30,29 +34,32 @@ class RestaurantScreenModel(
     }
 
     private fun getRestaurants() {
-        val currentState = state.value
+
         tryToExecute(
-            {
-                manageRestaurant.getRestaurant(
-                    currentState.selectedPageNumber,
-                    currentState.numberOfRestaurantsInPage,
-                    currentState.searchQuery,
-                    currentState.restaurantFilterDropdownMenuUiState.filterRating,
-                    currentState.restaurantFilterDropdownMenuUiState.filterPriceLevel,
-                )
-            },
-            ::onGetRestaurantSuccessfully,
-            ::onError
+                {
+                    mutableState.value.run {
+                        manageRestaurant.getRestaurant(
+                                selectedPageNumber,
+                                numberOfRestaurantsInPage,
+                                searchQuery,
+                                restaurantFilterDropdownMenuUiState.filterRating,
+                                restaurantFilterDropdownMenuUiState.filterPriceLevel,
+                        )
+                    }
+                },
+                ::onGetRestaurantSuccessfully,
+                ::onError
         )
     }
 
     private fun onGetRestaurantSuccessfully(restaurants: DataWrapper<Restaurant>) {
         updateState {
             it.copy(
-                restaurants = restaurants.result.toRestaurantsUIState(),
-                isLoading = false,
-                numberOfRestaurants = restaurants.numberOfResult,
-                maxPageCount = restaurants.totalPages
+                    hasConnection = true,
+                    restaurants = restaurants.result.toRestaurantsUIState(),
+                    isLoading = false,
+                    numberOfRestaurants = restaurants.numberOfResult,
+                    maxPageCount = restaurants.totalPages
             )
         }
         if (state.value.selectedPageNumber > state.value.maxPageCount) {
@@ -62,18 +69,18 @@ class RestaurantScreenModel(
 
     private fun getCuisines() {
         tryToExecute(
-            mangeCuisines::getCuisines,
-            ::onGetCuisinesSuccessfully,
-            ::onError
+                mangeCuisines::getCuisines,
+                ::onGetCuisinesSuccessfully,
+                ::onError
         )
     }
 
     private fun onGetCuisinesSuccessfully(cuisines: List<Cuisine>) {
         updateState {
             it.copy(
-                restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
-                    cuisines = cuisines.toUiState(),
-                )
+                    restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
+                            cuisines = cuisines.toUiState(),
+                    )
             )
         }
     }
@@ -113,6 +120,20 @@ class RestaurantScreenModel(
                         )
                     )
                 }
+                updateState { it.copy(
+                    restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
+                            cuisineNameError = ErrorWrapper(errorStates
+                                .firstInstanceOfOrNull<ErrorState.CuisineNameAlreadyExisted>()
+                                ?.errorMessage ?: "", true)
+                    ))
+                }
+
+
+            }
+            is ErrorState.NoConnection -> {
+                updateState {
+                    it.copy(hasConnection = false)
+                }
             }
 
             else -> {}
@@ -122,9 +143,9 @@ class RestaurantScreenModel(
     override fun onSaveFilterRestaurantsClicked(rating: Double, priceLevel: String) {
         updateState {
             it.copy(
-                restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
-                    isFiltered = true
-                )
+                    restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
+                            isFiltered = true
+                    )
             )
         }
         getRestaurants()
@@ -149,9 +170,9 @@ class RestaurantScreenModel(
     override fun onClickDropDownMenu() {
         updateState {
             it.copy(
-                restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
-                    isFilterDropdownMenuExpanded = true
-                )
+                    restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
+                            isFilterDropdownMenuExpanded = true
+                    )
             )
         }
     }
@@ -159,9 +180,9 @@ class RestaurantScreenModel(
     override fun onDismissDropDownMenu() {
         updateState {
             it.copy(
-                restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
-                    isFilterDropdownMenuExpanded = false
-                )
+                    restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
+                            isFilterDropdownMenuExpanded = false
+                    )
             )
         }
     }
@@ -169,9 +190,9 @@ class RestaurantScreenModel(
     override fun onClickFilterRatingBar(rating: Double) {
         updateState {
             it.copy(
-                restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
-                    filterRating = rating
-                )
+                    restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
+                            filterRating = rating
+                    )
             )
         }
     }
@@ -179,9 +200,9 @@ class RestaurantScreenModel(
     override fun onClickFilterPriceBar(priceLevel: Int) {
         updateState {
             it.copy(
-                restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
-                    filterPriceLevel = priceLevel
-                )
+                    restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
+                            filterPriceLevel = priceLevel
+                    )
             )
         }
     }
@@ -229,21 +250,25 @@ class RestaurantScreenModel(
         )
     }
 
+    override fun onRetry() {
+        initRestaurantScreen()
+    }
+
     private fun getCurrentLocation() {
         tryToExecute(
-            callee = { manageLocation.getCurrentLocation() },
-            onSuccess = ::onGetCurrentLocationSuccess,
-            onError = ::onError,
+                callee = { manageLocation.getCurrentLocation() },
+                onSuccess = ::onGetCurrentLocationSuccess,
+                onError = ::onError,
         )
     }
 
     private fun onGetCurrentLocationSuccess(location: LocationInfo) {
         updateState {
             it.copy(
-                restaurantInformationUIState = it.restaurantInformationUIState.copy(
-                    latitude = location.latitude.toString(),
-                    longitude = location.longitude.toString(),
-                )
+                    restaurantInformationUIState = it.restaurantInformationUIState.copy(
+                            latitude = location.latitude.toString(),
+                            longitude = location.longitude.toString(),
+                    )
             )
         }
     }
@@ -257,13 +282,13 @@ class RestaurantScreenModel(
     private fun clearAddRestaurantInfo() {
         updateState {
             it.copy(
-                restaurantInformationUIState = it.restaurantInformationUIState.copy(
-                    name = "",
-                    ownerUsername = "",
-                    phoneNumber = "",
-                    openingTime = "",
-                    closingTime = "",
-                ),
+                    restaurantInformationUIState = it.restaurantInformationUIState.copy(
+                            name = "",
+                            ownerUsername = "",
+                            phoneNumber = "",
+                            openingTime = "",
+                            closingTime = "",
+                    ),
             )
         }
     }
@@ -271,9 +296,9 @@ class RestaurantScreenModel(
     override fun onRestaurantNameChange(name: String) {
         updateState {
             it.copy(
-                restaurantInformationUIState = it.restaurantInformationUIState.copy(
-                    name = name,
-                )
+                    restaurantInformationUIState = it.restaurantInformationUIState.copy(
+                            name = name,
+                    )
             )
         }
     }
@@ -281,7 +306,7 @@ class RestaurantScreenModel(
     override fun onOwnerUserNameChange(name: String) {
         updateState {
             it.copy(
-                restaurantInformationUIState = it.restaurantInformationUIState.copy(ownerUsername = name)
+                    restaurantInformationUIState = it.restaurantInformationUIState.copy(ownerUsername = name)
             )
         }
     }
@@ -296,13 +321,13 @@ class RestaurantScreenModel(
         updateState {
             it.copy(restaurantInformationUIState = it.restaurantInformationUIState.copy(openingTime = hour))
             it.copy(
-                restaurantInformationUIState = it.restaurantInformationUIState.copy(
-                    openingTime = hour,
+                    restaurantInformationUIState = it.restaurantInformationUIState.copy(
+                            openingTime = hour,
 //                    startTimeError = ErrorWrapper(
 //                        "write in valid format 00:00",
 ////                        !iValidateRestaurantUseCase.validateStartTime(hour)
 //                    ),
-                )
+                    )
             )
         }
     }
@@ -316,9 +341,9 @@ class RestaurantScreenModel(
     override fun onLocationChange(location: String) {
         updateState {
             it.copy(
-                restaurantInformationUIState = it.restaurantInformationUIState.copy(
-                    location = location,
-                )
+                    restaurantInformationUIState = it.restaurantInformationUIState.copy(
+                            location = location,
+                    )
             )
         }
     }
@@ -381,11 +406,11 @@ class RestaurantScreenModel(
     override fun onFilterClearAllClicked() {
         updateState {
             it.copy(
-                restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
-                    filterRating = 0.0,
-                    filterPriceLevel = 0,
-                    isFiltered = false
-                )
+                    restaurantFilterDropdownMenuUiState = it.restaurantFilterDropdownMenuUiState.copy(
+                            filterRating = 0.0,
+                            filterPriceLevel = 0,
+                            isFiltered = false
+                    )
             )
         }
     }
@@ -404,7 +429,11 @@ class RestaurantScreenModel(
         val newRestaurant =
             mutableState.value.restaurants.toMutableList().apply { add(restaurant.toUiState()) }
         updateState {
-            it.copy(restaurants = newRestaurant, isLoading = false, isNewRestaurantInfoDialogVisible = false)
+            it.copy(
+                    restaurants = newRestaurant,
+                    isLoading = false,
+                    isNewRestaurantInfoDialogVisible = false
+            )
         }
     }
 
@@ -417,14 +446,14 @@ class RestaurantScreenModel(
     private fun clearRestaurantInfoErrorState() {
         updateState {
             it.copy(
-                restaurantInformationUIState = it.restaurantInformationUIState.copy(
-                    nameError = ErrorWrapper(),
-                    userNameError = ErrorWrapper(),
-                    phoneNumberError = ErrorWrapper(),
-                    startTimeError = ErrorWrapper(),
-                    endTimeError = ErrorWrapper(),
-                    locationError = ErrorWrapper(),
-                )
+                    restaurantInformationUIState = it.restaurantInformationUIState.copy(
+                            nameError = ErrorWrapper(),
+                            userNameError = ErrorWrapper(),
+                            phoneNumberError = ErrorWrapper(),
+                            startTimeError = ErrorWrapper(),
+                            endTimeError = ErrorWrapper(),
+                            locationError = ErrorWrapper(),
+                    )
             )
         }
     }
@@ -432,8 +461,8 @@ class RestaurantScreenModel(
     private fun clearCuisineErrorState() {
         updateState {
             it.copy(
-                restaurantAddCuisineDialogUiState =
-                it.restaurantAddCuisineDialogUiState.copy(cuisineNameError = ErrorWrapper())
+                    restaurantAddCuisineDialogUiState =
+                    it.restaurantAddCuisineDialogUiState.copy(cuisineNameError = ErrorWrapper())
             )
         }
     }
@@ -443,8 +472,8 @@ class RestaurantScreenModel(
     override fun onClickAddCuisine() {
         updateState {
             it.copy(
-                restaurantAddCuisineDialogUiState =
-                it.restaurantAddCuisineDialogUiState.copy(isVisible = true)
+                    restaurantAddCuisineDialogUiState =
+                    it.restaurantAddCuisineDialogUiState.copy(isVisible = true)
             )
         }
     }
@@ -453,17 +482,17 @@ class RestaurantScreenModel(
         clearCuisineErrorState()
         updateState {
             it.copy(
-                restaurantAddCuisineDialogUiState =
-                it.restaurantAddCuisineDialogUiState.copy(isVisible = false, cuisineName = "")
+                    restaurantAddCuisineDialogUiState =
+                    it.restaurantAddCuisineDialogUiState.copy(isVisible = false, cuisineName = "")
             )
         }
     }
 
     override fun onClickCreateCuisine() {
         tryToExecute(
-            { mangeCuisines.createCuisine(state.value.restaurantAddCuisineDialogUiState.cuisineName) },
-            ::onCreateCuisinesSuccessfully,
-            ::onError
+                { mangeCuisines.createCuisine(state.value.restaurantAddCuisineDialogUiState.cuisineName) },
+                ::onCreateCuisinesSuccessfully,
+                ::onError
         )
     }
 
@@ -471,12 +500,13 @@ class RestaurantScreenModel(
         clearCuisineErrorState()
         updateState {
             it.copy(
-                restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
-                    cuisines = it.restaurantAddCuisineDialogUiState.cuisines.toMutableList().apply {
-                        add(cuisine.toUiState())
-                    },
-                    cuisineName = ""
-                )
+                    restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
+                            cuisines = it.restaurantAddCuisineDialogUiState.cuisines.toMutableList()
+                                .apply {
+                                    add(cuisine.toUiState())
+                                },
+                            cuisineName = ""
+                    )
             )
         }
     }
@@ -492,12 +522,14 @@ class RestaurantScreenModel(
     private fun onDeleteCuisinesSuccessfully(cuisineId: String) {
         updateState {
             it.copy(
-                restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
-                    cuisines = it.restaurantAddCuisineDialogUiState.cuisines.toMutableList().apply {
-                        val cuisine = this.find { cuisineUiState -> cuisineUiState.id == cuisineId }
-                        remove(cuisine)
-                    }
-                )
+                    restaurantAddCuisineDialogUiState = it.restaurantAddCuisineDialogUiState.copy(
+                            cuisines = it.restaurantAddCuisineDialogUiState.cuisines.toMutableList()
+                                .apply {
+                                    val cuisine =
+                                        this.find { cuisineUiState -> cuisineUiState.id == cuisineId }
+                                    remove(cuisine)
+                                }
+                    )
             )
         }
     }

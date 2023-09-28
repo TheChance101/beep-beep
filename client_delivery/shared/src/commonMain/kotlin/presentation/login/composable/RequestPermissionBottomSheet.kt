@@ -28,7 +28,7 @@ fun RequestPermissionBottomSheet(
 ) {
     Column(
         modifier = modifier.wrapContentHeight()
-            .padding(horizontal = Theme.dimens.space16, vertical = 24.dp)
+            .padding(horizontal = 16.dp, vertical = 24.dp)
     ) {
         Text(
             text = Resources.strings.askForPermission,
@@ -37,7 +37,7 @@ fun RequestPermissionBottomSheet(
         )
         BpTextField(
             text = state.deliveryUsername,
-            label = Resources.strings.restaurantName,
+            label = Resources.strings.deliveryUsername,
             keyboardType = KeyboardType.Text,
             onValueChange = listener::onRestaurantNameChanged,
             modifier = Modifier.fillMaxWidth().padding(top = 24.dp)
@@ -66,12 +66,12 @@ fun RequestPermissionBottomSheet(
                 )
             },
             title = Resources.strings.submit,
-            modifier = Modifier.fillMaxWidth().padding(top = Theme.dimens.space24),
+            modifier = Modifier.fillMaxWidth().padding(top =24.dp),
         )
         BpTransparentButton(
             onClick = listener::onCancelClicked,
             title = Resources.strings.cancel,
-            modifier = Modifier.fillMaxWidth().padding(vertical = Theme.dimens.space16),
+            modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
         )
     }
 }
