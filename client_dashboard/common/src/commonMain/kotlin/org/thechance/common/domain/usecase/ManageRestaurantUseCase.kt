@@ -67,7 +67,6 @@ class ManageRestaurantUseCase(private val restaurantGateway: IRestaurantGateway)
         ownerId: String,
         restaurant: RestaurantInformation
     ): Restaurant {
-        println("updateRestaurant :$restaurantId ")
         return restaurantGateway.updateRestaurant(restaurantId, ownerId, restaurant)
     }
 

@@ -89,7 +89,6 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
         ownerId: String,
         restaurant: RestaurantInformation
     ): Restaurant {
-        println("updateRestaurant :$restaurantId")
         return tryToExecute<ServerResponse<RestaurantDto>>(client) {
             put(urlString = "/restaurant") {
                 setBody(
