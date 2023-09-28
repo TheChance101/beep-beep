@@ -30,7 +30,6 @@ fun CalfMapWebView(
     }
     LaunchedEffect(key1 = currentLocation) {
         destination?.let { location ->
-            state.evaluateJavascript("clearDirections()", null)
             state.evaluateJavascript(
                 "getDirections(${currentLocation.lat},${currentLocation.lng},${location.lat},${location.lng})",
                 null
