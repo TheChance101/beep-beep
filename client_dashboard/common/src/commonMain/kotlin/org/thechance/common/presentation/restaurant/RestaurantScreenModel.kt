@@ -302,22 +302,21 @@ class RestaurantScreenModel(
     }
 
     override fun onShowRestaurantMenu(restaurantId: String) {
-        setTaxiMenuVisibility(restaurantId, true)
+        setRestaurantMenuVisibility(restaurantId, true)
     }
 
     override fun onHideRestaurantMenu(restaurantId: String) {
-        setTaxiMenuVisibility(restaurantId, false)
+        setRestaurantMenuVisibility(restaurantId, false)
     }
 
-    private fun setTaxiMenuVisibility(id: String, isExpanded: Boolean) {
-        println("setTaxiMenuVisibility: $id, $isExpanded")
+    private fun setRestaurantMenuVisibility(id: String, isExpanded: Boolean) {
         val currentRestaurantState = state.value.restaurants
-        val selectedTaxiState = currentRestaurantState.first { it.id == id }
-        val updatedTaxiState = selectedTaxiState.copy(isExpanded = isExpanded)
+        val selectedRestaurantState = currentRestaurantState.first { it.id == id }
+        val updateRestaurantState = selectedRestaurantState.copy(isExpanded = isExpanded)
         updateState {
             it.copy(
                 restaurants = currentRestaurantState.toMutableList()
-                    .apply { set(indexOf(selectedTaxiState), updatedTaxiState) }
+                    .apply { set(indexOf(selectedRestaurantState), updateRestaurantState) }
             )
         }
     }
@@ -337,8 +336,8 @@ class RestaurantScreenModel(
 
     override fun onClickEditRestaurantMenuItem(restaurantId: String) {
         getRestaurantById(restaurantId)
-        setTaxiMenuVisibility(restaurantId, false)
-        updateState { it.copy(isNewRestaurantInfoDialogVisible = true) }
+        setRestaurantMenuVisibility(restaurantId, false)
+        updateState { it.copy(isNewRestaurantInfoDialogVisible = true, isEditMode = true) }
     }
 
     override fun onClickDeleteRestaurantMenuItem(id: String) {
@@ -381,7 +380,7 @@ class RestaurantScreenModel(
 
     private fun onDeleteRestaurantSuccessfully(id: String) {
         updateState { it.copy(isLoading = false) }
-        setTaxiMenuVisibility(id, false)
+        setRestaurantMenuVisibility(id, false)
         getRestaurants()
     }
 
