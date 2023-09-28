@@ -1,4 +1,5 @@
-package org.thechance.api_gateway.data.model
+package org.thechance.api_gateway.data.model.identity
+
 import org.thechance.api_gateway.data.model.AddressDto
 
 data class UserDetailsDto(

@@ -10,8 +10,7 @@ import io.ktor.server.routing.*
 import kotlinx.coroutines.async
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.model.LocationDto
-import org.thechance.api_gateway.data.model.getUserOptions
-import org.thechance.api_gateway.data.model.restaurant.getRestaurantOptions
+import org.thechance.api_gateway.data.model.identity.getUserOptions
 import org.thechance.api_gateway.data.service.IdentityService
 import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.data.service.TaxiService
