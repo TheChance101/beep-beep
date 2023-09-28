@@ -40,7 +40,7 @@ fun NewRestaurantInfoDialog(
         state = state.restaurantInformationUIState,
         onCreateClicked = listener::onCreateNewRestaurantClicked,
         onLocationChange = listener::onLocationChange,
-        onUpdateRestaurantClicked = listener::onUpdateRestaurantClicked,
+        onUpdateRestaurantClicked = { listener.onUpdateRestaurantClicked(it) },
         isEditMode = state.isEditMode
     )
 }
@@ -59,7 +59,7 @@ private fun RestaurantDialog(
     onWorkingStartHourChange: (String) -> Unit,
     onWorkingEndHourChange: (String) -> Unit,
     onLocationChange: (String) -> Unit,
-    onUpdateRestaurantClicked : (String) -> Unit,
+    onUpdateRestaurantClicked: (String) -> Unit,
     isEditMode: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -175,6 +175,7 @@ private fun RestaurantDialog(
                             title = if (isEditMode) Resources.Strings.update else Resources.Strings.create,
                             onClick = {
                                 if (isEditMode) {
+                                    println("state.id :${state.id}")
                                     onUpdateRestaurantClicked(state.id)
                                 } else {
                                     onCreateClicked()
