@@ -94,3 +94,17 @@ suspend inline fun <reified T> PipelineContext<Unit, ApplicationCall>.receiveMul
     }
     return MultipartDto(data = data!!, image = fileBytes)
 }
+
+fun String?.toListOfIntOrNull(): List<Int>? {
+    return takeIf { !it.isNullOrBlank() }?.run {
+        val integerStrings = this.replace("[", "").replace("]", "").split(",")
+        integerStrings.mapNotNull(String::toIntOrNull)
+    }
+}
+
+fun String?.toListOfStringOrNull(): List<String>? {
+    return takeIf { !it.isNullOrBlank() }?.run {
+        val integerStrings = this.replace("[", "").replace("]", "").split(",")
+        integerStrings.map(String::trim)
+    }
+}

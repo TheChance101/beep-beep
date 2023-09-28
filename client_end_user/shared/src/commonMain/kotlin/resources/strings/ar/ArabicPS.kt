@@ -97,5 +97,6 @@ data class ArabicPS(
     override val loginToAddToFavourite: String= "الرجاء تسجيل الدخول للاضافه",
     override val addToCart: String= "أضف إلى العربة",
     override val mealAddedToYourCart: String= " ضفنالك الوجبة إلى عربة التسوق تاعك ",
-
-    ) : IStringResources
+    override val invalidAddress: String = "العنوان مو صالح",
+    override val yourAddress: String = "عنوانك",
+) : IStringResources

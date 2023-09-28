@@ -1,6 +1,5 @@
 package org.thechance.service_restaurant.domain.usecase
 
-import org.thechance.service_restaurant.api.models.RestaurantOptionsDto
 import org.thechance.service_restaurant.domain.entity.*
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
@@ -12,16 +11,14 @@ import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 interface IDiscoverRestaurantUseCase {
     suspend fun getRestaurants(restaurantOptions: RestaurantOptions): List<Restaurant>
     suspend fun getRestaurantsByIds(restaurantIds: List<String>): List<Restaurant>
-    suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant>
     suspend fun getRestaurantDetails(restaurantId: String): Restaurant
-    suspend fun getMealsByCuisine(cuisineId: String): List<Meal>
-
-    suspend fun getMealsByRestaurantId(restaurantId: String, page: Int, limit: Int): List<Meal>
-    suspend fun getMealDetails(mealId: String): MealDetails
-    suspend fun getCategories(page: Int, limit: Int): List<Category>
     suspend fun getRestaurantsInCategory(categoryId: String): List<Restaurant>
 
 
+    suspend fun getMealsByCuisine(cuisineId: String): List<Meal>
+    suspend fun getMealsByRestaurantId(restaurantId: String, page: Int, limit: Int): List<Meal>
+    suspend fun getMealDetails(mealId: String): MealDetails
+    suspend fun getCategories(page: Int, limit: Int): List<Category>
 }
 
 class DiscoverRestaurantUseCase(
@@ -40,10 +37,6 @@ class DiscoverRestaurantUseCase(
         return restaurantGateway.getRestaurants(restaurantIds)
     }
 
-    override suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant> {
-        basicValidation.isValidId(ownerId)
-        return restaurantGateway.getRestaurantsByOwnerId(ownerId)
-    }
 
     override suspend fun getCategories(page: Int, limit: Int): List<Category> {
         basicValidation.validatePagination(page, limit)
@@ -65,11 +58,7 @@ class DiscoverRestaurantUseCase(
         return optionsGateway.getMealsInCuisine(cuisineId)
     }
 
-    override suspend fun getMealsByRestaurantId(
-        restaurantId: String,
-        page: Int,
-        limit: Int
-    ): List<Meal> {
+    override suspend fun getMealsByRestaurantId(restaurantId: String, page: Int, limit: Int): List<Meal> {
         checkIfRestaurantIsExist(restaurantId)
         return restaurantGateway.getMealsByRestaurantId(restaurantId, page, limit)
     }
