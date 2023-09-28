@@ -1,16 +1,15 @@
 package org.thechance.service_identity.domain.usecases.validation
 
 import org.koin.core.annotation.Single
+import org.thechance.service_identity.domain.entity.UserInfo
 import org.thechance.service_identity.domain.util.RequestValidationException
 import org.thechance.service_identity.domain.util.*
 
 interface IUserInfoValidationUseCase {
 
-    fun validateUserInformation(fullName: String, username: String, password: String, email: String)
+    fun validateUserInformation(user: UserInfo, password: String?)
 
-    fun validateUpdateUserInformation(fullName: String?, username: String?, password: String?, email: String?)
-
-    fun validateUpdateUserProfile(fullName: String?)
+    fun validateUpdateUserInformation(fullName: String?, email: String?)
 
     fun validateUsernameIsNotEmpty(username: String): Boolean
 
@@ -28,32 +27,36 @@ interface IUserInfoValidationUseCase {
 @Single
 class UserInfoValidationUseCase : IUserInfoValidationUseCase {
 
-    override fun validateUserInformation(
-        fullName: String, username: String, password: String, email: String
-    ) {
+    override fun validateUserInformation(user: UserInfo, password: String?) {
         val reasons = mutableListOf<String>()
 
-        if (!validateUsernameIsNotEmpty(username)) {
+        if (!validateUsernameIsNotEmpty(user.username)) {
             reasons.add(USERNAME_CANNOT_BE_BLANK)
         }
 
-        if (!validateUsername(username)) {
+        if (!validateUsername(user.username)) {
             reasons.add(INVALID_USERNAME)
         }
 
-        if (!validateFullNameIsNotEmpty(fullName)) {
+        if (!validateFullNameIsNotEmpty(user.fullName)) {
             reasons.add(INVALID_FULLNAME)
         }
 
-        if (!validatePasswordIsNotEmpty(password)) {
-            reasons.add(PASSWORD_CANNOT_BE_BLANK)
+        if (password == null) {
+            reasons.add(INVALID_REQUEST_PARAMETER)
+
         }
 
-        if (!validatePasswordLength(password)) {
-            reasons.add(PASSWORD_CANNOT_BE_LESS_THAN_8_CHARACTERS)
+        password?.let {
+            if (!validatePasswordIsNotEmpty(password)) {
+                reasons.add(PASSWORD_CANNOT_BE_BLANK)
+            }
+            if (!validatePasswordLength(password)) {
+                reasons.add(PASSWORD_CANNOT_BE_LESS_THAN_8_CHARACTERS)
+            }
         }
 
-        if (!validateEmail(email)) {
+        if (!validateEmail(user.email)) {
             reasons.add(INVALID_EMAIL)
         }
 
@@ -62,38 +65,12 @@ class UserInfoValidationUseCase : IUserInfoValidationUseCase {
         }
     }
 
-    override fun validateUpdateUserInformation(
-        fullName: String?, username: String?, password: String?, email: String?
-    ) {
+    override fun validateUpdateUserInformation(fullName: String?, email: String?) {
         val reasons = mutableListOf<String>()
-
-        username?.let {
-            if (!validateUsernameIsNotEmpty(it)) {
-                reasons.add(USERNAME_CANNOT_BE_BLANK)
-            }
-        }
-
-        username?.let {
-            if (!validateUsername(it)) {
-                reasons.add(INVALID_USERNAME)
-            }
-        }
 
         fullName?.let {
             if (!validateFullNameIsNotEmpty(it)) {
                 reasons.add(INVALID_FULLNAME)
-            }
-        }
-
-        password?.let {
-            if (!validatePasswordIsNotEmpty(it)) {
-                reasons.add(PASSWORD_CANNOT_BE_BLANK)
-            }
-        }
-
-        password?.let {
-            if (!validatePasswordLength(it)) {
-                reasons.add(PASSWORD_CANNOT_BE_LESS_THAN_8_CHARACTERS)
             }
         }
 
@@ -103,18 +80,6 @@ class UserInfoValidationUseCase : IUserInfoValidationUseCase {
             }
         }
 
-        if (reasons.isNotEmpty()) {
-            throw RequestValidationException(reasons)
-        }
-    }
-
-    override fun validateUpdateUserProfile(fullName: String?) {
-        val reasons = mutableListOf<String>()
-        fullName?.let {
-            if (!validateFullNameIsNotEmpty(it)) {
-                reasons.add(INVALID_FULLNAME)
-            }
-        }
         if (reasons.isNotEmpty()) {
             throw RequestValidationException(reasons)
         }
