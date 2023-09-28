@@ -254,7 +254,7 @@ class RestaurantScreen :
             )
             EditRestaurantDropdownMenu(
                 restaurant = restaurant,
-                onClickEdit = { onClickEditRestaurantMenuItem(it.id) },
+                onClickEdit = { onClickEditRestaurantMenuItem(it) },
                 onClickDelete = onClickDeleteRestaurantMenuItem,
                 onDismissRequest = onEditRestaurantDismiss,
             )
@@ -454,7 +454,7 @@ class RestaurantScreen :
     @Composable
     private fun EditRestaurantDropdownMenu(
         restaurant: RestaurantUiState.RestaurantDetailsUiState,
-        onClickEdit: (RestaurantUiState.RestaurantDetailsUiState) -> Unit,
+        onClickEdit: (restaurantId : String) -> Unit,
         onClickDelete: (id: String) -> Unit,
         onDismissRequest: (String) -> Unit,
     ) {
@@ -467,7 +467,7 @@ class RestaurantScreen :
             Column {
                 BpDropdownMenuItem(
                     onClick = {
-                        onClickEdit(restaurant)
+                        onClickEdit(restaurant.id)
                     },
                     text = Resources.Strings.edit,
                     leadingIconPath = Resources.Drawable.permission,

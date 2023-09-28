@@ -230,8 +230,8 @@ class RestaurantScreenModel(
 
     private fun onUpdateRestaurantSuccessfully(restaurant: Restaurant) {
         updateState { it.copy(isLoading = false, isNewRestaurantInfoDialogVisible = false) }
-        clearAddRestaurantInfo()
         getRestaurants()
+        clearAddRestaurantInfo()
     }
 
     override fun onUpdateRestaurantClicked(restaurantId: String) {
