@@ -9,6 +9,7 @@ data class Taxi(
     val type: String,
     val seats: Int,
     val username: String,
+    val driverId:String? = null,
     val status: TaxiStatus,
     val trips: String,
 )

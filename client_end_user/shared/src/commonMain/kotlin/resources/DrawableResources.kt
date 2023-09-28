@@ -15,6 +15,7 @@ data class DrawableResources(
     val ordersOutlined: String = "ic_orders_outlined.xml",
     val ordersFilled: String = "ic_orders_filled.xml",
     val arrowRight: String = "ic_right_arrow.xml",
+    val arrowLeft: String = "arrow_left.xml",
     val chatImage: String = "img_chat.png",
     val orderImage: String = "img_order.png",
     val orderTaxi: String = "img_taxi.png",
@@ -32,6 +33,9 @@ data class DrawableResources(
     val wishDishHigh: String = "wish_dish_high.png",
     val quickRide: String = "quick_ride.png",
     val slowRide: String = "slow_ride.png",
+    val transferIcon:String = "icon_from_to.xml",
+    val logout : String = "logout_2.xml",
+    val needLogin : String = "need_login.png",
 )
 
 val BpDrawableDarkResources = DrawableResources(

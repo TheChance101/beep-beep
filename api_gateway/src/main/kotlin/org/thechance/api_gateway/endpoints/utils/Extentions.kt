@@ -61,12 +61,8 @@ fun Route.authenticateWithRole(role: Int, block: Route.() -> Unit) {
     }
 }
 
-private fun hasPermission(permission: Int, role: Int): Boolean {
+fun hasPermission(permission: Int, role: Int): Boolean {
     return (permission and role) == role
-}
-
-fun String?.toIntListOrNull(): List<Int>? {
-    return this?.split(",")?.mapNotNull { it.toIntOrNull() }
 }
 
 suspend inline fun <reified T> PipelineContext<Unit, ApplicationCall>.receiveMultipart(
@@ -97,4 +93,18 @@ suspend inline fun <reified T> PipelineContext<Unit, ApplicationCall>.receiveMul
         part.dispose()
     }
     return MultipartDto(data = data!!, image = fileBytes)
+}
+
+fun String?.toListOfIntOrNull(): List<Int>? {
+    return takeIf { !it.isNullOrBlank() }?.run {
+        val integerStrings = this.replace("[", "").replace("]", "").split(",")
+        integerStrings.mapNotNull(String::toIntOrNull)
+    }
+}
+
+fun String?.toListOfStringOrNull(): List<String>? {
+    return takeIf { !it.isNullOrBlank() }?.run {
+        val integerStrings = this.replace("[", "").replace("]", "").split(",")
+        integerStrings.map(String::trim)
+    }
 }

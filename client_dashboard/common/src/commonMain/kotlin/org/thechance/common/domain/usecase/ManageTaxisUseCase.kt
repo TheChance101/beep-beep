@@ -21,9 +21,9 @@ interface IManageTaxisUseCase {
         limit: Int
     ): DataWrapper<Taxi>
 
-    suspend fun updateTaxi(addTaxi: NewTaxiInfo): Taxi
+    suspend fun updateTaxi(addTaxi: NewTaxiInfo,taxiId:String): Taxi
 
-    suspend fun deleteTaxi(taxiId: String): Boolean
+    suspend fun deleteTaxi(taxiId: String): Taxi
 
     suspend fun getTaxiById(id: String): Taxi
 
@@ -31,7 +31,6 @@ interface IManageTaxisUseCase {
 
 class ManageTaxisUseCase(
     private val taxiGateway: ITaxisGateway,
-    private val remoteGateway: IRemoteGateway
 ) : IManageTaxisUseCase {
 
     override suspend fun createTaxi(addTaxi: NewTaxiInfo): Taxi {
@@ -39,7 +38,7 @@ class ManageTaxisUseCase(
     }
 
     override suspend fun createTaxiReport() {
-        return remoteGateway.getPdfTaxiReport()
+        return taxiGateway.getPdfTaxiReport()
     }
 
     override suspend fun getTaxis(
@@ -56,7 +55,7 @@ class ManageTaxisUseCase(
         )
     }
 
-    override suspend fun deleteTaxi(taxiId: String): Boolean {
+    override suspend fun deleteTaxi(taxiId: String): Taxi {
         return taxiGateway.deleteTaxi(taxiId)
     }
 
@@ -64,8 +63,8 @@ class ManageTaxisUseCase(
         return taxiGateway.getTaxiById(id)
     }
 
-    override suspend fun updateTaxi(addTaxi: NewTaxiInfo): Taxi {
-        return taxiGateway.updateTaxi(addTaxi)
+    override suspend fun updateTaxi(addTaxi: NewTaxiInfo,taxiId:String): Taxi {
+        return taxiGateway.updateTaxi(addTaxi,taxiId)
     }
 
 }

@@ -1,6 +1,6 @@
 package data.gateway.remote
 
-import domain.gateway.IFakeRemoteGateway
+import domain.gateway.remote.IFakeRemoteGateway
 
 class FakeRemoteGateway : IFakeRemoteGateway {
 

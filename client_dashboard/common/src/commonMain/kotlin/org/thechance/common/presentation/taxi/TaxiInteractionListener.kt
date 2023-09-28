@@ -14,6 +14,8 @@ interface TaxiInteractionListener : BaseInteractionListener, FilterMenuListener,
     fun onSearchInputChange(searchQuery: String)
 
     fun onAddNewTaxiClicked()
+
+    fun onRetry()
 }
 
 interface TaxiDialogListener {
@@ -37,9 +39,9 @@ interface TaxiDialogListener {
 
 interface TaxiMenuListener {
 
-    fun showTaxiMenu(taxiId: String)
+    fun onShowTaxiMenu(id : String)
 
-    fun hideTaxiMenu()
+    fun onHideTaxiMenu(id : String)
 
     fun onDeleteTaxiClicked(taxi: String)
 
@@ -48,6 +50,7 @@ interface TaxiMenuListener {
 }
 
 interface FilterMenuListener {
+
     fun onCancelFilterClicked()
 
     fun onSaveFilterClicked()
@@ -63,10 +66,13 @@ interface FilterMenuListener {
     fun onSelectedStatus(status: TaxiStatus)
 
     fun onClearAllClicked()
+
 }
 
 interface PageListener {
+
     fun onItemsIndicatorChange(itemPerPage: Int)
 
     fun onPageClick(pageNumber: Int)
+
 }

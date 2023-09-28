@@ -1,10 +1,11 @@
 package domain.usecase
 
 import domain.gateway.local.ILocalConfigurationGateway
+import kotlinx.coroutines.flow.Flow
 
 interface IMangeLanguageUseCase {
     suspend fun saveLanguageCode(code: String)
-    suspend fun getLanguageCode(): String
+    suspend fun getLanguageCode(): Flow<String>
 }
 
 class MangeLanguageUseCase(
@@ -14,7 +15,7 @@ class MangeLanguageUseCase(
        return localGateway.saveLanguageCode(code)
     }
 
-    override suspend fun getLanguageCode(): String {
-        return localGateway.getLanguageCode()
+    override suspend fun getLanguageCode(): Flow<String> {
+        return localGateway.getLanguageCodeFlow()
     }
 }
