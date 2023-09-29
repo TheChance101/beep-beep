@@ -89,4 +89,6 @@ interface IStringResources {
     val total: String
     val yourCart: String
     val pleaseLogin: String
+    val message: String
+    val supportTeam: String
 }

@@ -31,10 +31,18 @@ class FakeChatRemoteGateway : IChatGateway {
         }
     }
 
-    override suspend fun sendMessage(message: Message) {
-        messages.value += message.toDto()
+    override suspend fun sendMessage(message: String, senderId: String, ticketId: String) {
+        val newMessage = Message(
+            id = "123",
+            ticketId = ticketId,
+            senderId = senderId,
+            message = message,
+            isMe = true,
+            avatarUrl = ""
+        )
+        messages.value += newMessage.toDto()
         delay(1500)
-        answerWithFakeMessage(message)
+        answerWithFakeMessage(newMessage)
     }
 
     private fun answerWithFakeMessage(message: Message) {

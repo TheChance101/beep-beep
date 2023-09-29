@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface IManageMessagesUseCase {
     fun getMessages(ticketId: String): Flow<List<Message>>
 
-    suspend fun sendMessage(message: Message)
+    suspend fun sendMessage(message: String, senderId: String, ticketId: String)
 }
 
 class ManageMessagesUseCase(private val chatGateway: IChatGateway) : IManageMessagesUseCase {
@@ -15,7 +15,7 @@ class ManageMessagesUseCase(private val chatGateway: IChatGateway) : IManageMess
         return chatGateway.getMessages(ticketId)
     }
 
-    override suspend fun sendMessage(message: Message) {
-        chatGateway.sendMessage(message)
+    override suspend fun sendMessage(message: String, senderId: String, ticketId: String) {
+        chatGateway.sendMessage(message, senderId, ticketId)
     }
 }
