@@ -37,7 +37,7 @@ suspend inline fun <reified T> HttpClient.tryToExecuteFromWebSocket(
     attributes.put(AttributeKey("API"), api.value)
     val host = System.getenv(attributes[AttributeKey("API")])
     return flow {
-        webSocket(host = host, path = path) {
+        webSocket(urlString = "ws://$host/$path") {
             while (true) {
                 emit(receiveDeserialized<T>())
             }
@@ -53,7 +53,7 @@ suspend inline fun <reified T> HttpClient.tryToSendWebSocketData(
 ) {
     attributes.put(AttributeKey("API"), api.value)
     val host = System.getenv(attributes[AttributeKey("API")])
-    webSocket(host = host, path = path) {
+    webSocket(urlString = "ws://$host/$path") {
         sendSerialized(data)
     }
 }
