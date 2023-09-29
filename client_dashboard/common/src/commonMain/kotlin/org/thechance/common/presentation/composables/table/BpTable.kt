@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -120,11 +121,12 @@ private fun TableRowLoading(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(16.kms)
     ){
+        val randomFloat= remember { (50..100).random().dp }
         repeat(9) {
-            Box(
-                    modifier = Modifier.height(32.kms).weight(if (it == 0 || it == 8) 1f else 3f)
-                        .clip(shape = RoundedCornerShape(8.dp)).shimmerEffect(durationMillis = 1500)
-            )
+            Box(modifier = Modifier.weight(if (it == 0 || it == 8) 1f else 3f)){
+                Box(modifier = Modifier.height(30.kms).width(randomFloat)
+                    .clip(shape = RoundedCornerShape(4.dp)).shimmerEffect(durationMillis = 1500))
+            }
         }
     }
     Divider(
