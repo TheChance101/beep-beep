@@ -54,6 +54,7 @@ import presentation.home.composable.CartCard
 import presentation.home.composable.ChatSupportCard
 import presentation.home.composable.CuisineCard
 import presentation.home.composable.OrderCard
+import presentation.main.MainContainer
 import presentation.main.SearchTab
 import presentation.search.SearchScreen
 import resources.Resources
@@ -76,7 +77,7 @@ class HomeScreen :
             is HomeScreenUiEffect.NavigateToOrderTaxi -> println("Navigate to Order Taxi screen")
             is HomeScreenUiEffect.ScrollDownToRecommendedRestaurants -> println("Scroll down home screen")
             is HomeScreenUiEffect.NavigateToOfferItem -> println("Navigate to offer item details ${effect.offerId}")
-            is HomeScreenUiEffect.NavigateToSearch -> navigator.root?.push(SearchTab)
+            is HomeScreenUiEffect.NavigateToSearch -> navigator.push(SearchTab)
             is HomeScreenUiEffect.NavigateToOrderDetails -> println("Navigate to order details ${effect.orderId}")
             is HomeScreenUiEffect.NavigateToCart -> navigator.root?.push(CartScreen())
             is HomeScreenUiEffect.NavigateLoginScreen -> navigator.root?.push(LoginScreen())
@@ -89,7 +90,6 @@ class HomeScreen :
     )
     @Composable
     override fun onRender(state: HomeScreenUiState, listener: HomeScreenInteractionListener) {
-        val tabNavigator = LocalTabNavigator.current
         val painters = mutableListOf<Painter>()
         repeat(state.favoriteRestaurants.size) {
             painters.add(painterResource(Resources.images.placeholder))
