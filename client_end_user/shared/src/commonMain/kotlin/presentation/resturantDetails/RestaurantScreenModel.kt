@@ -8,6 +8,7 @@ import domain.usecase.IManageFavouriteUseCase
 import domain.usecase.IMangeRestaurantDetailsUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
@@ -34,11 +35,18 @@ class RestaurantScreenModel(
         )
     }
 
-    private fun onCheckLoginSuccess (accessToken: String) {
-        if(accessToken.isNotEmpty()){
-            updateState { it.copy(isLogin = true) }
+    private fun onCheckLoginSuccess(accessToken: Flow<String>) {
+        coroutineScope.launch {
+            accessToken.collect { token ->
+                if (token.isNotEmpty()) {
+                    updateState { it.copy(isLogin = true) }
+                } else {
+                    updateState { it.copy(isLogin = false) }
+                }
+            }
         }
     }
+
     private fun onCheckLoginError (errorState: ErrorState) {
         updateState { it.copy( isLogin = false)}
     }
