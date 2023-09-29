@@ -84,7 +84,6 @@ class ChatSupportScreen() :
             LaunchedEffect(state.messages.size) {
                 scrollState.animateScrollToItem(abs(state.messages.size - 1))
             }
-            WindowInsets.ime
             LazyColumn(
                 modifier = Modifier.fillMaxSize().padding(bottom = it.calculateBottomPadding()),
                 state = scrollState,
