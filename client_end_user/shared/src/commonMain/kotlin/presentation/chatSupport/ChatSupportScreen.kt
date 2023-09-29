@@ -2,6 +2,7 @@ package presentation.chatSupport
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -85,7 +86,8 @@ class ChatSupportScreen() :
                 scrollState.animateScrollToItem(abs(state.messages.size - 1))
             }
             LazyColumn(
-                modifier = Modifier.fillMaxSize().padding(bottom = it.calculateBottomPadding()),
+                modifier = Modifier.fillMaxSize().background(Theme.colors.background)
+                    .padding(bottom = it.calculateBottomPadding()),
                 state = scrollState,
                 contentPadding = PaddingValues(
                     top = it.calculateTopPadding()
