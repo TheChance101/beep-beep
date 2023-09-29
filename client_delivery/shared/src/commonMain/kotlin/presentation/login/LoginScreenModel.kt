@@ -48,15 +48,21 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
         updateState { it.copy(isLoading = true) }
         clearErrors()
         tryToExecute(
-            { manageLoginUser.loginUser(username, password, isKeepMeLoggedInChecked) },
-            {onLoginSuccess()},
+            {
+                manageLoginUser.loginUser(username, password, isKeepMeLoggedInChecked)
+            },
+            {onLoginSuccess(username)},
             ::onLoginError
         )
     }
 
-    private fun onLoginSuccess() {
+    private fun onLoginSuccess(username: String) {
         clearErrors()
+        viewModelScope.launch {
+            manageLoginUser.saveUsername(username)
+        }
         sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
+
     }
 
     private fun onLoginError(errorState: ErrorState) {
