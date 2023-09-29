@@ -9,5 +9,6 @@ data class MainUiState(
     val isLogin: Boolean = false,
     val error: ErrorState = ErrorState.UnKnownError,
     val isDropMenuExpanded: Boolean = false,
-    val isDarkMode: Boolean = false
+    val isDarkMode: Boolean = false,
+    val hasInternetConnection: Boolean = true
 )

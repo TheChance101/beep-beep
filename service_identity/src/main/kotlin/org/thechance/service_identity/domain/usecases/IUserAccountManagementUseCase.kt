@@ -20,8 +20,11 @@ interface IUserAccountManagementUseCase {
         id: String, fullName: String? = null, username: String? = null, password: String? = null, email: String? = null
     ): Boolean
 
-    suspend fun getUser(id: String): User
+    suspend fun updateUserProfile(
+        id: String, fullName: String?
+    ): Boolean
 
+    suspend fun getUser(id: String): User
     suspend fun addToWallet(userId: String, amount: Double): Wallet
 
     suspend fun subtractFromWallet(userId: String, amount: Double): Wallet
@@ -82,6 +85,11 @@ class UserAccountManagementUseCase(
         return dataBaseGateway.updateUser(id, saltedHash, fullName, username, email)
     }
 
+    override suspend fun updateUserProfile(id: String, fullName: String?): Boolean {
+        userInfoValidationUseCase.validateUpdateUserProfile(fullName)
+        return dataBaseGateway.updateUserProfile(id,fullName,)
+    }
+
     override suspend fun getUser(id: String): User {
         return dataBaseGateway.getUserById(id)
     }
@@ -110,9 +118,9 @@ class UserAccountManagementUseCase(
         map[ApplicationId.END_USER] = Pair(System.getenv(ApplicationId.END_USER).toString(), Role.END_USER)
         map[ApplicationId.RESTAURANT] = Pair(System.getenv(ApplicationId.RESTAURANT).toString(), Role.RESTAURANT_OWNER)
         map[ApplicationId.DASHBOARD] = Pair(System.getenv(ApplicationId.DASHBOARD).toString(), Role.DASHBOARD_ADMIN)
-//        map[ApplicationId.TAXI_DRIVER] = Pair(System.getenv(ApplicationId.TAXI_DRIVER).toString(), Role.TAXI_DRIVER)
-//        map[ApplicationId.DELIVERY] = Pair(System.getenv(ApplicationId.DELIVERY).toString(), Role.DELIVERY)
-//        map[ApplicationId.SUPPORT] = Pair(System.getenv(ApplicationId.SUPPORT).toString(), Role.SUPPORT)
+        map[ApplicationId.TAXI_DRIVER] = Pair(System.getenv(ApplicationId.TAXI_DRIVER).toString(), Role.TAXI_DRIVER)
+        map[ApplicationId.DELIVERY] = Pair(System.getenv(ApplicationId.DELIVERY).toString(), Role.DELIVERY)
+        map[ApplicationId.SUPPORT] = Pair(System.getenv(ApplicationId.SUPPORT).toString(), Role.SUPPORT)
         return map
     }
 

@@ -2,7 +2,6 @@ package org.thechance.common.presentation.login
 
 import org.thechance.common.domain.usecase.ILoginUserUseCase
 import org.thechance.common.presentation.base.BaseScreenModel
-import org.thechance.common.presentation.resources.englishStrings
 import org.thechance.common.presentation.restaurant.ErrorWrapper
 import org.thechance.common.presentation.util.ErrorState
 
@@ -12,73 +11,92 @@ class LoginScreenModel(
 ) : BaseScreenModel<LoginUIState, LoginUIEffect>(LoginUIState()), LoginInteractionListener {
 
     override fun onPasswordChange(password: String) {
-        updateState { it.copy(password = password,isAbleToLogin = password.isNotBlank()) }
+        updateState { it.copy(password = password, isAbleToLogin = password.isNotBlank()) }
     }
 
     override fun onUsernameChange(username: String) {
-        updateState { it.copy(username = username,isAbleToLogin = username.isNotBlank()) }
+        updateState { it.copy(username = username, isAbleToLogin = username.isNotBlank()) }
     }
 
     override fun onLoginClicked() {
-        val currentState = mutableState.value
-        clearErrorState()
-        tryToExecute(
-            {
-                login.loginUser(
-                    username = currentState.username,
-                    password = currentState.password,
-                    keepLoggedIn = currentState.keepLoggedIn
-                )
-            },
-            onSuccess = { onLoginSuccess() },
-            onError = ::onLoginError
-        )
-    }
-
-    override fun onKeepLoggedInClicked() {
-        updateState { it.copy(keepLoggedIn = !it.keepLoggedIn) }
+        clearState()
+        updateState { it.copy(isLoading = true) }
+        mutableState.value.apply {
+            tryToExecute(
+                { login.loginUser(username = username, password = password) },
+                { onLoginSuccess() },
+                ::onError
+            )
+        }
     }
 
     private fun onLoginSuccess() {
-        updateState { it.copy(isLoading = false, error = null) }
+        updateState { it.copy(isLoading = false) }
         sendNewEffect(LoginUIEffect.LoginSuccess)
     }
 
-    private fun onLoginError(error: ErrorState) {
-        updateState { it.copy(isLoading = false, error = error) }
+    private fun onError(error: ErrorState) {
+        updateState { it.copy(isLoading = false) }
         handleErrorState(error)
     }
 
     private fun handleErrorState(error: ErrorState) {
         when (error) {
-            is ErrorState.InvalidPassword -> {
-                updateState { it.copy(isLoading = false, error = error, isPasswordError = ErrorWrapper(error.errorMessage,true)) }
-            }
-
-            is ErrorState.UserNotExist -> {
-                updateState { it.copy(isLoading = false, error = error, isUserError = ErrorWrapper(error.errorMessage,true)) }
+            is ErrorState.MultipleErrors -> {
+                val errorStates = error.errors
+                updateState {
+                    it.copy(
+                        isPasswordError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidPassword>()
+                            ?.let { error ->
+                                ErrorWrapper(error.errorMessage, true)
+                            },
+                        isUserError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidUserName>()
+                            ?.let { error ->
+                                ErrorWrapper(error.errorMessage, true)
+                            },
+                    )
+                }
+                updateState {
+                    it.copy(
+                        isSnackBarVisible = true,
+                        snackBarTitle = errorStates.firstInstanceOfOrNull<ErrorState.InvalidPermission>()?.errorMessage
+                    )
+                }
             }
 
             ErrorState.NoConnection -> {
-
+                updateState {
+                    it.copy(
+                        isSnackBarVisible = true,
+                        snackBarTitle = null,
+                    )
+                }
             }
 
-            ErrorState.UnKnownError -> {
-
-            }
             else -> {
-
+                updateState { it.copy(isSnackBarVisible = true, snackBarTitle = null) }
             }
         }
     }
 
-    private fun clearErrorState() =
+    override fun onSnackBarDismiss() {
         updateState {
             it.copy(
-                error = null,
-                isLoading = false,
-                isPasswordError = ErrorWrapper(),
-                isUserError = ErrorWrapper()
+                isSnackBarVisible = false,
             )
         }
+    }
+
+    private fun clearState() {
+        updateState {
+            it.copy(
+                isLoading = false,
+                isPasswordError = ErrorWrapper(),
+                isUserError = ErrorWrapper(),
+                isSnackBarVisible = false,
+                snackBarTitle = null,
+            )
+        }
+    }
+
 }

@@ -2,15 +2,7 @@ package org.thechance.service_taxi.domain.usecase
 
 import org.thechance.service_taxi.domain.entity.Color
 import org.thechance.service_taxi.domain.entity.Taxi
-import org.thechance.service_taxi.domain.exceptions.AlreadyExistException
-import org.thechance.service_taxi.domain.exceptions.INVALID_CAR_TYPE
-import org.thechance.service_taxi.domain.exceptions.INVALID_COLOR
-import org.thechance.service_taxi.domain.exceptions.INVALID_ID
-import org.thechance.service_taxi.domain.exceptions.INVALID_PLATE
-import org.thechance.service_taxi.domain.exceptions.InvalidIdException
-import org.thechance.service_taxi.domain.exceptions.MultiErrorException
-import org.thechance.service_taxi.domain.exceptions.ResourceNotFoundException
-import org.thechance.service_taxi.domain.exceptions.SEAT_OUT_OF_RANGE
+import org.thechance.service_taxi.domain.exceptions.*
 import org.thechance.service_taxi.domain.gateway.ITaxiGateway
 import org.thechance.service_taxi.domain.usecase.utils.IValidations
 
@@ -21,12 +13,21 @@ interface IManageTaxiUseCase {
     suspend fun getTaxi(taxiId: String): Taxi
     suspend fun editTaxi(taxiId: String, taxi: Taxi): Taxi
     suspend fun getNumberOfTaxis(): Long
-    suspend fun findTaxisWithFilters(status: Boolean, color: Long?, seats: Int?, plateNumber: String?, driverIds: List<String>?): List<Taxi>
+    suspend fun findTaxisWithFilters(
+        page: Int,
+        limit: Int,
+        status: Boolean?,
+        color: Long?,
+        seats: Int?,
+        query: String?
+    ): List<Taxi>
+
+    suspend fun deleteTaxiByDriverId(driverId: String): Boolean
 }
 
 class ManageTaxiUseCase(
-        private val taxiGateway: ITaxiGateway,
-        private val validations: IValidations,
+    private val taxiGateway: ITaxiGateway,
+    private val validations: IValidations,
 ) : IManageTaxiUseCase {
     override suspend fun createTaxi(taxi: Taxi): Taxi {
         validateTaxi(taxi)
@@ -57,8 +58,19 @@ class ManageTaxiUseCase(
         return taxiGateway.getNumberOfTaxis()
     }
 
-    override suspend fun findTaxisWithFilters(status: Boolean, color: Long?, seats: Int?, plateNumber: String?, driverIds: List<String>?): List<Taxi> {
-        return taxiGateway.findTaxisWithFilters(status, color, seats, plateNumber, driverIds)
+    override suspend fun findTaxisWithFilters(
+        page: Int,
+        limit: Int,
+        status: Boolean?,
+        color: Long?,
+        seats: Int?,
+        query: String?
+    ): List<Taxi> {
+        return taxiGateway.findTaxisWithFilters(page, limit, status, color, seats, query)
+    }
+
+    override suspend fun deleteTaxiByDriverId(driverId: String): Boolean {
+        return taxiGateway.deleteTaxiByDriverId(driverId)
     }
 
     private suspend fun isTaxiExistedBefore(taxi: Taxi): Boolean {
@@ -71,11 +83,14 @@ class ManageTaxiUseCase(
         if (!validations.isValidPlateNumber(taxi.plateNumber)) {
             validationErrors.add(INVALID_PLATE)
         }
-        if (taxi.color == Color.OTHER) {
-            validationErrors.add(INVALID_COLOR)
-        }
         if (taxi.type.isBlank()) {
             validationErrors.add(INVALID_CAR_TYPE)
+        }
+        if (!validations.isValidCarType(taxi.type)) {
+            validationErrors.add(INVALID_CAR_TYPE)
+        }
+        if (taxi.color == Color.OTHER) {
+            validationErrors.add(INVALID_COLOR)
         }
         if (!validations.isValidId(taxi.driverId)) {
             validationErrors.add(INVALID_ID)

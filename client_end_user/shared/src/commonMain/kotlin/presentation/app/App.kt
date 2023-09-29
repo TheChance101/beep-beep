@@ -1,41 +1,36 @@
 package presentation.app
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
-import kotlinx.coroutines.runBlocking
-import org.koin.compose.getKoin
 import presentation.main.MainContainer
 import presentation.pickLanguage.PickLanguageScreen
 import resources.BeepBeepTheme
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun App() {
-    BeepBeepTheme {
+    MainApp.Content()
+}
 
+object MainApp : Screen {
+    @Composable
+    override fun Content() {
+        val appScreenModel = getScreenModel<AppScreenModel>()
 
-        val appScreenModel = AppScreenModel(getKoin().get())
-        var isFirstTime by remember { mutableStateOf(false) }
+        val userLanguage by appScreenModel.language.collectAsState()
+        val firstTime by appScreenModel.isFirstTimeOpenApp.collectAsState()
 
-        runBlocking {
-            isFirstTime =  appScreenModel.getInitScreen()
-        }
-            if(isFirstTime){
-                Navigator(PickLanguageScreen) {
-                    SlideTransition(it)
-                }
-            }else{
-                Navigator(MainContainer) {
-                    SlideTransition(it)
-                }
+        BeepBeepTheme(languageCode = userLanguage) {
+            if (firstTime) {
+                Navigator(PickLanguageScreen) { SlideTransition(it) }
+            } else {
+                Navigator(MainContainer) { SlideTransition(it) }
             }
-
+        }
     }
 }
 

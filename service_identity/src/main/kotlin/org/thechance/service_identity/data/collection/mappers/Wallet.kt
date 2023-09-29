@@ -8,5 +8,6 @@ fun WalletCollection.toEntity() = Wallet(
     id = id.toString(),
     userId = userId.toString(),
     walletBalance = walletBalance,
+    currency = currency
 )
 

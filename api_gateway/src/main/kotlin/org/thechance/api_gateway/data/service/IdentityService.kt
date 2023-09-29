@@ -10,14 +10,13 @@ import io.ktor.http.*
 import io.ktor.util.*
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
-import org.thechance.api_gateway.data.model.PaginationResponse
-import org.thechance.api_gateway.data.model.UserDto
-import org.thechance.api_gateway.data.model.UserTokensResponse
+import org.thechance.api_gateway.data.model.*
 import org.thechance.api_gateway.data.model.authenticate.TokenConfiguration
 import org.thechance.api_gateway.data.model.authenticate.TokenType
+import org.thechance.api_gateway.data.model.restaurant.RestaurantDto
+import org.thechance.api_gateway.data.model.restaurant.RestaurantOptions
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.tryToExecute
 import org.thechance.api_gateway.util.APIs
@@ -55,7 +54,11 @@ class IdentityService(
     }
 
     suspend fun loginUser(
-        userName: String, password: String, tokenConfiguration: TokenConfiguration, languageCode: String, applicationId: String
+        userName: String,
+        password: String,
+        tokenConfiguration: TokenConfiguration,
+        languageCode: String,
+        applicationId: String
     ): UserTokensResponse {
         client.tryToExecute<Boolean>(
             api = APIs.IDENTITY_API,
@@ -90,6 +93,19 @@ class IdentityService(
         }
     }
 
+    @OptIn(InternalAPI::class)
+    suspend fun getUsers(
+        options: UserOptions, languageCode: String
+    ) = client.tryToExecute<PaginationResponse<UserDto>>(
+        APIs.IDENTITY_API, attributes = attributes, setErrorMessage = { errorCodes ->
+            errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+        }
+    ) {
+        post("/dashboard/user") {
+            body = Json.encodeToString(UserOptions.serializer(), options)
+        }
+    }
+
     suspend fun getLastRegisteredUsers(limit: Int) = client.tryToExecute<List<UserDto>>(
         APIs.IDENTITY_API, attributes = attributes,
     ) {
@@ -98,10 +114,32 @@ class IdentityService(
         }
     }
 
-    private suspend fun getUserById(id: String): UserDto = client.tryToExecute<UserDto>(
-        APIs.IDENTITY_API, attributes = attributes,
+    suspend fun getUserById(id: String, languageCode: String): UserDetailsDto = client.tryToExecute<UserDetailsDto>(
+        APIs.IDENTITY_API, attributes = attributes, setErrorMessage = { errorCodes ->
+            errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+        }
     ) {
         get("user/$id")
+    }
+
+    suspend fun updateUserProfile(
+        id: String,
+        fullName: String,
+        languageCode: String
+    ): UserDetailsDto {
+        return client.tryToExecute<UserDetailsDto>(
+            APIs.IDENTITY_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+            }
+        ) {
+            submitForm("/user/profile/$id",
+                formParameters = parameters {
+                    append("fullName", fullName)
+                }
+            )
+        }
     }
 
     suspend fun getUserByUsername(username: String?, languageCode: String): UserDto = client.tryToExecute<UserDto>(
@@ -113,17 +151,6 @@ class IdentityService(
             parameter("username", username)
         }
     }
-
-    @OptIn(InternalAPI::class)
-    suspend fun searchUsers(query: String, permission: List<Int>) = client.tryToExecute<List<UserDto>>(
-        APIs.IDENTITY_API, attributes = attributes,
-    ) {
-        post("/dashboard/user/search") {
-            parameter("query", query)
-            body = Json.encodeToString(ListSerializer(Int.serializer()), permission)
-        }
-    }
-
 
     @OptIn(InternalAPI::class)
     suspend fun updateUserPermission(userId: String, permission: List<Int>, languageCode: String): UserDto {
@@ -227,5 +254,18 @@ class IdentityService(
 
         return accessToken.sign(Algorithm.HMAC256(tokenConfiguration.secret))
     }
+
+    @OptIn(InternalAPI::class)
+    suspend fun updateUserLocation(userId: String, location: LocationDto, language: String) =
+        client.tryToExecute<AddressDto>(
+            api = APIs.IDENTITY_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, language)
+            }) {
+            post("/user/$userId/address/location") {
+                body = Json.encodeToString(LocationDto.serializer(), location)
+            }
+        }
 
 }

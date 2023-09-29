@@ -13,6 +13,7 @@ data class UserDto(
     val email: String? = null,
     val country: String? = null,
     val walletBalance: Double? = 0.0,
+    val currency: String? = null,
     val addresses: List<AddressDto> = emptyList(),
     val permission: Int = Role.END_USER
 )

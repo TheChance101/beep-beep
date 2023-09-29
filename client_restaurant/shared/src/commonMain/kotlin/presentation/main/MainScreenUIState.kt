@@ -1,32 +1,41 @@
 package presentation.main
 
+import presentation.base.ErrorState
 import presentation.restaurantSelection.RestaurantUIState
 
 data class MainScreenUIState(
     val expanded: Boolean = false,
+    val isLoading: Boolean = false,
+    val error: ErrorState? = null,
     val restaurants: List<RestaurantUIState> = emptyList(),
     val selectedRestaurantId: String = "",
-    val ordersChart: ChartItemUiState = ChartItemUiState(
-        title = "Orders",
-        points = emptyList(),
-        totalThisWeek = 280,
-        sign = null,
+
+    val orderUiState: ChartsItemUiState = ChartsItemUiState(
+        yAxisData = listOf(0.0,0.0),
+        xAxisData = listOf("1","2"),
+        label = "Orders"
     ),
-    val revenueChart: ChartItemUiState = ChartItemUiState(
-        title = "Revenue",
-        points = emptyList(),
-        totalThisWeek = 4700,
-        sign = '$',
-    ),
+    val revenueUiState: ChartsItemUiState = ChartsItemUiState(
+        yAxisData = listOf(0.0,0.0),
+        xAxisData = listOf("1","2"),
+        label = "Revenue"
+    )
 ) {
     val selectedRestaurant: RestaurantUIState
         get() = restaurants.firstOrNull { it.id == selectedRestaurantId } ?: RestaurantUIState()
 }
 
-// todo: Need to handle how date look like
-data class ChartItemUiState(
-    val title: String = "",
-    val points: List<Pair<String, Int>> = emptyList(), // string is days in week, int is value
-    val totalThisWeek: Int = 0,
-    val sign: Char? = null,
-)
+data class ChartsItemUiState(
+    val yAxisData: List<Double> = emptyList(),
+    val xAxisData: List<String> = emptyList(),
+    val label : String = "",
+    )
+
+fun List<Pair<String, Double>>.toChartsItemUiState(label:String): ChartsItemUiState {
+    val yAxisData = this.map { it.second }
+    val xAxisData = this.map { it.first }
+    return ChartsItemUiState(yAxisData, xAxisData,label)
+}
+
+
+

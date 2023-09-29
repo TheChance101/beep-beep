@@ -2,6 +2,7 @@ package org.thechance.service_identity.domain.gateway
 
 import org.thechance.service_identity.domain.entity.*
 import org.thechance.service_identity.domain.security.SaltedHash
+import java.util.Currency
 
 interface IDataBaseGateway {
 
@@ -27,7 +28,7 @@ interface IDataBaseGateway {
     // region: user
     suspend fun getUserById(id: String): User
 
-    suspend fun getUsers(page: Int, limit: Int, searchTerm: String = ""): List<UserManagement>
+    suspend fun getUsers(options: UserOptions): List<UserManagement>
 
     suspend fun createUser(saltedHash: SaltedHash, fullName: String, username: String, email: String): UserManagement
 
@@ -66,6 +67,8 @@ interface IDataBaseGateway {
 
     suspend fun addToWallet(userId: String, amount: Double): Wallet
 
+    suspend fun updateWalletCurrency(userId:String, currency: String)
+
     // endregion
 
     // region: favorite
@@ -82,5 +85,7 @@ interface IDataBaseGateway {
     suspend fun getLastRegisterUser(limit: Int): List<UserManagement>
 
     suspend fun searchUsers(searchTerm: String, filterByPermission: List<Int>): List<UserManagement>
+
+     suspend fun updateUserProfile(id: String, fullName: String?, ): Boolean
 
 }

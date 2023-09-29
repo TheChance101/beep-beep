@@ -6,14 +6,12 @@ interface IRestaurantGateway {
     //region request
     suspend fun getRestaurantPermissionRequests(): List<RestaurantPermissionRequest>
     suspend fun createRestaurantPermissionRequest(
-        restaurantName: String,
-        ownerEmail: String,
-        cause: String
+        restaurantName: String, ownerEmail: String, cause: String
     ): RestaurantPermissionRequest
     //endregion
 
     //region Get
-    suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant>
+    suspend fun getRestaurants(options: RestaurantOptions): List<Restaurant>
     suspend fun getRestaurants(restaurantIds: List<String>): List<Restaurant>
     suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant>
     suspend fun getRestaurant(id: String): Restaurant?
@@ -42,12 +40,13 @@ interface IRestaurantGateway {
 
     //region meal
     suspend fun getMealCuisines(mealId: String): List<Cuisine>
-    suspend fun getMeals(page: Int, limit: Int): List<Meal>
+    suspend fun getMeals(query: String, page: Int, limit: Int): List<Meal>
     suspend fun getMealById(id: String): MealDetails?
     suspend fun addCuisinesToMeal(mealId: String, cuisineIds: List<String>): Boolean
     suspend fun addMeal(meal: MealDetails): Meal
     suspend fun updateMeal(meal: MealDetails): Meal
     suspend fun deleteMealById(id: String): Boolean
     suspend fun deleteCuisineFromMeal(mealId: String, cuisineId: String): Boolean
+    suspend fun deleteRestaurantsByOwnerId(ownerId: String): Boolean
     //endregion
 }

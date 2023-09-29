@@ -14,12 +14,16 @@ import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.collection.relationModels.MealCuisines
 import org.thechance.service_restaurant.data.collection.relationModels.MealWithCuisines
 import org.thechance.service_restaurant.data.collection.relationModels.RestaurantCuisine
-import org.thechance.service_restaurant.data.utils.*
+import org.thechance.service_restaurant.data.utils.getNonEmptyFieldsMap
+import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
+import org.thechance.service_restaurant.data.utils.paginate
+import org.thechance.service_restaurant.data.utils.toObjectIds
 import org.thechance.service_restaurant.domain.entity.*
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.utils.exceptions.ERROR_ADD
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
+import javax.management.Query
 
 class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantGateway {
 
@@ -44,9 +48,15 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
     //endregion
 
     //region Restaurant
-    override suspend fun getRestaurants(page: Int, limit: Int): List<Restaurant> {
-        return container.restaurantCollection.find(RestaurantCollection::isDeleted eq false)
-            .paginate(page, limit).toList().toEntity()
+    override suspend fun getRestaurants(options: RestaurantOptions): List<Restaurant> {
+        return container.restaurantCollection.find(
+            and(
+                RestaurantCollection::isDeleted eq false,
+                RestaurantCollection::name regex Regex(options.query.orEmpty(), RegexOption.IGNORE_CASE),
+                options.rating?.let { RestaurantCollection::rate eq it },
+                options.priceLevel?.let { RestaurantCollection::priceLevel eq it }
+            )
+        ).paginate(options.page, options.limit).toList().toEntity()
     }
 
     override suspend fun getRestaurants(restaurantIds: List<String>): List<Restaurant> {
@@ -218,10 +228,13 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
 //endregion
 
     //region meal
-    override suspend fun getMeals(page: Int, limit: Int): List<Meal> {
-        return container.mealCollection.find(MealCollection::isDeleted eq false)
-            .paginate(page, limit).toList()
-            .toEntity()
+    override suspend fun getMeals(query: String, page: Int, limit: Int): List<Meal> {
+        return container.mealCollection.find(
+            and(
+                MealCollection::isDeleted eq false,
+                MealCollection::name regex Regex(query, RegexOption.IGNORE_CASE),
+            )
+        ).paginate(page, limit).toList().toEntity()
     }
 
     override suspend fun getMealById(id: String): MealDetails? {
@@ -309,5 +322,15 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
             pull(MealCollection::cuisines, ObjectId(cuisineId)),
         ).wasAcknowledged()
     }
-//endregion
+
+    override suspend fun deleteRestaurantsByOwnerId(ownerId: String): Boolean {
+        return container.restaurantCollection.updateMany(
+            filter = and(
+                RestaurantCollection::ownerId eq ObjectId(ownerId),
+                RestaurantCollection::isDeleted eq false
+            ),
+            update = set(RestaurantCollection::isDeleted setTo true),
+        ).isSuccessfullyUpdated()
+    }
+    //endregion
 }

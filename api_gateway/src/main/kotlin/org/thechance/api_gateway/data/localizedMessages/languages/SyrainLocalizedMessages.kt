@@ -28,6 +28,10 @@ class SyrianArabicLocalizedMessages() : LocalizedMessages {
 
     // region taxi
     override val taxiCreatedSuccessfully: String = "سيارة التاكسي صارت عنا 🎉"
+    override val tripCreatedSuccessfully: String = "تم انشاء الرحلة"
+    override val tripApproved: String = "تم قبول الرحلة"
+    override val tripCanceled: String = "تم الغاء الرحلة"
+    override val tripFinished: String = "تم إنهاء الرحلة بنجاح"
     override val taxiUpdateSuccessfully: String = "سيارة التاكسي صارت محدثة 🎉"
     override val taxiDeleteSuccessfully: String = "سيارة التاكسي صارت محذوفة"
     override val invalidId: String= "الرقم مالو صحيح"
@@ -73,6 +77,11 @@ class SyrianArabicLocalizedMessages() : LocalizedMessages {
     override val restaurantNotFound: String = "عذرًا، ما لقينا هالمطعم"
     override val deletedSuccessfully: String = "حذفنالك ياجار"
     override val cuisineNameAlreadyExisted: String = "المطبخ موجود قبل هيك"
+
+
+    override val missingParameter: String = "في معلومات ناقصة يا جار!"
+    override val tokensNotFound: String = "التوكن مالو موجود"
+    override val tokenNotRegister: String = "التوكن مالو مسجل"
     //endregion
 
     // region notification

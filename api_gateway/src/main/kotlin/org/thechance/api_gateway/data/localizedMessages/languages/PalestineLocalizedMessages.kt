@@ -3,8 +3,7 @@ package org.thechance.api_gateway.data.localizedMessages.languages
 import org.koin.core.annotation.Single
 
 @Single
-class PalestinianArabicLocalizedMessages(
-) : LocalizedMessages {
+class PalestinianArabicLocalizedMessages() : LocalizedMessages {
 
     // region identity
     override val invalidRequestParameter: String = "بيانات الطلب مش صحيحة"
@@ -29,6 +28,10 @@ class PalestinianArabicLocalizedMessages(
 
     // region taxi
     override val taxiCreatedSuccessfully: String = "اعمل حفلة بقى عندك تكسي يا صاحب الحظ 🎉"
+    override val tripCreatedSuccessfully: String = "تم انشاء الرحلة"
+    override val tripApproved: String = "تم قبول الرحلة"
+    override val tripCanceled: String = "تم الغاء الرحلة"
+    override val tripFinished: String = "تم إنهاء الرحلة بنجاح"
     override val taxiUpdateSuccessfully: String = "تم تحديث التاكسي بنجاح"
     override val taxiDeleteSuccessfully: String = "تم حذف التاكسي بنجاح"
     override val invalidId: String = "هاد التاكسي مش عنده رقم صحيح!"
@@ -75,6 +78,10 @@ class PalestinianArabicLocalizedMessages(
     override val restaurantNotFound: String = "ما لقينا هالمطعم يا صاحب!!"
     override val deletedSuccessfully: String="انحذف يخوو"
     override val cuisineNameAlreadyExisted: String = "المطبخ موجود قبل كدا يا حبيبى"
+
+    override val missingParameter: String = "في معلومات مفقودة يا زلمة!"
+    override val tokensNotFound: String = "ما لقينا التوكنات يا زلمة!"
+    override val tokenNotRegister: String="التوكن مش مسجل"
     //endregion
 
     // region notification

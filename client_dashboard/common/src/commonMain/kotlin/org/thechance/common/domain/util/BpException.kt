@@ -4,78 +4,71 @@ open class BeepBeepException(message: String) : Exception(message)
 
 class UnknownErrorException(message: String) : BeepBeepException(message)
 
-class NoInternetException : BeepBeepException("No internet connection")
+class NoInternetException(message: String) : BeepBeepException(message)
 
 class NotFoundException(message: String) : BeepBeepException(message)
 
-//region user Exceptions
-open class IdentityException(message: String) : BeepBeepException(message)
+class MultipleErrorException(val errors: List<BpError>) : BeepBeepException("Multiple exceptions occurred")
 
-class InvalidPasswordException(message: String) : IdentityException(message)
+sealed interface BpError{
 
-class InvalidUserNameException(message: String) : IdentityException(message)
+    data class UnknownError(val message: String) : BpError
 
-class UsernameCannotBeBlankException(message: String) : IdentityException(message)
+    data class NoInternetConnection(val message: String) : BpError
 
-class PasswordCannotBeBlankException(message: String) : IdentityException(message)
-class InvalidUserRequestParameterException(message: String) : IdentityException(message)
+    data class NotFoundException(val message: String) : BpError
 
-//endregion
+    data class InvalidPassword(val message: String) : BpError
 
+    data class InvalidUserName(val message: String) : BpError
+    data class InvalidPermission(val message: String) : BpError
 
-//region taxi Exceptions
-open class TaxiException(message: String) : BeepBeepException(message)
+    data class UsernameCannotBeBlank(val message: String) : BpError
 
-class InvalidTaxiIdException(message: String) : TaxiException(message)
+    data class PasswordCannotBeBlank(val message: String) : BpError
 
-class InvalidTaxiPlateException(message: String) : TaxiException(message)
+    data class InvalidTaxiId(val message: String) : BpError
 
-class InvalidTaxiColorException(message: String) : TaxiException(message)
+    data class InvalidTaxiPlate(val message: String) : BpError
 
-class InvalidCarTypeException(message: String) : TaxiException(message)
+    data class InvalidTaxiColor(val message: String) : BpError
 
-class SeatOutOfRangeException(message: String) : TaxiException(message)
+    data class InvalidCarType(val message: String) : BpError
 
+    data class SeatOutOfRange(val message: String) : BpError
 
-class TaxiAlreadyExistsException(message: String) : TaxiException(message)
+    data class TaxiAlreadyExists(val message: String) : BpError
 
-class InvalidTaxiRequestParameterException(message: String) : TaxiException(message)
-class TaxiNotFoundException(message: String) : TaxiException(message)
+    data class TaxiNotFound(val message: String) : BpError
 
-//endregion
+    data class RestaurantInvalidId(val message: String) : BpError
 
+    data class RestaurantInvalidName(val message: String) : BpError
 
-//region restaurant Exceptions
-open class RestaurantException(message: String) : BeepBeepException(message)
-class RestaurantInvalidIdException(message: String) : RestaurantException(message)
+    data class RestaurantInvalidLocation(val message: String) : BpError
 
-class RestaurantInvalidNameException(message: String) : RestaurantException(message)
+    data class RestaurantInvalidDescription(val message: String) : BpError
 
-class RestaurantInvalidLocationException(message: String) : RestaurantException(message)
+    data class RestaurantInvalidPhone(val message: String) : BpError
 
-class RestaurantInvalidDescriptionException(message: String) : RestaurantException(message)
+    data class RestaurantInvalidTime(val message: String) : BpError
 
-class RestaurantInvalidPhoneException(message: String) : RestaurantException(message)
+    data class RestaurantInvalidPage(val message: String) : BpError
 
-class RestaurantInvalidTimeException(message: String) : RestaurantException(message)
+    data class RestaurantInvalidPageLimit(val message: String) : BpError
 
-class RestaurantInvalidPageException(message: String) : RestaurantException(message)
+    data class RestaurantInvalidUpdateParameter(val message: String) : BpError
 
-class RestaurantInvalidPageLimitException(message: String) : RestaurantException(message)
+    data class RestaurantInvalidAddress(val message: String) : BpError
 
+    data class RestaurantInvalidRequestParameter(val message: String) : BpError
 
-class RestaurantInvalidUpdateParameterException(message: String) : RestaurantException(message)
+    data class RestaurantNotFound(val message: String) : BpError
 
-class RestaurantInvalidAddressException(message: String) : RestaurantException(message)
+    data class RestaurantErrorAdd(val message: String) : BpError
 
-class RestaurantInvalidRequestParameterException(message: String) : RestaurantException(message)
+    data class RestaurantClosed(val message: String) : BpError
 
-class RestaurantNotFoundException(message: String) : RestaurantException(message)
+    data class CuisineNameAlreadyExisted(val message: String) : BpError
 
-class RestaurantErrorAddException(message: String) : RestaurantException(message)
-
-class RestaurantClosedException(message: String) : RestaurantException(message)
-
-class CuisineNameAlreadyExistedException(message: String) : RestaurantException(message)
-
-//endregion
+}
