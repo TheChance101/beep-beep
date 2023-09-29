@@ -3,8 +3,10 @@ package presentation.chatSupport
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,7 +15,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpAppBar
@@ -37,22 +41,14 @@ class ChatSupportScreen() :
     @OptIn(ExperimentalResourceApi::class, ExperimentalLayoutApi::class)
     @Composable
     override fun onRender(state: ChatUIState, listener: ChatSupportInteractionListener) {
+        val density = LocalDensity.current.density
+        val keyboardHeight = with(LocalDensity.current) {
+            val customDensity = Density(density)
+            WindowInsets.ime.getBottom(customDensity).toDp()
+        }
+
+
         Scaffold(
-            bottomBar = {
-                BpSimpleTextField(
-                    hint = Resources.strings.message,
-                    text = state.message,
-                    onValueChange = { listener.onMessageChanged(it) },
-                    trailingIconEnabled = state.message.isNotEmpty(),
-                    trailingPainter = painterResource(Resources.images.sendMessage),
-                    onTrailingIconClick = { listener.onClickSendMessage(state.message, "1") },
-                    modifier = Modifier.padding(
-                        start = 16.dp,
-                        end = 16.dp,
-                        bottom = getNavigationBarPadding().calculateBottomPadding() + 16.dp
-                    )
-                )
-            },
             topBar = {
                 BpAppBar(
                     title = Resources.strings.supportTeam,
@@ -60,12 +56,30 @@ class ChatSupportScreen() :
                     painterResource = painterResource(Resources.images.iconBack),
                     isBackIconVisible = true,
                 )
+            },
+            bottomBar = {
+                BpSimpleTextField(
+                    hint = Resources.strings.message,
+                    text = state.message,
+                    onValueChange = { listener.onMessageChanged(it) },
+                    trailingIconEnabled = state.message.isNotEmpty(),
+                    isSingleLine = false,
+                    trailingPainter = painterResource(Resources.images.sendMessage),
+                    onTrailingIconClick = { listener.onClickSendMessage(state.message, "1") },
+                    modifier = Modifier.padding(
+                        start = 16.dp,
+                        end = 16.dp,
+                        bottom = if(keyboardHeight > 0.dp ) 16.dp + keyboardHeight
+                        else  getNavigationBarPadding().calculateBottomPadding() + 16.dp + keyboardHeight
+                    )
+                )
             }
         ) {
             val scrollState = rememberLazyListState()
             LaunchedEffect(state.messages.size) {
                 scrollState.animateScrollToItem(abs(state.messages.size - 1))
             }
+            WindowInsets.ime
             LazyColumn(
                 modifier = Modifier.padding(bottom = it.calculateBottomPadding()),
                 state = scrollState,
