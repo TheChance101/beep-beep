@@ -23,6 +23,7 @@ import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.utils.exceptions.ERROR_ADD
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
+import javax.management.Query
 
 class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantGateway {
 
@@ -227,10 +228,13 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
 //endregion
 
     //region meal
-    override suspend fun getMeals(page: Int, limit: Int): List<Meal> {
-        return container.mealCollection.find(MealCollection::isDeleted eq false)
-            .paginate(page, limit).toList()
-            .toEntity()
+    override suspend fun getMeals(query: String, page: Int, limit: Int): List<Meal> {
+        return container.mealCollection.find(
+            and(
+                MealCollection::isDeleted eq false,
+                MealCollection::name regex Regex(query, RegexOption.IGNORE_CASE),
+            )
+        ).paginate(page, limit).toList().toEntity()
     }
 
     override suspend fun getMealById(id: String): MealDetails? {

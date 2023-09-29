@@ -58,7 +58,7 @@ fun setCarColor(color: CarColor?) =
         CarColor.SILVER -> 4290822336L
         CarColor.GOLD -> 4294956800L
         CarColor.BRONZE -> 4291657522L
-        else -> 0L
+        else -> null
     }
 
 fun getCarColor(color: Long) =
@@ -84,5 +84,10 @@ fun getTaxiStatus(isAvailable: Boolean) =
     if (isAvailable) TaxiStatus.ONLINE else TaxiStatus.OFFLINE
 
 
-fun setTaxiStatus(status: TaxiStatus?) =
-    if (status == TaxiStatus.OFFLINE) 0 else 1
+fun setTaxiStatus(status: TaxiStatus?): Boolean? {
+    return when (status) {
+        TaxiStatus.ONLINE -> true
+        TaxiStatus.OFFLINE -> false
+        else -> null
+    }
+}

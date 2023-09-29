@@ -1,7 +1,7 @@
 package org.thechance.api_gateway.di
 
 import io.ktor.client.*
-import io.ktor.client.engine.okhttp.*
+import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
@@ -27,7 +27,7 @@ class ApiClientModule {
     fun provideHttpClient(
         clientAttributes: Attributes
     ): HttpClient {
-        return HttpClient(OkHttp) {
+        return HttpClient(CIO) {
             install(Logging) {
                 logger = Logger.DEFAULT
                 level = LogLevel.ALL

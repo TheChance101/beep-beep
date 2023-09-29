@@ -37,6 +37,7 @@ fun Route.userRoutes() {
     }
 
     route("/user") {
+
         authenticateWithRole(Role.DASHBOARD_ADMIN) {
             get("/last-register") {
                 val limit = call.parameters["limit"]?.toInt() ?: 4
@@ -75,6 +76,15 @@ fun Route.userRoutes() {
                 val language = extractLocalizationHeader()
                 val user = identityService.getUserById(userId, language)
                 respondWithResult(HttpStatusCode.OK, user)
+            }
+            put("profile") {
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val userId = tokenClaim?.get(Claim.USER_ID).toString()
+                val language = extractLocalizationHeader()
+                val params = call.receiveParameters()
+                val fullName = params["fullName"]?.trim().toString()
+                val result = identityService.updateUserProfile(userId, fullName, language)
+                respondWithResult(HttpStatusCode.OK, result)
             }
 
             put("/location") {
