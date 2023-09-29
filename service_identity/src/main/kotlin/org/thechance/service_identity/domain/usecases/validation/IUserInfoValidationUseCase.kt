@@ -44,7 +44,12 @@ class UserInfoValidationUseCase : IUserInfoValidationUseCase {
 
         if (password == null) {
             reasons.add(INVALID_REQUEST_PARAMETER)
+        }
 
+        if (user.phone.isBlank()) {
+            reasons.add(INVALID_REQUEST_PARAMETER)
+        } else if (!isValidPhone(user.phone)) {
+            reasons.add(INVALID_PHONE)
         }
 
         password?.let {
@@ -75,14 +80,25 @@ class UserInfoValidationUseCase : IUserInfoValidationUseCase {
         }
 
         phone?.let {
-//            if (!v(it)) {
-//                reasons.add(INVALID_EMAIL)
-//            }
+            if (!isValidPhone(phone)) {
+                reasons.add(INVALID_EMAIL)
+            }
         }
 
         if (reasons.isNotEmpty()) {
             throw RequestValidationException(reasons)
         }
+    }
+
+    private fun isValidPhone(phone: String): Boolean {
+        val phoneRegexMap = mapOf(
+            "EGP" to "^\\+20\\d{10}$".toRegex(),
+            "IQD" to "^\\+964\\d{10}$".toRegex(),
+            "SYP" to "^\\+963\\d{9}$".toRegex(),
+            "ILS" to "^\\+972([59])\\d{8}$".toRegex(),
+            "US" to "^\\+1\\d{10}$".toRegex()
+        )
+        return phoneRegexMap.values.any { it.matches(phone) }
     }
 
     override fun validateUsernameIsNotEmpty(username: String): Boolean = username.isNotBlank()

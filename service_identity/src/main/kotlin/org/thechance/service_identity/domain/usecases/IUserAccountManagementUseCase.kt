@@ -36,8 +36,9 @@ class UserAccountManagementUseCase(
 
     override suspend fun createUser(password: String?, user: UserInfo): UserManagement {
         userInfoValidationUseCase.validateUserInformation(password = password, user = user)
+        if (password == null) { throw RequestValidationException(listOf(INVALID_REQUEST_PARAMETER)) }
+        val saltedHash = hashingService.generateSaltedHash(password)
         val userCountry = getUserCountry(user.phone)
-        val saltedHash = hashingService.generateSaltedHash(password!!)
         val newUser = dataBaseGateway.createUser(saltedHash, country = userCountry.name, user = user)
         dataBaseGateway.createWallet(newUser.id, currency = userCountry.currency)
         dataBaseGateway.addAddress(newUser.id, user.addresses.first())
