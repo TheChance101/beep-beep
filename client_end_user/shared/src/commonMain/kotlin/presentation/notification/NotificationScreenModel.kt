@@ -2,18 +2,48 @@ package presentation.notification
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Notification
+import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.ManageNotificationsUseCase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
-class NotificationScreenModel(private val notificationManagement: ManageNotificationsUseCase) :
-    BaseScreenModel<NotificationsUiState, NotificationUiEffect>(NotificationsUiState()),
+class NotificationScreenModel(
+    private val notificationManagement: ManageNotificationsUseCase,
+    private val manageAuthentication: IManageAuthenticationUseCase
+) : BaseScreenModel<NotificationsUiState, NotificationUiEffect>(NotificationsUiState()),
     NotificationInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
 
     init {
+        checkIfLoggedIn()
         getNotifications()
+    }
+
+    private fun checkIfLoggedIn() {
+        tryToExecute(
+            { manageAuthentication.getAccessToken() },
+            ::onCheckIfLoggedInSuccess,
+            ::onCheckIfLoggedInError
+        )
+    }
+
+    private fun onCheckIfLoggedInSuccess(accessToken: Flow<String>) {
+        coroutineScope.launch {
+            accessToken.collect { token ->
+                if (token.isNotEmpty()) {
+                    updateState { it.copy(isLoggedIn = true) }
+                } else {
+                    updateState { it.copy(isLoggedIn = false) }
+                }
+            }
+        }
+    }
+
+    private fun onCheckIfLoggedInError(errorState: ErrorState) {
+        updateState { it.copy(isLoggedIn = false) }
     }
 
     private fun getNotifications() {
@@ -35,6 +65,10 @@ class NotificationScreenModel(private val notificationManagement: ManageNotifica
 
     override fun onClickTryAgain() {
         TODO("Not yet implemented")
+    }
+
+    override fun onClickLogin() {
+        sendNewEffect(NotificationUiEffect.NavigateToLoginScreen)
     }
 
     private fun onGetTodayNotificationsSuccess(todayNotifications: List<Notification>) {

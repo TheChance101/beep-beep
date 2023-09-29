@@ -27,9 +27,14 @@ class TaxisGateway(private val client: HttpClient) : BaseGateway(), ITaxisGatewa
         limit: Int
     ): DataWrapper<Taxi> {
         val result = tryToExecute<ServerResponse<PaginationResponse<TaxiDto>>>(client) {
-            get(urlString = "/taxi") {
+           val taxiFiltrationDto= taxiFiltration.toDto()
+            get(urlString = "/taxis/search") {
                 parameter("page", page)
                 parameter("limit", limit)
+                parameter("status", taxiFiltrationDto.status)
+                parameter("color", taxiFiltrationDto.color)
+                parameter("seats", taxiFiltrationDto.seats)
+                parameter("query", username)
             }
         }.value
         return paginateData(result?.items?.toEntity() ?: emptyList(), limit, result?.total ?: 0)
@@ -45,7 +50,6 @@ class TaxisGateway(private val client: HttpClient) : BaseGateway(), ITaxisGatewa
     }
 
     override suspend fun updateTaxi(taxi: NewTaxiInfo,taxiId:String): Taxi {
-        println("updateTaxi: $taxiId")
         val result = tryToExecute<ServerResponse<TaxiDto>>(client) {
             put(urlString = "/taxi/$taxiId") {
                 contentType(ContentType.Application.Json)

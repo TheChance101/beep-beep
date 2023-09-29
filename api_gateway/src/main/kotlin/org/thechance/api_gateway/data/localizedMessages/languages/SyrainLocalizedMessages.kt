@@ -83,4 +83,8 @@ class SyrianArabicLocalizedMessages() : LocalizedMessages {
     override val tokensNotFound: String = "التوكن مالو موجود"
     override val tokenNotRegister: String = "التوكن مالو مسجل"
     //endregion
+
+    // region notification
+    override val notificationNotSent: String = "ما انبعت الاشعار"
+    //endregion
 }

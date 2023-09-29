@@ -1,7 +1,5 @@
 package org.thechance.api_gateway.data.localizedMessages.languages
 
-import org.koin.core.annotation.Single
-
 
 interface LocalizedMessages {
 
@@ -148,5 +146,10 @@ interface LocalizedMessages {
     val tokenNotRegister : String
 
 
+    //endregion
+
+
+    // region notification
+    val notificationNotSent : String
     //endregion
 }

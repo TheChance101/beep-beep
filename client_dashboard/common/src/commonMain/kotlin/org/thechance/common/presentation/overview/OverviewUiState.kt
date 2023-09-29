@@ -11,7 +11,7 @@ import org.thechance.common.presentation.util.ErrorState
 
 data class OverviewUiState(
     val hasInternetConnection: Boolean = true,
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val error: ErrorState = ErrorState.UnKnownError,
     val users: List<LatestRegisteredUserUiState> = emptyList(),
     val dropdownMenuState: DropdownMenuState = DropdownMenuState(),

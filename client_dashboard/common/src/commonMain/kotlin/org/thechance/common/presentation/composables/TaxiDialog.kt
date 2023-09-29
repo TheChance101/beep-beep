@@ -1,4 +1,4 @@
-package org.thechance.common.presentation.taxi
+package org.thechance.common.presentation.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -22,9 +22,9 @@ import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.domain.entity.CarColor
-import org.thechance.common.presentation.composables.CarColors
-import org.thechance.common.presentation.composables.SeatsBar
 import org.thechance.common.presentation.resources.Resources
+import org.thechance.common.presentation.taxi.TaxiDialogListener
+import org.thechance.common.presentation.taxi.TaxiInfoUiState
 import org.thechance.common.presentation.util.kms
 import java.awt.Dimension
 
