@@ -93,4 +93,5 @@ data class Arabic(
     override val pleaseLogin: String = "الرجاء تسجيل الدخول للوصول الى ملفك الشخصي",
     override val message: String = "الرسالة",
     override val supportTeam: String = "فريق الدعم",
+    override val sendMessageToStartLiveChat: String = "أرسل رسالة لتبدأ المحادثة!",
 ) : IStringResources

@@ -91,4 +91,5 @@ interface IStringResources {
     val pleaseLogin: String
     val message: String
     val supportTeam: String
+    val sendMessageToStartLiveChat: String
 }

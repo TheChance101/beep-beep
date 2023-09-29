@@ -37,6 +37,7 @@ data class DrawableResources(
     val logout : String = "logout_2.xml",
     val needLogin : String = "need_login.png",
     val sendMessage: String = "ic_send.xml",
+    val chatPlaceholder: String = "img_chat_placeholder.png"
 )
 
 val BpDrawableDarkResources = DrawableResources(

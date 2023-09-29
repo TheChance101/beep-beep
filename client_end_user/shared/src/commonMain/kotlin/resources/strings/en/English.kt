@@ -93,4 +93,5 @@ data class English(
     override val pleaseLogin: String="Please log in to access your profile",
     override val message: String = "Message",
     override val supportTeam: String = "Support team",
+    override val sendMessageToStartLiveChat: String = "Send a message to start the live chat!",
 ) : IStringResources

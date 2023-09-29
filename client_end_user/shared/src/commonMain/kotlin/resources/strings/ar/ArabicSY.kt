@@ -93,4 +93,5 @@ data class ArabicSY(
     override val pleaseLogin: String = "سجل دخول حتى توصل حسابك يخوو",
     override val message: String = "الرسالة",
     override val supportTeam: String = "فريق الدعم",
+    override val sendMessageToStartLiveChat: String = "أبعث رسالة مشان تبلش الدردشة!",
 ) : IStringResources

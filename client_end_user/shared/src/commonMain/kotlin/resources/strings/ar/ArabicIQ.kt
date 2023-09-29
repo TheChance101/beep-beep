@@ -93,5 +93,6 @@ data class ArabicIQ(
     override val pleaseLogin: String = "سجل دخول وشوف حسابك",
     override val message: String = "الرسالة",
     override val supportTeam: String = "فريق الدعم",
+    override val sendMessageToStartLiveChat: String = "دز رسالة علمود تبدأ الشات!",
 
     ) : IStringResources

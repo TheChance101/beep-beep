@@ -93,4 +93,5 @@ data class ArabicEG(
     override val pleaseLogin: String = "سجل دخول يا اسطا وشوفك  حسابك",
     override val message: String = "الرسالة",
     override val supportTeam: String = "فريق الدعم",
+    override val sendMessageToStartLiveChat: String = "أبعت رسالة عشان تبدأ الشات!",
 ) : IStringResources

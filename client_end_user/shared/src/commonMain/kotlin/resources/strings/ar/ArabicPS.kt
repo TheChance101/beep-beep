@@ -93,5 +93,6 @@ data class ArabicPS(
     override val pleaseLogin: String = "سجل دخول حتى توصل حسابك يخوو",
     override val message: String = "الرسالة",
     override val supportTeam: String = "فريق الدعم",
+    override val sendMessageToStartLiveChat: String = "أبعت رسالة عشان تبدأ المحادثة!",
 
     ) : IStringResources
