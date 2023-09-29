@@ -141,6 +141,8 @@ class TaxiScreen :
                     key = { it.id },
                     isVisible = state.hasConnection,
                     headers = state.tabHeader,
+                    limitItem=state.specifiedTaxis,
+                    isLoading = state. isLoading,
                     modifier = Modifier.fillMaxWidth(),
                     rowContent = { taxi ->
                         TaxiRow(
@@ -259,7 +261,7 @@ class TaxiScreen :
                         modifier = Modifier.padding(horizontal = 24.kms, vertical = 16.kms)
                     )
                     SeatsBar(
-                        selectedSeatsCount = taxi.seats,
+                        selectedSeatsCount = taxi.seats?: 0,
                         count = 6,
                         selectedIcon = painterResource(Resources.Drawable.seatFilled),
                         notSelectedIcon = painterResource(Resources.Drawable.seatOutlined),

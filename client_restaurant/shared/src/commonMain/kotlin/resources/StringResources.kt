@@ -60,4 +60,6 @@ data class StringResources(
     val closingTimeErrorMessage: String = "Closing time should be between 00:00 to 23:59",
     val userNameIsRequired: String = "Username is required.",
     val passwordIsRequired: String = "Password is required",
+    val noOrderYet: String = "No Orders Available at the Moment",
+    val noOrderHistory: String = "No Orders History at the Moment"
 )

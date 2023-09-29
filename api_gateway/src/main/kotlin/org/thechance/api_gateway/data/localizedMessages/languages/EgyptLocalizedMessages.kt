@@ -82,4 +82,8 @@ class EgyptianArabicLocalizedMessages() : LocalizedMessages {
     override val tokensNotFound: String= "مش لاقيين التوكنات دي ياعم"
     override val tokenNotRegister: String = "التوكن ده مش مسجل ياعم"
     //endregion
+
+    // region notification
+    override val notificationNotSent: String = "لم يتم إرسال الإشعار ياعم"
+    //endregion
 }

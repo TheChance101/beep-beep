@@ -90,7 +90,10 @@ data class English(
     override val logout: String = "Logout",
     override val address: String = "Address",
     override val save: String = "Save",
-    override val pleaseLogin: String="Please login to access your profile",
+    override val profileLoginMessage: String = "Please log in to access your profile",
+    override val ordersHistoryLoginMessage: String = "Please login to view your orders",
+    override val notificationLoginMessage: String = "Please login to access your notifications",
+    override val pleaseLogin: String = "Please login to access your profile",
     override val invalidAddress: String = "Invalid Address",
     override val yourAddress: String = "Your Address",
 ) : IStringResources

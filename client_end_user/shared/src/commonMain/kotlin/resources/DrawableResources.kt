@@ -33,9 +33,11 @@ data class DrawableResources(
     val wishDishHigh: String = "wish_dish_high.png",
     val quickRide: String = "quick_ride.png",
     val slowRide: String = "slow_ride.png",
-    val transferIcon:String = "icon_from_to.xml",
-    val logout : String = "logout_2.xml",
-    val needLogin : String = "need_login.png",
+    val transferIcon: String = "icon_from_to.xml",
+    val logout: String = "logout_2.xml",
+    val requireLoginToShowProfilePlaceholder: String = "login_placeholder_profile.png",
+    val requireLoginToShowOrdersHistoryPlaceholder: String = "login_placeholder_order_history.png",
+    val requireLoginToShowNotificationPlaceholder: String = "login_placeholder_notification.png",
 )
 
 val BpDrawableDarkResources = DrawableResources(
