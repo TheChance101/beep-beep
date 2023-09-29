@@ -17,12 +17,10 @@ class ChatSupportScreenModel(
     override val viewModelScope = coroutineScope
 
     init {
-        println("hello")
         getTickets()
     }
 
     private fun getTickets() {
-        println("hello tickets")
         tryToCollect(
             { getTicketsUseCase() },
             ::onGetTicketsSuccess,
@@ -31,7 +29,6 @@ class ChatSupportScreenModel(
     }
 
     private fun onGetTicketsSuccess(ticket: Ticket) {
-        println("hello tickets success")
         updateState { it.copy(ticketId = ticket.id) }
         getMessages(ticket.id)
     }
@@ -65,7 +62,7 @@ class ChatSupportScreenModel(
                 )
             },
             ::onSendMessageSuccess,
-            ::onError
+            ::onSendNewMessageError
         )
     }
 
@@ -78,6 +75,11 @@ class ChatSupportScreenModel(
     }
 
     private fun onError(error: ErrorState) {
-        println("hello error $error")
+        println("$error")
+    }
+
+    private fun onSendNewMessageError(error: ErrorState){
+        updateState { it.copy(message = "") }
+        println("$error")
     }
 }
