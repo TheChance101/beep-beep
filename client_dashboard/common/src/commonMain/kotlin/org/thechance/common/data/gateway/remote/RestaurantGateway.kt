@@ -4,20 +4,17 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
-import org.thechance.common.data.gateway.remote.model.CuisineDto
-import org.thechance.common.data.gateway.remote.model.RestaurantDto
-import org.thechance.common.data.gateway.remote.model.RestaurantResponse
-import org.thechance.common.data.gateway.remote.model.ServerResponse
 import org.thechance.common.data.gateway.remote.mapper.getPriceLevelOrNull
 import org.thechance.common.data.gateway.remote.mapper.getRatingOrNull
 import org.thechance.common.data.gateway.remote.mapper.toDto
 import org.thechance.common.data.gateway.remote.mapper.toEntity
+import org.thechance.common.data.gateway.remote.model.*
 import org.thechance.common.domain.entity.*
 import org.thechance.common.domain.getway.IRestaurantGateway
 
 class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestaurantGateway {
 
-    override suspend fun createRestaurant(restaurant: NewRestaurantInfo): Restaurant {
+    override suspend fun createRestaurant(restaurant: RestaurantInformation): Restaurant {
         return tryToExecute<ServerResponse<RestaurantDto>>(client) {
             post(urlString = "/restaurant") {
                 setBody(restaurant.toDto())
@@ -81,5 +78,36 @@ class RestaurantGateway(private val client: HttpClient) : BaseGateway(), IRestau
         )
     }
 
-}
+    override suspend fun getRestaurantById(id: String): Restaurant {
+        return tryToExecute<ServerResponse<RestaurantDto>>(client) {
+            get(urlString = "/restaurant") { url { appendPathSegments(id) } }
+        }.value?.toEntity() ?: throw UnknownError()
+    }
 
+    override suspend fun updateRestaurant(
+        restaurantId: String,
+        ownerId: String,
+        restaurant: RestaurantInformation
+    ): Restaurant {
+        return tryToExecute<ServerResponse<RestaurantDto>>(client) {
+            put(urlString = "/restaurant") {
+                setBody(
+                    RestaurantDto(
+                        id = restaurantId,
+                        name = restaurant.name,
+                        ownerId = ownerId,
+                        ownerUserName = restaurant.ownerUsername,
+                        openingTime = restaurant.openingTime,
+                        closingTime = restaurant.closingTime,
+                        phone = restaurant.phoneNumber,
+                        location = LocationDto(
+                            latitude = restaurant.location.split(",")[0].toDouble(),
+                            longitude = restaurant.location.split(",")[1].toDouble()
+                        )
+                    )
+                )
+            }
+        }.value?.toEntity() ?: throw UnknownError()
+    }
+
+}

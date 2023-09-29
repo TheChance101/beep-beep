@@ -2,12 +2,10 @@ package org.thechance.common.data.gateway.fake
 
 import org.thechance.common.data.gateway.remote.mapper.toEntity
 import org.thechance.common.data.gateway.remote.model.DataWrapperDto
+import org.thechance.common.data.gateway.remote.model.LocationDto
 import org.thechance.common.data.gateway.remote.model.RestaurantDto
 import org.thechance.common.data.gateway.remote.model.toEntity
-import org.thechance.common.domain.entity.Cuisine
-import org.thechance.common.domain.entity.DataWrapper
-import org.thechance.common.domain.entity.NewRestaurantInfo
-import org.thechance.common.domain.entity.Restaurant
+import org.thechance.common.domain.entity.*
 import org.thechance.common.domain.getway.IRestaurantGateway
 import java.util.UUID
 import kotlin.math.ceil
@@ -62,7 +60,30 @@ class RestaurantFakeGateway : IRestaurantGateway {
         }
     }
 
-    override suspend fun createRestaurant(restaurant: NewRestaurantInfo): Restaurant {
+    override suspend fun getRestaurantById(id: String): Restaurant {
+        return restaurants.first { it.id == id }.toEntity()
+    }
+
+    override suspend fun updateRestaurant(
+        restaurantId: String,
+        ownerId: String,
+        restaurant: RestaurantInformation
+    ): Restaurant {
+        val index = restaurants.indexOfFirst { it.id == restaurantId }
+        restaurants[index] = restaurants[index].copy(
+            name = restaurant.name,
+            phone = restaurant.phoneNumber,
+            openingTime = restaurant.openingTime,
+            closingTime = restaurant.closingTime,
+            location = LocationDto(
+                latitude = restaurant.location.split(",")[0].toDouble(),
+                longitude = restaurant.location.split(",")[1].toDouble()
+            )
+        )
+        return restaurants[index].toEntity()
+    }
+
+    override suspend fun createRestaurant(restaurant: RestaurantInformation): Restaurant {
         return Restaurant(
             id = "7",
             name = restaurant.name,
@@ -72,7 +93,11 @@ class RestaurantFakeGateway : IRestaurantGateway {
             closingTime = restaurant.closingTime,
             rate = 0.0,
             priceLevel = "",
-            ownerUsername = restaurant.ownerUsername
+            ownerUsername = restaurant.ownerUsername,
+            location = Location(
+                latitude = restaurant.location.split(",")[0].toDouble(),
+                longitude = restaurant.location.split(",")[1].toDouble()
+            )
         )
     }
 
@@ -184,7 +209,8 @@ class RestaurantFakeGateway : IRestaurantGateway {
             rate = 4.9,
             priceLevel = "$",
             openingTime = "06:30 - 22:30"
-        ),        RestaurantDto(
+        ),
+        RestaurantDto(
             id = "7a1bfe39-4b2c-4f76-bde0-82da2eaf9e89",
             name = "Kamel Restaurant",
             ownerId = "kamel",
