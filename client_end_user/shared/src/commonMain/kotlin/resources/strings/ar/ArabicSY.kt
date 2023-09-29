@@ -87,7 +87,7 @@ data class ArabicSY(
     override val orderNow: String = "أطلب هلأ",
     override val total: String = "المجموع:",
     override val yourCart: String = "العربة",
-    override val logout: String = "تسجيل الخروج",
+    override val logout: String= "تسجيل الخروج",
     override val address: String = "العنوان",
     override val save: String = "حفظ",
     override val profileLoginMessage: String = "سجل دخول حتى توصل حسابك يخوو",
@@ -96,4 +96,10 @@ data class ArabicSY(
     override val pleaseLogin: String="سجل دخول حتى توصل حسابك يخوو",
     override val invalidAddress: String = "العنوان مش صالح",
     override val yourAddress: String = "عنوانك",
-) : IStringResources
+    override val mostOrdered: String = "الأكثر طلباً",
+    override val sweets: String= "حلويات",
+    override val free: String= "مجاناً",
+    override val loginToAddToFavourite: String= "الرجاء تسجيل الدخول للاضافه",
+    override val addToCart: String= "أضف إلى العربة",
+    override val mealAddedToYourCart: String= " ضفنالك الوجبة إلى عربة التسوق تاعك ",
+    ) : IStringResources

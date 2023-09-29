@@ -38,6 +38,17 @@ data class DrawableResources(
     val requireLoginToShowProfilePlaceholder: String = "login_placeholder_profile.png",
     val requireLoginToShowOrdersHistoryPlaceholder: String = "login_placeholder_order_history.png",
     val requireLoginToShowNotificationPlaceholder: String = "login_placeholder_notification.png",
+    val needLogin : String = "need_login.png",
+    val heart: String = "Heart.png",
+    val mapPoint: String = "map_point.xml",
+    val star : String = "star.xml",
+    val starHalf : String = "star_half.xml",
+    val heartFilled : String = "heart_fill.xml",
+    val plus: String = "plus_icon.xml",
+    val minus: String = "minus_icon.xml",
+    val close: String = "close.xml",
+    val unread: String = "unread.xml",
+
 )
 
 val BpDrawableDarkResources = DrawableResources(

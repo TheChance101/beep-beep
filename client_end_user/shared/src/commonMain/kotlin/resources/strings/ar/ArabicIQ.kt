@@ -87,7 +87,7 @@ data class ArabicIQ(
     override val total: String = "المجموع:",
     override val yourCart: String = "العربة",
     override val allCuisines: String = "المطابخ",
-    override val logout: String = "تسجيل الخروج",
+    override val logout: String= "تسجيل الخروج",
     override val address: String = "العنوان",
     override val save: String = "حفظ",
     override val profileLoginMessage: String = "سجل دخول وشوف حسابك",
@@ -96,4 +96,11 @@ data class ArabicIQ(
     override val pleaseLogin: String = "سجل دخول وشوف حسابك",
     override val invalidAddress: String = "العنوان مش صالح",
     override val yourAddress: String = "عنوانك",
-) : IStringResources
+    override val mostOrdered: String = "الأكثر طلباً",
+    override val sweets: String= "حلويات",
+    override val free: String= "مجاناً",
+    override val loginToAddToFavourite: String= "الرجاء تسجيل الدخول للاضافه",
+    override val addToCart: String= "أضف إلى العربة",
+    override val mealAddedToYourCart: String= " ضفنالك الوجبة إلى عربة التسوق مالتك ",
+
+    ) : IStringResources
