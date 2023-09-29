@@ -154,7 +154,7 @@ class LoginScreen :
                         title = Resources.Strings.loginButton,
                         onClick = { listener.onLoginClicked() },
                         modifier = Modifier.padding(top = 24.kms).fillMaxWidth(),
-                        enabled = state.isAbleToLogin,
+                        enabled = state.isEnable,
                         isLoading = state.isLoading,
                     )
                 }
