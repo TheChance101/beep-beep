@@ -1,5 +1,6 @@
 package presentation.home
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -45,6 +46,7 @@ import presentation.base.BaseScreen
 import presentation.cart.CartScreen
 import presentation.chatSupport.ChatSupportScreen
 import presentation.composable.BpImageLoader
+import presentation.composable.ContentVisibility
 import presentation.composable.ImageSlider
 import presentation.composable.ItemSection
 import presentation.composable.SectionHeader
@@ -57,8 +59,12 @@ import presentation.home.composable.OrderCard
 import resources.Resources
 import util.root
 
-class HomeScreen :
-    BaseScreen<HomeScreenModel, HomeScreenUiState, HomeScreenUiEffect, HomeScreenInteractionListener>() {
+class HomeScreen : BaseScreen<
+        HomeScreenModel,
+        HomeScreenUiState,
+        HomeScreenUiEffect,
+        HomeScreenInteractionListener
+        >() {
 
     @Composable
     override fun Content() {
@@ -138,7 +144,9 @@ class HomeScreen :
             }
 
             item {
-                CartCard(onClick = { listener.onClickCartCard() })
+                AnimatedVisibility(state.showCart) {
+                    CartCard(onClick = { listener.onClickCartCard() })
+                }
             }
 
             if (state.hasProgress) {

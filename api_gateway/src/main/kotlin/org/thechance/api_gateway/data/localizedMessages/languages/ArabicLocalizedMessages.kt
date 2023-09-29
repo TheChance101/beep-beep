@@ -81,4 +81,8 @@ class ArabicLocalizedMessages() : LocalizedMessages {
     override val tokensNotFound: String = "رمز الجهاز غير موجود"
     override val tokenNotRegister: String = "رمز الجهاز غير مسجل"
     //endregion
+
+    // region notification
+    override val notificationNotSent: String = "لم يتم إرسال الإشعار"
+    //endregion
 }

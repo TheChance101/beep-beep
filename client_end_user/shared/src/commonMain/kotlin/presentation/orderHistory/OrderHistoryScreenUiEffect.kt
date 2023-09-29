@@ -1,3 +1,5 @@
 package presentation.orderHistory
 
-sealed class OrderHistoryScreenUiEffect{}
+sealed class OrderHistoryScreenUiEffect{
+    data object NavigateToLoginScreen : OrderHistoryScreenUiEffect()
+}

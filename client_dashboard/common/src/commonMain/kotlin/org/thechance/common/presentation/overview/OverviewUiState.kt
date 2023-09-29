@@ -11,7 +11,7 @@ import org.thechance.common.presentation.util.ErrorState
 
 data class OverviewUiState(
     val hasInternetConnection: Boolean = true,
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val error: ErrorState = ErrorState.UnKnownError,
     val users: List<LatestRegisteredUserUiState> = emptyList(),
     val dropdownMenuState: DropdownMenuState = DropdownMenuState(),
@@ -67,7 +67,7 @@ fun List<User>.toLatestUsersUiState(): List<LatestRegisteredUserUiState> {
 }
 
 enum class PermissionUiState {
-    RESTAURANT,
+    RESTAURANT_OWNER,
     DRIVER,
     END_USER,
     SUPPORT,
@@ -77,7 +77,7 @@ enum class PermissionUiState {
 
 fun Permission.toUiState(): PermissionUiState {
     return when (this) {
-        Permission.RESTAURANT_OWNER -> PermissionUiState.RESTAURANT
+        Permission.RESTAURANT_OWNER -> PermissionUiState.RESTAURANT_OWNER
         Permission.DRIVER -> PermissionUiState.DRIVER
         Permission.END_USER -> PermissionUiState.END_USER
         Permission.SUPPORT -> PermissionUiState.SUPPORT
