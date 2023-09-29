@@ -1,6 +1,6 @@
 package org.thechance.common.domain.entity
 
-data class NewRestaurantInfo(
+data class RestaurantInformation(
     val name: String,
     val ownerUsername: String,
     val phoneNumber: String,

@@ -176,6 +176,10 @@ class ErrorHandler(
         if(errorCodes.contains( 4003))
             errors[4003] = localizedMessages.tokenNotRegister
 
+
+        if(errorCodes.contains(4004))
+            errors[4004] = localizedMessages.notificationNotSent
+
         return errors
     }
 

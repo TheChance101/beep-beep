@@ -81,4 +81,8 @@ class EnglishLocalizedMessages() : LocalizedMessages {
     override val tokensNotFound: String = "Tokens not found"
     override val tokenNotRegister: String = "Token not register"
     //endregion
+
+    // region notification
+    override val notificationNotSent: String = "Notification not sent"
+    //endregion
 }
