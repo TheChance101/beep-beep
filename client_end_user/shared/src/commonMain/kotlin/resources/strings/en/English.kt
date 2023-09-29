@@ -96,4 +96,10 @@ data class English(
     override val pleaseLogin: String = "Please login to access your profile",
     override val invalidAddress: String = "Invalid Address",
     override val yourAddress: String = "Your Address",
+    override val mostOrdered: String = "Most Ordered",
+    override val sweets: String = "Sweets",
+    override val free: String= "Free",
+    override val loginToAddToFavourite: String="Please login to add",
+    override val addToCart: String = "Add to cart",
+    override val mealAddedToYourCart: String="Meal added to your cart",
 ) : IStringResources

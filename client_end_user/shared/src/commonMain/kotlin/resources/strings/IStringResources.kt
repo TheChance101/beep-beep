@@ -94,4 +94,10 @@ interface IStringResources {
     val ordersHistoryLoginMessage: String
     val notificationLoginMessage: String
     val pleaseLogin: String
+    val mostOrdered: String
+    val sweets: String
+    val free: String
+    val loginToAddToFavourite: String
+    val addToCart: String
+    val mealAddedToYourCart: String
 }
