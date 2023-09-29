@@ -62,6 +62,14 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
             .find()?.accessToken ?: ""
     }
 
+    override suspend fun getAccessTokenStream(): Flow<String> {
+        return realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID")
+            .asFlow()
+            .map { result ->
+                result.list.find { it.accessToken.isNotEmpty() }?.accessToken ?: ""
+            }
+    }
+
     override suspend fun getRefreshToken(): String {
         return realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
             .find()?.refreshToken ?: ""
