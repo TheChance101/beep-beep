@@ -16,6 +16,7 @@ class EgyptianArabicLocalizedMessages() : LocalizedMessages {
     override val usernameCannotBeBlank: String = "في اي يسطا"
     override val passwordCannotBeBlank: String = "فين الباسورد!! هنخم؟"
     override val invalidEmail: String = "الايميل يسطا!!"
+    override val invalidPhone: String ="رقم الموبايل مش صح يا عم !!"
     override val notFound: String = "مش موجود ياعم"
     override val invalidCredentials: String = "امسك حرامي"
     override val userCreatedSuccessfully: String = "اعمل حفلة بقى عندك حساب يا ابن المحظوظة 🎉"

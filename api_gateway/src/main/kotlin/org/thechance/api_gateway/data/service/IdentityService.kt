@@ -75,20 +75,6 @@ class IdentityService(
         return generateUserTokens(user.id, userName, user.permission, tokenConfiguration)
     }
 
-    suspend fun getUsers(
-        page: Int? = null, limit: Int? = null, searchTerm: String, languageCode: String
-    ) = client.tryToExecute<PaginationResponse<UserDto>>(
-        APIs.IDENTITY_API, attributes = attributes, setErrorMessage = { errorCodes ->
-            errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
-        }
-    ) {
-        get("/dashboard/user") {
-            parameter("page", page)
-            parameter("limit", limit)
-            parameter("name", searchTerm)
-        }
-    }
-
     @OptIn(InternalAPI::class)
     suspend fun getUsers(
         options: UserOptions, languageCode: String

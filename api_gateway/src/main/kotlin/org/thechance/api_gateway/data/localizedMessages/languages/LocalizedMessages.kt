@@ -26,6 +26,8 @@ interface LocalizedMessages {
 
     val invalidEmail: String
 
+    val invalidPhone: String
+
     val notFound: String
 
     val invalidCredentials: String
@@ -145,7 +147,7 @@ interface LocalizedMessages {
 
     val tokensNotFound: String
 
-    val tokenNotRegister : String
+    val tokenNotRegister: String
 
 
     //endregion
