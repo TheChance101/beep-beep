@@ -87,10 +87,11 @@ data class ArabicIQ(
     override val total: String = "المجموع:",
     override val yourCart: String = "العربة",
     override val allCuisines: String = "المطابخ",
-    override val logout: String= "تسجيل الخروج",
+    override val logout: String = "تسجيل الخروج",
     override val address: String = "العنوان",
-    override val save: String= "حفظ",
-    override val pleaseLogin: String= "سجل دخول وشوف حسابك"
-
+    override val save: String = "حفظ",
+    override val pleaseLogin: String = "سجل دخول وشوف حسابك",
+    override val message: String = "الرسالة",
+    override val supportTeam: String = "فريق الدعم",
 
     ) : IStringResources

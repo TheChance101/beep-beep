@@ -84,11 +84,13 @@ data class ArabicEG(
     override val allCuisines: String = "المطابخ",
     override val trackYourOrder: String = "تابع الاوردر",
     override val history: String = "سجل الطلبات",
-    override val logout: String= "تسجيل الخروج",
+    override val logout: String = "تسجيل الخروج",
     override val address: String = "العنوان",
-    override val save: String= "حفظ",
+    override val save: String = "حفظ",
     override val orderNow: String = "أطلب دلوقتي",
     override val total: String = "المجموع:",
     override val yourCart: String = "العربة",
-    override val pleaseLogin: String="سجل دخول يا اسطا وشوفك  حسابك"
+    override val pleaseLogin: String = "سجل دخول يا اسطا وشوفك  حسابك",
+    override val message: String = "الرسالة",
+    override val supportTeam: String = "فريق الدعم",
 ) : IStringResources

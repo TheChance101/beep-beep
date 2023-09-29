@@ -87,8 +87,10 @@ data class ArabicSY(
     override val orderNow: String = "أطلب هلأ",
     override val total: String = "المجموع:",
     override val yourCart: String = "العربة",
-    override val logout: String= "تسجيل الخروج",
+    override val logout: String = "تسجيل الخروج",
     override val address: String = "العنوان",
-    override val save: String= "حفظ",
-    override val pleaseLogin: String="سجل دخول حتى توصل حسابك يخوو"
+    override val save: String = "حفظ",
+    override val pleaseLogin: String = "سجل دخول حتى توصل حسابك يخوو",
+    override val message: String = "الرسالة",
+    override val supportTeam: String = "فريق الدعم",
 ) : IStringResources
