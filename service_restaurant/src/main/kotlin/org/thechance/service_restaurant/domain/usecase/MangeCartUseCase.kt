@@ -42,9 +42,9 @@ class MangeCartUseCase(
 
     override suspend fun orderCart(userId: String): Order {
         val cart = restaurantOperationGateway.getCart(userId)
-        return if (cart.restaurantId == null) {
+        return if (cart.meals.isNullOrEmpty()) {
             throw MultiErrorException(listOf(CART_IS_EMPTY))
-        } else if (isRestaurantOpened(cart.restaurantId)) {
+        } else if (cart.restaurantId != null && isRestaurantOpened(cart.restaurantId)) {
             restaurantOperationGateway.deleteCart(userId)
             restaurantOperationGateway.addOrder(order = cart.toOrder())
         } else {

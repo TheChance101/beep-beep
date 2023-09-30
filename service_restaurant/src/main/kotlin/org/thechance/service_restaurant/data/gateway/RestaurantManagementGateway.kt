@@ -161,11 +161,17 @@ class RestaurantManagementGateway(private val container: DataBaseContainer) : IR
             and(
                 CartCollection::id eq ObjectId(cartId),
                 CartCollection::meals.elemMatch(CartCollection.MealCollection::mealId eq meal.id)
-            ), Updates.pull("meals", Document("mealId", ObjectId(mealId)))
+            ),
+            Updates.pull("meals", Document("mealId", ObjectId(mealId)))
         )
 
         return if (quantity == 0) {
-            deleteFromCart(cartId, meal, restaurantId).toCartDetails(restaurant).toEntity()
+            val cart = deleteFromCart(cartId, meal, restaurantId)
+            if (cart.restaurantId == null) {
+                cart.toCartDetails().toEntity()
+            } else {
+                cart.toCartDetails(restaurant).toEntity()
+            }
         } else {
             addToCart(cartId, meal, restaurantId, quantity).toCartDetails(restaurant).toEntity()
         }
@@ -188,14 +194,24 @@ class RestaurantManagementGateway(private val container: DataBaseContainer) : IR
     private suspend fun deleteFromCart(
         cartId: String, meal: MealCollection, restaurantId: String
     ): CartCollection {
-        return container.cartCollection.findOneAndUpdate(
+
+        var updatedCart = container.cartCollection.findOneAndUpdate(
             CartCollection::id eq ObjectId(cartId),
             update = Updates.combine(
                 Updates.set("restaurantId", ObjectId(restaurantId)),
                 Updates.pull("meals", Filters.eq("mealId", meal.id))
             ),
             options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
-        ) ?: throw MultiErrorException(listOf(NOT_FOUND))
+        )
+
+        if (updatedCart != null && updatedCart.meals.isEmpty()) {
+            updatedCart = container.cartCollection.findOneAndUpdate(
+                CartCollection::id eq ObjectId(cartId),
+                Updates.set("restaurantId", null),
+                options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
+            )
+        }
+        return updatedCart ?: throw MultiErrorException(listOf(NOT_FOUND))
     }
 
     override suspend fun deleteCart(userId: String) {
