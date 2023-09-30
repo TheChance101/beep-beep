@@ -223,6 +223,18 @@ class RestaurantService(
     }
     //endregion
 
+    //region Cart
+    suspend fun getUserCart(userId: String, language: String): CartDto {
+        return client.tryToExecute(
+            api = APIs.RESTAURANT_API, attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, language) }
+        ) {
+            get("/cart/$userId")
+        }
+    }
+
+    //endregion
+
     //region order
     @OptIn(InternalAPI::class)
     suspend fun createOrder(order: OrderDto, languageCode: String): OrderDto {
@@ -320,6 +332,5 @@ class RestaurantService(
             method = { delete("/restaurant/owner/$id") }
         )
     }
-
     //endregion
 }
