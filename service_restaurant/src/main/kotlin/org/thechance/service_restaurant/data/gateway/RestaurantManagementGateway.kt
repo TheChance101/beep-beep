@@ -1,5 +1,6 @@
 package org.thechance.service_restaurant.data.gateway
 
+import com.mongodb.client.model.Filters
 import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.client.model.ReturnDocument
 import com.mongodb.client.model.Updates
@@ -9,10 +10,12 @@ import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
 import org.thechance.service_restaurant.data.DataBaseContainer
 import org.thechance.service_restaurant.data.collection.CartCollection
+import org.thechance.service_restaurant.data.collection.MealCollection
 import org.thechance.service_restaurant.data.collection.OrderCollection
 import org.thechance.service_restaurant.data.collection.mapper.*
 import org.thechance.service_restaurant.data.collection.relationModels.OrderWithRestaurant
 import org.thechance.service_restaurant.domain.entity.Cart
+import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.gateway.IRestaurantManagementGateway
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
@@ -158,9 +161,26 @@ class RestaurantManagementGateway(private val container: DataBaseContainer) : IR
             and(
                 CartCollection::id eq ObjectId(cartId),
                 CartCollection::meals.elemMatch(CartCollection.MealCollection::mealId eq meal.id)
-            ), Updates.pull("meals", Document("mealId", ObjectId(mealId)))
+            ),
+            Updates.pull("meals", Document("mealId", ObjectId(mealId)))
         )
 
+        return if (quantity == 0) {
+            val cart = deleteFromCart(cartId, meal, restaurantId)
+            if (cart.restaurantId == null) {
+                cart.toCartDetails().toEntity()
+            } else {
+                cart.toCartDetails(restaurant).toEntity()
+            }
+        } else {
+            addToCart(cartId, meal, restaurantId, quantity).toCartDetails(restaurant).toEntity()
+        }
+
+    }
+
+    private suspend fun addToCart(
+        cartId: String, meal: MealCollection, restaurantId: String, quantity: Int
+    ): CartCollection {
         return container.cartCollection.findOneAndUpdate(
             CartCollection::id eq ObjectId(cartId),
             update = Updates.combine(
@@ -168,8 +188,30 @@ class RestaurantManagementGateway(private val container: DataBaseContainer) : IR
                 Updates.addToSet("meals", meal.toMealInCart(quantity))
             ),
             options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
-        )?.toCartDetails(restaurant)?.toEntity() ?: throw MultiErrorException(listOf(NOT_FOUND))
+        ) ?: throw MultiErrorException(listOf(NOT_FOUND))
+    }
 
+    private suspend fun deleteFromCart(
+        cartId: String, meal: MealCollection, restaurantId: String
+    ): CartCollection {
+
+        var updatedCart = container.cartCollection.findOneAndUpdate(
+            CartCollection::id eq ObjectId(cartId),
+            update = Updates.combine(
+                Updates.set("restaurantId", ObjectId(restaurantId)),
+                Updates.pull("meals", Filters.eq("mealId", meal.id))
+            ),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
+        )
+
+        if (updatedCart != null && updatedCart.meals.isEmpty()) {
+            updatedCart = container.cartCollection.findOneAndUpdate(
+                CartCollection::id eq ObjectId(cartId),
+                Updates.set("restaurantId", null),
+                options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
+            )
+        }
+        return updatedCart ?: throw MultiErrorException(listOf(NOT_FOUND))
     }
 
     override suspend fun deleteCart(userId: String) {
@@ -180,6 +222,11 @@ class RestaurantManagementGateway(private val container: DataBaseContainer) : IR
                 Updates.unset("meals")
             )
         )
+    }
+
+    override suspend fun isCartEmpty(userId: String): Boolean {
+        val cart = container.cartCollection.findOne(filter = CartCollection::userId eq ObjectId(userId))
+        return cart?.restaurantId == null
     }
 
     //endregion
