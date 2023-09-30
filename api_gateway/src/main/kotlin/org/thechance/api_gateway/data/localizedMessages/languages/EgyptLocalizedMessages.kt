@@ -82,6 +82,7 @@ class EgyptianArabicLocalizedMessages() : LocalizedMessages {
     override val tokensNotFound: String = "مش لاقيين التوكنات دي ياعم"
     override val tokenNotRegister: String = "التوكن ده مش مسجل ياعم"
     override val cartIsAlreadyEmpty: String = "هتشتري ازاي والسله فاضيه اصلا!!"
+    override val invalidQuantity: String = "مدخل كميه مش صح"
 
     //endregion
 }

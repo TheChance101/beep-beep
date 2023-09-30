@@ -82,5 +82,7 @@ class ArabicLocalizedMessages() : LocalizedMessages {
     override val tokenNotRegister: String = "رمز الجهاز غير مسجل"
 
     override val cartIsAlreadyEmpty: String = "لا يمكن اجراء الامر لان السله فارغه"
+    override val invalidQuantity: String = "مدخل كميه مش صح"
+
     //endregion
 }
