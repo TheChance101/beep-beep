@@ -182,5 +182,10 @@ class RestaurantManagementGateway(private val container: DataBaseContainer) : IR
         )
     }
 
+    override suspend fun isCartEmpty(userId: String): Boolean {
+        val cart = container.cartCollection.findOne(filter = CartCollection::userId eq ObjectId(userId))
+        return cart?.restaurantId == null
+    }
+
     //endregion
 }

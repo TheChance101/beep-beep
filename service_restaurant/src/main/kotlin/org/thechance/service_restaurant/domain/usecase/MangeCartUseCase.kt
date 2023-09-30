@@ -6,9 +6,8 @@ import org.thechance.service_restaurant.domain.entity.mapper.toOrder
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.gateway.IRestaurantManagementGateway
 import org.thechance.service_restaurant.domain.usecase.validation.ICartValidationUseCase
-import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
-import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
-import org.thechance.service_restaurant.domain.utils.exceptions.RESTAURANT_NOT_SAME_IN_CART
+import org.thechance.service_restaurant.domain.utils.exceptions.*
+import org.thechance.service_restaurant.domain.utils.exceptions.RESTAURANT_CLOSED
 
 
 interface IMangeCartUseCase {
@@ -43,16 +42,14 @@ class MangeCartUseCase(
 
     override suspend fun orderCart(userId: String): Order {
         val cart = restaurantOperationGateway.getCart(userId)
-        restaurantOperationGateway.deleteCart(userId)
-        return restaurantOperationGateway.addOrder(order = cart.toOrder())
-
-        /* RETURN AFTER FINISH TESTING
-        return if (cart.restaurantId != null && isRestaurantOpened(cart.restaurantId)) {
+        return if (cart.restaurantId == null) {
+            throw MultiErrorException(listOf(CART_IS_EMPTY))
+        } else if (isRestaurantOpened(cart.restaurantId)) {
             restaurantOperationGateway.deleteCart(userId)
             restaurantOperationGateway.addOrder(order = cart.toOrder())
         } else {
             throw MultiErrorException(listOf(RESTAURANT_CLOSED))
-        }*/
+        }
     }
 
     override suspend fun getOrdersHistoryForUser(userId: String, page: Int, limit: Int): List<Order> {

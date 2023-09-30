@@ -21,6 +21,8 @@ interface IRestaurantManagementGateway {
     suspend fun getCart(userId: String): Cart
     suspend fun updateCart(cartId: String, restaurantId: String, mealId: String, quantity: Int): Cart
     suspend fun deleteCart(userId: String)
+
+    suspend fun isCartEmpty(userId: String): Boolean
     //endregion
 
 }
