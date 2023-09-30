@@ -57,7 +57,7 @@ fun Route.orderRoutes() {
             call.respond(HttpStatusCode.OK, result)
         }
 
-        get("/{restaurantId}/history") {
+        get("/restaurant/{restaurantId}/history") {
             val restaurantId = call.parameters["restaurantId"]?.trim() ?: throw MultiErrorException(listOf(NOT_FOUND))
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 10
