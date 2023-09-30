@@ -4,8 +4,10 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
+import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
+import org.thechance.api_gateway.data.model.MealRequestDto
 import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
@@ -33,8 +35,9 @@ fun Route.cartRoutes() {
                 val language = extractLocalizationHeader()
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val userId = tokenClaim?.get(Claim.USER_ID).toString()
-
-//                respondWithResult(HttpStatusCode.OK, result)
+                val meal = call.receive<MealRequestDto>()
+                val result = restaurantService.updateMealInCart(meal.copy(userId = userId), language)
+                respondWithResult(HttpStatusCode.OK, result)
             }
 
             delete("/orderNow") {

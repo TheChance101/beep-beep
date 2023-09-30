@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
+import org.thechance.api_gateway.data.model.MealRequestDto
 import org.thechance.api_gateway.data.model.PaginationResponse
 import org.thechance.api_gateway.data.model.restaurant.*
 import org.thechance.api_gateway.data.utils.ErrorHandler
@@ -230,6 +231,19 @@ class RestaurantService(
             setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, language) }
         ) {
             get("/cart/$userId")
+        }
+    }
+
+    suspend fun updateMealInCart(meal: MealRequestDto, language: String): CartDto {
+        return client.tryToExecute(
+            api = APIs.RESTAURANT_API, attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, language) }
+        ) {
+            put("/cart/${meal.userId}") {
+                parameter("restaurantId", meal.restaurantId)
+                parameter("mealId", meal.mealId)
+                parameter("quantity", meal.quantity)
+            }
         }
     }
 
