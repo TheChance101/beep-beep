@@ -23,7 +23,6 @@ class CartValidationUseCase(private val basicValidation: IValidation) : ICartVal
 
         if (quantity < 0) {
             validationErrors.add(INVALID_QUANTITY)
-
         }
 
         if (validationErrors.isNotEmpty()) {
