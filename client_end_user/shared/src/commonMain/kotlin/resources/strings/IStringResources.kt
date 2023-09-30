@@ -1,6 +1,8 @@
 package resources.strings
 
 interface IStringResources {
+    val yourAddress: String
+    val invalidAddress: String
     val unknownError: String
     val wifiDisabled: String
     val requestFailed: String

@@ -12,10 +12,10 @@ import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 
 interface IManageRestaurantDetailsUseCase {
     suspend fun getRestaurant(restaurantId: String): Restaurant
+    suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant>
+
     suspend fun updateRestaurant(restaurant: Restaurant): Restaurant
-    suspend fun deleteCategoriesInRestaurant(
-        restaurantId: String, categoryIds: List<String>
-    ): Boolean
+    suspend fun deleteCategoriesInRestaurant(restaurantId: String, categoryIds: List<String>): Boolean
 
 }
 
@@ -34,6 +34,11 @@ class ManageRestaurantDetailsUseCase(
                 NOT_FOUND
             )
         )
+    }
+
+    override suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant> {
+        basicValidation.isValidId(ownerId)
+        return restaurantGateway.getRestaurantsByOwnerId(ownerId)
     }
 
     override suspend fun updateRestaurant(restaurant: Restaurant): Restaurant {

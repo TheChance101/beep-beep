@@ -56,13 +56,13 @@ class UserScreenModel(
     }
 
     override fun onFilterMenuPermissionClick(permission: UserScreenUiState.PermissionUiState) {
-        val updatedPermissions = getUpdatedPermissions(mutableState.value.filter.permissions, permission)
-        updateState { it.copy(filter = it.filter.copy(permissions = updatedPermissions)) }
+        val updatedPermissions = getUpdatedPermissions(mutableState.value.filter.selectedPermissions, permission)
+        updateState { it.copy(filter = it.filter.copy(selectedPermissions = updatedPermissions)) }
     }
 
-    override fun onFilterMenuCountryClick(country: UserScreenUiState.CountryUiState) {
+    override fun onFilterMenuCountryClick(countryUiState: UserScreenUiState.CountryUiState) {
         val updatedCountries = mutableState.value.filter.countries.map {
-            if (it.name == country.name) it.copy(selected = !country.selected) else it
+            if (it.country == countryUiState.country) it.copy(isSelected = !countryUiState.isSelected) else it
         }
         updateState { it.copy(filter = it.filter.copy(countries = updatedCountries)) }
     }
@@ -76,8 +76,8 @@ class UserScreenModel(
         updateState {
             it.copy(
                 filter = it.filter.copy(
-                    permissions = emptyList(),
-                    countries = it.filter.countries.map { country -> country.copy(selected = false) }
+                    selectedPermissions = emptyList(),
+                    countries = it.filter.countries.map { country -> country.copy(isSelected = false) }
                 )
             )
         }
@@ -108,8 +108,8 @@ class UserScreenModel(
             {
                 userManagement.getUsers(
                     query = state.value.search.trim(),
-                    byPermissions = state.value.filter.permissions.toEntity(),
-                    byCountries = state.value.filter.countries.filter { it.selected }.map { it.name },
+                    byPermissions = state.value.filter.selectedPermissions.toEntity(),
+                    byCountries = state.value.filter.countries.filter { it.isSelected }.map { it.country }.toCountryEntity(),
                     page = state.value.currentPage,
                     numberOfUsers = state.value.specifiedUsers
                 )

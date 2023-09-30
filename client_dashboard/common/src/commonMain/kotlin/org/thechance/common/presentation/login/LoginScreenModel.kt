@@ -20,7 +20,7 @@ class LoginScreenModel(
 
     override fun onLoginClicked() {
         updateState { it.copy(isLoading = true) }
-        clearErrorState()
+        clearState()
         mutableState.value.apply {
             tryToExecute(
                     { login.loginUser(username = username, password = password) },
@@ -32,7 +32,7 @@ class LoginScreenModel(
     }
 
     private fun onLoginSuccess() {
-        updateState { it.copy(isLoading = false, hasInternetConnection = true) }
+        updateState { it.copy(isLoading = false) }
         sendNewEffect(LoginUIEffect.LoginSuccess)
     }
 
@@ -53,47 +53,40 @@ class LoginScreenModel(
                             },
                         isUserError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidUserName>()?.let { error ->
                             ErrorWrapper(error.errorMessage, true)
-                        }
+                        },
                     )
                 }
-            }
-
-            is ErrorState.InvalidPassword -> {
+               val error= errorStates.firstInstanceOfOrNull<ErrorState.InvalidPermission>()
                 updateState {
-                    it.copy(
-                        isPasswordError = ErrorWrapper(error.errorMessage, true)
-                    )
-                }
+                    it.copy(isSnackBarVisible =true, snackBarTitle =
+                    errorStates.firstInstanceOfOrNull<ErrorState.InvalidPermission>()?.errorMessage) }
             }
-
-            is ErrorState.UserNotExist -> {
-                updateState {
-                    it.copy(
-                        isUserError = ErrorWrapper(error.errorMessage, true)
-                    )
-                }
-            }
-
             ErrorState.NoConnection -> {
-                updateState { it.copy(hasInternetConnection = false) }
+                updateState { it.copy(isSnackBarVisible =true, snackBarTitle = null,
+                        ) }
             }
 
             else -> {
-                updateState { it.copy(hasInternetConnection = false) }
+                updateState { it.copy(isSnackBarVisible =true, snackBarTitle = null, ) }
             }
         }
     }
 
     override fun onSnackBarDismiss() {
-        updateState { it.copy(hasInternetConnection = true) }
+        updateState { it.copy(
+                isSnackBarVisible =false,
+                ) }
     }
 
-    private fun clearErrorState() =
+    private fun clearState() =
         updateState {
             it.copy(
                 isLoading = false,
                 isPasswordError = ErrorWrapper(),
-                isUserError = ErrorWrapper()
+                isUserError = ErrorWrapper(),
+                isSnackBarVisible =false,
+                snackBarTitle = null,
+
             )
         }
 }

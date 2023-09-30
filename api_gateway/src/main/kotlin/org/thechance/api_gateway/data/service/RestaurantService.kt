@@ -92,7 +92,7 @@ class RestaurantService(
             attributes = attributes,
             setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
         ) {
-            post("/restaurants") {
+            post("/restaurants/favorite") {
                 body = Json.encodeToString(restaurantIds)
             }
         }
@@ -354,6 +354,22 @@ class RestaurantService(
             attributes = attributes,
             method = { delete("/restaurant/owner/$id") }
         )
+    }
+
+    suspend fun search(query: String?, page: String?, limit: String?, languageCode: String): ExploreRestaurantDto {
+        return client.tryToExecute(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+            }
+        ) {
+            get("/restaurants/search") {
+                parameter("query", query)
+                parameter("page", page)
+                parameter("limit", limit)
+            }
+        }
     }
     //endregion
 }
