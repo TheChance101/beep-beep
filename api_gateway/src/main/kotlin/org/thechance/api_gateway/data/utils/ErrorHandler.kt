@@ -167,6 +167,9 @@ class ErrorHandler(
             errors[2503] = localizedMessages.cuisineNameAlreadyExisted
 
 
+        if(errorCodes.contains( 2505))
+            errors[2505] = localizedMessages.cartIsAlreadyEmpty
+
         if(errorCodes.contains( 4001))
             errors[4001] = localizedMessages.missingParameter
 

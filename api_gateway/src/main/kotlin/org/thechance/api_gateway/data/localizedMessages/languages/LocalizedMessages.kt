@@ -141,11 +141,13 @@ interface LocalizedMessages {
 
     val cuisineNameAlreadyExisted: String
 
+    val cartIsAlreadyEmpty: String
+
     val missingParameter: String
 
     val tokensNotFound: String
 
-    val tokenNotRegister : String
+    val tokenNotRegister: String
 
 
     //endregion

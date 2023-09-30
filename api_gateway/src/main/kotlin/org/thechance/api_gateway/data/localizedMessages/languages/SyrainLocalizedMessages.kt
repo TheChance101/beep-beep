@@ -82,5 +82,7 @@ class SyrianArabicLocalizedMessages() : LocalizedMessages {
     override val missingParameter: String = "في معلومات ناقصة يا جار!"
     override val tokensNotFound: String = "التوكن مالو موجود"
     override val tokenNotRegister: String = "التوكن مالو مسجل"
+    override val cartIsAlreadyEmpty: String = "لا يمكن اجراء الامر لان السله فارغه"
+
     //endregion
 }
