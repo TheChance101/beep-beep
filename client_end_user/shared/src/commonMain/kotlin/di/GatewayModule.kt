@@ -1,10 +1,12 @@
 package di
 
+import data.gateway.fake.FakeChatRemoteGateway
 import data.gateway.fake.FakeOrderRemoteGateway
 import data.gateway.fake.FakeRemoteGateway
 import data.gateway.local.LocalConfigurationGateway
 import data.gateway.remote.RestaurantGateway
 import data.gateway.remote.UserRemoteRemoteGateway
+import domain.gateway.IChatGateway
 import domain.gateway.IFakeRemoteGateway
 import domain.gateway.IOrderRemoteGateway
 import domain.gateway.IRestaurantRemoteGateway
@@ -20,4 +22,5 @@ val gatewayModule = module {
     singleOf(::RestaurantGateway) { bind<IRestaurantRemoteGateway>() }
     singleOf(::LocalConfigurationGateway) { bind<ILocalConfigurationGateway>() }
     singleOf(::FakeOrderRemoteGateway) { bind<IOrderRemoteGateway>() }
+    singleOf(::FakeChatRemoteGateway) { bind<IChatGateway>() }
 }

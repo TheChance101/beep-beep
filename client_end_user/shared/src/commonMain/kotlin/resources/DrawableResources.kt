@@ -48,7 +48,8 @@ data class DrawableResources(
     val minus: String = "minus_icon.xml",
     val close: String = "close.xml",
     val unread: String = "unread.xml",
-
+    val sendMessage: String = "ic_send.xml",
+    val chatPlaceholder: String = "img_chat_placeholder.png",
 )
 
 val BpDrawableDarkResources = DrawableResources(

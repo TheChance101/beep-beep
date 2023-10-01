@@ -100,4 +100,7 @@ interface IStringResources {
     val loginToAddToFavourite: String
     val addToCart: String
     val mealAddedToYourCart: String
+    val message: String
+    val supportTeam: String
+    val sendMessageToStartLiveChat: String
 }

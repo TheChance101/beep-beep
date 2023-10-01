@@ -44,6 +44,7 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
 import presentation.cart.CartScreen
+import presentation.chatSupport.ChatSupportScreen
 import presentation.composable.BpImageLoader
 import presentation.composable.ContentVisibility
 import presentation.composable.ImageSlider
@@ -74,7 +75,7 @@ class HomeScreen : BaseScreen<
         when (effect) {
             is HomeScreenUiEffect.NavigateToCuisineDetails -> println("Cuisine id ${effect.cuisineId}")
             is HomeScreenUiEffect.NavigateToCuisines -> navigator.root?.push(CuisinesScreen())
-            is HomeScreenUiEffect.NavigateToChatSupport -> println("Navigate to Chat support screen")
+            is HomeScreenUiEffect.NavigateToChatSupport -> navigator.root?.push(ChatSupportScreen())
             is HomeScreenUiEffect.NavigateToOrderTaxi -> println("Navigate to Order Taxi screen")
             is HomeScreenUiEffect.ScrollDownToRecommendedRestaurants -> println("Scroll down home screen")
             is HomeScreenUiEffect.NavigateToOfferItem -> println("Navigate to offer item details ${effect.offerId}")

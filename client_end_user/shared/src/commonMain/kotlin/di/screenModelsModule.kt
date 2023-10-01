@@ -15,6 +15,7 @@ import presentation.preferredMeal.PreferredScreenModel
 import presentation.preferredRide.PreferredRideScreenModel
 import presentation.cart.CartScreenModel
 import presentation.profile.ProfileScreenModel
+import presentation.chatSupport.ChatSupportScreenModel
 import presentation.resturantDetails.RestaurantScreenModel
 import presentation.app.AppScreenModel
 
@@ -34,4 +35,5 @@ val screenModelsModule = module {
     factoryOf(::CuisinesScreenModel)
     factoryOf(::RestaurantScreenModel)
     factory { AppScreenModel(get()) }
+    factoryOf(::ChatSupportScreenModel)
 }
