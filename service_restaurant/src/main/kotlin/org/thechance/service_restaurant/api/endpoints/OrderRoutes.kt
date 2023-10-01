@@ -6,26 +6,24 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
-import org.bson.types.ObjectId
 import org.koin.ktor.ext.inject
+import org.thechance.service_restaurant.api.models.BasePaginationResponseDto
 import org.thechance.service_restaurant.api.models.OrderDto
 import org.thechance.service_restaurant.api.models.WebSocketRestaurant
 import org.thechance.service_restaurant.api.models.mappers.toDto
-import org.thechance.service_restaurant.api.models.mappers.toEntity
+//import org.thechance.service_restaurant.api.models.mappers.toHistoryDto
 import org.thechance.service_restaurant.api.utils.SocketHandler
 import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.usecase.IManageOrderUseCase
-import org.thechance.service_restaurant.domain.utils.currentDateTime
-import org.thechance.service_restaurant.domain.utils.exceptions.INSERT_ORDER_ERROR
+import org.thechance.service_restaurant.domain.usecase.IMangeCartUseCase
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_REQUEST_PARAMETER
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
-import org.thechance.service_restaurant.domain.utils.toMillis
 import kotlin.collections.set
 
 fun Route.orderRoutes() {
-
     val manageOrder: IManageOrderUseCase by inject()
+    val manageCart: IMangeCartUseCase by inject()
     val socketHandler: SocketHandler by inject()
 
     route("/order") {
@@ -50,22 +48,38 @@ fun Route.orderRoutes() {
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
-        put("/{id}/status") {
+        put("/{id}") {
             val id = call.parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
-            val status = call.receiveParameters()["status"]?.toInt() ?: throw MultiErrorException(
-                listOf(INVALID_REQUEST_PARAMETER)
-            )
-            val result = manageOrder.updateOrderStatus(orderId = id, state = Order.Status.getOrderStatus(status))
+            val status =
+                call.parameters["status"]?.toInt() ?: throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER))
+            val result =
+                manageOrder.updateOrderStatus(orderId = id, state = Order.Status.getOrderStatus(status)).toDto()
             call.respond(HttpStatusCode.OK, result)
         }
 
-        get("/history/{id}") {
-            val id = call.parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
+        get("/restaurant/{restaurantId}/history") {
+            val restaurantId = call.parameters["restaurantId"]?.trim() ?: throw MultiErrorException(listOf(NOT_FOUND))
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 10
+            val result =
+                manageOrder.getOrdersHistoryForRestaurant(restaurantId = restaurantId, page = page, limit = limit)
+                    .map { it.toDto() }
+            val total = manageOrder.getNumberOfOrdersHistoryInRestaurant(restaurantId)
+            call.respond(
+                HttpStatusCode.OK, BasePaginationResponseDto<OrderDto>(items = result, total = total)
+            )
+        }
 
-            val result = manageOrder.getOrdersHistory(restaurantId = id, page = page, limit = limit)
-            call.respond(HttpStatusCode.OK, result.map { it.toDto() })
+        get("/user/{userId}/history") {
+            val userId = call.parameters["userId"]?.trim() ?: throw MultiErrorException(listOf(NOT_FOUND))
+            val page = call.parameters["page"]?.toInt() ?: 1
+            val limit = call.parameters["limit"]?.toInt() ?: 10
+            val result =
+                manageCart.getOrdersHistoryForUser(userId = userId, page = page, limit = limit).map { it.toDto() }
+            val total = manageOrder.getNumberOfOrdersHistoryForUser(userId)
+            call.respond(
+                HttpStatusCode.OK, BasePaginationResponseDto<OrderDto>(items = result, total = total)
+            )
         }
 
         get("/{restaurantId}/orders") {
@@ -74,21 +88,10 @@ fun Route.orderRoutes() {
             call.respond(HttpStatusCode.OK, result.map { it.toDto() })
         }
 
-        post {
-            val order = call.receive<OrderDto>()
-                .copy(id = ObjectId().toString(), createdAt = currentDateTime().toMillis())
-            val isOrderInserted = manageOrder.addOrder(order.toEntity())
-            isOrderInserted.takeIf { it }.apply {
-                socketHandler.restaurants[order.restaurantId]?.orders?.emit(order)
-                call.respond(HttpStatusCode.Created, order)
-            } ?: throw MultiErrorException(listOf(INSERT_ORDER_ERROR))
-        }
-
         webSocket("/restaurant/{restaurantId}") {
             val restaurantId = call.parameters["restaurantId"]?.trim().orEmpty()
             socketHandler.restaurants[restaurantId] = WebSocketRestaurant(this)
             socketHandler.broadcastOrder(restaurantId)
         }
-
     }
 }

@@ -1,6 +1,7 @@
 package org.thechance.service_restaurant.data.collection.mapper
 
 import org.bson.types.ObjectId
+import org.thechance.service_restaurant.data.collection.CartCollection
 import org.thechance.service_restaurant.data.collection.MealCollection
 import org.thechance.service_restaurant.data.collection.relationModels.MealWithCuisines
 import org.thechance.service_restaurant.domain.entity.Meal
@@ -42,3 +43,11 @@ fun MealWithCuisines.toEntity() = MealDetails(
 )
 
 fun List<MealCollection>.toEntity(): List<Meal> = this.map { it.toEntity() }
+
+fun MealCollection.toMealInCart(quantity: Int) = CartCollection.MealCollection(
+    mealId = id,
+    name = name,
+    image = image,
+    quantity = quantity,
+    price = price
+)

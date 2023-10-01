@@ -4,6 +4,7 @@ import kotlinx.datetime.LocalDateTime
 import org.bson.types.ObjectId
 import org.thechance.service_taxi.data.collection.LocationCollection
 import org.thechance.service_taxi.data.collection.TripCollection
+import org.thechance.service_taxi.data.collection.relationModel.TripWithTaxi
 import org.thechance.service_taxi.domain.entity.Location
 import org.thechance.service_taxi.domain.entity.Trip
 import org.thechance.service_taxi.domain.exceptions.CantBeNullException
@@ -30,6 +31,20 @@ fun LocationCollection.toEntity(): Location {
     )
 }
 
+fun TripDto.LocationDto.toEntity(): Location {
+    return Location(
+        latitude = latitude,
+        longitude = longitude
+    )
+}
+
+fun Location.toDto(): TripDto.LocationDto {
+    return TripDto.LocationDto(
+        latitude = latitude,
+        longitude = longitude
+    )
+}
+
 fun Location.toCollection(): LocationCollection {
     return LocationCollection(
         latitude = latitude,
@@ -43,8 +58,10 @@ fun Trip.toDto(): TripDto {
         taxiId = taxiId,
         driverId = driverId,
         clientId = clientId,
-        startPoint = startPoint.toCollection(),
-        destination = destination?.toCollection(),
+        taxiDriverName = driverName,
+        taxiPlateNumber = taxiPlateNumber,
+        startPoint = startPoint.toDto(),
+        destination = destination?.toDto(),
         rate = rate,
         price = price,
         startDate = startDate?.toString(),
@@ -59,7 +76,7 @@ fun TripCollection.toEntity(): Trip {
         id = id.toString(),
         taxiId = taxiId?.toString(),
         driverId = driverId?.toString(),
-        clientId = clientId?.toString() ?: throw CantBeNullException,
+        clientId = clientId.toString(),
         startPoint = startPoint?.toEntity() ?: throw CantBeNullException,
         destination = destination?.toEntity(),
         rate = rate,
@@ -82,5 +99,23 @@ fun Trip.toCollection(): TripCollection {
         price = price,
         startDate = startDate?.toString(),
         endDate = endDate?.toString()
+    )
+}
+
+fun TripWithTaxi.toEntity(): Trip {
+    return Trip(
+        id = id.toString(),
+        taxiId = taxi.id.toString(),
+        driverId = driverId?.toString() ?: "",
+        taxiPlateNumber = taxi.plateNumber ?: "",
+        driverName = taxi.driverUsername ?: "",
+        clientId = clientId?.toString() ?: throw CantBeNullException,
+        startPoint = startPoint?.toEntity() ?: throw CantBeNullException,
+        destination = destination?.toEntity(),
+        rate = rate,
+        price = price ?: 0.0,
+        startDate = startDate?.let { LocalDateTime.parse(it) },
+        endDate = endDate?.let { LocalDateTime.parse(it) }
+
     )
 }

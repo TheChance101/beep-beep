@@ -17,11 +17,7 @@ class ClientTripsManagementUseCase(
     private val validations: IValidations
 ) : IClientTripsManagementUseCase {
 
-    override suspend fun getTripsByClientId(
-        clientId: String,
-        page: Int,
-        limit: Int
-    ): List<Trip> {
+    override suspend fun getTripsByClientId(clientId: String, page: Int, limit: Int): List<Trip> {
         return taxiGateway.getClientTripsHistory(clientId, page, limit)
     }
 

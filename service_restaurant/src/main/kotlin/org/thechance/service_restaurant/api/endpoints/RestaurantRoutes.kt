@@ -36,7 +36,7 @@ fun Route.restaurantRoutes() {
             val restaurantOptions = call.receive<RestaurantOptionsDto>()
             val restaurants = discoverRestaurant.getRestaurants(restaurantOptions.toEntity()).toDto()
             val total = controlRestaurant.getTotalNumberOfRestaurant()
-            call.respond(HttpStatusCode.OK, BasePaginationResponseDto(restaurants, total))
+            call.respond(HttpStatusCode.OK, BasePaginationResponseDto(items = restaurants, total = total))
         }
 
         get("/{ownerId}") {
@@ -117,9 +117,7 @@ fun Route.restaurantRoutes() {
         delete("/{id}/categories") {
             val restaurantId =
                 call.parameters.extractString("id") ?: throw MultiErrorException(
-                    listOf(
-                        INVALID_REQUEST_PARAMETER
-                    )
+                    listOf(INVALID_REQUEST_PARAMETER)
                 )
             val categoryIds = call.receive<List<String>>()
             val result =
@@ -128,11 +126,7 @@ fun Route.restaurantRoutes() {
         }
 
         delete("/{id}") {
-            val restaurantId = call.parameters["id"] ?: throw MultiErrorException(
-                listOf(
-                    INVALID_REQUEST_PARAMETER
-                )
-            )
+            val restaurantId = call.parameters["id"] ?: throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER))
             val result = controlRestaurant.deleteRestaurant(restaurantId)
             call.respond(HttpStatusCode.OK, result)
         }

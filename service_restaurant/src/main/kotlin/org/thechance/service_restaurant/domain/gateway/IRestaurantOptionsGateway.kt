@@ -27,7 +27,7 @@ interface IRestaurantOptionsGateway {
     suspend fun deleteCuisine(id: String): Boolean
     suspend fun getCuisineByName(cuisineName: String): Cuisine?
     //endregion
-
+/*
     //region Order
     suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order>
     suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order>
@@ -36,4 +36,11 @@ interface IRestaurantOptionsGateway {
     suspend fun updateOrderStatus(orderId: String, status: Order.Status): Order?
     suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order>
     //endregion
+
+    //region Cart
+    suspend fun getUserCart(userId: String): Cart?
+    suspend fun addMealToCart(meal: Meal, quantity: Int, userId: String): Boolean
+    suspend fun deleteMealFromCart(cartId: String, mealId: String): Boolean
+    //endregion
+    */
 }
