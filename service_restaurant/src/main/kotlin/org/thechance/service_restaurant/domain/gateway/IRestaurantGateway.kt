@@ -40,7 +40,7 @@ interface IRestaurantGateway {
 
     //region meal
     suspend fun getMealCuisines(mealId: String): List<Cuisine>
-    suspend fun getMeals(page: Int, limit: Int): List<Meal>
+    suspend fun getMeals(query: String, page: Int, limit: Int): List<Meal>
     suspend fun getMealById(id: String): MealDetails?
     suspend fun addCuisinesToMeal(mealId: String, cuisineIds: List<String>): Boolean
     suspend fun addMeal(meal: MealDetails): Meal

@@ -3,15 +3,11 @@ package domain.gateway
 
 import domain.entity.Session
 import domain.entity.User
+import domain.entity.UserCreation
 
 interface IUserRemoteGateway {
 
-    suspend fun createUser(
-        fullName: String,
-        username: String,
-        password: String,
-        email: String
-    ): User
+    suspend fun createUser(userCreation: UserCreation): User
 
     suspend fun loginUser(username: String, password: String): Session
 

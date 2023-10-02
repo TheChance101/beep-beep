@@ -1,5 +1,6 @@
 package presentation.home
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -43,7 +44,9 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
 import presentation.cart.CartScreen
+import presentation.chatSupport.ChatSupportScreen
 import presentation.composable.BpImageLoader
+import presentation.composable.ContentVisibility
 import presentation.composable.ImageSlider
 import presentation.composable.ItemSection
 import presentation.composable.SectionHeader
@@ -56,8 +59,12 @@ import presentation.home.composable.OrderCard
 import resources.Resources
 import util.root
 
-class HomeScreen :
-    BaseScreen<HomeScreenModel, HomeScreenUiState, HomeScreenUiEffect, HomeScreenInteractionListener>() {
+class HomeScreen : BaseScreen<
+        HomeScreenModel,
+        HomeScreenUiState,
+        HomeScreenUiEffect,
+        HomeScreenInteractionListener
+        >() {
 
     @Composable
     override fun Content() {
@@ -68,18 +75,19 @@ class HomeScreen :
         when (effect) {
             is HomeScreenUiEffect.NavigateToCuisineDetails -> println("Cuisine id ${effect.cuisineId}")
             is HomeScreenUiEffect.NavigateToCuisines -> navigator.root?.push(CuisinesScreen())
-            is HomeScreenUiEffect.NavigateToChatSupport -> println("Navigate to Chat support screen")
+            is HomeScreenUiEffect.NavigateToChatSupport -> navigator.root?.push(ChatSupportScreen())
             is HomeScreenUiEffect.NavigateToOrderTaxi -> println("Navigate to Order Taxi screen")
             is HomeScreenUiEffect.ScrollDownToRecommendedRestaurants -> println("Scroll down home screen")
             is HomeScreenUiEffect.NavigateToOfferItem -> println("Navigate to offer item details ${effect.offerId}")
             is HomeScreenUiEffect.NavigateToSearch -> println("Navigate to Search Screen")
-            is HomeScreenUiEffect.NavigateToOrderDetails ->  println("Navigate to order details ${effect.orderId}")
+            is HomeScreenUiEffect.NavigateToOrderDetails -> println("Navigate to order details ${effect.orderId}")
             is HomeScreenUiEffect.NavigateToCart -> navigator.root?.push(CartScreen())
             is HomeScreenUiEffect.NavigateLoginScreen -> navigator.root?.push(LoginScreen())
         }
     }
 
-    @OptIn(ExperimentalResourceApi::class, ExperimentalFoundationApi::class,
+    @OptIn(
+        ExperimentalResourceApi::class, ExperimentalFoundationApi::class,
         ExperimentalMaterial3Api::class
     )
     @Composable
@@ -136,7 +144,9 @@ class HomeScreen :
             }
 
             item {
-                CartCard(onClick = { listener.onClickCartCard() })
+                AnimatedVisibility(state.showCart) {
+                    CartCard(onClick = { listener.onClickCartCard() })
+                }
             }
 
             if (state.hasProgress) {
@@ -221,7 +231,7 @@ class HomeScreen :
                 }
             }
             item {
-                LastOrder(state.lastOrder,listener)
+                LastOrder(state.lastOrder, listener)
             }
             item {
                 Column(
@@ -332,16 +342,32 @@ class HomeScreen :
     @Composable
     private fun LastOrder(order: OrderUiState, listener: HomeScreenInteractionListener) {
         Column(modifier = Modifier.padding(start = 16.dp)) {
-            Text(Resources.strings.lastOrder, style = Theme.typography.titleLarge.copy(color = Theme.colors.contentPrimary))
+            Text(
+                Resources.strings.lastOrder,
+                style = Theme.typography.titleLarge.copy(color = Theme.colors.contentPrimary)
+            )
             Row(modifier = Modifier.fillMaxWidth().height(80.dp).padding(top = 8.dp)) {
                 BpImageLoader(
-                    modifier = Modifier.fillMaxHeight().width(104.dp).clip(RoundedCornerShape(8.dp)),
+                    modifier = Modifier.fillMaxHeight().width(104.dp)
+                        .clip(RoundedCornerShape(8.dp)),
                     imageUrl = order.image
                 )
-                Column(modifier = Modifier.padding(8.dp).fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
-                    Text(order.restaurantName, style = Theme.typography.title.copy(color = Theme.colors.contentPrimary))
-                    Text(order.date, style = Theme.typography.body.copy(color = Theme.colors.contentSecondary))
-                    Row(modifier = Modifier.clickable { listener.onClickOrderAgain(order.id) }, verticalAlignment = Alignment.CenterVertically) {
+                Column(
+                    modifier = Modifier.padding(8.dp).fillMaxSize(),
+                    verticalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        order.restaurantName,
+                        style = Theme.typography.title.copy(color = Theme.colors.contentPrimary)
+                    )
+                    Text(
+                        order.date,
+                        style = Theme.typography.body.copy(color = Theme.colors.contentSecondary)
+                    )
+                    Row(
+                        modifier = Modifier.clickable { listener.onClickOrderAgain(order.id) },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Text(
                             text = Resources.strings.orderAgain,
                             style = Theme.typography.body,

@@ -13,7 +13,7 @@ fun RestaurantDto.toEntity(): Restaurant {
 
     return Restaurant(
         id = id,
-        ownerId = ownerId,
+        ownerId = ownerId ?:"",
         ownerUsername = ownerUsername ?: "",
         name = name ?: "",
         description = description ?: "",

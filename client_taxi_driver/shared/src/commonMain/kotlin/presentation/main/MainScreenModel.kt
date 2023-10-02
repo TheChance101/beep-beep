@@ -8,5 +8,4 @@ class MainScreenModel:
     override fun onCLickStart() {
         sendNewEffect(MainUiEffect.MainEffect)
     }
-
 }

@@ -84,6 +84,15 @@ class RegistrationScreen :
                     errorMessage = if (state.isUsernameError) Resources.strings.invalidUsername else "",
                     isError = state.isUsernameError,
                 )
+
+                BpTextField(
+                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                    text = state.email,
+                    onValueChange = listener::onEmailChanged,
+                    label = Resources.strings.email,
+                    errorMessage = if (state.isEmailError) Resources.strings.invalidEmail else "",
+                    isError = state.isEmailError,
+                )
                 BpTextField(
                     modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
                     text = state.password,
@@ -123,6 +132,7 @@ class RegistrationScreen :
             is RegistrationScreenEffect.NavigateToSubmitRegistrationScreen -> navigator.push(
                 RegistrationSubmitScreen(
                     username = effect.username,
+                    email = effect.email,
                     password = effect.password
                 )
             )

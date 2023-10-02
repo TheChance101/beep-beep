@@ -1,25 +1,34 @@
 package data.gateway.remote
 
 import data.remote.mapper.toCuisineEntity
+import data.remote.mapper.toEntity
 import data.remote.model.CuisineDto
+import data.remote.model.RestaurantDto
 import data.remote.model.ServerResponse
 import domain.entity.Cuisine
 import domain.entity.InProgressWrapper
 import domain.entity.Location
 import domain.entity.Order
+import domain.entity.Restaurant
 import domain.entity.Taxi
 import domain.entity.Trip
 import domain.gateway.IRestaurantRemoteGateway
 import domain.utils.GeneralException
 import io.ktor.client.HttpClient
+import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
+import io.ktor.client.request.parameter
+import io.ktor.http.HttpMethod
+import io.ktor.http.Parameters
 import kotlinx.datetime.Clock
 
 class RestaurantGateway(client: HttpClient) : BaseGateway(client = client),
     IRestaurantRemoteGateway {
     override suspend fun getCuisines(): List<Cuisine> {
         return tryToExecute<ServerResponse<List<CuisineDto>>> {
-            get("/cuisines")
+            get("/cuisines"){
+
+            }
         }.value?.toCuisineEntity() ?: throw GeneralException.NotFoundException
     }
 
@@ -30,6 +39,39 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client),
             tripsOnTheWay = getActiveRide(),
             ordersOnTheWay = getActiveOrder(),
         )
+    }
+
+    override suspend fun getRestaurantDetails(restaurantId: String): Restaurant {
+        return tryToExecute<ServerResponse<RestaurantDto>> {
+            get("/restaurant/$restaurantId")
+
+        }.value?.toEntity() ?: throw GeneralException.NotFoundException
+    }
+
+    override suspend fun addRestaurantToFavorites(restaurantId: String): Boolean {
+        return tryToExecute<ServerResponse<Boolean>> {
+            submitForm(
+                url = ("/user/favorite"),
+                formParameters = Parameters.build {
+                    append("restaurantId", restaurantId)
+                }
+            ){
+                method = HttpMethod.Post
+            }
+        }.value ?: throw GeneralException.NotFoundException
+    }
+
+    override suspend fun removeRestaurantFromFavorites(restaurantId: String): Boolean {
+        return tryToExecute<ServerResponse<Boolean>> {
+            submitForm(
+                url = ("/user/favorite"),
+                formParameters = Parameters.build {
+                    append("restaurantId", restaurantId)
+                }
+            ){
+                method = HttpMethod.Delete
+            }
+        }.value ?: throw GeneralException.NotFoundException
     }
 
     private fun getActiveRide(): List<Trip> {

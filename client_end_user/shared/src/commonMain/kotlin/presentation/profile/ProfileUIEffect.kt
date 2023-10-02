@@ -1,5 +1,5 @@
 package presentation.profile
 
-sealed class ProfileUIEffect(){
-    object Login : ProfileUIEffect()
+sealed class ProfileUIEffect {
+    data object NavigateToLoginScreen : ProfileUIEffect()
 }

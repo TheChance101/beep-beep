@@ -15,3 +15,14 @@ fun Long.toTime(): Time {
 
     return Time((hours % hoursPerDay).toInt(), (minutes % minutesPerHour).toInt())
 }
+
+fun String.toTime(): Time {
+    val parts = this.split(":")
+    if (parts.size == 2) {
+        val hours = parts[0].toInt()
+        val minutes = parts[1].toInt()
+        return Time(hours, minutes)
+    } else {
+        throw IllegalArgumentException("Invalid Time Format")
+    }
+}

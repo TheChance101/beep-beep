@@ -115,12 +115,32 @@ class IdentityService(
         }
     }
 
-    suspend fun getUserById(id: String, languageCode: String): UserDto = client.tryToExecute<UserDto>(
+    suspend fun getUserById(id: String, languageCode: String): UserDetailsDto = client.tryToExecute<UserDetailsDto>(
         APIs.IDENTITY_API, attributes = attributes, setErrorMessage = { errorCodes ->
             errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
         }
     ) {
         get("user/$id")
+    }
+
+    suspend fun updateUserProfile(
+        id: String,
+        fullName: String,
+        languageCode: String
+    ): UserDetailsDto {
+        return client.tryToExecute<UserDetailsDto>(
+            APIs.IDENTITY_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+            }
+        ) {
+            submitForm("/user/profile/$id",
+                formParameters = parameters {
+                    append("fullName", fullName)
+                }
+            )
+        }
     }
 
     suspend fun getUserByUsername(username: String?, languageCode: String): UserDto = client.tryToExecute<UserDto>(
