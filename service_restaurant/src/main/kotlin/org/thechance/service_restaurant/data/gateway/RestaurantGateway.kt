@@ -332,5 +332,14 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
             update = set(RestaurantCollection::isDeleted setTo true),
         ).isSuccessfullyUpdated()
     }
+
+    override suspend fun getTotalNumberOfMealsByRestaurantId(restaurantId: String): Long {
+        return container.mealCollection.countDocuments(
+            and(
+                MealCollection::restaurantId eq ObjectId(restaurantId),
+                MealCollection::isDeleted eq false
+            )
+        )
+    }
     //endregion
 }

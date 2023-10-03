@@ -5,8 +5,6 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
 import org.koin.ktor.ext.inject
 import org.thechance.service_taxi.api.dto.BasePaginationResponse
 import org.thechance.service_taxi.api.dto.trip.TripDto
@@ -42,7 +40,7 @@ fun Route.tripRoutes() {
             val limit = call.parameters["limit"]?.toInt() ?: 20
             val result = driverTripsManagementUseCase.getTripsByDriverId(id, page, limit).toDto()
             val total = driverTripsManagementUseCase.getNumberOfTripsByDriverId(id)
-            call.respond(HttpStatusCode.OK, BasePaginationResponse(items = result, total = total))
+            call.respond(HttpStatusCode.OK, BasePaginationResponse(result, page, total))
         }
 
         get("/client/{clientId}") {
@@ -51,7 +49,7 @@ fun Route.tripRoutes() {
             val limit = call.parameters["limit"]?.toInt() ?: 20
             val result = clientTripsManagementUseCase.getTripsByClientId(id, page, limit).toDto()
             val total = clientTripsManagementUseCase.getNumberOfTripsByClientId(id)
-            call.respond(HttpStatusCode.OK, BasePaginationResponse(items = result, total = total))
+            call.respond(HttpStatusCode.OK, BasePaginationResponse(result, page, total))
         }
 
         post {

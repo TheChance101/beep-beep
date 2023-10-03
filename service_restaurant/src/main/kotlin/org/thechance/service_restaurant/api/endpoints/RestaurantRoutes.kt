@@ -33,10 +33,10 @@ fun Route.restaurantRoutes() {
     route("restaurants") {
 
         post {
-            val restaurantOptions = call.receive<RestaurantOptionsDto>()
-            val restaurants = discoverRestaurant.getRestaurants(restaurantOptions.toEntity()).toDto()
+            val restaurantOptions = call.receive<RestaurantOptionsDto>().toEntity()
+            val restaurants = discoverRestaurant.getRestaurants(restaurantOptions).toDto()
             val total = controlRestaurant.getTotalNumberOfRestaurant()
-            call.respond(HttpStatusCode.OK, BasePaginationResponseDto(items = restaurants, total = total))
+            call.respond(HttpStatusCode.OK, BasePaginationResponseDto(restaurants, restaurantOptions.page, total))
         }
 
         get("/{ownerId}") {
@@ -78,12 +78,13 @@ fun Route.restaurantRoutes() {
             )
             val page = call.parameters.extractInt("page") ?: 1
             val limit = call.parameters.extractInt("limit") ?: 10
-            val restaurant = discoverRestaurant.getMealsByRestaurantId(
+            val meals = discoverRestaurant.getMealsByRestaurantId(
                 restaurantId = restaurantId,
                 page = page,
                 limit = limit
             ).toMealDto()
-            call.respond(HttpStatusCode.OK, restaurant)
+            val total = controlRestaurant.getTotalNumberOfMealsByRestaurantId(restaurantId)
+            call.respond(HttpStatusCode.OK, BasePaginationResponseDto(meals, page, total))
         }
 
         get("/{id}") {
