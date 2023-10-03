@@ -57,30 +57,6 @@ class FakeRemoteGateway : IFakeRemoteGateway {
         return meals.first().toEntity()
     }
 
-    override suspend fun getUserProfile(): UserDetails {
-        return userProfile.toEntity()
-    }
-
-    private val userProfile = UserDetailsDto(
-        addresses = listOf(
-            AddressDto(
-                id = "64f372095fecc11e6d917656",
-                address = "Main street, 123",
-                location = LocationDto(22.0, 10.5)
-            )
-        ),
-        country = "iraq",
-        currency = "IQD",
-        email = "aya@gmail.com",
-        fullName = "aya",
-        id = "64f3663e5ddbc15bfd1efcfa",
-        permission = 1,
-        username = "ay0o5h",
-        walletBalance = 0.0,
-        phoneNumber = "1234567890"
-
-    )
-
     private val restaurants = listOf(
         RestaurantDto(
             id = "64f372095fecc11e6d917656",
