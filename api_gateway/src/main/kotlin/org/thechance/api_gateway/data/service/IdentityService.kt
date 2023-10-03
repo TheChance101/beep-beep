@@ -17,6 +17,7 @@ import org.thechance.api_gateway.data.model.*
 import org.thechance.api_gateway.data.model.authenticate.TokenConfiguration
 import org.thechance.api_gateway.data.model.authenticate.TokenType
 import org.thechance.api_gateway.data.model.restaurant.RestaurantDto
+import org.thechance.api_gateway.data.model.restaurant.RestaurantOptions
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.tryToExecute
 import org.thechance.api_gateway.util.APIs
@@ -93,6 +94,19 @@ class IdentityService(
         }
     }
 
+    @OptIn(InternalAPI::class)
+    suspend fun getUsers(
+        options: UserOptions, languageCode: String
+    ) = client.tryToExecute<PaginationResponse<UserDto>>(
+        APIs.IDENTITY_API, attributes = attributes, setErrorMessage = { errorCodes ->
+            errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+        }
+    ) {
+        post("/dashboard/user") {
+            body = Json.encodeToString(UserOptions.serializer(), options)
+        }
+    }
+
     suspend fun getLastRegisteredUsers(limit: Int) = client.tryToExecute<List<UserDto>>(
         APIs.IDENTITY_API, attributes = attributes,
     ) {
@@ -101,12 +115,32 @@ class IdentityService(
         }
     }
 
-    suspend fun getUserById(id: String, languageCode: String): UserDto = client.tryToExecute<UserDto>(
+    suspend fun getUserById(id: String, languageCode: String): UserDetailsDto = client.tryToExecute<UserDetailsDto>(
         APIs.IDENTITY_API, attributes = attributes, setErrorMessage = { errorCodes ->
             errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
         }
     ) {
         get("user/$id")
+    }
+
+    suspend fun updateUserProfile(
+        id: String,
+        fullName: String,
+        languageCode: String
+    ): UserDetailsDto {
+        return client.tryToExecute<UserDetailsDto>(
+            APIs.IDENTITY_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+            }
+        ) {
+            submitForm("/user/profile/$id",
+                formParameters = parameters {
+                    append("fullName", fullName)
+                }
+            )
+        }
     }
 
     suspend fun getUserByUsername(username: String?, languageCode: String): UserDto = client.tryToExecute<UserDto>(
@@ -118,17 +152,6 @@ class IdentityService(
             parameter("username", username)
         }
     }
-
-    @OptIn(InternalAPI::class)
-    suspend fun searchUsers(query: String, permission: List<Int>) = client.tryToExecute<List<UserDto>>(
-        APIs.IDENTITY_API, attributes = attributes,
-    ) {
-        post("/dashboard/user/search") {
-            parameter("query", query)
-            body = Json.encodeToString(ListSerializer(Int.serializer()), permission)
-        }
-    }
-
 
     @OptIn(InternalAPI::class)
     suspend fun updateUserPermission(userId: String, permission: List<Int>, languageCode: String): UserDto {

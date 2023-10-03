@@ -38,12 +38,12 @@ class EnglishLocalizedMessages() : LocalizedMessages {
     override val invalidColor: String = "Invalid color"
     override val invalidCarType: String = "Invalid car type"
     override val seatOutOfRange: String = "Seat out of range"
-    override val invalidLocation: String= "Invalid location"
-    override val invalidRate: String= "Invalid rate"
-    override val invalidDate: String= "Invalid date"
-    override val invalidPrice: String= "Invalid price"
-    override val alreadyExist: String= "Already exist"
-    override val requiredQuery: String= "Required query"
+    override val invalidLocation: String = "Invalid location"
+    override val invalidRate: String = "Invalid rate"
+    override val invalidDate: String = "Invalid date"
+    override val invalidPrice: String = "Invalid price"
+    override val alreadyExist: String = "Already exist"
+    override val requiredQuery: String = "Required query"
     // endregion
 
     //region restaurant
@@ -76,5 +76,15 @@ class EnglishLocalizedMessages() : LocalizedMessages {
     override val restaurantNotFound: String = "Sorry, we could not found this restaurant"
     override val deletedSuccessfully: String = "Deleted successfully "
     override val cuisineNameAlreadyExisted: String = "Cuisine name already existed"
+
+    override val missingParameter: String = "Missing parameter"
+    override val tokensNotFound: String = "Tokens not found"
+    override val tokenNotRegister: String = "Token not register"
+    override val cartIsAlreadyEmpty: String = "cart is already empty"
+    override val invalidQuantity: String = "Invalid Quantity"
+    //endregion
+
+    // region notification
+    override val notificationNotSent: String = "Notification not sent"
     //endregion
 }

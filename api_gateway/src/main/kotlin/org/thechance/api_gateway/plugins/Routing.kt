@@ -20,6 +20,8 @@ fun Application.configureRouting(tokenConfiguration: TokenConfiguration) {
         taxiRoutes()
         mealRoute()
         orderRoutes()
+        notificationRoute()
         locationRoute()
+        cartRoutes()
     }
 }

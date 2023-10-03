@@ -8,6 +8,10 @@ import org.koin.core.context.startKoin
 class App: Application() {
     override fun onCreate() {
         super.onCreate()
-        startKoin { androidContext(this@App.applicationContext); modules(appModule()) }
+        startKoin { androidContext(this@App.applicationContext); modules(appModule(),
+            locationDataSourceModule,
+            locationTrackerModule,
+            locationServiceModule
+        ) }
     }
 }

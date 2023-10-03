@@ -10,6 +10,7 @@ import org.thechance.service_identity.endpoints.model.mapper.toDto
 import org.thechance.service_identity.domain.util.MissingParameterException
 import org.thechance.service_identity.domain.usecases.IUserAccountManagementUseCase
 import org.thechance.service_identity.domain.usecases.IUserFavoriteUseCase
+import org.thechance.service_identity.domain.util.ApplicationId
 import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
 import org.thechance.service_identity.endpoints.util.extractApplicationIdHeader
 import org.thechance.service_identity.endpoints.util.extractInt
@@ -88,6 +89,17 @@ fun Route.userRoutes() {
                 username = username.toString(),
                 password = password.toString(),
                 email = email.toString()
+            )
+            call.respond(HttpStatusCode.OK, result)
+        }
+        put("/profile/{id}") {
+            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            val params = call.receiveParameters()
+            val fullName = params["fullName"]?.trim()
+
+            val result = manageUserAccount.updateUserProfile(
+                id = id,
+                fullName = fullName.toString(),
             )
             call.respond(HttpStatusCode.OK, result)
         }

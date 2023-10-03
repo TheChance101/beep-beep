@@ -8,6 +8,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.bson.types.ObjectId
 import org.litote.kmongo.*
+import org.litote.kmongo.coroutine.aggregate
 import org.thechance.service_taxi.api.dto.taxi.toCollection
 import org.thechance.service_taxi.api.dto.taxi.toEntity
 import org.thechance.service_taxi.api.dto.trip.toCollection
@@ -15,7 +16,7 @@ import org.thechance.service_taxi.api.dto.trip.toEntity
 import org.thechance.service_taxi.data.DataBaseContainer
 import org.thechance.service_taxi.data.collection.TaxiCollection
 import org.thechance.service_taxi.data.collection.TripCollection
-import org.thechance.service_taxi.data.utils.isSuccessfullyUpdated
+import org.thechance.service_taxi.data.collection.relationModel.TripWithTaxi
 import org.thechance.service_taxi.data.utils.paginate
 import org.thechance.service_taxi.domain.entity.Taxi
 import org.thechance.service_taxi.domain.entity.Trip
@@ -40,6 +41,7 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
             filter = TaxiCollection::id eq ObjectId(taxiId),
             update = Updates.combine(
                 set(TaxiCollection::plateNumber setTo taxiCollection.plateNumber),
+                set(TaxiCollection::driverUsername setTo taxiCollection.driverUsername),
                 set(TaxiCollection::color setTo taxiCollection.color),
                 set(TaxiCollection::type setTo taxiCollection.type),
                 set(TaxiCollection::driverId setTo taxiCollection.driverId),
@@ -106,8 +108,12 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
 
     //region trip curd
     override suspend fun addTrip(trip: Trip): Trip? {
-        container.tripCollection.insertOne(trip.toCollection())
-        return getTripById(trip.id)
+        val insertResult = container.tripCollection.insertOne(trip.toCollection())
+        return if (insertResult.wasAcknowledged()) {
+            trip
+        } else {
+            null
+        }
     }
 
     override suspend fun getTripById(tripId: String): Trip? {
@@ -133,17 +139,37 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
         ).paginate(page, limit).toList().toEntity()
     }
 
-    override suspend fun getClientTripsHistory(
-        clientId: String,
-        page: Int,
-        limit: Int
-    ): List<Trip> {
-        return container.tripCollection.find(
-            and(
-                TripCollection::isDeleted ne true,
-                TripCollection::clientId eq ObjectId(clientId)
-            )
-        ).paginate(page, limit).toList().toEntity()
+    override suspend fun getClientTripsHistory(clientId: String, page: Int, limit: Int): List<Trip> {
+        return container.tripCollection.aggregate<TripWithTaxi>(
+            match(
+                and(
+                    TripCollection::clientId eq ObjectId(clientId),
+                    TripCollection::isDeleted ne true,
+                    TripCollection::endDate ne null
+                )
+            ),
+            lookup(
+                from = DataBaseContainer.TAXI_COLLECTION_NAME,
+                localField = TripCollection::taxiId.name,
+                foreignField = "_id",
+                newAs = "taxi"
+            ),
+            unwind("\$taxi"),
+            project(
+                TripWithTaxi::id from "\$_id",
+                TripWithTaxi::driverId from "\$driverId",
+                TripWithTaxi::clientId from "\$clientId",
+                TripWithTaxi::taxi from "\$taxi",
+                TripWithTaxi::startPoint from "\$startPoint",
+                TripWithTaxi::destination from "\$destination",
+                TripWithTaxi::rate from "\$rate",
+                TripWithTaxi::price from "\$price",
+                TripWithTaxi::startDate from "\$startDate",
+                TripWithTaxi::endDate from "\$endDate",
+            ),
+            skip((page - 1) * limit),
+            limit(limit)
+        ).toList().map { it.toEntity() }
     }
 
     override suspend fun deleteTrip(tripId: String): Trip? {
@@ -214,9 +240,17 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
         return container.tripCollection.countDocuments(
             and(
                 TripCollection::isDeleted ne true,
-                TripCollection::clientId eq ObjectId(id)
+                TripCollection::clientId eq ObjectId(id),
+                TripCollection::endDate ne null
             )
         )
+    }
+
+    override suspend fun deleteTaxiByDriverId(driverId: String): Boolean {
+        return container.taxiCollection.updateMany(
+            filter = TaxiCollection::driverId eq ObjectId(driverId),
+            update = set(TaxiCollection::isDeleted setTo true),
+        ).isSuccessfullyUpdated()
     }
     //endregion
 }
