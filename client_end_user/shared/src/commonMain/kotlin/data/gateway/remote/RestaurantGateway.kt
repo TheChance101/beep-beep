@@ -3,9 +3,11 @@ package data.gateway.remote
 import data.remote.mapper.toCuisineEntity
 import data.remote.mapper.toEntity
 import data.remote.model.CuisineDto
+import data.remote.model.MealRestaurantDto
 import data.remote.model.RestaurantDto
 import data.remote.model.ServerResponse
 import domain.entity.Cuisine
+import domain.entity.Explore
 import domain.entity.InProgressWrapper
 import domain.entity.Location
 import domain.entity.Order
@@ -17,7 +19,6 @@ import domain.utils.GeneralException
 import io.ktor.client.HttpClient
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
-import io.ktor.client.request.parameter
 import io.ktor.http.HttpMethod
 import io.ktor.http.Parameters
 import kotlinx.datetime.Clock
@@ -26,10 +27,14 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client),
     IRestaurantRemoteGateway {
     override suspend fun getCuisines(): List<Cuisine> {
         return tryToExecute<ServerResponse<List<CuisineDto>>> {
-            get("/cuisines"){
-
-            }
+            get("/cuisines")
         }.value?.toCuisineEntity() ?: throw GeneralException.NotFoundException
+    }
+
+    override suspend fun search(query: String): Explore {
+        return tryToExecute<ServerResponse<MealRestaurantDto>> {
+            get("/restaurants/search?query=$query")
+        }.value?.toEntity() ?: throw GeneralException.NotFoundException
     }
 
     // region Fake implementation todo: need to use real api
@@ -55,7 +60,7 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client),
                 formParameters = Parameters.build {
                     append("restaurantId", restaurantId)
                 }
-            ){
+            ) {
                 method = HttpMethod.Post
             }
         }.value ?: throw GeneralException.NotFoundException
@@ -68,7 +73,7 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client),
                 formParameters = Parameters.build {
                     append("restaurantId", restaurantId)
                 }
-            ){
+            ) {
                 method = HttpMethod.Delete
             }
         }.value ?: throw GeneralException.NotFoundException
