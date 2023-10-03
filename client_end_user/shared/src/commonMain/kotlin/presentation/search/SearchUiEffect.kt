@@ -1,6 +1,6 @@
 package presentation.search
 
 sealed class SearchUiEffect {
-    data object NavigateToMeal : SearchUiEffect()
-    data object NavigateToRestaurant : SearchUiEffect()
+    data class NavigateToMeal(val mealId: String) : SearchUiEffect()
+    data class NavigateToRestaurant(val restaurantId: String) : SearchUiEffect()
 }
