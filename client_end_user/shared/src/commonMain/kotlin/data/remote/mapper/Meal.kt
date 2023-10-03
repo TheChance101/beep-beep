@@ -6,12 +6,15 @@ import domain.entity.Meal
 fun MealDto.toEntity(): Meal {
     return Meal(
         id = id ?: "",
-        name = name?: "",
+        name = name ?: "",
         description = description ?: "",
         price = price ?: 0.0,
         currency = currency ?: "",
         restaurantId = restaurantId ?: "",
         cuisines = cuisines ?: emptyList(),
-        image = image ?: ""
+        image = image ?: "",
+        restaurantName = restaurantName ?: ""
     )
 }
+
+fun List<MealDto>.toEntity() = map { it.toEntity() }
