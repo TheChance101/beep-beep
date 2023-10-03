@@ -33,6 +33,7 @@ import presentation.composable.BpBrandBackgroundContainer
 import presentation.composable.HeadFirstCard
 import presentation.composable.modifier.noRippleEffect
 import resources.Resources
+import util.getNavigationBarPadding
 
 class RegistrationSubmitScreen(
     private val username: String,
@@ -113,7 +114,8 @@ class RegistrationSubmitScreen(
                 exit = slideOutVertically { it },
                 modifier = Modifier.align(Alignment.BottomCenter)
             ) {
-                BPSnackBar(icon = painterResource(Resources.images.icError)) {
+                BPSnackBar(icon = painterResource(Resources.images.icError),modifier = Modifier
+                    .padding(bottom = getNavigationBarPadding().calculateBottomPadding())) {
                     Text(
                         text = state.snackbarMessage,
                         style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
