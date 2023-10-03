@@ -17,18 +17,18 @@ data class UserScreenUiState(
     val search: String = "",
     val permissionsDialog: PermissionsDialogUiState = PermissionsDialogUiState(),
     val filter: FilterUiState = FilterUiState(),
-    val allPermissions: List<PermissionUiState> = listOf(
-        PermissionUiState.RESTAURANT_OWNER,
-        PermissionUiState.DRIVER,
-        PermissionUiState.END_USER,
-        PermissionUiState.SUPPORT,
-        PermissionUiState.DELIVERY,
-        PermissionUiState.ADMIN,
-    ),
     val error: ErrorState = ErrorState.UnKnownError,
     val isLoading: Boolean = true,
     val userMenu: String = "",
 ) {
+    val allPermissions: List<PermissionUiState> = listOf(
+            PermissionUiState.RESTAURANT_OWNER,
+            PermissionUiState.DRIVER,
+            PermissionUiState.END_USER,
+            PermissionUiState.SUPPORT,
+            PermissionUiState.DELIVERY,
+            PermissionUiState.ADMIN,
+    )
     val tableHeader: List<Header>
         @Composable get() = listOf(
             Header(Resources.Strings.number, 1f),

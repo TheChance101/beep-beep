@@ -32,9 +32,11 @@ class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGatewa
             get(urlString = "/users") {
                 parameter("page", page)
                 parameter("limit", numberOfUsers)
+                parameter("permissions", byPermissions)
+                parameter("countries", byCountries)
+                parameter("query", query)
             }
         }.value
-
         return paginateData(result?.users?.toEntity() ?: emptyList(), numberOfUsers, result?.total ?: 0)
     }
 
