@@ -30,6 +30,8 @@ import domain.usecase.ManageNotificationsUseCase
 import domain.usecase.ManageUserUseCase
 import domain.usecase.MangeLanguageUseCase
 import domain.usecase.MangePreferredFoodUseCase
+import domain.usecase.SearchUseCase
+import domain.usecase.ISearchUseCase
 import domain.usecase.validation.IValidationUseCase
 import domain.usecase.validation.ValidationUseCaseUseCase
 import org.koin.core.module.dsl.bind
@@ -53,4 +55,5 @@ val useCaseModule = module {
     singleOf(::ManageMessagesUseCase) { bind<IManageMessagesUseCase>() }
     singleOf(::GetTicketsUseCase) { bind<IGetTicketsUseCase>() }
     singleOf(::ManageFavouriteUseCase) { bind<IManageFavouriteUseCase>() }
+    singleOf(::SearchUseCase) { bind<ISearchUseCase>() }
 }
