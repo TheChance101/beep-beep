@@ -13,7 +13,7 @@ fun RestaurantDto.toEntity(): Restaurant {
 
     return Restaurant(
         id = id,
-        ownerId = ownerId ?:"",
+        ownerId = ownerId ?: "",
         ownerUsername = ownerUsername ?: "",
         name = name ?: "",
         description = description ?: "",
@@ -29,6 +29,10 @@ fun RestaurantDto.toEntity(): Restaurant {
             minutes = closingTimeParts?.get(1)?.toInt() ?: 0
         ),
         location = location.toEntity(),
-        address = address ?: ""
+        address = address ?: "",
+        image = image ?: ""
     )
 }
+
+
+fun List<RestaurantDto>.toEntity() = map { it.toEntity() }
