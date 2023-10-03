@@ -6,7 +6,7 @@ import org.bson.types.ObjectId
 
 @Serializable
 data class MessageCollection(
-    @Contextual val id : ObjectId,
+    @Contextual val id : ObjectId = ObjectId(),
     val senderId : String,
     val content : String,
     val time : Long
