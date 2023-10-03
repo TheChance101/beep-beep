@@ -1,5 +1,6 @@
 package presentation.cuisines
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -60,26 +61,37 @@ class CuisinesScreen : BaseScreen<
                 onNavigateUp = listener::onBackIconClicked,
                 painterResource = painterResource(Resources.images.arrowLeft)
             )
-            AnimatedVisibility(state.isLoading) {
-                LoadingCuisines()
-            }
-            LazyVerticalGrid(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(24.dp),
-                columns = GridCells.Adaptive(96.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                items(state.cuisines) { cuisine ->
-                    CuisineCard(
-                        cuisine = cuisine,
-                        onClickCuisine = listener::onCuisineClicked,
-                        width = 104.dp,
-                        imagePadding = PaddingValues(vertical = 24.dp),
-                        backGroundColor = Theme.colors.surface
-                    )
+            AnimatedContent(state.isLoading) {
+                if (state.isLoading) {
+                    LoadingCuisines()
+                } else {
+                    CuisinesContent(state, listener)
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun CuisinesContent(
+    state: CuisinesUiState,
+    listener: CuisinesInteractionListener
+) {
+    LazyVerticalGrid(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(24.dp),
+        columns = GridCells.Adaptive(96.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        items(state.cuisines) { cuisine ->
+            CuisineCard(
+                cuisine = cuisine,
+                onClickCuisine = listener::onCuisineClicked,
+                width = 104.dp,
+                imagePadding = PaddingValues(vertical = 24.dp),
+                backGroundColor = Theme.colors.surface
+            )
         }
     }
 }
