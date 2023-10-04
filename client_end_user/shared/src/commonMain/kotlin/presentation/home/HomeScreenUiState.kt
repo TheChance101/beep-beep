@@ -11,7 +11,7 @@ data class HomeScreenUiState(
     val inProgressWrapper: InProgressWrapper = InProgressWrapper(),
     val lastOrder: OrderUiState = OrderUiState(),
     val user: UserUiState = UserUiState(),
-    val showCart: Boolean = false
+    val showCart: Boolean = false,
     val searchTerm: String = "",
 ) {
     val hasProgress: Boolean

@@ -84,8 +84,6 @@ class HomeScreen : BaseScreen<
             is HomeScreenUiEffect.NavigateToOrderTaxi -> println("Navigate to Order Taxi screen")
             is HomeScreenUiEffect.ScrollDownToRecommendedRestaurants -> println("Scroll down home screen")
             is HomeScreenUiEffect.NavigateToOfferItem -> println("Navigate to offer item details ${effect.offerId}")
-            is HomeScreenUiEffect.NavigateToSearch -> println("Navigate to Search Screen")
-            is HomeScreenUiEffect.NavigateToOrderDetails -> println("Navigate to order details ${effect.orderId}")
             is HomeScreenUiEffect.NavigateToSearch -> navigator.push(SearchTab)
             is HomeScreenUiEffect.NavigateToOrderDetails -> println("Navigate to order details ${effect.orderId}")
             is HomeScreenUiEffect.NavigateToCart -> navigator.root?.push(CartScreen())
