@@ -8,6 +8,7 @@ import domain.usecase.GetFavoriteRestaurantsUseCase
 import domain.usecase.IGetCuisinesUseCase
 import domain.usecase.IGetNewOffersUserCase
 import domain.usecase.IInProgressTrackerUseCase
+import domain.usecase.IManageCartUseCase
 import domain.usecase.IManageUserUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -21,7 +22,8 @@ class HomeScreenModel(
     private val getFavoriteRestaurantsUseCase: GetFavoriteRestaurantsUseCase,
     private val offers: IGetNewOffersUserCase,
     private val inProgressTrackerUseCase: IInProgressTrackerUseCase,
-    private val manageUserUseCase: IManageUserUseCase
+    private val manageUserUseCase: IManageUserUseCase,
+    private val manageCart: IManageCartUseCase,
 ) : BaseScreenModel<HomeScreenUiState, HomeScreenUiEffect>(HomeScreenUiState()),
     HomeScreenInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
@@ -32,6 +34,23 @@ class HomeScreenModel(
         getRecommendedCuisines()
         getFavoriteRestaurants()
         getNewOffers()
+        checkIfThereIsOrderInCart()
+    }
+
+    private fun checkIfThereIsOrderInCart() {
+        tryToExecute(
+            { manageCart.checkIfThereIsOrderInCart() },
+            ::onCheckIfThereIsOrderInCartSuccess,
+            ::onCheckIfThereIsOrderInCartError
+        )
+    }
+
+    private fun onCheckIfThereIsOrderInCartSuccess(isEmpty: Boolean) {
+        updateState { it.copy(showCart = !isEmpty) }
+    }
+
+    private fun onCheckIfThereIsOrderInCartError(errorState: ErrorState) {
+        updateState { it.copy(showCart = false) }
     }
 
     private fun getUserWallet() {

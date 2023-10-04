@@ -1,7 +1,5 @@
 package org.thechance.api_gateway.data.localizedMessages.languages
 
-import org.koin.core.annotation.Single
-
 
 interface LocalizedMessages {
 
@@ -141,12 +139,21 @@ interface LocalizedMessages {
 
     val cuisineNameAlreadyExisted: String
 
+    val invalidQuantity: String
+
+    val cartIsAlreadyEmpty: String
+
     val missingParameter: String
 
     val tokensNotFound: String
 
-    val tokenNotRegister : String
+    val tokenNotRegister: String
 
 
+    //endregion
+
+
+    // region notification
+    val notificationNotSent : String
     //endregion
 }

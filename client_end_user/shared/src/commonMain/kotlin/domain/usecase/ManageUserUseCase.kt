@@ -73,5 +73,4 @@ class ManageUserUseCase(
        return fakeRemoteGateway.getUserProfile()
     }
 
-
 }

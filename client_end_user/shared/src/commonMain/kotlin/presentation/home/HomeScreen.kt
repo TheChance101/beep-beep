@@ -1,5 +1,6 @@
 package presentation.home
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -44,7 +45,9 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
 import presentation.cart.CartScreen
+import presentation.chatSupport.ChatSupportScreen
 import presentation.composable.BpImageLoader
+import presentation.composable.ContentVisibility
 import presentation.composable.ImageSlider
 import presentation.composable.ItemSection
 import presentation.composable.SectionHeader
@@ -60,8 +63,12 @@ import presentation.search.SearchScreen
 import resources.Resources
 import util.root
 
-class HomeScreen :
-    BaseScreen<HomeScreenModel, HomeScreenUiState, HomeScreenUiEffect, HomeScreenInteractionListener>() {
+class HomeScreen : BaseScreen<
+        HomeScreenModel,
+        HomeScreenUiState,
+        HomeScreenUiEffect,
+        HomeScreenInteractionListener
+        >() {
 
     @Composable
     override fun Content() {
@@ -73,10 +80,12 @@ class HomeScreen :
         when (effect) {
             is HomeScreenUiEffect.NavigateToCuisineDetails -> println("Cuisine id ${effect.cuisineId}")
             is HomeScreenUiEffect.NavigateToCuisines -> navigator.root?.push(CuisinesScreen())
-            is HomeScreenUiEffect.NavigateToChatSupport -> println("Navigate to Chat support screen")
+            is HomeScreenUiEffect.NavigateToChatSupport -> navigator.root?.push(ChatSupportScreen())
             is HomeScreenUiEffect.NavigateToOrderTaxi -> println("Navigate to Order Taxi screen")
             is HomeScreenUiEffect.ScrollDownToRecommendedRestaurants -> println("Scroll down home screen")
             is HomeScreenUiEffect.NavigateToOfferItem -> println("Navigate to offer item details ${effect.offerId}")
+            is HomeScreenUiEffect.NavigateToSearch -> println("Navigate to Search Screen")
+            is HomeScreenUiEffect.NavigateToOrderDetails -> println("Navigate to order details ${effect.orderId}")
             is HomeScreenUiEffect.NavigateToSearch -> navigator.push(SearchTab)
             is HomeScreenUiEffect.NavigateToOrderDetails -> println("Navigate to order details ${effect.orderId}")
             is HomeScreenUiEffect.NavigateToCart -> navigator.root?.push(CartScreen())
@@ -142,7 +151,9 @@ class HomeScreen :
             }
 
             item {
-                CartCard(onClick = { listener.onClickCartCard() })
+                AnimatedVisibility(state.showCart) {
+                    CartCard(onClick = { listener.onClickCartCard() })
+                }
             }
 
             if (state.hasProgress) {

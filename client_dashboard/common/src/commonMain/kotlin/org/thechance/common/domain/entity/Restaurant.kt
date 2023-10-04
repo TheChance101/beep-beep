@@ -9,6 +9,11 @@ data class Restaurant(
     val rate: Double,
     val priceLevel: String,
     val openingTime: String,
-    val closingTime: String
+    val closingTime: String,
+    val location: Location
 )
 
+data class Location(
+    val latitude: Double,
+    val longitude: Double
+)
