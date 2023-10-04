@@ -109,7 +109,6 @@ class HomeScreenModel(
     }
 
     override fun onClickSearch() {
-        println("effect sent")
         sendNewEffect(HomeScreenUiEffect.NavigateToSearch)
     }
 

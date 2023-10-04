@@ -14,4 +14,6 @@ interface IRestaurantRemoteGateway {
     suspend fun addRestaurantToFavorites(restaurantId: String): Boolean
 
     suspend fun removeRestaurantFromFavorites(restaurantId: String): Boolean
+
+    suspend fun getFavoriteRestaurants(): List<Restaurant>
 }

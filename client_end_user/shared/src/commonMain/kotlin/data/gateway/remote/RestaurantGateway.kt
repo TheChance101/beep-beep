@@ -17,7 +17,6 @@ import domain.utils.GeneralException
 import io.ktor.client.HttpClient
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
-import io.ktor.client.request.parameter
 import io.ktor.http.HttpMethod
 import io.ktor.http.Parameters
 import kotlinx.datetime.Clock
@@ -55,7 +54,7 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client),
                 formParameters = Parameters.build {
                     append("restaurantId", restaurantId)
                 }
-            ){
+            ) {
                 method = HttpMethod.Post
             }
         }.value ?: throw GeneralException.NotFoundException
@@ -68,10 +67,16 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client),
                 formParameters = Parameters.build {
                     append("restaurantId", restaurantId)
                 }
-            ){
+            ) {
                 method = HttpMethod.Delete
             }
         }.value ?: throw GeneralException.NotFoundException
+    }
+
+    override suspend fun getFavoriteRestaurants(): List<Restaurant> {
+        return tryToExecute<ServerResponse<List<RestaurantDto>>> {
+            get("/user/favorite")
+        }.value?.map { it.toEntity() } ?: throw GeneralException.NotFoundException
     }
 
     private fun getActiveRide(): List<Trip> {
