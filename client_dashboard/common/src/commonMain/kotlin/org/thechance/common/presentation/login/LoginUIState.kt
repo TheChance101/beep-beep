@@ -9,7 +9,7 @@ data class LoginUIState(
     val isLoading: Boolean = false,
     val isUserError: ErrorWrapper? = null,
     val isPasswordError: ErrorWrapper? = null,
-    val isAbleToLogin: Boolean = false,
+    val isEnable: Boolean = false,
     val snackBarTitle: String? = null,
     val isSnackBarVisible: Boolean = false
 )

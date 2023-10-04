@@ -102,5 +102,7 @@ data class ArabicEG(
     override val loginToAddToFavourite: String= "الرجاء تسجيل الدخول للاضافه",
     override val addToCart: String= "أضف إلى العربة",
     override val mealAddedToYourCart: String= " ضفنالك الوجبة إلى عربة التسوق تبعك ",
-
-    ) : IStringResources
+    override val message: String = "الرسالة",
+    override val supportTeam: String = "فريق الدعم",
+    override val sendMessageToStartLiveChat: String = "أبعت رسالة عشان تبدأ الشات!",
+) : IStringResources

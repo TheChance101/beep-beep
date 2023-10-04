@@ -14,6 +14,7 @@ interface IManageCategoryUseCase {
     suspend fun createCategory(category: Category): Category
     suspend fun updateCategory(category: Category): Category
     suspend fun deleteCategory(categoryId: String): Boolean
+    suspend fun getTotalNumberOfCategories(): Long
 
 }
 
@@ -44,6 +45,10 @@ class ManageCategoryUseCase(
     override suspend fun deleteCategory(categoryId: String): Boolean {
         checkIfCategoryIsExist(categoryId)
         return restaurantOptions.deleteCategory(categoryId)
+    }
+
+    override suspend fun getTotalNumberOfCategories(): Long {
+        return restaurantOptions.getTotalNumberOfCategories()
     }
 
     private suspend fun checkIfCategoryIsExist(categoryId: String) {

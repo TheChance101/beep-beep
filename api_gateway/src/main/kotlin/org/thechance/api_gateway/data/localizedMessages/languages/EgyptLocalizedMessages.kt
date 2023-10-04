@@ -22,17 +22,17 @@ class EgyptianArabicLocalizedMessages() : LocalizedMessages {
     override val unknownError: String = "حصل ايرور لو كانت عارفه كنت هقولك"
     override val userNotFound: String = "مش لاقينك ياعم"
     override val invalidPermission: String = "مش عندك الصلاحية ياعم"
-    override val alreadyInFavorite: String= "موجود يا عم"
+    override val alreadyInFavorite: String = "موجود يا عم"
     // endregion
 
     // region taxi
-    override val taxiCreatedSuccessfully: String= "اعمل حفلة بقى عندك تكسي يا ابن المحظوظة 🎉"
+    override val taxiCreatedSuccessfully: String = "اعمل حفلة بقى عندك تكسي يا ابن المحظوظة 🎉"
     override val tripCreatedSuccessfully: String = "تم انشاء الرحلة"
     override val tripApproved: String = "تم قبول الرحلة"
     override val tripCanceled: String = "تم الغاء الرحلة"
     override val tripFinished: String = "تم إنهاء الرحلة بنجاح"
-    override val taxiUpdateSuccessfully: String= "حدثنالك التاكسي يا عم 🎉"
-    override val taxiDeleteSuccessfully: String= "مسحنالك التاكسي مع الاسف"
+    override val taxiUpdateSuccessfully: String = "حدثنالك التاكسي يا عم 🎉"
+    override val taxiDeleteSuccessfully: String = "مسحنالك التاكسي مع الاسف"
     override val invalidId: String = "مش لاقيين التاكسي ده!!"
     override val invalidPlate: String = "الرقم اللي دخلته مش مظبوط يعم"
     override val invalidColor: String = "مش مظبوط اللون اللي دخلته يعم"
@@ -79,8 +79,11 @@ class EgyptianArabicLocalizedMessages() : LocalizedMessages {
     override val cuisineNameAlreadyExisted: String = "المطبخ موجود مرة يا عم مش فرح هو"
 
     override val missingParameter: String = "في حاجة ناقصة يا عم"
-    override val tokensNotFound: String= "مش لاقيين التوكنات دي ياعم"
+    override val tokensNotFound: String = "مش لاقيين التوكنات دي ياعم"
     override val tokenNotRegister: String = "التوكن ده مش مسجل ياعم"
+    override val cartIsAlreadyEmpty: String = "هتشتري ازاي والسله فاضيه اصلا!!"
+    override val invalidQuantity: String = "مدخل كميه مش صح"
+
     //endregion
 
     // region notification

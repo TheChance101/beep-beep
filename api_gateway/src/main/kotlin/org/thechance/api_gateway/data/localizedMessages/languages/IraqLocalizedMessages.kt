@@ -80,6 +80,9 @@ class IraqiArabicLocalizedMessages() : LocalizedMessages {
     override val missingParameter: String = "عندك نقص بالمعلومات حجي"
     override val tokensNotFound: String = "ما لكينا توكن جهازك"
     override val tokenNotRegister: String = "التوكن ما مسجل حجي"
+    override val cartIsAlreadyEmpty: String = "لا يمكن اجراء الامر لان السله فارغه"
+    override val invalidQuantity: String = "مدخل كميه مش صح"
+
     //endregion
 
     // region notification

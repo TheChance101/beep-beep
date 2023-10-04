@@ -93,7 +93,6 @@ data class English(
     override val profileLoginMessage: String = "Please log in to access your profile",
     override val ordersHistoryLoginMessage: String = "Please login to view your orders",
     override val notificationLoginMessage: String = "Please login to access your notifications",
-    override val pleaseLogin: String = "Please login to access your profile",
     override val invalidAddress: String = "Invalid Address",
     override val yourAddress: String = "Your Address",
     override val mostOrdered: String = "Most Ordered",
@@ -102,4 +101,8 @@ data class English(
     override val loginToAddToFavourite: String="Please login to add",
     override val addToCart: String = "Add to cart",
     override val mealAddedToYourCart: String="Meal added to your cart",
+    override val pleaseLogin: String="Please log in to access your profile",
+    override val message: String = "Message",
+    override val supportTeam: String = "Support team",
+    override val sendMessageToStartLiveChat: String = "Send a message to start the live chat!",
 ) : IStringResources

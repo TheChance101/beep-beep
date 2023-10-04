@@ -1,6 +1,9 @@
 package org.thechance.service_restaurant.domain.gateway
 
-import org.thechance.service_restaurant.domain.entity.*
+import org.thechance.service_restaurant.domain.entity.Category
+import org.thechance.service_restaurant.domain.entity.Cuisine
+import org.thechance.service_restaurant.domain.entity.Meal
+import org.thechance.service_restaurant.domain.entity.Restaurant
 
 interface IRestaurantOptionsGateway {
 
@@ -26,8 +29,9 @@ interface IRestaurantOptionsGateway {
     suspend fun updateCuisine(cuisine: Cuisine): Cuisine
     suspend fun deleteCuisine(id: String): Boolean
     suspend fun getCuisineByName(cuisineName: String): Cuisine?
+    suspend fun getTotalNumberOfCategories(): Long
     //endregion
-
+/*
     //region Order
     suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order>
     suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order>
@@ -36,4 +40,11 @@ interface IRestaurantOptionsGateway {
     suspend fun updateOrderStatus(orderId: String, status: Order.Status): Order?
     suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order>
     //endregion
+
+    //region Cart
+    suspend fun getUserCart(userId: String): Cart?
+    suspend fun addMealToCart(meal: Meal, quantity: Int, userId: String): Boolean
+    suspend fun deleteMealFromCart(cartId: String, mealId: String): Boolean
+    //endregion
+    */
 }
