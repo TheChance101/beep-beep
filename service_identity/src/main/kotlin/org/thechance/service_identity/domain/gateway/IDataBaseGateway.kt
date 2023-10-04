@@ -2,7 +2,6 @@ package org.thechance.service_identity.domain.gateway
 
 import org.thechance.service_identity.domain.entity.*
 import org.thechance.service_identity.domain.security.SaltedHash
-import java.util.Currency
 
 interface IDataBaseGateway {
 
@@ -79,5 +78,9 @@ interface IDataBaseGateway {
     suspend fun getUserByUsername(username: String): UserManagement
 
     suspend fun getLastRegisterUser(limit: Int): List<UserManagement>
+
+    suspend fun searchUsers(searchTerm: String, filterByPermission: List<Int>): List<UserManagement>
+
+    suspend fun updateUserProfile(id: String, fullName: String?, ): Boolean
 
 }

@@ -11,6 +11,7 @@ import org.thechance.service_identity.endpoints.model.mapper.toDto
 import org.thechance.service_identity.domain.util.MissingParameterException
 import org.thechance.service_identity.domain.usecases.IUserAccountManagementUseCase
 import org.thechance.service_identity.domain.usecases.IUserFavoriteUseCase
+import org.thechance.service_identity.domain.util.ApplicationId
 import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
 import org.thechance.service_identity.endpoints.model.UserRegistrationDto
 import org.thechance.service_identity.endpoints.model.mapper.toEntity

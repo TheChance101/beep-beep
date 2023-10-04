@@ -13,9 +13,3 @@ data class UserManagementDto(
     val country: String,
     val permission: Int = Role.END_USER
 )
-
-@Serializable
-data class UsersManagementDto(
-    val items: List<UserManagementDto>,
-    val total: Long
-)

@@ -1,6 +1,8 @@
 package org.thechance.service_restaurant.data.collection
 
 
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -17,16 +19,9 @@ data class OrderCollection(
     val userId: ObjectId,
     @Contextual
     val restaurantId: ObjectId,
-    val meals: List<MealCollection> = emptyList(),
+    val meals: List<CartCollection.MealCollection> = emptyList(),
     val totalPrice: Double,
-    val createdAt: Long,
+    val createdAt: LocalDateTime,
     val orderStatus: Int
-){
-    @Serializable
-    data class MealCollection(
-        @Contextual
-        val mealId: ObjectId,
-        val quantity: Int
-    )
-}
+)
 
