@@ -137,7 +137,7 @@ fun UserScreenUiState.PermissionUiState.toEntity(): Permission {
     }
 }
 
-fun List<UserScreenUiState.PermissionUiState>.toEntity() = this.map { it.toEntity() }
+fun List<UserScreenUiState.PermissionUiState>.toEntity() = map { it.toEntity() }
 
 fun UserScreenUiState.Country.toEntity(): Country {
     return when (this) {

@@ -29,10 +29,11 @@ class UsersGateway(private val client: HttpClient) : BaseGateway(), IUsersGatewa
         numberOfUsers: Int
     ): DataWrapper<User> {
         val result = tryToExecute<ServerResponse<UserResponse>>(client) {
+            val permissions = mapPermissionsToInt(byPermissions)
             get(urlString = "/users") {
                 parameter("page", page)
                 parameter("limit", numberOfUsers)
-                parameter("permissions", byPermissions)
+                parameter("permissions", permissions)
                 parameter("countries", byCountries)
                 parameter("query", query)
             }
