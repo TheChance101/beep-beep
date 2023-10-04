@@ -3,9 +3,9 @@ package data.gateway.fake
 import domain.entity.Location
 import domain.entity.Order
 import domain.entity.Trip
-import domain.gateway.IOrderRemoteGateway
+import domain.gateway.IOrderGateway
 
-class FakeOrderRemoteGateway : IOrderRemoteGateway {
+class FakeOrderGateway : IOrderGateway {
     override suspend fun getTripHistory(): List<Trip> {
         return listOf(
             Trip(

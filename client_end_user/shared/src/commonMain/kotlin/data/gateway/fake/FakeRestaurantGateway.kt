@@ -1,11 +1,7 @@
-package data.gateway.remote
+package data.gateway.fake
 
-import data.remote.mapper.toCuisineEntity
 import data.remote.mapper.toEntity
-import data.remote.model.CuisineDto
 import data.remote.model.MealDto
-import data.remote.model.RestaurantDto
-import data.remote.model.ServerResponse
 import domain.entity.Cuisine
 import domain.entity.InProgressWrapper
 import domain.entity.Location
@@ -15,22 +11,14 @@ import domain.entity.Restaurant
 import domain.entity.Taxi
 import domain.entity.Trip
 import domain.gateway.IRestaurantGateway
-import domain.utils.GeneralException
-import io.ktor.client.HttpClient
-import io.ktor.client.request.get
 import kotlinx.datetime.Clock
 
-class RestaurantGateway(client: HttpClient) : BaseGateway(client = client), IRestaurantGateway {
+class FakeRestaurantGateway : IRestaurantGateway {
     override suspend fun getCuisines(): List<Cuisine> {
-        return tryToExecute<ServerResponse<List<CuisineDto>>> {
-            get("/cuisines") {
-
-            }
-        }.value?.toCuisineEntity() ?: throw GeneralException.NotFoundException
+        TODO("Not yet implemented")
     }
 
     override suspend fun getInProgress(): InProgressWrapper {
-        // todo: implement this when the backend is ready
         return InProgressWrapper(
             taxisOnTheWay = getTaxiOnTheWay(),
             tripsOnTheWay = getActiveRide(),
@@ -39,18 +27,14 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client), IRes
     }
 
     override suspend fun getRestaurantDetails(restaurantId: String): Restaurant {
-        return tryToExecute<ServerResponse<RestaurantDto>> {
-            get("/restaurant/$restaurantId")
-
-        }.value?.toEntity() ?: throw GeneralException.NotFoundException
+        TODO("Not yet implemented")
     }
 
     override suspend fun getMealById(mealId: String): Meal {
-        // todo: implement this when the backend is ready
         return meals.first().toEntity()
     }
 
-    // all the following methods are fake data and should be removed when the backend is ready
+
     private fun getActiveRide(): List<Trip> {
         return listOf(
             Trip(

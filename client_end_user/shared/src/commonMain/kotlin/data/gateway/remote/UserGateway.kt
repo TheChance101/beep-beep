@@ -11,7 +11,7 @@ import domain.entity.Session
 import domain.entity.User
 import domain.entity.UserCreation
 import domain.entity.UserDetails
-import domain.gateway.IUserRemoteGateway
+import domain.gateway.IUserGateway
 import domain.utils.AuthorizationException
 import io.ktor.client.HttpClient
 import io.ktor.client.request.forms.submitForm
@@ -20,7 +20,7 @@ import io.ktor.client.request.url
 import io.ktor.http.HttpMethod
 import io.ktor.http.Parameters
 
-class UserRemoteRemoteGateway(client: HttpClient) : BaseGateway(client), IUserRemoteGateway {
+class UserGateway(client: HttpClient) : BaseGateway(client), IUserGateway {
 
     override suspend fun createUser(
         userCreation: UserCreation,
@@ -33,13 +33,20 @@ class UserRemoteRemoteGateway(client: HttpClient) : BaseGateway(client), IUserRe
                     append("username", userCreation.username)
                     append("password", userCreation.password)
                     append("email", userCreation.email)
-                    append("phone", userCreation.phone) // todo: remove this todo when phone is added to the backend
-                    append("address", userCreation.address) // todo: remove this todo when address is added to the backend
+                    append(
+                        "phone",
+                        userCreation.phone
+                    ) // todo: remove this todo when phone is added to the backend
+                    append(
+                        "address",
+                        userCreation.address
+                    ) // todo: remove this todo when address is added to the backend
                 }
-            ){
+            ) {
                 method = HttpMethod.Post
             }
-        }.value?.toUser() ?: throw AuthorizationException.InvalidCredentialsException("Invalid Credential")
+        }.value?.toUser()
+            ?: throw AuthorizationException.InvalidCredentialsException("Invalid Credential")
     }
 
     override suspend fun loginUser(username: String, password: String): Session {
@@ -50,21 +57,25 @@ class UserRemoteRemoteGateway(client: HttpClient) : BaseGateway(client), IUserRe
                     append("username", username)
                     append("password", password)
                 }
-            ){
-                headers.append("Application-Id", "1000") // todo: remove this line in next deploy when the backend is updated
+            ) {
+                headers.append(
+                    "Application-Id",
+                    "1000"
+                ) // todo: remove this line in next deploy when the backend is updated
                 method = HttpMethod.Post
             }
-        }.value?.toSessionEntity() ?: throw AuthorizationException.InvalidCredentialsException("Invalid Credential")
+        }.value?.toSessionEntity()
+            ?: throw AuthorizationException.InvalidCredentialsException("Invalid Credential")
     }
 
-    override suspend fun refreshAccessToken(refreshToken: String): Pair<String,String> {
+    override suspend fun refreshAccessToken(refreshToken: String): Pair<String, String> {
         val result = tryToExecute<ServerResponse<SessionDto>> {
             submitForm {
                 url("/refresh-access-token")
             }
         }.value ?: throw Exception()
 
-        return Pair(result.accessToken,result.refreshToken)
+        return Pair(result.accessToken, result.refreshToken)
     }
 
     override suspend fun getUserProfile(): UserDetails {
@@ -72,5 +83,10 @@ class UserRemoteRemoteGateway(client: HttpClient) : BaseGateway(client), IUserRe
             get("/user")
         }.value?.toEntity()
             ?: throw AuthorizationException.InvalidCredentialsException("Invalid Credential")
+    }
+
+    override suspend fun getUserWallet(): User {
+        // todo : implement this when the backend is ready
+        return User(name = "Test", currency = "$", walletValue = 100.0)
     }
 }

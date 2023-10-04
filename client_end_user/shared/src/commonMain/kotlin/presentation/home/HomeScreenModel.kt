@@ -4,11 +4,11 @@ import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.InProgressWrapper
 import domain.entity.Restaurant
 import domain.entity.User
-import domain.usecase.GetFavoriteRestaurantsUseCase
 import domain.usecase.IGetCuisinesUseCase
-import domain.usecase.IGetNewOffersUserCase
 import domain.usecase.IInProgressTrackerUseCase
 import domain.usecase.IManageCartUseCase
+import domain.usecase.IManageFavouriteUseCase
+import domain.usecase.IManageOffersUseCase
 import domain.usecase.IManageUserUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -19,11 +19,11 @@ import presentation.cuisines.toCuisineUiState
 
 class HomeScreenModel(
     private val cuisineUseCase: IGetCuisinesUseCase,
-    private val getFavoriteRestaurantsUseCase: GetFavoriteRestaurantsUseCase,
-    private val offers: IGetNewOffersUserCase,
+    private val offers: IManageOffersUseCase,
     private val inProgressTrackerUseCase: IInProgressTrackerUseCase,
     private val manageUserUseCase: IManageUserUseCase,
     private val manageCart: IManageCartUseCase,
+    private val manageFavorite: IManageFavouriteUseCase,
 ) : BaseScreenModel<HomeScreenUiState, HomeScreenUiEffect>(HomeScreenUiState()),
     HomeScreenInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
@@ -144,7 +144,7 @@ class HomeScreenModel(
 
     private fun getFavoriteRestaurants() {
         tryToExecute(
-            { getFavoriteRestaurantsUseCase() },
+            { manageFavorite.getFavoriteRestaurants() },
             ::onGetFavoriteRestaurantsSuccess,
             ::onGetFavoriteRestaurantsError
         )

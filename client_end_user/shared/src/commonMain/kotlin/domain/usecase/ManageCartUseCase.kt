@@ -1,6 +1,6 @@
 package domain.usecase
 
-import data.gateway.fake.FakeRemoteGateway
+import data.gateway.fake.FakeCartGateway
 import domain.entity.Cart
 
 interface IManageCartUseCase {
@@ -8,7 +8,7 @@ interface IManageCartUseCase {
     suspend fun checkIfThereIsOrderInCart(): Boolean
 }
 
-class ManageCartUseCase(private val remoteGateway: FakeRemoteGateway) : IManageCartUseCase {
+class ManageCartUseCase(private val remoteGateway: FakeCartGateway) : IManageCartUseCase {
     override suspend fun getAllCartMeals(): Cart {
         return remoteGateway.getAllCartMeals()
     }

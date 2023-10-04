@@ -1,21 +1,21 @@
 package domain.usecase
 
-import data.gateway.fake.FakeRemoteGateway
 import domain.entity.Notification
+import domain.gateway.INotificationGateway
 
 interface IManageNotificationsUseCase {
     suspend fun getTodayNotifications(): List<Notification>
     suspend fun getThisWeekNotifications(): List<Notification>
 }
 
-class ManageNotificationsUseCase(private val remoteGateway: FakeRemoteGateway) :
-    IManageNotificationsUseCase {
+class ManageNotificationsUseCase(
+    private val notificationGateway: INotificationGateway
+) : IManageNotificationsUseCase {
     override suspend fun getTodayNotifications(): List<Notification> {
-        return remoteGateway.getNotificationHistory().take(2)
+        return notificationGateway.getNotificationHistory().take(2)
     }
 
     override suspend fun getThisWeekNotifications(): List<Notification> {
-        return remoteGateway.getNotificationHistory().takeLast(3)
+        return notificationGateway.getNotificationHistory().takeLast(3)
     }
-
 }
