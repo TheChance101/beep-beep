@@ -78,9 +78,4 @@ interface IDataBaseGateway {
     suspend fun getUserByUsername(username: String): UserManagement
 
     suspend fun getLastRegisterUser(limit: Int): List<UserManagement>
-
-    suspend fun searchUsers(searchTerm: String, filterByPermission: List<Int>): List<UserManagement>
-
-    suspend fun updateUserProfile(id: String, fullName: String?, ): Boolean
-
 }

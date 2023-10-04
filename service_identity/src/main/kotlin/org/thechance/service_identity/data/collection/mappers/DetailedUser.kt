@@ -1,9 +1,7 @@
 package org.thechance.service_identity.data.collection.mappers
 
 import org.thechance.service_identity.data.collection.DetailedUser
-import org.thechance.service_identity.domain.entity.Address
 import org.thechance.service_identity.domain.entity.User
-import org.thechance.service_identity.domain.entity.UserManagement
 
 
 fun DetailedUser.toEntity() = User(
