@@ -193,14 +193,14 @@ class RestaurantService(
 
     //region cuisine
     @OptIn(InternalAPI::class)
-    suspend fun addCuisine(name: String, languageCode: String): CuisineDto {
+    suspend fun addCuisine(cuisineDto: CuisineDto, languageCode: String): CuisineDto {
         return client.tryToExecute<CuisineDto>(
             APIs.RESTAURANT_API,
             attributes = attributes,
             setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
         ) {
             post("/cuisine") {
-                body = Json.encodeToString(CuisineDto.serializer(), CuisineDto(name = name))
+                body = Json.encodeToString(CuisineDto.serializer(), cuisineDto)
             }
         }
     }
