@@ -10,6 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
+import presentation.home.HomeScreenUiEffect
 
 class SearchScreenModel(private val search: ISearchUseCase) :
     BaseScreenModel<SearchUiState, SearchUiEffect>(SearchUiState()), SearchInteractionListener {
@@ -24,6 +25,14 @@ class SearchScreenModel(private val search: ISearchUseCase) :
     override fun onSearchInputChanged(keyword: String) {
         updateState { it.copy(query = keyword) }
         launchSearchJob()
+    }
+
+    override fun onRestaurantClicked(restaurantId: String) {
+        sendNewEffect(SearchUiEffect.NavigateToRestaurant(restaurantId))
+    }
+
+    override fun onMealClicked(mealId: String) {
+        sendNewEffect(SearchUiEffect.NavigateToMeal(mealId))
     }
 
     private fun launchSearchJob() {
