@@ -1,15 +1,15 @@
 package domain.usecase
 
-import data.gateway.fake.FakeRemoteGateway
-import domain.entity.PreferredRide
-import domain.entity.User
-import domain.gateway.local.ILocalConfigurationGateway
-import domain.utils.AuthorizationException
+import data.gateway.remote.UserRemoteRemoteGateway
 import data.local.mapper.toFormattedString
 import data.local.mapper.toPreferredRide
-import kotlinx.coroutines.flow.Flow
+import domain.entity.PreferredRide
+import domain.entity.User
 import domain.entity.UserDetails
 import domain.gateway.IFakeRemoteGateway
+import domain.gateway.local.ILocalConfigurationGateway
+import domain.utils.AuthorizationException
+import kotlinx.coroutines.flow.Flow
 
 interface IManageUserUseCase {
 
@@ -30,7 +30,8 @@ interface IManageUserUseCase {
 
 class ManageUserUseCase(
     private val localGateway: ILocalConfigurationGateway,
-    private val fakeRemoteGateway: IFakeRemoteGateway
+    private val fakeRemoteGateway: IFakeRemoteGateway,
+    private val remoteGateway: UserRemoteRemoteGateway
 ) : IManageUserUseCase {
 
     override suspend fun getUserWallet(): User {
@@ -70,7 +71,7 @@ class ManageUserUseCase(
     }
 
     override suspend fun getUserProfile(): UserDetails {
-       return fakeRemoteGateway.getUserProfile()
+       return remoteGateway.getUserProfile()
     }
 
 }

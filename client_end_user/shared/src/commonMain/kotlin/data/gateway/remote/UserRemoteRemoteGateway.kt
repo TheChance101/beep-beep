@@ -1,17 +1,21 @@
 package data.gateway.remote
 
+import data.remote.mapper.toEntity
 import data.remote.mapper.toSessionEntity
 import data.remote.mapper.toUser
 import data.remote.model.ServerResponse
 import data.remote.model.SessionDto
+import data.remote.model.UserDetailsDto
 import data.remote.model.UserDto
 import domain.entity.Session
 import domain.entity.User
 import domain.entity.UserCreation
+import domain.entity.UserDetails
 import domain.gateway.IUserRemoteGateway
 import domain.utils.AuthorizationException
 import io.ktor.client.HttpClient
 import io.ktor.client.request.forms.submitForm
+import io.ktor.client.request.get
 import io.ktor.client.request.url
 import io.ktor.http.HttpMethod
 import io.ktor.http.Parameters
@@ -61,5 +65,12 @@ class UserRemoteRemoteGateway(client: HttpClient) : BaseGateway(client), IUserRe
         }.value ?: throw Exception()
 
         return Pair(result.accessToken,result.refreshToken)
+    }
+
+    override suspend fun getUserProfile(): UserDetails {
+        return tryToExecute<ServerResponse<UserDetailsDto>> {
+            get("/user")
+        }.value?.toEntity()
+            ?: throw AuthorizationException.InvalidCredentialsException("Invalid Credential")
     }
 }
