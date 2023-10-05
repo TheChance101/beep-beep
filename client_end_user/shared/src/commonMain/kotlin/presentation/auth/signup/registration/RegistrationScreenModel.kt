@@ -14,26 +14,30 @@ class RegistrationScreenModel(private val validation: IValidationUseCase) :
     // region interactions
     override fun onUsernameChanged(username: String) {
         updateState { it.copy(username = username) }
-        tryCatch {
-            validation.validateUsername(username)
-            clearErrors()
-        }
+        tryCatch { validation.validateUsername(username) }
+    }
+
+    override fun onEmailChanged(email: String) {
+        updateState { it.copy(email = email) }
+        tryCatch { validation.validateEmail(email) }
     }
 
     override fun onPasswordChanged(password: String) {
         updateState { it.copy(password = password) }
-        tryCatch {
-            validation.validatePassword(password)
-            clearErrors()
-        }
+        tryCatch { validation.validatePassword(password) }
     }
 
     override fun onNextButtonClicked() {
         with(state.value) {
             tryCatch {
-                validation.validateUsername(username); validation.validatePassword(password)
+                validation.validateUsername(username)
+                validation.validatePassword(password)
                 sendNewEffect(
-                    RegistrationScreenEffect.NavigateToSubmitRegistrationScreen(username, password)
+                    RegistrationScreenEffect.NavigateToSubmitRegistrationScreen(
+                        username,
+                        email,
+                        password
+                    )
                 )
             }
         }
@@ -48,30 +52,24 @@ class RegistrationScreenModel(private val validation: IValidationUseCase) :
     private fun tryCatch(block: () -> Unit) {
         try {
             block()
+            clearErrors()
         } catch (e: AuthorizationException.InvalidUsernameException) {
+            updateState { it.copy(isUsernameError = true) }
+        } catch (e: AuthorizationException.InvalidEmailException) {
             updateState {
-                it.copy(
-                    usernameErrorMsg = e.message ?: "Invalid Username",
-                    isUsernameError = true
-                )
+                it.copy(isEmailError = true)
             }
         } catch (e: AuthorizationException.InvalidPasswordException) {
-            updateState {
-                it.copy(
-                    passwordErrorMsg = e.message ?: "Invalid Password",
-                    isPasswordError = true
-                )
-            }
+            updateState { it.copy(isPasswordError = true) }
         }
     }
 
     private fun clearErrors() {
         updateState {
             it.copy(
-                usernameErrorMsg = "",
-                passwordErrorMsg = "",
                 isUsernameError = false,
-                isPasswordError = false
+                isPasswordError = false,
+                isEmailError = false,
             )
         }
     }

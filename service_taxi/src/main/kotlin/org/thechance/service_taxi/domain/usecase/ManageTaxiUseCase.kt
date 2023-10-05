@@ -13,12 +13,21 @@ interface IManageTaxiUseCase {
     suspend fun getTaxi(taxiId: String): Taxi
     suspend fun editTaxi(taxiId: String, taxi: Taxi): Taxi
     suspend fun getNumberOfTaxis(): Long
-    suspend fun findTaxisWithFilters(status: Boolean, color: Long?, seats: Int?, plateNumber: String?, driverIds: List<String>?): List<Taxi>
+    suspend fun findTaxisWithFilters(
+        page: Int,
+        limit: Int,
+        status: Boolean?,
+        color: Long?,
+        seats: Int?,
+        query: String?
+    ): List<Taxi>
+
+    suspend fun deleteTaxiByDriverId(driverId: String): Boolean
 }
 
 class ManageTaxiUseCase(
-        private val taxiGateway: ITaxiGateway,
-        private val validations: IValidations,
+    private val taxiGateway: ITaxiGateway,
+    private val validations: IValidations,
 ) : IManageTaxiUseCase {
     override suspend fun createTaxi(taxi: Taxi): Taxi {
         validateTaxi(taxi)
@@ -49,8 +58,19 @@ class ManageTaxiUseCase(
         return taxiGateway.getNumberOfTaxis()
     }
 
-    override suspend fun findTaxisWithFilters(status: Boolean, color: Long?, seats: Int?, plateNumber: String?, driverIds: List<String>?): List<Taxi> {
-        return taxiGateway.findTaxisWithFilters(status, color, seats, plateNumber, driverIds)
+    override suspend fun findTaxisWithFilters(
+        page: Int,
+        limit: Int,
+        status: Boolean?,
+        color: Long?,
+        seats: Int?,
+        query: String?
+    ): List<Taxi> {
+        return taxiGateway.findTaxisWithFilters(page, limit, status, color, seats, query)
+    }
+
+    override suspend fun deleteTaxiByDriverId(driverId: String): Boolean {
+        return taxiGateway.deleteTaxiByDriverId(driverId)
     }
 
     private suspend fun isTaxiExistedBefore(taxi: Taxi): Boolean {

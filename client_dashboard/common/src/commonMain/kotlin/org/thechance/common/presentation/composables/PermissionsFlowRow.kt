@@ -10,6 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.beepbeep.designSystem.ui.composable.BpChip
 import com.beepbeep.designSystem.ui.theme.Theme
+import org.thechance.common.presentation.resources.Resources
+import org.thechance.common.presentation.users.PermissionInformation
 import org.thechance.common.presentation.users.UserScreenUiState
 import org.thechance.common.presentation.util.kms
 
@@ -28,17 +30,48 @@ fun PermissionsFlowRow(
     ) {
         allPermissions.forEach { permission ->
             BpChip(
-                label = permission.name.lowercase().capitalizeWords(),
+                label = getPermissionInformation(permission).title,
                 modifier = Modifier.padding(8.kms),
                 onClick = { onUserPermissionClicked(permission) },
-                painter = painterResource(permission.iconPath),
+                painter = painterResource(getPermissionInformation(permission).iconPath),
                 isSelected = selectedPermissions.contains(permission)
             )
         }
     }
 }
 
+@Composable
+fun getPermissionInformation(permission: UserScreenUiState.PermissionUiState): PermissionInformation {
+    return when (permission) {
+        UserScreenUiState.PermissionUiState.RESTAURANT_OWNER -> PermissionInformation(
+            Resources.Drawable.restaurantOutlined,
+            Resources.Strings.restaurantPermission
+        )
 
-private fun String.capitalizeWords(): String = split(" ")
-    .joinToString(" ") { it.replaceFirstChar { char -> char.uppercase() } }
-    .replace("_", " ")
+        UserScreenUiState.PermissionUiState.DRIVER -> PermissionInformation(
+            Resources.Drawable.taxiOutlined,
+            Resources.Strings.taxiPermission
+        )
+
+        UserScreenUiState.PermissionUiState.END_USER -> PermissionInformation(
+            Resources.Drawable.endUser,
+            Resources.Strings.endUserPermission
+        )
+
+        UserScreenUiState.PermissionUiState.SUPPORT -> PermissionInformation(
+            Resources.Drawable.support,
+            Resources.Strings.supportPermission
+        )
+
+        UserScreenUiState.PermissionUiState.DELIVERY -> PermissionInformation(
+            Resources.Drawable.delivery,
+            Resources.Strings.deliveryPermission
+        )
+
+        UserScreenUiState.PermissionUiState.ADMIN -> PermissionInformation(
+            Resources.Drawable.dashboardAdmin,
+            Resources.Strings.adminPermission
+        )
+    }
+}
+

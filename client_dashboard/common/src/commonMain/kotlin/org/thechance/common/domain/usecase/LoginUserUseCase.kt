@@ -1,26 +1,30 @@
 package org.thechance.common.domain.usecase
 
-import org.thechance.common.domain.getway.IIdentityGateway
-import org.thechance.common.domain.getway.IRemoteGateway
+
+import org.thechance.common.domain.getway.ILocationGateway
+import org.thechance.common.domain.getway.IUserLocalGateway
 import org.thechance.common.domain.getway.IUsersGateway
 
 interface ILoginUserUseCase {
 
-    suspend fun loginUser(username: String, password: String, keepLoggedIn: Boolean)
+    suspend fun loginUser(username: String, password: String)
 
 }
 
 class LoginUserUseCase(
-    private val identityGateway: IIdentityGateway,
-    private val remoteGateway: IUsersGateway
+    private val userLocalGateway: IUserLocalGateway,
+    private val usersRemoteGateway: IUsersGateway,
+    private val locationRemoteGateway: ILocationGateway
 ) : ILoginUserUseCase {
 
-    override suspend fun loginUser(username: String, password: String, keepLoggedIn: Boolean) {
-        val userTokens = remoteGateway.loginUser(username, password)
-        identityGateway.createUserConfiguration()
-        identityGateway.saveAccessToken(userTokens.first)
-        identityGateway.saveRefreshToken(userTokens.second)
-        identityGateway.shouldUserKeptLoggedIn(keepLoggedIn)
+    override suspend fun loginUser(username: String, password: String) {
+        val userTokens = usersRemoteGateway.loginUser(username, password)
+        val countryCode = locationRemoteGateway.getCurrentLocation().countryCode
+        userLocalGateway.createUserConfiguration()
+        userLocalGateway.saveAccessToken(userTokens.first)
+        userLocalGateway.saveRefreshToken(userTokens.second)
+        userLocalGateway.saveUserName(username)
+        userLocalGateway.saveCountryCode(countryCode)
     }
 
 }

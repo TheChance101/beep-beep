@@ -1,5 +1,7 @@
 package org.thechance.service_taxi.data.gateway
 
+import com.mongodb.client.model.FindOneAndUpdateOptions
+import com.mongodb.client.model.ReturnDocument
 import com.mongodb.client.model.Updates
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
@@ -13,8 +15,8 @@ import org.thechance.service_taxi.api.dto.trip.toEntity
 import org.thechance.service_taxi.data.DataBaseContainer
 import org.thechance.service_taxi.data.collection.TaxiCollection
 import org.thechance.service_taxi.data.collection.TripCollection
+import org.thechance.service_taxi.data.utils.isSuccessfullyUpdated
 import org.thechance.service_taxi.data.utils.paginate
-import org.thechance.service_taxi.data.utils.toObjectIds
 import org.thechance.service_taxi.domain.entity.Taxi
 import org.thechance.service_taxi.domain.entity.Trip
 import org.thechance.service_taxi.domain.gateway.ITaxiGateway
@@ -69,27 +71,35 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
         return container.taxiCollection.findOne(query) != null
     }
 
-    override suspend fun findTaxisWithFilters(status: Boolean, color: Long?, seats: Int?, plateNumber: String?, driverIds: List<String>?): List<Taxi> {
+    override suspend fun findTaxisWithFilters(
+        page: Int,
+        limit: Int,
+        status: Boolean?,
+        color: Long?,
+        seats: Int?,
+        query: String?
+    ): List<Taxi> {
         val searchQueries = or(
-                TaxiCollection::plateNumber regex Regex(plateNumber.orEmpty(), RegexOption.IGNORE_CASE),
-                TaxiCollection::driverId `in` driverIds?.toObjectIds()!!
+            TaxiCollection::plateNumber regex Regex(query.orEmpty(), RegexOption.IGNORE_CASE),
+            TaxiCollection::driverUsername regex Regex(query.orEmpty(), RegexOption.IGNORE_CASE),
         )
         val filter = and(
-                TaxiCollection::isAvailable eq status,
-                TaxiCollection::color eq color,
-                TaxiCollection::seats eq seats,
+            status?.let { TaxiCollection::isAvailable eq it },
+            color?.let { TaxiCollection::color eq it },
+            seats?.let { TaxiCollection::seats eq it }
         )
         return container.taxiCollection.find(
-                searchQueries,
-                filter,
-                TaxiCollection::isDeleted ne true
-        ).toList().toEntity()
+            searchQueries,
+            filter,
+            TaxiCollection::isDeleted ne true
+        ).paginate(page, limit).toList().toEntity()
     }
 
     override suspend fun updateTaxiTripsCount(taxiId: String, count: Int): Taxi? {
         return container.taxiCollection.findOneAndUpdate(
             filter = TaxiCollection::id eq ObjectId(taxiId),
-            update = set(TaxiCollection::tripsCount setTo count)
+            update = set(TaxiCollection::tripsCount setTo count),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toEntity()
     }
     //endregion
@@ -159,7 +169,8 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
                         TimeZone.currentSystemDefault()
                     ).toString()
                 )
-            )
+            ),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toEntity()
     }
 
@@ -174,7 +185,8 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
                 TripCollection::endDate.name, Clock.System.now().toLocalDateTime(
                     TimeZone.currentSystemDefault()
                 ).toString()
-            )
+            ),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toEntity()
     }
 
@@ -184,7 +196,8 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
                 TripCollection::isDeleted ne true,
                 TripCollection::id eq ObjectId(tripId),
             ),
-            update = Updates.set(TripCollection::rate.name, rate)
+            update = Updates.set(TripCollection::rate.name, rate),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toEntity()
     }
 
@@ -204,6 +217,13 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
                 TripCollection::clientId eq ObjectId(id)
             )
         )
+    }
+
+    override suspend fun deleteTaxiByDriverId(driverId: String): Boolean {
+        return container.taxiCollection.updateMany(
+            filter = TaxiCollection::driverId eq ObjectId(driverId),
+            update = set(TaxiCollection::isDeleted setTo true),
+        ).isSuccessfullyUpdated()
     }
     //endregion
 }

@@ -62,6 +62,8 @@ kotlin {
                 implementation(libs.ktor.logging)
                 implementation(libs.ktor.client.cio)
                 implementation(libs.kotlin.serialization)
+                //aay chart
+                implementation(libs.aay.chart)
             }
         }
         val androidMain by getting {

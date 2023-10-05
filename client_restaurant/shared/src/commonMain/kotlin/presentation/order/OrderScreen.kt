@@ -18,13 +18,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
 import domain.entity.OrderState
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.composable.BpAppBar
+import presentation.composable.BpEmptyScreen
 import presentation.order.composable.OrderCard
 import presentation.order.composable.OrderTextButton
 import presentation.order.composable.header
@@ -45,12 +49,11 @@ class OrderScreen :
         }
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
+    @OptIn(ExperimentalFoundationApi::class, ExperimentalResourceApi::class)
     @Composable
     override fun onRender(state: OrderScreenUiState, listener: OrderScreenInteractionListener) {
 
         Column(modifier = Modifier.fillMaxSize().background(Theme.colors.background)) {
-
             BpAppBar(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -65,8 +68,12 @@ class OrderScreen :
                     modifier = Modifier.padding(end = 16.dp)
                 )
             }
-
-
+            BpEmptyScreen(
+                painter = painterResource(Resources.images.emptyScreen),
+                text = Resources.strings.noOrderYet,
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                isVisible = (state.pendingOrders.isEmpty()&&state.inCookingOrders.isEmpty())
+            )
             LazyVerticalStaggeredGrid(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(16.dp),
@@ -79,6 +86,7 @@ class OrderScreen :
                     OrdersHeader(
                         text = Resources.strings.inCookingOrders,
                         modifier = Modifier.padding(bottom = 8.dp)
+                            .alpha(if (state.inCookingOrders.isEmpty()) 0f else 1f)
                     )
                 }
 
@@ -97,6 +105,7 @@ class OrderScreen :
                     OrdersHeader(
                         text = Resources.strings.requestedOrders,
                         modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+                            .alpha(if (state.pendingOrders.isEmpty()) 0f else 1f)
                     )
                 }
 

@@ -28,6 +28,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.composables.BpLogo
 import org.thechance.common.presentation.composables.modifier.centerItem
 import org.thechance.common.presentation.composables.pxToDp
+import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.kms
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -55,11 +56,9 @@ fun DashboardSideBar(
                     animateDpAsState(
                         targetValue = if (mainMenuIsExpanded.value) sideBarExpandedWidthInKms
                         else sideBarUnexpandedWidthInKms
-                    ).value
-                )
-                .padding(vertical = 40.kms).onPointerEvent(PointerEventType.Enter) {
-                    mainMenuIsExpanded.value = true
-                }
+                    ).value)
+                .padding(vertical = 40.kms)
+                .onPointerEvent(PointerEventType.Enter) { mainMenuIsExpanded.value = true }
                 .onPointerEvent(PointerEventType.Exit) { mainMenuIsExpanded.value = false },
         ) {
             //region logo
@@ -80,15 +79,13 @@ fun DashboardSideBar(
                             animateDpAsState(
                                 (mainMenuItemHeight.value.pxToDp() * currentItem)
                             ).value
-                        )
-                    )
+                        ))
                     Spacer(
                         Modifier.height(mainMenuItemHeight.value.pxToDp())
                             .padding(vertical = 8.kms)
                             .width(4.kms)
                             .clip(RoundedCornerShape(16.kms))
-                            .background(Color(0xffF53D47))
-                    )
+                            .background(Color(0xffF53D47)))
                 }
                 Column(
                     verticalArrangement = Arrangement.SpaceBetween,
@@ -119,7 +116,7 @@ fun DashboardSideBar(
                     exit = fadeOut()
                 ) {
                     Text(
-                        "Dark theme",
+                        Resources.Strings.darkTheme,
                         maxLines = 1,
                         style = Theme.typography.titleMedium,
                         color = Theme.colors.contentPrimary

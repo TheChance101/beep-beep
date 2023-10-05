@@ -21,3 +21,6 @@ fun AddressDto.toEntity() = Address(
     location = location.toEntity(),
     address = address
 )
+
+fun List<AddressDto>.toEntity() = map { it.toEntity() }
+

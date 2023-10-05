@@ -91,6 +91,17 @@ fun Route.userRoutes() {
             )
             call.respond(HttpStatusCode.OK, result)
         }
+        put("/profile/{id}") {
+            val id = call.parameters["id"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)
+            val params = call.receiveParameters()
+            val fullName = params["fullName"]?.trim()
+
+            val result = manageUserAccount.updateUserProfile(
+                id = id,
+                fullName = fullName.toString(),
+            )
+            call.respond(HttpStatusCode.OK, result)
+        }
 
         delete("/{userId}") {
             val id = call.parameters["userId"] ?: throw MissingParameterException(INVALID_REQUEST_PARAMETER)

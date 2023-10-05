@@ -1,7 +1,5 @@
 package org.thechance.api_gateway.data.localizedMessages.languages
 
-import org.koin.core.annotation.Single
-
 
 interface LocalizedMessages {
 
@@ -44,6 +42,14 @@ interface LocalizedMessages {
 
     // region taxi
     val taxiCreatedSuccessfully: String
+
+    val tripCreatedSuccessfully: String
+
+    val tripApproved: String
+
+    val tripCanceled: String
+
+    val tripFinished: String
 
     val taxiUpdateSuccessfully: String
 
@@ -133,5 +139,17 @@ interface LocalizedMessages {
 
     val cuisineNameAlreadyExisted: String
 
+    val missingParameter: String
+
+    val tokensNotFound: String
+
+    val tokenNotRegister : String
+
+
+    //endregion
+
+
+    // region notification
+    val notificationNotSent : String
     //endregion
 }

@@ -42,10 +42,20 @@ interface IFakeRemoteGateway {
 
     suspend fun getCuisinesInMeal(mealId: String): List<Cuisine>
 
-    suspend fun getCuisineByRestaurantId (restaurantId: String): List<Cuisine>
+    suspend fun getCuisineByRestaurantId(restaurantId: String): List<Cuisine>
 
     suspend fun getMealsByCuisineId(id: String): List<Meal>
 
     //endregion Cuisine
 
+    //region stats
+    suspend fun getOrdersRevenueByDaysBefore(
+    restaurantId: String, daysBack: Int
+     ): List<Map<String, Double>>
+
+    suspend fun getOrdersCountByDaysBefore(
+    restaurantId: String, daysBack: Int
+        ): List<Map<String,Int>>
+
+    //endregion stats
 }

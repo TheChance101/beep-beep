@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -66,7 +67,7 @@ class TaxiScreen :
             isEditMode = state.isEditMode
         )
         Box(
-            modifier = Modifier.background(Theme.colors.surface).fillMaxSize(),
+            modifier = Modifier.background(Theme.colors.surface).padding(40.kms).fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
 
@@ -84,6 +85,14 @@ class TaxiScreen :
                         text = state.searchQuery,
                         keyboardType = KeyboardType.Text,
                         trailingPainter = painterResource(Resources.Drawable.search),
+                        outlinedTextFieldDefaults =  OutlinedTextFieldDefaults.colors(
+                            focusedContainerColor = Theme.colors.surface,
+                            cursorColor = Theme.colors.contentTertiary,
+                            errorCursorColor = Theme.colors.primary,
+                            focusedBorderColor = Theme.colors.contentTertiary.copy(alpha = 0.2f),
+                            unfocusedBorderColor = Theme.colors.contentBorder.copy(alpha = 0.1f),
+                            errorBorderColor = Theme.colors.primary.copy(alpha = 0.5f),
+                        )
                     )
 
                     Column {
@@ -123,20 +132,26 @@ class TaxiScreen :
                         modifier = Modifier.cursorHoverIconHand()
                     )
                 }
+                BpNoInternetConnection(!state.hasConnection){
+                    listener.onRetry()
+                }
                 BpTable(
+                    hasConnection = state.hasConnection,
                     data = state.pageInfo.data,
                     key = { it.id },
+                    isVisible = state.hasConnection,
                     headers = state.tabHeader,
+                    limitItem=state.specifiedTaxis,
+                    isLoading = state. isLoading,
                     modifier = Modifier.fillMaxWidth(),
                     rowContent = { taxi ->
                         TaxiRow(
                             taxi = taxi,
                             position = state.pageInfo.data.indexOf(taxi) + 1,
-                            onDropdownMenuClicked = listener::showTaxiMenu,
-                            onDropdownMenuDismiss = listener::hideTaxiMenu,
+                            onDropdownMenuClicked = listener::onShowTaxiMenu,
+                            onDropdownMenuDismiss = listener::onHideTaxiMenu,
                             onEditTaxiClicked = listener::onEditTaxiClicked,
                             onDeleteTaxiClicked = listener::onDeleteTaxiClicked,
-                            editTaxiMenu = state.taxiMenu,
                         )
                     },
                 )
@@ -246,7 +261,7 @@ class TaxiScreen :
                         modifier = Modifier.padding(horizontal = 24.kms, vertical = 16.kms)
                     )
                     SeatsBar(
-                        selectedSeatsCount = taxi.seats,
+                        selectedSeatsCount = taxi.seats?: 0,
                         count = 6,
                         selectedIcon = painterResource(Resources.Drawable.seatFilled),
                         notSelectedIcon = painterResource(Resources.Drawable.seatOutlined),
@@ -299,8 +314,7 @@ class TaxiScreen :
         firstColumnWeight: Float = 1f,
         otherColumnsWeight: Float = 3f,
         onDropdownMenuClicked: (String) -> Unit,
-        editTaxiMenu: MenuUiState,
-        onDropdownMenuDismiss: () -> Unit,
+        onDropdownMenuDismiss: (String) -> Unit,
         onEditTaxiClicked: (String) -> Unit,
         onDeleteTaxiClicked: (String) -> Unit,
     ) {
@@ -343,8 +357,7 @@ class TaxiScreen :
             )
             EditTaxiDropdownMenu(
                 taxi = taxi,
-                editTaxiMenu = editTaxiMenu,
-                onDropdownMenuDismiss = onDropdownMenuDismiss,
+                onDropdownMenuDismiss = { onDropdownMenuDismiss(taxi.id) },
                 onEditTaxiClicked = onEditTaxiClicked,
                 onDeleteTaxiClicked = onDeleteTaxiClicked,
             )
@@ -355,92 +368,95 @@ class TaxiScreen :
     private fun EditTaxiDropdownMenu(
         taxi: TaxiDetailsUiState,
         onDropdownMenuDismiss: () -> Unit,
-        editTaxiMenu: MenuUiState,
         onEditTaxiClicked: (String) -> Unit,
         onDeleteTaxiClicked: (String) -> Unit,
     ) {
         BpDropdownMenu(
-            expanded = taxi.id == editTaxiMenu.id,
+            expanded = taxi.isTaxiMenuExpanded,
             onDismissRequest = onDropdownMenuDismiss,
             shape = RoundedCornerShape(Theme.radius.medium),
             offset = DpOffset.Zero.copy(x = (-100).kms)
         ) {
             Column {
-                editTaxiMenu.items.forEach {
-                    BpDropdownMenuItem(
-                        onClick = {
-                            when (it.text) {
-                                "Edit" -> onEditTaxiClicked(taxi.id)
-                                "Delete" -> onDeleteTaxiClicked(taxi.id)
-                            }
-                        },
-                        text = it.text,
-                        leadingIconPath = it.iconPath,
-                        isSecondary = it.isSecondary,
-                        showBottomDivider = it != editTaxiMenu.items.last()
-                    )
-                }
-            }
-        }
-    }
-
-    @Composable
-    private fun RowScope.TitleField(
-        text: String,
-        modifier: Modifier = Modifier,
-        color: Color = Theme.colors.contentPrimary,
-        weight: Float = 3f
-    ) {
-        Text(
-            text = text,
-            style = Theme.typography.titleMedium,
-            overflow = TextOverflow.Ellipsis,
-            modifier = modifier.weight(weight),
-            maxLines = 1,
-            color = color
-        )
-    }
-
-    @Composable
-    private fun SquareColorField(modifier: Modifier = Modifier, color: Color) {
-        Box(modifier = modifier) {
-            Spacer(
-                modifier = Modifier.size(24.kms)
-                    .background(
-                        color = color,
-                        shape = RoundedCornerShape(Theme.radius.small),
-                    )
-                    .border(
-                        width = 1.kms,
-                        color = Theme.colors.contentBorder,
-                        shape = RoundedCornerShape(Theme.radius.small),
-                    )
-            )
-        }
-    }
-
-    @Composable
-    fun CarStatus(
-        modifier: Modifier = Modifier,
-        status: List<TaxiStatus>,
-        onSelectState: (TaxiStatus) -> Unit,
-        selectedStatus: TaxiStatus?,
-    ) {
-
-        Row(
-            modifier = modifier,
-            verticalAlignment = Alignment.Top,
-            horizontalArrangement = Arrangement.spacedBy(16.kms)
-        ) {
-            status.forEach { status ->
-                BpChip(
-                    modifier = Modifier.height(32.kms),
-                    label = status.getStatusName(),
-                    onClick = { onSelectState(status) },
-                    isSelected = selectedStatus == status,
+                BpDropdownMenuItem(
+                    onClick = {
+                        onEditTaxiClicked(taxi.id)
+                    },
+                    text = Resources.Strings.edit,
+                    leadingIconPath = Resources.Drawable.edit,
+                    isSecondary = false,
+                    showBottomDivider = true
+                )
+                BpDropdownMenuItem(
+                    onClick = {
+                        onDeleteTaxiClicked(taxi.id)
+                    },
+                    text = Resources.Strings.delete,
+                    leadingIconPath = Resources.Drawable.delete,
+                    isSecondary = true,
+                    showBottomDivider = false
                 )
             }
         }
     }
-    //endregion
 }
+
+@Composable
+private fun RowScope.TitleField(
+    text: String,
+    modifier: Modifier = Modifier,
+    color: Color = Theme.colors.contentPrimary,
+    weight: Float = 3f
+) {
+    Text(
+        text = text,
+        style = Theme.typography.titleMedium,
+        overflow = TextOverflow.Ellipsis,
+        modifier = modifier.weight(weight),
+        maxLines = 1,
+        color = color
+    )
+}
+
+@Composable
+private fun SquareColorField(modifier: Modifier = Modifier, color: Color) {
+    Box(modifier = modifier) {
+        Spacer(
+            modifier = Modifier.size(24.kms)
+                .background(
+                    color = color,
+                    shape = RoundedCornerShape(Theme.radius.small),
+                )
+                .border(
+                    width = 1.kms,
+                    color = Theme.colors.contentBorder,
+                    shape = RoundedCornerShape(Theme.radius.small),
+                )
+        )
+    }
+}
+
+@Composable
+fun CarStatus(
+    modifier: Modifier = Modifier,
+    status: List<TaxiStatus>,
+    onSelectState: (TaxiStatus) -> Unit,
+    selectedStatus: TaxiStatus?,
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.Top,
+        horizontalArrangement = Arrangement.spacedBy(16.kms)
+    ) {
+        status.forEach { status ->
+            BpChip(
+                modifier = Modifier.height(32.kms),
+                label = status.getStatusName(),
+                onClick = { onSelectState(status) },
+                isSelected = selectedStatus == status,
+            )
+        }
+    }
+}
+//endregion
+

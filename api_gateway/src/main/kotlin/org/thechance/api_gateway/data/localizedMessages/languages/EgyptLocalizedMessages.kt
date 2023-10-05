@@ -27,6 +27,10 @@ class EgyptianArabicLocalizedMessages() : LocalizedMessages {
 
     // region taxi
     override val taxiCreatedSuccessfully: String= "اعمل حفلة بقى عندك تكسي يا ابن المحظوظة 🎉"
+    override val tripCreatedSuccessfully: String = "تم انشاء الرحلة"
+    override val tripApproved: String = "تم قبول الرحلة"
+    override val tripCanceled: String = "تم الغاء الرحلة"
+    override val tripFinished: String = "تم إنهاء الرحلة بنجاح"
     override val taxiUpdateSuccessfully: String= "حدثنالك التاكسي يا عم 🎉"
     override val taxiDeleteSuccessfully: String= "مسحنالك التاكسي مع الاسف"
     override val invalidId: String = "مش لاقيين التاكسي ده!!"
@@ -40,6 +44,7 @@ class EgyptianArabicLocalizedMessages() : LocalizedMessages {
     override val invalidPrice: String = "مش مظبوط السعر اللي دخلته يعم"
     override val alreadyExist: String = "التاكسي ده موجود قبل كده ياعم"
     override val requiredQuery: String = " في حاجات ناقصة يا معلم"
+
     // endregion
 
     //region restaurant
@@ -72,5 +77,13 @@ class EgyptianArabicLocalizedMessages() : LocalizedMessages {
     override val restaurantNotFound: String = "مش لاقيين المطعم ده!!"
     override val deletedSuccessfully: String = "مسحناها ياعم"
     override val cuisineNameAlreadyExisted: String = "المطبخ موجود مرة يا عم مش فرح هو"
+
+    override val missingParameter: String = "في حاجة ناقصة يا عم"
+    override val tokensNotFound: String= "مش لاقيين التوكنات دي ياعم"
+    override val tokenNotRegister: String = "التوكن ده مش مسجل ياعم"
+    //endregion
+
+    // region notification
+    override val notificationNotSent: String = "لم يتم إرسال الإشعار ياعم"
     //endregion
 }

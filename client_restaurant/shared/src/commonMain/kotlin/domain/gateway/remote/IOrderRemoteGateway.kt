@@ -14,9 +14,9 @@ interface IOrderRemoteGateway {
     suspend fun getOrdersRevenueByDaysBefore(
         restaurantId: String,
         daysBack: Int
-    ): List<Map<Int, Double>>
+    ): List<Map<String, Double>>
 
     suspend fun getOrdersCountByDaysBefore(
         restaurantId: String, daysBack: Int
-    ): List<Map<Int, Int>>
+    ): List<Map<String, Int>>
 }

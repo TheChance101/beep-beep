@@ -21,12 +21,12 @@ fun DetailedUserCollection.toEntity(
 
 fun List<DetailedUserCollection>.toEntity(
     walletBalance: Double, currency: String, addresses: List<Address>, country: String, permission: Int
-) = map {
-    it.toEntity(
-        walletBalance = walletBalance,
-        currency = currency,
-        addresses = addresses,
-        country = country,
-        permission = permission
-    )
+)  = map { it.toEntity(walletBalance, currency, addresses, country, permission) }
+
+fun List<DetailedUserCollection>.toUserEntity(
+    walletBalance: Double, currency: String,addresses: List<Address>, country: String, permission: Int
+): List<User> {
+    return this.map { detailedUser ->
+        detailedUser.toEntity(walletBalance, currency,addresses, country, permission)
+    }
 }

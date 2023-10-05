@@ -7,13 +7,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
-import resources.strings.IStringResources
 
 class LoginScreenModel(
     private val manageAuthentication: IManageAuthenticationUseCase,
-    private val stringResources: IStringResources
-) :
-    BaseScreenModel<LoginScreenUIState, LoginScreenUIEffect>(LoginScreenUIState()),
+) : BaseScreenModel<LoginScreenUIState, LoginScreenUIEffect>(LoginScreenUIState()),
     LoginScreenInteractionListener {
 
     override val viewModelScope: CoroutineScope = coroutineScope
@@ -49,19 +46,9 @@ class LoginScreenModel(
     private fun onLoginError(errorState: ErrorState) {
         clearErrors()
         when (errorState) {
-            ErrorState.InvalidPassword -> updateState {
-                it.copy(
-                    passwordErrorMsg = "invalid password",
-                    isPasswordError = true
-                )
-            }
+            ErrorState.InvalidPassword -> updateState { it.copy(isPasswordError = true) }
 
-            ErrorState.InvalidUsername -> updateState {
-                it.copy(
-                    usernameErrorMsg = stringResources.invalidUsername,
-                    isUsernameError = true
-                )
-            }
+            ErrorState.InvalidUsername -> updateState { it.copy(isUsernameError = true) }
 
             is ErrorState.WrongPassword -> {
                 showSnackbar(errorState.message)
@@ -88,9 +75,7 @@ class LoginScreenModel(
     private fun clearErrors() {
         updateState {
             it.copy(
-                usernameErrorMsg = "",
                 isUsernameError = false,
-                passwordErrorMsg = "",
                 isPasswordError = false,
                 isLoading = false
             )
