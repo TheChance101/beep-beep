@@ -11,10 +11,10 @@ class DataBaseContainer(client: MongoClient) {
 
     private val database = client.coroutine.getDatabase(DATA_BASE_NAME)
 
-    val ticketCollection: CoroutineCollection<TicketCollection> = database.getCollection(CHAT_COLLECTION)
+    val ticketCollection: CoroutineCollection<TicketCollection> = database.getCollection(TICKET_COLLECTION)
 
     companion object {
         private val DATA_BASE_NAME = System.getenv("DB_NAME").toString()
-        const val CHAT_COLLECTION = "chat"
+        const val TICKET_COLLECTION = "ticket"
     }
 }

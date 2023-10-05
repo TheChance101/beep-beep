@@ -18,5 +18,5 @@ data class TicketCollection(
     @SerialName("_id")
     val id: ObjectId = ObjectId()
 
-    val messages: List<MessageCollection> = emptyList()
+    val messages: MutableList<MessageCollection> = mutableListOf()
 }

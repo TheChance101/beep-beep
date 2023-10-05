@@ -9,8 +9,11 @@ import org.thechance.service_chat.data.DataBaseContainer
 import org.thechance.service_chat.data.collection.TicketCollection
 import org.thechance.service_chat.data.collection.mappers.toCollection
 import org.thechance.service_chat.data.collection.mappers.toEntity
+import org.thechance.service_chat.domain.entity.Message
 import org.thechance.service_chat.domain.entity.Ticket
 import org.thechance.service_chat.domain.gateway.IChatGateway
+import org.thechance.service_chat.domain.utils.MultiErrorException
+import org.thechance.service_chat.domain.utils.TICKET_NOT_FOUND
 
 @Single
 class ChatGateway(private val container: DataBaseContainer) : IChatGateway {
@@ -26,7 +29,16 @@ class ChatGateway(private val container: DataBaseContainer) : IChatGateway {
             filter = TicketCollection::ticketId eq ticketId,
             update = Updates.set(TicketCollection::supportId.name, supportId),
             options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER),
-        )?.toEntity() ?: throw Throwable("not found")
+        )?.toEntity() ?: throw MultiErrorException(listOf(TICKET_NOT_FOUND))
+    }
+
+
+    override suspend fun saveMessage(ticketId: String, message: Message) {
+        val ticket = container.ticketCollection.findOne(TicketCollection::ticketId eq ticketId)
+        ticket?.messages?.add(message.toCollection())
+        ticket?.let {
+            container.ticketCollection.updateOne(TicketCollection::ticketId eq ticketId, ticket)
+        } ?: MultiErrorException(listOf(TICKET_NOT_FOUND))
     }
 
 }

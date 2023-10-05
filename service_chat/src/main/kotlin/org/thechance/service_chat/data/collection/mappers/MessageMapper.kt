@@ -10,4 +10,12 @@ fun MessageCollection.toEntity(): Message {
     )
 }
 
+fun Message.toCollection(): MessageCollection {
+    return MessageCollection(
+        senderId = senderId,
+        content = content,
+        time = time
+    )
+}
+
 fun List<MessageCollection>.toEntity() = map { it.toEntity() }
