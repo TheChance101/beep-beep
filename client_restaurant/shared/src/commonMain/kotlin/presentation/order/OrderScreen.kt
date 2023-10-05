@@ -26,6 +26,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import domain.entity.OrderState
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.BpAppBar
 import presentation.composable.BpEmptyScreen
@@ -34,12 +35,12 @@ import presentation.order.composable.OrderTextButton
 import presentation.order.composable.header
 import resources.Resources
 
-class OrderScreen :
+class OrderScreen(private val restaurantId: String) :
     BaseScreen<OrderScreenModel, OrderScreenUiState, OrderScreenUiEffect, OrderScreenInteractionListener>() {
 
     @Composable
     override fun Content() {
-        initScreen(getScreenModel())
+        initScreen(getScreenModel { parametersOf(restaurantId) })
     }
 
     override fun onEffect(effect: OrderScreenUiEffect, navigator: Navigator) {

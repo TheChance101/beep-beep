@@ -5,6 +5,8 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.statement.HttpResponse
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import presentation.base.NoInternetException
 import presentation.base.ServerSideException
 import presentation.base.UnknownErrorException
@@ -18,6 +20,24 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
     ): T {
         try {
             return client.method().body()
+        } catch (e: ClientRequestException) {
+            val errorMessages = e.response.body<BaseResponse<String>>().status.errorMessages
+            errorMessages?.let(::throwMatchingException)
+            throw UnknownErrorException(e.message)
+        } catch (e: ServerSideException) {
+            println("${e.message}")
+            throw NoInternetException()
+        } catch (e: Exception) {
+            println("${e.message}")
+            throw NoInternetException()
+        }
+    }
+
+    protected suspend inline fun <reified T> tryToExecuteWithFlow(
+        crossinline method: suspend HttpClient.() -> Unit
+    ): Flow<T> {
+        try {
+            return flow { client.method() }
         } catch (e: ClientRequestException) {
             val errorMessages = e.response.body<BaseResponse<String>>().status.errorMessages
             errorMessages?.let(::throwMatchingException)

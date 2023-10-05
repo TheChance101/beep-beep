@@ -7,32 +7,33 @@ import data.remote.model.OrderDto
 import domain.entity.Order
 import domain.gateway.remote.IOrderRemoteGateway
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.websocket.wss
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.websocket.Frame
+import io.ktor.websocket.readText
 import kotlinx.coroutines.flow.Flow
-
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.serialization.json.Json
 
 class OrderRemoteGateway(client: HttpClient) : IOrderRemoteGateway,
     BaseRemoteGateway(client = client) {
 
-    override suspend fun getCurrentOrders(restaurantId: String): Flow<Order>? {
-        return null
-        /*return tryToExecute<BaseResponse<List<OrderDto>>> {
+    override suspend fun getCurrentOrders(restaurantId: String): Flow<Order> {
+        return tryToExecuteWithFlow<OrderDto> {
+            wss("/orders/$restaurantId") {
+                incoming.receiveAsFlow().map { frame ->
 
-            try {
-                ws("/order/restaurant/$restaurantId") {
-                    //connect
-                    //getCurrentOrders + get active orders
+                    if (frame is Frame.Text) {
+                        val message = frame.readText()
+                        val orderParser = Json.decodeFromString<OrderDto>(message)
+                        orderParser.toEntity()
+                    }
                 }
-            } catch (e: Exception) {
-                //disconnect
-                //get active orders
             }
-
-            get("/orders/$restaurantId")
-            //todo add pagination
-        }.value.toOrderEntity()*/
+        }.map { it.toEntity() }
     }
 
     override suspend fun getActiveOrders(restaurantId: String): List<Order> {

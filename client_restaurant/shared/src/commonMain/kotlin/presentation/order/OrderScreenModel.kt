@@ -7,7 +7,10 @@ import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
-class OrderScreenModel(private val manageOrders: IManageOrderUseCase) :
+class OrderScreenModel(
+    private val restaurantId: String,
+    private val manageOrders: IManageOrderUseCase
+) :
     BaseScreenModel<OrderScreenUiState, OrderScreenUiEffect>(OrderScreenUiState()),
     OrderScreenInteractionListener {
 
@@ -45,9 +48,9 @@ class OrderScreenModel(private val manageOrders: IManageOrderUseCase) :
     private fun getPendingOrders() {
         tryToExecute(
             {
-                manageOrders.getCurrentOrders("")
-                    .filter { it.orderState == OrderState.PENDING }
-                    .map { it.toOrderUiState() }
+                listOf(manageOrders.getCurrentOrders(restaurantId).toOrderUiState())
+//                    .filter { it.orderState == OrderState.PENDING }
+//                    .map { it.toOrderUiState() }
             },
             ::onGetPendingOrdersSuccess,
             ::onGetOrdersError
@@ -57,9 +60,7 @@ class OrderScreenModel(private val manageOrders: IManageOrderUseCase) :
     private fun getInCookingOrders() {
         tryToExecute(
             {
-                manageOrders.getCurrentOrders("")
-                    .filter { it.orderState == OrderState.IN_COOKING }
-                    .map { it.toOrderUiState() }
+                listOf(manageOrders.getCurrentOrders(restaurantId).toOrderUiState())
             },
             ::onGetCookingSuccess,
             ::onGetOrdersError

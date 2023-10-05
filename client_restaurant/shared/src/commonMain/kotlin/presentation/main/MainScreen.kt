@@ -264,7 +264,7 @@ class MainScreen(private val restaurantId: String) :
         when (effect) {
             is MainScreenUIEffect.Back -> navigator.pop()
             is MainScreenUIEffect.NavigateToAllMeals -> navigator.push(MealsScreen(effect.restaurantId))
-            is MainScreenUIEffect.NavigateToOrders -> navigator.push(OrderScreen())
+            is MainScreenUIEffect.NavigateToOrders -> navigator.push(OrderScreen(effect.restaurantId))
             is MainScreenUIEffect.NavigateToRestaurantInfo -> navigator.push(
                 RestaurantInformationScreen(effect.restaurantId)
             )
