@@ -2,7 +2,7 @@ package domain.usecase
 
 import domain.entity.Meal
 import domain.entity.Offer
-import domain.gateway.IOffersGateway
+import domain.gateway.IRestaurantGateway
 
 interface IManageOffersUseCase {
     suspend fun getNewOffers(limit: Int = DEFAULT_OFFER_LIMIT): List<Offer>
@@ -16,16 +16,18 @@ interface IManageOffersUseCase {
     }
 }
 
-class ManageOffersUseCase(private val offersGateway: IOffersGateway) : IManageOffersUseCase {
+class ManageOffersUseCase(
+    private val restaurantRemoteGateway: IRestaurantGateway,
+) : IManageOffersUseCase {
     override suspend fun getNewOffers(limit: Int): List<Offer> {
-        return offersGateway.getNewOffers().take(limit)
+        return restaurantRemoteGateway.getNewOffers().take(limit)
     }
 
     override suspend fun getRestaurantMostOrders(restaurantId: String): List<Meal> {
-        return offersGateway.getMostOrdersMeal(restaurantId)
+        return restaurantRemoteGateway.getMostOrdersMeal(restaurantId)
     }
 
     override suspend fun getRestaurantSweets(restaurantId: String): List<Meal> {
-        return offersGateway.getSweets(restaurantId)
+        return restaurantRemoteGateway.getSweets(restaurantId)
     }
 }

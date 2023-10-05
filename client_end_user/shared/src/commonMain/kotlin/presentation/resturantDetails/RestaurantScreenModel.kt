@@ -23,7 +23,6 @@ class RestaurantScreenModel(
     RestaurantInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
 
-
     init {
         onCheckLogin()
         getRestaurantDetails("64fa315fb7c56f626e24d852")
@@ -148,7 +147,6 @@ class RestaurantScreenModel(
         } else {
             addToFavourite("64fa315fb7c56f626e24d852")
         }
-
     }
 
     override fun onBack() {

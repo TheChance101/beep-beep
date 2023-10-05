@@ -10,15 +10,15 @@ interface IGetOrderHistoryUseCase {
 }
 
 class GetOrderHistoryUseCase(
-    private val orderRemoteGateway: IOrderGateway
+    private val orderGateway: IOrderGateway
 ) : IGetOrderHistoryUseCase {
     override suspend fun getOrdersHistory(): List<Order> {
-        return orderRemoteGateway.getOrderHistoryGateway()
+        return orderGateway.getOrderHistoryGateway()
             .filter { it.orderStatus == FINISHED_ORDER }
     }
 
     override suspend fun getTripsHistory(): List<Trip> {
-        return orderRemoteGateway.getTripHistory()
+        return orderGateway.getTripHistory()
     }
 
     companion object {
