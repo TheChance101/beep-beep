@@ -96,4 +96,11 @@ data class ArabicEG(
     override val pleaseLogin: String = "سجل دخول يا اسطا وشوفك حسابك",
     override val invalidAddress: String = "عنوانك مش صح",
     override val yourAddress: String = "عنوانك",
-) : IStringResources
+    override val mostOrdered: String = "الأكثر طلباً",
+    override val sweets: String= "حلويات",
+    override val free: String= "مجاناً",
+    override val loginToAddToFavourite: String= "الرجاء تسجيل الدخول للاضافه",
+    override val addToCart: String= "أضف إلى العربة",
+    override val mealAddedToYourCart: String= " ضفنالك الوجبة إلى عربة التسوق تبعك ",
+
+    ) : IStringResources
