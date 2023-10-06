@@ -5,7 +5,8 @@ import domain.entity.Meal
 import domain.entity.Restaurant
 import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.IManageFavouriteUseCase
-import domain.usecase.IMangeRestaurantDetailsUseCase
+import domain.usecase.IManageOffersUseCase
+import domain.usecase.IMangeRestaurantUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -14,22 +15,24 @@ import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
 class RestaurantScreenModel(
-   private val mangeRestaurantDetails: IMangeRestaurantDetailsUseCase,
+    private val mangeRestaurantDetails: IMangeRestaurantUseCase,
     private val manageFavourite: IManageFavouriteUseCase,
-   private val manageAuthentication: IManageAuthenticationUseCase
-) : BaseScreenModel<RestaurantUIState, RestaurantUIEffect>(RestaurantUIState()),RestaurantInteractionListener {
+    private val manageAuthentication: IManageAuthenticationUseCase,
+    private val manageOffers: IManageOffersUseCase,
+) : BaseScreenModel<RestaurantUIState, RestaurantUIEffect>(RestaurantUIState()),
+    RestaurantInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
 
-
     init {
-        onCheckLogin ()
+        onCheckLogin()
         getRestaurantDetails("64fa315fb7c56f626e24d852")
         getMostOrders("64fa315fb7c56f626e24d852")
         getSweets("64fa315fb7c56f626e24d852")
     }
-    private fun onCheckLogin () {
+
+    private fun onCheckLogin() {
         tryToExecute(
-            { manageAuthentication.getAccessToken() } ,
+            { manageAuthentication.getAccessToken() },
             ::onCheckLoginSuccess,
             ::onCheckLoginError
         )
@@ -47,8 +50,8 @@ class RestaurantScreenModel(
         }
     }
 
-    private fun onCheckLoginError (errorState: ErrorState) {
-        updateState { it.copy( isLogin = false)}
+    private fun onCheckLoginError(errorState: ErrorState) {
+        updateState { it.copy(isLogin = false) }
     }
 
     private fun getRestaurantDetails(restaurantId: String) {
@@ -61,7 +64,7 @@ class RestaurantScreenModel(
 
     }
 
-    private  fun onGetRestaurantDetailsSuccess(restaurant: Restaurant) {
+    private fun onGetRestaurantDetailsSuccess(restaurant: Restaurant) {
         println("AYA2 $restaurant")
         updateState { it.copy(restaurantInfo = restaurant.toUIState()) }
     }
@@ -80,13 +83,14 @@ class RestaurantScreenModel(
         }
     }
 
-   private  fun addToFavourite(restaurantId: String) {
+    private fun addToFavourite(restaurantId: String) {
         tryToExecute(
             { manageFavourite.addRestaurantToFavorites(restaurantId) },
             ::onAddToFavouriteSuccess,
             ::onError
         )
     }
+
     private fun removeFromFavourite(restaurantId: String) {
         tryToExecute(
             { manageFavourite.removeRestaurantFromFavorites(restaurantId) },
@@ -99,6 +103,7 @@ class RestaurantScreenModel(
         println("AYA $isAdded")
         updateState { it.copy(isFavourite = isAdded) }
     }
+
     private fun onRemoveFromFavouriteSuccess(isAdded: Boolean) {
         println("AYA $isAdded")
         updateState { it.copy(isFavourite = false) }
@@ -107,7 +112,7 @@ class RestaurantScreenModel(
 
     private fun getMostOrders(restaurantId: String) {
         tryToExecute(
-            { mangeRestaurantDetails.getRestaurantMostOrders(restaurantId) },
+            { manageOffers.getRestaurantMostOrders(restaurantId) },
             ::onGetMostOrdersSuccess,
             ::onError
         )
@@ -116,24 +121,23 @@ class RestaurantScreenModel(
 
     private fun getSweets(restaurantId: String) {
         tryToExecute(
-            { mangeRestaurantDetails.getRestaurantSweets(restaurantId) },
+            { manageOffers.getRestaurantSweets(restaurantId) },
             ::onGetSweetsSuccess,
             ::onError
         )
     }
 
-    private  fun onGetMostOrdersSuccess(meals:List<Meal>) {
+    private fun onGetMostOrdersSuccess(meals: List<Meal>) {
         updateState { it -> it.copy(mostOrders = meals.map { it.toUIState() }) }
     }
 
-    private  fun onGetSweetsSuccess(meals:List<Meal>) {
+    private fun onGetSweetsSuccess(meals: List<Meal>) {
         updateState { it -> it.copy(sweets = meals.map { it.toUIState() }) }
     }
 
     private fun onError(errorState: ErrorState) {
         println("$errorState")
     }
-
 
 
     override fun onAddToFavourite() {
@@ -143,24 +147,25 @@ class RestaurantScreenModel(
         } else {
             addToFavourite("64fa315fb7c56f626e24d852")
         }
-
     }
 
     override fun onBack() {
         sendNewEffect(RestaurantUIEffect.onBack)
     }
 
-    override  fun onGoToDetails(mealId: String) {
+    override fun onGoToDetails(mealId: String) {
         tryToExecute(
             { mangeRestaurantDetails.getMealById(mealId) },
             ::onGetMealDetailsSuccess,
             ::onError
         )
     }
+
     private fun onGetMealDetailsSuccess(meal: Meal) {
-        updateState { it.copy(meal = meal.toUIState(),) }
+        updateState { it.copy(meal = meal.toUIState()) }
         onShowMealSheet()
     }
+
     override fun onDismissSheet() {
         state.value.sheetState.dismiss()
         coroutineScope.launch {
@@ -171,17 +176,17 @@ class RestaurantScreenModel(
     override fun onShowLoginSheet() {
         coroutineScope.launch {
             state.value.sheetState.dismiss()
-            updateState { it.copy( showLoginSheet = true) }
+            updateState { it.copy(showLoginSheet = true) }
             state.value.sheetState.show()
         }
     }
 
     override fun onAddToCart() {
 
-        if(state.value.isLogin) {
+        if (state.value.isLogin) {
             onDismissSheet()
             showToast()
-        }else{
+        } else {
             updateState { it.copy(showMealSheet = false, showLoginSheet = true) }
         }
     }
@@ -199,29 +204,36 @@ class RestaurantScreenModel(
     }
 
     override fun onIncressQuantity() {
-        updateState { it.copy(
-            meal = state.value.meal.copy(
-                quantity = state.value.meal.quantity + 1,
-                price = state.value.meal.price * state.value.meal.quantity
+        updateState {
+            it.copy(
+                meal = state.value.meal.copy(
+                    quantity = state.value.meal.quantity + 1,
+                    price = state.value.meal.price * state.value.meal.quantity
+                )
             )
-        ) }
+        }
     }
+
     override fun onDecressQuantity() {
-        if(state.value.meal.quantity == 1) return
-        updateState { it.copy(
-            meal = state.value.meal.copy(
-                quantity = state.value.meal.quantity - 1,
-                price = state.value.meal.price * state.value.meal.quantity
+        if (state.value.meal.quantity == 1) return
+        updateState {
+            it.copy(
+                meal = state.value.meal.copy(
+                    quantity = state.value.meal.quantity - 1,
+                    price = state.value.meal.price * state.value.meal.quantity
+                )
             )
-        ) }
+        }
     }
+
     private suspend fun delayAndChangePermissionSheetState(show: Boolean) {
         delay(300)
-        updateState { it.copy(showLoginSheet = show,showMealSheet=show) }
+        updateState { it.copy(showLoginSheet = show, showMealSheet = show) }
     }
+
     private fun showToast() {
         viewModelScope.launch {
-            updateState { it.copy( showToast = true) }
+            updateState { it.copy(showToast = true) }
             delay(2000)
             updateState { it.copy(showToast = false) }
             delay(300)

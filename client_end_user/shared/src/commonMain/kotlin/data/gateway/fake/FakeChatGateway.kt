@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.sample
 import kotlin.random.Random
 
-class FakeChatRemoteGateway : IChatGateway {
+class FakeChatGateway : IChatGateway {
     @OptIn(FlowPreview::class)
     override fun getTickets(): Flow<Ticket> {
         return tickets.sample(1500)
@@ -73,6 +73,5 @@ class FakeChatRemoteGateway : IChatGateway {
     )
 
     private val messages = MutableStateFlow(listOf<MessageDto>())
-
     private var index = 0
 }
