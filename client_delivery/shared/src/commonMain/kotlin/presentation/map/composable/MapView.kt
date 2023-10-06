@@ -36,13 +36,11 @@ fun MapView(
 
     LaunchedEffect(key1 = currentLocation) {
         destination?.let { location ->
-            state.evaluateJavascript(" clearMap()", null)
-
+            state.evaluateJavascript("clearDirections()", null)
             state.evaluateJavascript(
                 "getDirections(${currentLocation.latitude},${currentLocation.longitude},${location.latitude},${location.longitude})",
                 null
             )
-            state.evaluateJavascript("clearDirections()", null)
         }
     }
 
