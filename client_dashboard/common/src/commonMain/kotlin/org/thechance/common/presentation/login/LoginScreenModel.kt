@@ -19,58 +19,84 @@ class LoginScreenModel(
     }
 
     override fun onLoginClicked() {
-        val currentState = mutableState.value
-        clearErrorState()
-        tryToExecute(
-            {
-                login.loginUser(
-                    username = currentState.username,
-                    password = currentState.password,
-                )
-            },
-            onSuccess = { onLoginSuccess() },
-            onError = ::onError
-        )
+        clearState()
+        updateState { it.copy(isLoading = true) }
+        mutableState.value.apply {
+            tryToExecute(
+                { login.loginUser(username = username, password = password) },
+                { onLoginSuccess() },
+                ::onError
+            )
+        }
     }
 
     private fun onLoginSuccess() {
-        updateState { it.copy(isLoading = false, error = null) }
+        updateState { it.copy(isLoading = false) }
         sendNewEffect(LoginUIEffect.LoginSuccess)
     }
 
     private fun onError(error: ErrorState) {
-        updateState { it.copy(isLoading = false, error = error) }
+        updateState { it.copy(isLoading = false) }
         handleErrorState(error)
     }
 
     private fun handleErrorState(error: ErrorState) {
-        updateState { it.copy(isLoading = false) }
         when (error) {
             is ErrorState.MultipleErrors -> {
                 val errorStates = error.errors
                 updateState {
                     it.copy(
-                        isPasswordError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidPassword>()?.let {error ->
-                            ErrorWrapper(error.errorMessage, true)
-                        },
-                        isUserError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidUserName>()?.let {error ->
-                            ErrorWrapper(error.errorMessage, true)
-                        }
+                        isPasswordError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidPassword>()
+                            ?.let { error ->
+                                ErrorWrapper(error.errorMessage, true)
+                            },
+                        isUserError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidUserName>()
+                            ?.let { error ->
+                                ErrorWrapper(error.errorMessage, true)
+                            },
+                    )
+                }
+                updateState {
+                    it.copy(
+                        isSnackBarVisible = true,
+                        snackBarTitle = errorStates.firstInstanceOfOrNull<ErrorState.InvalidPermission>()?.errorMessage
                     )
                 }
             }
-            else -> {}
 
+            ErrorState.NoConnection -> {
+                updateState {
+                    it.copy(
+                        isSnackBarVisible = true,
+                        snackBarTitle = null,
+                    )
+                }
+            }
+
+            else -> {
+                updateState { it.copy(isSnackBarVisible = true, snackBarTitle = null) }
+            }
         }
     }
 
-    private fun clearErrorState() =
+    override fun onSnackBarDismiss() {
         updateState {
             it.copy(
-                error = null,
-                isLoading = false,
-                isPasswordError = ErrorWrapper(),
-                isUserError = ErrorWrapper()
+                isSnackBarVisible = false,
             )
         }
+    }
+
+    private fun clearState() {
+        updateState {
+            it.copy(
+                isLoading = false,
+                isPasswordError = ErrorWrapper(),
+                isUserError = ErrorWrapper(),
+                isSnackBarVisible = false,
+                snackBarTitle = null,
+            )
+        }
+    }
+
 }

@@ -14,6 +14,8 @@ interface TaxiInteractionListener : BaseInteractionListener, FilterMenuListener,
     fun onSearchInputChange(searchQuery: String)
 
     fun onAddNewTaxiClicked()
+
+    fun onRetry()
 }
 
 interface TaxiDialogListener {

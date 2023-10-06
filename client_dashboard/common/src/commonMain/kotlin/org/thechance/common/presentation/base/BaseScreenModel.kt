@@ -132,8 +132,9 @@ abstract class BaseScreenModel<S, E>(initialState: S) : StateScreenModel<S>(init
                 is BpError.RestaurantNotFound -> ErrorState.RestaurantNotFound(error.message)
                 is BpError.TaxiNotFound -> ErrorState.TaxiNotFound(error.message)
                 is BpError.SeatOutOfRange -> ErrorState.SeatOutOfRange(error.message)
-                is BpError.UnknownError -> ErrorState.UnKnownError
                 is BpError.UsernameCannotBeBlank -> ErrorState.UsernameCannotBeBlank(error.message)
+                is BpError.InvalidPermission -> ErrorState.InvalidPermission(error.message)
+                is BpError.UnknownError -> ErrorState.UnKnownError
             }
             errorStates.add(errorState)
         }

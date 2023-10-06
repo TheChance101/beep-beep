@@ -4,9 +4,9 @@ open class BeepBeepException(message: String) : Exception(message)
 
 class UnknownErrorException(message: String) : BeepBeepException(message)
 
-class NotFoundException(message: String) : BeepBeepException(message)
+class NoInternetException(message: String) : BeepBeepException(message)
 
-class NoInternetException : BeepBeepException("No internet connection")
+class NotFoundException(message: String) : BeepBeepException(message)
 
 class MultipleErrorException(val errors: List<BpError>) : BeepBeepException("Multiple exceptions occurred")
 
@@ -21,6 +21,7 @@ sealed interface BpError{
     data class InvalidPassword(val message: String) : BpError
 
     data class InvalidUserName(val message: String) : BpError
+    data class InvalidPermission(val message: String) : BpError
 
     data class UsernameCannotBeBlank(val message: String) : BpError
 

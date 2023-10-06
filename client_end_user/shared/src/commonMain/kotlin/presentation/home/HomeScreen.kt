@@ -1,5 +1,6 @@
 package presentation.home
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,22 +34,27 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
+import com.beepbeep.designSystem.ui.composable.BpAppBar
+import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
+import presentation.cart.CartScreen
 import presentation.composable.BpImageLoader
 import presentation.composable.ImageSlider
 import presentation.composable.ItemSection
 import presentation.composable.SectionHeader
 import presentation.composable.modifier.roundedBorderShape
+import presentation.cuisines.CuisinesScreen
 import presentation.home.composable.CartCard
 import presentation.home.composable.ChatSupportCard
 import presentation.home.composable.CuisineCard
 import presentation.home.composable.OrderCard
-import presentation.search.SearchScreen
 import resources.Resources
+import util.root
 
 class HomeScreen :
     BaseScreen<HomeScreenModel, HomeScreenUiState, HomeScreenUiEffect, HomeScreenInteractionListener>() {
@@ -60,17 +67,21 @@ class HomeScreen :
     override fun onEffect(effect: HomeScreenUiEffect, navigator: Navigator) {
         when (effect) {
             is HomeScreenUiEffect.NavigateToCuisineDetails -> println("Cuisine id ${effect.cuisineId}")
-            is HomeScreenUiEffect.NavigateToCuisines -> println("Navigate to Cuisine Screen")
+            is HomeScreenUiEffect.NavigateToCuisines -> navigator.root?.push(CuisinesScreen())
             is HomeScreenUiEffect.NavigateToChatSupport -> println("Navigate to Chat support screen")
             is HomeScreenUiEffect.NavigateToOrderTaxi -> println("Navigate to Order Taxi screen")
             is HomeScreenUiEffect.ScrollDownToRecommendedRestaurants -> println("Scroll down home screen")
             is HomeScreenUiEffect.NavigateToOfferItem -> println("Navigate to offer item details ${effect.offerId}")
             is HomeScreenUiEffect.NavigateToSearch -> println("Navigate to Search Screen")
             is HomeScreenUiEffect.NavigateToOrderDetails ->  println("Navigate to order details ${effect.orderId}")
+            is HomeScreenUiEffect.NavigateToCart -> navigator.root?.push(CartScreen())
+            is HomeScreenUiEffect.NavigateLoginScreen -> navigator.root?.push(LoginScreen())
         }
     }
 
-    @OptIn(ExperimentalResourceApi::class)
+    @OptIn(ExperimentalResourceApi::class, ExperimentalFoundationApi::class,
+        ExperimentalMaterial3Api::class
+    )
     @Composable
     override fun onRender(state: HomeScreenUiState, listener: HomeScreenInteractionListener) {
         val painters = mutableListOf<Painter>()
@@ -80,8 +91,30 @@ class HomeScreen :
         LazyColumn(
             modifier = Modifier.fillMaxSize().background(Theme.colors.background),
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(vertical = 16.dp)
+            contentPadding = PaddingValues(bottom = 16.dp)
         ) {
+            stickyHeader {
+                BpAppBar(
+                    title = if (state.user.isLogin) {
+                        Resources.strings.welcome + " ${state.user.username}"
+                    } else {
+                        Resources.strings.loginWelcomeMessage
+                    },
+                    actions = {
+                        if (state.user.isLogin) {
+                            Wallet(value = state.user.currency + state.user.wallet)
+                        } else {
+                            BpButton(
+                                modifier = Modifier.heightIn(max = 32.dp).padding(end = 16.dp),
+                                textPadding = PaddingValues(horizontal = 16.dp),
+                                title = Resources.strings.login,
+                                onClick = listener::onLoginClicked
+                            )
+                        }
+                    }
+                )
+            }
+
             item {
                 ImageSlider(
                     modifier = Modifier.padding(horizontal = 16.dp),
@@ -103,7 +136,7 @@ class HomeScreen :
             }
 
             item {
-                CartCard(onClick = {})
+                CartCard(onClick = { listener.onClickCartCard() })
             }
 
             if (state.hasProgress) {
@@ -323,6 +356,25 @@ class HomeScreen :
                     }
                 }
             }
+        }
+    }
+
+    @Composable
+    private fun Wallet(
+        value: String,
+        modifier: Modifier = Modifier,
+    ) {
+        Column(modifier = modifier.padding(end = 16.dp)) {
+            Text(
+                Resources.strings.wallet,
+                style = Theme.typography.body,
+                color = Theme.colors.contentSecondary
+            )
+            Text(
+                value,
+                style = Theme.typography.title,
+                color = Theme.colors.primary
+            )
         }
     }
 }

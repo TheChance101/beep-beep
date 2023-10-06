@@ -1,6 +1,5 @@
 package presentation.meals
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,7 +10,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
@@ -30,6 +28,7 @@ import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.BpAppBar
 import presentation.composable.MealCard
+import presentation.composable.ShimmerItemList
 import presentation.mealManagement.MealScreen
 import presentation.mealManagement.ScreenMode
 import resources.Resources.strings
@@ -46,9 +45,9 @@ class MealsScreen(private val restaurantId: String) :
         when (effect) {
             is MealsScreenUIEffect.Back -> navigator.pop()
             is MealsScreenUIEffect.NavigateToMealDetails ->
-                navigator.push(MealScreen(ScreenMode.EDIT, effect.mealId))
+                navigator.push(MealScreen(ScreenMode.EDIT, effect.mealId,restaurantId = restaurantId))
 
-            is MealsScreenUIEffect.NavigateToAddMeal -> navigator.push(MealScreen(ScreenMode.CREATION))
+            is MealsScreenUIEffect.NavigateToAddMeal -> navigator.push(MealScreen(ScreenMode.CREATION,restaurantId =effect.restaurantId))
         }
     }
 
@@ -100,12 +99,6 @@ class MealsScreen(private val restaurantId: String) :
                         )
                     }
                 }
-                AnimatedVisibility(visible = state.isLoading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        color = colors.primary,
-                    )
-                }
                 LazyVerticalGrid(
                     contentPadding = PaddingValues(dimens.space16),
                     columns = GridCells.Adaptive(150.dp),
@@ -114,9 +107,16 @@ class MealsScreen(private val restaurantId: String) :
 
                     ) {
                     items(state.meals.size) { index ->
-                        MealCard(onClick = {
-                            listener.onClickMeal(state.meals[index].id)
-                        }, meal = state.meals[index])
+                       ShimmerItemList(
+                           isLoading = state.isLoading,
+                           cardHeight = 100.dp,
+                           cardWidth = 150.dp,
+                           contentAfterLoading = {
+                               MealCard(onClick = {
+                                   listener.onClickMeal(state.meals[index].id)
+                               }, meal = state.meals[index])
+                           }
+                       )
                     }
                 }
             }

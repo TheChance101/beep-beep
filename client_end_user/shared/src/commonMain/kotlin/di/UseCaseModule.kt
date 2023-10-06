@@ -10,6 +10,8 @@ import domain.usecase.IGetNewOffersUserCase
 import domain.usecase.IGetOrderHistoryUseCase
 import domain.usecase.IInProgressTrackerUseCase
 import domain.usecase.IManageAuthenticationUseCase
+import domain.usecase.IManageCartUseCase
+import domain.usecase.ManageCartUseCase
 import domain.usecase.IManageNotificationsUseCase
 import domain.usecase.IManageUserUseCase
 import domain.usecase.IMangeLanguageUseCase
@@ -38,4 +40,5 @@ val useCaseModule = module {
     singleOf(::MangeLanguageUseCase) { bind<IMangeLanguageUseCase>() }
     singleOf(::ManageNotificationsUseCase) { bind<IManageNotificationsUseCase>() }
     singleOf(::GetOrderHistoryUseCase) { bind<IGetOrderHistoryUseCase>() }
+    singleOf(::ManageCartUseCase) { bind<IManageCartUseCase>() }
 }

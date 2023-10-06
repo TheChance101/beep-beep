@@ -1,6 +1,5 @@
 package presentation.composable
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -21,42 +20,40 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
-import presentation.PreferredFood.FoodUIState
+import presentation.cuisines.CuisineUiState
 
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun PreferredFoodCard(
-    onClick: () -> Unit,
-    state:FoodUIState,
-    modifier: Modifier= Modifier
+    onClick: (String) -> Unit,
+    state: CuisineUiState,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier=  modifier
+        modifier = modifier
             .border(width = 1.dp, color = Theme.colors.divider, shape = MaterialTheme.shapes.medium)
             .height(112.dp)
             .background(color = Theme.colors.surface, shape = MaterialTheme.shapes.medium)
-            .clickable (
+            .clickable(
                 indication = null,
-                interactionSource = remember { MutableInteractionSource() } ,
-            ){
-                onClick()
-            },
-        horizontalAlignment =  Alignment.Start,
+                interactionSource = remember { MutableInteractionSource() },
+            ) { onClick(state.cuisineId) },
+        horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Bottom
-    ){
+    ) {
         Text(
-            text = state.name,
-            color= Theme.colors.contentSecondary,
+            text = state.cuisineName,
+            color = Theme.colors.contentSecondary,
             style = Theme.typography.title,
             modifier = Modifier.padding(start = 12.dp, top = 12.dp, bottom = 4.dp)
         )
-        Image(
-            painter = painterResource(state.image),
-            contentDescription = "${state.name} Picture",
+        BpImageLoader(
+            imageUrl = state.cuisineImageUrl,
+            contentDescription = "${state.cuisineName} Picture",
             contentScale = ContentScale.Crop,
-            modifier = Modifier.size(88.dp).clip(shape = MaterialTheme.shapes.medium).align(Alignment.End)
+            modifier = Modifier.size(88.dp).clip(shape = MaterialTheme.shapes.medium)
+                .align(Alignment.End)
         )
 
     }

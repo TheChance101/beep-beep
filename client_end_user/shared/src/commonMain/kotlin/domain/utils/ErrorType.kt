@@ -14,6 +14,7 @@ sealed class AuthorizationException(val errorMessage: String = "") : Exception()
     data object InvalidFullNameException : AuthorizationException()
     data object InvalidEmailException : AuthorizationException()
     data object InvalidPhoneException : AuthorizationException()
+    data object InvalidAddressException : AuthorizationException()
 
     class UserNotFoundException(message: String) : AuthorizationException(message)
     class InvalidCredentialsException(message: String) : AuthorizationException(message)

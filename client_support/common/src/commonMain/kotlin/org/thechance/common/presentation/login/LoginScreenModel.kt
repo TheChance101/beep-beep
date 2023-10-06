@@ -18,6 +18,7 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
     override fun onLoginClicked() {
         val currentState = mutableState.value
         clearErrorState()
+        updateState { it.copy(isLoading = true) }
         tryToExecute(
             {
                 loginUserUseCase.loginUser(

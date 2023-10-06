@@ -1,10 +1,12 @@
 package org.thechance.common.domain.usecase
 
+import org.thechance.common.domain.entity.Country
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Permission
 import org.thechance.common.domain.entity.User
 import org.thechance.common.domain.getway.IUserLocalGateway
 import org.thechance.common.domain.getway.IUsersGateway
+import org.thechance.common.presentation.users.UserScreenUiState
 
 interface IUsersManagementUseCase {
 
@@ -13,7 +15,7 @@ interface IUsersManagementUseCase {
     suspend fun getUsers(
         query: String? = null,
         byPermissions: List<Permission>,
-        byCountries: List<String>,
+        byCountries: List<Country>,
         page: Int,
         numberOfUsers: Int
     ): DataWrapper<User>
@@ -33,7 +35,7 @@ class UsersManagementUseCase(
     override suspend fun getUsers(
         query: String?,
         byPermissions: List<Permission>,
-        byCountries: List<String>,
+        byCountries: List<Country>,
         page: Int,
         numberOfUsers: Int,
     ): DataWrapper<User> {

@@ -38,6 +38,7 @@ fun Restaurant.toDto() = RestaurantDto(
 fun Restaurant.toDetailsDto() = RestaurantDetailsDto(
     id = id,
     name = name,
+    ownerId = ownerId,
     ownerUserName = ownerUserName,
     description = description,
     priceLevel = priceLevel,

@@ -15,8 +15,8 @@ import androidx.compose.ui.Modifier
 fun MapCardAnimation(
     modifier: Modifier = Modifier,
     visible: Boolean,
-    enter: EnterTransition = slideInVertically(tween(1500)) { it } + fadeIn(),
-    exit: ExitTransition = slideOutVertically(tween(1000)) { it } + fadeOut(),
+    enter: EnterTransition = slideInVertically(tween(500)) { it } + fadeIn(),
+    exit: ExitTransition = slideOutVertically(tween(300)) { it } + fadeOut(),
     content: @Composable () -> Unit,
 ) {
     AnimatedVisibility(
