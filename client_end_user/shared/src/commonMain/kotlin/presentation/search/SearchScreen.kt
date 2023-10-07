@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
@@ -74,7 +75,8 @@ class SearchScreen :
                     onValueChange = listener::onSearchInputChanged,
                     onClick = {},
                     leadingPainter = painterResource(Resources.images.searchOutlined),
-                    modifier = Modifier.background(Theme.colors.background).padding(horizontal = 16.dp)
+                    modifier = Modifier.background(Theme.colors.background)
+                        .padding(horizontal = 16.dp),
                 )
             }
 
@@ -104,9 +106,9 @@ class SearchScreen :
 
     @Composable
     private fun Restaurant(
-        modifier: Modifier = Modifier,
         restaurant: RestaurantUiState,
-        onClick: (String) -> Unit
+        onClick: (String) -> Unit,
+        modifier: Modifier = Modifier,
     ) {
         Column(
             modifier = modifier.widthIn(max = 64.dp).noRippleEffect { onClick(restaurant.id) },
@@ -125,7 +127,8 @@ class SearchScreen :
                 style = Theme.typography.body,
                 color = Theme.colors.contentPrimary,
                 maxLines = 2,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }
@@ -133,12 +136,13 @@ class SearchScreen :
 
     @Composable
     private fun MealCard(
-        modifier: Modifier = Modifier,
         meal: MealUiState,
-        onClick: (String) -> Unit
+        onClick: (String) -> Unit,
+        modifier: Modifier = Modifier,
     ) {
         Row(
-            modifier = modifier.fillMaxWidth().noRippleEffect { onClick(meal.id) }.padding(horizontal = 16.dp),
+            modifier = modifier.fillMaxWidth().noRippleEffect { onClick(meal.id) }
+                .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
@@ -160,6 +164,7 @@ class SearchScreen :
                         text = meal.name,
                         style = Theme.typography.title,
                         color = Theme.colors.contentPrimary,
+                        overflow = TextOverflow.Ellipsis,
                         maxLines = 1
                     )
 
