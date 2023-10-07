@@ -16,6 +16,7 @@ class SyrianArabicLocalizedMessages() : LocalizedMessages {
     override val usernameCannotBeBlank: String = "اسم المستخدم ما يقدر يكون فاضي"
     override val passwordCannotBeBlank: String = "الرقم السري ما يقدر يكون فاضي"
     override val invalidEmail: String = "الإيميل مالو صحيح"
+    override val invalidPhone: String = "الموبايل مش صحيح"
     override val notFound: String = "ما لقيناه"
     override val invalidCredentials: String = "بيانات الاعتماد مالا صحيحة"
     override val userCreatedSuccessfully: String = "المستخدم صار عنا 🎉"

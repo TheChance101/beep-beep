@@ -16,6 +16,7 @@ class ArabicLocalizedMessages() : LocalizedMessages {
     override val usernameCannotBeBlank: String = "اسم المستخدم لا يجب ان يكون فارغ"
     override val passwordCannotBeBlank: String = "كلمه المرور لا يجب ان تكون فارغة"
     override val invalidEmail: String = "ايميل غير صالح"
+    override val invalidPhone: String = "رقم الهاتف غير صحيح"
     override val notFound: String = "غير موجود"
     override val invalidCredentials: String = "البيانات خاطئة"
     override val userCreatedSuccessfully: String = ""

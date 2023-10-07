@@ -10,7 +10,7 @@ import org.koin.core.scope.Scope
 fun Scope.authorizationIntercept(client: HttpClient) {
 
     val localConfigurationGateway: LocalConfigurationGateway by inject()
-    val userRemoteGateway: UserRemoteRemoteGateway by inject()
+    val userRemoteGateway: UserGateway by inject()
 
     client.plugin(HttpSend).intercept { request ->
 
@@ -33,7 +33,4 @@ fun Scope.authorizationIntercept(client: HttpClient) {
             originalCall
         }
     }
-
-
-
 }
