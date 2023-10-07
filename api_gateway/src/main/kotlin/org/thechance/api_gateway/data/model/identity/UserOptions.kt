@@ -1,4 +1,4 @@
-package org.thechance.api_gateway.data.model
+package org.thechance.api_gateway.data.model.identity
 
 import io.ktor.http.*
 import kotlinx.serialization.Serializable

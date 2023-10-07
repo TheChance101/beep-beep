@@ -18,10 +18,6 @@ interface IDataBaseGateway {
 
     suspend fun getUserAddresses(userId: String): List<Address>
 
-    suspend fun getUserCountry(userId: String): String
-
-    suspend fun updateUserCountry(userId: String, country: String): Boolean
-
     //endregion
 
     // region: user
@@ -29,11 +25,9 @@ interface IDataBaseGateway {
 
     suspend fun getUsers(options: UserOptions): List<UserManagement>
 
-    suspend fun createUser(saltedHash: SaltedHash, fullName: String, username: String, email: String): UserManagement
+    suspend fun createUser(saltedHash: SaltedHash, country: String, user: UserInfo): UserManagement
 
-    suspend fun updateUser(
-        id: String, saltedHash: SaltedHash?, fullName: String?, username: String?, email: String?
-    ): Boolean
+    suspend fun updateUser(userId: String, fullName: String?, phone: String?): UserManagement
 
     suspend fun deleteUser(id: String): Boolean
 
@@ -60,13 +54,15 @@ interface IDataBaseGateway {
     // endregion: user permission management
 
     // region: Wallet
+    suspend fun createWallet(userId: String, currency: String): Wallet
+
     suspend fun subtractFromWallet(userId: String, amount: Double): Wallet
 
     suspend fun getWalletBalance(userId: String): Wallet
 
     suspend fun addToWallet(userId: String, amount: Double): Wallet
 
-    suspend fun updateWalletCurrency(userId:String, currency: String)
+    suspend fun updateWalletCurrency(userId: String, currency: String)
 
     // endregion
 
@@ -82,9 +78,4 @@ interface IDataBaseGateway {
     suspend fun getUserByUsername(username: String): UserManagement
 
     suspend fun getLastRegisterUser(limit: Int): List<UserManagement>
-
-    suspend fun searchUsers(searchTerm: String, filterByPermission: List<Int>): List<UserManagement>
-
-    suspend fun updateUserProfile(id: String, fullName: String?, ): Boolean
-
 }

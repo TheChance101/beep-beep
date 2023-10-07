@@ -34,6 +34,9 @@ class ErrorHandler(
         if (errorCodes.contains(1008))
             errors[1008] = localizedMessages.invalidEmail
 
+        if (errorCodes.contains(1009))
+            errors[1009] = localizedMessages.invalidPhone
+
         if (errorCodes.contains(1013))
             errors[1013] = localizedMessages.invalidCredentials
 

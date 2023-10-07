@@ -16,6 +16,7 @@ class EnglishLocalizedMessages() : LocalizedMessages {
     override val usernameCannotBeBlank: String = "Username cannot be blank"
     override val passwordCannotBeBlank: String = "Password cannot be blank"
     override val invalidEmail: String = "Invalid email"
+    override val invalidPhone: String = "Invalid phone"
     override val notFound: String = "Not found"
     override val invalidCredentials: String = "Invalid credentials"
     override val userCreatedSuccessfully: String = "User created successfully 🎉"
