@@ -9,6 +9,7 @@ data class UserManagementDto(
     val fullName: String,
     val username: String,
     val email: String,
+    val phone: String,
     val country: String,
-    val permission : Int = Role.END_USER
+    val permission: Int = Role.END_USER
 )

@@ -2,16 +2,16 @@ package presentation.preferredFood
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Cuisine
-import domain.usecase.GetCuisinesUseCase
-import domain.usecase.IMangePreferredFoodUseCase
+import domain.usecase.IMangeRestaurantUseCase
+import domain.usecase.IMangeUserPreferenceUseCase
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 import presentation.cuisines.toCuisineUiState
 
 class PreferredFoodScreenModel(
-    private val mangePreferredFood: IMangePreferredFoodUseCase,
-    private val getCuisinesUseCase: GetCuisinesUseCase
+    private val mangePreferredFood: IMangeUserPreferenceUseCase,
+    private val manageRestaurants: IMangeRestaurantUseCase
 ) : BaseScreenModel<PreferredFoodUIState, PreferredFoodUIEffect>(PreferredFoodUIState()),
     PreferredFoodInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
@@ -23,7 +23,7 @@ class PreferredFoodScreenModel(
 
     private fun getData() {
         tryToExecute(
-            getCuisinesUseCase::getCuisines,
+            manageRestaurants::getCuisines,
             ::onGetCuisinesSuccess,
             ::onError
         )
