@@ -1,16 +1,14 @@
 package domain.usecase
 
 import domain.entity.Explore
-import domain.entity.Meal
-import domain.entity.Restaurant
-import domain.gateway.IRestaurantRemoteGateway
+import domain.gateway.IRestaurantGateway
 
 interface ISearchUseCase {
     suspend fun searchMealAndRestaurant(query: String): Explore
 }
 
 
-class SearchUseCase(private val restaurantRemoteGateway: IRestaurantRemoteGateway) :
+class SearchUseCase(private val restaurantRemoteGateway: IRestaurantGateway) :
     ISearchUseCase {
     override suspend fun searchMealAndRestaurant(query: String): Explore {
         return restaurantRemoteGateway.search(query.trim())

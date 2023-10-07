@@ -4,10 +4,12 @@ import data.remote.mapper.toCuisineEntity
 import data.remote.mapper.toEntity
 import data.remote.model.CuisineDto
 import data.remote.model.MealDto
+import data.remote.model.MealRestaurantDto
 import data.remote.model.OfferDto
 import data.remote.model.RestaurantDto
 import data.remote.model.ServerResponse
 import domain.entity.Cuisine
+import domain.entity.Explore
 import domain.entity.InProgressWrapper
 import domain.entity.Location
 import domain.entity.Meal
@@ -66,6 +68,13 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client), IRes
         // todo: implement this when the backend is ready
         return meals.map { it.toEntity() }
     }
+
+    override suspend fun search(query: String): Explore {
+        return tryToExecute<ServerResponse<MealRestaurantDto>> {
+            get("/restaurants/search?query=$query")
+        }.value?.toEntity() ?: throw GeneralException.NotFoundException
+    }
+
 
     // all the following methods are fake data and should be removed when the backend is ready
     private fun getActiveRide(): List<Trip> {

@@ -2,15 +2,11 @@ package presentation.search
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Explore
-import domain.entity.InProgressWrapper
-import domain.usecase.IGetCuisinesUseCase
 import domain.usecase.ISearchUseCase
-import io.realm.kotlin.query.RealmElementQuery
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
-import presentation.home.HomeScreenUiEffect
 
 class SearchScreenModel(private val search: ISearchUseCase) :
     BaseScreenModel<SearchUiState, SearchUiEffect>(SearchUiState()), SearchInteractionListener {
