@@ -9,7 +9,7 @@ data class TripDto(
     @SerialName("taxiId") val taxiId: String? = null,
     @SerialName("taxiPlateNumber") val taxiPlateNumber: String? = null,
     @SerialName("driverId") val driverId: String? = null,
-    @SerialName("driverName") val driverName: String? = null,
+    @SerialName("taxiDriverName") val taxiDriverName: String? = null,
     @SerialName("clientId") val clientId: String,
     @SerialName("startPoint") val startPoint: LocationDto? = null,
     @SerialName("destination") val destination: LocationDto? = null,

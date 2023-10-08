@@ -5,9 +5,10 @@ import domain.entity.CartMeal
 
 data class CartUiState(
     val meals: List<CartMealUiState> = emptyList(),
-    val totalPrice: Double = 0.0,
     val currency: String = ""
-)
+){
+    val totalPrice: Double get() = meals.sumOf { it.price * it.count }
+}
 
 data class CartMealUiState(
     val id: String = "",
@@ -22,7 +23,6 @@ data class CartMealUiState(
 fun Cart.toUiState(): CartUiState {
     return CartUiState(
         meals = meals.map { it.toUiState() },
-        totalPrice = totalPrice,
         currency = currency
     )
 }

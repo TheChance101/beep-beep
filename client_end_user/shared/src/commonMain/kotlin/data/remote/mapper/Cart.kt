@@ -15,12 +15,12 @@ fun CartDto.toEntity(): Cart {
 
 fun CartMealDto.toEntity(): CartMeal {
     return CartMeal(
-        id = id ?: "",
+        id = mealId ?: "",
         name = name ?: "",
         price = price ?: 0.0,
         currency = currency ?: "",
         restaurantName = restaurantName ?: "",
         image = image ?: "",
-        count = count ?: 0
+        count = quantity?.toLong() ?: 0
     )
 }

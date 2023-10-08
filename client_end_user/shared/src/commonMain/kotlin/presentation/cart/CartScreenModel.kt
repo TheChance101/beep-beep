@@ -17,7 +17,7 @@ class CartScreenModel(private val cartManagement: ManageCartUseCase) :
 
     private fun getCartMeals() {
         tryToExecute(
-            { cartManagement.getAllCartMeals() },
+            cartManagement::getAllCartMeals,
             ::onGetCartMealsSuccess,
             ::onError
         )
@@ -62,7 +62,6 @@ class CartScreenModel(private val cartManagement: ManageCartUseCase) :
         updateState {
             it.copy(
                 meals = cartUiState.meals,
-                totalPrice = cartUiState.totalPrice,
                 currency = cartUiState.currency
             )
         }

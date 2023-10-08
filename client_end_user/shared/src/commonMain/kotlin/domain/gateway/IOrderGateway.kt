@@ -5,7 +5,7 @@ import domain.entity.Order
 import domain.entity.Trip
 
 interface IOrderGateway {
-    suspend fun getTripHistory(): List<Trip>
-    suspend fun getOrderHistoryGateway(): List<Order>
+    suspend fun getTripHistory(): List<Trip> // TODO: need to handle pagination
+    suspend fun getOrderHistoryGateway(): List<Order> // TODO: need to handle pagination
     suspend fun getAllCartMeals(): Cart
 }
