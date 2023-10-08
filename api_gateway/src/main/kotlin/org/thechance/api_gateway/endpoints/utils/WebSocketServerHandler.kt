@@ -3,6 +3,7 @@ package org.thechance.api_gateway.endpoints.utils
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import org.koin.core.annotation.Single
@@ -18,6 +19,9 @@ class WebSocketServerHandler {
         try {
             values.flowOn(Dispatchers.IO).collect { value -> session.sendSerialized(value) }
         } catch (e: LocalizedMessageException) {
+            session.send(e.localizedMessage)
+            session.close()
+        } catch (e: ClosedReceiveChannelException) {
             session.send(e.localizedMessage)
             session.close()
         }
