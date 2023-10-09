@@ -11,7 +11,7 @@ import org.thechance.service_taxi.domain.exceptions.CantBeNullException
 
 fun TripDto.toEntity(): Trip {
     return Trip(
-        id = if (id.isNullOrBlank()) ObjectId().toHexString() else ObjectId(id).toHexString(),
+        id = ObjectId().toString(),
         taxiId = taxiId,
         driverId = driverId,
         clientId = clientId ?: throw CantBeNullException,
@@ -102,6 +102,7 @@ fun List<TripCollection>.toEntity(): List<Trip> = map(TripCollection::toEntity)
 
 fun Trip.toCollection(): TripCollection {
     return TripCollection(
+        id = ObjectId(id),
         taxiId = if (taxiId != null) ObjectId(taxiId) else null,
         driverId = if (driverId != null) ObjectId(driverId) else null,
         clientId = ObjectId(clientId),
