@@ -18,7 +18,8 @@ data class TripDto(
     val price: Double? = null,
     val startDate: String? = null,
     val endDate: String? = null,
-    val isATaxiTrip: Boolean? = null
+    val isATaxiTrip: Boolean? = null,
+    val tripStatus: Int = 0
 ) {
     @Serializable
     data class LocationDto(

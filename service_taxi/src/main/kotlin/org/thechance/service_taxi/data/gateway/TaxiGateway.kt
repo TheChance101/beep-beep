@@ -169,6 +169,7 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
                 TripWithTaxi::price from "\$price",
                 TripWithTaxi::startDate from "\$startDate",
                 TripWithTaxi::endDate from "\$endDate",
+                TripWithTaxi::tripStatus from "\$tripStatus"
             ),
             skip((page - 1) * limit),
             limit(limit)
@@ -197,7 +198,8 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
                     TripCollection::startDate.name, Clock.System.now().toLocalDateTime(
                         TimeZone.currentSystemDefault()
                     ).toString()
-                )
+                ),
+                Updates.set(TripCollection::tripStatus.name, Trip.Status.APPROVED.statusCode),
             ),
             options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toEntity()
@@ -210,10 +212,13 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
                 TripCollection::id eq ObjectId(tripId),
                 TripCollection::driverId eq ObjectId(driverId),
             ),
-            update = Updates.set(
-                TripCollection::endDate.name, Clock.System.now().toLocalDateTime(
-                    TimeZone.currentSystemDefault()
-                ).toString()
+            update = Updates.combine(
+                Updates.set(
+                    TripCollection::endDate.name, Clock.System.now().toLocalDateTime(
+                        TimeZone.currentSystemDefault()
+                    ).toString()
+                ),
+                Updates.set(TripCollection::tripStatus.name, Trip.Status.FINISHED.statusCode),
             ),
             options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toEntity()

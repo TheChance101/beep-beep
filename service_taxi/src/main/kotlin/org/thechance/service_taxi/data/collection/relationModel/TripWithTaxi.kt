@@ -27,4 +27,5 @@ data class TripWithTaxi(
     val price: Double?,
     val startDate: String? = null,
     val endDate: String? = null,
+    val tripStatus: Int
 )

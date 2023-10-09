@@ -18,4 +18,22 @@ data class Trip(
     val startDate: LocalDateTime? = null,
     val endDate: LocalDateTime? = null,
     val isATaxiTrip: Boolean? = null,
-)
+    val tripStatus: Status
+) {
+    enum class Status(val statusCode: Int) {
+        PENDING(0),
+        APPROVED(1),
+        FINISHED(2),
+    }
+
+    companion object {
+        fun getOrderStatus(statusCode: Int): Status {
+            Status.values().forEach {
+                if (it.statusCode == statusCode) {
+                    return it
+                }
+            }
+            return Status.PENDING
+        }
+    }
+}

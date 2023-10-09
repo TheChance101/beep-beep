@@ -23,7 +23,8 @@ fun TripDto.toEntity(): Trip {
         price = price ?: throw CantBeNullException,
         startDate = startDate?.let { LocalDateTime.parse(it) },
         endDate = endDate?.let { LocalDateTime.parse(it) },
-        isATaxiTrip = isATaxiTrip
+        isATaxiTrip = isATaxiTrip,
+        tripStatus = Trip.getOrderStatus(tripStatus)
     )
 }
 
@@ -71,7 +72,8 @@ fun Trip.toDto(): TripDto {
         price = price,
         startDate = startDate?.toString(),
         endDate = endDate?.toString(),
-        isATaxiTrip = isATaxiTrip ?: true
+        isATaxiTrip = isATaxiTrip ?: true,
+        tripStatus = tripStatus.statusCode
     )
 }
 
@@ -91,7 +93,8 @@ fun TripCollection.toEntity(): Trip {
         price = price ?: 0.0,
         startDate = startDate?.let { LocalDateTime.parse(it) },
         endDate = endDate?.let { LocalDateTime.parse(it) },
-        isATaxiTrip = isATaxiTrip
+        isATaxiTrip = isATaxiTrip,
+        tripStatus = Trip.getOrderStatus(tripStatus)
     )
 }
 
@@ -110,7 +113,8 @@ fun Trip.toCollection(): TripCollection {
         price = price,
         startDate = startDate?.toString(),
         endDate = endDate?.toString(),
-        isATaxiTrip = isATaxiTrip ?: true
+        isATaxiTrip = isATaxiTrip ?: true,
+        tripStatus = tripStatus.statusCode
     )
 }
 
@@ -130,5 +134,6 @@ fun TripWithTaxi.toEntity(): Trip {
         price = price ?: 0.0,
         startDate = startDate?.let { LocalDateTime.parse(it) },
         endDate = endDate?.let { LocalDateTime.parse(it) },
+        tripStatus = Trip.getOrderStatus(tripStatus)
     )
 }

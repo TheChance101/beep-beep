@@ -27,6 +27,7 @@ data class TripCollection(
     val price: Double?,
     val startDate: String? = null,
     val endDate: String? = null,
-    val isATaxiTrip: Boolean
+    val isATaxiTrip: Boolean,
+    val tripStatus: Int
 )
 

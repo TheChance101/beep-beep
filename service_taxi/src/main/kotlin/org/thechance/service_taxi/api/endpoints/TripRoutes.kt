@@ -56,17 +56,10 @@ fun Route.tripRoutes() {
             call.respond(HttpStatusCode.OK, BasePaginationResponse(result, page, total))
         }
 
-        post("/taxi") {
+        post {
             val tripDto = call.receive<TripDto>()
             val result = clientTripsManagementUseCase.createTrip(tripDto.toEntity()).toDto()
             socketHandler.trips[result.clientId]?.trips?.emit(result)
-            call.respond(HttpStatusCode.Created, result)
-        }
-
-        post("/delivery") {
-            val tripDto = call.receive<TripDto>()
-            val result = clientTripsManagementUseCase.createTrip(tripDto.toEntity()).toDto()
-            socketHandler.trips[tripDto.clientId]?.trips?.emit(result)
             call.respond(HttpStatusCode.Created, result)
         }
 
