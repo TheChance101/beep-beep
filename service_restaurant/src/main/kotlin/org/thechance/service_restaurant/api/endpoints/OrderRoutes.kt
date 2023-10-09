@@ -88,7 +88,7 @@ fun Route.orderRoutes() {
         webSocket("/restaurant/{restaurantId}") {
             val restaurantId = call.parameters["restaurantId"]?.trim().orEmpty()
             socketHandler.restaurants[restaurantId] = WebSocketRestaurant(this)
-            socketHandler.broadcastOrder(restaurantId)
+            socketHandler.collectOrder(restaurantId)
         }
     }
 }

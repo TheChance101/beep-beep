@@ -1,7 +1,6 @@
 package org.thechance.service_taxi.api.dto.trip
 
 import kotlinx.serialization.Serializable
-import org.thechance.service_taxi.data.collection.LocationCollection
 
 @Serializable
 data class TripDto(
@@ -17,6 +16,7 @@ data class TripDto(
     val price: Double? = null,
     val startDate: String? = null,
     val endDate: String? = null,
+    val isATaxiTrip: Boolean? = null
 ) {
     @Serializable
     data class LocationDto(

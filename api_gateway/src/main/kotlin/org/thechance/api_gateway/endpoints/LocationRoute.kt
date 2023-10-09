@@ -30,6 +30,5 @@ fun Route.locationRoute() {
                 webSocketServerHandler.tryToCollectFormWebSocket(locations, it)
             }
         }
-
     }
 }

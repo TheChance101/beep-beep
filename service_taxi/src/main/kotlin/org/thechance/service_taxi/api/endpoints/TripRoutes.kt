@@ -5,11 +5,14 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.websocket.*
 import org.koin.ktor.ext.inject
 import org.thechance.service_taxi.api.dto.BasePaginationResponse
 import org.thechance.service_taxi.api.dto.trip.TripDto
+import org.thechance.service_taxi.api.dto.trip.WebSocketTrip
 import org.thechance.service_taxi.api.dto.trip.toDto
 import org.thechance.service_taxi.api.dto.trip.toEntity
+import org.thechance.service_taxi.api.util.SocketHandler
 import org.thechance.service_taxi.domain.exceptions.MissingParameterException
 import org.thechance.service_taxi.domain.usecase.IClientTripsManagementUseCase
 import org.thechance.service_taxi.domain.usecase.IDriverTripsManagementUseCase
@@ -19,6 +22,7 @@ fun Route.tripRoutes() {
     val manageTripsUseCase: IManageTripsUseCase by inject()
     val driverTripsManagementUseCase: IDriverTripsManagementUseCase by inject()
     val clientTripsManagementUseCase: IClientTripsManagementUseCase by inject()
+    val socketHandler: SocketHandler by inject()
 
     route("/trip") {
         get {
@@ -52,10 +56,30 @@ fun Route.tripRoutes() {
             call.respond(HttpStatusCode.OK, BasePaginationResponse(result, page, total))
         }
 
-        post {
+        post("/taxi") {
             val tripDto = call.receive<TripDto>()
-            val result = clientTripsManagementUseCase.createTrip(tripDto.toEntity())
-            call.respond(HttpStatusCode.Created, result.toDto())
+            val result = clientTripsManagementUseCase.createTrip(tripDto.toEntity()).toDto()
+            socketHandler.trips[result.clientId]?.trips?.emit(result)
+            call.respond(HttpStatusCode.Created, result)
+        }
+
+        post("/delivery") {
+            val tripDto = call.receive<TripDto>()
+            val result = clientTripsManagementUseCase.createTrip(tripDto.toEntity()).toDto()
+            socketHandler.trips[tripDto.clientId]?.trips?.emit(result)
+            call.respond(HttpStatusCode.Created, result)
+        }
+
+        webSocket("/taxi/{driverId}") {
+            val taxiDriverId = call.parameters["driverId"]?.trim().orEmpty()
+            socketHandler.trips[taxiDriverId] = WebSocketTrip(session = this, true)
+            socketHandler.collectTrips(taxiDriverId)
+        }
+
+        webSocket("/delivery/{deliveryId}") {
+            val deliveryId = call.parameters["deliveryId"]?.trim().orEmpty()
+            socketHandler.trips[deliveryId] = WebSocketTrip(session = this, false)
+            socketHandler.collectTrips(deliveryId)
         }
 
         put("/{tripId}/rate") {

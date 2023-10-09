@@ -14,7 +14,6 @@ class LocationService(
     private val client: HttpClient,
     private val attributes: Attributes
 ) {
-
     suspend fun sendLocation(location: LocationDto, tripId: String) {
         client.tryToSendWebSocketData(
             data = location,

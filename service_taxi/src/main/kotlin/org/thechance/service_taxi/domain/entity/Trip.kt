@@ -15,4 +15,5 @@ data class Trip(
     val price: Double,
     val startDate: LocalDateTime? = null,
     val endDate: LocalDateTime? = null,
+    val isATaxiTrip: Boolean? = null,
 )
