@@ -12,6 +12,8 @@ data class TripDto(
     val taxiDriverName: String? = null,
     val startPoint: LocationDto? = null,
     val destination: LocationDto? = null,
+    val startPointAddress: String? = null,
+    val destinationAddress: String? = null,
     val rate: Double? = null,
     val price: Double? = null,
     val startDate: String? = null,

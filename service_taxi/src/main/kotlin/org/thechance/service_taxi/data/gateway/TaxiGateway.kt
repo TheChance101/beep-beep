@@ -163,6 +163,8 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
                 TripWithTaxi::taxi from "\$taxi",
                 TripWithTaxi::startPoint from "\$startPoint",
                 TripWithTaxi::destination from "\$destination",
+                TripWithTaxi::startPointAddress from "\$startPointAddress",
+                TripWithTaxi::destinationAddress from "\$destinationAddress",
                 TripWithTaxi::rate from "\$rate",
                 TripWithTaxi::price from "\$price",
                 TripWithTaxi::startDate from "\$startDate",

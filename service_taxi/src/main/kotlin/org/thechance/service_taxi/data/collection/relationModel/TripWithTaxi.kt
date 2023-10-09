@@ -21,6 +21,8 @@ data class TripWithTaxi(
     val taxi: TaxiCollection,
     val startPoint: LocationCollection? = null,
     val destination: LocationCollection? = null,
+    val startPointAddress: String,
+    val destinationAddress: String,
     val rate: Double? = null,
     val price: Double?,
     val startDate: String? = null,

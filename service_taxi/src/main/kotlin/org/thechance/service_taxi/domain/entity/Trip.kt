@@ -11,6 +11,8 @@ data class Trip(
     val clientId: String,
     val startPoint: Location,
     val destination: Location?,
+    val startPointAddress: String,
+    val destinationAddress: String,
     val rate: Double? = null,
     val price: Double,
     val startDate: LocalDateTime? = null,
