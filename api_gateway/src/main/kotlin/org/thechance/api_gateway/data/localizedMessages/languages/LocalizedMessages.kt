@@ -24,6 +24,8 @@ interface LocalizedMessages {
 
     val invalidEmail: String
 
+    val invalidPhone: String
+
     val notFound: String
 
     val invalidCredentials: String

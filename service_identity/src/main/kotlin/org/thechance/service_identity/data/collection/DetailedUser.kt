@@ -6,17 +6,19 @@ import kotlinx.serialization.Serializable
 
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
-import java.util.UUID
+import org.thechance.service_identity.domain.entity.Address
 
 @Serializable
-data class DetailedUserCollection(
+data class DetailedUser(
     @SerialName("_id")
-    @BsonId
     @Contextual
     val id: ObjectId,
     val fullName: String,
     val username: String,
     val email: String,
-    val isDeleted: Boolean = false,
-    val details: List<UserDetailsCollection>
+    val phone: String,
+    val country: String,
+    val permission: Int,
+    val wallet: WalletCollection,
+    val addresses: List<AddressCollection> = emptyList()
 )
