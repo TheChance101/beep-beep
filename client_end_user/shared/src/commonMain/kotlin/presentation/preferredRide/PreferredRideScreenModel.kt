@@ -4,27 +4,33 @@ import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Cost
 import domain.entity.PreferredRide
 import domain.entity.RideQuality
-import domain.usecase.ManageUserUseCase
+import domain.usecase.IMangeUserPreferenceUseCase
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
-class PreferredRideScreenModel(private val userPreference: ManageUserUseCase) :
-    BaseScreenModel<PreferredRideUiState, PreferredRideUiEffect>
-        (PreferredRideUiState()), PreferredRideInteractionListener {
+class PreferredRideScreenModel(
+    private val userPreferences: IMangeUserPreferenceUseCase,
+) : BaseScreenModel<PreferredRideUiState, PreferredRideUiEffect>
+    (PreferredRideUiState()), PreferredRideInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
     override fun onClickPreferredRide(quality: RideQuality) {
         when (quality) {
             RideQuality.LOW -> updateState { it.copy(cost = Cost.LOW, quality = RideQuality.LOW) }
 
-            RideQuality.HIGH -> updateState { it.copy(cost = Cost.HIGH, quality = RideQuality.HIGH)}
+            RideQuality.HIGH -> updateState {
+                it.copy(
+                    cost = Cost.HIGH,
+                    quality = RideQuality.HIGH
+                )
+            }
         }
         savePreferredRide(state.value.toPreferredRide())
     }
 
     private fun savePreferredRide(preferredRide: PreferredRide) {
         tryToExecute(
-            { userPreference.savePreferredRide(preferredRide) },
+            { userPreferences.savePreferredRide(preferredRide) },
             ::onSuccess,
             ::onError
         )
@@ -37,6 +43,4 @@ class PreferredRideScreenModel(private val userPreference: ManageUserUseCase) :
     private fun onError(errorState: ErrorState) {
         println("$errorState")
     }
-
-
 }

@@ -5,7 +5,6 @@ import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
-import io.ktor.client.utils.*
 import io.ktor.http.*
 import io.ktor.util.*
 import kotlinx.serialization.builtins.ListSerializer
@@ -16,7 +15,11 @@ import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.*
 import org.thechance.api_gateway.data.model.authenticate.TokenConfiguration
 import org.thechance.api_gateway.data.model.authenticate.TokenType
-import org.thechance.api_gateway.data.model.restaurant.RestaurantDto
+import org.thechance.api_gateway.data.model.identity.UserDetailsDto
+import org.thechance.api_gateway.data.model.identity.UserDto
+import org.thechance.api_gateway.data.model.identity.UserOptions
+import org.thechance.api_gateway.data.model.identity.UserRegistrationDto
+import org.thechance.api_gateway.data.model.restaurant.MealDto
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.tryToExecute
 import org.thechance.api_gateway.util.APIs
@@ -32,9 +35,8 @@ class IdentityService(
     private val attributes: Attributes,
     private val errorHandler: ErrorHandler
 ) {
-    suspend fun createUser(
-        fullName: String, username: String, password: String, email: String, languageCode: String
-    ): UserDto {
+    @OptIn(InternalAPI::class)
+    suspend fun createUser(newUser: UserRegistrationDto, languageCode: String): UserDto {
         return client.tryToExecute<UserDto>(
             APIs.IDENTITY_API,
             attributes = attributes,
@@ -42,14 +44,9 @@ class IdentityService(
                 errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             }
         ) {
-            submitForm("/user",
-                formParameters = parameters {
-                    append("fullName", fullName)
-                    append("username", username)
-                    append("password", password)
-                    append("email", email)
-                }
-            )
+            post("/user") {
+                body = Json.encodeToString(UserRegistrationDto.serializer(), newUser)
+            }
         }
     }
 
@@ -79,17 +76,16 @@ class IdentityService(
         return generateUserTokens(user.id, userName, user.permission, tokenConfiguration)
     }
 
+    @OptIn(InternalAPI::class)
     suspend fun getUsers(
-        page: Int? = null, limit: Int? = null, searchTerm: String, languageCode: String
+        options: UserOptions, languageCode: String
     ) = client.tryToExecute<PaginationResponse<UserDto>>(
         APIs.IDENTITY_API, attributes = attributes, setErrorMessage = { errorCodes ->
             errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
         }
     ) {
-        get("/dashboard/user") {
-            parameter("page", page)
-            parameter("limit", limit)
-            parameter("name", searchTerm)
+        post("/dashboard/user") {
+            body = Json.encodeToString(UserOptions.serializer(), options)
         }
     }
 
@@ -101,12 +97,27 @@ class IdentityService(
         }
     }
 
-    suspend fun getUserById(id: String, languageCode: String): UserDto = client.tryToExecute<UserDto>(
+    suspend fun getUserById(id: String, languageCode: String): UserDetailsDto = client.tryToExecute<UserDetailsDto>(
         APIs.IDENTITY_API, attributes = attributes, setErrorMessage = { errorCodes ->
             errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
         }
-    ) {
-        get("user/$id")
+    ) { get("user/$id") }
+
+    @OptIn(InternalAPI::class)
+    suspend fun updateUserProfile(id: String, fullName: String?, phone: String?, languageCode: String): UserDto {
+        return client.tryToExecute(
+            APIs.IDENTITY_API, attributes = attributes, setErrorMessage = { errorCodes ->
+                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
+            }
+        ) {
+            val formData = FormDataContent(Parameters.build {
+                fullName?.let { append("fullName", it) }
+                phone?.let { append("phone", it) }
+            })
+            put("/user/$id") {
+                body = formData
+            }
+        }
     }
 
     suspend fun getUserByUsername(username: String?, languageCode: String): UserDto = client.tryToExecute<UserDto>(
@@ -118,17 +129,6 @@ class IdentityService(
             parameter("username", username)
         }
     }
-
-    @OptIn(InternalAPI::class)
-    suspend fun searchUsers(query: String, permission: List<Int>) = client.tryToExecute<List<UserDto>>(
-        APIs.IDENTITY_API, attributes = attributes,
-    ) {
-        post("/dashboard/user/search") {
-            parameter("query", query)
-            body = Json.encodeToString(ListSerializer(Int.serializer()), permission)
-        }
-    }
-
 
     @OptIn(InternalAPI::class)
     suspend fun updateUserPermission(userId: String, permission: List<Int>, languageCode: String): UserDto {
@@ -199,8 +199,10 @@ class IdentityService(
         val accessTokenExpirationDate = getExpirationDate(tokenConfiguration.accessTokenExpirationTimestamp)
         val refreshTokenExpirationDate = getExpirationDate(tokenConfiguration.refreshTokenExpirationTimestamp)
 
-        val refreshToken = generateToken(userId, username, userPermission, tokenConfiguration, TokenType.REFRESH_TOKEN)
-        val accessToken = generateToken(userId, username, userPermission, tokenConfiguration, TokenType.ACCESS_TOKEN)
+        val refreshToken =
+            generateToken(userId, username, userPermission, tokenConfiguration, TokenType.REFRESH_TOKEN)
+        val accessToken =
+            generateToken(userId, username, userPermission, tokenConfiguration, TokenType.ACCESS_TOKEN)
 
         return UserTokensResponse(
             accessTokenExpirationDate.time,

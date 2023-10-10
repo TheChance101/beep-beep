@@ -15,8 +15,13 @@ interface IValidationUseCase {
     @Throws(AuthorizationException.InvalidEmailException::class)
     fun validateEmail(email: String)
 
+    @Throws(AuthorizationException.InvalidAddressException::class)
+    fun validateAddress(address: String)
+
     @Throws(AuthorizationException.InvalidPhoneException::class)
-    fun validatePhone(phone: String)
+    fun validatePhone(phone: String, currency: String? = null)
+
+
 }
 
 class ValidationUseCaseUseCase : IValidationUseCase {
@@ -44,21 +49,38 @@ class ValidationUseCaseUseCase : IValidationUseCase {
         }
     }
 
-    override fun validatePhone(phone: String) {
-        if (phoneRegex.any { it.matches(phone) }.not()) {
-            throw AuthorizationException.InvalidPhoneException
+    override fun validateAddress(address: String) {
+        // todo: add address validation regex like this one: ^[A-Za-z0-9\s.,-]+$
+        if (address.isBlank()) {
+            throw AuthorizationException.InvalidAddressException
         }
+    }
+
+    override fun validatePhone(phone: String, currency: String?) {
+        if (currency == null) {
+            phoneRegexMap.values.any { it.matches(phone) }.takeIf { it }
+                ?: throw AuthorizationException.InvalidPhoneException
+        } else {
+            val phoneRegex = getPhoneRegex(currency)
+            if (phone.matches(phoneRegex).not()) {
+                throw AuthorizationException.InvalidPhoneException
+            }
+        }
+    }
+
+
+    private fun getPhoneRegex(currency: String): Regex {
+        return phoneRegexMap[currency] ?: "^\\+\\d{2,}\\d{9,}$".toRegex()
     }
 
     private companion object {
         val fullNameRegex = "^[\\p{L}'-]+(?: [\\p{L}'-]+)*\$".toRegex()
         val emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$".toRegex()
-        val phoneRegex = listOf(
-            "^01\\d{9}\$".toRegex(),
-            "^07\\d{9}\$".toRegex(),
-            "^09\\d{9}\$".toRegex(),
-            "^(05|09)\\d{9}\$".toRegex(),
-            "^\\d{10}\$\n".toRegex()
+        val phoneRegexMap = mapOf(
+            "EGP" to "^\\+20\\d{10}$".toRegex(),
+            "IQD" to "^\\+964\\d{10}$".toRegex(),
+            "SYP" to "^\\+963\\d{9}$".toRegex(),
+            "ILS" to "^\\+972([59])\\d{8}$".toRegex(),
         )
     }
 }

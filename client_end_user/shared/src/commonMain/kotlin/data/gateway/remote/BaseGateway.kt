@@ -8,16 +8,22 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
 
 abstract class BaseGateway(val client: HttpClient) {
     suspend inline fun <reified T> tryToExecute(
         method: HttpClient.() -> HttpResponse,
     ): T {
         try {
+            println("AYA1 ${client.method().bodyAsText()}}")
             return client.method().body()
         } catch (e: ClientRequestException) {
-            //TODO: replace ServerResponse<String> with ServerResponse<T> in next deployment
-            val errorMessages = e.response.body<ServerResponse<String>>().status.errorMessages
+            println("AYA1 ${e.response.status.value}}")
+            println("AYA1 ${e.response}}")
+            println("AYA1 ${e.response.body<ServerResponse<T>>().status.errorMessages}}")
+
+
+            val errorMessages = e.response.body<ServerResponse<T>>().status.errorMessages
             errorMessages?.let(::throwMatchingException)
             throw GeneralException.UnknownErrorException
         } catch (e: InternetException.NoInternetException) {

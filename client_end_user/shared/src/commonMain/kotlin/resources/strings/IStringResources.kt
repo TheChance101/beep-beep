@@ -1,6 +1,8 @@
 package resources.strings
 
 interface IStringResources {
+    val yourAddress: String
+    val invalidAddress: String
     val unknownError: String
     val wifiDisabled: String
     val requestFailed: String
@@ -25,6 +27,7 @@ interface IStringResources {
     val notification: String
     val profile: String
     val cuisineImageDescription: String
+    val allCuisines: String
     val viewAll: String
     val seeAllDescription: String
     val cuisineSectionTitle: String
@@ -80,5 +83,24 @@ interface IStringResources {
     val thisWeek: String
     val tryAgain: String
     val trackYourOrder: String
+    val logout: String
+    val address: String
+    val save: String
     val history: String
+    val orderNow: String
+    val total: String
+    val yourCart: String
+    val profileLoginMessage: String
+    val ordersHistoryLoginMessage: String
+    val notificationLoginMessage: String
+    val pleaseLogin: String
+    val mostOrdered: String
+    val sweets: String
+    val free: String
+    val loginToAddToFavourite: String
+    val addToCart: String
+    val mealAddedToYourCart: String
+    val message: String
+    val supportTeam: String
+    val sendMessageToStartLiveChat: String
 }

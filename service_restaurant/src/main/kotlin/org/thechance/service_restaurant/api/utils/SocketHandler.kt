@@ -25,7 +25,6 @@ class SocketHandler {
                 ?.flowOn(Dispatchers.IO)
                 ?.collect { order ->
                     ownerSession?.sendSerialized(order)
-                    println("sssssss $order")
                 }
         } catch (e: MultiErrorException) {
             ownerSession?.send(e.errorCodes.toString())

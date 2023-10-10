@@ -31,6 +31,7 @@ import presentation.composable.HeadFirstCard
 import presentation.composable.SimpleTextButton
 import presentation.main.MainContainer
 import resources.Resources
+import util.getNavigationBarPadding
 
 class LoginScreen :
     BaseScreen<LoginScreenModel, LoginScreenUIState, LoginScreenUIEffect, LoginScreenInteractionListener>() {
@@ -47,7 +48,6 @@ class LoginScreen :
         when (effect) {
             is LoginScreenUIEffect.NavigateToHome -> navigator.replaceAll(MainContainer)
             LoginScreenUIEffect.NavigateToSignup -> navigator.push(RegistrationScreen())
-            else -> {}
         }
     }
 
@@ -65,7 +65,7 @@ class LoginScreen :
                     onValueChange = listener::onUsernameChanged,
                     label = Resources.strings.username,
                     keyboardType = KeyboardType.Text,
-                    errorMessage = state.usernameErrorMsg,
+                    errorMessage = if (state.isUsernameError) Resources.strings.invalidUsername else "",
                     isError = state.isUsernameError,
                 )
                 BpTextField(
@@ -74,7 +74,7 @@ class LoginScreen :
                     onValueChange = listener::onPasswordChanged,
                     label = Resources.strings.password,
                     keyboardType = KeyboardType.Password,
-                    errorMessage = state.passwordErrorMsg,
+                    errorMessage = if (state.isPasswordError) Resources.strings.invalidPassword else "",
                     isError = state.isPasswordError,
                 )
                 BpCheckBox(
@@ -123,7 +123,8 @@ class LoginScreen :
                 exit = slideOutVertically { it },
                 modifier = Modifier.align(Alignment.BottomCenter)
             ) {
-                BPSnackBar(icon = painterResource(Resources.images.icError)) {
+                BPSnackBar(icon = painterResource(Resources.images.icError),modifier = Modifier
+                    .padding(bottom = getNavigationBarPadding().calculateBottomPadding())) {
                     Text(
                         text = state.snackbarMessage,
                         style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),

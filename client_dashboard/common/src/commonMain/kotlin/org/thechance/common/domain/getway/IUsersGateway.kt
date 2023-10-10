@@ -1,5 +1,6 @@
 package org.thechance.common.domain.getway
 
+import org.thechance.common.domain.entity.Country
 import org.thechance.common.domain.entity.DataWrapper
 import org.thechance.common.domain.entity.Permission
 import org.thechance.common.domain.entity.User
@@ -7,9 +8,9 @@ import org.thechance.common.domain.entity.User
 interface IUsersGateway {
 
     suspend fun getUsers(
-        query: String?,
+        query: String?=null,
         byPermissions: List<Permission>,
-        byCountries: List<String>,
+        byCountries: List<Country>,
         page: Int,
         numberOfUsers: Int,
     ): DataWrapper<User>

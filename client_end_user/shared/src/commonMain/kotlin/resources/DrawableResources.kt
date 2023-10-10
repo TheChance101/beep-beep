@@ -15,6 +15,7 @@ data class DrawableResources(
     val ordersOutlined: String = "ic_orders_outlined.xml",
     val ordersFilled: String = "ic_orders_filled.xml",
     val arrowRight: String = "ic_right_arrow.xml",
+    val arrowLeft: String = "arrow_left.xml",
     val chatImage: String = "img_chat.png",
     val orderImage: String = "img_order.png",
     val orderTaxi: String = "img_taxi.png",
@@ -32,7 +33,23 @@ data class DrawableResources(
     val wishDishHigh: String = "wish_dish_high.png",
     val quickRide: String = "quick_ride.png",
     val slowRide: String = "slow_ride.png",
-    val transferIcon:String = "icon_from_to.xml"
+    val transferIcon: String = "icon_from_to.xml",
+    val logout: String = "logout_2.xml",
+    val requireLoginToShowProfilePlaceholder: String = "login_placeholder_profile.png",
+    val requireLoginToShowOrdersHistoryPlaceholder: String = "login_placeholder_order_history.png",
+    val requireLoginToShowNotificationPlaceholder: String = "login_placeholder_notification.png",
+    val needLogin : String = "need_login.png",
+    val heart: String = "Heart.png",
+    val mapPoint: String = "map_point.xml",
+    val star : String = "star.xml",
+    val starHalf : String = "star_half.xml",
+    val heartFilled : String = "heart_fill.xml",
+    val plus: String = "plus_icon.xml",
+    val minus: String = "minus_icon.xml",
+    val close: String = "close.xml",
+    val unread: String = "unread.xml",
+    val sendMessage: String = "ic_send.xml",
+    val chatPlaceholder: String = "img_chat_placeholder.png",
 )
 
 val BpDrawableDarkResources = DrawableResources(

@@ -5,6 +5,7 @@ import dev.icerock.moko.permissions.PermissionsController
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import data.BpLocationDataSource
+import data.service.ILocationService
 import domain.dataSource.IBpLocationDataSource
 
 val locationDataSourceModule = module {
@@ -15,4 +16,8 @@ val locationTrackerModule = module {
     single {
         LocationTracker(PermissionsController(applicationContext = androidContext().applicationContext))
     }
+}
+
+val locationServiceModule = module {
+    single<ILocationService> { LocationService(androidContext().applicationContext) }
 }

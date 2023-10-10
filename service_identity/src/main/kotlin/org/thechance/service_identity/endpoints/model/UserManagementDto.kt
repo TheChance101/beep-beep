@@ -9,12 +9,7 @@ data class UserManagementDto(
     val fullName: String,
     val username: String,
     val email: String,
+    val phone: String,
     val country: String,
-    val permission : Int = Role.END_USER
-)
-
-@Serializable
-data class UsersManagementDto(
-    val items: List<UserManagementDto>,
-    val total: Long
+    val permission: Int = Role.END_USER
 )

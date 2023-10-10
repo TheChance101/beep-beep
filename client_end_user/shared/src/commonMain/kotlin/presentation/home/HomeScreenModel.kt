@@ -3,29 +3,70 @@ package presentation.home
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.InProgressWrapper
 import domain.entity.Restaurant
-import domain.usecase.GetFavoriteRestaurantsUseCase
-import domain.usecase.IGetCuisinesUseCase
-import domain.usecase.IGetNewOffersUserCase
+import domain.entity.User
 import domain.usecase.IInProgressTrackerUseCase
+import domain.usecase.IManageCartUseCase
+import domain.usecase.IManageFavouriteUseCase
+import domain.usecase.IManageOffersUseCase
+import domain.usecase.IManageUserUseCase
+import domain.usecase.IMangeRestaurantUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
+import presentation.cuisines.CuisineUiState
+import presentation.cuisines.toCuisineUiState
 
 class HomeScreenModel(
-    private val cuisineUseCase: IGetCuisinesUseCase,
-    private val getFavoriteRestaurantsUseCase: GetFavoriteRestaurantsUseCase,
-    private val offers: IGetNewOffersUserCase,
+    private val manageRestaurant: IMangeRestaurantUseCase,
+    private val offers: IManageOffersUseCase,
     private val inProgressTrackerUseCase: IInProgressTrackerUseCase,
+    private val manageUserUseCase: IManageUserUseCase,
+    private val manageCart: IManageCartUseCase,
+    private val manageFavorite: IManageFavouriteUseCase,
 ) : BaseScreenModel<HomeScreenUiState, HomeScreenUiEffect>(HomeScreenUiState()),
     HomeScreenInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
 
     init {
+        getUserWallet()
         getInProgress()
         getRecommendedCuisines()
         getFavoriteRestaurants()
         getNewOffers()
+        checkIfThereIsOrderInCart()
+    }
+
+    private fun checkIfThereIsOrderInCart() {
+        tryToExecute(
+            { manageCart.checkIfThereIsOrderInCart() },
+            ::onCheckIfThereIsOrderInCartSuccess,
+            ::onCheckIfThereIsOrderInCartError
+        )
+    }
+
+    private fun onCheckIfThereIsOrderInCartSuccess(isEmpty: Boolean) {
+        updateState { it.copy(showCart = !isEmpty) }
+    }
+
+    private fun onCheckIfThereIsOrderInCartError(errorState: ErrorState) {
+        updateState { it.copy(showCart = false) }
+    }
+
+    private fun getUserWallet() {
+        tryToExecute(
+            { manageUserUseCase.getUserWallet() },
+            ::onGetUserWalletSuccess,
+            ::onGetUserWalletError
+        )
+    }
+
+    private fun onGetUserWalletError(errorState: ErrorState) {
+        updateState { it.copy(user = it.user.copy(isLogin = false)) }
+    }
+
+    private fun onGetUserWalletSuccess(user: User) {
+        updateState { it.copy(user = user.toUIState()) }
     }
 
     private fun getInProgress() {
@@ -67,18 +108,27 @@ class HomeScreenModel(
         }
     }
 
-    override fun onClickSearch() {
-        println("effect sent")
-        sendNewEffect(HomeScreenUiEffect.NavigateToSearch)
-    }
+
 
     override fun onClickOrderAgain(orderId: String) {
         sendNewEffect(HomeScreenUiEffect.NavigateToOrderDetails(orderId))
     }
 
+    override fun onLoginClicked() {
+        sendNewEffect(HomeScreenUiEffect.NavigateLoginScreen)
+    }
+
+    override fun onClickCartCard() {
+        sendNewEffect(HomeScreenUiEffect.NavigateToCart)
+    }
+
+    override fun onChangeSearchText(searchText: String) {
+        updateState { it.copy(searchTerm = searchText) }
+    }
+
     private fun getRecommendedCuisines() {
         tryToExecute(
-            { cuisineUseCase.getCuisines().toCuisineUiState() },
+            { manageRestaurant.getCuisines().toCuisineUiState() },
             ::onGetCuisinesSuccess,
             ::onGetCuisinesError
         )
@@ -95,7 +145,7 @@ class HomeScreenModel(
 
     private fun getFavoriteRestaurants() {
         tryToExecute(
-            { getFavoriteRestaurantsUseCase() },
+            { manageFavorite.getFavoriteRestaurants() },
             ::onGetFavoriteRestaurantsSuccess,
             ::onGetFavoriteRestaurantsError
         )
@@ -125,5 +175,4 @@ class HomeScreenModel(
     private fun onGetNewOffersError(error: ErrorState) {
         println("error is $error")
     }
-
 }

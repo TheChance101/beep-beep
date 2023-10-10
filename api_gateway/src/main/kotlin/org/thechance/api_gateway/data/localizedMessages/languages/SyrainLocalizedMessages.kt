@@ -16,6 +16,7 @@ class SyrianArabicLocalizedMessages() : LocalizedMessages {
     override val usernameCannotBeBlank: String = "اسم المستخدم ما يقدر يكون فاضي"
     override val passwordCannotBeBlank: String = "الرقم السري ما يقدر يكون فاضي"
     override val invalidEmail: String = "الإيميل مالو صحيح"
+    override val invalidPhone: String = "الموبايل مش صحيح"
     override val notFound: String = "ما لقيناه"
     override val invalidCredentials: String = "بيانات الاعتماد مالا صحيحة"
     override val userCreatedSuccessfully: String = "المستخدم صار عنا 🎉"
@@ -77,5 +78,17 @@ class SyrianArabicLocalizedMessages() : LocalizedMessages {
     override val restaurantNotFound: String = "عذرًا، ما لقينا هالمطعم"
     override val deletedSuccessfully: String = "حذفنالك ياجار"
     override val cuisineNameAlreadyExisted: String = "المطبخ موجود قبل هيك"
+
+
+    override val missingParameter: String = "في معلومات ناقصة يا جار!"
+    override val tokensNotFound: String = "التوكن مالو موجود"
+    override val tokenNotRegister: String = "التوكن مالو مسجل"
+    override val cartIsAlreadyEmpty: String = "لا يمكن اجراء الامر لان السله فارغه"
+    override val invalidQuantity: String = "مدخل كميه مش صح"
+
+    //endregion
+
+    // region notification
+    override val notificationNotSent: String = "ما انبعت الاشعار"
     //endregion
 }

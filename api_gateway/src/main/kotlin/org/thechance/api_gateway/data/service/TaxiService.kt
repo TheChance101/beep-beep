@@ -162,6 +162,20 @@ class TaxiService(
         )
     }
 
+    suspend fun getTripsHistoryForUser(
+        userId: String,
+        page: Int,
+        limit: Int,
+        languageCode: String
+    ): PaginationResponse<TripDto> {
+        return client.tryToExecute<PaginationResponse<TripDto>>(
+            api = APIs.TAXI_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { get("/trip/client/$userId?page=$page&&limit=$limit") }
+        )
+    }
+
     @OptIn(InternalAPI::class)
     suspend fun approveTrip(
         taxiId: String,
@@ -215,6 +229,14 @@ class TaxiService(
                 errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             },
             method = { delete("/trip/$tripId") }
+        )
+    }
+
+    suspend fun deleteTaxiByDriverId(id: String): Boolean {
+        return client.tryToExecute<Boolean>(
+            api = APIs.TAXI_API,
+            attributes = attributes,
+            method = { delete("/taxi/driver/$id") }
         )
     }
 }

@@ -10,11 +10,10 @@ import org.thechance.service_identity.endpoints.model.mapper.toDto
 import org.thechance.service_identity.domain.util.MissingParameterException
 import org.thechance.service_identity.domain.usecases.IUserManagementUseCase
 import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
-import org.thechance.service_identity.domain.util.Role
-
-import org.thechance.service_identity.endpoints.model.UsersManagementDto
+import org.thechance.service_identity.endpoints.model.UserOptionsDto
+import org.thechance.service_identity.endpoints.model.mapper.toEntity
+import org.thechance.service_identity.endpoints.model.BasePagingResponse
 import org.thechance.service_identity.endpoints.util.extractInt
-import org.thechance.service_identity.endpoints.util.toIntListOrNull
 
 fun Route.userManagementRoutes() {
 
@@ -22,20 +21,11 @@ fun Route.userManagementRoutes() {
 
     route("/dashboard/user") {
 
-        get {
-            val searchTerm = call.parameters["name"] ?: ""
-            val page = call.parameters.extractInt("page") ?: 1
-            val limit = call.parameters.extractInt("limit") ?: 10
-            val users = userManagement.getUsers(page, limit, searchTerm).toDto()
+        post {
+            val options = call.receive<UserOptionsDto>().toEntity()
+            val users = userManagement.getUsers(options).toDto()
             val total = userManagement.getNumberOfUsers()
-            call.respond(HttpStatusCode.OK, UsersManagementDto(users, total))
-        }
-
-        post("/search"){
-            val searchTerm = call.request.queryParameters["query"]?.trim() ?: ""
-            val permission: List<Int> = call.receive<List<Int>>()
-            val users = userManagement.searchUsers(searchTerm, permission )
-            call.respond(HttpStatusCode.OK, users.toDto())
+            call.respond(HttpStatusCode.OK, BasePagingResponse(users, page = options.page, total))
         }
 
         get("/last-register") {

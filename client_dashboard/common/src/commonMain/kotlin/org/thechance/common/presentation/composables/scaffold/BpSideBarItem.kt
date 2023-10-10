@@ -20,8 +20,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.composables.modifier.cursorHoverIconHand
 import org.thechance.common.presentation.util.kms
@@ -37,33 +39,43 @@ fun ColumnScope.BpSideBarItem(
     sideBarUnexpandedWidthInKms: Dp,
     label: String,
     modifier: Modifier = Modifier,
+    layoutDirection: LayoutDirection = LocalLayoutDirection.current
 ) {
     val iconSize: Dp by remember { mutableStateOf(24.kms) }
+
+    // Calculate translation based on layout direction
+    val translationsX = when (layoutDirection) {
+        LayoutDirection.Ltr -> (sideBarUnexpandedWidthInKms.value - iconSize.value) / 2
+        LayoutDirection.Rtl -> -(sideBarUnexpandedWidthInKms.value - iconSize.value) / 2
+    }
+
     Row(
-        horizontalArrangement = Arrangement
-            .spacedBy(32.kms + iconSize),
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.weight(1f).fillMaxWidth().onClick(onClick = onClick)
-            .cursorHoverIconHand()
+            horizontalArrangement = Arrangement.spacedBy(32.kms + iconSize),
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .onClick(onClick = onClick)
+                .cursorHoverIconHand()
     ) {
         Icon(
-            painterResource(if (isSelected) selectedIconResource else unSelectedIconResource),
-            contentDescription = null,
-            tint = if (isSelected) Theme.colors.primary else Theme.colors.contentSecondary,
-            modifier = Modifier.size(iconSize).graphicsLayer {
-                translationX = (sideBarUnexpandedWidthInKms.toPx() - iconSize.toPx()) / 2
-            }
+                painterResource(if (isSelected) selectedIconResource else unSelectedIconResource),
+                contentDescription = null,
+                tint = if (isSelected) Theme.colors.primary else Theme.colors.contentSecondary,
+                modifier = Modifier
+                    .size(iconSize)
+                    .graphicsLayer { translationX=translationsX }
         )
         AnimatedVisibility(
-            visible = mainMenuIsExpanded,
-            enter = fadeIn(tween(500)),
-            exit = fadeOut(),
+                visible = mainMenuIsExpanded,
+                enter = fadeIn(tween(500)),
+                exit = fadeOut(),
         ) {
             Text(
-                label,
-                style = Theme.typography.headline,
-                color = if (isSelected) Theme.colors.primary else Theme.colors.contentSecondary,
-                maxLines = 1,
+                    label,
+                    style = Theme.typography.headline,
+                    color = if (isSelected) Theme.colors.primary else Theme.colors.contentSecondary,
+                    maxLines = 1,
             )
         }
     }

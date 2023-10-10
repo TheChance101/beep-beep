@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -55,26 +56,27 @@ class RestaurantScreen :
     override fun OnRender(state: RestaurantUiState, listener: RestaurantInteractionListener) {
         AnimatedVisibility(visible = state.isNewRestaurantInfoDialogVisible) {
             NewRestaurantInfoDialog(
-                    modifier = Modifier,
-                    state = state,
-                    listener = listener,
+                modifier = Modifier,
+                state = state,
+                listener = listener,
             )
         }
 
         RestaurantAddCuisineDialog(
-                listener = listener,
-                state = state.restaurantAddCuisineDialogUiState
+            listener = listener,
+            state = state.restaurantAddCuisineDialogUiState
         )
 
         Column(
-                Modifier.background(Theme.colors.surface).fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.kms),
+            Modifier.background(Theme.colors.surface).padding(40.kms).fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.kms),
         ) {
             RestaurantScreenTopRow(state = state, listener = listener)
-
             RestaurantTable(state = state, listener = listener)
-
+            BpNoInternetConnection(!state.hasConnection) {
+                listener.onRetry()
+            }
             RestaurantPagingRow(state = state, listener = listener)
         }
     }
@@ -86,17 +88,25 @@ class RestaurantScreen :
         listener: RestaurantInteractionListener,
     ) {
         Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.kms),
-                verticalAlignment = Alignment.Top
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.kms),
+            verticalAlignment = Alignment.Top
         ) {
             BpSimpleTextField(
-                    modifier = Modifier.widthIn(min = 340.kms, max = 440.kms),
-                    hint = Resources.Strings.searchForRestaurants,
-                    onValueChange = listener::onSearchChange,
-                    text = state.searchQuery,
-                    keyboardType = KeyboardType.Text,
-                    trailingPainter = painterResource(Resources.Drawable.search)
+                modifier = Modifier.widthIn(min = 340.kms, max = 440.kms),
+                hint = Resources.Strings.searchForRestaurants,
+                onValueChange = listener::onSearchChange,
+                text = state.searchQuery,
+                keyboardType = KeyboardType.Text,
+                trailingPainter = painterResource(Resources.Drawable.search),
+                outlinedTextFieldDefaults = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = Theme.colors.surface,
+                    cursorColor = Theme.colors.contentTertiary,
+                    errorCursorColor = Theme.colors.primary,
+                    focusedBorderColor = Theme.colors.contentTertiary.copy(alpha = 0.2f),
+                    unfocusedBorderColor = Theme.colors.contentBorder.copy(alpha = 0.1f),
+                    errorBorderColor = Theme.colors.primary.copy(alpha = 0.5f),
+                )
             )
 
             RestaurantFilterRow(state, listener)
@@ -134,15 +144,15 @@ class RestaurantScreen :
             key = { it.id },
             headers = state.tableHeader,
             modifier = Modifier.fillMaxWidth(),
+            isVisible = state.hasConnection,
             rowContent = { restaurant ->
                 RestaurantRow(
-                    onClickEditRestaurant = listener::showEditRestaurantMenu,
-                    onEditRestaurantDismiss = listener::hideEditRestaurantMenu,
+                    onClickEditRestaurant = listener::onShowRestaurantMenu,
+                    onEditRestaurantDismiss = listener::onHideRestaurantMenu,
                     onClickDeleteRestaurantMenuItem = listener::onClickDeleteRestaurantMenuItem,
-                    onClickEditRestaurantMenuItem = listener::onClickEditRestaurantMenuItem,
+                    onClickEditRestaurantMenuItem = { listener.onClickEditRestaurantMenuItem(it) },
                     position = state.restaurants.indexOf(restaurant) + 1,
                     restaurant = restaurant,
-                    editRestaurantMenu = state.editRestaurantMenu
                 )
             },
         )
@@ -174,13 +184,12 @@ class RestaurantScreen :
 
     @Composable
     private fun RowScope.RestaurantRow(
-        onClickEditRestaurant: (restaurantName: String) -> Unit,
-        onEditRestaurantDismiss: () -> Unit,
-        onClickEditRestaurantMenuItem: (RestaurantUiState.RestaurantDetailsUiState) -> Unit,
+        onClickEditRestaurant: (restaurantId: String) -> Unit,
+        onEditRestaurantDismiss: (String) -> Unit,
+        onClickEditRestaurantMenuItem: (restaurantId: String) -> Unit,
         onClickDeleteRestaurantMenuItem: (id: String) -> Unit,
         position: Int,
         restaurant: RestaurantUiState.RestaurantDetailsUiState,
-        editRestaurantMenu: String,
         firstAndLastColumnWeight: Float = 1f,
         otherColumnsWeight: Float = 3f,
     ) {
@@ -222,7 +231,7 @@ class RestaurantScreen :
             iconsSize = 16.kms
         )
         PriceBar(
-            priceLevel = 1,
+            priceLevel = restaurant.priceLevel,
             icon = painterResource(Resources.Drawable.dollarSign),
             iconColor = Theme.colors.success,
             modifier = Modifier.weight(otherColumnsWeight),
@@ -240,15 +249,14 @@ class RestaurantScreen :
             Image(
                 painter = painterResource(Resources.Drawable.dots),
                 contentDescription = null,
-                modifier = Modifier.noRipple { onClickEditRestaurant(restaurant.name) },
+                modifier = Modifier.noRipple { onClickEditRestaurant(restaurant.id) },
                 colorFilter = ColorFilter.tint(color = Theme.colors.contentPrimary)
             )
             EditRestaurantDropdownMenu(
                 restaurant = restaurant,
-                onClickEdit = onClickEditRestaurantMenuItem,
+                onClickEdit = { onClickEditRestaurantMenuItem(it) },
                 onClickDelete = onClickDeleteRestaurantMenuItem,
                 onDismissRequest = onEditRestaurantDismiss,
-                editRestaurantMenu = editRestaurantMenu
             )
         }
     }
@@ -363,21 +371,21 @@ class RestaurantScreen :
         state: RestaurantAddCuisineDialogUiState
     ) {
         Dialog(
-                visible = state.isVisible,
-                transparent = true,
-                undecorated = true,
-                resizable = false,
-                onCloseRequest = listener::onCloseAddCuisineDialog,
+            visible = state.isVisible,
+            transparent = true,
+            undecorated = true,
+            resizable = false,
+            onCloseRequest = listener::onCloseAddCuisineDialog,
         ) {
             window.minimumSize = Dimension(400, 420)
             Column(
-                    modifier = Modifier
-                        .background(Theme.colors.surface, RoundedCornerShape(8.kms))
-                        .border(
-                                1.kms,
-                                Theme.colors.divider,
-                                RoundedCornerShape(Theme.radius.medium)
-                        )
+                modifier = Modifier
+                    .background(Theme.colors.surface, RoundedCornerShape(8.kms))
+                    .border(
+                        1.kms,
+                        Theme.colors.divider,
+                        RoundedCornerShape(Theme.radius.medium)
+                    )
             ) {
                 Text(
                     text = Resources.Strings.cuisines,
@@ -386,17 +394,17 @@ class RestaurantScreen :
                     modifier = Modifier.padding(top = 24.kms, start = 24.kms)
                 )
                 BpSimpleTextField(
-                        text = state.cuisineName,
-                        hint = Resources.Strings.enterCuisineName,
-                        onValueChange = listener::onChangeCuisineName,
-                        modifier = Modifier.padding(top =24.kms, start = 24.kms, end = 24.kms),
-                        isError = state.cuisineNameError.isError,
-                        errorMessage = state.cuisineNameError.errorMessage,
+                    text = state.cuisineName,
+                    hint = Resources.Strings.enterCuisineName,
+                    onValueChange = listener::onChangeCuisineName,
+                    modifier = Modifier.padding(top = 24.kms, start = 24.kms, end = 24.kms),
+                    isError = state.cuisineNameError.isError,
+                    errorMessage = state.cuisineNameError.errorMessage,
                 )
                 LazyColumn(
-                        modifier = Modifier.padding(top = 16.kms)
-                            .background(Theme.colors.background)
-                            .fillMaxWidth().heightIn(min = 64.kms, max = 256.kms)
+                    modifier = Modifier.padding(top = 16.kms)
+                        .background(Theme.colors.background)
+                        .fillMaxWidth().heightIn(min = 64.kms, max = 256.kms)
                 ) {
                     items(state.cuisines) { cuisine ->
                         Row(
@@ -404,7 +412,7 @@ class RestaurantScreen :
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text= cuisine.name,
+                                text = cuisine.name,
                                 style = Theme.typography.caption,
                                 color = Theme.colors.contentPrimary,
                             )
@@ -446,21 +454,20 @@ class RestaurantScreen :
     @Composable
     private fun EditRestaurantDropdownMenu(
         restaurant: RestaurantUiState.RestaurantDetailsUiState,
-        onClickEdit: (RestaurantUiState.RestaurantDetailsUiState) -> Unit,
+        onClickEdit: (restaurantId : String) -> Unit,
         onClickDelete: (id: String) -> Unit,
-        onDismissRequest: () -> Unit,
-        editRestaurantMenu: String,
+        onDismissRequest: (String) -> Unit,
     ) {
         BpDropdownMenu(
-            expanded = restaurant.name == editRestaurantMenu,
-            onDismissRequest = onDismissRequest,
+            expanded = restaurant.isExpanded,
+            onDismissRequest = { onDismissRequest(restaurant.id) },
             shape = RoundedCornerShape(Theme.radius.medium).copy(topEnd = CornerSize(0.dp)),
             offset = DpOffset.Zero.copy(x = (-178).kms)
         ) {
             Column {
                 BpDropdownMenuItem(
                     onClick = {
-                        onClickEdit(restaurant)
+                        onClickEdit(restaurant.id)
                     },
                     text = Resources.Strings.edit,
                     leadingIconPath = Resources.Drawable.permission,
