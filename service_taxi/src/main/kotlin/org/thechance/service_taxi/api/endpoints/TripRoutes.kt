@@ -95,10 +95,17 @@ fun Route.tripRoutes() {
             val parameters = call.receiveParameters()
             val tripId = parameters["tripId"] ?: throw MissingParameterException
             val driverId = parameters["driverId"] ?: throw MissingParameterException
-            val result = driverTripsManagementUseCase.finishTrip(driverId, tripId)
+            val result = driverTripsManagementUseCase.finishTrip(driverId = driverId, tripId = tripId)
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
+        put("/received") {
+            val parameters = call.receiveParameters()
+            val tripId = parameters["tripId"] ?: throw MissingParameterException
+            val driverId = parameters["driverId"] ?: throw MissingParameterException
+            val result = driverTripsManagementUseCase.updateTripAsReceived(driverId = driverId, tripId = tripId)
+            call.respond(HttpStatusCode.OK, result.toDto())
+        }
         delete("/{tripId}") {
             val tripId = call.parameters["tripId"] ?: throw MissingParameterException
             val result = manageTripsUseCase.deleteTrip(tripId)

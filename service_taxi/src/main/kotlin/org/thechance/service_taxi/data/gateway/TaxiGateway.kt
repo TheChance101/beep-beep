@@ -224,6 +224,17 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
         )?.toEntity()
     }
 
+    override suspend fun updateTripAsReceived(tripId: String, driverId: String): Trip? {
+        return container.tripCollection.findOneAndUpdate(
+            filter = and(
+                TripCollection::id eq ObjectId(tripId),
+                TripCollection::driverId eq ObjectId(driverId),
+            ),
+            update = Updates.set(TripCollection::tripStatus.name, Trip.Status.RECEIVED.statusCode),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
+        )?.toEntity()
+    }
+
     override suspend fun rateTrip(tripId: String, rate: Double): Trip? {
         return container.tripCollection.findOneAndUpdate(
             filter = and(

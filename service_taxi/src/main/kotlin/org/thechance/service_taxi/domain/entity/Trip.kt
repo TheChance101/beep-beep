@@ -23,7 +23,8 @@ data class Trip(
     enum class Status(val statusCode: Int) {
         PENDING(0),
         APPROVED(1),
-        FINISHED(2),
+        RECEIVED(2),
+        FINISHED(3),
     }
 
     companion object {
