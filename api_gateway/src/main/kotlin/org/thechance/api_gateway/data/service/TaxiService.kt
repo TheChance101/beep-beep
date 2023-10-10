@@ -5,6 +5,7 @@ import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import io.ktor.util.*
+import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.PaginationResponse
@@ -12,6 +13,7 @@ import org.thechance.api_gateway.data.model.taxi.TaxiDto
 import org.thechance.api_gateway.data.model.taxi.TripDto
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.tryToExecute
+import org.thechance.api_gateway.data.utils.tryToExecuteFromWebSocket
 import org.thechance.api_gateway.util.APIs
 
 
@@ -105,6 +107,22 @@ class TaxiService(
             attributes = attributes,
             setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
             method = { post("/trip") { body = Json.encodeToString(TripDto.serializer(), trip) } }
+        )
+    }
+
+    suspend fun getTaxiTrips(driverId: String): Flow<TripDto> {
+        return client.tryToExecuteFromWebSocket<TripDto>(
+            api = APIs.TAXI_API,
+            attributes = attributes,
+            path = "/trip/taxi/$driverId",
+        )
+    }
+
+    suspend fun getDeliveryTrips(deliveryId: String): Flow<TripDto> {
+        return client.tryToExecuteFromWebSocket<TripDto>(
+            api = APIs.TAXI_API,
+            attributes = attributes,
+            path = "/trip/delivery/$deliveryId",
         )
     }
 

@@ -23,8 +23,7 @@ fun Route.orderRoutes() {
 
         webSocket("orders/{restaurantId}") {
             val restaurantId = call.parameters["restaurantId"]?.trim().orEmpty()
-            val language = extractLocalizationHeaderFromWebSocket()
-            val orders = restaurantService.restaurantOrders(restaurantId, language)
+            val orders = restaurantService.restaurantOrders(restaurantId)
             webSocketServerHandler.sessions[restaurantId] = this
             webSocketServerHandler.sessions[restaurantId]?.let {
                 webSocketServerHandler.tryToCollectFormWebSocket(orders, it)

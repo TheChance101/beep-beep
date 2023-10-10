@@ -331,7 +331,7 @@ class RestaurantService(
         )
     }
 
-    suspend fun restaurantOrders(restaurantId: String, languageCode: String): Flow<OrderDto> {
+    suspend fun restaurantOrders(restaurantId: String): Flow<OrderDto> {
         return client.tryToExecuteFromWebSocket<OrderDto>(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
