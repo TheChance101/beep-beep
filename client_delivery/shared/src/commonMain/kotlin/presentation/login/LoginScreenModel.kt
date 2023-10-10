@@ -17,6 +17,7 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
         get() = coroutineScope
 
     init {
+        showSnackBar("Sign up with Beep Beep account")
         loginIfKeepMeLoggedInFlagSet()
     }
 
@@ -70,14 +71,12 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
                 )
             }
 
-            ErrorState.InvalidUsername -> updateState {
+            ErrorState.InvalidUsername,ErrorState.UserNotFound -> updateState {
                 it.copy(
                     usernameErrorMsg = "Invalid username",
                     isUsernameError = true
                 )
             }
-
-            is ErrorState.UserNotFound -> showSnackBar("Sign up with Beep Beep account")
 
             is ErrorState.UnAuthorized -> state.value.sheetState.show()
             else -> {}
