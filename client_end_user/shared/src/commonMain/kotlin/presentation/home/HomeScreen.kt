@@ -84,7 +84,6 @@ class HomeScreen : BaseScreen<
             is HomeScreenUiEffect.NavigateToOrderTaxi -> println("Navigate to Order Taxi screen")
             is HomeScreenUiEffect.ScrollDownToRecommendedRestaurants -> println("Scroll down home screen")
             is HomeScreenUiEffect.NavigateToOfferItem -> println("Navigate to offer item details ${effect.offerId}")
-            is HomeScreenUiEffect.NavigateToSearch -> navigator to SearchTab
             is HomeScreenUiEffect.NavigateToOrderDetails -> println("Navigate to order details ${effect.orderId}")
             is HomeScreenUiEffect.NavigateToCart -> navigator.root?.push(CartScreen())
             is HomeScreenUiEffect.NavigateLoginScreen -> navigator.root?.push(LoginScreen())
@@ -143,10 +142,7 @@ class HomeScreen : BaseScreen<
                     hint = Resources.strings.searchHint,
                     hintColor = Theme.colors.contentSecondary,
                     onValueChange = listener::onChangeSearchText,
-                    onClick = {
-                        listener.onClickSearch()
-                        tabNavigator.current = SearchTab
-                              },
+                    onClick = { tabNavigator.current = SearchTab },
                     leadingPainter = painterResource(Resources.images.searchOutlined),
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
