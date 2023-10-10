@@ -59,7 +59,7 @@ fun Route.tripRoutes() {
         post {
             val tripDto = call.receive<TripDto>()
             val result = clientTripsManagementUseCase.createTrip(tripDto.toEntity()).toDto()
-            socketHandler.trips[result.clientId]?.trips?.emit(result)
+            socketHandler.broadcastChannel.emit(result)
             call.respond(HttpStatusCode.Created, result)
         }
 
