@@ -47,7 +47,6 @@ import presentation.base.BaseScreen
 import presentation.cart.CartScreen
 import presentation.chatSupport.ChatSupportScreen
 import presentation.composable.BpImageLoader
-import presentation.composable.ContentVisibility
 import presentation.composable.ImageSlider
 import presentation.composable.ItemSection
 import presentation.composable.SectionHeader
@@ -264,38 +263,44 @@ class HomeScreen : BaseScreen<
             }
 
             item {
-                ItemSection(
-                    header = Resources.strings.favoriteRestaurants,
-                    titles = state.favoriteRestaurants.map { it.name },
-                    ratings = state.favoriteRestaurants.map { it.rating },
-                    priceLevels = state.favoriteRestaurants.map { it.priceLevel },
-                    painters = painters,
-                )
+                AnimatedVisibility(state.favoriteRestaurants.isNotEmpty()) {
+                    ItemSection(
+                        header = Resources.strings.favoriteRestaurants,
+                        titles = state.favoriteRestaurants.map { it.name },
+                        ratings = state.favoriteRestaurants.map { it.rating },
+                        priceLevels = state.favoriteRestaurants.map { it.priceLevel },
+                        painters = painters,
+                    )
+                }
             }
             item {
-                ItemSection(
-                    header = Resources.strings.eidSpecials,
-                    titles = state.favoriteRestaurants.map { it.name },
-                    ratings = state.favoriteRestaurants.map { it.rating },
-                    priceLevels = state.favoriteRestaurants.map { it.priceLevel },
-                    painters = painters,
-                    modifier = Modifier.padding(top = 16.dp),
-                    hasOffer = true,
-                    offers = listOf("15 %", "15 %", "15 %")
-                )
+                AnimatedVisibility(state.favoriteRestaurants.isNotEmpty()) {
+                    ItemSection(
+                        header = Resources.strings.eidSpecials,
+                        titles = state.favoriteRestaurants.map { it.name },
+                        ratings = state.favoriteRestaurants.map { it.rating },
+                        priceLevels = state.favoriteRestaurants.map { it.priceLevel },
+                        painters = painters,
+                        modifier = Modifier.padding(top = 16.dp),
+                        hasOffer = true,
+                        offers = listOf("15 %", "15 %", "15 %")
+                    )
+                }
             }
 
             item {
-                ItemSection(
-                    header = Resources.strings.freeDelivery,
-                    titles = state.favoriteRestaurants.map { it.name },
-                    ratings = state.favoriteRestaurants.map { it.rating },
-                    priceLevels = state.favoriteRestaurants.map { it.priceLevel },
-                    painters = painters,
-                    modifier = Modifier.padding(top = 16.dp),
-                    hasDeliveryPrice = true,
-                    deliveryPrices = listOf("Free", "Free", "Free")
-                )
+                AnimatedVisibility(state.favoriteRestaurants.isNotEmpty()) {
+                    ItemSection(
+                        header = Resources.strings.freeDelivery,
+                        titles = state.favoriteRestaurants.map { it.name },
+                        ratings = state.favoriteRestaurants.map { it.rating },
+                        priceLevels = state.favoriteRestaurants.map { it.priceLevel },
+                        painters = painters,
+                        modifier = Modifier.padding(top = 16.dp),
+                        hasDeliveryPrice = true,
+                        deliveryPrices = listOf("Free", "Free", "Free")
+                    )
+                }
             }
         }
     }
