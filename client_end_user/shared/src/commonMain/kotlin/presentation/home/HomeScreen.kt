@@ -35,6 +35,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import com.beepbeep.designSystem.ui.composable.BpAppBar
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
@@ -56,6 +57,9 @@ import presentation.home.composable.CartCard
 import presentation.home.composable.ChatSupportCard
 import presentation.home.composable.CuisineCard
 import presentation.home.composable.OrderCard
+import presentation.main.MainContainer
+import presentation.main.SearchTab
+import presentation.search.SearchScreen
 import resources.Resources
 import util.root
 
@@ -72,6 +76,7 @@ class HomeScreen : BaseScreen<
     }
 
     override fun onEffect(effect: HomeScreenUiEffect, navigator: Navigator) {
+
         when (effect) {
             is HomeScreenUiEffect.NavigateToCuisineDetails -> println("Cuisine id ${effect.cuisineId}")
             is HomeScreenUiEffect.NavigateToCuisines -> navigator.root?.push(CuisinesScreen())
@@ -79,7 +84,6 @@ class HomeScreen : BaseScreen<
             is HomeScreenUiEffect.NavigateToOrderTaxi -> println("Navigate to Order Taxi screen")
             is HomeScreenUiEffect.ScrollDownToRecommendedRestaurants -> println("Scroll down home screen")
             is HomeScreenUiEffect.NavigateToOfferItem -> println("Navigate to offer item details ${effect.offerId}")
-            is HomeScreenUiEffect.NavigateToSearch -> println("Navigate to Search Screen")
             is HomeScreenUiEffect.NavigateToOrderDetails -> println("Navigate to order details ${effect.orderId}")
             is HomeScreenUiEffect.NavigateToCart -> navigator.root?.push(CartScreen())
             is HomeScreenUiEffect.NavigateLoginScreen -> navigator.root?.push(LoginScreen())
@@ -92,6 +96,7 @@ class HomeScreen : BaseScreen<
     )
     @Composable
     override fun onRender(state: HomeScreenUiState, listener: HomeScreenInteractionListener) {
+        val tabNavigator = LocalTabNavigator.current
         val painters = mutableListOf<Painter>()
         repeat(state.favoriteRestaurants.size) {
             painters.add(painterResource(Resources.images.placeholder))
@@ -133,11 +138,11 @@ class HomeScreen : BaseScreen<
 
             item {
                 BpSimpleTextField(
-                    "",
+                    text = state.searchTerm,
                     hint = Resources.strings.searchHint,
                     hintColor = Theme.colors.contentSecondary,
-                    onValueChange = {},
-                    onClick = { listener.onClickSearch() },
+                    onValueChange = listener::onChangeSearchText,
+                    onClick = { tabNavigator.current = SearchTab },
                     leadingPainter = painterResource(Resources.images.searchOutlined),
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
