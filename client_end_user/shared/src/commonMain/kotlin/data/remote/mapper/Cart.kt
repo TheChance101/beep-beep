@@ -24,3 +24,23 @@ fun CartMealDto.toEntity(): CartMeal {
         count = quantity?.toLong() ?: 0
     )
 }
+
+
+fun Cart.toDto(): CartDto {
+    return CartDto(
+        meals = meals.map { it.toDto() },
+        currency = currency
+    )
+}
+
+fun CartMeal.toDto(): CartMealDto {
+    return CartMealDto(
+        mealId = id,
+        currency = currency,
+        restaurantName = restaurantName,
+        name = name,
+        image = image,
+        quantity = count.toInt(),
+        price = price
+    )
+}

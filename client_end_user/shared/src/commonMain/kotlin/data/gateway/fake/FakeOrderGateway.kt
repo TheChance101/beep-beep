@@ -340,6 +340,10 @@ class FakeOrderGateway : IOrderGateway {
         ).toEntity()
     }
 
+    override suspend fun updateCartMeals(cart: Cart) {
+        println("cart: $cart")
+    }
+
     private val mealsCart = listOf(
         CartMealDto(
             mealId  = "64f372095fecc11e6d917656",

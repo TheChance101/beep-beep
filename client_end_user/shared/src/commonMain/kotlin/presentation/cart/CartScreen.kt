@@ -93,3 +93,7 @@ class CartScreen :
         }
     }
 }
+
+fun main() {
+
+}

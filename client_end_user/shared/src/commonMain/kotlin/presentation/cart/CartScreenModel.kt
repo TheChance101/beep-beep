@@ -15,6 +15,7 @@ class CartScreenModel(private val cartManagement: ManageCartUseCase) :
         getCartMeals()
     }
 
+    // region getting cart meals
     private fun getCartMeals() {
         tryToExecute(
             cartManagement::getAllCartMeals,
@@ -23,6 +24,23 @@ class CartScreenModel(private val cartManagement: ManageCartUseCase) :
         )
     }
 
+
+    private fun onGetCartMealsSuccess(cart: Cart) {
+        val cartUiState = cart.toUiState()
+        updateState {
+            it.copy(
+                meals = cartUiState.meals,
+                currency = cartUiState.currency
+            )
+        }
+    }
+
+    private fun onError(error: ErrorState) {
+        println("error: $error")
+    }
+    // endregion
+
+    // region interactions
     override fun onClickPlus(index: Int, count: Long) {
         val updatedCount = if (count < 99) count + 1 else count
         val meal = state.value.meals[index].copy(count = updatedCount)
@@ -56,19 +74,13 @@ class CartScreenModel(private val cartManagement: ManageCartUseCase) :
     override fun onClickBack() {
         sendNewEffect(CartUiEffect.NavigateUp)
     }
+    // endregion
 
-    private fun onGetCartMealsSuccess(cart: Cart) {
-        val cartUiState = cart.toUiState()
-        updateState {
-            it.copy(
-                meals = cartUiState.meals,
-                currency = cartUiState.currency
-            )
-        }
-    }
+    // region saving cart
+    override fun onDispose() {
 
-    private fun onError(error: ErrorState) {
-        println("error: $error")
+        super.onDispose()
     }
+    // endregion
 
 }

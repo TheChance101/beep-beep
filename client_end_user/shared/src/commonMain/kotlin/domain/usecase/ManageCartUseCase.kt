@@ -5,6 +5,8 @@ import domain.gateway.IOrderGateway
 
 interface IManageCartUseCase {
     suspend fun getAllCartMeals(): Cart
+
+    suspend fun updateCartMeals(cart: Cart)
     suspend fun checkIfThereIsOrderInCart(): Boolean
 }
 
@@ -13,6 +15,10 @@ class ManageCartUseCase(
 ) : IManageCartUseCase {
     override suspend fun getAllCartMeals(): Cart {
         return orderGateway.getAllCartMeals()
+    }
+
+    override suspend fun updateCartMeals(cart: Cart) {
+        return orderGateway.updateCartMeals(cart)
     }
 
     override suspend fun checkIfThereIsOrderInCart(): Boolean {
