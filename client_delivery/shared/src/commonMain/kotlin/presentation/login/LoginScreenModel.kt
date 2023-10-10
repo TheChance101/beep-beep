@@ -45,7 +45,7 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
         password: String,
         isKeepMeLoggedInChecked: Boolean
     ) {
-        updateState { it.copy(isLoading = true) }
+        updateState { it.copy(isLoading = true, isEnable = false) }
         clearErrors()
         tryToExecute(
             { manageLoginUser.loginUser(username, password, isKeepMeLoggedInChecked) },
@@ -60,6 +60,7 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
     }
 
     private fun onLoginError(errorState: ErrorState) {
+        updateState { it.copy(isLoading = false, isEnable = true) }
         clearErrors()
         when (errorState) {
             ErrorState.InvalidPassword -> updateState {
@@ -98,8 +99,7 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
                 usernameErrorMsg = "",
                 isUsernameError = false,
                 passwordErrorMsg = "",
-                isPasswordError = false,
-                isLoading = false
+                isPasswordError = false
             )
         }
     }

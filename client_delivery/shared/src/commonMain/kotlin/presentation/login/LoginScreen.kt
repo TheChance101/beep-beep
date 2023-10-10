@@ -162,7 +162,8 @@ private fun LoginScreenContent(
                         password = state.password,
                         isKeepMeLoggedInChecked = state.keepLoggedIn
                     )
-                }
+                }, isLoading = state.isLoading,
+                enabled = state.isEnable
             )
         }
 
