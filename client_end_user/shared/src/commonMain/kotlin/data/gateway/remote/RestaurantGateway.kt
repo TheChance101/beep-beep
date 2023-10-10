@@ -20,8 +20,6 @@ import domain.gateway.IRestaurantGateway
 import domain.utils.GeneralException
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
-import io.ktor.http.HttpMethod
-import io.ktor.http.Parameters
 import kotlinx.datetime.Clock
 
 class RestaurantGateway(client: HttpClient) : BaseGateway(client = client), IRestaurantGateway {
@@ -67,12 +65,6 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client), IRes
     override suspend fun getSweets(restaurantId: String): List<Meal> {
         // todo: implement this when the backend is ready
         return meals.map { it.toEntity() }
-    }
-
-    override suspend fun getFavoriteRestaurants(): List<Restaurant> {
-        return tryToExecute<ServerResponse<List<RestaurantDto>>> {
-            get("/user/favorite")
-        }.value?.map { it.toEntity() } ?: throw GeneralException.NotFoundException
     }
 
     // all the following methods are fake data and should be removed when the backend is ready
