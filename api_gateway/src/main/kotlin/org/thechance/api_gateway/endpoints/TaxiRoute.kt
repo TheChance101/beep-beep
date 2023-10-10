@@ -120,7 +120,6 @@ fun Route.taxiRoutes() {
             val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripCreatedSuccessfully
             val trip = call.receive<TripDto>()
             val createdTrip = taxiService.createTrip(trip, language)
-
             respondWithResult(HttpStatusCode.Created, createdTrip, successMessage)
         }
 
@@ -131,31 +130,28 @@ fun Route.taxiRoutes() {
             val taxiId = parameters["taxiId"]?.trim().orEmpty()
             val driverId = parameters["driverId"]?.trim().orEmpty()
             val tripId = parameters["tripId"]?.trim().orEmpty()
-
-            val approvedTrip =
-                taxiService.approveTrip(taxiId = taxiId, tripId = tripId, driverId = driverId, language)
+            val approvedTrip = taxiService.approveTrip(taxiId = taxiId, tripId = tripId, driverId = driverId, language)
             respondWithResult(HttpStatusCode.OK, approvedTrip, successMessage)
-
         }
+
+        put("/received") {
+            val language = extractLocalizationHeader()
+            val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripFinished
+            val parameters = call.receiveParameters()
+            val tripId = parameters["tripId"]?.trim().orEmpty()
+            val driverId = parameters["driverId"]?.trim().orEmpty()
+            val receivedTrip = taxiService.updateTripAsReceived(tripId = tripId, driverId = driverId, language)
+            respondWithResult(HttpStatusCode.OK, receivedTrip, successMessage)
+        }
+
         put("/finish") {
             val language = extractLocalizationHeader()
             val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripFinished
             val parameters = call.receiveParameters()
             val driverId = parameters["driverId"]?.trim().orEmpty()
             val tripId = parameters["tripId"]?.trim().orEmpty()
-
-            val finishedTrip = taxiService.finishTrip(tripId = tripId, driverId = driverId, language)
+            val finishedTrip = taxiService.updateTripAsReceived(tripId = tripId, driverId = driverId, language)
             respondWithResult(HttpStatusCode.OK, finishedTrip, successMessage)
-        }
-
-        delete("cancel") {
-            val language = extractLocalizationHeader()
-            val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripCanceled
-            val parameters = call.receiveParameters()
-            val tripId = parameters["tripId"]?.trim().orEmpty()
-
-            val deletedTrip = taxiService.deleteTrip(tripId = tripId, language)
-            respondWithResult(HttpStatusCode.OK, deletedTrip, successMessage)
         }
     }
 //    }
