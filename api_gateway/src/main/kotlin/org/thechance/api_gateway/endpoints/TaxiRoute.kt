@@ -26,7 +26,6 @@ fun Route.taxiRoutes() {
     val localizedMessagesFactory by inject<LocalizedMessagesFactory>()
     val webSocketServerHandler: WebSocketServerHandler by inject()
 
-//    authenticateWithRole(Role.DASHBOARD_ADMIN) {
     route("/taxi") {
 
         get {
@@ -153,7 +152,7 @@ fun Route.taxiRoutes() {
 
         put("/received") {
             val language = extractLocalizationHeader()
-            val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripFinished
+            val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripArrived
             val parameters = call.receiveParameters()
             val tripId = parameters["tripId"]?.trim().orEmpty()
             val driverId = parameters["driverId"]?.trim().orEmpty()
@@ -171,5 +170,4 @@ fun Route.taxiRoutes() {
             respondWithResult(HttpStatusCode.OK, finishedTrip, successMessage)
         }
     }
-//    }
 }

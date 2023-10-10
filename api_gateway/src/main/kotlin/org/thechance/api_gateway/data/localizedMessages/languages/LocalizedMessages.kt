@@ -53,6 +53,8 @@ interface LocalizedMessages {
 
     val tripFinished: String
 
+    val tripArrived: String
+
     val taxiUpdateSuccessfully: String
 
     val taxiDeleteSuccessfully: String

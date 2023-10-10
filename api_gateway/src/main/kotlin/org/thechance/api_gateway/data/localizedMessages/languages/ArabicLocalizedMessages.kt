@@ -32,6 +32,7 @@ class ArabicLocalizedMessages() : LocalizedMessages {
     override val tripApproved: String = "تم قبول الرحلة"
     override val tripCanceled: String = "تم الغاء الرحلة"
     override val tripFinished: String = "تم إنهاء الرحلة بنجاح"
+    override val tripArrived: String = "تم الوصول الى العميل"
     override val taxiUpdateSuccessfully: String= "تم تحديث التاكسي بنجاح"
     override val taxiDeleteSuccessfully: String= "تم حذف التاكسي بنجاح"
     override val invalidId: String = "رقم بطاقة غير صالح"

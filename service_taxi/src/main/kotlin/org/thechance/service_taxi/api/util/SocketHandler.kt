@@ -4,6 +4,7 @@ import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.flowOn
 import org.thechance.service_taxi.api.dto.trip.TripDto
@@ -23,7 +24,7 @@ class SocketHandler {
             broadcastChannel
                 .drop(1)
                 .flowOn(Dispatchers.IO)
-                .collect { tripDto ->
+                .collectLatest { tripDto ->
                     if (tripDto.isATaxiTrip == isATaxi) {
                         session?.sendSerialized(tripDto)
                     }

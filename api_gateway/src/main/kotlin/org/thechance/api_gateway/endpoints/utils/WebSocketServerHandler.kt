@@ -11,14 +11,11 @@ import java.util.concurrent.ConcurrentHashMap
 
 @Single
 class WebSocketServerHandler {
-
     val sessions: ConcurrentHashMap<String, DefaultWebSocketServerSession> = ConcurrentHashMap()
-
     suspend inline fun <reified T> tryToCollectFormWebSocket(values: Flow<T>, session: DefaultWebSocketServerSession) {
         try {
             values.flowOn(Dispatchers.IO).collect { value -> session.sendSerialized(value) }
         } catch (e: LocalizedMessageException) {
-
             session.send(e.localizedMessage)
             session.close()
         }

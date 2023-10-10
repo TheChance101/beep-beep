@@ -18,7 +18,6 @@ data class TripCollection(
     val driverId: ObjectId? = null,
     @Contextual
     val clientId: ObjectId,
-    val isDeleted: Boolean = false,
     val startPoint: LocationCollection? = null,
     val destination: LocationCollection? = null,
     val startPointAddress: String,
