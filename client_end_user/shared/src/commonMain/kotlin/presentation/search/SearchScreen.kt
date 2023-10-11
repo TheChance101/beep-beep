@@ -17,9 +17,10 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -31,10 +32,12 @@ import com.seiko.imageloader.rememberAsyncImagePainter
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
-import presentation.composable.BpImageCard
+import presentation.composable.BottomSheet
+import presentation.composable.ModalBottomSheetState
 import presentation.composable.modifier.noRippleEffect
 import presentation.composable.modifier.roundedBorderShape
 import presentation.resturantDetails.RestaurantScreen
+import presentation.composable.MealBottomSheet
 import resources.Resources
 import util.getStatusBarPadding
 import util.root
@@ -49,16 +52,49 @@ class SearchScreen :
 
     override fun onEffect(effect: SearchUiEffect, navigator: Navigator) {
         when (effect) {
-            is SearchUiEffect.NavigateToMeal -> TODO()
             is SearchUiEffect.NavigateToRestaurant -> navigator.root?.push(RestaurantScreen)
         }
     }
 
-    @OptIn(ExperimentalResourceApi::class, ExperimentalFoundationApi::class)
     @Composable
     override fun onRender(state: SearchUiState, listener: SearchInteractionListener) {
+        val sheetState = remember { ModalBottomSheetState() }
+
+        BottomSheet(
+            sheetContent = {
+                MealBottomSheet(
+                    meal = state.selectedMeal,
+                    onDismissSheet = listener::onDismissSheet,
+                    onDecreaseQuantity = {},
+                    onIncreaseQuantity = {},
+                    onAddToCart = {}
+                )
+            },
+            sheetBackgroundColor = Theme.colors.background,
+            onBackGroundClicked = listener::onDismissSheet,
+            sheetState = sheetState,
+            content = { content(state, listener) }
+        )
+
+        LaunchedEffect(state.showMealSheet) {
+            if (state.showMealSheet) {
+                sheetState.show()
+            } else {
+                sheetState.dismiss()
+            }
+        }
+
+    }
+
+    @OptIn(ExperimentalFoundationApi::class, ExperimentalResourceApi::class)
+    @Composable
+    private fun content(
+        state: SearchUiState,
+        listener: SearchInteractionListener,
+        modifier: Modifier = Modifier
+    ) {
         LazyColumn(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .background(Theme.colors.background)
                 .padding(getStatusBarPadding())
@@ -102,7 +138,6 @@ class SearchScreen :
             }
         }
     }
-
 
     @Composable
     private fun Restaurant(

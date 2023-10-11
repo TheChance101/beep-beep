@@ -1,11 +1,7 @@
 package presentation.resturantDetails
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,38 +10,24 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
-import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.theme.Theme
 import domain.entity.PriceLevel
-import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.auth.login.LoginScreen
@@ -56,16 +38,15 @@ import presentation.composable.BpPriceLevel
 import presentation.composable.RatingBar
 import presentation.composable.SectionHeader
 import presentation.composable.modifier.noRippleEffect
-import presentation.resturantDetails.Composable.Chip
-import presentation.resturantDetails.Composable.CloseButton
-import presentation.resturantDetails.Composable.MealBottomSheet
-import presentation.resturantDetails.Composable.NeedToLoginSheet
-import presentation.resturantDetails.Composable.ToastMessage
+import presentation.resturantDetails.composable.Chip
+import presentation.resturantDetails.composable.CloseButton
+import presentation.composable.MealBottomSheet
+import presentation.resturantDetails.composable.NeedToLoginSheet
+import presentation.resturantDetails.composable.ToastMessage
 import resources.Resources
 
 object RestaurantScreen :
     BaseScreen<RestaurantScreenModel, RestaurantUIState, RestaurantUIEffect, RestaurantInteractionListener>() {
-
 
     override fun onEffect(effect: RestaurantUIEffect, navigator: Navigator) {
         when (effect) {
@@ -92,9 +73,12 @@ object RestaurantScreen :
                     if (state.showMealSheet)
                         MealBottomSheet(
                             meal = state.meal,
-                            listener = listener,
+                            onAddToCart = listener::onAddToCart,
+                            onDismissSheet = listener::onDismissSheet,
+                            onIncreaseQuantity = listener::onIncressQuantity,
+                            onDecreaseQuantity = listener::onDecressQuantity
                         )
-                    if(state.showLoginSheet)
+                    if (state.showLoginSheet)
                         NeedToLoginSheet(
                             text = Resources.strings.loginToAddToFavourite,
                             onClick = {
@@ -105,17 +89,18 @@ object RestaurantScreen :
                 },
                 sheetBackgroundColor = Theme.colors.background,
                 onBackGroundClicked = listener::onDismissSheet,
-                sheetState =  state.sheetState,
+                sheetState = state.sheetState,
             ) {
 
                 Image(
                     painter = painterResource(Resources.images.placeholder),
-                    contentDescription = "background",)
+                    contentDescription = "background",
+                )
 
                 CloseButton(
-                    onClick = {  listener.onBack()},
+                    onClick = { listener.onBack() },
                     modifier = Modifier.align(Alignment.TopCenter),
-                    icon=Resources.images.iconBack
+                    icon = Resources.images.iconBack
                 )
                 Column(
                     modifier = Modifier.fillMaxWidth().fillMaxHeight(.75f)

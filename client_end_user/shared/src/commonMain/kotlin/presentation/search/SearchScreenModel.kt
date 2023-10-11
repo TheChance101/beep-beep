@@ -5,13 +5,15 @@ import domain.entity.Explore
 import domain.usecase.ISearchUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
 class SearchScreenModel(private val search: ISearchUseCase) :
     BaseScreenModel<SearchUiState, SearchUiEffect>(SearchUiState()), SearchInteractionListener {
-    override val viewModelScope: CoroutineScope = coroutineScope
 
+    override val viewModelScope: CoroutineScope = coroutineScope
     private var searchJob: Job? = null
 
     init {
@@ -28,7 +30,11 @@ class SearchScreenModel(private val search: ISearchUseCase) :
     }
 
     override fun onMealClicked(mealId: String) {
-        sendNewEffect(SearchUiEffect.NavigateToMeal(mealId))
+        updateState { it.copy(showMealSheet = true) }
+    }
+
+    override fun onDismissSheet() {
+        updateState { it.copy(showMealSheet = false) }
     }
 
     private fun launchSearchJob() {
@@ -56,4 +62,5 @@ class SearchScreenModel(private val search: ISearchUseCase) :
     private fun onError(error: ErrorState) {
 
     }
+
 }

@@ -2,12 +2,16 @@ package presentation.search
 
 import domain.entity.Meal
 import domain.entity.Restaurant
+import presentation.composable.ModalBottomSheetState
+import presentation.resturantDetails.MealUIState
 
 
 data class SearchUiState(
     val query: String = "",
     val meals: List<MealUiState> = emptyList(),
-    val restaurants: List<RestaurantUiState> = emptyList()
+    val restaurants: List<RestaurantUiState> = emptyList(),
+    val showMealSheet: Boolean = false,
+    val selectedMeal: MealUIState = MealUIState()
 )
 
 
