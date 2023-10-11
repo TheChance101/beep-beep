@@ -34,9 +34,26 @@ class CartScreenModel(private val cartManagement: ManageCartUseCase) :
             )
         }
     }
+    // endregion
 
-    private fun onError(error: ErrorState) {
-        println("error: $error")
+    // region saving cart
+    override fun onDispose() {
+        tryToExecute(
+            { cartManagement.updateCartMeals(state.value.toEntity()) },
+            {},
+            ::onError
+        )
+        super.onDispose()
+    }
+
+    private fun orderNow() {
+        tryToExecute(cartManagement::orderNow, ::onOrderNowSuccess, ::onError)
+    }
+
+    private fun onOrderNowSuccess(success: Boolean) {
+        if (success) {
+            sendNewEffect(CartUiEffect.NavigateUp)
+        }
     }
     // endregion
 
@@ -68,7 +85,7 @@ class CartScreenModel(private val cartManagement: ManageCartUseCase) :
     }
 
     override fun onClickOrderNow() {
-        println("make order")
+        orderNow()
     }
 
     override fun onClickBack() {
@@ -76,11 +93,9 @@ class CartScreenModel(private val cartManagement: ManageCartUseCase) :
     }
     // endregion
 
-    // region saving cart
-    override fun onDispose() {
-
-        super.onDispose()
+    // region error handling
+    private fun onError(error: ErrorState) {
+        println("error: $error")
     }
     // endregion
-
 }

@@ -8,6 +8,7 @@ interface IManageCartUseCase {
 
     suspend fun updateCartMeals(cart: Cart)
     suspend fun checkIfThereIsOrderInCart(): Boolean
+    suspend fun orderNow(): Boolean
 }
 
 class ManageCartUseCase(
@@ -24,5 +25,9 @@ class ManageCartUseCase(
     override suspend fun checkIfThereIsOrderInCart(): Boolean {
         val cart = orderGateway.getAllCartMeals()
         return cart.meals.isEmpty()
+    }
+
+    override suspend fun orderNow(): Boolean {
+        return orderGateway.orderNow()
     }
 }

@@ -46,5 +46,9 @@ class OrderGateway(client: HttpClient) : BaseGateway(client), IOrderGateway {
             }
         }
     }
+
+    override suspend fun orderNow(): Boolean {
+        return tryToExecute<ServerResponse<OrderDto>> { put("/cart/orderNow") }.value != null
+    }
 }
 

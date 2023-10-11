@@ -344,6 +344,10 @@ class FakeOrderGateway : IOrderGateway {
         println("cart: $cart")
     }
 
+    override suspend fun orderNow(): Boolean {
+        return true
+    }
+
     private val mealsCart = listOf(
         CartMealDto(
             mealId  = "64f372095fecc11e6d917656",

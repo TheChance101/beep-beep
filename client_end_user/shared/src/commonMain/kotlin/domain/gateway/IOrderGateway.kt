@@ -9,4 +9,5 @@ interface IOrderGateway {
     suspend fun getOrderHistoryGateway(): List<Order> // TODO: need to handle pagination
     suspend fun getAllCartMeals(): Cart
     suspend fun updateCartMeals(cart: Cart)
+    suspend fun orderNow(): Boolean
 }
