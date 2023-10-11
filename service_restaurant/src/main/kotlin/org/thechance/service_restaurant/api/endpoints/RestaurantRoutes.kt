@@ -51,7 +51,9 @@ fun Route.restaurantRoutes() {
 
         post("/favorite") {
             val restaurantIds = call.receive<List<String>>()
-            val result = discoverRestaurant.getRestaurantsByIds(restaurantIds)
+            val page = call.parameters.extractInt("page") ?: 1
+            val limit = call.parameters.extractInt("limit") ?: 10
+            val result = discoverRestaurant.getRestaurantsByIds(restaurantIds, page, limit)
             call.respond(HttpStatusCode.Created, result.toDto())
         }
 

@@ -63,11 +63,11 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
         ).paginate(options.page, options.limit).toList().toEntity()
     }
 
-    override suspend fun getRestaurants(restaurantIds: List<String>): List<Restaurant> {
+    override suspend fun getRestaurants(restaurantIds: List<String>,page: Int,limit: Int): List<Restaurant> {
         return container.restaurantCollection.find(
             RestaurantCollection::isDeleted eq false,
             RestaurantCollection::id `in` restaurantIds.toObjectIds()
-        ).toList().toEntity()
+        ).paginate(page, limit).toList().toEntity()
     }
 
     override suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant> {

@@ -10,7 +10,7 @@ import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 
 interface IDiscoverRestaurantUseCase {
     suspend fun getRestaurants(restaurantOptions: RestaurantOptions): List<Restaurant>
-    suspend fun getRestaurantsByIds(restaurantIds: List<String>): List<Restaurant>
+    suspend fun getRestaurantsByIds(restaurantIds: List<String>,page: Int,limit: Int): List<Restaurant>
     suspend fun getRestaurantDetails(restaurantId: String): Restaurant
     suspend fun getRestaurantsInCategory(categoryId: String): List<Restaurant>
 
@@ -33,8 +33,8 @@ class DiscoverRestaurantUseCase(
         return restaurantGateway.getRestaurants(restaurantOptions)
     }
 
-    override suspend fun getRestaurantsByIds(restaurantIds: List<String>): List<Restaurant> {
-        return restaurantGateway.getRestaurants(restaurantIds)
+    override suspend fun getRestaurantsByIds(restaurantIds: List<String>,page: Int,limit: Int): List<Restaurant> {
+        return restaurantGateway.getRestaurants(restaurantIds,page,limit)
     }
 
 
