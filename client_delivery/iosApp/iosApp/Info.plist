@@ -61,5 +61,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Access Loaction 3</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Access Location 2</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Access Location</string>
 </dict>
 </plist>
