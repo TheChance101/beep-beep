@@ -1,7 +1,7 @@
 package domain.usecase
 
 import domain.entity.UserCreation
-import domain.gateway.IUserRemoteGateway
+import domain.gateway.IUserGateway
 import domain.gateway.local.ILocalConfigurationGateway
 import domain.usecase.validation.IValidationUseCase
 import kotlinx.coroutines.flow.Flow
@@ -19,7 +19,7 @@ interface IManageAuthenticationUseCase {
 }
 
 class ManageAuthenticationUseCase(
-    private val remoteGateway: IUserRemoteGateway,
+    private val remoteGateway: IUserGateway,
     private val localGateway: ILocalConfigurationGateway,
     private val validation: IValidationUseCase,
 ) : IManageAuthenticationUseCase {
@@ -58,5 +58,4 @@ class ManageAuthenticationUseCase(
     override suspend fun getAccessToken(): Flow<String> {
         return localGateway.getAccessTokenStream()
     }
-
 }

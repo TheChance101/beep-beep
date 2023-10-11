@@ -3,14 +3,12 @@ package presentation.chatSupport
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Message
 import domain.entity.Ticket
-import domain.usecase.GetTicketsUseCase
-import domain.usecase.ManageMessagesUseCase
+import domain.usecase.ManageChatUseCase
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
 class ChatSupportScreenModel(
-    private val messageManagement: ManageMessagesUseCase,
-    private val getTicketsUseCase: GetTicketsUseCase
+    private val manageChat: ManageChatUseCase,
 ) : BaseScreenModel<ChatUIState, ChatSupportUiEffect>(ChatUIState()),
     ChatSupportInteractionListener {
 
@@ -22,7 +20,7 @@ class ChatSupportScreenModel(
 
     private fun getTickets() {
         tryToCollect(
-            { getTicketsUseCase() },
+            { manageChat.getTickets() },
             ::onGetTicketsSuccess,
             ::onError
         )
@@ -35,7 +33,7 @@ class ChatSupportScreenModel(
 
     private fun getMessages(ticketId: String) {
         tryToCollect(
-            { messageManagement.getMessages(ticketId) },
+            { manageChat.getMessages(ticketId) },
             ::onGetNewMessage,
             ::onError
         )
@@ -55,7 +53,7 @@ class ChatSupportScreenModel(
         println("userId: $userId")
         tryToExecute(
             {
-                messageManagement.sendMessage(
+                manageChat.sendMessage(
                     message,
                     userId,
                     ticketId = state.value.ticketId
@@ -78,7 +76,7 @@ class ChatSupportScreenModel(
         println("$error")
     }
 
-    private fun onSendNewMessageError(error: ErrorState){
+    private fun onSendNewMessageError(error: ErrorState) {
         updateState { it.copy(message = "") }
         println("$error")
     }

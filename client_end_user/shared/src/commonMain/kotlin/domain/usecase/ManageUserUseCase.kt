@@ -1,61 +1,35 @@
 package domain.usecase
 
-import data.gateway.remote.UserRemoteRemoteGateway
+import data.gateway.remote.UserGateway
 import data.local.mapper.toFormattedString
 import data.local.mapper.toPreferredRide
 import domain.entity.PreferredRide
 import domain.entity.User
 import domain.entity.UserDetails
-import domain.gateway.IFakeRemoteGateway
+import domain.gateway.IUserGateway
 import domain.gateway.local.ILocalConfigurationGateway
 import domain.utils.AuthorizationException
 import kotlinx.coroutines.flow.Flow
 
 interface IManageUserUseCase {
-
     suspend fun getUserWallet(): User
-    suspend fun savePriceLevel(priceLevel: String)
-    suspend fun getPriceLevel(): String
-    suspend fun savePreferredRide(preferredRide: PreferredRide)
-    suspend fun getPreferredRide(): PreferredRide
-
     suspend fun saveIsFirstTimeUseApp(isFirstTimeUseApp: Boolean)
-
     suspend fun getIsFirstTimeUseApp(): Boolean
     suspend fun getUserLanguageCode(): Flow<String>
-
     suspend fun getUserProfile(): UserDetails
-
 }
 
 class ManageUserUseCase(
     private val localGateway: ILocalConfigurationGateway,
-    private val fakeRemoteGateway: IFakeRemoteGateway,
-    private val remoteGateway: UserRemoteRemoteGateway
+    private val userGateway: IUserGateway
 ) : IManageUserUseCase {
 
     override suspend fun getUserWallet(): User {
         return if (localGateway.getAccessToken().isNotEmpty()) {
-            fakeRemoteGateway.getUsrWallet()
+            userGateway.getUserWallet()
         } else {
             throw AuthorizationException.UnAuthorizedException
         }
-    }
-
-    override suspend fun savePriceLevel(priceLevel: String) {
-        localGateway.savePriceLevel(priceLevel)
-    }
-
-    override suspend fun getPriceLevel(): String {
-        return localGateway.getPriceLevel()
-    }
-
-    override suspend fun savePreferredRide(preferredRide: PreferredRide) {
-        localGateway.savePreferredRideQuality(preferredRide.toFormattedString())
-    }
-
-    override suspend fun getPreferredRide(): PreferredRide {
-        return localGateway.getPreferredRideQuality().toPreferredRide()
     }
 
     override suspend fun saveIsFirstTimeUseApp(isFirstTimeUseApp: Boolean) {
@@ -71,7 +45,6 @@ class ManageUserUseCase(
     }
 
     override suspend fun getUserProfile(): UserDetails {
-       return remoteGateway.getUserProfile()
+        return userGateway.getUserProfile()
     }
-
 }

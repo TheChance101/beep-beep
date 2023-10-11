@@ -102,6 +102,7 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
                 BpNoInternetConnection(hasConnection = !state.hasConnection, onRetry = onRetry)
                 UsersTable(
                     hasConnection = state.hasConnection,
+                    isLoading = state.isLoading,
                     users = state.pageInfo.data,
                     headers = state.tableHeader,
                     selectedPage = state.currentPage,
@@ -124,6 +125,7 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
     @Composable
     private fun ColumnScope.UsersTable(
         hasConnection: Boolean,
+        isLoading: Boolean,
         users: List<UserScreenUiState.UserUiState>,
         headers: List<Header>,
         selectedPage: Int,
@@ -143,6 +145,7 @@ class UserScreen : BaseScreen<UserScreenModel, UserUiEffect, UserScreenUiState, 
             key = UserScreenUiState.UserUiState::username,
             headers = headers,
             isVisible = hasConnection,
+            isLoading = isLoading,
             modifier = Modifier.fillMaxWidth(),
         ) { user ->
             UserRow(

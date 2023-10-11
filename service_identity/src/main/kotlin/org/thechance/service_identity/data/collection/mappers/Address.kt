@@ -5,7 +5,7 @@ import org.thechance.service_identity.domain.entity.Address
 
 fun AddressCollection.toEntity() = Address(
     id = id.toString(),
-    location = location.toEntity(),
+    location = location?.toEntity(),
     address = address ?: ""
 )
 
