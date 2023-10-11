@@ -12,17 +12,16 @@ import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
 import org.thechance.api_gateway.data.model.taxi.TaxiDto
 import org.thechance.api_gateway.data.model.taxi.TripDto
 import org.thechance.api_gateway.data.service.IdentityService
+import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.data.service.TaxiService
-import org.thechance.api_gateway.endpoints.utils.WebSocketServerHandler
-import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
-import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
-import org.thechance.api_gateway.endpoints.utils.respondWithResult
+import org.thechance.api_gateway.endpoints.utils.*
 import org.thechance.api_gateway.util.Claim
 import org.thechance.api_gateway.util.Role
 
 fun Route.taxiRoutes() {
     val taxiService: TaxiService by inject()
     val identityService: IdentityService by inject()
+    val restaurantService: RestaurantService by inject()
     val localizedMessagesFactory by inject<LocalizedMessagesFactory>()
     val webSocketServerHandler: WebSocketServerHandler by inject()
 
@@ -123,19 +122,33 @@ fun Route.taxiRoutes() {
 
         webSocket("/taxi/{driverId}") {
             val driverId = call.parameters["driverId"]?.trim().orEmpty()
-            val taxiTrips = taxiService.getTaxiTrips(driverId)
+            val language = extractLocalizationHeaderFromWebSocket()
+            val taxiTrips = taxiService.getTaxiTrips(driverId, language)
+            val successMessage = localizedMessagesFactory.createLocalizedMessages(language).receivedNewTrip
             webSocketServerHandler.sessions[driverId] = this
-            webSocketServerHandler.sessions[driverId]?.let {
-                webSocketServerHandler.tryToCollectFormWebSocket(taxiTrips, it)
+            webSocketServerHandler.sessions[driverId]?.let { session ->
+                webSocketServerHandler.tryToCollectAndMapToTaxiTrip(
+                    values = taxiTrips,
+                    session = session,
+                    successMessage = successMessage,
+                    language = language
+                )
             }
         }
 
         webSocket("/delivery/{deliveryId}") {
             val deliveryId = call.parameters["deliveryId"]?.trim().orEmpty()
-            val deliveryTrips = taxiService.getDeliveryTrips(deliveryId)
+            val language = extractLocalizationHeaderFromWebSocket()
+            val deliveryTrips = taxiService.getDeliveryTrips(deliveryId, language)
+            val successMessage = localizedMessagesFactory.createLocalizedMessages(language).receivedNewDeliveryOrder
             webSocketServerHandler.sessions[deliveryId] = this
-            webSocketServerHandler.sessions[deliveryId]?.let {
-                webSocketServerHandler.tryToCollectFormWebSocket(deliveryTrips, it)
+            webSocketServerHandler.sessions[deliveryId]?.let { session ->
+                webSocketServerHandler.tryToCollectAndMapToDeliveryTrip(
+                    values = deliveryTrips,
+                    session = session,
+                    successMessage = successMessage,
+                    language = language
+                )
             }
         }
 

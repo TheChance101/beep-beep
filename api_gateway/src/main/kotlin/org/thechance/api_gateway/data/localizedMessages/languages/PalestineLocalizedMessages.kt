@@ -34,6 +34,8 @@ class PalestinianArabicLocalizedMessages() : LocalizedMessages {
     override val tripCanceled: String = "تم الغاء الرحلة"
     override val tripFinished: String = "تم إنهاء الرحلة بنجاح"
     override val tripArrived: String = "تم الوصول الى العميل"
+    override val receivedNewTrip: String = "تم إستلام رحلة جديدة"
+    override val receivedNewDeliveryOrder: String = "تم إستلام اوردر جديد"
     override val taxiUpdateSuccessfully: String = "تم تحديث التاكسي بنجاح"
     override val taxiDeleteSuccessfully: String = "تم حذف التاكسي بنجاح"
     override val invalidId: String = "هاد التاكسي مش عنده رقم صحيح!"

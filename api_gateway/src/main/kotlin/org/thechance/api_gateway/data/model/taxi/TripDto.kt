@@ -2,6 +2,8 @@ package org.thechance.api_gateway.data.model.taxi
 
 import kotlinx.serialization.Serializable
 import org.thechance.api_gateway.data.model.LocationDto
+import org.thechance.api_gateway.data.model.identity.UserDetailsDto
+import org.thechance.api_gateway.data.model.restaurant.RestaurantDto
 
 @Serializable
 data class TripDto(
@@ -22,3 +24,30 @@ data class TripDto(
     val isATaxiTrip: Boolean? = null,
     val tripStatus: Int = 0
 )
+
+fun TripDto.toTaxiTripResponse(userInfo: UserDetailsDto): TaxiTripResponse {
+    return TaxiTripResponse(
+        id = id ?: "",
+        clientName = userInfo.fullName,
+        startPoint = startPoint ?: LocationDto(0.0, 0.0),
+        destination = destination ?: LocationDto(0.0, 0.0),
+        startPointAddress = startPointAddress ?: "",
+        destinationAddress = destinationAddress ?: "",
+        price = price ?: 0.0,
+        tripStatus = tripStatus
+    )
+}
+
+fun TripDto.toDeliveryTripResponse(restaurantInfo: RestaurantDto): DeliveryTripResponse {
+    return DeliveryTripResponse(
+        id = id ?: "",
+        restaurantName = restaurantInfo.name ?: "",
+        restaurantImage = restaurantInfo.restaurantImage ?: "",
+        startPoint = startPoint ?: LocationDto(0.0, 0.0),
+        destination = destination ?: LocationDto(0.0, 0.0),
+        startPointAddress = startPointAddress ?: "",
+        destinationAddress = destinationAddress ?: "",
+        price = price ?: 0.0,
+        tripStatus = tripStatus
+    )
+}

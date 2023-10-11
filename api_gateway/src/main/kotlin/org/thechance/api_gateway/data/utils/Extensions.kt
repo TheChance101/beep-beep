@@ -8,7 +8,6 @@ import io.ktor.http.*
 import io.ktor.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import org.thechance.api_gateway.util.APIs
@@ -45,6 +44,30 @@ suspend inline fun <reified T> HttpClient.tryToExecuteFromWebSocket(
         }
     }.flowOn(Dispatchers.IO)
 }
+
+suspend inline fun <reified T> HttpClient.tryToExecuteWebSocket(
+    api: APIs,
+    path: String,
+    attributes: Attributes,
+    crossinline setErrorMessage: (errorCodes: List<Int>) -> Map<Int, String> = { emptyMap() }
+): Flow<T> {
+    attributes.put(AttributeKey("API"), api.value)
+    val host = System.getenv(attributes[AttributeKey("API")])
+    return flow {
+        webSocket(urlString = "ws://$host/$path") {
+            while (true) {
+                try {
+                    emit(receiveDeserialized<T>())
+                } catch (e: Exception) {
+                    val errorResponse = listOf(500)
+                    val errorMessage = setErrorMessage(errorResponse)
+                    throw LocalizedMessageException(errorMessage)
+                }
+            }
+        }
+    }.flowOn(Dispatchers.IO)
+}
+
 
 suspend inline fun <reified T> HttpClient.tryToSendWebSocketData(
     data: T,

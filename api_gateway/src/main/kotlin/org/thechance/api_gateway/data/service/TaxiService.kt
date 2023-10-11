@@ -13,7 +13,7 @@ import org.thechance.api_gateway.data.model.taxi.TaxiDto
 import org.thechance.api_gateway.data.model.taxi.TripDto
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.tryToExecute
-import org.thechance.api_gateway.data.utils.tryToExecuteFromWebSocket
+import org.thechance.api_gateway.data.utils.tryToExecuteWebSocket
 import org.thechance.api_gateway.util.APIs
 
 
@@ -110,19 +110,21 @@ class TaxiService(
         )
     }
 
-    suspend fun getTaxiTrips(driverId: String): Flow<TripDto> {
-        return client.tryToExecuteFromWebSocket<TripDto>(
+    suspend fun getTaxiTrips(driverId: String, language: String): Flow<TripDto> {
+        return client.tryToExecuteWebSocket<TripDto>(
             api = APIs.TAXI_API,
             attributes = attributes,
             path = "/trip/taxi/$driverId",
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, language) }
         )
     }
 
-    suspend fun getDeliveryTrips(deliveryId: String): Flow<TripDto> {
-        return client.tryToExecuteFromWebSocket<TripDto>(
+    suspend fun getDeliveryTrips(deliveryId: String, language: String): Flow<TripDto> {
+        return client.tryToExecuteWebSocket<TripDto>(
             api = APIs.TAXI_API,
             attributes = attributes,
             path = "/trip/delivery/$deliveryId",
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, language) }
         )
     }
 

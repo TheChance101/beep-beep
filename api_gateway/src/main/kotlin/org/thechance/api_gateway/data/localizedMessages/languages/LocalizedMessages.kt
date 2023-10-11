@@ -55,6 +55,10 @@ interface LocalizedMessages {
 
     val tripArrived: String
 
+    val receivedNewTrip: String
+
+    val receivedNewDeliveryOrder: String
+
     val taxiUpdateSuccessfully: String
 
     val taxiDeleteSuccessfully: String
@@ -158,6 +162,6 @@ interface LocalizedMessages {
 
 
     // region notification
-    val notificationNotSent : String
+    val notificationNotSent: String
     //endregion
 }

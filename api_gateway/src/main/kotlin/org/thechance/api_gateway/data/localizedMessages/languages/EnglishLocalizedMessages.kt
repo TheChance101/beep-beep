@@ -33,6 +33,8 @@ class EnglishLocalizedMessages() : LocalizedMessages {
     override val tripCanceled: String = "Trip Canceled"
     override val tripFinished: String = "Trip Finished Successfully"
     override val tripArrived: String = "Trip Arrived Successfully"
+    override val receivedNewTrip: String = "New trip recieved"
+    override val receivedNewDeliveryOrder: String = "New Order is coming"
     override val taxiUpdateSuccessfully: String = "Taxi updated successfully 🎉"
     override val taxiDeleteSuccessfully: String = "Taxi deleted successfully 🎉"
     override val invalidId: String = "Invalid id"
