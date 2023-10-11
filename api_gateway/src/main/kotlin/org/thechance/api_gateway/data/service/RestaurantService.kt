@@ -86,7 +86,7 @@ class RestaurantService(
         }
 
     @OptIn(InternalAPI::class)
-    suspend fun getRestaurants(restaurantIds: List<String>, languageCode: String) =
+    suspend fun getRestaurants(restaurantIds: List<String>, page:Int? ,limit:Int?,  languageCode: String) =
         client.tryToExecute<List<RestaurantDto>>(
             APIs.RESTAURANT_API,
             attributes = attributes,
@@ -94,6 +94,8 @@ class RestaurantService(
         ) {
             post("/restaurants/favorite") {
                 body = Json.encodeToString(restaurantIds)
+                parameter("page", page)
+                parameter("limit", limit)
             }
         }
 

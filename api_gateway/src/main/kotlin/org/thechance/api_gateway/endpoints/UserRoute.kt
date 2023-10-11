@@ -100,13 +100,15 @@ fun Route.userRoutes() {
 
             get("/favorite") {
                 val tokenClaim = call.principal<JWTPrincipal>()
+                val page = call.parameters["page"]?.toInt() ?: 1
+                val limit = call.parameters["limit"]?.toInt() ?: 20
                 val userId = tokenClaim?.get(Claim.USER_ID).toString()
                 val language = extractLocalizationHeader()
                 val restaurantIds = identityService.getFavoriteRestaurantsIds(
                     userId = userId, languageCode = language
                 )
                 val result = async {
-                    restaurantService.getRestaurants(restaurantIds, language)
+                    restaurantService.getRestaurants(restaurantIds = restaurantIds,page=page,limit=limit,languageCode= language)
                 }.await()
                 respondWithResult(HttpStatusCode.OK, result)
             }
