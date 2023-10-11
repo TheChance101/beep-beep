@@ -1,4 +1,4 @@
-package presentation.resturantDetails.composable
+package presentation.resturantDetails.Composable
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

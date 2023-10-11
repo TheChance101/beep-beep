@@ -25,7 +25,7 @@ import com.beepbeep.designSystem.ui.composable.modifier.noRippleEffect
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import presentation.resturantDetails.composable.CloseButton
+import presentation.resturantDetails.Composable.CloseButton
 import presentation.resturantDetails.MealUIState
 import resources.Resources
 

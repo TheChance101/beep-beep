@@ -9,6 +9,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
+import presentation.resturantDetails.MealUIState
+import presentation.resturantDetails.toUIState
 
 class SearchScreenModel(private val search: ISearchUseCase) :
     BaseScreenModel<SearchUiState, SearchUiEffect>(SearchUiState()), SearchInteractionListener {
@@ -29,8 +31,8 @@ class SearchScreenModel(private val search: ISearchUseCase) :
         sendNewEffect(SearchUiEffect.NavigateToRestaurant(restaurantId))
     }
 
-    override fun onMealClicked(mealId: String) {
-        updateState { it.copy(showMealSheet = true) }
+    override fun onMealClicked(meal: MealUIState) {
+        updateState { it.copy(showMealSheet = true, selectedMeal = meal) }
     }
 
     override fun onDismissSheet() {
@@ -54,7 +56,7 @@ class SearchScreenModel(private val search: ISearchUseCase) :
         updateState {
             it.copy(
                 restaurants = result.restaurants.toExploreUiState(),
-                meals = result.meals.toUiState()
+                meals = result.meals.toUIState()
             )
         }
     }

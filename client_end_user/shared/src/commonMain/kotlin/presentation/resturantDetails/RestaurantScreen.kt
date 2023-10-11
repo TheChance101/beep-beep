@@ -38,11 +38,11 @@ import presentation.composable.BpPriceLevel
 import presentation.composable.RatingBar
 import presentation.composable.SectionHeader
 import presentation.composable.modifier.noRippleEffect
-import presentation.resturantDetails.composable.Chip
-import presentation.resturantDetails.composable.CloseButton
+import presentation.resturantDetails.Composable.Chip
+import presentation.resturantDetails.Composable.CloseButton
 import presentation.composable.MealBottomSheet
-import presentation.resturantDetails.composable.NeedToLoginSheet
-import presentation.resturantDetails.composable.ToastMessage
+import presentation.resturantDetails.Composable.NeedToLoginSheet
+import presentation.resturantDetails.Composable.ToastMessage
 import resources.Resources
 
 object RestaurantScreen :

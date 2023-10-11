@@ -38,6 +38,7 @@ import presentation.composable.modifier.noRippleEffect
 import presentation.composable.modifier.roundedBorderShape
 import presentation.resturantDetails.RestaurantScreen
 import presentation.composable.MealBottomSheet
+import presentation.resturantDetails.MealUIState
 import resources.Resources
 import util.getStatusBarPadding
 import util.root
@@ -133,7 +134,7 @@ class SearchScreen :
             items(state.meals) {
                 MealCard(
                     meal = it,
-                    onClick = listener::onMealClicked
+                    modifier = Modifier.noRippleEffect { listener.onMealClicked(it) }
                 )
             }
         }
@@ -171,12 +172,11 @@ class SearchScreen :
 
     @Composable
     private fun MealCard(
-        meal: MealUiState,
-        onClick: (String) -> Unit,
+        meal: MealUIState,
         modifier: Modifier = Modifier,
     ) {
         Row(
-            modifier = modifier.fillMaxWidth().noRippleEffect { onClick(meal.id) }
+            modifier = modifier.fillMaxWidth()
                 .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -204,7 +204,7 @@ class SearchScreen :
                     )
 
                     Text(
-                        text = meal.price,
+                        text = "${meal.currency} ${meal.price}",
                         style = Theme.typography.body,
                         color = Theme.colors.primary,
                         maxLines = 1

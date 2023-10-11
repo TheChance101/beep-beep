@@ -1,4 +1,4 @@
-package presentation.resturantDetails.composable
+package presentation.resturantDetails.Composable
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
