@@ -86,7 +86,7 @@ class MealValidationTest {
         // given a meal with more than max cuisines
         val cuisines = mutableListOf<Cuisine>()
         for (i in 0..(MAX_CUISINE + 1)) {
-            cuisines.add(Cuisine("64cc5fdd52F4136b92938f8c", "Italian"))
+            cuisines.add(Cuisine("64cc5fdd52F4136b92938f8c", "Italian",""))
         }
         val emptyCuisinesMeal = createValidMeal().copy(cuisines = cuisines)
         val cuisineExecutable = Executable { mealValidation.validateAddMeal(emptyCuisinesMeal) }
@@ -216,6 +216,7 @@ class MealValidationTest {
             price = 20.0,
             cuisines = listOf(Cuisine("6BFC9A2D8E15C037F921D4A6", "Italian")),
             currency = "USD",
+            image = "",
         )
     }
 
@@ -234,6 +235,7 @@ class MealValidationTest {
             restaurantId = "2a1b3c4d5e6f7a8b9c0d1e2f",
             cuisines = listOf(),
             currency = "USD",
+            image = "",
         )
         // when validateUpdateMeal is invoked
         val result = Executable { mealValidation.validateUpdateMeal(mealDetails) }
@@ -254,6 +256,7 @@ class MealValidationTest {
             restaurantId = restaurantId,
             cuisines = listOf(),
             currency = "USD",
+            image = "",
         )
         // when validateUpdateMeal is invoked
         val result = Executable { mealValidation.validateUpdateMeal(mealDetails) }
@@ -274,6 +277,7 @@ class MealValidationTest {
             restaurantId = "2a1b3c4d5e6f7a8b9c0d1e2f",
             cuisines = listOf(),
             currency = "USD",
+            image = "",
         )
         // when validateUpdateMeal is invoked
         val result = Executable { mealValidation.validateUpdateMeal(mealDetails) }
@@ -294,6 +298,7 @@ class MealValidationTest {
             restaurantId = restaurantId,
             cuisines = listOf(),
             currency = "USD",
+            image = "",
         )
         // when validateUpdateMeal is invoked
         val result = Executable { mealValidation.validateUpdateMeal(mealDetails) }
@@ -313,6 +318,7 @@ class MealValidationTest {
             restaurantId = "2a1b3c4d5e6f7a8b9c0d1e2f",
             cuisines = emptyList(),
             currency = "USD",
+            image = "",
         )
         // when validateUpdateMeal is invoked
         val result = Executable { mealValidation.validateUpdateMeal(mealDetails) }
@@ -333,6 +339,7 @@ class MealValidationTest {
             restaurantId = "2a1b3c4d5e6f7a8b9c0d1e2f",
             cuisines = listOf(),
             currency = "USD",
+            image = "",
         )
         // when validateUpdateMeal is invoked
         val result = Executable { mealValidation.validateUpdateMeal(mealDetails) }
@@ -367,6 +374,7 @@ class MealValidationTest {
             restaurantId = "2a1b3c4d5e6f7a8b9c0d1e2f",
             cuisines = listOf(),
             currency = "USD",
+            image = "",
         )
         // when validateUpdateMeal is invoked
         val result = Executable { mealValidation.validateUpdateMeal(mealDetails) }
@@ -387,6 +395,7 @@ class MealValidationTest {
             restaurantId = "2a1b3c4d5e6f7a8b9c0d1e2f",
             cuisines = listOf(),
             currency = "USD",
+            image = "",
         )
         // when validateUpdateMeal is invoked
         val result = Executable { mealValidation.validateUpdateMeal(mealDetails) }
@@ -416,6 +425,7 @@ class MealValidationTest {
             restaurantId = "2a1b3c4d5e6f7a8b9c0d1e2f",
             cuisines = cuisines,
             currency = "USD",
+            image = "",
         )
         // when  validateUpdateMeal is invoked
         val result = Executable { mealValidation.validateUpdateMeal(mealDetails) }
@@ -445,6 +455,7 @@ class MealValidationTest {
             restaurantId = "2a1b3c4d5e6f7a8b9c0d1e2f",
             cuisines = cuisines,
             currency = "USD",
+            image = "",
         )
         // when  validateUpdateMeal is invoked
         val result = Executable { mealValidation.validateUpdateMeal(mealDetails) }
@@ -474,6 +485,7 @@ class MealValidationTest {
             restaurantId = "6BFC9A2D8E15C037F921D4A6",
             cuisines = cuisines,
             currency = "USD",
+            image = "",
         )
         // when validateUpdateMeal is invoked
         val result = Executable { mealValidation.validateUpdateMeal(mealDetails) }

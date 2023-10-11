@@ -22,7 +22,7 @@ fun MealDetails.toCollection(): MealCollection =
         image = image
     )
 
-fun MealCollection.toEntity() = Meal(
+fun MealCollection.toMealEntity() = Meal(
     id = id.toString(),
     restaurantId = restaurantId.toString(),
     restaurantName = "",
@@ -33,7 +33,7 @@ fun MealCollection.toEntity() = Meal(
     image = image
 )
 
-fun MealWithCuisines.toEntity() = MealDetails(
+fun MealWithCuisines.toMealDeatilsEntity():MealDetails = MealDetails(
     id = id.toString(),
     restaurantId = restaurantId.toString(),
     name = name,
@@ -44,7 +44,11 @@ fun MealWithCuisines.toEntity() = MealDetails(
     image = image
 )
 
-fun List<MealCollection>.toEntity(): List<Meal> = this.map { it.toEntity() }
+
+
+fun List<MealCollection>.toMealsEntity(): List<Meal> = this.map { it.toMealEntity() }
+
+
 
 fun MealCollection.toMealInCart(quantity: Int) = CartCollection.MealCollection(
     mealId = id,
@@ -66,4 +70,4 @@ fun MealWithRestaurant.toEntity() = Meal(
 )
 
 
-fun List<MealWithRestaurant>.toEntity() = map { it.toEntity() }
+fun List<MealWithRestaurant>.toMealRestaurantEntity(): List<Meal> = map { it.toEntity() }

@@ -480,6 +480,8 @@ class RestaurantValidationTest  {
                 currency = "USD",
                 location = Location(0.0, 0.0),
                 address = "123 Main Street",
+                ownerUserName = "owner",
+                restaurantImage = "image",
             ),
             Restaurant(
                 id = "6BFC9A2D8E15C037F921D4A6",
@@ -493,7 +495,9 @@ class RestaurantValidationTest  {
                 rate = 4.5,
                 description = "G".repeat(DESCRIPTION_MIN_LENGTH),
                 address = "123 Main Street",
-                currency = "USD"
+                currency = "USD",
+                ownerUserName = "owner",
+                restaurantImage = "image",
             ),
             Restaurant(
                 id = "6BFC9A2D8E15C037F921D4A6",
@@ -507,7 +511,9 @@ class RestaurantValidationTest  {
                 rate = 4.5,
                 description = "G".repeat(DESCRIPTION_MIN_LENGTH),
                 address = "123 Main Street",
-                currency = "USD"
+                currency = "USD",
+                ownerUserName = "owner",
+                restaurantImage = "image",
             )
         )
     }

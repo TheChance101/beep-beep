@@ -4,6 +4,7 @@ import org.junit.Test
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.function.Executable
+import org.thechance.service_restaurant.domain.entity.Location
 import org.thechance.service_restaurant.domain.utils.Validation
 import org.thechance.service_restaurant.domain.utils.Validation.Companion.DESCRIPTION_MAX_LENGTH
 import org.thechance.service_restaurant.domain.utils.Validation.Companion.DESCRIPTION_MIN_LENGTH
@@ -161,7 +162,8 @@ class ValidationTest {
         // given a latitude and longitude that is valid
         val validLatitude = 25.0
         val validLongitude = -70.0
-        val result = validation.isValidLocation(validLatitude, validLongitude)
+
+        val result = validation.isValidLocation( Location(validLatitude, validLongitude))
         // then return true
         Assertions.assertEquals(true, result)
     }
@@ -171,7 +173,7 @@ class ValidationTest {
         // given a latitude that is valid and a longitude that is invalid
         val invalidLatitude = -100.0
         val validLongitude = 120.0
-        val result = validation.isValidLocation(invalidLatitude, validLongitude)
+        val result = validation.isValidLocation( Location(invalidLatitude, validLongitude))
         // then return false
         Assertions.assertEquals(false, result)
     }
@@ -181,7 +183,7 @@ class ValidationTest {
         // given a latitude that is valid  and a longitude that more than -180.0
         val validLatitude = 40.0
         val invalidLongitude = -190.0
-        val result = validation.isValidLocation(validLatitude, invalidLongitude)
+        val result = validation.isValidLocation( Location(validLatitude, invalidLongitude))
         // then return false
         Assertions.assertEquals(false, result)
     }
@@ -191,7 +193,7 @@ class ValidationTest {
         // given a latitude that more than 90.0 and a longitude that more than 180.0
         val invalidLatitude = 95.0
         val invalidLongitude = 200.0
-        val result = validation.isValidLocation(invalidLatitude, invalidLongitude)
+        val result = validation.isValidLocation( Location(invalidLatitude, invalidLongitude))
         // then return false
         Assertions.assertEquals(false, result)
     }
