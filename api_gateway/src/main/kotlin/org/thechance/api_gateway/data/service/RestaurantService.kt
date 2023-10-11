@@ -247,6 +247,18 @@ class RestaurantService(
         }
     }
 
+    @OptIn(InternalAPI::class)
+    suspend fun updateCart(userId: String, cart: CartDto, language: String): CartDto {
+        return client.tryToExecute(
+            api = APIs.RESTAURANT_API, attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, language) }
+        ) {
+            put("/cart/$userId/replace") {
+                body = Json.encodeToString(CartDto.serializer(), cart)
+            }
+        }
+    }
+
     suspend fun orderCart(userId: String, language: String): OrderDto {
         return client.tryToExecute(
             api = APIs.RESTAURANT_API, attributes = attributes,
@@ -255,7 +267,6 @@ class RestaurantService(
             delete("/cart/$userId/orderNow")
         }
     }
-
     //endregion
 
     //region order
