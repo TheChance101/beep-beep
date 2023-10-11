@@ -13,6 +13,10 @@ import org.thechance.service_restaurant.data.DataBaseContainer.Companion.RESTAUR
 import org.thechance.service_restaurant.data.collection.*
 import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
+import org.thechance.service_restaurant.data.collection.mapper.toMealDeatilsEntity
+import org.thechance.service_restaurant.data.collection.mapper.toMealEntity
+import org.thechance.service_restaurant.data.collection.mapper.toMealRestaurantEntity
+import org.thechance.service_restaurant.data.collection.mapper.toMealsEntity
 import org.thechance.service_restaurant.data.collection.relationModels.*
 import org.thechance.service_restaurant.data.utils.getNonEmptyFieldsMap
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
@@ -114,7 +118,7 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
         return container.mealCollection.find(
             MealCollection::restaurantId eq ObjectId(restaurantId),
             MealCollection::isDeleted eq false
-        ).paginate(page, limit).toList().toEntity()
+        ).paginate(page, limit).toList().toMealsEntity()
 
     }
 
@@ -255,7 +259,7 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
             sort(descending(OrderWithRestaurant::createdAt)),
             skip((page - 1) * limit),
             limit(limit)
-        ).toList().toEntity()
+        ).toList().toMealRestaurantEntity()
     }
 
     override suspend fun getMealById(id: String): MealDetails? {
@@ -267,7 +271,7 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
                 foreignField = "_id",
                 newAs = MealWithCuisines::cuisines.name
             )
-        ).toList().firstOrNull()?.toEntity()
+        ).toList().firstOrNull()?.toMealDeatilsEntity()
     }
 
     override suspend fun getMealCuisines(mealId: String): List<Cuisine> {
@@ -296,7 +300,7 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
         ).isSuccessfullyUpdated()
 
         return if (addedMeal && addedMealToCuisine) {
-            mealDocument.toEntity()
+            mealDocument.toMealEntity()
         } else {
             throw MultiErrorException(listOf(ERROR_ADD))
         }
@@ -326,7 +330,7 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
             filter = MealCollection::id eq ObjectId(meal.id),
             update = Updates.combine(fieldsToUpdate.map { Updates.set(it.key, it.value) }),
             options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
-        )?.toEntity() ?: throw MultiErrorException(listOf(NOT_FOUND))
+        )?.toMealEntity() ?: throw MultiErrorException(listOf(NOT_FOUND))
 
     }
 

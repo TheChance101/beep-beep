@@ -13,6 +13,8 @@ import org.thechance.service_restaurant.data.collection.MealCollection
 import org.thechance.service_restaurant.data.collection.RestaurantCollection
 import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
+import org.thechance.service_restaurant.data.collection.mapper.toMealEntity
+import org.thechance.service_restaurant.data.collection.mapper.toMealsEntity
 import org.thechance.service_restaurant.data.collection.relationModels.CategoryRestaurant
 import org.thechance.service_restaurant.data.collection.relationModels.MealCuisines
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
@@ -157,7 +159,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
                 foreignField = "_id",
                 newAs = MealCuisines::meals.name
             )
-        ).toList().first().meals.filterNot { it.isDeleted }.toEntity()
+        ).toList().first().meals.filterNot { it.isDeleted }.toMealsEntity()
     }
 
     override suspend fun addCuisine(cuisine: Cuisine): Cuisine {
