@@ -3,6 +3,7 @@ package presentation.base
 import cafe.adriel.voyager.core.model.ScreenModel
 import domain.utils.InvalidPasswordException
 import domain.utils.InvalidUsernameException
+import domain.utils.LocationAccessDeniedException
 import domain.utils.UnAuthorizedException
 import domain.utils.UserNotFoundException
 import kotlinx.coroutines.CoroutineDispatcher
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
@@ -50,7 +52,9 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
         inScope: CoroutineScope = viewModelScope
     ): Job {
         return runWithErrorCheck(onError, inScope) {
-            function().collect {
+            function()
+                .debounce(1000)
+                .collect {
                 onNewValue(it)
             }
         }
@@ -83,7 +87,9 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
                 onError(ErrorState.UserNotFound)
             } catch (e: UnAuthorizedException) {
                 onError(ErrorState.UnAuthorized)
-            } catch (e: Exception) {
+            } catch (e: LocationAccessDeniedException) {
+                onError(ErrorState.LocationAccessDenied)
+            }catch (e: Exception) {
                 onError(ErrorState.RequestFailed)
             }
         }

@@ -9,6 +9,7 @@ import data.remote.model.ServerResponse
 import data.remote.model.SessionDto
 import data.remote.model.UserDetailsDto
 import data.remote.model.UserDto
+import domain.entity.Restaurant
 import domain.entity.Session
 import domain.entity.User
 import domain.entity.UserCreation
@@ -93,8 +94,10 @@ class UserGateway(client: HttpClient) : BaseGateway(client), IUserGateway {
         return User(name = "Test", currency = "$", walletValue = 100.0)
     }
 
-    override suspend fun getFavoriteRestaurants(): List<domain.entity.Restaurant> {
-        return restaurants.map { it.toEntity() }
+    override suspend fun getFavoriteRestaurants(): List<Restaurant> {
+        return tryToExecute<ServerResponse<List<RestaurantDto>>> {
+            get("/user/favorite")
+        }.value?.map { it.toEntity() } ?: throw GeneralException.NotFoundException
     }
 
     override suspend fun addRestaurantToFavorites(restaurantId: String): Boolean {
