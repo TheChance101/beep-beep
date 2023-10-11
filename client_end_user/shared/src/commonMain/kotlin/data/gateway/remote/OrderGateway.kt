@@ -41,7 +41,7 @@ class OrderGateway(client: HttpClient) : BaseGateway(client), IOrderGateway {
     @OptIn(InternalAPI::class)
     override suspend fun updateCartMeals(cart: Cart) {
         tryToExecute<ServerResponse<CartDto>> {
-            put("/cart") {
+            put("/cart/replace") {
                 body = Json.encodeToString(CartDto.serializer(), cart.toDto())
             }
         }
