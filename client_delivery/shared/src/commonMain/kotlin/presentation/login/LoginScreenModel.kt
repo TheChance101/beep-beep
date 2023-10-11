@@ -16,18 +16,6 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
 
-    init {
-        loginIfKeepMeLoggedInFlagSet()
-    }
-
-    private fun loginIfKeepMeLoggedInFlagSet(){
-        viewModelScope.launch {
-            if (manageLoginUser.getKeepMeLoggedInFlag()) {
-                sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
-            }
-        }
-    }
-
     override fun onUserNameChanged(userName: String) {
         updateState { it.copy(userName = userName) }
     }
