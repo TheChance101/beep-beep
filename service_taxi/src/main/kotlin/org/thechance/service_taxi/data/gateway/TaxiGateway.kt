@@ -17,6 +17,7 @@ import org.thechance.service_taxi.data.DataBaseContainer
 import org.thechance.service_taxi.data.collection.TaxiCollection
 import org.thechance.service_taxi.data.collection.TripCollection
 import org.thechance.service_taxi.data.collection.relationModel.TripWithTaxi
+import org.thechance.service_taxi.data.utils.isSuccessfullyUpdated
 import org.thechance.service_taxi.data.utils.paginate
 import org.thechance.service_taxi.domain.entity.Taxi
 import org.thechance.service_taxi.domain.entity.Trip
