@@ -1,10 +1,10 @@
 package data.remote.mapper
 
-import data.remote.model.TripDto
-import domain.entity.Trip
+import data.remote.model.OrderDto
+import domain.entity.Order
 
-fun TripDto.toTripEntity(): Trip {
-    return Trip(
+fun OrderDto.toTripEntity(): Order {
+    return Order(
         id = id,
         restaurantName = restaurantName,
         restaurantImage = restaurantImage,

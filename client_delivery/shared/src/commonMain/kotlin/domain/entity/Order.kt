@@ -1,7 +1,7 @@
 package domain.entity
 
 
-data class Trip(
+data class Order(
     val id: String,
     val restaurantName: String,
     val restaurantImage: String,
