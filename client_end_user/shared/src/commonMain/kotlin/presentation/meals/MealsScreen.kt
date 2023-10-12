@@ -19,13 +19,16 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
+import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
 import presentation.composable.BottomSheet
 import presentation.composable.MealBottomSheet
 import presentation.composable.MealCard
 import presentation.composable.ModalBottomSheetState
 import presentation.composable.modifier.noRippleEffect
+import presentation.resturantDetails.Composable.NeedToLoginSheet
 import presentation.resturantDetails.MealUIState
+import presentation.search.SearchUiEffect
 import resources.Resources
 import util.getStatusBarPadding
 
@@ -40,6 +43,7 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
     override fun onEffect(effect: MealsUiEffect, navigator: Navigator) {
         when (effect) {
             is MealsUiEffect.NavigateBack -> navigator.pop()
+            is MealsUiEffect.NavigateToLogin -> navigator.push(LoginScreen())
         }
     }
 
@@ -48,13 +52,20 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
         val sheetState = remember { ModalBottomSheetState() }
         BottomSheet(
             sheetContent = {
-                MealBottomSheet(
-                    meal = state.selectedMeal,
-                    onDismissSheet = listener::onDismissSheet,
-                    onDecreaseQuantity = {},
-                    onIncreaseQuantity = {},
-                    onAddToCart = {}
-                )
+                if (state.showMealSheet) {
+                    MealBottomSheet(
+                        meal = state.selectedMeal,
+                        onAddToCart = listener::onAddToCart,
+                        onDismissSheet = listener::onDismissSheet,
+                        onIncreaseQuantity = listener::onIncreaseMealQuantity,
+                        onDecreaseQuantity = listener::onDecreaseMealQuantity
+                    )
+                } else if (state.showLoginSheet) {
+                    NeedToLoginSheet(
+                        text = Resources.strings.loginToAddToFavourite,
+                        onClick = listener::onLoginClicked,
+                    )
+                }
             },
             sheetBackgroundColor = Theme.colors.background,
             onBackGroundClicked = listener::onDismissSheet,
@@ -68,8 +79,8 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
             }
         )
 
-        LaunchedEffect(state.showMealSheet) {
-            if (state.showMealSheet) {
+        LaunchedEffect(state.showMealSheet, state.showLoginSheet) {
+            if (state.showMealSheet || state.showLoginSheet) {
                 sheetState.show()
             } else {
                 sheetState.dismiss()

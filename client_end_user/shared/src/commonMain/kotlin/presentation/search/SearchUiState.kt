@@ -13,9 +13,8 @@ data class SearchUiState(
     val showMealSheet: Boolean = false,
     val selectedMeal: MealUIState = MealUIState(),
     val isLogin: Boolean = false,
-    val showLoginSheet: Boolean = false,
-
-    )
+    val showLoginSheet: Boolean = false
+)
 
 data class RestaurantUiState(
     val id: String = "",
