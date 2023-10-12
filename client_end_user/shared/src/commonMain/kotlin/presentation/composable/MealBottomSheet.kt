@@ -36,9 +36,10 @@ fun MealBottomSheet(
     onDismissSheet: () -> Unit,
     onDecreaseQuantity: () -> Unit,
     onIncreaseQuantity: () -> Unit,
-    onAddToCart: () -> Unit
+    onAddToCart: () -> Unit,
+    modifier: Modifier= Modifier
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = modifier.fillMaxWidth()) {
         Box(
             modifier = Modifier.fillMaxWidth()
         ) {

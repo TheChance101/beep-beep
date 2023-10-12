@@ -14,8 +14,12 @@ import resources.Resources
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NeedToLoginSheet(onClick: () -> Unit, text: String) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+fun NeedToLoginSheet(
+    onClick: () -> Unit,
+    text: String,
+    modifier: Modifier= Modifier
+) {
+    Column(modifier = modifier.fillMaxWidth()) {
         Text(
             text = text,
             style = Theme.typography.title,

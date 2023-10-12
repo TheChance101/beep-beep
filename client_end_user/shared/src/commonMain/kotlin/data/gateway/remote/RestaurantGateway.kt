@@ -159,7 +159,7 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client), IRes
                 name = "Burger",
                 price = price,
                 currency = "$",
-                description = "Nice meal",
+                description = "Lorem ipsum dolor sit amet consectetur.",
                 restaurantName = "Restaurant Name",
                 image = "https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=1024x1024&w=is&k=20&c=iBBM7YTn5Rf-QhCd0kkvFaDNLV6Rb02iMQlS39LSSTI="
             )

@@ -30,6 +30,7 @@ import presentation.resturantDetails.Composable.NeedToLoginSheet
 import presentation.resturantDetails.MealUIState
 import presentation.search.SearchUiEffect
 import resources.Resources
+import util.getNavigationBarPadding
 import util.getStatusBarPadding
 
 class MealsScreen(private val cuisineId: String, private val cuisineName: String) :
@@ -54,6 +55,7 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
             sheetContent = {
                 if (state.showMealSheet) {
                     MealBottomSheet(
+                        modifier = Modifier.padding(getNavigationBarPadding()),
                         meal = state.selectedMeal,
                         onAddToCart = listener::onAddToCart,
                         onDismissSheet = listener::onDismissSheet,
@@ -62,6 +64,7 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
                     )
                 } else if (state.showLoginSheet) {
                     NeedToLoginSheet(
+                        modifier = Modifier.padding(getNavigationBarPadding()),
                         text = Resources.strings.loginToAddToFavourite,
                         onClick = listener::onLoginClicked,
                     )
@@ -95,7 +98,11 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
         onMealSelected: (MealUIState) -> Unit,
         onBackClicked: () -> Unit
     ) {
-        Column(Modifier.fillMaxSize().background(Theme.colors.background)) {
+        Column(
+            Modifier.fillMaxSize().background(Theme.colors.background).padding(
+                getNavigationBarPadding()
+            )
+        ) {
             BpAppBar(
                 title = state.cuisineName,
                 onNavigateUp = onBackClicked,

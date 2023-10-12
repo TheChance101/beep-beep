@@ -79,7 +79,7 @@ class HomeScreen : BaseScreen<
 
         when (effect) {
             is HomeScreenUiEffect.NavigateToMeals -> {
-                navigator.push(MealsScreen(effect.cuisineId, effect.cuisineName))
+                navigator.root?.push(MealsScreen(effect.cuisineId, effect.cuisineName))
             }
             is HomeScreenUiEffect.NavigateToCuisines -> navigator.root?.push(CuisinesScreen())
             is HomeScreenUiEffect.NavigateToChatSupport -> navigator.root?.push(ChatSupportScreen())

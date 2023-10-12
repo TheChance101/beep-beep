@@ -44,6 +44,7 @@ import presentation.composable.MealBottomSheet
 import presentation.resturantDetails.Composable.NeedToLoginSheet
 import presentation.resturantDetails.Composable.ToastMessage
 import resources.Resources
+import util.getNavigationBarPadding
 
 object RestaurantScreen :
     BaseScreen<RestaurantScreenModel, RestaurantUIState, RestaurantUIEffect, RestaurantInteractionListener>() {
@@ -72,6 +73,7 @@ object RestaurantScreen :
                 sheetContent = {
                     if (state.showMealSheet)
                         MealBottomSheet(
+                            modifier = Modifier.padding(getNavigationBarPadding()),
                             meal = state.meal,
                             onAddToCart = listener::onAddToCart,
                             onDismissSheet = listener::onDismissSheet,
@@ -80,6 +82,7 @@ object RestaurantScreen :
                         )
                     if (state.showLoginSheet)
                         NeedToLoginSheet(
+                            modifier = Modifier.padding(getNavigationBarPadding()),
                             text = Resources.strings.loginToAddToFavourite,
                             onClick = {
                                 listener.onDismissSheet()
@@ -91,12 +94,10 @@ object RestaurantScreen :
                 onBackGroundClicked = listener::onDismissSheet,
                 sheetState = state.sheetState,
             ) {
-
                 Image(
                     painter = painterResource(Resources.images.placeholder),
                     contentDescription = "background",
                 )
-
                 CloseButton(
                     onClick = { listener.onBack() },
                     modifier = Modifier.align(Alignment.TopCenter),
@@ -227,10 +228,11 @@ object RestaurantScreen :
                         Resources.strings.sweets,
                         modifier = Modifier.padding(start = 16.dp, bottom = 8.dp, top = 28.dp)
                     )
+
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         contentPadding = PaddingValues(horizontal = 16.dp),
-                        modifier = Modifier.padding(bottom = 16.dp)
+                        modifier = Modifier.padding(getNavigationBarPadding())
                     ) {
                         items(state.sweets.size) { index ->
                             BpImageCard(
