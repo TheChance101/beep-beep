@@ -16,8 +16,8 @@ import kotlinx.coroutines.flow.map
 
 class MapRemoteGateway(client: HttpClient) : IMapRemoteGateway,
     BaseRemoteGateway(client = client) {
-    override suspend fun getOrders(): Flow<Order> {
-        return client.tryToExecuteWebSocket<BaseResponse<Order>>("/trip/delivery")
+    override suspend fun getOrders(deliveryId:String): Flow<Order> {
+        return client.tryToExecuteWebSocket<BaseResponse<Order>>("/trip/delivery$deliveryId")
             .map { baseResponse ->
                 if (baseResponse.isSuccess) {
                     baseResponse.value

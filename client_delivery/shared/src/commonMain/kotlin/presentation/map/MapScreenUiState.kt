@@ -11,6 +11,7 @@ data class MapScreenUiState(
     val orderDistance: String = "20 KM",
     val orderDuration: String = "20 min",
     val orderUiState: OrderUiState = OrderUiState(),
+    val deliveryLocation: LocationUiState = LocationUiState(),
 )
 
 data class OrderUiState(
