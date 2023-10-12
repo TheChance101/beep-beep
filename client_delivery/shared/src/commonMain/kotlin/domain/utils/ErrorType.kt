@@ -18,3 +18,6 @@ open class InvalidCredentialsException(message: String) : AuthorizationException
 class UserNotFoundException(message: String) : AuthorizationException(message)
 class UnknownErrorException : BpException()
 class LocationAccessDeniedException: BpException()
+open class RequestException() : BpException()
+class ServerSideException : RequestException()
+
