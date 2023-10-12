@@ -1,21 +1,17 @@
 package presentation.resturantDetails
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -31,7 +27,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
-import domain.entity.PriceLevel
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
@@ -40,16 +35,15 @@ import presentation.base.BaseScreen
 import presentation.composable.BottomSheet
 import presentation.composable.BpPriceLevel
 import presentation.composable.ItemSection
+import presentation.composable.MealBottomSheet
 import presentation.composable.RatingBar
 import presentation.composable.modifier.noRippleEffect
 import presentation.resturantDetails.Composable.Chip
 import presentation.resturantDetails.Composable.CloseButton
-import presentation.resturantDetails.Composable.MealBottomSheet
 import presentation.resturantDetails.Composable.NeedToLoginSheet
 import presentation.resturantDetails.Composable.ToastMessage
 import resources.Resources
 import util.getNavigationBarPadding
-import util.getStatusBarPadding
 
 
 data class RestaurantScreen(val restaurantId: String) :

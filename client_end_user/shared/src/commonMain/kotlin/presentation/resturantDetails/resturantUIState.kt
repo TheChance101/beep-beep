@@ -24,6 +24,8 @@ data class RestaurantUIState(
 
 data class MealUIState(
     val id: String = "",
+    val restaurantName: String = "",
+    val totalPrice: Double = 0.0,
     val name: String = "",
     val price: Double = 0.0,
     val image: String = "",

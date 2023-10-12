@@ -86,7 +86,7 @@ class HomeScreenModel(
         sendNewEffect(HomeScreenUiEffect.NavigateToMeals(cuisineId, cuisine.cuisineName))
     }
 
-    override fun onclickSeeAllCuisines() {
+    override fun onClickSeeAllCuisines() {
         sendNewEffect(HomeScreenUiEffect.NavigateToCuisines)
     }
 
@@ -123,11 +123,7 @@ class HomeScreenModel(
         sendNewEffect(HomeScreenUiEffect.NavigateToCart)
     }
 
-    override fun onChangeSearchText(searchText: String) {
-        updateState { it.copy(searchTerm = searchText) }
-    }
-
-    override fun onClickRestaurant(restaurantId: String) {
+    override fun onClickRestaurantCard(restaurantId: String) {
         sendNewEffect(HomeScreenUiEffect.NavigateToRestaurantDetails(restaurantId))
     }
 

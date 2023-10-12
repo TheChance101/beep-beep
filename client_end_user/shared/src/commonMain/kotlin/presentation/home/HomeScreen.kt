@@ -26,9 +26,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.TextStyle
@@ -61,15 +63,6 @@ import presentation.meals.MealsScreen
 import presentation.resturantDetails.RestaurantScreen
 import resources.Resources
 import util.root
-import androidx.compose.foundation.layout.Box
-import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.focus.onFocusEvent
-import androidx.compose.ui.input.key.onInterceptKeyBeforeSoftKeyboard
-import androidx.compose.ui.input.key.onKeyEvent
-import androidx.compose.ui.input.key.onPreviewKeyEvent
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.onPlaced
 
 class HomeScreen : BaseScreen<
         HomeScreenModel,
@@ -263,7 +256,7 @@ class HomeScreen : BaseScreen<
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     SectionHeader(
-                        onClickViewAll = listener::onclickSeeAllCuisines,
+                        onClickViewAll = listener::onClickSeeAllCuisines,
                         title = Resources.strings.cuisineSectionTitle,
                         showViewAll = true
                     )
@@ -285,7 +278,7 @@ class HomeScreen : BaseScreen<
             item {
                 AnimatedVisibility(state.favoriteRestaurants.isNotEmpty()) {
                     ItemSection(
-                        { restaurantId -> listener.onClickRestaurant(restaurantId) },
+                        { restaurantId -> listener.onClickRestaurantCard(restaurantId) },
                         header = Resources.strings.favoriteRestaurants,
                         ids = state.favoriteRestaurants.map { it.id },
                         titles = state.favoriteRestaurants.map { it.name },
