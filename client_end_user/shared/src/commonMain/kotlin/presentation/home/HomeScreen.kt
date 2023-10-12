@@ -272,6 +272,8 @@ class HomeScreen : BaseScreen<
                         ratings = state.favoriteRestaurants.map { it.rating },
                         priceLevels = state.favoriteRestaurants.map { it.priceLevel },
                         painters = painters,
+                        hasRating = true,
+                        hasPriceLevel = true,
                     )
                 }
             }
@@ -285,6 +287,8 @@ class HomeScreen : BaseScreen<
                         painters = painters,
                         modifier = Modifier.padding(top = 16.dp),
                         hasOffer = true,
+                        hasPriceLevel = true,
+                        hasRating = true,
                         offers = listOf("15 %", "15 %", "15 %")
                     )
                 }
@@ -300,6 +304,8 @@ class HomeScreen : BaseScreen<
                         painters = painters,
                         modifier = Modifier.padding(top = 16.dp),
                         hasDeliveryPrice = true,
+                        hasPriceLevel = true,
+                        hasRating = true,
                         deliveryPrices = listOf("Free", "Free", "Free")
                     )
                 }

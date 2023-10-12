@@ -58,15 +58,15 @@ data class RestaurantInfoUIState(
 fun Restaurant.toUIState() = RestaurantInfoUIState(
     id = id ,
     name = name,
-    address = "address, 45 street",
+    address = address,
     rating = rate,
     priceLevel = priceLevel,
     image = "",
     discount = doubleToPercentage(1500.0),
     hasFreeDelivery = true,
-    description = "this is restaurant description",
+    description = description,
 )
 
 fun doubleToPercentage(value: Double): Int {
-    return (value.toDouble() / 100.0).toInt()
+    return (value / 100.0).toInt()
 }

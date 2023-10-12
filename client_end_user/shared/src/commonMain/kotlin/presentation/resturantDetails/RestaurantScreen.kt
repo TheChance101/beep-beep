@@ -1,18 +1,17 @@
 package presentation.resturantDetails
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -23,21 +22,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
-import domain.entity.PriceLevel
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
 import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
 import presentation.composable.BottomSheet
-import presentation.composable.BpImageCard
 import presentation.composable.BpPriceLevel
+import presentation.composable.ItemSection
 import presentation.composable.RatingBar
-import presentation.composable.SectionHeader
 import presentation.composable.modifier.noRippleEffect
 import presentation.resturantDetails.Composable.Chip
 import presentation.resturantDetails.Composable.CloseButton
@@ -45,6 +43,8 @@ import presentation.resturantDetails.Composable.MealBottomSheet
 import presentation.resturantDetails.Composable.NeedToLoginSheet
 import presentation.resturantDetails.Composable.ToastMessage
 import resources.Resources
+import util.getNavigationBarPadding
+import util.getStatusBarPadding
 
 
 data class RestaurantScreen(val restaurantId: String) :
@@ -67,7 +67,8 @@ data class RestaurantScreen(val restaurantId: String) :
     @Composable
     override fun onRender(state: RestaurantUIState, listener: RestaurantInteractionListener) {
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize()
+                .padding(bottom = getNavigationBarPadding().calculateBottomPadding()),
             contentAlignment = Alignment.TopCenter
         ) {
             BottomSheet(
@@ -170,26 +171,30 @@ data class RestaurantScreen(val restaurantId: String) :
                         modifier = Modifier.padding(horizontal = 16.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        Chip(color = Theme.colors.secondary) {
-                            Text(
-                                text = "${state.restaurantInfo.discount}% ${Resources.strings.off}",
-                                style = Theme.typography.body,
-                                color = Theme.colors.primary,
-                            )
-                        }
-                        Chip(color = Theme.colors.successContainer) {
-                            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                                Icon(
-                                    painter = painterResource(Resources.images.scooter),
-                                    contentDescription = null,
-                                    tint = Theme.colors.success,
-                                    modifier = Modifier.size(16.dp)
-                                )
+                        AnimatedVisibility(state.restaurantInfo.discount > 0) {
+                            Chip(color = Theme.colors.secondary) {
                                 Text(
-                                    text = Resources.strings.free,
+                                    text = "${state.restaurantInfo.discount}% ${Resources.strings.off}",
                                     style = Theme.typography.body,
-                                    color = Theme.colors.success,
+                                    color = Theme.colors.primary,
                                 )
+                            }
+                        }
+                        AnimatedVisibility(state.restaurantInfo.hasFreeDelivery) {
+                            Chip(color = Theme.colors.successContainer) {
+                                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                    Icon(
+                                        painter = painterResource(Resources.images.scooter),
+                                        contentDescription = null,
+                                        tint = Theme.colors.success,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Text(
+                                        text = Resources.strings.free,
+                                        style = Theme.typography.body,
+                                        color = Theme.colors.success,
+                                    )
+                                }
                             }
                         }
                     }
@@ -197,63 +202,35 @@ data class RestaurantScreen(val restaurantId: String) :
                         modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
                         color = Theme.colors.contentBorder
                     )
-
-                    SectionHeader(
-                        Resources.strings.mostOrdered,
-                        modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
-                    )
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(horizontal = 16.dp)
-                    ) {
-                        items(state.mostOrders.size) { index ->
-                            BpImageCard(
-                                title = state.mostOrders[index].name,
-                                painter = painterResource(Resources.images.placeholder),
-                                priceLevel = PriceLevel.LOW,
-                                hasPriceLevel = false,
-                                hasPrice = true,
-                                hasRate = false,
-                                price = state.mostOrders[index].price,
-                                currency = state.mostOrders[index].currency,
-                                modifier = Modifier.noRippleEffect {
-                                    listener.onGoToDetails(state.mostOrders[index].id)
-                                }
-                            )
-                        }
-                    }
-                    SectionHeader(
-                        Resources.strings.sweets,
-                        modifier = Modifier.padding(start = 16.dp, bottom = 8.dp, top = 28.dp)
-                    )
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(horizontal = 16.dp),
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    ) {
-                        items(state.sweets.size) { index ->
-                            BpImageCard(
-                                title = state.sweets[index].name,
-                                painter = painterResource(Resources.images.placeholder),
-                                priceLevel = PriceLevel.LOW,
-                                hasPriceLevel = false,
-                                hasPrice = true,
-                                price = state.mostOrders[index].price,
-                                currency = state.sweets[index].currency,
-                                hasRate = false,
-                                modifier = Modifier.noRippleEffect {
-                                    listener.onGoToDetails(state.mostOrders[index].id)
-                                }
-                            )
-                        }
+                    val painters = mutableListOf<Painter>()
+                    repeat(state.sweets.size) {
+                        painters.add(painterResource(Resources.images.placeholder))
                     }
 
+                    ItemSection(
+                        onClickItem = { orderId -> listener.onGoToDetails(orderId) },
+                        header = Resources.strings.sweets,
+                        titles = state.mostOrders.map { it.name },
+                        hasPrice = true,
+                        prices = state.mostOrders.map { it.price },
+                        painters = painters,
+                        modifier = Modifier.padding(vertical = 16.dp)
+                    )
+                    ItemSection(
+                        onClickItem = { orderId -> listener.onGoToDetails(orderId) },
+                        header = Resources.strings.sweets,
+                        titles = state.sweets.map { it.name },
+                        hasPrice = true,
+                        prices = state.sweets.map { it.price },
+                        painters = painters
+                    )
                 }
             }
             ToastMessage(
                 state = state.showToast,
                 message = Resources.strings.mealAddedToYourCart,
-                modifier = Modifier.align(Alignment.BottomCenter)
+                modifier = Modifier.padding(bottom = getStatusBarPadding().calculateBottomPadding())
+                    .align(Alignment.BottomCenter)
             )
         }
     }
