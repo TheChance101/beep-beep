@@ -82,7 +82,8 @@ class HomeScreenModel(
     }
 
     override fun onClickCuisineItem(cuisineId: String) {
-        sendNewEffect(HomeScreenUiEffect.NavigateToCuisineDetails(cuisineId))
+        val cuisine = state.value.recommendedCuisines.first { it.cuisineId == cuisineId }
+        sendNewEffect(HomeScreenUiEffect.NavigateToMeals(cuisineId, cuisine.cuisineName))
     }
 
     override fun onclickSeeAllCuisines() {

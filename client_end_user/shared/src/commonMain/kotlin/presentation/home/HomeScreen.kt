@@ -46,7 +46,6 @@ import presentation.base.BaseScreen
 import presentation.cart.CartScreen
 import presentation.chatSupport.ChatSupportScreen
 import presentation.composable.BpImageLoader
-import presentation.composable.ContentVisibility
 import presentation.composable.ImageSlider
 import presentation.composable.ItemSection
 import presentation.composable.SectionHeader
@@ -56,6 +55,7 @@ import presentation.home.composable.CartCard
 import presentation.home.composable.ChatSupportCard
 import presentation.home.composable.CuisineCard
 import presentation.home.composable.OrderCard
+import presentation.meals.MealsScreen
 import resources.Resources
 import util.root
 
@@ -73,7 +73,9 @@ class HomeScreen : BaseScreen<
 
     override fun onEffect(effect: HomeScreenUiEffect, navigator: Navigator) {
         when (effect) {
-            is HomeScreenUiEffect.NavigateToCuisineDetails -> println("Cuisine id ${effect.cuisineId}")
+            is HomeScreenUiEffect.NavigateToMeals -> {
+                navigator.push(MealsScreen(effect.cuisineId, effect.cuisineName))
+            }
             is HomeScreenUiEffect.NavigateToCuisines -> navigator.root?.push(CuisinesScreen())
             is HomeScreenUiEffect.NavigateToChatSupport -> navigator.root?.push(ChatSupportScreen())
             is HomeScreenUiEffect.NavigateToOrderTaxi -> println("Navigate to Order Taxi screen")
