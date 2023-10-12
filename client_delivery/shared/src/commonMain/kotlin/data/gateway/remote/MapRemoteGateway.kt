@@ -12,17 +12,24 @@ import io.ktor.client.request.put
 import io.ktor.http.Parameters
 import io.ktor.util.InternalAPI
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class MapRemoteGateway(client: HttpClient) : IMapRemoteGateway,
     BaseRemoteGateway(client = client) {
     override suspend fun getOrders(): Flow<Trip> {
-      return  client.tryToExecuteWebSocket<Trip>("")
+        return client.tryToExecuteWebSocket<BaseResponse<Trip>>("/trip/delivery")
+            .map { baseResponse ->
+                if (baseResponse.isSuccess) {
+                    baseResponse.value
+                        ?: throw IllegalStateException("Value is null in successful response")
+                } else {
+                    throw Exception()
+                }
+            }
     }
 
     override suspend fun sendLocation(location: LocationDto, tripId: String) {
-        client.tryToExecuteWebSocket<Trip>(////////////////
-            path = "/location/sender/$tripId"
-        )
+        client.tryToExecuteWebSocket<Trip>("/location/sender/$tripId")
     }
 
     @OptIn(InternalAPI::class)
