@@ -56,9 +56,8 @@ import presentation.home.composable.CartCard
 import presentation.home.composable.ChatSupportCard
 import presentation.home.composable.CuisineCard
 import presentation.home.composable.OrderCard
-import presentation.main.MainContainer
 import presentation.main.SearchTab
-import presentation.search.SearchScreen
+import presentation.resturantDetails.RestaurantScreen
 import resources.Resources
 import util.root
 
@@ -86,6 +85,7 @@ class HomeScreen : BaseScreen<
             is HomeScreenUiEffect.NavigateToOrderDetails -> println("Navigate to order details ${effect.orderId}")
             is HomeScreenUiEffect.NavigateToCart -> navigator.root?.push(CartScreen())
             is HomeScreenUiEffect.NavigateLoginScreen -> navigator.root?.push(LoginScreen())
+            is HomeScreenUiEffect.NavigateToRestaurantDetails -> navigator.root?.push(RestaurantScreen(effect.restaurantId))
         }
     }
 
@@ -265,7 +265,9 @@ class HomeScreen : BaseScreen<
             item {
                 AnimatedVisibility(state.favoriteRestaurants.isNotEmpty()) {
                     ItemSection(
-                        header = Resources.strings.favoriteRestaurants,
+                        { restaurantId -> listener.onClickRestaurant(restaurantId) },
+                        header = Resources . strings . favoriteRestaurants,
+                        ids = state.favoriteRestaurants.map { it.id },
                         titles = state.favoriteRestaurants.map { it.name },
                         ratings = state.favoriteRestaurants.map { it.rating },
                         priceLevels = state.favoriteRestaurants.map { it.priceLevel },

@@ -13,12 +13,14 @@ import domain.entity.PriceLevel
 
 @Composable
 fun ItemSection(
+    onClickItem: (String) -> Unit = {},
     header: String,
     titles: List<String>,
     priceLevels: List<PriceLevel>,
     painters: List<Painter>,
     ratings: List<Double>,
     modifier: Modifier = Modifier,
+    ids: List<String> = emptyList(),
     hasOffer: Boolean = false,
     offers: List<String> = emptyList(),
     hasDeliveryPrice: Boolean = false,
@@ -32,6 +34,7 @@ fun ItemSection(
         ) {
             items(titles.size) { index ->
                 BpImageCard(
+                    onClickItem,
                     title = titles[index],
                     painter = painters[index],
                     priceLevel = priceLevels[index],
@@ -39,7 +42,8 @@ fun ItemSection(
                     offer = if (offers.isNotEmpty()) offers[index] else "",
                     hasDeliveryPrice = hasDeliveryPrice,
                     deliveryPrice = if (deliveryPrices.isNotEmpty()) deliveryPrices[index] else "",
-                    rate = ratings[index]
+                    rate = ratings[index],
+                    id = if (ids.isNotEmpty()) ids[index] else ""
                 )
             }
         }

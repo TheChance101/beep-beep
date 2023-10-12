@@ -126,6 +126,10 @@ class HomeScreenModel(
         updateState { it.copy(searchTerm = searchText) }
     }
 
+    override fun onClickRestaurant(restaurantId: String) {
+        sendNewEffect(HomeScreenUiEffect.NavigateToRestaurantDetails(restaurantId))
+    }
+
     private fun getRecommendedCuisines() {
         tryToExecute(
             { manageRestaurant.getCuisines().toCuisineUiState() },
