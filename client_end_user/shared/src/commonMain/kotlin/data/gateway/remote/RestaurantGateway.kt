@@ -27,9 +27,7 @@ import kotlinx.datetime.Clock
 class RestaurantGateway(client: HttpClient) : BaseGateway(client = client), IRestaurantGateway {
     override suspend fun getCuisines(): List<Cuisine> {
         return tryToExecute<ServerResponse<List<CuisineDto>>> {
-            get("/cuisines") {
-
-            }
+            get("/cuisines")
         }.value?.toCuisineEntity() ?: throw GeneralException.NotFoundException
     }
 
@@ -73,6 +71,11 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client), IRes
         return tryToExecute<ServerResponse<MealRestaurantDto>> {
             get("/restaurants/search?query=$query")
         }.value?.toEntity() ?: throw GeneralException.NotFoundException
+    }
+
+    override suspend fun getMealsInCuisine(cuisineId: String): List<Meal> {
+        //TODO call api
+        return meals.toEntity()
     }
 
 

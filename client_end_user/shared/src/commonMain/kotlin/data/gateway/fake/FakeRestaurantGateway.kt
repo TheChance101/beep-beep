@@ -53,6 +53,10 @@ class FakeRestaurantGateway : IRestaurantGateway {
         TODO("Not yet implemented")
     }
 
+    override suspend fun getMealsInCuisine(cuisineId: String): List<Meal> {
+        return meals.toEntity()
+    }
+
     private val offers = listOf(
         OfferDto(
             "000-0d-d0-d0--00d0d0d",

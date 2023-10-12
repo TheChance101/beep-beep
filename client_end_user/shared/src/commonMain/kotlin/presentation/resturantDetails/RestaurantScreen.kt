@@ -75,8 +75,8 @@ object RestaurantScreen :
                             meal = state.meal,
                             onAddToCart = listener::onAddToCart,
                             onDismissSheet = listener::onDismissSheet,
-                            onIncreaseQuantity = listener::onIncressQuantity,
-                            onDecreaseQuantity = listener::onDecressQuantity
+                            onIncreaseQuantity = listener::onIncreaseMealQuantity,
+                            onDecreaseQuantity = listener::onDecreaseMealQuantity
                         )
                     if (state.showLoginSheet)
                         NeedToLoginSheet(

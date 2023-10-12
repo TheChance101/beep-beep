@@ -38,6 +38,7 @@ import presentation.composable.modifier.noRippleEffect
 import presentation.composable.modifier.roundedBorderShape
 import presentation.resturantDetails.RestaurantScreen
 import presentation.composable.MealBottomSheet
+import presentation.composable.MealCard
 import presentation.resturantDetails.MealUIState
 import resources.Resources
 import util.getStatusBarPadding
@@ -66,9 +67,9 @@ class SearchScreen :
                 MealBottomSheet(
                     meal = state.selectedMeal,
                     onDismissSheet = listener::onDismissSheet,
-                    onDecreaseQuantity = {},
-                    onIncreaseQuantity = {},
-                    onAddToCart = {}
+                    onDecreaseQuantity = listener::onDecreaseMealQuantity,
+                    onIncreaseQuantity = listener::onIncreaseMealQuantity,
+                    onAddToCart = listener::onAddToCart
                 )
             },
             sheetBackgroundColor = Theme.colors.background,
@@ -169,55 +170,4 @@ class SearchScreen :
         }
     }
 
-
-    @Composable
-    private fun MealCard(
-        meal: MealUIState,
-        modifier: Modifier = Modifier,
-    ) {
-        Row(
-            modifier = modifier.fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            Image(
-                modifier = Modifier.roundedBorderShape().size(height = 72.dp, width = 80.dp),
-                painter = rememberAsyncImagePainter(meal.image),
-                contentScale = ContentScale.Crop,
-                contentDescription = meal.name
-            )
-            Column(
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = meal.name,
-                        style = Theme.typography.title,
-                        color = Theme.colors.contentPrimary,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 1
-                    )
-
-                    Text(
-                        text = "${meal.currency} ${meal.price}",
-                        style = Theme.typography.body,
-                        color = Theme.colors.primary,
-                        maxLines = 1
-                    )
-                }
-                Text(
-                    text = meal.restaurantName,
-                    style = Theme.typography.body,
-                    color = Theme.colors.contentSecondary,
-                    maxLines = 1
-                )
-            }
-        }
-
-    }
 }

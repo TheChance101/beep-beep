@@ -19,6 +19,8 @@ import presentation.chatSupport.ChatSupportScreenModel
 import presentation.resturantDetails.RestaurantScreenModel
 import presentation.search.SearchScreenModel
 import presentation.app.AppScreenModel
+import presentation.meals.MealsScreenModel
+
 
 val screenModelsModule = module {
     factoryOf(::LoginScreenModel)
@@ -38,4 +40,5 @@ val screenModelsModule = module {
     factory { AppScreenModel(get()) }
     factoryOf(::ChatSupportScreenModel)
     factoryOf(::SearchScreenModel)
+    factoryOf(::MealsScreenModel)
 }

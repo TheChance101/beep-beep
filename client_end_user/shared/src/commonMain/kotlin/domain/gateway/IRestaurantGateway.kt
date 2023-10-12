@@ -16,5 +16,5 @@ interface IRestaurantGateway {
     suspend fun getMostOrdersMeal(restaurantId: String): List<Meal>
     suspend fun getSweets(restaurantId: String): List<Meal>
     suspend fun search(query: String): Explore
-
+    suspend fun getMealsInCuisine(cuisineId: String): List<Meal>
 }

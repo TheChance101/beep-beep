@@ -181,8 +181,30 @@ class RestaurantScreenModel(
         }
     }
 
-    override fun onAddToCart() {
+    override fun onIncreaseMealQuantity() {
+        updateState {
+            it.copy(
+                meal = state.value.meal.copy(
+                    quantity = state.value.meal.quantity + 1,
+                    price = state.value.meal.price * state.value.meal.quantity
+                )
+            )
+        }
+    }
 
+    override fun onDecreaseMealQuantity() {
+        if (state.value.meal.quantity == 1) return
+        updateState {
+            it.copy(
+                meal = state.value.meal.copy(
+                    quantity = state.value.meal.quantity - 1,
+                    price = state.value.meal.price * state.value.meal.quantity
+                )
+            )
+        }
+    }
+
+    override fun onAddToCart() {
         if (state.value.isLogin) {
             onDismissSheet()
             showToast()
@@ -201,29 +223,6 @@ class RestaurantScreenModel(
 
     override fun onGoToLogin() {
         sendNewEffect(RestaurantUIEffect.onGoToLogin)
-    }
-
-    override fun onIncressQuantity() {
-        updateState {
-            it.copy(
-                meal = state.value.meal.copy(
-                    quantity = state.value.meal.quantity + 1,
-                    price = state.value.meal.price * state.value.meal.quantity
-                )
-            )
-        }
-    }
-
-    override fun onDecressQuantity() {
-        if (state.value.meal.quantity == 1) return
-        updateState {
-            it.copy(
-                meal = state.value.meal.copy(
-                    quantity = state.value.meal.quantity - 1,
-                    price = state.value.meal.price * state.value.meal.quantity
-                )
-            )
-        }
     }
 
     private suspend fun delayAndChangePermissionSheetState(show: Boolean) {

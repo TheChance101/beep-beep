@@ -9,6 +9,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
+import presentation.resturantDetails.MealInteractionListener
 import presentation.resturantDetails.MealUIState
 import presentation.resturantDetails.toUIState
 
@@ -32,7 +33,9 @@ class SearchScreenModel(private val search: ISearchUseCase) :
     }
 
     override fun onMealClicked(meal: MealUIState) {
-        updateState { it.copy(showMealSheet = true, selectedMeal = meal) }
+        if (!state.value.showMealSheet) {
+            updateState { it.copy(showMealSheet = true, selectedMeal = meal) }
+        }
     }
 
     override fun onDismissSheet() {
@@ -63,6 +66,18 @@ class SearchScreenModel(private val search: ISearchUseCase) :
 
     private fun onError(error: ErrorState) {
 
+    }
+
+    override fun onIncreaseMealQuantity() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onDecreaseMealQuantity() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onAddToCart() {
+        TODO("Not yet implemented")
     }
 
 }

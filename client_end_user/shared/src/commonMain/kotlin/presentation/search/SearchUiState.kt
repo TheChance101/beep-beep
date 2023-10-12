@@ -14,15 +14,6 @@ data class SearchUiState(
     val selectedMeal: MealUIState = MealUIState()
 )
 
-
-//data class MealUiState(
-//    val id: String = "",
-//    val name: String = "",
-//    val image: String = "",
-//    val restaurantName: String = "",
-//    val price: String = ""
-//)
-
 data class RestaurantUiState(
     val id: String = "",
     val image: String = "",
