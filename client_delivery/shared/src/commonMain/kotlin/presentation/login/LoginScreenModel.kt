@@ -20,14 +20,6 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
         showSnackBar("Sign up with Beep Beep account")
     }
 
-    private fun loginIfKeepMeLoggedInFlagSet(){
-        viewModelScope.launch {
-            if (manageLoginUser.getKeepMeLoggedInFlag()) {
-                sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
-            }
-        }
-    }
-
     override fun onUserNameChanged(userName: String) {
         updateState { it.copy(userName = userName) }
     }
@@ -45,6 +37,7 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
         password: String,
         isKeepMeLoggedInChecked: Boolean
     ) {
+
         updateState { it.copy(isLoading = true, isEnable = false) }
         clearErrors()
         tryToExecute(
