@@ -37,8 +37,8 @@ class MapScreen:BaseScreen<MapScreenModel,MapScreenUiState,MapScreenUiEffect,Map
         ) {
             MapView(
                 modifier = Modifier.fillMaxSize(),
-                currentLocation = state.currentLocation.toEntity(),
-                destination = state.destinationLocation.toEntity()
+                deliveryLocation = state.deliveryLocation,
+                destination = state.orderUiState.destinationLocation
             )
             BpAppBar(
                 isBackIconVisible = false,

@@ -2,34 +2,46 @@ package presentation.map
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Location
+import domain.entity.Order
+import domain.usecase.IManageOrderUseCase
 import domain.usecase.IManageUserLocationUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
 class MapScreenModel(
     private val currentLocation: IManageUserLocationUseCase,
+    private val manageOrderUseCase: IManageOrderUseCase,
 ):BaseScreenModel<MapScreenUiState,MapScreenUiEffect>(MapScreenUiState()),MapScreenInteractionsListener {
 
-
-
     override val viewModelScope: CoroutineScope = coroutineScope
+
     init {
         getCurrentLocation()
+        getOrder()
+    }
+    private fun getOrder() {
+        updateState { it.copy(orderState = OrderState.LOADING) }
+        tryToExecute(
+            function = manageOrderUseCase::getOrders,
+            onSuccess = ::onGetOrderSuccess,
+            onError = ::onError
+        )
+    }
+
+    private fun onGetOrderSuccess(orders: Flow<Order>) {
         viewModelScope.launch {
-            delay(5000)
-            updateState { it.copy(
-                orderState = OrderState.NEW_ORDER,
-                orderUiState = OrderUiState(
-                    destinationLocation = LocationUiState(
-                        31.2001,
-                        29.9187,
-                        ""
+            orders.collect { order ->
+                updateState { mapScreenUiState ->
+                    mapScreenUiState.copy(
+                        orderUiState = order.toUiState(),
+                        orderState = OrderState.NEW_ORDER
                     )
-                )
-            )}
+                }
+            }
         }
     }
 
