@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,9 +18,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpOutlinedButton
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
+import com.beepbeep.designSystem.ui.composable.modifier.shimmerEffect
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.base.BaseScreen
 import org.thechance.common.presentation.composable.MainAppbar
@@ -52,8 +54,7 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
                 onLogOut = listener::onClickLogOut,
             )
             AnimatedContent(targetState = state.idle) { idle ->
-                if (state.loading) LoadingIndicator()
-                else if (idle) IdlePlaceholder()
+                if (idle) IdlePlaceholder()
                 else ChatScreenContent(state, listener)
             }
         }
@@ -76,7 +77,7 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
                 .border(1.kms, Theme.colors.divider, RoundedCornerShape(Theme.radius.medium))
         ) {
             Column {
-                ChatHeader(state.ticket, listener)
+                ChatHeader(state.loading, state.ticket, listener)
                 ChatMessages(state.messages, modifier = Modifier.weight(1f))
                 Divider(color = Theme.colors.divider, thickness = 1.kms)
                 BpSimpleTextField(
@@ -94,45 +95,68 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
     }
 
     @Composable
-    private fun ChatHeader(ticket: ChatUIState.TicketUIState, listener: ChatInteractionListener) {
+    private fun ChatHeader(isLoading: Boolean, ticket: ChatUIState.TicketUIState, listener: ChatInteractionListener) {
         Column {
-            Row(
-                modifier = Modifier.padding(24.kms),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    painter = painterResource(Resources.Drawable.beepBeepLogoExpanded),
-                    contentDescription = Resources.Strings.profileImage,
-                    modifier = Modifier.size(40.kms).padding(end = 16.kms)
-                )
-                Text(
-                    text = ticket.username,
-                    style = Theme.typography.titleMedium,
-                    color = Theme.colors.contentPrimary
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    text = ticket.id,
-                    style = Theme.typography.titleMedium,
-                    color = Theme.colors.contentTertiary,
-                )
-                Text(
-                    text = ticket.openedAt,
-                    style = Theme.typography.titleMedium,
-                    color = Theme.colors.contentTertiary,
-                    modifier = Modifier.padding(horizontal = 40.kms)
-                )
-                BpOutlinedButton(
-                    title = Resources.Strings.closeTicket,
-                    onClick = listener::onCloseTicketClicked,
-                )
+            if (isLoading) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(24.kms),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    ShimmerCircleBox()
+                    ShimmerRoundedBox(100.kms, 20.kms)
+                    Spacer(modifier = Modifier.weight(1f))
+                    ShimmerRoundedBox(100.kms, 20.kms)
+                    ShimmerRoundedBox(100.kms, 20.kms, horizontalPadding = 40.kms)
+                    BpOutlinedButton(
+                        title = Resources.Strings.closeTicket,
+                        onClick = listener::onCloseTicketClicked,
+                    )
+                }
+                Divider(color = Theme.colors.divider, thickness = 1.kms)
+            } else {
+                Row(
+                    modifier = Modifier.padding(24.kms),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = painterResource(Resources.Drawable.beepBeepLogoExpanded),
+                        contentDescription = Resources.Strings.profileImage,
+                        modifier = Modifier.size(40.kms).padding(end = 16.kms)
+                    )
+                    Text(
+                        text = ticket.username,
+                        style = Theme.typography.titleMedium,
+                        color = Theme.colors.contentPrimary
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = ticket.id,
+                        style = Theme.typography.titleMedium,
+                        color = Theme.colors.contentTertiary,
+                    )
+                    Text(
+                        text = ticket.openedAt,
+                        style = Theme.typography.titleMedium,
+                        color = Theme.colors.contentTertiary,
+                        modifier = Modifier.padding(horizontal = 40.kms)
+                    )
+                    BpOutlinedButton(
+                        title = Resources.Strings.closeTicket,
+                        onClick = listener::onCloseTicketClicked,
+                    )
+                }
+                Divider(color = Theme.colors.divider, thickness = 1.kms)
             }
-            Divider(color = Theme.colors.divider, thickness = 1.kms)
         }
     }
 
     @Composable
-    private fun ChatMessages(messages: List<ChatUIState.MessageUIState>, modifier: Modifier = Modifier) {
+    private fun ChatMessages(
+        messages: List<ChatUIState.MessageUIState>,
+        modifier: Modifier = Modifier
+    ) {
         val scrollState = rememberLazyListState()
         LaunchedEffect(messages.size) {
             scrollState.animateScrollToItem(abs(messages.size - 1))
@@ -156,11 +180,14 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
             horizontalArrangement = if (message.isMe) Arrangement.End else Arrangement.Start,
             verticalAlignment = Alignment.Bottom,
         ) {
-            if (message.showAvatar) Image(
-                painter = painterResource(Resources.Drawable.beepBeepLogoExpanded),
-                contentDescription = null,
-                modifier = Modifier.size(40.kms).padding(end = 8.kms)
-            ) else Spacer(modifier = Modifier.size(40.kms))
+            if (message.showAvatar)
+                Image(
+                    painter = painterResource(Resources.Drawable.beepBeepLogoExpanded),
+                    contentDescription = null,
+                    modifier = Modifier.size(40.kms).padding(end = 8.kms)
+                )
+            else
+                Spacer(modifier = Modifier.size(40.kms))
 
             Text(
                 text = message.message,
@@ -206,12 +233,25 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
     }
 
     @Composable
-    private fun LoadingIndicator(modifier: Modifier = Modifier) {
-        Box(modifier = modifier.fillMaxSize()) {
-            CircularProgressIndicator(
-                color = Theme.colors.primary,
-                modifier = Modifier.align(Alignment.Center)
-            )
-        }
+    private fun ShimmerCircleBox() {
+        Box(
+            modifier = Modifier
+                .size(45.kms, 30.kms)
+                .padding(end = 16.kms)
+                .clip(CircleShape)
+                .shimmerEffect()
+        )
     }
+
+    @Composable
+    private fun ShimmerRoundedBox(width: Dp, height: Dp, horizontalPadding: Dp = 0.kms) {
+        Box(
+            modifier = Modifier
+                .padding(horizontal = horizontalPadding)
+                .clip(RoundedCornerShape(Theme.radius.large))
+                .size(width, height)
+                .shimmerEffect()
+        )
+    }
+
 }
