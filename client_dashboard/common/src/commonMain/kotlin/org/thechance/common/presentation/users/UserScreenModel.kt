@@ -69,7 +69,7 @@ class UserScreenModel(
 
     override fun onFilterMenuSaveButtonClicked() {
         hideFilterMenu()
-        this.getUsers()
+        getUsers()
     }
 
     override fun onFilterClearAllClicked() {
@@ -93,7 +93,7 @@ class UserScreenModel(
 
     private fun launchSearchJob() {
         searchJob?.cancel()
-        searchJob = launchDelayed(300L) { this@UserScreenModel.getUsers() }
+        searchJob = launchDelayed(300L) { getUsers() }
     }
 
     private fun onSearchUsersSuccessfully(users: DataWrapper<User>) {
@@ -104,6 +104,7 @@ class UserScreenModel(
     }
 
     private fun getUsers() {
+        updateState { it.copy(isLoading =  true) }
         tryToExecute(
             {
                 userManagement.getUsers(

@@ -9,8 +9,7 @@ sealed class HomeScreenUiEffect {
     data object NavigateToChatSupport : HomeScreenUiEffect()
     data object NavigateToOrderTaxi : HomeScreenUiEffect()
     data object ScrollDownToRecommendedRestaurants : HomeScreenUiEffect()
-    data class NavigateToOfferItem(val offerId: String) : HomeScreenUiEffect()
-    data object NavigateToSearch : HomeScreenUiEffect()
-    data object NavigateToCart : HomeScreenUiEffect()
-    data object NavigateLoginScreen : HomeScreenUiEffect()
+    data class NavigateToOfferItem(val offerId : String) : HomeScreenUiEffect()
+    data object NavigateToCart: HomeScreenUiEffect()
+    data object NavigateLoginScreen: HomeScreenUiEffect()
 }
