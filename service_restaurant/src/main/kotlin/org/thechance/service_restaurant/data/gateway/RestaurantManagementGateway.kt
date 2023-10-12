@@ -15,7 +15,6 @@ import org.thechance.service_restaurant.data.collection.OrderCollection
 import org.thechance.service_restaurant.data.collection.mapper.*
 import org.thechance.service_restaurant.data.collection.relationModels.OrderWithRestaurant
 import org.thechance.service_restaurant.domain.entity.Cart
-import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.gateway.IRestaurantManagementGateway
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
@@ -91,7 +90,6 @@ class RestaurantManagementGateway(private val container: DataBaseContainer) : IR
                 newAs = "restaurant"
             ),
             unwind("\$restaurant"),
-
             project(
                 OrderWithRestaurant::id from "\$_id",
                 OrderWithRestaurant::userId from "\$userId",

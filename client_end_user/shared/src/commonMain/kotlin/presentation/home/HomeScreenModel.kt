@@ -108,10 +108,7 @@ class HomeScreenModel(
         }
     }
 
-    override fun onClickSearch() {
-        println("effect sent")
-        sendNewEffect(HomeScreenUiEffect.NavigateToSearch)
-    }
+
 
     override fun onClickOrderAgain(orderId: String) {
         sendNewEffect(HomeScreenUiEffect.NavigateToOrderDetails(orderId))
@@ -123,6 +120,10 @@ class HomeScreenModel(
 
     override fun onClickCartCard() {
         sendNewEffect(HomeScreenUiEffect.NavigateToCart)
+    }
+
+    override fun onChangeSearchText(searchText: String) {
+        updateState { it.copy(searchTerm = searchText) }
     }
 
     private fun getRecommendedCuisines() {
