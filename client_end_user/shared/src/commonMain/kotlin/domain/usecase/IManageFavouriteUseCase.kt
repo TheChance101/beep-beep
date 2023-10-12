@@ -1,6 +1,5 @@
 package domain.usecase
 
-import data.gateway.remote.UserGateway
 import domain.entity.Restaurant
 import domain.gateway.IUserGateway
 
@@ -8,6 +7,7 @@ interface IManageFavouriteUseCase {
     suspend fun addRestaurantToFavorites(restaurantId: String): Boolean
     suspend fun removeRestaurantFromFavorites(restaurantId: String): Boolean
     suspend fun getFavoriteRestaurants(): List<Restaurant>
+    suspend fun checkIfFavoriteRestaurant(restaurantId: String): Boolean
 }
 
 class ManageFavouriteUseCase(
@@ -23,5 +23,9 @@ class ManageFavouriteUseCase(
 
     override suspend fun getFavoriteRestaurants(): List<Restaurant> {
         return userGateway.getFavoriteRestaurants()
+    }
+
+    override suspend fun checkIfFavoriteRestaurant(restaurantId: String): Boolean {
+        return userGateway.getFavoriteRestaurants().any { it.id == restaurantId }
     }
 }
