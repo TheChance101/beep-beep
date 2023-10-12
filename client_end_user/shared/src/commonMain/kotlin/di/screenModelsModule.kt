@@ -17,7 +17,10 @@ import presentation.cart.CartScreenModel
 import presentation.profile.ProfileScreenModel
 import presentation.chatSupport.ChatSupportScreenModel
 import presentation.resturantDetails.RestaurantScreenModel
+import presentation.search.SearchScreenModel
 import presentation.app.AppScreenModel
+import presentation.meals.MealsScreenModel
+
 
 val screenModelsModule = module {
     factoryOf(::LoginScreenModel)
@@ -34,7 +37,8 @@ val screenModelsModule = module {
     factoryOf(::CartScreenModel)
     factoryOf(::CuisinesScreenModel)
     factoryOf(::ChatSupportScreenModel)
-    // factoryOf(::RestaurantScreenModel)
+    factoryOf(::SearchScreenModel)
+    factoryOf(::MealsScreenModel)
     factory { AppScreenModel(get()) }
     factory { (restaurantId: String) ->
         RestaurantScreenModel(

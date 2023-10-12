@@ -1,17 +1,21 @@
 package presentation.resturantDetails
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -27,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
+import domain.entity.PriceLevel
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.koin.core.parameter.parametersOf
@@ -67,19 +72,23 @@ data class RestaurantScreen(val restaurantId: String) :
     @Composable
     override fun onRender(state: RestaurantUIState, listener: RestaurantInteractionListener) {
         Box(
-            modifier = Modifier.fillMaxSize()
-                .padding(bottom = getNavigationBarPadding().calculateBottomPadding()),
+            modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.TopCenter
         ) {
             BottomSheet(
                 sheetContent = {
                     if (state.showMealSheet)
                         MealBottomSheet(
+                            modifier = Modifier.padding(getNavigationBarPadding()),
                             meal = state.meal,
-                            listener = listener,
+                            onAddToCart = listener::onAddToCart,
+                            onDismissSheet = listener::onDismissSheet,
+                            onIncreaseQuantity = listener::onIncreaseMealQuantity,
+                            onDecreaseQuantity = listener::onDecreaseMealQuantity
                         )
                     if (state.showLoginSheet)
                         NeedToLoginSheet(
+                            modifier = Modifier.padding(getNavigationBarPadding()),
                             text = Resources.strings.loginToAddToFavourite,
                             onClick = {
                                 listener.onDismissSheet()
@@ -91,12 +100,10 @@ data class RestaurantScreen(val restaurantId: String) :
                 onBackGroundClicked = listener::onDismissSheet,
                 sheetState = state.sheetState,
             ) {
-
                 Image(
                     painter = painterResource(Resources.images.placeholder),
                     contentDescription = "background",
                 )
-
                 CloseButton(
                     onClick = { listener.onBack() },
                     modifier = Modifier.align(Alignment.TopCenter),
@@ -222,15 +229,15 @@ data class RestaurantScreen(val restaurantId: String) :
                         titles = state.sweets.map { it.name },
                         hasPrice = true,
                         prices = state.sweets.map { it.price },
-                        painters = painters
+                        painters = painters,
+                        modifier = Modifier.padding(getNavigationBarPadding())
                     )
                 }
             }
             ToastMessage(
                 state = state.showToast,
                 message = Resources.strings.mealAddedToYourCart,
-                modifier = Modifier.padding(bottom = getStatusBarPadding().calculateBottomPadding())
-                    .align(Alignment.BottomCenter)
+                modifier = Modifier.align(Alignment.BottomCenter)
             )
         }
     }

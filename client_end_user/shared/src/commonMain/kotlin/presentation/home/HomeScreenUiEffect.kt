@@ -1,7 +1,9 @@
 package presentation.home
 
 sealed class HomeScreenUiEffect {
-    data class NavigateToCuisineDetails(val cuisineId: String) : HomeScreenUiEffect()
+    data class NavigateToMeals(val cuisineId: String, val cuisineName: String) :
+        HomeScreenUiEffect()
+
     data class NavigateToOrderDetails(val orderId: String) : HomeScreenUiEffect()
     data object NavigateToCuisines : HomeScreenUiEffect()
     data object NavigateToChatSupport : HomeScreenUiEffect()

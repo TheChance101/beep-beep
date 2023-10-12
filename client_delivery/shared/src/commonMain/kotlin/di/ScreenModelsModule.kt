@@ -1,5 +1,6 @@
 package di
 
+import presentation.app.AppScreenModel
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 import presentation.login.LoginScreenModel
@@ -10,4 +11,5 @@ val screenModelsModule = module {
     factoryOf(::MainScreenModel)
     factoryOf(::LoginScreenModel)
     factoryOf(::MapScreenModel)
+    factoryOf(::AppScreenModel)
 }

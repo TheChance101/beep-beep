@@ -28,8 +28,6 @@ fun Route.cuisineRoute() {
     route("/cuisine") {
         authenticateWithRole(Role.DASHBOARD_ADMIN) {
             post {
-                val params = call.receiveParameters()
-                val name = params["name"]?.trim().toString()
                 val language = extractLocalizationHeader()
                 val multipartDto = receiveMultipart<CuisineDto>(imageValidator)
                 val image = multipartDto.image?.let { image -> imageService.uploadImage(image) }
@@ -37,6 +35,7 @@ fun Route.cuisineRoute() {
                 val cuisine =  restaurantService.addCuisine(cuisineDto, language)
                 respondWithResult(HttpStatusCode.Created, cuisine)
             }
+
             delete("/{id}") {
                 val language = extractLocalizationHeader()
                 val cuisineId =call.parameters["id"]?.trim().toString()
@@ -56,8 +55,6 @@ fun Route.cuisineRoute() {
             )
             respondWithResult(HttpStatusCode.OK, meals)
         }
-
-
 
     }
 

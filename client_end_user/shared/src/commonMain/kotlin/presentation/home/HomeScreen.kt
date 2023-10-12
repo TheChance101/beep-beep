@@ -57,9 +57,19 @@ import presentation.home.composable.ChatSupportCard
 import presentation.home.composable.CuisineCard
 import presentation.home.composable.OrderCard
 import presentation.main.SearchTab
+import presentation.meals.MealsScreen
 import presentation.resturantDetails.RestaurantScreen
 import resources.Resources
 import util.root
+import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.focus.onFocusEvent
+import androidx.compose.ui.input.key.onInterceptKeyBeforeSoftKeyboard
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onPlaced
 
 class HomeScreen : BaseScreen<
         HomeScreenModel,
@@ -76,7 +86,10 @@ class HomeScreen : BaseScreen<
     override fun onEffect(effect: HomeScreenUiEffect, navigator: Navigator) {
 
         when (effect) {
-            is HomeScreenUiEffect.NavigateToCuisineDetails -> println("Cuisine id ${effect.cuisineId}")
+            is HomeScreenUiEffect.NavigateToMeals -> {
+                navigator.root?.push(MealsScreen(effect.cuisineId, effect.cuisineName))
+            }
+
             is HomeScreenUiEffect.NavigateToCuisines -> navigator.root?.push(CuisinesScreen())
             is HomeScreenUiEffect.NavigateToChatSupport -> navigator.root?.push(ChatSupportScreen())
             is HomeScreenUiEffect.NavigateToOrderTaxi -> println("Navigate to Order Taxi screen")
@@ -85,13 +98,15 @@ class HomeScreen : BaseScreen<
             is HomeScreenUiEffect.NavigateToOrderDetails -> println("Navigate to order details ${effect.orderId}")
             is HomeScreenUiEffect.NavigateToCart -> navigator.root?.push(CartScreen())
             is HomeScreenUiEffect.NavigateLoginScreen -> navigator.root?.push(LoginScreen())
-            is HomeScreenUiEffect.NavigateToRestaurantDetails -> navigator.root?.push(RestaurantScreen(effect.restaurantId))
+            is HomeScreenUiEffect.NavigateToRestaurantDetails -> navigator.root?.push(
+                RestaurantScreen(effect.restaurantId)
+            )
         }
     }
 
     @OptIn(
         ExperimentalResourceApi::class, ExperimentalFoundationApi::class,
-        ExperimentalMaterial3Api::class
+        ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class
     )
     @Composable
     override fun onRender(state: HomeScreenUiState, listener: HomeScreenInteractionListener) {
@@ -137,13 +152,18 @@ class HomeScreen : BaseScreen<
 
             item {
                 BpSimpleTextField(
-                    text = state.searchTerm,
+                    text = "",
                     hint = Resources.strings.searchHint,
                     hintColor = Theme.colors.contentSecondary,
-                    onValueChange = listener::onChangeSearchText,
+                    onTrailingIconClick = { tabNavigator.current = SearchTab },
+                    onValueChange = { },
                     onClick = { tabNavigator.current = SearchTab },
                     leadingPainter = painterResource(Resources.images.searchOutlined),
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier.onFocusChanged {
+                        if (it.hasFocus) {
+                            tabNavigator.current = SearchTab
+                        }
+                    }.padding(horizontal = 16.dp)
                 )
             }
 
@@ -266,7 +286,7 @@ class HomeScreen : BaseScreen<
                 AnimatedVisibility(state.favoriteRestaurants.isNotEmpty()) {
                     ItemSection(
                         { restaurantId -> listener.onClickRestaurant(restaurantId) },
-                        header = Resources . strings . favoriteRestaurants,
+                        header = Resources.strings.favoriteRestaurants,
                         ids = state.favoriteRestaurants.map { it.id },
                         titles = state.favoriteRestaurants.map { it.name },
                         ratings = state.favoriteRestaurants.map { it.rating },
