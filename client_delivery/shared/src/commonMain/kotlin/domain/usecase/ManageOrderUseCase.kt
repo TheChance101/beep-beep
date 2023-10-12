@@ -1,37 +1,39 @@
 package domain.usecase
 
+import data.remote.model.LocationDto
 import domain.entity.Location
 import domain.entity.Trip
 import domain.gateway.remote.IMapRemoteGateway
+import kotlinx.coroutines.flow.Flow
 
 interface IManageOrderUseCase {
-    suspend fun sendLocation(location: Location, tripId: String)
-    suspend fun getTripById(tripId: String): Trip
-    suspend fun approveTrip(taxiId: String, tripId: String, driverId: String): Trip
-    suspend fun finishTrip(tripId: String, driverId: String): Trip
-    suspend fun deleteTrip(tripId: String): Trip
+    suspend fun getOrders(): Flow<Trip>
+    suspend fun sendLocation(location: LocationDto, tripId: String)
+    suspend fun acceptOrder(taxiId: String, tripId: String, driverId: String): Trip
+    suspend fun updateOrderAsReceived(tripId: String, driverId: String): Trip
+    suspend fun updateOrderAsDelivered(tripId: String, driverId: String): Trip
 }
 
 class ManageOrderUseCase(private val remoteGateway: IMapRemoteGateway) : IManageOrderUseCase {
-    override suspend fun sendLocation(location: Location, tripId: String) {
-        TODO("Not yet implemented")
+    override suspend fun getOrders(): Flow<Trip> {
+        return remoteGateway.getOrders()
     }
 
-    override suspend fun getTripById(tripId: String): Trip {
-        TODO("Not yet implemented")
+    override suspend fun sendLocation(location: LocationDto, tripId: String) {
+        remoteGateway.sendLocation(location, tripId)
     }
 
-    override suspend fun approveTrip(taxiId: String, tripId: String, driverId: String): Trip {
-        TODO("Not yet implemented")
+    override suspend fun acceptOrder(taxiId: String, tripId: String, driverId: String): Trip {
+        return remoteGateway.acceptOrder(taxiId, tripId, driverId)
     }
 
-    override suspend fun finishTrip(tripId: String, driverId: String): Trip {
-        TODO("Not yet implemented")
+    override suspend fun updateOrderAsReceived(tripId: String, driverId: String): Trip {
+        return remoteGateway.updateOrderAsReceived(tripId, driverId)
     }
 
-    override suspend fun deleteTrip(tripId: String): Trip {
-        TODO("Not yet implemented")
-        // return remoteGateway.deleteTrip(tripId)
+    override suspend fun updateOrderAsDelivered(tripId: String, driverId: String): Trip {
+        return remoteGateway.updateOrderAsDelivered(tripId, driverId)
     }
+
 
 }
