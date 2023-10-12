@@ -33,7 +33,7 @@ class MapRemoteGateway(client: HttpClient) : IMapRemoteGateway,
     }
 
     @OptIn(InternalAPI::class)
-    override suspend fun approveTrip(taxiId: String, tripId: String, driverId: String): Trip {
+    override suspend fun acceptOrder(taxiId: String, tripId: String, driverId: String): Trip {
         val result = tryToExecute<BaseResponse<TripDto>> {
             val formData = FormDataContent(Parameters.build {
                 append("tripId", tripId)
@@ -49,13 +49,28 @@ class MapRemoteGateway(client: HttpClient) : IMapRemoteGateway,
     }
 
     @OptIn(InternalAPI::class)
-    override suspend fun finishTrip(tripId: String, driverId: String): Trip {
+    override suspend fun updateOrderAsReceived(tripId: String, driverId: String): Trip {
         val result = tryToExecute<BaseResponse<TripDto>> {
             val formData = FormDataContent(Parameters.build {
                 append("tripId", tripId)
                 append("driverId", driverId)
             })
-            put("/trip/finish$tripId") {
+            put("/trip/received") {
+                body = formData
+            }
+        }.value ?: throw Exception()
+
+        return result.toTripEntity()
+    }
+
+    @OptIn(InternalAPI::class)
+    override suspend fun updateOrderAsDelivered(tripId: String, driverId: String): Trip {
+         val result = tryToExecute<BaseResponse<TripDto>> {
+            val formData = FormDataContent(Parameters.build {
+                append("tripId", tripId)
+                append("driverId", driverId)
+            })
+            put("/trip/finish") {
                 body = formData
             }
         }.value ?: throw Exception()
