@@ -12,9 +12,15 @@ data class TripDto(
     @SerialName("restaurantImage")
     val restaurantImage: String,
     @SerialName("startPoint")
-    val startPointAddress: LocationDto? = null,
+    val startPoint: LocationDto,
     @SerialName("destination")
-    val destinationAddress: LocationDto? = null,
+    val destination: LocationDto,
+    @SerialName("startPointAddress")
+    val startPointAddress: String,
+    @SerialName("destinationAddress")
+    val destinationAddress: String,
+    @SerialName("price")
+    val price: Double,
     @SerialName("tripStatus")
-    val tripStatus: Int
+    val tripStatus: Int,
 )
