@@ -51,18 +51,20 @@ data class RestaurantInfoUIState(
     val priceLevel:PriceLevel = PriceLevel.LOW,
     val image: String = "",
     val discount: Int = 0,
+    val hasFreeDelivery: Boolean = false,
     val description: String = "",
 )
 
 fun Restaurant.toUIState() = RestaurantInfoUIState(
     id = id ,
     name = name,
-    address = address,
+    address = "address, 45 street",
     rating = rate,
     priceLevel = priceLevel,
     image = "",
-    discount = doubleToPercentage(15.0),
-    description = description,
+    discount = doubleToPercentage(1500.0),
+    hasFreeDelivery = true,
+    description = "this is restaurant description",
 )
 
 fun doubleToPercentage(value: Double): Int {
