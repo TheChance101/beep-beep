@@ -1,16 +1,11 @@
 package domain.entity
 
 
-data class Trip( val id: String,
-    val taxiId: String,
-    val taxiPlateNumber: String,
-    val driverId: String,
-    val driverName: String,
-    val clientId: String,
-    val startPoint: Location,
-    val destination: Location,
-    val rate: Double,
-    val price: Double,
-    val startDate: String,
-    val endDate: String,
-    val timeToArriveInMints: Int)
+data class Trip(val id: String,
+                val restaurantName: String,
+                val restaurantImage: String,
+                val startPoint: Location,
+                val destination: Location,
+//                val startPointAddress: String,
+//                val destinationAddress: String,
+                val tripStatus: Int)
