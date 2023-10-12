@@ -33,13 +33,13 @@ fun Route.tripRoutes() {
         }
 
         get("/{tripId}") {
-            val id = call.parameters["tripId"] ?: throw MissingParameterException
+            val id = call.parameters["tripId"] ?: throw MissingParameterException()
             val result = manageTripsUseCase.getTripById(id)
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
         get("/driver/{driverId}") {
-            val id = call.parameters["driverId"] ?: throw MissingParameterException
+            val id = call.parameters["driverId"] ?: throw MissingParameterException()
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 20
             val result = driverTripsManagementUseCase.getTripsByDriverId(id, page, limit).toDto()
@@ -48,7 +48,7 @@ fun Route.tripRoutes() {
         }
 
         get("/client/{clientId}") {
-            val id = call.parameters["clientId"] ?: throw MissingParameterException
+            val id = call.parameters["clientId"] ?: throw MissingParameterException()
             val page = call.parameters["page"]?.toInt() ?: 1
             val limit = call.parameters["limit"]?.toInt() ?: 20
             val result = clientTripsManagementUseCase.getTripsByClientId(id, page, limit).toDto()
@@ -75,35 +75,45 @@ fun Route.tripRoutes() {
             socketHandler.collectTrips(deliveryId)
         }
 
-        put("/{tripId}/rate") {
-            val tripId = call.parameters["tripId"] ?: throw MissingParameterException
-            val rate = call.parameters["rate"]?.toDouble() ?: throw MissingParameterException
-            val result = clientTripsManagementUseCase.rateTrip(tripId, rate)
-            call.respond(HttpStatusCode.OK, result.toDto())
+        webSocket("/track/{tripId}") {
+            val tripId = call.parameters["tripId"]?.trim().orEmpty()
+            socketHandler.trips[tripId] = WebSocketTrip(session = this)
+            socketHandler.collectTripStatus(tripId)
         }
 
         put("/approve") {
             val parameters = call.receiveParameters()
-            val tripId = parameters["tripId"] ?: throw MissingParameterException
-            val driverId = parameters["driverId"] ?: throw MissingParameterException
-            val taxiId = parameters["taxiId"] ?: throw MissingParameterException
-            val result = driverTripsManagementUseCase.approveTrip(driverId, taxiId, tripId)
-            call.respond(HttpStatusCode.OK, result.toDto())
-        }
-
-        put("/finish") {
-            val parameters = call.receiveParameters()
-            val tripId = parameters["tripId"] ?: throw MissingParameterException
-            val driverId = parameters["driverId"] ?: throw MissingParameterException
-            val result = driverTripsManagementUseCase.finishTrip(driverId = driverId, tripId = tripId)
-            call.respond(HttpStatusCode.OK, result.toDto())
+            val tripId = parameters["tripId"] ?: throw MissingParameterException()
+            val driverId = parameters["driverId"] ?: throw MissingParameterException()
+            val taxiId = parameters["taxiId"] ?: throw MissingParameterException()
+            val result = driverTripsManagementUseCase.approveTrip(driverId, taxiId, tripId).toDto()
+            socketHandler.trips[tripId]?.trip?.emit(result)
+            socketHandler.endSession(driverId) // end collecting from other clients
+            call.respond(HttpStatusCode.OK, result)
         }
 
         put("/received") {
             val parameters = call.receiveParameters()
-            val tripId = parameters["tripId"] ?: throw MissingParameterException
-            val driverId = parameters["driverId"] ?: throw MissingParameterException
-            val result = driverTripsManagementUseCase.updateTripAsReceived(driverId = driverId, tripId = tripId)
+            val tripId = parameters["tripId"] ?: throw MissingParameterException()
+            val driverId = parameters["driverId"] ?: throw MissingParameterException()
+            val result = driverTripsManagementUseCase.updateTripAsReceived(driverId = driverId, tripId = tripId).toDto()
+            socketHandler.trips[tripId]?.trip?.emit(result)
+            call.respond(HttpStatusCode.OK, result)
+        }
+
+        put("/finish") {
+            val parameters = call.receiveParameters()
+            val tripId = parameters["tripId"] ?: throw MissingParameterException()
+            val driverId = parameters["driverId"] ?: throw MissingParameterException()
+            val result = driverTripsManagementUseCase.finishTrip(driverId = driverId, tripId = tripId).toDto()
+            socketHandler.trips[tripId]?.trip?.emit(result)
+            call.respond(HttpStatusCode.OK, result)
+        }
+
+        put("/{tripId}/rate") {
+            val tripId = call.parameters["tripId"] ?: throw MissingParameterException()
+            val rate = call.parameters["rate"]?.toDouble() ?: throw MissingParameterException()
+            val result = clientTripsManagementUseCase.rateTrip(tripId, rate)
             call.respond(HttpStatusCode.OK, result.toDto())
         }
     }

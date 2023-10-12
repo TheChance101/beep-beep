@@ -17,6 +17,6 @@ class ManageTripsUseCase(
     }
 
     override suspend fun getTripById(tripId: String): Trip {
-        return taxiGateway.getTripById(tripId) ?: throw ResourceNotFoundException
+        return taxiGateway.getTripById(tripId) ?: throw ResourceNotFoundException()
     }
 }

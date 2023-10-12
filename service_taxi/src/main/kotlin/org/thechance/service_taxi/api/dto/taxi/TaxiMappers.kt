@@ -40,11 +40,11 @@ fun List<Taxi>.toDto(): List<TaxiDto> = map(Taxi::toDto)
 fun TaxiCollection.toEntity(): Taxi {
     return Taxi(
         id = id.toString(),
-        plateNumber = plateNumber ?: throw CantBeNullException,
+        plateNumber = plateNumber ?: throw CantBeNullException(),
         driverUsername = driverUsername ?: "",
-        color = color?.let { Color.getColorByColorNumber(it) } ?: throw CantBeNullException,
-        type = type ?: throw CantBeNullException,
-        driverId = driverId?.toString() ?: throw CantBeNullException,
+        color = color?.let { Color.getColorByColorNumber(it) } ?: throw CantBeNullException(),
+        type = type ?: throw CantBeNullException(),
+        driverId = driverId?.toString() ?: throw CantBeNullException(),
         isAvailable = isAvailable ?: true,
         seats = seats ?: 4,
         tripsCount = tripsCount ?: 0,

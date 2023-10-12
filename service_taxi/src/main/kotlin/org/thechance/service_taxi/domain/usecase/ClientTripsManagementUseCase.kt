@@ -22,9 +22,9 @@ class ClientTripsManagementUseCase(
     }
 
     override suspend fun rateTrip(tripId: String, rate: Double): Trip {
-        taxiGateway.getTripById(tripId) ?: throw ResourceNotFoundException
+        taxiGateway.getTripById(tripId) ?: throw ResourceNotFoundException()
         if (!validations.isValidRate(rate)) throw MultiErrorException(listOf(INVALID_RATE))
-        return taxiGateway.rateTrip(tripId, rate) ?: throw ResourceNotFoundException
+        return taxiGateway.rateTrip(tripId, rate) ?: throw ResourceNotFoundException()
     }
 
     override suspend fun createTrip(trip: Trip): Trip {
@@ -34,7 +34,7 @@ class ClientTripsManagementUseCase(
                 val count = taxiGateway.getTaxiById(id)?.tripsCount ?: 0
                 taxiGateway.updateTaxiTripsCount(id, count + 1)
             }
-        } ?: throw ResourceNotFoundException
+        } ?: throw ResourceNotFoundException()
     }
 
     override suspend fun getNumberOfTripsByClientId(id: String): Long {

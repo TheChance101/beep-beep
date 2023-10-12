@@ -32,8 +32,14 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
     }
 
     override suspend fun getTaxiById(taxiId: String): Taxi? {
-        return container.taxiCollection.findOneById(ObjectId(taxiId))
-            ?.takeIf { !it.isDeleted }?.toEntity()
+        return container.taxiCollection.findOneById(ObjectId(taxiId))?.takeIf { !it.isDeleted }?.toEntity()
+    }
+
+    override suspend fun getTaxiByDriverId(driverId: String): Taxi? {
+        return container.taxiCollection.findOne(
+            TaxiCollection::driverId eq ObjectId(driverId)
+        )?.takeIf { !it.isDeleted }
+            ?.toEntity()
     }
 
     override suspend fun editTaxi(taxiId: String, taxi: Taxi): Taxi {
