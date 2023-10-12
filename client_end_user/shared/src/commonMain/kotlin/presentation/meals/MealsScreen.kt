@@ -24,6 +24,7 @@ import presentation.composable.BottomSheet
 import presentation.composable.MealBottomSheet
 import presentation.composable.MealCard
 import presentation.composable.ModalBottomSheetState
+import presentation.composable.modifier.noRippleEffect
 import presentation.resturantDetails.MealUIState
 import resources.Resources
 import util.getStatusBarPadding
@@ -58,7 +59,13 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
             sheetBackgroundColor = Theme.colors.background,
             onBackGroundClicked = listener::onDismissSheet,
             sheetState = sheetState,
-            content = { content(state, onBackClicked = listener::onBackClicked) }
+            content = {
+                content(
+                    state,
+                    onBackClicked = listener::onBackClicked,
+                    onMealSelected = listener::onMealClicked
+                )
+            }
         )
 
         LaunchedEffect(state.showMealSheet) {
@@ -74,6 +81,7 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
     @Composable
     private fun content(
         state: MealsUiState,
+        onMealSelected: (MealUIState) -> Unit,
         onBackClicked: () -> Unit
     ) {
         Column(Modifier.fillMaxSize().background(Theme.colors.background)) {
@@ -91,7 +99,9 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
             ) {
 
                 items(state.meals) { meal ->
-                    MealCard(meal = meal)
+                    MealCard(
+                        meal = meal,
+                        modifier = Modifier.noRippleEffect { onMealSelected(meal) })
                 }
             }
         }

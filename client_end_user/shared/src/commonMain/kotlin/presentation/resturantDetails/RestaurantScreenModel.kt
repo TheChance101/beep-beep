@@ -182,11 +182,12 @@ class RestaurantScreenModel(
     }
 
     override fun onIncreaseMealQuantity() {
+        val quality = state.value.meal.quantity + 1
         updateState {
             it.copy(
                 meal = state.value.meal.copy(
-                    quantity = state.value.meal.quantity + 1,
-                    price = state.value.meal.price * state.value.meal.quantity
+                    quantity = quality,
+                    totalPrice = state.value.meal.price * quality
                 )
             )
         }
@@ -195,10 +196,11 @@ class RestaurantScreenModel(
     override fun onDecreaseMealQuantity() {
         if (state.value.meal.quantity == 1) return
         updateState {
+            val quality = state.value.meal.quantity - 1
             it.copy(
                 meal = state.value.meal.copy(
-                    quantity = state.value.meal.quantity - 1,
-                    price = state.value.meal.price * state.value.meal.quantity
+                    quantity = quality,
+                    totalPrice = state.value.meal.price * quality
                 )
             )
         }

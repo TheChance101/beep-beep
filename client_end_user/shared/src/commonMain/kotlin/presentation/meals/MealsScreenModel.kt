@@ -10,6 +10,7 @@ import presentation.cuisines.CuisinesUiEffect
 import presentation.resturantDetails.MealInteractionListener
 import presentation.resturantDetails.toUIState
 import org.koin.core.component.get
+import presentation.resturantDetails.MealUIState
 
 class MealsScreenModel(
     private val cuisineId: String,
@@ -63,8 +64,13 @@ class MealsScreenModel(
         TODO("Not yet implemented")
     }
 
+    override fun onMealClicked(meal: MealUIState) {
+        if (!state.value.showMealSheet) {
+            updateState { it.copy(showMealSheet = true, selectedMeal = meal) }
+        }
+    }
     override fun onDismissSheet() {
-        TODO("Not yet implemented")
+        updateState { it.copy(showMealSheet = false) }
     }
 
     override fun onBackClicked() {

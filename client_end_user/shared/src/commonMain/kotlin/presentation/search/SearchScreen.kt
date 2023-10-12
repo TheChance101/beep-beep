@@ -31,6 +31,7 @@ import com.beepbeep.designSystem.ui.theme.Theme
 import com.seiko.imageloader.rememberAsyncImagePainter
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
 import presentation.composable.BottomSheet
 import presentation.composable.ModalBottomSheetState
@@ -39,6 +40,7 @@ import presentation.composable.modifier.roundedBorderShape
 import presentation.resturantDetails.RestaurantScreen
 import presentation.composable.MealBottomSheet
 import presentation.composable.MealCard
+import presentation.resturantDetails.Composable.NeedToLoginSheet
 import presentation.resturantDetails.MealUIState
 import resources.Resources
 import util.getStatusBarPadding
@@ -55,6 +57,7 @@ class SearchScreen :
     override fun onEffect(effect: SearchUiEffect, navigator: Navigator) {
         when (effect) {
             is SearchUiEffect.NavigateToRestaurant -> navigator.root?.push(RestaurantScreen)
+            is SearchUiEffect.NavigateToLogin -> navigator.push(LoginScreen())
         }
     }
 
@@ -64,13 +67,19 @@ class SearchScreen :
 
         BottomSheet(
             sheetContent = {
-                MealBottomSheet(
-                    meal = state.selectedMeal,
-                    onDismissSheet = listener::onDismissSheet,
-                    onDecreaseQuantity = listener::onDecreaseMealQuantity,
-                    onIncreaseQuantity = listener::onIncreaseMealQuantity,
-                    onAddToCart = listener::onAddToCart
-                )
+                if (state.showMealSheet)
+                    MealBottomSheet(
+                        meal = state.selectedMeal,
+                        onAddToCart = listener::onAddToCart,
+                        onDismissSheet = listener::onDismissSheet,
+                        onIncreaseQuantity = listener::onIncreaseMealQuantity,
+                        onDecreaseQuantity = listener::onDecreaseMealQuantity
+                    )
+                if (state.showLoginSheet)
+                    NeedToLoginSheet(
+                        text = Resources.strings.loginToAddToFavourite,
+                        onClick = listener::onLoginClicked,
+                    )
             },
             sheetBackgroundColor = Theme.colors.background,
             onBackGroundClicked = listener::onDismissSheet,
@@ -78,8 +87,8 @@ class SearchScreen :
             content = { content(state, listener) }
         )
 
-        LaunchedEffect(state.showMealSheet) {
-            if (state.showMealSheet) {
+        LaunchedEffect(state.showMealSheet, state.showLoginSheet) {
+            if (state.showMealSheet || state.showLoginSheet) {
                 sheetState.show()
             } else {
                 sheetState.dismiss()

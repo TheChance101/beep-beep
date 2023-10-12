@@ -73,7 +73,7 @@ fun MealBottomSheet(
         )
         {
             Text(
-                text = "${meal.currency} ${meal.price}",
+                text = "${meal.currency}${meal.totalPrice}",
                 style = Theme.typography.title,
                 color = Theme.colors.contentPrimary,
             )
