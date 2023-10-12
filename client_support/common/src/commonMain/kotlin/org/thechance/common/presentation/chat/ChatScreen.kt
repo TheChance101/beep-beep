@@ -165,7 +165,7 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 ShimmerCircleBox(60.kms,45.kms)
-                ShimmerRoundedBox(200.kms, 20.kms)
+                ShimmerRoundedBox(300.kms, 40.kms)
             }
         } else {
             val scrollState = rememberLazyListState()
@@ -260,7 +260,7 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
         Box(
             modifier = Modifier
                 .padding(horizontal = horizontalPadding)
-                .clip(RoundedCornerShape(Theme.radius.large))
+                .clip(RoundedCornerShape(Theme.radius.medium))
                 .size(width, height)
                 .shimmerEffect()
         )
