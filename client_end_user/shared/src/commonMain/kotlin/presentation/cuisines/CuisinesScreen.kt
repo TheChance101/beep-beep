@@ -28,14 +28,11 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.home.composable.CuisineCard
+import presentation.meals.MealsScreen
 import resources.Resources
 
-class CuisinesScreen : BaseScreen<
-        CuisinesScreenModel,
-        CuisinesUiState,
-        CuisinesUiEffect,
-        CuisinesInteractionListener
-        >() {
+class CuisinesScreen :
+    BaseScreen<CuisinesScreenModel, CuisinesUiState, CuisinesUiEffect, CuisinesInteractionListener>() {
 
     @Composable
     override fun Content() {
@@ -45,7 +42,7 @@ class CuisinesScreen : BaseScreen<
     override fun onEffect(effect: CuisinesUiEffect, navigator: Navigator) {
         when (effect) {
             is CuisinesUiEffect.NavigateToCuisineDetails -> {
-//                navigator.push(CuisineDetailsScreen(effect.cuisineId))
+                navigator.push(MealsScreen(effect.cuisineId, effect.cuisineName))
             }
 
             CuisinesUiEffect.NavigateBack -> navigator.pop()

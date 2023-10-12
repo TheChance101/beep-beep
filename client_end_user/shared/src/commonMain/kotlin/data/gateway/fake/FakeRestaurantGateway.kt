@@ -4,6 +4,7 @@ import data.remote.mapper.toEntity
 import data.remote.model.MealDto
 import data.remote.model.OfferDto
 import domain.entity.Cuisine
+import domain.entity.Explore
 import domain.entity.InProgressWrapper
 import domain.entity.Location
 import domain.entity.Meal
@@ -46,6 +47,14 @@ class FakeRestaurantGateway : IRestaurantGateway {
 
     override suspend fun getSweets(restaurantId: String): List<Meal> {
         return meals.map { it.toEntity() }
+    }
+
+    override suspend fun search(query: String): Explore {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getMealsInCuisine(cuisineId: String): List<Meal> {
+        return meals.toEntity()
     }
 
     private val offers = listOf(
