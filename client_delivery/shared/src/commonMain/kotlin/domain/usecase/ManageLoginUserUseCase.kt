@@ -20,6 +20,7 @@ interface IManageLoginUserUseCase {
         deliveryRequestPermission: DeliveryRequestPermission
     ): Boolean
 
+    suspend fun saveUsername(username: String)
 }
 
 class ManageLoginUserUseCase(
@@ -57,6 +58,10 @@ class ManageLoginUserUseCase(
         return remoteGateway.createRequestPermission(
             deliveryRequestPermission
         )
+    }
+
+    override suspend fun saveUsername(username: String) {
+        localGateWay.saveUserName(username)
     }
 
 }
