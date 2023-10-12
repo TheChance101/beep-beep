@@ -22,7 +22,13 @@ class MapScreenModel(
             delay(5000)
             updateState { it.copy(
                 orderState = OrderState.NEW_ORDER,
-                destinationLocation = LocationUiState(31.2001, 29.9187, "")
+                orderUiState = OrderUiState(
+                    destinationLocation = LocationUiState(
+                        31.2001,
+                        29.9187,
+                        ""
+                    )
+                )
             )}
         }
     }
@@ -41,7 +47,7 @@ class MapScreenModel(
             updateState {
                 it.copy(
                     errorState = null,
-                    currentLocation = location.toUiState()
+                    orderUiState = OrderUiState(restaurantLocation = location.toUiState())
                 )
             }
         }
@@ -60,7 +66,13 @@ class MapScreenModel(
         updateState { it.copy(
             orderState = OrderState.ACCEPTED,
             // todo replace this with the restaurant actual location
-            destinationLocation = LocationUiState(31.2001, 29.9187, "")
+            orderUiState = OrderUiState(
+                destinationLocation = LocationUiState(
+                    31.2001,
+                    29.9187,
+                    ""
+                )
+            )
         ) }
     }
 
