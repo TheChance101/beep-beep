@@ -78,7 +78,7 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
         ) {
             Column {
                 ChatHeader(state.loading, state.ticket, listener)
-                ChatMessages(state.messages, modifier = Modifier.weight(1f))
+                ChatMessages(state.messages, state.loading, modifier = Modifier.weight(1f))
                 Divider(color = Theme.colors.divider, thickness = 1.kms)
                 BpSimpleTextField(
                     text = state.message,
@@ -104,7 +104,7 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
                         .padding(24.kms),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    ShimmerCircleBox()
+                    ShimmerCircleBox(45.kms,30.kms)
                     ShimmerRoundedBox(100.kms, 20.kms)
                     Spacer(modifier = Modifier.weight(1f))
                     ShimmerRoundedBox(100.kms, 20.kms)
@@ -114,7 +114,6 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
                         onClick = listener::onCloseTicketClicked,
                     )
                 }
-                Divider(color = Theme.colors.divider, thickness = 1.kms)
             } else {
                 Row(
                     modifier = Modifier.padding(24.kms),
@@ -147,26 +146,39 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
                         onClick = listener::onCloseTicketClicked,
                     )
                 }
-                Divider(color = Theme.colors.divider, thickness = 1.kms)
             }
+            Divider(color = Theme.colors.divider, thickness = 1.kms)
         }
     }
 
     @Composable
     private fun ChatMessages(
         messages: List<ChatUIState.MessageUIState>,
+        isLoading: Boolean,
         modifier: Modifier = Modifier
     ) {
-        val scrollState = rememberLazyListState()
-        LaunchedEffect(messages.size) {
-            scrollState.animateScrollToItem(abs(messages.size - 1))
-        }
-        LazyColumn(modifier = modifier, state = scrollState) {
-            items(messages) { message ->
-                val currentMessage = messages.indexOf(message)
-                val nextMessage = messages.getOrNull(currentMessage + 1)
-                val showAvatar = nextMessage?.isMe != message.isMe && !message.isMe
-                Message(message.copy(showAvatar = showAvatar))
+        if (isLoading) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.kms),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                ShimmerCircleBox(60.kms,45.kms)
+                ShimmerRoundedBox(200.kms, 20.kms)
+            }
+        } else {
+            val scrollState = rememberLazyListState()
+            LaunchedEffect(messages.size) {
+                scrollState.animateScrollToItem(abs(messages.size - 1))
+            }
+            LazyColumn(modifier = modifier, state = scrollState) {
+                items(messages) { message ->
+                    val currentMessage = messages.indexOf(message)
+                    val nextMessage = messages.getOrNull(currentMessage + 1)
+                    val showAvatar = nextMessage?.isMe != message.isMe && !message.isMe
+                    Message(message.copy(showAvatar = showAvatar))
+                }
             }
         }
     }
@@ -233,10 +245,10 @@ class ChatScreen : BaseScreen<ChatScreenModel, ChatUIEffect, ChatUIState, ChatIn
     }
 
     @Composable
-    private fun ShimmerCircleBox() {
+    private fun ShimmerCircleBox(width: Dp, height: Dp) {
         Box(
             modifier = Modifier
-                .size(45.kms, 30.kms)
+                .size(width, height)
                 .padding(end = 16.kms)
                 .clip(CircleShape)
                 .shimmerEffect()
