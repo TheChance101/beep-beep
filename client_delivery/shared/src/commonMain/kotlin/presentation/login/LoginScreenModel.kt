@@ -16,6 +16,10 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
     override val viewModelScope: CoroutineScope
         get() = coroutineScope
 
+    init {
+        showSnackBar("Sign up with Beep Beep account")
+    }
+
     override fun onUserNameChanged(userName: String) {
         updateState { it.copy(userName = userName) }
     }
@@ -33,7 +37,8 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
         password: String,
         isKeepMeLoggedInChecked: Boolean
     ) {
-        updateState { it.copy(isLoading = true) }
+
+        updateState { it.copy(isLoading = true, isEnable = false) }
         clearErrors()
         tryToExecute(
             {
@@ -54,6 +59,7 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
     }
 
     private fun onLoginError(errorState: ErrorState) {
+        updateState { it.copy(isLoading = false, isEnable = true) }
         clearErrors()
         when (errorState) {
             ErrorState.InvalidPassword -> updateState {
@@ -63,14 +69,12 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
                 )
             }
 
-            ErrorState.InvalidUsername -> updateState {
+            ErrorState.InvalidUsername,ErrorState.UserNotFound -> updateState {
                 it.copy(
                     usernameErrorMsg = "Invalid username",
                     isUsernameError = true
                 )
             }
-
-            is ErrorState.UserNotFound -> showSnackBar("Sign up with Beep Beep account")
 
             is ErrorState.UnAuthorized -> state.value.sheetState.show()
             else -> {}
@@ -92,8 +96,7 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
                 usernameErrorMsg = "",
                 isUsernameError = false,
                 passwordErrorMsg = "",
-                isPasswordError = false,
-                isLoading = false
+                isPasswordError = false
             )
         }
     }

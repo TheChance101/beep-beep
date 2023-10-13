@@ -26,9 +26,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.TextStyle
@@ -56,9 +58,9 @@ import presentation.home.composable.CartCard
 import presentation.home.composable.ChatSupportCard
 import presentation.home.composable.CuisineCard
 import presentation.home.composable.OrderCard
-import presentation.main.MainContainer
 import presentation.main.SearchTab
-import presentation.search.SearchScreen
+import presentation.meals.MealsScreen
+import presentation.resturantDetails.RestaurantScreen
 import resources.Resources
 import util.root
 
@@ -77,7 +79,10 @@ class HomeScreen : BaseScreen<
     override fun onEffect(effect: HomeScreenUiEffect, navigator: Navigator) {
 
         when (effect) {
-            is HomeScreenUiEffect.NavigateToCuisineDetails -> println("Cuisine id ${effect.cuisineId}")
+            is HomeScreenUiEffect.NavigateToMeals -> {
+                navigator.root?.push(MealsScreen(effect.cuisineId, effect.cuisineName))
+            }
+
             is HomeScreenUiEffect.NavigateToCuisines -> navigator.root?.push(CuisinesScreen())
             is HomeScreenUiEffect.NavigateToChatSupport -> navigator.root?.push(ChatSupportScreen())
             is HomeScreenUiEffect.NavigateToOrderTaxi -> println("Navigate to Order Taxi screen")
@@ -86,12 +91,15 @@ class HomeScreen : BaseScreen<
             is HomeScreenUiEffect.NavigateToOrderDetails -> println("Navigate to order details ${effect.orderId}")
             is HomeScreenUiEffect.NavigateToCart -> navigator.root?.push(CartScreen())
             is HomeScreenUiEffect.NavigateLoginScreen -> navigator.root?.push(LoginScreen())
+            is HomeScreenUiEffect.NavigateToRestaurantDetails -> navigator.root?.push(
+                RestaurantScreen(effect.restaurantId)
+            )
         }
     }
 
     @OptIn(
         ExperimentalResourceApi::class, ExperimentalFoundationApi::class,
-        ExperimentalMaterial3Api::class
+        ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class
     )
     @Composable
     override fun onRender(state: HomeScreenUiState, listener: HomeScreenInteractionListener) {
@@ -137,13 +145,18 @@ class HomeScreen : BaseScreen<
 
             item {
                 BpSimpleTextField(
-                    text = state.searchTerm,
+                    text = "",
                     hint = Resources.strings.searchHint,
                     hintColor = Theme.colors.contentSecondary,
-                    onValueChange = listener::onChangeSearchText,
+                    onTrailingIconClick = { tabNavigator.current = SearchTab },
+                    onValueChange = { },
                     onClick = { tabNavigator.current = SearchTab },
                     leadingPainter = painterResource(Resources.images.searchOutlined),
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier.onFocusChanged {
+                        if (it.hasFocus) {
+                            tabNavigator.current = SearchTab
+                        }
+                    }.padding(horizontal = 16.dp)
                 )
             }
 
@@ -243,7 +256,7 @@ class HomeScreen : BaseScreen<
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     SectionHeader(
-                        onClickViewAll = listener::onclickSeeAllCuisines,
+                        onClickViewAll = listener::onClickSeeAllCuisines,
                         title = Resources.strings.cuisineSectionTitle,
                         showViewAll = true
                     )
@@ -265,11 +278,15 @@ class HomeScreen : BaseScreen<
             item {
                 AnimatedVisibility(state.favoriteRestaurants.isNotEmpty()) {
                     ItemSection(
+                        { restaurantId -> listener.onClickRestaurantCard(restaurantId) },
                         header = Resources.strings.favoriteRestaurants,
+                        ids = state.favoriteRestaurants.map { it.id },
                         titles = state.favoriteRestaurants.map { it.name },
                         ratings = state.favoriteRestaurants.map { it.rating },
                         priceLevels = state.favoriteRestaurants.map { it.priceLevel },
                         painters = painters,
+                        hasRating = true,
+                        hasPriceLevel = true,
                     )
                 }
             }
@@ -283,6 +300,8 @@ class HomeScreen : BaseScreen<
                         painters = painters,
                         modifier = Modifier.padding(top = 16.dp),
                         hasOffer = true,
+                        hasPriceLevel = true,
+                        hasRating = true,
                         offers = listOf("15 %", "15 %", "15 %")
                     )
                 }
@@ -298,6 +317,8 @@ class HomeScreen : BaseScreen<
                         painters = painters,
                         modifier = Modifier.padding(top = 16.dp),
                         hasDeliveryPrice = true,
+                        hasPriceLevel = true,
+                        hasRating = true,
                         deliveryPrices = listOf("Free", "Free", "Free")
                     )
                 }

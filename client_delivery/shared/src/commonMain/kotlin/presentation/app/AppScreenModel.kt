@@ -20,7 +20,11 @@ class AppScreenModel(private val manageUser: IManageLoginUserUseCase): ScreenMod
     }
     private fun getIsKeptLoggedIn(){
         coroutineScope.launch(Dispatchers.IO) {
-            _isKeptLoggedIn.update { manageUser.getKeepMeLoggedInFlag() }
+            val isKeptLoggedIn = manageUser.getKeepMeLoggedInFlag()
+            if (!isKeptLoggedIn) {
+                manageUser.saveUsername("")
+            }
+            _isKeptLoggedIn.update { isKeptLoggedIn }
         }
     }
 }
