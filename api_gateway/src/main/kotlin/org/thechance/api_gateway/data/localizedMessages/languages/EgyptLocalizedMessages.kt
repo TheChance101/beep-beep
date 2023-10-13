@@ -34,6 +34,7 @@ class EgyptianArabicLocalizedMessages() : LocalizedMessages {
     override val tripFinished: String = "تم إنهاء الرحلة بنجاح"
     override val tripArrived: String = "تم الوصول الى العميل"
     override val receivedNewTrip: String = "رحلة جديدة يا معلم الحق بسرعة"
+    override val newOrderComing: String = "اوردر جديد وصل يا كبير"
     override val receivedNewDeliveryOrder: String = "جالك اوردر جديد ابسط يا عم"
     override val taxiUpdateSuccessfully: String = "حدثنالك التاكسي يا عم 🎉"
     override val taxiDeleteSuccessfully: String = "مسحنالك التاكسي مع الاسف"

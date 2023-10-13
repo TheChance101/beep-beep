@@ -3,12 +3,10 @@ package org.thechance.api_gateway.endpoints.utils
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.ServerResponse
 import org.thechance.api_gateway.data.model.taxi.*
@@ -26,11 +24,28 @@ class WebSocketServerHandler(
 ) {
 
     val sessions: ConcurrentHashMap<String, DefaultWebSocketServerSession> = ConcurrentHashMap()
-    suspend inline fun <reified T> tryToCollectFormWebSocket(values: Flow<T>, session: DefaultWebSocketServerSession) {
+
+    suspend inline fun <reified T> tryToCollect(values: Flow<T>, session: DefaultWebSocketServerSession) {
         try {
             values.flowOn(Dispatchers.IO).collect { value -> session.sendSerialized(value) }
         } catch (e: LocalizedMessageException) {
             session.send(e.localizedMessage)
+            session.close()
+        }
+    }
+
+    suspend inline fun <reified T> tryToCollectOrders(
+        values: Flow<T>,
+        session: DefaultWebSocketServerSession,
+        successMessage: String,
+    ) {
+        try {
+            values.flowOn(Dispatchers.IO).collectLatest { value ->
+                session.sendSerialized(ServerResponse.success(value, successMessage))
+            }
+        } catch (e: LocalizedMessageException) {
+            val errorResponse = ServerResponse.error(e.errorMessages, 404)
+            session.sendSerialized(errorResponse)
             session.close()
         }
     }
@@ -90,7 +105,6 @@ class WebSocketServerHandler(
 
         try {
             values
-                .flowOn(Dispatchers.IO)
                 .map { tripDto ->
                     val taxi = taxiService.getTaxiById(tripDto.taxiId ?: "", language)
                     tripDto.toRideTrackingResponse(taxi)

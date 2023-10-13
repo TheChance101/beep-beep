@@ -8,6 +8,7 @@ import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import org.koin.ktor.ext.inject
+import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
 import org.thechance.api_gateway.data.model.restaurant.OrderDto
 import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.endpoints.utils.*
@@ -18,15 +19,18 @@ fun Route.orderRoutes() {
 
     val webSocketServerHandler: WebSocketServerHandler by inject()
     val restaurantService: RestaurantService by inject()
+    val localizedMessagesFactory: LocalizedMessagesFactory by inject()
 
     authenticateWithRole(Role.RESTAURANT_OWNER) {
 
         webSocket("orders/{restaurantId}") {
             val restaurantId = call.parameters["restaurantId"]?.trim().orEmpty()
-            val orders = restaurantService.restaurantOrders(restaurantId)
+            val orders = restaurantService.getIncomingOrders(restaurantId)
+            val language = extractLocalizationHeaderFromWebSocket()
+            val successMessage = localizedMessagesFactory.createLocalizedMessages(language).newOrderComing
             webSocketServerHandler.sessions[restaurantId] = this
             webSocketServerHandler.sessions[restaurantId]?.let {
-                webSocketServerHandler.tryToCollectFormWebSocket(orders, it)
+                webSocketServerHandler.tryToCollectOrders(orders, it, successMessage)
             }
         }
 

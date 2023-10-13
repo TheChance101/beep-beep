@@ -36,6 +36,7 @@ class SyrianArabicLocalizedMessages() : LocalizedMessages {
     override val tripArrived: String = "تم الوصول الى العميل"
     override val receivedNewTrip: String = "تم إستلام رحلة جديدة"
     override val receivedNewDeliveryOrder: String = "تم إستلام اوردر جديد"
+    override val newOrderComing: String = "اوردر جديد وصل يا كبير"
     override val taxiUpdateSuccessfully: String = "سيارة التاكسي صارت محدثة 🎉"
     override val taxiDeleteSuccessfully: String = "سيارة التاكسي صارت محذوفة"
     override val invalidId: String= "الرقم مالو صحيح"

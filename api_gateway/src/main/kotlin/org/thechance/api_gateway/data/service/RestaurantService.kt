@@ -12,7 +12,7 @@ import org.thechance.api_gateway.data.model.PaginationResponse
 import org.thechance.api_gateway.data.model.restaurant.*
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.tryToExecute
-import org.thechance.api_gateway.data.utils.tryToExecuteFromWebSocket
+import org.thechance.api_gateway.data.utils.tryToExecuteWebSocket
 import org.thechance.api_gateway.util.APIs
 
 @Single
@@ -331,8 +331,8 @@ class RestaurantService(
         )
     }
 
-    suspend fun restaurantOrders(restaurantId: String): Flow<OrderDto> {
-        return client.tryToExecuteFromWebSocket<OrderDto>(
+    suspend fun getIncomingOrders(restaurantId: String): Flow<OrderDto> {
+        return client.tryToExecuteWebSocket<OrderDto>(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
             path = "/order/restaurant/$restaurantId",

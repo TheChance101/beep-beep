@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.LocationDto
 import org.thechance.api_gateway.data.utils.tryToExecuteFromWebSocket
+import org.thechance.api_gateway.data.utils.tryToExecuteWebSocket
 import org.thechance.api_gateway.data.utils.tryToSendWebSocketData
 import org.thechance.api_gateway.util.APIs
 
@@ -24,7 +25,7 @@ class LocationService(
     }
 
     suspend fun receiveLocation(tripId: String): Flow<LocationDto> {
-        return client.tryToExecuteFromWebSocket<LocationDto>(
+        return client.tryToExecuteWebSocket<LocationDto>(
             api = APIs.LOCATION_API,
             attributes = attributes,
             path = "/location/receiver/$tripId",

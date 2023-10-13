@@ -57,6 +57,8 @@ interface LocalizedMessages {
 
     val receivedNewTrip: String
 
+    val newOrderComing: String
+
     val receivedNewDeliveryOrder: String
 
     val taxiUpdateSuccessfully: String

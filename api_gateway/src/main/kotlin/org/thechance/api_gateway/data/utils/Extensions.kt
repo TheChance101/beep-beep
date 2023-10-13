@@ -73,11 +73,19 @@ suspend inline fun <reified T> HttpClient.tryToSendWebSocketData(
     data: T,
     api: APIs,
     path: String,
-    attributes: Attributes
+    attributes: Attributes,
+    crossinline setErrorMessage: (errorCodes: List<Int>) -> Map<Int, String> = { emptyMap() }
+
 ) {
     attributes.put(AttributeKey("API"), api.value)
     val host = System.getenv(attributes[AttributeKey("API")])
     webSocket(urlString = "ws://$host/$path") {
-        sendSerialized(data)
+        try {
+            sendSerialized(data)
+        } catch (e: Exception) {
+            val errorResponse = listOf(500)
+            val errorMessage = setErrorMessage(errorResponse)
+            throw LocalizedMessageException(errorMessage)
+        }
     }
 }

@@ -35,6 +35,7 @@ class IraqiArabicLocalizedMessages() : LocalizedMessages {
     override val tripArrived: String = "تم الوصول الى العميل"
     override val receivedNewTrip: String = "تم إستلام رحلة جديدة"
     override val receivedNewDeliveryOrder: String = "تم إستلام اوردر جديد"
+    override val newOrderComing: String = "اوردر جديد وصل يا كبير"
     override val taxiUpdateSuccessfully: String = "سيارة التاكسي صارت محدثة بنجاح 🎉"
     override val taxiDeleteSuccessfully: String = "سيارة التاكسي صارت محذوفة بنجاح 🎉"
     override val invalidId: String = "الايدي مالتك مو صحيح"
