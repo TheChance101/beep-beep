@@ -27,6 +27,10 @@ class FakeUserGateway : IUserGateway {
         TODO("Not yet implemented")
     }
 
+    override suspend fun updateProfile(fullName: String?, phone: String?): User {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getFavoriteRestaurants(): List<Restaurant> {
         return restaurants.map { it.toEntity() }
     }

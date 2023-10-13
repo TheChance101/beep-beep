@@ -13,7 +13,6 @@ import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
-//TODO add update profile
 class ProfileScreenModel(
     private val validation: IValidationUseCase,
     private val manageProfile: IManageProfileUseCase,
@@ -24,56 +23,50 @@ class ProfileScreenModel(
 
     init {
         checkIfLoggedIn()
-        getUserProfile()
     }
 
     private fun checkIfLoggedIn() {
         tryToExecute(
             { manageAuthentication.getAccessToken() },
             ::onCheckIfLoggedInSuccess,
-            ::onCheckIfLoggedInError
+            ::onError
         )
-    }
-
-    private fun onCheckIfLoggedInSuccess(accessToken: Flow<String>) {
-        coroutineScope.launch {
-            accessToken.collect { token ->
-                if (token.isNotEmpty()) {
-                    updateState { it.copy(isLoggedIn = true) }
-                } else {
-                    updateState { it.copy(isLoggedIn = false) }
-                }
-            }
-        }
-    }
-
-    private fun onCheckIfLoggedInError(errorState: ErrorState) {
-        updateState { it.copy(isLoggedIn = false) }
     }
 
     private fun getUserProfile() {
         tryToExecute(
             { manageProfile.getUserProfile() },
             ::onGetUserProfileSuccess,
-            ::onGetUserProfileError
+            ::onError
         )
     }
-
     private fun onGetUserProfileSuccess(userDetails: User) {
         val result = userDetails.toUIState()
         updateState {
             it.copy(
                 user = result,
                 fullName = result.fullName,
-                phoneNumber = result.phoneNumber
+                phoneNumber = result.phoneNumber,
+                isButtonEnabled = false,
+                isLoading = false,
+                isLoggedIn = true
             )
         }
     }
-
-    private fun onGetUserProfileError(errorState: ErrorState) {
+    private fun onCheckIfLoggedInSuccess(accessToken: Flow<String>) {
+        coroutineScope.launch {
+            accessToken.collect { token ->
+                if (token.isNotEmpty()) {
+                    getUserProfile()
+                } else {
+                    updateState { it.copy(isLoggedIn = false) }
+                }
+            }
+        }
+    }
+    private fun onError(errorState: ErrorState) {
         updateState { it.copy(isLoggedIn = false) }
     }
-
     override fun onFullNameChanged(fullName: String) {
         updateState { it.copy(fullName = fullName, isButtonEnabled = true) }
         checkValidate {
@@ -81,7 +74,6 @@ class ProfileScreenModel(
             clearErrors()
         }
     }
-
     override fun onPhoneNumberChanged(phone: String) {
         updateState { it.copy(phoneNumber = phone, isButtonEnabled = true) }
         checkValidate {
@@ -89,7 +81,31 @@ class ProfileScreenModel(
             clearErrors()
         }
     }
-
+    override fun onSaveProfileInfo() {
+        tryToExecute(
+            { manageProfile.updateUserProfile(state.value.fullName, state.value.phoneNumber) },
+            ::onGetUserProfileSuccess,
+            ::onUpdateProfileError
+        )
+    }
+    private fun onUpdateProfileError(errorState: ErrorState) {
+        updateState { it.copy(isLoading = false) }
+        //TODO display toast failed to update
+    }
+    override fun onLogout() {
+        updateState { it.copy(isLoggedIn = false) }
+        viewModelScope.launch {
+            manageAuthentication.logout()
+        }
+    }
+    override fun onClickLogin() {
+        sendNewEffect(ProfileUIEffect.NavigateToLoginScreen)
+    }
+    private fun clearErrors() {
+        updateState {
+            it.copy(isFullNameError = false, isPhoneNumberError = false)
+        }
+    }
     private fun checkValidate(block: () -> Unit) {
         try {
             block()
@@ -103,27 +119,4 @@ class ProfileScreenModel(
             }
         }
     }
-
-    private fun clearErrors() {
-        updateState {
-            it.copy(isFullNameError = false, isPhoneNumberError = false)
-        }
-    }
-
-    override fun onSaveProfileInfo() {
-        updateState { it.copy(isButtonEnabled = true, isLoading = false) }
-    }
-
-    override fun onLogout() {
-        updateState { it.copy(isLoggedIn = false) }
-        viewModelScope.launch {
-            manageAuthentication.removeAccessToken()
-            manageAuthentication.removeRefreshToken()
-        }
-    }
-
-    override fun onClickLogin() {
-        sendNewEffect(ProfileUIEffect.NavigateToLoginScreen)
-    }
-
 }

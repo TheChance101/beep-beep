@@ -83,6 +83,21 @@ class UserGateway(client: HttpClient) : BaseGateway(client), IUserGateway {
             ?: throw AuthorizationException.InvalidCredentialsException("Invalid Credential")
     }
 
+    override suspend fun updateProfile(fullName: String?, phone: String?): User {
+        return tryToExecute<ServerResponse<UserDetailsDto>> {
+            submitForm(
+                url = ("/user/profile"),
+                formParameters = Parameters.build {
+                    fullName?.let { append("fullName", it) }
+                    phone?.let { append("phone", it) }
+                }
+            ) {
+                method = HttpMethod.Post
+            }
+        }.value?.toEntity()
+            ?: throw AuthorizationException.InvalidCredentialsException("Invalid Credential")
+
+    }
 
     override suspend fun getFavoriteRestaurants(): List<Restaurant> {
         return tryToExecute<ServerResponse<List<RestaurantDto>>> {

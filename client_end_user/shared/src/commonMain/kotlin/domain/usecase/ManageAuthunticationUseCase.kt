@@ -11,11 +11,7 @@ interface IManageAuthenticationUseCase {
     suspend fun createUser(userCreation: Account): Boolean
 
     suspend fun loginUser(username: String, password: String, keepLoggedIn: Boolean): Boolean
-
-    suspend fun removeAccessToken()
-
-    suspend fun removeRefreshToken()
-
+    suspend fun logout()
     suspend fun getAccessToken(): Flow<String>
 }
 
@@ -46,12 +42,9 @@ class ManageAuthenticationUseCase(
         return true
     }
 
-    override suspend fun removeAccessToken() {
-        return localGateway.removeAccessToken()
-    }
-
-    override suspend fun removeRefreshToken() {
-        return localGateway.removeRefreshToken()
+    override suspend fun logout() {
+        localGateway.removeAccessToken()
+        localGateway.removeRefreshToken()
     }
 
     override suspend fun getAccessToken(): Flow<String> {

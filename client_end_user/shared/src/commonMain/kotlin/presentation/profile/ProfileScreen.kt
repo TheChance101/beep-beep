@@ -55,15 +55,11 @@ class ProfileScreen : BaseScreen<
     @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
     @Composable
     override fun onRender(state: ProfileUIState, listener: ProfileInteractionListener) {
-
-            LoginRequiredPlaceholder(
-                placeHolder = painterResource(Resources.images.requireLoginToShowProfilePlaceholder),
-                message = Resources.strings.profileLoginMessage,
-                onClickLogin = listener::onClickLogin
-            )
-
-
-
+        LoginRequiredPlaceholder(
+            placeHolder = painterResource(Resources.images.requireLoginToShowProfilePlaceholder),
+            message = Resources.strings.profileLoginMessage,
+            onClickLogin = listener::onClickLogin
+        )
         ContentVisibility(state.isLoggedIn) {
             Column(
                 modifier = Modifier
@@ -109,9 +105,7 @@ class ProfileScreen : BaseScreen<
                         title = Resources.strings.save,
                         enabled = state.isButtonEnabled,
                         isLoading = state.isLoading,
-                        onClick = {
-                            listener.onSaveProfileInfo()
-                        },
+                        onClick = listener::onSaveProfileInfo,
                     )
                 }
                 WhiteCard {

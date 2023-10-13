@@ -17,7 +17,7 @@ class ManageProfileUseCase(private val remoteGateway: IUserGateway) : IManagePro
     }
 
     override suspend fun updateUserProfile(name: String?, phoneNumber: String?): User {
-        TODO()
+        return remoteGateway.updateProfile(name, phoneNumber)
     }
 
 }
