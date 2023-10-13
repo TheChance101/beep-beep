@@ -30,6 +30,7 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.map.MapScreen
 import resources.Resources
+import util.getNavigationBarPadding
 
 class MainScreen :
     BaseScreen<MainScreenModel, MainUiState, MainScreenUiEffect, MainInteractionListener>() {
@@ -99,7 +100,8 @@ class MainScreen :
                 BPSnackBar(
                     icon = painterResource(Resources.images.warningIcon),
                     iconBackgroundColor = Theme.colors.warningContainer,
-                    iconTint = Theme.colors.warning
+                    iconTint = Theme.colors.warning,
+                    modifier = Modifier.padding(bottom = getNavigationBarPadding().calculateBottomPadding())
                 ) {
                     Text(
                         text = state.snackBarMessage,
