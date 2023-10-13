@@ -119,7 +119,8 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
                 items(state.meals) { meal ->
                     MealCard(
                         meal = meal,
-                        modifier = Modifier.noRippleEffect { onMealSelected(meal) })
+                        modifier = Modifier.noRippleEffect { onMealSelected(meal) }
+                    )
                 }
             }
         }

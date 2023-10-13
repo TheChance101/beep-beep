@@ -75,8 +75,9 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client), IRes
     }
 
     override suspend fun getMealsInCuisine(cuisineId: String): List<Meal> {
-        //TODO call api
-        return meals.toEntity()
+        return tryToExecute<ServerResponse<List<MealDto>>> {
+            get("/cuisine/$cuisineId/meals")
+        }.value?.toEntity() ?: throw GeneralException.NotFoundException
     }
 
 
