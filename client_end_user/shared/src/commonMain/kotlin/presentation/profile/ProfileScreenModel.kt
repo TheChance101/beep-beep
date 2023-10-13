@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
-//TOD
+//TODO add update profile
 class ProfileScreenModel(
     private val validation: IValidationUseCase,
     private val manageProfile: IManageProfileUseCase,
