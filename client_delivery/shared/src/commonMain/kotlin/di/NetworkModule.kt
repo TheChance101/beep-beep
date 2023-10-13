@@ -9,6 +9,7 @@ import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.client.request.header
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
@@ -28,11 +29,13 @@ val networkModule = module {
 
                 header("Content-Type", "application/json")
                 header("Accept-Language", "en")
-               // url("https://beep-beep-api-gateway-nap2u.ondigitalocean.app/")
-                url("https://beep-beep-api-gateway-nap2u.ondigitalocean.app/")
+                // url("https://beep-beep-api-gateway-nap2u.ondigitalocean.app/")
+                url("http://127.0.0.1:8080/")
 
             }
-
+            install(WebSockets) {
+                pingInterval = 20_000
+            }
             install(ContentNegotiation) {
                 json(
                     Json {

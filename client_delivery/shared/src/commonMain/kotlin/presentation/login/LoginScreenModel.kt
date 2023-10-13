@@ -50,10 +50,11 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
             manageLoginUser.saveUsername(username)
         }
         sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
-
+        println("Success")
     }
 
     private fun onLoginError(errorState: ErrorState) {
+        println("Error")
         clearErrors()
         when (errorState) {
             ErrorState.InvalidPassword -> updateState {
