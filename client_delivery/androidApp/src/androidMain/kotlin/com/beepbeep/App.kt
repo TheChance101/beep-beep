@@ -13,7 +13,8 @@ class App : Application() {
             modules(
                 appModule(),
                 locationTrackerModule,
-                locationServiceModule
+                locationServiceModule,
+                locationDataSourceModule
             )
         }
     }
