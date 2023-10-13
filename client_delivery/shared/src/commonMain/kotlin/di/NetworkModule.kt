@@ -30,7 +30,7 @@ val networkModule = module {
                 header("Content-Type", "application/json")
                 header("Accept-Language", "en")
                 // url("https://beep-beep-api-gateway-nap2u.ondigitalocean.app/")
-                url("http://127.0.0.1:8080/")
+                url("http://192.168.1.100:8080/")
 
             }
             install(WebSockets) {
