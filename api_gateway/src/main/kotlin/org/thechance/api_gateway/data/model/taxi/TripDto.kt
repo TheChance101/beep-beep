@@ -51,3 +51,28 @@ fun TripDto.toDeliveryTripResponse(restaurantInfo: RestaurantDto): DeliveryTripR
         tripStatus = tripStatus
     )
 }
+
+fun TripDto.toRideTrackingResponse(taxi: TaxiDto): RideTrackingResponse {
+    return RideTrackingResponse(
+        id = id ?: "",
+        taxiPlateNumber = taxiPlateNumber ?: "",
+        taxiDriverName = taxi.driverUsername,
+        driverImage = taxi.driverImage ?: "",
+        rate = taxi.rate ?: 0.0,
+        carType = taxi.type,
+        startPoint = startPoint ?: LocationDto(0.0, 0.0),
+        destination = destination ?: LocationDto(0.0, 0.0),
+        startPointAddress = startPointAddress ?: "",
+        destinationAddress = destinationAddress ?: "",
+        tripStatus = tripStatus
+    )
+}
+
+fun TripDto.toDeliveryTrackingResponse(): DeliveryTrackingResponse {
+    return DeliveryTrackingResponse(
+        id = id ?: "",
+        startPoint = startPoint ?: LocationDto(0.0, 0.0),
+        destination = destination ?: LocationDto(0.0, 0.0),
+        status = tripStatus
+    )
+}

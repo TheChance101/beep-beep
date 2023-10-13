@@ -152,6 +152,35 @@ fun Route.taxiRoutes() {
             }
         }
 
+        webSocket("/track/ride/{tripId}") {
+            val tripId = call.parameters["tripId"]?.trim().orEmpty()
+            val language = extractLocalizationHeaderFromWebSocket()
+            val ride = taxiService.trackOrderRequest(tripId, language)
+            webSocketServerHandler.sessions[tripId] = this
+            webSocketServerHandler.sessions[tripId]?.let { session ->
+                webSocketServerHandler.tryToTrackTaxiRide(
+                    values = ride,
+                    session = session,
+                    successMessage = "tracking your taxi ride",
+                    language = language
+                )
+            }
+        }
+
+        webSocket("/track/delivery/{tripId}") {
+            val tripId = call.parameters["tripId"]?.trim().orEmpty()
+            val language = extractLocalizationHeaderFromWebSocket()
+            val delivery = taxiService.trackOrderRequest(tripId, language)
+            webSocketServerHandler.sessions[tripId] = this
+            webSocketServerHandler.sessions[tripId]?.let { session ->
+                webSocketServerHandler.tryToTrackOrder(
+                    values = delivery,
+                    session = session,
+                    successMessage = "tracking your order",
+                )
+            }
+        }
+
         put("/approve") {
             val language = extractLocalizationHeader()
             val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripApproved

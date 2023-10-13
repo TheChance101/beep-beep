@@ -11,6 +11,8 @@ data class TaxiDto(
     @SerialName("type") val type: String,
     @SerialName("driverId") val driverId: String? = null,
     @SerialName("driverUsername") val driverUsername: String,
+    @SerialName("driverImage") val driverImage: String? = null,
+    @SerialName("rate") val rate: Double? = null,
     @SerialName("isAvailable") val isAvailable: Boolean = true,
     @SerialName("seats") val seats: Int = 4,
     @SerialName("tripsCount") val tripsCount: Int? = 0,

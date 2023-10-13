@@ -3,6 +3,7 @@ package org.thechance.service_taxi.api.util
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.drop
@@ -62,9 +63,12 @@ class SocketHandler {
         }
     }
 
-    suspend fun endSession(key: String) {
+    suspend fun endSession(key: String, delayInMillis: Long = 3000) {
         val session = trips[key]?.session
-        session?.close()
+        session?.let {
+            delay(delayInMillis)
+            it.close()
+        }
         trips.remove(key)
     }
 }
