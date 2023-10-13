@@ -9,8 +9,9 @@ data class HomeScreenUiState(
     val recommendedCuisines: List<CuisineUiState> = emptyList(),
     val favoriteRestaurants: List<RestaurantUiState> = emptyList(),
     val inProgressWrapper: InProgressWrapper = InProgressWrapper(),
-    val lastOrder : OrderUiState = OrderUiState(),
+    val lastOrder: OrderUiState = OrderUiState(),
     val user: UserUiState = UserUiState(),
+    val showCart: Boolean = false,
 ) {
     val hasProgress: Boolean
         get() = inProgressWrapper.taxisOnTheWay.isNotEmpty() ||

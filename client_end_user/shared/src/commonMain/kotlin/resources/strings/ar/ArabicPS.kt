@@ -87,9 +87,22 @@ data class ArabicPS(
     override val orderNow: String = "أطلب هلأ",
     override val total: String = "المجموع:",
     override val yourCart: String = "العربة",
-    override val logout: String= "تسجيل الخروج",
+    override val logout: String = "تسجيل الخروج",
     override val address: String = "العنوان",
-    override val save: String= "حفظ",
-    override val pleaseLogin: String="سجل دخول حتى توصل حسابك يخوو"
-
-    ) : IStringResources
+    override val save: String = "حفظ",
+    override val pleaseLogin: String = "سجل دخول حتى توصل حسابك يخوو",
+    override val message: String = "الرسالة",
+    override val supportTeam: String = "فريق الدعم",
+    override val sendMessageToStartLiveChat: String = "أبعت رسالة عشان تبدأ المحادثة!",
+    override val profileLoginMessage: String = "سجل دخول حتى توصل حسابك يخوو",
+    override val ordersHistoryLoginMessage: String = "برجاء تسجيل الدخول للوصول إلى سجل طلباتك",
+    override val notificationLoginMessage: String = "برجاء تسجيل الدخول لمشاهدة الإشعارات",
+    override val mostOrdered: String = "الأكثر طلباً",
+    override val sweets: String= "حلويات",
+    override val free: String= "مجاناً",
+    override val loginToAddToFavourite: String= "الرجاء تسجيل الدخول للاضافه",
+    override val addToCart: String= "أضف إلى العربة",
+    override val mealAddedToYourCart: String= " ضفنالك الوجبة إلى عربة التسوق تاعك ",
+    override val invalidAddress: String = "العنوان مو صالح",
+    override val yourAddress: String = "عنوانك",
+) : IStringResources

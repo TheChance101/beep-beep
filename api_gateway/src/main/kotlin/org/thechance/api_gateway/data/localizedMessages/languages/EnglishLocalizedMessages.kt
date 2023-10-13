@@ -16,6 +16,7 @@ class EnglishLocalizedMessages() : LocalizedMessages {
     override val usernameCannotBeBlank: String = "Username cannot be blank"
     override val passwordCannotBeBlank: String = "Password cannot be blank"
     override val invalidEmail: String = "Invalid email"
+    override val invalidPhone: String = "Invalid phone"
     override val notFound: String = "Not found"
     override val invalidCredentials: String = "Invalid credentials"
     override val userCreatedSuccessfully: String = "User created successfully 🎉"
@@ -38,12 +39,12 @@ class EnglishLocalizedMessages() : LocalizedMessages {
     override val invalidColor: String = "Invalid color"
     override val invalidCarType: String = "Invalid car type"
     override val seatOutOfRange: String = "Seat out of range"
-    override val invalidLocation: String= "Invalid location"
-    override val invalidRate: String= "Invalid rate"
-    override val invalidDate: String= "Invalid date"
-    override val invalidPrice: String= "Invalid price"
-    override val alreadyExist: String= "Already exist"
-    override val requiredQuery: String= "Required query"
+    override val invalidLocation: String = "Invalid location"
+    override val invalidRate: String = "Invalid rate"
+    override val invalidDate: String = "Invalid date"
+    override val invalidPrice: String = "Invalid price"
+    override val alreadyExist: String = "Already exist"
+    override val requiredQuery: String = "Required query"
     // endregion
 
     //region restaurant
@@ -77,8 +78,14 @@ class EnglishLocalizedMessages() : LocalizedMessages {
     override val deletedSuccessfully: String = "Deleted successfully "
     override val cuisineNameAlreadyExisted: String = "Cuisine name already existed"
 
-    override val missingParameter: String= "Missing parameter"
+    override val missingParameter: String = "Missing parameter"
     override val tokensNotFound: String = "Tokens not found"
     override val tokenNotRegister: String = "Token not register"
+    override val cartIsAlreadyEmpty: String = "cart is already empty"
+    override val invalidQuantity: String = "Invalid Quantity"
+    //endregion
+
+    // region notification
+    override val notificationNotSent: String = "Notification not sent"
     //endregion
 }

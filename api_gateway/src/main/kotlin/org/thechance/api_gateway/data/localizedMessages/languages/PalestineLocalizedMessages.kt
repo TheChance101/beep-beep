@@ -16,6 +16,7 @@ class PalestinianArabicLocalizedMessages() : LocalizedMessages {
     override val usernameCannotBeBlank: String = "شو هالاسم الفارغ؟"
     override val passwordCannotBeBlank: String = "ما عندك رقم سري؟"
     override val invalidEmail: String = "الإيميل مش صحيح"
+    override val invalidPhone: String = "الموبايل مش صحيح"
     override val notFound: String = "ما لقيناه"
     override val invalidCredentials: String = "امسك حرامي"
     override val userCreatedSuccessfully: String = "اعمل حفلة بقى عندك حساب يا صاحب الحظ 🎉"
@@ -82,5 +83,12 @@ class PalestinianArabicLocalizedMessages() : LocalizedMessages {
     override val missingParameter: String = "في معلومات مفقودة يا زلمة!"
     override val tokensNotFound: String = "ما لقينا التوكنات يا زلمة!"
     override val tokenNotRegister: String="التوكن مش مسجل"
+    override val cartIsAlreadyEmpty: String = "لا يمكن اجراء الامر لان السله فارغه"
+    override val invalidQuantity: String = "مدخل كميه مش صح"
+
+    //endregion
+
+    // region notification
+    override val notificationNotSent: String = "لم يتم إرسال الإشعار"
     //endregion
 }

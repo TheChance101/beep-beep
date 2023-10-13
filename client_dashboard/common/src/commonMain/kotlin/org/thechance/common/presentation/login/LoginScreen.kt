@@ -6,15 +6,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -66,107 +58,107 @@ class LoginScreen :
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun OnRender(state: LoginUIState, listener: LoginInteractionListener) {
-        Row(
-                Modifier.background(Theme.colors.surface).fillMaxSize()
-                    .padding(
-                            top = 40.kms,
-                            start = 40.kms,
-                            bottom = 40.kms
-                    ),
-                horizontalArrangement = Arrangement.Center
-        ) {
-            Box(Modifier.weight(1f)) {
-                Image(
-                        painter = painterResource(Resources.Drawable.login),
-                        contentDescription = null,
-                        alignment = Alignment.CenterStart,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
-                            .border(
-                                    BorderStroke(width = 1.kms, color = Theme.colors.divider),
-                                    shape = RoundedCornerShape(Theme.radius.large)
-                            )
-                            .clip(RoundedCornerShape(Theme.radius.large))
-                )
-                BpLogo(
-                        expanded = true,
-                        modifier = Modifier.align(Alignment.TopStart).padding(32.kms)
-                )
-            }
-            Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
-
-                Column(
-                        modifier = Modifier.fillMaxHeight(),
-                        verticalArrangement = Arrangement.Bottom,
-                ) {
-                    AnimatedVisibility( state.isSnackBarVisible,
-                            modifier = Modifier.animateContentSize(),
-                            enter = fadeIn(),
-                            exit = fadeOut()
-                    ) {
-                        SnackBar(onDismiss = listener::onSnackBarDismiss, backgroundColor = Theme.colors.hover) {
-                            Image(
-                                    painter = painterResource(Resources.Drawable.infoIcon),
-                                    contentDescription = null,
-                                    colorFilter = ColorFilter.tint(color = Theme.colors.primary),
-                                    modifier = Modifier.padding(16.kms)
-                            )
-                                Text(
-                                        text = state.snackBarTitle?:Resources.Strings.noInternet,
-                                        style = Theme.typography.titleMedium,
-                                        color = Theme.colors.primary,
-                                )
-                        }
-                    }
-
-                }
-                Column(
-                        Modifier.fillMaxHeight().width(450.kms),
-                        verticalArrangement = Arrangement.Center,
-                ) {
-                    Text(
-                            Resources.Strings.login,
-                            style = Theme.typography.headlineLarge,
-                            color = Theme.colors.contentPrimary
-                    )
-                    Text(
-                            Resources.Strings.loginTitle,
-                            style = Theme.typography.titleMedium,
-                            color = Theme.colors.contentTertiary,
-                            modifier = Modifier.padding(top = 8.kms)
-                    )
-                    BpTextField(
-                            onValueChange = { listener.onUsernameChange(it) },
-                            text = state.username,
-                            label = Resources.Strings.loginUsername,
-                            modifier = Modifier.padding(top = 40.kms),
-                            errorMessage = state.isUserError?.errorMessage ?: "",
-                            isError = state.isUserError?.isError ?: false,
-                            hint = ""
-                    )
-                    BpTextField(
-                            onValueChange = { listener.onPasswordChange(it) },
-                            text = state.password,
-                            label = Resources.Strings.loginPassword,
-                            keyboardType = KeyboardType.Password,
-                            modifier = Modifier.padding(top = 16.kms),
-                            errorMessage = state.isPasswordError?.errorMessage ?: "",
-                            isError = state.isPasswordError?.isError ?: false,
-                            hint = ""
-                    )
-                    BpButton(
-                            title = Resources.Strings.loginButton,
-                            onClick = { listener.onLoginClicked() },
-                            modifier = Modifier.padding(top = 24.kms).fillMaxWidth(),
-                            enabled = state.isAbleToLogin
-                    )
-                }
-            }
-        }
-
         LaunchedEffect(state.isSnackBarVisible) {
             delay(1500)
             listener.onSnackBarDismiss()
+        }
+
+        Row(
+            Modifier.background(Theme.colors.surface).fillMaxSize()
+                .padding(
+                    top = 40.kms,
+                    start = 40.kms,
+                    bottom = 40.kms
+                ),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Box(Modifier.weight(1f)) {
+                Image(
+                    painter = painterResource(Resources.Drawable.login),
+                    contentDescription = null,
+                    alignment = Alignment.CenterStart,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                        .border(
+                            BorderStroke(width = 1.kms, color = Theme.colors.divider),
+                            shape = RoundedCornerShape(Theme.radius.large)
+                        )
+                        .clip(RoundedCornerShape(Theme.radius.large))
+                )
+                BpLogo(
+                    expanded = true,
+                    modifier = Modifier.align(Alignment.TopStart).padding(32.kms)
+                )
+            }
+            Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                Column(
+                    modifier = Modifier.fillMaxHeight(),
+                    verticalArrangement = Arrangement.Bottom,
+                ) {
+                    AnimatedVisibility(
+                        state.isSnackBarVisible,
+                        modifier = Modifier.animateContentSize(),
+                        enter = fadeIn(),
+                        exit = fadeOut()
+                    ) {
+                        SnackBar(onDismiss = listener::onSnackBarDismiss, backgroundColor = Theme.colors.hover) {
+                            Image(
+                                painter = painterResource(Resources.Drawable.infoIcon),
+                                contentDescription = null,
+                                colorFilter = ColorFilter.tint(color = Theme.colors.primary),
+                                modifier = Modifier.padding(16.kms)
+                            )
+                            Text(
+                                text = state.snackBarTitle ?: Resources.Strings.noInternet,
+                                style = Theme.typography.titleMedium,
+                                color = Theme.colors.primary,
+                            )
+                        }
+                    }
+                }
+                Column(
+                    Modifier.fillMaxHeight().width(450.kms),
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Text(
+                        Resources.Strings.login,
+                        style = Theme.typography.headlineLarge,
+                        color = Theme.colors.contentPrimary
+                    )
+                    Text(
+                        Resources.Strings.loginTitle,
+                        style = Theme.typography.titleMedium,
+                        color = Theme.colors.contentTertiary,
+                        modifier = Modifier.padding(top = 8.kms)
+                    )
+                    BpTextField(
+                        onValueChange = { listener.onUsernameChange(it) },
+                        text = state.username,
+                        label = Resources.Strings.loginUsername,
+                        modifier = Modifier.padding(top = 40.kms),
+                        errorMessage = state.isUserError?.errorMessage ?: "",
+                        isError = state.isUserError?.isError ?: false,
+                        hint = ""
+                    )
+                    BpTextField(
+                        onValueChange = { listener.onPasswordChange(it) },
+                        text = state.password,
+                        label = Resources.Strings.loginPassword,
+                        keyboardType = KeyboardType.Password,
+                        modifier = Modifier.padding(top = 16.kms),
+                        errorMessage = state.isPasswordError?.errorMessage ?: "",
+                        isError = state.isPasswordError?.isError ?: false,
+                        hint = ""
+                    )
+                    BpButton(
+                        title = Resources.Strings.loginButton,
+                        onClick = { listener.onLoginClicked() },
+                        modifier = Modifier.padding(top = 24.kms).fillMaxWidth(),
+                        enabled = state.isEnable,
+                        isLoading = state.isLoading,
+                    )
+                }
+            }
         }
     }
 }

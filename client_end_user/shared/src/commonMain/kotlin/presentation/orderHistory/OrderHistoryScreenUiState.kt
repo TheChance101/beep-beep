@@ -7,7 +7,8 @@ import domain.entity.Trip
 data class OrderScreenUiState(
     val selectedType: OrderSelectType = OrderSelectType.MEALS,
     val ordersHistory: List<OrderHistoryUiState> = emptyList(),
-    val tripsHistory: List<TripHistoryUiState> = emptyList()
+    val tripsHistory: List<TripHistoryUiState> = emptyList(),
+    val isLoggedIn : Boolean = false
 ) {
     enum class OrderSelectType {
         MEALS,

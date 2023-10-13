@@ -34,6 +34,8 @@ data class StringResources(
     val cuisines: String = "Cuisines",
     val enterCuisineName: String = "Enter cuisine name",
     val add: String = "Add",
+    val update : String = "Update",
+    val updateRestaurant: String = "Update Restaurant",
     //endregion Restaurant
 
     //region Taxi
@@ -69,7 +71,7 @@ data class StringResources(
     val palestine: String = "Palestine",
     val jordan: String = "Jordan",
     val egypt: String = "Egypt",
-        //endregion User
+    //endregion User
 
     //region scaffold
     val logout: String = "Logout",

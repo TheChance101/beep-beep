@@ -62,7 +62,7 @@ kotlin {
                 implementation(libs.ktor.client.cio)
                 implementation(libs.kotlin.serialization)
 
-                //moko
+                api(libs.calf)
                 api(libs.moko.geo)
             }
         }

@@ -18,6 +18,9 @@ val UseCasesModule = module {
     single<IManageMealUseCase> { ManageMealUseCase(get(), get(), get(), get()) }
     single<IManageRestaurantDetailsUseCase> { ManageRestaurantDetailsUseCase(get(), get(), get(), get()) }
     single<IManageRestaurantRequestUseCase> { ManageRestaurantRequestUseCase(get(), get()) }
+    single<IMangeCartUseCase> { MangeCartUseCase(get(), get(), get()) }
+    single<ICartValidationUseCase> { CartValidationUseCase(get()) }
+    single<ISearchUseCase> { SearchUseCase(get()) }
     factory<IOrderValidationUseCase> { OrderValidationUseCase(get()) }
-    factory<IManageOrderUseCase> { ManageOrderUseCase(get(), get(), get(), get()) }
+    factory<IManageOrderUseCase> { ManageOrderUseCase(get(), get(), get()) }
 }

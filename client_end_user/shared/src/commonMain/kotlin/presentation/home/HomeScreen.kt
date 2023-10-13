@@ -1,10 +1,12 @@
 package presentation.home
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -25,15 +27,24 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.input.key.onInterceptKeyBeforeSoftKeyboard
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import com.beepbeep.designSystem.ui.composable.BpAppBar
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
@@ -43,6 +54,7 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
 import presentation.cart.CartScreen
+import presentation.chatSupport.ChatSupportScreen
 import presentation.composable.BpImageLoader
 import presentation.composable.ImageSlider
 import presentation.composable.ItemSection
@@ -53,11 +65,19 @@ import presentation.home.composable.CartCard
 import presentation.home.composable.ChatSupportCard
 import presentation.home.composable.CuisineCard
 import presentation.home.composable.OrderCard
+import presentation.meals.MealsScreen
+import presentation.main.MainContainer
+import presentation.main.SearchTab
+import presentation.search.SearchScreen
 import resources.Resources
 import util.root
 
-class HomeScreen :
-    BaseScreen<HomeScreenModel, HomeScreenUiState, HomeScreenUiEffect, HomeScreenInteractionListener>() {
+class HomeScreen : BaseScreen<
+        HomeScreenModel,
+        HomeScreenUiState,
+        HomeScreenUiEffect,
+        HomeScreenInteractionListener
+        >() {
 
     @Composable
     override fun Content() {
@@ -65,25 +85,30 @@ class HomeScreen :
     }
 
     override fun onEffect(effect: HomeScreenUiEffect, navigator: Navigator) {
+
         when (effect) {
-            is HomeScreenUiEffect.NavigateToCuisineDetails -> println("Cuisine id ${effect.cuisineId}")
+            is HomeScreenUiEffect.NavigateToMeals -> {
+                navigator.root?.push(MealsScreen(effect.cuisineId, effect.cuisineName))
+            }
+
             is HomeScreenUiEffect.NavigateToCuisines -> navigator.root?.push(CuisinesScreen())
-            is HomeScreenUiEffect.NavigateToChatSupport -> println("Navigate to Chat support screen")
+            is HomeScreenUiEffect.NavigateToChatSupport -> navigator.root?.push(ChatSupportScreen())
             is HomeScreenUiEffect.NavigateToOrderTaxi -> println("Navigate to Order Taxi screen")
             is HomeScreenUiEffect.ScrollDownToRecommendedRestaurants -> println("Scroll down home screen")
             is HomeScreenUiEffect.NavigateToOfferItem -> println("Navigate to offer item details ${effect.offerId}")
-            is HomeScreenUiEffect.NavigateToSearch -> println("Navigate to Search Screen")
-            is HomeScreenUiEffect.NavigateToOrderDetails ->  println("Navigate to order details ${effect.orderId}")
+            is HomeScreenUiEffect.NavigateToOrderDetails -> println("Navigate to order details ${effect.orderId}")
             is HomeScreenUiEffect.NavigateToCart -> navigator.root?.push(CartScreen())
             is HomeScreenUiEffect.NavigateLoginScreen -> navigator.root?.push(LoginScreen())
         }
     }
 
-    @OptIn(ExperimentalResourceApi::class, ExperimentalFoundationApi::class,
-        ExperimentalMaterial3Api::class
+    @OptIn(
+        ExperimentalResourceApi::class, ExperimentalFoundationApi::class,
+        ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class
     )
     @Composable
     override fun onRender(state: HomeScreenUiState, listener: HomeScreenInteractionListener) {
+        val tabNavigator = LocalTabNavigator.current
         val painters = mutableListOf<Painter>()
         repeat(state.favoriteRestaurants.size) {
             painters.add(painterResource(Resources.images.placeholder))
@@ -125,18 +150,25 @@ class HomeScreen :
 
             item {
                 BpSimpleTextField(
-                    "",
+                    text = "",
                     hint = Resources.strings.searchHint,
                     hintColor = Theme.colors.contentSecondary,
-                    onValueChange = {},
-                    onClick = { listener.onClickSearch() },
+                    onTrailingIconClick = { tabNavigator.current = SearchTab },
+                    onValueChange = { },
+                    onClick = { tabNavigator.current = SearchTab },
                     leadingPainter = painterResource(Resources.images.searchOutlined),
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier.onFocusChanged {
+                        if (it.hasFocus) {
+                            tabNavigator.current = SearchTab
+                        }
+                    }.padding(horizontal = 16.dp)
                 )
             }
 
             item {
-                CartCard(onClick = { listener.onClickCartCard() })
+                AnimatedVisibility(state.showCart) {
+                    CartCard(onClick = { listener.onClickCartCard() })
+                }
             }
 
             if (state.hasProgress) {
@@ -221,7 +253,7 @@ class HomeScreen :
                 }
             }
             item {
-                LastOrder(state.lastOrder,listener)
+                LastOrder(state.lastOrder, listener)
             }
             item {
                 Column(
@@ -249,38 +281,44 @@ class HomeScreen :
             }
 
             item {
-                ItemSection(
-                    header = Resources.strings.favoriteRestaurants,
-                    titles = state.favoriteRestaurants.map { it.name },
-                    ratings = state.favoriteRestaurants.map { it.rating },
-                    priceLevels = state.favoriteRestaurants.map { it.priceLevel },
-                    painters = painters,
-                )
+                AnimatedVisibility(state.favoriteRestaurants.isNotEmpty()) {
+                    ItemSection(
+                        header = Resources.strings.favoriteRestaurants,
+                        titles = state.favoriteRestaurants.map { it.name },
+                        ratings = state.favoriteRestaurants.map { it.rating },
+                        priceLevels = state.favoriteRestaurants.map { it.priceLevel },
+                        painters = painters,
+                    )
+                }
             }
             item {
-                ItemSection(
-                    header = Resources.strings.eidSpecials,
-                    titles = state.favoriteRestaurants.map { it.name },
-                    ratings = state.favoriteRestaurants.map { it.rating },
-                    priceLevels = state.favoriteRestaurants.map { it.priceLevel },
-                    painters = painters,
-                    modifier = Modifier.padding(top = 16.dp),
-                    hasOffer = true,
-                    offers = listOf("15 %", "15 %", "15 %")
-                )
+                AnimatedVisibility(state.favoriteRestaurants.isNotEmpty()) {
+                    ItemSection(
+                        header = Resources.strings.eidSpecials,
+                        titles = state.favoriteRestaurants.map { it.name },
+                        ratings = state.favoriteRestaurants.map { it.rating },
+                        priceLevels = state.favoriteRestaurants.map { it.priceLevel },
+                        painters = painters,
+                        modifier = Modifier.padding(top = 16.dp),
+                        hasOffer = true,
+                        offers = listOf("15 %", "15 %", "15 %")
+                    )
+                }
             }
 
             item {
-                ItemSection(
-                    header = Resources.strings.freeDelivery,
-                    titles = state.favoriteRestaurants.map { it.name },
-                    ratings = state.favoriteRestaurants.map { it.rating },
-                    priceLevels = state.favoriteRestaurants.map { it.priceLevel },
-                    painters = painters,
-                    modifier = Modifier.padding(top = 16.dp),
-                    hasDeliveryPrice = true,
-                    deliveryPrices = listOf("Free", "Free", "Free")
-                )
+                AnimatedVisibility(state.favoriteRestaurants.isNotEmpty()) {
+                    ItemSection(
+                        header = Resources.strings.freeDelivery,
+                        titles = state.favoriteRestaurants.map { it.name },
+                        ratings = state.favoriteRestaurants.map { it.rating },
+                        priceLevels = state.favoriteRestaurants.map { it.priceLevel },
+                        painters = painters,
+                        modifier = Modifier.padding(top = 16.dp),
+                        hasDeliveryPrice = true,
+                        deliveryPrices = listOf("Free", "Free", "Free")
+                    )
+                }
             }
         }
     }
@@ -332,16 +370,32 @@ class HomeScreen :
     @Composable
     private fun LastOrder(order: OrderUiState, listener: HomeScreenInteractionListener) {
         Column(modifier = Modifier.padding(start = 16.dp)) {
-            Text(Resources.strings.lastOrder, style = Theme.typography.titleLarge.copy(color = Theme.colors.contentPrimary))
+            Text(
+                Resources.strings.lastOrder,
+                style = Theme.typography.titleLarge.copy(color = Theme.colors.contentPrimary)
+            )
             Row(modifier = Modifier.fillMaxWidth().height(80.dp).padding(top = 8.dp)) {
                 BpImageLoader(
-                    modifier = Modifier.fillMaxHeight().width(104.dp).clip(RoundedCornerShape(8.dp)),
+                    modifier = Modifier.fillMaxHeight().width(104.dp)
+                        .clip(RoundedCornerShape(8.dp)),
                     imageUrl = order.image
                 )
-                Column(modifier = Modifier.padding(8.dp).fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
-                    Text(order.restaurantName, style = Theme.typography.title.copy(color = Theme.colors.contentPrimary))
-                    Text(order.date, style = Theme.typography.body.copy(color = Theme.colors.contentSecondary))
-                    Row(modifier = Modifier.clickable { listener.onClickOrderAgain(order.id) }, verticalAlignment = Alignment.CenterVertically) {
+                Column(
+                    modifier = Modifier.padding(8.dp).fillMaxSize(),
+                    verticalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        order.restaurantName,
+                        style = Theme.typography.title.copy(color = Theme.colors.contentPrimary)
+                    )
+                    Text(
+                        order.date,
+                        style = Theme.typography.body.copy(color = Theme.colors.contentSecondary)
+                    )
+                    Row(
+                        modifier = Modifier.clickable { listener.onClickOrderAgain(order.id) },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Text(
                             text = Resources.strings.orderAgain,
                             style = Theme.typography.body,

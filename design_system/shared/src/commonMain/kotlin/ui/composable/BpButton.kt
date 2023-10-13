@@ -1,14 +1,9 @@
 package com.beepbeep.designSystem.ui.composable
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,7 +31,8 @@ fun BpButton(
     shape: Shape = RoundedCornerShape(Theme.radius.medium),
     containerColor: Color = Theme.colors.primary,
     contentColor: Color = Theme.colors.onPrimary,
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.Center
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.Center,
+    isLoading: Boolean = false,
 ) {
     val buttonColor by animateColorAsState(
         if (enabled) containerColor else Theme.colors.disable
@@ -60,16 +56,19 @@ fun BpButton(
         ) {
             painter?.let {
                 Image(
-                    modifier = Modifier.size(Theme.dimens.space24).padding(end =Theme.dimens.space8),
+                    modifier = Modifier.size(Theme.dimens.space24).padding(end = Theme.dimens.space8),
                     painter = painter,
                     contentDescription = null
                 )
             }
-            Text(
-                text = title,
-                style = Theme.typography.titleLarge.copy(color = contentColor),
-                modifier=Modifier.padding(textPadding))
+            AnimatedContent(targetState = isLoading) {
+                if (isLoading) BpThreeDotLoadingIndicator()
+                else Text(
+                    text = title,
+                    style = Theme.typography.titleLarge.copy(color = contentColor),
+                    modifier = Modifier.padding(textPadding)
+                )
+            }
         }
     }
-
 }

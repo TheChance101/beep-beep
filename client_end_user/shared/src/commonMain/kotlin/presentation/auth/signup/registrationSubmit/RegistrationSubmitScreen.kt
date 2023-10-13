@@ -33,13 +33,17 @@ import presentation.composable.BpBrandBackgroundContainer
 import presentation.composable.HeadFirstCard
 import presentation.composable.modifier.noRippleEffect
 import resources.Resources
+import util.getNavigationBarPadding
 
-class RegistrationSubmitScreen(private val username: String, private val password: String) :
-    BaseScreen<RegistrationSubmitScreenModel, RegistrationSubmitUIState, RegistrationSubmitScreenEffect, RegistrationSubmitInteractionListener>() {
+class RegistrationSubmitScreen(
+    private val username: String,
+    private val email: String,
+    private val password: String
+) : BaseScreen<RegistrationSubmitScreenModel, RegistrationSubmitUIState, RegistrationSubmitScreenEffect, RegistrationSubmitInteractionListener>() {
 
     @Composable
     override fun Content() {
-        initScreen(getScreenModel { parametersOf(username, password) })
+        initScreen(getScreenModel { parametersOf(username, email, password) })
     }
 
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
@@ -82,19 +86,19 @@ class RegistrationSubmitScreen(private val username: String, private val passwor
                 )
                 BpTextField(
                     modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
-                    text = state.email,
-                    onValueChange = listener::onEmailChanged,
-                    label = Resources.strings.email,
-                    errorMessage = if (state.isEmailError) Resources.strings.invalidEmail else "",
-                    isError = state.isEmailError,
-                )
-                BpTextField(
-                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
                     text = state.phone,
                     onValueChange = listener::onPhoneChanged,
                     label = Resources.strings.mobileNumber,
                     errorMessage = if (state.isPhoneError) Resources.strings.invalidPhoneNumber else "",
                     isError = state.isPhoneError,
+                )
+                BpTextField(
+                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                    text = state.address,
+                    onValueChange = listener::onAddressChanged,
+                    label = Resources.strings.yourAddress,
+                    errorMessage = if (state.isAddressError) Resources.strings.invalidAddress else "",
+                    isError = state.isAddressError,
                 )
                 BpButton(
                     modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
@@ -110,7 +114,8 @@ class RegistrationSubmitScreen(private val username: String, private val passwor
                 exit = slideOutVertically { it },
                 modifier = Modifier.align(Alignment.BottomCenter)
             ) {
-                BPSnackBar(icon = painterResource(Resources.images.icError)) {
+                BPSnackBar(icon = painterResource(Resources.images.icError),modifier = Modifier
+                    .padding(bottom = getNavigationBarPadding().calculateBottomPadding())) {
                     Text(
                         text = state.snackbarMessage,
                         style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),

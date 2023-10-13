@@ -33,6 +33,7 @@ import presentation.composable.BpBrandBackgroundContainer
 import presentation.composable.HeadFirstCard
 import presentation.composable.modifier.noRippleEffect
 import resources.Resources
+import util.getNavigationBarPadding
 import util.getStatusBarPadding
 
 class RegistrationScreen :
@@ -84,6 +85,15 @@ class RegistrationScreen :
                     errorMessage = if (state.isUsernameError) Resources.strings.invalidUsername else "",
                     isError = state.isUsernameError,
                 )
+
+                BpTextField(
+                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                    text = state.email,
+                    onValueChange = listener::onEmailChanged,
+                    label = Resources.strings.email,
+                    errorMessage = if (state.isEmailError) Resources.strings.invalidEmail else "",
+                    isError = state.isEmailError,
+                )
                 BpTextField(
                     modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
                     text = state.password,
@@ -107,7 +117,8 @@ class RegistrationScreen :
                 exit = slideOutVertically { it },
                 modifier = Modifier.align(Alignment.BottomCenter)
             ) {
-                BPSnackBar(icon = painterResource(Resources.images.icError)) {
+                BPSnackBar(icon = painterResource(Resources.images.icError),modifier = Modifier
+                    .padding(bottom = getNavigationBarPadding().calculateBottomPadding())) {
                     Text(
                         text = state.snackbarMessage,
                         style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
@@ -123,6 +134,7 @@ class RegistrationScreen :
             is RegistrationScreenEffect.NavigateToSubmitRegistrationScreen -> navigator.push(
                 RegistrationSubmitScreen(
                     username = effect.username,
+                    email = effect.email,
                     password = effect.password
                 )
             )
