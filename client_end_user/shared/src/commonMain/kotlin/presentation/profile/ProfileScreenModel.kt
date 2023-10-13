@@ -113,7 +113,7 @@ class ProfileScreenModel(
     }
 
     override fun onSaveProfileInfo() {
-        updateState { it.copy(isButtonEnabled = true) }
+        updateState { it.copy(isButtonEnabled = true, isLoading = false) }
 
     }
 

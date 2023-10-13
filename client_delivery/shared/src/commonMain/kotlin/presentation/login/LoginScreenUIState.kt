@@ -7,6 +7,7 @@ data class LoginScreenUIState(
     val isSuccess: Boolean = false,
     val userName: String = "",
     val password: String = "",
+    val isEnable: Boolean = true,
     val keepLoggedIn: Boolean = false,
     val isUsernameError: Boolean = false,
     val isPasswordError: Boolean = false,

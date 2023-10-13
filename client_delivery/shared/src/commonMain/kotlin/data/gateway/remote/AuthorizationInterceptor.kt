@@ -11,7 +11,6 @@ fun Scope.authorizationIntercept(client: HttpClient) {
 
     client.plugin(HttpSend).intercept { request ->
         val applicationId = 5000
-
         val localConfigurationGateway = get<LocalConfigurationGateway>()
         val remoteIdentityGateway = get<IdentityRemoteGateway>()
 
@@ -21,7 +20,6 @@ fun Scope.authorizationIntercept(client: HttpClient) {
         request.headers {
             append("Authorization", "Bearer $accessToken")
             append("Application-Id", "$applicationId")
-
         }
         val originalCall = execute(request)
 
