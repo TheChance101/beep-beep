@@ -6,7 +6,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -32,14 +31,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.input.key.onInterceptKeyBeforeSoftKeyboard
-import androidx.compose.ui.input.key.onKeyEvent
-import androidx.compose.ui.input.key.onPreviewKeyEvent
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -65,10 +58,9 @@ import presentation.home.composable.CartCard
 import presentation.home.composable.ChatSupportCard
 import presentation.home.composable.CuisineCard
 import presentation.home.composable.OrderCard
-import presentation.meals.MealsScreen
-import presentation.main.MainContainer
 import presentation.main.SearchTab
-import presentation.search.SearchScreen
+import presentation.meals.MealsScreen
+import presentation.resturantDetails.RestaurantScreen
 import resources.Resources
 import util.root
 
@@ -99,6 +91,9 @@ class HomeScreen : BaseScreen<
             is HomeScreenUiEffect.NavigateToOrderDetails -> println("Navigate to order details ${effect.orderId}")
             is HomeScreenUiEffect.NavigateToCart -> navigator.root?.push(CartScreen())
             is HomeScreenUiEffect.NavigateLoginScreen -> navigator.root?.push(LoginScreen())
+            is HomeScreenUiEffect.NavigateToRestaurantDetails -> navigator.root?.push(
+                RestaurantScreen(effect.restaurantId)
+            )
         }
     }
 
@@ -261,7 +256,7 @@ class HomeScreen : BaseScreen<
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     SectionHeader(
-                        onClickViewAll = listener::onclickSeeAllCuisines,
+                        onClickViewAll = listener::onClickSeeAllCuisines,
                         title = Resources.strings.cuisineSectionTitle,
                         showViewAll = true
                     )
@@ -283,11 +278,15 @@ class HomeScreen : BaseScreen<
             item {
                 AnimatedVisibility(state.favoriteRestaurants.isNotEmpty()) {
                     ItemSection(
+                        { restaurantId -> listener.onClickRestaurantCard(restaurantId) },
                         header = Resources.strings.favoriteRestaurants,
+                        ids = state.favoriteRestaurants.map { it.id },
                         titles = state.favoriteRestaurants.map { it.name },
                         ratings = state.favoriteRestaurants.map { it.rating },
                         priceLevels = state.favoriteRestaurants.map { it.priceLevel },
                         painters = painters,
+                        hasRating = true,
+                        hasPriceLevel = true,
                     )
                 }
             }
@@ -301,6 +300,8 @@ class HomeScreen : BaseScreen<
                         painters = painters,
                         modifier = Modifier.padding(top = 16.dp),
                         hasOffer = true,
+                        hasPriceLevel = true,
+                        hasRating = true,
                         offers = listOf("15 %", "15 %", "15 %")
                     )
                 }
@@ -316,6 +317,8 @@ class HomeScreen : BaseScreen<
                         painters = painters,
                         modifier = Modifier.padding(top = 16.dp),
                         hasDeliveryPrice = true,
+                        hasPriceLevel = true,
+                        hasRating = true,
                         deliveryPrices = listOf("Free", "Free", "Free")
                     )
                 }

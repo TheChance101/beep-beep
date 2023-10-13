@@ -24,10 +24,10 @@ data class RestaurantUIState(
 
 data class MealUIState(
     val id: String = "",
-    val name: String = "",
     val restaurantName: String = "",
-    val price: Double = 0.0,
     val totalPrice: Double = 0.0,
+    val name: String = "",
+    val price: Double = 0.0,
     val image: String = "",
     val discount: Double = 0.0,
     val currency: String = "",
@@ -57,6 +57,7 @@ data class RestaurantInfoUIState(
     val priceLevel: PriceLevel = PriceLevel.LOW,
     val image: String = "",
     val discount: Int = 0,
+    val hasFreeDelivery: Boolean = false,
     val description: String = "",
 )
 
@@ -67,10 +68,11 @@ fun Restaurant.toUIState() = RestaurantInfoUIState(
     rating = rate,
     priceLevel = priceLevel,
     image = "",
-    discount = doubleToPercentage(15.0),
+    discount = doubleToPercentage(1500.0),
+    hasFreeDelivery = true,
     description = description,
 )
 
 fun doubleToPercentage(value: Double): Int {
-    return (value.toDouble() / 100.0).toInt()
+    return (value / 100.0).toInt()
 }

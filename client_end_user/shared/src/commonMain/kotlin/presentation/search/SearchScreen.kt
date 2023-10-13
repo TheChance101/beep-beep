@@ -6,9 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -34,14 +32,13 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
 import presentation.composable.BottomSheet
+import presentation.composable.MealBottomSheet
+import presentation.composable.MealCard
 import presentation.composable.ModalBottomSheetState
 import presentation.composable.modifier.noRippleEffect
 import presentation.composable.modifier.roundedBorderShape
-import presentation.resturantDetails.RestaurantScreen
-import presentation.composable.MealBottomSheet
-import presentation.composable.MealCard
 import presentation.resturantDetails.Composable.NeedToLoginSheet
-import presentation.resturantDetails.MealUIState
+import presentation.resturantDetails.RestaurantScreen
 import resources.Resources
 import util.getStatusBarPadding
 import util.root
@@ -56,7 +53,7 @@ class SearchScreen :
 
     override fun onEffect(effect: SearchUiEffect, navigator: Navigator) {
         when (effect) {
-            is SearchUiEffect.NavigateToRestaurant -> navigator.root?.push(RestaurantScreen)
+            is SearchUiEffect.NavigateToRestaurant -> navigator.root?.push(RestaurantScreen(effect.restaurantId))
             is SearchUiEffect.NavigateToLogin -> navigator.push(LoginScreen())
         }
     }

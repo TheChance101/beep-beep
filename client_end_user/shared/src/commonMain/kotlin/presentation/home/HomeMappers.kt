@@ -13,6 +13,7 @@ fun Offer.toUiState(): OfferUiState {
 
 fun Restaurant.toRestaurantUiState(): RestaurantUiState {
     return RestaurantUiState(
+        id = id,
         name = name,
         rating = rate,
         priceLevel = priceLevel

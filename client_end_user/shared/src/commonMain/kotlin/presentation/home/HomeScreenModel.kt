@@ -86,7 +86,7 @@ class HomeScreenModel(
         sendNewEffect(HomeScreenUiEffect.NavigateToMeals(cuisineId, cuisine.cuisineName))
     }
 
-    override fun onclickSeeAllCuisines() {
+    override fun onClickSeeAllCuisines() {
         sendNewEffect(HomeScreenUiEffect.NavigateToCuisines)
     }
 
@@ -121,6 +121,10 @@ class HomeScreenModel(
 
     override fun onClickCartCard() {
         sendNewEffect(HomeScreenUiEffect.NavigateToCart)
+    }
+
+    override fun onClickRestaurantCard(restaurantId: String) {
+        sendNewEffect(HomeScreenUiEffect.NavigateToRestaurantDetails(restaurantId))
     }
 
     private fun getRecommendedCuisines() {
