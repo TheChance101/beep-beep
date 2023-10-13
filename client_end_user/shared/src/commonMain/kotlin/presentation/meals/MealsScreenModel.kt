@@ -3,23 +3,20 @@ package presentation.meals
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Meal
 import domain.usecase.IManageAuthenticationUseCase
-import domain.usecase.IMangeRestaurantUseCase
+import domain.usecase.IExploreRestaurantUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
-import presentation.cuisines.CuisinesUiEffect
 import presentation.resturantDetails.MealInteractionListener
 import presentation.resturantDetails.toUIState
-import org.koin.core.component.get
 import presentation.resturantDetails.MealUIState
-import presentation.search.SearchUiEffect
 
 class MealsScreenModel(
     private val cuisineId: String,
     private val cuisineName: String,
-    private val manageRestaurant: IMangeRestaurantUseCase,
+    private val manageRestaurant: IExploreRestaurantUseCase,
     private val manageAuthentication: IManageAuthenticationUseCase
 ) :
     BaseScreenModel<MealsUiState, MealsUiEffect>(MealsUiState()), MealsInteractionListener,

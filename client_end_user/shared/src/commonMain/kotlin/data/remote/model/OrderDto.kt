@@ -1,5 +1,6 @@
 package data.remote.model
 
+import domain.entity.MealCart
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -10,16 +11,9 @@ data class OrderDto(
     @SerialName("restaurantId") val restaurantId: String,
     @SerialName("restaurantName") val restaurantName: String,
     @SerialName("restaurantImage") val restaurantImageUrl: String? = null,
-    @SerialName("meals") val meals: List<MealDto>,
+    @SerialName("meals") val meals: List<CartMealDto>,
     @SerialName("totalPrice") val totalPrice: Double? = null,
     @SerialName("createdAt") val createdAt: Long? = null,
     @SerialName("orderStatus") val orderStatus: Int = 0,
     @SerialName("timeToArriveInMints") val timeToArriveInMints: Int? = null,
-) {
-    @Serializable
-    data class MealDto(
-        @SerialName("mealId") val mealId: String,
-        @SerialName("mealName") val mealName: String,
-        @SerialName("quantity") val quantity: Int
-    )
-}
+)

@@ -4,14 +4,14 @@ import domain.entity.Order
 import domain.entity.Trip
 import domain.gateway.IOrderGateway
 
-interface IGetOrderHistoryUseCase {
+interface IGetTransactionHistoryUseCase {
     suspend fun getOrdersHistory(): List<Order>
     suspend fun getTripsHistory(): List<Trip>
 }
 
-class GetOrderHistoryUseCase(
+class GetTransactionHistoryUseCase(
     private val orderGateway: IOrderGateway
-) : IGetOrderHistoryUseCase {
+) : IGetTransactionHistoryUseCase {
     override suspend fun getOrdersHistory(): List<Order> {
         return orderGateway.getOrderHistoryGateway()
             .filter { it.orderStatus == FINISHED_ORDER }

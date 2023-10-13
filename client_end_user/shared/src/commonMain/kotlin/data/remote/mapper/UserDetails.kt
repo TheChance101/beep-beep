@@ -1,29 +1,21 @@
 package data.remote.mapper
 
-import data.remote.model.AddressDto
 import data.remote.model.UserDetailsDto
-import domain.entity.Address
-import domain.entity.UserDetails
+import domain.entity.Price
+import domain.entity.User
 
-fun UserDetailsDto.toEntity (): UserDetails {
-    return UserDetails(
-    id = id ?: "",
+fun UserDetailsDto.toEntity(): User {
+    return User(
+        id = id ?: "",
         country = fullName ?: "",
-        currency = currency ?: "",
         email = email ?: "",
         fullName = fullName ?: "",
         permission = permission ?: 1,
         username = username ?: "",
-        walletBalance = walletBalance ?: 0.0,
+        wallet = Price(walletBalance ?: 0.0, currency ?: "$"),
         addresses = addresses?.filterNotNull()?.map { it.toEntity() } ?: emptyList(),
-        phoneNumber=phoneNumber?:""
+        phoneNumber = phoneNumber ?: ""
     )
 }
 
-fun AddressDto.toEntity (): Address {
-    return Address(
-         id = id ?: "",
-        address = address ?: "",
-        location = location?.toEntity()
-    )
-}
+

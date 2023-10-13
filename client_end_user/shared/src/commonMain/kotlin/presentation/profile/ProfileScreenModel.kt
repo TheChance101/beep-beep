@@ -1,9 +1,10 @@
 package presentation.profile
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.entity.UserDetails
+import domain.entity.User
 import domain.usecase.IManageAuthenticationUseCase
-import domain.usecase.IManageUserUseCase
+import domain.usecase.IManageProfileUseCase
+import domain.usecase.IManageSettingUseCase
 import domain.usecase.validation.IValidationUseCase
 import domain.utils.AuthorizationException
 import kotlinx.coroutines.CoroutineScope
@@ -12,9 +13,10 @@ import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
+//TOD
 class ProfileScreenModel(
     private val validation: IValidationUseCase,
-    private val manageUser: IManageUserUseCase,
+    private val manageProfile: IManageProfileUseCase,
     private val manageAuthentication: IManageAuthenticationUseCase
 ) : BaseScreenModel<ProfileUIState, ProfileUIEffect>(ProfileUIState()), ProfileInteractionListener {
 
@@ -51,13 +53,13 @@ class ProfileScreenModel(
 
     private fun getUserProfile() {
         tryToExecute(
-            { manageUser.getUserProfile() },
+            { manageProfile.getUserProfile() },
             ::onGetUserProfileSuccess,
             ::onGetUserProfileError
         )
     }
 
-    private fun onGetUserProfileSuccess(userDetails: UserDetails) {
+    private fun onGetUserProfileSuccess(userDetails: User) {
         val result = userDetails.toUIState()
         updateState {
             it.copy(
@@ -70,7 +72,6 @@ class ProfileScreenModel(
 
     private fun onGetUserProfileError(errorState: ErrorState) {
         updateState { it.copy(isLoggedIn = false) }
-        println(errorState)
     }
 
     override fun onFullNameChanged(fullName: String) {
@@ -105,16 +106,12 @@ class ProfileScreenModel(
 
     private fun clearErrors() {
         updateState {
-            it.copy(
-                isFullNameError = false,
-                isPhoneNumberError = false
-            )
+            it.copy(isFullNameError = false, isPhoneNumberError = false)
         }
     }
 
     override fun onSaveProfileInfo() {
         updateState { it.copy(isButtonEnabled = true, isLoading = false) }
-
     }
 
     override fun onLogout() {
@@ -128,4 +125,5 @@ class ProfileScreenModel(
     override fun onClickLogin() {
         sendNewEffect(ProfileUIEffect.NavigateToLoginScreen)
     }
+
 }

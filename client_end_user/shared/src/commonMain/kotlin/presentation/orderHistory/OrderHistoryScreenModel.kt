@@ -1,7 +1,7 @@
 package presentation.orderHistory
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.usecase.GetOrderHistoryUseCase
+import domain.usecase.GetTransactionHistoryUseCase
 import domain.usecase.IManageAuthenticationUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -10,7 +10,7 @@ import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
 class OrderHistoryScreenModel(
-    private val orderHistoryUseCase: GetOrderHistoryUseCase,
+    private val orderHistoryUseCase: GetTransactionHistoryUseCase,
     private val manageAuthentication: IManageAuthenticationUseCase
 ) : BaseScreenModel<OrderScreenUiState, OrderHistoryScreenUiEffect>(OrderScreenUiState()),
     OrderHistoryScreenInteractionListener {

@@ -1,14 +1,17 @@
 package presentation.orderHistory
 
 import domain.entity.Location
+import domain.entity.MealCart
 import domain.entity.Order
 import domain.entity.Trip
+import presentation.cart.toUiState
+import presentation.resturantDetails.MealUIState
 
 data class OrderScreenUiState(
     val selectedType: OrderSelectType = OrderSelectType.MEALS,
     val ordersHistory: List<OrderHistoryUiState> = emptyList(),
     val tripsHistory: List<TripHistoryUiState> = emptyList(),
-    val isLoggedIn : Boolean = false
+    val isLoggedIn: Boolean = false
 ) {
     enum class OrderSelectType {
         MEALS,
@@ -17,17 +20,12 @@ data class OrderScreenUiState(
 }
 
 data class OrderHistoryUiState(
-    val meals: List<MealUiState> = emptyList(),
+    val meals: List<MealUIState> = emptyList(),
     val restaurantName: String = "",
     val restaurantImageUrl: String = "",
     val totalPrice: Double = 0.0,
     val createdAt: Long = 0L,
-) {
-    data class MealUiState(
-        val mealName: String = "",
-        val quantity: Int = 0
-    )
-}
+)
 
 data class TripHistoryUiState(
     val taxiPlateNumber: String = "",
@@ -40,21 +38,26 @@ data class TripHistoryUiState(
     data class LocationUiState(val latitude: Double = 0.0, val longitude: Double = 0.0)
 }
 
-fun Order.toOrderHistoryUiState(): OrderHistoryUiState {
-    return OrderHistoryUiState(
-        meals = meals.toMealsUiState(),
-        restaurantName = restaurantName,
-        restaurantImageUrl = restaurantImageUrl,
-        totalPrice = totalPrice,
-        createdAt = createdAt
-    )
-}
+fun Order.toOrderHistoryUiState() = OrderHistoryUiState(
+    meals = meals.toMealUIState(),
+    restaurantName = restaurantName,
+    restaurantImageUrl = restaurantImageUrl,
+    totalPrice = price.value,
+    createdAt = createdAt
+)
 
-fun Order.Meal.toMealUiState(): OrderHistoryUiState.MealUiState {
-    return OrderHistoryUiState.MealUiState(mealName = mealName, quantity = quantity)
-}
+fun MealCart.toMealUIState() = MealUIState(
+    id = id,
+    name = name,
+    restaurantName = restaurantName,
+    price = price.value,
+    totalPrice = price.value,
+    image = imageUrl,
+    currency = price.currency,
+    quantity = quality,
+)
 
-fun List<Order.Meal>.toMealsUiState() = map { it.toMealUiState() }
+fun List<MealCart>.toMealUIState()= map{it.toMealUIState()}
 
 fun Trip.toTripHistoryUiState(): TripHistoryUiState {
     return TripHistoryUiState(
@@ -62,8 +65,8 @@ fun Trip.toTripHistoryUiState(): TripHistoryUiState {
         driverName = driverName,
         startPoint = startPoint.toLocationUiState(),
         destination = destination.toLocationUiState(),
-        price = price,
-        endDate = endDate
+        price = price.value,
+        endDate = ""
     )
 }
 

@@ -1,15 +1,19 @@
 package presentation.home
 
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.entity.Cart
 import domain.entity.InProgressWrapper
 import domain.entity.Restaurant
 import domain.entity.User
 import domain.usecase.IInProgressTrackerUseCase
 import domain.usecase.IManageCartUseCase
 import domain.usecase.IManageFavouriteUseCase
-import domain.usecase.IManageOffersUseCase
-import domain.usecase.IManageUserUseCase
-import domain.usecase.IMangeRestaurantUseCase
+import domain.usecase.IGetOffersUseCase
+import domain.usecase.IManageSettingUseCase
+import domain.usecase.IExploreRestaurantUseCase
+import domain.usecase.IManageAuthenticationUseCase
+import domain.usecase.IManageProfileUseCase
+import domain.usecase.ManageProfileUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
@@ -18,18 +22,19 @@ import presentation.cuisines.CuisineUiState
 import presentation.cuisines.toCuisineUiState
 
 class HomeScreenModel(
-    private val manageRestaurant: IMangeRestaurantUseCase,
-    private val offers: IManageOffersUseCase,
+    private val exploreRestaurant: IExploreRestaurantUseCase,
+    private val offers: IGetOffersUseCase,
     private val inProgressTrackerUseCase: IInProgressTrackerUseCase,
-    private val manageUserUseCase: IManageUserUseCase,
     private val manageCart: IManageCartUseCase,
     private val manageFavorite: IManageFavouriteUseCase,
+    private val manageProfile: IManageProfileUseCase,
+    private val authentication: IManageAuthenticationUseCase
 ) : BaseScreenModel<HomeScreenUiState, HomeScreenUiEffect>(HomeScreenUiState()),
     HomeScreenInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
 
     init {
-        getUserWallet()
+        getUser()
         getInProgress()
         getRecommendedCuisines()
         getFavoriteRestaurants()
@@ -39,33 +44,33 @@ class HomeScreenModel(
 
     private fun checkIfThereIsOrderInCart() {
         tryToExecute(
-            { manageCart.checkIfThereIsOrderInCart() },
-            ::onCheckIfThereIsOrderInCartSuccess,
-            ::onCheckIfThereIsOrderInCartError
+            { manageCart.getCart() },
+            ::onGetCartSuccess,
+            ::onGetCartError
         )
     }
 
-    private fun onCheckIfThereIsOrderInCartSuccess(isEmpty: Boolean) {
-        updateState { it.copy(showCart = !isEmpty) }
+    private fun onGetCartSuccess(cart: Cart) {
+        updateState { it.copy(showCart = cart.meals.isNotEmpty()) }
     }
 
-    private fun onCheckIfThereIsOrderInCartError(errorState: ErrorState) {
+    private fun onGetCartError(errorState: ErrorState) {
         updateState { it.copy(showCart = false) }
     }
 
-    private fun getUserWallet() {
+    private fun getUser() {
         tryToExecute(
-            { manageUserUseCase.getUserWallet() },
-            ::onGetUserWalletSuccess,
-            ::onGetUserWalletError
+            { manageProfile.getUserProfile() },
+            ::onGetUserSuccess,
+            ::onGetUserError
         )
     }
 
-    private fun onGetUserWalletError(errorState: ErrorState) {
+    private fun onGetUserError(errorState: ErrorState) {
         updateState { it.copy(user = it.user.copy(isLogin = false)) }
     }
 
-    private fun onGetUserWalletSuccess(user: User) {
+    private fun onGetUserSuccess(user: User) {
         updateState { it.copy(user = user.toUIState()) }
     }
 
@@ -110,7 +115,6 @@ class HomeScreenModel(
     }
 
 
-
     override fun onClickOrderAgain(orderId: String) {
         sendNewEffect(HomeScreenUiEffect.NavigateToOrderDetails(orderId))
     }
@@ -129,7 +133,7 @@ class HomeScreenModel(
 
     private fun getRecommendedCuisines() {
         tryToExecute(
-            { manageRestaurant.getCuisines().toCuisineUiState() },
+            { exploreRestaurant.getCuisines().toCuisineUiState() },
             ::onGetCuisinesSuccess,
             ::onGetCuisinesError
         )

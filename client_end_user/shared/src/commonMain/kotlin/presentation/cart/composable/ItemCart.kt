@@ -27,13 +27,13 @@ import presentation.composable.exitinstion.bottomBorder
 
 @Composable
 fun ItemCart(
-    onClickPlus: (Int, Long) -> Unit,
-    onClickMinus: (Int, Long) -> Unit,
+    onClickPlus: (Int, Int) -> Unit,
+    onClickMinus: (Int, Int) -> Unit,
     mealName: String,
     restaurantName: String,
     price: String,
     imagePainter: Painter,
-    count: Long,
+    count: Int,
     index: Int,
     modifier: Modifier = Modifier,
     isDividerVisible: Boolean = false

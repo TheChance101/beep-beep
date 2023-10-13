@@ -74,7 +74,7 @@ fun MealOrderItem(
         ) {
             orders.meals.forEach { meal ->
                 Text(
-                    text = "${meal.quantity} ${meal.mealName}, ",
+                    text = "${meal.quantity} ${meal.name}, ",
                     style = Theme.typography.caption,
                     color = Theme.colors.contentTertiary
                 )

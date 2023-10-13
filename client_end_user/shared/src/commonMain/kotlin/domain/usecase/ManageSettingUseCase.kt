@@ -3,10 +3,11 @@ package domain.usecase
 import data.local.mapper.toFormattedString
 import data.local.mapper.toPreferredRide
 import domain.entity.PreferredRide
+import domain.entity.User
 import domain.gateway.local.ILocalConfigurationGateway
 import kotlinx.coroutines.flow.Flow
 
-interface IMangeUserPreferenceUseCase {
+interface IManageSettingUseCase {
     suspend fun savePreferredFood(food: List<String>)
     suspend fun getPreferredFood(): List<String>?
     suspend fun saveLanguageCode(code: String)
@@ -15,11 +16,13 @@ interface IMangeUserPreferenceUseCase {
     suspend fun getPriceLevel(): String
     suspend fun savePreferredRide(preferredRide: PreferredRide)
     suspend fun getPreferredRide(): PreferredRide
+    suspend fun saveIsFirstTimeUseApp(isFirstTimeUseApp: Boolean)
+    suspend fun getIsFirstTimeUseApp(): Boolean
+    suspend fun getUserLanguageCode(): Flow<String>
 }
 
-class MangeUserPreferenceUseCase(
-    private val localGateway: ILocalConfigurationGateway
-) : IMangeUserPreferenceUseCase {
+class ManageSettingUseCase(private val localGateway: ILocalConfigurationGateway) :
+    IManageSettingUseCase {
     override suspend fun savePreferredFood(food: List<String>) {
         return localGateway.savePreferredFood(food)
     }
@@ -50,5 +53,17 @@ class MangeUserPreferenceUseCase(
 
     override suspend fun getPreferredRide(): PreferredRide {
         return localGateway.getPreferredRideQuality().toPreferredRide()
+    }
+
+    override suspend fun saveIsFirstTimeUseApp(isFirstTimeUseApp: Boolean) {
+        return localGateway.saveIsFirstTimeUseApp(isFirstTimeUseApp)
+    }
+
+    override suspend fun getIsFirstTimeUseApp(): Boolean {
+        return localGateway.getIsFirstTimeUseApp()
+    }
+
+    override suspend fun getUserLanguageCode(): Flow<String> {
+        return localGateway.getLanguageCodeFlow()
     }
 }

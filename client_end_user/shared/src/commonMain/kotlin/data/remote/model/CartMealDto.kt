@@ -11,5 +11,5 @@ data class CartMealDto(
     @SerialName("currency") val currency: String? = null,
     @SerialName("restaurantName") val restaurantName: String? = null,
     @SerialName("image") val image: String? = null,
-    @SerialName("count") val count: Long? = null
+    @SerialName("count") val count: Int? = null
 )

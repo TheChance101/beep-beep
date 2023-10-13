@@ -1,12 +1,10 @@
 package domain.entity
 
-data class Meal(
+data class MealCart(
     val id: String,
     val name: String,
-    val description: String,
-    val restaurantId: String,
     val restaurantName: String,
-    val cuisines: List<String>,
     val imageUrl: String,
+    val quality: Int,
     val price: Price,
 )
