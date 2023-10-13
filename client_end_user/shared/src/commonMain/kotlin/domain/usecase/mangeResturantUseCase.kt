@@ -9,7 +9,7 @@ interface IMangeRestaurantUseCase {
     suspend fun getRestaurantDetails(restaurantId: String): Restaurant
     suspend fun getMealById(mealId: String): Meal
     suspend fun getCuisines(): List<Cuisine>
-
+    suspend fun getMealsInCuisine(cuisineId: String): List<Meal>
 }
 
 class MangeRestaurantUseCase(
@@ -25,5 +25,9 @@ class MangeRestaurantUseCase(
 
     override suspend fun getCuisines(): List<Cuisine> {
         return restaurantGateway.getCuisines()
+    }
+
+    override suspend fun getMealsInCuisine(cuisineId: String): List<Meal> {
+        return restaurantGateway.getMealsInCuisine(cuisineId)
     }
 }

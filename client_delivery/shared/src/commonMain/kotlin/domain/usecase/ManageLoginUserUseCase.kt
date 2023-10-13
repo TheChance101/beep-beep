@@ -21,6 +21,7 @@ interface IManageLoginUserUseCase {
     ): Boolean
 
     suspend fun saveUsername(username: String)
+    suspend fun getUsername(): String
 }
 
 class ManageLoginUserUseCase(
@@ -62,6 +63,10 @@ class ManageLoginUserUseCase(
 
     override suspend fun saveUsername(username: String) {
         localGateWay.saveUserName(username)
+    }
+
+    override suspend fun getUsername(): String {
+        return localGateWay.getUsername()
     }
 
 }

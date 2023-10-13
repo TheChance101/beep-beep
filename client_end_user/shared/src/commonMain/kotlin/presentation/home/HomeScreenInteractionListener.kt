@@ -4,7 +4,7 @@ import presentation.base.BaseInteractionListener
 
 interface HomeScreenInteractionListener : BaseInteractionListener {
     fun onClickCuisineItem(cuisineId: String)
-    fun onclickSeeAllCuisines()
+    fun onClickSeeAllCuisines()
     fun onClickChatSupport()
     fun onClickOrderTaxi()
     fun onClickOrderFood()
@@ -12,6 +12,5 @@ interface HomeScreenInteractionListener : BaseInteractionListener {
     fun onClickOrderAgain(orderId : String)
     fun onLoginClicked()
     fun onClickCartCard()
-
-    fun onChangeSearchText(searchText : String)
+    fun onClickRestaurantCard(restaurantId: String)
 }

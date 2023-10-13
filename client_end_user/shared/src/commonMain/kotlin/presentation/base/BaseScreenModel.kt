@@ -1,6 +1,7 @@
 package presentation.base
 
 import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.coroutineScope
 import domain.utils.AuthorizationException
 import domain.utils.InternetException
 import kotlinx.coroutines.CoroutineDispatcher
@@ -8,6 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -97,4 +99,10 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
         }
     }
 
+    protected fun launchDelayed(duration: Long, block: suspend CoroutineScope.() -> Unit): Job {
+        return coroutineScope.launch(Dispatchers.IO) {
+            delay(duration)
+            block()
+        }
+    }
 }

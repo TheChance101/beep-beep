@@ -2,6 +2,7 @@ package presentation.map
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Location
+import domain.usecase.IManageLoginUserUseCase
 import domain.usecase.IManageUserLocationUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -11,22 +12,26 @@ import presentation.base.ErrorState
 
 class MapScreenModel(
     private val currentLocation: IManageUserLocationUseCase,
+    private val manageLoginUser: IManageLoginUserUseCase,
 ):BaseScreenModel<MapScreenUiState,MapScreenUiEffect>(MapScreenUiState()),MapScreenInteractionsListener {
 
-
-
     override val viewModelScope: CoroutineScope = coroutineScope
+
     init {
+        getUserName()
         getCurrentLocation()
+        updateOrderState()
+    }
+    private fun getUserName() {
         viewModelScope.launch {
-            delay(5000)
-            updateState { it.copy(
-                orderState = OrderState.NEW_ORDER,
-                destinationLocation = LocationUiState(31.2001, 29.9187, "")
-            )}
+            val username = manageLoginUser.getUsername()
+            updateState {
+                it.copy(
+                    username = username,
+                )
+            }
         }
     }
-
     private fun getCurrentLocation() {
         tryToCollect(
             function = currentLocation::trackCurrentLocation,
@@ -34,7 +39,17 @@ class MapScreenModel(
             onError = ::onError
         )
     }
-
+    private fun updateOrderState() {
+        viewModelScope.launch {
+            delay(5000)
+            updateState {
+                it.copy(
+                    orderState = OrderState.NEW_ORDER,
+                    destinationLocation = LocationUiState(31.2001, 29.9187, "")
+                )
+            }
+        }
+    }
     private fun onGetLiveLocationSuccess(location: Location) {
         viewModelScope.launch {
             delay(2000)

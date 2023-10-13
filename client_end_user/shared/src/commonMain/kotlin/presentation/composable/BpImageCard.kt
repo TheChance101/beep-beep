@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import com.beepbeep.designSystem.ui.composable.modifier.noRippleEffect
 import com.beepbeep.designSystem.ui.theme.Theme
 import domain.entity.PriceLevel
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -34,8 +35,10 @@ import resources.Resources
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun BpImageCard(
+    onClickCard: (String) -> Unit = {},
     painter: Painter,
     title: String,
+    id: String = "",
     rate: Double = 0.0,
     priceLevel: PriceLevel = PriceLevel.MEDIUM,
     modifier: Modifier = Modifier,
@@ -50,7 +53,7 @@ fun BpImageCard(
     currency: String = "",
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier.noRippleEffect { onClickCard(id) },
         colors = CardDefaults.cardColors(Color.Transparent),
         shape = RoundedCornerShape(0.dp)
     ) {

@@ -15,6 +15,7 @@ import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
 class RestaurantScreenModel(
+    private val restaurantId: String,
     private val mangeRestaurantDetails: IMangeRestaurantUseCase,
     private val manageFavourite: IManageFavouriteUseCase,
     private val manageAuthentication: IManageAuthenticationUseCase,
@@ -24,13 +25,13 @@ class RestaurantScreenModel(
     override val viewModelScope: CoroutineScope = coroutineScope
 
     init {
-        onCheckLogin()
-        getRestaurantDetails("64fa315fb7c56f626e24d852")
-        getMostOrders("64fa315fb7c56f626e24d852")
-        getSweets("64fa315fb7c56f626e24d852")
+        checkIfLoggedIn()
+        getRestaurantDetails(restaurantId)
+        getMostOrders(restaurantId)
+        getSweets(restaurantId)
     }
 
-    private fun onCheckLogin() {
+    private fun checkIfLoggedIn() {
         tryToExecute(
             { manageAuthentication.getAccessToken() },
             ::onCheckLoginSuccess,
@@ -51,7 +52,7 @@ class RestaurantScreenModel(
     }
 
     private fun onCheckLoginError(errorState: ErrorState) {
-        updateState { it.copy(isLogin = false) }
+        updateState { it.copy(isLogin = false, error = errorState) }
     }
 
     private fun getRestaurantDetails(restaurantId: String) {
@@ -65,12 +66,15 @@ class RestaurantScreenModel(
     }
 
     private fun onGetRestaurantDetailsSuccess(restaurant: Restaurant) {
-        println("AYA2 $restaurant")
         updateState { it.copy(restaurantInfo = restaurant.toUIState()) }
+        tryToExecute(
+            { manageFavourite.checkIfFavoriteRestaurant(restaurantId) },
+            ::onGetIfFavoriteRestaurantSuccess,
+            ::onError
+        )
     }
 
     private fun onGetRestaurantDetailsError(errorState: ErrorState) {
-        println("AYA $errorState")
         updateState { it.copy(isLoading = false) }
         when (errorState) {
             is ErrorState.NoInternet -> {
@@ -81,6 +85,10 @@ class RestaurantScreenModel(
                 updateState { it.copy(error = errorState) }
             }
         }
+    }
+
+    private fun onGetIfFavoriteRestaurantSuccess(isFavourite: Boolean){
+        updateState { it.copy(isFavourite = isFavourite) }
     }
 
     private fun addToFavourite(restaurantId: String) {
@@ -100,12 +108,10 @@ class RestaurantScreenModel(
     }
 
     private fun onAddToFavouriteSuccess(isAdded: Boolean) {
-        println("AYA $isAdded")
         updateState { it.copy(isFavourite = isAdded) }
     }
 
     private fun onRemoveFromFavouriteSuccess(isAdded: Boolean) {
-        println("AYA $isAdded")
         updateState { it.copy(isFavourite = false) }
     }
 
@@ -136,16 +142,16 @@ class RestaurantScreenModel(
     }
 
     private fun onError(errorState: ErrorState) {
-        println("$errorState")
+        updateState { it.copy(error = errorState) }
     }
 
 
     override fun onAddToFavourite() {
         updateState { it.copy(isFavourite = !state.value.isFavourite) }
         if (state.value.isFavourite) {
-            removeFromFavourite("64fa315fb7c56f626e24d852")
+            removeFromFavourite(restaurantId)
         } else {
-            addToFavourite("64fa315fb7c56f626e24d852")
+            addToFavourite(restaurantId)
         }
     }
 
@@ -181,8 +187,32 @@ class RestaurantScreenModel(
         }
     }
 
-    override fun onAddToCart() {
+    override fun onIncreaseMealQuantity() {
+        val quality = state.value.meal.quantity + 1
+        updateState {
+            it.copy(
+                meal = state.value.meal.copy(
+                    quantity = quality,
+                    totalPrice = state.value.meal.price * quality
+                )
+            )
+        }
+    }
 
+    override fun onDecreaseMealQuantity() {
+        if (state.value.meal.quantity == 1) return
+        updateState {
+            val quality = state.value.meal.quantity - 1
+            it.copy(
+                meal = state.value.meal.copy(
+                    quantity = quality,
+                    totalPrice = state.value.meal.price * quality
+                )
+            )
+        }
+    }
+
+    override fun onAddToCart() {
         if (state.value.isLogin) {
             onDismissSheet()
             showToast()
@@ -201,29 +231,6 @@ class RestaurantScreenModel(
 
     override fun onGoToLogin() {
         sendNewEffect(RestaurantUIEffect.onGoToLogin)
-    }
-
-    override fun onIncressQuantity() {
-        updateState {
-            it.copy(
-                meal = state.value.meal.copy(
-                    quantity = state.value.meal.quantity + 1,
-                    price = state.value.meal.price * state.value.meal.quantity
-                )
-            )
-        }
-    }
-
-    override fun onDecressQuantity() {
-        if (state.value.meal.quantity == 1) return
-        updateState {
-            it.copy(
-                meal = state.value.meal.copy(
-                    quantity = state.value.meal.quantity - 1,
-                    price = state.value.meal.price * state.value.meal.quantity
-                )
-            )
-        }
     }
 
     private suspend fun delayAndChangePermissionSheetState(show: Boolean) {

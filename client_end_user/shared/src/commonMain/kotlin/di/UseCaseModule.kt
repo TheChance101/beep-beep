@@ -10,8 +10,11 @@ import domain.usecase.IManageFavouriteUseCase
 import domain.usecase.IManageNotificationsUseCase
 import domain.usecase.IManageOffersUseCase
 import domain.usecase.IManageUserUseCase
+import domain.usecase.ManageUserUseCase
 import domain.usecase.IMangeRestaurantUseCase
 import domain.usecase.IMangeUserPreferenceUseCase
+import domain.usecase.ISearchUseCase
+import domain.usecase.SearchUseCase
 import domain.usecase.InProgressTrackerUseCase
 import domain.usecase.ManageAuthenticationUseCase
 import domain.usecase.ManageCartUseCase
@@ -19,7 +22,6 @@ import domain.usecase.ManageChatUseCase
 import domain.usecase.ManageFavouriteUseCase
 import domain.usecase.ManageNotificationsUseCase
 import domain.usecase.ManageOffersUseCase
-import domain.usecase.ManageUserUseCase
 import domain.usecase.MangeRestaurantUseCase
 import domain.usecase.MangeUserPreferenceUseCase
 import domain.usecase.validation.IValidationUseCase
@@ -41,4 +43,5 @@ val useCaseModule = module {
     singleOf(::ManageCartUseCase) { bind<IManageCartUseCase>() }
     singleOf(::ManageChatUseCase) { bind<IManageChatUseCase>() }
     singleOf(::ManageFavouriteUseCase) { bind<IManageFavouriteUseCase>() }
+    singleOf(::SearchUseCase) { bind<ISearchUseCase>() }
 }
