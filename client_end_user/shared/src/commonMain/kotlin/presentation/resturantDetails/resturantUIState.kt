@@ -9,11 +9,11 @@ import presentation.composable.ModalBottomSheetState
 data class RestaurantUIState(
     val restaurantInfo: RestaurantInfoUIState = RestaurantInfoUIState(),
     val isFavourite: Boolean = false,
-    val mostOrders :List<MealUIState> = emptyList(),
-    val sweets :List<MealUIState> = emptyList(),
+    val mostOrders: List<MealUIState> = emptyList(),
+    val sweets: List<MealUIState> = emptyList(),
     val isLoading: Boolean = false,
     val error: ErrorState? = null,
-    val isLogin :Boolean = false,
+    val isLogin: Boolean = false,
     val sheetState: ModalBottomSheetState = ModalBottomSheetState(),
     val sheetMealState: ModalBottomSheetState = ModalBottomSheetState(),
     val showLoginSheet: Boolean = false,
@@ -25,7 +25,9 @@ data class RestaurantUIState(
 data class MealUIState(
     val id: String = "",
     val name: String = "",
+    val restaurantName: String = "",
     val price: Double = 0.0,
+    val totalPrice: Double = 0.0,
     val image: String = "",
     val discount: Double = 0.0,
     val currency: String = "",
@@ -36,26 +38,30 @@ data class MealUIState(
 fun Meal.toUIState() = MealUIState(
     id = id,
     name = name,
+    restaurantName = restaurantName,
     price = price,
+    totalPrice = price,
     image = image,
     currency = currency,
     quantity = 1,
     description = description,
 )
 
+fun List<Meal>.toUIState() = map { it.toUIState() }
+
 data class RestaurantInfoUIState(
     val id: String = "",
     val name: String = "",
     val address: String = "",
     val rating: Double = 0.0,
-    val priceLevel:PriceLevel = PriceLevel.LOW,
+    val priceLevel: PriceLevel = PriceLevel.LOW,
     val image: String = "",
     val discount: Int = 0,
     val description: String = "",
 )
 
 fun Restaurant.toUIState() = RestaurantInfoUIState(
-    id = id ,
+    id = id,
     name = name,
     address = address,
     rating = rate,

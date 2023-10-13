@@ -4,6 +4,7 @@ import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Cuisine
 import domain.usecase.IMangeRestaurantUseCase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.filter
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 import presentation.base.ErrorState.NoInternet
@@ -52,7 +53,13 @@ class CuisinesScreenModel(
 
     // region interactions
     override fun onCuisineClicked(cuisineId: String) {
-        sendNewEffect(CuisinesUiEffect.NavigateToCuisineDetails(cuisineId))
+        val cuisine = state.value.cuisines.first { it.cuisineId == cuisineId }
+        sendNewEffect(
+            CuisinesUiEffect.NavigateToCuisineDetails(
+                cuisineId = cuisineId,
+                cuisineName = cuisine.cuisineName
+            )
+        )
     }
 
     override fun onBackIconClicked() {

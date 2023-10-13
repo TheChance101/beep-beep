@@ -1,4 +1,4 @@
-package presentation.resturantDetails.Composable
+package presentation.composable
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -25,14 +25,21 @@ import com.beepbeep.designSystem.ui.composable.modifier.noRippleEffect
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import presentation.resturantDetails.Composable.CloseButton
 import presentation.resturantDetails.MealUIState
-import presentation.resturantDetails.RestaurantInteractionListener
 import resources.Resources
 
 @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun MealBottomSheet(meal: MealUIState, listener: RestaurantInteractionListener) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+fun MealBottomSheet(
+    meal: MealUIState,
+    onDismissSheet: () -> Unit,
+    onDecreaseQuantity: () -> Unit,
+    onIncreaseQuantity: () -> Unit,
+    onAddToCart: () -> Unit,
+    modifier: Modifier= Modifier
+) {
+    Column(modifier = modifier.fillMaxWidth()) {
         Box(
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -44,7 +51,7 @@ fun MealBottomSheet(meal: MealUIState, listener: RestaurantInteractionListener) 
                     .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
             )
             CloseButton(
-                onClick = { listener.onDismissSheet() },
+                onClick = onDismissSheet,
                 modifier = Modifier.align(Alignment.TopCenter),
                 horizontalArrangement = Arrangement.End,
             )
@@ -67,7 +74,7 @@ fun MealBottomSheet(meal: MealUIState, listener: RestaurantInteractionListener) 
         )
         {
             Text(
-                text = "${meal.currency} ${meal.price}",
+                text = "${meal.currency}${meal.totalPrice}",
                 style = Theme.typography.title,
                 color = Theme.colors.contentPrimary,
             )
@@ -75,23 +82,22 @@ fun MealBottomSheet(meal: MealUIState, listener: RestaurantInteractionListener) 
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                quantityButton(onClick = {
-                    listener.onDecressQuantity()
-                }, icon = Resources.images.minus)
+                quantityButton(
+                    onClick = onDecreaseQuantity,
+                    icon = Resources.images.minus
+                )
                 Text(
                     text = "${meal.quantity}",
                     style = Theme.typography.title,
                     color = Theme.colors.contentPrimary,
                 )
-                quantityButton(onClick = {
-                    listener.onIncressQuantity()
-                }, icon = Resources.images.plus)
+                quantityButton(onClick = onIncreaseQuantity, icon = Resources.images.plus)
             }
         }
         BpButton(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 24.dp),
             title = Resources.strings.addToCart,
-            onClick = { listener.onAddToCart() },
+            onClick = onAddToCart,
         )
     }
 }
