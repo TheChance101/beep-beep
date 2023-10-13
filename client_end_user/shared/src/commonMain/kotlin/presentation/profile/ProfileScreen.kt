@@ -56,11 +56,13 @@ class ProfileScreen : BaseScreen<
     @Composable
     override fun onRender(state: ProfileUIState, listener: ProfileInteractionListener) {
 
-        LoginRequiredPlaceholder(
-            placeHolder = painterResource(Resources.images.requireLoginToShowProfilePlaceholder),
-            message = Resources.strings.profileLoginMessage,
-            onClickLogin = listener::onClickLogin
-        )
+            LoginRequiredPlaceholder(
+                placeHolder = painterResource(Resources.images.requireLoginToShowProfilePlaceholder),
+                message = Resources.strings.profileLoginMessage,
+                onClickLogin = listener::onClickLogin
+            )
+
+
 
         ContentVisibility(state.isLoggedIn) {
             Column(
@@ -106,6 +108,7 @@ class ProfileScreen : BaseScreen<
                         modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
                         title = Resources.strings.save,
                         enabled = state.isButtonEnabled,
+                        isLoading = state.isLoading,
                         onClick = {
                             listener.onSaveProfileInfo()
                         },
