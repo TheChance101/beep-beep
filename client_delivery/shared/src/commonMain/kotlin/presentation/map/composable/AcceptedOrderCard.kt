@@ -20,9 +20,9 @@ fun AcceptedOrderCard(state: MapScreenUiState, listener: AcceptedOrderInteractio
     MapCard {
         OrderInfo(
             restaurantImage = painterResource(Resources.images.test),//just for now,then will be from state,
-            restaurantName = state.restaurantName,
-            restaurantLocation = state.restaurantLocation,
-            orderLocation = state.orderLocation
+            restaurantName = state.orderUiState.restaurantName,
+            restaurantLocation = state.orderUiState.restaurantAddress,
+            orderLocation = state.orderUiState.destinationAddress
         )
         DistanceInfo(orderDistance = state.orderDistance, orderDuration = state.orderDuration)
 

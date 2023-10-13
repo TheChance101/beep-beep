@@ -29,9 +29,9 @@ fun NewOrderCard(state: MapScreenUiState, listener: MapScreenInteractionsListene
         )
         OrderInfo(
             restaurantImage = painterResource(Resources.images.test),//just for now,then will be from state,
-            restaurantName = state.restaurantName,
-            restaurantLocation = state.restaurantLocation,
-            orderLocation = state.orderLocation
+            restaurantName = state.orderUiState.restaurantName,
+            restaurantLocation = state.orderUiState.restaurantAddress,
+            orderLocation = state.orderUiState.destinationAddress
         )
         BpButton(
             onClick = listener::onAcceptClicked,

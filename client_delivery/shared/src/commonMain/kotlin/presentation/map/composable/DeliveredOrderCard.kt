@@ -19,9 +19,9 @@ fun DeliveredOrderCard(state: MapScreenUiState, listener: DeliveredOrderInteract
     MapCard {
         OrderInfo(
             restaurantImage = painterResource(Resources.images.test),//just for now,then will be from state,
-            restaurantName = state.restaurantName,
-            restaurantLocation = state.restaurantLocation,
-            orderLocation = state.orderLocation
+            restaurantName = state.orderUiState.restaurantName,
+            restaurantLocation = state.orderUiState.restaurantAddress,
+            orderLocation = state.orderUiState.destinationAddress
         )
         BpButton(
             onClick = listener::onDeliveredClicked,
