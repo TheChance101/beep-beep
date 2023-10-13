@@ -11,7 +11,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/beep_beep_icon_launcher"
         android:roundIcon="@mipmap/beep_beep_icon_launcher_round"
-        android:label="Beep Beep"
+        android:label="Delivery App"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
