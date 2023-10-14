@@ -28,7 +28,7 @@ import kotlin.random.Random
 
 class RestaurantGateway(client: HttpClient) : BaseGateway(client = client), IRestaurantGateway {
     override suspend fun getCuisines(): List<Cuisine> {
-       return tryToExecute<ServerResponse<List<CuisineDto>>> {
+        return tryToExecute<ServerResponse<List<CuisineDto>>> {
             get("/cuisines")
         }.value?.toCuisineEntity() ?: throw GeneralException.NotFoundException
     }
@@ -38,20 +38,20 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client), IRes
         return InProgressWrapper(
             taxisOnTheWay = getTaxiOnTheWay(),
             tripsOnTheWay = getActiveRide(),
-            ordersOnTheWay = getActiveOrder(),
+            ordersOnTheWay = emptyList(),
         )
     }
 
     override suspend fun getRestaurantDetails(restaurantId: String): Restaurant {
         return tryToExecute<ServerResponse<RestaurantDto>> {
             get("/restaurant/$restaurantId")
-
         }.value?.toEntity() ?: throw GeneralException.NotFoundException
     }
 
     override suspend fun getMealById(mealId: String): Meal {
-        // todo: implement this when the backend is ready
-        return meals.first().toEntity()
+        return tryToExecute<ServerResponse<MealDto>> {
+            get("/meal/$mealId")
+        }.value?.toEntity() ?: throw GeneralException.NotFoundException
     }
 
     override suspend fun getNewOffers(): List<Offer> {
@@ -61,13 +61,9 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client), IRes
 
     override suspend fun getMostOrdersMeal(restaurantId: String): List<Meal> {
         // todo: implement this when the backend is ready
-        return meals.map { it.toEntity() }
+        return emptyList()
     }
 
-    override suspend fun getSweets(restaurantId: String): List<Meal> {
-        // todo: implement this when the backend is ready
-        return meals.map { it.toEntity() }
-    }
 
     override suspend fun search(query: String): Pair<List<Restaurant>, List<Meal>> {
         val result = tryToExecute<ServerResponse<MealRestaurantDto>> {
@@ -115,50 +111,7 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client), IRes
         )
     }
 
-    private fun getActiveOrder(): List<Order> {
-        return listOf(
-            Order(
-                id = "khhfhdfhd",
-                userId = "user123",
-                restaurantId = "restaurant456",
-                restaurantName = "Hamada Market",
-                restaurantImageUrl = "",
-                meals = listOf(),
-                price = Price(20.0, "$"),
-                createdAt = Clock.System.now().epochSeconds,
-                orderStatus = 1,
-                timeToArriveInMints = 20
-            )
-        )
-    }
 
-    private val meals = generateRandomMeals()
-
-    private fun generateRandomId(): String {
-        val alphanumeric = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        return (1..12)
-            .map { alphanumeric[Random.nextInt(alphanumeric.length)] }
-            .joinToString("")
-    }
-
-    private fun generateRandomMeals(): List<MealDto> {
-        val meals = mutableListOf<MealDto>()
-        repeat(30) {
-            val id = generateRandomId()
-            val price = (10..200).random().toDouble()
-            val meal = MealDto(
-                id = id,
-                name = "Burger",
-                price = price,
-                currency = "$",
-                description = "Lorem ipsum dolor sit amet consectetur.",
-                restaurantName = "Restaurant Name",
-                image = "https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=1024x1024&w=is&k=20&c=iBBM7YTn5Rf-QhCd0kkvFaDNLV6Rb02iMQlS39LSSTI="
-            )
-            meals.add(meal)
-        }
-        return meals
-    }
 
     private val offers = listOf(
         OfferDto(
