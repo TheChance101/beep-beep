@@ -168,23 +168,18 @@ private fun LoginScreenContent(
             )
         }
 
-        AnimatedVisibility(
-            visible = state.showSnackBar,
-            enter = slideInVertically { it },
-            exit = slideOutVertically { it },
-            modifier = Modifier.align(Alignment.BottomCenter)
-        ) {
-            BPSnackBar(
+         BPSnackBar(
                 icon = painterResource(Resources.images.warningIcon),
                 iconBackgroundColor = Theme.colors.warningContainer,
                 iconTint = Theme.colors.warning,
+                isVisible = state.showSnackBar,
                 modifier = Modifier.padding(bottom = getNavigationBarPadding().calculateBottomPadding())
+                    .align(Alignment.BottomCenter)
             ) {
                 Text(
                     text = state.snackBarMessage,
                     style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
                 )
-            }
         }
     }
 }
