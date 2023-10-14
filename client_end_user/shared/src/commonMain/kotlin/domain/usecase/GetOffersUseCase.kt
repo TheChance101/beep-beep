@@ -9,8 +9,6 @@ interface IGetOffersUseCase {
 
     suspend fun getRestaurantMostOrders(restaurantId: String): List<Meal>
 
-    suspend fun getRestaurantSweets(restaurantId: String): List<Meal>
-
     private companion object {
         const val DEFAULT_OFFER_LIMIT = 3
     }
@@ -27,7 +25,5 @@ class GetOffersUseCase(
         return restaurantRemoteGateway.getMostOrdersMeal(restaurantId)
     }
 
-    override suspend fun getRestaurantSweets(restaurantId: String): List<Meal> {
-        return restaurantRemoteGateway.getSweets(restaurantId)
-    }
+
 }

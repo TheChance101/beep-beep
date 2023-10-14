@@ -171,6 +171,7 @@ class HomeScreen :
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
                 }
+
                 items(state.inProgressWrapper.taxisOnTheWay) {
                     HorizontalImageCard(
                         painter = painterResource(Resources.images.taxiOnTheWay),

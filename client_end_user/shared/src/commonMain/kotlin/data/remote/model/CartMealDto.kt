@@ -5,11 +5,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CartMealDto(
-    @SerialName("id") val id: String? = null,
+    @SerialName("mealId") val mealId: String? = null,
     @SerialName("name") val name: String? = null,
-    @SerialName("price") val price: Double? = null,
-    @SerialName("currency") val currency: String? = null,
-    @SerialName("restaurantName") val restaurantName: String? = null,
     @SerialName("image") val image: String? = null,
-    @SerialName("count") val count: Int? = null
+    @SerialName("quantity") val quantity: Int? = null,
+    @SerialName("price") val price: Double? = null
 )

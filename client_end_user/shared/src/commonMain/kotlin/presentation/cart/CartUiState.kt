@@ -20,7 +20,7 @@ data class CartMealUiState(
 )
 
 fun Cart.toUiState() = CartUiState(
-    meals = meals.map { it.toUiState() },
+    meals = meals?.map { it.toUiState() } ?: emptyList(),
     totalPrice = price.value,
     currency = price.currency
 )
@@ -32,7 +32,6 @@ fun MealCart.toUiState(): CartMealUiState {
         name = name,
         price = price.value,
         currency = price.currency,
-        restaurantName = restaurantName,
         image = imageUrl,
         count = quality
     )

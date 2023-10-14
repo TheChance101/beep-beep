@@ -2,7 +2,7 @@ package domain.usecase
 
 import domain.entity.Order
 import domain.entity.Trip
-import domain.gateway.IOrderGateway
+import domain.gateway.ITransactionsGateway
 
 interface IGetTransactionHistoryUseCase {
     suspend fun getOrdersHistory(): List<Order>
@@ -10,15 +10,16 @@ interface IGetTransactionHistoryUseCase {
 }
 
 class GetTransactionHistoryUseCase(
-    private val orderGateway: IOrderGateway
+    private val transactionsGateway: ITransactionsGateway
 ) : IGetTransactionHistoryUseCase {
+
     override suspend fun getOrdersHistory(): List<Order> {
-        return orderGateway.getOrderHistoryGateway()
+        return transactionsGateway.getOrderHistoryGateway()
             .filter { it.orderStatus == FINISHED_ORDER }
     }
 
     override suspend fun getTripsHistory(): List<Trip> {
-        return orderGateway.getTripHistory()
+        return transactionsGateway.getTripHistory()
     }
 
     companion object {

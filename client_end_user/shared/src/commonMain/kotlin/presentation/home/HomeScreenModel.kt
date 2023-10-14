@@ -78,7 +78,7 @@ class HomeScreenModel(
     }
 
     private fun onGetCartSuccess(cart: Cart) {
-        updateState { it.copy(showCart = cart.meals.isNotEmpty()) }
+        updateState { it.copy(showCart = !cart.meals.isNullOrEmpty()) }
     }
 
     private fun onGetCartError(errorState: ErrorState) {
