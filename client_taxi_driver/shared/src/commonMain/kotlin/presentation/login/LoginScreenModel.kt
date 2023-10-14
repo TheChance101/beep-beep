@@ -42,13 +42,16 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
         updateState { it.copy(isLoading = true, isEnable = false) }
         tryToExecute(
             { loginUserUseCase.loginUser(userName, password, isKeepMeLoggedInChecked) },
-            { onLoginSuccess() },
+            { onLoginSuccess(userName) },
             ::onLoginFailed
         )
     }
 
-    private fun onLoginSuccess() {
+    private fun onLoginSuccess(username: String) {
         clearErrors()
+        coroutineScope.launch {
+            loginUserUseCase.saveUsername(username)
+        }
         sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
     }
 
