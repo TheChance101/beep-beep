@@ -56,10 +56,6 @@ class UserGateway(client: HttpClient) : BaseGateway(client), IUserGateway {
                     append("password", password)
                 }
             ) {
-                headers.append(
-                    "Application-Id",
-                    "1000"
-                ) // todo: remove this line in next deploy when the backend is updated
                 method = HttpMethod.Post
             }
         }.value?.toSessionEntity()
