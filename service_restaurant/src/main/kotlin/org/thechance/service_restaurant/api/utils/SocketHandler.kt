@@ -5,31 +5,31 @@ import io.ktor.websocket.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.flowOn
-import org.thechance.service_restaurant.api.models.WebSocketRestaurant
+import org.thechance.service_restaurant.api.models.WebSocketOrder
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import java.util.concurrent.ConcurrentHashMap
 
 class SocketHandler {
 
-    val restaurants: ConcurrentHashMap<String, WebSocketRestaurant> = ConcurrentHashMap()
+    val orders: ConcurrentHashMap<String, WebSocketOrder> = ConcurrentHashMap()
 
-    suspend fun collectOrder(restaurantId: String) {
+    suspend fun collectOrder(key: String) {
 
-        val ownerSession = restaurants[restaurantId]?.ownerSession
-        val orders = restaurants[restaurantId]?.orders
+        val session = orders[key]?.session
+        val order = orders[key]?.order
 
         try {
-            orders
+            order
                 ?.drop(1)
                 ?.flowOn(Dispatchers.IO)
-                ?.collect { order ->
-                    ownerSession?.sendSerialized(order)
+                ?.collect { incomingOrder ->
+                    session?.sendSerialized(incomingOrder)
                 }
         } catch (e: MultiErrorException) {
-            ownerSession?.send(e.errorCodes.toString())
-            ownerSession?.close()
+            session?.send(e.errorCodes.toString())
+            session?.close()
         } finally {
-            restaurants.remove(restaurantId)
+            orders.remove(key)
         }
     }
 }
