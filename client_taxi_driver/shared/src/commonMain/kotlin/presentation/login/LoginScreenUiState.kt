@@ -12,7 +12,9 @@ data class LoginScreenUIState(
     val error: ErrorState? = null,
     val usernameErrorMsg: String = "",
     val passwordErrorMsg: String = "",
-    val bottomSheetUiState: LoginScreenBottomSheetUiState = LoginScreenBottomSheetUiState()
+    val snackBarMessage: String = "",
+    val showSnackBar: Boolean = false,
+    val bottomSheetUiState: LoginScreenBottomSheetUiState = LoginScreenBottomSheetUiState(),
 )
 
 data class LoginScreenBottomSheetUiState(
