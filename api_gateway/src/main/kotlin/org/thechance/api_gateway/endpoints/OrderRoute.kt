@@ -19,18 +19,15 @@ fun Route.orderRoutes() {
 
     val webSocketServerHandler: WebSocketServerHandler by inject()
     val restaurantService: RestaurantService by inject()
-    val localizedMessagesFactory: LocalizedMessagesFactory by inject()
 
     authenticateWithRole(Role.RESTAURANT_OWNER) {
 
         webSocket("orders/{restaurantId}") {
             val restaurantId = call.parameters["restaurantId"]?.trim().orEmpty()
             val orders = restaurantService.getIncomingOrders(restaurantId)
-            val language = extractLocalizationHeaderFromWebSocket()
-            val successMessage = localizedMessagesFactory.createLocalizedMessages(language).newOrderComing
             webSocketServerHandler.sessions[restaurantId] = this
             webSocketServerHandler.sessions[restaurantId]?.let {
-                webSocketServerHandler.tryToCollectOrders(orders, it, successMessage)
+                webSocketServerHandler.tryToCollect(orders, it)
             }
         }
 

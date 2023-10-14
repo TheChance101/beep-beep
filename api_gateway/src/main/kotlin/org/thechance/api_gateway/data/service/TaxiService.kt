@@ -110,30 +110,27 @@ class TaxiService(
         )
     }
 
-    suspend fun getTaxiTrips(driverId: String, language: String): Flow<TripDto> {
+    suspend fun getTaxiTrips(driverId: String): Flow<TripDto> {
         return client.tryToExecuteWebSocket<TripDto>(
             api = APIs.TAXI_API,
             attributes = attributes,
             path = "/trip/taxi/$driverId",
-            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, language) }
         )
     }
 
-    suspend fun getDeliveryTrips(deliveryId: String, language: String): Flow<TripDto> {
+    suspend fun getDeliveryTrips(deliveryId: String): Flow<TripDto> {
         return client.tryToExecuteWebSocket<TripDto>(
             api = APIs.TAXI_API,
             attributes = attributes,
             path = "/trip/delivery/$deliveryId",
-            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, language) }
         )
     }
 
-    suspend fun trackOrderRequest(tripId: String, language: String): Flow<TripDto> {
+    suspend fun trackOrderRequest(tripId: String): Flow<TripDto> {
         return client.tryToExecuteWebSocket<TripDto>(
             api = APIs.TAXI_API,
             attributes = attributes,
             path = "/trip/track/$tripId",
-            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, language) }
         )
     }
 

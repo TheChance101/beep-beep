@@ -29,27 +29,10 @@ suspend inline fun <reified T> HttpClient.tryToExecute(
     }
 }
 
-suspend inline fun <reified T> HttpClient.tryToExecuteFromWebSocket(
-    api: APIs,
-    path: String,
-    attributes: Attributes
-): Flow<T> {
-    attributes.put(AttributeKey("API"), api.value)
-    val host = System.getenv(attributes[AttributeKey("API")])
-    return flow {
-        webSocket(urlString = "ws://$host/$path") {
-            while (true) {
-                emit(receiveDeserialized<T>())
-            }
-        }
-    }.flowOn(Dispatchers.IO)
-}
-
 suspend inline fun <reified T> HttpClient.tryToExecuteWebSocket(
     api: APIs,
     path: String,
     attributes: Attributes,
-    crossinline setErrorMessage: (errorCodes: List<Int>) -> Map<Int, String> = { emptyMap() }
 ): Flow<T> {
     attributes.put(AttributeKey("API"), api.value)
     val host = System.getenv(attributes[AttributeKey("API")])
@@ -59,9 +42,7 @@ suspend inline fun <reified T> HttpClient.tryToExecuteWebSocket(
                 try {
                     emit(receiveDeserialized<T>())
                 } catch (e: Exception) {
-                    val errorResponse = listOf(500)
-                    val errorMessage = setErrorMessage(errorResponse)
-                    throw LocalizedMessageException(errorMessage)
+                    throw Exception(e.message.toString())
                 }
             }
         }
@@ -69,13 +50,11 @@ suspend inline fun <reified T> HttpClient.tryToExecuteWebSocket(
 }
 
 
-suspend inline fun <reified T> HttpClient.tryToSendWebSocketData(
+suspend inline fun <reified T> HttpClient.tryToSendLocation(
     data: T,
     api: APIs,
     path: String,
     attributes: Attributes,
-    crossinline setErrorMessage: (errorCodes: List<Int>) -> Map<Int, String> = { emptyMap() }
-
 ) {
     attributes.put(AttributeKey("API"), api.value)
     val host = System.getenv(attributes[AttributeKey("API")])
@@ -83,9 +62,7 @@ suspend inline fun <reified T> HttpClient.tryToSendWebSocketData(
         try {
             sendSerialized(data)
         } catch (e: Exception) {
-            val errorResponse = listOf(500)
-            val errorMessage = setErrorMessage(errorResponse)
-            throw LocalizedMessageException(errorMessage)
+            throw Exception(e.message.toString())
         }
     }
 }
