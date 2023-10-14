@@ -57,13 +57,12 @@ fun MealOrderItem(
                     )
                     Text(
                         text = "Oct 2/2022",
-//                        text = orders.createdAt.toString(),
                         style = Theme.typography.caption,
                         color = Theme.colors.contentTertiary
                     )
                 }
                 Text(
-                    text = "$ ${orders.totalPrice}",
+                    text = "${orders.currency} ${orders.totalPrice}",
                     style = Theme.typography.titleLarge,
                     color = Theme.colors.contentPrimary
                 )

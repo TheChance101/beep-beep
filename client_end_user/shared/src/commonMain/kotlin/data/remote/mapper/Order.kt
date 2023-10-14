@@ -4,17 +4,16 @@ import data.remote.model.OrderDto
 import domain.entity.Order
 import domain.entity.Price
 
-//NEED TO RETURN currency
-fun OrderDto.toOrderEntity() = Order(
-    id = id,
-    userId = userId,
-    restaurantId = restaurantId,
-    restaurantName = restaurantName,
-    restaurantImageUrl = restaurantImageUrl
+fun OrderDto.toEntity() = Order(
+    id = id ?: "",
+    restaurantId = restaurantId ?: "",
+    restaurantName = restaurantName ?: "",
+    restaurantImageUrl = restaurantImage
         ?: "https://takethemameal.com/files_images_v2/stam.jpg",
-    meals = meals.toEntity(),
-    price = Price(totalPrice ?: 0.0, "$"),
+    meals = meals?.toEntity(restaurantName, currency = currency) ?: emptyList(),
+    price = Price(totalPrice ?: 0.0, currency = currency ?: ""),
     createdAt = createdAt ?: 0L,
     orderStatus = orderStatus,
-    timeToArriveInMints = timeToArriveInMints ?: 0,
 )
+
+fun List<OrderDto>.toEntity() = map { it.toEntity() }
