@@ -6,12 +6,10 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.service_restaurant.api.models.mappers.toDto
-import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.SocketHandler
 import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
 import org.thechance.service_restaurant.domain.usecase.IMangeCartUseCase
-import org.thechance.service_restaurant.domain.utils.exceptions.INSERT_ORDER_ERROR
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 
@@ -38,10 +36,10 @@ fun Route.cartRoutes() {
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
-        delete("/orderNow") {
+        post("/orderNow") {
             val userId = call.parameters["userId"] ?: throw MultiErrorException(listOf(NOT_FOUND))
             val order = manageCart.orderCart(userId).toDto()
-            socketHandler.restaurants[order.restaurantId]?.orders?.emit(order)
+            socketHandler.orders[order.restaurantId]?.order?.emit(order)
             call.respond(HttpStatusCode.Created, order)
         }
     }

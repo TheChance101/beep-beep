@@ -29,31 +29,40 @@ suspend inline fun <reified T> HttpClient.tryToExecute(
     }
 }
 
-suspend inline fun <reified T> HttpClient.tryToExecuteFromWebSocket(
+suspend inline fun <reified T> HttpClient.tryToExecuteWebSocket(
     api: APIs,
     path: String,
-    attributes: Attributes
+    attributes: Attributes,
 ): Flow<T> {
     attributes.put(AttributeKey("API"), api.value)
     val host = System.getenv(attributes[AttributeKey("API")])
     return flow {
         webSocket(urlString = "ws://$host/$path") {
             while (true) {
-                emit(receiveDeserialized<T>())
+                try {
+                    emit(receiveDeserialized<T>())
+                } catch (e: Exception) {
+                    throw Exception(e.message.toString())
+                }
             }
         }
     }.flowOn(Dispatchers.IO)
 }
 
-suspend inline fun <reified T> HttpClient.tryToSendWebSocketData(
+
+suspend inline fun <reified T> HttpClient.tryToSendLocation(
     data: T,
     api: APIs,
     path: String,
-    attributes: Attributes
+    attributes: Attributes,
 ) {
     attributes.put(AttributeKey("API"), api.value)
     val host = System.getenv(attributes[AttributeKey("API")])
     webSocket(urlString = "ws://$host/$path") {
-        sendSerialized(data)
+        try {
+            sendSerialized(data)
+        } catch (e: Exception) {
+            throw Exception(e.message.toString())
+        }
     }
 }
