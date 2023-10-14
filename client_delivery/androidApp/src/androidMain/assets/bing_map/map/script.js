@@ -1,20 +1,13 @@
-var latitude2 = 0
 var map,directionsManager;
 
 function GetMap() {
 map = new Microsoft.Maps.Map('#myMap', {
 
     credentials: 'Access_token',
-    //center: new Microsoft.Maps.Location(29.0,32.0),
     mapTypeId: Microsoft.Maps.MapTypeId.grayscale,
     minZoom: 2,
     maxZoom: 7
 });
-    var center = map.getCenter();
-   var pin = new Microsoft.Maps.Pushpin(center, {
-       color: 'red',
-   });
-   map.entities.push(pin);
 }
 
 function getDirections(startLat, startLng, endLat, endLng) {
@@ -36,7 +29,7 @@ function getDirections(startLat, startLng, endLat, endLng) {
         const renderOptions = {
             drivingPolylineOptions: {
                 strokeColor: 'red',
-                strokeThickness: 8
+                strokeThickness: 4
             },
             autoUpdateMapView: false
         };
@@ -58,10 +51,6 @@ function getDirections(startLat, startLng, endLat, endLng) {
         // Calculate the directions
         directionsManager.calculateDirections();
     });
-    var newCenter = new Microsoft.Maps.Location(lat-1, lng-1.5);
-    map.setView({
-            center: map.getCenter(),
-        });
 }
 
 function getRouteTime() {
