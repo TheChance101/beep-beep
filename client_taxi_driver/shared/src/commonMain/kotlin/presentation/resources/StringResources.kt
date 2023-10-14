@@ -4,7 +4,7 @@ data class StringResources(
     val start: String = "start",
     val mainScreenTitle: String = "Foodies are waiting!",
     val mainScreenSubTitle: String = "Tap Start and become their food superhero",
-    val welcomeToBeepBeepApp: String = "Welcome To Beep Beep App",
+    val welcomeToBeepBeepApp: String = "Welcome To Taxi Driver App",
     val loginToAccessAllTheFeatures: String = "Login to access all the features",
     val username: String = "Username",
     val password: String = "Password",
