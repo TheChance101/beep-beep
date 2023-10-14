@@ -5,7 +5,7 @@ function GetMap() {
 map = new Microsoft.Maps.Map('#myMap', {
 
     credentials: 'Access_token',
-    center: new Microsoft.Maps.Location(29.0,32.0),
+    //center: new Microsoft.Maps.Location(29.0,32.0),
     mapTypeId: Microsoft.Maps.MapTypeId.grayscale,
     minZoom: 2,
     maxZoom: 7
