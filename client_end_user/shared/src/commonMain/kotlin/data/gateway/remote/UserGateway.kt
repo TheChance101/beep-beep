@@ -92,7 +92,7 @@ class UserGateway(client: HttpClient) : BaseGateway(client), IUserGateway {
                     phone?.let { append("phone", it) }
                 }
             ) {
-                method = HttpMethod.Post
+                method = HttpMethod.Put
             }
         }.value?.toEntity()
             ?: throw AuthorizationException.InvalidCredentialsException("Invalid Credential")

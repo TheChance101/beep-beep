@@ -28,7 +28,7 @@ import kotlin.random.Random
 
 class RestaurantGateway(client: HttpClient) : BaseGateway(client = client), IRestaurantGateway {
     override suspend fun getCuisines(): List<Cuisine> {
-        return tryToExecute<ServerResponse<List<CuisineDto>>> {
+       return tryToExecute<ServerResponse<List<CuisineDto>>> {
             get("/cuisines")
         }.value?.toCuisineEntity() ?: throw GeneralException.NotFoundException
     }
