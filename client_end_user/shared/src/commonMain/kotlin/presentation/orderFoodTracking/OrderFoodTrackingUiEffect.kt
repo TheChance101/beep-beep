@@ -1,0 +1,3 @@
+package presentation.orderFoodTracking
+
+sealed class OrderFoodTrackingUiEffect
