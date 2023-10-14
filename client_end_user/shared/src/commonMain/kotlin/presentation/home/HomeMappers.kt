@@ -27,6 +27,5 @@ fun User.toUIState() = UserUiState(
     username = username,
     wallet = wallet.value,
     currency = wallet.currency,
-    isLogin = true
 )
 

@@ -15,6 +15,7 @@ import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.IManageProfileUseCase
 import domain.usecase.ManageProfileUseCase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
@@ -28,19 +29,45 @@ class HomeScreenModel(
     private val manageCart: IManageCartUseCase,
     private val manageFavorite: IManageFavouriteUseCase,
     private val manageProfile: IManageProfileUseCase,
-    private val authentication: IManageAuthenticationUseCase
+    private val manageAuthentication: IManageAuthenticationUseCase
 ) : BaseScreenModel<HomeScreenUiState, HomeScreenUiEffect>(HomeScreenUiState()),
     HomeScreenInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
 
     init {
-        getUser()
+        checkIfLoggedIn()
         getInProgress()
         getRecommendedCuisines()
-        getFavoriteRestaurants()
         getNewOffers()
-        checkIfThereIsOrderInCart()
     }
+
+    private fun checkIfLoggedIn() {
+        tryToExecute(
+            { manageAuthentication.getAccessToken() },
+            ::onCheckIfLoggedInSuccess,
+            ::onError
+        )
+    }
+
+    private fun onCheckIfLoggedInSuccess(accessToken: Flow<String>) {
+        coroutineScope.launch {
+            accessToken.collect { token ->
+                if (token.isNotEmpty()) {
+                    updateState { it.copy(isLoggedIn = true) }
+                    getUser()
+                    getFavoriteRestaurants()
+                    checkIfThereIsOrderInCart()
+                } else {
+                    updateState { it.copy(isLoggedIn = false, showCart = false) }
+                }
+            }
+        }
+    }
+
+    private fun onError(errorState: ErrorState) {
+        updateState { it.copy(isLoggedIn = false) }
+    }
+
 
     private fun checkIfThereIsOrderInCart() {
         tryToExecute(
@@ -67,7 +94,7 @@ class HomeScreenModel(
     }
 
     private fun onGetUserError(errorState: ErrorState) {
-        updateState { it.copy(user = it.user.copy(isLogin = false)) }
+        updateState { it.copy(isLoggedIn = false) }
     }
 
     private fun onGetUserSuccess(user: User) {
@@ -140,8 +167,13 @@ class HomeScreenModel(
     }
 
     private fun onGetCuisinesSuccess(cuisines: List<CuisineUiState>) {
-        val popularCuisines = cuisines.shuffled().take(4)
-        updateState { it.copy(recommendedCuisines = popularCuisines) }
+        val popularCuisines = cuisines.shuffled().take(state.value.maxCuisinesInHome)
+        updateState {
+            it.copy(
+                recommendedCuisines = popularCuisines,
+                isMoreCuisine = cuisines.size > it.maxCuisinesInHome
+            )
+        }
     }
 
     private fun onGetCuisinesError(error: ErrorState) {

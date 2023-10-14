@@ -23,7 +23,6 @@ class ProfileScreenModel(
 
     init {
         checkIfLoggedIn()
-        getUserProfile()
     }
 
     private fun checkIfLoggedIn() {
@@ -61,6 +60,7 @@ class ProfileScreenModel(
             accessToken.collect { token ->
                 if (token.isNotEmpty()) {
                     updateState { it.copy(isLoggedIn = true) }
+                    getUserProfile()
                 } else {
                     updateState { it.copy(isLoggedIn = false) }
                 }
