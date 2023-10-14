@@ -40,6 +40,7 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.resources.Resources
+import util.getNavigationBarPadding
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 class MapScreen :
@@ -146,7 +147,11 @@ class MapScreen :
     ) {
         Card(
             modifier = modifier.fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, bottom = 20.dp),
+                .padding(
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = getNavigationBarPadding().calculateBottomPadding()
+                ),
             colors = CardDefaults.cardColors(containerColor = Theme.colors.surface),
             shape = RoundedCornerShape(8.dp),
             elevation = CardDefaults.elevatedCardElevation(0.dp),
