@@ -282,10 +282,7 @@ class RestaurantService(
     }
 
     suspend fun getOrdersHistoryInRestaurant(
-        restaurantId: String,
-        page: Int,
-        limit: Int,
-        languageCode: String
+        restaurantId: String, page: Int, limit: Int, languageCode: String
     ): PaginationResponse<OrderDto> {
         return client.tryToExecute<PaginationResponse<OrderDto>>(
             api = APIs.RESTAURANT_API,
@@ -296,10 +293,7 @@ class RestaurantService(
     }
 
     suspend fun getOrdersHistoryForUser(
-        userId: String,
-        page: Int,
-        limit: Int,
-        languageCode: String
+        userId: String, page: Int, limit: Int, languageCode: String
     ): PaginationResponse<OrderDto> {
         return client.tryToExecute<PaginationResponse<OrderDto>>(
             api = APIs.RESTAURANT_API,

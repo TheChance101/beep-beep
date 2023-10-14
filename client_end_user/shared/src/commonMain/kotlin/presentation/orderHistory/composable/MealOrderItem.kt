@@ -1,6 +1,5 @@
 package presentation.orderHistory.composable
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,12 +16,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
 import presentation.composable.BpImageLoader
 import presentation.orderHistory.OrderHistoryUiState
-import resources.Resources
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun MealOrderItem(
     modifier: Modifier = Modifier,
@@ -68,17 +64,13 @@ fun MealOrderItem(
                 )
             }
         }
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp, start = 16.dp, end = 16.dp)
-        ) {
-            orders.meals.forEach { meal ->
-                Text(
-                    text = "${meal.quantity} ${meal.name}, ",
-                    style = Theme.typography.caption,
-                    color = Theme.colors.contentTertiary
-                )
-            }
-        }
 
+        Text(
+            modifier = Modifier.fillMaxWidth()
+                .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
+            text = orders.meals,
+            style = Theme.typography.caption,
+            color = Theme.colors.contentTertiary
+        )
     }
 }

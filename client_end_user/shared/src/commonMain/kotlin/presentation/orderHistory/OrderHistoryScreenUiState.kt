@@ -1,7 +1,5 @@
 package presentation.orderHistory
 
-import presentation.resturantDetails.MealUIState
-
 data class OrderScreenUiState(
     val selectedType: OrderSelectType = OrderSelectType.MEALS,
     val ordersHistory: List<OrderHistoryUiState> = emptyList(),
@@ -15,7 +13,7 @@ data class OrderScreenUiState(
 }
 
 data class OrderHistoryUiState(
-    val meals: List<MealUIState> = emptyList(),
+    val meals: String = "",
     val restaurantName: String = "",
     val restaurantImageUrl: String = "",
     val totalPrice: Double = 0.0,
