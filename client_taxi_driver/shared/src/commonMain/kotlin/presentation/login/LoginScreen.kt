@@ -24,6 +24,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
+import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpCheckBox
 import com.beepbeep.designSystem.ui.composable.BpExpandableTextField
@@ -36,6 +37,7 @@ import presentation.base.BaseScreen
 import presentation.composable.CustomBottomSheet
 import presentation.main.MainScreen
 import presentation.resources.Resources
+import util.getNavigationBarPadding
 
 class LoginScreen :
     BaseScreen<LoginScreenModel, LoginScreenUIState, LoginScreenUIEffect, LoginScreenInteractionListener>() {
@@ -139,6 +141,19 @@ private fun LoginScreenContent(
                         isKeepMeLoggedInChecked = state.keepLoggedIn
                     )
                 },
+            )
+        }
+        BPSnackBar(
+            icon = painterResource(Resources.images.errorIcon),
+            iconBackgroundColor = Theme.colors.warningContainer,
+            iconTint = Theme.colors.warning,
+            isVisible = state.showSnackBar,
+            modifier = Modifier.padding(bottom = getNavigationBarPadding().calculateBottomPadding())
+                .align(Alignment.BottomCenter)
+        ) {
+            Text(
+                text = state.snackBarMessage,
+                style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
             )
         }
     }

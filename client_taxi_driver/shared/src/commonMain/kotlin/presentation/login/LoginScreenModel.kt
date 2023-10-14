@@ -11,10 +11,14 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
     BaseScreenModel<LoginScreenUIState, LoginScreenUIEffect>(LoginScreenUIState()),
     LoginScreenInteractionListener {
     init {
+        showSnackBar("Sign up with Beep Beep account")
+    }
+
+    private fun showSnackBar(message: String) {
         coroutineScope.launch {
-            if (loginUserUseCase.getKeepMeLoggedInFlag()) {
-                sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
-            }
+            updateState { it.copy(snackBarMessage = message, showSnackBar = true) }
+            delay(4000)
+            updateState { it.copy(showSnackBar = false) }
         }
     }
 
