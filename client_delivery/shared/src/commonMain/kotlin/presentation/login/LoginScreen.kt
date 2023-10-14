@@ -49,7 +49,7 @@ class LoginScreen : BaseScreen<
         Column(modifier = Modifier.fillMaxSize()) {
             LoginScaffold(
                 sheetContent = {
-                    if (state.showPermissionSheet) {
+                    if (state.permissionUiState.showPermissionSheet) {
                         RequestPermissionBottomSheet(
                             listener = listener,
                             state = state
@@ -62,7 +62,7 @@ class LoginScreen : BaseScreen<
                 },
                 sheetBackgroundColor = Theme.colors.background,
                 onBackGroundClicked = listener::onSheetBackgroundClicked,
-                sheetState = state.sheetState,
+                sheetState = state.permissionUiState.sheetState,
             ) {
                 LoginScreenContent(state, listener)
             }
