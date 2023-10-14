@@ -119,6 +119,13 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
 
     }
 
+    override suspend fun isRestaurantExisted(restaurantId: String): Boolean {
+        val restaurant = container.restaurantCollection.findOne(
+            and(RestaurantCollection::id eq ObjectId(restaurantId), RestaurantCollection::isDeleted eq false)
+        )
+        return restaurant != null
+    }
+
     override suspend fun addRestaurant(restaurant: Restaurant): Restaurant {
         val addedRestaurant = restaurant.toCollection()
         container.restaurantCollection.insertOne(addedRestaurant)

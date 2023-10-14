@@ -35,6 +35,8 @@ interface IDataBaseGateway {
 
     suspend fun isUserDeleted(id: String): Boolean
 
+    suspend fun isUserExisted(userId: String): Boolean
+
     // endregion: user
 
     // region token
