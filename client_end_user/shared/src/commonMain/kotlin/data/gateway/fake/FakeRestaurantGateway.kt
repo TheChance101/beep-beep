@@ -46,9 +46,6 @@ class FakeRestaurantGateway : IRestaurantGateway {
         return meals.map { it.toEntity() }
     }
 
-    override suspend fun getSweets(restaurantId: String): List<Meal> {
-        return meals.map { it.toEntity() }
-    }
 
     override suspend fun search(query: String): Pair<List<Restaurant>, List<Meal>> {
         TODO("Not yet implemented")
@@ -112,7 +109,6 @@ class FakeRestaurantGateway : IRestaurantGateway {
         return listOf(
             Order(
                 id = "khhfhdfhd",
-                userId = "user123",
                 restaurantId = "restaurant456",
                 restaurantName = "Hamada Market",
                 restaurantImageUrl = "",
@@ -120,7 +116,6 @@ class FakeRestaurantGateway : IRestaurantGateway {
                 price = Price(20.0, "$"),
                 createdAt = Clock.System.now().epochSeconds,
                 orderStatus = 1,
-                timeToArriveInMints = 20
             )
         )
     }

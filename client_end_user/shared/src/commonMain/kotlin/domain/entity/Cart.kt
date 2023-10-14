@@ -1,6 +1,9 @@
 package domain.entity
 
 data class Cart(
-    val meals: List<MealCart>,
-    val price: Price
+    val price: Price,
+    val restaurantId: String?,
+    val restaurantName: String?,
+    val restaurantImageUrl: String?,
+    val meals: List<MealCart>?
 )

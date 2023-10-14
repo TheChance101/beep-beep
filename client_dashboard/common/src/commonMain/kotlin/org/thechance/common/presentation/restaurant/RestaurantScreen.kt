@@ -142,6 +142,7 @@ class RestaurantScreen :
         BpTable(
             data = state.restaurants,
             key = { it.id },
+            isLoading = state.isLoading,
             headers = state.tableHeader,
             modifier = Modifier.fillMaxWidth(),
             isVisible = state.hasConnection,

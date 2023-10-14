@@ -126,11 +126,11 @@ class RestaurantScreenModel(
     }
 
     private fun getSweets(restaurantId: String) {
-        tryToExecute(
-            { manageOffers.getRestaurantSweets(restaurantId) },
-            ::onGetSweetsSuccess,
-            ::onError
-        )
+//        tryToExecute(
+//            { manageOffers.getRestaurantSweets(restaurantId) },
+//            ::onGetSweetsSuccess,
+//            ::onError
+//        )
     }
 
     private fun onGetMostOrdersSuccess(meals: List<Meal>) {

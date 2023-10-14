@@ -1,17 +1,17 @@
 package domain.usecase
 
 import domain.entity.Cart
-import domain.gateway.IOrderGateway
+import domain.gateway.ITransactionsGateway
 
 interface IManageCartUseCase {
     suspend fun getCart(): Cart
 }
 
 class ManageCartUseCase(
-    private val orderGateway: IOrderGateway
+    private val transactionGateway: ITransactionsGateway
 ) : IManageCartUseCase {
     override suspend fun getCart(): Cart {
-        return orderGateway.getAllCartMeals()
+        return transactionGateway.getCart()
     }
 
 
