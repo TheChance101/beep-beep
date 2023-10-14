@@ -6,7 +6,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.flowOn
 import org.thechance.service_restaurant.api.models.WebSocketOrder
-import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import java.util.concurrent.ConcurrentHashMap
 
 class SocketHandler {
@@ -25,9 +24,8 @@ class SocketHandler {
                 ?.collect { incomingOrder ->
                     session?.sendSerialized(incomingOrder)
                 }
-        } catch (e: MultiErrorException) {
-            session?.send(e.errorCodes.toString())
-            session?.close()
+        } catch (e: Exception) {
+            session?.close(CloseReason(CloseReason.Codes.NORMAL, e.message.toString()))
         } finally {
             orders.remove(key)
         }

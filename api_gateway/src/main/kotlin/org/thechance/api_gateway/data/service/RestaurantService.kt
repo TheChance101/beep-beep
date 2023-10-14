@@ -252,7 +252,7 @@ class RestaurantService(
             api = APIs.RESTAURANT_API, attributes = attributes,
             setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, language) }
         ) {
-            delete("/cart/$userId/orderNow")
+            post("/cart/$userId/orderNow")
         }
     }
 
@@ -336,6 +336,14 @@ class RestaurantService(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
             path = "/order/restaurant/$restaurantId",
+        )
+    }
+
+    suspend fun trackOrder(orderId: String): Flow<OrderDto> {
+        return client.tryToExecuteWebSocket<OrderDto>(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+            path = "/order/track/$orderId",
         )
     }
 

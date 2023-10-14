@@ -88,13 +88,6 @@ fun Route.orderRoutes() {
 
     authenticateWithRole(Role.END_USER) {
 
-        post("order") {
-            val language = extractLocalizationHeader()
-            val order = call.receive<OrderDto>()
-            val result = restaurantService.createOrder(order, language)
-            respondWithResult(HttpStatusCode.Created, result)
-        }
-
         get("orders/user/history") {
             val tokenClaim = call.principal<JWTPrincipal>()
             val userId = tokenClaim?.get(Claim.USER_ID).toString()
@@ -108,6 +101,15 @@ fun Route.orderRoutes() {
                 languageCode = language
             )
             respondWithResult(HttpStatusCode.OK, result)
+        }
+
+        webSocket("order/track/{orderId}") {
+            val orderId = call.parameters["orderId"]?.trim().orEmpty()
+            val order = restaurantService.trackOrder(orderId)
+            webSocketServerHandler.sessions[orderId] = this
+            webSocketServerHandler.sessions[orderId]?.let {
+                webSocketServerHandler.tryToCollect(order, it)
+            }
         }
     }
 }
