@@ -49,7 +49,8 @@ class RestaurantManagementGateway(private val container: DataBaseContainer) : IR
         val updateOperation = setValue(OrderCollection::orderStatus, status.statusCode)
         val updatedOrder = container.orderCollection.findOneAndUpdate(
             filter = OrderCollection::id eq ObjectId(orderId),
-            update = updateOperation
+            update = updateOperation,
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )
         return updatedOrder?.toEntity()
     }
