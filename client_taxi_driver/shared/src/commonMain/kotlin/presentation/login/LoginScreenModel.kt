@@ -39,6 +39,7 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
         password: String,
         isKeepMeLoggedInChecked: Boolean
     ) {
+        updateState { it.copy(isLoading = true, isEnable = false) }
         tryToExecute(
             { loginUserUseCase.loginUser(userName, password, isKeepMeLoggedInChecked) },
             { onLoginSuccess() },
@@ -47,20 +48,24 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
     }
 
     private fun onLoginSuccess() {
-        updateState {
-            it.copy(
-                isLoading = false,
-                isSuccess = true,
-                usernameErrorMsg = "",
-                passwordErrorMsg = ""
-            )
-        }
-
+        clearErrors()
         sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
     }
 
+    private fun clearErrors() {
+        updateState {
+            it.copy(
+                usernameErrorMsg = "",
+                isUsernameError = false,
+                passwordErrorMsg = "",
+                isPasswordError = false
+            )
+        }
+    }
+
     private fun onLoginFailed(error: ErrorState) {
-        updateState { it.copy(isLoading = false, error = error) }
+        updateState { it.copy(isLoading = false, isEnable = true, error = error) }
+        clearErrors()
         handleErrorState(error)
     }
 

@@ -141,6 +141,8 @@ private fun LoginScreenContent(
                         isKeepMeLoggedInChecked = state.keepLoggedIn
                     )
                 },
+                isLoading = state.isLoading,
+                enabled = state.isEnable,
             )
         }
         BPSnackBar(
