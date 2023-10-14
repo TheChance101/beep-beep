@@ -116,8 +116,32 @@ fun Route.taxiRoutes() {
             val language = extractLocalizationHeader()
             val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripCreatedSuccessfully
             val trip = call.receive<TripDto>()
-            val createdTrip = taxiService.createTrip(trip, language)
-            respondWithResult(HttpStatusCode.Created, createdTrip, successMessage)
+            val isATaxiTrip = trip.isATaxiTrip!!
+            if (isATaxiTrip) {
+                val isUserExisted = identityService.isUserExistedInDb(userId = trip.clientId, language)
+                if (isUserExisted) {
+                    val createdTrip = taxiService.createTrip(trip, language)
+                    respondWithResult(HttpStatusCode.Created, createdTrip, successMessage)
+                } else {
+                    respondWithError(
+                        call,
+                        statusCode = HttpStatusCode.BadRequest,
+                        errorMessage = mapOf(400 to " User Not found")
+                    )
+                }
+            } else {
+                val isRestaurantExisted = restaurantService.isRestaurantExisted(restaurantId = trip.clientId, language)
+                if (isRestaurantExisted) {
+                    val createdTrip = taxiService.createTrip(trip, language)
+                    respondWithResult(HttpStatusCode.Created, createdTrip, successMessage)
+                } else {
+                    respondWithError(
+                        call,
+                        statusCode = HttpStatusCode.BadRequest,
+                        errorMessage = mapOf(400 to " Restaurant Not found")
+                    )
+                }
+            }
         }
 
         webSocket("/taxi/{driverId}") {

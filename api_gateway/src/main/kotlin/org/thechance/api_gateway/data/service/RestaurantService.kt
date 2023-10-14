@@ -371,5 +371,14 @@ class RestaurantService(
             }
         }
     }
+
+    suspend fun isRestaurantExisted(restaurantId: String?, language: String): Boolean {
+        return client.tryToExecute<Boolean>(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, language) },
+            method = { get("/restaurant/isExisted/$restaurantId") }
+        )
+    }
     //endregion
 }

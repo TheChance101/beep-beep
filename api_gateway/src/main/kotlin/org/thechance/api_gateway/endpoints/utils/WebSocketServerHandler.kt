@@ -67,7 +67,7 @@ class WebSocketServerHandler(
         } catch (e: LocalizedMessageException) {
             val errorResponse = ServerResponse.error(e.errorMessages, 404)
             session.sendSerialized(errorResponse)
-            session.close()
+//            session.close()
         }
     }
 
