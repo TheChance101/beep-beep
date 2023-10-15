@@ -132,44 +132,34 @@ fun Route.taxiRoutes() {
             }
         }
 
-//        authenticateWithRole(Role.RESTAURANT_OWNER) {
-        post("/delivery") {
-            val language = extractLocalizationHeader()
-            val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripCreatedSuccessfully
-            val trip = call.receive<TripDto>()
-            val isRestaurantExisted =  restaurantService.isRestaurantExisted(restaurantId = trip.restaurantId, language)
-            val isUserExisted = identityService.isUserExistedInDb(userId = trip.clientId, language)
+        authenticateWithRole(Role.RESTAURANT_OWNER) {
+            post("/delivery") {
+                val language = extractLocalizationHeader()
+                val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripCreatedSuccessfully
+                val trip = call.receive<TripDto>()
+                val isRestaurantExisted =
+                    restaurantService.isRestaurantExisted(restaurantId = trip.restaurantId, language)
+                val isUserExisted = identityService.isUserExistedInDb(userId = trip.clientId, language)
 
-                        if (!isUserExisted) {
-                            respondWithError(
-                                call,
-                                statusCode = HttpStatusCode.BadRequest,
-                                errorMessage = mapOf(400 to "User with this id Not found")
-                            )
-                        } else if (!isRestaurantExisted) {
-                            respondWithError(
-                                call,
-                                statusCode = HttpStatusCode.BadRequest,
-                                errorMessage = mapOf(400 to "Restaurant with this id Not found")
-                            )
-                        } else {
-                            val createdTrip = taxiService.createTrip(trip, language)
-                            respondWithResult(HttpStatusCode.Created, createdTrip, successMessage)
-                        }
+                if (!isUserExisted) {
+                    respondWithError(
+                        call,
+                        statusCode = HttpStatusCode.BadRequest,
+                        errorMessage = mapOf(400 to "User with this id Not found")
+                    )
+                } else if (!isRestaurantExisted) {
+                    respondWithError(
+                        call,
+                        statusCode = HttpStatusCode.BadRequest,
+                        errorMessage = mapOf(400 to "Restaurant with this id Not found")
+                    )
+                } else {
+                    val createdTrip = taxiService.createTrip(trip, language)
+                    respondWithResult(HttpStatusCode.Created, createdTrip, successMessage)
+                }
 
-//            if (isUserExisted && isRestaurantExisted) {
-//                val createdTrip = taxiService.createTrip(trip, language)
-//                respondWithResult(HttpStatusCode.Created, createdTrip, successMessage)
-//            }else{
-//                respondWithError(
-//                    call,
-//                    statusCode = HttpStatusCode.BadRequest,
-//                    errorMessage = mapOf(400 to "restaurant or user not existed")
-//                )
-//            }
-
+            }
         }
-//        }
 
         authenticateWithRole(Role.TAXI_DRIVER) {
             webSocket("/incoming-taxi-rides") {
@@ -188,23 +178,22 @@ fun Route.taxiRoutes() {
             }
         }
 
-//        authenticateWithRole(Role.DELIVERY) {
-        webSocket("/incoming-delivery-orders/{id}") {
-            val id = call.parameters["id"].toString()
-            val tokenClaim = call.principal<JWTPrincipal>()
-            val deliveryId = tokenClaim?.get(Claim.USER_ID).toString()
-            val language = extractLocalizationHeaderFromWebSocket()
-            val deliveryTrips = taxiService.getDeliveryTrips(id)
-            webSocketServerHandler.sessions[id] = this
-            webSocketServerHandler.sessions[id]?.let { session ->
-                webSocketServerHandler.tryToCollectAndMapToDeliveryTrip(
-                    values = deliveryTrips,
-                    session = session,
-                    language = language
-                )
+        authenticateWithRole(Role.DELIVERY) {
+            webSocket("/incoming-delivery-orders") {
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val deliveryId = tokenClaim?.get(Claim.USER_ID).toString()
+                val language = extractLocalizationHeaderFromWebSocket()
+                val deliveryTrips = taxiService.getDeliveryTrips(deliveryId)
+                webSocketServerHandler.sessions[deliveryId] = this
+                webSocketServerHandler.sessions[deliveryId]?.let { session ->
+                    webSocketServerHandler.tryToCollectAndMapToDeliveryTrip(
+                        values = deliveryTrips,
+                        session = session,
+                        language = language
+                    )
+                }
             }
         }
-//        }
 
 
         authenticateWithRole(Role.END_USER) {
