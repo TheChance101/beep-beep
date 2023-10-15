@@ -50,14 +50,13 @@ fun Route.cartRoutes() {
                 respondWithResult(HttpStatusCode.OK, result)
             }
 
-            delete("/orderNow") {
+            post("/orderNow") {
                 val language = extractLocalizationHeader()
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val userId = tokenClaim?.get(Claim.USER_ID).toString()
-                val result = restaurantService.orderCart(userId,language)
+                val result = restaurantService.orderCart(userId, language)
                 respondWithResult(HttpStatusCode.OK, result)
             }
-
         }
     }
 }

@@ -248,4 +248,11 @@ class IdentityService(
             }
         }
 
+    suspend fun isUserExistedInDb(userId: String?, languageCode: String): Boolean = client.tryToExecute<Boolean>(
+        APIs.IDENTITY_API,
+        attributes = attributes,
+        setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+        method = { get("user/isExisted/$userId") }
+    )
+
 }

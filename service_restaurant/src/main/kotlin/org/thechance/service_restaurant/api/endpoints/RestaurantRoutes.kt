@@ -138,5 +138,11 @@ fun Route.restaurantRoutes() {
             val result = controlRestaurant.deleteRestaurantsByOwnerId(ownerId)
             call.respond(HttpStatusCode.OK, result)
         }
+
+        get("/isExisted/{id}") {
+            val restaurantId = call.parameters["id"] ?: throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER))
+            val isRestaurantExisted = discoverRestaurant.isRestaurantExisted(restaurantId)
+            call.respond(HttpStatusCode.OK, isRestaurantExisted)
+        }
     }
 }

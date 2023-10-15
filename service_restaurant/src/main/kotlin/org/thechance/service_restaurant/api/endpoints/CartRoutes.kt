@@ -46,10 +46,10 @@ fun Route.cartRoutes() {
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
-        delete("/orderNow") {
+        post("/orderNow") {
             val userId = call.parameters["userId"] ?: throw MultiErrorException(listOf(NOT_FOUND))
             val order = manageCart.orderCart(userId).toDto()
-            socketHandler.restaurants[order.restaurantId]?.orders?.emit(order)
+            socketHandler.orders[order.restaurantId]?.order?.emit(order)
             call.respond(HttpStatusCode.Created, order)
         }
     }

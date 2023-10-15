@@ -12,7 +12,6 @@ data class HomeScreenUiState(
     val lastOrder: OrderUiState = OrderUiState(),
     val user: UserUiState = UserUiState(),
     val showCart: Boolean = false,
-    val searchTerm: String = "",
 ) {
     val hasProgress: Boolean
         get() = inProgressWrapper.taxisOnTheWay.isNotEmpty() ||
@@ -37,6 +36,7 @@ data class OfferUiState(
 )
 
 data class RestaurantUiState(
+    val id: String = "",
     val name: String = "",
     val rating: Double = 0.0,
     val priceLevel: PriceLevel = PriceLevel.LOW

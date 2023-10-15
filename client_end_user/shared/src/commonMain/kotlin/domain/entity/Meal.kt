@@ -7,6 +7,7 @@ data class Meal(
     val price: Double,
     val currency: String,
     val restaurantId: String,
+    val restaurantName: String,
     val cuisines: List<String>,
     val image: String
 )
