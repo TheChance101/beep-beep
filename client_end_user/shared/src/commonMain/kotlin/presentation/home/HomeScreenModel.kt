@@ -158,6 +158,14 @@ class HomeScreenModel(
         sendNewEffect(HomeScreenUiEffect.NavigateToRestaurantDetails(restaurantId))
     }
 
+    override fun onClickInProgressOrderCard(orderId: String) {
+        sendNewEffect(HomeScreenUiEffect.NavigateToTrackOrderFood(orderId))
+    }
+
+    override fun onClickInProgressTaxiRide(tripId: String) {
+        sendNewEffect(HomeScreenUiEffect.NavigateToTrackTaxiRide(tripId))
+    }
+
     private fun getRecommendedCuisines() {
         tryToExecute(
             { exploreRestaurant.getCuisines().toCuisineUiState() },

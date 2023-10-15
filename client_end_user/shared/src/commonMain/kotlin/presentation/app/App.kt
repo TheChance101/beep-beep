@@ -7,7 +7,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
-import presentation.orderFoodTracking.OrderFoodTrackingScreen
+import presentation.main.MainContainer
 import presentation.pickLanguage.PickLanguageScreen
 import resources.BeepBeepTheme
 
@@ -20,7 +20,6 @@ object MainApp : Screen {
     @Composable
     override fun Content() {
         val appScreenModel = getScreenModel<AppScreenModel>()
-
         val userLanguage by appScreenModel.language.collectAsState()
         val firstTime by appScreenModel.isFirstTimeOpenApp.collectAsState()
 
@@ -28,10 +27,8 @@ object MainApp : Screen {
             if (firstTime) {
                 Navigator(PickLanguageScreen) { SlideTransition(it) }
             } else {
-                Navigator(OrderFoodTrackingScreen()) { SlideTransition(it) }
+                Navigator(MainContainer) { SlideTransition(it) }
             }
         }
     }
 }
-
-

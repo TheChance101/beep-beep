@@ -52,6 +52,7 @@ import presentation.composable.BpImageLoader
 import presentation.composable.ImageSlider
 import presentation.composable.ItemSection
 import presentation.composable.SectionHeader
+import presentation.composable.modifier.noRippleEffect
 import presentation.composable.modifier.roundedBorderShape
 import presentation.cuisines.CuisineUiState
 import presentation.cuisines.CuisinesScreen
@@ -61,6 +62,7 @@ import presentation.home.composable.CuisineCard
 import presentation.home.composable.OrderCard
 import presentation.main.SearchTab
 import presentation.meals.MealsScreen
+import presentation.orderFoodTracking.OrderFoodTrackingScreen
 import presentation.resturantDetails.RestaurantScreen
 import resources.Resources
 import util.root
@@ -91,6 +93,10 @@ class HomeScreen :
             is HomeScreenUiEffect.NavigateToRestaurantDetails -> navigator.root?.push(
                 RestaurantScreen(effect.restaurantId)
             )
+            is HomeScreenUiEffect.NavigateToTrackOrderFood -> navigator.root?.push(
+                OrderFoodTrackingScreen()
+            )
+            is HomeScreenUiEffect.NavigateToTrackTaxiRide -> println("navigate to track taxi ride ${effect.tripId}")
         }
     }
 
@@ -176,6 +182,7 @@ class HomeScreen :
                     HorizontalImageCard(
                         painter = painterResource(Resources.images.taxiOnTheWay),
                         titleText = Resources.strings.taxiOnTheWay,
+                        onClick = listener::onClickInProgressTaxiRide
                     ) { textStyle ->
                         Row(
                             Modifier.fillMaxWidth(),
@@ -198,6 +205,7 @@ class HomeScreen :
                         painter = painterResource(Resources.images.taxiOnTheWay),
                         titleText = Resources.strings.enjoyYourRide,
                         titleTextColor = Theme.colors.contentSecondary,
+                        onClick = listener::onClickInProgressTaxiRide
                     ) { textStyle ->
                         Text(
                             text = "${it.timeToArriveInMints} min to arrive",
@@ -209,6 +217,7 @@ class HomeScreen :
                     HorizontalImageCard(
                         painter = painterResource(Resources.images.orderOnTheWay),
                         titleText = Resources.strings.orderOnTheWay,
+                        onClick = listener::onClickInProgressOrderCard
                     ) { textStyle ->
                         Text(
                             text = "From ${it.restaurantName}",
@@ -319,14 +328,20 @@ class HomeScreen :
     private fun HorizontalImageCard(
         painter: Painter,
         titleText: String,
+        onClick: (id: String) -> Unit,
         modifier: Modifier = Modifier,
         titleTextColor: Color = Theme.colors.primary,
         titleTextStyle: TextStyle = Theme.typography.title.copy(color = titleTextColor),
         captionText: @Composable (TextStyle) -> Unit,
     ) {
         Row(
-            modifier = modifier.heightIn(min = 72.dp).fillMaxWidth().padding(horizontal = 16.dp)
-                .roundedBorderShape().padding(horizontal = 16.dp, vertical = 4.dp),
+            modifier = modifier
+                .heightIn(min = 72.dp)
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .noRippleEffect { onClick("order id or trip id") }
+                .roundedBorderShape()
+                .padding(horizontal = 16.dp, vertical = 4.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
