@@ -68,7 +68,7 @@ fun Route.userRoutes() {
         }
 
 
-        authenticateWithRole(Role.END_USER) {
+//        authenticateWithRole(Role.END_USER) {
 
             get {
                 val tokenClaim = call.principal<JWTPrincipal>()
@@ -141,7 +141,7 @@ fun Route.userRoutes() {
                 respondWithResult(HttpStatusCode.OK, trips)
             }
         }
-    }
+//    }
 
 }
 

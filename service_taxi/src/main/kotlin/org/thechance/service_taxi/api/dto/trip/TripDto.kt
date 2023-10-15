@@ -8,6 +8,7 @@ data class TripDto(
     val taxiId: String? = null,
     val driverId: String? = null,
     val clientId: String? = null,
+    val restaurantId: String? = null,
     val taxiPlateNumber: String? = null,
     val taxiDriverName: String? = null,
     val startPoint: LocationDto? = null,

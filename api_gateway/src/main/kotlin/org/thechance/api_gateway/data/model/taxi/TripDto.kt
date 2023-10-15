@@ -12,6 +12,7 @@ data class TripDto(
     val taxiId: String? = null,
     val driverId: String? = null,
     val clientId: String? = null,
+    val restaurantId: String? = null,
     val taxiPlateNumber: String? = null,
     val taxiDriverName: String? = null,
     val startPoint: LocationDto? = null,
@@ -39,11 +40,11 @@ fun TripDto.toTaxiTripResponse(userInfo: UserDetailsDto): TaxiTripResponse {
     )
 }
 
-fun TripDto.toDeliveryTripResponse(order: OrderDto): DeliveryTripResponse {
+fun TripDto.toDeliveryTripResponse(restaurantInfo: RestaurantDto): DeliveryTripResponse {
     return DeliveryTripResponse(
         id = id ?: "",
-        restaurantName = order.restaurantName ?: "",
-        restaurantImage = order.restaurantImage ?: "",
+        restaurantName = restaurantInfo.name ?: "",
+        restaurantImage = restaurantInfo.restaurantImage ?: "",
         startPoint = startPoint ?: LocationDto(0.0, 0.0),
         destination = destination ?: LocationDto(0.0, 0.0),
         startPointAddress = startPointAddress ?: "",
