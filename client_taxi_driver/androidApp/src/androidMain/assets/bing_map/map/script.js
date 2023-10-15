@@ -2,12 +2,10 @@ var map,directionsManager;
 function getMap() {
 map = new Microsoft.Maps.Map('#myMap', {
     credentials: 'Access_token',
-    center: new Microsoft.Maps.Location(0,0),
     mapTypeId: Microsoft.Maps.MapTypeId.road,
     minZoom: 4,
     maxZoom: 18
 });
-    var center = map.getCenter();
           getPin();
 }
 

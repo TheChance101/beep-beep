@@ -30,7 +30,6 @@ coroutine-version = "1.7.3"
 image-loader = "1.2.8"
 kotlin-realm = "1.10.0"
 realm-version = "1.10.0"
-calf = "0.1.1"
 kotlinx-serialization-version = "1.9.0"
 kotlin-datetime-version = "0.4.0"
 androidx-foundation-layout-android-version = "1.5.1"
@@ -94,7 +93,6 @@ calf = { module = "com.mohamedrejeb.calf:calf-ui", version.ref = "calf" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlin-datetime-version" }
 androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "androidx-foundation-layout-android-version" }
 moko-geo = {module = "dev.icerock.moko:geo", version.ref = "moko-geo-version"}
-calf = { module = "com.mohamedrejeb.calf:calf-ui", version.ref = "calf" }
 
 [bundles]
 voyager = ["voyager-navigator", "voyager-koin", "voyager-transitions"]
