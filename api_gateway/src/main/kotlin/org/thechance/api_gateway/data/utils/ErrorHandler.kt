@@ -34,6 +34,9 @@ class ErrorHandler(
         if (errorCodes.contains(1008))
             errors[1008] = localizedMessages.invalidEmail
 
+        if (errorCodes.contains(1009))
+            errors[1009] = localizedMessages.invalidPhone
+
         if (errorCodes.contains(1013))
             errors[1013] = localizedMessages.invalidCredentials
 
@@ -61,120 +64,129 @@ class ErrorHandler(
 
 
 
-        if(errorCodes.contains(3001))
+        if (errorCodes.contains(3001))
             errors[3001] = localizedMessages.invalidId
-        if(errorCodes.contains(3002))
+        if (errorCodes.contains(3002))
             errors[3002] = localizedMessages.invalidPlate
-        if(errorCodes.contains(3003))
+        if (errorCodes.contains(3003))
             errors[3003] = localizedMessages.invalidColor
-        if(errorCodes.contains(3004))
+        if (errorCodes.contains(3004))
             errors[3004] = localizedMessages.invalidCarType
-        if(errorCodes.contains(3005))
+        if (errorCodes.contains(3005))
             errors[3005] = localizedMessages.seatOutOfRange
-        if(errorCodes.contains(3006))
+        if (errorCodes.contains(3006))
             errors[3006] = localizedMessages.invalidLocation
-        if(errorCodes.contains(3007))
+        if (errorCodes.contains(3007))
             errors[3007] = localizedMessages.invalidRate
-        if(errorCodes.contains(3008))
+        if (errorCodes.contains(3008))
             errors[3008] = localizedMessages.invalidDate
-        if(errorCodes.contains(3009))
+        if (errorCodes.contains(3009))
             errors[3009] = localizedMessages.invalidPrice
-        if(errorCodes.contains(3010))
+        if (errorCodes.contains(3010))
             errors[3010] = localizedMessages.alreadyExist
-        if(errorCodes.contains(3100))
+        if (errorCodes.contains(3100))
             errors[3100] = localizedMessages.invalidRequestParameter
-        if(errorCodes.contains(3200))
+        if (errorCodes.contains(3200))
             errors[3200] = localizedMessages.requiredQuery
-        if(errorCodes.contains(3404))
+        if (errorCodes.contains(3404))
             errors[3404] = localizedMessages.notFound
-        if(errorCodes.contains(3911))
+        if (errorCodes.contains(3911))
             errors[3911] = localizedMessages.unknownError
 
 
-        if(errorCodes.contains(2001))
+        if (errorCodes.contains(2001))
             errors[2001] = localizedMessages.restaurantInvalidId
 
-        if(errorCodes.contains(2002))
+        if (errorCodes.contains(2002))
             errors[2002] = localizedMessages.restaurantInvalidName
 
-        if(errorCodes.contains(2003))
+        if (errorCodes.contains(2003))
             errors[2003] = localizedMessages.restaurantInvalidLocation
 
-        if(errorCodes.contains(2004))
+        if (errorCodes.contains(2004))
             errors[2004] = localizedMessages.restaurantInvalidDescription
 
-        if(errorCodes.contains(2005))
+        if (errorCodes.contains(2005))
             errors[2005] = localizedMessages.restaurantInvalidPriceLevel
 
-        if(errorCodes.contains(2006))
+        if (errorCodes.contains(2006))
             errors[2006] = localizedMessages.restaurantInvalidRate
 
-        if(errorCodes.contains(2007))
+        if (errorCodes.contains(2007))
             errors[2007] = localizedMessages.restaurantInvalidPhone
 
-        if(errorCodes.contains(2008))
+        if (errorCodes.contains(2008))
             errors[2008] = localizedMessages.restaurantInvalidTime
 
-        if(errorCodes.contains(2009))
+        if (errorCodes.contains(2009))
             errors[2009] = localizedMessages.restaurantInvalidPage
 
-        if(errorCodes.contains(2010))
+        if (errorCodes.contains(2010))
             errors[2010] = localizedMessages.restaurantInvalidPageLimit
 
-        if(errorCodes.contains(2011))
+        if (errorCodes.contains(2011))
             errors[2011] = localizedMessages.restaurantInvalidOneOrMoreIds
 
-        if(errorCodes.contains(2012))
+        if (errorCodes.contains(2012))
             errors[2012] = localizedMessages.restaurantInvalidPermissionUpdateLocation
 
-        if(errorCodes.contains(2013))
+        if (errorCodes.contains(2013))
             errors[2013] = localizedMessages.restaurantInvalidUpdateParameter
 
-        if(errorCodes.contains(2014))
+        if (errorCodes.contains(2014))
             errors[2014] = localizedMessages.restaurantInvalidPropertyRights
 
-        if(errorCodes.contains(2015))
+        if (errorCodes.contains(2015))
             errors[2015] = localizedMessages.restaurantInvalidPrice
 
-        if(errorCodes.contains(2016))
+        if (errorCodes.contains(2016))
             errors[2016] = localizedMessages.restaurantInvalidCuisineLimit
 
-        if(errorCodes.contains(2017))
+        if (errorCodes.contains(2017))
             errors[2017] = localizedMessages.restaurantInvalidAddress
 
-        if(errorCodes.contains(2018))
+        if (errorCodes.contains(2018))
             errors[2018] = localizedMessages.restaurantInvalidEmail
 
-        if(errorCodes.contains(2100))
+        if (errorCodes.contains(2100))
             errors[2100] = localizedMessages.restaurantInvalidRequestParameter
 
-        if(errorCodes.contains(2404))
+        if (errorCodes.contains(2404))
             errors[2404] = localizedMessages.restaurantNotFound
 
-        if(errorCodes.contains(2405))
+        if (errorCodes.contains(2405))
             errors[2405] = localizedMessages.restaurantErrorAdd
 
-        if(errorCodes.contains(2500))
+        if (errorCodes.contains(2500))
             errors[2500] = localizedMessages.restaurantClosed
 
-        if(errorCodes.contains(2501))
+        if (errorCodes.contains(2501))
             errors[2501] = localizedMessages.restaurantInsertOrderError
 
-        if(errorCodes.contains(2502))
+        if (errorCodes.contains(2502))
             errors[2502] = localizedMessages.restaurantInvalidReceivedOrders
 
-        if(errorCodes.contains( 2503))
+        if (errorCodes.contains(2503))
             errors[2503] = localizedMessages.cuisineNameAlreadyExisted
 
+        if (errorCodes.contains(2504))
+            errors[2504] = localizedMessages.invalidQuantity
 
-        if(errorCodes.contains( 4001))
+        if (errorCodes.contains(2505))
+            errors[2505] = localizedMessages.cartIsAlreadyEmpty
+
+        if (errorCodes.contains(4001))
             errors[4001] = localizedMessages.missingParameter
 
-        if(errorCodes.contains( 4002))
+        if (errorCodes.contains(4002))
             errors[4002] = localizedMessages.tokensNotFound
 
-        if(errorCodes.contains( 4003))
+        if (errorCodes.contains(4003))
             errors[4003] = localizedMessages.tokenNotRegister
+
+
+        if(errorCodes.contains(4004))
+            errors[4004] = localizedMessages.notificationNotSent
 
         return errors
     }

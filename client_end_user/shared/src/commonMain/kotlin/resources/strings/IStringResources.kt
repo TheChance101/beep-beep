@@ -90,5 +90,17 @@ interface IStringResources {
     val orderNow: String
     val total: String
     val yourCart: String
+    val profileLoginMessage: String
+    val ordersHistoryLoginMessage: String
+    val notificationLoginMessage: String
     val pleaseLogin: String
+    val mostOrdered: String
+    val sweets: String
+    val free: String
+    val loginToAddToFavourite: String
+    val addToCart: String
+    val mealAddedToYourCart: String
+    val message: String
+    val supportTeam: String
+    val sendMessageToStartLiveChat: String
 }

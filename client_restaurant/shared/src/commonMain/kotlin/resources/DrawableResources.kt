@@ -21,7 +21,8 @@ data class DrawableResources(
     val ordersHistory: String = "orders_history.png",
     val revenue: String = "revenue.png",
     val arrowDown: String = "arrow_down.xml",
-    val errorIcon: String = "ic_error_icon.xml"
+    val errorIcon: String = "ic_error_icon.xml",
+    val emptyScreen: String = "empty.png"
 )
 
 val BpDrawableDarkResources = DrawableResources(

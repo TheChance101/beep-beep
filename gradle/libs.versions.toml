@@ -7,6 +7,7 @@ minSdk = "24"
 targetSdk = "34"
 ios-deploymentTarget = "14.1"
 jvmToolchain = "11"
+calf = "0.2.0"
 
 androidx-core = "1.10.1"
 androidx-activity-compose = "1.7.2"
@@ -89,6 +90,7 @@ kotlin-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-j
 kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutine-version" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin-version" }
 
+calf = { module = "com.mohamedrejeb.calf:calf-ui", version.ref = "calf" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlin-datetime-version" }
 androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "androidx-foundation-layout-android-version" }
 moko-geo = {module = "dev.icerock.moko:geo", version.ref = "moko-geo-version"}

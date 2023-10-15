@@ -17,15 +17,7 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
         get() = coroutineScope
 
     init {
-        loginIfKeepMeLoggedInFlagSet()
-    }
-
-    private fun loginIfKeepMeLoggedInFlagSet(){
-        viewModelScope.launch {
-            if (manageLoginUser.getKeepMeLoggedInFlag()) {
-                sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
-            }
-        }
+        showSnackBar("Sign up with Beep Beep account")
     }
 
     override fun onUserNameChanged(userName: String) {
@@ -45,21 +37,29 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
         password: String,
         isKeepMeLoggedInChecked: Boolean
     ) {
-        updateState { it.copy(isLoading = true) }
+
+        updateState { it.copy(isLoading = true, isEnable = false) }
         clearErrors()
         tryToExecute(
-            { manageLoginUser.loginUser(username, password, isKeepMeLoggedInChecked) },
-            {onLoginSuccess()},
+            {
+                manageLoginUser.loginUser(username, password, isKeepMeLoggedInChecked)
+            },
+            {onLoginSuccess(username)},
             ::onLoginError
         )
     }
 
-    private fun onLoginSuccess() {
+    private fun onLoginSuccess(username: String) {
         clearErrors()
+        viewModelScope.launch {
+            manageLoginUser.saveUsername(username)
+        }
         sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
+
     }
 
     private fun onLoginError(errorState: ErrorState) {
+        updateState { it.copy(isLoading = false, isEnable = true) }
         clearErrors()
         when (errorState) {
             ErrorState.InvalidPassword -> updateState {
@@ -69,14 +69,12 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
                 )
             }
 
-            ErrorState.InvalidUsername -> updateState {
+            ErrorState.InvalidUsername,ErrorState.UserNotFound -> updateState {
                 it.copy(
                     usernameErrorMsg = "Invalid username",
                     isUsernameError = true
                 )
             }
-
-            is ErrorState.UserNotFound -> showSnackBar("Sign up with Beep Beep account")
 
             is ErrorState.UnAuthorized -> state.value.sheetState.show()
             else -> {}
@@ -98,8 +96,7 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
                 usernameErrorMsg = "",
                 isUsernameError = false,
                 passwordErrorMsg = "",
-                isPasswordError = false,
-                isLoading = false
+                isPasswordError = false
             )
         }
     }

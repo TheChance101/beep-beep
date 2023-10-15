@@ -6,5 +6,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CuisineDto(
     @SerialName("id") val id: String? = null,
-    @SerialName("name") val name: String
+    @SerialName("name") val name: String,
+    @SerialName("image") val image: String? = null
 )

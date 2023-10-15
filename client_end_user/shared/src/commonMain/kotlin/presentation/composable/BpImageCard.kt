@@ -3,7 +3,6 @@ package presentation.composable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import com.beepbeep.designSystem.ui.composable.modifier.noRippleEffect
 import com.beepbeep.designSystem.ui.theme.Theme
 import domain.entity.PriceLevel
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -34,18 +35,25 @@ import resources.Resources
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun BpImageCard(
+    onClickCard: (String) -> Unit = {},
     painter: Painter,
-    rate: Double,
     title: String,
-    priceLevel: PriceLevel,
+    id: String = "",
+    rate: Double = 0.0,
+    priceLevel: PriceLevel = PriceLevel.MEDIUM,
     modifier: Modifier = Modifier,
     hasOffer: Boolean = false,
+    hasRate: Boolean = true,
     offer: String = "",
     hasDeliveryPrice: Boolean = false,
-    deliveryPrice: String = ""
+    deliveryPrice: String = "",
+    hasPriceLevel: Boolean = true,
+    hasPrice: Boolean = false,
+    price: Double = 0.0,
+    currency: String = "",
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier.noRippleEffect { onClickCard(id) },
         colors = CardDefaults.cardColors(Color.Transparent),
         shape = RoundedCornerShape(0.dp)
     ) {
@@ -58,26 +66,44 @@ fun BpImageCard(
                 contentScale = ContentScale.Crop,
                 contentDescription = null
             )
-            Row(
-                modifier = Modifier.padding(start = 179.dp, top = 8.dp)
-                    .clip(RoundedCornerShape(4.dp)).background(Theme.colors.surface),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = rate.toString(),
-                    modifier = Modifier.padding(4.dp),
-                    style = Theme.typography.caption,
-                    color = Theme.colors.contentSecondary
-                )
-                Image(
-                    modifier = Modifier.padding(top = 4.dp, bottom = 4.dp, end = 4.dp).size(16.dp),
-                    painter = painterResource(Resources.images.filledStar),
-                    contentDescription = null
-                )
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Spacer(modifier = Modifier.weight(1f))
+                AnimatedVisibility(hasOffer || hasDeliveryPrice) {
+                    Row(
+                        modifier = Modifier.padding(top = 8.dp, end = 8.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                            .background(if (hasOffer) Theme.colors.secondary else Theme.colors.successContainer)
+                            .padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        if (hasOffer) {
+                            Text(
+                                text = offer,
+                                modifier = Modifier.padding(horizontal = 4.dp),
+                                style = Theme.typography.caption,
+                                color = Theme.colors.primary
+                            )
+                        } else {
+                            Icon(
+                                modifier = Modifier.padding(horizontal = 4.dp),
+                                painter = painterResource(Resources.images.scooter),
+                                tint = Theme.colors.success,
+                                contentDescription = null
+                            )
+                        }
+                        Text(
+                            text = if (hasOffer) Resources.strings.off else deliveryPrice,
+                            modifier = Modifier.padding(end = 4.dp),
+                            style = Theme.typography.caption,
+                            color = if (hasOffer) Theme.colors.primary else Theme.colors.success
+                        )
+                    }
+                }
             }
         }
         Row(
-            modifier = Modifier.padding(top = 8.dp).width(232.dp)
+            modifier = Modifier.padding(top = 8.dp).width(232.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = title,
@@ -85,47 +111,29 @@ fun BpImageCard(
                 color = Theme.colors.contentPrimary
             )
             Spacer(Modifier.weight(1f))
-            BpPriceLevel(priceLevel)
-        }
-        AnimatedVisibility(hasOffer) {
-            Row(
-                modifier = Modifier.padding(top = 8.dp).clip(RoundedCornerShape(4.dp))
-                    .background(Theme.colors.secondary)
-                    .padding(vertical = 4.dp)
-            ) {
-                Text(
-                    text = offer,
-                    modifier = Modifier.padding(horizontal = 4.dp),
-                    style = Theme.typography.caption,
-                    color = Theme.colors.primary
-                )
-                Text(
-                    text = Resources.strings.off,
-                    modifier = Modifier.padding(end = 4.dp),
-                    style = Theme.typography.caption,
-                    color = Theme.colors.primary
-                )
-            }
-        }
-        AnimatedVisibility(hasDeliveryPrice) {
-            Row(
-                modifier = Modifier.padding(top = 8.dp).clip(RoundedCornerShape(4.dp))
-                    .background(Theme.colors.successContainer)
-                    .padding(vertical = 4.dp)
-            ) {
-                Icon(
-                    modifier = Modifier.padding(start = 4.dp),
-                    painter = painterResource(Resources.images.scooter),
-                    tint = Theme.colors.success,
+            if (hasRate) {
+                Image(
+                    modifier = Modifier.padding(end = 4.dp).size(16.dp),
+                    painter = painterResource(Resources.images.filledStar),
                     contentDescription = null
                 )
                 Text(
-                    text = deliveryPrice,
-                    modifier = Modifier.padding(horizontal = 4.dp),
+                    text = rate.toString(),
+                    modifier = Modifier.padding(end = 4.dp),
                     style = Theme.typography.caption,
-                    color = Theme.colors.success
+                    color = Theme.colors.contentSecondary
+                )
+                Spacer(
+                    modifier.padding(end = 4.dp).clip(CircleShape).size(4.dp)
+                        .background(Theme.colors.disable)
                 )
             }
+            if (hasPriceLevel) BpPriceLevel(priceLevel)
+            if (hasPrice) Text(
+                " $currency $price",
+                style = Theme.typography.body,
+                color = Theme.colors.primary
+            )
         }
     }
 }

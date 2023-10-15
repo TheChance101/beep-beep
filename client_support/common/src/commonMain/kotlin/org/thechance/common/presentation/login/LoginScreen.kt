@@ -21,6 +21,7 @@ import com.beepbeep.designSystem.ui.composable.BpCheckBox
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.thechance.common.presentation.base.BaseScreen
+import org.thechance.common.presentation.chat.ChatScreen
 import org.thechance.common.presentation.resources.Resources
 import org.thechance.common.presentation.util.kms
 
@@ -36,7 +37,7 @@ class LoginScreen :
     override fun onEffect(effect: LoginUIEffect, navigator: Navigator) {
         when (effect) {
             LoginUIEffect.LoginSuccess -> {
-
+                navigator.replaceAll(ChatScreen())
             }
 
             is LoginUIEffect.LoginFailed -> {
@@ -118,7 +119,8 @@ class LoginScreen :
                         title = Resources.Strings.login,
                         onClick = { listener.onLoginClicked() },
                         modifier = Modifier.padding(top = 24.kms).fillMaxWidth(),
-                        enabled = true
+                        enabled = true,
+                        isLoading = state.isLoading
                     )
                 }
             }

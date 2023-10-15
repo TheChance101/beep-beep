@@ -29,7 +29,7 @@ class RestaurantScreenModel(
     private fun initRestaurantScreen() {
         getRestaurants()
         getCuisines()
-        if (state.value.newRestaurantInfoUiState.lat.isEmpty())
+        if (state.value.restaurantInformationUIState.latitude.isEmpty())
             getCurrentLocation()
     }
 
@@ -92,32 +92,32 @@ class RestaurantScreenModel(
                 val errorStates = error.errors
                 updateState {
                     it.copy(
-                            newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
-                                    nameError = errorStates.firstInstanceOfOrNull<ErrorState.RestaurantInvalidName>()
-                                        ?.let { error ->
-                                            ErrorWrapper(error.errorMessage, true)
-                                        },
-                                    userNameError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidUserName>()
-                                        ?.let { error ->
-                                            ErrorWrapper(error.errorMessage, true)
-                                        },
-                                    phoneNumberError = errorStates.firstInstanceOfOrNull<ErrorState.RestaurantInvalidPhone>()
-                                        ?.let { error ->
-                                            ErrorWrapper(error.errorMessage, true)
-                                        },
-                                    startTimeError = errorStates.firstInstanceOfOrNull<ErrorState.RestaurantInvalidTime>()
-                                        ?.let { error ->
-                                            ErrorWrapper(error.errorMessage, true)
-                                        },
-                                    endTimeError = errorStates.firstInstanceOfOrNull<ErrorState.RestaurantInvalidTime>()
-                                        ?.let { error ->
-                                            ErrorWrapper(error.errorMessage, true)
-                                        },
-                                    locationError = errorStates.firstInstanceOfOrNull<ErrorState.RestaurantInvalidLocation>()
-                                        ?.let { error ->
-                                            ErrorWrapper(error.errorMessage, true)
-                                        },
-                            )
+                        restaurantInformationUIState = it.restaurantInformationUIState.copy(
+                            nameError = errorStates.firstInstanceOfOrNull<ErrorState.RestaurantInvalidName>()
+                                ?.let { error ->
+                                    ErrorWrapper(error.errorMessage, true)
+                                },
+                            userNameError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidUserName>()
+                                ?.let { error ->
+                                    ErrorWrapper(error.errorMessage, true)
+                                },
+                            phoneNumberError = errorStates.firstInstanceOfOrNull<ErrorState.RestaurantInvalidPhone>()
+                                ?.let { error ->
+                                    ErrorWrapper(error.errorMessage, true)
+                                },
+                            startTimeError = errorStates.firstInstanceOfOrNull<ErrorState.RestaurantInvalidTime>()
+                                ?.let { error ->
+                                    ErrorWrapper(error.errorMessage, true)
+                                },
+                            endTimeError = errorStates.firstInstanceOfOrNull<ErrorState.RestaurantInvalidTime>()
+                                ?.let { error ->
+                                    ErrorWrapper(error.errorMessage, true)
+                                },
+                            locationError = errorStates.firstInstanceOfOrNull<ErrorState.RestaurantInvalidLocation>()
+                                ?.let { error ->
+                                    ErrorWrapper(error.errorMessage, true)
+                                },
+                        )
                     )
                 }
                 updateState { it.copy(
@@ -225,7 +225,29 @@ class RestaurantScreenModel(
     override fun onAddNewRestaurantClicked() {
         clearRestaurantInfoErrorState()
         clearAddRestaurantInfo()
-        updateState { it.copy(isNewRestaurantInfoDialogVisible = true) }
+        updateState { it.copy(isNewRestaurantInfoDialogVisible = true, isEditMode = false) }
+    }
+
+    private fun onUpdateRestaurantSuccessfully(restaurant: Restaurant) {
+        updateState { it.copy(isLoading = false, isNewRestaurantInfoDialogVisible = false) }
+        getRestaurants()
+        clearAddRestaurantInfo()
+    }
+
+    override fun onUpdateRestaurantClicked(restaurantId: String) {
+        updateState { it.copy(isLoading = true) }
+        clearRestaurantInfoErrorState()
+        tryToExecute(
+            {
+                manageRestaurant.updateRestaurant(
+                    restaurantId,
+                    state.value.restaurantInformationUIState.ownerId,
+                    state.value.restaurantInformationUIState.toEntity()
+                )
+            },
+            ::onUpdateRestaurantSuccessfully,
+            ::onError,
+        )
     }
 
     override fun onRetry() {
@@ -243,9 +265,9 @@ class RestaurantScreenModel(
     private fun onGetCurrentLocationSuccess(location: LocationInfo) {
         updateState {
             it.copy(
-                    newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
-                            lat = location.latitude.toString(),
-                            lng = location.longitude.toString(),
+                    restaurantInformationUIState = it.restaurantInformationUIState.copy(
+                            latitude = location.latitude.toString(),
+                            longitude = location.longitude.toString(),
                     )
             )
         }
@@ -260,7 +282,7 @@ class RestaurantScreenModel(
     private fun clearAddRestaurantInfo() {
         updateState {
             it.copy(
-                    newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
+                    restaurantInformationUIState = it.restaurantInformationUIState.copy(
                             name = "",
                             ownerUsername = "",
                             phoneNumber = "",
@@ -274,7 +296,7 @@ class RestaurantScreenModel(
     override fun onRestaurantNameChange(name: String) {
         updateState {
             it.copy(
-                    newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
+                    restaurantInformationUIState = it.restaurantInformationUIState.copy(
                             name = name,
                     )
             )
@@ -284,22 +306,22 @@ class RestaurantScreenModel(
     override fun onOwnerUserNameChange(name: String) {
         updateState {
             it.copy(
-                    newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(ownerUsername = name)
+                    restaurantInformationUIState = it.restaurantInformationUIState.copy(ownerUsername = name)
             )
         }
     }
 
     override fun onPhoneNumberChange(number: String) {
         updateState {
-            it.copy(newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(phoneNumber = number))
+            it.copy(restaurantInformationUIState = it.restaurantInformationUIState.copy(phoneNumber = number))
         }
     }
 
     override fun onWorkingStartHourChange(hour: String) {
         updateState {
-            it.copy(newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(openingTime = hour))
+            it.copy(restaurantInformationUIState = it.restaurantInformationUIState.copy(openingTime = hour))
             it.copy(
-                    newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
+                    restaurantInformationUIState = it.restaurantInformationUIState.copy(
                             openingTime = hour,
 //                    startTimeError = ErrorWrapper(
 //                        "write in valid format 00:00",
@@ -312,37 +334,75 @@ class RestaurantScreenModel(
 
     override fun onWorkingEndHourChange(hour: String) {
         updateState {
-            it.copy(newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(closingTime = hour))
+            it.copy(restaurantInformationUIState = it.restaurantInformationUIState.copy(closingTime = hour))
         }
     }
 
     override fun onLocationChange(location: String) {
         updateState {
             it.copy(
-                    newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
+                    restaurantInformationUIState = it.restaurantInformationUIState.copy(
                             location = location,
                     )
             )
         }
     }
 
-    override fun showEditRestaurantMenu(restaurantName: String) {
-        updateState { it.copy(editRestaurantMenu = restaurantName) }
+    override fun onShowRestaurantMenu(restaurantId: String) {
+        setRestaurantMenuVisibility(restaurantId, true)
     }
 
-    override fun hideEditRestaurantMenu() {
-        updateState { it.copy(editRestaurantMenu = "") }
+    override fun onHideRestaurantMenu(restaurantId: String) {
+        setRestaurantMenuVisibility(restaurantId, false)
     }
 
-    override fun onClickEditRestaurantMenuItem(restaurant: RestaurantUiState.RestaurantDetailsUiState) {
-        TODO("navigate to restaurant details screen")
+    private fun setRestaurantMenuVisibility(id: String, isExpanded: Boolean) {
+        println("setRestaurantMenuVisibility $id $isExpanded")
+        val currentRestaurantState = state.value.restaurants
+        println("currentRestaurantState $currentRestaurantState")
+        val selectedRestaurantState = currentRestaurantState.first { it.id == id }
+        val updateRestaurantState = selectedRestaurantState.copy(isExpanded = isExpanded)
+        updateState {
+            it.copy(
+                restaurants = currentRestaurantState.toMutableList()
+                    .apply { set(indexOf(selectedRestaurantState), updateRestaurantState) }
+            )
+        }
+    }
+
+    private fun onGetRestaurantByIdSuccessfully(restaurant: Restaurant) {
+        val restaurantUiState = restaurant.toUIState()
+        updateState {
+            it.copy(restaurantInformationUIState = restaurantUiState)
+        }
+        updateState {
+            it.copy(
+                restaurantInformationUIState =
+                mutableState.value.restaurantInformationUIState.copy(ownerId = restaurant.ownerId)
+            )
+        }
+    }
+
+    private fun getRestaurantById(id: String) {
+        tryToExecute(
+            { manageRestaurant.getRestaurantById(id) },
+            ::onGetRestaurantByIdSuccessfully,
+            ::onError
+        )
+    }
+
+    override fun onClickEditRestaurantMenuItem(restaurantId: String) {
+        println("onClickEditRestaurantMenuItem $restaurantId")
+        getRestaurantById(restaurantId)
+        setRestaurantMenuVisibility(restaurantId, false)
+        updateState { it.copy(isNewRestaurantInfoDialogVisible = true, isEditMode = true) }
     }
 
     override fun onClickDeleteRestaurantMenuItem(id: String) {
         tryToExecute(
-                { manageRestaurant.deleteRestaurant(id) },
-                ::onDeleteRestaurantSuccessfully,
-                ::onError
+            { manageRestaurant.deleteRestaurant(id) },
+            { onDeleteRestaurantSuccessfully(id) },
+            ::onError
         )
     }
 
@@ -361,9 +421,9 @@ class RestaurantScreenModel(
     override fun onCreateNewRestaurantClicked() {
         clearRestaurantInfoErrorState()
         tryToExecute(
-                { manageRestaurant.createRestaurant(state.value.newRestaurantInfoUiState.toEntity()) },
-                ::onCreateRestaurantSuccessfully,
-                ::onError,
+            { manageRestaurant.createRestaurant(state.value.restaurantInformationUIState.toEntity()) },
+            ::onCreateRestaurantSuccessfully,
+            ::onError,
         )
     }
 
@@ -380,16 +440,16 @@ class RestaurantScreenModel(
         }
     }
 
-    private fun onDeleteRestaurantSuccessfully(isDeleted: Boolean) {
+    private fun onDeleteRestaurantSuccessfully(id: String) {
         updateState { it.copy(isLoading = false) }
-        hideEditRestaurantMenu()
+        setRestaurantMenuVisibility(id, false)
         getRestaurants()
     }
 
     private fun clearRestaurantInfoErrorState() {
         updateState {
             it.copy(
-                    newRestaurantInfoUiState = it.newRestaurantInfoUiState.copy(
+                    restaurantInformationUIState = it.restaurantInformationUIState.copy(
                             nameError = ErrorWrapper(),
                             userNameError = ErrorWrapper(),
                             phoneNumberError = ErrorWrapper(),
@@ -440,7 +500,6 @@ class RestaurantScreenModel(
     }
 
     private fun onCreateCuisinesSuccessfully(cuisine: Cuisine) {
-        println("onCreateCuisinesSuccessfully: $cuisine")
         clearCuisineErrorState()
         updateState {
             it.copy(
@@ -457,9 +516,9 @@ class RestaurantScreenModel(
 
     override fun onClickDeleteCuisine(cuisineId: String) {
         tryToExecute(
-                { mangeCuisines.deleteCuisine(cuisineId) },
-                { onDeleteCuisinesSuccessfully(cuisineId) },
-                ::onError
+            { mangeCuisines.deleteCuisine(cuisineId) },
+            { onDeleteCuisinesSuccessfully(cuisineId) },
+            ::onError
         )
     }
 
@@ -482,8 +541,8 @@ class RestaurantScreenModel(
         clearCuisineErrorState()
         updateState {
             it.copy(
-                    restaurantAddCuisineDialogUiState =
-                    it.restaurantAddCuisineDialogUiState.copy(cuisineName = cuisineName)
+                restaurantAddCuisineDialogUiState =
+                it.restaurantAddCuisineDialogUiState.copy(cuisineName = cuisineName)
             )
         }
     }

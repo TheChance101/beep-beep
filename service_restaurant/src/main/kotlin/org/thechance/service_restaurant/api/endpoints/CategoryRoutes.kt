@@ -1,16 +1,12 @@
 package org.thechance.service_restaurant.api.endpoints
 
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.call
-import io.ktor.server.request.receive
-import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.delete
-import io.ktor.server.routing.get
-import io.ktor.server.routing.post
-import io.ktor.server.routing.put
-import io.ktor.server.routing.route
+import io.ktor.http.*
+import io.ktor.server.application.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
+import org.thechance.service_restaurant.api.models.BasePaginationResponseDto
 import org.thechance.service_restaurant.api.models.CategoryDto
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
@@ -32,7 +28,8 @@ fun Route.categoryRoutes() {
         val page = call.parameters.extractInt("page") ?: 1
         val limit = call.parameters.extractInt("limit") ?: 10
         val categories = manageCategory.getCategories(page, limit).toDto()
-        call.respond(HttpStatusCode.OK, categories)
+        val total = manageCategory.getTotalNumberOfCategories()
+        call.respond(HttpStatusCode.OK, BasePaginationResponseDto(categories, page, total))
     }
 
     route("/category") {

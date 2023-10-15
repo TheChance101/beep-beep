@@ -11,24 +11,28 @@ class LoginScreenModel(
 ) : BaseScreenModel<LoginUIState, LoginUIEffect>(LoginUIState()), LoginInteractionListener {
 
     override fun onPasswordChange(password: String) {
-        updateState { it.copy(password = password, isAbleToLogin = password.isNotBlank()) }
+        updateState { it.copy(password = password) }
+        updateLoginClickedState()
     }
 
     override fun onUsernameChange(username: String) {
-        updateState { it.copy(username = username, isAbleToLogin = username.isNotBlank()) }
+        updateState { it.copy(username = username) }
+        updateLoginClickedState()
     }
 
+    private fun updateLoginClickedState(){
+        updateState { it.copy( isEnable = state.value.username.isNotBlank() && state.value.password.isNotBlank()) }
+    }
     override fun onLoginClicked() {
-        updateState { it.copy(isLoading = true) }
         clearState()
+        updateState { it.copy(isLoading = true, isEnable = false) }
         mutableState.value.apply {
             tryToExecute(
-                    { login.loginUser(username = username, password = password) },
-                    { onLoginSuccess() },
-                    ::onError
+                { login.loginUser(username = username, password = password) },
+                { onLoginSuccess() },
+                ::onError
             )
         }
-
     }
 
     private fun onLoginSuccess() {
@@ -37,7 +41,7 @@ class LoginScreenModel(
     }
 
     private fun onError(error: ErrorState) {
-        updateState { it.copy(isLoading = false) }
+        updateState { it.copy(isLoading = false, isEnable = true) }
         handleErrorState(error)
     }
 
@@ -51,42 +55,52 @@ class LoginScreenModel(
                             ?.let { error ->
                                 ErrorWrapper(error.errorMessage, true)
                             },
-                        isUserError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidUserName>()?.let { error ->
-                            ErrorWrapper(error.errorMessage, true)
-                        },
+                        isUserError = errorStates.firstInstanceOfOrNull<ErrorState.InvalidUserName>()
+                            ?.let { error ->
+                                ErrorWrapper(error.errorMessage, true)
+                            },
                     )
                 }
-               val error= errorStates.firstInstanceOfOrNull<ErrorState.InvalidPermission>()
                 updateState {
-                    it.copy(isSnackBarVisible =true, snackBarTitle =
-                    errorStates.firstInstanceOfOrNull<ErrorState.InvalidPermission>()?.errorMessage) }
+                    errorStates.firstInstanceOfOrNull<ErrorState.InvalidPermission>()?.errorMessage?.let { errorMessage ->
+                            it.copy(isSnackBarVisible = errorMessage.isNotEmpty(), snackBarTitle = errorMessage)
+                        }?:it
+                }
             }
+
             ErrorState.NoConnection -> {
-                updateState { it.copy(isSnackBarVisible =true, snackBarTitle = null,
-                        ) }
+                updateState {
+                    it.copy(
+                        isSnackBarVisible = true,
+                        snackBarTitle = null,
+                    )
+                }
             }
 
             else -> {
-                updateState { it.copy(isSnackBarVisible =true, snackBarTitle = null, ) }
+                updateState { it.copy(isSnackBarVisible = true, snackBarTitle = null) }
             }
         }
     }
 
     override fun onSnackBarDismiss() {
-        updateState { it.copy(
-                isSnackBarVisible =false,
-                ) }
+        updateState {
+            it.copy(
+                isSnackBarVisible = false,
+            )
+        }
     }
 
-    private fun clearState() =
+    private fun clearState() {
         updateState {
             it.copy(
                 isLoading = false,
                 isPasswordError = ErrorWrapper(),
                 isUserError = ErrorWrapper(),
-                isSnackBarVisible =false,
+                isSnackBarVisible = false,
                 snackBarTitle = null,
-
             )
         }
+    }
+
 }

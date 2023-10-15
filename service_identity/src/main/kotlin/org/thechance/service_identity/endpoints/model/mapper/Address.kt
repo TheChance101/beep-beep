@@ -7,7 +7,7 @@ import org.thechance.service_identity.endpoints.model.AddressDto
 fun Address.toDto(): AddressDto {
     return AddressDto(
         id = id,
-        location = location.toDto(),
+        location = location?.toDto(),
         address = address
     )
 }
@@ -18,6 +18,9 @@ fun List<Address>.toDto(): List<AddressDto> {
 
 fun AddressDto.toEntity() = Address(
     id = id ?: "",
-    location = location.toEntity(),
+    location = location?.toEntity(),
     address = address
 )
+
+fun List<AddressDto>.toEntity() = map { it.toEntity() }
+

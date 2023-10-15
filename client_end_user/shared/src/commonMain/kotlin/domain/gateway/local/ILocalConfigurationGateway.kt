@@ -3,9 +3,9 @@ package domain.gateway.local
 import kotlinx.coroutines.flow.Flow
 
 interface ILocalConfigurationGateway {
-
     suspend fun saveAccessToken(token: String)
     suspend fun getAccessToken(): String
+    suspend fun getAccessTokenStream(): Flow<String>
     suspend fun saveRefreshToken(token: String)
     suspend fun getRefreshToken(): String
     suspend fun saveKeepMeLoggedInFlag(isChecked: Boolean)

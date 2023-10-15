@@ -2,7 +2,7 @@ package org.thechance.common.presentation.restaurant
 
 import androidx.compose.runtime.Composable
 import org.thechance.common.domain.entity.Cuisine
-import org.thechance.common.domain.entity.NewRestaurantInfo
+import org.thechance.common.domain.entity.RestaurantInformation
 import org.thechance.common.domain.entity.Restaurant
 import org.thechance.common.presentation.composables.table.Header
 import org.thechance.common.presentation.resources.Resources
@@ -12,7 +12,7 @@ data class RestaurantUiState(
     val isLoading: Boolean = true,
     val hasConnection: Boolean = true,
     val isNewRestaurantInfoDialogVisible: Boolean = false,
-    val newRestaurantInfoUiState: NewRestaurantInfoUiState = NewRestaurantInfoUiState(),
+    val restaurantInformationUIState: RestaurantInformationUIState = RestaurantInformationUIState(),
     val restaurantAddCuisineDialogUiState: RestaurantAddCuisineDialogUiState = RestaurantAddCuisineDialogUiState(),
     val restaurantFilterDropdownMenuUiState: RestaurantFilterDropdownMenuUiState = RestaurantFilterDropdownMenuUiState(),
     val restaurants: List<RestaurantDetailsUiState> = emptyList(),
@@ -22,6 +22,7 @@ data class RestaurantUiState(
     val selectedPageNumber: Int = 1,
     val numberOfRestaurantsInPage: Int = 10,
     val editRestaurantMenu: String = "",
+    val isEditMode: Boolean = false,
 ) {
     val tableHeader: List<Header>
        @Composable get() = listOf(
@@ -43,6 +44,7 @@ data class RestaurantUiState(
         val priceLevel: Int,
         val openingTime: String,
         val closingTime: String,
+        val isExpanded: Boolean = false,
     )
 }
 
@@ -53,14 +55,16 @@ fun Restaurant.toUiState(): RestaurantUiState.RestaurantDetailsUiState =
         ownerUsername = ownerUsername,
         phone = phone,
         rate = rate,
-        priceLevel = priceLevel.count { it == '$' } ,
+        priceLevel = priceLevel.count { it == '$' },
         openingTime = openingTime,
         closingTime = closingTime,
     )
 
 fun List<Restaurant>.toRestaurantsUIState() = map(Restaurant::toUiState)
 
-data class NewRestaurantInfoUiState(
+data class RestaurantInformationUIState(
+    val id: String = "",
+    val ownerId: String = "",
     val name: String = "",
     val nameError: ErrorWrapper? = null,
     val ownerUsername: String = "",
@@ -73,12 +77,23 @@ data class NewRestaurantInfoUiState(
     val endTimeError: ErrorWrapper? = null,
     val location: String = "",
     val locationError: ErrorWrapper? = null,
-    val lat: String = "",
-    val lng: String = "",
+    val latitude: String = "",
+    val longitude: String = "",
     val buttonEnabled: Boolean = true
 )
 
-fun NewRestaurantInfoUiState.toEntity() = NewRestaurantInfo(
+fun Restaurant.toUIState() = RestaurantInformationUIState(
+    id = id,
+    name = name,
+    ownerUsername = ownerUsername,
+    ownerId = ownerId,
+    phoneNumber = phone,
+    openingTime = openingTime,
+    closingTime = closingTime,
+    location = location.latitude.toString() + "," + location.longitude.toString()
+)
+
+fun RestaurantInformationUIState.toEntity() = RestaurantInformation(
     name = name,
     ownerUsername = ownerUsername,
     phoneNumber = phoneNumber,
