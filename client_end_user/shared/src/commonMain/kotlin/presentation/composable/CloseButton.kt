@@ -30,8 +30,12 @@ fun BackButton(
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
 ) {
     Row(
-        modifier = modifier.padding(16.dp).height(56.dp).fillMaxWidth()
-            .padding(vertical = 8.dp).noRippleEffect { onClick() },
+        modifier = modifier
+            .padding(16.dp)
+            .height(56.dp)
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .noRippleEffect { onClick() },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = horizontalArrangement
     ) {

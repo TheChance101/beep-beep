@@ -89,14 +89,14 @@ class OrderHistoryScreen :
                         OrderScreenUiState.OrderSelectType.MEALS -> {
                             items(state.ordersHistory) {
                                 MealOrderItem(orders = it)
-                                HorizontalDivider()
+                                HorizontalDivider(modifier = Modifier.fillMaxWidth())
                             }
                         }
 
                         OrderScreenUiState.OrderSelectType.TRIPS -> {
                             items(state.tripsHistory) {
                                 TripHistoryItem(it)
-                                HorizontalDivider()
+                                HorizontalDivider(modifier = Modifier.fillMaxWidth())
                             }
                         }
                     }

@@ -16,6 +16,9 @@ import presentation.base.BaseScreen
 import presentation.composable.BackButton
 import presentation.home.HomeScreen
 import presentation.orderFoodTracking.composable.OrderTrackerCard
+import resources.Resources
+import util.getNavigationBarPadding
+import util.getStatusBarPadding
 
 class OrderFoodTrackingScreen : BaseScreen<
         OrderFoodTrackingScreenModel,
@@ -39,21 +42,27 @@ class OrderFoodTrackingScreen : BaseScreen<
         state: OrderFoodTrackingUiState,
         listener: OrderFoodTrackingInteractionListener
     ) {
-        Box(modifier = Modifier.fillMaxSize().background(color = Theme.colors.background)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = Theme.colors.background)
+                .padding(getStatusBarPadding())
+        ) {
             Column(
-                modifier = Modifier.fillMaxSize()
-                    .padding(top = 24.dp, bottom = 16.dp, start = 16.dp, end = 16.dp),
-                verticalArrangement = Arrangement.SpaceBetween
+                modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween
             ) {
-                BackButton(onClick = { listener.onBackButtonClicked() })
+                BackButton(
+                    modifier = Modifier.padding(0.dp),
+                    onClick = { listener.onBackButtonClicked() })
                 OrderTrackerCard(
                     currentStatusDescription = when (state.currentOrderStatus) {
-                        is OrderingFoodStatus.OrderArrived -> "Your Feast Has Arrived."
-                        is OrderingFoodStatus.OrderInCooking -> "Your meal in the oven."
-                        is OrderingFoodStatus.OrderInTheRoute -> "Your Food Is En Route."
-                        is OrderingFoodStatus.OrderPlaced -> "Order placed."
+                        is OrderingFoodStatus.OrderPlaced -> Resources.strings.orderPlaced
+                        is OrderingFoodStatus.OrderArrived -> Resources.strings.orderArrived
+                        is OrderingFoodStatus.OrderInCooking -> Resources.strings.orderInCooking
+                        is OrderingFoodStatus.OrderInTheRoute -> Resources.strings.orderInTheRoute
                     },
                     state.orderStatus,
+                    modifier = Modifier.padding(getNavigationBarPadding()).padding(16.dp)
                 )
             }
         }

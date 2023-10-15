@@ -8,8 +8,9 @@ data class OrderFoodTrackingUiState(
 )
 
 data class OrderStatus(
-    val isOrderPlaced: Boolean = false,
-    val isOrderInCooking: Boolean = false,
+    val estimatedTime: String = "32:00",
+    val isOrderPlaced: Boolean = true,
+    val isOrderInCooking: Boolean = true,
     val isOrderInTheRoute: Boolean = false,
     val isOrderArrived: Boolean = false
 )

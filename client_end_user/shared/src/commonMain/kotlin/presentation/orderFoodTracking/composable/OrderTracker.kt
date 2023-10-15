@@ -38,8 +38,10 @@ fun OrderTrackerCard(
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(Theme.radius.medium))
             .border(1.dp, Theme.colors.divider, shape = RoundedCornerShape(Theme.radius.medium))
-            .background(Theme.colors.surface).padding(vertical = 24.dp),
+            .background(Theme.colors.surface)
+            .padding(vertical = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -53,41 +55,74 @@ fun OrderTrackerCard(
                 style = Theme.typography.titleLarge,
                 color = Theme.colors.contentPrimary
             )
-            EstimatedTimeWithIcon()
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text(
+                    text = Resources.strings.orderEstimatedTime,
+                    style = Theme.typography.caption,
+                    color = Theme.colors.contentTertiary
+                )
+                EstimatedTimeWithIcon(
+                    modifier = Modifier.align(Alignment.End),
+                    estimatedTime = orderStatus.estimatedTime
+                )
+            }
         }
-        HorizontalDivider()
-        Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
+        HorizontalDivider(modifier = Modifier.fillMaxWidth())
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+
             OrderStatus(
                 hasFinished = orderStatus.isOrderPlaced,
                 statusIcon = painterResource(Resources.images.icTime),
                 contentDescription = "icon estimated time"
             )
-            HorizontalDivider(thickness = 1.5.dp, orderHasFinished = orderStatus.isOrderInCooking)
+
+            HorizontalDivider(
+                modifier = Modifier.fillMaxWidth().weight(1f),
+                thickness = 1.5.dp,
+                orderHasFinished = orderStatus.isOrderInCooking
+            )
             OrderStatus(
                 hasFinished = orderStatus.isOrderInCooking,
                 statusIcon = painterResource(Resources.images.icInCooking),
                 contentDescription = "icon in cooking"
             )
-            HorizontalDivider(thickness = 1.5.dp, orderHasFinished = orderStatus.isOrderInTheRoute)
+
+            HorizontalDivider(
+                modifier = Modifier.fillMaxWidth().weight(1f),
+                thickness = 1.5.dp,
+                orderHasFinished = orderStatus.isOrderInTheRoute
+            )
+
             OrderStatus(
                 hasFinished = orderStatus.isOrderInTheRoute,
                 statusIcon = painterResource(Resources.images.icScooter),
                 contentDescription = "icon scooter"
             )
-            HorizontalDivider(thickness = 1.5.dp, orderHasFinished = orderStatus.isOrderArrived)
+
+            HorizontalDivider(
+                modifier = Modifier.fillMaxWidth().weight(1f),
+                thickness = 1.5.dp,
+                orderHasFinished = orderStatus.isOrderArrived
+            )
             OrderStatus(
                 hasFinished = orderStatus.isOrderArrived,
                 statusIcon = painterResource(Resources.images.icHome),
                 contentDescription = "icon arrived home"
             )
+
         }
     }
 }
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun EstimatedTimeWithIcon() {
+fun EstimatedTimeWithIcon(modifier: Modifier = Modifier, estimatedTime: String) {
     Row(
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
@@ -97,7 +132,7 @@ fun EstimatedTimeWithIcon() {
             tint = Theme.colors.contentPrimary,
         )
         Text(
-            text = "32:00",
+            text = estimatedTime,
             style = Theme.typography.body,
             color = Theme.colors.contentPrimary,
         )
@@ -112,21 +147,28 @@ fun OrderStatus(
     contentDescription: String,
     modifier: Modifier = Modifier,
 ) {
-    val statusColor by animateColorAsState(
+    val borderColor by animateColorAsState(
+        if (hasFinished) Theme.colors.primary
+        else Theme.colors.divider
+    )
+
+    val iconColor by animateColorAsState(
         if (hasFinished) Theme.colors.primary
         else Theme.colors.contentTertiary
     )
+
     Box(
         modifier = modifier
             .size(48.dp)
             .clip(RoundedCornerShape(Theme.radius.medium))
-            .background(Theme.colors.primary),
+            .border(1.dp, borderColor, shape = RoundedCornerShape(Theme.radius.medium))
+            .background(Theme.colors.background),
         contentAlignment = Alignment.Center
     ) {
         Icon(
             painter = statusIcon,
             contentDescription = contentDescription,
-            tint = statusColor,
+            tint = iconColor,
             modifier = Modifier.size(24.dp)
         )
     }
