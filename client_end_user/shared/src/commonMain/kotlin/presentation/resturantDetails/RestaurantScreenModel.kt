@@ -5,8 +5,8 @@ import domain.entity.Meal
 import domain.entity.Restaurant
 import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.IManageFavouriteUseCase
-import domain.usecase.IManageOffersUseCase
-import domain.usecase.IMangeRestaurantUseCase
+import domain.usecase.IGetOffersUseCase
+import domain.usecase.IExploreRestaurantUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -16,10 +16,10 @@ import presentation.base.ErrorState
 
 class RestaurantScreenModel(
     private val restaurantId: String,
-    private val mangeRestaurantDetails: IMangeRestaurantUseCase,
+    private val mangeRestaurantDetails: IExploreRestaurantUseCase,
     private val manageFavourite: IManageFavouriteUseCase,
     private val manageAuthentication: IManageAuthenticationUseCase,
-    private val manageOffers: IManageOffersUseCase,
+    private val manageOffers: IGetOffersUseCase,
 ) : BaseScreenModel<RestaurantUIState, RestaurantUIEffect>(RestaurantUIState()),
     RestaurantInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
@@ -126,11 +126,11 @@ class RestaurantScreenModel(
     }
 
     private fun getSweets(restaurantId: String) {
-        tryToExecute(
-            { manageOffers.getRestaurantSweets(restaurantId) },
-            ::onGetSweetsSuccess,
-            ::onError
-        )
+//        tryToExecute(
+//            { manageOffers.getRestaurantSweets(restaurantId) },
+//            ::onGetSweetsSuccess,
+//            ::onError
+//        )
     }
 
     private fun onGetMostOrdersSuccess(meals: List<Meal>) {

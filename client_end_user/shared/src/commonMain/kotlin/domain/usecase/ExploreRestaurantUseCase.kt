@@ -5,16 +5,16 @@ import domain.entity.Meal
 import domain.entity.Restaurant
 import domain.gateway.IRestaurantGateway
 
-interface IMangeRestaurantUseCase {
+interface IExploreRestaurantUseCase {
     suspend fun getRestaurantDetails(restaurantId: String): Restaurant
     suspend fun getMealById(mealId: String): Meal
     suspend fun getCuisines(): List<Cuisine>
     suspend fun getMealsInCuisine(cuisineId: String): List<Meal>
 }
 
-class MangeRestaurantUseCase(
+class ExploreRestaurantUseCase(
     private val restaurantGateway: IRestaurantGateway,
-) : IMangeRestaurantUseCase {
+) : IExploreRestaurantUseCase {
     override suspend fun getRestaurantDetails(restaurantId: String): Restaurant {
         return restaurantGateway.getRestaurantDetails(restaurantId)
     }

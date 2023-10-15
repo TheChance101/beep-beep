@@ -3,7 +3,7 @@ package presentation.notification
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Notification
 import domain.usecase.IManageAuthenticationUseCase
-import domain.usecase.ManageNotificationsUseCase
+import domain.usecase.GetNotificationsUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -11,7 +11,7 @@ import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
 class NotificationScreenModel(
-    private val notificationManagement: ManageNotificationsUseCase,
+    private val notificationManagement: GetNotificationsUseCase,
     private val manageAuthentication: IManageAuthenticationUseCase
 ) : BaseScreenModel<NotificationsUiState, NotificationUiEffect>(NotificationsUiState()),
     NotificationInteractionListener {

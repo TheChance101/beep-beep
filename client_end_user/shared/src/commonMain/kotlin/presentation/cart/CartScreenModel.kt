@@ -17,13 +17,13 @@ class CartScreenModel(private val cartManagement: ManageCartUseCase) :
 
     private fun getCartMeals() {
         tryToExecute(
-            { cartManagement.getAllCartMeals() },
+            { cartManagement.getCart() },
             ::onGetCartMealsSuccess,
             ::onError
         )
     }
 
-    override fun onClickPlus(index: Int, count: Long) {
+    override fun onClickPlus(index: Int, count: Int) {
         val updatedCount = if (count < 99) count + 1 else count
         val meal = state.value.meals[index].copy(count = updatedCount)
         updateState {
@@ -36,7 +36,7 @@ class CartScreenModel(private val cartManagement: ManageCartUseCase) :
         }
     }
 
-    override fun onClickMinus(index: Int, count: Long) {
+    override fun onClickMinus(index: Int, count: Int) {
         val updatedCount = if (count > 1) count - 1 else count
         val meal = state.value.meals[index].copy(count = updatedCount)
         updateState {

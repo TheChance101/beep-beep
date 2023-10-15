@@ -53,6 +53,7 @@ import presentation.composable.ImageSlider
 import presentation.composable.ItemSection
 import presentation.composable.SectionHeader
 import presentation.composable.modifier.roundedBorderShape
+import presentation.cuisines.CuisineUiState
 import presentation.cuisines.CuisinesScreen
 import presentation.home.composable.CartCard
 import presentation.home.composable.ChatSupportCard
@@ -64,12 +65,8 @@ import presentation.resturantDetails.RestaurantScreen
 import resources.Resources
 import util.root
 
-class HomeScreen : BaseScreen<
-        HomeScreenModel,
-        HomeScreenUiState,
-        HomeScreenUiEffect,
-        HomeScreenInteractionListener
-        >() {
+class HomeScreen :
+    BaseScreen<HomeScreenModel, HomeScreenUiState, HomeScreenUiEffect, HomeScreenInteractionListener>() {
 
     @Composable
     override fun Content() {
@@ -115,14 +112,14 @@ class HomeScreen : BaseScreen<
         ) {
             stickyHeader {
                 BpAppBar(
-                    title = if (state.user.isLogin) {
+                    title = if (state.isLoggedIn) {
                         Resources.strings.welcome + " ${state.user.username}"
                     } else {
                         Resources.strings.loginWelcomeMessage
                     },
                     actions = {
-                        if (state.user.isLogin) {
-                            Wallet(value = state.user.currency + state.user.wallet)
+                        if (state.isLoggedIn) {
+                            Wallet(value = "${state.user.currency} ${state.user.wallet}")
                         } else {
                             BpButton(
                                 modifier = Modifier.heightIn(max = 32.dp).padding(end = 16.dp),
@@ -166,7 +163,7 @@ class HomeScreen : BaseScreen<
                 }
             }
 
-            if (state.hasProgress) {
+            if (state.hasProgress && state.isLoggedIn) {
                 item {
                     Text(
                         text = Resources.strings.inProgress,
@@ -174,6 +171,7 @@ class HomeScreen : BaseScreen<
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
                 }
+
                 items(state.inProgressWrapper.taxisOnTheWay) {
                     HorizontalImageCard(
                         painter = painterResource(Resources.images.taxiOnTheWay),
@@ -220,12 +218,15 @@ class HomeScreen : BaseScreen<
                 }
             }
 
-            item {
-                ChatSupportCard(
-                    onClick = listener::onClickChatSupport,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
+            if (state.isLoggedIn) {
+                item {
+                    ChatSupportCard(
+                        onClick = listener::onClickChatSupport,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                }
             }
+
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
@@ -247,32 +248,20 @@ class HomeScreen : BaseScreen<
                     )
                 }
             }
-            item {
-                LastOrder(state.lastOrder, listener)
-            }
-            item {
-                Column(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    SectionHeader(
-                        onClickViewAll = listener::onClickSeeAllCuisines,
-                        title = Resources.strings.cuisineSectionTitle,
-                        showViewAll = true
-                    )
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        state.recommendedCuisines.forEach { cuisine ->
-                            CuisineCard(
-                                cuisine = cuisine,
-                                onClickCuisine = listener::onClickCuisineItem
-                            )
-                        }
-                    }
+
+            if (state.isLoggedIn) {
+                item {
+                    LastOrder(state.lastOrder, listener)
                 }
+            }
+
+            item {
+                Cuisines(
+                    recommendedCuisines = state.recommendedCuisines,
+                    onClickCuisineItem = listener::onClickCuisineItem,
+                    onClickSeeAllCuisines = listener::onClickSeeAllCuisines,
+                    showSeeAllCuisine = state.isMoreCuisine
+                )
             }
 
             item {
@@ -432,6 +421,39 @@ class HomeScreen : BaseScreen<
                 style = Theme.typography.title,
                 color = Theme.colors.primary
             )
+        }
+    }
+
+    @Composable
+    private fun Cuisines(
+        showSeeAllCuisine: Boolean,
+        recommendedCuisines: List<CuisineUiState>,
+        onClickSeeAllCuisines: () -> Unit,
+        onClickCuisineItem: (String) -> Unit
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+
+            SectionHeader(
+                onClickViewAll = onClickSeeAllCuisines,
+                title = Resources.strings.cuisineSectionTitle,
+                showViewAll = showSeeAllCuisine
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                recommendedCuisines.forEach { cuisine ->
+                    CuisineCard(
+                        cuisine = cuisine,
+                        onClickCuisine = onClickCuisineItem
+                    )
+                }
+            }
         }
     }
 }

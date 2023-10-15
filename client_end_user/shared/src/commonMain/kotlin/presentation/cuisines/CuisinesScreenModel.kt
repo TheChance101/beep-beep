@@ -2,15 +2,14 @@ package presentation.cuisines
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Cuisine
-import domain.usecase.IMangeRestaurantUseCase
+import domain.usecase.IExploreRestaurantUseCase
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.filter
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 import presentation.base.ErrorState.NoInternet
 
 class CuisinesScreenModel(
-    private val manageRestaurant: IMangeRestaurantUseCase,
+    private val manageRestaurant: IExploreRestaurantUseCase,
 ) : BaseScreenModel<CuisinesUiState, CuisinesUiEffect>(CuisinesUiState()),
     CuisinesInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
