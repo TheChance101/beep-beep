@@ -120,7 +120,7 @@ fun OrderTrackerCard(
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun EstimatedTimeWithIcon(modifier: Modifier = Modifier, estimatedTime: String) {
+private fun EstimatedTimeWithIcon(modifier: Modifier = Modifier, estimatedTime: String) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
@@ -141,7 +141,7 @@ fun EstimatedTimeWithIcon(modifier: Modifier = Modifier, estimatedTime: String) 
 
 
 @Composable
-fun OrderStatus(
+private fun OrderStatus(
     hasFinished: Boolean,
     statusIcon: Painter,
     contentDescription: String,
