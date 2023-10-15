@@ -304,7 +304,7 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
         ).isSuccessfullyUpdated()
 
         return if (addedMeal && addedMealToCuisine) {
-            mealDocument.toEntity()
+            mealDocument.toMealEntity()
         } else {
             throw MultiErrorException(listOf(ERROR_ADD))
         }
@@ -334,7 +334,7 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
             filter = MealCollection::id eq ObjectId(meal.id),
             update = Updates.combine(fieldsToUpdate.map { Updates.set(it.key, it.value) }),
             options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
-        )?.toEntity() ?: throw MultiErrorException(listOf(NOT_FOUND))
+        )?.toMealEntity() ?: throw MultiErrorException(listOf(NOT_FOUND))
 
     }
 

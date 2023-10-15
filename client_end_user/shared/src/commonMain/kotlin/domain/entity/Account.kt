@@ -1,6 +1,6 @@
 package domain.entity
 
-data class UserCreation(
+data class Account(
     val fullName: String,
     val username: String,
     val password: String,

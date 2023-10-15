@@ -36,8 +36,8 @@ class IdentityService(
     private val errorHandler: ErrorHandler
 ) {
     @OptIn(InternalAPI::class)
-    suspend fun createUser(newUser: UserRegistrationDto, languageCode: String): UserDto {
-        return client.tryToExecute<UserDto>(
+    suspend fun createUser(newUser: UserRegistrationDto, languageCode: String): UserDetailsDto {
+        return client.tryToExecute<UserDetailsDto>(
             APIs.IDENTITY_API,
             attributes = attributes,
             setErrorMessage = { errorCodes ->
@@ -104,7 +104,7 @@ class IdentityService(
     ) { get("user/$id") }
 
     @OptIn(InternalAPI::class)
-    suspend fun updateUserProfile(id: String, fullName: String?, phone: String?, languageCode: String): UserDto {
+    suspend fun updateUserProfile(id: String, fullName: String?, phone: String?, languageCode: String): UserDetailsDto {
         return client.tryToExecute(
             APIs.IDENTITY_API, attributes = attributes, setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)

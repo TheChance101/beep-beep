@@ -1,7 +1,6 @@
 package domain.gateway
 
 import domain.entity.Cuisine
-import domain.entity.Explore
 import domain.entity.InProgressWrapper
 import domain.entity.Meal
 import domain.entity.Offer
@@ -14,7 +13,6 @@ interface IRestaurantGateway {
     suspend fun getMealById(mealId: String): Meal
     suspend fun getNewOffers(): List<Offer>
     suspend fun getMostOrdersMeal(restaurantId: String): List<Meal>
-    suspend fun getSweets(restaurantId: String): List<Meal>
-    suspend fun search(query: String): Explore
+    suspend fun search(query: String): Pair<List<Restaurant>, List<Meal>>
     suspend fun getMealsInCuisine(cuisineId: String): List<Meal>
 }
