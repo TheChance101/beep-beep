@@ -152,4 +152,9 @@ interface LocalizedMessages {
     // region notification
     val notificationNotSent : String
     //endregion
+
+
+    //region chat
+    val supportAgentNotFound: String
+    //endregion
 }

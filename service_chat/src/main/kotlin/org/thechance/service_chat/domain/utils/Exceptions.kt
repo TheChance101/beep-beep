@@ -4,3 +4,4 @@ class MultiErrorException(val errorCodes: List<Int>) : Throwable(errorCodes.toSt
 
 
 const val TICKET_NOT_FOUND = 6000
+const val SUPPORT_AGENT_NOT_FOUND = 6001

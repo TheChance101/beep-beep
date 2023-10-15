@@ -180,6 +180,9 @@ class ErrorHandler(
         if(errorCodes.contains(4004))
             errors[4004] = localizedMessages.notificationNotSent
 
+        if (errorCodes.contains(6001))
+            errors[6001] = localizedMessages.supportAgentNotFound
+
         return errors
     }
 

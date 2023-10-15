@@ -37,8 +37,10 @@ fun Route.chatRoutes() {
         webSocket("/tickets/{supportId}") {
             val supportId = call.parameters["supportId"]?.trim().orEmpty()
             manageTicket.supports[supportId] = SupportAgent(session = this)
-            manageTicket.notifySupportAgentOfNewTickets(supportId).collectLatest { ticket ->
-                sendSerialized(ticket.toDto())
+            while (true){
+                manageTicket.notifySupportAgentOfNewTickets(supportId).collectLatest { ticket ->
+                    sendSerialized(ticket.toDto())
+                }
             }
         }
 
