@@ -210,4 +210,13 @@ class TaxiService(
             method = { delete("/taxi/driver/$id") }
         )
     }
+
+    suspend fun getActiveTripsByUserId(userId: String, languageCode: String): List<TripDto> {
+        return client.tryToExecute<List<TripDto>>(
+            api = APIs.TAXI_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { get("/trip/actives/$userId") }
+        )
+    }
 }

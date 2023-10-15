@@ -57,12 +57,12 @@ class WebSocketServerHandler(
         try {
             values
                 .map { tripDto ->
-                    val restaurantInfo =
-                        restaurantService.getRestaurantInfo(
+                    val order =
+                        restaurantService.getOrderById(
                             languageCode = language,
-                            restaurantId = tripDto.clientId ?: ""
+                            orderId = tripDto.clientId ?: ""
                         )
-                    tripDto.toDeliveryTripResponse(restaurantInfo)
+                    tripDto.toDeliveryTripResponse(order)
                 }.collectLatest { value ->
                     session.sendSerialized(value)
                 }

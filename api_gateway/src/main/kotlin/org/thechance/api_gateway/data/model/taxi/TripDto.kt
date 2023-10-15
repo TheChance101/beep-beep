@@ -3,6 +3,7 @@ package org.thechance.api_gateway.data.model.taxi
 import kotlinx.serialization.Serializable
 import org.thechance.api_gateway.data.model.LocationDto
 import org.thechance.api_gateway.data.model.identity.UserDetailsDto
+import org.thechance.api_gateway.data.model.restaurant.OrderDto
 import org.thechance.api_gateway.data.model.restaurant.RestaurantDto
 
 @Serializable
@@ -38,11 +39,11 @@ fun TripDto.toTaxiTripResponse(userInfo: UserDetailsDto): TaxiTripResponse {
     )
 }
 
-fun TripDto.toDeliveryTripResponse(restaurantInfo: RestaurantDto): DeliveryTripResponse {
+fun TripDto.toDeliveryTripResponse(order: OrderDto): DeliveryTripResponse {
     return DeliveryTripResponse(
         id = id ?: "",
-        restaurantName = restaurantInfo.name ?: "",
-        restaurantImage = restaurantInfo.restaurantImage ?: "",
+        restaurantName = order.restaurantName ?: "",
+        restaurantImage = order.restaurantImage ?: "",
         startPoint = startPoint ?: LocationDto(0.0, 0.0),
         destination = destination ?: LocationDto(0.0, 0.0),
         startPointAddress = startPointAddress ?: "",

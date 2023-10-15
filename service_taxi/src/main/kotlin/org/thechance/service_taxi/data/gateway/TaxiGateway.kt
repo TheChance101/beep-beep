@@ -133,6 +133,15 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
             .toEntity()
     }
 
+    override suspend fun getActiveTripsByUserId(userId: String): List<Trip> {
+        return container.tripCollection.find(
+            and(
+                TripCollection::clientId eq ObjectId(userId),
+                TripCollection::tripStatus nin listOf(Trip.Status.FINISHED.statusCode, Trip.Status.PENDING.statusCode)
+            )
+        ).toList().toEntity()
+    }
+
     override suspend fun getDriverTripsHistory(
         driverId: String,
         page: Int,

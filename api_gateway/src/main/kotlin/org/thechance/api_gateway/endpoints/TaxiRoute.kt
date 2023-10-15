@@ -137,8 +137,8 @@ fun Route.taxiRoutes() {
                 val language = extractLocalizationHeader()
                 val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripCreatedSuccessfully
                 val trip = call.receive<TripDto>()
-                val isRestaurantExisted = restaurantService.isRestaurantExisted(restaurantId = trip.clientId, language)
-                if (isRestaurantExisted) {
+                val isOrderExisted = restaurantService.isOrderExisted(orderId = trip.clientId, language)
+                if (isOrderExisted) {
                     val createdTrip = taxiService.createTrip(trip, language)
                     respondWithResult(HttpStatusCode.Created, createdTrip, successMessage)
                 } else {
