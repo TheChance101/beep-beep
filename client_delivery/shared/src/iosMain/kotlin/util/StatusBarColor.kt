@@ -5,6 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.ui.interop.LocalUIViewController
 import androidx.compose.ui.unit.dp
+import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.engine.darwin.Darwin
 import platform.UIKit.UIViewController
 
 actual class PlatformContext(val iosController: ProvidableCompositionLocal<UIViewController>)
@@ -13,7 +15,9 @@ actual class PlatformContext(val iosController: ProvidableCompositionLocal<UIVie
 actual fun getPlatformContext(): PlatformContext = PlatformContext(LocalUIViewController)
 
 @Composable
-actual fun SetInsetsController(isDark: Boolean) {}
+actual fun SetInsetsController(isDark: Boolean) {
+}
+
 @Composable
 actual fun getNavigationBarPadding(): PaddingValues {
     return PaddingValues(bottom = 10.dp)
@@ -23,3 +27,6 @@ actual fun getNavigationBarPadding(): PaddingValues {
 actual fun getStatusBarPadding(): PaddingValues {
     return PaddingValues(top = 35.dp)
 }
+
+
+actual fun getEngine(): HttpClientEngine = Darwin.create()
