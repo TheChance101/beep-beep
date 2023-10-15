@@ -7,7 +7,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
-import presentation.main.MainContainer
+import presentation.orderFoodTracking.OrderFoodTrackingScreen
 import presentation.pickLanguage.PickLanguageScreen
 import resources.BeepBeepTheme
 
@@ -28,7 +28,7 @@ object MainApp : Screen {
             if (firstTime) {
                 Navigator(PickLanguageScreen) { SlideTransition(it) }
             } else {
-                Navigator(MainContainer) { SlideTransition(it) }
+                Navigator(OrderFoodTrackingScreen()) { SlideTransition(it) }
             }
         }
     }

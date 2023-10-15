@@ -1,3 +1,5 @@
 package presentation.orderFoodTracking
 
-sealed class OrderFoodTrackingUiEffect
+sealed class OrderFoodTrackingUiEffect {
+    data object NavigateBack : OrderFoodTrackingUiEffect()
+}

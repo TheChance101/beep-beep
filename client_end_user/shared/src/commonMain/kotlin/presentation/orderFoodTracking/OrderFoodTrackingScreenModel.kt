@@ -8,4 +8,7 @@ class OrderFoodTrackingScreenModel() :
     BaseScreenModel<OrderFoodTrackingUiState, OrderFoodTrackingUiEffect>(OrderFoodTrackingUiState()),
     OrderFoodTrackingInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
+    override fun onBackButtonClicked() {
+        sendNewEffect(OrderFoodTrackingUiEffect.NavigateBack)
+    }
 }

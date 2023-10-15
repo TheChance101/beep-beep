@@ -14,7 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.lifecycle.LifecycleEffect
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpAnimatedTabLayout
 import com.beepbeep.designSystem.ui.theme.Theme
@@ -24,7 +23,7 @@ import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
 import presentation.composable.ContentVisibility
 import presentation.composable.LoginRequiredPlaceholder
-import presentation.orderHistory.composable.HorizontalDivider
+import presentation.composable.HorizontalDivider
 import presentation.orderHistory.composable.MealOrderItem
 import presentation.orderHistory.composable.TripHistoryItem
 import resources.Resources
