@@ -2,8 +2,8 @@ package presentation.resources
 
 data class StringResources(
     val start: String = "start",
-    val mainScreenTitle: String = "Foodies are waiting!",
-    val mainScreenSubTitle: String = "Tap Start and become their food superhero",
+    val mainScreenTitle: String = "You're the captain now!",
+    val mainScreenSubTitle: String = "Turn the key and tap Start",
     val welcomeToBeepBeepApp: String = "Welcome To Taxi Driver App",
     val loginToAccessAllTheFeatures: String = "Login to access all the features",
     val username: String = "Username",
