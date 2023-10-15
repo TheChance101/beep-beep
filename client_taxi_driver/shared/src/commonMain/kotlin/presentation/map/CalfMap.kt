@@ -19,6 +19,11 @@ fun CalfMapWebView(
     val state = rememberWebViewState(url = url).apply {
         settings.javaScriptEnabled = true
     }
+
+    LaunchedEffect(state.isLoading) {
+        // Get the current loading state
+    }
+
     AnimatedVisibility(destination == null) {
         state.evaluateJavascript(
             "createInfiniteLoopFunction(${currentLocation.lat},${currentLocation.lng})()",
