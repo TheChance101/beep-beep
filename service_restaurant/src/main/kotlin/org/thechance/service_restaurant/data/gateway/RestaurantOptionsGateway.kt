@@ -30,9 +30,8 @@ import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRestaurantOptionsGateway {
 
     //region Category
-    override suspend fun getCategories(page: Int, limit: Int): List<Category> {
-        return container.categoryCollection.find(CategoryCollection::isDeleted eq false)
-            .paginate(page, limit).toList().toEntity()
+    override suspend fun getCategories(): List<Category> {
+        return container.categoryCollection.find(CategoryCollection::isDeleted eq false).toList().toEntity()
     }
 
     override suspend fun getCategory(categoryId: String): Category? {
@@ -84,8 +83,8 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
     }
 
 
-    override suspend fun addCategory(category: Category): Category {
-        val addedCategory = category.toCollection()
+    override suspend fun addCategory(categoryName: String): Category {
+        val addedCategory = CategoryCollection(name = categoryName)
         container.categoryCollection.insertOne(addedCategory)
         return addedCategory.toEntity()
     }

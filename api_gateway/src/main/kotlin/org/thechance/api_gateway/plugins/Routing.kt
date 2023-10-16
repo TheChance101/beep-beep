@@ -23,5 +23,6 @@ fun Application.configureRouting(tokenConfiguration: TokenConfiguration) {
         notificationRoute()
         locationRoute()
         cartRoutes()
+        offerRoute()
     }
 }

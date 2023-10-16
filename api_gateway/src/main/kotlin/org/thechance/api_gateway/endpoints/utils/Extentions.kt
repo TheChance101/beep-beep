@@ -108,3 +108,8 @@ fun String?.toListOfStringOrNull(): List<String>? {
         integerStrings.map(String::trim)
     }
 }
+
+
+fun Parameters.extractString(key: String): String {
+    return this[key]?.trim()?.takeIf { it.isNotEmpty() } ?: ""
+}

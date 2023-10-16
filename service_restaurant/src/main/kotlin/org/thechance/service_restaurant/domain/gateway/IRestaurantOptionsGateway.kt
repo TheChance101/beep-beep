@@ -8,13 +8,13 @@ import org.thechance.service_restaurant.domain.entity.Restaurant
 interface IRestaurantOptionsGateway {
 
     //region Category
-    suspend fun getCategories(page: Int, limit: Int): List<Category>
+    suspend fun getCategories(): List<Category>
     suspend fun getCategory(categoryId: String): Category?
     suspend fun getRestaurantsInCategory(categoryId: String): List<Restaurant>
     suspend fun areCategoriesExisting(categoryIds: List<String>): Boolean
     suspend fun getCategoriesInRestaurant(restaurantId: String): List<Category>
     suspend fun addCategoriesToRestaurant(restaurantId: String, categoryIds: List<String>): Boolean
-    suspend fun addCategory(category: Category): Category
+    suspend fun addCategory(categoryName: String): Category
     suspend fun updateCategory(category: Category): Category
     suspend fun deleteCategory(categoryId: String): Boolean
     suspend fun deleteRestaurantsInCategory(categoryId: String, restaurantIds: List<String>): Boolean
@@ -31,20 +31,20 @@ interface IRestaurantOptionsGateway {
     suspend fun getCuisineByName(cuisineName: String): Cuisine?
     suspend fun getTotalNumberOfCategories(): Long
     //endregion
-/*
-    //region Order
-    suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order>
-    suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order>
-    suspend fun getOrderById(orderId: String): Order?
-    suspend fun addOrder(order: Order): Boolean
-    suspend fun updateOrderStatus(orderId: String, status: Order.Status): Order?
-    suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order>
-    //endregion
+    /*
+        //region Order
+        suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order>
+        suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order>
+        suspend fun getOrderById(orderId: String): Order?
+        suspend fun addOrder(order: Order): Boolean
+        suspend fun updateOrderStatus(orderId: String, status: Order.Status): Order?
+        suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order>
+        //endregion
 
-    //region Cart
-    suspend fun getUserCart(userId: String): Cart?
-    suspend fun addMealToCart(meal: Meal, quantity: Int, userId: String): Boolean
-    suspend fun deleteMealFromCart(cartId: String, mealId: String): Boolean
-    //endregion
-    */
+        //region Cart
+        suspend fun getUserCart(userId: String): Cart?
+        suspend fun addMealToCart(meal: Meal, quantity: Int, userId: String): Boolean
+        suspend fun deleteMealFromCart(cartId: String, mealId: String): Boolean
+        //endregion
+        */
 }

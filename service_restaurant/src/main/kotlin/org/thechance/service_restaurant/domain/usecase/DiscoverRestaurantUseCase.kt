@@ -18,7 +18,6 @@ interface IDiscoverRestaurantUseCase {
     suspend fun getMealsByCuisine(cuisineId: String): List<Meal>
     suspend fun getMealsByRestaurantId(restaurantId: String, page: Int, limit: Int): List<Meal>
     suspend fun getMealDetails(mealId: String): MealDetails
-    suspend fun getCategories(page: Int, limit: Int): List<Category>
     suspend fun isRestaurantExisted(restaurantId: String): Boolean
 }
 
@@ -39,10 +38,7 @@ class DiscoverRestaurantUseCase(
     }
 
 
-    override suspend fun getCategories(page: Int, limit: Int): List<Category> {
-        basicValidation.validatePagination(page, limit)
-        return optionsGateway.getCategories(page, limit)
-    }
+
 
     override suspend fun isRestaurantExisted(restaurantId: String): Boolean {
         return restaurantGateway.isRestaurantExisted(restaurantId)

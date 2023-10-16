@@ -2,6 +2,8 @@ package org.thechance.api_gateway.data.service
 
 import io.ktor.client.*
 import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
+import io.ktor.http.*
 import io.ktor.util.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.encodeToString
@@ -383,4 +385,20 @@ class RestaurantService(
         )
     }
     //endregion
+
+
+    //region offer
+    suspend fun addOffer(offerTitle: String, languageCode: String) =
+        client.tryToExecute<OfferDto>(
+            APIs.RESTAURANT_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
+        ) {
+            post("/category") {
+                formData {
+                    parameter("categoryName", offerTitle)
+                }
+            }
+        }
+//endregion
 }
