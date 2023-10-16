@@ -12,6 +12,7 @@ import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
+import org.thechance.service_restaurant.api.utils.toListOfStringOrNull
 import org.thechance.service_restaurant.domain.usecase.IDiscoverRestaurantUseCase
 import org.thechance.service_restaurant.domain.usecase.IManageCategoryUseCase
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_REQUEST_PARAMETER
@@ -41,6 +42,13 @@ fun Route.categoryRoutes() {
             val categoryName = call.parameters["categoryName"] ?: throw MultiErrorException(listOf(NOT_FOUND))
             val result = manageCategory.createCategory(categoryName)
             call.respond(HttpStatusCode.Created, result.toDto())
+        }
+
+        post("/{categoryId}/restaurants") {
+            val categoryId = call.parameters["categoryId"]?.trim() ?: throw MultiErrorException(listOf(NOT_FOUND))
+            val restaurants = call.receive<List<String>>()
+            val result = manageCategory.addRestaurantsToCategory(categoryId, restaurants)
+            call.respond(HttpStatusCode.Created, result)
         }
 
         put {

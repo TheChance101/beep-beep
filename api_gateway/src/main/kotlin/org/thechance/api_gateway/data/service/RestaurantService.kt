@@ -6,6 +6,8 @@ import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import io.ktor.util.*
 import kotlinx.coroutines.flow.Flow
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
@@ -388,16 +390,28 @@ class RestaurantService(
 
 
     //region offer
-    suspend fun addOffer(offerTitle: String, languageCode: String) =
-        client.tryToExecute<OfferDto>(
+    suspend fun addOffer(offerTitle: String, languageCode: String) = client.tryToExecute<OfferDto>(
+        APIs.RESTAURANT_API,
+        attributes = attributes,
+        setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
+    ) {
+        post("/category") {
+            formData {
+                parameter("categoryName", offerTitle)
+            }
+        }
+    }
+
+    //TODO:NEED TO CHANGE RETURN TYP
+    @OptIn(InternalAPI::class)
+    suspend fun addRestaurantsToOffer(restaurantIds: List<String>, offerId: String, languageCode: String) =
+        client.tryToExecute<Boolean>(
             APIs.RESTAURANT_API,
             attributes = attributes,
             setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
         ) {
-            post("/category") {
-                formData {
-                    parameter("categoryName", offerTitle)
-                }
+            post("/category/$offerId/restaurants") {
+                body = Json.encodeToString(ListSerializer(String.serializer()), restaurantIds)
             }
         }
 

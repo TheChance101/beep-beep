@@ -6,8 +6,6 @@ import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
-import org.thechance.api_gateway.data.model.restaurant.CuisineDto
-import org.thechance.api_gateway.data.service.ImageService
 import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.endpoints.utils.*
 import org.thechance.api_gateway.util.Role
@@ -35,6 +33,14 @@ fun Route.offerRoute() {
                 val params = call.receiveParameters()
                 val offerTitle = params["offerTitle"]?.trim().toString()
                 val offer = restaurantService.addOffer(offerTitle, language)
+                respondWithResult(HttpStatusCode.Created, offer)
+            }
+
+            post("/{offerId}/restaurants") {
+                val language = extractLocalizationHeader()
+                val offerId = call.parameters["offerId"]?.trim().toString()
+                val restaurants = call.receive<List<String>>()
+                val offer = restaurantService.addRestaurantsToOffer(restaurants, offerId, language)
                 respondWithResult(HttpStatusCode.Created, offer)
             }
 

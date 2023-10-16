@@ -89,10 +89,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         return addedCategory.toEntity()
     }
 
-    override suspend fun addCategoriesToRestaurant(
-        restaurantId: String,
-        categoryIds: List<String>
-    ): Boolean {
+    override suspend fun addCategoriesToRestaurant(restaurantId: String, categoryIds: List<String>): Boolean {
         val resultAddToCategory = container.categoryCollection.updateMany(
             CategoryCollection::id `in` categoryIds.toObjectIds(),
             addToSet(CategoryCollection::restaurantIds, ObjectId(restaurantId))
@@ -107,6 +104,23 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         ).isSuccessfullyUpdated()
 
         return resultAddToCategory and resultAddToRestaurant
+    }
+
+    override suspend fun addRestaurantsToCategory(categoryId: String, restaurantIds: List<String>): Boolean {
+        val resultAddToRestaurants = container.restaurantCollection.updateMany(
+            RestaurantCollection::id `in` restaurantIds.toObjectIds(),
+            addToSet(RestaurantCollection::categoryIds, ObjectId(categoryId))
+        ).isSuccessfullyUpdated()
+
+        val resultAddToCategory = container.categoryCollection.updateOneById(
+            ObjectId(categoryId),
+            update = Updates.addEachToSet(
+                CategoryCollection::restaurantIds.name,
+                restaurantIds.toObjectIds()
+            )
+        ).isSuccessfullyUpdated()
+
+        return resultAddToCategory and resultAddToRestaurants
     }
 
     override suspend fun updateCategory(category: Category): Category {
@@ -124,10 +138,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         ).isSuccessfullyUpdated()
     }
 
-    override suspend fun deleteRestaurantsInCategory(
-        categoryId: String,
-        restaurantIds: List<String>
-    ): Boolean {
+    override suspend fun deleteRestaurantsInCategory(categoryId: String, restaurantIds: List<String>): Boolean {
         val resultDeleteFromRestaurant = container.restaurantCollection.updateMany(
             RestaurantCollection::id `in` restaurantIds.toObjectIds(),
             pull(RestaurantCollection::categoryIds, ObjectId(categoryId))
