@@ -400,5 +400,11 @@ class RestaurantService(
                 }
             }
         }
-//endregion
+
+    suspend fun getOffers(languageCode: String) = client.tryToExecute<List<OfferDto>>(
+        APIs.RESTAURANT_API,
+        attributes = attributes,
+        setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
+    ) { get("categories") }
+    //endregion
 }

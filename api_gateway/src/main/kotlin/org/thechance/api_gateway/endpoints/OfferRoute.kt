@@ -18,10 +18,14 @@ fun Route.offerRoute() {
 
     val localizedMessagesFactory by inject<LocalizedMessagesFactory>()
 
-    get("/offers") {
-        val language = extractLocalizationHeader()
-//        val cuisine = restaurantService.addCuisine(cuisineDto, language)
-//        respondWithResult(HttpStatusCode.Created, cuisine)
+    route("/offers") {
+        authenticateWithRole(Role.DASHBOARD_ADMIN) {
+            get {
+                val language = extractLocalizationHeader()
+                val offers = restaurantService.getOffers(language)
+                respondWithResult(HttpStatusCode.Created, offers)
+            }
+        }
     }
 
     route("/offer") {
