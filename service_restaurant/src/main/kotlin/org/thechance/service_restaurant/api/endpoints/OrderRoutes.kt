@@ -76,6 +76,12 @@ fun Route.orderRoutes() {
             call.respond(HttpStatusCode.OK, result.map { it.toDto() })
         }
 
+        get("/user/{userId}/orders") {
+            val userId = call.parameters["userId"] ?: throw MultiErrorException(listOf(NOT_FOUND))
+            val result = manageOrder.getActiveOrdersForUser(userId = userId)
+            call.respond(HttpStatusCode.OK, result.map { it.toDto() })
+        }
+
         get("/isExisted/{orderId}") {
             val orderId = call.parameters["orderId"] ?: throw MultiErrorException(listOf(NOT_FOUND))
             val result = manageOrder.isOrderExisted(orderId)

@@ -7,6 +7,7 @@ interface IRestaurantManagementGateway {
     //region Order
     suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order>
     suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order>
+    suspend fun getActiveOrdersForUser(userId: String): List<Order>
     suspend fun getOrderById(orderId: String): Order?
     suspend fun isOrderExisted(orderId: String): Boolean
     suspend fun addOrder(order: Order): Order

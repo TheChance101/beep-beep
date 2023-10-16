@@ -12,7 +12,6 @@ import org.thechance.service_restaurant.data.DataBaseContainer
 import org.thechance.service_restaurant.data.collection.CartCollection
 import org.thechance.service_restaurant.data.collection.MealCollection
 import org.thechance.service_restaurant.data.collection.OrderCollection
-import org.thechance.service_restaurant.data.collection.RestaurantCollection
 import org.thechance.service_restaurant.data.collection.mapper.*
 import org.thechance.service_restaurant.data.collection.relationModels.OrderWithRestaurant
 import org.thechance.service_restaurant.domain.entity.Cart
@@ -38,8 +37,22 @@ class RestaurantManagementGateway(private val container: DataBaseContainer) : IR
 
     override suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order> {
         return container.orderCollection.find(
-            OrderCollection::restaurantId eq ObjectId(restaurantId),
-            OrderCollection::orderStatus nin listOf(Order.Status.DONE.statusCode, Order.Status.CANCELED.statusCode)
+            and(
+                OrderCollection::restaurantId eq ObjectId(restaurantId),
+                OrderCollection::orderStatus nin listOf(Order.Status.DONE.statusCode, Order.Status.CANCELED.statusCode)
+            )
+        ).toList().toEntity()
+    }
+
+    override suspend fun getActiveOrdersForUser(userId: String): List<Order> {
+        return container.orderCollection.find(
+            and(
+                OrderCollection::userId eq ObjectId(userId),
+                OrderCollection::orderStatus `in` listOf(
+                    Order.Status.APPROVED.statusCode,
+                    Order.Status.IN_COOKING.statusCode
+                )
+            )
         ).toList().toEntity()
     }
 

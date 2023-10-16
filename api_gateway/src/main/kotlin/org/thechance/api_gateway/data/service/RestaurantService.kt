@@ -338,6 +338,15 @@ class RestaurantService(
         )
     }
 
+    suspend fun getActiveOrdersForUser(userId: String, languageCode: String): List<OrderDto> {
+        return client.tryToExecute<List<OrderDto>>(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { get("/order/user/$userId/orders") }
+        )
+    }
+
     suspend fun getOrderById(orderId: String?, languageCode: String): OrderDto {
         return client.tryToExecute<OrderDto>(
             api = APIs.RESTAURANT_API,

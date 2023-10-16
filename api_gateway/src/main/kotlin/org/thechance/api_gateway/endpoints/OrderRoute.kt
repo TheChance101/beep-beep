@@ -111,5 +111,14 @@ fun Route.orderRoutes() {
                 webSocketServerHandler.tryToCollect(order, it)
             }
         }
+
+        get("active/orders") {
+            val tokenClaim = call.principal<JWTPrincipal>()
+            val userId = tokenClaim?.get(Claim.USER_ID).toString()
+            val language = extractLocalizationHeader()
+            val result = restaurantService.getActiveOrdersForUser(userId, language)
+            respondWithResult(HttpStatusCode.OK, result)
+        }
+
     }
 }

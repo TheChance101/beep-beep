@@ -14,6 +14,8 @@ import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorExcept
 interface IManageOrderUseCase {
     suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order>
 
+    suspend fun getActiveOrdersForUser(userId: String): List<Order>
+
     suspend fun updateOrderStatus(orderId: String, state: Order.Status): Order
 
     suspend fun getOrderById(orderId: String): Order
@@ -44,6 +46,11 @@ class ManageOrderUseCase(
 
     override suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order> {
         return restaurantOperationGateway.getOrdersByRestaurantId(restaurantId = restaurantId)
+    }
+
+    override suspend fun getActiveOrdersForUser(userId: String): List<Order> {
+        println("AAAAA : use case called")
+        return restaurantOperationGateway.getActiveOrdersForUser(userId)
     }
 
     override suspend fun getOrderById(orderId: String): Order {

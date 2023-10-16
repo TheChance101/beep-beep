@@ -2,7 +2,6 @@ package org.thechance.service_restaurant.data.gateway
 
 import com.mongodb.client.model.Accumulators
 import com.mongodb.client.model.FindOneAndUpdateOptions
-import com.mongodb.client.model.Projections.computed
 import com.mongodb.client.model.ReturnDocument
 import com.mongodb.client.model.Updates
 import org.bson.types.ObjectId
@@ -24,7 +23,6 @@ import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.utils.exceptions.ERROR_ADD
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
-import javax.management.Query
 
 class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantGateway {
 
@@ -304,7 +302,7 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
         ).isSuccessfullyUpdated()
 
         return if (addedMeal && addedMealToCuisine) {
-            mealDocument.toMealEntity()
+            mealDocument.toEntity()
         } else {
             throw MultiErrorException(listOf(ERROR_ADD))
         }
@@ -334,7 +332,7 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
             filter = MealCollection::id eq ObjectId(meal.id),
             update = Updates.combine(fieldsToUpdate.map { Updates.set(it.key, it.value) }),
             options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
-        )?.toMealEntity() ?: throw MultiErrorException(listOf(NOT_FOUND))
+        )?.toEntity() ?: throw MultiErrorException(listOf(NOT_FOUND))
 
     }
 
