@@ -1,16 +1,23 @@
 package presentation.map
 
+import domain.entity.Location
 import domain.entity.Order
-import domain.usecase.ManageOrderUseCase
+import domain.usecase.IIdentityUseCase
+import domain.usecase.IManageLocationUseCase
+import domain.usecase.IManageOrderUseCase
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
 class MapScreenModel(
-    private val order: ManageOrderUseCase,
+    private val order: IManageOrderUseCase,
+    private val location: IManageLocationUseCase,
+    private val identity: IIdentityUseCase,
 ) : BaseScreenModel<MapScreenUiState, MapUiEffect>(MapScreenUiState()),
     MapScreenInteractionListener {
 
     init {
+        getLiveLocation()
+        getTaxiDriverName()
         findingNewOrder()
     }
 
@@ -18,7 +25,7 @@ class MapScreenModel(
         tryToExecute(
             function = order::foundNewOrder,
             onSuccess = ::onFoundNewOrderSuccess,
-            onError = ::onFoundNewOrderFailed
+            onError = ::onError
         )
     }
 
@@ -33,15 +40,52 @@ class MapScreenModel(
         }
     }
 
-    private fun onFoundNewOrderFailed(errorState: ErrorState) {
+    private fun onError(errorState: ErrorState) {
         updateState {
             it.copy(
                 isLoading = false,
-                isNewOrderFound = false,
                 error = errorState,
             )
         }
     }
+
+
+    private fun getLiveLocation() {
+        tryToCollect(
+            function = location::trackCurrentLocation,
+            onNewValue = ::onGetLiveLocationSuccess,
+            onError = ::onError,
+        )
+    }
+
+    private fun onGetLiveLocationSuccess(location: Location) {
+        updateState {
+            it.copy(
+                isLoading = true,
+                error = null,
+                currentLocation = location.toUiState()
+            )
+        }
+    }
+
+
+    private fun getTaxiDriverName() {
+        tryToExecute(
+            function = identity::getTaxiDriverName,
+            onSuccess = ::onGetTaxiDriverNameSuccess,
+            onError = ::onError,
+        )
+    }
+
+    private fun onGetTaxiDriverNameSuccess(name: String) {
+        updateState {
+            it.copy(
+                error = null,
+                userName = name
+            )
+        }
+    }
+
 
     override fun onClickAccept() {
         updateState {
@@ -60,7 +104,8 @@ class MapScreenModel(
                 isLoading = true,
                 isNewOrderFound = false,
                 isAcceptedOrder = false,
-                error = null
+                error = null,
+                orderInfoUiState = OrderInfoUiState()
             )
         }
         findingNewOrder()
@@ -84,9 +129,7 @@ class MapScreenModel(
                 isLoading = true,
                 isAcceptedOrder = false,
                 error = null,
-                orderInfoUiState = it.orderInfoUiState.copy(
-                    isArrived = false
-                )
+                orderInfoUiState = OrderInfoUiState()
             )
         }
         findingNewOrder()

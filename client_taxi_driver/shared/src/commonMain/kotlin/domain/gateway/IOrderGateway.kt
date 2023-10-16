@@ -2,6 +2,6 @@ package domain.gateway
 
 import domain.entity.Order
 
-interface IMapGateway {
+interface IOrderGateway {
     suspend fun findingNewOrder(): Order
 }
