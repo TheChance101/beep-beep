@@ -10,6 +10,7 @@ interface IDriverTripsManagementUseCase {
     suspend fun finishTrip(driverId: String, tripId: String): Trip // driver
     suspend fun updateTripAsReceived(tripId: String, driverId: String): Trip
     suspend fun getNumberOfTripsByDriverId(id: String): Long
+    suspend fun getActiveTripsByUserId(userId: String): List<Trip>
 }
 
 class DriverTripsManagementUseCase(
@@ -33,11 +34,11 @@ class DriverTripsManagementUseCase(
         return taxiGateway.getNumberOfTripsByDriverId(id)
     }
 
-    override suspend fun getTripsByDriverId(
-        driverId: String,
-        page: Int,
-        limit: Int
-    ): List<Trip> {
+    override suspend fun getActiveTripsByUserId(userId: String): List<Trip> {
+        return taxiGateway.getActiveTripsByUserId(userId)
+    }
+
+    override suspend fun getTripsByDriverId(driverId: String, page: Int, limit: Int): List<Trip> {
         return taxiGateway.getDriverTripsHistory(driverId, page, limit)
     }
 }

@@ -18,6 +18,8 @@ data class TripWithTaxi(
     val driverId: ObjectId? = null,
     @Contextual
     val clientId: ObjectId?,
+    @Contextual
+    val restaurantId: ObjectId?,
     val taxi: TaxiCollection,
     val startPoint: LocationCollection? = null,
     val destination: LocationCollection? = null,
