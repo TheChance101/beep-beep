@@ -1,11 +1,12 @@
 package data.remote.mapper
 
 import data.remote.model.OrderDto
-import domain.entity.Order
-import domain.entity.Price
+import domain.entity.FoodOrder
+import kotlinx.datetime.LocalTime
 
-fun OrderDto.toEntity() = Order(
+fun OrderDto.toEntity() = FoodOrder(
     id = id ?: "",
+    userId = userId ?: "",
     restaurantId = restaurantId ?: "",
     restaurantName = restaurantName ?: "",
     restaurantImageUrl = if (restaurantImage.isNullOrBlank()) {
@@ -13,10 +14,12 @@ fun OrderDto.toEntity() = Order(
     } else {
         restaurantImage
     },
+    currency = currency ?: "USD",
     meals = meals?.toEntity(restaurantName, currency = currency) ?: emptyList(),
-    price = Price(totalPrice ?: 0.0, currency = currency ?: ""),
+    totalPrice = totalPrice ?: 0.0,
     createdAt = createdAt ?: 0L,
-    orderStatus = orderStatus,
+    orderStatus = FoodOrder.OrderStatusInRestaurant.getOrderStatus(orderStatus),
+    orderEstimatedTime = LocalTime(0, 30).minute,
 )
 
 fun List<OrderDto>.toEntity() = map { it.toEntity() }

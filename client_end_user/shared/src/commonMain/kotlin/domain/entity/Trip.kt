@@ -1,19 +1,55 @@
 package domain.entity
 
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
 
 data class Trip(
     val id: String,
-    val taxiId: String,
-    val taxiPlateNumber: String,
-    val driverId: String,
-    val driverName: String,
+    val taxiId: String? = null,
+    val driverId: String? = null,
     val clientId: String,
+    val restaurantId: String? = null,
+    val taxiPlateNumber: String? = null,
+    val taxiDriverName: String? = null,
     val startPoint: Location,
     val destination: Location,
+    val startPointAddress: String,
+    val destinationAddress: String,
     val rate: Double,
+    val price: Double,
     val startDate: LocalDate,
-    val endDate: LocalDate?,
+    val endDate: LocalDate? = null,
+    val isATaxiTrip: Boolean,
+    val tripStatus: Int,
     val timeToArriveInMints: Int,
-    val price: Price
-)
+) {
+
+    val estimatedTimeToArriveInMints: Int
+        get() = when (TripStatus.getTripStatus(tripStatus)) {
+            TripStatus.PENDING -> LocalTime(0, 40).minute
+            TripStatus.APPROVED -> {
+                if (timeToArriveInMints == 0)
+                    LocalTime(0, 30).minute else timeToArriveInMints
+            }
+            TripStatus.RECEIVED -> timeToArriveInMints / 2
+            TripStatus.FINISHED -> LocalTime(0, 0).minute
+        }
+
+    enum class TripStatus(val statusCode: Int) {
+        PENDING(0),
+        APPROVED(1),
+        RECEIVED(2),
+        FINISHED(3);
+
+        companion object {
+            fun getTripStatus(statusCode: Int): TripStatus {
+                TripStatus.values().forEach {
+                    if (it.statusCode == statusCode) {
+                        return it
+                    }
+                }
+                return APPROVED
+            }
+        }
+    }
+}
