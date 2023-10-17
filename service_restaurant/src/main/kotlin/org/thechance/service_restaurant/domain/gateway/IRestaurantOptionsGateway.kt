@@ -19,6 +19,7 @@ interface IRestaurantOptionsGateway {
     suspend fun updateCategory(category: Category): Category
     suspend fun deleteCategory(categoryId: String): Boolean
     suspend fun deleteRestaurantsInCategory(categoryId: String, restaurantIds: List<String>): Boolean
+    suspend fun getCategoriesWithRestaurants(): List<Category>
     //endregion
 
     //region Cuisines

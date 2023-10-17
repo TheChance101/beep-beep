@@ -1,7 +1,6 @@
 package org.thechance.service_restaurant.domain.usecase
 
 import org.thechance.service_restaurant.domain.entity.Category
-import org.thechance.service_restaurant.domain.entity.Restaurant
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
 import org.thechance.service_restaurant.domain.usecase.validation.ICategoryValidationUseCase
 import org.thechance.service_restaurant.domain.utils.IValidation
@@ -12,9 +11,10 @@ import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 
 interface IManageCategoryUseCase {
     suspend fun getCategories(): List<Category>
+
+    suspend fun getCategoriesWithRestaurants(): List<Category>
     suspend fun createCategory(categoryName: String): Category
     suspend fun updateCategory(category: Category): Category
-
     suspend fun addRestaurantsToCategory(categoryId: String, restaurantIds: List<String>): Boolean
     suspend fun deleteCategory(categoryId: String): Boolean
 
@@ -28,6 +28,10 @@ class ManageCategoryUseCase(
 
     override suspend fun getCategories(): List<Category> {
         return restaurantOptions.getCategories()
+    }
+
+    override suspend fun getCategoriesWithRestaurants(): List<Category> {
+        return restaurantOptions.getCategoriesWithRestaurants()
     }
 
     override suspend fun createCategory(categoryName: String): Category {

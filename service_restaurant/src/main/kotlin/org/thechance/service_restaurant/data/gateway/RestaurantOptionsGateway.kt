@@ -11,13 +11,14 @@ import org.thechance.service_restaurant.data.collection.CategoryCollection
 import org.thechance.service_restaurant.data.collection.CuisineCollection
 import org.thechance.service_restaurant.data.collection.MealCollection
 import org.thechance.service_restaurant.data.collection.RestaurantCollection
+import org.thechance.service_restaurant.data.collection.mapper.categoryDetailsToEntity
 import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
 import org.thechance.service_restaurant.data.collection.mapper.toMealEntity
+import org.thechance.service_restaurant.data.collection.relationModels.CategoryDetails
 import org.thechance.service_restaurant.data.collection.relationModels.CategoryRestaurant
 import org.thechance.service_restaurant.data.collection.relationModels.MealCuisines
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
-import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.data.utils.toObjectIds
 import org.thechance.service_restaurant.domain.entity.Category
 import org.thechance.service_restaurant.domain.entity.Cuisine
@@ -57,6 +58,21 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
             )
         ).toList().first().restaurants.filterNot { it.isDeleted }.toEntity()
     }
+
+    override suspend fun getCategoriesWithRestaurants(): List<Category> {
+        return container.categoryCollection.aggregate<CategoryDetails>(
+            listOf(
+                match(CategoryCollection::isDeleted eq false),
+                lookup(
+                    from = DataBaseContainer.RESTAURANT_COLLECTION,
+                    localField = CategoryCollection::restaurantIds.name,
+                    foreignField = "_id",
+                    newAs = CategoryDetails::restaurants.name
+                ),
+            )
+        ).toList().categoryDetailsToEntity()
+    }
+
 
     override suspend fun areCategoriesExisting(categoryIds: List<String>): Boolean {
         val categoryObjects =
