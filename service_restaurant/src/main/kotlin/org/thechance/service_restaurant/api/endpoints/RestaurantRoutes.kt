@@ -10,10 +10,7 @@ import org.thechance.service_restaurant.api.models.BasePaginationResponseDto
 import org.thechance.service_restaurant.api.models.ExploreRestaurantDto
 import org.thechance.service_restaurant.api.models.RestaurantDto
 import org.thechance.service_restaurant.api.models.RestaurantOptionsDto
-import org.thechance.service_restaurant.api.models.mappers.toDetailsDto
-import org.thechance.service_restaurant.api.models.mappers.toDto
-import org.thechance.service_restaurant.api.models.mappers.toEntity
-import org.thechance.service_restaurant.api.models.mappers.toMealDto
+import org.thechance.service_restaurant.api.models.mappers.*
 import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
 import org.thechance.service_restaurant.domain.usecase.IControlRestaurantsUseCase
@@ -85,6 +82,16 @@ fun Route.restaurantRoutes() {
             ).toMealDto()
             val total = controlRestaurant.getTotalNumberOfMealsByRestaurantId(restaurantId)
             call.respond(HttpStatusCode.OK, BasePaginationResponseDto(meals, page, total))
+        }
+
+        get("/{id}/cuisineMeals") {
+            val restaurantId = call.parameters["id"] ?: throw MultiErrorException(
+                listOf(
+                    INVALID_REQUEST_PARAMETER
+                )
+            )
+            val result = discoverRestaurant.getCuisinesMealsInRestaurant(restaurantId)
+            call.respond(HttpStatusCode.OK, result.toCuisineDetailsDto())
         }
 
         get("/{id}") {

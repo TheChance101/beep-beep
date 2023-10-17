@@ -1,5 +1,6 @@
 package org.thechance.service_restaurant.domain.gateway
 
+import org.thechance.service_restaurant.data.collection.relationModels.CuisinesMealDetails
 import org.thechance.service_restaurant.domain.entity.Category
 import org.thechance.service_restaurant.domain.entity.Cuisine
 import org.thechance.service_restaurant.domain.entity.Meal
@@ -24,6 +25,7 @@ interface IRestaurantOptionsGateway {
 
     //region Cuisines
     suspend fun getCuisines(): List<Cuisine>
+    suspend fun getCuisinesWithMeals(restaurantId: String): List<Cuisine>
     suspend fun getCuisineById(id: String): Cuisine?
     suspend fun getMealsInCuisine(cuisineId: String): List<Meal>
     suspend fun addCuisine(cuisine: Cuisine): Cuisine

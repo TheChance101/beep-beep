@@ -11,12 +11,10 @@ import org.thechance.service_restaurant.data.collection.CategoryCollection
 import org.thechance.service_restaurant.data.collection.CuisineCollection
 import org.thechance.service_restaurant.data.collection.MealCollection
 import org.thechance.service_restaurant.data.collection.RestaurantCollection
-import org.thechance.service_restaurant.data.collection.mapper.categoryDetailsToEntity
-import org.thechance.service_restaurant.data.collection.mapper.toCollection
-import org.thechance.service_restaurant.data.collection.mapper.toEntity
-import org.thechance.service_restaurant.data.collection.mapper.toMealEntity
+import org.thechance.service_restaurant.data.collection.mapper.*
 import org.thechance.service_restaurant.data.collection.relationModels.CategoryDetails
 import org.thechance.service_restaurant.data.collection.relationModels.CategoryRestaurant
+import org.thechance.service_restaurant.data.collection.relationModels.CuisinesMealDetails
 import org.thechance.service_restaurant.data.collection.relationModels.MealCuisines
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
 import org.thechance.service_restaurant.data.utils.toObjectIds
@@ -98,7 +96,6 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         ).toList().first().categories.filterNot { it.isDeleted }.toEntity()
     }
 
-
     override suspend fun addCategory(categoryName: String): Category {
         val addedCategory = CategoryCollection(name = categoryName)
         container.categoryCollection.insertOne(addedCategory)
@@ -171,6 +168,31 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
     //region Cuisines
     override suspend fun getCuisines(): List<Cuisine> =
         container.cuisineCollection.find(MealCollection::isDeleted eq false).toList().toEntity()
+
+    override suspend fun getCuisinesWithMeals(restaurantId: String): List<Cuisine> {
+        val cuisineIds =
+            container.restaurantCollection.find(RestaurantCollection::id eq ObjectId(restaurantId)).first()?.cuisineIds
+        return if (cuisineIds != null) {
+            container.cuisineCollection.aggregate<CuisinesMealDetails>(
+                listOf(
+                    match(
+                        and(
+                            CuisineCollection::isDeleted eq false,
+                            CuisineCollection::id `in` cuisineIds
+                        )
+                    ),
+                    lookup(
+                        from = DataBaseContainer.MEAL_COLLECTION,
+                        localField = CuisineCollection::meals.name,
+                        foreignField = "_id",
+                        newAs = CuisinesMealDetails::meals.name
+                    ),
+                )
+            ).toList().toCuisineMealsEntity()
+        } else {
+            emptyList()
+        }
+    }
 
     override suspend fun getCuisineById(id: String): Cuisine? =
         container.cuisineCollection.findOneById(ObjectId(id))?.takeIf { !it.isDeleted }?.toEntity()
