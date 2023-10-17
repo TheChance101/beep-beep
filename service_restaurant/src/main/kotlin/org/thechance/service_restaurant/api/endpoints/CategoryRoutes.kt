@@ -8,6 +8,7 @@ import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.service_restaurant.api.models.BasePaginationResponseDto
 import org.thechance.service_restaurant.api.models.CategoryDto
+import org.thechance.service_restaurant.api.models.mappers.toCategoryRestaurantsDto
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.extractInt
@@ -25,9 +26,18 @@ fun Route.categoryRoutes() {
     val manageCategory: IManageCategoryUseCase by inject()
     val discoverRestaurant: IDiscoverRestaurantUseCase by inject()
 
-    get("/categories") {
-        val categories = manageCategory.getCategories().toDto()
-        call.respond(HttpStatusCode.OK, categories)
+    route("/categories") {
+
+        get {
+            val categories = manageCategory.getCategories().toDto()
+            call.respond(HttpStatusCode.OK, categories)
+        }
+
+        get("/restaurants") {
+            val categories = manageCategory.getCategoriesWithRestaurants().toCategoryRestaurantsDto()
+            call.respond(HttpStatusCode.OK, categories)
+        }
+
     }
 
     route("/category") {
@@ -63,6 +73,5 @@ fun Route.categoryRoutes() {
             val result = manageCategory.deleteCategory(categoryId)
             call.respond(HttpStatusCode.OK, result)
         }
-
     }
 }
