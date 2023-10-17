@@ -1,7 +1,6 @@
 package di
 
 import data.gateway.fake.FakeChatGateway
-import data.gateway.fake.FakeOrderGateway
 import data.gateway.fake.FakeNotificationGateway
 import data.gateway.local.LocalConfigurationGateway
 import data.gateway.local.LocationGateway
