@@ -1,13 +1,11 @@
 package presentation.map
 
-import domain.entity.Location
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.entity.Location
 import domain.entity.Order
-import domain.usecase.IIdentityUseCase
 import domain.usecase.IManageLocationUseCase
 import domain.usecase.IManageOrderUseCase
 import domain.usecase.LoginUserUseCase
-import domain.usecase.ManageOrderUseCase
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
