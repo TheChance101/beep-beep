@@ -6,6 +6,7 @@
 
     <application
         android:allowBackup="true"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/beep_beep_icon_launcher"
         android:label="Taxi Driver App"
         android:roundIcon="@mipmap/beep_beep_icon_launcher_round"

@@ -23,11 +23,9 @@ fun Restaurant.toRestaurantUiState(): RestaurantUiState {
 fun List<Restaurant>.toRestaurantUiState() = map { it.toRestaurantUiState() }
 
 
-
 fun User.toUIState() = UserUiState(
-    username = name,
-    wallet = walletValue,
-    currency = currency,
-    isLogin = true
+    username = username,
+    wallet = wallet.value,
+    currency = wallet.currency,
 )
 

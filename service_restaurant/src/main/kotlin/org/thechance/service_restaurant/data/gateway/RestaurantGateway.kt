@@ -13,6 +13,7 @@ import org.thechance.service_restaurant.data.DataBaseContainer.Companion.RESTAUR
 import org.thechance.service_restaurant.data.collection.*
 import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
+import org.thechance.service_restaurant.data.collection.mapper.toMealEntity
 import org.thechance.service_restaurant.data.collection.relationModels.*
 import org.thechance.service_restaurant.data.utils.getNonEmptyFieldsMap
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
@@ -114,7 +115,7 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
         return container.mealCollection.find(
             MealCollection::restaurantId eq ObjectId(restaurantId),
             MealCollection::isDeleted eq false
-        ).paginate(page, limit).toList().toEntity()
+        ).paginate(page, limit).toList().toMealEntity()
 
     }
 
@@ -303,7 +304,7 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
         ).isSuccessfullyUpdated()
 
         return if (addedMeal && addedMealToCuisine) {
-            mealDocument.toEntity()
+            mealDocument.toMealEntity()
         } else {
             throw MultiErrorException(listOf(ERROR_ADD))
         }
@@ -333,7 +334,7 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
             filter = MealCollection::id eq ObjectId(meal.id),
             update = Updates.combine(fieldsToUpdate.map { Updates.set(it.key, it.value) }),
             options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
-        )?.toEntity() ?: throw MultiErrorException(listOf(NOT_FOUND))
+        )?.toMealEntity() ?: throw MultiErrorException(listOf(NOT_FOUND))
 
     }
 

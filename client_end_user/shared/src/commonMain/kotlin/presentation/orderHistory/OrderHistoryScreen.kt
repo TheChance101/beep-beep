@@ -31,12 +31,8 @@ import resources.Resources
 import util.capitalizeFirstLetter
 import util.root
 
-class OrderHistoryScreen : BaseScreen<
-        OrderHistoryScreenModel,
-        OrderScreenUiState,
-        OrderHistoryScreenUiEffect,
-        OrderHistoryScreenInteractionListener
-        >() {
+class OrderHistoryScreen :
+    BaseScreen<OrderHistoryScreenModel, OrderScreenUiState, OrderHistoryScreenUiEffect, OrderHistoryScreenInteractionListener>() {
 
     @Composable
     override fun Content() {

@@ -4,13 +4,13 @@ import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Cost
 import domain.entity.PreferredRide
 import domain.entity.RideQuality
-import domain.usecase.IMangeUserPreferenceUseCase
+import domain.usecase.IManageSettingUseCase
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
 class PreferredRideScreenModel(
-    private val userPreferences: IMangeUserPreferenceUseCase,
+    private val userPreferences: IManageSettingUseCase,
 ) : BaseScreenModel<PreferredRideUiState, PreferredRideUiEffect>
     (PreferredRideUiState()), PreferredRideInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
