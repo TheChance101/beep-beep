@@ -86,9 +86,7 @@ fun Route.restaurantRoutes() {
 
         get("/{id}/cuisineMeals") {
             val restaurantId = call.parameters["id"] ?: throw MultiErrorException(
-                listOf(
-                    INVALID_REQUEST_PARAMETER
-                )
+                listOf(INVALID_REQUEST_PARAMETER)
             )
             val result = discoverRestaurant.getCuisinesMealsInRestaurant(restaurantId)
             call.respond(HttpStatusCode.OK, result.toCuisineDetailsDto())

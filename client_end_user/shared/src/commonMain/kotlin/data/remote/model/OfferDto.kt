@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class OfferDto(
-    @SerialName("id") val id: String,
-    @SerialName("image") val image: String
+    @SerialName("id") val id: String? = null,
+    @SerialName("name") val name: String? = null,
+    @SerialName("restaurants") val restaurants: List<RestaurantDto>? = null,
 )
