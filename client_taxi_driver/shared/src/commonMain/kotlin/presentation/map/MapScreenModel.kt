@@ -81,16 +81,6 @@ class MapScreenModel(
         }
     }
 
-    private fun onGetTaxiDriverNameSuccess(name: String) {
-        updateState {
-            it.copy(
-                error = null,
-                userName = name
-            )
-        }
-    }
-
-
     override fun onClickAccept() {
         updateState {
             it.copy(
