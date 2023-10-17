@@ -3,7 +3,6 @@ package org.thechance.api_gateway.data.service
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
-import io.ktor.http.*
 import io.ktor.util.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.builtins.ListSerializer
@@ -13,6 +12,8 @@ import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.MealRequestDto
 import org.thechance.api_gateway.data.model.PaginationResponse
+import org.thechance.api_gateway.data.model.offer.OfferDto
+import org.thechance.api_gateway.data.model.offer.OfferRestaurantsDto
 import org.thechance.api_gateway.data.model.restaurant.*
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.tryToExecute
@@ -419,6 +420,13 @@ class RestaurantService(
         APIs.RESTAURANT_API,
         attributes = attributes,
         setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
-    ) { get("categories") }
+    ) { get("/categories") }
+
+
+    suspend fun getOffersWithRestaurants(languageCode: String) = client.tryToExecute<List<OfferRestaurantsDto>>(
+        APIs.RESTAURANT_API,
+        attributes = attributes,
+        setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
+    ) { get("/categories/restaurants") }
     //endregion
 }

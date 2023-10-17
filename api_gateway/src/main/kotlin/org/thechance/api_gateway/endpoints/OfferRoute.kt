@@ -14,15 +14,18 @@ fun Route.offerRoute() {
 
     val restaurantService: RestaurantService by inject()
 
-    val localizedMessagesFactory by inject<LocalizedMessagesFactory>()
-
     route("/offers") {
-        authenticateWithRole(Role.DASHBOARD_ADMIN) {
-            get {
-                val language = extractLocalizationHeader()
-                val offers = restaurantService.getOffers(language)
-                respondWithResult(HttpStatusCode.Created, offers)
-            }
+        get {
+            val language = extractLocalizationHeader()
+            val offers = restaurantService.getOffers(language)
+            respondWithResult(HttpStatusCode.Created, offers)
+        }
+
+
+        get("/restaurants") {
+            val language = extractLocalizationHeader()
+            val offers = restaurantService.getOffersWithRestaurants(language)
+            respondWithResult(HttpStatusCode.Created, offers)
         }
     }
 
@@ -44,14 +47,6 @@ fun Route.offerRoute() {
                 respondWithResult(HttpStatusCode.Created, offer)
             }
 
-            delete("/{id}") {
-//                val language = extractLocalizationHeader()
-//                val cuisineId = call.parameters["id"]?.trim().toString()
-//                val result = restaurantService.deleteCuisine(cuisineId = cuisineId, languageCode = language)
-//                val successMessage =
-//                    localizedMessagesFactory.createLocalizedMessages(language).deletedSuccessfully
-//                respondWithResult(HttpStatusCode.OK, result, message = successMessage)
-            }
         }
     }
 

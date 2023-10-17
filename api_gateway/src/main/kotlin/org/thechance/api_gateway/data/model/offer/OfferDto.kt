@@ -1,4 +1,4 @@
-package org.thechance.api_gateway.data.model.restaurant
+package org.thechance.api_gateway.data.model.offer
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
