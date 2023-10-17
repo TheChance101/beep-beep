@@ -54,6 +54,7 @@ data class DrawableResources(
     val icHome: String = "ic_home.xml",
     val icScooter: String = "ic_scooter.xml",
     val icInCooking: String = "ic_in_cooking.xml",
+    val inCookingFood: String = "food_cooking.png",
 )
 
 val BpDrawableDarkResources = DrawableResources(
