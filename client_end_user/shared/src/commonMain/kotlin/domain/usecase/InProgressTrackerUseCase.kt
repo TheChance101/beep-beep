@@ -1,16 +1,34 @@
 package domain.usecase
 
-import domain.entity.InProgressWrapper
-import domain.gateway.IRestaurantGateway
+import domain.entity.FoodOrder
+import domain.entity.Trip
+import domain.gateway.ITransactionsGateway
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 
-//NEED TO Refactor
 interface IInProgressTrackerUseCase {
-    suspend fun getInProgress(): InProgressWrapper
+    suspend fun getActiveTaxiTrips(): Flow<List<Trip>>
+    suspend fun getActiveDeliveryTrips(): Flow<List<Trip>>
+    suspend fun getActiveFoodOrders(): Flow<List<FoodOrder>>
 }
 
-class InProgressTrackerUseCase(private val remoteGateway: IRestaurantGateway) :
-    IInProgressTrackerUseCase {
-    override suspend fun getInProgress(): InProgressWrapper {
-        return remoteGateway.getInProgress()
+class InProgressTrackerUseCase(
+    private val remoteGateway: ITransactionsGateway
+) : IInProgressTrackerUseCase {
+    override suspend fun getActiveTaxiTrips(): Flow<List<Trip>> {
+        val trips = remoteGateway.getActiveTrips()
+        val activeTaxiRides = trips.filter { it.isATaxiTrip }
+        return flowOf(activeTaxiRides)
+    }
+
+    override suspend fun getActiveDeliveryTrips(): Flow<List<Trip>> {
+        val trips = remoteGateway.getActiveTrips()
+        val activeDeliveryOrders = trips.filterNot { it.isATaxiTrip }
+        return flowOf(activeDeliveryOrders)
+    }
+
+    override suspend fun getActiveFoodOrders(): Flow<List<FoodOrder>> {
+        val orders = remoteGateway.getActiveOrders()
+        return flowOf(orders)
     }
 }

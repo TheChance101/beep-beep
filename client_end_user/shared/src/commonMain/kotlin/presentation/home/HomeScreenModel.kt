@@ -2,18 +2,17 @@ package presentation.home
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Cart
-import domain.entity.InProgressWrapper
+import domain.entity.FoodOrder
 import domain.entity.Restaurant
+import domain.entity.Trip
 import domain.entity.User
+import domain.usecase.IExploreRestaurantUseCase
+import domain.usecase.IGetOffersUseCase
 import domain.usecase.IInProgressTrackerUseCase
+import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.IManageCartUseCase
 import domain.usecase.IManageFavouriteUseCase
-import domain.usecase.IGetOffersUseCase
-import domain.usecase.IManageSettingUseCase
-import domain.usecase.IExploreRestaurantUseCase
-import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.IManageProfileUseCase
-import domain.usecase.ManageProfileUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -29,16 +28,76 @@ class HomeScreenModel(
     private val manageCart: IManageCartUseCase,
     private val manageFavorite: IManageFavouriteUseCase,
     private val manageProfile: IManageProfileUseCase,
-    private val manageAuthentication: IManageAuthenticationUseCase
+    private val manageAuthentication: IManageAuthenticationUseCase,
 ) : BaseScreenModel<HomeScreenUiState, HomeScreenUiEffect>(HomeScreenUiState()),
     HomeScreenInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
 
     init {
         checkIfLoggedIn()
-        getInProgress()
+        getLiveOrders()
         getRecommendedCuisines()
         getNewOffers()
+    }
+
+    private fun getLiveOrders() {
+        getActiveTaxiTrips()
+        getActiveDeliveryTrips()
+        getActiveFoodOrders()
+    }
+
+    private fun getActiveTaxiTrips() {
+        tryToCollect(
+            { inProgressTrackerUseCase.getActiveTaxiTrips() },
+            ::onGetActiveTaxiTripsSuccess,
+            ::onError
+        )
+    }
+
+    private fun getActiveDeliveryTrips() {
+        tryToCollect(
+            { inProgressTrackerUseCase.getActiveDeliveryTrips() },
+            ::onGetActiveDeliveryTripsSuccess,
+            ::onError
+        )
+    }
+
+    private fun getActiveFoodOrders() {
+        tryToCollect(
+            { inProgressTrackerUseCase.getActiveFoodOrders() },
+            ::onGetActiveFoodOrdersSuccess,
+            ::onError
+        )
+    }
+
+    private fun onGetActiveTaxiTripsSuccess(taxiTrips: List<Trip>) {
+        updateState { homeScreenState ->
+            homeScreenState.copy(
+                liveOrders = homeScreenState.liveOrders.copy(
+                    taxiRides = taxiTrips.map { trip -> trip.toTaxiRideUiState() }
+                )
+            )
+        }
+    }
+
+    private fun onGetActiveDeliveryTripsSuccess(deliveryTrips: List<Trip>) {
+        updateState { homeScreenState ->
+            homeScreenState.copy(
+                liveOrders = homeScreenState.liveOrders.copy(
+                    deliveryOrders = deliveryTrips.map { trip -> trip.toDeliveryOrderUiState() }
+                )
+            )
+        }
+    }
+
+    private fun onGetActiveFoodOrdersSuccess(foodOrders: List<FoodOrder>) {
+        updateState { homeScreenState ->
+            homeScreenState.copy(
+                liveOrders = homeScreenState.liveOrders.copy(
+                    foodOrders = foodOrders.map { order -> order.toFoodOrderUiState() }
+                )
+            )
+        }
     }
 
     private fun checkIfLoggedIn() {
@@ -99,18 +158,6 @@ class HomeScreenModel(
 
     private fun onGetUserSuccess(user: User) {
         updateState { it.copy(user = user.toUIState()) }
-    }
-
-    private fun getInProgress() {
-        tryToExecute(
-            { inProgressTrackerUseCase.getInProgress() },
-            ::onGetInProgressSuccess,
-            ::onGetCuisinesError
-        )
-    }
-
-    private fun onGetInProgressSuccess(inProgressWrapper: InProgressWrapper) {
-        updateState { it.copy(inProgressWrapper = inProgressWrapper) }
     }
 
     override fun onClickCuisineItem(cuisineId: String) {

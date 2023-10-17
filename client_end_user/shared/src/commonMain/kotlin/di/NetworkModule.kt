@@ -27,8 +27,8 @@ val networkModule = module {
             defaultRequest {
                 header("Content-Type", "application/json")
                 header("Application-id" , 1000)
-                url("https://beep-beep-api-gateway-nap2u.ondigitalocean.app/")
-//                url("http://192.168.1.10:8081")
+//                url("https://beep-beep-api-gateway-nap2u.ondigitalocean.app/")
+                url("http://192.168.1.10:8081/")
             }
 
             install(ContentNegotiation) {

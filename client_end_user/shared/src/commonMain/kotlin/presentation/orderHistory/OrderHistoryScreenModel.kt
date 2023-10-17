@@ -1,7 +1,7 @@
 package presentation.orderHistory
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.entity.Order
+import domain.entity.FoodOrder
 import domain.entity.Trip
 import domain.usecase.GetTransactionHistoryUseCase
 import domain.usecase.IManageAuthenticationUseCase
@@ -69,7 +69,7 @@ class OrderHistoryScreenModel(
         updateState { it.copy(tripsHistory = tripsHistory.map { it.toTripHistoryUiState() }) }
     }
 
-    private fun onGetOrdersHistorySuccess(ordersHistory: List<Order>) {
+    private fun onGetOrdersHistorySuccess(ordersHistory: List<FoodOrder>) {
         updateState { it.copy(ordersHistory = ordersHistory.map { it.toOrderHistoryUiState() }) }
     }
 

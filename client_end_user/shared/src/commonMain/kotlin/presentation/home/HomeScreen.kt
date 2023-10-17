@@ -42,6 +42,8 @@ import com.beepbeep.designSystem.ui.composable.BpAppBar
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.theme.Theme
+import domain.entity.FoodOrder
+import domain.entity.Trip
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.auth.login.LoginScreen
@@ -62,6 +64,7 @@ import presentation.home.composable.CuisineCard
 import presentation.home.composable.OrderCard
 import presentation.main.SearchTab
 import presentation.meals.MealsScreen
+import presentation.orderFoodTracking.FoodOrderStatus
 import presentation.orderFoodTracking.OrderFoodTrackingScreen
 import presentation.resturantDetails.RestaurantScreen
 import resources.Resources
@@ -93,9 +96,11 @@ class HomeScreen :
             is HomeScreenUiEffect.NavigateToRestaurantDetails -> navigator.root?.push(
                 RestaurantScreen(effect.restaurantId)
             )
+
             is HomeScreenUiEffect.NavigateToTrackOrderFood -> navigator.root?.push(
                 OrderFoodTrackingScreen()
             )
+
             is HomeScreenUiEffect.NavigateToTrackTaxiRide -> println("navigate to track taxi ride ${effect.tripId}")
         }
     }
@@ -169,7 +174,8 @@ class HomeScreen :
                 }
             }
 
-            if (state.hasProgress && state.isLoggedIn) {
+            // in progress orders
+            if (state.hasLiveOrders && state.isLoggedIn) {
                 item {
                     Text(
                         text = Resources.strings.inProgress,
@@ -178,29 +184,37 @@ class HomeScreen :
                     )
                 }
 
-                items(state.inProgressWrapper.taxisOnTheWay) {
+                items(state.liveOrders.taxiRides) { taxiRideUiState ->
                     HorizontalImageCard(
                         painter = painterResource(Resources.images.taxiOnTheWay),
                         titleText = Resources.strings.taxiOnTheWay,
-                        onClick = listener::onClickInProgressTaxiRide
+                        onClick = listener::onClickInProgressTaxiRide,
+                        titleTextColor = if (taxiRideUiState.rideStatus == Trip.TripStatus.RECEIVED.statusCode) {
+                            Theme.colors.contentSecondary
+                        } else {
+                            Theme.colors.primary
+                        }
                     ) { textStyle ->
                         Row(
                             Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(text = it.color, style = textStyle)
-                            Circle()
-                            Text(text = it.plate, style = textStyle)
-                            Circle()
-                            Text(
-                                text = "${it.timeToArriveInMints} min to arrive",
-                                style = textStyle
-                            )
+                            Text(text = taxiRideUiState.taxiColor, style = textStyle)
+                            if (taxiRideUiState.rideStatus == Trip.TripStatus.RECEIVED.statusCode) {
+                                Circle()
+                                Text(text = taxiRideUiState.taxiPlateNumber, style = textStyle)
+                                Circle()
+                                Text(
+                                    text = "${taxiRideUiState.rideEstimatedTime} min to arrive",
+                                    style = textStyle
+                                )
+                            }
                         }
                     }
                 }
-                items(state.inProgressWrapper.tripsOnTheWay) {
+
+                items(state.liveOrders.deliveryOrders) {
                     HorizontalImageCard(
                         painter = painterResource(Resources.images.taxiOnTheWay),
                         titleText = Resources.strings.enjoyYourRide,
@@ -208,14 +222,19 @@ class HomeScreen :
                         onClick = listener::onClickInProgressTaxiRide
                     ) { textStyle ->
                         Text(
-                            text = "${it.timeToArriveInMints} min to arrive",
+                            text = "From ${it.restaurantName}",
                             style = textStyle
                         )
                     }
                 }
-                items(state.inProgressWrapper.ordersOnTheWay) {
+                items(state.liveOrders.foodOrders) {
                     HorizontalImageCard(
-                        painter = painterResource(Resources.images.orderOnTheWay),
+                        painter =
+                        if (it.orderStatus == FoodOrder.OrderStatusInRestaurant.APPROVED.statusCode) {
+                            painterResource(Resources.images.orderOnTheWay)
+                        } else {
+                            painterResource(Resources.images.inCookingFood)
+                        },
                         titleText = Resources.strings.orderOnTheWay,
                         onClick = listener::onClickInProgressOrderCard
                     ) { textStyle ->
@@ -226,6 +245,7 @@ class HomeScreen :
                     }
                 }
             }
+            // end in progress orders
 
             if (state.isLoggedIn) {
                 item {
@@ -368,7 +388,7 @@ class HomeScreen :
     private fun Circle(
         modifier: Modifier = Modifier,
         circleSize: Dp = 4.dp,
-        circleColor: Color = Theme.colors.disable
+        circleColor: Color = Theme.colors.disable,
     ) {
         Spacer(modifier.size(circleSize).drawBehind { drawCircle(circleColor) })
     }
@@ -444,7 +464,7 @@ class HomeScreen :
         showSeeAllCuisine: Boolean,
         recommendedCuisines: List<CuisineUiState>,
         onClickSeeAllCuisines: () -> Unit,
-        onClickCuisineItem: (String) -> Unit
+        onClickCuisineItem: (String) -> Unit,
     ) {
         Column(
             modifier = Modifier.padding(horizontal = 16.dp),

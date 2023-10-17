@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
-import domain.utils.OrderingFoodStatus
+import domain.entity.FoodOrder
 import presentation.base.BaseScreen
 import presentation.composable.BackButton
 import presentation.home.HomeScreen
@@ -40,7 +40,7 @@ class OrderFoodTrackingScreen : BaseScreen<
     @Composable
     override fun onRender(
         state: OrderFoodTrackingUiState,
-        listener: OrderFoodTrackingInteractionListener
+        listener: OrderFoodTrackingInteractionListener,
     ) {
         Box(
             modifier = Modifier
@@ -56,10 +56,10 @@ class OrderFoodTrackingScreen : BaseScreen<
                     onClick = { listener.onBackButtonClicked() })
                 OrderTrackerCard(
                     currentStatusDescription = when (state.currentOrderStatus) {
-                        is OrderingFoodStatus.OrderPlaced -> Resources.strings.orderPlaced
-                        is OrderingFoodStatus.OrderArrived -> Resources.strings.orderArrived
-                        is OrderingFoodStatus.OrderInCooking -> Resources.strings.orderInCooking
-                        is OrderingFoodStatus.OrderInTheRoute -> Resources.strings.orderInTheRoute
+                        FoodOrderStatus.ORDER_PLACED -> Resources.strings.orderPlaced
+                        FoodOrderStatus.ORDER_ARRIVED -> Resources.strings.orderArrived
+                        FoodOrderStatus.ORDER_IN_COOKING -> Resources.strings.orderInCooking
+                        FoodOrderStatus.ORDER_IN_THE_ROUTE -> Resources.strings.orderInTheRoute
                     },
                     state.orderStatus,
                     modifier = Modifier.padding(getNavigationBarPadding()).padding(16.dp)

@@ -1,10 +1,8 @@
 package presentation.orderFoodTracking
 
-import domain.utils.OrderingFoodStatus
-
 data class OrderFoodTrackingUiState(
     val orderStatus: OrderStatus = OrderStatus(),
-    val currentOrderStatus: OrderingFoodStatus = OrderingFoodStatus.OrderPlaced()
+    val currentOrderStatus: FoodOrderStatus = FoodOrderStatus.ORDER_PLACED,
 )
 
 data class OrderStatus(
@@ -12,5 +10,12 @@ data class OrderStatus(
     val isOrderPlaced: Boolean = true,
     val isOrderInCooking: Boolean = true,
     val isOrderInTheRoute: Boolean = false,
-    val isOrderArrived: Boolean = false
+    val isOrderArrived: Boolean = false,
 )
+
+enum class FoodOrderStatus {
+    ORDER_PLACED,
+    ORDER_IN_COOKING,
+    ORDER_IN_THE_ROUTE,
+    ORDER_ARRIVED;
+}
