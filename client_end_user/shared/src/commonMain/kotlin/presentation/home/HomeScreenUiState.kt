@@ -11,7 +11,10 @@ data class HomeScreenUiState(
     val inProgressWrapper: InProgressWrapper = InProgressWrapper(),
     val lastOrder: OrderUiState = OrderUiState(),
     val user: UserUiState = UserUiState(),
-    val showCart: Boolean = false
+    val showCart: Boolean = false,
+    val isLoggedIn: Boolean = false,
+    val isMoreCuisine: Boolean = false,
+    val maxCuisinesInHome:Int = 4
 ) {
     val hasProgress: Boolean
         get() = inProgressWrapper.taxisOnTheWay.isNotEmpty() ||
@@ -36,6 +39,7 @@ data class OfferUiState(
 )
 
 data class RestaurantUiState(
+    val id: String = "",
     val name: String = "",
     val rating: Double = 0.0,
     val priceLevel: PriceLevel = PriceLevel.LOW
@@ -43,7 +47,6 @@ data class RestaurantUiState(
 
 data class UserUiState(
     val username: String = "",
-    val isLogin: Boolean = false,
     val wallet: Double = 0.0,
     val currency: String = ""
 )

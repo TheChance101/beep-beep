@@ -5,9 +5,9 @@ import domain.entity.Cuisine
 
 fun CuisineDto.toCuisineEntity(): Cuisine {
     return Cuisine(
-        cuisineId = id,
-        cuisineName = name,
-        cuisineImageUrl = "https://icons.veryicon.com/png/Holiday/Christmas%205/fast%20food.png"
+        id = id,
+        name = name,
+        imageUrl = "https://icons.veryicon.com/png/Holiday/Christmas%205/fast%20food.png"
     )
 }
 

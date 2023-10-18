@@ -16,10 +16,16 @@ data class UserCollection(
     val id: ObjectId = ObjectId(),
     val fullName: String,
     val username: String,
-    val hashedPassword: String? = null,
     val email: String,
-    val country: String? = null,
+    val phone: String,
+    val country: String,
+    val hashedPassword: String? = null,
     val salt: String? = null,
+    @Contextual
+    val walletId: ObjectId? = null,
+    val addressIds: MutableList<@Contextual ObjectId> = mutableListOf(),
+    val favorite: MutableList<@Contextual ObjectId> = mutableListOf(),
     val permission: Int = Role.END_USER,
-    val isDeleted: Boolean = false,
+    val isDeleted: Boolean = false
+
 )

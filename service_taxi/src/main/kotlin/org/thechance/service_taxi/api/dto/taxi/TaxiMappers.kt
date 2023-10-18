@@ -14,6 +14,8 @@ fun TaxiDto.toEntity(): Taxi {
         type = type ?: "",
         driverId = driverId ?: "",
         driverUsername = driverUsername ?: "",
+        driverImage = driverImage ?: "",
+        rate = rate ?: 0.0,
         isAvailable = isAvailable ?: true,
         seats = seats ?: 4,
         tripsCount = tripsCount ?: 0
@@ -30,6 +32,8 @@ fun Taxi.toDto(): TaxiDto {
         isAvailable = isAvailable,
         tripsCount = tripsCount,
         driverUsername = driverUsername,
+        driverImage = driverImage,
+        rate = rate,
         seats = seats
     )
 }
@@ -40,14 +44,16 @@ fun List<Taxi>.toDto(): List<TaxiDto> = map(Taxi::toDto)
 fun TaxiCollection.toEntity(): Taxi {
     return Taxi(
         id = id.toString(),
-        plateNumber = plateNumber ?: throw CantBeNullException,
-        color = color?.let { Color.getColorByColorNumber(it) } ?: throw CantBeNullException,
-        type = type ?: throw CantBeNullException,
-        driverId = driverId?.toString() ?: throw CantBeNullException,
+        plateNumber = plateNumber ?: throw CantBeNullException(),
+        driverUsername = driverUsername ?: "",
+        driverImage = driverImage ?: "",
+        rate = rate ?: 0.0,
+        color = color?.let { Color.getColorByColorNumber(it) } ?: throw CantBeNullException(),
+        type = type ?: throw CantBeNullException(),
+        driverId = driverId?.toString() ?: throw CantBeNullException(),
         isAvailable = isAvailable ?: true,
         seats = seats ?: 4,
         tripsCount = tripsCount ?: 0,
-        driverUsername = driverUsername ?: ""
     )
 }
 
@@ -56,13 +62,15 @@ fun List<TaxiCollection>.toEntity(): List<Taxi> = map(TaxiCollection::toEntity)
 fun Taxi.toCollection(): TaxiCollection {
     return TaxiCollection(
         plateNumber = plateNumber,
+        driverUsername = driverUsername,
+        driverImage = driverImage,
+        rate = rate,
         color = color.colorNumber,
         type = type,
         driverId = ObjectId(driverId),
         isAvailable = isAvailable,
         seats = seats,
         tripsCount = tripsCount,
-        driverUsername = driverUsername,
         id = if (id.isNotBlank()) ObjectId(id) else ObjectId()
     )
 }

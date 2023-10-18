@@ -16,6 +16,7 @@ class SyrianArabicLocalizedMessages : LocalizedMessages {
     override val usernameCannotBeBlank: String = "اسم المستخدم ما يقدر يكون فاضي"
     override val passwordCannotBeBlank: String = "الرقم السري ما يقدر يكون فاضي"
     override val invalidEmail: String = "الإيميل مالو صحيح"
+    override val invalidPhone: String = "الموبايل مش صحيح"
     override val notFound: String = "ما لقيناه"
     override val invalidCredentials: String = "بيانات الاعتماد مالا صحيحة"
     override val userCreatedSuccessfully: String = "المستخدم صار عنا 🎉"
@@ -32,6 +33,10 @@ class SyrianArabicLocalizedMessages : LocalizedMessages {
     override val tripApproved: String = "تم قبول الرحلة"
     override val tripCanceled: String = "تم الغاء الرحلة"
     override val tripFinished: String = "تم إنهاء الرحلة بنجاح"
+    override val tripArrived: String = "تم الوصول الى العميل"
+    override val receivedNewTrip: String = "تم إستلام رحلة جديدة"
+    override val receivedNewDeliveryOrder: String = "تم إستلام اوردر جديد"
+    override val newOrderComing: String = "اوردر جديد وصل يا كبير"
     override val taxiUpdateSuccessfully: String = "سيارة التاكسي صارت محدثة 🎉"
     override val taxiDeleteSuccessfully: String = "سيارة التاكسي صارت محذوفة"
     override val invalidId: String= "الرقم مالو صحيح"
@@ -82,6 +87,9 @@ class SyrianArabicLocalizedMessages : LocalizedMessages {
     override val missingParameter: String = "في معلومات ناقصة يا جار!"
     override val tokensNotFound: String = "التوكن مالو موجود"
     override val tokenNotRegister: String = "التوكن مالو مسجل"
+    override val cartIsAlreadyEmpty: String = "لا يمكن اجراء الامر لان السله فارغه"
+    override val invalidQuantity: String = "مدخل كميه مش صح"
+
     //endregion
 
     // region notification

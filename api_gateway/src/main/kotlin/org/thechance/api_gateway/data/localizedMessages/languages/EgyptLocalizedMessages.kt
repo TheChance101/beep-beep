@@ -16,6 +16,7 @@ class EgyptianArabicLocalizedMessages : LocalizedMessages {
     override val usernameCannotBeBlank: String = "في اي يسطا"
     override val passwordCannotBeBlank: String = "فين الباسورد!! هنخم؟"
     override val invalidEmail: String = "الايميل يسطا!!"
+    override val invalidPhone: String ="رقم الموبايل مش صح يا عم !!"
     override val notFound: String = "مش موجود ياعم"
     override val invalidCredentials: String = "امسك حرامي"
     override val userCreatedSuccessfully: String = "اعمل حفلة بقى عندك حساب يا ابن المحظوظة 🎉"
@@ -31,6 +32,12 @@ class EgyptianArabicLocalizedMessages : LocalizedMessages {
     override val tripApproved: String = "تم قبول الرحلة"
     override val tripCanceled: String = "تم الغاء الرحلة"
     override val tripFinished: String = "تم إنهاء الرحلة بنجاح"
+    override val tripArrived: String = "تم الوصول الى العميل"
+    override val receivedNewTrip: String = "رحلة جديدة يا معلم الحق بسرعة"
+    override val newOrderComing: String = "اوردر جديد وصل يا كبير"
+    override val receivedNewDeliveryOrder: String = "جالك اوردر جديد ابسط يا عم"
+    override val taxiUpdateSuccessfully: String = "حدثنالك التاكسي يا عم 🎉"
+    override val taxiDeleteSuccessfully: String = "مسحنالك التاكسي مع الاسف"
     override val taxiUpdateSuccessfully: String = "حدثنالك التاكسي يا عم 🎉"
     override val taxiDeleteSuccessfully: String = "مسحنالك التاكسي مع الاسف"
     override val invalidId: String = "مش لاقيين التاكسي ده!!"
@@ -81,6 +88,9 @@ class EgyptianArabicLocalizedMessages : LocalizedMessages {
     override val missingParameter: String = "في حاجة ناقصة يا عم"
     override val tokensNotFound: String = "مش لاقيين التوكنات دي ياعم"
     override val tokenNotRegister: String = "التوكن ده مش مسجل ياعم"
+    override val cartIsAlreadyEmpty: String = "هتشتري ازاي والسله فاضيه اصلا!!"
+    override val invalidQuantity: String = "مدخل كميه مش صح"
+
     //endregion
 
     // region notification

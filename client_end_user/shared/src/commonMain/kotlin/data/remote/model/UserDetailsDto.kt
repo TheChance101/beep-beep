@@ -5,25 +5,14 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserDetailsDto(
-    @SerialName("addresses")
-    val addresses: List<AddressDto?>?,
-    @SerialName("country")
-    val country: String?,
-    @SerialName("currency")
-    val currency: String?,
-    @SerialName("email")
-    val email: String?,
-    @SerialName("fullName")
-    val fullName: String?,
-    @SerialName("id")
-    val id: String?,
-    @SerialName("permission")
-    val permission: Int?,
-    @SerialName("username")
-    val username: String?,
-    @SerialName("walletBalance")
-    val walletBalance: Double?,
-    @SerialName("phoneNumber")
-    val phoneNumber: String?
-
+    @SerialName("id") val id: String?,
+    @SerialName("fullName") val fullName: String? = null,
+    @SerialName("username") val username: String? = null,
+    @SerialName("email") val email: String? = null,
+    @SerialName("country") val country: String? = null,
+    @SerialName("phone") val phoneNumber: String? = null,
+    @SerialName("permission") val permission: Int? = null,
+    @SerialName("walletBalance") val walletBalance: Double? = null,
+    @SerialName("currency") val currency: String? = null,
+    @SerialName("addresses") val addresses: List<AddressDto?>?=  null,
 )

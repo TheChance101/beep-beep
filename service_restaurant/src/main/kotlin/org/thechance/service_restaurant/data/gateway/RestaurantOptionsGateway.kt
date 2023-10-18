@@ -7,15 +7,22 @@ import org.bson.types.ObjectId
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
 import org.thechance.service_restaurant.data.DataBaseContainer
-import org.thechance.service_restaurant.data.collection.*
+import org.thechance.service_restaurant.data.collection.CategoryCollection
+import org.thechance.service_restaurant.data.collection.CuisineCollection
+import org.thechance.service_restaurant.data.collection.MealCollection
+import org.thechance.service_restaurant.data.collection.RestaurantCollection
 import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
+import org.thechance.service_restaurant.data.collection.mapper.toMealEntity
 import org.thechance.service_restaurant.data.collection.relationModels.CategoryRestaurant
 import org.thechance.service_restaurant.data.collection.relationModels.MealCuisines
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
 import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.data.utils.toObjectIds
-import org.thechance.service_restaurant.domain.entity.*
+import org.thechance.service_restaurant.domain.entity.Category
+import org.thechance.service_restaurant.domain.entity.Cuisine
+import org.thechance.service_restaurant.domain.entity.Meal
+import org.thechance.service_restaurant.domain.entity.Restaurant
 import org.thechance.service_restaurant.domain.gateway.IRestaurantOptionsGateway
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
@@ -75,6 +82,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
             )
         ).toList().first().categories.filterNot { it.isDeleted }.toEntity()
     }
+
 
     override suspend fun addCategory(category: Category): Category {
         val addedCategory = category.toCollection()
@@ -150,7 +158,7 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
                 foreignField = "_id",
                 newAs = MealCuisines::meals.name
             )
-        ).toList().first().meals.filterNot { it.isDeleted }.toEntity()
+        ).toList().first().meals.filterNot { it.isDeleted }.toMealEntity()
     }
 
     override suspend fun addCuisine(cuisine: Cuisine): Cuisine {
@@ -202,50 +210,8 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
         )?.toEntity()
     }
 
-    //endregion
-
-    //region Order
-    override suspend fun addOrder(order: Order): Boolean {
-        return container.orderCollection.insertOne(order.toCollection()).wasAcknowledged()
-    }
-
-    override suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order> {
-        return container.orderCollection.find(
-            OrderCollection::restaurantId
-                    eq ObjectId(restaurantId)
-        ).toList().toEntity()
-    }
-
-    override suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order> {
-        return container.orderCollection.find(
-            OrderCollection::restaurantId eq ObjectId(restaurantId),
-            OrderCollection::orderStatus ne Order.Status.CANCELED.statusCode,
-            OrderCollection::orderStatus ne Order.Status.DONE.statusCode
-        ).toList().toEntity()
-    }
-
-    override suspend fun getOrderById(orderId: String): Order? =
-        container.orderCollection.findOneById(ObjectId(orderId))?.toEntity()
-
-    override suspend fun updateOrderStatus(orderId: String, status: Order.Status): Order? {
-        val updateOperation = setValue(OrderCollection::orderStatus, status.statusCode)
-        val updatedOrder = container.orderCollection.findOneAndUpdate(
-            filter = OrderCollection::id eq ObjectId(orderId),
-            update = updateOperation
-        )
-        return updatedOrder?.toEntity()
-    }
-
-    override suspend fun getOrdersHistory(restaurantId: String, page: Int, limit: Int): List<Order> {
-        return container.orderCollection
-            .find(
-                OrderCollection::orderStatus eq Order.Status.DONE.statusCode,
-                OrderCollection::orderStatus eq Order.Status.CANCELED.statusCode,
-                OrderCollection::restaurantId eq ObjectId(restaurantId)
-            )
-            .sort(descending(OrderCollection::createdAt))
-            .paginate(page, limit).toList().toEntity()
+    override suspend fun getTotalNumberOfCategories(): Long {
+        return container.categoryCollection.countDocuments(CategoryCollection::isDeleted eq false)
     }
     //endregion
-
 }

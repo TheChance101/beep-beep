@@ -1,5 +1,7 @@
 package domain.entity
 
+import kotlinx.datetime.LocalDate
+
 data class Trip(
     val id: String,
     val taxiId: String,
@@ -10,8 +12,8 @@ data class Trip(
     val startPoint: Location,
     val destination: Location,
     val rate: Double,
-    val price: Double,
-    val startDate: String,
-    val endDate: String,
+    val startDate: LocalDate,
+    val endDate: LocalDate?,
     val timeToArriveInMints: Int,
+    val price: Price
 )

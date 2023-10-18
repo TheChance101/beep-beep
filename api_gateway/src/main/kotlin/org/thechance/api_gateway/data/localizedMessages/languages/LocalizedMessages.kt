@@ -24,6 +24,8 @@ interface LocalizedMessages {
 
     val invalidEmail: String
 
+    val invalidPhone: String
+
     val notFound: String
 
     val invalidCredentials: String
@@ -50,6 +52,14 @@ interface LocalizedMessages {
     val tripCanceled: String
 
     val tripFinished: String
+
+    val tripArrived: String
+
+    val receivedNewTrip: String
+
+    val newOrderComing: String
+
+    val receivedNewDeliveryOrder: String
 
     val taxiUpdateSuccessfully: String
 
@@ -139,18 +149,22 @@ interface LocalizedMessages {
 
     val cuisineNameAlreadyExisted: String
 
+    val invalidQuantity: String
+
+    val cartIsAlreadyEmpty: String
+
     val missingParameter: String
 
     val tokensNotFound: String
 
-    val tokenNotRegister : String
+    val tokenNotRegister: String
 
 
     //endregion
 
 
     // region notification
-    val notificationNotSent : String
+    val notificationNotSent: String
     //endregion
 
 

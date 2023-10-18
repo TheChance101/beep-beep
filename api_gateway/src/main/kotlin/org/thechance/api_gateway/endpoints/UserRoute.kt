@@ -10,8 +10,7 @@ import io.ktor.server.routing.*
 import kotlinx.coroutines.async
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.model.LocationDto
-import org.thechance.api_gateway.data.model.getUserOptions
-import org.thechance.api_gateway.data.model.restaurant.getRestaurantOptions
+import org.thechance.api_gateway.data.model.identity.getUserOptions
 import org.thechance.api_gateway.data.service.IdentityService
 import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.data.service.TaxiService
@@ -70,6 +69,7 @@ fun Route.userRoutes() {
 
 
         authenticateWithRole(Role.END_USER) {
+
             get {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val userId = tokenClaim?.get(Claim.USER_ID).toString()
@@ -77,13 +77,15 @@ fun Route.userRoutes() {
                 val user = identityService.getUserById(userId, language)
                 respondWithResult(HttpStatusCode.OK, user)
             }
-            put("profile") {
+
+            put("/profile") {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val userId = tokenClaim?.get(Claim.USER_ID).toString()
                 val language = extractLocalizationHeader()
                 val params = call.receiveParameters()
-                val fullName = params["fullName"]?.trim().toString()
-                val result = identityService.updateUserProfile(userId, fullName, language)
+                val fullName = params["fullName"]?.trim()
+                val phone = params["phone"]?.trim()
+                val result = identityService.updateUserProfile(userId, fullName, phone, language)
                 respondWithResult(HttpStatusCode.OK, result)
             }
 
@@ -129,6 +131,14 @@ fun Route.userRoutes() {
                     userId = userId, restaurantId = restaurantId, languageCode = language
                 )
                 respondWithResult(HttpStatusCode.OK, result)
+            }
+
+            get("active/trips") {
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val userId = tokenClaim?.get(Claim.USER_ID).toString()
+                val language = extractLocalizationHeader()
+                val trips = taxiService.getActiveTripsByUserId(userId, language)
+                respondWithResult(HttpStatusCode.OK, trips)
             }
         }
     }

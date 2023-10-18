@@ -87,7 +87,7 @@ data class Arabic(
     override val yourCart: String = "العربة",
     override val allCuisines: String = "المطابخ",
     override val history: String = "سجل الطلبات",
-    override val logout: String= "تسجيل الخروج",
+    override val logout: String = "تسجيل الخروج",
     override val address: String = "العنوان",
     override val save: String= "حفظ",
     override val pleaseLogin: String="الرجاء تسجيل الدخول للوصول الى ملفك الشخصي",
@@ -102,5 +102,7 @@ data class Arabic(
     override val loginToAddToFavourite: String= "الرجاء تسجيل الدخول للاضافه",
     override val addToCart: String= "أضف إلى العربة",
     override val mealAddedToYourCart: String= "تمت إضافة الوجبة إلى عربة التسوق الخاصة بك",
-
-    ) : IStringResources
+    override val message: String = "الرسالة",
+    override val supportTeam: String = "فريق الدعم",
+    override val sendMessageToStartLiveChat: String = "أرسل رسالة لتبدأ المحادثة!",
+) : IStringResources

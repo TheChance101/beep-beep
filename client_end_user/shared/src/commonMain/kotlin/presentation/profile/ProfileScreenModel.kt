@@ -1,9 +1,10 @@
 package presentation.profile
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.entity.UserDetails
+import domain.entity.User
 import domain.usecase.IManageAuthenticationUseCase
-import domain.usecase.IManageUserUseCase
+import domain.usecase.IManageProfileUseCase
+import domain.usecase.IManageSettingUseCase
 import domain.usecase.validation.IValidationUseCase
 import domain.utils.AuthorizationException
 import kotlinx.coroutines.CoroutineScope
@@ -14,7 +15,7 @@ import presentation.base.ErrorState
 
 class ProfileScreenModel(
     private val validation: IValidationUseCase,
-    private val manageUser: IManageUserUseCase,
+    private val manageProfile: IManageProfileUseCase,
     private val manageAuthentication: IManageAuthenticationUseCase
 ) : BaseScreenModel<ProfileUIState, ProfileUIEffect>(ProfileUIState()), ProfileInteractionListener {
 
@@ -22,15 +23,36 @@ class ProfileScreenModel(
 
     init {
         checkIfLoggedIn()
-        getUserProfile()
     }
 
     private fun checkIfLoggedIn() {
         tryToExecute(
             { manageAuthentication.getAccessToken() },
             ::onCheckIfLoggedInSuccess,
-            ::onCheckIfLoggedInError
+            ::onError
         )
+    }
+
+    private fun getUserProfile() {
+        tryToExecute(
+            { manageProfile.getUserProfile() },
+            ::onGetUserProfileSuccess,
+            ::onError
+        )
+    }
+
+    private fun onGetUserProfileSuccess(userDetails: User) {
+        val result = userDetails.toUIState()
+        updateState {
+            it.copy(
+                user = result,
+                fullName = result.fullName,
+                phoneNumber = result.phoneNumber,
+                isButtonEnabled = false,
+                isLoading = false,
+                isLoggedIn = true,
+            )
+        }
     }
 
     private fun onCheckIfLoggedInSuccess(accessToken: Flow<String>) {
@@ -38,6 +60,7 @@ class ProfileScreenModel(
             accessToken.collect { token ->
                 if (token.isNotEmpty()) {
                     updateState { it.copy(isLoggedIn = true) }
+                    getUserProfile()
                 } else {
                     updateState { it.copy(isLoggedIn = false) }
                 }
@@ -45,36 +68,12 @@ class ProfileScreenModel(
         }
     }
 
-    private fun onCheckIfLoggedInError(errorState: ErrorState) {
+    private fun onError(errorState: ErrorState) {
         updateState { it.copy(isLoggedIn = false) }
-    }
-
-    private fun getUserProfile() {
-        tryToExecute(
-            { manageUser.getUserProfile() },
-            ::onGetUserProfileSuccess,
-            ::onGetUserProfileError
-        )
-    }
-
-    private fun onGetUserProfileSuccess(userDetails: UserDetails) {
-        val result = userDetails.toUIState()
-        updateState {
-            it.copy(
-                user = result,
-                fullName = result.fullName,
-                phoneNumber = result.phoneNumber
-            )
-        }
-    }
-
-    private fun onGetUserProfileError(errorState: ErrorState) {
-        updateState { it.copy(isLoggedIn = false) }
-        println(errorState)
     }
 
     override fun onFullNameChanged(fullName: String) {
-        updateState { it.copy(fullName = fullName, isButtonEnabled = true) }
+        updateState { it.copy(fullName = fullName) }
         checkValidate {
             validation.validateFullName(fullName)
             clearErrors()
@@ -82,10 +81,45 @@ class ProfileScreenModel(
     }
 
     override fun onPhoneNumberChanged(phone: String) {
-        updateState { it.copy(phoneNumber = phone, isButtonEnabled = true) }
+        updateState { it.copy(phoneNumber = phone) }
         checkValidate {
-            validation.validatePhone(phone, state.value.user?.currency!!)
+            validation.validatePhone(phone, state.value.user.currency)
             clearErrors()
+        }
+    }
+
+    override fun onSaveProfileInfo() {
+        updateState { it.copy(isLoading = true) }
+        tryToExecute(
+            { manageProfile.updateUserProfile(state.value.fullName, state.value.phoneNumber) },
+            ::onGetUserProfileSuccess,
+            ::onUpdateProfileError
+        )
+    }
+
+    private fun onUpdateProfileError(errorState: ErrorState) {
+        updateState { it.copy(isLoading = false) }
+        //TODO display toast failed to update
+    }
+
+    override fun onLogout() {
+        updateState { it.copy(isLoggedIn = false) }
+        viewModelScope.launch {
+            manageAuthentication.logout()
+        }
+    }
+
+    override fun onClickLogin() {
+        sendNewEffect(ProfileUIEffect.NavigateToLoginScreen)
+    }
+
+    private fun clearErrors() {
+        updateState {
+            it.copy(
+                isFullNameError = false,
+                isPhoneNumberError = false,
+                isButtonEnabled = it.isNameOrPhoneChange()
+            )
         }
     }
 
@@ -94,38 +128,12 @@ class ProfileScreenModel(
             block()
         } catch (e: AuthorizationException.InvalidFullNameException) {
             updateState {
-                it.copy(isFullNameError = true)
+                it.copy(isFullNameError = true, isButtonEnabled = false)
             }
         } catch (e: AuthorizationException.InvalidPhoneException) {
             updateState {
-                it.copy(isPhoneNumberError = true)
+                it.copy(isPhoneNumberError = true, isButtonEnabled = false)
             }
         }
-    }
-
-    private fun clearErrors() {
-        updateState {
-            it.copy(
-                isFullNameError = false,
-                isPhoneNumberError = false
-            )
-        }
-    }
-
-    override fun onSaveProfileInfo() {
-        updateState { it.copy(isButtonEnabled = true) }
-
-    }
-
-    override fun onLogout() {
-        updateState { it.copy(isLoggedIn = false) }
-        viewModelScope.launch {
-            manageAuthentication.removeAccessToken()
-            manageAuthentication.removeRefreshToken()
-        }
-    }
-
-    override fun onClickLogin() {
-        sendNewEffect(ProfileUIEffect.NavigateToLoginScreen)
     }
 }

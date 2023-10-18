@@ -36,6 +36,7 @@ import presentation.login.composable.RequestPermissionBottomSheet
 import presentation.login.composable.WrongPermissionBottomSheet
 import presentation.main.MainScreen
 import resources.Resources
+import util.getNavigationBarPadding
 
 class LoginScreen : BaseScreen<
         LoginScreenModel,
@@ -162,7 +163,8 @@ private fun LoginScreenContent(
                         password = state.password,
                         isKeepMeLoggedInChecked = state.keepLoggedIn
                     )
-                }
+                }, isLoading = state.isLoading,
+                enabled = state.isEnable
             )
         }
 
@@ -175,7 +177,8 @@ private fun LoginScreenContent(
             BPSnackBar(
                 icon = painterResource(Resources.images.warningIcon),
                 iconBackgroundColor = Theme.colors.warningContainer,
-                iconTint = Theme.colors.warning
+                iconTint = Theme.colors.warning,
+                modifier = Modifier.padding(bottom = getNavigationBarPadding().calculateBottomPadding())
             ) {
                 Text(
                     text = state.snackBarMessage,

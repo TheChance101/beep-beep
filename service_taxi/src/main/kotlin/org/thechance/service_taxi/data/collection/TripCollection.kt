@@ -8,23 +8,27 @@ import org.bson.types.ObjectId
 
 @Serializable
 data class TripCollection(
+    @SerialName("_id")
+    @BsonId
+    @Contextual
+    val id: ObjectId = ObjectId(),
     @Contextual
     val taxiId: ObjectId? = null,
     @Contextual
     val driverId: ObjectId? = null,
     @Contextual
-    val clientId: ObjectId?,
+    val clientId: ObjectId,
+    @Contextual
+    val restaurantId: ObjectId? = null,
     val startPoint: LocationCollection? = null,
     val destination: LocationCollection? = null,
+    val startPointAddress: String,
+    val destinationAddress: String,
     val rate: Double? = null,
     val price: Double?,
     val startDate: String? = null,
     val endDate: String? = null,
-) {
-    @SerialName("_id")
-    @BsonId
-    @Contextual
-    val id: ObjectId = ObjectId()
-    val isDeleted: Boolean = false
-}
+    val isATaxiTrip: Boolean,
+    val tripStatus: Int
+)
 

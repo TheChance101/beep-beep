@@ -3,6 +3,7 @@ package presentation.map
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -50,6 +51,12 @@ class MapScreen :
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
+            CalfMapWebView(
+                modifier = Modifier,
+                url = MAP_URL,
+                currentLocation = state.currentLocation.toEntity(),
+                destination = state.orderInfoUiState.dropOffAddress?.toEntity(),
+            )
             BpAppBar(
                 isBackIconVisible = false,
                 title = "${Resources.strings.mapScreenAppBarTitle}${state.userName}!"
@@ -72,7 +79,6 @@ class MapScreen :
                     )
                 }
             }
-
             MapCardAnimation(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 visible = state.isLoading,
@@ -105,6 +111,7 @@ class MapScreen :
                     listener = listener,
                 )
             }
+
         }
     }
 
@@ -124,8 +131,8 @@ class MapScreen :
     private fun MapCardAnimation(
         modifier: Modifier = Modifier,
         visible: Boolean,
-        enter: EnterTransition = slideInVertically { it } + fadeIn(),
-        exit: ExitTransition = slideOutVertically { it } + fadeOut(),
+        enter: EnterTransition = slideInVertically { it } + fadeIn(tween(600)),
+        exit: ExitTransition = slideOutVertically { it } + fadeOut(tween(600)),
         content: @Composable () -> Unit,
     ) {
         AnimatedVisibility(
@@ -218,7 +225,7 @@ class MapScreen :
 
                 Text(
                     modifier = Modifier.padding(start = 4.dp),
-                    text = state.dropOffAddress.name,
+                    text = state.pickUpAddress?.addressName ?: "",
                     color = Theme.colors.contentSecondary,
                     style = Theme.typography.body,
                 )
@@ -269,7 +276,7 @@ class MapScreen :
                         style = Theme.typography.caption,
                     )
                     Text(
-                        text = state.pickUpAddress.name,
+                        text = state.pickUpAddress?.addressName ?: "",
                         color = Theme.colors.contentPrimary,
                         style = Theme.typography.body,
                     )
@@ -289,7 +296,7 @@ class MapScreen :
                         style = Theme.typography.caption,
                     )
                     Text(
-                        text = state.dropOffAddress.name,
+                        text = state.dropOffAddress?.addressName ?: "",
                         color = Theme.colors.contentPrimary,
                         style = Theme.typography.body,
                     )
@@ -302,6 +309,10 @@ class MapScreen :
                 onClick = if (state.isArrived) listener::onClickDropOff else listener::onClickArrived
             )
         }
+    }
+
+    companion object {
+        private const val MAP_URL = "File:///android_asset/bing_map/map/index.html"
     }
 }
 
