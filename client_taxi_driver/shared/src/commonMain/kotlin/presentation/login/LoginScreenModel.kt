@@ -62,7 +62,6 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
 
     private fun handleErrorState(error: ErrorState) {
         when (error) {
-
             ErrorState.HasNoPermission -> {
                 state.value.bottomSheetUiState.sheetState.show()
             }

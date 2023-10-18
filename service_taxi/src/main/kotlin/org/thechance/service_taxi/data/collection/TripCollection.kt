@@ -18,12 +18,17 @@ data class TripCollection(
     val driverId: ObjectId? = null,
     @Contextual
     val clientId: ObjectId,
-    val isDeleted: Boolean = false,
+    @Contextual
+    val restaurantId: ObjectId? = null,
     val startPoint: LocationCollection? = null,
     val destination: LocationCollection? = null,
+    val startPointAddress: String,
+    val destinationAddress: String,
     val rate: Double? = null,
     val price: Double?,
     val startDate: String? = null,
     val endDate: String? = null,
+    val isATaxiTrip: Boolean,
+    val tripStatus: Int
 )
 

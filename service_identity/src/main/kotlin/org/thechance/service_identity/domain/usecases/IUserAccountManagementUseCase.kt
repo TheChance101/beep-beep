@@ -17,7 +17,7 @@ interface IUserAccountManagementUseCase {
 
     suspend fun deleteUser(id: String): Boolean
 
-    suspend fun updateUser(id: String, fullName: String? = null, phone: String? = null): UserManagement
+    suspend fun updateUser(id: String, fullName: String? = null, phone: String? = null): User
 
     suspend fun getUser(id: String): User
 
@@ -68,9 +68,10 @@ class UserAccountManagementUseCase(
         return dataBaseGateway.deleteUser(id)
     }
 
-    override suspend fun updateUser(id: String, fullName: String?, phone: String?): UserManagement {
+    override suspend fun updateUser(id: String, fullName: String?, phone: String?): User {
         userInfoValidationUseCase.validateUpdateUserInformation(fullName, phone)
-        return dataBaseGateway.updateUser(id, fullName, phone)
+        dataBaseGateway.updateUser(id, fullName, phone)
+        return dataBaseGateway.getUserById(id)
     }
 
     override suspend fun getUser(id: String): User {

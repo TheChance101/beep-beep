@@ -36,9 +36,17 @@ val screenModelsModule = module {
     factoryOf(::NotificationScreenModel)
     factoryOf(::CartScreenModel)
     factoryOf(::CuisinesScreenModel)
-    factoryOf(::RestaurantScreenModel)
-    factory { AppScreenModel(get()) }
     factoryOf(::ChatSupportScreenModel)
     factoryOf(::SearchScreenModel)
     factoryOf(::MealsScreenModel)
+    factory { AppScreenModel(get()) }
+    factory { (restaurantId: String) ->
+        RestaurantScreenModel(
+            restaurantId = restaurantId,
+            mangeRestaurantDetails = get(),
+            manageFavourite = get(),
+            manageAuthentication = get(),
+            manageOffers = get()
+        )
+    }
 }

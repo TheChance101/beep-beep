@@ -18,6 +18,8 @@ interface IManageOrderUseCase {
 
     suspend fun getOrderById(orderId: String): Order
 
+    suspend fun isOrderExisted(orderId: String): Boolean
+
     suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<Order>
 
     suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order>
@@ -51,13 +53,24 @@ class ManageOrderUseCase(
         return restaurantOperationGateway.getOrderById(orderId = orderId)!!
     }
 
+    override suspend fun isOrderExisted(orderId: String): Boolean {
+        if (!basicValidation.isValidId(orderId)) {
+            throw MultiErrorException(listOf(INVALID_ID))
+        }
+        return restaurantOperationGateway.isOrderExisted(orderId)
+    }
+
     override suspend fun updateOrderStatus(orderId: String, state: Order.Status): Order {
         orderValidationUseCase.validateUpdateOrder(orderId = orderId, status = state)
         return restaurantOperationGateway.updateOrderStatus(orderId = orderId, status = state)!!
     }
 
     override suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<Order> {
-        return restaurantOperationGateway.getOrdersHistoryForRestaurant(restaurantId = restaurantId, page = page, limit = limit)
+        return restaurantOperationGateway.getOrdersHistoryForRestaurant(
+            restaurantId = restaurantId,
+            page = page,
+            limit = limit
+        )
     }
 
     override suspend fun getActiveOrdersByRestaurantId(restaurantId: String): List<Order> {
@@ -70,8 +83,9 @@ class ManageOrderUseCase(
     override suspend fun getOrdersCountByDaysBefore(restaurantId: String, daysBack: Int): List<Map<Int, Int>> {
         basicValidation.isValidId(restaurantId).takeIf { it }?.let {
             return doInRangeWithDaysBack(daysBack) { daysOfYearRange, currentDateTime ->
-                val groupedOrdersByDayOfYear = restaurantOperationGateway.getOrdersByRestaurantId(restaurantId = restaurantId)
-                    .filter { it.createdAt.dayOfYear in daysOfYearRange }.groupBy { it.createdAt.dayOfYear }
+                val groupedOrdersByDayOfYear =
+                    restaurantOperationGateway.getOrdersByRestaurantId(restaurantId = restaurantId)
+                        .filter { it.createdAt.dayOfYear in daysOfYearRange }.groupBy { it.createdAt.dayOfYear }
 
                 daysOfYearRange.map {
                     val count = groupedOrdersByDayOfYear[it]?.size ?: 0
@@ -84,9 +98,10 @@ class ManageOrderUseCase(
     override suspend fun getOrdersRevenueByDaysBefore(restaurantId: String, daysBack: Int): List<Map<Int, Double>> {
         basicValidation.isValidId(restaurantId).takeIf { it }?.let {
             return doInRangeWithDaysBack(daysBack) { daysOfYearRange, currentDateTime ->
-                val groupedOrdersByDayOfYear = restaurantOperationGateway.getOrdersByRestaurantId(restaurantId = restaurantId)
-                    .filter { it.createdAt.dayOfYear in daysOfYearRange && it.status == Order.Status.DONE }
-                    .groupBy { it.createdAt.dayOfYear }
+                val groupedOrdersByDayOfYear =
+                    restaurantOperationGateway.getOrdersByRestaurantId(restaurantId = restaurantId)
+                        .filter { it.createdAt.dayOfYear in daysOfYearRange && it.status == Order.Status.DONE }
+                        .groupBy { it.createdAt.dayOfYear }
 
                 daysOfYearRange.map { days ->
                     val prices = groupedOrdersByDayOfYear[days]?.map { it.totalPrice } ?: emptyList()

@@ -132,6 +132,14 @@ fun Route.userRoutes() {
                 )
                 respondWithResult(HttpStatusCode.OK, result)
             }
+
+            get("active/trips") {
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val userId = tokenClaim?.get(Claim.USER_ID).toString()
+                val language = extractLocalizationHeader()
+                val trips = taxiService.getActiveTripsByUserId(userId, language)
+                respondWithResult(HttpStatusCode.OK, trips)
+            }
         }
     }
 
