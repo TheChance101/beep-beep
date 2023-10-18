@@ -22,7 +22,6 @@ data class CartMealUiState(
 
 fun Cart.toUiState() = CartUiState(
     meals = meals?.map { it.toUiState() } ?: emptyList(),
-    totalPrice = price.value,
     currency = price.currency
 )
 

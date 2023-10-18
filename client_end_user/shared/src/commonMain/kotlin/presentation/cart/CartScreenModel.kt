@@ -18,7 +18,7 @@ class CartScreenModel(private val cartManagement: ManageCartUseCase) :
     // region getting cart meals
     private fun getCartMeals() {
         tryToExecute(
-            { cartManagement.getCart() },
+            cartManagement::getCart,
             ::onGetCartMealsSuccess,
             ::onError
         )
@@ -39,7 +39,7 @@ class CartScreenModel(private val cartManagement: ManageCartUseCase) :
     // region saving cart
     override fun onDispose() {
         tryToExecute(
-            { cartManagement.updateCartMeals(state.value.toEntity()) },
+            { cartManagement.updateCart(state.value.toEntity()) },
             {},
             ::onError
         )

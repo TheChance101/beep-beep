@@ -1,24 +1,26 @@
 package presentation.cart
 
 import domain.entity.Cart
-import domain.entity.CartMeal
+import domain.entity.MealCart
+import domain.entity.Price
 
 fun CartUiState.toEntity(): Cart {
     return Cart(
         meals = meals.map { it.toEntity() },
-        currency = currency,
-        totalPrice = totalPrice
+        price = Price(totalPrice, currency),
+        restaurantId = null,
+        restaurantName = null,
+        restaurantImageUrl = null
     )
 }
 
-fun CartMealUiState.toEntity(): CartMeal {
-    return CartMeal(
+fun CartMealUiState.toEntity(): MealCart {
+    return MealCart(
         id = id,
         name = name,
-        price = price,
-        currency = currency,
+        price = Price(price, currency),
         restaurantName = restaurantName,
-        image = image,
-        count = count
+        imageUrl = image,
+        quality = count
     )
 }

@@ -1,7 +1,9 @@
 package data.remote.mapper
 
 import data.remote.model.CartDto
+import data.remote.model.CartMealDto
 import domain.entity.Cart
+import domain.entity.MealCart
 import domain.entity.Price
 
 fun CartDto.toEntity() = Cart(
@@ -12,34 +14,37 @@ fun CartDto.toEntity() = Cart(
     restaurantImageUrl = restaurantImage
 )
 
-fun CartMealDto.toEntity(): CartMeal {
-    return CartMeal(
+fun CartMealDto.toEntity(): MealCart {
+    return MealCart(
         id = mealId ?: "",
         name = name ?: "",
-        price = price ?: 0.0,
-        currency = currency ?: "",
+        price = Price(price ?: 0.0, currency ?: ""),
         restaurantName = restaurantName ?: "",
-        image = image ?: "",
-        count = quantity?.toLong() ?: 0
+        imageUrl = image ?: "",
+        quality = quantity ?: 0
     )
 }
 
 
 fun Cart.toDto(): CartDto {
     return CartDto(
-        meals = meals.map { it.toDto() },
-        currency = currency
+        meals = meals?.map { it.toDto() },
+        currency = price.currency,
+        totalPrice = price.value,
+        restaurantId = restaurantId,
+        restaurantName = restaurantName,
+        restaurantImage = restaurantImageUrl
     )
 }
 
-fun CartMeal.toDto(): CartMealDto {
+fun MealCart.toDto(): CartMealDto {
     return CartMealDto(
         mealId = id,
-        currency = currency,
+        currency = price.currency,
         restaurantName = restaurantName,
         name = name,
-        image = image,
-        quantity = count.toInt(),
-        price = price
+        image = imageUrl,
+        quantity = quality,
+        price = price.value
     )
 }
