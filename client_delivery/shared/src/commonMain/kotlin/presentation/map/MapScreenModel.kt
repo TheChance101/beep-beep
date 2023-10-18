@@ -86,17 +86,20 @@ class MapScreenModel(
     }
 
     override fun onAcceptClicked() {
-        updateState { it.copy(
-            orderState = OrderState.ACCEPTED,
-            // todo replace this with the restaurant actual location
-            orderUiState = OrderUiState(
-                destinationLocation = LocationUiState(
-                    31.2001,
-                    29.9187,
-                    addressName = state.value.orderUiState.restaurantAddress
-                )
+        tryToExecute(
+            function = { manageOrderUseCase.acceptOrder("","","") },
+            onSuccess = ::onAcceptOrderSuccess,
+            onError = ::onError
+        )
+    }
+
+    private fun onAcceptOrderSuccess(order: Order) {
+        updateState { mapScreenUiState ->
+            mapScreenUiState.copy(
+                orderUiState = order.toUiState(),
+                orderState = OrderState.ACCEPTED
             )
-        ) }
+        }
     }
 
     override fun onRejectClicked() {
@@ -106,12 +109,36 @@ class MapScreenModel(
     }
 
     override fun onReceivedClicked() {
-      updateState { it.copy(orderState = OrderState.RECEIVED) }
+        tryToExecute(
+            function = { manageOrderUseCase.updateOrderAsReceived("1", "1") },
+            onSuccess = ::onUpdateOrderAsReceivedSuccess,
+            onError = ::onError
+        )
+    }
+
+    private fun onUpdateOrderAsReceivedSuccess(order: Order) {
+        updateState { mapScreenUiState ->
+            mapScreenUiState.copy(
+                orderUiState = order.toUiState(),
+                orderState = OrderState.RECEIVED
+            )
+        }
     }
 
     override fun onDeliveredClicked() {
-        viewModelScope.launch {
-            updateState { it.copy(orderState = OrderState.DELIVERED) }
+        tryToExecute(
+            function = { manageOrderUseCase.updateOrderAsDelivered("1", "1") },
+            onSuccess = ::onUpdateOrderAsDeliveredSuccess,
+            onError = ::onError
+        )
+    }
+
+    private fun onUpdateOrderAsDeliveredSuccess(order: Order) {
+        updateState { mapScreenUiState ->
+            mapScreenUiState.copy(
+                orderUiState = order.toUiState(),
+                orderState = OrderState.DELIVERED
+            )
         }
     }
 
