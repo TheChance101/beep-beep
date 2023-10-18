@@ -34,7 +34,7 @@ class ChatService(
     }
 
     suspend fun receiveTicket(supportId: String): Flow<TicketDto> {
-        return client.tryToExecuteFromWebSocket<TicketDto>(
+        return client.tryToExecuteWebSocket<TicketDto>(
             api = APIs.CHAT_API,
             attributes = attributes,
             path = "/chat/tickets/$supportId",

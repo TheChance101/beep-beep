@@ -38,7 +38,7 @@ fun Route.chatRoute() {
                 val tickets = chatService.receiveTicket(supportId)
                 webSocketServerHandler.sessions[supportId] = this
                 webSocketServerHandler.sessions[supportId]?.let {
-                    webSocketServerHandler.tryToCollectFormWebSocket(tickets, it)
+                    webSocketServerHandler.tryToCollect(tickets, it)
                 }
             }
         }

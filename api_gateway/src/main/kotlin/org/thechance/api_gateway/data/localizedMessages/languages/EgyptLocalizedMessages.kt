@@ -38,8 +38,6 @@ class EgyptianArabicLocalizedMessages : LocalizedMessages {
     override val receivedNewDeliveryOrder: String = "جالك اوردر جديد ابسط يا عم"
     override val taxiUpdateSuccessfully: String = "حدثنالك التاكسي يا عم 🎉"
     override val taxiDeleteSuccessfully: String = "مسحنالك التاكسي مع الاسف"
-    override val taxiUpdateSuccessfully: String = "حدثنالك التاكسي يا عم 🎉"
-    override val taxiDeleteSuccessfully: String = "مسحنالك التاكسي مع الاسف"
     override val invalidId: String = "مش لاقيين التاكسي ده!!"
     override val invalidPlate: String = "الرقم اللي دخلته مش مظبوط يعم"
     override val invalidColor: String = "مش مظبوط اللون اللي دخلته يعم"
