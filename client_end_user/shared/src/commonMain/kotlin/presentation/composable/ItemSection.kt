@@ -16,7 +16,7 @@ fun ItemSection(
     onClickItem: (String) -> Unit = {},
     header: String,
     titles: List<String>,
-    painters: List<Painter>,
+    imageUrls: List<String>,
     modifier: Modifier = Modifier,
     hasPriceLevel: Boolean = false,
     hasRating: Boolean = false,
@@ -40,7 +40,7 @@ fun ItemSection(
                 BpImageCard(
                     onClickItem,
                     title = titles[index],
-                    painter = painters[index],
+                    imageUrl = imageUrls[index],
                     priceLevel = if(priceLevels.isNotEmpty()) priceLevels[index] else PriceLevel.LOW,
                     hasOffer = hasOffer,
                     offer = if (offers.isNotEmpty()) offers[index] else "",
