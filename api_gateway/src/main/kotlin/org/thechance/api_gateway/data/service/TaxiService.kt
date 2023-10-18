@@ -5,6 +5,7 @@ import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import io.ktor.util.*
+import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.PaginationResponse
@@ -12,6 +13,7 @@ import org.thechance.api_gateway.data.model.taxi.TaxiDto
 import org.thechance.api_gateway.data.model.taxi.TripDto
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.tryToExecute
+import org.thechance.api_gateway.data.utils.tryToExecuteWebSocket
 import org.thechance.api_gateway.util.APIs
 
 
@@ -22,17 +24,11 @@ class TaxiService(
     private val errorHandler: ErrorHandler
 ) {
 
-
     suspend fun getAllTaxi(languageCode: String, page: Int, limit: Int): PaginationResponse<TaxiDto> {
         return client.tryToExecute(
             api = APIs.TAXI_API,
             attributes = attributes,
-            setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(
-                    errorCodes,
-                    languageCode
-                )
-            }
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
         ) {
             get("/taxi") {
                 parameter("page", page)
@@ -41,72 +37,42 @@ class TaxiService(
         }
     }
 
-    suspend fun getTaxiById(
-        id: String,
-        languageCode: String
-    ): TaxiDto {
+    suspend fun getTaxiById(id: String, languageCode: String): TaxiDto {
         return client.tryToExecute(
             api = APIs.TAXI_API,
             attributes = attributes,
-            setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
-            }
-        ) {
-            get("/taxi/$id")
-        }
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { get("/taxi/$id") }
+        )
     }
 
     @OptIn(InternalAPI::class)
-    suspend fun createTaxi(
-        taxiDto: TaxiDto,
-        languageCode: String
-    ): TaxiDto {
+    suspend fun createTaxi(taxiDto: TaxiDto, languageCode: String): TaxiDto {
         return client.tryToExecute(
             api = APIs.TAXI_API,
             attributes = attributes,
-            setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
-            }
-        ) {
-
-            post("/taxi") {
-                body = Json.encodeToString(TaxiDto.serializer(), taxiDto)
-            }
-        }
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { post("/taxi") { body = Json.encodeToString(TaxiDto.serializer(), taxiDto) } }
+        )
     }
 
     @OptIn(InternalAPI::class)
-    suspend fun editTaxi(
-        id: String,
-        taxiDto: TaxiDto,
-        languageCode: String
-    ): TaxiDto {
+    suspend fun editTaxi(id: String, taxiDto: TaxiDto, languageCode: String): TaxiDto {
         return client.tryToExecute(
             api = APIs.TAXI_API,
             attributes = attributes,
-            setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
-            }
-        ) {
-            put("/taxi/$id") {
-                body = Json.encodeToString(TaxiDto.serializer(), taxiDto)
-            }
-        }
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { put("/taxi/$id") { body = Json.encodeToString(TaxiDto.serializer(), taxiDto) } }
+        )
     }
 
-    suspend fun deleteTaxi(
-        id: String,
-        languageCode: String
-    ): TaxiDto {
+    suspend fun deleteTaxi(id: String, languageCode: String): TaxiDto {
         return client.tryToExecute(
             api = APIs.TAXI_API,
             attributes = attributes,
-            setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
-            }
-        ) {
-            delete("/taxi/$id")
-        }
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { delete("/taxi/$id") }
+        )
     }
 
     suspend fun findTaxisByQuery(
@@ -121,9 +87,7 @@ class TaxiService(
         return client.tryToExecute(
             api = APIs.TAXI_API,
             attributes = attributes,
-            setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(errorCodes, language)
-            }
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, language) }
         ) {
             get("/taxis/search") {
                 parameter("page", page)
@@ -141,23 +105,40 @@ class TaxiService(
         return client.tryToExecute(
             api = APIs.TAXI_API,
             attributes = attributes,
-            setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
-            }
-        ) {
-            post("/trip") {
-                body = Json.encodeToString(TripDto.serializer(), trip)
-            }
-        }
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { post("/trip") { body = Json.encodeToString(TripDto.serializer(), trip) } }
+        )
+    }
+
+    suspend fun getTaxiTrips(driverId: String): Flow<TripDto> {
+        return client.tryToExecuteWebSocket<TripDto>(
+            api = APIs.TAXI_API,
+            attributes = attributes,
+            path = "/trip/taxi/$driverId",
+        )
+    }
+
+    suspend fun getDeliveryTrips(deliveryId: String): Flow<TripDto> {
+        return client.tryToExecuteWebSocket<TripDto>(
+            api = APIs.TAXI_API,
+            attributes = attributes,
+            path = "/trip/delivery/$deliveryId",
+        )
+    }
+
+    suspend fun trackOrderRequest(tripId: String): Flow<TripDto> {
+        return client.tryToExecuteWebSocket<TripDto>(
+            api = APIs.TAXI_API,
+            attributes = attributes,
+            path = "/trip/track/$tripId",
+        )
     }
 
     suspend fun getTripById(tripId: String, languageCode: String): TripDto {
         return client.tryToExecute(
             api = APIs.TAXI_API,
             attributes = attributes,
-            setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
-            },
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
             method = { get("/trip/$tripId") }
         )
     }
@@ -177,59 +158,49 @@ class TaxiService(
     }
 
     @OptIn(InternalAPI::class)
-    suspend fun approveTrip(
-        taxiId: String,
-        tripId: String,
-        driverId: String,
-        languageCode: String
-    ): TripDto {
-
+    suspend fun approveTrip(taxiId: String, tripId: String, driverId: String, languageCode: String): TripDto {
         return client.tryToExecute(
             api = APIs.TAXI_API,
             attributes = attributes,
-            setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
-            }
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
         ) {
             val formData = FormDataContent(Parameters.build {
                 append("tripId", tripId)
                 append("taxiId", taxiId)
                 append("driverId", driverId)
             })
-            put("/trip/approve") {
-                body = formData
-            }
+            put("/trip/approve") { body = formData }
         }
     }
 
     @OptIn(InternalAPI::class)
-    suspend fun finishTrip(tripId: String, driverId: String, languageCode: String): TripDto {
+    suspend fun updateTripAsReceived(tripId: String, driverId: String, languageCode: String): TripDto {
         return client.tryToExecute(
             api = APIs.TAXI_API,
             attributes = attributes,
-            setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
-            }
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
         ) {
             val formData = FormDataContent(Parameters.build {
                 append("tripId", tripId)
                 append("driverId", driverId)
             })
-            put("/trip/finish") {
-                body = formData
-            }
+            put("/trip/received") { body = formData }
         }
     }
 
-    suspend fun deleteTrip(tripId: String, languageCode: String): TripDto {
+    @OptIn(InternalAPI::class)
+    suspend fun updateTripAsFinished(tripId: String, driverId: String, languageCode: String): TripDto {
         return client.tryToExecute(
             api = APIs.TAXI_API,
             attributes = attributes,
-            setErrorMessage = { errorCodes ->
-                errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
-            },
-            method = { delete("/trip/$tripId") }
-        )
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
+        ) {
+            val formData = FormDataContent(Parameters.build {
+                append("tripId", tripId)
+                append("driverId", driverId)
+            })
+            put("/trip/finish") { body = formData }
+        }
     }
 
     suspend fun deleteTaxiByDriverId(id: String): Boolean {
@@ -237,6 +208,15 @@ class TaxiService(
             api = APIs.TAXI_API,
             attributes = attributes,
             method = { delete("/taxi/driver/$id") }
+        )
+    }
+
+    suspend fun getActiveTripsByUserId(userId: String, languageCode: String): List<TripDto> {
+        return client.tryToExecute<List<TripDto>>(
+            api = APIs.TAXI_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { get("/trip/actives/$userId") }
         )
     }
 }

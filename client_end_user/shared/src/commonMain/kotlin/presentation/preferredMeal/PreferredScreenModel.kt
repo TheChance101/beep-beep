@@ -1,15 +1,14 @@
 package presentation.preferredMeal
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.usecase.IManageUserUseCase
-import domain.usecase.IMangeUserPreferenceUseCase
+import domain.usecase.IManageSettingUseCase
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
 class PreferredScreenModel(
-    private val manageUser: IManageUserUseCase,
-    private val userPreferences: IMangeUserPreferenceUseCase,
+    private val manageUser: IManageSettingUseCase,
+    private val userPreferences: IManageSettingUseCase,
     ) :
     BaseScreenModel<PreferredScreenUiState, PreferredScreenUiEffect>(PreferredScreenUiState()),
     PreferredScreenInteractionListener {

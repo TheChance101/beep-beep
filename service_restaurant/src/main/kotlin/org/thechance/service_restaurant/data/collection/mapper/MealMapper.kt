@@ -4,6 +4,7 @@ import org.bson.types.ObjectId
 import org.thechance.service_restaurant.data.collection.CartCollection
 import org.thechance.service_restaurant.data.collection.MealCollection
 import org.thechance.service_restaurant.data.collection.relationModels.MealWithCuisines
+import org.thechance.service_restaurant.data.collection.relationModels.MealWithRestaurant
 import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.entity.MealDetails
 import java.util.*
@@ -24,6 +25,7 @@ fun MealDetails.toCollection(): MealCollection =
 fun MealCollection.toEntity() = Meal(
     id = id.toString(),
     restaurantId = restaurantId.toString(),
+    restaurantName = "",
     name = name,
     description = description,
     price = price,
@@ -42,7 +44,7 @@ fun MealWithCuisines.toEntity() = MealDetails(
     image = image
 )
 
-fun List<MealCollection>.toEntity(): List<Meal> = this.map { it.toEntity() }
+fun List<MealCollection>.toMealEntity(): List<Meal> = this.map { it.toEntity() }
 
 fun MealCollection.toMealInCart(quantity: Int) = CartCollection.MealCollection(
     mealId = id,
@@ -51,3 +53,17 @@ fun MealCollection.toMealInCart(quantity: Int) = CartCollection.MealCollection(
     quantity = quantity,
     price = price
 )
+
+fun MealWithRestaurant.toEntity() = Meal(
+    id = id.toString(),
+    restaurantId = restaurant.id.toString(),
+    restaurantName = restaurant.name,
+    name = name,
+    description = description,
+    price = price,
+    currency = currency,
+    image = image
+)
+
+
+fun List<MealWithRestaurant>.toEntity() = map { it.toEntity() }

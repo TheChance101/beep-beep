@@ -104,7 +104,7 @@ class RegistrationSubmitScreen(
                     modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
                     title = Resources.strings.signUp,
                     onClick = listener::onSignUpButtonClicked,
-                    enabled = !state.isLoading
+                    isLoading = state.isLoading,
                 )
             }
 

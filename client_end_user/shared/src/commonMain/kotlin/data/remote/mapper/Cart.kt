@@ -1,17 +1,16 @@
 package data.remote.mapper
 
 import data.remote.model.CartDto
-import data.remote.model.CartMealDto
 import domain.entity.Cart
-import domain.entity.CartMeal
+import domain.entity.Price
 
-fun CartDto.toEntity(): Cart {
-    return Cart(
-        meals = meals?.map { it.toEntity() } ?: emptyList(),
-        totalPrice = totalPrice ?: 0.0,
-        currency = currency ?: ""
-    )
-}
+fun CartDto.toEntity() = Cart(
+    meals = meals?.map { it.toEntity(restaurantName, currency) } ?: emptyList(),
+    price = Price(totalPrice ?: 0.0, currency ?: ""),
+    restaurantId = restaurantId,
+    restaurantName = restaurantName,
+    restaurantImageUrl = restaurantImage
+)
 
 fun CartMealDto.toEntity(): CartMeal {
     return CartMeal(

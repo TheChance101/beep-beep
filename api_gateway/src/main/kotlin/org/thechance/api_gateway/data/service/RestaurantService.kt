@@ -12,7 +12,7 @@ import org.thechance.api_gateway.data.model.PaginationResponse
 import org.thechance.api_gateway.data.model.restaurant.*
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.tryToExecute
-import org.thechance.api_gateway.data.utils.tryToExecuteFromWebSocket
+import org.thechance.api_gateway.data.utils.tryToExecuteWebSocket
 import org.thechance.api_gateway.util.APIs
 
 @Single
@@ -252,25 +252,13 @@ class RestaurantService(
             api = APIs.RESTAURANT_API, attributes = attributes,
             setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, language) }
         ) {
-            delete("/cart/$userId/orderNow")
+            post("/cart/$userId/orderNow")
         }
     }
 
     //endregion
 
     //region order
-    @OptIn(InternalAPI::class)
-    suspend fun createOrder(order: OrderDto, languageCode: String): OrderDto {
-        return client.tryToExecute<OrderDto>(
-            api = APIs.RESTAURANT_API,
-            attributes = attributes,
-            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
-        ) {
-            post("/order") {
-                body = Json.encodeToString(OrderDto.serializer(), order)
-            }
-        }
-    }
 
     suspend fun updateOrderStatus(orderId: String, status: Int, languageCode: String): OrderDto {
         return client.tryToExecute<OrderDto>(
@@ -282,10 +270,7 @@ class RestaurantService(
     }
 
     suspend fun getOrdersHistoryInRestaurant(
-        restaurantId: String,
-        page: Int,
-        limit: Int,
-        languageCode: String
+        restaurantId: String, page: Int, limit: Int, languageCode: String
     ): PaginationResponse<OrderDto> {
         return client.tryToExecute<PaginationResponse<OrderDto>>(
             api = APIs.RESTAURANT_API,
@@ -296,10 +281,7 @@ class RestaurantService(
     }
 
     suspend fun getOrdersHistoryForUser(
-        userId: String,
-        page: Int,
-        limit: Int,
-        languageCode: String
+        userId: String, page: Int, limit: Int, languageCode: String
     ): PaginationResponse<OrderDto> {
         return client.tryToExecute<PaginationResponse<OrderDto>>(
             api = APIs.RESTAURANT_API,
@@ -331,11 +313,19 @@ class RestaurantService(
         )
     }
 
-    suspend fun restaurantOrders(restaurantId: String, languageCode: String): Flow<OrderDto> {
-        return client.tryToExecuteFromWebSocket<OrderDto>(
+    suspend fun getIncomingOrders(restaurantId: String): Flow<OrderDto> {
+        return client.tryToExecuteWebSocket<OrderDto>(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
             path = "/order/restaurant/$restaurantId",
+        )
+    }
+
+    suspend fun trackOrder(orderId: String): Flow<OrderDto> {
+        return client.tryToExecuteWebSocket<OrderDto>(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+            path = "/order/track/$orderId",
         )
     }
 
@@ -345,6 +335,24 @@ class RestaurantService(
             attributes = attributes,
             setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
             method = { get("/order/$restaurantId/orders") }
+        )
+    }
+
+    suspend fun getOrderById(orderId: String?, languageCode: String): OrderDto {
+        return client.tryToExecute<OrderDto>(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { get("/order/$orderId") }
+        )
+    }
+
+    suspend fun isOrderExisted(orderId: String?, languageCode: String): Boolean {
+        return client.tryToExecute<Boolean>(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { get("/order/isExisted/$orderId") }
         )
     }
 
@@ -370,6 +378,15 @@ class RestaurantService(
                 parameter("limit", limit)
             }
         }
+    }
+
+    suspend fun isRestaurantExisted(restaurantId: String?, language: String): Boolean {
+        return client.tryToExecute<Boolean>(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, language) },
+            method = { get("/restaurant/isExisted/$restaurantId") }
+        )
     }
     //endregion
 }

@@ -9,11 +9,13 @@ import domain.entity.Location
 import domain.entity.Meal
 import domain.entity.Offer
 import domain.entity.Order
+import domain.entity.Price
 import domain.entity.Restaurant
 import domain.entity.Taxi
 import domain.entity.Trip
 import domain.gateway.IRestaurantGateway
 import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
 
 class FakeRestaurantGateway : IRestaurantGateway {
     override suspend fun getCuisines(): List<Cuisine> {
@@ -44,8 +46,13 @@ class FakeRestaurantGateway : IRestaurantGateway {
         return meals.map { it.toEntity() }
     }
 
-    override suspend fun getSweets(restaurantId: String): List<Meal> {
-        return meals.map { it.toEntity() }
+
+    override suspend fun search(query: String): Pair<List<Restaurant>, List<Meal>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getMealsInCuisine(cuisineId: String): List<Meal> {
+        return meals.toEntity()
     }
 
     private val offers = listOf(
@@ -79,9 +86,9 @@ class FakeRestaurantGateway : IRestaurantGateway {
                 startPoint = Location(37.7749, -122.4194),
                 destination = Location(37.7831, -122.4039),
                 rate = 4.5,
-                price = 25.0,
-                startDate = "2023-09-20 09:00:00",
-                endDate = "2023-09-20 09:30:00",
+                price = Price(20.0, "$"),
+                startDate = LocalDate(2023, 9, 20),
+                endDate = LocalDate(2023, 9, 20),
                 timeToArriveInMints = 30
             )
         )
@@ -102,26 +109,13 @@ class FakeRestaurantGateway : IRestaurantGateway {
         return listOf(
             Order(
                 id = "khhfhdfhd",
-                userId = "user123",
                 restaurantId = "restaurant456",
                 restaurantName = "Hamada Market",
                 restaurantImageUrl = "",
-                meals = listOf(
-                    Order.Meal(
-                        mealId = "meal789",
-                        mealName = "Cheeseburger",
-                        quantity = 2
-                    ),
-                    Order.Meal(
-                        mealId = "meal101",
-                        mealName = "Fries",
-                        quantity = 1
-                    )
-                ),
-                totalPrice = 15.99,
+                meals = listOf(),
+                price = Price(20.0, "$"),
                 createdAt = Clock.System.now().epochSeconds,
                 orderStatus = 1,
-                timeToArriveInMints = 20
             )
         )
     }

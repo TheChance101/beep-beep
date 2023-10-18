@@ -12,10 +12,10 @@ import org.thechance.service_restaurant.data.DataBaseContainer
 import org.thechance.service_restaurant.data.collection.CartCollection
 import org.thechance.service_restaurant.data.collection.MealCollection
 import org.thechance.service_restaurant.data.collection.OrderCollection
+import org.thechance.service_restaurant.data.collection.RestaurantCollection
 import org.thechance.service_restaurant.data.collection.mapper.*
 import org.thechance.service_restaurant.data.collection.relationModels.OrderWithRestaurant
 import org.thechance.service_restaurant.domain.entity.Cart
-import org.thechance.service_restaurant.domain.entity.Meal
 import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.gateway.IRestaurantManagementGateway
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
@@ -46,11 +46,22 @@ class RestaurantManagementGateway(private val container: DataBaseContainer) : IR
     override suspend fun getOrderById(orderId: String): Order? =
         container.orderCollection.findOneById(ObjectId(orderId))?.toEntity()
 
+    override suspend fun isOrderExisted(orderId: String): Boolean {
+        val order = container.orderCollection.findOne(
+            and(
+                OrderCollection::id eq ObjectId(orderId),
+                OrderCollection::orderStatus eq Order.Status.CANCELED.statusCode
+            )
+        )
+        return order != null
+    }
+
     override suspend fun updateOrderStatus(orderId: String, status: Order.Status): Order? {
         val updateOperation = setValue(OrderCollection::orderStatus, status.statusCode)
         val updatedOrder = container.orderCollection.findOneAndUpdate(
             filter = OrderCollection::id eq ObjectId(orderId),
-            update = updateOperation
+            update = updateOperation,
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )
         return updatedOrder?.toEntity()
     }
@@ -91,7 +102,6 @@ class RestaurantManagementGateway(private val container: DataBaseContainer) : IR
                 newAs = "restaurant"
             ),
             unwind("\$restaurant"),
-
             project(
                 OrderWithRestaurant::id from "\$_id",
                 OrderWithRestaurant::userId from "\$userId",

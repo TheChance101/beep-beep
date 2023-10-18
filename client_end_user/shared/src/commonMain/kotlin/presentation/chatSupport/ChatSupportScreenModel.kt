@@ -3,12 +3,12 @@ package presentation.chatSupport
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Message
 import domain.entity.Ticket
-import domain.usecase.ManageChatUseCase
+import domain.usecase.ChatUseCase
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
 class ChatSupportScreenModel(
-    private val manageChat: ManageChatUseCase,
+    private val manageChat: ChatUseCase,
 ) : BaseScreenModel<ChatUIState, ChatSupportUiEffect>(ChatUIState()),
     ChatSupportInteractionListener {
 
