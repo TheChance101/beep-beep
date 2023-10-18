@@ -77,14 +77,12 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
     }
 
     override suspend fun getRestaurant(id: String): Restaurant? {
-        return container.restaurantCollection.aggregate<RestaurantCollection>(
-            match(
-                and(
-                    RestaurantCollection::id eq ObjectId(id),
-                    RestaurantCollection::isDeleted eq false
-                )
-            ),
-        ).toList().firstOrNull()?.toEntity()
+        return container.restaurantCollection.findOne(
+            and(
+                RestaurantCollection::id eq ObjectId(id),
+                RestaurantCollection::isDeleted eq false
+            )
+        )?.toEntity()
     }
 
     override suspend fun getRestaurantIds(): List<String> {

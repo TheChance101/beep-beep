@@ -329,6 +329,14 @@ class RestaurantService(
         )
     }
 
+    suspend fun trackOrderByUserId(userId: String): Flow<OrderDto> {
+        return client.tryToExecuteWebSocket<OrderDto>(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+            path = "/order/user/track/$userId",
+        )
+    }
+
     suspend fun getActiveOrders(restaurantId: String, languageCode: String): List<OrderDto> {
         return client.tryToExecute<List<OrderDto>>(
             api = APIs.RESTAURANT_API,

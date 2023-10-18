@@ -95,6 +95,7 @@ fun Route.orderRoutes() {
             val result =
                 manageOrder.updateOrderStatus(orderId = id, state = Order.Status.getOrderStatus(status)).toDto()
             socketHandler.orders[result.id]?.order?.emit(result)
+            socketHandler.orders[result.userId]?.order?.emit(result)
             call.respond(HttpStatusCode.OK, result)
         }
 
@@ -108,6 +109,12 @@ fun Route.orderRoutes() {
             val orderId = call.parameters["orderId"] ?: throw MultiErrorException(listOf(NOT_FOUND))
             socketHandler.orders[orderId] = WebSocketOrder(this)
             socketHandler.collectOrder(orderId)
+        }
+
+        webSocket("/user/track/{userId}") {
+            val userId = call.parameters["userId"] ?: throw MultiErrorException(listOf(NOT_FOUND))
+            socketHandler.orders[userId] = WebSocketOrder(this)
+            socketHandler.collectOrder(userId)
         }
     }
 }

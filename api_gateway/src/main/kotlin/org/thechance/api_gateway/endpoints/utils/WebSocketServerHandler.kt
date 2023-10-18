@@ -3,10 +3,7 @@ package org.thechance.api_gateway.endpoints.utils
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.taxi.*
 import org.thechance.api_gateway.data.service.IdentityService
@@ -56,11 +53,12 @@ class WebSocketServerHandler(
     ) {
         try {
             values
+                .filter { it.isATaxiTrip == false }
                 .map { tripDto ->
                     val restaurantInfo =
                         restaurantService.getRestaurantInfo(
                             languageCode = language,
-                            restaurantId = tripDto.clientId ?: ""
+                            restaurantId = tripDto.restaurantId ?: ""
                         )
                     tripDto.toDeliveryTripResponse(restaurantInfo)
                 }.collectLatest { value ->
@@ -79,6 +77,7 @@ class WebSocketServerHandler(
 
         try {
             values
+                .filter { it.isATaxiTrip == true }
                 .map { tripDto ->
                     val taxi = taxiService.getTaxiById(tripDto.taxiId ?: "", language)
                     tripDto.toRideTrackingResponse(taxi)
