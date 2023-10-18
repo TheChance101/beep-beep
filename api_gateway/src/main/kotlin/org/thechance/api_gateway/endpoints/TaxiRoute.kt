@@ -210,6 +210,21 @@ fun Route.taxiRoutes() {
                     )
                 }
             }
+
+            webSocket("/track/rides") {
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val userId = tokenClaim?.get(Claim.USER_ID).toString()
+                val language = extractLocalizationHeaderFromWebSocket()
+                val ride = taxiService.trackRidesForUser(userId)
+                webSocketServerHandler.sessions[userId] = this
+                webSocketServerHandler.sessions[userId]?.let { session ->
+                    webSocketServerHandler.tryToTrackTaxiRide(
+                        values = ride,
+                        session = session,
+                        language = language
+                    )
+                }
+            }
         }
 
         authenticateWithRole(Role.END_USER) {
@@ -235,9 +250,16 @@ fun Route.taxiRoutes() {
                 val parameters = call.receiveParameters()
                 val taxiId = parameters["taxiId"]?.trim().orEmpty()
                 val tripId = parameters["tripId"]?.trim().orEmpty()
+                val userId = parameters["userId"]?.trim().orEmpty()
                 val driverId = tokenClaim?.get(Claim.USER_ID).toString()
                 val approvedTrip =
-                    taxiService.approveTrip(taxiId = taxiId, tripId = tripId, driverId = driverId, language)
+                    taxiService.approveTrip(
+                        taxiId = taxiId,
+                        tripId = tripId,
+                        userId = userId,
+                        driverId = driverId,
+                        languageCode = language
+                    )
                 respondWithResult(HttpStatusCode.OK, approvedTrip, successMessage)
             }
 
@@ -247,8 +269,10 @@ fun Route.taxiRoutes() {
                 val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripArrived
                 val parameters = call.receiveParameters()
                 val tripId = parameters["tripId"]?.trim().orEmpty()
+                val userId = parameters["userId"]?.trim().orEmpty()
                 val driverId = tokenClaim?.get(Claim.USER_ID).toString()
-                val receivedTrip = taxiService.updateTripAsReceived(tripId = tripId, driverId = driverId, language)
+                val receivedTrip =
+                    taxiService.updateTripAsReceived(tripId = tripId, driverId = driverId, userId = userId, language)
                 respondWithResult(HttpStatusCode.OK, receivedTrip, successMessage)
             }
 
@@ -259,7 +283,9 @@ fun Route.taxiRoutes() {
                 val parameters = call.receiveParameters()
                 val driverId = tokenClaim?.get(Claim.USER_ID).toString()
                 val tripId = parameters["tripId"]?.trim().orEmpty()
-                val finishedTrip = taxiService.updateTripAsFinished(tripId = tripId, driverId = driverId, language)
+                val userId = parameters["userId"]?.trim().orEmpty()
+                val finishedTrip =
+                    taxiService.updateTripAsFinished(tripId = tripId, driverId = driverId, userId = userId, language)
                 respondWithResult(HttpStatusCode.OK, finishedTrip, successMessage)
             }
         }
@@ -274,9 +300,16 @@ fun Route.taxiRoutes() {
                 val parameters = call.receiveParameters()
                 val taxiId = parameters["taxiId"]?.trim().orEmpty()
                 val tripId = parameters["tripId"]?.trim().orEmpty()
+                val userId = parameters["userId"]?.trim().orEmpty()
                 val deliveryId = tokenClaim?.get(Claim.USER_ID).toString()
                 val approvedTrip =
-                    taxiService.approveTrip(taxiId = taxiId, tripId = tripId, driverId = deliveryId, language)
+                    taxiService.approveTrip(
+                        taxiId = taxiId,
+                        tripId = tripId,
+                        driverId = deliveryId,
+                        userId = userId,
+                        language
+                    )
                 respondWithResult(HttpStatusCode.OK, approvedTrip, successMessage)
             }
 
@@ -286,8 +319,10 @@ fun Route.taxiRoutes() {
                 val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripArrived
                 val parameters = call.receiveParameters()
                 val tripId = parameters["tripId"]?.trim().orEmpty()
+                val userId = parameters["userId"]?.trim().orEmpty()
                 val deliveryId = tokenClaim?.get(Claim.USER_ID).toString()
-                val receivedTrip = taxiService.updateTripAsReceived(tripId = tripId, driverId = deliveryId, language)
+                val receivedTrip =
+                    taxiService.updateTripAsReceived(tripId = tripId, driverId = deliveryId, userId = userId, language)
                 respondWithResult(HttpStatusCode.OK, receivedTrip, successMessage)
             }
 
@@ -298,7 +333,9 @@ fun Route.taxiRoutes() {
                 val parameters = call.receiveParameters()
                 val deliveryId = tokenClaim?.get(Claim.USER_ID).toString()
                 val tripId = parameters["tripId"]?.trim().orEmpty()
-                val finishedTrip = taxiService.updateTripAsFinished(tripId = tripId, driverId = deliveryId, language)
+                val userId = parameters["userId"]?.trim().orEmpty()
+                val finishedTrip =
+                    taxiService.updateTripAsFinished(tripId = tripId, driverId = deliveryId, userId = userId, language)
                 respondWithResult(HttpStatusCode.OK, finishedTrip, successMessage)
             }
         }

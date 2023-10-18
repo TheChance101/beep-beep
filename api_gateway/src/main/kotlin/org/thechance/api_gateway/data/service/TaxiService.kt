@@ -134,6 +134,14 @@ class TaxiService(
         )
     }
 
+    suspend fun trackRidesForUser(userId: String): Flow<TripDto> {
+        return client.tryToExecuteWebSocket<TripDto>(
+            api = APIs.TAXI_API,
+            attributes = attributes,
+            path = "/trip/track/rides/$userId",
+        )
+    }
+
     suspend fun getTripById(tripId: String, languageCode: String): TripDto {
         return client.tryToExecute(
             api = APIs.TAXI_API,
@@ -158,7 +166,13 @@ class TaxiService(
     }
 
     @OptIn(InternalAPI::class)
-    suspend fun approveTrip(taxiId: String, tripId: String, driverId: String, languageCode: String): TripDto {
+    suspend fun approveTrip(
+        taxiId: String,
+        tripId: String,
+        driverId: String,
+        userId: String,
+        languageCode: String
+    ): TripDto {
         return client.tryToExecute(
             api = APIs.TAXI_API,
             attributes = attributes,
@@ -168,13 +182,14 @@ class TaxiService(
                 append("tripId", tripId)
                 append("taxiId", taxiId)
                 append("driverId", driverId)
+                append("userId", userId)
             })
             put("/trip/approve") { body = formData }
         }
     }
 
     @OptIn(InternalAPI::class)
-    suspend fun updateTripAsReceived(tripId: String, driverId: String, languageCode: String): TripDto {
+    suspend fun updateTripAsReceived(tripId: String, driverId: String, userId: String, languageCode: String): TripDto {
         return client.tryToExecute(
             api = APIs.TAXI_API,
             attributes = attributes,
@@ -183,13 +198,14 @@ class TaxiService(
             val formData = FormDataContent(Parameters.build {
                 append("tripId", tripId)
                 append("driverId", driverId)
+                append("userId", userId)
             })
             put("/trip/received") { body = formData }
         }
     }
 
     @OptIn(InternalAPI::class)
-    suspend fun updateTripAsFinished(tripId: String, driverId: String, languageCode: String): TripDto {
+    suspend fun updateTripAsFinished(tripId: String, driverId: String, userId: String, languageCode: String): TripDto {
         return client.tryToExecute(
             api = APIs.TAXI_API,
             attributes = attributes,
@@ -198,6 +214,7 @@ class TaxiService(
             val formData = FormDataContent(Parameters.build {
                 append("tripId", tripId)
                 append("driverId", driverId)
+                append("userId", userId)
             })
             put("/trip/finish") { body = formData }
         }
