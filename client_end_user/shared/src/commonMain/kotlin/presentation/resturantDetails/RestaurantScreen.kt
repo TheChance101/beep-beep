@@ -203,29 +203,25 @@ data class RestaurantScreen(val restaurantId: String) :
                         modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
                         color = Theme.colors.contentBorder
                     )
-                    val painters = mutableListOf<Painter>()
-                    repeat(state.sweets.size) {
-                        painters.add(painterResource(Resources.images.placeholder))
-                    }
 
-                    ItemSection(
-                        onClickItem = { orderId -> listener.onGoToDetails(orderId) },
-                        header = Resources.strings.sweets,
-                        titles = state.mostOrders.map { it.name },
-                        hasPrice = true,
-                        prices = state.mostOrders.map { it.price },
-                        painters = painters,
-                        modifier = Modifier.padding(vertical = 16.dp)
-                    )
-                    ItemSection(
-                        onClickItem = { orderId -> listener.onGoToDetails(orderId) },
-                        header = Resources.strings.sweets,
-                        titles = state.sweets.map { it.name },
-                        hasPrice = true,
-                        prices = state.sweets.map { it.price },
-                        painters = painters,
-                        modifier = Modifier.padding(getNavigationBarPadding())
-                    )
+//                    ItemSection(
+//                        onClickItem = { orderId -> listener.onGoToDetails(orderId) },
+//                        header = Resources.strings.sweets,
+//                        titles = state.mostOrders.map { it.name },
+//                        hasPrice = true,
+//                        prices = state.mostOrders.map { it.price },
+//                        imageUrls = state.,
+//                        modifier = Modifier.padding(vertical = 16.dp)
+//                    )
+//                    ItemSection(
+//                        onClickItem = { orderId -> listener.onGoToDetails(orderId) },
+//                        header = Resources.strings.sweets,
+//                        titles = state.sweets.map { it.name },
+//                        hasPrice = true,
+//                        prices = state.sweets.map { it.price },
+//                        painters = painters,
+//                        modifier = Modifier.padding(getNavigationBarPadding())
+//                    )
                 }
             }
             ToastMessage(
