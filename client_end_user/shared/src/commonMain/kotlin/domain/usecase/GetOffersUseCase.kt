@@ -10,7 +10,7 @@ interface IGetOffersUseCase {
     suspend fun getRestaurantMostOrders(restaurantId: String): List<Meal>
 
     private companion object {
-        const val DEFAULT_OFFER_LIMIT = 3
+        const val DEFAULT_OFFER_LIMIT = 0
     }
 }
 
@@ -18,7 +18,13 @@ class GetOffersUseCase(
     private val restaurantRemoteGateway: IRestaurantGateway,
 ) : IGetOffersUseCase {
     override suspend fun getNewOffers(limit: Int): List<Offer> {
-        return restaurantRemoteGateway.getNewOffers().take(limit)
+        return restaurantRemoteGateway.getNewOffers()
+            .takeWhile { it.restaurants.isNotEmpty() }
+            .apply {
+                if (limit != 0) {
+                    this.take(limit)
+                }
+            }
     }
 
     override suspend fun getRestaurantMostOrders(restaurantId: String): List<Meal> {
