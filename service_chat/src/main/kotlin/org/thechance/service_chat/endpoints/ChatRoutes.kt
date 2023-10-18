@@ -10,20 +10,17 @@ import kotlinx.coroutines.flow.collectLatest
 import org.koin.ktor.ext.inject
 import org.thechance.service_chat.domain.usecase.IManageChat
 import org.thechance.service_chat.domain.usecase.IManageTicket
-import org.thechance.service_chat.endpoints.models.Connection
 import org.thechance.service_chat.endpoints.models.MessageDto
 import org.thechance.service_chat.endpoints.models.SupportAgent
 import org.thechance.service_chat.endpoints.models.TicketDto
 import org.thechance.service_chat.endpoints.models.mappers.toDto
 import org.thechance.service_chat.endpoints.models.mappers.toEntity
-import java.util.*
 
 
 fun Route.chatRoutes() {
 
     val manageTicket: IManageTicket by inject()
     val manageChat: IManageChat by inject()
-    val connections = Collections.synchronizedSet<Connection?>(LinkedHashSet())
 
 
     route("/chat") {
@@ -37,7 +34,7 @@ fun Route.chatRoutes() {
         webSocket("/tickets/{supportId}") {
             val supportId = call.parameters["supportId"]?.trim().orEmpty()
             manageTicket.supports[supportId] = SupportAgent(session = this)
-            while (true){
+            while (true) {
                 manageTicket.notifySupportAgentOfNewTickets(supportId).collectLatest { ticket ->
                     sendSerialized(ticket.toDto())
                 }
@@ -46,21 +43,10 @@ fun Route.chatRoutes() {
 
         webSocket("/{ticketId}") {
             val ticketId = call.parameters["ticketId"]?.trim().orEmpty()
-            val thisConnection = Connection(this)
-            if (connections.size > 1) {
-                return@webSocket
-            }
-            connections += thisConnection
-            try {
+            while (true) {
                 val message = receiveDeserialized<MessageDto>()
-                manageChat.saveMessage(ticketId, message.toEntity())
-                connections.forEach {
-                    it.session.sendSerialized(message)
-                }
-            } catch (e: Exception) {
-                println(e.localizedMessage)
-            } finally {
-                connections -= thisConnection
+                val savedMessage = manageChat.saveMessage(ticketId, message.toEntity())
+                sendSerialized(savedMessage.toDto())
             }
         }
     }

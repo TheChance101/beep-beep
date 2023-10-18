@@ -33,12 +33,14 @@ class ChatGateway(private val container: DataBaseContainer) : IChatGateway {
     }
 
 
-    override suspend fun saveMessage(ticketId: String, message: Message) {
+    override suspend fun saveMessage(ticketId: String, message: Message): Message {
         val ticket = container.ticketCollection.findOne(TicketCollection::ticketId eq ticketId)
-        ticket?.messages?.add(message.toCollection())
+        val newMessage = message.toCollection()
+        ticket?.messages?.add(newMessage)
         ticket?.let {
             container.ticketCollection.updateOne(TicketCollection::ticketId eq ticketId, ticket)
         } ?: MultiErrorException(listOf(TICKET_NOT_FOUND))
+        return newMessage.toEntity()
     }
 
 }

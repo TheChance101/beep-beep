@@ -6,10 +6,9 @@ import io.ktor.util.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
+import org.thechance.api_gateway.data.model.MessageDto
 import org.thechance.api_gateway.data.model.TicketDto
-import org.thechance.api_gateway.data.utils.ErrorHandler
-import org.thechance.api_gateway.data.utils.tryToExecute
-import org.thechance.api_gateway.data.utils.tryToExecuteFromWebSocket
+import org.thechance.api_gateway.data.utils.*
 import org.thechance.api_gateway.util.APIs
 
 
@@ -39,6 +38,15 @@ class ChatService(
             api = APIs.CHAT_API,
             attributes = attributes,
             path = "/chat/tickets/$supportId",
+        )
+    }
+
+    suspend fun sendAndReceiveMessage(message: MessageDto, ticketId: String) : Flow<MessageDto> {
+        return client.tryToSendAndReceiveWebSocketData(
+            data = message,
+            api = APIs.CHAT_API,
+            attributes = attributes,
+            path = "/chat/$ticketId"
         )
     }
 

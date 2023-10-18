@@ -7,7 +7,7 @@ import org.thechance.service_chat.domain.utils.currentDateTime
 import org.thechance.service_chat.domain.utils.toMillis
 
 interface IManageChat {
-    suspend fun saveMessage(ticketId: String, message: Message)
+    suspend fun saveMessage(ticketId: String, message: Message): Message
 
 }
 
@@ -15,8 +15,8 @@ interface IManageChat {
 class ManageChat(
     private val chatGateway: IChatGateway
 ) : IManageChat {
-    override suspend fun saveMessage(ticketId: String, message: Message) {
-        chatGateway.saveMessage(ticketId, message.copy(time = currentDateTime().toMillis()))
+    override suspend fun saveMessage(ticketId: String, message: Message): Message {
+        return chatGateway.saveMessage(ticketId, message.copy(time = currentDateTime().toMillis()))
     }
 
 }
