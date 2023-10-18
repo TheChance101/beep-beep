@@ -61,7 +61,7 @@ class WebSocketServerHandler(
                             restaurantId = tripDto.restaurantId ?: ""
                         )
                     tripDto.toDeliveryTripResponse(restaurantInfo)
-                }.collectLatest { value ->
+                }.collect { value ->
                     session.sendSerialized(value)
                 }
         } catch (e: Exception) {
