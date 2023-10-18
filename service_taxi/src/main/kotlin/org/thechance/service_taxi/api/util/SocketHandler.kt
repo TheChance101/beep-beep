@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.flowOn
 import org.thechance.service_taxi.api.dto.trip.TripDto
 import org.thechance.service_taxi.api.dto.trip.WebSocketTrip
+import org.thechance.service_taxi.domain.entity.Trip
 import java.util.concurrent.ConcurrentHashMap
 
 class SocketHandler {
@@ -48,12 +49,12 @@ class SocketHandler {
                 ?.flowOn(Dispatchers.IO)
                 ?.collectLatest { tripDto ->
                     session?.sendSerialized(tripDto)
-//                    if (tripDto.tripStatus == Trip.Status.FINISHED.statusCode) {
-//                        session?.sendSerialized(tripDto)
-////                        endSession(key)
-//                    } else {
-//                        session?.sendSerialized(tripDto)
-//                    }
+                    if (tripDto.tripStatus == Trip.Status.FINISHED.statusCode) {
+                        session?.sendSerialized(tripDto)
+                        endSession(key)
+                    } else {
+                        session?.sendSerialized(tripDto)
+                    }
                 }
         } catch (e: Exception) {
             session?.send(e.message.toString())
