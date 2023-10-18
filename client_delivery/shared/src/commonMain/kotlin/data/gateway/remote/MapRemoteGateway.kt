@@ -17,15 +17,8 @@ import kotlinx.coroutines.flow.map
 class MapRemoteGateway(client: HttpClient) : IMapRemoteGateway,
     BaseRemoteGateway(client = client) {
     override suspend fun getOrders(): Flow<Order> {
-        return client.tryToExecuteWebSocket<BaseResponse<Order>>("/trip/delivery/65288100340d7030237c8759")
-            .map { baseResponse ->
-                if (baseResponse.isSuccess) {
-                    baseResponse.value
-                        ?: throw IllegalStateException("Value is null in successful response")
-                } else {
-                    throw Exception()
-                }
-            }
+        return client.tryToExecuteWebSocket<OrderDto>("192.168.1.100:8080/trip/incoming-delivery-orders")
+            .map { it.toTripEntity() }
     }
 
     override suspend fun sendLocation(location: LocationDto, tripId: String) {
@@ -33,12 +26,16 @@ class MapRemoteGateway(client: HttpClient) : IMapRemoteGateway,
     }
 
     @OptIn(InternalAPI::class)
-    override suspend fun acceptOrder(taxiId: String, tripId: String, driverId: String): Order {
+    override suspend fun acceptOrder(
+        taxiId: String,
+        tripId: String,
+        clientId: String,
+    ): Order {
         val result = tryToExecute<BaseResponse<OrderDto>> {
             val formData = FormDataContent(Parameters.build {
                 append("tripId", tripId)
                 append("taxiId", taxiId)
-                append("driverId", driverId)
+                append("userId", clientId)
             })
             put("/trip/approve") {
                 body = formData
@@ -49,11 +46,14 @@ class MapRemoteGateway(client: HttpClient) : IMapRemoteGateway,
     }
 
     @OptIn(InternalAPI::class)
-    override suspend fun updateOrderAsReceived(tripId: String, driverId: String): Order {
+    override suspend fun updateOrderAsReceived(
+        tripId: String,
+        clientId: String,
+    ): Order {
         val result = tryToExecute<BaseResponse<OrderDto>> {
             val formData = FormDataContent(Parameters.build {
                 append("tripId", tripId)
-                append("driverId", driverId)
+                append("userId", clientId)
             })
             put("/trip/received") {
                 body = formData
@@ -64,11 +64,14 @@ class MapRemoteGateway(client: HttpClient) : IMapRemoteGateway,
     }
 
     @OptIn(InternalAPI::class)
-    override suspend fun updateOrderAsDelivered(tripId: String, driverId: String): Order {
-         val result = tryToExecute<BaseResponse<OrderDto>> {
+    override suspend fun updateOrderAsDelivered(
+        tripId: String,
+        clientId: String,
+    ): Order {
+        val result = tryToExecute<BaseResponse<OrderDto>> {
             val formData = FormDataContent(Parameters.build {
                 append("tripId", tripId)
-                append("driverId", driverId)
+                append("userId", clientId)
             })
             put("/trip/finish") {
                 body = formData

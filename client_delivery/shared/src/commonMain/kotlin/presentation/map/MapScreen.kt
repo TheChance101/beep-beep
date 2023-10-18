@@ -72,6 +72,7 @@ class MapScreen:BaseScreen<MapScreenModel,MapScreenUiState,MapScreenUiEffect,Map
                 visible = state.orderState == OrderState.NEW_ORDER ,
                 modifier = Modifier.align(Alignment.BottomCenter)
             ){
+                println("Azorder: ${state.orderUiState}")
                 NewOrderCard(state, listener)
             }
 

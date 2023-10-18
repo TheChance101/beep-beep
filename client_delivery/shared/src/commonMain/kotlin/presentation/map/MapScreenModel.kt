@@ -2,13 +2,12 @@ package presentation.map
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Location
-import domain.usecase.IManageLoginUserUseCase
 import domain.entity.Order
+import domain.usecase.IManageLoginUserUseCase
 import domain.usecase.IManageOrderUseCase
 import domain.usecase.IManageUserLocationUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
@@ -35,26 +34,25 @@ class MapScreenModel(
                 )
             }
         }
-    }
+     }
+
     private fun getOrder() {
         updateState { it.copy(orderState = OrderState.LOADING) }
-        tryToExecute(
+        tryToCollect(
             function = manageOrderUseCase::getOrders,
-            onSuccess = ::onGetOrderSuccess,
+            onNewValue = ::onGetOrderSuccess,
             onError = ::onError
         )
     }
 
-    private fun onGetOrderSuccess(orders: Flow<Order>) {
-        viewModelScope.launch {
-            orders.collect { order ->
-                updateState { mapScreenUiState ->
-                    mapScreenUiState.copy(
-                        orderUiState = order.toUiState(),
-                        orderState = OrderState.NEW_ORDER
-                    )
-                }
-            }
+    private fun onGetOrderSuccess(order: Order) {
+        println("orderUiState: ${order.toUiState()}")
+        updateState { mapScreenUiState ->
+            mapScreenUiState.copy(
+                orderUiState = order.toUiState(),
+                orderState = OrderState.NEW_ORDER
+            )
+
         }
     }
 
@@ -95,7 +93,7 @@ class MapScreenModel(
                 destinationLocation = LocationUiState(
                     31.2001,
                     29.9187,
-                    ""
+                    addressName = state.value.orderUiState.restaurantAddress
                 )
             )
         ) }
@@ -104,8 +102,6 @@ class MapScreenModel(
     override fun onRejectClicked() {
         viewModelScope.launch {
             updateState { it.copy(orderState = OrderState.LOADING) }
-            delay(2000) // just for simulation
-            updateState { it.copy(orderState = OrderState.NEW_ORDER) }
         }
     }
 
@@ -115,13 +111,7 @@ class MapScreenModel(
 
     override fun onDeliveredClicked() {
         viewModelScope.launch {
-            currentLocation.startTracking()
-        }
-        viewModelScope.launch {
             updateState { it.copy(orderState = OrderState.DELIVERED) }
-            updateState { it.copy(orderState = OrderState.LOADING) }
-            delay(2000)
-            updateState { it.copy(orderState = OrderState.NEW_ORDER) }
         }
     }
 

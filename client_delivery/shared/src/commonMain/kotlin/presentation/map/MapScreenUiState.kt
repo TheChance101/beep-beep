@@ -8,8 +8,8 @@ data class MapScreenUiState(
     val username: String = "",
     val orderState: OrderState = OrderState.LOADING,
     val errorState: ErrorState? = null,
-    val orderDistance: String = "20 KM",
-    val orderDuration: String = "20 min",
+    val orderDistance: String = "",
+    val orderDuration: String = "",
     val orderUiState: OrderUiState = OrderUiState(),
     val deliveryLocation: LocationUiState = LocationUiState(),
 )
