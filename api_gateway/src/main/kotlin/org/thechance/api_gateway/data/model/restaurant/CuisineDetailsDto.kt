@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CuisineDetailsDto(
     @SerialName("id") val id: String? = null,
-    @SerialName("name") val name: String,
+    @SerialName("name") val name: String?=null,
     @SerialName("image") val image: String? = null,
-    @SerialName("meals") val meals: List<MealDto> = emptyList()
+    @SerialName("meals") val meals: List<MealDto>? = null
 )

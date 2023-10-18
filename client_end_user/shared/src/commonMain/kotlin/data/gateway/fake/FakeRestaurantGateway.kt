@@ -46,6 +46,10 @@ class FakeRestaurantGateway : IRestaurantGateway {
         return meals.map { it.toEntity() }
     }
 
+    override suspend fun getCuisinesWithMealsInRestaurant(restaurantId: String): List<Cuisine> {
+        TODO("Not yet implemented")
+    }
+
 
     override suspend fun search(query: String): Pair<List<Restaurant>, List<Meal>> {
         TODO("Not yet implemented")

@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
@@ -74,7 +73,7 @@ data class RestaurantScreen(val restaurantId: String) :
                     if (state.showMealSheet)
                         MealBottomSheet(
                             modifier = Modifier.padding(getNavigationBarPadding()),
-                            meal = state.meal,
+                            meal = state.selectedMeal,
                             onAddToCart = listener::onAddToCart,
                             onDismissSheet = listener::onDismissSheet,
                             onIncreaseQuantity = listener::onIncreaseMealQuantity,
@@ -199,6 +198,7 @@ data class RestaurantScreen(val restaurantId: String) :
                             }
                         }
                     }
+
                     Divider(
                         modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
                         color = Theme.colors.contentBorder
@@ -213,17 +213,22 @@ data class RestaurantScreen(val restaurantId: String) :
 //                        imageUrls = state.,
 //                        modifier = Modifier.padding(vertical = 16.dp)
 //                    )
-//                    ItemSection(
-//                        onClickItem = { orderId -> listener.onGoToDetails(orderId) },
-//                        header = Resources.strings.sweets,
-//                        titles = state.sweets.map { it.name },
-//                        hasPrice = true,
-//                        prices = state.sweets.map { it.price },
-//                        painters = painters,
-//                        modifier = Modifier.padding(getNavigationBarPadding())
-//                    )
+                    state.cuisines.forEach { cuisine ->
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            ItemSection(
+                                onClickItem = listener::onGoToDetails,
+                                header = cuisine.name,
+                                titles = cuisine.meals.map { it.name },
+                                hasPrice = true,
+                                prices = cuisine.meals.map { it.price },
+                                imageUrls = cuisine.meals.map { it.image },
+                                modifier = Modifier.padding(getNavigationBarPadding())
+                            )
+                        }
+                    }
                 }
             }
+
             ToastMessage(
                 state = state.showToast,
                 message = Resources.strings.mealAddedToYourCart,

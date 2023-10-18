@@ -65,6 +65,12 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client), IRes
         return emptyList()
     }
 
+    override suspend fun getCuisinesWithMealsInRestaurant(restaurantId: String): List<Cuisine> {
+        return tryToExecute<ServerResponse<List<CuisineDto>>> {
+            get("/restaurant/${restaurantId}/cuisineMeals")
+        }.value?.toCuisineEntity() ?: throw GeneralException.NotFoundException
+    }
+
 
     override suspend fun search(query: String): Pair<List<Restaurant>, List<Meal>> {
         val result = tryToExecute<ServerResponse<MealRestaurantDto>> {

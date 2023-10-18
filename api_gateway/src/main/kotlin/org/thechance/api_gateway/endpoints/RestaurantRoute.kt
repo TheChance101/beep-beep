@@ -77,7 +77,7 @@ fun Route.restaurantRoutes() {
             val language = extractLocalizationHeader()
             val restaurantId = call.parameters["restaurantId"]?.trim().toString()
             val result = restaurantService.getCuisinesMealsInRestaurant(restaurantId, language)
-            call.respond(HttpStatusCode.OK, result)
+            respondWithResult(HttpStatusCode.OK, result)
         }
 
         get("/{restaurantId}") {

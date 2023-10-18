@@ -167,7 +167,7 @@ class RestaurantService(
             attributes = attributes,
             setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
         ) {
-            get("restaurant/$restaurantId/cuisineMeals")
+            get("/restaurant/$restaurantId/cuisineMeals")
         }
 
     suspend fun getMealsByCuisineId(cuisineId: String, languageCode: String): List<MealDto> {
