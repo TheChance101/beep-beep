@@ -4,6 +4,7 @@ import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Cart
 import domain.entity.FoodOrder
 import domain.entity.Restaurant
+import domain.entity.TaxiRide
 import domain.entity.Trip
 import domain.entity.User
 import domain.usecase.IExploreRestaurantUseCase
@@ -46,6 +47,43 @@ class HomeScreenModel(
         getActiveFoodOrders()
     }
 
+    private fun tackAndUpdateTaxiRide(tripId: String) {
+        tryToCollect(
+            { inProgressTrackerUseCase.trackTaxiRide(tripId) },
+            ::onTrackingTaxiRideSuccess,
+            ::onSocketError
+        )
+    }
+
+    private fun onSocketError(errorState: ErrorState) {
+        println("errror Socket : $errorState")
+    }
+
+    private fun onTrackingTaxiRideSuccess(taxiRide: TaxiRide) {
+        updateState { homeScreenUiState ->
+            val currentTaxiRides = homeScreenUiState.liveOrders.taxiRides.toMutableList()
+            val existingTaxiRide = currentTaxiRides.find { it.tripId == taxiRide.id }
+
+            if (existingTaxiRide != null) {
+                val updatedTaxiRidesList = currentTaxiRides.map { taxiRideUiState ->
+                    if (taxiRideUiState.tripId == taxiRide.id) {
+                        if (taxiRide.tripStatus.statusCode == Trip.TripStatus.FINISHED.statusCode) {
+                            getActiveTaxiTrips()
+                        }
+                        taxiRide.toTaxiRideUiState()
+                    } else {
+                        taxiRideUiState
+                    }
+                }
+                homeScreenUiState.copy(liveOrders = homeScreenUiState.liveOrders.copy(taxiRides = updatedTaxiRidesList))
+            } else {
+                val newTaxiRideUiState = taxiRide.toTaxiRideUiState()
+                currentTaxiRides.add(newTaxiRideUiState)
+                homeScreenUiState.copy(liveOrders = homeScreenUiState.liveOrders.copy(taxiRides = currentTaxiRides))
+            }
+        }
+    }
+
     private fun getActiveTaxiTrips() {
         tryToCollect(
             { inProgressTrackerUseCase.getActiveTaxiTrips() },
@@ -78,7 +116,14 @@ class HomeScreenModel(
                 )
             )
         }
+
+        if (taxiTrips.isNotEmpty()) {
+            taxiTrips.forEach { trip ->
+                tackAndUpdateTaxiRide(trip.id)
+            }
+        }
     }
+
 
     private fun onGetActiveDeliveryTripsSuccess(deliveryTrips: List<Trip>) {
         updateState { homeScreenState ->

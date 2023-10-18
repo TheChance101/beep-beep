@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class OrderDto(
+data class FoodOrderDto(
     @SerialName("id") val id: String? = null,
     @SerialName("userId") val userId: String? = null,
     @SerialName("restaurantId") val restaurantId: String? = null,

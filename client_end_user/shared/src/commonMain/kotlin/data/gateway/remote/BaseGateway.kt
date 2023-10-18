@@ -7,11 +7,32 @@ import domain.utils.InternetException
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.websocket.receiveDeserialized
+import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.client.statement.HttpResponse
-import io.ktor.client.statement.bodyAsText
-import io.ktor.http.isSuccess
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 abstract class BaseGateway(val client: HttpClient) {
+
+    suspend inline fun <reified T> tryToExecuteWebSocket(path: String): Flow<T> {
+        return flow {
+            client.webSocket(urlString = path) {
+                while (true) {
+                    try {
+                        emit(receiveDeserialized<T>())
+                    } catch (e: Exception) {
+                        println("Errrrrrrrrrr ${e.message.toString()}")
+                        throw Exception(e.message.toString())
+                    }
+                }
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
     suspend inline fun <reified T> tryToExecute(method: HttpClient.() -> HttpResponse): T {
         try {
             return client.method().body()

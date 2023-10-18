@@ -2,6 +2,7 @@ package presentation.home
 
 import domain.entity.FoodOrder
 import domain.entity.PriceLevel
+import domain.entity.TaxiRide
 import domain.entity.Trip
 import presentation.cuisines.CuisineUiState
 
@@ -41,6 +42,16 @@ data class TaxiRideUiState(
     val rideEstimatedTime: Int = 30,
 )
 
+fun TaxiRide.toTaxiRideUiState(): TaxiRideUiState {
+    return TaxiRideUiState(
+        tripId = this.id,
+        taxiColor = "White",
+        taxiPlateNumber = this.taxiPlateNumber,
+        rideStatus = this.tripStatus.statusCode,
+        rideEstimatedTime = 30,
+    )
+}
+
 data class DeliveryOrderUiState(
     val tripId: String = "",
     val restaurantName: String = "",
@@ -54,7 +65,7 @@ data class FoodOrderUiState(
 
 data class OrderUiState(
     val id: String = "",
-    val image: String = "https://s3-alpha-sig.figma.com/img/42f5/b4a1/acaee3b03ba74a8d32dc3ca923356221?Expires=1694995200&Signature=kU4mJsFvnFuSxvUemFrj3jWqT4Rq-Jclc8tq4hiZGhNNjAYEk2Dt1JYFzvy7EYlDgt36JwcC~PCgdqn53E3JkYKRAmojbgwtKN~Rn6o-z4GzgTEoUXvvS2TU6XJbS5Hmei1A3uD1qIavVsvd3Cr~P0KHXm3J8IPI14TwlywTqQLqcEuA9Htogw-cRFMhuscB6BIjMuL1v3Z-yITZSBsn~SEOU8MyhbpZrl7YFPh3bzOfUijlPwklTeygB8BPilmCVIkYPR86FMSzs~j4OXrKL9B7-T9thwqhS6Z4i0W2r~Qy0y7KAmX82NpHEK4Y7sn3jF4B3oxFTTtyEy-asku~~A__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4",
+    val image: String = "",
     val restaurantName: String = "Burger King",
     val date: String = "Jan 5",
 )
@@ -80,9 +91,9 @@ data class UserUiState(
 fun Trip.toTaxiRideUiState(): TaxiRideUiState {
     return TaxiRideUiState(
         tripId = this.id,
-        taxiColor = this.taxiPlateNumber ?: "",
-        taxiPlateNumber = this.taxiPlateNumber ?: "",
-        rideStatus = this.tripStatus,
+        taxiColor = "White",
+        taxiPlateNumber = this.taxiPlateNumber ?: "5874RE",
+        rideStatus = this.tripStatus.statusCode,
         rideEstimatedTime = this.estimatedTimeToArriveInMints,
     )
 }
@@ -90,7 +101,7 @@ fun Trip.toTaxiRideUiState(): TaxiRideUiState {
 fun Trip.toDeliveryOrderUiState(): DeliveryOrderUiState {
     return DeliveryOrderUiState(
         tripId = this.id,
-        restaurantName = this.restaurantId ?: "",
+        restaurantName = this.restaurantId ?: "Hello Restaurant",
     )
 }
 

@@ -17,20 +17,21 @@ data class Trip(
     val destinationAddress: String,
     val rate: Double,
     val price: Double,
-    val startDate: LocalDate,
-    val endDate: LocalDate? = null,
+    val startDate: String? = null,
+    val endDate: String? = null,
     val isATaxiTrip: Boolean,
-    val tripStatus: Int,
+    val tripStatus: TripStatus,
     val timeToArriveInMints: Int,
 ) {
 
     val estimatedTimeToArriveInMints: Int
-        get() = when (TripStatus.getTripStatus(tripStatus)) {
+        get() = when (TripStatus.getTripStatus(tripStatus.statusCode)) {
             TripStatus.PENDING -> LocalTime(0, 40).minute
             TripStatus.APPROVED -> {
                 if (timeToArriveInMints == 0)
                     LocalTime(0, 30).minute else timeToArriveInMints
             }
+
             TripStatus.RECEIVED -> timeToArriveInMints / 2
             TripStatus.FINISHED -> LocalTime(0, 0).minute
         }

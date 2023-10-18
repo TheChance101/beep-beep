@@ -1,10 +1,13 @@
 package data.gateway.fake
 
 import domain.entity.Cart
+import domain.entity.DeliveryRide
 import domain.entity.Location
 import domain.entity.FoodOrder
+import domain.entity.TaxiRide
 import domain.entity.Trip
 import domain.gateway.ITransactionsGateway
+import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 
@@ -20,9 +23,9 @@ class FakeTransactionsGateway : ITransactionsGateway {
                 destinationAddress = "456 Elm Street, Town",
                 rate = 3.5,
                 price = 25.0,
-                startDate = LocalDate(2023, 10, 17),
+                startDate = "2023-10-17",
                 isATaxiTrip = true,
-                tripStatus = 1,
+                tripStatus = Trip.TripStatus.RECEIVED,
                 timeToArriveInMints = 10
             ),
             Trip(
@@ -34,9 +37,9 @@ class FakeTransactionsGateway : ITransactionsGateway {
                 destinationAddress = "456 Elm Street, Town",
                 rate = 3.5,
                 price = 25.0,
-                startDate = LocalDate(2023, 10, 17),
+                startDate = "2023-10-17",
                 isATaxiTrip = true,
-                tripStatus = 1,
+                tripStatus = Trip.TripStatus.RECEIVED,
                 timeToArriveInMints = 10
             ),
             Trip(
@@ -48,9 +51,8 @@ class FakeTransactionsGateway : ITransactionsGateway {
                 destinationAddress = "456 Elm Street, Town",
                 rate = 3.5,
                 price = 25.0,
-                startDate = LocalDate(2023, 10, 17),
                 isATaxiTrip = true,
-                tripStatus = 1,
+                tripStatus = Trip.TripStatus.RECEIVED,
                 timeToArriveInMints = 10
             ),
         )
@@ -109,6 +111,18 @@ class FakeTransactionsGateway : ITransactionsGateway {
     }
 
     override suspend fun getActiveOrders(): List<FoodOrder> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun trackTaxiRide(tripId: String): Flow<TaxiRide> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun trackDeliveryRide(tripId: String): Flow<DeliveryRide> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun trackFoodOrderInRestaurant(orderId: String): Flow<FoodOrder> {
         TODO("Not yet implemented")
     }
 
