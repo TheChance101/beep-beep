@@ -47,6 +47,12 @@ fun Route.tripRoutes() {
             call.respond(HttpStatusCode.OK, BasePaginationResponse(result, page, total))
         }
 
+        get("/actives/{userId}") {
+            val userId = call.parameters["userId"] ?: throw MissingParameterException()
+            val trips = driverTripsManagementUseCase.getActiveTripsByUserId(userId).toDto()
+            call.respond(HttpStatusCode.OK, trips)
+        }
+
         get("/client/{clientId}") {
             val id = call.parameters["clientId"] ?: throw MissingParameterException()
             val page = call.parameters["page"]?.toInt() ?: 1

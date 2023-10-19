@@ -3,7 +3,7 @@ package org.thechance.api_gateway.data.localizedMessages.languages
 import org.koin.core.annotation.Single
 
 @Single
-class EnglishLocalizedMessages() : LocalizedMessages {
+class EnglishLocalizedMessages : LocalizedMessages {
 
     // region identity
     override val invalidRequestParameter: String = "Invalid request parameter"
@@ -91,5 +91,9 @@ class EnglishLocalizedMessages() : LocalizedMessages {
 
     // region notification
     override val notificationNotSent: String = "Notification not sent"
+    //endregion
+
+    // region chat
+    override val supportAgentNotFound: String = "There is no one to help you"
     //endregion
 }

@@ -1,8 +1,5 @@
 package data.gateway.fake
 
-import data.remote.mapper.toEntity
-import data.remote.model.CartDto
-import data.remote.model.CartMealDto
 import domain.entity.Cart
 import domain.entity.Location
 import domain.entity.Order
@@ -98,7 +95,15 @@ class FakeOrderGateway : ITransactionsGateway {
     }
 
     override suspend fun getCart(): Cart {
-        TODO("Not yet implemented")
+        return Cart(price = Price(10.0, "EGP"), null, null, null, null)
+    }
+
+    override suspend fun orderNow(): Boolean {
+        return true
+    }
+
+    override suspend fun updateCart(cart: Cart) {
+
     }
 
 }

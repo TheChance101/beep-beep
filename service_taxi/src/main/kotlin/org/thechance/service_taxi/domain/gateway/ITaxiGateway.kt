@@ -13,7 +13,15 @@ interface ITaxiGateway {
     suspend fun deleteTaxi(taxiId: String): Taxi?
     suspend fun getNumberOfTaxis(): Long
     suspend fun isTaxiExistedBefore(taxi: Taxi): Boolean
-    suspend fun findTaxisWithFilters(page: Int, limit: Int, status: Boolean?, color: Long?, seats: Int?, query: String?) : List<Taxi>
+    suspend fun findTaxisWithFilters(
+        page: Int,
+        limit: Int,
+        status: Boolean?,
+        color: Long?,
+        seats: Int?,
+        query: String?
+    ): List<Taxi>
+
     suspend fun updateTaxiTripsCount(taxiId: String, count: Int): Taxi?
     //endregion
 
@@ -21,6 +29,7 @@ interface ITaxiGateway {
     suspend fun addTrip(trip: Trip): Trip?
     suspend fun getTripById(tripId: String): Trip?
     suspend fun getAllTrips(page: Int, limit: Int): List<Trip>
+    suspend fun getActiveTripsByUserId(userId: String): List<Trip>
     suspend fun getDriverTripsHistory(driverId: String, page: Int, limit: Int): List<Trip>
     suspend fun getClientTripsHistory(clientId: String, page: Int, limit: Int): List<Trip>
     suspend fun approveTrip(tripId: String, taxiId: String, driverId: String): Trip?

@@ -3,7 +3,7 @@ package org.thechance.api_gateway.data.localizedMessages.languages
 import org.koin.core.annotation.Single
 
 @Single
-class EgyptianArabicLocalizedMessages() : LocalizedMessages {
+class EgyptianArabicLocalizedMessages : LocalizedMessages {
 
     // region identity
     override val invalidRequestParameter: String = "مدخل بيانات غلط يا باشا"
@@ -93,5 +93,10 @@ class EgyptianArabicLocalizedMessages() : LocalizedMessages {
 
     // region notification
     override val notificationNotSent: String = "لم يتم إرسال الإشعار ياعم"
+    //endregion
+
+
+    // region chat
+    override val supportAgentNotFound: String = "لايوجد احد للدعم ياعم"
     //endregion
 }

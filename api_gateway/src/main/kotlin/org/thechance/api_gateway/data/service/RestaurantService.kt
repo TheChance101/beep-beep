@@ -273,18 +273,6 @@ class RestaurantService(
 //endregion
 
     //region order
-    @OptIn(InternalAPI::class)
-    suspend fun createOrder(order: OrderDto, languageCode: String): OrderDto {
-        return client.tryToExecute<OrderDto>(
-            api = APIs.RESTAURANT_API,
-            attributes = attributes,
-            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
-        ) {
-            post("/order") {
-                body = Json.encodeToString(OrderDto.serializer(), order)
-            }
-        }
-    }
 
     suspend fun updateOrderStatus(orderId: String, status: Int, languageCode: String): OrderDto {
         return client.tryToExecute<OrderDto>(
@@ -361,6 +349,24 @@ class RestaurantService(
             attributes = attributes,
             setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
             method = { get("/order/$restaurantId/orders") }
+        )
+    }
+
+    suspend fun getOrderById(orderId: String?, languageCode: String): OrderDto {
+        return client.tryToExecute<OrderDto>(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { get("/order/$orderId") }
+        )
+    }
+
+    suspend fun isOrderExisted(orderId: String?, languageCode: String): Boolean {
+        return client.tryToExecute<Boolean>(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { get("/order/isExisted/$orderId") }
         )
     }
 
