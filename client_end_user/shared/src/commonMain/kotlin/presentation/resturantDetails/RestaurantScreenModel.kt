@@ -3,10 +3,10 @@ package presentation.resturantDetails
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Meal
 import domain.entity.Restaurant
+import domain.usecase.IExploreRestaurantUseCase
+import domain.usecase.IGetOffersUseCase
 import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.IManageFavouriteUseCase
-import domain.usecase.IGetOffersUseCase
-import domain.usecase.IExploreRestaurantUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -91,9 +91,9 @@ class RestaurantScreenModel(
         updateState { it.copy(isFavourite = isFavourite) }
     }
 
-    private fun addToFavourite(restaurantId: String) {
+    private fun addToFavourite() {
         tryToExecute(
-            { manageFavourite.addRestaurantToFavorites(restaurantId) },
+            { manageFavourite.addRestaurantToFavorites(state.value.restaurantInfo.toRestaurant()) },
             ::onAddToFavouriteSuccess,
             ::onError
         )
@@ -151,7 +151,7 @@ class RestaurantScreenModel(
         if (state.value.isFavourite) {
             removeFromFavourite(restaurantId)
         } else {
-            addToFavourite(restaurantId)
+            addToFavourite()
         }
     }
 

@@ -1,8 +1,6 @@
 package presentation.resturantDetails
 
-import domain.entity.Meal
 import domain.entity.PriceLevel
-import domain.entity.Restaurant
 import presentation.base.ErrorState
 import presentation.composable.ModalBottomSheetState
 
@@ -35,20 +33,6 @@ data class MealUIState(
     val description: String = "",
 )
 
-fun Meal.toUIState() = MealUIState(
-    id = id,
-    name = name,
-    restaurantName = restaurantName,
-    price = price.value,
-    totalPrice = price.value,
-    image = imageUrl,
-    currency = price.currency,
-    quantity = 1,
-    description = description,
-)
-
-fun List<Meal>.toUIState() = map { it.toUIState() }
-
 data class RestaurantInfoUIState(
     val id: String = "",
     val name: String = "",
@@ -60,19 +44,3 @@ data class RestaurantInfoUIState(
     val hasFreeDelivery: Boolean = false,
     val description: String = "",
 )
-
-fun Restaurant.toUIState() = RestaurantInfoUIState(
-    id = id,
-    name = name,
-    address = address,
-    rating = rate,
-    priceLevel = priceLevel,
-    image = "",
-    discount = doubleToPercentage(1500.0),
-    hasFreeDelivery = true,
-    description = description,
-)
-
-fun doubleToPercentage(value: Double): Int {
-    return (value / 100.0).toInt()
-}
