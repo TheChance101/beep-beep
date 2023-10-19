@@ -10,6 +10,7 @@ interface IExploreRestaurantUseCase {
     suspend fun getMealById(mealId: String): Meal
     suspend fun getCuisines(): List<Cuisine>
     suspend fun getMealsInCuisine(cuisineId: String): List<Meal>
+    suspend fun getCuisinesWithMealsInRestaurant(restaurantId: String): List<Cuisine>
 }
 
 class ExploreRestaurantUseCase(
@@ -29,5 +30,9 @@ class ExploreRestaurantUseCase(
 
     override suspend fun getMealsInCuisine(cuisineId: String): List<Meal> {
         return restaurantGateway.getMealsInCuisine(cuisineId)
+    }
+
+    override suspend fun getCuisinesWithMealsInRestaurant(restaurantId: String): List<Cuisine> {
+        return restaurantGateway.getCuisinesWithMealsInRestaurant(restaurantId)
     }
 }

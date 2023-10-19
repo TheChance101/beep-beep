@@ -52,7 +52,7 @@ fun MealOrderItem(
                         color = Theme.colors.contentPrimary
                     )
                     Text(
-                        text = "Oct 2/2022",
+                        text = orders.createdAt,
                         style = Theme.typography.caption,
                         color = Theme.colors.contentTertiary
                     )

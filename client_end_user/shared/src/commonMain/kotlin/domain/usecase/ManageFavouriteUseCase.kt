@@ -26,6 +26,7 @@ class ManageFavouriteUseCase(
     }
 
     override suspend fun checkIfFavoriteRestaurant(restaurantId: String): Boolean {
-        return userGateway.getFavoriteRestaurants().any { it.id == restaurantId }
+        //TODO refactor to get it from local not remote
+        return true//userGateway.getFavoriteRestaurants().any { it.id == restaurantId }
     }
 }
