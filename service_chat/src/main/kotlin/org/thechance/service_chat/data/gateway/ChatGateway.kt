@@ -16,7 +16,6 @@ import org.thechance.service_chat.domain.entity.Ticket
 import org.thechance.service_chat.domain.gateway.IChatGateway
 import org.thechance.service_chat.domain.utils.MultiErrorException
 import org.thechance.service_chat.domain.utils.TICKET_NOT_FOUND
-import org.thechance.service_chat.domain.utils.TICKET_UPDATE_FAILED
 
 @Single
 class ChatGateway(private val container: DataBaseContainer) : IChatGateway {
