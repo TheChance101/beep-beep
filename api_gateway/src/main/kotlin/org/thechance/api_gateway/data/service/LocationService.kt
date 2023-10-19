@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.LocationDto
 import org.thechance.api_gateway.data.utils.tryToExecuteWebSocket
-import org.thechance.api_gateway.data.utils.tryToSendLocation
+import org.thechance.api_gateway.data.utils.tryToSendWebSocketData
 import org.thechance.api_gateway.util.APIs
 
 @Single
@@ -15,7 +15,7 @@ class LocationService(
     private val attributes: Attributes
 ) {
     suspend fun sendLocation(location: LocationDto, tripId: String) {
-        client.tryToSendLocation(
+        client.tryToSendWebSocketData(
             data = location,
             api = APIs.LOCATION_API,
             attributes = attributes,
