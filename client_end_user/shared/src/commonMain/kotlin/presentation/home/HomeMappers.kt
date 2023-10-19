@@ -11,6 +11,7 @@ fun Offer.toUiState() = OfferUiState(
     title = title,
 )
 
+fun List<Offer>.toUiState()= map{it.toUiState()}
 
 fun Restaurant.toRestaurantUiState() = RestaurantUiState(
     id = id,
