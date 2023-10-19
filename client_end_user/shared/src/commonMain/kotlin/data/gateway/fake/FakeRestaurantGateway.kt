@@ -56,7 +56,7 @@ class FakeRestaurantGateway : IRestaurantGateway {
     }
 
     override suspend fun getMealsInCuisine(cuisineId: String): List<Meal> {
-        return meals.toEntity()
+        return emptyList()
     }
 
     private val offers = listOf(
