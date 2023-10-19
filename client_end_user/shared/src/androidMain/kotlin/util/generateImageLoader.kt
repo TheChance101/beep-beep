@@ -6,7 +6,9 @@ import androidx.compose.ui.platform.LocalContext
 import com.seiko.imageloader.ImageLoader
 import com.seiko.imageloader.cache.memory.maxSizePercent
 import com.seiko.imageloader.component.setupDefaultComponents
+import io.ktor.client.engine.okhttp.OkHttp
 import okio.Path.Companion.toOkioPath
+import org.koin.dsl.module
 
 actual class PlatformContext(val androidContext: Context)
 
@@ -31,3 +33,7 @@ actual fun generateImageLoader(applicationContext: PlatformContext): ImageLoader
         }
     }
 }
+
+
+actual fun getEngine() = OkHttp.create()
+

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowCompat
+import io.ktor.client.engine.cio.CIO
 
 actual class PlatformContext(val androidContext: Context)
 
@@ -32,3 +33,5 @@ actual fun getNavigationBarPadding(): PaddingValues {
 actual fun getStatusBarPadding(): PaddingValues {
     return WindowInsets.statusBars.asPaddingValues()
 }
+
+actual fun getEngine() = CIO.create()
