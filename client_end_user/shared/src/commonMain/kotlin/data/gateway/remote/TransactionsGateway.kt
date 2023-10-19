@@ -17,7 +17,9 @@ import io.ktor.client.request.get
 
 class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), ITransactionsGateway {
     override suspend fun getTripHistory(): List<Trip> {
-        //TODO("Not yet implemented")
+        tryToExecute<ServerResponse<PaginationResponse<OrderDto>>> {
+            get("/trip/history")
+        }.value?.items?.toEntity() ?: throw GeneralException.NotFoundException
         return emptyList()
     }
 
