@@ -151,7 +151,6 @@ class RestaurantScreenModel(
     }
 
     private fun onError(errorState: ErrorState) {
-        println("errorrrrrr \n\n\n ${errorState.toString()}")
         updateState { it.copy(error = errorState) }
     }
 
@@ -164,7 +163,7 @@ class RestaurantScreenModel(
     }
 
     override fun onGoToDetails(mealId: String) {
-        tryToExecute(
+         tryToExecute(
             { mangeRestaurantDetails.getMealById(mealId) },
             ::onGetMealDetailsSuccess,
             ::onError

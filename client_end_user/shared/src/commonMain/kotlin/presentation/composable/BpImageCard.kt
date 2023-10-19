@@ -35,10 +35,9 @@ import resources.Resources
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun BpImageCard(
-    onClickCard: (String) -> Unit = {},
+    onClickCard: () -> Unit = {},
     imageUrl: String,
     title: String,
-    id: String = "",
     rate: Double = 0.0,
     priceLevel: PriceLevel = PriceLevel.MEDIUM,
     modifier: Modifier = Modifier,
@@ -53,7 +52,7 @@ fun BpImageCard(
     currency: String = "",
 ) {
     Card(
-        modifier = modifier.noRippleEffect { onClickCard(id) },
+        modifier = modifier.noRippleEffect { onClickCard() },
         colors = CardDefaults.cardColors(Color.Transparent),
         shape = RoundedCornerShape(0.dp)
     ) {
