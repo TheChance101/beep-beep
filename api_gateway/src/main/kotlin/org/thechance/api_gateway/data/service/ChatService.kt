@@ -33,6 +33,17 @@ class ChatService(
         }
     }
 
+    suspend fun updateTicketState(ticketId: String, state: Boolean, language: String): Boolean {
+        return client.tryToExecute<Boolean>(
+            api = APIs.CHAT_API, attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, language) }
+        ) {
+            put("/chat/$ticketId") {
+                parameter("state", state)
+            }
+        }
+    }
+
     suspend fun receiveTicket(supportId: String): Flow<TicketDto> {
         return client.tryToExecuteWebSocket<TicketDto>(
             api = APIs.CHAT_API,
@@ -41,7 +52,7 @@ class ChatService(
         )
     }
 
-    suspend fun sendAndReceiveMessage(message: MessageDto, ticketId: String) : Flow<MessageDto> {
+    suspend fun sendAndReceiveMessage(message: MessageDto, ticketId: String): Flow<MessageDto> {
         return client.tryToSendAndReceiveWebSocketData(
             data = message,
             api = APIs.CHAT_API,

@@ -3,6 +3,7 @@ package org.thechance.service_chat.data.gateway
 import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.client.model.ReturnDocument
 import com.mongodb.client.model.Updates
+import com.mongodb.client.result.UpdateResult
 import org.koin.core.annotation.Single
 import org.litote.kmongo.eq
 import org.litote.kmongo.setValue
@@ -46,11 +47,14 @@ class ChatGateway(private val container: DataBaseContainer) : IChatGateway {
     }
 
     override suspend fun updateTicketState(ticketId: String, state: Boolean): Boolean {
-        val updateOperation = setValue(TicketCollection::isOpen, state)
-        return container.ticketCollection.findOneAndUpdate(
+        return container.ticketCollection.updateOne(
             filter = TicketCollection::ticketId eq ticketId,
-            update = updateOperation
-        )?.isOpen ?: throw MultiErrorException(listOf(TICKET_UPDATE_FAILED))
+            update = setValue(TicketCollection::isOpen, state)
+        ).isSuccessfullyUpdated()
+    }
+
+    private fun UpdateResult.isSuccessfullyUpdated(): Boolean {
+        return this.modifiedCount > 0L
     }
 
 }

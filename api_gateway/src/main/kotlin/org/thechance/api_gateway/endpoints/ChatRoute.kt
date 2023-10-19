@@ -33,6 +33,15 @@ fun Route.chatRoute() {
         }
 
         authenticateWithRole(Role.SUPPORT) {
+
+            put("/{ticketId}") {
+                val ticketId = call.parameters["ticketId"]?.trim().orEmpty()
+                val state = call.parameters["state"].toBoolean()
+                val language = extractLocalizationHeader()
+                val result = chatService.updateTicketState(ticketId, state, language)
+                respondWithResult(HttpStatusCode.OK, result)
+            }
+
             webSocket("/tickets/{supportId}") {
                 val supportId = call.parameters["supportId"]?.trim().orEmpty()
                 val tickets = chatService.receiveTicket(supportId)
