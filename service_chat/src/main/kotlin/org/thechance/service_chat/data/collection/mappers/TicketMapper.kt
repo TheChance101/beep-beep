@@ -9,7 +9,8 @@ fun Ticket.toCollection(): TicketCollection {
         ticketId = id,
         userId = userId,
         supportId = supportId,
-        time = time
+        time = time,
+        isOpen = isOpen
     )
 }
 
@@ -19,6 +20,7 @@ fun TicketCollection.toEntity(): Ticket {
         userId = userId,
         supportId = supportId,
         time = time,
-        messages = messages.toEntity()
+        messages = messages.toEntity(),
+        isOpen = isOpen
     )
 }

@@ -18,6 +18,7 @@ interface IManageTicket {
     suspend fun createTicket(ticket: Ticket): Ticket
     suspend fun notifySupportAgentOfNewTickets(supportId: String): Flow<Ticket>
     suspend fun assignTicketToSupportAgent(ticket: Ticket): Ticket
+    suspend fun updateTicketState(ticketId: String, state: Boolean): Boolean
 }
 
 @Single
@@ -34,6 +35,10 @@ class ManageTicket(
         val currentTime = currentDateTime().toMillis()
         val newTicket = chatGateway.createTicket(ticket.copy(id = ticketId, time = currentTime))
         return assignTicketToSupportAgent(newTicket)
+    }
+
+    override suspend fun updateTicketState(ticketId: String, state: Boolean): Boolean {
+        return chatGateway.updateTicketState(ticketId, state)
     }
 
     override suspend fun assignTicketToSupportAgent(ticket: Ticket): Ticket {

@@ -11,7 +11,8 @@ data class TicketCollection(
     val ticketId: String,
     val userId: String,
     val supportId: String,
-    val time: Long
+    val time: Long,
+    val isOpen: Boolean = true
 ) {
     @BsonId
     @Contextual

@@ -7,7 +7,8 @@ import kotlinx.serialization.Serializable
 data class TicketDto(
     val id: String? = null,
     val userId: String,
-    val supportId: String ? = null,
-    val time : Long? = null,
-    val messages: List<MessageDto>? = null
+    val supportId: String? = null,
+    val time: Long? = null,
+    val messages: List<MessageDto>? = null,
+    val isOpen: Boolean? = null
 )

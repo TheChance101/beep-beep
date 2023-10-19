@@ -22,13 +22,19 @@ fun Route.chatRoutes() {
     val manageTicket: IManageTicket by inject()
     val manageChat: IManageChat by inject()
 
-
     route("/chat") {
 
         post("/ticket") {
             val chat = call.receive<TicketDto>()
             val result = manageTicket.createTicket(chat.toEntity())
             call.respond(HttpStatusCode.Created, result.toDto())
+        }
+
+        put("/{ticketId}") {
+            val ticketId = call.parameters["ticketId"]?.trim().orEmpty()
+            val state = call.parameters["state"].toBoolean()
+            val result = manageTicket.updateTicketState(ticketId, state)
+            call.respond(HttpStatusCode.OK, result)
         }
 
         webSocket("/tickets/{supportId}") {

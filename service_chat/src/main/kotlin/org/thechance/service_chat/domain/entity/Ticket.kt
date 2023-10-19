@@ -4,8 +4,9 @@ data class Ticket(
     val id: String,
     val userId: String,
     val supportId: String,
-    val time : Long,
-    val messages: List<Message>
+    val time: Long,
+    val messages: List<Message>,
+    val isOpen: Boolean = true
 ) {
     fun generateTicketId(): String {
         val randomString = (1..8)

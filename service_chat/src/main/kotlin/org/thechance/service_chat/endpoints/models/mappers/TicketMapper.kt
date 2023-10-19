@@ -9,7 +9,8 @@ fun Ticket.toDto(): TicketDto {
         userId = userId,
         supportId = supportId,
         time = time,
-        messages = messages.map { it.toDto() }
+        messages = messages.map { it.toDto() },
+        isOpen = isOpen
     )
 }
 
@@ -20,6 +21,7 @@ fun TicketDto.toEntity(): Ticket {
         userId = userId,
         supportId = supportId ?: "",
         time = time ?: 0,
-        messages = messages?.map { it.toEntity() } ?: emptyList()
+        messages = messages?.map { it.toEntity() } ?: emptyList(),
+        isOpen = isOpen ?: true
     )
 }

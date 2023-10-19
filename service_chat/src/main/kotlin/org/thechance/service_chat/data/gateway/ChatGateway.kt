@@ -5,6 +5,7 @@ import com.mongodb.client.model.ReturnDocument
 import com.mongodb.client.model.Updates
 import org.koin.core.annotation.Single
 import org.litote.kmongo.eq
+import org.litote.kmongo.setValue
 import org.thechance.service_chat.data.DataBaseContainer
 import org.thechance.service_chat.data.collection.TicketCollection
 import org.thechance.service_chat.data.collection.mappers.toCollection
@@ -14,6 +15,7 @@ import org.thechance.service_chat.domain.entity.Ticket
 import org.thechance.service_chat.domain.gateway.IChatGateway
 import org.thechance.service_chat.domain.utils.MultiErrorException
 import org.thechance.service_chat.domain.utils.TICKET_NOT_FOUND
+import org.thechance.service_chat.domain.utils.TICKET_UPDATE_FAILED
 
 @Single
 class ChatGateway(private val container: DataBaseContainer) : IChatGateway {
@@ -41,6 +43,14 @@ class ChatGateway(private val container: DataBaseContainer) : IChatGateway {
             container.ticketCollection.updateOne(TicketCollection::ticketId eq ticketId, ticket)
         } ?: MultiErrorException(listOf(TICKET_NOT_FOUND))
         return newMessage.toEntity()
+    }
+
+    override suspend fun updateTicketState(ticketId: String, state: Boolean): Boolean {
+        val updateOperation = setValue(TicketCollection::isOpen, state)
+        return container.ticketCollection.findOneAndUpdate(
+            filter = TicketCollection::ticketId eq ticketId,
+            update = updateOperation
+        )?.isOpen ?: throw MultiErrorException(listOf(TICKET_UPDATE_FAILED))
     }
 
 }
