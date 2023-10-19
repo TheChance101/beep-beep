@@ -197,7 +197,7 @@ fun Route.taxiRoutes() {
 
 
         authenticateWithRole(Role.END_USER) {
-            webSocket("/track/ride/{tripId}") {
+            webSocket("/track/taxi-ride/{tripId}") {
                 val tripId = call.parameters["tripId"]?.trim().orEmpty()
                 val language = extractLocalizationHeaderFromWebSocket()
                 val ride = taxiService.trackOrderRequest(tripId)
@@ -211,7 +211,7 @@ fun Route.taxiRoutes() {
                 }
             }
 
-            webSocket("/track/rides") {
+            webSocket("/track/taxi-rides") {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val userId = tokenClaim?.get(Claim.USER_ID).toString()
                 val language = extractLocalizationHeaderFromWebSocket()
@@ -225,17 +225,32 @@ fun Route.taxiRoutes() {
                     )
                 }
             }
-        }
 
-        authenticateWithRole(Role.END_USER) {
             webSocket("/track/delivery/{tripId}") {
                 val tripId = call.parameters["tripId"]?.trim().orEmpty()
+                val language = extractLocalizationHeaderFromWebSocket()
                 val delivery = taxiService.trackOrderRequest(tripId)
                 webSocketServerHandler.sessions[tripId] = this
                 webSocketServerHandler.sessions[tripId]?.let { session ->
-                    webSocketServerHandler.tryToTrackOrder(
+                    webSocketServerHandler.tryToCollectAndMapToDeliveryTrip(
                         values = delivery,
                         session = session,
+                        language = language
+                    )
+                }
+            }
+
+            webSocket("/track/delivery-rides") {
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val userId = tokenClaim?.get(Claim.USER_ID).toString()
+                val language = extractLocalizationHeaderFromWebSocket()
+                val ride = taxiService.trackRidesForUser(userId)
+                webSocketServerHandler.sessions[userId] = this
+                webSocketServerHandler.sessions[userId]?.let { session ->
+                    webSocketServerHandler.tryToCollectAndMapToDeliveryTrip(
+                        values = ride,
+                        session = session,
+                        language = language
                     )
                 }
             }

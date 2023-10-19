@@ -101,7 +101,6 @@ fun Route.tripRoutes() {
             val userId = parameters["userId"] ?: throw MissingParameterException()
             val result = driverTripsManagementUseCase.approveTrip(driverId, taxiId, tripId).toDto()
             socketHandler.trips[tripId]?.trip?.emit(result)
-            socketHandler.endSession(driverId)
             socketHandler.trips[userId]?.trip?.emit(result)
             call.respond(HttpStatusCode.OK, result)
         }
