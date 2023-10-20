@@ -21,5 +21,3 @@ data class OrderWithRestaurant(
     val createdAt: LocalDateTime,
     val orderStatus: Int
 )
-
-

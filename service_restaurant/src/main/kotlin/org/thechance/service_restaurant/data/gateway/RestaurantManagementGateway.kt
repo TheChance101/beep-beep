@@ -2,6 +2,7 @@ package org.thechance.service_restaurant.data.gateway
 
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.FindOneAndUpdateOptions
+import com.mongodb.client.model.Projections.computed
 import com.mongodb.client.model.ReturnDocument
 import com.mongodb.client.model.Updates
 import org.bson.Document
@@ -45,15 +46,47 @@ class RestaurantManagementGateway(private val container: DataBaseContainer) : IR
     }
 
     override suspend fun getActiveOrdersForUser(userId: String): List<Order> {
-        return container.orderCollection.find(
-            and(
-                OrderCollection::userId eq ObjectId(userId),
-                OrderCollection::orderStatus `in` listOf(
-                    Order.Status.APPROVED.statusCode,
-                    Order.Status.IN_COOKING.statusCode
+        val pipeline = listOf(
+            match(
+                and(
+                    OrderCollection::userId eq ObjectId(userId),
+                    OrderCollection::orderStatus `in` listOf(
+                        Order.Status.APPROVED.statusCode,
+                        Order.Status.IN_COOKING.statusCode
+                    )
+                )
+            ),
+            lookup(
+                from = "restaurant",
+                localField = OrderCollection::restaurantId.name,
+                foreignField = "_id",
+                newAs = "restaurant"
+            ),
+            unwind("\$restaurant"),
+            project(
+                OrderWithRestaurant::id from "\$_id",
+                OrderWithRestaurant::userId from "\$userId",
+                OrderWithRestaurant::restaurant from "\$restaurant",
+                OrderWithRestaurant::meals from "\$meals",
+                OrderWithRestaurant::totalPrice from "\$totalPrice",
+                OrderWithRestaurant::createdAt from "\$createdAt",
+                OrderWithRestaurant::orderStatus from "\$orderStatus",
+                computed(
+                    "restaurantName",
+                    "\$restaurant.name"
+                ),
+                computed(
+                    "restaurantImage",
+                    "\$restaurant.restaurantImage"
+                ),
+                computed(
+                    "currency",
+                    "\$restaurant.currency"
                 )
             )
-        ).toList().toEntity()
+        )
+
+        return container.orderCollection.aggregate<OrderWithRestaurant>(pipeline).toList().map { it.toOrderEntity() }
     }
 
     override suspend fun getOrderById(orderId: String): Order? =
