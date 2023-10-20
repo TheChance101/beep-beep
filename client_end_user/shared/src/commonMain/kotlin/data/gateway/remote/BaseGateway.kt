@@ -25,7 +25,6 @@ abstract class BaseGateway(val client: HttpClient) {
                     try {
                         emit(receiveDeserialized<T>())
                     } catch (e: Exception) {
-                        println("Errrrrrrrrrr ${e.message.toString()}")
                         throw Exception(e.message.toString())
                     }
                 }

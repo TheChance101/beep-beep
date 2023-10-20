@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
@@ -51,7 +52,7 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
         inScope: CoroutineScope = viewModelScope
     ): Job {
         return runWithErrorCheck(onError, inScope) {
-            function().collectLatest {
+            function().distinctUntilChanged().collectLatest {
                 onNewValue(it)
             }
         }

@@ -6,6 +6,7 @@ import domain.entity.Location
 import domain.entity.FoodOrder
 import domain.entity.TaxiRide
 import domain.entity.Trip
+import domain.entity.TripStatus
 import domain.gateway.ITransactionsGateway
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDate
@@ -25,7 +26,7 @@ class FakeTransactionsGateway : ITransactionsGateway {
                 price = 25.0,
                 startDate = "2023-10-17",
                 isATaxiTrip = true,
-                tripStatus = Trip.TripStatus.RECEIVED,
+                tripStatus = TripStatus.RECEIVED,
                 timeToArriveInMints = 10
             ),
             Trip(
@@ -39,7 +40,7 @@ class FakeTransactionsGateway : ITransactionsGateway {
                 price = 25.0,
                 startDate = "2023-10-17",
                 isATaxiTrip = true,
-                tripStatus = Trip.TripStatus.RECEIVED,
+                tripStatus = TripStatus.RECEIVED,
                 timeToArriveInMints = 10
             ),
             Trip(
@@ -52,7 +53,7 @@ class FakeTransactionsGateway : ITransactionsGateway {
                 rate = 3.5,
                 price = 25.0,
                 isATaxiTrip = true,
-                tripStatus = Trip.TripStatus.RECEIVED,
+                tripStatus = TripStatus.RECEIVED,
                 timeToArriveInMints = 10
             ),
         )

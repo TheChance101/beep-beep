@@ -85,20 +85,19 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
 
     override suspend fun trackTaxiRide(tripId: String): Flow<TaxiRide> {
         return tryToExecuteWebSocket<TaxiRideDto>(
-            path = "ws://192.168.1.10:8081/trip/track/ride/$tripId"
+            path = "ws://192.168.1.10:8081/trip/track/taxi-ride/$tripId"
         ).map { it.toTaxiRideEntity() }
     }
 
     override suspend fun trackDeliveryRide(tripId: String): Flow<DeliveryRide> {
         return tryToExecuteWebSocket<DeliveryRideDto>(
-            path = "/trip/track/delivery/$tripId"
+            path = "ws://192.168.1.10:8081/trip/track/delivery-ride/$tripId"
         ).map { it.toDeliveryRideEntity() }
     }
 
     override suspend fun trackFoodOrderInRestaurant(orderId: String): Flow<FoodOrder> {
         return tryToExecuteWebSocket<FoodOrderDto>(
-            path = "order/track/$orderId"
+            path = "ws://192.168.1.10:8081/order/track/$orderId"
         ).map { it.toEntity() }
     }
-
 }
