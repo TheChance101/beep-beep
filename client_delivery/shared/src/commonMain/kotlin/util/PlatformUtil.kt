@@ -16,8 +16,5 @@ expect fun SetInsetsController(isDark: Boolean)
 @Composable
 expect fun getNavigationBarPadding(): PaddingValues
 
-@Composable
-expect fun getStatusBarPadding(): PaddingValues
-
 
 expect fun getEngine(): HttpClientEngine

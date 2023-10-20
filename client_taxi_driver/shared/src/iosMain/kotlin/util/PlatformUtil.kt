@@ -15,18 +15,10 @@ actual class PlatformContext(val iosController: ProvidableCompositionLocal<UIVie
 actual fun getPlatformContext(): PlatformContext = PlatformContext(LocalUIViewController)
 
 @Composable
-actual fun SetInsetsController(isDark: Boolean) {
-}
-
+actual fun SetInsetsController(isDark: Boolean) {}
 @Composable
 actual fun getNavigationBarPadding(): PaddingValues {
     return PaddingValues(bottom = 10.dp)
 }
-
-@Composable
-actual fun getStatusBarPadding(): PaddingValues {
-    return PaddingValues(top = 35.dp)
-}
-
 
 actual fun getEngine(): HttpClientEngine = Darwin.create()
