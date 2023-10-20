@@ -43,7 +43,6 @@ import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import domain.entity.FoodOrder
-import domain.entity.Trip
 import domain.entity.TripStatus
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -65,7 +64,6 @@ import presentation.home.composable.CuisineCard
 import presentation.home.composable.OrderCard
 import presentation.main.SearchTab
 import presentation.meals.MealsScreen
-import presentation.orderFoodTracking.FoodOrderStatus
 import presentation.orderFoodTracking.OrderFoodTrackingScreen
 import presentation.resturantDetails.RestaurantScreen
 import resources.Resources
@@ -103,12 +101,15 @@ class HomeScreen :
             )
 
             is HomeScreenUiEffect.NavigateToTrackTaxiRide -> println("navigate to track taxi ride ${effect.tripId}")
+            is HomeScreenUiEffect.NavigateToTrackDeliveryOrderRide -> navigator.root?.push(
+                OrderFoodTrackingScreen()
+            )
         }
     }
 
     @OptIn(
         ExperimentalResourceApi::class, ExperimentalFoundationApi::class,
-        ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class
+        ExperimentalMaterial3Api::class
     )
     @Composable
     override fun onRender(state: HomeScreenUiState, listener: HomeScreenInteractionListener) {
@@ -187,76 +188,74 @@ class HomeScreen :
 
                 // taxi rides
                 items(state.liveOrders.taxiRides) { taxiRideUiState ->
-                    if (taxiRideUiState.rideStatus != TripStatus.FINISHED.statusCode
-                        || taxiRideUiState.rideStatus != TripStatus.PENDING.statusCode
-                    ) {
-
-                        HorizontalImageCard(
-                            painter = painterResource(Resources.images.taxiOnTheWay),
-                            titleText = if (taxiRideUiState.rideStatus == TripStatus.APPROVED.statusCode) {
-                                Resources.strings.taxiOnTheWay
-                            } else {
-                                Resources.strings.enjoyYourRide
-                            },
-                            onClick = listener::onClickInProgressTaxiRide,
-                            titleTextColor = if (taxiRideUiState.rideStatus == TripStatus.APPROVED.statusCode) {
-                                Theme.colors.primary
-                            } else {
-                                Theme.colors.contentSecondary
+                    HorizontalImageCard(
+                        painter = painterResource(Resources.images.taxiOnTheWay),
+                        titleText = if (taxiRideUiState.rideStatus == TripStatus.APPROVED.statusCode) {
+                            Resources.strings.taxiOnTheWay
+                        } else {
+                            Resources.strings.enjoyYourRide
+                        },
+                        id = taxiRideUiState.tripId,
+                        onClick = listener::onClickActiveTaxiRide,
+                        titleTextColor = if (taxiRideUiState.rideStatus == TripStatus.APPROVED.statusCode) {
+                            Theme.colors.primary
+                        } else {
+                            Theme.colors.contentSecondary
+                        }
+                    ) { textStyle ->
+                        Row(
+                            Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            if (taxiRideUiState.rideStatus == TripStatus.APPROVED.statusCode) {
+                                Text(text = taxiRideUiState.taxiColor, style = textStyle)
+                                Circle()
+                                Text(text = taxiRideUiState.taxiPlateNumber, style = textStyle)
+                                Circle()
                             }
-                        ) { textStyle ->
-                            Row(
-                                Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                if (taxiRideUiState.rideStatus == TripStatus.APPROVED.statusCode) {
-                                    Text(text = taxiRideUiState.taxiColor, style = textStyle)
-                                    Circle()
-                                    Text(text = taxiRideUiState.taxiPlateNumber, style = textStyle)
-                                    Circle()
-                                }
-                                Text(
-                                    text = "${taxiRideUiState.rideEstimatedTime} min to arrive",
-                                    style = textStyle
-                                )
-                            }
+                            Text(
+                                text = "${taxiRideUiState.rideEstimatedTime} min to arrive",
+                                style = textStyle
+                            )
                         }
                     }
                 }
 
                 // delivery rides
-                items(state.liveOrders.deliveryOrders) {
+                items(state.liveOrders.deliveryOrders) { deliveryOrder ->
                     HorizontalImageCard(
                         painter = painterResource(Resources.images.orderOnTheWay),
                         titleText = Resources.strings.orderOnTheWay,
                         titleTextColor = Theme.colors.primary,
-                        onClick = listener::onClickInProgressTaxiRide
+                        id = deliveryOrder.tripId,
+                        onClick = listener::onClickActiveDeliveryRide
                     ) { textStyle ->
                         Text(
-                            text = "From ${it.restaurantName}",
+                            text = "From ${deliveryOrder.restaurantName}",
                             style = textStyle
                         )
                     }
                 }
                 // food orders
-                items(state.liveOrders.foodOrders) {
+                items(state.liveOrders.foodOrders) { foodOrder ->
                     HorizontalImageCard(
                         painter =
-                        if (it.orderStatus == FoodOrder.OrderStatusInRestaurant.APPROVED.statusCode) {
+                        if (foodOrder.orderStatus == FoodOrder.OrderStatusInRestaurant.APPROVED.statusCode) {
                             painterResource(Resources.images.approvedFood)
                         } else {
                             painterResource(Resources.images.inCookingFood)
                         },
-                        titleText = if (it.orderStatus == FoodOrder.OrderStatusInRestaurant.APPROVED.statusCode) {
+                        titleText = if (foodOrder.orderStatus == FoodOrder.OrderStatusInRestaurant.APPROVED.statusCode) {
                             Resources.strings.orderPlaced
                         } else {
                             Resources.strings.orderInCooking
                         },
-                        onClick = listener::onClickInProgressOrderCard
+                        id = foodOrder.orderId,
+                        onClick = listener::onClickActiveFoodOrder
                     ) { textStyle ->
                         Text(
-                            text = "From ${it.restaurantName}",
+                            text = "From ${foodOrder.restaurantName}",
                             style = textStyle
                         )
                     }
@@ -325,6 +324,7 @@ class HomeScreen :
                     )
                 }
             }
+
             item {
                 AnimatedVisibility(state.favoriteRestaurants.isNotEmpty()) {
                     ItemSection(
@@ -365,6 +365,7 @@ class HomeScreen :
     private fun HorizontalImageCard(
         painter: Painter,
         titleText: String,
+        id: String,
         onClick: (id: String) -> Unit,
         modifier: Modifier = Modifier,
         titleTextColor: Color = Theme.colors.primary,
@@ -376,7 +377,7 @@ class HomeScreen :
                 .heightIn(min = 72.dp)
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
-                .noRippleEffect { onClick("order id or trip id") }
+                .noRippleEffect { onClick(id) }
                 .roundedBorderShape()
                 .padding(horizontal = 16.dp, vertical = 4.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),

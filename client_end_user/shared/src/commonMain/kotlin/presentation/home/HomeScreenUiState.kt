@@ -86,7 +86,7 @@ fun Trip.toTaxiRideUiState(): TaxiRideUiState {
     return TaxiRideUiState(
         tripId = this.id,
         taxiColor = "White",
-        taxiPlateNumber = this.taxiPlateNumber ?: "5874RE",
+        taxiPlateNumber = this.taxiPlateNumber ?: "",
         rideStatus = this.tripStatus.statusCode,
         rideEstimatedTime = this.estimatedTimeToArriveInMints,
     )

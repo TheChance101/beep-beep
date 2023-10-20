@@ -323,11 +323,15 @@ class HomeScreenModel(
         sendNewEffect(HomeScreenUiEffect.NavigateToRestaurantDetails(restaurantId))
     }
 
-    override fun onClickInProgressOrderCard(orderId: String) {
+    override fun onClickActiveFoodOrder(orderId: String) {
         sendNewEffect(HomeScreenUiEffect.NavigateToTrackOrderFood(orderId))
     }
 
-    override fun onClickInProgressTaxiRide(tripId: String) {
+    override fun onClickActiveTaxiRide(tripId: String) {
+        sendNewEffect(HomeScreenUiEffect.NavigateToTrackOrderFood(tripId))
+    }
+
+    override fun onClickActiveDeliveryRide(tripId: String) {
         sendNewEffect(HomeScreenUiEffect.NavigateToTrackTaxiRide(tripId))
     }
 

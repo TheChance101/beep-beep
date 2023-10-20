@@ -13,6 +13,7 @@ interface HomeScreenInteractionListener : BaseInteractionListener {
     fun onLoginClicked()
     fun onClickCartCard()
     fun onClickRestaurantCard(restaurantId: String)
-    fun onClickInProgressOrderCard(orderId: String)
-    fun onClickInProgressTaxiRide(tripId: String)
+    fun onClickActiveFoodOrder(orderId: String)
+    fun onClickActiveTaxiRide(tripId: String)
+    fun onClickActiveDeliveryRide(tripId: String)
 }
