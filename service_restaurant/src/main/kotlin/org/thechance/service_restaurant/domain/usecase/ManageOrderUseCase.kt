@@ -49,7 +49,6 @@ class ManageOrderUseCase(
     }
 
     override suspend fun getActiveOrdersForUser(userId: String): List<Order> {
-        println("AAAAA : use case called")
         return restaurantOperationGateway.getActiveOrdersForUser(userId)
     }
 

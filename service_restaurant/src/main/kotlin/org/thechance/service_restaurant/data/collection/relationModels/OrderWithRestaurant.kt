@@ -13,10 +13,11 @@ data class OrderWithRestaurant(
     @Contextual
     val id: ObjectId,
     @Contextual
-    val userId:ObjectId,
+    val userId: ObjectId,
     val restaurant: RestaurantCollection,
     val meals: List<CartCollection.MealCollection>,
     val totalPrice: Double,
+    val currency: String,
     val createdAt: LocalDateTime,
     val orderStatus: Int
 )
