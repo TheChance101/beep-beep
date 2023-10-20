@@ -2,13 +2,18 @@ package org.thechance.api_gateway.data.service
 
 import io.ktor.client.*
 import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
 import io.ktor.util.*
 import kotlinx.coroutines.flow.Flow
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.MealRequestDto
 import org.thechance.api_gateway.data.model.PaginationResponse
+import org.thechance.api_gateway.data.model.offer.OfferDto
+import org.thechance.api_gateway.data.model.offer.OfferRestaurantsDto
 import org.thechance.api_gateway.data.model.restaurant.*
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.tryToExecute
@@ -156,6 +161,15 @@ class RestaurantService(
         }
     }
 
+    suspend fun getCuisinesMealsInRestaurant(restaurantId: String, languageCode: String) =
+        client.tryToExecute<List<CuisineDetailsDto>>(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
+        ) {
+            get("/restaurant/$restaurantId/cuisineMeals")
+        }
+
     suspend fun getMealsByCuisineId(cuisineId: String, languageCode: String): List<MealDto> {
         return client.tryToExecute(
             api = APIs.RESTAURANT_API,
@@ -189,7 +203,7 @@ class RestaurantService(
         }
     }
 
-    //endregion
+//endregion
 
     //region cuisine
     @OptIn(InternalAPI::class)
@@ -222,7 +236,7 @@ class RestaurantService(
             method = { delete("/cuisine/$cuisineId") }
         )
     }
-    //endregion
+//endregion
 
     //region Cart
     suspend fun getUserCart(userId: String, language: String): CartDto {
@@ -256,7 +270,7 @@ class RestaurantService(
         }
     }
 
-    //endregion
+//endregion
 
     //region order
 
@@ -388,5 +402,46 @@ class RestaurantService(
             method = { get("/restaurant/isExisted/$restaurantId") }
         )
     }
-    //endregion
+//endregion
+
+
+    //region offer
+    suspend fun addOffer(offerTitle: String, languageCode: String) = client.tryToExecute<OfferDto>(
+        APIs.RESTAURANT_API,
+        attributes = attributes,
+        setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
+    ) {
+        post("/category") {
+            formData {
+                parameter("categoryName", offerTitle)
+            }
+        }
+    }
+
+    //TODO:NEED TO CHANGE RETURN TYP
+    @OptIn(InternalAPI::class)
+    suspend fun addRestaurantsToOffer(restaurantIds: List<String>, offerId: String, languageCode: String) =
+        client.tryToExecute<Boolean>(
+            APIs.RESTAURANT_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
+        ) {
+            post("/category/$offerId/restaurants") {
+                body = Json.encodeToString(ListSerializer(String.serializer()), restaurantIds)
+            }
+        }
+
+    suspend fun getOffers(languageCode: String) = client.tryToExecute<List<OfferDto>>(
+        APIs.RESTAURANT_API,
+        attributes = attributes,
+        setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
+    ) { get("/categories") }
+
+
+    suspend fun getOffersWithRestaurants(languageCode: String) = client.tryToExecute<List<OfferRestaurantsDto>>(
+        APIs.RESTAURANT_API,
+        attributes = attributes,
+        setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
+    ) { get("/categories/restaurants") }
+//endregion
 }

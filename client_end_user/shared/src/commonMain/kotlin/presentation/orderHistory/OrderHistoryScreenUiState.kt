@@ -18,7 +18,7 @@ data class OrderHistoryUiState(
     val restaurantImageUrl: String = "",
     val totalPrice: Double = 0.0,
     val currency: String = "",
-    val createdAt: Long = 0L,
+    val createdAt: String = "",
 )
 
 data class TripHistoryUiState(
