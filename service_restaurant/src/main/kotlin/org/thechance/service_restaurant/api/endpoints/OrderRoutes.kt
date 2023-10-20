@@ -10,10 +10,8 @@ import org.thechance.service_restaurant.api.models.BasePaginationResponseDto
 import org.thechance.service_restaurant.api.models.WebSocketOrder
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.utils.SocketHandler
-import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.usecase.IManageOrderUseCase
 import org.thechance.service_restaurant.domain.usecase.IMangeCartUseCase
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_REQUEST_PARAMETER
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 import kotlin.collections.set
@@ -90,10 +88,7 @@ fun Route.orderRoutes() {
 
         put("/{id}") {
             val id = call.parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
-            val status =
-                call.parameters["status"]?.toInt() ?: throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER))
-            val result =
-                manageOrder.updateOrderStatus(orderId = id, state = Order.Status.getOrderStatus(status)).toDto()
+            val result = manageOrder.updateOrderStatus(orderId = id).toDto()
             socketHandler.orders[result.id]?.order?.emit(result)
             call.respond(HttpStatusCode.OK, result)
         }

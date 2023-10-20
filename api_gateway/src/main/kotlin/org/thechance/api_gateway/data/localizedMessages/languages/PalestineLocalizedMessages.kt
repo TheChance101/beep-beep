@@ -87,6 +87,7 @@ class PalestinianArabicLocalizedMessages() : LocalizedMessages {
     override val missingParameter: String = "في معلومات مفقودة يا زلمة!"
     override val tokensNotFound: String = "ما لقينا التوكنات يا زلمة!"
     override val tokenNotRegister: String="التوكن مش مسجل"
+    override val alreadyUpdated: String = "اتحدثت مرة يا عم مش مربة هيه"
     override val cartIsAlreadyEmpty: String = "لا يمكن اجراء الامر لان السله فارغه"
     override val invalidQuantity: String = "مدخل كميه مش صح"
 

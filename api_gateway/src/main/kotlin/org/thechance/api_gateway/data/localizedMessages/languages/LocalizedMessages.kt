@@ -159,6 +159,7 @@ interface LocalizedMessages {
 
     val tokenNotRegister: String
 
+    val alreadyUpdated:String
 
     //endregion
 

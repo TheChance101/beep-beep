@@ -78,9 +78,8 @@ fun Route.orderRoutes() {
 
         put("order/{orderId}") {
             val orderId = call.parameters["orderId"]?.trim().toString()
-            val status = call.parameters["status"]?.trim()?.toInt() ?: 0
             val language = extractLocalizationHeader()
-            val result = restaurantService.updateOrderStatus(orderId, status, language)
+            val result = restaurantService.updateOrderStatus(orderId, language)
             respondWithResult(HttpStatusCode.OK, result)
         }
 

@@ -85,6 +85,7 @@ class EnglishLocalizedMessages() : LocalizedMessages {
     override val missingParameter: String = "Missing parameter"
     override val tokensNotFound: String = "Tokens not found"
     override val tokenNotRegister: String = "Token not register"
+    override val alreadyUpdated: String = "This order already finished before"
     override val cartIsAlreadyEmpty: String = "cart is already empty"
     override val invalidQuantity: String = "Invalid Quantity"
     //endregion

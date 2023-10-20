@@ -9,7 +9,7 @@ import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorExcept
 interface IOrderValidationUseCase {
     fun validateGetOrdersByRestaurantId(restaurantId: String)
     fun validateGetOrderById(orderId: String)
-    fun validateUpdateOrder(orderId: String, status: Order.Status)
+    fun validateUpdateOrder(orderId: String)
     fun validateGetOrdersHistory(restaurantId: String, page: Int, limit: Int)
 
 }
@@ -43,7 +43,7 @@ class OrderValidationUseCase(
         }
     }
 
-    override fun validateUpdateOrder(orderId: String, status: Order.Status) {
+    override fun validateUpdateOrder(orderId: String) {
         val validationErrors = mutableListOf<Int>()
 
         if (!basicValidation.isValidId(orderId)) {

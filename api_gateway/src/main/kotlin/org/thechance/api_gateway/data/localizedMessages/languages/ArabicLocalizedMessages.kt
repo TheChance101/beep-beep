@@ -85,7 +85,7 @@ class ArabicLocalizedMessages() : LocalizedMessages {
     override val missingParameter: String = "معلومات مفقودة"
     override val tokensNotFound: String = "رمز الجهاز غير موجود"
     override val tokenNotRegister: String = "رمز الجهاز غير مسجل"
-
+    override val alreadyUpdated: String = "تم التحديث من قبل"
     override val cartIsAlreadyEmpty: String = "لا يمكن اجراء الامر لان السله فارغه"
     override val invalidQuantity: String = "مدخل كميه مش صح"
 

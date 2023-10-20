@@ -5,7 +5,9 @@ import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.client.model.Projections.computed
 import com.mongodb.client.model.ReturnDocument
 import com.mongodb.client.model.Updates
+import io.ktor.server.plugins.*
 import org.bson.Document
+import org.bson.conversions.Bson
 import org.bson.types.ObjectId
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
@@ -92,6 +94,11 @@ class RestaurantManagementGateway(private val container: DataBaseContainer) : IR
     override suspend fun getOrderById(orderId: String): Order? =
         container.orderCollection.findOneById(ObjectId(orderId))?.toEntity()
 
+    override suspend fun getOrderStatus(orderId: String): Int {
+        return container.orderCollection.findOne(OrderCollection::id eq ObjectId(orderId))?.orderStatus
+            ?: throw MultiErrorException(listOf(NOT_FOUND))
+    }
+
     override suspend fun isOrderExisted(orderId: String): Boolean {
         val order = container.orderCollection.findOne(
             and(
@@ -102,8 +109,8 @@ class RestaurantManagementGateway(private val container: DataBaseContainer) : IR
         return order != null
     }
 
-    override suspend fun updateOrderStatus(orderId: String, status: Order.Status): Order? {
-        val updateOperation = setValue(OrderCollection::orderStatus, status.statusCode)
+    override suspend fun updateOrderStatus(orderId: String, status: Int): Order? {
+        val updateOperation = setValue(OrderCollection::orderStatus, status)
 
         container.orderCollection.updateOne(
             filter = OrderCollection::id eq ObjectId(orderId),

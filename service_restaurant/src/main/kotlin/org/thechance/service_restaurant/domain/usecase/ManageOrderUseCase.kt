@@ -8,15 +8,14 @@ import org.thechance.service_restaurant.domain.gateway.IRestaurantManagementGate
 import org.thechance.service_restaurant.domain.usecase.validation.IOrderValidationUseCase
 import org.thechance.service_restaurant.domain.utils.IValidation
 import org.thechance.service_restaurant.domain.utils.currentDateTime
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_ID
-import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
+import org.thechance.service_restaurant.domain.utils.exceptions.*
 
 interface IManageOrderUseCase {
     suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order>
 
     suspend fun getActiveOrdersForUser(userId: String): List<Order>
 
-    suspend fun updateOrderStatus(orderId: String, state: Order.Status): Order
+    suspend fun updateOrderStatus(orderId: String): Order
 
     suspend fun getOrderById(orderId: String): Order
 
@@ -66,9 +65,24 @@ class ManageOrderUseCase(
         return restaurantOperationGateway.isOrderExisted(orderId)
     }
 
-    override suspend fun updateOrderStatus(orderId: String, state: Order.Status): Order {
-        orderValidationUseCase.validateUpdateOrder(orderId = orderId, status = state)
-        return restaurantOperationGateway.updateOrderStatus(orderId = orderId, status = state)!!
+    override suspend fun updateOrderStatus(orderId: String): Order {
+
+        orderValidationUseCase.validateUpdateOrder(orderId = orderId)
+        val currentOrderStatus = Order.Status.getOrderStatus(getOrderStatus(orderId))
+        val newOrderStatus = when (currentOrderStatus) {
+            Order.Status.PENDING -> Order.Status.APPROVED.statusCode
+            Order.Status.APPROVED -> Order.Status.IN_COOKING.statusCode
+            Order.Status.IN_COOKING -> Order.Status.DONE.statusCode
+            Order.Status.DONE -> throw MultiErrorException(listOf(ALREADY_UPDATED))
+            else -> throw MultiErrorException(listOf(INVALID_UPDATE_PARAMETER))
+        }
+
+        return restaurantOperationGateway.updateOrderStatus(orderId = orderId, status = newOrderStatus)
+            ?: throw MultiErrorException(listOf(NOT_FOUND))
+    }
+
+    private suspend fun getOrderStatus(orderId: String): Int {
+        return restaurantOperationGateway.getOrderStatus(orderId)
     }
 
     override suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<Order> {

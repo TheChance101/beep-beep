@@ -260,12 +260,12 @@ class RestaurantService(
 
     //region order
 
-    suspend fun updateOrderStatus(orderId: String, status: Int, languageCode: String): OrderDto {
+    suspend fun updateOrderStatus(orderId: String, languageCode: String): OrderDto {
         return client.tryToExecute<OrderDto>(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
             setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
-            method = { put("/order/$orderId?status=$status") }
+            method = { put("/order/$orderId") }
         )
     }
 
