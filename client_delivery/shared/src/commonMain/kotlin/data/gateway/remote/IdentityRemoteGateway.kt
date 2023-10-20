@@ -19,7 +19,7 @@ import io.ktor.http.Parameters
 class IdentityRemoteGateway(client: HttpClient) : IIdentityRemoteGateway,
     BaseRemoteGateway(client = client) {
 
-    override suspend fun loginUser(userName: String, password: String): Session {
+    override suspend fun loginUser(userName: String, password: String): Session? {
         val result = tryToExecute<BaseResponse<SessionDto>> {
             submitForm(
                 url = ("/login"),
@@ -32,7 +32,7 @@ class IdentityRemoteGateway(client: HttpClient) : IIdentityRemoteGateway,
             }
         }.value
 
-        return result?.toEntity() ?: throw InvalidCredentialsException("Invalid Credential")
+        return result?.toEntity()
     }
 
     override suspend fun refreshAccessToken(refreshToken: String): Pair<String, String> {

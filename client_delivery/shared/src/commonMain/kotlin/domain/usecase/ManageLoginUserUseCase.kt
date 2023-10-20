@@ -8,17 +8,11 @@ import domain.utils.InvalidUsernameException
 
 interface IManageLoginUserUseCase {
 
-    suspend fun loginUser(
-        userName: String,
-        password: String,
-        isKeepMeLoggedInChecked: Boolean
-    )
+    suspend fun loginUser(userName: String, password: String, isKeepMeLoggedInChecked: Boolean)
 
     suspend fun getKeepMeLoggedInFlag(): Boolean
 
-    suspend fun requestPermission(
-        deliveryRequestPermission: DeliveryRequestPermission
-    ): Boolean
+    suspend fun requestPermission(deliveryRequestPermission: DeliveryRequestPermission): Boolean
 
     suspend fun saveUsername(username: String)
     suspend fun getUsername(): String
@@ -36,8 +30,8 @@ class ManageLoginUserUseCase(
     ) {
         if (validateLoginFields(userName, password)) {
             val userTokens = remoteGateway.loginUser(userName, password)
-            localGateWay.saveAccessToken(userTokens.accessToken)
-            localGateWay.saveRefreshToken(userTokens.refreshToken)
+            localGateWay.saveAccessToken(userTokens?.accessToken ?: "")
+            localGateWay.saveRefreshToken(userTokens?.refreshToken ?: "")
             localGateWay.saveKeepMeLoggedInFlag(isKeepMeLoggedInChecked)
         }
     }

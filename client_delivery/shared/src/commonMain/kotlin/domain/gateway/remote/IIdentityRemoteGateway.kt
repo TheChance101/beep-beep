@@ -5,7 +5,7 @@ import domain.entity.Session
 
 interface IIdentityRemoteGateway {
     //region login
-    suspend fun loginUser(userName: String, password: String): Session
+    suspend fun loginUser(userName: String, password: String): Session?
 
     suspend fun refreshAccessToken(refreshToken: String): Pair<String, String>
     //endregion

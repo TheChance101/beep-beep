@@ -1,8 +1,5 @@
 package presentation.main
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -90,19 +87,14 @@ class MainScreen :
                     enabled = !state.isLoading
                 )
             }
-
-            AnimatedVisibility(
-                visible = state.showSnackBar,
-                enter = slideInVertically { it },
-                exit = slideOutVertically { it },
-                modifier = Modifier.align(Alignment.BottomCenter)
+            BPSnackBar(
+                icon = painterResource(Resources.images.warningIcon),
+                iconBackgroundColor = Theme.colors.warningContainer,
+                iconTint = Theme.colors.warning,
+                isVisible = state.showSnackBar,
+                modifier = Modifier.padding(bottom = getNavigationBarPadding().calculateBottomPadding())
+                    .align(Alignment.BottomCenter)
             ) {
-                BPSnackBar(
-                    icon = painterResource(Resources.images.warningIcon),
-                    iconBackgroundColor = Theme.colors.warningContainer,
-                    iconTint = Theme.colors.warning,
-                    modifier = Modifier.padding(bottom = getNavigationBarPadding().calculateBottomPadding())
-                ) {
                     Text(
                         text = state.snackBarMessage,
                         style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
@@ -111,4 +103,3 @@ class MainScreen :
             }
         }
     }
-}

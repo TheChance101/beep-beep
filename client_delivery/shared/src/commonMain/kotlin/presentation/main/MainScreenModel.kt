@@ -28,16 +28,15 @@ class MainScreenModel(private val manageUserLocation: IManageUserLocationUseCase
 
     private fun onError(error: ErrorState) {
         when (error) {
-            ErrorState.LocationAccessDenied -> showSnackBar("To continue, Please access location permission")
+            ErrorState.LocationAccessDenied ->  showSnackBar()
             else -> {}
         }
     }
-
-    private fun showSnackBar(message: String) {
+    private fun showSnackBar() {
         viewModelScope.launch {
-            updateState { it.copy(showSnackBar = true, snackBarMessage = message) }
+            updateState { it.copy(showSnackBar = true) }
             delay(4000)
-            updateState { it.copy(showSnackBar = false, snackBarMessage = message) }
+            updateState { it.copy(showSnackBar = false) }
         }
 
     }
