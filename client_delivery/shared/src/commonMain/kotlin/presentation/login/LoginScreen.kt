@@ -13,6 +13,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,6 +26,7 @@ import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpCheckBox
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
@@ -86,7 +88,6 @@ private fun LoginScreenContent(
     state: LoginScreenUIState,
     listener: LoginScreenInteractionListener
 ) {
-
     Box(
         modifier = Modifier.fillMaxSize().background(Theme.colors.background),
         contentAlignment = Alignment.Center
@@ -174,7 +175,7 @@ private fun LoginScreenContent(
                     .align(Alignment.BottomCenter)
             ) {
                 Text(
-                    text = state.snackBarMessage,
+                    text = Resources.strings.signupWithBeepBeep,
                     style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
                 )
         }

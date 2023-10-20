@@ -17,7 +17,7 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
         get() = coroutineScope
 
     init {
-        showSnackBar("Sign up with Beep Beep account")
+        showSnackBar()
     }
 
     override fun onUserNameChanged(userName: String) {
@@ -81,10 +81,10 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
         }
     }
 
-    private fun showSnackBar(message: String) {
+    private fun showSnackBar() {
         viewModelScope.launch {
-            updateState { it.copy(snackBarMessage = message, showSnackBar = true) }
-            delay(4000) // wait for snack-bar to show
+            updateState { it.copy(showSnackBar = true) }
+            delay(1500)
             updateState { it.copy(showSnackBar = false) }
         }
     }
