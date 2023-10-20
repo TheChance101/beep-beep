@@ -136,13 +136,38 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
     }
 
     override suspend fun getActiveTripsByUserId(userId: String): List<Trip> {
-        return container.tripCollection.find(
-            and(
-                TripCollection::clientId eq ObjectId(userId),
-                TripCollection::tripStatus nin listOf(Trip.Status.FINISHED.statusCode, Trip.Status.PENDING.statusCode)
+
+        val pipeline = listOf(
+            match(TripCollection::clientId eq ObjectId(userId)),
+            lookup(
+                from = "taxi",
+                localField = "taxiId",
+                foreignField = "_id",
+                newAs = "taxi"
+            ),
+            unwind("\$taxi"),
+            project(
+                TripWithTaxi::id from "\$_id",
+                TripWithTaxi::driverId from "\$driverId",
+                TripWithTaxi::clientId from "\$clientId",
+                TripWithTaxi::restaurantId from "\$restaurantId",
+                TripWithTaxi::taxi from "\$taxi",
+                TripWithTaxi::startPoint from "\$startPoint",
+                TripWithTaxi::destination from "\$destination",
+                TripWithTaxi::startPointAddress from "\$startPointAddress",
+                TripWithTaxi::destinationAddress from "\$destinationAddress",
+                TripWithTaxi::rate from "\$rate",
+                TripWithTaxi::price from "\$price",
+                TripWithTaxi::startDate from "\$startDate",
+                TripWithTaxi::endDate from "\$endDate",
+                TripWithTaxi::tripStatus from "\$tripStatus",
+                TripWithTaxi::isATaxiTrip from "\$isATaxiTrip",
             )
-        ).toList().toEntity()
+        )
+
+        return container.tripCollection.aggregate<TripWithTaxi>(pipeline).toList().map { it.toEntity() }
     }
+
 
     override suspend fun getDriverTripsHistory(
         driverId: String,
