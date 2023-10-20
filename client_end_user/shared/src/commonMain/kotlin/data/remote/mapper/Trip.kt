@@ -7,6 +7,7 @@ import domain.entity.DeliveryRide
 import domain.entity.Location
 import domain.entity.TaxiRide
 import domain.entity.Trip
+import domain.entity.TripStatus
 import kotlinx.datetime.LocalTime
 
 fun TripDto.toTripEntity(): Trip {
@@ -27,7 +28,7 @@ fun TripDto.toTripEntity(): Trip {
         startDate = startDate,
         endDate = endDate,
         isATaxiTrip = isATaxiTrip ?: false,
-        tripStatus = Trip.TripStatus.getTripStatus(tripStatus),
+        tripStatus = TripStatus.getTripStatus(tripStatus),
         timeToArriveInMints = LocalTime(0, 30).minute,
     )
 }
@@ -36,7 +37,7 @@ fun List<TripDto>.toTripEntity() = map { it.toTripEntity() }
 
 fun TaxiRideDto.toTaxiRideEntity(): TaxiRide {
     return TaxiRide(
-        id = id ?: "",
+        id = id ,
         taxiPlateNumber = taxiPlateNumber,
         taxiDriverName = taxiDriverName,
         driverImage = driverImage ?: "",
@@ -46,15 +47,22 @@ fun TaxiRideDto.toTaxiRideEntity(): TaxiRide {
         startPointAddress = startPointAddress,
         destinationAddress = destinationAddress,
         rate = rate ?: 0.0,
-        tripStatus = Trip.TripStatus.getTripStatus(tripStatus),
+        tripStatus = TripStatus.getTripStatus(tripStatus),
     )
 }
 
 fun DeliveryRideDto.toDeliveryRideEntity(): DeliveryRide {
     return DeliveryRide(
         id = id,
+        restaurantName = restaurantName,
+        restaurantImage = restaurantImage.ifEmpty {
+            "https://graphicsfamily.com/wp-content/uploads/edd/2023/02/Restaurant-Logo-Design-2-scaled.jpg"
+        },
         startPoint = startPoint.toEntity(),
         destination = destination.toEntity(),
-        status = status,
+        startPointAddress = startPointAddress,
+        destinationAddress = destinationAddress,
+        price = price,
+        tripStatus = TripStatus.getTripStatus(tripStatus),
     )
 }

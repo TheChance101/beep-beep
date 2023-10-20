@@ -1,13 +1,16 @@
 package presentation.home
 
+import domain.entity.DeliveryRide
 import domain.entity.FoodOrder
 import domain.entity.PriceLevel
 import domain.entity.TaxiRide
 import domain.entity.Trip
+import domain.entity.TripStatus
 import presentation.cuisines.CuisineUiState
 
 data class HomeScreenUiState(
     val offers: List<OfferUiState> = emptyList(),
+    val isLoading: Boolean = false,
     val recommendedCuisines: List<CuisineUiState> = emptyList(),
     val favoriteRestaurants: List<RestaurantUiState> = emptyList(),
     val liveOrders: InProgressOrderUiState = InProgressOrderUiState(),
@@ -38,29 +41,20 @@ data class TaxiRideUiState(
     val tripId: String = "",
     val taxiColor: String = "",
     val taxiPlateNumber: String = "",
-    val rideStatus: Int = 1,
+    val rideStatus: Int = TripStatus.PENDING.statusCode,
     val rideEstimatedTime: Int = 30,
 )
-
-fun TaxiRide.toTaxiRideUiState(): TaxiRideUiState {
-    return TaxiRideUiState(
-        tripId = this.id,
-        taxiColor = "White",
-        taxiPlateNumber = this.taxiPlateNumber,
-        rideStatus = this.tripStatus.statusCode,
-        rideEstimatedTime = 30,
-    )
-}
 
 data class DeliveryOrderUiState(
     val tripId: String = "",
     val restaurantName: String = "",
+    val orderStatus: Int = TripStatus.PENDING.statusCode,
 )
 
 data class FoodOrderUiState(
     val orderId: String = "",
     val restaurantName: String = "",
-    val orderStatus: Int = 1,
+    val orderStatus: Int = FoodOrder.OrderStatusInRestaurant.PENDING.statusCode,
 )
 
 data class OrderUiState(
@@ -110,5 +104,23 @@ fun FoodOrder.toFoodOrderUiState(): FoodOrderUiState {
         orderId = this.id,
         restaurantName = this.restaurantName,
         orderStatus = this.orderStatus.statusCode,
+    )
+}
+
+fun TaxiRide.toTaxiRideUiState(): TaxiRideUiState {
+    return TaxiRideUiState(
+        tripId = this.id,
+        taxiColor = "white", // missing taxi color
+        taxiPlateNumber = this.taxiPlateNumber,
+        rideStatus = this.tripStatus.statusCode,
+        rideEstimatedTime = 30,
+    )
+}
+
+fun DeliveryRide.toDeliveryOrderUiState(): DeliveryOrderUiState {
+    return DeliveryOrderUiState(
+        tripId = this.id,
+        restaurantName = this.restaurantName,
+        orderStatus = this.tripStatus.statusCode,
     )
 }

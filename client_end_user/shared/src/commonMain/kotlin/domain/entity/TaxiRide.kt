@@ -11,5 +11,5 @@ data class TaxiRide(
     val startPointAddress: String,
     val destinationAddress: String,
     val rate: Double,
-    val tripStatus: Trip.TripStatus,
+    val tripStatus: TripStatus,
 )
