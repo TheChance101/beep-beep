@@ -130,7 +130,7 @@ private fun LoginScreenContent(
                 text = state.userName,
                 onValueChange = listener::onUserNameChanged,
                 label = Resources.strings.usernameLabel,
-                errorMessage = state.usernameErrorMsg,
+                errorMessage = if (state.isUsernameError) Resources.strings.invalidUsername else "",
                 isError = state.isUsernameError,
             )
             BpTextField(
@@ -139,7 +139,7 @@ private fun LoginScreenContent(
                 onValueChange = listener::onPasswordChanged,
                 label = Resources.strings.passwordLabel,
                 keyboardType = KeyboardType.Password,
-                errorMessage = state.passwordErrorMsg,
+                errorMessage = if (state.isPasswordError) Resources.strings.invalidPassword else "",
                 isError = state.isPasswordError
             )
             BpCheckBox(

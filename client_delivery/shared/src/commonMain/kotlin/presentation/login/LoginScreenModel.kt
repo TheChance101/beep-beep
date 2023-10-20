@@ -62,18 +62,10 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
         updateState { it.copy(isLoading = false, isEnable = true) }
         clearErrors()
         when (errorState) {
-            ErrorState.InvalidPassword -> updateState {
-                it.copy(
-                    passwordErrorMsg = "Invalid password",
-                    isPasswordError = true
-                )
-            }
+            ErrorState.InvalidPassword -> updateState { it.copy(isPasswordError = true) }
 
             ErrorState.InvalidUsername,ErrorState.UserNotFound -> updateState {
-                it.copy(
-                    usernameErrorMsg = "Invalid username",
-                    isUsernameError = true
-                )
+                it.copy(isUsernameError = true)
             }
 
             is ErrorState.UnAuthorized -> state.value.permissionUiState.sheetState.show()
