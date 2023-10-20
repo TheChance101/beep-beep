@@ -138,7 +138,12 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
     override suspend fun getActiveTripsByUserId(userId: String): List<Trip> {
 
         val pipeline = listOf(
-            match(TripCollection::clientId eq ObjectId(userId)),
+            match(
+                and(
+                    TripCollection::clientId eq ObjectId(userId),
+                    TripCollection::tripStatus ne Trip.Status.FINISHED.statusCode
+                )
+            ),
             lookup(
                 from = "taxi",
                 localField = "taxiId",
@@ -258,11 +263,42 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
 
         val combinedUpdates = Updates.combine(updates)
 
-        return container.tripCollection.findOneAndUpdate(
+        container.tripCollection.updateOne(
             filter = and(TripCollection::id eq ObjectId(tripId)),
-            update = combinedUpdates,
-            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
-        )?.toEntity()
+            update = combinedUpdates
+        )
+
+        val pipeline = listOf(
+            match(TripCollection::id eq ObjectId(tripId)),
+            lookup(
+                from = "taxi",
+                localField = "taxiId",
+                foreignField = "_id",
+                newAs = "taxi"
+            ),
+            unwind("\$taxi"),
+            project(
+                TripWithTaxi::id from "\$_id",
+                TripWithTaxi::driverId from "\$driverId",
+                TripWithTaxi::clientId from "\$clientId",
+                TripWithTaxi::restaurantId from "\$restaurantId",
+                TripWithTaxi::taxi from "\$taxi",
+                TripWithTaxi::startPoint from "\$startPoint",
+                TripWithTaxi::destination from "\$destination",
+                TripWithTaxi::startPointAddress from "\$startPointAddress",
+                TripWithTaxi::destinationAddress from "\$destinationAddress",
+                TripWithTaxi::rate from "\$rate",
+                TripWithTaxi::price from "\$price",
+                TripWithTaxi::startDate from "\$startDate",
+                TripWithTaxi::endDate from "\$endDate",
+                TripWithTaxi::tripStatus from "\$tripStatus",
+                TripWithTaxi::isATaxiTrip from "\$isATaxiTrip"
+            )
+        )
+
+        val updatedTrip = container.tripCollection.aggregate<TripWithTaxi>(pipeline).first()
+
+        return updatedTrip?.toEntity()
     }
 
 
