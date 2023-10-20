@@ -6,38 +6,31 @@ import domain.entity.TaxiRide
 import domain.entity.Trip
 import domain.gateway.ITransactionsGateway
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flowOf
-import presentation.home.toTaxiRideUiState
 
 interface IInProgressTrackerUseCase {
-    suspend fun getActiveTaxiTrips(): Flow<List<Trip>>
-    suspend fun getActiveDeliveryTrips(): Flow<List<Trip>>
-    suspend fun getActiveFoodOrders(): Flow<List<FoodOrder>>
+    suspend fun getActiveTaxiTrips(): List<Trip>
+    suspend fun getActiveDeliveryTrips(): List<Trip>
+    suspend fun getActiveFoodOrders(): List<FoodOrder>
     suspend fun trackTaxiRide(tripId: String): Flow<TaxiRide>
     suspend fun trackDeliveryRide(tripId: String): Flow<DeliveryRide>
     suspend fun trackFoodOrderInRestaurant(orderId: String): Flow<FoodOrder>
-
 }
 
 class InProgressTrackerUseCase(
     private val remoteGateway: ITransactionsGateway,
 ) : IInProgressTrackerUseCase {
-    override suspend fun getActiveTaxiTrips(): Flow<List<Trip>> {
+    override suspend fun getActiveTaxiTrips(): List<Trip> {
         val trips = remoteGateway.getActiveTrips()
-        val activeTaxiRides = trips.filter { it.isATaxiTrip }
-        return flowOf(activeTaxiRides)
+        return trips.filter { it.isATaxiTrip }
     }
 
-    override suspend fun getActiveDeliveryTrips(): Flow<List<Trip>> {
+    override suspend fun getActiveDeliveryTrips(): List<Trip> {
         val trips = remoteGateway.getActiveTrips()
-        val activeDeliveryOrders = trips.filterNot { it.isATaxiTrip }
-        return flowOf(activeDeliveryOrders)
+        return trips.filterNot { it.isATaxiTrip }
     }
 
-    override suspend fun getActiveFoodOrders(): Flow<List<FoodOrder>> {
-        val orders = remoteGateway.getActiveOrders()
-        return flowOf(orders)
+    override suspend fun getActiveFoodOrders(): List<FoodOrder> {
+        return remoteGateway.getActiveOrders()
     }
 
     override suspend fun trackTaxiRide(tripId: String): Flow<TaxiRide> {

@@ -44,6 +44,7 @@ import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.theme.Theme
 import domain.entity.FoodOrder
 import domain.entity.Trip
+import domain.entity.TripStatus
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.auth.login.LoginScreen
@@ -186,19 +187,19 @@ class HomeScreen :
 
                 // taxi rides
                 items(state.liveOrders.taxiRides) { taxiRideUiState ->
-                    if (taxiRideUiState.rideStatus != Trip.TripStatus.FINISHED.statusCode
-                        || taxiRideUiState.rideStatus != Trip.TripStatus.PENDING.statusCode
+                    if (taxiRideUiState.rideStatus != TripStatus.FINISHED.statusCode
+                        || taxiRideUiState.rideStatus != TripStatus.PENDING.statusCode
                     ) {
 
                         HorizontalImageCard(
                             painter = painterResource(Resources.images.taxiOnTheWay),
-                            titleText = if (taxiRideUiState.rideStatus == Trip.TripStatus.APPROVED.statusCode) {
+                            titleText = if (taxiRideUiState.rideStatus == TripStatus.APPROVED.statusCode) {
                                 Resources.strings.taxiOnTheWay
                             } else {
                                 Resources.strings.enjoyYourRide
                             },
                             onClick = listener::onClickInProgressTaxiRide,
-                            titleTextColor = if (taxiRideUiState.rideStatus == Trip.TripStatus.APPROVED.statusCode) {
+                            titleTextColor = if (taxiRideUiState.rideStatus == TripStatus.APPROVED.statusCode) {
                                 Theme.colors.primary
                             } else {
                                 Theme.colors.contentSecondary
@@ -209,7 +210,7 @@ class HomeScreen :
                                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                if (taxiRideUiState.rideStatus == Trip.TripStatus.APPROVED.statusCode) {
+                                if (taxiRideUiState.rideStatus == TripStatus.APPROVED.statusCode) {
                                     Text(text = taxiRideUiState.taxiColor, style = textStyle)
                                     Circle()
                                     Text(text = taxiRideUiState.taxiPlateNumber, style = textStyle)

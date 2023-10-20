@@ -2,10 +2,12 @@ package presentation.home
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Cart
+import domain.entity.DeliveryRide
 import domain.entity.FoodOrder
 import domain.entity.Restaurant
 import domain.entity.TaxiRide
 import domain.entity.Trip
+import domain.entity.TripStatus
 import domain.entity.User
 import domain.usecase.IExploreRestaurantUseCase
 import domain.usecase.IGetOffersUseCase
@@ -15,6 +17,7 @@ import domain.usecase.IManageCartUseCase
 import domain.usecase.IManageFavouriteUseCase
 import domain.usecase.IManageProfileUseCase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
@@ -42,69 +45,123 @@ class HomeScreenModel(
     }
 
     private fun getLiveOrders() {
-        getActiveTaxiTrips()
-        getActiveDeliveryTrips()
-        getActiveFoodOrders()
+        coroutineScope.launch {
+            async { getActiveTaxiTrips() }.await()
+            async { getActiveDeliveryTrips() }.await()
+            async { getActiveFoodOrders() }.await()
+        }
     }
 
-    private fun tackAndUpdateTaxiRide(tripId: String) {
+
+    private fun trackingAndUpdateTaxiRide(tripId: String) {
         tryToCollect(
             { inProgressTrackerUseCase.trackTaxiRide(tripId) },
-            ::onTrackingTaxiRideSuccess,
-            ::onSocketError
+            ::onGetTaxiRidesSuccess,
+            ::onTrackingError
         )
     }
 
-    private fun onSocketError(errorState: ErrorState) {
-        println("errror Socket : $errorState")
+    private fun trackingAndUpdateDeliveryRide(tripId: String) {
+        tryToCollect(
+            { inProgressTrackerUseCase.trackDeliveryRide(tripId) },
+            ::onGetDeliveryRidesSuccess,
+            ::onTrackingError
+        )
     }
 
-    private fun onTrackingTaxiRideSuccess(taxiRide: TaxiRide) {
-        updateState { homeScreenUiState ->
-            val currentTaxiRides = homeScreenUiState.liveOrders.taxiRides.toMutableList()
-            val existingTaxiRide = currentTaxiRides.find { it.tripId == taxiRide.id }
+    private fun trackingAndUpdateFoodOrdersInRestaurant(orderId: String) {
+        tryToCollect(
+            { inProgressTrackerUseCase.trackFoodOrderInRestaurant(orderId) },
+            ::onGetFoodOrdersSuccess,
+            ::onTrackingError
+        )
+    }
 
-            if (existingTaxiRide != null) {
-                val updatedTaxiRidesList = currentTaxiRides.map { taxiRideUiState ->
-                    if (taxiRideUiState.tripId == taxiRide.id) {
-                        if (taxiRide.tripStatus.statusCode == Trip.TripStatus.FINISHED.statusCode) {
-                            getActiveTaxiTrips()
-                        }
-                        taxiRide.toTaxiRideUiState()
+    private fun onGetTaxiRidesSuccess(ride: TaxiRide) {
+        updateState { it.copy(isLoading = false) }
+        updateState { homeScreenUiState ->
+            val currentTaxiRides = homeScreenUiState.liveOrders.taxiRides
+            val updatedTaxiRides = currentTaxiRides.mapNotNull { taxiRideUiState ->
+                if (taxiRideUiState.tripId == ride.id) {
+                    if (ride.tripStatus.statusCode == TripStatus.FINISHED.statusCode) {
+                        currentTaxiRides - ride.toTaxiRideUiState()
+                        null
                     } else {
-                        taxiRideUiState
+                        ride.toTaxiRideUiState()
                     }
+                } else {
+                    taxiRideUiState
                 }
-                homeScreenUiState.copy(liveOrders = homeScreenUiState.liveOrders.copy(taxiRides = updatedTaxiRidesList))
-            } else {
-                val newTaxiRideUiState = taxiRide.toTaxiRideUiState()
-                currentTaxiRides.add(newTaxiRideUiState)
-                homeScreenUiState.copy(liveOrders = homeScreenUiState.liveOrders.copy(taxiRides = currentTaxiRides))
             }
+            homeScreenUiState.copy(liveOrders = homeScreenUiState.liveOrders.copy(taxiRides = updatedTaxiRides))
+        }
+    }
+
+    private fun onGetDeliveryRidesSuccess(ride: DeliveryRide) {
+        updateState { it.copy(isLoading = false) }
+        updateState { homeScreenUiState ->
+            val currentDeliveryRides = homeScreenUiState.liveOrders.deliveryOrders
+            val updatedDeliveryRides = currentDeliveryRides.mapNotNull { deliveryRideUiState ->
+                if (deliveryRideUiState.tripId == ride.id) {
+                    if (ride.tripStatus.statusCode == TripStatus.FINISHED.statusCode) {
+                        currentDeliveryRides - ride.toDeliveryOrderUiState()
+                        null
+                    } else {
+                        ride.toDeliveryOrderUiState()
+                    }
+                } else {
+                    deliveryRideUiState
+                }
+            }
+            homeScreenUiState.copy(liveOrders = homeScreenUiState.liveOrders.copy(deliveryOrders = updatedDeliveryRides))
+        }
+    }
+
+
+    private fun onGetFoodOrdersSuccess(order: FoodOrder) {
+        updateState { it.copy(isLoading = false) }
+        updateState { homeScreenUiState ->
+            val currentFoodOrders = homeScreenUiState.liveOrders.foodOrders
+            val updatedFoodOrders = currentFoodOrders.mapNotNull { foodOrderUiState ->
+                if (foodOrderUiState.orderId == order.id) {
+                    if (order.orderStatus.statusCode == TripStatus.FINISHED.statusCode) {
+                        currentFoodOrders - order.toFoodOrderUiState()
+                        null
+                    } else {
+                        order.toFoodOrderUiState()
+                    }
+                } else {
+                    foodOrderUiState
+                }
+            }
+            homeScreenUiState.copy(liveOrders = homeScreenUiState.liveOrders.copy(foodOrders = updatedFoodOrders))
         }
     }
 
     private fun getActiveTaxiTrips() {
-        tryToCollect(
+        updateState { it.copy(isLoading = true) }
+        tryToExecute(
             { inProgressTrackerUseCase.getActiveTaxiTrips() },
             ::onGetActiveTaxiTripsSuccess,
-            ::onError
+            ::onTrackingError
         )
     }
 
     private fun getActiveDeliveryTrips() {
-        tryToCollect(
+        updateState { it.copy(isLoading = true) }
+        tryToExecute(
             { inProgressTrackerUseCase.getActiveDeliveryTrips() },
             ::onGetActiveDeliveryTripsSuccess,
-            ::onError
+            ::onTrackingError
         )
     }
 
     private fun getActiveFoodOrders() {
-        tryToCollect(
+        updateState { it.copy(isLoading = true) }
+        tryToExecute(
             { inProgressTrackerUseCase.getActiveFoodOrders() },
             ::onGetActiveFoodOrdersSuccess,
-            ::onError
+            ::onTrackingError
         )
     }
 
@@ -116,14 +173,13 @@ class HomeScreenModel(
                 )
             )
         }
-
-        if (taxiTrips.isNotEmpty()) {
-            taxiTrips.forEach { trip ->
-                tackAndUpdateTaxiRide(trip.id)
+        val currentTaxiRides = state.value.liveOrders.taxiRides
+        if (currentTaxiRides.isNotEmpty()) {
+            currentTaxiRides.forEach { taxiRide ->
+                trackingAndUpdateTaxiRide(taxiRide.tripId)
             }
         }
     }
-
 
     private fun onGetActiveDeliveryTripsSuccess(deliveryTrips: List<Trip>) {
         updateState { homeScreenState ->
@@ -132,6 +188,13 @@ class HomeScreenModel(
                     deliveryOrders = deliveryTrips.map { trip -> trip.toDeliveryOrderUiState() }
                 )
             )
+        }
+
+        val currentDeliveryRides = state.value.liveOrders.deliveryOrders
+        if (currentDeliveryRides.isNotEmpty()) {
+            currentDeliveryRides.forEach { deliveryRide ->
+                trackingAndUpdateDeliveryRide(deliveryRide.tripId)
+            }
         }
     }
 
@@ -142,6 +205,13 @@ class HomeScreenModel(
                     foodOrders = foodOrders.map { order -> order.toFoodOrderUiState() }
                 )
             )
+        }
+
+        val currentFoodOrders = state.value.liveOrders.foodOrders
+        if (currentFoodOrders.isNotEmpty()) {
+            currentFoodOrders.forEach { order ->
+                trackingAndUpdateFoodOrdersInRestaurant(order.orderId)
+            }
         }
     }
 
@@ -172,6 +242,9 @@ class HomeScreenModel(
         updateState { it.copy(isLoggedIn = false) }
     }
 
+    private fun onTrackingError(errorState: ErrorState) {
+        updateState { it.copy(isLoading = false) }
+    }
 
     private fun checkIfThereIsOrderInCart() {
         tryToExecute(

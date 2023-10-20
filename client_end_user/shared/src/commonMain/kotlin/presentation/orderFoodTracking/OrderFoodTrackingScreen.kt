@@ -33,7 +33,7 @@ class OrderFoodTrackingScreen : BaseScreen<
 
     override fun onEffect(effect: OrderFoodTrackingUiEffect, navigator: Navigator) {
         when (effect) {
-            OrderFoodTrackingUiEffect.NavigateBack -> navigator.replace(HomeScreen())
+            OrderFoodTrackingUiEffect.NavigateBack -> navigator.pop()
         }
     }
 
