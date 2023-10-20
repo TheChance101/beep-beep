@@ -30,7 +30,7 @@ class SyrianArabicLocalizedMessages() : LocalizedMessages {
     // region taxi
     override val taxiCreatedSuccessfully: String = "سيارة التاكسي صارت عنا 🎉"
     override val tripCreatedSuccessfully: String = "تم انشاء الرحلة"
-    override val tripApproved: String = "تم قبول الرحلة"
+    override val tripUpdated: String = "تم تحديث الرحلة بنجاح"
     override val tripCanceled: String = "تم الغاء الرحلة"
     override val tripFinished: String = "تم إنهاء الرحلة بنجاح"
     override val tripArrived: String = "تم الوصول الى العميل"

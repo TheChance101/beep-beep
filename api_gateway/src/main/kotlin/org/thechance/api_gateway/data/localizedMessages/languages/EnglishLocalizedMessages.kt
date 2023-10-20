@@ -29,7 +29,7 @@ class EnglishLocalizedMessages() : LocalizedMessages {
     // region taxi
     override val taxiCreatedSuccessfully: String = "Taxi created successfully 🎉"
     override val tripCreatedSuccessfully: String = "Trip Created Successfully"
-    override val tripApproved: String = "Trip Approved"
+    override val tripUpdated: String = "Trip updated Successfully"
     override val tripCanceled: String = "Trip Canceled"
     override val tripFinished: String = "Trip Finished Successfully"
     override val tripArrived: String = "Trip Arrived Successfully"

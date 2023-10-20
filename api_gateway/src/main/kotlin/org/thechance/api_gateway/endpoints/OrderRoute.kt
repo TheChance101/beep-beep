@@ -112,16 +112,6 @@ fun Route.orderRoutes() {
             }
         }
 
-        webSocket("track/user-orders") {
-            val tokenClaim = call.principal<JWTPrincipal>()
-            val userId = tokenClaim?.get(Claim.USER_ID).toString()
-            val order = restaurantService.trackOrderByUserId(userId)
-            webSocketServerHandler.sessions[userId] = this
-            webSocketServerHandler.sessions[userId]?.let {
-                webSocketServerHandler.tryToCollect(order, it)
-            }
-        }
-
         get("active/orders") {
             val tokenClaim = call.principal<JWTPrincipal>()
             val userId = tokenClaim?.get(Claim.USER_ID).toString()

@@ -47,7 +47,7 @@ interface LocalizedMessages {
 
     val tripCreatedSuccessfully: String
 
-    val tripApproved: String
+    val tripUpdated: String
 
     val tripCanceled: String
 

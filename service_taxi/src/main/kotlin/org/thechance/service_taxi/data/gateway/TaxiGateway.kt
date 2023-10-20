@@ -6,6 +6,7 @@ import com.mongodb.client.model.Updates
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.bson.conversions.Bson
 import org.bson.types.ObjectId
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
@@ -21,6 +22,7 @@ import org.thechance.service_taxi.data.utils.isSuccessfullyUpdated
 import org.thechance.service_taxi.data.utils.paginate
 import org.thechance.service_taxi.domain.entity.Taxi
 import org.thechance.service_taxi.domain.entity.Trip
+import org.thechance.service_taxi.domain.exceptions.ResourceNotFoundException
 import org.thechance.service_taxi.domain.gateway.ITaxiGateway
 
 class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
@@ -187,51 +189,57 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
         ).toList().map { it.toEntity() }
     }
 
-    override suspend fun approveTrip(tripId: String, taxiId: String, driverId: String): Trip? {
+    override suspend fun getTripStatus(tripId: String): Int {
+        val trip = container.tripCollection.findOne(TripCollection::id eq ObjectId(tripId))
+            ?: throw ResourceNotFoundException()
+
+        return trip.tripStatus
+    }
+
+    override suspend fun updateTrip(driverId: String, taxiId: String, tripId: String, statusCode: Int): Trip? {
+        val updates = mutableListOf<Bson>()
+
+        when (Trip.getOrderStatus(statusCode)) {
+            Trip.Status.PENDING -> {
+                updates.add(Updates.set(TripCollection::tripStatus.name, statusCode))
+            }
+
+            Trip.Status.APPROVED -> {
+                updates.add(Updates.set(TripCollection::tripStatus.name, statusCode))
+                updates.add(Updates.set(TripCollection::taxiId.name, ObjectId(taxiId)))
+                updates.add(Updates.set(TripCollection::driverId.name, ObjectId(driverId)))
+                updates.add(
+                    Updates.set(
+                        TripCollection::startDate.name,
+                        Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).toString()
+                    )
+                )
+            }
+
+            Trip.Status.RECEIVED -> {
+                updates.add(Updates.set(TripCollection::tripStatus.name, statusCode))
+            }
+
+            Trip.Status.FINISHED -> {
+                updates.add(Updates.set(TripCollection::tripStatus.name, statusCode))
+                updates.add(
+                    Updates.set(
+                        TripCollection::endDate.name,
+                        Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).toString()
+                    )
+                )
+            }
+        }
+
+        val combinedUpdates = Updates.combine(updates)
+
         return container.tripCollection.findOneAndUpdate(
             filter = and(TripCollection::id eq ObjectId(tripId)),
-            update = Updates.combine(
-                Updates.set(TripCollection::taxiId.name, ObjectId(taxiId)),
-                Updates.set(TripCollection::driverId.name, ObjectId(driverId)),
-                Updates.set(
-                    TripCollection::startDate.name, Clock.System.now().toLocalDateTime(
-                        TimeZone.currentSystemDefault()
-                    ).toString()
-                ),
-                Updates.set(TripCollection::tripStatus.name, Trip.Status.APPROVED.statusCode),
-            ),
+            update = combinedUpdates,
             options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )?.toEntity()
     }
 
-    override suspend fun finishTrip(tripId: String, driverId: String): Trip? {
-        return container.tripCollection.findOneAndUpdate(
-            filter = and(
-                TripCollection::id eq ObjectId(tripId),
-                TripCollection::driverId eq ObjectId(driverId),
-            ),
-            update = Updates.combine(
-                Updates.set(
-                    TripCollection::endDate.name, Clock.System.now().toLocalDateTime(
-                        TimeZone.currentSystemDefault()
-                    ).toString()
-                ),
-                Updates.set(TripCollection::tripStatus.name, Trip.Status.FINISHED.statusCode),
-            ),
-            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
-        )?.toEntity()
-    }
-
-    override suspend fun updateTripAsReceived(tripId: String, driverId: String): Trip? {
-        return container.tripCollection.findOneAndUpdate(
-            filter = and(
-                TripCollection::id eq ObjectId(tripId),
-                TripCollection::driverId eq ObjectId(driverId),
-            ),
-            update = Updates.set(TripCollection::tripStatus.name, Trip.Status.RECEIVED.statusCode),
-            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
-        )?.toEntity()
-    }
 
     override suspend fun rateTrip(tripId: String, rate: Double): Trip? {
         return container.tripCollection.findOneAndUpdate(

@@ -69,12 +69,3 @@ fun TripDto.toRideTrackingResponse(taxi: TaxiDto): RideTrackingResponse {
         tripStatus = tripStatus
     )
 }
-
-fun TripDto.toDeliveryTrackingResponse(): DeliveryTrackingResponse {
-    return DeliveryTrackingResponse(
-        id = id ?: "",
-        startPoint = startPoint ?: LocationDto(0.0, 0.0),
-        destination = destination ?: LocationDto(0.0, 0.0),
-        status = tripStatus
-    )
-}
