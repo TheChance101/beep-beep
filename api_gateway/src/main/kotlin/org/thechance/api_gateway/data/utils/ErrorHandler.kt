@@ -178,6 +178,9 @@ class ErrorHandler(
         if (errorCodes.contains(2507))
             errors[2505] = localizedMessages.alreadyUpdated
 
+        if (errorCodes.contains(2508))
+            errors[2505] = localizedMessages.cancelOrderError
+
         if (errorCodes.contains(4001))
             errors[4001] = localizedMessages.missingParameter
 

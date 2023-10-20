@@ -13,6 +13,7 @@ interface IRestaurantManagementGateway {
     suspend fun isOrderExisted(orderId: String): Boolean
     suspend fun addOrder(order: Order): Order
     suspend fun updateOrderStatus(orderId: String, status: Int): Order?
+    suspend fun cancelOrder(orderId: String): Order?
     suspend fun getOrdersHistoryForRestaurant(restaurantId: String, page: Int, limit: Int): List<Order>
     suspend fun getOrdersHistoryForUser(userId: String, page: Int, limit: Int): List<Order>
     suspend fun getNumberOfOrdersHistoryInRestaurant(restaurantId: String): Long

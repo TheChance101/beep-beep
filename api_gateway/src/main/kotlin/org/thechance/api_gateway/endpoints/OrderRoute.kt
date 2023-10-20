@@ -83,6 +83,13 @@ fun Route.orderRoutes() {
             respondWithResult(HttpStatusCode.OK, result)
         }
 
+        put("order/cancel/{orderId}") {
+            val orderId = call.parameters["orderId"]?.trim().toString()
+            val language = extractLocalizationHeader()
+            val result = restaurantService.cancelOrder(orderId, language)
+            respondWithResult(HttpStatusCode.OK, result)
+        }
+
     }
 
     authenticateWithRole(Role.END_USER) {

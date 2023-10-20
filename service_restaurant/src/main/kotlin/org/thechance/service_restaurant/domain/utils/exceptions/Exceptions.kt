@@ -39,4 +39,4 @@ const val CART_IS_EMPTY = 2505
 
 const val ALREADY_EXISTED = 2503
 const val ALREADY_UPDATED = 2507
-
+const val CANCEL_ERROR = 2508

@@ -159,7 +159,9 @@ interface LocalizedMessages {
 
     val tokenNotRegister: String
 
-    val alreadyUpdated:String
+    val alreadyUpdated: String
+
+    val cancelOrderError: String
 
     //endregion
 

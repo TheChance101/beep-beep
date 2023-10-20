@@ -16,6 +16,7 @@ interface IManageOrderUseCase {
     suspend fun getActiveOrdersForUser(userId: String): List<Order>
 
     suspend fun updateOrderStatus(orderId: String): Order
+    suspend fun cancelOrder(orderId: String): Order
 
     suspend fun getOrderById(orderId: String): Order
 
@@ -79,6 +80,14 @@ class ManageOrderUseCase(
 
         return restaurantOperationGateway.updateOrderStatus(orderId = orderId, status = newOrderStatus)
             ?: throw MultiErrorException(listOf(NOT_FOUND))
+    }
+
+    override suspend fun cancelOrder(orderId: String): Order {
+        val currentOrderStatus = Order.Status.getOrderStatus(getOrderStatus(orderId))
+        if (currentOrderStatus != Order.Status.PENDING) {
+            throw MultiErrorException(listOf(CANCEL_ERROR))
+        }
+        return restaurantOperationGateway.cancelOrder(orderId) ?: throw MultiErrorException(listOf(NOT_FOUND))
     }
 
     private suspend fun getOrderStatus(orderId: String): Int {

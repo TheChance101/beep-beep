@@ -269,6 +269,15 @@ class RestaurantService(
         )
     }
 
+    suspend fun cancelOrder(orderId: String, languageCode: String): OrderDto {
+        return client.tryToExecute<OrderDto>(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { post("/order/cancel/$orderId") }
+        )
+    }
+
     suspend fun getOrdersHistoryInRestaurant(
         restaurantId: String, page: Int, limit: Int, languageCode: String
     ): PaginationResponse<OrderDto> {

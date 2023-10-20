@@ -93,6 +93,13 @@ fun Route.orderRoutes() {
             call.respond(HttpStatusCode.OK, result)
         }
 
+        post("cancel/{id}") {
+            val id = call.parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
+            val result = manageOrder.cancelOrder(orderId = id).toDto()
+            socketHandler.orders[result.id]?.order?.emit(result)
+            call.respond(HttpStatusCode.OK, result)
+        }
+
         webSocket("/restaurant/{restaurantId}") {
             val restaurantId = call.parameters["restaurantId"]?.trim().orEmpty()
             socketHandler.orders[restaurantId] = WebSocketOrder(this)
