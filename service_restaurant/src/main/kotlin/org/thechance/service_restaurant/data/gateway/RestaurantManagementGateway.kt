@@ -104,13 +104,48 @@ class RestaurantManagementGateway(private val container: DataBaseContainer) : IR
 
     override suspend fun updateOrderStatus(orderId: String, status: Order.Status): Order? {
         val updateOperation = setValue(OrderCollection::orderStatus, status.statusCode)
-        val updatedOrder = container.orderCollection.findOneAndUpdate(
+
+        container.orderCollection.updateOne(
             filter = OrderCollection::id eq ObjectId(orderId),
-            update = updateOperation,
-            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
+            update = updateOperation
         )
-        return updatedOrder?.toEntity()
+
+        val pipeline = listOf(
+            match(OrderCollection::id eq ObjectId(orderId)),
+            lookup(
+                from = "restaurant",
+                localField = OrderCollection::restaurantId.name,
+                foreignField = "_id",
+                newAs = "restaurant"
+            ),
+            unwind("\$restaurant"),
+            project(
+                OrderWithRestaurant::id from "\$_id",
+                OrderWithRestaurant::userId from "\$userId",
+                OrderWithRestaurant::restaurant from "\$restaurant",
+                OrderWithRestaurant::meals from "\$meals",
+                OrderWithRestaurant::totalPrice from "\$totalPrice",
+                OrderWithRestaurant::createdAt from "\$createdAt",
+                OrderWithRestaurant::orderStatus from "\$orderStatus",
+                computed(
+                    "restaurantName",
+                    "\$restaurant.name"
+                ),
+                computed(
+                    "restaurantImage",
+                    "\$restaurant.restaurantImage"
+                ),
+                computed(
+                    "currency",
+                    "\$restaurant.currency"
+                )
+            )
+        )
+
+        val updatedOrderWithRestaurant = container.orderCollection.aggregate<OrderWithRestaurant>(pipeline).first()
+        return updatedOrderWithRestaurant?.toOrderEntity()
     }
+
 
     override suspend fun getNumberOfOrdersHistoryInRestaurant(restaurantId: String): Long {
         return container.orderCollection.countDocuments(
