@@ -96,7 +96,7 @@ class MainScreen :
                     .align(Alignment.BottomCenter)
             ) {
                     Text(
-                        text = state.snackBarMessage,
+                        text = Resources.strings.accessDeniedMessage,
                         style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
                     )
                 }

@@ -30,8 +30,8 @@ class ManageLoginUserUseCase(
     ) {
         if (validateLoginFields(userName, password)) {
             val userTokens = remoteGateway.loginUser(userName, password)
-            localGateWay.saveAccessToken(userTokens?.accessToken ?: "")
-            localGateWay.saveRefreshToken(userTokens?.refreshToken ?: "")
+            localGateWay.saveAccessToken(userTokens.accessToken)
+            localGateWay.saveRefreshToken(userTokens.refreshToken)
             localGateWay.saveKeepMeLoggedInFlag(isKeepMeLoggedInChecked)
         }
     }
