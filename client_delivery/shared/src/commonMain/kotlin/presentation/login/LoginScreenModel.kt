@@ -19,7 +19,13 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
     init {
         showSnackBar()
     }
-
+    private fun showSnackBar() {
+        viewModelScope.launch {
+            updateState { it.copy(showSnackBar = true) }
+            delay(3000)
+            updateState { it.copy(showSnackBar = false) }
+        }
+    }
     override fun onUserNameChanged(userName: String) {
         updateState { it.copy(userName = userName) }
     }
@@ -73,13 +79,7 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
         }
     }
 
-    private fun showSnackBar() {
-        viewModelScope.launch {
-            updateState { it.copy(showSnackBar = true) }
-            delay(1500)
-            updateState { it.copy(showSnackBar = false) }
-        }
-    }
+
 
 
     private fun clearErrors() {

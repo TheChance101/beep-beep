@@ -154,7 +154,7 @@ private fun LoginScreenContent(
                 .align(Alignment.BottomCenter)
         ) {
             Text(
-                text = state.snackBarMessage,
+                text = Resources.strings.signUpWithYourBeepBeepAccount,
                 style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
             )
         }
