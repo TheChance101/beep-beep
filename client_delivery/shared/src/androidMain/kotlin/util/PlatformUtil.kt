@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowCompat
@@ -26,12 +25,6 @@ actual fun SetInsetsController(isDark: Boolean) {
 @Composable
 actual fun getNavigationBarPadding(): PaddingValues {
     return WindowInsets.navigationBars.asPaddingValues()
-}
-
-
-@Composable
-actual fun getStatusBarPadding(): PaddingValues {
-    return WindowInsets.statusBars.asPaddingValues()
 }
 
 actual fun getEngine() = CIO.create()
