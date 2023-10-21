@@ -9,7 +9,7 @@ data class FoodOrder(
     val currency: String,
     val meals: List<MealCart>,
     val totalPrice: Double,
-    val createdAt: Long,
+    val createdAt: String,
     val orderStatus: OrderStatusInRestaurant,
     val orderEstimatedTime: Int,
 ) {

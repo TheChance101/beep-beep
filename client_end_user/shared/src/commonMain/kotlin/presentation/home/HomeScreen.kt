@@ -39,6 +39,8 @@ import com.beepbeep.designSystem.ui.composable.BpAppBar
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
 import com.beepbeep.designSystem.ui.theme.Theme
+import domain.entity.FoodOrder
+import domain.entity.TripStatus
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.auth.login.LoginScreen
@@ -49,6 +51,7 @@ import presentation.composable.BpImageLoader
 import presentation.composable.ImageSlider
 import presentation.composable.ItemSection
 import presentation.composable.SectionHeader
+import presentation.composable.modifier.noRippleEffect
 import presentation.composable.modifier.roundedBorderShape
 import presentation.cuisines.CuisineUiState
 import presentation.cuisines.CuisinesScreen
@@ -59,12 +62,17 @@ import presentation.home.composable.CuisineCard
 import presentation.home.composable.OrderCard
 import presentation.main.SearchTab
 import presentation.meals.MealsScreen
+import presentation.orderFoodTracking.OrderFoodTrackingScreen
 import presentation.resturantDetails.RestaurantScreen
 import resources.Resources
 import util.root
 
-class HomeScreen :
-    BaseScreen<HomeScreenModel, HomeScreenUiState, HomeScreenUiEffect, HomeScreenInteractionListener>() {
+class HomeScreen : BaseScreen<
+        HomeScreenModel,
+        HomeScreenUiState,
+        HomeScreenUiEffect,
+        HomeScreenInteractionListener
+        >() {
 
     @Composable
     override fun Content() {
@@ -89,6 +97,12 @@ class HomeScreen :
             is HomeScreenUiEffect.NavigateToRestaurantDetails -> navigator.root?.push(
                 RestaurantScreen(effect.restaurantId)
             )
+
+            is HomeScreenUiEffect.NavigateToTrackOrder -> navigator.root?.push(
+                OrderFoodTrackingScreen(effect.orderId, effect.tripId)
+            )
+
+            is HomeScreenUiEffect.NavigateToTrackTaxiRide -> println("navigate to track taxi ride ${effect.tripId}")
         }
     }
 
@@ -140,7 +154,7 @@ class HomeScreen :
                 }
             }
 
-            this.inProgressSection(state)
+            this.inProgressSection(state, listener)
 
             item {
                 AnimatedVisibility(state.isLoggedIn) {
@@ -244,8 +258,11 @@ class HomeScreen :
     }
 
     @OptIn(ExperimentalResourceApi::class)
-    private fun LazyListScope.inProgressSection(state: HomeScreenUiState) {
-        if (state.hasProgress && state.isLoggedIn) {
+    private fun LazyListScope.inProgressSection(
+        state: HomeScreenUiState,
+        listener: HomeScreenInteractionListener,
+    ) {
+        if (state.hasLiveOrders && state.isLoggedIn) {
             item {
                 Text(
                     text = Resources.strings.inProgress,
@@ -253,50 +270,98 @@ class HomeScreen :
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
             }
-            items(state.inProgressWrapper.taxisOnTheWay) {
+
+            // taxi rides
+            items(
+                items = state.liveOrders.taxiRides,
+                key = { it.tripId }) { taxiRideUiState ->
                 InProgressCard(
                     painter = painterResource(Resources.images.taxiOnTheWay),
-                    titleText = Resources.strings.taxiOnTheWay,
+                    titleText = if (taxiRideUiState.rideStatus == TripStatus.APPROVED.statusCode) {
+                        Resources.strings.taxiOnTheWay
+                    } else {
+                        Resources.strings.enjoyYourRide
+                    },
+                    id = taxiRideUiState.tripId,
+                    onClick = listener::onClickActiveTaxiRide,
+                    titleTextColor = if (taxiRideUiState.rideStatus == TripStatus.APPROVED.statusCode) {
+                        Theme.colors.primary
+                    } else {
+                        Theme.colors.contentSecondary
+                    }
                 ) { textStyle ->
                     Row(
                         Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = it.color, style = textStyle)
-                        Circle()
-                        Text(text = it.plate, style = textStyle)
-                        Circle()
+                        if (taxiRideUiState.rideStatus == TripStatus.APPROVED.statusCode) {
+                            Text(text = taxiRideUiState.taxiColor.name, style = textStyle)
+                            Circle()
+                            Text(text = taxiRideUiState.taxiPlateNumber, style = textStyle)
+                            Circle()
+                        }
                         Text(
-                            text = "${it.timeToArriveInMints} min to arrive",
+                            text = "${taxiRideUiState.rideEstimatedTime} min to arrive",
                             style = textStyle
                         )
                     }
                 }
             }
-            items(state.inProgressWrapper.tripsOnTheWay) {
-                InProgressCard(
-                    painter = painterResource(Resources.images.taxiOnTheWay),
-                    titleText = Resources.strings.enjoyYourRide,
-                    titleTextColor = Theme.colors.contentSecondary,
-                ) { textStyle ->
-                    Text(
-                        text = "${it.timeToArriveInMints} min to arrive",
-                        style = textStyle
-                    )
-                }
-            }
-            items(state.inProgressWrapper.ordersOnTheWay) {
+
+            // delivery rides
+            items(
+                items = state.liveOrders.deliveryOrders,
+                key = { it.tripId }
+            ) { deliveryOrder ->
                 InProgressCard(
                     painter = painterResource(Resources.images.orderOnTheWay),
                     titleText = Resources.strings.orderOnTheWay,
+                    titleTextColor = Theme.colors.primary,
+                    id = deliveryOrder.tripId,
+                    onClick = {
+                        listener.onClickActiveFoodOrder(
+                            orderId = "",
+                            tripId = deliveryOrder.tripId
+                        )
+                    }
                 ) { textStyle ->
                     Text(
-                        text = "From ${it.restaurantName}",
+                        text = "From ${deliveryOrder.restaurantName}",
                         style = textStyle
                     )
                 }
             }
+
+            // food orders
+            items(items = state.liveOrders.foodOrders, key = { it.orderId }) { foodOrder ->
+                InProgressCard(
+                    painter =
+                    if (foodOrder.orderStatus == FoodOrder.OrderStatusInRestaurant.APPROVED.statusCode) {
+                        painterResource(Resources.images.approvedFood)
+                    } else {
+                        painterResource(Resources.images.inCookingFood)
+                    },
+                    titleText = if (foodOrder.orderStatus == FoodOrder.OrderStatusInRestaurant.APPROVED.statusCode) {
+                        Resources.strings.orderPlaced
+                    } else {
+                        Resources.strings.orderInCooking
+                    },
+                    id = foodOrder.orderId,
+                    onClick = {
+                        listener.onClickActiveFoodOrder(
+                            orderId = foodOrder.orderId,
+                            tripId = ""
+                        )
+                    }
+                ) { textStyle ->
+                    Text(
+                        text = "From ${foodOrder.restaurantName}",
+                        style = textStyle
+                    )
+                }
+            }
+
         }
     }
 
@@ -420,14 +485,21 @@ class HomeScreen :
     private fun InProgressCard(
         painter: Painter,
         titleText: String,
+        id: String,
+        onClick: (id: String) -> Unit,
         modifier: Modifier = Modifier,
         titleTextColor: Color = Theme.colors.primary,
         titleTextStyle: TextStyle = Theme.typography.title.copy(color = titleTextColor),
         captionText: @Composable (TextStyle) -> Unit,
     ) {
         Row(
-            modifier = modifier.heightIn(min = 72.dp).fillMaxWidth().padding(horizontal = 16.dp)
-                .roundedBorderShape().padding(horizontal = 16.dp, vertical = 4.dp),
+            modifier = modifier
+                .heightIn(min = 72.dp)
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .noRippleEffect { onClick(id) }
+                .roundedBorderShape()
+                .padding(horizontal = 16.dp, vertical = 4.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {

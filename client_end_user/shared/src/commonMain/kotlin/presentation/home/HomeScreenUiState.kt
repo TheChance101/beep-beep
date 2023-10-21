@@ -85,41 +85,5 @@ data class RestaurantUiState(
 data class UserUiState(
     val username: String = "",
     val wallet: Double = 0.0,
-    val currency: String = ""
+    val currency: String = "",
 )
-
-fun Trip.toTaxiRideUiState(): TaxiRideUiState {
-    return TaxiRideUiState(
-        tripId = this.id,
-        taxiColor = taxiColor,
-        taxiPlateNumber = this.taxiPlateNumber ?: "",
-        rideStatus = this.tripStatus.statusCode,
-        rideEstimatedTime = this.estimatedTimeToArriveInMints,
-    )
-}
-
-fun FoodOrder.toFoodOrderUiState(): FoodOrderUiState {
-    return FoodOrderUiState(
-        orderId = this.id,
-        restaurantName = this.restaurantName,
-        orderStatus = this.orderStatus.statusCode,
-    )
-}
-
-fun TaxiRide.toTaxiRideUiState(): TaxiRideUiState {
-    return TaxiRideUiState(
-        tripId = this.id,
-        taxiColor = taxiColor,
-        taxiPlateNumber = this.taxiPlateNumber,
-        rideStatus = this.tripStatus.statusCode,
-        rideEstimatedTime = 30,
-    )
-}
-
-fun DeliveryRide.toDeliveryOrderUiState(): DeliveryRideUiState {
-    return DeliveryRideUiState(
-        tripId = this.id,
-        restaurantName = this.restaurantName,
-        orderStatus = this.tripStatus.statusCode,
-    )
-}

@@ -1,6 +1,5 @@
 package di
 
-import androidx.compose.ui.graphics.Path
 import data.gateway.remote.authorizationIntercept
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
@@ -12,7 +11,6 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.client.request.header
-import io.ktor.http.Url
 import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
@@ -34,7 +32,7 @@ val networkModule = module {
                 url("http://192.168.1.10:8081/")
             }
 
-            install(WebSockets){
+            install(WebSockets) {
                 contentConverter = KotlinxWebsocketSerializationConverter(Json)
             }
 

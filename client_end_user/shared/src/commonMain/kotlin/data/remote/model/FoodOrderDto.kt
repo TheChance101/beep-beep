@@ -13,6 +13,6 @@ data class FoodOrderDto(
     @SerialName("currency") val currency: String? = null,
     @SerialName("meals") val meals: List<CartMealDto>? = null,
     @SerialName("totalPrice") val totalPrice: Double? = null,
-    @SerialName("createdAt") val createdAt: Long? = null,
+    @SerialName("createdAt") val createdAt: String? = null,
     @SerialName("orderStatus") val orderStatus: Int = 0,
 )

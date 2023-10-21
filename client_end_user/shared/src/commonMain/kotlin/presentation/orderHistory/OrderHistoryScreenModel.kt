@@ -13,7 +13,7 @@ import presentation.base.ErrorState
 
 class OrderHistoryScreenModel(
     private val orderHistoryUseCase: GetTransactionHistoryUseCase,
-    private val manageAuthentication: IManageAuthenticationUseCase
+    private val manageAuthentication: IManageAuthenticationUseCase,
 ) : BaseScreenModel<OrderScreenUiState, OrderHistoryScreenUiEffect>(OrderScreenUiState()),
     OrderHistoryScreenInteractionListener {
 

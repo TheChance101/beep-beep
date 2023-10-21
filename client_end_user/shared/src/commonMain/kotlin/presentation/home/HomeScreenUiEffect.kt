@@ -5,6 +5,7 @@ sealed class HomeScreenUiEffect {
         val cuisineId: String,
         val cuisineName: String,
     ) : HomeScreenUiEffect()
+
     data class NavigateToOrderDetails(val orderId: String) : HomeScreenUiEffect()
     data object NavigateToCuisines : HomeScreenUiEffect()
     data object NavigateToChatSupport : HomeScreenUiEffect()

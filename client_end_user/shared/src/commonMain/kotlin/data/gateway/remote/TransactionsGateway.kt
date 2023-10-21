@@ -1,18 +1,15 @@
 package data.gateway.remote
 
-import data.remote.mapper.toDto
 import data.remote.mapper.toDeliveryRideEntity
+import data.remote.mapper.toDto
 import data.remote.mapper.toEntity
-import data.remote.mapper.toTripEntity
 import data.remote.mapper.toTaxiRideEntity
 import data.remote.mapper.toTripEntity
 import data.remote.model.CartDto
-import data.remote.model.OrderDto
 import data.remote.model.DeliveryRideDto
 import data.remote.model.FoodOrderDto
 import data.remote.model.PaginationResponse
 import data.remote.model.ServerResponse
-import data.remote.model.TripDto
 import data.remote.model.TaxiRideDto
 import data.remote.model.TripDto
 import domain.entity.Cart
@@ -26,9 +23,9 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.put
 import io.ktor.util.InternalAPI
-import kotlinx.serialization.json.Json
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.json.Json
 
 class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), ITransactionsGateway {
     override suspend fun getTripHistory(): List<Trip> {
@@ -126,7 +123,7 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
     }
 
     override suspend fun orderNow(): Boolean {
-        return tryToExecute<ServerResponse<OrderDto>> { put("/cart/orderNow") }.value != null
+        return tryToExecute<ServerResponse<FoodOrder>> { put("/cart/orderNow") }.value != null
     }
 
     @OptIn(InternalAPI::class)
@@ -137,5 +134,4 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
             }
         }
     }
-
 }

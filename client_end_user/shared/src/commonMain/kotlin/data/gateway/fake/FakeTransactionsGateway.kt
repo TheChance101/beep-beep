@@ -2,15 +2,14 @@ package data.gateway.fake
 
 import domain.entity.Cart
 import domain.entity.DeliveryRide
-import domain.entity.Location
 import domain.entity.FoodOrder
+import domain.entity.Location
 import domain.entity.TaxiColor
 import domain.entity.TaxiRide
 import domain.entity.Trip
 import domain.entity.TripStatus
 import domain.gateway.ITransactionsGateway
 import kotlinx.coroutines.flow.Flow
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 
 class FakeTransactionsGateway : ITransactionsGateway {
@@ -74,7 +73,7 @@ class FakeTransactionsGateway : ITransactionsGateway {
                 currency = "$",
                 meals = listOf(),
                 totalPrice = 500.50,
-                createdAt = 564844874874L,
+                createdAt = "24 Aug 2021",
                 orderStatus = FoodOrder.OrderStatusInRestaurant.APPROVED,
                 orderEstimatedTime = LocalTime(0, 30).minute,
             ),
@@ -87,7 +86,7 @@ class FakeTransactionsGateway : ITransactionsGateway {
                 currency = "$",
                 meals = listOf(),
                 totalPrice = 500.50,
-                createdAt = 564844874874L,
+                createdAt = "23 Sep 2021",
                 orderStatus = FoodOrder.OrderStatusInRestaurant.APPROVED,
                 orderEstimatedTime = LocalTime(0, 30).minute,
             ),
@@ -100,7 +99,7 @@ class FakeTransactionsGateway : ITransactionsGateway {
                 currency = "$",
                 meals = listOf(),
                 totalPrice = 500.50,
-                createdAt = 564844874874L,
+                createdAt = "11 Oct 2021",
                 orderStatus = FoodOrder.OrderStatusInRestaurant.APPROVED,
                 orderEstimatedTime = LocalTime(0, 30).minute,
             )
@@ -108,6 +107,14 @@ class FakeTransactionsGateway : ITransactionsGateway {
     }
 
     override suspend fun getCart(): Cart {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun orderNow(): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun updateCart(cart: Cart) {
         TODO("Not yet implemented")
     }
 
