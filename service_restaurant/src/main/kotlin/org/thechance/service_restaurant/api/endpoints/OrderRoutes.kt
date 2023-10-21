@@ -103,13 +103,13 @@ fun Route.orderRoutes() {
         webSocket("/restaurant/{restaurantId}") {
             val restaurantId = call.parameters["restaurantId"]?.trim().orEmpty()
             socketHandler.orders[restaurantId] = WebSocketOrder(this)
-            socketHandler.collectOrder(restaurantId)
+            socketHandler.collectOrders(restaurantId)
         }
 
         webSocket("/track/{orderId}") {
             val orderId = call.parameters["orderId"] ?: throw MultiErrorException(listOf(NOT_FOUND))
             socketHandler.orders[orderId] = WebSocketOrder(this)
-            socketHandler.collectOrder(orderId)
+            socketHandler.collectOrderByOrderId(orderId)
         }
     }
 }

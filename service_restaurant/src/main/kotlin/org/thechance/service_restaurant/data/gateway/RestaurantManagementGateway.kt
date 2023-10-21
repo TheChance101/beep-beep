@@ -5,9 +5,7 @@ import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.client.model.Projections.computed
 import com.mongodb.client.model.ReturnDocument
 import com.mongodb.client.model.Updates
-import io.ktor.server.plugins.*
 import org.bson.Document
-import org.bson.conversions.Bson
 import org.bson.types.ObjectId
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.aggregate
