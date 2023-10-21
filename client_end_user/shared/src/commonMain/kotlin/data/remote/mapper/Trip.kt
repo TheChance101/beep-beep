@@ -5,6 +5,7 @@ import data.remote.model.TaxiRideDto
 import data.remote.model.TripDto
 import domain.entity.DeliveryRide
 import domain.entity.Location
+import domain.entity.TaxiColor
 import domain.entity.TaxiRide
 import domain.entity.Trip
 import domain.entity.TripStatus
@@ -17,8 +18,9 @@ fun TripDto.toTripEntity(): Trip {
         driverId = driverId ?: "",
         clientId = clientId ?: "",
         restaurantId = restaurantId ?: "",
-        taxiPlateNumber = if (taxiPlateNumber.isNullOrBlank()) "1346FV" else taxiPlateNumber,
+        taxiPlateNumber = taxiPlateNumber ?: "",
         taxiDriverName = taxiDriverName ?: "",
+        taxiColor = TaxiColor.getColorByColorNumber(taxiColor ?: 4294639360L),
         startPoint = startPoint?.toEntity() ?: Location(0.0, 0.0),
         destination = destination?.toEntity() ?: Location(0.0, 0.0),
         startPointAddress = startPointAddress ?: "",
@@ -37,11 +39,12 @@ fun List<TripDto>.toTripEntity() = map { it.toTripEntity() }
 
 fun TaxiRideDto.toTaxiRideEntity(): TaxiRide {
     return TaxiRide(
-        id = id ,
+        id = id,
         taxiPlateNumber = taxiPlateNumber,
         taxiDriverName = taxiDriverName,
         driverImage = driverImage ?: "",
         carType = carType ?: "",
+        taxiColor = TaxiColor.getColorByColorNumber(taxiColor),
         startPoint = startPoint.toEntity(),
         destination = destination.toEntity(),
         startPointAddress = startPointAddress,

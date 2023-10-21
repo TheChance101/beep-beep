@@ -181,7 +181,7 @@ class HomeScreenModel(
         }
     }
 
-    private fun onGetActiveDeliveryTripsSuccess(deliveryTrips: List<Trip>) {
+    private fun onGetActiveDeliveryTripsSuccess(deliveryTrips: List<DeliveryRide>) {
         updateState { homeScreenState ->
             homeScreenState.copy(
                 liveOrders = homeScreenState.liveOrders.copy(

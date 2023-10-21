@@ -19,12 +19,8 @@ import domain.entity.Trip
 import domain.gateway.ITransactionsGateway
 import domain.utils.GeneralException
 import io.ktor.client.HttpClient
-import io.ktor.client.plugins.websocket.receiveDeserialized
-import io.ktor.client.plugins.websocket.wss
 import io.ktor.client.request.get
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), ITransactionsGateway {
@@ -45,13 +41,33 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
         }.value?.toEntity() ?: throw GeneralException.NotFoundException
     }
 
-    override suspend fun getActiveTrips(): List<Trip> {
+    override suspend fun getActiveTaxiTrips(): List<Trip> {
         val response = tryToExecute<ServerResponse<List<TripDto>>> {
-            get("/user/active/trips")
+            get("/user/active/taxi/trips")
         }
         if (response.isSuccess) {
 
             return response.value?.toTripEntity()
+                ?: throw GeneralException.NotFoundException
+        } else {
+            // here we can handle different errors by checking response.status.code
+            // and also we can use the message sent from the server to pass it throw the exception
+            // and show it to user if we want
+            if (response.status.code == 404) {
+                throw GeneralException.NotFoundException
+            } else {
+                throw GeneralException.UnknownErrorException
+            }
+        }
+    }
+
+    override suspend fun getActiveDeliveryTrips(): List<DeliveryRide> {
+        val response = tryToExecute<ServerResponse<List<DeliveryRideDto>>> {
+            get("/user/active/delivery/trips")
+        }
+        if (response.isSuccess) {
+
+            return response.value?.map { it.toDeliveryRideEntity() }
                 ?: throw GeneralException.NotFoundException
         } else {
             // here we can handle different errors by checking response.status.code

@@ -13,6 +13,7 @@ data class TripDto(
     @SerialName("restaurantId") val restaurantId: String? = null,
     @SerialName("taxiPlateNumber") val taxiPlateNumber: String? = null,
     @SerialName("taxiDriverName") val taxiDriverName: String? = null,
+    @SerialName("taxiColor") val taxiColor: Long? = null,
     @SerialName("startPoint") val startPoint: LocationDto? = null,
     @SerialName("destination") val destination: LocationDto? = null,
     @SerialName("startPointAddress") val startPointAddress: String? = null,
@@ -22,5 +23,5 @@ data class TripDto(
     @SerialName("startDate") val startDate: String? = null,
     @SerialName("endDate") val endDate: String? = null,
     @SerialName("isATaxiTrip") val isATaxiTrip: Boolean? = null,
-    @SerialName("tripStatus") val tripStatus: Int = 0
+    @SerialName("tripStatus") val tripStatus: Int = 0,
 )

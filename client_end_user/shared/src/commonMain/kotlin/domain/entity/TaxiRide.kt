@@ -6,6 +6,7 @@ data class TaxiRide(
     val taxiDriverName: String,
     val driverImage: String,
     val carType: String,
+    val taxiColor: TaxiColor,
     val startPoint: Location,
     val destination: Location,
     val startPointAddress: String,

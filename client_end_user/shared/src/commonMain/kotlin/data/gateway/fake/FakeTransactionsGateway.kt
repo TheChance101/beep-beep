@@ -4,6 +4,7 @@ import domain.entity.Cart
 import domain.entity.DeliveryRide
 import domain.entity.Location
 import domain.entity.FoodOrder
+import domain.entity.TaxiColor
 import domain.entity.TaxiRide
 import domain.entity.Trip
 import domain.entity.TripStatus
@@ -22,6 +23,7 @@ class FakeTransactionsGateway : ITransactionsGateway {
                 destination = Location(34.0522, -118.2437),
                 startPointAddress = "123 Main Street, City",
                 destinationAddress = "456 Elm Street, Town",
+                taxiColor = TaxiColor.getColorByColorNumber(4294639360L),
                 rate = 3.5,
                 price = 25.0,
                 startDate = "2023-10-17",
@@ -36,6 +38,7 @@ class FakeTransactionsGateway : ITransactionsGateway {
                 destination = Location(34.0522, -118.2437),
                 startPointAddress = "123 Main Street, City",
                 destinationAddress = "456 Elm Street, Town",
+                taxiColor = TaxiColor.getColorByColorNumber(4294639360L),
                 rate = 3.5,
                 price = 25.0,
                 startDate = "2023-10-17",
@@ -50,6 +53,7 @@ class FakeTransactionsGateway : ITransactionsGateway {
                 destination = Location(34.0522, -118.2437),
                 startPointAddress = "123 Main Street, City",
                 destinationAddress = "456 Elm Street, Town",
+                taxiColor = TaxiColor.getColorByColorNumber(4294639360L),
                 rate = 3.5,
                 price = 25.0,
                 isATaxiTrip = true,
@@ -107,8 +111,12 @@ class FakeTransactionsGateway : ITransactionsGateway {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getActiveTrips(): List<Trip> {
+    override suspend fun getActiveTaxiTrips(): List<Trip> {
         return emptyList()
+    }
+
+    override suspend fun getActiveDeliveryTrips(): List<DeliveryRide> {
+        TODO("Not yet implemented")
     }
 
     override suspend fun getActiveOrders(): List<FoodOrder> {

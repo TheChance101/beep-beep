@@ -10,6 +10,7 @@ data class Trip(
     val restaurantId: String? = null,
     val taxiPlateNumber: String? = null,
     val taxiDriverName: String? = null,
+    val taxiColor: TaxiColor,
     val startPoint: Location,
     val destination: Location,
     val startPointAddress: String,
@@ -34,4 +35,6 @@ data class Trip(
             TripStatus.RECEIVED -> timeToArriveInMints / 2
             TripStatus.FINISHED -> LocalTime(0, 0).minute
         }
+
+
 }

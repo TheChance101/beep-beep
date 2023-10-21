@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface IInProgressTrackerUseCase {
     suspend fun getActiveTaxiTrips(): List<Trip>
-    suspend fun getActiveDeliveryTrips(): List<Trip>
+    suspend fun getActiveDeliveryTrips(): List<DeliveryRide>
     suspend fun getActiveFoodOrders(): List<FoodOrder>
     suspend fun trackTaxiRide(tripId: String): Flow<TaxiRide>
     suspend fun trackDeliveryRide(tripId: String): Flow<DeliveryRide>
@@ -20,13 +20,11 @@ class InProgressTrackerUseCase(
     private val remoteGateway: ITransactionsGateway,
 ) : IInProgressTrackerUseCase {
     override suspend fun getActiveTaxiTrips(): List<Trip> {
-        val trips = remoteGateway.getActiveTrips()
-        return trips.filter { it.isATaxiTrip }
+        return remoteGateway.getActiveTaxiTrips()
     }
 
-    override suspend fun getActiveDeliveryTrips(): List<Trip> {
-        val trips = remoteGateway.getActiveTrips()
-        return trips.filterNot { it.isATaxiTrip }
+    override suspend fun getActiveDeliveryTrips(): List<DeliveryRide> {
+        return remoteGateway.getActiveDeliveryTrips()
     }
 
     override suspend fun getActiveFoodOrders(): List<FoodOrder> {

@@ -209,7 +209,7 @@ class HomeScreen :
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             if (taxiRideUiState.rideStatus == TripStatus.APPROVED.statusCode) {
-                                Text(text = taxiRideUiState.taxiColor, style = textStyle)
+                                Text(text = taxiRideUiState.taxiColor.name, style = textStyle)
                                 Circle()
                                 Text(text = taxiRideUiState.taxiPlateNumber, style = textStyle)
                                 Circle()

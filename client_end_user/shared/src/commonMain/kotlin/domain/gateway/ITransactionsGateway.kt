@@ -11,7 +11,8 @@ interface ITransactionsGateway {
     suspend fun getTripHistory(): List<Trip>
     suspend fun getOrderHistoryGateway(): List<FoodOrder>
     suspend fun getCart(): Cart
-    suspend fun getActiveTrips(): List<Trip>
+    suspend fun getActiveTaxiTrips(): List<Trip>
+    suspend fun getActiveDeliveryTrips(): List<DeliveryRide>
     suspend fun getActiveOrders(): List<FoodOrder>
     suspend fun trackTaxiRide(tripId: String): Flow<TaxiRide>
     suspend fun trackDeliveryRide(tripId: String): Flow<DeliveryRide>

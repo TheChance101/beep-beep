@@ -3,6 +3,7 @@ package presentation.home
 import domain.entity.DeliveryRide
 import domain.entity.FoodOrder
 import domain.entity.PriceLevel
+import domain.entity.TaxiColor
 import domain.entity.TaxiRide
 import domain.entity.Trip
 import domain.entity.TripStatus
@@ -39,7 +40,7 @@ data class InProgressOrderUiState(
 
 data class TaxiRideUiState(
     val tripId: String = "",
-    val taxiColor: String = "",
+    val taxiColor: TaxiColor = TaxiColor.WHITE,
     val taxiPlateNumber: String = "",
     val rideStatus: Int = TripStatus.PENDING.statusCode,
     val rideEstimatedTime: Int = 30,
@@ -85,17 +86,10 @@ data class UserUiState(
 fun Trip.toTaxiRideUiState(): TaxiRideUiState {
     return TaxiRideUiState(
         tripId = this.id,
-        taxiColor = "White",
+        taxiColor = taxiColor,
         taxiPlateNumber = this.taxiPlateNumber ?: "",
         rideStatus = this.tripStatus.statusCode,
         rideEstimatedTime = this.estimatedTimeToArriveInMints,
-    )
-}
-
-fun Trip.toDeliveryOrderUiState(): DeliveryOrderUiState {
-    return DeliveryOrderUiState(
-        tripId = this.id,
-        restaurantName = this.restaurantId ?: "Hello Restaurant",
     )
 }
 
@@ -110,7 +104,7 @@ fun FoodOrder.toFoodOrderUiState(): FoodOrderUiState {
 fun TaxiRide.toTaxiRideUiState(): TaxiRideUiState {
     return TaxiRideUiState(
         tripId = this.id,
-        taxiColor = "white", // missing taxi color
+        taxiColor = taxiColor,
         taxiPlateNumber = this.taxiPlateNumber,
         rideStatus = this.tripStatus.statusCode,
         rideEstimatedTime = 30,
