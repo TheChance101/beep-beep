@@ -26,7 +26,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
@@ -96,14 +95,11 @@ class HomeScreen :
                 RestaurantScreen(effect.restaurantId)
             )
 
-            is HomeScreenUiEffect.NavigateToTrackOrderFood -> navigator.root?.push(
-                OrderFoodTrackingScreen()
+            is HomeScreenUiEffect.NavigateToTrackOrder -> navigator.root?.push(
+                OrderFoodTrackingScreen(effect.orderId, effect.tripId)
             )
 
             is HomeScreenUiEffect.NavigateToTrackTaxiRide -> println("navigate to track taxi ride ${effect.tripId}")
-            is HomeScreenUiEffect.NavigateToTrackDeliveryOrderRide -> navigator.root?.push(
-                OrderFoodTrackingScreen()
-            )
         }
     }
 
@@ -229,7 +225,12 @@ class HomeScreen :
                         titleText = Resources.strings.orderOnTheWay,
                         titleTextColor = Theme.colors.primary,
                         id = deliveryOrder.tripId,
-                        onClick = listener::onClickActiveDeliveryRide
+                        onClick = {
+                            listener.onClickActiveFoodOrder(
+                                orderId = "",
+                                tripId = deliveryOrder.tripId
+                            )
+                        }
                     ) { textStyle ->
                         Text(
                             text = "From ${deliveryOrder.restaurantName}",
@@ -252,7 +253,12 @@ class HomeScreen :
                             Resources.strings.orderInCooking
                         },
                         id = foodOrder.orderId,
-                        onClick = listener::onClickActiveFoodOrder
+                        onClick =  {
+                            listener.onClickActiveFoodOrder(
+                                orderId = foodOrder.orderId,
+                                tripId = ""
+                            )
+                        }
                     ) { textStyle ->
                         Text(
                             text = "From ${foodOrder.restaurantName}",

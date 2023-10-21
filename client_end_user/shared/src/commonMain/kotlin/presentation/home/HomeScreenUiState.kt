@@ -34,7 +34,7 @@ data class HomeScreenUiState(
 
 data class InProgressOrderUiState(
     val taxiRides: List<TaxiRideUiState> = emptyList(),
-    val deliveryOrders: List<DeliveryOrderUiState> = emptyList(),
+    val deliveryOrders: List<DeliveryRideUiState> = emptyList(),
     val foodOrders: List<FoodOrderUiState> = emptyList(),
 )
 
@@ -46,7 +46,7 @@ data class TaxiRideUiState(
     val rideEstimatedTime: Int = 30,
 )
 
-data class DeliveryOrderUiState(
+data class DeliveryRideUiState(
     val tripId: String = "",
     val restaurantName: String = "",
     val orderStatus: Int = TripStatus.PENDING.statusCode,
@@ -61,8 +61,8 @@ data class FoodOrderUiState(
 data class OrderUiState(
     val id: String = "",
     val image: String = "",
-    val restaurantName: String = "Burger King",
-    val date: String = "Jan 5",
+    val restaurantName: String = "",
+    val date: String = "",
 )
 
 data class OfferUiState(
@@ -111,8 +111,8 @@ fun TaxiRide.toTaxiRideUiState(): TaxiRideUiState {
     )
 }
 
-fun DeliveryRide.toDeliveryOrderUiState(): DeliveryOrderUiState {
-    return DeliveryOrderUiState(
+fun DeliveryRide.toDeliveryOrderUiState(): DeliveryRideUiState {
+    return DeliveryRideUiState(
         tripId = this.id,
         restaurantName = this.restaurantName,
         orderStatus = this.tripStatus.statusCode,
