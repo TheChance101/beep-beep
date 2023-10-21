@@ -49,6 +49,7 @@ class SocketHandler {
                 ?.flowOn(Dispatchers.IO)
                 ?.collectLatest { tripDto ->
                     if (tripDto.tripStatus == Trip.Status.FINISHED.statusCode) {
+                        session?.sendSerialized(tripDto)
                         endSession(key)
                     }
                     session?.sendSerialized(tripDto)

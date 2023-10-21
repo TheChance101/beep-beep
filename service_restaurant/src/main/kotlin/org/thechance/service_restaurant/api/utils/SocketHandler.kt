@@ -45,6 +45,7 @@ class SocketHandler {
                     if (incomingOrder.orderStatus == Order.Status.DONE.statusCode
                         || incomingOrder.orderStatus == Order.Status.CANCELED.statusCode
                     ) {
+                        session?.sendSerialized(incomingOrder)
                         endSession(orderId)
                     }
                     session?.sendSerialized(incomingOrder)
