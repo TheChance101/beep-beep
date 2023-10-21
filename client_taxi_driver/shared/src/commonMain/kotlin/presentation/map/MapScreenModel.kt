@@ -1,24 +1,26 @@
 package presentation.map
 
+import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Location
 import domain.entity.Order
-import domain.usecase.IIdentityUseCase
 import domain.usecase.IManageLocationUseCase
 import domain.usecase.IManageOrderUseCase
+import domain.usecase.LoginUserUseCase
+import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
 class MapScreenModel(
+    private val loginUserUseCase: LoginUserUseCase,
     private val order: IManageOrderUseCase,
     private val location: IManageLocationUseCase,
-    private val identity: IIdentityUseCase,
 ) : BaseScreenModel<MapScreenUiState, MapUiEffect>(MapScreenUiState()),
     MapScreenInteractionListener {
 
     init {
         getLiveLocation()
-        getTaxiDriverName()
         findingNewOrder()
+        getUserName()
     }
 
     private fun findingNewOrder() {
@@ -27,6 +29,17 @@ class MapScreenModel(
             onSuccess = ::onFoundNewOrderSuccess,
             onError = ::onError
         )
+    }
+
+    private fun getUserName() {
+        coroutineScope.launch {
+            val username = loginUserUseCase.getUsername()
+            updateState {
+                it.copy(
+                    userName = username,
+                )
+            }
+        }
     }
 
     private fun onFoundNewOrderSuccess(order: Order) {
@@ -67,25 +80,6 @@ class MapScreenModel(
             )
         }
     }
-
-
-    private fun getTaxiDriverName() {
-        tryToExecute(
-            function = identity::getTaxiDriverName,
-            onSuccess = ::onGetTaxiDriverNameSuccess,
-            onError = ::onError,
-        )
-    }
-
-    private fun onGetTaxiDriverNameSuccess(name: String) {
-        updateState {
-            it.copy(
-                error = null,
-                userName = name
-            )
-        }
-    }
-
 
     override fun onClickAccept() {
         updateState {

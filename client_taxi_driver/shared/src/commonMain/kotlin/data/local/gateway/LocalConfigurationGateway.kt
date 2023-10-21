@@ -64,6 +64,17 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
             "$ID == $CONFIGURATION_ID"
         ).first().find()?.isKeepMeLoggedInMeChecked ?: false
     }
+  override suspend fun saveUserName(username: String) {
+        realm.write {
+            query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+                .find()?.username = username
+        }
+    }
+
+    override suspend fun getUsername(): String {
+        return realm.query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+            .find()?.username ?: ""
+    }
 
     companion object {
         private const val CONFIGURATION_ID = 0

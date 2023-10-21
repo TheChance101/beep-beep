@@ -1,8 +1,5 @@
 package presentation.login
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -16,6 +13,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +26,7 @@ import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpCheckBox
 import com.beepbeep.designSystem.ui.composable.BpTextField
 import com.beepbeep.designSystem.ui.theme.Theme
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
@@ -49,7 +48,7 @@ class LoginScreen : BaseScreen<
         Column(modifier = Modifier.fillMaxSize()) {
             LoginScaffold(
                 sheetContent = {
-                    if (state.showPermissionSheet) {
+                    if (state.permissionUiState.showPermissionSheet) {
                         RequestPermissionBottomSheet(
                             listener = listener,
                             state = state
@@ -62,7 +61,7 @@ class LoginScreen : BaseScreen<
                 },
                 sheetBackgroundColor = Theme.colors.background,
                 onBackGroundClicked = listener::onSheetBackgroundClicked,
-                sheetState = state.sheetState,
+                sheetState = state.permissionUiState.sheetState,
             ) {
                 LoginScreenContent(state, listener)
             }
@@ -89,7 +88,6 @@ private fun LoginScreenContent(
     state: LoginScreenUIState,
     listener: LoginScreenInteractionListener
 ) {
-
     Box(
         modifier = Modifier.fillMaxSize().background(Theme.colors.background),
         contentAlignment = Alignment.Center
@@ -132,7 +130,7 @@ private fun LoginScreenContent(
                 text = state.userName,
                 onValueChange = listener::onUserNameChanged,
                 label = Resources.strings.usernameLabel,
-                errorMessage = state.usernameErrorMsg,
+                errorMessage = if (state.isUsernameError) Resources.strings.invalidUsername else "",
                 isError = state.isUsernameError,
             )
             BpTextField(
@@ -141,7 +139,7 @@ private fun LoginScreenContent(
                 onValueChange = listener::onPasswordChanged,
                 label = Resources.strings.passwordLabel,
                 keyboardType = KeyboardType.Password,
-                errorMessage = state.passwordErrorMsg,
+                errorMessage = if (state.isPasswordError) Resources.strings.invalidPassword else "",
                 isError = state.isPasswordError
             )
             BpCheckBox(
@@ -168,23 +166,18 @@ private fun LoginScreenContent(
             )
         }
 
-        AnimatedVisibility(
-            visible = state.showSnackBar,
-            enter = slideInVertically { it },
-            exit = slideOutVertically { it },
-            modifier = Modifier.align(Alignment.BottomCenter)
-        ) {
-            BPSnackBar(
+         BPSnackBar(
                 icon = painterResource(Resources.images.warningIcon),
                 iconBackgroundColor = Theme.colors.warningContainer,
                 iconTint = Theme.colors.warning,
+                isVisible = state.showSnackBar,
                 modifier = Modifier.padding(bottom = getNavigationBarPadding().calculateBottomPadding())
+                    .align(Alignment.BottomCenter)
             ) {
                 Text(
-                    text = state.snackBarMessage,
+                    text = Resources.strings.signupWithBeepBeep,
                     style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
                 )
-            }
         }
     }
 }
