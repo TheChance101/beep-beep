@@ -2,6 +2,8 @@ package presentation.home
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Cart
+import domain.entity.InProgressWrapper
+import domain.entity.Offer
 import domain.entity.DeliveryRide
 import domain.entity.FoodOrder
 import domain.entity.Restaurant
@@ -15,7 +17,12 @@ import domain.usecase.IInProgressTrackerUseCase
 import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.IManageCartUseCase
 import domain.usecase.IManageFavouriteUseCase
+import domain.usecase.IGetOffersUseCase
+import domain.usecase.IManageSettingUseCase
+import domain.usecase.IExploreRestaurantUseCase
+import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.IManageProfileUseCase
+import domain.usecase.ManageProfileUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
@@ -32,7 +39,7 @@ class HomeScreenModel(
     private val manageCart: IManageCartUseCase,
     private val manageFavorite: IManageFavouriteUseCase,
     private val manageProfile: IManageProfileUseCase,
-    private val manageAuthentication: IManageAuthenticationUseCase,
+    private val manageAuthentication: IManageAuthenticationUseCase
 ) : BaseScreenModel<HomeScreenUiState, HomeScreenUiEffect>(HomeScreenUiState()),
     HomeScreenInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
@@ -372,14 +379,14 @@ class HomeScreenModel(
 
     private fun getNewOffers() {
         tryToExecute(
-            { offers.getNewOffers().map { it.toUiState() } },
+            { offers.getNewOffers() },
             ::onGetNewOffersSuccess,
             ::onGetNewOffersError
         )
     }
 
-    private fun onGetNewOffersSuccess(offers: List<OfferUiState>) {
-        updateState { it.copy(offers = offers) }
+    private fun onGetNewOffersSuccess(offers: List<Offer>) {
+        updateState { it.copy(offers = offers.toUiState()) }
     }
 
     private fun onGetNewOffersError(error: ErrorState) {

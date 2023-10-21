@@ -5,6 +5,7 @@ import org.bson.types.ObjectId
 import org.thechance.service_taxi.data.collection.LocationCollection
 import org.thechance.service_taxi.data.collection.TripCollection
 import org.thechance.service_taxi.data.collection.relationModel.TripWithTaxi
+import org.thechance.service_taxi.domain.entity.Color
 import org.thechance.service_taxi.domain.entity.Location
 import org.thechance.service_taxi.domain.entity.Trip
 import org.thechance.service_taxi.domain.exceptions.CantBeNullException
@@ -15,15 +16,17 @@ fun TripDto.toEntity(): Trip {
         taxiId = taxiId,
         driverId = driverId,
         clientId = clientId ?: throw CantBeNullException(),
+        restaurantId = restaurantId,
         startPoint = startPoint?.toEntity() ?: throw CantBeNullException(),
         destination = destination?.toEntity() ?: throw CantBeNullException(),
         startPointAddress = startPointAddress ?: throw CantBeNullException(),
         destinationAddress = destinationAddress ?: throw CantBeNullException(),
+        taxiColor = Color.getColorByColorNumber(taxiColor ?: 4278190335L),
         rate = rate,
         price = price ?: throw CantBeNullException(),
         startDate = startDate?.let { LocalDateTime.parse(it) },
         endDate = endDate?.let { LocalDateTime.parse(it) },
-        isATaxiTrip = isATaxiTrip,
+        isATaxiTrip = isATaxiTrip ?: true,
         tripStatus = Trip.getOrderStatus(tripStatus)
     )
 }
@@ -62,8 +65,10 @@ fun Trip.toDto(): TripDto {
         taxiId = taxiId,
         driverId = driverId,
         clientId = clientId,
+        restaurantId = restaurantId,
         taxiDriverName = driverName,
         taxiPlateNumber = taxiPlateNumber ?: "",
+        taxiColor = taxiColor.colorNumber,
         startPoint = startPoint.toDto(),
         destination = destination?.toDto() ?: TripDto.LocationDto(0.0, 0.0),
         startPointAddress = startPointAddress,
@@ -72,7 +77,7 @@ fun Trip.toDto(): TripDto {
         price = price,
         startDate = startDate?.toString(),
         endDate = endDate?.toString(),
-        isATaxiTrip = isATaxiTrip ?: true,
+        isATaxiTrip = isATaxiTrip,
         tripStatus = tripStatus.statusCode
     )
 }
@@ -85,6 +90,7 @@ fun TripCollection.toEntity(): Trip {
         taxiId = taxiId?.toString(),
         driverId = driverId?.toString(),
         clientId = clientId.toString(),
+        restaurantId = restaurantId.toString(),
         startPoint = startPoint?.toEntity() ?: throw CantBeNullException(),
         destination = destination?.toEntity(),
         startPointAddress = startPointAddress,
@@ -106,6 +112,7 @@ fun Trip.toCollection(): TripCollection {
         taxiId = if (taxiId != null) ObjectId(taxiId) else null,
         driverId = if (driverId != null) ObjectId(driverId) else null,
         clientId = ObjectId(clientId),
+        restaurantId = if (restaurantId != null) ObjectId(restaurantId) else null,
         startPoint = startPoint.toCollection(),
         destination = destination?.toCollection(),
         startPointAddress = startPointAddress,
@@ -114,7 +121,7 @@ fun Trip.toCollection(): TripCollection {
         price = price,
         startDate = startDate?.toString(),
         endDate = endDate?.toString(),
-        isATaxiTrip = isATaxiTrip ?: true,
+        isATaxiTrip = isATaxiTrip,
         tripStatus = tripStatus.statusCode
     )
 }
@@ -125,8 +132,10 @@ fun TripWithTaxi.toEntity(): Trip {
         taxiId = taxi.id.toString(),
         driverId = driverId?.toString() ?: "",
         taxiPlateNumber = taxi.plateNumber ?: "",
+        taxiColor = Color.getColorByColorNumber(taxi.color ?: 0L),
         driverName = taxi.driverUsername ?: "",
-        clientId = clientId?.toString() ?: throw CantBeNullException(),
+        clientId = clientId.toString(),
+        restaurantId = restaurantId?.toString() ?: "",
         startPoint = startPoint?.toEntity() ?: throw CantBeNullException(),
         destination = destination?.toEntity(),
         startPointAddress = startPointAddress,
@@ -135,6 +144,7 @@ fun TripWithTaxi.toEntity(): Trip {
         price = price ?: 0.0,
         startDate = startDate?.let { LocalDateTime.parse(it) },
         endDate = endDate?.let { LocalDateTime.parse(it) },
-        tripStatus = Trip.getOrderStatus(tripStatus)
+        tripStatus = Trip.getOrderStatus(tripStatus),
+        isATaxiTrip = isATaxiTrip
     )
 }

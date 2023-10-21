@@ -81,6 +81,17 @@ class ClientTripsManagementUseCase(
                 validationErrors.add(INVALID_DATE)
             }
         }
+        if (trip.isATaxiTrip == null) {
+            validationErrors.add(INVALID_REQUEST_PARAMETER)
+        }
+        trip.isATaxiTrip?.let { isATaxiTrip ->
+            if (!isATaxiTrip && trip.restaurantId.isNullOrEmpty()) {
+                validationErrors.add(INVALID_REQUEST_PARAMETER)
+            }
+            if (isATaxiTrip && !trip.restaurantId.isNullOrEmpty()) {
+                validationErrors.add(INVALID_REQUEST_PARAMETER)
+            }
+        }
         if (validationErrors.isNotEmpty()) {
             throw MultiErrorException(validationErrors)
         }

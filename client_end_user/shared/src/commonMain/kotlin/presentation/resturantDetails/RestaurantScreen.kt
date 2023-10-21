@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
@@ -74,7 +73,7 @@ data class RestaurantScreen(val restaurantId: String) :
                     if (state.showMealSheet)
                         MealBottomSheet(
                             modifier = Modifier.padding(getNavigationBarPadding()),
-                            meal = state.meal,
+                            meal = state.selectedMeal,
                             onAddToCart = listener::onAddToCart,
                             onDismissSheet = listener::onDismissSheet,
                             onIncreaseQuantity = listener::onIncreaseMealQuantity,
@@ -155,9 +154,8 @@ data class RestaurantScreen(val restaurantId: String) :
                     Row(
                         modifier = Modifier
                             .fillMaxWidth().padding(horizontal = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-
-                        ) {
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
                         RatingBar(currentRating = state.restaurantInfo.rating)
                         BpPriceLevel(state.restaurantInfo.priceLevel)
                     }
@@ -199,35 +197,29 @@ data class RestaurantScreen(val restaurantId: String) :
                             }
                         }
                     }
+
                     Divider(
                         modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
                         color = Theme.colors.contentBorder
                     )
-                    val painters = mutableListOf<Painter>()
-                    repeat(state.sweets.size) {
-                        painters.add(painterResource(Resources.images.placeholder))
-                    }
 
-                    ItemSection(
-                        onClickItem = { orderId -> listener.onGoToDetails(orderId) },
-                        header = Resources.strings.sweets,
-                        titles = state.mostOrders.map { it.name },
-                        hasPrice = true,
-                        prices = state.mostOrders.map { it.price },
-                        painters = painters,
-                        modifier = Modifier.padding(vertical = 16.dp)
-                    )
-                    ItemSection(
-                        onClickItem = { orderId -> listener.onGoToDetails(orderId) },
-                        header = Resources.strings.sweets,
-                        titles = state.sweets.map { it.name },
-                        hasPrice = true,
-                        prices = state.sweets.map { it.price },
-                        painters = painters,
-                        modifier = Modifier.padding(getNavigationBarPadding())
-                    )
+                    state.cuisines.forEach { cuisine ->
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            ItemSection(
+                                onClickItem = listener::onGoToDetails,
+                                header = cuisine.name,
+                                ids = cuisine.meals.map { it.id },
+                                titles = cuisine.meals.map { it.name },
+                                hasPrice = true,
+                                prices = cuisine.meals.map { it.price },
+                                imageUrls = cuisine.meals.map { it.image },
+                                modifier = Modifier.padding(getNavigationBarPadding())
+                            )
+                        }
+                    }
                 }
             }
+
             ToastMessage(
                 state = state.showToast,
                 message = Resources.strings.mealAddedToYourCart,

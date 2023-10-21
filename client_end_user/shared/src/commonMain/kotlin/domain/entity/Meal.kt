@@ -6,7 +6,7 @@ data class Meal(
     val description: String,
     val restaurantId: String,
     val restaurantName: String,
-    val cuisines: List<String>,
+    val cuisines: List<Cuisine>,
     val imageUrl: String,
     val price: Price,
 )

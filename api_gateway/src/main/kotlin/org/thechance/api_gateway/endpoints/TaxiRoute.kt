@@ -137,17 +137,27 @@ fun Route.taxiRoutes() {
                 val language = extractLocalizationHeader()
                 val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripCreatedSuccessfully
                 val trip = call.receive<TripDto>()
-                val isRestaurantExisted = restaurantService.isRestaurantExisted(restaurantId = trip.clientId, language)
-                if (isRestaurantExisted) {
-                    val createdTrip = taxiService.createTrip(trip, language)
-                    respondWithResult(HttpStatusCode.Created, createdTrip, successMessage)
-                } else {
+                val isRestaurantExisted =
+                    restaurantService.isRestaurantExisted(restaurantId = trip.restaurantId, language)
+                val isUserExisted = identityService.isUserExistedInDb(userId = trip.clientId, language)
+
+                if (!isUserExisted) {
                     respondWithError(
                         call,
                         statusCode = HttpStatusCode.BadRequest,
-                        errorMessage = mapOf(400 to "Restaurant Not found")
+                        errorMessage = mapOf(400 to "User with this id Not found")
                     )
+                } else if (!isRestaurantExisted) {
+                    respondWithError(
+                        call,
+                        statusCode = HttpStatusCode.BadRequest,
+                        errorMessage = mapOf(400 to "Restaurant with this id Not found")
+                    )
+                } else {
+                    val createdTrip = taxiService.createTrip(trip, language)
+                    respondWithResult(HttpStatusCode.Created, createdTrip, successMessage)
                 }
+
             }
         }
 
@@ -185,9 +195,8 @@ fun Route.taxiRoutes() {
             }
         }
 
-
         authenticateWithRole(Role.END_USER) {
-            webSocket("/track/ride/{tripId}") {
+            webSocket("/track/taxi-ride/{tripId}") {
                 val tripId = call.parameters["tripId"]?.trim().orEmpty()
                 val language = extractLocalizationHeaderFromWebSocket()
                 val ride = taxiService.trackOrderRequest(tripId)
@@ -200,98 +209,50 @@ fun Route.taxiRoutes() {
                     )
                 }
             }
-        }
 
-        authenticateWithRole(Role.END_USER) {
-            webSocket("/track/delivery/{tripId}") {
+            webSocket("/track/delivery-ride/{tripId}") {
                 val tripId = call.parameters["tripId"]?.trim().orEmpty()
+                val language = extractLocalizationHeaderFromWebSocket()
                 val delivery = taxiService.trackOrderRequest(tripId)
                 webSocketServerHandler.sessions[tripId] = this
                 webSocketServerHandler.sessions[tripId]?.let { session ->
-                    webSocketServerHandler.tryToTrackOrder(
+                    webSocketServerHandler.tryToCollectAndMapToDeliveryTrip(
                         values = delivery,
                         session = session,
+                        language = language
                     )
                 }
             }
         }
 
-        // region taxi
         authenticateWithRole(Role.TAXI_DRIVER) {
-            put("/approve") {
+            put("/update") {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val language = extractLocalizationHeader()
-                val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripApproved
+                val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripUpdated
                 val parameters = call.receiveParameters()
                 val taxiId = parameters["taxiId"]?.trim().orEmpty()
                 val tripId = parameters["tripId"]?.trim().orEmpty()
                 val driverId = tokenClaim?.get(Claim.USER_ID).toString()
                 val approvedTrip =
-                    taxiService.approveTrip(taxiId = taxiId, tripId = tripId, driverId = driverId, language)
+                    taxiService.updateTrip(taxiId = taxiId, tripId = tripId, driverId = driverId, language)
                 respondWithResult(HttpStatusCode.OK, approvedTrip, successMessage)
             }
-
-            put("/received") {
-                val tokenClaim = call.principal<JWTPrincipal>()
-                val language = extractLocalizationHeader()
-                val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripArrived
-                val parameters = call.receiveParameters()
-                val tripId = parameters["tripId"]?.trim().orEmpty()
-                val driverId = tokenClaim?.get(Claim.USER_ID).toString()
-                val receivedTrip = taxiService.updateTripAsReceived(tripId = tripId, driverId = driverId, language)
-                respondWithResult(HttpStatusCode.OK, receivedTrip, successMessage)
-            }
-
-            put("/finish") {
-                val tokenClaim = call.principal<JWTPrincipal>()
-                val language = extractLocalizationHeader()
-                val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripFinished
-                val parameters = call.receiveParameters()
-                val driverId = tokenClaim?.get(Claim.USER_ID).toString()
-                val tripId = parameters["tripId"]?.trim().orEmpty()
-                val finishedTrip = taxiService.updateTripAsFinished(tripId = tripId, driverId = driverId, language)
-                respondWithResult(HttpStatusCode.OK, finishedTrip, successMessage)
-            }
         }
-        //endregion taxi
 
-        // region delivery
         authenticateWithRole(Role.DELIVERY) {
-            put("/approve") {
+            put("/update") {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val language = extractLocalizationHeader()
-                val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripApproved
+                val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripUpdated
                 val parameters = call.receiveParameters()
                 val taxiId = parameters["taxiId"]?.trim().orEmpty()
                 val tripId = parameters["tripId"]?.trim().orEmpty()
                 val deliveryId = tokenClaim?.get(Claim.USER_ID).toString()
                 val approvedTrip =
-                    taxiService.approveTrip(taxiId = taxiId, tripId = tripId, driverId = deliveryId, language)
+                    taxiService.updateTrip(taxiId = taxiId, tripId = tripId, driverId = deliveryId, language)
                 respondWithResult(HttpStatusCode.OK, approvedTrip, successMessage)
             }
-
-            put("/received") {
-                val tokenClaim = call.principal<JWTPrincipal>()
-                val language = extractLocalizationHeader()
-                val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripArrived
-                val parameters = call.receiveParameters()
-                val tripId = parameters["tripId"]?.trim().orEmpty()
-                val deliveryId = tokenClaim?.get(Claim.USER_ID).toString()
-                val receivedTrip = taxiService.updateTripAsReceived(tripId = tripId, driverId = deliveryId, language)
-                respondWithResult(HttpStatusCode.OK, receivedTrip, successMessage)
-            }
-
-            put("/finish") {
-                val tokenClaim = call.principal<JWTPrincipal>()
-                val language = extractLocalizationHeader()
-                val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripFinished
-                val parameters = call.receiveParameters()
-                val deliveryId = tokenClaim?.get(Claim.USER_ID).toString()
-                val tripId = parameters["tripId"]?.trim().orEmpty()
-                val finishedTrip = taxiService.updateTripAsFinished(tripId = tripId, driverId = deliveryId, language)
-                respondWithResult(HttpStatusCode.OK, finishedTrip, successMessage)
-            }
         }
-        //endregion delivery
     }
 }

@@ -10,10 +10,8 @@ import org.thechance.service_restaurant.api.models.BasePaginationResponseDto
 import org.thechance.service_restaurant.api.models.WebSocketOrder
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.utils.SocketHandler
-import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.usecase.IManageOrderUseCase
 import org.thechance.service_restaurant.domain.usecase.IMangeCartUseCase
-import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_REQUEST_PARAMETER
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 import kotlin.collections.set
@@ -76,12 +74,28 @@ fun Route.orderRoutes() {
             call.respond(HttpStatusCode.OK, result.map { it.toDto() })
         }
 
+        get("/user/{userId}/orders") {
+            val userId = call.parameters["userId"] ?: throw MultiErrorException(listOf(NOT_FOUND))
+            val result = manageOrder.getActiveOrdersForUser(userId = userId)
+            call.respond(HttpStatusCode.OK, result.map { it.toDto() })
+        }
+
+        get("/isExisted/{orderId}") {
+            val orderId = call.parameters["orderId"] ?: throw MultiErrorException(listOf(NOT_FOUND))
+            val result = manageOrder.isOrderExisted(orderId)
+            call.respond(HttpStatusCode.OK, result)
+        }
+
         put("/{id}") {
             val id = call.parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
-            val status =
-                call.parameters["status"]?.toInt() ?: throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER))
-            val result =
-                manageOrder.updateOrderStatus(orderId = id, state = Order.Status.getOrderStatus(status)).toDto()
+            val result = manageOrder.updateOrderStatus(orderId = id).toDto()
+            socketHandler.orders[result.id]?.order?.emit(result)
+            call.respond(HttpStatusCode.OK, result)
+        }
+
+        post("cancel/{id}") {
+            val id = call.parameters["id"] ?: throw MultiErrorException(listOf(NOT_FOUND))
+            val result = manageOrder.cancelOrder(orderId = id).toDto()
             socketHandler.orders[result.id]?.order?.emit(result)
             call.respond(HttpStatusCode.OK, result)
         }
@@ -89,13 +103,13 @@ fun Route.orderRoutes() {
         webSocket("/restaurant/{restaurantId}") {
             val restaurantId = call.parameters["restaurantId"]?.trim().orEmpty()
             socketHandler.orders[restaurantId] = WebSocketOrder(this)
-            socketHandler.collectOrder(restaurantId)
+            socketHandler.collectOrders(restaurantId)
         }
 
         webSocket("/track/{orderId}") {
             val orderId = call.parameters["orderId"] ?: throw MultiErrorException(listOf(NOT_FOUND))
             socketHandler.orders[orderId] = WebSocketOrder(this)
-            socketHandler.collectOrder(orderId)
+            socketHandler.collectOrderByOrderId(orderId)
         }
     }
 }

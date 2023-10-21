@@ -20,15 +20,17 @@ data class HomeScreenUiState(
     val showCart: Boolean = false,
     val isLoggedIn: Boolean = false,
     val isMoreCuisine: Boolean = false,
-    val maxCuisinesInHome: Int = 4,
+    val isThereLastOrder: Boolean = false,
 ) {
+    val maxCuisinesInHome: Int = 4
+    private val maxOffersInBanal: Int = 3
     val hasLiveOrders: Boolean
         get() = liveOrders.taxiRides.isNotEmpty() ||
                 liveOrders.deliveryOrders.isNotEmpty() ||
                 liveOrders.foodOrders.isNotEmpty()
 
     fun getOfferImages(): List<String> {
-        return this.offers.map { it.image }
+        return this.offers.map { it.image }.take(maxOffersInBanal)
     }
 }
 
@@ -67,20 +69,23 @@ data class OrderUiState(
 
 data class OfferUiState(
     val id: String,
+    val title: String,
     val image: String,
+    val restaurants: List<RestaurantUiState>,
 )
 
 data class RestaurantUiState(
     val id: String = "",
     val name: String = "",
     val rating: Double = 0.0,
+    val imageUrl: String = "",
     val priceLevel: PriceLevel = PriceLevel.LOW,
 )
 
 data class UserUiState(
     val username: String = "",
     val wallet: Double = 0.0,
-    val currency: String = "",
+    val currency: String = ""
 )
 
 fun Trip.toTaxiRideUiState(): TaxiRideUiState {

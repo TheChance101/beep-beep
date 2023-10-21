@@ -31,13 +31,17 @@ class FakeRestaurantGateway : IRestaurantGateway {
         return meals.map { it.toEntity() }
     }
 
+    override suspend fun getCuisinesWithMealsInRestaurant(restaurantId: String): List<Cuisine> {
+        TODO("Not yet implemented")
+    }
+
 
     override suspend fun search(query: String): Pair<List<Restaurant>, List<Meal>> {
         TODO("Not yet implemented")
     }
 
     override suspend fun getMealsInCuisine(cuisineId: String): List<Meal> {
-        return meals.toEntity()
+        return emptyList()
     }
 
     private val offers = listOf(

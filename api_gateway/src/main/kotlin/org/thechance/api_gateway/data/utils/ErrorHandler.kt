@@ -175,6 +175,12 @@ class ErrorHandler(
         if (errorCodes.contains(2505))
             errors[2505] = localizedMessages.cartIsAlreadyEmpty
 
+        if (errorCodes.contains(2507))
+            errors[2505] = localizedMessages.alreadyUpdated
+
+        if (errorCodes.contains(2508))
+            errors[2505] = localizedMessages.cancelOrderError
+
         if (errorCodes.contains(4001))
             errors[4001] = localizedMessages.missingParameter
 
@@ -185,8 +191,11 @@ class ErrorHandler(
             errors[4003] = localizedMessages.tokenNotRegister
 
 
-        if(errorCodes.contains(4004))
+        if (errorCodes.contains(4004))
             errors[4004] = localizedMessages.notificationNotSent
+
+        if (errorCodes.contains(6001))
+            errors[6001] = localizedMessages.supportAgentNotFound
 
         return errors
     }

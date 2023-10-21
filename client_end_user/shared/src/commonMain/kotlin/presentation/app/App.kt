@@ -24,7 +24,7 @@ object MainApp : Screen {
         val firstTime by appScreenModel.isFirstTimeOpenApp.collectAsState()
 
         BeepBeepTheme(languageCode = userLanguage) {
-            if (firstTime) {
+            if (false) {
                 Navigator(PickLanguageScreen) { SlideTransition(it) }
             } else {
                 Navigator(MainContainer) { SlideTransition(it) }

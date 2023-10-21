@@ -109,3 +109,4 @@ google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hil
 kotlinKsp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 realm = { id = "io.realm.kotlin", version.ref = "realm-version" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinx-serialization-version" }
+

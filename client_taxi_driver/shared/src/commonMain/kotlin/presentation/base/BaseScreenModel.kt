@@ -7,6 +7,8 @@ import domain.InvalidDriverEmailException
 import domain.InvalidDriverNameException
 import domain.InvalidPasswordException
 import domain.InvalidUserNameException
+import domain.LocationPermissionDeniedAlwaysException
+import domain.LocationPermissionDeniedException
 import domain.NoInternetException
 import domain.NotFoundedException
 import domain.PermissionDenied
@@ -110,6 +112,14 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
                         ErrorState.InvalidDriverEmail(
                             exception.message.toString()
                         )
+                    )
+
+                    is LocationPermissionDeniedAlwaysException -> onError(
+                        ErrorState.LocationPermissionDenied(message = exception.message.toString())
+                    )
+
+                    is LocationPermissionDeniedException -> onError(
+                        ErrorState.LocationPermissionDenied(message = exception.message.toString())
                     )
 
                     else -> onError(ErrorState.UnknownError(exception.message.toString()))

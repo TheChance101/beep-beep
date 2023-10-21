@@ -76,6 +76,9 @@ kotlin {
                 api(libs.androidx.core.ktx)
                 api(libs.koin.android)
                 implementation(libs.androidx.constraint)
+
+                implementation("io.ktor:ktor-client-android:2.3.3")
+                implementation("io.ktor:ktor-client-okhttp:2.3.3")
             }
         }
         val iosX64Main by getting
