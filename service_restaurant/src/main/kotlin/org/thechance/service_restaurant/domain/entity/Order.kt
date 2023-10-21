@@ -16,10 +16,11 @@ data class Order(
 ) {
     enum class Status(val statusCode: Int) {
         PENDING(0),
-        COOKING(1),
-        APPROVED(2),
-        CANCELED(3),
-        DONE(4);
+        APPROVED(1),
+        IN_COOKING(2),
+        DONE(3),
+        CANCELED(4);
+
 
         companion object {
             fun getOrderStatus(statusCode: Int): Status {

@@ -32,9 +32,8 @@ interface ITaxiGateway {
     suspend fun getActiveTripsByUserId(userId: String): List<Trip>
     suspend fun getDriverTripsHistory(driverId: String, page: Int, limit: Int): List<Trip>
     suspend fun getClientTripsHistory(clientId: String, page: Int, limit: Int): List<Trip>
-    suspend fun approveTrip(tripId: String, taxiId: String, driverId: String): Trip?
-    suspend fun finishTrip(tripId: String, driverId: String): Trip?
-    suspend fun updateTripAsReceived(tripId: String, driverId: String): Trip?
+    suspend fun getTripStatus(tripId: String): Int
+    suspend fun updateTrip(driverId: String, taxiId: String, tripId: String, statusCode: Int): Trip?
     suspend fun rateTrip(tripId: String, rate: Double): Trip?
     suspend fun getNumberOfTripsByDriverId(id: String): Long
     suspend fun getNumberOfTripsByClientId(id: String): Long
