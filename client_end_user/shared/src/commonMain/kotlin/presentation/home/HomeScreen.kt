@@ -173,6 +173,7 @@ class HomeScreen :
             }
 
             // in progress orders
+
             if (state.hasLiveOrders && state.isLoggedIn) {
                 item {
                     Text(
@@ -183,7 +184,9 @@ class HomeScreen :
                 }
 
                 // taxi rides
-                items(state.liveOrders.taxiRides) { taxiRideUiState ->
+                items(
+                    items = state.liveOrders.taxiRides,
+                    key = { it.tripId }) { taxiRideUiState ->
                     HorizontalImageCard(
                         painter = painterResource(Resources.images.taxiOnTheWay),
                         titleText = if (taxiRideUiState.rideStatus == TripStatus.APPROVED.statusCode) {
@@ -218,8 +221,12 @@ class HomeScreen :
                     }
                 }
 
+
                 // delivery rides
-                items(state.liveOrders.deliveryOrders) { deliveryOrder ->
+                items(
+                    items = state.liveOrders.deliveryOrders,
+                    key = { it.tripId }
+                ) { deliveryOrder ->
                     HorizontalImageCard(
                         painter = painterResource(Resources.images.orderOnTheWay),
                         titleText = Resources.strings.orderOnTheWay,
@@ -238,8 +245,9 @@ class HomeScreen :
                         )
                     }
                 }
+
                 // food orders
-                items(state.liveOrders.foodOrders) { foodOrder ->
+                items(items = state.liveOrders.foodOrders, key = { it.orderId }) { foodOrder ->
                     HorizontalImageCard(
                         painter =
                         if (foodOrder.orderStatus == FoodOrder.OrderStatusInRestaurant.APPROVED.statusCode) {
@@ -253,7 +261,7 @@ class HomeScreen :
                             Resources.strings.orderInCooking
                         },
                         id = foodOrder.orderId,
-                        onClick =  {
+                        onClick = {
                             listener.onClickActiveFoodOrder(
                                 orderId = foodOrder.orderId,
                                 tripId = ""
@@ -266,6 +274,7 @@ class HomeScreen :
                         )
                     }
                 }
+
             }
             // end in progress orders
 
