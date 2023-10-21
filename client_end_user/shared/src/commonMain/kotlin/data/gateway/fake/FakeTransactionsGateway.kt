@@ -99,7 +99,7 @@ class FakeTransactionsGateway : ITransactionsGateway {
                 currency = "$",
                 meals = listOf(),
                 totalPrice = 500.50,
-                createdAt = "11 Oct 2021",
+                createdAt = "23 Sep 2021",
                 orderStatus = FoodOrder.OrderStatusInRestaurant.APPROVED,
                 orderEstimatedTime = LocalTime(0, 30).minute,
             )

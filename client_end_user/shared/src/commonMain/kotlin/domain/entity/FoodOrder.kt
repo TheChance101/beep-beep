@@ -17,8 +17,8 @@ data class FoodOrder(
         PENDING(0),
         APPROVED(1),
         IN_COOKING(2),
-        CANCELED(3),
-        DONE(4);
+        DONE(3),
+        CANCELED(4);
 
         companion object {
             fun getOrderStatus(statusCode: Int): OrderStatusInRestaurant {
