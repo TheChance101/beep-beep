@@ -13,6 +13,7 @@ import org.thechance.service_taxi.api.dto.trip.WebSocketTrip
 import org.thechance.service_taxi.api.dto.trip.toDto
 import org.thechance.service_taxi.api.dto.trip.toEntity
 import org.thechance.service_taxi.api.util.SocketHandler
+import org.thechance.service_taxi.domain.entity.Trip
 import org.thechance.service_taxi.domain.exceptions.MissingParameterException
 import org.thechance.service_taxi.domain.usecase.IClientTripsManagementUseCase
 import org.thechance.service_taxi.domain.usecase.IDriverTripsManagementUseCase
@@ -95,7 +96,7 @@ fun Route.tripRoutes() {
             val result =
                 driverTripsManagementUseCase.updateTrip(driverId = driverId, taxiId = taxiId, tripId = tripId).toDto()
             socketHandler.trips[tripId]?.trip?.emit(result)
-            socketHandler.trips[result.clientId.toString()]?.trip?.emit(result)
+            socketHandler.endSession(driverId)
             call.respond(HttpStatusCode.OK, result)
         }
 
