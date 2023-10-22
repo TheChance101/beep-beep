@@ -68,7 +68,7 @@ class OrderFoodTrackingScreen(private val orderId: String, private val tripId: S
                     modifier = Modifier.padding(0.dp),
                     onClick = { listener.onBackButtonClicked() })
                 OrderTrackerCard(
-                    currentStatusDescription = when (state.currentOrderStatus) {
+                    currentStatusDescription = when (state.order.currentOrderStatus) {
                         OrderFoodTrackingUiState.FoodOrderStatus.ORDER_PLACED -> Resources.strings.orderPlaced
                         OrderFoodTrackingUiState.FoodOrderStatus.ORDER_ARRIVED -> Resources.strings.orderArrived
                         OrderFoodTrackingUiState.FoodOrderStatus.ORDER_IN_COOKING -> Resources.strings.orderInCooking

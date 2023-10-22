@@ -1,15 +1,18 @@
 package presentation.orderFoodTracking
 
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.entity.DeliveryRide
+import domain.entity.FoodOrder
 import domain.entity.Location
+import domain.entity.TripStatus
 import domain.usecase.ITrackOrdersUseCase
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
 class OrderFoodTrackingScreenModel(
-    private val orderId: String,
-    private val tripId: String,
+    orderId: String,
+    tripId: String,
     private val trackOrders: ITrackOrdersUseCase,
 ) : BaseScreenModel<OrderFoodTrackingUiState, OrderFoodTrackingUiEffect>(OrderFoodTrackingUiState()),
     OrderFoodTrackingInteractionListener {
@@ -20,6 +23,90 @@ class OrderFoodTrackingScreenModel(
 
     init {
         getUserLocation()
+//        if (orderId.isNotEmpty()) {
+//            trackFoodOrderFromRestaurant(orderId)
+//        } else {
+//            trackDelivery(tripId)
+//        }
+    }
+
+
+    private fun getTripIdAndTrackDelivery(orderId: String) {
+        tryToExecute(
+            function = { trackOrders.getTripId(orderId) },
+            onSuccess = ::onGetTripIdSuccess,
+            onError = ::onGetTripIdError,
+        )
+    }
+
+    private fun onGetTripIdSuccess(tripId: String) {
+        trackDelivery(tripId)
+    }
+
+    private fun onGetTripIdError(errorState: ErrorState) {
+        println("Error getting trip id: $errorState")
+    }
+
+    private fun trackDelivery(tripId: String) {
+        tryToCollect(
+            function = { trackOrders.trackDeliveryRide(tripId) },
+            onNewValue = ::onTrackDeliverySuccess,
+            onError = ::onTrackingError,
+        )
+    }
+
+    private fun onTrackDeliverySuccess(deliveryRide: DeliveryRide) {
+        val updatedOrderStatus = when (deliveryRide.tripStatus) {
+            TripStatus.RECEIVED -> {
+                OrderFoodTrackingUiState.FoodOrderStatus.ORDER_IN_THE_ROUTE
+            }
+
+            TripStatus.FINISHED -> {
+                OrderFoodTrackingUiState.FoodOrderStatus.ORDER_ARRIVED
+            }
+
+            else -> {
+                OrderFoodTrackingUiState.FoodOrderStatus.ORDER_IN_COOKING
+            }
+        }
+
+        updateState { it.copy(order = it.order.copy(currentOrderStatus = updatedOrderStatus)) }
+    }
+
+    private fun trackFoodOrderFromRestaurant(orderId: String) {
+        tryToCollect(
+            function = { trackOrders.trackFoodOrderInRestaurant(orderId) },
+            onNewValue = ::onTrackFoodOrderFromRestaurantSuccess,
+            onError = ::onTrackingError,
+        )
+    }
+
+    private fun onTrackFoodOrderFromRestaurantSuccess(foodOrder: FoodOrder) {
+        val updatedOrderStatus = when (foodOrder.orderStatus) {
+            FoodOrder.OrderStatusInRestaurant.APPROVED -> {
+                OrderFoodTrackingUiState.FoodOrderStatus.ORDER_PLACED
+            }
+
+            FoodOrder.OrderStatusInRestaurant.IN_COOKING -> {
+                OrderFoodTrackingUiState.FoodOrderStatus.ORDER_IN_COOKING
+            }
+
+            FoodOrder.OrderStatusInRestaurant.DONE -> {
+                getTripIdAndTrackDelivery(foodOrder.id)
+                OrderFoodTrackingUiState.FoodOrderStatus.ORDER_IN_COOKING
+            }
+
+            else -> {
+                OrderFoodTrackingUiState.FoodOrderStatus.ORDER_IN_COOKING
+            }
+        }
+        println("Updated order status: ${updatedOrderStatus.name}")
+
+        updateState { it.copy(order = it.order.copy(currentOrderStatus = updatedOrderStatus)) }
+    }
+
+    private fun onTrackingError(errorState: ErrorState) {
+        println("Error tracking order: $errorState")
     }
 
     private fun getUserLocation() {
