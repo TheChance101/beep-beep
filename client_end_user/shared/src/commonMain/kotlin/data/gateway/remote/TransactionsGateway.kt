@@ -8,6 +8,7 @@ import data.remote.mapper.toTripEntity
 import data.remote.model.CartDto
 import data.remote.model.DeliveryRideDto
 import data.remote.model.FoodOrderDto
+import data.remote.model.LocationDto
 import data.remote.model.PaginationResponse
 import data.remote.model.ServerResponse
 import data.remote.model.TaxiRideDto
@@ -15,6 +16,7 @@ import data.remote.model.TripDto
 import domain.entity.Cart
 import domain.entity.DeliveryRide
 import domain.entity.FoodOrder
+import domain.entity.Location
 import domain.entity.TaxiRide
 import domain.entity.Trip
 import domain.gateway.ITransactionsGateway
@@ -44,6 +46,19 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
         return tryToExecute<ServerResponse<CartDto>> {
             get("/cart")
         }.value?.toEntity() ?: throw GeneralException.NotFoundException
+    }
+
+    override suspend fun orderNow(): Boolean {
+        return tryToExecute<ServerResponse<FoodOrder>> { put("/cart/orderNow") }.value != null
+    }
+
+    @OptIn(InternalAPI::class)
+    override suspend fun updateCart(cart: Cart) {
+        tryToExecute<ServerResponse<CartDto>> {
+            put("/cart/replace") {
+                body = Json.encodeToString(CartDto.serializer(), cart.toDto())
+            }
+        }
     }
 
     override suspend fun getActiveTaxiTrips(): List<Trip> {
@@ -122,16 +137,9 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
         ).map { it.toEntity() }
     }
 
-    override suspend fun orderNow(): Boolean {
-        return tryToExecute<ServerResponse<FoodOrder>> { put("/cart/orderNow") }.value != null
-    }
-
-    @OptIn(InternalAPI::class)
-    override suspend fun updateCart(cart: Cart) {
-        tryToExecute<ServerResponse<CartDto>> {
-            put("/cart/replace") {
-                body = Json.encodeToString(CartDto.serializer(), cart.toDto())
-            }
-        }
+    override suspend fun trackDriverLocation(tripId: String): Flow<Location> {
+        return tryToExecuteWebSocket<LocationDto>(
+            path = "location/receive/$tripId"
+        ).map { it.toEntity() }
     }
 }
