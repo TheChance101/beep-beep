@@ -47,8 +47,9 @@ class SocketHandler {
                     ) {
                         session?.sendSerialized(incomingOrder)
                         endSession(orderId)
+                    } else {
+                        session?.sendSerialized(incomingOrder)
                     }
-                    session?.sendSerialized(incomingOrder)
                 }
         } catch (e: Exception) {
             session?.close(CloseReason(CloseReason.Codes.NORMAL, e.message.toString()))
