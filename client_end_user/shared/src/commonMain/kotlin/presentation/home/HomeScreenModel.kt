@@ -70,7 +70,7 @@ class HomeScreenModel(
         )
     }
 
-    private fun trackingAndUpdateFoodOrdersInRestaurant(orderId: String) {
+    private fun trackingAndUpdateFoodOrderFromRestaurant(orderId: String) {
         tryToCollect(
             { inProgressTrackerUseCase.trackFoodOrderInRestaurant(orderId) },
             ::onGetFoodOrdersSuccess,
@@ -211,7 +211,7 @@ class HomeScreenModel(
         val currentFoodOrders = state.value.liveOrders.foodOrders
         if (currentFoodOrders.isNotEmpty()) {
             currentFoodOrders.forEach { order ->
-                trackingAndUpdateFoodOrdersInRestaurant(order.orderId)
+                trackingAndUpdateFoodOrderFromRestaurant(order.orderId)
             }
         }
     }

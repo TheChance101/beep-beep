@@ -25,6 +25,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.BackButton
 import presentation.composable.HorizontalDivider
@@ -40,7 +41,7 @@ class OrderFoodTrackingScreen(private val orderId: String, private val tripId: S
 
     @Composable
     override fun Content() {
-        initScreen(getScreenModel())
+        initScreen(getScreenModel(parameters = { parametersOf(orderId, tripId) }))
     }
 
     override fun onEffect(effect: OrderFoodTrackingUiEffect, navigator: Navigator) {
