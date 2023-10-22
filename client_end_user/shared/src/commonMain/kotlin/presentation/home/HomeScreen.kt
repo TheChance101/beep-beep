@@ -303,12 +303,7 @@ class HomeScreen : BaseScreen<
                         Resources.strings.enjoyYourRide
                     },
                     id = taxiRideUiState.tripId,
-                    onClick = {
-                        listener.onClickActiveTaxiRide(
-                            tripId = taxiRideUiState.tripId,
-                            isATaxiRide = true
-                        )
-                    },
+                    onClick = listener::onClickActiveTaxiRide,
                     titleTextColor = if (taxiRideUiState.rideStatus == TripStatus.APPROVED.statusCode) {
                         Theme.colors.primary
                     } else {
@@ -348,7 +343,6 @@ class HomeScreen : BaseScreen<
                         listener.onClickActiveFoodOrder(
                             orderId = "",
                             tripId = deliveryOrder.tripId,
-                            isATaxiRide = false
                         )
                     }
                 ) { textStyle ->
@@ -375,11 +369,7 @@ class HomeScreen : BaseScreen<
                     },
                     id = foodOrder.orderId,
                     onClick = {
-                        listener.onClickActiveFoodOrder(
-                            orderId = foodOrder.orderId,
-                            tripId = "",
-                            isATaxiRide = false
-                        )
+                        listener.onClickActiveFoodOrder(orderId = foodOrder.orderId, tripId = "")
                     }
                 ) { textStyle ->
                     Text(
