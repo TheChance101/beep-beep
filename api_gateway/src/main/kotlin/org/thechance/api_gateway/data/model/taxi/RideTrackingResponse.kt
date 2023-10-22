@@ -10,6 +10,7 @@ data class RideTrackingResponse(
     val taxiDriverName: String,
     val driverImage: String? = null,
     val carType: String? = null,
+    val taxiColor: Long,
     val startPoint: LocationDto,
     val destination: LocationDto,
     val startPointAddress: String,

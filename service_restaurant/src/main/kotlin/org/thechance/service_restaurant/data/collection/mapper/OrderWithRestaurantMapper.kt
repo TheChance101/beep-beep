@@ -1,5 +1,6 @@
 package org.thechance.service_restaurant.data.collection.mapper
 
+import kotlinx.datetime.LocalDateTime
 import org.thechance.service_restaurant.data.collection.CartCollection
 import org.thechance.service_restaurant.data.collection.relationModels.OrderWithRestaurant
 import org.thechance.service_restaurant.domain.entity.Order
@@ -29,3 +30,17 @@ fun CartCollection.MealCollection.toMealHistoryEntity() = OrderedMeal(
     price = price
 )
 
+fun OrderWithRestaurant.toOrderEntity(): Order {
+    return Order(
+        id = id.toString(),
+        userId = userId.toString(),
+        restaurantId = restaurant.id.toString(),
+        restaurantName = restaurant.name,
+        restaurantImage = restaurant.restaurantImage,
+        meals = meals.map { it.toMealEntity() },
+        totalPrice = totalPrice,
+        currency = currency,
+        createdAt = createdAt,
+        status = Order.Status.getOrderStatus(orderStatus)
+    )
+}

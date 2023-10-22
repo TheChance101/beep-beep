@@ -17,9 +17,9 @@ data class TripWithTaxi(
     @Contextual
     val driverId: ObjectId? = null,
     @Contextual
-    val clientId: ObjectId?,
+    val clientId: ObjectId,
     @Contextual
-    val restaurantId: ObjectId?,
+    val restaurantId: ObjectId? = null,
     val taxi: TaxiCollection,
     val startPoint: LocationCollection? = null,
     val destination: LocationCollection? = null,
@@ -29,5 +29,6 @@ data class TripWithTaxi(
     val price: Double?,
     val startDate: String? = null,
     val endDate: String? = null,
-    val tripStatus: Int
+    val tripStatus: Int,
+    val isATaxiTrip: Boolean
 )

@@ -11,6 +11,7 @@ import kotlinx.coroutines.async
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.model.LocationDto
 import org.thechance.api_gateway.data.model.identity.getUserOptions
+import org.thechance.api_gateway.data.model.taxi.toDeliveryTripResponse
 import org.thechance.api_gateway.data.service.IdentityService
 import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.data.service.TaxiService
@@ -133,12 +134,27 @@ fun Route.userRoutes() {
                 respondWithResult(HttpStatusCode.OK, result)
             }
 
-            get("active/trips") {
+            get("active/taxi/trips") {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val userId = tokenClaim?.get(Claim.USER_ID).toString()
                 val language = extractLocalizationHeader()
-                val trips = taxiService.getActiveTripsByUserId(userId, language)
+                val trips = taxiService.getActiveTripsByUserId(userId, language).filter { it.isATaxiTrip == true }
                 respondWithResult(HttpStatusCode.OK, trips)
+            }
+
+            get("active/delivery/trips") {
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val userId = tokenClaim?.get(Claim.USER_ID).toString()
+                val language = extractLocalizationHeader()
+                val trips = taxiService.getActiveTripsByUserId(userId, language).filter { it.isATaxiTrip == false }
+                val restaurantIds = trips.mapNotNull { it.restaurantId }.distinct()
+                val restaurantInfo = restaurantService.getRestaurants(restaurantIds, language)
+                val restaurantInfoMap = restaurantInfo.associateBy { it.id }
+                val deliveryTrips = trips.mapNotNull { tripDto ->
+                    val restaurant = restaurantInfoMap[tripDto.restaurantId]
+                    restaurant?.let { tripDto.toDeliveryTripResponse(it) }
+                }
+                respondWithResult(HttpStatusCode.OK, deliveryTrips)
             }
         }
     }

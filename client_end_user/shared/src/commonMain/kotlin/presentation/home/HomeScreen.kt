@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,15 +26,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
@@ -57,6 +54,7 @@ import presentation.cuisines.CuisineUiState
 import presentation.cuisines.CuisinesScreen
 import presentation.home.composable.CartCard
 import presentation.home.composable.ChatSupportCard
+import presentation.home.composable.Circle
 import presentation.home.composable.CuisineCard
 import presentation.home.composable.OrderCard
 import presentation.main.SearchTab
@@ -94,22 +92,16 @@ class HomeScreen :
         }
     }
 
-    @OptIn(
-        ExperimentalResourceApi::class, ExperimentalFoundationApi::class,
-        ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class
-    )
+    @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
     @Composable
     override fun onRender(state: HomeScreenUiState, listener: HomeScreenInteractionListener) {
         val tabNavigator = LocalTabNavigator.current
-        val painters = mutableListOf<Painter>()
-        repeat(state.favoriteRestaurants.size) {
-            painters.add(painterResource(Resources.images.placeholder))
-        }
         LazyColumn(
             modifier = Modifier.fillMaxSize().background(Theme.colors.background),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(bottom = 16.dp)
         ) {
+
             stickyHeader {
                 BpAppBar(
                     title = if (state.isLoggedIn) {
@@ -140,22 +132,7 @@ class HomeScreen :
                 )
             }
 
-            item {
-                BpSimpleTextField(
-                    text = "",
-                    hint = Resources.strings.searchHint,
-                    hintColor = Theme.colors.contentSecondary,
-                    onTrailingIconClick = { tabNavigator.current = SearchTab },
-                    onValueChange = { },
-                    onClick = { tabNavigator.current = SearchTab },
-                    leadingPainter = painterResource(Resources.images.searchOutlined),
-                    modifier = Modifier.onFocusChanged {
-                        if (it.hasFocus) {
-                            tabNavigator.current = SearchTab
-                        }
-                    }.padding(horizontal = 16.dp)
-                )
-            }
+            this.search(onClick = { tabNavigator.current = SearchTab })
 
             item {
                 AnimatedVisibility(state.showCart) {
@@ -163,63 +140,10 @@ class HomeScreen :
                 }
             }
 
-            if (state.hasProgress && state.isLoggedIn) {
-                item {
-                    Text(
-                        text = Resources.strings.inProgress,
-                        style = Theme.typography.titleLarge.copy(Theme.colors.contentPrimary),
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    )
-                }
+            this.inProgressSection(state)
 
-                items(state.inProgressWrapper.taxisOnTheWay) {
-                    HorizontalImageCard(
-                        painter = painterResource(Resources.images.taxiOnTheWay),
-                        titleText = Resources.strings.taxiOnTheWay,
-                    ) { textStyle ->
-                        Row(
-                            Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(4.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = it.color, style = textStyle)
-                            Circle()
-                            Text(text = it.plate, style = textStyle)
-                            Circle()
-                            Text(
-                                text = "${it.timeToArriveInMints} min to arrive",
-                                style = textStyle
-                            )
-                        }
-                    }
-                }
-                items(state.inProgressWrapper.tripsOnTheWay) {
-                    HorizontalImageCard(
-                        painter = painterResource(Resources.images.taxiOnTheWay),
-                        titleText = Resources.strings.enjoyYourRide,
-                        titleTextColor = Theme.colors.contentSecondary,
-                    ) { textStyle ->
-                        Text(
-                            text = "${it.timeToArriveInMints} min to arrive",
-                            style = textStyle
-                        )
-                    }
-                }
-                items(state.inProgressWrapper.ordersOnTheWay) {
-                    HorizontalImageCard(
-                        painter = painterResource(Resources.images.orderOnTheWay),
-                        titleText = Resources.strings.orderOnTheWay,
-                    ) { textStyle ->
-                        Text(
-                            text = "From ${it.restaurantName}",
-                            style = textStyle
-                        )
-                    }
-                }
-            }
-
-            if (state.isLoggedIn) {
-                item {
+            item {
+                AnimatedVisibility(state.isLoggedIn) {
                     ChatSupportCard(
                         onClick = listener::onClickChatSupport,
                         modifier = Modifier.padding(horizontal = 16.dp)
@@ -227,30 +151,13 @@ class HomeScreen :
                 }
             }
 
-            item {
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    OrderCard(
-                        modifier = Modifier.fillMaxWidth(0.5f),
-                        onClick = listener::onClickOrderTaxi,
-                        buttonTitle = Resources.strings.orderTaxiButtonTitle,
-                        painter = painterResource(Resources.images.orderTaxi)
-                    )
-                    OrderCard(
-                        modifier = Modifier.fillMaxWidth(1f),
-                        onClick = listener::onClickOrderFood,
-                        buttonTitle = Resources.strings.orderFoodButtonTitle,
-                        painter = painterResource(Resources.images.orderImage),
-                        color = Theme.colors.orange
-                    )
-                }
-            }
+            this.orderSection(
+                onClickOrderFood = listener::onClickOrderFood,
+                onClickOrderTaxi = listener::onClickOrderTaxi
+            )
 
-            if (state.isLoggedIn) {
-                item {
+            item {
+                AnimatedVisibility(state.isThereLastOrder) {
                     LastOrder(state.lastOrder, listener)
                 }
             }
@@ -265,7 +172,7 @@ class HomeScreen :
             }
 
             item {
-                AnimatedVisibility(state.favoriteRestaurants.isNotEmpty()) {
+                AnimatedVisibility(state.isLoggedIn && state.favoriteRestaurants.isNotEmpty()) {
                     ItemSection(
                         { restaurantId -> listener.onClickRestaurantCard(restaurantId) },
                         header = Resources.strings.favoriteRestaurants,
@@ -273,89 +180,144 @@ class HomeScreen :
                         titles = state.favoriteRestaurants.map { it.name },
                         ratings = state.favoriteRestaurants.map { it.rating },
                         priceLevels = state.favoriteRestaurants.map { it.priceLevel },
-                        painters = painters,
+                        imageUrls = state.favoriteRestaurants.map { it.imageUrl },
                         hasRating = true,
                         hasPriceLevel = true,
-                    )
-                }
-            }
-            item {
-                AnimatedVisibility(state.favoriteRestaurants.isNotEmpty()) {
-                    ItemSection(
-                        header = Resources.strings.eidSpecials,
-                        titles = state.favoriteRestaurants.map { it.name },
-                        ratings = state.favoriteRestaurants.map { it.rating },
-                        priceLevels = state.favoriteRestaurants.map { it.priceLevel },
-                        painters = painters,
-                        modifier = Modifier.padding(top = 16.dp),
-                        hasOffer = true,
-                        hasPriceLevel = true,
-                        hasRating = true,
-                        offers = listOf("15 %", "15 %", "15 %")
                     )
                 }
             }
 
-            item {
-                AnimatedVisibility(state.favoriteRestaurants.isNotEmpty()) {
-                    ItemSection(
-                        header = Resources.strings.freeDelivery,
-                        titles = state.favoriteRestaurants.map { it.name },
-                        ratings = state.favoriteRestaurants.map { it.rating },
-                        priceLevels = state.favoriteRestaurants.map { it.priceLevel },
-                        painters = painters,
-                        modifier = Modifier.padding(top = 16.dp),
-                        hasDeliveryPrice = true,
-                        hasPriceLevel = true,
-                        hasRating = true,
-                        deliveryPrices = listOf("Free", "Free", "Free")
-                    )
-                }
-            }
-        }
-    }
-
-    @Composable
-    private fun HorizontalImageCard(
-        painter: Painter,
-        titleText: String,
-        modifier: Modifier = Modifier,
-        titleTextColor: Color = Theme.colors.primary,
-        titleTextStyle: TextStyle = Theme.typography.title.copy(color = titleTextColor),
-        captionText: @Composable (TextStyle) -> Unit,
-    ) {
-        Row(
-            modifier = modifier.heightIn(min = 72.dp).fillMaxWidth().padding(horizontal = 16.dp)
-                .roundedBorderShape().padding(horizontal = 16.dp, vertical = 4.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painter,
-                contentDescription = null,
-                modifier = Modifier.size(64.dp)
+            this.offers(
+                offers = state.offers,
+                onRestaurantClicked = listener::onClickRestaurantCard
             )
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                Text(
-                    text = titleText,
-                    style = titleTextStyle,
-                    color = titleTextColor
+        }
+    }
+
+    private fun LazyListScope.offers(
+        offers: List<OfferUiState>,
+        onRestaurantClicked: (String) -> Unit,
+    ) {
+        offers.forEach { offer ->
+            this.item {
+                ItemSection(
+                    onRestaurantClicked,
+                    header = offer.title,
+                    ids = offer.restaurants.map { it.id },
+                    titles = offer.restaurants.map { it.name },
+                    ratings = offer.restaurants.map { it.rating },
+                    priceLevels = offer.restaurants.map { it.priceLevel },
+                    imageUrls = offer.restaurants.map { it.imageUrl },
+                    hasRating = true,
+                    hasPriceLevel = true,
                 )
-                captionText(Theme.typography.caption.copy(color = Theme.colors.contentSecondary))
             }
         }
     }
 
-    @Composable
-    private fun Circle(
-        modifier: Modifier = Modifier,
-        circleSize: Dp = 4.dp,
-        circleColor: Color = Theme.colors.disable
+    @OptIn(ExperimentalResourceApi::class)
+    private fun LazyListScope.orderSection(
+        onClickOrderTaxi: () -> Unit,
+        onClickOrderFood: () -> Unit,
     ) {
-        Spacer(modifier.size(circleSize).drawBehind { drawCircle(circleColor) })
+        this.item {
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                OrderCard(
+                    modifier = Modifier.fillMaxWidth(0.5f),
+                    onClick = onClickOrderTaxi,
+                    buttonTitle = Resources.strings.orderTaxiButtonTitle,
+                    painter = painterResource(Resources.images.orderTaxi)
+                )
+                OrderCard(
+                    modifier = Modifier.fillMaxWidth(1f),
+                    onClick = onClickOrderFood,
+                    buttonTitle = Resources.strings.orderFoodButtonTitle,
+                    painter = painterResource(Resources.images.orderImage),
+                    color = Theme.colors.orange
+                )
+            }
+        }
+    }
+
+    @OptIn(ExperimentalResourceApi::class)
+    private fun LazyListScope.inProgressSection(state: HomeScreenUiState) {
+        if (state.hasProgress && state.isLoggedIn) {
+            item {
+                Text(
+                    text = Resources.strings.inProgress,
+                    style = Theme.typography.titleLarge.copy(Theme.colors.contentPrimary),
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            }
+            items(state.inProgressWrapper.taxisOnTheWay) {
+                InProgressCard(
+                    painter = painterResource(Resources.images.taxiOnTheWay),
+                    titleText = Resources.strings.taxiOnTheWay,
+                ) { textStyle ->
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = it.color, style = textStyle)
+                        Circle()
+                        Text(text = it.plate, style = textStyle)
+                        Circle()
+                        Text(
+                            text = "${it.timeToArriveInMints} min to arrive",
+                            style = textStyle
+                        )
+                    }
+                }
+            }
+            items(state.inProgressWrapper.tripsOnTheWay) {
+                InProgressCard(
+                    painter = painterResource(Resources.images.taxiOnTheWay),
+                    titleText = Resources.strings.enjoyYourRide,
+                    titleTextColor = Theme.colors.contentSecondary,
+                ) { textStyle ->
+                    Text(
+                        text = "${it.timeToArriveInMints} min to arrive",
+                        style = textStyle
+                    )
+                }
+            }
+            items(state.inProgressWrapper.ordersOnTheWay) {
+                InProgressCard(
+                    painter = painterResource(Resources.images.orderOnTheWay),
+                    titleText = Resources.strings.orderOnTheWay,
+                ) { textStyle ->
+                    Text(
+                        text = "From ${it.restaurantName}",
+                        style = textStyle
+                    )
+                }
+            }
+        }
+    }
+
+    @OptIn(ExperimentalResourceApi::class)
+    private fun LazyListScope.search(onClick: () -> Unit) {
+        item {
+            BpSimpleTextField(
+                text = "",
+                hint = Resources.strings.searchHint,
+                hintColor = Theme.colors.contentSecondary,
+                onTrailingIconClick = onClick,
+                onValueChange = { },
+                onClick = onClick,
+                leadingPainter = painterResource(Resources.images.searchOutlined),
+                modifier = Modifier.onFocusChanged {
+                    if (it.hasFocus) {
+                        onClick()
+                    }
+                }.padding(horizontal = 16.dp)
+            )
+        }
     }
 
     @OptIn(ExperimentalResourceApi::class)
@@ -406,10 +368,7 @@ class HomeScreen :
     }
 
     @Composable
-    private fun Wallet(
-        value: String,
-        modifier: Modifier = Modifier,
-    ) {
+    private fun Wallet(value: String, modifier: Modifier = Modifier) {
         Column(modifier = modifier.padding(end = 16.dp)) {
             Text(
                 Resources.strings.wallet,
@@ -429,7 +388,7 @@ class HomeScreen :
         showSeeAllCuisine: Boolean,
         recommendedCuisines: List<CuisineUiState>,
         onClickSeeAllCuisines: () -> Unit,
-        onClickCuisineItem: (String) -> Unit
+        onClickCuisineItem: (String) -> Unit,
     ) {
         Column(
             modifier = Modifier.padding(horizontal = 16.dp),
@@ -453,6 +412,40 @@ class HomeScreen :
                         onClickCuisine = onClickCuisineItem
                     )
                 }
+            }
+        }
+    }
+
+    @Composable
+    private fun InProgressCard(
+        painter: Painter,
+        titleText: String,
+        modifier: Modifier = Modifier,
+        titleTextColor: Color = Theme.colors.primary,
+        titleTextStyle: TextStyle = Theme.typography.title.copy(color = titleTextColor),
+        captionText: @Composable (TextStyle) -> Unit,
+    ) {
+        Row(
+            modifier = modifier.heightIn(min = 72.dp).fillMaxWidth().padding(horizontal = 16.dp)
+                .roundedBorderShape().padding(horizontal = 16.dp, vertical = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painter,
+                contentDescription = null,
+                modifier = Modifier.size(64.dp)
+            )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Text(
+                    text = titleText,
+                    style = titleTextStyle,
+                    color = titleTextColor
+                )
+                captionText(Theme.typography.caption.copy(color = Theme.colors.contentSecondary))
             }
         }
     }

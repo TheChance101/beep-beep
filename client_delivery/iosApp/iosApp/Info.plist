@@ -41,14 +41,7 @@
 		<false/>
 	</dict>
 	<key>UILaunchScreen</key>
-	<dict>
-		<key>UIColorName</key>
-		<string>Primary</string>
-		<key>UIImageName</key>
-		<string>logobeep</string>
-		<key>UIImageRespectsSafeAreaInsets</key>
-		<true/>
-	</dict>
+	<dict/>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
@@ -70,5 +63,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Access Loaction 3</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Access Location 2</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Access Location</string>
 </dict>
 </plist>

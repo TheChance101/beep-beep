@@ -1,13 +1,19 @@
 import di.appModule
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
-import data.BpLocationDataSource
+import data.gateway.local.LocationGateway
+import data.service.ILocationService
 import dev.icerock.moko.geo.LocationTracker
 import dev.icerock.moko.permissions.ios.PermissionsController
-import domain.dataSource.IBpLocationDataSource
+import domain.gateway.local.ILocationGateway
+
 
 val locationDataSourceModule = module {
-    single<IBpLocationDataSource> { BpLocationDataSource(get()) }
+    single<ILocationGateway> { LocationGateway(get(), get()) }
+}
+
+val locationServiceModule = module {
+    single<ILocationService> { LocationService() }
 }
 
 val locationTrackerModule = module {
@@ -16,8 +22,11 @@ val locationTrackerModule = module {
 
 fun initKoin() {
     startKoin {
-        modules(appModule())
-        locationDataSourceModule,
-        locationTrackerModule
+        modules(
+            appModule(),
+            locationDataSourceModule,
+            locationServiceModule,
+            locationTrackerModule
+        )
     }
 }

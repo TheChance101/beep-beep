@@ -11,10 +11,14 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
     BaseScreenModel<LoginScreenUIState, LoginScreenUIEffect>(LoginScreenUIState()),
     LoginScreenInteractionListener {
     init {
+        showSnackBar()
+    }
+
+    private fun showSnackBar() {
         coroutineScope.launch {
-            if (loginUserUseCase.getKeepMeLoggedInFlag()) {
-                sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
-            }
+            updateState { it.copy( showSnackBar = true) }
+            delay(4000)
+            updateState { it.copy(showSnackBar = false) }
         }
     }
 
@@ -35,28 +39,36 @@ class LoginScreenModel(private val loginUserUseCase: ILoginUserUseCase) :
         password: String,
         isKeepMeLoggedInChecked: Boolean
     ) {
+        updateState { it.copy(isLoading = true, isEnable = false) }
         tryToExecute(
             { loginUserUseCase.loginUser(userName, password, isKeepMeLoggedInChecked) },
-            { onLoginSuccess() },
+            { onLoginSuccess(userName) },
             ::onLoginFailed
         )
     }
 
-    private fun onLoginSuccess() {
-        updateState {
-            it.copy(
-                isLoading = false,
-                isSuccess = true,
-                usernameErrorMsg = "",
-                passwordErrorMsg = ""
-            )
+    private fun onLoginSuccess(username: String) {
+        clearErrors()
+        coroutineScope.launch {
+            loginUserUseCase.saveUsername(username)
         }
-
         sendNewEffect(LoginScreenUIEffect.LoginEffect(""))
     }
 
+    private fun clearErrors() {
+        updateState {
+            it.copy(
+                usernameErrorMsg = "",
+                isUsernameError = false,
+                passwordErrorMsg = "",
+                isPasswordError = false
+            )
+        }
+    }
+
     private fun onLoginFailed(error: ErrorState) {
-        updateState { it.copy(isLoading = false, error = error) }
+        updateState { it.copy(isLoading = false, isEnable = true, error = error) }
+        clearErrors()
         handleErrorState(error)
     }
 

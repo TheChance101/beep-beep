@@ -3,7 +3,7 @@ package org.thechance.api_gateway.data.localizedMessages.languages
 import org.koin.core.annotation.Single
 
 @Single
-class PalestinianArabicLocalizedMessages() : LocalizedMessages {
+class PalestinianArabicLocalizedMessages : LocalizedMessages {
 
     // region identity
     override val invalidRequestParameter: String = "بيانات الطلب مش صحيحة"
@@ -30,7 +30,7 @@ class PalestinianArabicLocalizedMessages() : LocalizedMessages {
     // region taxi
     override val taxiCreatedSuccessfully: String = "اعمل حفلة بقى عندك تكسي يا صاحب الحظ 🎉"
     override val tripCreatedSuccessfully: String = "تم انشاء الرحلة"
-    override val tripApproved: String = "تم قبول الرحلة"
+    override val tripUpdated: String = "تم تحديث الرحلة بنجاح"
     override val tripCanceled: String = "تم الغاء الرحلة"
     override val tripFinished: String = "تم إنهاء الرحلة بنجاح"
     override val tripArrived: String = "تم الوصول الى العميل"
@@ -87,6 +87,8 @@ class PalestinianArabicLocalizedMessages() : LocalizedMessages {
     override val missingParameter: String = "في معلومات مفقودة يا زلمة!"
     override val tokensNotFound: String = "ما لقينا التوكنات يا زلمة!"
     override val tokenNotRegister: String="التوكن مش مسجل"
+    override val alreadyUpdated: String = "اتحدثت مرة يا عم مش مربة هيه"
+    override val cancelOrderError: String = "هذا الطلب تم الغائه من قبل او تم قبوله من قبل"
     override val cartIsAlreadyEmpty: String = "لا يمكن اجراء الامر لان السله فارغه"
     override val invalidQuantity: String = "مدخل كميه مش صح"
 
@@ -94,5 +96,9 @@ class PalestinianArabicLocalizedMessages() : LocalizedMessages {
 
     // region notification
     override val notificationNotSent: String = "لم يتم إرسال الإشعار"
+    //endregion
+
+    // region chat
+    override val supportAgentNotFound: String = "مافي اي حد الان للدعم"
     //endregion
 }

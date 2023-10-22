@@ -47,7 +47,7 @@ interface LocalizedMessages {
 
     val tripCreatedSuccessfully: String
 
-    val tripApproved: String
+    val tripUpdated: String
 
     val tripCanceled: String
 
@@ -159,11 +159,19 @@ interface LocalizedMessages {
 
     val tokenNotRegister: String
 
+    val alreadyUpdated: String
+
+    val cancelOrderError: String
 
     //endregion
 
 
     // region notification
     val notificationNotSent: String
+    //endregion
+
+
+    //region chat
+    val supportAgentNotFound: String
     //endregion
 }

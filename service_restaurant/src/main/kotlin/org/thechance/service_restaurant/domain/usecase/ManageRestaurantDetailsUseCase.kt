@@ -29,11 +29,7 @@ class ManageRestaurantDetailsUseCase(
         if (!basicValidation.isValidId(restaurantId)) {
             throw MultiErrorException(listOf(INVALID_ID))
         }
-        return restaurantGateway.getRestaurant(restaurantId) ?: throw MultiErrorException(
-            listOf(
-                NOT_FOUND
-            )
-        )
+        return restaurantGateway.getRestaurant(restaurantId) ?: throw MultiErrorException(listOf(NOT_FOUND))
     }
 
     override suspend fun getRestaurantsByOwnerId(ownerId: String): List<Restaurant> {

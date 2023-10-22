@@ -15,6 +15,7 @@ data class TripDto(
     val restaurantId: String? = null,
     val taxiPlateNumber: String? = null,
     val taxiDriverName: String? = null,
+    val taxiColor: Long? = null,
     val startPoint: LocationDto? = null,
     val destination: LocationDto? = null,
     val startPointAddress: String? = null,
@@ -62,19 +63,11 @@ fun TripDto.toRideTrackingResponse(taxi: TaxiDto): RideTrackingResponse {
         driverImage = taxi.driverImage ?: "",
         rate = taxi.rate ?: 0.0,
         carType = taxi.type,
+        taxiColor = taxiColor ?: 4294944768L,
         startPoint = startPoint ?: LocationDto(0.0, 0.0),
         destination = destination ?: LocationDto(0.0, 0.0),
         startPointAddress = startPointAddress ?: "",
         destinationAddress = destinationAddress ?: "",
         tripStatus = tripStatus
-    )
-}
-
-fun TripDto.toDeliveryTrackingResponse(): DeliveryTrackingResponse {
-    return DeliveryTrackingResponse(
-        id = id ?: "",
-        startPoint = startPoint ?: LocationDto(0.0, 0.0),
-        destination = destination ?: LocationDto(0.0, 0.0),
-        status = tripStatus
     )
 }

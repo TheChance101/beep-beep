@@ -1,6 +1,9 @@
 package domain.usecase
 
-import domain.*
+import domain.InvalidDriverEmailException
+import domain.InvalidDriverNameException
+import domain.InvalidPasswordException
+import domain.InvalidUserNameException
 import domain.gateway.local.ILocalConfigurationGateway
 import domain.gateway.remote.IIdentityRemoteGateway
 
@@ -9,15 +12,17 @@ interface ILoginUserUseCase {
     suspend fun loginUser(
         userName: String,
         password: String,
-        isKeepMeLoggedInChecked: Boolean
+        isKeepMeLoggedInChecked: Boolean,
     )
 
+    suspend fun saveUsername(username: String)
+    suspend fun getUsername(): String
     suspend fun getKeepMeLoggedInFlag(): Boolean
 
     suspend fun requestPermission(
         driverFullName: String,
         driverEmail: String,
-        description: String
+        description: String,
     )
 }
 
@@ -29,7 +34,7 @@ class LoginUserUseCase(
     override suspend fun loginUser(
         userName: String,
         password: String,
-        isKeepMeLoggedInChecked: Boolean
+        isKeepMeLoggedInChecked: Boolean,
     ) {
         checkValidationLoginFields(userName, password)
         val userTokens = remoteGateway.loginUser(userName, password)
@@ -38,12 +43,20 @@ class LoginUserUseCase(
         localGateWay.saveKeepMeLoggedInFlag(isKeepMeLoggedInChecked)
     }
 
+    override suspend fun saveUsername(username: String) {
+        localGateWay.saveUserName(username)
+    }
+
+    override suspend fun getUsername(): String {
+        return localGateWay.getUsername()
+    }
+
     override suspend fun getKeepMeLoggedInFlag(): Boolean {
         return localGateWay.getKeepMeLoggedInFlag()
     }
 
     override suspend fun requestPermission(
-        driverFullName: String, driverEmail: String, description: String
+        driverFullName: String, driverEmail: String, description: String,
     ) {
         checkValidationPermissionFields(driverFullName, driverEmail)
 

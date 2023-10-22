@@ -34,5 +34,4 @@ class IdentityFakeGateway : IIdentityRemoteGateway {
     ) {
     }
 
-    override suspend fun getTaxiDriverName() = "Emerald Team"
 }

@@ -17,9 +17,15 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
         get() = coroutineScope
 
     init {
-        showSnackBar("Sign up with Beep Beep account")
+        showSnackBar()
     }
-
+    private fun showSnackBar() {
+        viewModelScope.launch {
+            updateState { it.copy(showSnackBar = true) }
+            delay(3000)
+            updateState { it.copy(showSnackBar = false) }
+        }
+    }
     override fun onUserNameChanged(userName: String) {
         updateState { it.copy(userName = userName) }
     }
@@ -33,18 +39,18 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
     }
 
     override fun onClickLogin(
-        username: String,
+        userName: String,
         password: String,
-        isKeepMeLoggedInChecked: Boolean
+        isKeepMeLoggedInChecked: Boolean,
     ) {
 
         updateState { it.copy(isLoading = true, isEnable = false) }
         clearErrors()
         tryToExecute(
             {
-                manageLoginUser.loginUser(username, password, isKeepMeLoggedInChecked)
+                manageLoginUser.loginUser(userName, password, isKeepMeLoggedInChecked)
             },
-            {onLoginSuccess(username)},
+            { onLoginSuccess(userName) },
             ::onLoginError
         )
     }
@@ -62,32 +68,18 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
         updateState { it.copy(isLoading = false, isEnable = true) }
         clearErrors()
         when (errorState) {
-            ErrorState.InvalidPassword -> updateState {
-                it.copy(
-                    passwordErrorMsg = "Invalid password",
-                    isPasswordError = true
-                )
-            }
+            ErrorState.InvalidPassword -> updateState { it.copy(isPasswordError = true) }
 
             ErrorState.InvalidUsername,ErrorState.UserNotFound -> updateState {
-                it.copy(
-                    usernameErrorMsg = "Invalid username",
-                    isUsernameError = true
-                )
+                it.copy(isUsernameError = true)
             }
 
-            is ErrorState.UnAuthorized -> state.value.sheetState.show()
+            is ErrorState.UnAuthorized -> state.value.permissionUiState.sheetState.show()
             else -> {}
         }
     }
 
-    private fun showSnackBar(message: String) {
-        viewModelScope.launch {
-            updateState { it.copy(snackBarMessage = message, showSnackBar = true) }
-            delay(4000) // wait for snack-bar to show
-            updateState { it.copy(showSnackBar = false) }
-        }
-    }
+
 
 
     private fun clearErrors() {
@@ -103,15 +95,16 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
 
     //region permission
     override fun onOwnerEmailChanged(ownerEmail: String) {
-        updateState { it.copy(ownerEmail = ownerEmail) }
+
+        updateState { it.copy(permissionUiState = it.permissionUiState.copy(ownerEmail = ownerEmail)) }
     }
 
     override fun onRestaurantNameChanged(restaurantName: String) {
-        updateState { it.copy(deliveryUsername = restaurantName) }
+        updateState { it.copy(permissionUiState = it.permissionUiState.copy(deliveryUsername = restaurantName)) }
     }
 
     override fun onDescriptionChanged(description: String) {
-        updateState { it.copy(description = description) }
+        updateState { it.copy(permissionUiState = it.permissionUiState.copy(description = description)) }
     }
 
     override fun onRequestPermissionClicked() {
@@ -122,8 +115,8 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
     private fun showPermissionSheetWithDelay() {
         coroutineScope.launch {
             delay(300)
-            updateState { it.copy(showPermissionSheet = true) }
-            state.value.sheetState.show()
+            updateState { it.copy(permissionUiState = it.permissionUiState.copy(showPermissionSheet = true)) }
+            state.value.permissionUiState.sheetState.show()
         }
     }
 
@@ -142,7 +135,7 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
     }
 
     private fun onAskForPermissionSuccess() {
-        state.value.sheetState.dismiss()
+        state.value.permissionUiState.sheetState.dismiss()
         coroutineScope.launch {
             delayAndChangePermissionSheetState(false)
         }
@@ -151,7 +144,7 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
 
 
     private fun onAskForPermissionFailed(error: ErrorState) {
-        state.value.sheetState.dismiss()
+        state.value.permissionUiState.sheetState.dismiss()
         coroutineScope.launch {
             delayAndChangePermissionSheetState(false)
         }
@@ -173,12 +166,12 @@ class LoginScreenModel(private val manageLoginUser: IManageLoginUserUseCase) :
     }
 
     private fun dismissBottomSheet() {
-        state.value.sheetState.dismiss()
+        state.value.permissionUiState.sheetState.dismiss()
     }
 
     private suspend fun delayAndChangePermissionSheetState(show: Boolean) {
         delay(300)
-        updateState { it.copy(showPermissionSheet = show) }
+        updateState { it.copy(permissionUiState = it.permissionUiState.copy(showPermissionSheet = show)) }
     }
     //end region
 }
