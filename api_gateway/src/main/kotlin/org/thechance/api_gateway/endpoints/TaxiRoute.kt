@@ -96,6 +96,13 @@ fun Route.taxiRoutes() {
             respondWithResult(HttpStatusCode.OK, trip)
         }
 
+        get("/user/{orderId}") {
+            val language = extractLocalizationHeader()
+            val orderId = call.parameters["orderId"]?.trim().orEmpty()
+            val trip = taxiService.getTripByOrderId(orderId, language)
+            respondWithResult(HttpStatusCode.OK, trip)
+        }
+
         authenticateWithRole(Role.END_USER) {
             get("/history") {
                 val tokenClaim = call.principal<JWTPrincipal>()
