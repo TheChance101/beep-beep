@@ -143,6 +143,15 @@ class TaxiService(
         )
     }
 
+    suspend fun getTripByOrderId(orderId: String, languageCode: String): TripDto {
+        return client.tryToExecute(
+            api = APIs.TAXI_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { get("/trip/user/$orderId") }
+        )
+    }
+
     suspend fun getTripsHistoryForUser(
         userId: String,
         page: Int,
