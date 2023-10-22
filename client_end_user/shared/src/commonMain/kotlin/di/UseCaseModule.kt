@@ -2,7 +2,7 @@ package di
 
 import domain.usecase.GetTransactionHistoryUseCase
 import domain.usecase.IGetTransactionHistoryUseCase
-import domain.usecase.IInProgressTrackerUseCase
+import domain.usecase.ITrackOrdersUseCase
 import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.IManageCartUseCase
 import domain.usecase.IChatUseCase
@@ -13,7 +13,7 @@ import domain.usecase.IManageSettingUseCase
 import domain.usecase.IExploreRestaurantUseCase
 import domain.usecase.ISearchUseCase
 import domain.usecase.SearchUseCase
-import domain.usecase.InProgressTrackerUseCase
+import domain.usecase.TrackOrdersUseCase
 import domain.usecase.ManageAuthenticationUseCase
 import domain.usecase.ManageCartUseCase
 import domain.usecase.ChatUseCase
@@ -34,7 +34,7 @@ val useCaseModule = module {
     singleOf(::ManageAuthenticationUseCase) { bind<IManageAuthenticationUseCase>() }
     singleOf(::GetOffersUseCase) { bind<IGetOffersUseCase>() }
     singleOf(::ManageSettingUseCase) { bind<IManageSettingUseCase>() }
-    singleOf(::InProgressTrackerUseCase) { bind<IInProgressTrackerUseCase>() }
+    singleOf(::TrackOrdersUseCase) { bind<ITrackOrdersUseCase>() }
     singleOf(::ValidationUseCaseUseCase) { bind<IValidationUseCase>() }
     singleOf(::GetNotificationsUseCase) { bind<IGetNotificationsUseCase>() }
     singleOf(::GetTransactionHistoryUseCase) { bind<IGetTransactionHistoryUseCase>() }

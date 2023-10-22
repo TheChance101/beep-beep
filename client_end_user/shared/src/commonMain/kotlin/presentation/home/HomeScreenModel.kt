@@ -12,7 +12,7 @@ import domain.entity.TripStatus
 import domain.entity.User
 import domain.usecase.IExploreRestaurantUseCase
 import domain.usecase.IGetOffersUseCase
-import domain.usecase.IInProgressTrackerUseCase
+import domain.usecase.ITrackOrdersUseCase
 import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.IManageCartUseCase
 import domain.usecase.IManageFavouriteUseCase
@@ -29,7 +29,7 @@ import presentation.cuisines.toCuisineUiState
 class HomeScreenModel(
     private val exploreRestaurant: IExploreRestaurantUseCase,
     private val offers: IGetOffersUseCase,
-    private val inProgressTrackerUseCase: IInProgressTrackerUseCase,
+    private val trackOrders: ITrackOrdersUseCase,
     private val manageCart: IManageCartUseCase,
     private val manageFavorite: IManageFavouriteUseCase,
     private val manageProfile: IManageProfileUseCase,
@@ -56,7 +56,7 @@ class HomeScreenModel(
 
     private fun trackingAndUpdateTaxiRide(tripId: String) {
         tryToCollect(
-            { inProgressTrackerUseCase.trackTaxiRide(tripId) },
+            { trackOrders.trackTaxiRide(tripId) },
             ::onGetTaxiRidesSuccess,
             ::onTrackingError
         )
@@ -64,7 +64,7 @@ class HomeScreenModel(
 
     private fun trackingAndUpdateDeliveryRide(tripId: String) {
         tryToCollect(
-            { inProgressTrackerUseCase.trackDeliveryRide(tripId) },
+            { trackOrders.trackDeliveryRide(tripId) },
             ::onGetDeliveryRidesSuccess,
             ::onTrackingError
         )
@@ -72,7 +72,7 @@ class HomeScreenModel(
 
     private fun trackingAndUpdateFoodOrderFromRestaurant(orderId: String) {
         tryToCollect(
-            { inProgressTrackerUseCase.trackFoodOrderInRestaurant(orderId) },
+            { trackOrders.trackFoodOrderInRestaurant(orderId) },
             ::onGetFoodOrdersSuccess,
             ::onTrackingError
         )
@@ -142,7 +142,7 @@ class HomeScreenModel(
     private fun getActiveTaxiTrips() {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            { inProgressTrackerUseCase.getActiveTaxiTrips() },
+            { trackOrders.getActiveTaxiTrips() },
             ::onGetActiveTaxiTripsSuccess,
             ::onTrackingError
         )
@@ -151,7 +151,7 @@ class HomeScreenModel(
     private fun getActiveDeliveryTrips() {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            { inProgressTrackerUseCase.getActiveDeliveryTrips() },
+            { trackOrders.getActiveDeliveryTrips() },
             ::onGetActiveDeliveryTripsSuccess,
             ::onTrackingError
         )
@@ -160,7 +160,7 @@ class HomeScreenModel(
     private fun getActiveFoodOrders() {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            { inProgressTrackerUseCase.getActiveFoodOrders() },
+            { trackOrders.getActiveFoodOrders() },
             ::onGetActiveFoodOrdersSuccess,
             ::onTrackingError
         )

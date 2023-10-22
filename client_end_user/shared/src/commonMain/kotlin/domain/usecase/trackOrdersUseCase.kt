@@ -7,7 +7,7 @@ import domain.entity.Trip
 import domain.gateway.ITransactionsGateway
 import kotlinx.coroutines.flow.Flow
 
-interface IInProgressTrackerUseCase {
+interface ITrackOrdersUseCase {
     suspend fun getActiveTaxiTrips(): List<Trip>
     suspend fun getActiveDeliveryTrips(): List<DeliveryRide>
     suspend fun getActiveFoodOrders(): List<FoodOrder>
@@ -16,9 +16,9 @@ interface IInProgressTrackerUseCase {
     suspend fun trackFoodOrderInRestaurant(orderId: String): Flow<FoodOrder>
 }
 
-class InProgressTrackerUseCase(
+class TrackOrdersUseCase(
     private val remoteGateway: ITransactionsGateway,
-) : IInProgressTrackerUseCase {
+) : ITrackOrdersUseCase {
     override suspend fun getActiveTaxiTrips(): List<Trip> {
         return remoteGateway.getActiveTaxiTrips()
     }
