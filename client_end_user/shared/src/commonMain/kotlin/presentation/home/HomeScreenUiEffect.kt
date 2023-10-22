@@ -15,10 +15,8 @@ sealed class HomeScreenUiEffect {
     data object NavigateToCart : HomeScreenUiEffect()
     data object NavigateLoginScreen : HomeScreenUiEffect()
     data class NavigateToRestaurantDetails(val restaurantId: String) : HomeScreenUiEffect()
-    data class NavigateToTrackOrder(
-        val orderId: String,
-        val tripId: String,
-    ) : HomeScreenUiEffect()
+    data class NavigateToTrackOrder(val orderId: String, val tripId: String) :
+        HomeScreenUiEffect()
 
     data class NavigateToTrackTaxiRide(val tripId: String) : HomeScreenUiEffect()
 }

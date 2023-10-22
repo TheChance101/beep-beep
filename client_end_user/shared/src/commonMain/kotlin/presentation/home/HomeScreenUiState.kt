@@ -21,6 +21,7 @@ data class HomeScreenUiState(
     val isLoggedIn: Boolean = false,
     val isMoreCuisine: Boolean = false,
     val isThereLastOrder: Boolean = false,
+    val showSnackBar: Boolean = false,
 ) {
     val maxCuisinesInHome: Int = 4
     private val maxOffersInBanal: Int = 3

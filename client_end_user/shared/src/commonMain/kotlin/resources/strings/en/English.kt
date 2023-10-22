@@ -110,4 +110,5 @@ data class English(
     override val orderArrived: String = "Your Feast Has Arrived.",
     override val orderInCooking: String = "Your meal in the oven.",
     override val orderInTheRoute: String = "Your Food Is En Route.",
-) : IStringResources
+    override val accessDeniedMessage: String = "To continue, Please access location permission",
+    ) : IStringResources

@@ -1,9 +1,19 @@
 package presentation.orderFoodTracking
 
+import domain.entity.Location
+
 data class OrderFoodTrackingUiState(
     val order: OrderUiState = OrderUiState(),
     val currentOrderStatus: FoodOrderStatus = FoodOrderStatus.ORDER_PLACED,
+    val userLocation: LocationUiState = LocationUiState(),
+    val deliveryLocation: LocationUiState = LocationUiState(),
 ) {
+
+    data class LocationUiState(
+        val latitude: Double = 0.0,
+        val longitude: Double = 0.0,
+    )
+
     data class OrderUiState(
         val estimatedTime: String = "32:00",
         val isOrderPlaced: Boolean = false,
@@ -19,4 +29,9 @@ data class OrderFoodTrackingUiState(
         ORDER_ARRIVED;
     }
 }
+
+fun Location.toUiState() = OrderFoodTrackingUiState.LocationUiState(
+    latitude = latitude,
+    longitude = longitude,
+)
 
