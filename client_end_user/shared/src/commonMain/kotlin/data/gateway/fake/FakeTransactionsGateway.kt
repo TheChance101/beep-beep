@@ -142,4 +142,8 @@ class FakeTransactionsGateway : ITransactionsGateway {
         TODO("Not yet implemented")
     }
 
+    override suspend fun trackDriverLocation(tripId: String): Flow<Location> {
+        TODO("Not yet implemented")
+    }
+
 }

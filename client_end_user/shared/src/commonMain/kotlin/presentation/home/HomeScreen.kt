@@ -35,6 +35,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
+import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.composable.BpAppBar
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.composable.BpSimpleTextField
@@ -65,6 +66,7 @@ import presentation.meals.MealsScreen
 import presentation.orderFoodTracking.OrderFoodTrackingScreen
 import presentation.resturantDetails.RestaurantScreen
 import resources.Resources
+import util.getNavigationBarPadding
 import util.root
 
 class HomeScreen : BaseScreen<
@@ -106,7 +108,10 @@ class HomeScreen : BaseScreen<
         }
     }
 
-    @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+    @OptIn(
+        ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class,
+        ExperimentalResourceApi::class
+    )
     @Composable
     override fun onRender(state: HomeScreenUiState, listener: HomeScreenInteractionListener) {
         val tabNavigator = LocalTabNavigator.current
@@ -205,6 +210,21 @@ class HomeScreen : BaseScreen<
                 offers = state.offers,
                 onRestaurantClicked = listener::onClickRestaurantCard
             )
+
+            item {
+                BPSnackBar(
+                    icon = painterResource(Resources.images.warningIcon),
+                    iconBackgroundColor = Theme.colors.warningContainer,
+                    iconTint = Theme.colors.warning,
+                    isVisible = state.showSnackBar,
+                    modifier = Modifier.padding(bottom = getNavigationBarPadding().calculateBottomPadding())
+                ) {
+                    Text(
+                        text = Resources.strings.accessDeniedMessage,
+                        style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
+                    )
+                }
+            }
         }
     }
 
@@ -283,7 +303,12 @@ class HomeScreen : BaseScreen<
                         Resources.strings.enjoyYourRide
                     },
                     id = taxiRideUiState.tripId,
-                    onClick = listener::onClickActiveTaxiRide,
+                    onClick = {
+                        listener.onClickActiveTaxiRide(
+                            tripId = taxiRideUiState.tripId,
+                            isATaxiRide = true
+                        )
+                    },
                     titleTextColor = if (taxiRideUiState.rideStatus == TripStatus.APPROVED.statusCode) {
                         Theme.colors.primary
                     } else {
@@ -322,7 +347,8 @@ class HomeScreen : BaseScreen<
                     onClick = {
                         listener.onClickActiveFoodOrder(
                             orderId = "",
-                            tripId = deliveryOrder.tripId
+                            tripId = deliveryOrder.tripId,
+                            isATaxiRide = false
                         )
                     }
                 ) { textStyle ->
@@ -351,7 +377,8 @@ class HomeScreen : BaseScreen<
                     onClick = {
                         listener.onClickActiveFoodOrder(
                             orderId = foodOrder.orderId,
-                            tripId = ""
+                            tripId = "",
+                            isATaxiRide = false
                         )
                     }
                 ) { textStyle ->

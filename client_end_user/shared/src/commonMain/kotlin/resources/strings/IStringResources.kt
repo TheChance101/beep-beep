@@ -108,4 +108,5 @@ interface IStringResources {
     val orderArrived: String
     val orderInCooking: String
     val orderInTheRoute: String
+    val accessDeniedMessage: String
 }

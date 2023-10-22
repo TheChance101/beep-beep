@@ -110,4 +110,6 @@ data class ArabicIQ(
     override val orderArrived: String = "وصل الطلب",
     override val orderInCooking: String = "جاري الطبخ",
     override val orderInTheRoute: String = "في الطريق",
-) : IStringResources
+    override val accessDeniedMessage: String = "يجب السماح اولاً بإمكانية الوصول للموقع",
+
+    ) : IStringResources

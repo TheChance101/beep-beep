@@ -12,6 +12,7 @@ import domain.entity.TripStatus
 import domain.entity.User
 import domain.usecase.IExploreRestaurantUseCase
 import domain.usecase.IGetOffersUseCase
+import domain.usecase.IGetUserLocationUseCase
 import domain.usecase.ITrackOrdersUseCase
 import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.IManageCartUseCase
@@ -19,6 +20,7 @@ import domain.usecase.IManageFavouriteUseCase
 import domain.usecase.IManageProfileUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
@@ -33,6 +35,7 @@ class HomeScreenModel(
     private val manageCart: IManageCartUseCase,
     private val manageFavorite: IManageFavouriteUseCase,
     private val manageProfile: IManageProfileUseCase,
+    private val getUserLocation: IGetUserLocationUseCase,
     private val manageAuthentication: IManageAuthenticationUseCase,
 ) : BaseScreenModel<HomeScreenUiState, HomeScreenUiEffect>(HomeScreenUiState()),
     HomeScreenInteractionListener {
@@ -324,12 +327,48 @@ class HomeScreenModel(
         sendNewEffect(HomeScreenUiEffect.NavigateToRestaurantDetails(restaurantId))
     }
 
-    override fun onClickActiveFoodOrder(orderId: String, tripId: String) {
-        sendNewEffect(HomeScreenUiEffect.NavigateToTrackOrder(orderId, tripId))
+    override fun onClickActiveFoodOrder(orderId: String, tripId: String, isATaxiRide: Boolean) {
+        startTrackUserLocation(orderId = orderId, tripId = tripId, isATaxiRide = isATaxiRide)
     }
 
-    override fun onClickActiveTaxiRide(tripId: String) {
-        sendNewEffect(HomeScreenUiEffect.NavigateToTrackTaxiRide(tripId))
+    override fun onClickActiveTaxiRide(tripId: String, isATaxiRide: Boolean) {
+        startTrackUserLocation(orderId = "", tripId = tripId, isATaxiRide)
+    }
+
+    private fun startTrackUserLocation(orderId: String, tripId: String, isATaxiRide: Boolean) {
+        tryToExecute(
+            function = getUserLocation::startTracking,
+            onSuccess = { onStartTrackUserLocationSuccess(orderId, tripId, isATaxiRide) },
+            onError = ::onStartTrackUserLocationError
+        )
+    }
+
+    private fun onStartTrackUserLocationSuccess(
+        orderId: String,
+        tripId: String,
+        isATaxiRide: Boolean,
+    ) {
+        if (isATaxiRide) {
+            sendNewEffect(HomeScreenUiEffect.NavigateToTrackTaxiRide(tripId, isATaxiRide))
+        } else {
+            sendNewEffect(HomeScreenUiEffect.NavigateToTrackOrder(orderId, tripId, isATaxiRide))
+        }
+    }
+
+    private fun onStartTrackUserLocationError(errorState: ErrorState) {
+        when (errorState) {
+            ErrorState.LocationPermissionDenied -> showSnackBar()
+            else -> {}
+        }
+    }
+
+    private fun showSnackBar() {
+        viewModelScope.launch {
+            updateState { it.copy(showSnackBar = true) }
+            delay(4000)
+            updateState { it.copy(showSnackBar = false) }
+        }
+
     }
 
     private fun getRecommendedCuisines() {
