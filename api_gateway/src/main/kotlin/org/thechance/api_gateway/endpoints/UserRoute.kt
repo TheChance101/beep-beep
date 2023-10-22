@@ -96,7 +96,7 @@ fun Route.userRoutes() {
                 val language = extractLocalizationHeader()
                 val location = call.receive<LocationDto>()
                 val userLocation = identityService.updateUserLocation(userId, location, language)
-                call.respond(HttpStatusCode.Created, userLocation)
+                respondWithResult(HttpStatusCode.OK, userLocation)
             }
 
             get("/favorite") {
