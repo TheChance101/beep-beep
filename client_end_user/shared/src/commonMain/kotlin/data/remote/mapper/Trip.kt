@@ -17,6 +17,7 @@ fun TripDto.toTripEntity(): Trip {
         taxiId = taxiId ?: "",
         driverId = driverId ?: "",
         clientId = clientId ?: "",
+        orderId = orderId ?: "",
         restaurantId = restaurantId ?: "",
         taxiPlateNumber = taxiPlateNumber ?: "",
         taxiDriverName = taxiDriverName ?: "",
