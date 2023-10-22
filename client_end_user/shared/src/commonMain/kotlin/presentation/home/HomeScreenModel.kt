@@ -13,11 +13,11 @@ import domain.entity.User
 import domain.usecase.IExploreRestaurantUseCase
 import domain.usecase.IGetOffersUseCase
 import domain.usecase.IGetUserLocationUseCase
-import domain.usecase.ITrackOrdersUseCase
 import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.IManageCartUseCase
 import domain.usecase.IManageFavouriteUseCase
 import domain.usecase.IManageProfileUseCase
+import domain.usecase.ITrackOrdersUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
@@ -349,9 +349,9 @@ class HomeScreenModel(
         isATaxiRide: Boolean,
     ) {
         if (isATaxiRide) {
-            sendNewEffect(HomeScreenUiEffect.NavigateToTrackTaxiRide(tripId, isATaxiRide))
+            sendNewEffect(HomeScreenUiEffect.NavigateToTrackTaxiRide(tripId))
         } else {
-            sendNewEffect(HomeScreenUiEffect.NavigateToTrackOrder(orderId, tripId, isATaxiRide))
+            sendNewEffect(HomeScreenUiEffect.NavigateToTrackOrder(orderId, tripId))
         }
     }
 
