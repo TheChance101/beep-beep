@@ -10,6 +10,7 @@ data class TripDto(
     @SerialName("taxiId") val taxiId: String? = null,
     @SerialName("driverId") val driverId: String? = null,
     @SerialName("clientId") val clientId: String? = null,
+    @SerialName("orderId") val orderId: String? = null,
     @SerialName("restaurantId") val restaurantId: String? = null,
     @SerialName("taxiPlateNumber") val taxiPlateNumber: String? = null,
     @SerialName("taxiDriverName") val taxiDriverName: String? = null,

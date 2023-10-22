@@ -119,6 +119,25 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
         }
     }
 
+    override suspend fun getTripByOrderId(orderId: String): Trip {
+        val response = tryToExecute<ServerResponse<TripDto>> {
+            get("trip/user/$orderId")
+        }
+        if (response.isSuccess) {
+            return response.value?.toTripEntity()
+                ?: throw GeneralException.NotFoundException
+        } else {
+            // here we can handle different errors by checking response.status.code
+            // and also we can use the message sent from the server to pass it throw the exception
+            // and show it to user if we want
+            if (response.status.code == 404) {
+                throw GeneralException.NotFoundException
+            } else {
+                throw GeneralException.UnknownErrorException
+            }
+        }
+    }
+
     override suspend fun trackTaxiRide(tripId: String): Flow<TaxiRide> {
         return tryToExecuteWebSocket<TaxiRideDto>(
             path = "trip/track/taxi-ride/$tripId"

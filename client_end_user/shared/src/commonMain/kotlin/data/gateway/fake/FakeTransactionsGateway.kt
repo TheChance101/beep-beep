@@ -130,6 +130,10 @@ class FakeTransactionsGateway : ITransactionsGateway {
         TODO("Not yet implemented")
     }
 
+    override suspend fun getTripByOrderId(orderId: String): Trip {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun trackTaxiRide(tripId: String): Flow<TaxiRide> {
         TODO("Not yet implemented")
     }

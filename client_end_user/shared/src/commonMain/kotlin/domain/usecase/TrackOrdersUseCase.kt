@@ -18,6 +18,7 @@ interface ITrackOrdersUseCase {
     suspend fun trackFoodOrderInRestaurant(orderId: String): Flow<FoodOrder>
     suspend fun trackDriverLocation(tripId: String): Flow<Location>
     suspend fun getUserOrderLocation(): Location
+    suspend fun getTripId(orderId: String): String
 }
 
 class TrackOrdersUseCase(
@@ -55,5 +56,9 @@ class TrackOrdersUseCase(
     override suspend fun getUserOrderLocation(): Location {
         val firstUserAddress = userGateway.getUserAddresses().first()
         return firstUserAddress.location ?: Location(30.44075, 30.966551)
+    }
+
+    override suspend fun getTripId(orderId: String): String {
+        return remoteGateway.getTripByOrderId(orderId).id
     }
 }
