@@ -2,6 +2,7 @@ package domain.usecase
 
 import domain.entity.DeliveryRide
 import domain.entity.FoodOrder
+import domain.entity.Location
 import domain.entity.TaxiRide
 import domain.entity.Trip
 import domain.gateway.ITransactionsGateway
@@ -14,6 +15,7 @@ interface ITrackOrdersUseCase {
     suspend fun trackTaxiRide(tripId: String): Flow<TaxiRide>
     suspend fun trackDeliveryRide(tripId: String): Flow<DeliveryRide>
     suspend fun trackFoodOrderInRestaurant(orderId: String): Flow<FoodOrder>
+    suspend fun trackDriverLocation(tripId: String): Flow<Location>
 }
 
 class TrackOrdersUseCase(
@@ -41,5 +43,9 @@ class TrackOrdersUseCase(
 
     override suspend fun trackFoodOrderInRestaurant(orderId: String): Flow<FoodOrder> {
         return remoteGateway.trackFoodOrderInRestaurant(orderId)
+    }
+
+    override suspend fun trackDriverLocation(tripId: String): Flow<Location> {
+        return remoteGateway.trackDriverLocation(tripId)
     }
 }
