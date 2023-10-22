@@ -3,6 +3,7 @@ package presentation.orderFoodTracking
 import domain.entity.Location
 
 data class OrderFoodTrackingUiState(
+    val isLoading: Boolean = false,
     val order: OrderUiState = OrderUiState(),
     val currentOrderStatus: FoodOrderStatus = FoodOrderStatus.ORDER_PLACED,
     val userLocation: LocationUiState = LocationUiState(),

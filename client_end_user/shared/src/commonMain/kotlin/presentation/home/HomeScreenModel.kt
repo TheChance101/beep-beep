@@ -327,32 +327,24 @@ class HomeScreenModel(
         sendNewEffect(HomeScreenUiEffect.NavigateToRestaurantDetails(restaurantId))
     }
 
-    override fun onClickActiveFoodOrder(orderId: String, tripId: String, isATaxiRide: Boolean) {
-        startTrackUserLocation(orderId = orderId, tripId = tripId, isATaxiRide = isATaxiRide)
+    override fun onClickActiveFoodOrder(orderId: String, tripId: String) {
+        sendNewEffect(HomeScreenUiEffect.NavigateToTrackOrder(orderId, tripId))
     }
 
-    override fun onClickActiveTaxiRide(tripId: String, isATaxiRide: Boolean) {
-        startTrackUserLocation(orderId = "", tripId = tripId, isATaxiRide)
+    override fun onClickActiveTaxiRide(tripId: String) {
+        startTrackUserLocation(tripId)
     }
 
-    private fun startTrackUserLocation(orderId: String, tripId: String, isATaxiRide: Boolean) {
+    private fun startTrackUserLocation(tripId: String) {
         tryToExecute(
             function = getUserLocation::startTracking,
-            onSuccess = { onStartTrackUserLocationSuccess(orderId, tripId, isATaxiRide) },
+            onSuccess = { onStartTrackUserLocationSuccess(tripId) },
             onError = ::onStartTrackUserLocationError
         )
     }
 
-    private fun onStartTrackUserLocationSuccess(
-        orderId: String,
-        tripId: String,
-        isATaxiRide: Boolean,
-    ) {
-        if (isATaxiRide) {
-            sendNewEffect(HomeScreenUiEffect.NavigateToTrackTaxiRide(tripId))
-        } else {
-            sendNewEffect(HomeScreenUiEffect.NavigateToTrackOrder(orderId, tripId))
-        }
+    private fun onStartTrackUserLocationSuccess(tripId: String) {
+        sendNewEffect(HomeScreenUiEffect.NavigateToTrackTaxiRide(tripId))
     }
 
     private fun onStartTrackUserLocationError(errorState: ErrorState) {

@@ -6,6 +6,7 @@ import domain.entity.Location
 import domain.entity.TaxiRide
 import domain.entity.Trip
 import domain.gateway.ITransactionsGateway
+import domain.gateway.IUserGateway
 import kotlinx.coroutines.flow.Flow
 
 interface ITrackOrdersUseCase {
@@ -16,10 +17,12 @@ interface ITrackOrdersUseCase {
     suspend fun trackDeliveryRide(tripId: String): Flow<DeliveryRide>
     suspend fun trackFoodOrderInRestaurant(orderId: String): Flow<FoodOrder>
     suspend fun trackDriverLocation(tripId: String): Flow<Location>
+    suspend fun getUserOrderLocation(): Location
 }
 
 class TrackOrdersUseCase(
     private val remoteGateway: ITransactionsGateway,
+    private val userGateway: IUserGateway,
 ) : ITrackOrdersUseCase {
     override suspend fun getActiveTaxiTrips(): List<Trip> {
         return remoteGateway.getActiveTaxiTrips()
@@ -47,5 +50,10 @@ class TrackOrdersUseCase(
 
     override suspend fun trackDriverLocation(tripId: String): Flow<Location> {
         return remoteGateway.trackDriverLocation(tripId)
+    }
+
+    override suspend fun getUserOrderLocation(): Location {
+        val firstUserAddress = userGateway.getUserAddresses().first()
+        return firstUserAddress.location ?: Location(30.44075, 30.966551)
     }
 }

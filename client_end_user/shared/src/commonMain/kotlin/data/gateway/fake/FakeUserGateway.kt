@@ -6,6 +6,7 @@ import data.remote.model.RestaurantDto
 import domain.entity.Restaurant
 import domain.entity.Session
 import domain.entity.Account
+import domain.entity.Address
 import domain.entity.Price
 import domain.entity.User
 import domain.gateway.IUserGateway
@@ -24,6 +25,10 @@ class FakeUserGateway : IUserGateway {
     }
 
     override suspend fun getUserProfile(): User {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getUserAddresses(): List<Address> {
         TODO("Not yet implemented")
     }
 
