@@ -2,11 +2,15 @@ package data.gateway.remote
 
 import data.remote.mapper.toEntity
 import data.remote.mapper.toSessionEntity
+import data.remote.mapper.toTripEntity
+import data.remote.model.AddressDto
 import data.remote.model.RestaurantDto
 import data.remote.model.ServerResponse
 import data.remote.model.SessionDto
+import data.remote.model.TripDto
 import data.remote.model.UserDetailsDto
 import domain.entity.Account
+import domain.entity.Address
 import domain.entity.Restaurant
 import domain.entity.Session
 import domain.entity.User
@@ -77,6 +81,25 @@ class UserGateway(client: HttpClient) : BaseGateway(client), IUserGateway {
             get("/user")
         }.value?.toEntity()
             ?: throw AuthorizationException.InvalidCredentialsException("Invalid Credential")
+    }
+
+    override suspend fun getUserAddresses(): List<Address> {
+        val response = tryToExecute<ServerResponse<List<AddressDto>>> {
+            get("/user/addresses")
+        }
+        if (response.isSuccess) {
+            return response.value?.map { it.toEntity() }
+                ?: throw GeneralException.NotFoundException
+        } else {
+            // here we can handle different errors by checking response.status.code
+            // and also we can use the message sent from the server to pass it throw the exception
+            // and show it to user if we want
+            if (response.status.code == 404) {
+                throw GeneralException.NotFoundException
+            } else {
+                throw GeneralException.UnknownErrorException
+            }
+        }
     }
 
     override suspend fun updateProfile(fullName: String?, phone: String?): User {
