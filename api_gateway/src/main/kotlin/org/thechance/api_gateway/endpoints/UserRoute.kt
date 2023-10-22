@@ -79,6 +79,14 @@ fun Route.userRoutes() {
                 respondWithResult(HttpStatusCode.OK, user)
             }
 
+            get("/addresses") {
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val userId = tokenClaim?.get(Claim.USER_ID).toString()
+                val language = extractLocalizationHeader()
+                val userAddresses = identityService.getUserAddresses(userId, language)
+                respondWithResult(HttpStatusCode.OK, userAddresses)
+            }
+
             put("/profile") {
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val userId = tokenClaim?.get(Claim.USER_ID).toString()
