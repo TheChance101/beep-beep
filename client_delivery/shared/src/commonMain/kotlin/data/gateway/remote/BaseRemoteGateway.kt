@@ -38,28 +38,6 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
         }
     }
 
-    /*  protected suspend inline fun <reified T> tryToExecute(
-            method: HttpClient.() -> HttpResponse
-        ): T {
-            try {
-                val response = client.method().body<BaseResponse<T>>()
-                return if (response.isSuccess) {
-                    response.value ?: throw NotFoundException()
-                } else {
-                    val throwable = checkErrorCode(response.status.code!!)
-                    throw throwable
-                }
-            } catch (e: ClientRequestException) {
-                val errorMessages = e.response.body<BaseResponse<String>>().status.errorMessages
-                errorMessages?.let { throwMatchingException(it) }
-                throw UnknownErrorException()
-            } catch (e: UnresolvedAddressException) {
-                throw NoInternetException()
-            } catch (e: Exception) {
-                throw UnknownErrorException()
-            }
-        }
-    */
     suspend inline fun <reified T> HttpClient.tryToExecuteWebSocket(path: String): Flow<T> {
         return flow {
             webSocket(urlString = "ws://$path") {
