@@ -11,7 +11,7 @@ import io.realm.kotlin.ext.query
 class LocalRestaurantGateway(private val realm: Realm) : ILocalRestaurantGateway {
     override suspend fun addRestaurantToFavorites(vararg restaurant: Restaurant): Boolean {
         val restaurantCollectionList = restaurant.map { it.toRestaurantCollection() }
-        realm.write { copyFromRealm(restaurantCollectionList) }
+        realm.write {  restaurantCollectionList.forEach { copyToRealm(it) }  }
         return true
     }
 
