@@ -94,6 +94,15 @@ class RestaurantScreenModel(
         updateState { it.copy(isFavourite = isFavourite) }
     }
 
+    override fun onAddToFavourite() {
+        updateState { it.copy(isFavourite = !state.value.isFavourite) }
+        if (state.value.isFavourite) {
+            removeFromFavourite(restaurantId)
+        } else {
+            addToFavourite()
+        }
+    }
+
     private fun addToFavourite() {
         tryToExecute(
             { manageFavourite.addRestaurantToFavorites(state.value.restaurantInfo.toRestaurant()) },
@@ -111,12 +120,7 @@ class RestaurantScreenModel(
     }
 
     private fun onAddToFavouriteSuccess(isAdded: Boolean) {
-        updateState { it.copy(isFavourite = !state.value.isFavourite) }
-        if (state.value.isFavourite) {
-            removeFromFavourite(restaurantId)
-        } else {
-            addToFavourite()
-        }
+        updateState { it.copy(isFavourite = isAdded) }
     }
 
     private fun onRemoveFromFavouriteSuccess(isAdded: Boolean) {

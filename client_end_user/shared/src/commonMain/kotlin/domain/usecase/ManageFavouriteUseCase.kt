@@ -2,6 +2,7 @@ package domain.usecase
 
 import domain.entity.Restaurant
 import domain.gateway.IUserGateway
+import domain.gateway.local.ILocalRestaurantGateway
 
 interface IManageFavouriteUseCase {
     suspend fun addRestaurantToFavorites(restaurant: Restaurant): Boolean

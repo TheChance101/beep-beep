@@ -1,8 +1,10 @@
 package presentation.resturantDetails
 
 import domain.entity.Cuisine
+import domain.entity.Location
 import domain.entity.Meal
 import domain.entity.Restaurant
+import domain.entity.Time
 
 fun Restaurant.toUIState() = RestaurantInfoUIState(
     id = id,
@@ -41,3 +43,20 @@ fun Meal.toUIState() = MealUIState(
 )
 
 fun List<Meal>.toUIState() = map { it.toUIState() }
+
+fun RestaurantInfoUIState.toRestaurant() = Restaurant(
+    id = id,
+    name = name,
+    address = address,
+    rate = rating,
+    priceLevel = priceLevel,
+    image = image,
+    description = description,
+    phone = "", // never used
+    openingTime = Time(12,0), // never used
+    closingTime = Time(23,0), // never used
+    location = Location(0.0,0.0), // never used
+    ownerId = "", // never used
+    ownerUsername = "" // never used
+)
+
