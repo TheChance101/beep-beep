@@ -9,7 +9,9 @@ import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.IExploreRestaurantUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
@@ -21,9 +23,8 @@ class MealsScreenModel(
     private val cuisineId: String,
     private val cuisineName: String,
     private val manageRestaurant: IExploreRestaurantUseCase,
-    private val manageAuthentication: IManageAuthenticationUseCase
-) :
-    BaseScreenModel<MealsUiState, MealsUiEffect>(MealsUiState()), MealsInteractionListener,
+    private val manageAuthentication: IManageAuthenticationUseCase,
+) : BaseScreenModel<MealsUiState, MealsUiEffect>(MealsUiState()), MealsInteractionListener,
     MealInteractionListener {
 
     override val viewModelScope: CoroutineScope = coroutineScope
@@ -78,7 +79,11 @@ class MealsScreenModel(
 
     private fun onGetMealsSuccess(meals: Flow<PagingData<Meal>>) {
         println("meals: $meals")
-      //  updateState { it.copy(meals = meals.map { meals-> meals.map { meal -> meal.toUIState() } }) }
+
+           updateState { it.copy(meals= meals) }
+
+
+        //  updateState { it.copy(meals = meals.map { meals-> meals.map { meal -> meal.toUIState() } }) }
         println("meals from state : ${state.value.meals}")
 //        updateState { it.copy(meals = meals.map { it.toUIState() }) }
 //        updateState { it.copy(meals = meals.toUIState(), isLoading = false, error = null) }

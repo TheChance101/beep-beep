@@ -6,6 +6,7 @@ import data.remote.model.CuisineDto
 import data.remote.model.MealDto
 import data.remote.model.MealRestaurantDto
 import data.remote.model.OfferDto
+import data.remote.model.PaginationResponse
 import data.remote.model.RestaurantDto
 import data.remote.model.ServerResponse
 import domain.entity.Cuisine
@@ -80,13 +81,13 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client), IRes
         return Pair(result.restaurants.toEntity(), result.meals.toEntity())
     }
 
-    override suspend fun getMealsInCuisine(cuisineId: String,page:Int,limit:Int): List<Meal> {
-        return tryToExecute<ServerResponse<List<MealDto>>> {
-            get("/cuisine/$cuisineId/meals"){
+    override suspend fun getMealsInCuisine(cuisineId: String, page: Int, limit: Int): List<Meal> {
+        return tryToExecute<ServerResponse<PaginationResponse<MealDto>>> {
+            get("/cuisine/$cuisineId/meals") {
                 parameter("page", page)
                 parameter("limit", limit)
             }
-        }.value?.toEntity() ?: throw GeneralException.NotFoundException
+        }.value?.items?.map { it.toEntity() } ?: throw GeneralException.NotFoundException
     }
 
 

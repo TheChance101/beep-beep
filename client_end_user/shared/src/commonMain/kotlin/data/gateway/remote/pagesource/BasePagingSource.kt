@@ -24,6 +24,7 @@ abstract class BasePagingSource<Value : Any> : PagingSource<Int, Value>() {
         return try {
             val response = fetchData(currentPage, limit)
             val nextKey = (currentPage + 1).takeIf { response.lastIndex >= currentPage }
+            println("response: ${response}")
             PagingSourceLoadResultPage(
                 data = response,
                 prevKey = if (currentPage == 1) null else currentPage - 1,

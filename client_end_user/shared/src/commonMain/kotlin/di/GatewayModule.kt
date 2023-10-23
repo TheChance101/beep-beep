@@ -23,6 +23,7 @@ val gatewayModule = module {
     singleOf(::TransactionsGateway) { bind<ITransactionsGateway>() } // fake
     singleOf(::RestaurantGateway) { bind<IRestaurantGateway>() } // remote
     singleOf(::UserGateway) { bind<IUserGateway>() } // remote
-    factory { (cuisineId: String) -> MealsPagingSource(remoteGateway =  get(), cuisineId = cuisineId ) }
+    singleOf(::MealsPagingSource)
+//    factory { (cuisineId: String) -> MealsPagingSource(remoteGateway =  get() ) }
     singleOf(::LocalConfigurationGateway) { bind<ILocalConfigurationGateway>() } // local
 }

@@ -94,6 +94,7 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
         onBackClicked: () -> Unit
     ) {
         val meal = state.meals.collectAsLazyPagingItems()
+        println("Meals UI: ${meal.itemSnapshotList.items} ")
         Column(
             Modifier.fillMaxSize().background(Theme.colors.background).padding(
                 getNavigationBarPadding()

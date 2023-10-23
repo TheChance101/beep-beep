@@ -8,11 +8,16 @@ import org.koin.core.parameter.parametersOf
 
 class MealsPagingSource(
     private val remoteGateway: IRestaurantGateway,
-    private val cuisineId: String
-) : BasePagingSource<Meal>() ,KoinComponent{
+) : BasePagingSource<Meal>(), KoinComponent {
+
+    private lateinit var cuisineId: String
+
+    fun initCuisine(id: String) {
+        cuisineId = id
+    }
+
     override suspend fun fetchData(page: Int, limit: Int): List<Meal> {
-        val factory = get<String> { parametersOf(cuisineId)}
-        return remoteGateway.getMealsInCuisine(factory, page, limit)
+        return remoteGateway.getMealsInCuisine(cuisineId, page, limit)
     }
 
 }

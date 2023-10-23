@@ -27,9 +27,9 @@ interface IExploreRestaurantUseCase {
 
 class ExploreRestaurantUseCase(
     private val restaurantGateway: IRestaurantGateway,
+    private val mealDataSource: MealsPagingSource,
 ) : IExploreRestaurantUseCase, KoinComponent {
 
-    private val mealDataSource: MealsPagingSource by inject()
 
     override suspend fun getRestaurantDetails(restaurantId: String): Restaurant {
         return restaurantGateway.getRestaurantDetails(restaurantId)
@@ -44,6 +44,7 @@ class ExploreRestaurantUseCase(
     }
 
     override suspend fun getMealsInCuisine(cuisineId: String): Flow<PagingData<Meal>> {
+        mealDataSource.initCuisine(cuisineId)
         return Pager(config = PagingConfig(pageSize = 10),
             pagingSourceFactory = { mealDataSource }
         ).flow
