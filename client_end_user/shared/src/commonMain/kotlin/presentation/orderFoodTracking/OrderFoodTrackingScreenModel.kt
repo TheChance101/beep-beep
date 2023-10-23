@@ -11,8 +11,8 @@ import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
 class OrderFoodTrackingScreenModel(
-    orderId: String,
-    tripId: String,
+    private val orderId: String,
+    private val tripId: String,
     private val trackOrders: ITrackOrdersUseCase,
 ) : BaseScreenModel<OrderFoodTrackingUiState, OrderFoodTrackingUiEffect>(OrderFoodTrackingUiState()),
     OrderFoodTrackingInteractionListener {
@@ -23,13 +23,62 @@ class OrderFoodTrackingScreenModel(
 
     init {
         getUserLocation()
-//        if (orderId.isNotEmpty()) {
-//            trackFoodOrderFromRestaurant(orderId)
-//        } else {
-//            trackDelivery(tripId)
-//        }
+        if (orderId.isNotEmpty()) {
+            getOrderStatus(orderId)
+        } else {
+            getTripStatus(tripId)
+        }
     }
 
+
+    private fun getTripStatus(tripId: String) {
+        tryToExecute(
+            function = { trackOrders.getTripStatus(tripId) },
+            onSuccess = ::onGetTripStatusSuccess,
+            onError = ::onGetStatusError,
+        )
+    }
+
+    private fun onGetTripStatusSuccess(tripStatus: TripStatus) {
+        val status = when (tripStatus) {
+            TripStatus.RECEIVED -> {
+                OrderFoodTrackingUiState.FoodOrderStatus.ORDER_IN_THE_ROUTE
+            }
+
+            TripStatus.FINISHED -> {
+                OrderFoodTrackingUiState.FoodOrderStatus.ORDER_ARRIVED
+            }
+
+            else -> {
+                OrderFoodTrackingUiState.FoodOrderStatus.ORDER_IN_COOKING
+            }
+        }
+        updateState { it.copy(order = it.order.copy(currentOrderStatus = status)) }
+        trackDelivery(tripId)
+    }
+
+    private fun getOrderStatus(orderId: String) {
+        tryToExecute(
+            function = { trackOrders.getOrderStatus(orderId) },
+            onSuccess = ::onGetOrderStatusSuccess,
+            onError = ::onGetStatusError,
+        )
+    }
+
+    private fun onGetOrderStatusSuccess(orderStatusInRestaurant: FoodOrder.OrderStatusInRestaurant) {
+        val orderStatus =
+            if (orderStatusInRestaurant == FoodOrder.OrderStatusInRestaurant.APPROVED) {
+                OrderFoodTrackingUiState.FoodOrderStatus.ORDER_PLACED
+            } else {
+                OrderFoodTrackingUiState.FoodOrderStatus.ORDER_IN_COOKING
+            }
+        updateState { it.copy(order = it.order.copy(currentOrderStatus = orderStatus)) }
+        trackFoodOrderFromRestaurant(orderId)
+    }
+
+    private fun onGetStatusError(errorState: ErrorState) {
+        println("Error getting order status: $errorState")
+    }
 
     private fun getTripIdAndTrackDelivery(orderId: String) {
         tryToExecute(

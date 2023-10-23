@@ -5,7 +5,6 @@ import domain.entity.Location
 data class OrderFoodTrackingUiState(
     val isLoading: Boolean = false,
     val order: OrderUiState = OrderUiState(),
-//    val currentOrderStatus: FoodOrderStatus = FoodOrderStatus.ORDER_PLACED,
     val userLocation: LocationUiState = LocationUiState(),
     val deliveryLocation: LocationUiState = LocationUiState(),
 ) {
@@ -23,19 +22,19 @@ data class OrderFoodTrackingUiState(
                 FoodOrderStatus.ORDER_PLACED -> "32:00"
                 FoodOrderStatus.ORDER_IN_COOKING -> "20:00"
                 FoodOrderStatus.ORDER_IN_THE_ROUTE -> "15:00"
-                FoodOrderStatus.ORDER_ARRIVED -> "5:00"
+                FoodOrderStatus.ORDER_ARRIVED -> "00:00"
             }
         val isOrderPlaced: Boolean
-            get() = currentOrderStatus == FoodOrderStatus.ORDER_PLACED
+            get() = currentOrderStatus >= FoodOrderStatus.ORDER_PLACED
 
         val isOrderInCooking: Boolean
-            get() = currentOrderStatus == FoodOrderStatus.ORDER_IN_COOKING
+            get() = currentOrderStatus >= FoodOrderStatus.ORDER_IN_COOKING
 
         val isOrderInTheRoute: Boolean
-            get() = currentOrderStatus == FoodOrderStatus.ORDER_IN_THE_ROUTE
+            get() = currentOrderStatus >= FoodOrderStatus.ORDER_IN_THE_ROUTE
 
         val isOrderArrived: Boolean
-            get() = currentOrderStatus == FoodOrderStatus.ORDER_ARRIVED
+            get() = currentOrderStatus >= FoodOrderStatus.ORDER_ARRIVED
     }
 
     enum class FoodOrderStatus {
