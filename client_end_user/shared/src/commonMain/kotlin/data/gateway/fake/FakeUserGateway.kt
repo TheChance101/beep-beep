@@ -11,7 +11,7 @@ import domain.entity.User
 import domain.gateway.IUserGateway
 
 class FakeUserGateway : IUserGateway {
-    override suspend fun createUser(userCreation: Account): User {
+    override suspend fun createUser(account: Account): User {
         TODO("Not yet implemented")
     }
 

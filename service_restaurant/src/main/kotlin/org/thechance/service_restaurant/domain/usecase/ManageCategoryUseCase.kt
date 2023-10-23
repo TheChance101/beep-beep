@@ -10,11 +10,13 @@ import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorExcept
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 
 interface IManageCategoryUseCase {
-    suspend fun getCategories(page: Int, limit: Int): List<Category>
-    suspend fun createCategory(category: Category): Category
+    suspend fun getCategories(): List<Category>
+
+    suspend fun getCategoriesWithRestaurants(): List<Category>
+    suspend fun createCategory(categoryName: String): Category
     suspend fun updateCategory(category: Category): Category
+    suspend fun addRestaurantsToCategory(categoryId: String, restaurantIds: List<String>): Boolean
     suspend fun deleteCategory(categoryId: String): Boolean
-    suspend fun getTotalNumberOfCategories(): Long
 
 }
 
@@ -24,16 +26,19 @@ class ManageCategoryUseCase(
     private val categoryValidation: ICategoryValidationUseCase
 ) : IManageCategoryUseCase {
 
-    override suspend fun getCategories(page: Int, limit: Int): List<Category> {
-        basicValidation.validatePagination(page, limit)
-        return restaurantOptions.getCategories(page, limit)
+    override suspend fun getCategories(): List<Category> {
+        return restaurantOptions.getCategories()
     }
 
-    override suspend fun createCategory(category: Category): Category {
-        if (!basicValidation.isValidName(category.name)) {
+    override suspend fun getCategoriesWithRestaurants(): List<Category> {
+        return restaurantOptions.getCategoriesWithRestaurants()
+    }
+
+    override suspend fun createCategory(categoryName: String): Category {
+        if (!basicValidation.isValidName(categoryName)) {
             throw MultiErrorException(listOf(INVALID_NAME))
         }
-        return restaurantOptions.addCategory(category)
+        return restaurantOptions.addCategory(categoryName)
     }
 
     override suspend fun updateCategory(category: Category): Category {
@@ -42,13 +47,13 @@ class ManageCategoryUseCase(
         return restaurantOptions.updateCategory(category)
     }
 
+    override suspend fun addRestaurantsToCategory(categoryId: String, restaurantIds: List<String>): Boolean {
+        return restaurantOptions.addRestaurantsToCategory(categoryId, restaurantIds)
+    }
+
     override suspend fun deleteCategory(categoryId: String): Boolean {
         checkIfCategoryIsExist(categoryId)
         return restaurantOptions.deleteCategory(categoryId)
-    }
-
-    override suspend fun getTotalNumberOfCategories(): Long {
-        return restaurantOptions.getTotalNumberOfCategories()
     }
 
     private suspend fun checkIfCategoryIsExist(categoryId: String) {

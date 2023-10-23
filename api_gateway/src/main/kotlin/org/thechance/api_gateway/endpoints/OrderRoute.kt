@@ -4,14 +4,14 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
-import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import org.koin.ktor.ext.inject
-import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
-import org.thechance.api_gateway.data.model.restaurant.OrderDto
 import org.thechance.api_gateway.data.service.RestaurantService
-import org.thechance.api_gateway.endpoints.utils.*
+import org.thechance.api_gateway.endpoints.utils.WebSocketServerHandler
+import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
+import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
+import org.thechance.api_gateway.endpoints.utils.respondWithResult
 import org.thechance.api_gateway.util.Claim
 import org.thechance.api_gateway.util.Role
 
@@ -78,9 +78,15 @@ fun Route.orderRoutes() {
 
         put("order/{orderId}") {
             val orderId = call.parameters["orderId"]?.trim().toString()
-            val status = call.parameters["status"]?.trim()?.toInt() ?: 0
             val language = extractLocalizationHeader()
-            val result = restaurantService.updateOrderStatus(orderId, status, language)
+            val result = restaurantService.updateOrderStatus(orderId, language)
+            respondWithResult(HttpStatusCode.OK, result)
+        }
+
+        put("order/cancel/{orderId}") {
+            val orderId = call.parameters["orderId"]?.trim().toString()
+            val language = extractLocalizationHeader()
+            val result = restaurantService.cancelOrder(orderId, language)
             respondWithResult(HttpStatusCode.OK, result)
         }
 
@@ -111,5 +117,14 @@ fun Route.orderRoutes() {
                 webSocketServerHandler.tryToCollect(order, it)
             }
         }
+
+        get("active/orders") {
+            val tokenClaim = call.principal<JWTPrincipal>()
+            val userId = tokenClaim?.get(Claim.USER_ID).toString()
+            val language = extractLocalizationHeader()
+            val result = restaurantService.getActiveOrdersForUser(userId, language)
+            respondWithResult(HttpStatusCode.OK, result)
+        }
+
     }
 }

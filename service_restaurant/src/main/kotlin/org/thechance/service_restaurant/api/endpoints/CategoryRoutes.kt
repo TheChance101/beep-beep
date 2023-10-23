@@ -8,10 +8,12 @@ import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.service_restaurant.api.models.BasePaginationResponseDto
 import org.thechance.service_restaurant.api.models.CategoryDto
+import org.thechance.service_restaurant.api.models.mappers.toCategoryRestaurantsDto
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.models.mappers.toEntity
 import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
+import org.thechance.service_restaurant.api.utils.toListOfStringOrNull
 import org.thechance.service_restaurant.domain.usecase.IDiscoverRestaurantUseCase
 import org.thechance.service_restaurant.domain.usecase.IManageCategoryUseCase
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_REQUEST_PARAMETER
@@ -24,26 +26,39 @@ fun Route.categoryRoutes() {
     val manageCategory: IManageCategoryUseCase by inject()
     val discoverRestaurant: IDiscoverRestaurantUseCase by inject()
 
-    get("/categories") {
-        val page = call.parameters.extractInt("page") ?: 1
-        val limit = call.parameters.extractInt("limit") ?: 10
-        val categories = manageCategory.getCategories(page, limit).toDto()
-        val total = manageCategory.getTotalNumberOfCategories()
-        call.respond(HttpStatusCode.OK, BasePaginationResponseDto(categories, page, total))
+    route("/categories") {
+
+        get {
+            val categories = manageCategory.getCategories().toDto()
+            call.respond(HttpStatusCode.OK, categories)
+        }
+
+        get("/restaurants") {
+            val categories = manageCategory.getCategoriesWithRestaurants().toCategoryRestaurantsDto()
+            call.respond(HttpStatusCode.OK, categories)
+        }
+
     }
 
     route("/category") {
 
         get("/{id}/restaurants") {
-            val categoryId = call.parameters.extractString("id") ?:  throw MultiErrorException(listOf(NOT_FOUND))
+            val categoryId = call.parameters.extractString("id") ?: throw MultiErrorException(listOf(NOT_FOUND))
             val category = discoverRestaurant.getRestaurantsInCategory(categoryId).toDto()
             call.respond(HttpStatusCode.OK, category)
         }
 
         post {
-            val category = call.receive<CategoryDto>()
-            val result = manageCategory.createCategory(category.toEntity())
+            val categoryName = call.parameters["categoryName"] ?: throw MultiErrorException(listOf(NOT_FOUND))
+            val result = manageCategory.createCategory(categoryName)
             call.respond(HttpStatusCode.Created, result.toDto())
+        }
+
+        post("/{categoryId}/restaurants") {
+            val categoryId = call.parameters["categoryId"]?.trim() ?: throw MultiErrorException(listOf(NOT_FOUND))
+            val restaurants = call.receive<List<String>>()
+            val result = manageCategory.addRestaurantsToCategory(categoryId, restaurants)
+            call.respond(HttpStatusCode.Created, result)
         }
 
         put {
@@ -54,11 +69,9 @@ fun Route.categoryRoutes() {
 
         delete("/{id}") {
             val categoryId =
-                call.parameters.extractString("id") ?:
-                throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER))
+                call.parameters.extractString("id") ?: throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER))
             val result = manageCategory.deleteCategory(categoryId)
             call.respond(HttpStatusCode.OK, result)
         }
-
     }
 }

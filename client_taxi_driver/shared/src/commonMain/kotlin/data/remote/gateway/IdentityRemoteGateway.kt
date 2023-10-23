@@ -50,9 +50,4 @@ class IdentityRemoteGateway(client: HttpClient) : IIdentityRemoteGateway,
     ) {
         // TODO: add create request permission end point when backend is done
     }
-
-    override suspend fun getTaxiDriverName(): String {
-        // TODO: return taxi driver name
-        return ""
-    }
 }

@@ -29,7 +29,7 @@ class EnglishLocalizedMessages : LocalizedMessages {
     // region taxi
     override val taxiCreatedSuccessfully: String = "Taxi created successfully 🎉"
     override val tripCreatedSuccessfully: String = "Trip Created Successfully"
-    override val tripApproved: String = "Trip Approved"
+    override val tripUpdated: String = "Trip updated Successfully"
     override val tripCanceled: String = "Trip Canceled"
     override val tripFinished: String = "Trip Finished Successfully"
     override val tripArrived: String = "Trip Arrived Successfully"
@@ -85,6 +85,8 @@ class EnglishLocalizedMessages : LocalizedMessages {
     override val missingParameter: String = "Missing parameter"
     override val tokensNotFound: String = "Tokens not found"
     override val tokenNotRegister: String = "Token not register"
+    override val alreadyUpdated: String = "This order already finished before"
+    override val cancelOrderError: String = "may be canceled before or it's not on pending status"
     override val cartIsAlreadyEmpty: String = "cart is already empty"
     override val invalidQuantity: String = "Invalid Quantity"
     //endregion

@@ -8,7 +8,10 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import org.koin.core.annotation.Single
-import org.thechance.api_gateway.data.model.taxi.*
+import org.thechance.api_gateway.data.model.taxi.TripDto
+import org.thechance.api_gateway.data.model.taxi.toDeliveryTripResponse
+import org.thechance.api_gateway.data.model.taxi.toRideTrackingResponse
+import org.thechance.api_gateway.data.model.taxi.toTaxiTripResponse
 import org.thechance.api_gateway.data.service.IdentityService
 import org.thechance.api_gateway.data.service.RestaurantService
 import org.thechance.api_gateway.data.service.TaxiService
@@ -60,7 +63,7 @@ class WebSocketServerHandler(
                     val restaurantInfo =
                         restaurantService.getRestaurantInfo(
                             languageCode = language,
-                            restaurantId = tripDto.clientId ?: ""
+                            restaurantId = tripDto.restaurantId ?: ""
                         )
                     tripDto.toDeliveryTripResponse(restaurantInfo)
                 }.collectLatest { value ->
@@ -76,28 +79,11 @@ class WebSocketServerHandler(
         language: String,
         session: DefaultWebSocketServerSession
     ) {
-
         try {
             values
                 .map { tripDto ->
                     val taxi = taxiService.getTaxiById(tripDto.taxiId ?: "", language)
                     tripDto.toRideTrackingResponse(taxi)
-                }.collectLatest { value ->
-                    session.sendSerialized(value)
-                }
-        } catch (e: Exception) {
-            session.close(CloseReason(CloseReason.Codes.NORMAL, e.message.toString()))
-        }
-    }
-
-    suspend fun tryToTrackOrder(
-        values: Flow<TripDto>,
-        session: DefaultWebSocketServerSession
-    ) {
-        try {
-            values
-                .map { tripDto ->
-                    tripDto.toDeliveryTrackingResponse()
                 }.collectLatest { value ->
                     session.sendSerialized(value)
                 }

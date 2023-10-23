@@ -5,7 +5,10 @@ import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.ui.interop.LocalUIViewController
 import com.seiko.imageloader.ImageLoader
 import com.seiko.imageloader.component.setupDefaultComponents
+import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.engine.darwin.Darwin
 import okio.Path.Companion.toPath
+import org.koin.dsl.module
 import platform.Foundation.NSCachesDirectory
 import platform.Foundation.NSSearchPathForDirectoriesInDomains
 import platform.Foundation.NSUserDomainMask
@@ -41,3 +44,6 @@ private fun getCacheDir(): String {
         true,
     ).first() as String
 }
+
+
+actual fun getEngine(): HttpClientEngine = Darwin.create()

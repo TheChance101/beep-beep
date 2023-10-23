@@ -1,6 +1,7 @@
 package presentation.resturantDetails
 
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.entity.Restaurant
 import domain.usecase.IExploreRestaurantUseCase
@@ -27,8 +28,8 @@ class RestaurantScreenModel(
     init {
         checkIfLoggedIn()
         getRestaurantDetails(restaurantId)
-        getMostOrders(restaurantId)
-        getSweets(restaurantId)
+//        getMostOrders(restaurantId)
+        getCuisinesWithMeals(restaurantId)
     }
 
     private fun checkIfLoggedIn() {
@@ -87,7 +88,9 @@ class RestaurantScreenModel(
         }
     }
 
-    private fun onGetIfFavoriteRestaurantSuccess(isFavourite: Boolean){
+
+    //region favorite
+    private fun onGetIfFavoriteRestaurantSuccess(isFavourite: Boolean) {
         updateState { it.copy(isFavourite = isFavourite) }
     }
 
@@ -108,13 +111,19 @@ class RestaurantScreenModel(
     }
 
     private fun onAddToFavouriteSuccess(isAdded: Boolean) {
-        updateState { it.copy(isFavourite = isAdded) }
+        updateState { it.copy(isFavourite = !state.value.isFavourite) }
+        if (state.value.isFavourite) {
+            removeFromFavourite(restaurantId)
+        } else {
+            addToFavourite()
+        }
     }
 
     private fun onRemoveFromFavouriteSuccess(isAdded: Boolean) {
         updateState { it.copy(isFavourite = false) }
     }
 
+    //endregion
 
     private fun getMostOrders(restaurantId: String) {
         tryToExecute(
@@ -125,34 +134,24 @@ class RestaurantScreenModel(
 
     }
 
-    private fun getSweets(restaurantId: String) {
-//        tryToExecute(
-//            { manageOffers.getRestaurantSweets(restaurantId) },
-//            ::onGetSweetsSuccess,
-//            ::onError
-//        )
+    private fun getCuisinesWithMeals(restaurantId: String) {
+        tryToExecute(
+            { mangeRestaurantDetails.getCuisinesWithMealsInRestaurant(restaurantId) },
+            ::onCuisinesWithMealsSuccess,
+            ::onError
+        )
     }
 
-    private fun onGetMostOrdersSuccess(meals: List<Meal>) {
-        updateState { it -> it.copy(mostOrders = meals.map { it.toUIState() }) }
-    }
-
-    private fun onGetSweetsSuccess(meals: List<Meal>) {
-        updateState { it -> it.copy(sweets = meals.map { it.toUIState() }) }
+    private fun onCuisinesWithMealsSuccess(cuisines: List<Cuisine>) {
+        updateState { it.copy(cuisines = cuisines.toRestaurantCuisineUiState()) }
     }
 
     private fun onError(errorState: ErrorState) {
         updateState { it.copy(error = errorState) }
     }
 
-
-    override fun onAddToFavourite() {
-        updateState { it.copy(isFavourite = !state.value.isFavourite) }
-        if (state.value.isFavourite) {
-            removeFromFavourite(restaurantId)
-        } else {
-            addToFavourite()
-        }
+    private fun onGetMostOrdersSuccess(meals: List<Meal>) {
+        updateState { it -> it.copy(mostOrders = meals.map { it.toUIState() }) }
     }
 
     override fun onBack() {
@@ -160,7 +159,7 @@ class RestaurantScreenModel(
     }
 
     override fun onGoToDetails(mealId: String) {
-        tryToExecute(
+         tryToExecute(
             { mangeRestaurantDetails.getMealById(mealId) },
             ::onGetMealDetailsSuccess,
             ::onError
@@ -168,7 +167,7 @@ class RestaurantScreenModel(
     }
 
     private fun onGetMealDetailsSuccess(meal: Meal) {
-        updateState { it.copy(meal = meal.toUIState()) }
+        updateState { it.copy(selectedMeal = meal.toUIState()) }
         onShowMealSheet()
     }
 
@@ -188,25 +187,25 @@ class RestaurantScreenModel(
     }
 
     override fun onIncreaseMealQuantity() {
-        val quality = state.value.meal.quantity + 1
+        val quality = state.value.selectedMeal.quantity + 1
         updateState {
             it.copy(
-                meal = state.value.meal.copy(
+                selectedMeal = state.value.selectedMeal.copy(
                     quantity = quality,
-                    totalPrice = state.value.meal.price * quality
+                    totalPrice = state.value.selectedMeal.price * quality
                 )
             )
         }
     }
 
     override fun onDecreaseMealQuantity() {
-        if (state.value.meal.quantity == 1) return
+        if (state.value.selectedMeal.quantity == 1) return
         updateState {
-            val quality = state.value.meal.quantity - 1
+            val quality = state.value.selectedMeal.quantity - 1
             it.copy(
-                meal = state.value.meal.copy(
+                selectedMeal = state.value.selectedMeal.copy(
                     quantity = quality,
-                    totalPrice = state.value.meal.price * quality
+                    totalPrice = state.value.selectedMeal.price * quality
                 )
             )
         }

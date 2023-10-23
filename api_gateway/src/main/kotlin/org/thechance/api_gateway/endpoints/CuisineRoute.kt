@@ -32,27 +32,24 @@ fun Route.cuisineRoute() {
                 val multipartDto = receiveMultipart<CuisineDto>(imageValidator)
                 val image = multipartDto.image?.let { image -> imageService.uploadImage(image) }
                 val cuisineDto = multipartDto.data.copy(image = image?.data?.link)
-                val cuisine =  restaurantService.addCuisine(cuisineDto, language)
+                val cuisine = restaurantService.addCuisine(cuisineDto, language)
                 respondWithResult(HttpStatusCode.Created, cuisine)
             }
 
             delete("/{id}") {
                 val language = extractLocalizationHeader()
-                val cuisineId =call.parameters["id"]?.trim().toString()
-                val result= restaurantService.deleteCuisine(cuisineId = cuisineId, languageCode = language)
+                val cuisineId = call.parameters["id"]?.trim().toString()
+                val result = restaurantService.deleteCuisine(cuisineId = cuisineId, languageCode = language)
                 val successMessage =
                     localizedMessagesFactory.createLocalizedMessages(language).deletedSuccessfully
-                respondWithResult(HttpStatusCode.OK,result, message=successMessage)
+                respondWithResult(HttpStatusCode.OK, result, message = successMessage)
             }
         }
 
         get("/{id}/meals") {
             val language = extractLocalizationHeader()
             val cuisineId = call.parameters["id"]?.trim().toString()
-            val meals = restaurantService.getMealsByCuisineId(
-                cuisineId = cuisineId,
-                languageCode = language
-            )
+            val meals = restaurantService.getMealsByCuisineId(cuisineId = cuisineId, languageCode = language)
             respondWithResult(HttpStatusCode.OK, meals)
         }
 

@@ -3,6 +3,7 @@ package presentation.home
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Cart
 import domain.entity.InProgressWrapper
+import domain.entity.Offer
 import domain.entity.Restaurant
 import domain.entity.User
 import domain.usecase.IInProgressTrackerUseCase
@@ -199,14 +200,14 @@ class HomeScreenModel(
 
     private fun getNewOffers() {
         tryToExecute(
-            { offers.getNewOffers().map { it.toUiState() } },
+            { offers.getNewOffers() },
             ::onGetNewOffersSuccess,
             ::onGetNewOffersError
         )
     }
 
-    private fun onGetNewOffersSuccess(offers: List<OfferUiState>) {
-        updateState { it.copy(offers = offers) }
+    private fun onGetNewOffersSuccess(offers: List<Offer>) {
+        updateState { it.copy(offers = offers.toUiState()) }
     }
 
     private fun onGetNewOffersError(error: ErrorState) {
