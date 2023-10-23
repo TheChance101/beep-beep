@@ -39,6 +39,7 @@ val useCaseModule = module {
     singleOf(::GetNotificationsUseCase) { bind<IGetNotificationsUseCase>() }
     singleOf(::GetTransactionHistoryUseCase) { bind<IGetTransactionHistoryUseCase>() }
     singleOf(::ExploreRestaurantUseCase) { bind<IExploreRestaurantUseCase>() }
+    single { ExploreRestaurantUseCase(get()) }
     singleOf(::ManageCartUseCase) { bind<IManageCartUseCase>() }
     singleOf(::ChatUseCase) { bind<IChatUseCase>() }
     singleOf(::ManageFavouriteUseCase) { bind<IManageFavouriteUseCase>() }

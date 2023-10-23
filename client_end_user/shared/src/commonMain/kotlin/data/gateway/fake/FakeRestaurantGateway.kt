@@ -55,7 +55,7 @@ class FakeRestaurantGateway : IRestaurantGateway {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getMealsInCuisine(cuisineId: String): List<Meal> {
+    override suspend fun getMealsInCuisine(cuisineId: String, page: Int, limit: Int): List<Meal>{
         return emptyList()
     }
 

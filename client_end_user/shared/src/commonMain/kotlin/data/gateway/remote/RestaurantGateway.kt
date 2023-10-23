@@ -22,6 +22,7 @@ import domain.gateway.IRestaurantGateway
 import domain.utils.GeneralException
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlin.random.Random
@@ -79,9 +80,12 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client), IRes
         return Pair(result.restaurants.toEntity(), result.meals.toEntity())
     }
 
-    override suspend fun getMealsInCuisine(cuisineId: String): List<Meal> {
+    override suspend fun getMealsInCuisine(cuisineId: String,page:Int,limit:Int): List<Meal> {
         return tryToExecute<ServerResponse<List<MealDto>>> {
-            get("/cuisine/$cuisineId/meals")
+            get("/cuisine/$cuisineId/meals"){
+                parameter("page", page)
+                parameter("limit", limit)
+            }
         }.value?.toEntity() ?: throw GeneralException.NotFoundException
     }
 
