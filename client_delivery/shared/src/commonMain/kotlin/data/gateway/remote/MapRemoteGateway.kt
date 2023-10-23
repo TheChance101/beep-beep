@@ -28,52 +28,14 @@ class MapRemoteGateway(client: HttpClient) : IMapRemoteGateway,
     @OptIn(InternalAPI::class)
     override suspend fun acceptOrder(
         taxiId: String,
-        tripId: String,
-        clientId: String,
+        tripId: String
     ): Order {
         val result = tryToExecute<BaseResponse<OrderDto>> {
             val formData = FormDataContent(Parameters.build {
                 append("tripId", tripId)
                 append("taxiId", taxiId)
-                append("userId", clientId)
             })
-            put("/trip/approve") {
-                body = formData
-            }
-        }.value ?: throw Exception()
-
-        return result.toTripEntity()
-    }
-
-    @OptIn(InternalAPI::class)
-    override suspend fun updateOrderAsReceived(
-        tripId: String,
-        clientId: String,
-    ): Order {
-        val result = tryToExecute<BaseResponse<OrderDto>> {
-            val formData = FormDataContent(Parameters.build {
-                append("tripId", tripId)
-                append("userId", clientId)
-            })
-            put("/trip/received") {
-                body = formData
-            }
-        }.value ?: throw Exception()
-
-        return result.toTripEntity()
-    }
-
-    @OptIn(InternalAPI::class)
-    override suspend fun updateOrderAsDelivered(
-        tripId: String,
-        clientId: String,
-    ): Order {
-        val result = tryToExecute<BaseResponse<OrderDto>> {
-            val formData = FormDataContent(Parameters.build {
-                append("tripId", tripId)
-                append("userId", clientId)
-            })
-            put("/trip/finish") {
+            put("/trip/update") {
                 body = formData
             }
         }.value ?: throw Exception()

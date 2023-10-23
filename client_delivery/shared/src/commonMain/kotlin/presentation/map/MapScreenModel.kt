@@ -87,7 +87,7 @@ class MapScreenModel(
 
     override fun onAcceptClicked() {
         tryToExecute(
-            function = { manageOrderUseCase.acceptOrder("","","") },
+            function = { manageOrderUseCase.acceptOrder("","") },
             onSuccess = ::onAcceptOrderSuccess,
             onError = ::onError
         )
@@ -110,7 +110,7 @@ class MapScreenModel(
 
     override fun onReceivedClicked() {
         tryToExecute(
-            function = { manageOrderUseCase.updateOrderAsReceived("1", "1") },
+            function = { manageOrderUseCase.acceptOrder("1", "1") },
             onSuccess = ::onUpdateOrderAsReceivedSuccess,
             onError = ::onError
         )
@@ -127,7 +127,7 @@ class MapScreenModel(
 
     override fun onDeliveredClicked() {
         tryToExecute(
-            function = { manageOrderUseCase.updateOrderAsDelivered("1", "1") },
+            function = { manageOrderUseCase.acceptOrder("1", "1") },
             onSuccess = ::onUpdateOrderAsDeliveredSuccess,
             onError = ::onError
         )
