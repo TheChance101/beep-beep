@@ -31,6 +31,18 @@ class OrderFoodTrackingScreenModel(
     }
 
 
+    private fun trackDeliveryLocation(tripId: String) {
+        tryToCollect(
+            function = { trackOrders.trackDriverLocation(tripId) },
+            onNewValue = ::onTrackDeliveryLocationSuccess,
+            onError = ::onTrackingError,
+        )
+    }
+
+    private fun onTrackDeliveryLocationSuccess(location: Location) {
+        updateState { it.copy(deliveryLocation = location.toUiState()) }
+    }
+
     private fun getTripStatus(tripId: String) {
         tryToExecute(
             function = { trackOrders.getTripStatus(tripId) },
@@ -42,6 +54,7 @@ class OrderFoodTrackingScreenModel(
     private fun onGetTripStatusSuccess(tripStatus: TripStatus) {
         val status = when (tripStatus) {
             TripStatus.RECEIVED -> {
+                trackDeliveryLocation(tripId)
                 OrderFoodTrackingUiState.FoodOrderStatus.ORDER_IN_THE_ROUTE
             }
 
@@ -107,6 +120,7 @@ class OrderFoodTrackingScreenModel(
     private fun onTrackDeliverySuccess(deliveryRide: DeliveryRide) {
         val updatedOrderStatus = when (deliveryRide.tripStatus) {
             TripStatus.RECEIVED -> {
+                trackDeliveryLocation(deliveryRide.id)
                 OrderFoodTrackingUiState.FoodOrderStatus.ORDER_IN_THE_ROUTE
             }
 
