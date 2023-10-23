@@ -8,4 +8,6 @@ interface ITransactionsGateway {
     suspend fun getTripHistory(): List<Trip>
     suspend fun getOrderHistoryGateway(): List<Order>
     suspend fun getCart(): Cart
+    suspend fun orderNow(): Boolean
+    suspend fun updateCart(cart: Cart)
 }

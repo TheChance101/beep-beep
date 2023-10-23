@@ -273,25 +273,22 @@ class RestaurantService(
 //endregion
 
     //region order
-    @OptIn(InternalAPI::class)
-    suspend fun createOrder(order: OrderDto, languageCode: String): OrderDto {
-        return client.tryToExecute<OrderDto>(
-            api = APIs.RESTAURANT_API,
-            attributes = attributes,
-            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
-        ) {
-            post("/order") {
-                body = Json.encodeToString(OrderDto.serializer(), order)
-            }
-        }
-    }
 
-    suspend fun updateOrderStatus(orderId: String, status: Int, languageCode: String): OrderDto {
+    suspend fun updateOrderStatus(orderId: String, languageCode: String): OrderDto {
         return client.tryToExecute<OrderDto>(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
             setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
-            method = { put("/order/$orderId?status=$status") }
+            method = { put("/order/$orderId") }
+        )
+    }
+
+    suspend fun cancelOrder(orderId: String, languageCode: String): OrderDto {
+        return client.tryToExecute<OrderDto>(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { post("/order/cancel/$orderId") }
         )
     }
 
@@ -355,12 +352,47 @@ class RestaurantService(
         )
     }
 
+    suspend fun trackOrderByUserId(userId: String): Flow<OrderDto> {
+        return client.tryToExecuteWebSocket<OrderDto>(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+            path = "/order/user/track/$userId",
+        )
+    }
+
     suspend fun getActiveOrders(restaurantId: String, languageCode: String): List<OrderDto> {
         return client.tryToExecute<List<OrderDto>>(
             api = APIs.RESTAURANT_API,
             attributes = attributes,
             setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
             method = { get("/order/$restaurantId/orders") }
+        )
+    }
+
+    suspend fun getActiveOrdersForUser(userId: String, languageCode: String): List<OrderDto> {
+        return client.tryToExecute<List<OrderDto>>(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { get("/order/user/$userId/orders") }
+        )
+    }
+
+    suspend fun getOrderById(orderId: String?, languageCode: String): OrderDto {
+        return client.tryToExecute<OrderDto>(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { get("/order/$orderId") }
+        )
+    }
+
+    suspend fun isOrderExisted(orderId: String?, languageCode: String): Boolean {
+        return client.tryToExecute<Boolean>(
+            api = APIs.RESTAURANT_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { get("/order/isExisted/$orderId") }
         )
     }
 

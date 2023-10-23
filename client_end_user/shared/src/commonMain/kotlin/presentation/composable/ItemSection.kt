@@ -28,7 +28,7 @@ fun ItemSection(
     prices: List<Double> = emptyList(),
     offers: List<String> = emptyList(),
     hasDeliveryPrice: Boolean = false,
-    deliveryPrices: List<String> = emptyList()
+    deliveryPrices: List<String> = emptyList(),
 ) {
     Column(modifier = modifier) {
         SectionHeader(header, modifier = Modifier.padding(start = 16.dp, bottom = 8.dp))
@@ -38,18 +38,17 @@ fun ItemSection(
         ) {
             items(titles.size) { index ->
                 BpImageCard(
-                    onClickItem,
+                    onClickCard = { onClickItem(ids[index]) },
                     title = titles[index],
                     imageUrl = imageUrls[index],
-                    priceLevel = if(priceLevels.isNotEmpty()) priceLevels[index] else PriceLevel.LOW,
+                    priceLevel = if (priceLevels.isNotEmpty()) priceLevels[index] else PriceLevel.LOW,
                     hasOffer = hasOffer,
                     offer = if (offers.isNotEmpty()) offers[index] else "",
                     hasDeliveryPrice = hasDeliveryPrice,
                     deliveryPrice = if (deliveryPrices.isNotEmpty()) deliveryPrices[index] else "",
-                    rate = if(ratings.isNotEmpty()) ratings[index] else 0.0,
-                    id = if (ids.isNotEmpty()) ids[index] else "",
+                    rate = if (ratings.isNotEmpty()) ratings[index] else 0.0,
                     hasPrice = hasPrice,
-                    price = if(prices.isNotEmpty()) prices[index] else 0.0,
+                    price = if (prices.isNotEmpty()) prices[index] else 0.0,
                     hasPriceLevel = hasPriceLevel,
                     hasRate = hasRating
                 )

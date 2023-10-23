@@ -41,7 +41,7 @@ class ApiClientModule {
             defaultRequest {
                 header("Content-Type", "application/json")
                 val host = System.getenv(clientAttributes[AttributeKey("API")])
-                url("http://$host")
+                url("https://$host")
             }
 
             install(ContentNegotiation) {

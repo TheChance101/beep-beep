@@ -49,15 +49,13 @@ class CartScreen :
                 OrderInfoCard(
                     onClickOrderNow = { listener.onClickOrderNow() },
                     totalPrice = "${state.currency} ${state.totalPrice}",
-                    modifier = Modifier.padding(bottom = getNavigationBarPadding().calculateBottomPadding())
+                    modifier = Modifier.background(Theme.colors.surface)
+                        .padding(bottom = getNavigationBarPadding().calculateBottomPadding())
                 )
             }
         ) { paddingValues ->
-            val navigationBarPadding = getNavigationBarPadding()
             LazyColumn(
-                modifier = Modifier.fillMaxSize()
-                    .padding(bottom = navigationBarPadding.calculateBottomPadding())
-                    .background(Theme.colors.background),
+                modifier = Modifier.fillMaxSize().background(Theme.colors.background),
                 contentPadding = PaddingValues(
                     top = paddingValues.calculateTopPadding()
                             + getNavigationBarPadding().calculateTopPadding()

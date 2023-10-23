@@ -17,8 +17,6 @@ class ServerSideException(message: String) : BpException(message)
 
 class NotFoundedException : BpException("Not founded")
 
-class UnKnownErrorException(message: String) : BpException(message)
-
 class LocationPermissionDeniedException(message: String?) : BpException(message)
 
 class LocationPermissionDeniedAlwaysException(message: String?) : BpException(message)
@@ -27,10 +25,12 @@ class UnknownErrorException(message: String) : BpException(message)
 
 class InvalidCredentialsException(message: String) : BpException(message)
 
-class InvalidUserNameException(errorMessage: String) : BpException(errorMessage)
+class InvalidUserNameException(private val errorMessage: String) : BpException(errorMessage)
 
-class InvalidPasswordException(errorMessage: String) : BpException(errorMessage)
+class InvalidPasswordException(private val errorMessage: String) : BpException(errorMessage)
 
-class InvalidDriverNameException(errorMessage: String) : BpException(errorMessage)
+class InvalidDriverNameException(private val errorMessage: String) : BpException(errorMessage)
 
-class InvalidDriverEmailException(errorMessage: String) : BpException(errorMessage)
+class InvalidDriverEmailException(private val errorMessage: String) : BpException(errorMessage)
+
+class InvalidDescriptionException(private val errorMessage: String) : BpException(errorMessage)

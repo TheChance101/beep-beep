@@ -154,9 +154,8 @@ data class RestaurantScreen(val restaurantId: String) :
                     Row(
                         modifier = Modifier
                             .fillMaxWidth().padding(horizontal = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-
-                        ) {
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
                         RatingBar(currentRating = state.restaurantInfo.rating)
                         BpPriceLevel(state.restaurantInfo.priceLevel)
                     }
@@ -204,20 +203,12 @@ data class RestaurantScreen(val restaurantId: String) :
                         color = Theme.colors.contentBorder
                     )
 
-//                    ItemSection(
-//                        onClickItem = { orderId -> listener.onGoToDetails(orderId) },
-//                        header = Resources.strings.sweets,
-//                        titles = state.mostOrders.map { it.name },
-//                        hasPrice = true,
-//                        prices = state.mostOrders.map { it.price },
-//                        imageUrls = state.,
-//                        modifier = Modifier.padding(vertical = 16.dp)
-//                    )
                     state.cuisines.forEach { cuisine ->
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             ItemSection(
                                 onClickItem = listener::onGoToDetails,
                                 header = cuisine.name,
+                                ids = cuisine.meals.map { it.id },
                                 titles = cuisine.meals.map { it.name },
                                 hasPrice = true,
                                 prices = cuisine.meals.map { it.price },

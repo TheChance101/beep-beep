@@ -19,7 +19,7 @@ class GetOffersUseCase(
 ) : IGetOffersUseCase {
     override suspend fun getNewOffers(limit: Int): List<Offer> {
         return restaurantRemoteGateway.getNewOffers()
-            .takeWhile { it.restaurants.isNotEmpty() }
+            .filter { it.restaurants.isNotEmpty() }
             .apply {
                 if (limit != 0) {
                     this.take(limit)

@@ -194,7 +194,6 @@ class HomeScreen :
         }
     }
 
-    @OptIn(ExperimentalResourceApi::class)
     private fun LazyListScope.offers(
         offers: List<OfferUiState>,
         onRestaurantClicked: (String) -> Unit,
