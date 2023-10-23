@@ -1,20 +1,12 @@
-var latitude2 = 0
-var map,directionsManager;
+var map, directionsManager, line;
 
 function GetMap() {
-map = new Microsoft.Maps.Map('#myMap', {
-
-    credentials: 'Access_token',
-    center: new Microsoft.Maps.Location(29.0,32.0),
-    mapTypeId: Microsoft.Maps.MapTypeId.grayscale,
-    minZoom: 2,
-    maxZoom: 7
-});
-    var center = map.getCenter();
-   var pin = new Microsoft.Maps.Pushpin(center, {
-       color: 'red',
-   });
-   map.entities.push(pin);
+    map = new Microsoft.Maps.Map('#myMap', {
+        credentials: 'Access_token',
+        mapTypeId: Microsoft.Maps.MapTypeId.grayscale,
+        minZoom: 1,
+        maxZoom: 14
+    });
 }
 
 function getDirections(startLat, startLng, endLat, endLng) {
@@ -22,58 +14,45 @@ function getDirections(startLat, startLng, endLat, endLng) {
     Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
 
         // Initialize the DirectionsManager with the existing map
-        const directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
+        directionsManager = new Microsoft.Maps.Directions.DirectionsManager(map);
 
-        // Configure the request options for route calculation
-        const requestOptions = {
-            routeMode: Microsoft.Maps.Directions.RouteMode.driving,
-            routeDraggable: false,
-            autoUpdateMapView: false
-        };
-        directionsManager.setRequestOptions(requestOptions);
-
-        // Configure the render options for the route
-        const renderOptions = {
-            drivingPolylineOptions: {
-                strokeColor: 'red',
-                strokeThickness: 8
-            },
-            autoUpdateMapView: false
-        };
-        directionsManager.setRenderOptions(renderOptions);
-
-        // Create waypoints using the provided latitude and longitude
-        const startWaypoint = new Microsoft.Maps.Directions.Waypoint({
-            location: new Microsoft.Maps.Location(startLat, startLng)
-        });
-        const endWaypoint = new Microsoft.Maps.Directions.Waypoint({
-            location: new Microsoft.Maps.Location(endLat, endLng)
-
-        });
-
-        // Add the waypoints to the directions manager
-        directionsManager.addWaypoint(startWaypoint);
-        directionsManager.addWaypoint(endWaypoint);
+        // ... (Your existing code for setting up directions)
 
         // Calculate the directions
-        directionsManager.calculateDirections();
-    });
-    var newCenter = new Microsoft.Maps.Location(lat-1, lng-1.5);
-    map.setView({
-            center: map.getCenter(),
+        directionsManager.calculateDirections(function () {
+            // After calculation, zoom to the destination
+            zoomToDestination(endLat, endLng);
+
+            // Draw a red line between the current location and destination
+            drawRedLine(startLat, startLng, endLat, endLng);
         });
+    });
 }
 
-function getRouteTime() {
-    directionsManager.time
+function zoomToDestination(lat, lng) {
+    var location = new Microsoft.Maps.Location(lat, lng);
+    map.setView({ center: location, zoom: 10 }); // You can adjust the zoom level as needed
+}
+
+function drawRedLine(startLat, startLng, endLat, endLng) {
+    var coordinates = [
+        new Microsoft.Maps.Location(startLat, startLng),
+        new Microsoft.Maps.Location(endLat, endLng)
+    ];
+
+    line = new Microsoft.Maps.Polyline(coordinates, {
+        strokeColor: 'red',
+        strokeThickness: 2
+    });
+
+    map.entities.push(line);
 }
 
 function clearDirections() {
-directionsManager.clearAll();
-directionsManager.clearDisplay();
+    directionsManager.clearAll();
+    directionsManager.clearDisplay();
 }
 
-function clearMap(){
-map.entities.clear();
+function clearMap() {
+    map.entities.clear();
 }
-
