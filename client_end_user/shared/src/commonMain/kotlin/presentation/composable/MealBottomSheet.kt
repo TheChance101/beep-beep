@@ -25,7 +25,6 @@ import com.beepbeep.designSystem.ui.composable.modifier.noRippleEffect
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import presentation.resturantDetails.Composable.CloseButton
 import presentation.resturantDetails.MealUIState
 import resources.Resources
 
@@ -50,7 +49,7 @@ fun MealBottomSheet(
                 modifier = Modifier.height(240.dp).padding(bottom = 24.dp)
                     .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
             )
-            CloseButton(
+            BackButton(
                 onClick = onDismissSheet,
                 modifier = Modifier.align(Alignment.TopCenter),
                 horizontalArrangement = Arrangement.End,

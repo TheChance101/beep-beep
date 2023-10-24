@@ -11,5 +11,4 @@ fun OfferDto.toEntity() = Offer(
     restaurants = restaurants?.toEntity() ?: emptyList()
 )
 
-
 fun List<OfferDto>.toEntity() = map { it.toEntity() }

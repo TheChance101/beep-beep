@@ -1,8 +1,7 @@
-package presentation.orderHistory.composable
+package presentation.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,6 +15,8 @@ fun HorizontalDivider(
     modifier: Modifier = Modifier,
     thickness: Dp = 1.dp,
     color: Color = Theme.colors.divider,
+    orderHasFinished: Boolean = false
 ) {
-    Box(modifier.fillMaxWidth().height(thickness).background(color))
+    val animatedColor = if (orderHasFinished) Theme.colors.primary else color
+    Box(modifier.height(thickness).background(animatedColor))
 }

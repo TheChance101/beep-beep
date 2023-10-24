@@ -103,4 +103,10 @@ interface IStringResources {
     val message: String
     val supportTeam: String
     val sendMessageToStartLiveChat: String
+    val orderEstimatedTime: String
+    val orderPlaced: String
+    val orderArrived: String
+    val orderInCooking: String
+    val orderInTheRoute: String
+    val accessDeniedMessage: String
 }

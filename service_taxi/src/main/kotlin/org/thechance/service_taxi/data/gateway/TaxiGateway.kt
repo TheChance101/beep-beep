@@ -129,6 +129,10 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
         return container.tripCollection.findOne(TripCollection::id eq ObjectId(tripId))?.toEntity()
     }
 
+    override suspend fun getTripByOrderId(orderId: String): Trip? {
+        return container.tripCollection.findOne(TripCollection::orderId eq ObjectId(orderId))?.toEntity()
+    }
+
     override suspend fun getAllTrips(page: Int, limit: Int): List<Trip> {
         return container.tripCollection.find()
             .paginate(page, limit).toList()
@@ -155,6 +159,7 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
                 TripWithTaxi::id from "\$_id",
                 TripWithTaxi::driverId from "\$driverId",
                 TripWithTaxi::clientId from "\$clientId",
+                TripWithTaxi::orderId from "\$orderId",
                 TripWithTaxi::restaurantId from "\$restaurantId",
                 TripWithTaxi::taxi from "\$taxi",
                 TripWithTaxi::startPoint from "\$startPoint",
@@ -203,6 +208,7 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
                 TripWithTaxi::id from "\$_id",
                 TripWithTaxi::driverId from "\$driverId",
                 TripWithTaxi::clientId from "\$clientId",
+                TripWithTaxi::orderId from "\$orderId",
                 TripWithTaxi::taxi from "\$taxi",
                 TripWithTaxi::startPoint from "\$startPoint",
                 TripWithTaxi::destination from "\$destination",
@@ -281,6 +287,7 @@ class TaxiGateway(private val container: DataBaseContainer) : ITaxiGateway {
                 TripWithTaxi::id from "\$_id",
                 TripWithTaxi::driverId from "\$driverId",
                 TripWithTaxi::clientId from "\$clientId",
+                TripWithTaxi::orderId from "\$orderId",
                 TripWithTaxi::restaurantId from "\$restaurantId",
                 TripWithTaxi::taxi from "\$taxi",
                 TripWithTaxi::startPoint from "\$startPoint",
