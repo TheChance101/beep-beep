@@ -2,12 +2,10 @@ package data.gateway.remote
 
 import data.remote.mapper.toEntity
 import data.remote.mapper.toSessionEntity
-import data.remote.mapper.toTripEntity
-import data.remote.model.AddressDto
 import data.remote.model.RestaurantDto
+import data.remote.model.AddressDto
 import data.remote.model.ServerResponse
 import data.remote.model.SessionDto
-import data.remote.model.TripDto
 import data.remote.model.UserDetailsDto
 import domain.entity.Account
 import domain.entity.Address
@@ -20,32 +18,21 @@ import domain.utils.GeneralException
 import io.ktor.client.HttpClient
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
+import io.ktor.client.request.post
 import io.ktor.client.request.url
 import io.ktor.http.HttpMethod
 import io.ktor.http.Parameters
+import io.ktor.util.InternalAPI
+import kotlinx.serialization.json.Json
 
 class UserGateway(client: HttpClient) : BaseGateway(client), IUserGateway {
 
-    override suspend fun createUser(userCreation: Account): User {
+    @OptIn(InternalAPI::class)
+    override suspend fun createUser(account: Account): User {
         return tryToExecute<ServerResponse<UserDetailsDto>> {
-            submitForm(
-                url = ("/signup"),
-                formParameters = Parameters.build {
-                    append("fullName", userCreation.fullName)
-                    append("username", userCreation.username)
-                    append("password", userCreation.password)
-                    append("email", userCreation.email)
-                    append(
-                        "phone",
-                        userCreation.phone
-                    ) // todo: remove this todo when phone is added to the backend
-                    append(
-                        "address",
-                        userCreation.address
-                    ) // todo: remove this todo when address is added to the backend
-                }
-            ) {
-                method = HttpMethod.Post
+            post("/signup"){
+                val userRegistrationDto = account.toUserRegistrationDto()
+                body = Json.encodeToString(UserRegistrationDto.serializer(), userRegistrationDto)
             }
         }.value?.toEntity()
             ?: throw AuthorizationException.InvalidCredentialsException("Invalid Credential")
