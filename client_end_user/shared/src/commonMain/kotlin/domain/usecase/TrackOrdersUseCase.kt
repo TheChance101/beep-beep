@@ -5,6 +5,7 @@ import domain.entity.FoodOrder
 import domain.entity.Location
 import domain.entity.TaxiRide
 import domain.entity.Trip
+import domain.entity.TripStatus
 import domain.gateway.ITransactionsGateway
 import domain.gateway.IUserGateway
 import kotlinx.coroutines.flow.Flow
@@ -19,6 +20,8 @@ interface ITrackOrdersUseCase {
     suspend fun trackDriverLocation(tripId: String): Flow<Location>
     suspend fun getUserOrderLocation(): Location
     suspend fun getTripId(orderId: String): String
+    suspend fun getTripStatus(tripId: String): TripStatus
+    suspend fun getOrderStatus(orderId: String): FoodOrder.OrderStatusInRestaurant
 }
 
 class TrackOrdersUseCase(
@@ -60,5 +63,13 @@ class TrackOrdersUseCase(
 
     override suspend fun getTripId(orderId: String): String {
         return remoteGateway.getTripByOrderId(orderId).id
+    }
+
+    override suspend fun getTripStatus(tripId: String): TripStatus {
+        return remoteGateway.getTripByTripId(tripId).tripStatus
+    }
+
+    override suspend fun getOrderStatus(orderId: String): FoodOrder.OrderStatusInRestaurant {
+        return remoteGateway.getOrderByOrderId(orderId).orderStatus
     }
 }

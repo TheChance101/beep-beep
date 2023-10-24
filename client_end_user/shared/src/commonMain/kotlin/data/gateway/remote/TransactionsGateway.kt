@@ -28,6 +28,7 @@ import io.ktor.util.InternalAPI
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
+import presentation.home.toFoodOrderUiState
 
 class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), ITransactionsGateway {
     override suspend fun getTripHistory(): List<Trip> {
@@ -125,6 +126,44 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
         }
         if (response.isSuccess) {
             return response.value?.toTripEntity()
+                ?: throw GeneralException.NotFoundException
+        } else {
+            // here we can handle different errors by checking response.status.code
+            // and also we can use the message sent from the server to pass it throw the exception
+            // and show it to user if we want
+            if (response.status.code == 404) {
+                throw GeneralException.NotFoundException
+            } else {
+                throw GeneralException.UnknownErrorException
+            }
+        }
+    }
+
+    override suspend fun getTripByTripId(tripId: String): Trip {
+        val response = tryToExecute<ServerResponse<TripDto>> {
+            get("trip/$tripId")
+        }
+        if (response.isSuccess) {
+            return response.value?.toTripEntity()
+                ?: throw GeneralException.NotFoundException
+        } else {
+            // here we can handle different errors by checking response.status.code
+            // and also we can use the message sent from the server to pass it throw the exception
+            // and show it to user if we want
+            if (response.status.code == 404) {
+                throw GeneralException.NotFoundException
+            } else {
+                throw GeneralException.UnknownErrorException
+            }
+        }
+    }
+
+    override suspend fun getOrderByOrderId(orderId: String): FoodOrder {
+        val response = tryToExecute<ServerResponse<FoodOrderDto>> {
+            get("order/$orderId")
+        }
+        if (response.isSuccess) {
+            return response.value?.toEntity()
                 ?: throw GeneralException.NotFoundException
         } else {
             // here we can handle different errors by checking response.status.code

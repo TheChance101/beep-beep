@@ -107,8 +107,8 @@ data class English(
     override val sendMessageToStartLiveChat: String = "Send a message to start the live chat!",
     override val orderEstimatedTime: String = "Estimated time",
     override val orderPlaced: String = "Order placed.",
-    override val orderArrived: String = "Your Feast Has Arrived.",
+    override val orderArrived: String = "Your feast has arrived.",
     override val orderInCooking: String = "Your meal in the oven.",
-    override val orderInTheRoute: String = "Your Food Is En Route.",
+    override val orderInTheRoute: String = "Your food is on the route.",
     override val accessDeniedMessage: String = "To continue, Please access location permission",
     ) : IStringResources

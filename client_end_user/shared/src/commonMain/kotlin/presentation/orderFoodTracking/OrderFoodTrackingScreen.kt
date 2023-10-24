@@ -29,6 +29,7 @@ import org.koin.core.parameter.parametersOf
 import presentation.base.BaseScreen
 import presentation.composable.BackButton
 import presentation.composable.HorizontalDivider
+import presentation.orderFoodTracking.composables.MapView
 import resources.Resources
 import util.getNavigationBarPadding
 import util.getStatusBarPadding
@@ -61,6 +62,11 @@ class OrderFoodTrackingScreen(private val orderId: String, private val tripId: S
                 .background(color = Theme.colors.background)
                 .padding(getStatusBarPadding())
         ) {
+            MapView(
+                modifier = Modifier.fillMaxSize(),
+                currentLocation = state.userLocation,
+                destination = state.deliveryLocation
+            )
             Column(
                 modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween
             ) {
@@ -68,7 +74,7 @@ class OrderFoodTrackingScreen(private val orderId: String, private val tripId: S
                     modifier = Modifier.padding(0.dp),
                     onClick = { listener.onBackButtonClicked() })
                 OrderTrackerCard(
-                    currentStatusDescription = when (state.currentOrderStatus) {
+                    currentStatusDescription = when (state.order.currentOrderStatus) {
                         OrderFoodTrackingUiState.FoodOrderStatus.ORDER_PLACED -> Resources.strings.orderPlaced
                         OrderFoodTrackingUiState.FoodOrderStatus.ORDER_ARRIVED -> Resources.strings.orderArrived
                         OrderFoodTrackingUiState.FoodOrderStatus.ORDER_IN_COOKING -> Resources.strings.orderInCooking
