@@ -15,6 +15,7 @@ import domain.entity.Location
 import domain.entity.Meal
 import domain.entity.Offer
 import domain.entity.Order
+import domain.entity.PaginationItems
 import domain.entity.Price
 import domain.entity.Restaurant
 import domain.entity.Taxi
@@ -81,13 +82,17 @@ class RestaurantGateway(client: HttpClient) : BaseGateway(client = client), IRes
         return Pair(result.restaurants.toEntity(), result.meals.toEntity())
     }
 
-    override suspend fun getMealsInCuisine(cuisineId: String, page: Int, limit: Int): List<Meal> {
-        return tryToExecute<ServerResponse<PaginationResponse<MealDto>>> {
+    override suspend fun getMealsInCuisine(cuisineId: String, page: Int, limit: Int): PaginationItems<Meal> {
+         val result =tryToExecute<ServerResponse<PaginationResponse<MealDto>>> {
             get("/cuisine/$cuisineId/meals") {
                 parameter("page", page)
                 parameter("limit", limit)
             }
-        }.value?.items?.map { it.toEntity() } ?: throw GeneralException.NotFoundException
+        }.value
+        return paginateData(
+            result = result?.items?.map { it.toEntity() } ?: throw GeneralException.NotFoundException,
+            page= result.page,
+            total = result.total)
     }
 
 
