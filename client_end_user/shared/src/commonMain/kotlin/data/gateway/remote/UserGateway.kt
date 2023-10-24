@@ -2,11 +2,13 @@ package data.gateway.remote
 
 import data.remote.mapper.toEntity
 import data.remote.mapper.toSessionEntity
-import data.remote.model.RestaurantDto
+import data.remote.mapper.toUserRegistrationDto
 import data.remote.model.AddressDto
+import data.remote.model.RestaurantDto
 import data.remote.model.ServerResponse
 import data.remote.model.SessionDto
 import data.remote.model.UserDetailsDto
+import data.remote.model.UserRegistrationDto
 import domain.entity.Account
 import domain.entity.Address
 import domain.entity.Restaurant
@@ -30,7 +32,7 @@ class UserGateway(client: HttpClient) : BaseGateway(client), IUserGateway {
     @OptIn(InternalAPI::class)
     override suspend fun createUser(account: Account): User {
         return tryToExecute<ServerResponse<UserDetailsDto>> {
-            post("/signup"){
+            post("/signup") {
                 val userRegistrationDto = account.toUserRegistrationDto()
                 body = Json.encodeToString(UserRegistrationDto.serializer(), userRegistrationDto)
             }
