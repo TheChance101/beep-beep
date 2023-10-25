@@ -10,6 +10,7 @@ data class MapScreenUiState(
     val errorState: ErrorState? = null,
     val orderDistance: String = "",
     val orderDuration: String = "",
+    val tripId: String = "",
     val orderUiState: OrderUiState = OrderUiState(),
     val deliveryLocation: LocationUiState = LocationUiState(),
 )

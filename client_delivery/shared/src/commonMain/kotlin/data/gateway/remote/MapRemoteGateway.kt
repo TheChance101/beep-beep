@@ -26,7 +26,7 @@ class MapRemoteGateway(client: HttpClient) : IMapRemoteGateway,
     }
 
     @OptIn(InternalAPI::class)
-    override suspend fun acceptOrder(
+    override suspend fun updateTrip(
         taxiId: String,
         tripId: String
     ): Order {

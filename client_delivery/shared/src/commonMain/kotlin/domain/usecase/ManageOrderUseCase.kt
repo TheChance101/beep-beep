@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface IManageOrderUseCase {
     suspend fun getOrders(): Flow<Order>
     suspend fun sendLocation(location: LocationDto, tripId: String)
-    suspend fun acceptOrder(taxiId: String, tripId: String): Order
+    suspend fun updateTrip(taxiId: String, tripId: String): Order
 }
 
 class ManageOrderUseCase(private val remoteGateway: IMapRemoteGateway) : IManageOrderUseCase {
@@ -20,8 +20,8 @@ class ManageOrderUseCase(private val remoteGateway: IMapRemoteGateway) : IManage
         remoteGateway.sendLocation(location, tripId)
     }
 
-    override suspend fun acceptOrder(taxiId: String, tripId: String): Order {
-        return remoteGateway.acceptOrder(taxiId, tripId)
+    override suspend fun updateTrip(taxiId: String, tripId: String): Order {
+        return remoteGateway.updateTrip(taxiId, tripId)
     }
 
 

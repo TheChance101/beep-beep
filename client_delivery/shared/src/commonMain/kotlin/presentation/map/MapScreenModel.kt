@@ -50,7 +50,8 @@ class MapScreenModel(
         updateState { mapScreenUiState ->
             mapScreenUiState.copy(
                 orderUiState = order.toUiState(),
-                orderState = OrderState.NEW_ORDER
+                orderState = OrderState.NEW_ORDER,
+                tripId = order.id,
             )
 
         }
@@ -87,7 +88,7 @@ class MapScreenModel(
 
     override fun onAcceptClicked() {
         tryToExecute(
-            function = { manageOrderUseCase.acceptOrder("","") },
+            function = { manageOrderUseCase.updateTrip("",state.value.tripId) },
             onSuccess = ::onAcceptOrderSuccess,
             onError = ::onError
         )
@@ -110,7 +111,7 @@ class MapScreenModel(
 
     override fun onReceivedClicked() {
         tryToExecute(
-            function = { manageOrderUseCase.acceptOrder("1", "1") },
+            function = { manageOrderUseCase.updateTrip("1", state.value.tripId) },
             onSuccess = ::onUpdateOrderAsReceivedSuccess,
             onError = ::onError
         )
@@ -127,7 +128,7 @@ class MapScreenModel(
 
     override fun onDeliveredClicked() {
         tryToExecute(
-            function = { manageOrderUseCase.acceptOrder("1", "1") },
+            function = { manageOrderUseCase.updateTrip("1", state.value.tripId) },
             onSuccess = ::onUpdateOrderAsDeliveredSuccess,
             onError = ::onError
         )

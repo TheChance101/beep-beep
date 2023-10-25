@@ -8,6 +8,6 @@ import kotlinx.coroutines.flow.Flow
 interface IMapRemoteGateway {
     suspend fun getOrders(): Flow<Order>
     suspend fun sendLocation(location: LocationDto, tripId: String)
-    suspend fun acceptOrder(taxiId: String, tripId: String): Order
+    suspend fun updateTrip(taxiId: String, tripId: String): Order
 
 }
