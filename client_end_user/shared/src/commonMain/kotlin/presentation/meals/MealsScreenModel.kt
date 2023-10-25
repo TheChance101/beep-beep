@@ -12,7 +12,7 @@ import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 import presentation.resturantDetails.MealInteractionListener
 import presentation.resturantDetails.MealUIState
-import util.toUIState
+import presentation.resturantDetails.toUIState
 
 class MealsScreenModel(
     private val cuisineId: String,

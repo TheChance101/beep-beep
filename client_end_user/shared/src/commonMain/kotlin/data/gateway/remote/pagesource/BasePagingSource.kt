@@ -13,25 +13,22 @@ import domain.entity.PaginationItems
 @Suppress("CAST_NEVER_SUCCEEDS", "USELESS_CAST", "KotlinRedundantDiagnosticSuppress")
 abstract class BasePagingSource<Value : Any> : PagingSource<Int, Value>() {
 
-    protected abstract suspend fun fetchData(page: Int, limit: Int): PaginationItems<Meal>
-
+    protected abstract suspend fun fetchData(page: Int, limit: Int): PaginationItems<Value>
 
     override suspend fun load(params: PagingSourceLoadParams<Int>): PagingSourceLoadResult<Int, Value> {
-        val currentPage = params.key ?: 1
+        val page = params.key ?: 1
         val limit = params.loadSize
-        val response = fetchData(currentPage, limit)
-        return try {
-            val nextKey = (response.page + 1).takeIf { response.items.lastIndex >= response.page }
-            println("response: ${response}")
-            PagingSourceLoadResultPage(
-                data = response.items,
-                prevKey = response.page - 1,
-                nextKey = nextKey
-            ) as PagingSourceLoadResult<Int, Value>
+        val response = fetchData(page, limit)
+       return try {
+           PagingSourceLoadResultPage(
+               data = response.items,
+               prevKey = (page - 1).takeIf { it >= 1 },
+               nextKey = if (response.items.isNotEmpty()) page + 1 else null,
+           )
         } catch (e: Exception) {
             PagingSourceLoadResultError<Int, Value>(
                 Exception("Received a "),
-            ) as PagingSourceLoadResult<Int, Value>
+            )
         }
     }
 

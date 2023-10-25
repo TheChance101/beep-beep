@@ -1,9 +1,5 @@
 package util
 
-import androidx.paging.map
-import app.cash.paging.PagingData
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -22,6 +18,3 @@ fun Long.convertLongToFormattedDate(): String {
     return formattedDate
 }
 
-fun <I :Any,O:Any> Flow<PagingData<I>>.toUIState(): Flow<PagingData<O>> {
-    return this.map { pagingData -> pagingData.map { it as O } }
-}

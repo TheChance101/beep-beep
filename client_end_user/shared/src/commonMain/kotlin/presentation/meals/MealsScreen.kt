@@ -4,11 +4,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.cash.paging.LoadStateError
+import app.cash.paging.LoadStateLoading
+import app.cash.paging.LoadStateNotLoading
+import app.cash.paging.compose.LazyPagingItems
 import app.cash.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpAppBar
@@ -93,8 +100,8 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
         onMealSelected: (MealUIState) -> Unit,
         onBackClicked: () -> Unit
     ) {
-        val meal = state.meals.collectAsLazyPagingItems()
-        println("Meals UI: ${meal.itemSnapshotList.items} ")
+        val meals = state.meals.collectAsLazyPagingItems()
+        println("Meals UI: ${meals.itemSnapshotList.items} ")
         Column(
             Modifier.fillMaxSize().background(Theme.colors.background).padding(
                 getNavigationBarPadding()
@@ -105,20 +112,50 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
                 onNavigateUp = onBackClicked,
                 painterResource = painterResource(Resources.images.arrowLeft)
             )
-//            LazyColumn(
-//                modifier = Modifier
-//                    .fillMaxSize()
-//                    .background(Theme.colors.background),
-//                verticalArrangement = Arrangement.spacedBy(16.dp),
-//                contentPadding = PaddingValues(16.dp)
-//            ) {
-//                items(meal.itemSnapshotList.items){meal->
-//                    MealCard(
-//                        meal = meal,
-//                        modifier = Modifier.noRippleEffect { onMealSelected(meal) }
-//                    )
-//                }
-//            }
+            PagingList(data = meals){ meal->
+                meal?.let {
+                    MealCard(
+                        meal = it,
+                        modifier = Modifier.noRippleEffect { onMealSelected(it) }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun <T:Any> PagingList(
+    modifier: Modifier = Modifier,
+    data: LazyPagingItems<T>,
+    content : @Composable (T?) -> Unit
+) {
+    LazyColumn(
+        modifier =  modifier
+            .fillMaxSize()
+            .background(Theme.colors.background),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        contentPadding = PaddingValues(16.dp)
+    ) {
+        when (val loadState = data.loadState.refresh) {
+            LoadStateLoading -> {
+                item {
+                    CircularProgressIndicator()
+                }
+            }
+            is LoadStateNotLoading -> {
+                items(data.itemCount) { index ->
+                    val item = data[index]
+                    content(item)
+                }
+            }
+            is LoadStateError -> {
+                item {
+                    Text(loadState.error.message ?: "Unknown error")
+                }
+            }
+            else -> error("when should be exhaustive")
         }
     }
 }
