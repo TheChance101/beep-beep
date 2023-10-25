@@ -39,6 +39,12 @@ fun Route.tripRoutes() {
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
+        get("/user/{orderId}") {
+            val orderId = call.parameters["orderId"] ?: throw MissingParameterException()
+            val result = manageTripsUseCase.getTripByOrderId(orderId)
+            call.respond(HttpStatusCode.OK, result.toDto())
+        }
+
         get("/driver/{driverId}") {
             val id = call.parameters["driverId"] ?: throw MissingParameterException()
             val page = call.parameters["page"]?.toInt() ?: 1

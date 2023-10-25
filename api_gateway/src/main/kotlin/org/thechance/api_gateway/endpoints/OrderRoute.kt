@@ -94,6 +94,13 @@ fun Route.orderRoutes() {
 
     authenticateWithRole(Role.END_USER) {
 
+        get("order/{orderId}") {
+            val orderId = call.parameters["orderId"]?.trim().toString()
+            val language = extractLocalizationHeader()
+            val result = restaurantService.getOrderById(orderId, language)
+            respondWithResult(HttpStatusCode.OK, result)
+        }
+
         get("orders/user/history") {
             val tokenClaim = call.principal<JWTPrincipal>()
             val userId = tokenClaim?.get(Claim.USER_ID).toString()
@@ -125,6 +132,5 @@ fun Route.orderRoutes() {
             val result = restaurantService.getActiveOrdersForUser(userId, language)
             respondWithResult(HttpStatusCode.OK, result)
         }
-
     }
 }

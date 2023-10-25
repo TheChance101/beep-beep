@@ -1,4 +1,4 @@
-package presentation.resturantDetails.Composable
+package presentation.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,15 +23,19 @@ import resources.Resources
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun  CloseButton(
+fun BackButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    icon:String = Resources.images.close,
+    icon: String = Resources.images.close,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-){
+) {
     Row(
-        modifier = modifier.padding(16.dp).height(56.dp).fillMaxWidth()
-            .padding(vertical = 8.dp)  .noRippleEffect { onClick()},
+        modifier = modifier
+            .padding(16.dp)
+            .height(56.dp)
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .noRippleEffect { onClick() },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = horizontalArrangement
     ) {

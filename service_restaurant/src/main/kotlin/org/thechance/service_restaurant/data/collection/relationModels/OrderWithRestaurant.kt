@@ -16,7 +16,6 @@ data class OrderWithRestaurant(
     val restaurant: RestaurantCollection,
     val meals: List<CartCollection.MealCollection>,
     val totalPrice: Double,
-    val currency: String,
     val createdAt: LocalDateTime,
     val orderStatus: Int
 )

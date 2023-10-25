@@ -27,6 +27,7 @@ class AppScreenModel(private val manageUser: IManageSettingUseCase) : ScreenMode
         getInitScreen()
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
     private fun getUserLanguageCode() {
         coroutineScope.launch(Dispatchers.IO) {
             manageUser.getUserLanguageCode().distinctUntilChanged().collectLatest { lang ->

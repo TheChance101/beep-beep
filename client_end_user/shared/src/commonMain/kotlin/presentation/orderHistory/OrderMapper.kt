@@ -1,26 +1,25 @@
 package presentation.orderHistory
 
 import domain.entity.Location
-import domain.entity.Order
+import domain.entity.FoodOrder
 import domain.entity.Trip
-import util.convertLongToFormattedDate
 
-fun Order.toOrderHistoryUiState() = OrderHistoryUiState(
+fun FoodOrder.toOrderHistoryUiState() = OrderHistoryUiState(
     meals = meals.joinToString(", ") { "${it.quality} ${it.name}" },
     restaurantName = restaurantName,
     restaurantImageUrl = restaurantImageUrl,
-    totalPrice = price.value,
-    currency = price.currency,
-    createdAt = createdAt.convertLongToFormattedDate()
+    totalPrice = totalPrice,
+    currency = currency,
+    createdAt = createdAt
 )
 
 fun Trip.toTripHistoryUiState(): TripHistoryUiState {
     return TripHistoryUiState(
-        taxiPlateNumber = taxiPlateNumber,
-        driverName = driverName,
+        taxiPlateNumber = taxiPlateNumber ?: "",
+        driverName = taxiDriverName ?: "",
         startPoint = startPoint.toLocationUiState(),
         destination = destination.toLocationUiState(),
-        price = price.value,
+        price = price,
         endDate = ""
     )
 }
