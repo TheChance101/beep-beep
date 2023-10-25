@@ -1,23 +1,18 @@
 package presentation.meals
 
 import app.cash.paging.PagingData
-import app.cash.paging.cachedIn
-import app.cash.paging.map
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Meal
-import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.IExploreRestaurantUseCase
+import domain.usecase.IManageAuthenticationUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 import presentation.resturantDetails.MealInteractionListener
-import presentation.resturantDetails.toUIState
 import presentation.resturantDetails.MealUIState
+import util.toUIState
 
 class MealsScreenModel(
     private val cuisineId: String,
@@ -78,15 +73,7 @@ class MealsScreenModel(
     }
 
     private fun onGetMealsSuccess(meals: Flow<PagingData<Meal>>) {
-        println("meals: $meals")
-
-           updateState { it.copy(meals= meals) }
-
-
-        //  updateState { it.copy(meals = meals.map { meals-> meals.map { meal -> meal.toUIState() } }) }
-        println("meals from state : ${state.value.meals}")
-//        updateState { it.copy(meals = meals.map { it.toUIState() }) }
-//        updateState { it.copy(meals = meals.toUIState(), isLoading = false, error = null) }
+        updateState { it.copy(meals = meals.toUIState()) }
     }
 
     override fun onIncreaseMealQuantity() {

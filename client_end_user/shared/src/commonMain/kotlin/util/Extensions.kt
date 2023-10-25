@@ -1,6 +1,9 @@
 package util
 
-import androidx.compose.ui.text.intl.Locale
+import androidx.paging.map
+import app.cash.paging.PagingData
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -17,4 +20,8 @@ fun Long.convertLongToFormattedDate(): String {
     val monthAbbreviation = localDateTime.month.name.substring(0, 3)
     val formattedDate = "${monthAbbreviation} ${localDateTime.dayOfMonth}/${localDateTime.year}"
     return formattedDate
+}
+
+fun <I :Any,O:Any> Flow<PagingData<I>>.toUIState(): Flow<PagingData<O>> {
+    return this.map { pagingData -> pagingData.map { it as O } }
 }

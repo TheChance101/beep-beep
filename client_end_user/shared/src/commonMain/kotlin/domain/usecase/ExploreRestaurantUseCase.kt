@@ -1,21 +1,14 @@
 package domain.usecase
 
-import androidx.paging.cachedIn
-import androidx.paging.map
 import app.cash.paging.Pager
 import app.cash.paging.PagingConfig
 import app.cash.paging.PagingData
-import com.seiko.imageloader.model.DataSource
-import data.gateway.remote.pagesource.BasePagingSource
 import data.gateway.remote.pagesource.MealsPagingSource
 import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.entity.Restaurant
 import domain.gateway.IRestaurantGateway
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 interface IExploreRestaurantUseCase {
     suspend fun getRestaurantDetails(restaurantId: String): Restaurant
@@ -28,7 +21,7 @@ interface IExploreRestaurantUseCase {
 class ExploreRestaurantUseCase(
     private val restaurantGateway: IRestaurantGateway,
     private val mealDataSource: MealsPagingSource,
-) : IExploreRestaurantUseCase, KoinComponent {
+) : IExploreRestaurantUseCase {
 
 
     override suspend fun getRestaurantDetails(restaurantId: String): Restaurant {
@@ -48,9 +41,6 @@ class ExploreRestaurantUseCase(
         return Pager(config = PagingConfig(pageSize = 10),
             pagingSourceFactory = { mealDataSource }
         ).flow
-//        return  mealDataSource.getAllWithParameters(cuisineId,restaurantGateway){params ->
-//            MealsPagingSource(restaurantGateway,params[1] as String)
-//        }
     }
 
     override suspend fun getCuisinesWithMealsInRestaurant(restaurantId: String): List<Cuisine> {

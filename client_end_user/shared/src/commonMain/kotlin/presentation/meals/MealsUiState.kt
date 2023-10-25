@@ -10,7 +10,7 @@ import presentation.resturantDetails.MealUIState
 
 data class MealsUiState(
     val cuisineName: String = "",
-    val meals: Flow<PagingData<Meal>> = emptyFlow(),
+    val meals: Flow<PagingData<MealUIState>> = emptyFlow(),
 
     val showMealSheet: Boolean = false,
     val selectedMeal: MealUIState = MealUIState(),
