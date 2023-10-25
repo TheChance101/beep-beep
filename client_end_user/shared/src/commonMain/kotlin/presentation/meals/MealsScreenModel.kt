@@ -73,7 +73,7 @@ class MealsScreenModel(
     }
 
     private fun onGetMealsSuccess(meals: Flow<PagingData<Meal>>) {
-        updateState { it.copy(meals = meals.toUIState()) }
+        updateState { it.copy(meals = meals.toUIState(), isLoading = false) }
     }
 
     override fun onIncreaseMealQuantity() {

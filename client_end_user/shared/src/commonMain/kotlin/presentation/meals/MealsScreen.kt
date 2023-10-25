@@ -1,17 +1,25 @@
 package presentation.meals
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import app.cash.paging.LoadStateError
 import app.cash.paging.LoadStateLoading
 import app.cash.paging.LoadStateNotLoading
@@ -101,7 +109,6 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
         onBackClicked: () -> Unit
     ) {
         val meals = state.meals.collectAsLazyPagingItems()
-        println("Meals UI: ${meals.itemSnapshotList.items} ")
         Column(
             Modifier.fillMaxSize().background(Theme.colors.background).padding(
                 getNavigationBarPadding()
@@ -112,7 +119,7 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
                 onNavigateUp = onBackClicked,
                 painterResource = painterResource(Resources.images.arrowLeft)
             )
-            PagingList(data = meals){ meal->
+            PagingList(data = meals, isLoading = state.isLoading) { meal ->
                 meal?.let {
                     MealCard(
                         meal = it,
@@ -125,37 +132,110 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
 }
 
 @Composable
-private fun <T:Any> PagingList(
+private fun <T : Any> PagingList(
     modifier: Modifier = Modifier,
     data: LazyPagingItems<T>,
-    content : @Composable (T?) -> Unit
+    isLoading: Boolean = true,
+    content: @Composable (T?) -> Unit
 ) {
     LazyColumn(
-        modifier =  modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Theme.colors.background),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         contentPadding = PaddingValues(16.dp)
     ) {
-        when (val loadState = data.loadState.refresh) {
-            LoadStateLoading -> {
+
+        if (data.itemSnapshotList.items.isEmpty()) {
+            item {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "No Meals",
+                        modifier = Modifier.fillMaxSize(),
+                        textAlign = TextAlign.Center
+                    )
+                }
+
+            }
+        } else {
+            items(data.itemCount) { index ->
+                val item = data[index]
+                content(item)
+            }
+            if (isLoading) {
                 item {
                     CircularProgressIndicator()
                 }
             }
-            is LoadStateNotLoading -> {
-                items(data.itemCount) { index ->
-                    val item = data[index]
-                    content(item)
+        }
+
+        item {
+            when (data.loadState.refresh) {
+                is LoadStateNotLoading -> Unit
+                LoadStateLoading -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(modifier.align(Alignment.Center))
+                    }
+                }
+
+                is LoadStateError -> {
+                    ErrorItem(
+                        message = (data.loadState.append as LoadStateError).error.message.toString(),
+                        onRefresh = { data.retry() })
+                }
+
+                else -> {
+                    ErrorItem(
+                        message = (data.loadState.append as LoadStateError).error.message.toString(),
+                        onRefresh = { data.retry() })
                 }
             }
-            is LoadStateError -> {
-                item {
-                    Text(loadState.error.message ?: "Unknown error")
-                }
-            }
-            else -> error("when should be exhaustive")
+        }
+
+
+    }
+}
+
+
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+fun ErrorItem(message: String, onRefresh: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .padding(6.dp)
+            .fillMaxWidth()
+            .wrapContentHeight()
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.Red)
+                .padding(8.dp)
+        ) {
+            Image(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .width(42.dp)
+                    .height(42.dp),
+                painter = painterResource(Resources.images.icError),
+                contentDescription = "",
+                colorFilter = ColorFilter.tint(Color.White)
+            )
+            Text(
+                color = Color.White,
+                text = message,
+                fontSize = 16.sp,
+                modifier = Modifier
+                    .padding(start = 12.dp)
+                    .align(CenterVertically)
+            )
         }
     }
 }

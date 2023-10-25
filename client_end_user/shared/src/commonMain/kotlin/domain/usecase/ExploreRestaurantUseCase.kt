@@ -38,7 +38,7 @@ class ExploreRestaurantUseCase(
 
     override suspend fun getMealsInCuisine(cuisineId: String): Flow<PagingData<Meal>> {
         mealDataSource.initCuisine(cuisineId)
-        return Pager(config = PagingConfig(pageSize = 10),
+        return Pager(config = PagingConfig(pageSize = 10, enablePlaceholders = true),
             pagingSourceFactory = { mealDataSource }
         ).flow
     }
