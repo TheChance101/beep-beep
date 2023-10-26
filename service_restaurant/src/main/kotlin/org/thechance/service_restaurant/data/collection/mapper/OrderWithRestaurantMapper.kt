@@ -39,7 +39,7 @@ fun OrderWithRestaurant.toOrderEntity(): Order {
         restaurantImage = restaurant.restaurantImage,
         meals = meals.map { it.toMealEntity() },
         totalPrice = totalPrice,
-        currency = currency,
+        currency = restaurant.currency,
         createdAt = createdAt,
         status = Order.Status.getOrderStatus(orderStatus)
     )

@@ -65,6 +65,10 @@ kotlin {
                 implementation("app.cash.paging:paging-common:3.3.0-alpha02-0.4.0")
                 implementation("app.cash.paging:paging-compose-common:3.3.0-alpha02-0.4.0")
 
+                //moko library for location
+                api(libs.calf)
+                api(libs.moko.geo)
+
             }
         }
         val androidMain by getting {

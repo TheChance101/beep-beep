@@ -4,8 +4,6 @@ import data.remote.mapper.toEntity
 import data.remote.model.MealDto
 import data.remote.model.OfferDto
 import domain.entity.Cuisine
-import domain.entity.InProgressWrapper
-import domain.entity.Location
 import domain.entity.Meal
 import domain.entity.Offer
 import domain.entity.Order
@@ -13,22 +11,11 @@ import domain.entity.PaginationItems
 import domain.entity.Price
 import domain.entity.Restaurant
 import domain.entity.Taxi
-import domain.entity.Trip
 import domain.gateway.IRestaurantGateway
-import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDate
 
 class FakeRestaurantGateway : IRestaurantGateway {
     override suspend fun getCuisines(): List<Cuisine> {
         TODO("Not yet implemented")
-    }
-
-    override suspend fun getInProgress(): InProgressWrapper {
-        return InProgressWrapper(
-            taxisOnTheWay = getTaxiOnTheWay(),
-            tripsOnTheWay = getActiveRide(),
-            ordersOnTheWay = getActiveOrder(),
-        )
     }
 
     override suspend fun getRestaurantDetails(restaurantId: String): Restaurant {
@@ -79,26 +66,6 @@ class FakeRestaurantGateway : IRestaurantGateway {
         )
     )
 
-    private fun getActiveRide(): List<Trip> {
-        return listOf(
-            Trip(
-                id = "khhfhdfhd",
-                taxiId = "taxi123",
-                taxiPlateNumber = "ABC123",
-                driverId = "driver456",
-                driverName = "Ali Yasein",
-                clientId = "client789",
-                startPoint = Location(37.7749, -122.4194),
-                destination = Location(37.7831, -122.4039),
-                rate = 4.5,
-                price = Price(20.0, "$"),
-                startDate = LocalDate(2023, 9, 20),
-                endDate = LocalDate(2023, 9, 20),
-                timeToArriveInMints = 30
-            )
-        )
-    }
-
     private fun getTaxiOnTheWay(): List<Taxi> {
         return listOf(
             Taxi(
@@ -110,20 +77,6 @@ class FakeRestaurantGateway : IRestaurantGateway {
         )
     }
 
-    private fun getActiveOrder(): List<Order> {
-        return listOf(
-            Order(
-                id = "khhfhdfhd",
-                restaurantId = "restaurant456",
-                restaurantName = "Hamada Market",
-                restaurantImageUrl = "",
-                meals = listOf(),
-                price = Price(20.0, "$"),
-                createdAt = Clock.System.now().epochSeconds,
-                orderStatus = 1,
-            )
-        )
-    }
 
     private val meals = listOf(
         MealDto(

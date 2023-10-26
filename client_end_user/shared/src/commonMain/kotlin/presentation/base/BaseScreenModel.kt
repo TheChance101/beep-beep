@@ -16,6 +16,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
@@ -36,7 +38,7 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
         function: suspend () -> T,
         onSuccess: (T) -> Unit,
         onError: (ErrorState) -> Unit,
-        inScope: CoroutineScope = viewModelScope
+        inScope: CoroutineScope = viewModelScope,
     ): Job {
         return runWithErrorCheck(onError, inScope) {
             val result = function()
@@ -48,10 +50,10 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
         function: suspend () -> Flow<T>,
         onNewValue: (T) -> Unit,
         onError: (ErrorState) -> Unit,
-        inScope: CoroutineScope = viewModelScope
+        inScope: CoroutineScope = viewModelScope,
     ): Job {
         return runWithErrorCheck(onError, inScope) {
-            function().collect {
+            function().distinctUntilChanged().collectLatest {
                 onNewValue(it)
             }
         }
@@ -71,7 +73,7 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
         onError: (ErrorState) -> Unit,
         inScope: CoroutineScope = viewModelScope,
         dispatcher: CoroutineDispatcher = Dispatchers.Unconfined,
-        function: suspend () -> Unit
+        function: suspend () -> Unit,
     ): Job {
         return inScope.launch(dispatcher) {
             try {
@@ -80,9 +82,11 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
                 handelInternetException(exception, onError)
             } catch (exception: AuthorizationException) {
                 handelAuthorizationException(exception, onError)
-            }catch (exception: GeneralException.UnknownErrorException) {
+            } catch (e: AuthorizationException.LocationAccessDeniedException) {
+                onError(ErrorState.LocationPermissionDenied)
+            } catch (exception: GeneralException.UnknownErrorException) {
                 onError(ErrorState.NoInternet)
-            }catch (exception: Exception) {
+            } catch (exception: Exception) {
                 onError(ErrorState.RequestFailed)
             }
         }
