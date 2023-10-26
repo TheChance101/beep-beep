@@ -18,6 +18,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import data.gateway.remote.TransactionsGateway
 import data.gateway.remote.pagesource.MealsPagingSource
+import data.gateway.remote.pagesource.FoodOrderPagingSource
 
 val gatewayModule = module {
     singleOf(::FakeChatGateway) { bind<IChatGateway>() } // fake
@@ -26,6 +27,7 @@ val gatewayModule = module {
     singleOf(::RestaurantGateway) { bind<IRestaurantGateway>() } // remote
     singleOf(::UserGateway) { bind<IUserGateway>() } // remote
     singleOf(::MealsPagingSource)
+    singleOf(::FoodOrderPagingSource)
     singleOf(::LocalConfigurationGateway) { bind<ILocalConfigurationGateway>() }   // local
     singleOf(::LocationGateway) { bind<ILocationGateway>() } // local
 }

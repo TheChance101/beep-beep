@@ -4,6 +4,7 @@ import domain.entity.Cart
 import domain.entity.DeliveryRide
 import domain.entity.FoodOrder
 import domain.entity.Location
+import domain.entity.PaginationItems
 import domain.entity.TaxiColor
 import domain.entity.TaxiRide
 import domain.entity.Trip
@@ -62,48 +63,8 @@ class FakeTransactionsGateway : ITransactionsGateway {
         )
     }
 
-    override suspend fun getOrderHistoryGateway(): List<FoodOrder> {
-        return listOf(
-            FoodOrder(
-                id = "order2",
-                userId = "user123",
-                restaurantId = "restaurant789",
-                restaurantImageUrl = "https://www.freshnlean.com/wp-content/uploads/2021/03/Meal-Plan-plate-protein.png",
-                restaurantName = "Zeko Talawoth",
-                currency = "$",
-                meals = listOf(),
-                totalPrice = 500.50,
-                createdAt = "24 Aug 2021",
-                orderStatus = FoodOrder.OrderStatusInRestaurant.APPROVED,
-                orderEstimatedTime = LocalTime(0, 30).minute,
-            ),
-            FoodOrder(
-                id = "order2",
-                userId = "user123",
-                restaurantId = "restaurant789",
-                restaurantImageUrl = "https://www.freshnlean.com/wp-content/uploads/2021/03/Meal-Plan-plate-protein.png",
-                restaurantName = "Zeko Talawoth",
-                currency = "$",
-                meals = listOf(),
-                totalPrice = 500.50,
-                createdAt = "23 Sep 2021",
-                orderStatus = FoodOrder.OrderStatusInRestaurant.APPROVED,
-                orderEstimatedTime = LocalTime(0, 30).minute,
-            ),
-            FoodOrder(
-                id = "order2",
-                userId = "user123",
-                restaurantId = "restaurant789",
-                restaurantImageUrl = "https://www.freshnlean.com/wp-content/uploads/2021/03/Meal-Plan-plate-protein.png",
-                restaurantName = "Zeko Talawoth",
-                currency = "$",
-                meals = listOf(),
-                totalPrice = 500.50,
-                createdAt = "23 Sep 2021",
-                orderStatus = FoodOrder.OrderStatusInRestaurant.APPROVED,
-                orderEstimatedTime = LocalTime(0, 30).minute,
-            )
-        )
+    override suspend fun getOrderHistoryGateway(page: Int, limit: Int): PaginationItems<FoodOrder> {
+        TODO("Not yet implemented")
     }
 
     override suspend fun getCart(): Cart {

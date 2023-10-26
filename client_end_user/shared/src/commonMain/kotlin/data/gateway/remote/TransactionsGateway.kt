@@ -17,18 +17,19 @@ import domain.entity.Cart
 import domain.entity.DeliveryRide
 import domain.entity.FoodOrder
 import domain.entity.Location
+import domain.entity.PaginationItems
 import domain.entity.TaxiRide
 import domain.entity.Trip
 import domain.gateway.ITransactionsGateway
 import domain.utils.GeneralException
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import io.ktor.client.request.put
 import io.ktor.util.InternalAPI
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
-import presentation.home.toFoodOrderUiState
 
 class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), ITransactionsGateway {
     override suspend fun getTripHistory(): List<Trip> {
@@ -37,10 +38,18 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
         }.value?.items?.map { it.toTripEntity() } ?: throw GeneralException.UnknownErrorException
     }
 
-    override suspend fun getOrderHistoryGateway(): List<FoodOrder> {
-        return tryToExecute<ServerResponse<PaginationResponse<FoodOrderDto>>> {
-            get("orders/user/history")
-        }.value?.items?.toEntity() ?: throw GeneralException.NotFoundException
+    override suspend fun getOrderHistoryGateway(page: Int, limit: Int): PaginationItems<FoodOrder> {
+        val result = tryToExecute<ServerResponse<PaginationResponse<FoodOrderDto>>> {
+            get("orders/user/history") {
+                parameter("page", page)
+                parameter("limit", limit)
+            }
+        }.value
+        return paginateData(
+            result = result?.items?.map { it.toEntity() }
+                ?: throw GeneralException.NotFoundException,
+            page = result.page, total = result.total
+        )
     }
 
     override suspend fun getCart(): Cart {
