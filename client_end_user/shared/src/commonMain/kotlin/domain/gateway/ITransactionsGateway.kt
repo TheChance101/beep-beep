@@ -10,7 +10,7 @@ import domain.entity.Trip
 import kotlinx.coroutines.flow.Flow
 
 interface ITransactionsGateway {
-    suspend fun getTripHistory(): List<Trip>
+    suspend fun getTripHistory(page: Int, limit: Int): PaginationItems<Trip>
     suspend fun getOrderHistoryGateway(page: Int, limit: Int): PaginationItems<FoodOrder>
     suspend fun getCart(): Cart
     suspend fun orderNow(): Boolean

@@ -37,3 +37,7 @@ fun Location.toLocationUiState(): TripHistoryUiState.LocationUiState {
 fun Flow<PagingData<FoodOrder>>.toOrderHistoryUiState(): Flow<PagingData<OrderHistoryUiState>> {
     return this.map { pagingData -> pagingData.map { it.toOrderHistoryUiState()} }
 }
+
+fun Flow<PagingData<Trip>>.toTripHistoryUiState(): Flow<PagingData<TripHistoryUiState>> {
+    return this.map { pagingData -> pagingData.map { it.toTripHistoryUiState()} }
+}

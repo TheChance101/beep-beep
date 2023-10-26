@@ -8,7 +8,7 @@ import presentation.base.ErrorState
 data class OrderScreenUiState(
     val selectedType: OrderSelectType = OrderSelectType.MEALS,
     val ordersHistory: Flow<PagingData<OrderHistoryUiState>> = emptyFlow(),
-    val tripsHistory: List<TripHistoryUiState> = emptyList(),
+    val tripsHistory:  Flow<PagingData<TripHistoryUiState>> = emptyFlow(),
 
     val isLoggedIn: Boolean = false,
     val isLoading: Boolean = false,

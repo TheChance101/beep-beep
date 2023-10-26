@@ -32,10 +32,18 @@ import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
 
 class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), ITransactionsGateway {
-    override suspend fun getTripHistory(): List<Trip> {
-        return tryToExecute<ServerResponse<PaginationResponse<TripDto>>> {
-            get("/trip/history")
-        }.value?.items?.map { it.toTripEntity() } ?: throw GeneralException.UnknownErrorException
+    override suspend fun getTripHistory(page: Int, limit: Int): PaginationItems<Trip> {
+        val result = tryToExecute<ServerResponse<PaginationResponse<TripDto>>> {
+            get("/trip/history") {
+                parameter("page", page)
+                parameter("limit", limit)
+            }
+        }.value
+        return paginateData(
+            result = result?.items?.map { it.toTripEntity() }
+                ?: throw GeneralException.UnknownErrorException,
+            page = result.page, total = result.total
+        )
     }
 
     override suspend fun getOrderHistoryGateway(page: Int, limit: Int): PaginationItems<FoodOrder> {

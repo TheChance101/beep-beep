@@ -41,7 +41,7 @@ class OrderHistoryScreenModel(
                 if (token.isNotEmpty()) {
                     updateState { it.copy(isLoggedIn = true) }
                     getOrdersHistory()
-                    getTripsHistory()
+//                    getTripsHistory()
                 } else {
                     updateState { it.copy(isLoggedIn = false) }
                 }
@@ -62,15 +62,17 @@ class OrderHistoryScreenModel(
     }
 
     private fun getTripsHistory() {
-//        tryToExecute(
-//            { orderHistoryUseCase.getTripsHistory() },
-//            ::onGetTripsHistorySuccess,
-//            ::onError
-//        )
+        tryToExecute(
+            { orderHistoryUseCase.getTripsHistory() },
+            ::onGetTripsHistorySuccess,
+            ::onError
+        )
     }
 
-    private fun onGetTripsHistorySuccess(tripsHistory: List<Trip>) {
-        updateState { it.copy(tripsHistory = tripsHistory.map { it.toTripHistoryUiState() }) }
+    private fun onGetTripsHistorySuccess(tripsHistory: Flow<PagingData<Trip>>) {
+        updateState {
+            it.copy(tripsHistory = tripsHistory.toTripHistoryUiState(), isLoading = false)
+        }
     }
 
     private fun onGetOrdersHistorySuccess(ordersHistory: Flow<PagingData<FoodOrder>>) {

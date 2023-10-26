@@ -11,56 +11,10 @@ import domain.entity.Trip
 import domain.entity.TripStatus
 import domain.gateway.ITransactionsGateway
 import kotlinx.coroutines.flow.Flow
-import kotlinx.datetime.LocalTime
 
 class FakeTransactionsGateway : ITransactionsGateway {
-    override suspend fun getTripHistory(): List<Trip> {
-        return listOf(
-            Trip(
-                id = "123456",
-                clientId = "67890",
-                startPoint = Location(37.7749, -122.4194),
-                destination = Location(34.0522, -118.2437),
-                startPointAddress = "123 Main Street, City",
-                destinationAddress = "456 Elm Street, Town",
-                taxiColor = TaxiColor.getColorByColorNumber(4294639360L),
-                rate = 3.5,
-                price = 25.0,
-                startDate = "2023-10-17",
-                isATaxiTrip = true,
-                tripStatus = TripStatus.RECEIVED,
-                timeToArriveInMints = 10
-            ),
-            Trip(
-                id = "123456",
-                clientId = "67890",
-                startPoint = Location(37.7749, -122.4194),
-                destination = Location(34.0522, -118.2437),
-                startPointAddress = "123 Main Street, City",
-                destinationAddress = "456 Elm Street, Town",
-                taxiColor = TaxiColor.getColorByColorNumber(4294639360L),
-                rate = 3.5,
-                price = 25.0,
-                startDate = "2023-10-17",
-                isATaxiTrip = true,
-                tripStatus = TripStatus.RECEIVED,
-                timeToArriveInMints = 10
-            ),
-            Trip(
-                id = "123456",
-                clientId = "67890",
-                startPoint = Location(37.7749, -122.4194),
-                destination = Location(34.0522, -118.2437),
-                startPointAddress = "123 Main Street, City",
-                destinationAddress = "456 Elm Street, Town",
-                taxiColor = TaxiColor.getColorByColorNumber(4294639360L),
-                rate = 3.5,
-                price = 25.0,
-                isATaxiTrip = true,
-                tripStatus = TripStatus.RECEIVED,
-                timeToArriveInMints = 10
-            ),
-        )
+    override suspend fun getTripHistory(page: Int, limit: Int): PaginationItems<Trip> {
+        TODO("Not yet implemented")
     }
 
     override suspend fun getOrderHistoryGateway(page: Int, limit: Int): PaginationItems<FoodOrder> {

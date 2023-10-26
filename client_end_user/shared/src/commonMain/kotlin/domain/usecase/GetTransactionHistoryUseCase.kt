@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import data.gateway.remote.pagesource.FoodOrderPagingSource
+import data.gateway.remote.pagesource.TaxiOrderPagingSource
 import domain.entity.FoodOrder
 import domain.entity.Trip
 import domain.gateway.ITransactionsGateway
@@ -11,11 +12,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface IGetTransactionHistoryUseCase {
     suspend fun getOrdersHistory(): Flow<PagingData<FoodOrder>>
-    suspend fun getTripsHistory(): List<Trip>
+    suspend fun getTripsHistory(): Flow<PagingData<Trip>>
 }
 
 class GetTransactionHistoryUseCase(
-    private val transactionsGateway: ITransactionsGateway,
+    private val taxiOrder: TaxiOrderPagingSource,
     private val foodOrderDataSource: FoodOrderPagingSource,
 ) : IGetTransactionHistoryUseCase {
 
@@ -25,7 +26,9 @@ class GetTransactionHistoryUseCase(
         ).flow
     }
 
-    override suspend fun getTripsHistory(): List<Trip> {
-        return transactionsGateway.getTripHistory()
+    override suspend fun getTripsHistory(): Flow<PagingData<Trip>> {
+        return Pager(config = PagingConfig(pageSize = 10, enablePlaceholders = true),
+            pagingSourceFactory = { taxiOrder }
+        ).flow
     }
 }

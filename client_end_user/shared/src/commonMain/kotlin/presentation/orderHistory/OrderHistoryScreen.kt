@@ -53,6 +53,8 @@ class OrderHistoryScreen :
         listener: OrderHistoryScreenInteractionListener,
     ) {
         val foodOrders = state.ordersHistory.collectAsLazyPagingItems()
+        val trips = state.tripsHistory.collectAsLazyPagingItems()
+
         LoginRequiredPlaceholder(
             placeHolder = painterResource(Resources.images.requireLoginToShowOrdersHistoryPlaceholder),
             message = Resources.strings.ordersHistoryLoginMessage,
@@ -97,9 +99,19 @@ class OrderHistoryScreen :
                             }
                         }
                     }
+
                     OrderScreenUiState.OrderSelectType.TRIPS -> {
-//                        TripHistoryItem(it)
-//                        HorizontalDivider(modifier = Modifier.fillMaxWidth())
+
+                        PagingList(
+                            data = trips,
+                            isLoading = state.isLoading,
+                            errorMessage = "No Trips"
+                        ) { trip ->
+                            trip?.let {
+                                TripHistoryItem(it)
+                                HorizontalDivider(modifier = Modifier.fillMaxWidth())
+                            }
+                        }
                     }
                 }
             }
