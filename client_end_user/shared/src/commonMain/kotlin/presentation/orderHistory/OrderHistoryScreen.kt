@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.cash.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpAnimatedTabLayout
 import com.beepbeep.designSystem.ui.theme.Theme
@@ -24,6 +25,7 @@ import presentation.base.BaseScreen
 import presentation.composable.ContentVisibility
 import presentation.composable.LoginRequiredPlaceholder
 import presentation.composable.HorizontalDivider
+import presentation.composable.PagingList
 import presentation.orderHistory.composable.MealOrderItem
 import presentation.orderHistory.composable.TripHistoryItem
 import resources.Resources
@@ -48,8 +50,9 @@ class OrderHistoryScreen :
     @Composable
     override fun onRender(
         state: OrderScreenUiState,
-        listener: OrderHistoryScreenInteractionListener
+        listener: OrderHistoryScreenInteractionListener,
     ) {
+        val foodOrders = state.ordersHistory.collectAsLazyPagingItems()
         LoginRequiredPlaceholder(
             placeHolder = painterResource(Resources.images.requireLoginToShowOrdersHistoryPlaceholder),
             message = Resources.strings.ordersHistoryLoginMessage,
@@ -81,24 +84,22 @@ class OrderHistoryScreen :
                         modifier = Modifier.padding(4.dp)
                     )
                 }
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(vertical = 24.dp)
-                ) {
-                    when (state.selectedType) {
-                        OrderScreenUiState.OrderSelectType.MEALS -> {
-                            items(state.ordersHistory) {
-                                MealOrderItem(orders = it)
+                when (state.selectedType) {
+                    OrderScreenUiState.OrderSelectType.MEALS -> {
+                        PagingList(
+                            data = foodOrders,
+                            isLoading = state.isLoading,
+                            errorMessage = "No Orders"
+                        ) { foodOrder ->
+                            foodOrder?.let {
+                                MealOrderItem(orders = foodOrder)
                                 HorizontalDivider(modifier = Modifier.fillMaxWidth())
                             }
                         }
-
-                        OrderScreenUiState.OrderSelectType.TRIPS -> {
-                            items(state.tripsHistory) {
-                                TripHistoryItem(it)
-                                HorizontalDivider(modifier = Modifier.fillMaxWidth())
-                            }
-                        }
+                    }
+                    OrderScreenUiState.OrderSelectType.TRIPS -> {
+//                        TripHistoryItem(it)
+//                        HorizontalDivider(modifier = Modifier.fillMaxWidth())
                     }
                 }
             }

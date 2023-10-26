@@ -1,7 +1,9 @@
 package presentation.orderHistory
 
+import androidx.paging.PagingData
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.FoodOrder
+import domain.entity.Meal
 import domain.entity.Trip
 import domain.usecase.GetTransactionHistoryUseCase
 import domain.usecase.IManageAuthenticationUseCase
@@ -10,6 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
+import presentation.resturantDetails.toUIState
 
 class OrderHistoryScreenModel(
     private val orderHistoryUseCase: GetTransactionHistoryUseCase,
@@ -20,6 +23,7 @@ class OrderHistoryScreenModel(
     override val viewModelScope: CoroutineScope = coroutineScope
 
     init {
+        updateState { it.copy(isLoading = true) }
         checkIfLoggedIn()
     }
 
@@ -46,7 +50,7 @@ class OrderHistoryScreenModel(
     }
 
     private fun onCheckIfLoggedInError(errorState: ErrorState) {
-        updateState { it.copy(isLoggedIn = false) }
+        updateState { it.copy(isLoggedIn = false, isLoading = false) }
     }
 
     private fun getOrdersHistory() {
@@ -58,23 +62,25 @@ class OrderHistoryScreenModel(
     }
 
     private fun getTripsHistory() {
-        tryToExecute(
-            { orderHistoryUseCase.getTripsHistory() },
-            ::onGetTripsHistorySuccess,
-            ::onError
-        )
+//        tryToExecute(
+//            { orderHistoryUseCase.getTripsHistory() },
+//            ::onGetTripsHistorySuccess,
+//            ::onError
+//        )
     }
 
     private fun onGetTripsHistorySuccess(tripsHistory: List<Trip>) {
         updateState { it.copy(tripsHistory = tripsHistory.map { it.toTripHistoryUiState() }) }
     }
 
-    private fun onGetOrdersHistorySuccess(ordersHistory: List<FoodOrder>) {
-        updateState { it.copy(ordersHistory = ordersHistory.map { it.toOrderHistoryUiState() }) }
+    private fun onGetOrdersHistorySuccess(ordersHistory: Flow<PagingData<FoodOrder>>) {
+        updateState {
+            it.copy(ordersHistory = ordersHistory.toOrderHistoryUiState(), isLoading = false)
+        }
     }
 
     private fun onError(errorState: ErrorState) {
-        // catch errors here
+        updateState { it.copy(isLoading = false, error = errorState) }
     }
 
     override fun onClickTab(type: OrderScreenUiState.OrderSelectType) {

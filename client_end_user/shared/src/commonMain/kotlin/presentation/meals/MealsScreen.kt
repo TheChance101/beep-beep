@@ -37,6 +37,7 @@ import presentation.composable.BottomSheet
 import presentation.composable.MealBottomSheet
 import presentation.composable.MealCard
 import presentation.composable.ModalBottomSheetState
+import presentation.composable.PagingList
 import presentation.composable.modifier.noRippleEffect
 import presentation.resturantDetails.Composable.NeedToLoginSheet
 import presentation.resturantDetails.MealUIState
@@ -106,7 +107,7 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
     private fun content(
         state: MealsUiState,
         onMealSelected: (MealUIState) -> Unit,
-        onBackClicked: () -> Unit
+        onBackClicked: () -> Unit,
     ) {
         val meals = state.meals.collectAsLazyPagingItems()
         Column(
@@ -119,7 +120,11 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
                 onNavigateUp = onBackClicked,
                 painterResource = painterResource(Resources.images.arrowLeft)
             )
-            PagingList(data = meals, isLoading = state.isLoading) { meal ->
+            PagingList(
+                data = meals,
+                isLoading = state.isLoading,
+                errorMessage = "No Meals"
+            ) { meal ->
                 meal?.let {
                     MealCard(
                         meal = it,
@@ -128,78 +133,6 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun <T : Any> PagingList(
-    modifier: Modifier = Modifier,
-    data: LazyPagingItems<T>,
-    isLoading: Boolean = true,
-    content: @Composable (T?) -> Unit
-) {
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Theme.colors.background),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        contentPadding = PaddingValues(16.dp)
-    ) {
-
-        if (data.itemSnapshotList.items.isEmpty()) {
-            item {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "No Meals",
-                        modifier = Modifier.fillMaxSize(),
-                        textAlign = TextAlign.Center
-                    )
-                }
-
-            }
-        } else {
-            items(data.itemCount) { index ->
-                val item = data[index]
-                content(item)
-            }
-            if (isLoading) {
-                item {
-                    CircularProgressIndicator()
-                }
-            }
-        }
-
-        item {
-            when (data.loadState.refresh) {
-                is LoadStateNotLoading -> Unit
-                LoadStateLoading -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(modifier.align(Alignment.Center))
-                    }
-                }
-
-                is LoadStateError -> {
-                    ErrorItem(
-                        message = (data.loadState.append as LoadStateError).error.message.toString(),
-                        onRefresh = { data.retry() })
-                }
-
-                else -> {
-                    ErrorItem(
-                        message = (data.loadState.append as LoadStateError).error.message.toString(),
-                        onRefresh = { data.retry() })
-                }
-            }
-        }
-
-
     }
 }
 

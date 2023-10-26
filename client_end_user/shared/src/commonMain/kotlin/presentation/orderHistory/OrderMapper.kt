@@ -1,8 +1,13 @@
 package presentation.orderHistory
 
-import domain.entity.Location
+import androidx.paging.PagingData
+import androidx.paging.map
 import domain.entity.FoodOrder
+import domain.entity.Location
 import domain.entity.Trip
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import presentation.resturantDetails.toUIState
 
 fun FoodOrder.toOrderHistoryUiState() = OrderHistoryUiState(
     meals = meals.joinToString(", ") { "${it.quality} ${it.name}" },
@@ -26,4 +31,9 @@ fun Trip.toTripHistoryUiState(): TripHistoryUiState {
 
 fun Location.toLocationUiState(): TripHistoryUiState.LocationUiState {
     return TripHistoryUiState.LocationUiState(latitude = latitude, longitude = longitude)
+}
+
+
+fun Flow<PagingData<FoodOrder>>.toOrderHistoryUiState(): Flow<PagingData<OrderHistoryUiState>> {
+    return this.map { pagingData -> pagingData.map { it.toOrderHistoryUiState()} }
 }
