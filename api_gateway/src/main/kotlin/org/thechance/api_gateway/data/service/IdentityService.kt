@@ -5,18 +5,21 @@ import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
-import io.ktor.client.utils.*
 import io.ktor.http.*
 import io.ktor.util.*
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
 import org.thechance.api_gateway.data.model.*
 import org.thechance.api_gateway.data.model.authenticate.TokenConfiguration
 import org.thechance.api_gateway.data.model.authenticate.TokenType
-import org.thechance.api_gateway.data.model.restaurant.RestaurantDto
-import org.thechance.api_gateway.data.model.restaurant.RestaurantOptions
+import org.thechance.api_gateway.data.model.identity.UserDetailsDto
+import org.thechance.api_gateway.data.model.identity.UserDto
+import org.thechance.api_gateway.data.model.identity.UserOptions
+import org.thechance.api_gateway.data.model.identity.UserRegistrationDto
+import org.thechance.api_gateway.data.model.restaurant.MealDto
 import org.thechance.api_gateway.data.utils.ErrorHandler
 import org.thechance.api_gateway.data.utils.tryToExecute
 import org.thechance.api_gateway.util.APIs
@@ -32,24 +35,18 @@ class IdentityService(
     private val attributes: Attributes,
     private val errorHandler: ErrorHandler
 ) {
-    suspend fun createUser(
-        fullName: String, username: String, password: String, email: String, languageCode: String
-    ): UserDto {
-        return client.tryToExecute<UserDto>(
+    @OptIn(InternalAPI::class)
+    suspend fun createUser(newUser: UserRegistrationDto, languageCode: String): UserDetailsDto {
+        return client.tryToExecute<UserDetailsDto>(
             APIs.IDENTITY_API,
             attributes = attributes,
             setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             }
         ) {
-            submitForm("/user",
-                formParameters = parameters {
-                    append("fullName", fullName)
-                    append("username", username)
-                    append("password", password)
-                    append("email", email)
-                }
-            )
+            post("/user") {
+                body = Json.encodeToString(UserRegistrationDto.serializer(), newUser)
+            }
         }
     }
 
@@ -79,20 +76,6 @@ class IdentityService(
         return generateUserTokens(user.id, userName, user.permission, tokenConfiguration)
     }
 
-    suspend fun getUsers(
-        page: Int? = null, limit: Int? = null, searchTerm: String, languageCode: String
-    ) = client.tryToExecute<PaginationResponse<UserDto>>(
-        APIs.IDENTITY_API, attributes = attributes, setErrorMessage = { errorCodes ->
-            errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
-        }
-    ) {
-        get("/dashboard/user") {
-            parameter("page", page)
-            parameter("limit", limit)
-            parameter("name", searchTerm)
-        }
-    }
-
     @OptIn(InternalAPI::class)
     suspend fun getUsers(
         options: UserOptions, languageCode: String
@@ -114,31 +97,36 @@ class IdentityService(
         }
     }
 
-    suspend fun getUserById(id: String, languageCode: String): UserDetailsDto = client.tryToExecute<UserDetailsDto>(
-        APIs.IDENTITY_API, attributes = attributes, setErrorMessage = { errorCodes ->
-            errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
-        }
-    ) {
-        get("user/$id")
-    }
-
-    suspend fun updateUserProfile(
-        id: String,
-        fullName: String,
-        languageCode: String
-    ): UserDetailsDto {
-        return client.tryToExecute<UserDetailsDto>(
+    suspend fun getUserAddresses(userId: String, languageCode: String): List<AddressDto> =
+        client.tryToExecute<List<AddressDto>>(
             APIs.IDENTITY_API,
             attributes = attributes,
-            setErrorMessage = { errorCodes ->
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { get("/user/$userId/address") }
+        )
+
+    suspend fun getUserById(id: String, languageCode: String): UserDetailsDto =
+        client.tryToExecute<UserDetailsDto>(
+            APIs.IDENTITY_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { get("user/$id") }
+        )
+
+    @OptIn(InternalAPI::class)
+    suspend fun updateUserProfile(id: String, fullName: String?, phone: String?, languageCode: String): UserDetailsDto {
+        return client.tryToExecute(
+            APIs.IDENTITY_API, attributes = attributes, setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
             }
         ) {
-            submitForm("/user/profile/$id",
-                formParameters = parameters {
-                    append("fullName", fullName)
-                }
-            )
+            val formData = FormDataContent(Parameters.build {
+                fullName?.let { append("fullName", it) }
+                phone?.let { append("phone", it) }
+            })
+            put("/user/$id") {
+                body = formData
+            }
         }
     }
 
@@ -221,8 +209,10 @@ class IdentityService(
         val accessTokenExpirationDate = getExpirationDate(tokenConfiguration.accessTokenExpirationTimestamp)
         val refreshTokenExpirationDate = getExpirationDate(tokenConfiguration.refreshTokenExpirationTimestamp)
 
-        val refreshToken = generateToken(userId, username, userPermission, tokenConfiguration, TokenType.REFRESH_TOKEN)
-        val accessToken = generateToken(userId, username, userPermission, tokenConfiguration, TokenType.ACCESS_TOKEN)
+        val refreshToken =
+            generateToken(userId, username, userPermission, tokenConfiguration, TokenType.REFRESH_TOKEN)
+        val accessToken =
+            generateToken(userId, username, userPermission, tokenConfiguration, TokenType.ACCESS_TOKEN)
 
         return UserTokensResponse(
             accessTokenExpirationDate.time,
@@ -267,5 +257,12 @@ class IdentityService(
                 body = Json.encodeToString(LocationDto.serializer(), location)
             }
         }
+
+    suspend fun isUserExistedInDb(userId: String?, languageCode: String): Boolean = client.tryToExecute<Boolean>(
+        APIs.IDENTITY_API,
+        attributes = attributes,
+        setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+        method = { get("user/isExisted/$userId") }
+    )
 
 }

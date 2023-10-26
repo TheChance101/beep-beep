@@ -3,7 +3,7 @@ package org.thechance.api_gateway.data.localizedMessages.languages
 import org.koin.core.annotation.Single
 
 @Single
-class ArabicLocalizedMessages() : LocalizedMessages {
+class ArabicLocalizedMessages : LocalizedMessages {
 
     // region identity
     override val invalidRequestParameter: String = "مدخلات خاطئة"
@@ -16,6 +16,7 @@ class ArabicLocalizedMessages() : LocalizedMessages {
     override val usernameCannotBeBlank: String = "اسم المستخدم لا يجب ان يكون فارغ"
     override val passwordCannotBeBlank: String = "كلمه المرور لا يجب ان تكون فارغة"
     override val invalidEmail: String = "ايميل غير صالح"
+    override val invalidPhone: String = "رقم الهاتف غير صحيح"
     override val notFound: String = "غير موجود"
     override val invalidCredentials: String = "البيانات خاطئة"
     override val userCreatedSuccessfully: String = ""
@@ -26,13 +27,17 @@ class ArabicLocalizedMessages() : LocalizedMessages {
     // endregion
 
     // region taxi
-    override val taxiCreatedSuccessfully: String= "تم انشاء التاكسي بنجاح"
+    override val taxiCreatedSuccessfully: String = "تم انشاء التاكسي بنجاح"
     override val tripCreatedSuccessfully: String = "تم انشاء الرحلة"
-    override val tripApproved: String = "تم قبول الرحلة"
+    override val tripUpdated: String = "تم تحديث الرحلة بنجاح"
     override val tripCanceled: String = "تم الغاء الرحلة"
     override val tripFinished: String = "تم إنهاء الرحلة بنجاح"
-    override val taxiUpdateSuccessfully: String= "تم تحديث التاكسي بنجاح"
-    override val taxiDeleteSuccessfully: String= "تم حذف التاكسي بنجاح"
+    override val tripArrived: String = "تم الوصول الى العميل"
+    override val receivedNewTrip: String = "تم إستلام رحلة جديدة"
+    override val receivedNewDeliveryOrder: String = "تم إستلام اوردر جديد"
+    override val newOrderComing: String = "تم استقبال اوردر جديد"
+    override val taxiUpdateSuccessfully: String = "تم تحديث التاكسي بنجاح"
+    override val taxiDeleteSuccessfully: String = "تم حذف التاكسي بنجاح"
     override val invalidId: String = "رقم بطاقة غير صالح"
     override val invalidPlate: String = "رقم لوحة غير صالح"
     override val invalidColor: String = "لون غير صالح"
@@ -80,9 +85,18 @@ class ArabicLocalizedMessages() : LocalizedMessages {
     override val missingParameter: String = "معلومات مفقودة"
     override val tokensNotFound: String = "رمز الجهاز غير موجود"
     override val tokenNotRegister: String = "رمز الجهاز غير مسجل"
+    override val alreadyUpdated: String = "تم التحديث من قبل"
+    override val cancelOrderError: String = "هذا الطلب تم الغائه من قبل او تم قبوله من قبل"
+    override val cartIsAlreadyEmpty: String = "لا يمكن اجراء الامر لان السله فارغه"
+    override val invalidQuantity: String = "مدخل كميه مش صح"
+
     //endregion
 
     // region notification
     override val notificationNotSent: String = "لم يتم إرسال الإشعار"
+    //endregion
+
+    // region chat
+    override val supportAgentNotFound: String = "لايوجد احد للدعم"
     //endregion
 }

@@ -124,7 +124,7 @@ private fun TableRowLoading(
         val randomFloat= remember { (50..100).random().dp }
         repeat(9) {
             Box(modifier = Modifier.weight(if (it == 0 || it == 8) 1f else 3f)){
-                Box(modifier = Modifier.height(30.kms).width(randomFloat)
+                Box(modifier = Modifier.height(30.kms).width(randomFloat).align(Alignment.CenterStart)
                     .clip(shape = RoundedCornerShape(4.dp)).shimmerEffect(durationMillis = 1500))
             }
         }

@@ -11,6 +11,7 @@ data class MealDto(
     @SerialName("price") val price: Double? = null,
     @SerialName("currency") val currency: String? = null,
     @SerialName("restaurantId") val restaurantId: String? = null,
-    @SerialName("cuisines") val cuisines: List<String>? = null,
+    @SerialName("restaurantName") val restaurantName: String? = null,
+    @SerialName("cuisines") val cuisines: List<CuisineDto>? = null,
     @SerialName("image") val image: String? = null
 )

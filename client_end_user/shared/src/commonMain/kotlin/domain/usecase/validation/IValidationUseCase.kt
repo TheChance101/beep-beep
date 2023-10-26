@@ -70,7 +70,7 @@ class ValidationUseCaseUseCase : IValidationUseCase {
 
 
     private fun getPhoneRegex(currency: String): Regex {
-        return phoneRegexMap[currency] ?: "^\\+\\d{2,}\\d{9,}$".toRegex()
+        return phoneRegexMap[currency] ?: "^\\+1\\d{10}$".toRegex()
     }
 
     private companion object {
@@ -81,6 +81,7 @@ class ValidationUseCaseUseCase : IValidationUseCase {
             "IQD" to "^\\+964\\d{10}$".toRegex(),
             "SYP" to "^\\+963\\d{9}$".toRegex(),
             "ILS" to "^\\+972([59])\\d{8}$".toRegex(),
+            "US" to "^\\+1\\d{10}$".toRegex()
         )
     }
 }

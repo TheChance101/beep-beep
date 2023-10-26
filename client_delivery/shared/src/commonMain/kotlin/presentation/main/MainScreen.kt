@@ -19,6 +19,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
+import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.composable.BpButton
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -26,6 +27,7 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.base.BaseScreen
 import presentation.map.MapScreen
 import resources.Resources
+import util.getNavigationBarPadding
 
 class MainScreen :
     BaseScreen<MainScreenModel, MainUiState, MainScreenUiEffect, MainInteractionListener>() {
@@ -85,6 +87,19 @@ class MainScreen :
                     enabled = !state.isLoading
                 )
             }
+            BPSnackBar(
+                icon = painterResource(Resources.images.warningIcon),
+                iconBackgroundColor = Theme.colors.warningContainer,
+                iconTint = Theme.colors.warning,
+                isVisible = state.showSnackBar,
+                modifier = Modifier.padding(bottom = getNavigationBarPadding().calculateBottomPadding())
+                    .align(Alignment.BottomCenter)
+            ) {
+                    Text(
+                        text = Resources.strings.accessDeniedMessage,
+                        style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
+                    )
+                }
+            }
         }
     }
-}

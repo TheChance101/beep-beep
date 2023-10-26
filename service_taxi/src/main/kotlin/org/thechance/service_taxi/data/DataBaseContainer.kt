@@ -12,8 +12,8 @@ class DataBaseContainer(client: CoroutineClient) {
     val taxiCollection by lazy { database.getCollection<TaxiCollection>(TAXI_COLLECTION_NAME) }
 
     companion object {
-        private val DATA_BASE_NAME = System.getenv("DB_NAME").toString()
-        private const val TAXI_COLLECTION_NAME = "taxi"
-        private const val TRIP_COLLECTION_NAME = "trip"
+        val DATA_BASE_NAME = System.getenv("DB_NAME").toString()
+        const val TAXI_COLLECTION_NAME = "taxi"
+        const val TRIP_COLLECTION_NAME = "trip"
     }
 }

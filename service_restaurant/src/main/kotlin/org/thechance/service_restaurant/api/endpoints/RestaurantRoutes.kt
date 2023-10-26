@@ -10,10 +10,7 @@ import org.thechance.service_restaurant.api.models.BasePaginationResponseDto
 import org.thechance.service_restaurant.api.models.ExploreRestaurantDto
 import org.thechance.service_restaurant.api.models.RestaurantDto
 import org.thechance.service_restaurant.api.models.RestaurantOptionsDto
-import org.thechance.service_restaurant.api.models.mappers.toDetailsDto
-import org.thechance.service_restaurant.api.models.mappers.toDto
-import org.thechance.service_restaurant.api.models.mappers.toEntity
-import org.thechance.service_restaurant.api.models.mappers.toMealDto
+import org.thechance.service_restaurant.api.models.mappers.*
 import org.thechance.service_restaurant.api.utils.extractInt
 import org.thechance.service_restaurant.api.utils.extractString
 import org.thechance.service_restaurant.domain.usecase.IControlRestaurantsUseCase
@@ -33,10 +30,10 @@ fun Route.restaurantRoutes() {
     route("restaurants") {
 
         post {
-            val restaurantOptions = call.receive<RestaurantOptionsDto>()
-            val restaurants = discoverRestaurant.getRestaurants(restaurantOptions.toEntity()).toDto()
+            val restaurantOptions = call.receive<RestaurantOptionsDto>().toEntity()
+            val restaurants = discoverRestaurant.getRestaurants(restaurantOptions).toDto()
             val total = controlRestaurant.getTotalNumberOfRestaurant()
-            call.respond(HttpStatusCode.OK, BasePaginationResponseDto(restaurants, total))
+            call.respond(HttpStatusCode.OK, BasePaginationResponseDto(restaurants, restaurantOptions.page, total))
         }
 
         get("/{ownerId}") {
@@ -78,12 +75,21 @@ fun Route.restaurantRoutes() {
             )
             val page = call.parameters.extractInt("page") ?: 1
             val limit = call.parameters.extractInt("limit") ?: 10
-            val restaurant = discoverRestaurant.getMealsByRestaurantId(
+            val meals = discoverRestaurant.getMealsByRestaurantId(
                 restaurantId = restaurantId,
                 page = page,
                 limit = limit
             ).toMealDto()
-            call.respond(HttpStatusCode.OK, restaurant)
+            val total = controlRestaurant.getTotalNumberOfMealsByRestaurantId(restaurantId)
+            call.respond(HttpStatusCode.OK, BasePaginationResponseDto(meals, page, total))
+        }
+
+        get("/{id}/cuisineMeals") {
+            val restaurantId = call.parameters["id"] ?: throw MultiErrorException(
+                listOf(INVALID_REQUEST_PARAMETER)
+            )
+            val result = discoverRestaurant.getCuisinesMealsInRestaurant(restaurantId)
+            call.respond(HttpStatusCode.OK, result.toCuisineDetailsDto())
         }
 
         get("/{id}") {
@@ -114,25 +120,8 @@ fun Route.restaurantRoutes() {
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
-        delete("/{id}/categories") {
-            val restaurantId =
-                call.parameters.extractString("id") ?: throw MultiErrorException(
-                    listOf(
-                        INVALID_REQUEST_PARAMETER
-                    )
-                )
-            val categoryIds = call.receive<List<String>>()
-            val result =
-                manageRestaurantDetails.deleteCategoriesInRestaurant(restaurantId, categoryIds)
-            call.respond(HttpStatusCode.OK, result)
-        }
-
         delete("/{id}") {
-            val restaurantId = call.parameters["id"] ?: throw MultiErrorException(
-                listOf(
-                    INVALID_REQUEST_PARAMETER
-                )
-            )
+            val restaurantId = call.parameters["id"] ?: throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER))
             val result = controlRestaurant.deleteRestaurant(restaurantId)
             call.respond(HttpStatusCode.OK, result)
         }
@@ -142,6 +131,12 @@ fun Route.restaurantRoutes() {
                 ?: throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER))
             val result = controlRestaurant.deleteRestaurantsByOwnerId(ownerId)
             call.respond(HttpStatusCode.OK, result)
+        }
+
+        get("/isExisted/{id}") {
+            val restaurantId = call.parameters["id"] ?: throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER))
+            val isRestaurantExisted = discoverRestaurant.isRestaurantExisted(restaurantId)
+            call.respond(HttpStatusCode.OK, isRestaurantExisted)
         }
     }
 }

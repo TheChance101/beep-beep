@@ -10,7 +10,8 @@ class App: Application() {
         super.onCreate()
         startKoin { androidContext(this@App.applicationContext); modules(appModule(),
             locationDataSourceModule,
-            locationTrackerModule
+            locationTrackerModule,
+            locationServiceModule
         ) }
     }
 }

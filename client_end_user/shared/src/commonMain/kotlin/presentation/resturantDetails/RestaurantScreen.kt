@@ -1,71 +1,52 @@
 package presentation.resturantDetails
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
-import com.beepbeep.designSystem.ui.composable.BPSnackBar
 import com.beepbeep.designSystem.ui.theme.Theme
-import domain.entity.PriceLevel
-import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import org.koin.core.parameter.parametersOf
 import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
 import presentation.composable.BottomSheet
-import presentation.composable.BpImageCard
 import presentation.composable.BpPriceLevel
+import presentation.composable.ItemSection
+import presentation.composable.MealBottomSheet
 import presentation.composable.RatingBar
-import presentation.composable.SectionHeader
 import presentation.composable.modifier.noRippleEffect
 import presentation.resturantDetails.Composable.Chip
-import presentation.resturantDetails.Composable.CloseButton
-import presentation.resturantDetails.Composable.MealBottomSheet
+import presentation.composable.BackButton
 import presentation.resturantDetails.Composable.NeedToLoginSheet
 import presentation.resturantDetails.Composable.ToastMessage
 import resources.Resources
+import util.getNavigationBarPadding
 
-object RestaurantScreen :
+
+data class RestaurantScreen(val restaurantId: String) :
     BaseScreen<RestaurantScreenModel, RestaurantUIState, RestaurantUIEffect, RestaurantInteractionListener>() {
-
 
     override fun onEffect(effect: RestaurantUIEffect, navigator: Navigator) {
         when (effect) {
@@ -77,7 +58,7 @@ object RestaurantScreen :
 
     @Composable
     override fun Content() {
-        initScreen(getScreenModel())
+        initScreen(getScreenModel(parameters = { parametersOf(restaurantId) }))
     }
 
     @OptIn(ExperimentalResourceApi::class)
@@ -91,11 +72,16 @@ object RestaurantScreen :
                 sheetContent = {
                     if (state.showMealSheet)
                         MealBottomSheet(
-                            meal = state.meal,
-                            listener = listener,
+                            modifier = Modifier.padding(getNavigationBarPadding()),
+                            meal = state.selectedMeal,
+                            onAddToCart = listener::onAddToCart,
+                            onDismissSheet = listener::onDismissSheet,
+                            onIncreaseQuantity = listener::onIncreaseMealQuantity,
+                            onDecreaseQuantity = listener::onDecreaseMealQuantity
                         )
-                    if(state.showLoginSheet)
+                    if (state.showLoginSheet)
                         NeedToLoginSheet(
+                            modifier = Modifier.padding(getNavigationBarPadding()),
                             text = Resources.strings.loginToAddToFavourite,
                             onClick = {
                                 listener.onDismissSheet()
@@ -105,17 +91,16 @@ object RestaurantScreen :
                 },
                 sheetBackgroundColor = Theme.colors.background,
                 onBackGroundClicked = listener::onDismissSheet,
-                sheetState =  state.sheetState,
+                sheetState = state.sheetState,
             ) {
-
                 Image(
                     painter = painterResource(Resources.images.placeholder),
-                    contentDescription = "background",)
-
-                CloseButton(
-                    onClick = {  listener.onBack()},
+                    contentDescription = "background",
+                )
+                BackButton(
+                    onClick = { listener.onBack() },
                     modifier = Modifier.align(Alignment.TopCenter),
-                    icon=Resources.images.iconBack
+                    icon = Resources.images.iconBack
                 )
                 Column(
                     modifier = Modifier.fillMaxWidth().fillMaxHeight(.75f)
@@ -169,9 +154,8 @@ object RestaurantScreen :
                     Row(
                         modifier = Modifier
                             .fillMaxWidth().padding(horizontal = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-
-                        ) {
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
                         RatingBar(currentRating = state.restaurantInfo.rating)
                         BpPriceLevel(state.restaurantInfo.priceLevel)
                     }
@@ -186,86 +170,56 @@ object RestaurantScreen :
                         modifier = Modifier.padding(horizontal = 16.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        Chip(color = Theme.colors.secondary) {
-                            Text(
-                                text = "${state.restaurantInfo.discount}% ${Resources.strings.off}",
-                                style = Theme.typography.body,
-                                color = Theme.colors.primary,
-                            )
-                        }
-                        Chip(color = Theme.colors.successContainer) {
-                            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                                Icon(
-                                    painter = painterResource(Resources.images.scooter),
-                                    contentDescription = null,
-                                    tint = Theme.colors.success,
-                                    modifier = Modifier.size(16.dp)
-                                )
+                        AnimatedVisibility(state.restaurantInfo.discount > 0) {
+                            Chip(color = Theme.colors.secondary) {
                                 Text(
-                                    text = Resources.strings.free,
+                                    text = "${state.restaurantInfo.discount}% ${Resources.strings.off}",
                                     style = Theme.typography.body,
-                                    color = Theme.colors.success,
+                                    color = Theme.colors.primary,
                                 )
                             }
                         }
+                        AnimatedVisibility(state.restaurantInfo.hasFreeDelivery) {
+                            Chip(color = Theme.colors.successContainer) {
+                                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                    Icon(
+                                        painter = painterResource(Resources.images.scooter),
+                                        contentDescription = null,
+                                        tint = Theme.colors.success,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Text(
+                                        text = Resources.strings.free,
+                                        style = Theme.typography.body,
+                                        color = Theme.colors.success,
+                                    )
+                                }
+                            }
+                        }
                     }
+
                     Divider(
                         modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
                         color = Theme.colors.contentBorder
                     )
 
-                    SectionHeader(
-                        Resources.strings.mostOrdered,
-                        modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
-                    )
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(horizontal = 16.dp)
-                    ) {
-                        items(state.mostOrders.size) { index ->
-                            BpImageCard(
-                                title = state.mostOrders[index].name,
-                                painter = painterResource(Resources.images.placeholder),
-                                priceLevel = PriceLevel.LOW,
-                                hasPriceLevel = false,
+                    state.cuisines.forEach { cuisine ->
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            ItemSection(
+                                onClickItem = listener::onGoToDetails,
+                                header = cuisine.name,
+                                ids = cuisine.meals.map { it.id },
+                                titles = cuisine.meals.map { it.name },
                                 hasPrice = true,
-                                hasRate = false,
-                                price = state.mostOrders[index].price,
-                                currency = state.mostOrders[index].currency,
-                                modifier = Modifier.noRippleEffect {
-                                    listener.onGoToDetails(state.mostOrders[index].id)
-                                }
+                                prices = cuisine.meals.map { it.price },
+                                imageUrls = cuisine.meals.map { it.image },
+                                modifier = Modifier.padding(getNavigationBarPadding())
                             )
                         }
                     }
-                    SectionHeader(
-                        Resources.strings.sweets,
-                        modifier = Modifier.padding(start = 16.dp, bottom = 8.dp, top = 28.dp)
-                    )
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(horizontal = 16.dp),
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    ) {
-                        items(state.sweets.size) { index ->
-                            BpImageCard(
-                                title = state.sweets[index].name,
-                                painter = painterResource(Resources.images.placeholder),
-                                priceLevel = PriceLevel.LOW,
-                                hasPriceLevel = false,
-                                hasPrice = true,
-                                price = state.mostOrders[index].price,
-                                currency = state.sweets[index].currency,
-                                hasRate = false,
-                                modifier = Modifier.noRippleEffect {
-                                    listener.onGoToDetails(state.mostOrders[index].id)
-                                }
-                            )
-                        }
-                    }
-
                 }
             }
+
             ToastMessage(
                 state = state.showToast,
                 message = Resources.strings.mealAddedToYourCart,

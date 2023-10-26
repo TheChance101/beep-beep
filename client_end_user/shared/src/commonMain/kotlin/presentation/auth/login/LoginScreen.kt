@@ -31,6 +31,7 @@ import presentation.composable.HeadFirstCard
 import presentation.composable.SimpleTextButton
 import presentation.main.MainContainer
 import resources.Resources
+import util.getNavigationBarPadding
 
 class LoginScreen :
     BaseScreen<LoginScreenModel, LoginScreenUIState, LoginScreenUIEffect, LoginScreenInteractionListener>() {
@@ -95,7 +96,7 @@ class LoginScreen :
                             keepLoggedIn = state.keepLoggedIn
                         )
                     },
-                    enabled = !state.isLoading
+                    isLoading = state.isLoading,
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(top = 32.dp, bottom = 16.dp),
@@ -122,7 +123,8 @@ class LoginScreen :
                 exit = slideOutVertically { it },
                 modifier = Modifier.align(Alignment.BottomCenter)
             ) {
-                BPSnackBar(icon = painterResource(Resources.images.icError)) {
+                BPSnackBar(icon = painterResource(Resources.images.icError),modifier = Modifier
+                    .padding(bottom = getNavigationBarPadding().calculateBottomPadding())) {
                     Text(
                         text = state.snackbarMessage,
                         style = Theme.typography.body.copy(color = Theme.colors.contentPrimary),

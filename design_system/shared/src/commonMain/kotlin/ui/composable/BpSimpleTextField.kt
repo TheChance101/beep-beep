@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -35,6 +36,7 @@ fun BpSimpleTextField(
     errorMessage: String = "",
     isError: Boolean = errorMessage.isNotEmpty(),
     onTrailingIconClick: () -> Unit = {},
+    isSingleLine: Boolean = true,
     trailingIconEnabled: Boolean = onTrailingIconClick != {},
     outlinedTextFieldDefaults: TextFieldColors = OutlinedTextFieldColorDefaults()
 ) {
@@ -43,20 +45,19 @@ fun BpSimpleTextField(
         horizontalAlignment = Alignment.Start
     ) {
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth().height(56.dp),
+            modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp, max = 160.dp),
             value = text,
             placeholder = {
                 Text(
                     hint,
                     style = Theme.typography.body,
                     color = hintColor,
-                    modifier = Modifier.noRippleEffect(onClick)
                 )
             },
             onValueChange = onValueChange,
             shape = RoundedCornerShape(radius),
             textStyle = Theme.typography.body.copy(color = Theme.colors.contentPrimary),
-            singleLine = true,
+            singleLine = isSingleLine,
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
             isError = isError,
             trailingIcon = {

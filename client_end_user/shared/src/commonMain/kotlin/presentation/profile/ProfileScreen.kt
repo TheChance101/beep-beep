@@ -1,8 +1,6 @@
 package presentation.profile
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,7 +14,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -32,16 +29,13 @@ import presentation.auth.login.LoginScreen
 import presentation.base.BaseScreen
 import presentation.composable.ContentVisibility
 import presentation.composable.LoginRequiredPlaceholder
+import presentation.composable.modifier.noRippleEffect
 import resources.Resources
 import util.getStatusBarPadding
 import util.root
 
-class ProfileScreen : BaseScreen<
-        ProfileScreenModel,
-        ProfileUIState,
-        ProfileUIEffect,
-        ProfileInteractionListener
-        >() {
+class ProfileScreen :
+    BaseScreen<ProfileScreenModel, ProfileUIState, ProfileUIEffect, ProfileInteractionListener>() {
 
     @Composable
     override fun Content() {
@@ -57,13 +51,11 @@ class ProfileScreen : BaseScreen<
     @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
     @Composable
     override fun onRender(state: ProfileUIState, listener: ProfileInteractionListener) {
-
         LoginRequiredPlaceholder(
             placeHolder = painterResource(Resources.images.requireLoginToShowProfilePlaceholder),
             message = Resources.strings.profileLoginMessage,
             onClickLogin = listener::onClickLogin
         )
-
         ContentVisibility(state.isLoggedIn) {
             Column(
                 modifier = Modifier
@@ -75,15 +67,15 @@ class ProfileScreen : BaseScreen<
                 WhiteCard {
                     Title(Resources.strings.wallet)
                     SubTitle(
-                        "${state.user?.currency} ${state.user?.walletBalance}",
+                        "${state.user.currency} ${state.user.walletBalance}",
                         Theme.colors.primary
                     )
                     Title(Resources.strings.username)
-                    SubTitle("@${state.user?.username}")
+                    SubTitle("@${state.user.username}")
                     Title(Resources.strings.address)
-                    SubTitle(state.user?.addresses?.firstOrNull()?.address ?: "")
+                    SubTitle(state.user.address)
                     Title(Resources.strings.email)
-                    SubTitle(state.user?.email ?: "")
+                    SubTitle(state.user.email)
                 }
                 WhiteCard {
                     BpTextField(
@@ -108,17 +100,13 @@ class ProfileScreen : BaseScreen<
                         modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
                         title = Resources.strings.save,
                         enabled = state.isButtonEnabled,
-                        onClick = {
-                            listener.onSaveProfileInfo()
-                        },
+                        isLoading = state.isLoading,
+                        onClick = listener::onSaveProfileInfo,
                     )
                 }
                 WhiteCard {
                     Row(
-                        modifier = Modifier.clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() },
-                        ) { listener.onLogout() },
+                        modifier = Modifier.noRippleEffect(listener::onLogout),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         Icon(

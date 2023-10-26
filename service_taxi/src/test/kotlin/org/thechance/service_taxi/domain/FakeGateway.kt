@@ -91,42 +91,6 @@ object FakeGateway : ITaxiGateway {
         return trips.filter { it.clientId == clientId }
     }
 
-    override suspend fun deleteTrip(tripId: String): Trip? {
-        val trip = getTripById(tripId)
-        trips.remove(trip)
-        return trip
-    }
-
-    override suspend fun approveTrip(tripId: String, taxiId: String, driverId: String): Trip? {
-        val target = trips.find { it.id == tripId } ?: return null
-        val position = trips.indexOf(target)
-        trips.removeAt(position)
-        trips.add(
-            position,
-            target.copy(
-                taxiId = taxiId,
-                driverId = driverId,
-                startDate = Clock.System.now().toLocalDateTime(
-                    TimeZone.currentSystemDefault()
-                )
-            )
-        )
-        return trips[position]
-    }
-
-    override suspend fun finishTrip(tripId: String, driverId: String): Trip? {
-        val target = trips.find { it.id == tripId } ?: return null
-        val position = trips.indexOf(target)
-        trips.removeAt(position)
-        trips.add(
-            position,
-            target.copy(
-                endDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-            )
-        )
-        return trips[position]
-    }
-
     override suspend fun rateTrip(tripId: String, rate: Double): Trip? {
         val target = trips.find { it.id == tripId } ?: return null
         val position = trips.indexOf(target)
@@ -157,7 +121,11 @@ object FakeGateway : ITaxiGateway {
                 type = "Sedan",
                 driverId = "123456789123456789123471",
                 isAvailable = true,
-                seats = 4
+                seats = 4,
+                rate = 0.5,
+                driverImage = "",
+                driverUsername = "Ahmed",
+                tripsCount = 5
             )
         )
         trips = mutableListOf(

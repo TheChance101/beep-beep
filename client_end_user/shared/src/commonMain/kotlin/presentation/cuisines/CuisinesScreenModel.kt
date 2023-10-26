@@ -2,14 +2,14 @@ package presentation.cuisines
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Cuisine
-import domain.usecase.GetCuisinesUseCase
+import domain.usecase.IExploreRestaurantUseCase
 import kotlinx.coroutines.CoroutineScope
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 import presentation.base.ErrorState.NoInternet
 
 class CuisinesScreenModel(
-    private val getCuisinesUseCase: GetCuisinesUseCase,
+    private val manageRestaurant: IExploreRestaurantUseCase,
 ) : BaseScreenModel<CuisinesUiState, CuisinesUiEffect>(CuisinesUiState()),
     CuisinesInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
@@ -21,7 +21,7 @@ class CuisinesScreenModel(
     private fun getData() {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            getCuisinesUseCase::getCuisines,
+            manageRestaurant::getCuisines,
             ::onGetCuisinesSuccess,
             ::onError
         )
@@ -52,7 +52,13 @@ class CuisinesScreenModel(
 
     // region interactions
     override fun onCuisineClicked(cuisineId: String) {
-        sendNewEffect(CuisinesUiEffect.NavigateToCuisineDetails(cuisineId))
+        val cuisine = state.value.cuisines.first { it.cuisineId == cuisineId }
+        sendNewEffect(
+            CuisinesUiEffect.NavigateToCuisineDetails(
+                cuisineId = cuisineId,
+                cuisineName = cuisine.cuisineName
+            )
+        )
     }
 
     override fun onBackIconClicked() {

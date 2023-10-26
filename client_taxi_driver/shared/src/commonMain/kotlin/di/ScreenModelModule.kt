@@ -5,9 +5,12 @@ import org.koin.dsl.module
 import presentation.login.LoginScreenModel
 import presentation.main.MainScreenModel
 import presentation.map.MapScreenModel
+import presentation.app.AppScreenModel
 
 val ScreenModelModule = module {
     factoryOf(::LoginScreenModel)
     factoryOf(::MainScreenModel)
-    factoryOf(::MapScreenModel)
+    factoryOf(::AppScreenModel)
+    factory { MapScreenModel(get(), get(),get()) }
+
 }

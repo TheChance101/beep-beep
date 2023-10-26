@@ -4,7 +4,6 @@ import org.koin.core.annotation.Single
 import org.thechance.service_identity.domain.entity.Address
 import org.thechance.service_identity.domain.entity.Location
 import org.thechance.service_identity.domain.gateway.IDataBaseGateway
-import org.thechance.service_identity.domain.util.getCurrencyForLocation
 
 interface IUserAddressManagementUseCase {
 
@@ -18,9 +17,6 @@ interface IUserAddressManagementUseCase {
     suspend fun updateAddress(id: String, location: Location): Address
 
     suspend fun getUserAddresses(userId: String): List<Address>
-
-    suspend fun getUserCountry(userId: String): String
-
 }
 
 @Single
@@ -29,7 +25,6 @@ class UserAddressManagementUseCase(
 ) : IUserAddressManagementUseCase {
 
     override suspend fun addLocation(userId: String, location: Location): Address {
-        dataBaseGateway.updateWalletCurrency(userId, getCurrencyForLocation(location))
         return dataBaseGateway.addLocation(userId, location)
     }
 
@@ -53,8 +48,5 @@ class UserAddressManagementUseCase(
         return dataBaseGateway.getUserAddresses(userId)
     }
 
-    override suspend fun getUserCountry(userId: String): String {
-        return dataBaseGateway.getUserCountry(userId)
-    }
 
 }

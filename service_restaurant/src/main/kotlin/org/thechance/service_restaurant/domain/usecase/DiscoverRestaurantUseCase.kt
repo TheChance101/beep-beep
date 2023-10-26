@@ -14,11 +14,11 @@ interface IDiscoverRestaurantUseCase {
     suspend fun getRestaurantDetails(restaurantId: String): Restaurant
     suspend fun getRestaurantsInCategory(categoryId: String): List<Restaurant>
 
-
+    suspend fun getCuisinesMealsInRestaurant(restaurantId: String): List<Cuisine>
     suspend fun getMealsByCuisine(cuisineId: String): List<Meal>
     suspend fun getMealsByRestaurantId(restaurantId: String, page: Int, limit: Int): List<Meal>
     suspend fun getMealDetails(mealId: String): MealDetails
-    suspend fun getCategories(page: Int, limit: Int): List<Category>
+    suspend fun isRestaurantExisted(restaurantId: String): Boolean
 }
 
 class DiscoverRestaurantUseCase(
@@ -37,15 +37,18 @@ class DiscoverRestaurantUseCase(
         return restaurantGateway.getRestaurants(restaurantIds)
     }
 
-
-    override suspend fun getCategories(page: Int, limit: Int): List<Category> {
-        basicValidation.validatePagination(page, limit)
-        return optionsGateway.getCategories(page, limit)
+    override suspend fun isRestaurantExisted(restaurantId: String): Boolean {
+        return restaurantGateway.isRestaurantExisted(restaurantId)
     }
 
     override suspend fun getRestaurantsInCategory(categoryId: String): List<Restaurant> {
         checkIfCategoryIsExist(categoryId)
         return optionsGateway.getRestaurantsInCategory(categoryId)
+    }
+
+    override suspend fun getCuisinesMealsInRestaurant(restaurantId: String): List<Cuisine> {
+        //TODO check for restaurant if found
+        return optionsGateway.getCuisinesWithMeals(restaurantId)
     }
 
     override suspend fun getRestaurantDetails(restaurantId: String): Restaurant {

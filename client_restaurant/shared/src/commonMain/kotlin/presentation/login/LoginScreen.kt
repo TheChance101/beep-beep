@@ -42,7 +42,7 @@ class LoginScreen :
         navigator: Navigator,
     ) {
         when (effect) {
-            is LoginScreenUIEffect.LoginEffect -> navigator.push(RestaurantSelectionScreen())
+            is LoginScreenUIEffect.LoginEffect -> navigator.replaceAll(RestaurantSelectionScreen())
             LoginScreenUIEffect.LoginUIFailed -> {}
         }
     }

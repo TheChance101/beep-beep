@@ -7,22 +7,35 @@ import domain.utils.InternetException
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.websocket.receiveDeserialized
+import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.client.statement.HttpResponse
-import io.ktor.client.statement.bodyAsText
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 abstract class BaseGateway(val client: HttpClient) {
-    suspend inline fun <reified T> tryToExecute(
-        method: HttpClient.() -> HttpResponse,
-    ): T {
+
+    suspend inline fun <reified T> tryToExecuteWebSocket(path: String): Flow<T> {
+        return flow {
+            client.webSocket(path = path) {
+                while (true) {
+                    try {
+                        emit(receiveDeserialized<T>())
+                    } catch (e: Exception) {
+                        throw Exception(e.message.toString())
+                    }
+                }
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend inline fun <reified T> tryToExecute(method: HttpClient.() -> HttpResponse): T {
         try {
-            println("AYA1 ${client.method().bodyAsText()}}")
             return client.method().body()
         } catch (e: ClientRequestException) {
-            println("AYA1 ${e.response.status.value}}")
-            println("AYA1 ${e.response}}")
-            println("AYA1 ${e.response.body<ServerResponse<T>>().status.errorMessages}}")
-
-
             val errorMessages = e.response.body<ServerResponse<T>>().status.errorMessages
             errorMessages?.let(::throwMatchingException)
             throw GeneralException.UnknownErrorException

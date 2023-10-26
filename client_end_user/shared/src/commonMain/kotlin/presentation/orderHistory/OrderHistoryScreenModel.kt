@@ -1,7 +1,9 @@
 package presentation.orderHistory
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.usecase.GetOrderHistoryUseCase
+import domain.entity.FoodOrder
+import domain.entity.Trip
+import domain.usecase.GetTransactionHistoryUseCase
 import domain.usecase.IManageAuthenticationUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -10,8 +12,8 @@ import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
 
 class OrderHistoryScreenModel(
-    private val orderHistoryUseCase: GetOrderHistoryUseCase,
-    private val manageAuthentication: IManageAuthenticationUseCase
+    private val orderHistoryUseCase: GetTransactionHistoryUseCase,
+    private val manageAuthentication: IManageAuthenticationUseCase,
 ) : BaseScreenModel<OrderScreenUiState, OrderHistoryScreenUiEffect>(OrderScreenUiState()),
     OrderHistoryScreenInteractionListener {
 
@@ -19,8 +21,6 @@ class OrderHistoryScreenModel(
 
     init {
         checkIfLoggedIn()
-        getOrdersHistory()
-        getTripsHistory()
     }
 
     private fun checkIfLoggedIn() {
@@ -36,6 +36,8 @@ class OrderHistoryScreenModel(
             accessToken.collect { token ->
                 if (token.isNotEmpty()) {
                     updateState { it.copy(isLoggedIn = true) }
+                    getOrdersHistory()
+                    getTripsHistory()
                 } else {
                     updateState { it.copy(isLoggedIn = false) }
                 }
@@ -49,7 +51,7 @@ class OrderHistoryScreenModel(
 
     private fun getOrdersHistory() {
         tryToExecute(
-            { orderHistoryUseCase.getOrdersHistory().map { it.toOrderHistoryUiState() } },
+            { orderHistoryUseCase.getOrdersHistory() },
             ::onGetOrdersHistorySuccess,
             ::onError
         )
@@ -57,18 +59,18 @@ class OrderHistoryScreenModel(
 
     private fun getTripsHistory() {
         tryToExecute(
-            { orderHistoryUseCase.getTripsHistory().map { it.toTripHistoryUiState() } },
+            { orderHistoryUseCase.getTripsHistory() },
             ::onGetTripsHistorySuccess,
             ::onError
         )
     }
 
-    private fun onGetTripsHistorySuccess(tripsHistory: List<TripHistoryUiState>) {
-        updateState { it.copy(tripsHistory = tripsHistory) }
+    private fun onGetTripsHistorySuccess(tripsHistory: List<Trip>) {
+        updateState { it.copy(tripsHistory = tripsHistory.map { it.toTripHistoryUiState() }) }
     }
 
-    private fun onGetOrdersHistorySuccess(ordersHistory: List<OrderHistoryUiState>) {
-        updateState { it.copy(ordersHistory = ordersHistory) }
+    private fun onGetOrdersHistorySuccess(ordersHistory: List<FoodOrder>) {
+        updateState { it.copy(ordersHistory = ordersHistory.map { it.toOrderHistoryUiState() }) }
     }
 
     private fun onError(errorState: ErrorState) {

@@ -3,7 +3,7 @@ package org.thechance.api_gateway.data.localizedMessages.languages
 import org.koin.core.annotation.Single
 
 @Single
-class EgyptianArabicLocalizedMessages() : LocalizedMessages {
+class EgyptianArabicLocalizedMessages : LocalizedMessages {
 
     // region identity
     override val invalidRequestParameter: String = "مدخل بيانات غلط يا باشا"
@@ -16,23 +16,28 @@ class EgyptianArabicLocalizedMessages() : LocalizedMessages {
     override val usernameCannotBeBlank: String = "في اي يسطا"
     override val passwordCannotBeBlank: String = "فين الباسورد!! هنخم؟"
     override val invalidEmail: String = "الايميل يسطا!!"
+    override val invalidPhone: String ="رقم الموبايل مش صح يا عم !!"
     override val notFound: String = "مش موجود ياعم"
     override val invalidCredentials: String = "امسك حرامي"
     override val userCreatedSuccessfully: String = "اعمل حفلة بقى عندك حساب يا ابن المحظوظة 🎉"
     override val unknownError: String = "حصل ايرور لو كانت عارفه كنت هقولك"
     override val userNotFound: String = "مش لاقينك ياعم"
     override val invalidPermission: String = "مش عندك الصلاحية ياعم"
-    override val alreadyInFavorite: String= "موجود يا عم"
+    override val alreadyInFavorite: String = "موجود يا عم"
     // endregion
 
     // region taxi
-    override val taxiCreatedSuccessfully: String= "اعمل حفلة بقى عندك تكسي يا ابن المحظوظة 🎉"
+    override val taxiCreatedSuccessfully: String = "اعمل حفلة بقى عندك تكسي يا ابن المحظوظة 🎉"
     override val tripCreatedSuccessfully: String = "تم انشاء الرحلة"
-    override val tripApproved: String = "تم قبول الرحلة"
+    override val tripUpdated: String = "تم تحديث الرحلة بنجاح"
     override val tripCanceled: String = "تم الغاء الرحلة"
     override val tripFinished: String = "تم إنهاء الرحلة بنجاح"
-    override val taxiUpdateSuccessfully: String= "حدثنالك التاكسي يا عم 🎉"
-    override val taxiDeleteSuccessfully: String= "مسحنالك التاكسي مع الاسف"
+    override val tripArrived: String = "تم الوصول الى العميل"
+    override val receivedNewTrip: String = "رحلة جديدة يا معلم الحق بسرعة"
+    override val newOrderComing: String = "اوردر جديد وصل يا كبير"
+    override val receivedNewDeliveryOrder: String = "جالك اوردر جديد ابسط يا عم"
+    override val taxiUpdateSuccessfully: String = "حدثنالك التاكسي يا عم 🎉"
+    override val taxiDeleteSuccessfully: String = "مسحنالك التاكسي مع الاسف"
     override val invalidId: String = "مش لاقيين التاكسي ده!!"
     override val invalidPlate: String = "الرقم اللي دخلته مش مظبوط يعم"
     override val invalidColor: String = "مش مظبوط اللون اللي دخلته يعم"
@@ -79,11 +84,21 @@ class EgyptianArabicLocalizedMessages() : LocalizedMessages {
     override val cuisineNameAlreadyExisted: String = "المطبخ موجود مرة يا عم مش فرح هو"
 
     override val missingParameter: String = "في حاجة ناقصة يا عم"
-    override val tokensNotFound: String= "مش لاقيين التوكنات دي ياعم"
+    override val tokensNotFound: String = "مش لاقيين التوكنات دي ياعم"
     override val tokenNotRegister: String = "التوكن ده مش مسجل ياعم"
+    override val alreadyUpdated: String = "اتحدثت مرة يا عم مش مربة هيه"
+    override val cancelOrderError: String = "هذا الطلب تم الغائه من قبل او تم قبوله من قبل"
+    override val cartIsAlreadyEmpty: String = "هتشتري ازاي والسله فاضيه اصلا!!"
+    override val invalidQuantity: String = "مدخل كميه مش صح"
+
     //endregion
 
     // region notification
     override val notificationNotSent: String = "لم يتم إرسال الإشعار ياعم"
+    //endregion
+
+
+    // region chat
+    override val supportAgentNotFound: String = "لايوجد احد للدعم ياعم"
     //endregion
 }

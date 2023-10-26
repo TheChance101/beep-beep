@@ -20,12 +20,11 @@ object MainApp : Screen {
     @Composable
     override fun Content() {
         val appScreenModel = getScreenModel<AppScreenModel>()
-
         val userLanguage by appScreenModel.language.collectAsState()
         val firstTime by appScreenModel.isFirstTimeOpenApp.collectAsState()
 
         BeepBeepTheme(languageCode = userLanguage) {
-            if (firstTime) {
+            if (false) {
                 Navigator(PickLanguageScreen) { SlideTransition(it) }
             } else {
                 Navigator(MainContainer) { SlideTransition(it) }
@@ -33,5 +32,3 @@ object MainApp : Screen {
         }
     }
 }
-
-

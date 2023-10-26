@@ -22,5 +22,8 @@ fun Application.configureRouting(tokenConfiguration: TokenConfiguration) {
         orderRoutes()
         notificationRoute()
         locationRoute()
+        cartRoutes()
+        chatRoute()
+        offerRoute()
     }
 }

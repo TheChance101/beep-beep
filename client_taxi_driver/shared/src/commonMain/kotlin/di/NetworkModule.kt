@@ -13,10 +13,11 @@ import io.ktor.client.request.header
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
+import util.getEngine
 
 val NetworkModule = module {
     single {
-        val client = HttpClient(CIO) {
+        val client = HttpClient(getEngine()) {
             expectSuccess = true
 
             install(Logging) {

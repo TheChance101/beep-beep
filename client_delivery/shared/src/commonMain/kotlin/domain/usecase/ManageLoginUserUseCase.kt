@@ -8,18 +8,14 @@ import domain.utils.InvalidUsernameException
 
 interface IManageLoginUserUseCase {
 
-    suspend fun loginUser(
-        userName: String,
-        password: String,
-        isKeepMeLoggedInChecked: Boolean
-    )
+    suspend fun loginUser(userName: String, password: String, isKeepMeLoggedInChecked: Boolean)
 
     suspend fun getKeepMeLoggedInFlag(): Boolean
 
-    suspend fun requestPermission(
-        deliveryRequestPermission: DeliveryRequestPermission
-    ): Boolean
+    suspend fun requestPermission(deliveryRequestPermission: DeliveryRequestPermission): Boolean
 
+    suspend fun saveUsername(username: String)
+    suspend fun getUsername(): String
 }
 
 class ManageLoginUserUseCase(
@@ -57,6 +53,14 @@ class ManageLoginUserUseCase(
         return remoteGateway.createRequestPermission(
             deliveryRequestPermission
         )
+    }
+
+    override suspend fun saveUsername(username: String) {
+        localGateWay.saveUserName(username)
+    }
+
+    override suspend fun getUsername(): String {
+        return localGateWay.getUsername()
     }
 
 }

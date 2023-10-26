@@ -11,11 +11,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.beepbeep.designSystem.ui.theme.Theme
+import util.getNavigationBarPadding
 
 @Composable
 fun MapCard(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
     Card(
-        modifier = modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
+        modifier = modifier.fillMaxWidth().padding(
+            start = 16.dp,
+            end = 16.dp,
+            bottom = getNavigationBarPadding().calculateBottomPadding()
+        ),
         colors = CardDefaults.cardColors(containerColor = Theme.colors.surface),
         shape = RoundedCornerShape(8.dp),
         border = BorderStroke(width = 1.dp, color = Theme.colors.divider),

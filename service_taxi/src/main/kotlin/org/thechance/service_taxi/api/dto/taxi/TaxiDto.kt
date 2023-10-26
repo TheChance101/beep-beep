@@ -10,6 +10,8 @@ data class TaxiDto(
     val type: String? = null,
     val driverId: String? = null,
     val driverUsername: String? = null,
+    val driverImage: String? = null,
+    val rate: Double? = null,
     val isAvailable: Boolean? = null,
     val seats: Int? = null,
     val tripsCount: Int? = null,

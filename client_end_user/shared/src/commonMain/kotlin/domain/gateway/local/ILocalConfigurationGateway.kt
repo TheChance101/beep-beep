@@ -3,7 +3,6 @@ package domain.gateway.local
 import kotlinx.coroutines.flow.Flow
 
 interface ILocalConfigurationGateway {
-
     suspend fun saveAccessToken(token: String)
     suspend fun getAccessToken(): String
     suspend fun getAccessTokenStream(): Flow<String>
