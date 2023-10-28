@@ -19,6 +19,8 @@ data class TripCollection(
     @Contextual
     val clientId: ObjectId,
     @Contextual
+    val orderId: ObjectId? = null,
+    @Contextual
     val restaurantId: ObjectId? = null,
     val startPoint: LocationCollection? = null,
     val destination: LocationCollection? = null,

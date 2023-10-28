@@ -2,20 +2,25 @@ package presentation.home
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Cart
-import domain.entity.InProgressWrapper
+import domain.entity.DeliveryRide
+import domain.entity.FoodOrder
 import domain.entity.Offer
 import domain.entity.Restaurant
+import domain.entity.TaxiRide
+import domain.entity.Trip
+import domain.entity.TripStatus
 import domain.entity.User
-import domain.usecase.IInProgressTrackerUseCase
+import domain.usecase.IExploreRestaurantUseCase
+import domain.usecase.IGetOffersUseCase
+import domain.usecase.IGetUserLocationUseCase
+import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.IManageCartUseCase
 import domain.usecase.IManageFavouriteUseCase
-import domain.usecase.IGetOffersUseCase
-import domain.usecase.IManageSettingUseCase
-import domain.usecase.IExploreRestaurantUseCase
-import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.IManageProfileUseCase
-import domain.usecase.ManageProfileUseCase
+import domain.usecase.ITrackOrdersUseCase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
@@ -26,20 +31,192 @@ import presentation.cuisines.toCuisineUiState
 class HomeScreenModel(
     private val exploreRestaurant: IExploreRestaurantUseCase,
     private val offers: IGetOffersUseCase,
-    private val inProgressTrackerUseCase: IInProgressTrackerUseCase,
+    private val trackOrders: ITrackOrdersUseCase,
     private val manageCart: IManageCartUseCase,
     private val manageFavorite: IManageFavouriteUseCase,
     private val manageProfile: IManageProfileUseCase,
-    private val manageAuthentication: IManageAuthenticationUseCase
+    private val getUserLocation: IGetUserLocationUseCase,
+    private val manageAuthentication: IManageAuthenticationUseCase,
 ) : BaseScreenModel<HomeScreenUiState, HomeScreenUiEffect>(HomeScreenUiState()),
     HomeScreenInteractionListener {
     override val viewModelScope: CoroutineScope = coroutineScope
 
     init {
         checkIfLoggedIn()
-        getInProgress()
+        getLiveOrders()
         getRecommendedCuisines()
         getNewOffers()
+    }
+
+    private fun getLiveOrders() {
+        coroutineScope.launch {
+            async { getActiveTaxiTrips() }.await()
+            async { getActiveDeliveryTrips() }.await()
+            async { getActiveFoodOrders() }.await()
+        }
+    }
+
+
+    private fun trackingAndUpdateTaxiRide(tripId: String) {
+        tryToCollect(
+            { trackOrders.trackTaxiRide(tripId) },
+            ::onGetTaxiRidesSuccess,
+            ::onTrackingError
+        )
+    }
+
+    private fun trackingAndUpdateDeliveryRide(tripId: String) {
+        tryToCollect(
+            { trackOrders.trackDeliveryRide(tripId) },
+            ::onGetDeliveryRidesSuccess,
+            ::onTrackingError
+        )
+    }
+
+    private fun trackingAndUpdateFoodOrderFromRestaurant(orderId: String) {
+        tryToCollect(
+            { trackOrders.trackFoodOrderInRestaurant(orderId) },
+            ::onGetFoodOrdersSuccess,
+            ::onTrackingError
+        )
+    }
+
+    private fun onGetTaxiRidesSuccess(ride: TaxiRide) {
+        updateState { it.copy(isLoading = false) }
+        updateState { homeScreenUiState ->
+            val currentTaxiRides = homeScreenUiState.liveOrders.taxiRides
+            val updatedTaxiRides = currentTaxiRides.mapNotNull { taxiRideUiState ->
+                if (taxiRideUiState.tripId == ride.id) {
+                    if (ride.tripStatus.statusCode == TripStatus.FINISHED.statusCode) {
+                        currentTaxiRides - ride.toTaxiRideUiState()
+                        null
+                    } else {
+                        ride.toTaxiRideUiState()
+                    }
+                } else {
+                    taxiRideUiState
+                }
+            }
+            homeScreenUiState.copy(liveOrders = homeScreenUiState.liveOrders.copy(taxiRides = updatedTaxiRides))
+        }
+    }
+
+    private fun onGetDeliveryRidesSuccess(ride: DeliveryRide) {
+        updateState { it.copy(isLoading = false) }
+        updateState { homeScreenUiState ->
+            val currentDeliveryRides = homeScreenUiState.liveOrders.deliveryOrders
+            val updatedDeliveryRides = currentDeliveryRides.mapNotNull { deliveryRideUiState ->
+                if (deliveryRideUiState.tripId == ride.id) {
+                    if (ride.tripStatus.statusCode == TripStatus.FINISHED.statusCode) {
+                        currentDeliveryRides - ride.toDeliveryOrderUiState()
+                        null
+                    } else {
+                        ride.toDeliveryOrderUiState()
+                    }
+                } else {
+                    deliveryRideUiState
+                }
+            }
+            homeScreenUiState.copy(liveOrders = homeScreenUiState.liveOrders.copy(deliveryOrders = updatedDeliveryRides))
+        }
+    }
+
+
+    private fun onGetFoodOrdersSuccess(order: FoodOrder) {
+        updateState { it.copy(isLoading = false) }
+        updateState { homeScreenUiState ->
+            val currentFoodOrders = homeScreenUiState.liveOrders.foodOrders
+            val updatedFoodOrders = currentFoodOrders.mapNotNull { foodOrderUiState ->
+                if (foodOrderUiState.orderId == order.id) {
+                    if (order.orderStatus.statusCode == TripStatus.FINISHED.statusCode) {
+                        currentFoodOrders - order.toFoodOrderUiState()
+                        null
+                    } else {
+                        order.toFoodOrderUiState()
+                    }
+                } else {
+                    foodOrderUiState
+                }
+            }
+            homeScreenUiState.copy(liveOrders = homeScreenUiState.liveOrders.copy(foodOrders = updatedFoodOrders))
+        }
+    }
+
+    private fun getActiveTaxiTrips() {
+        updateState { it.copy(isLoading = true) }
+        tryToExecute(
+            { trackOrders.getActiveTaxiTrips() },
+            ::onGetActiveTaxiTripsSuccess,
+            ::onTrackingError
+        )
+    }
+
+    private fun getActiveDeliveryTrips() {
+        updateState { it.copy(isLoading = true) }
+        tryToExecute(
+            { trackOrders.getActiveDeliveryTrips() },
+            ::onGetActiveDeliveryTripsSuccess,
+            ::onTrackingError
+        )
+    }
+
+    private fun getActiveFoodOrders() {
+        updateState { it.copy(isLoading = true) }
+        tryToExecute(
+            { trackOrders.getActiveFoodOrders() },
+            ::onGetActiveFoodOrdersSuccess,
+            ::onTrackingError
+        )
+    }
+
+    private fun onGetActiveTaxiTripsSuccess(taxiTrips: List<Trip>) {
+        updateState { homeScreenState ->
+            homeScreenState.copy(
+                liveOrders = homeScreenState.liveOrders.copy(
+                    taxiRides = taxiTrips.map { trip -> trip.toTaxiRideUiState() }
+                )
+            )
+        }
+        val currentTaxiRides = state.value.liveOrders.taxiRides
+        if (currentTaxiRides.isNotEmpty()) {
+            currentTaxiRides.forEach { taxiRide ->
+                trackingAndUpdateTaxiRide(taxiRide.tripId)
+            }
+        }
+    }
+
+    private fun onGetActiveDeliveryTripsSuccess(deliveryTrips: List<DeliveryRide>) {
+        updateState { homeScreenState ->
+            homeScreenState.copy(
+                liveOrders = homeScreenState.liveOrders.copy(
+                    deliveryOrders = deliveryTrips.map { trip -> trip.toDeliveryOrderUiState() }
+                )
+            )
+        }
+
+        val currentDeliveryRides = state.value.liveOrders.deliveryOrders
+        if (currentDeliveryRides.isNotEmpty()) {
+            currentDeliveryRides.forEach { deliveryRide ->
+                trackingAndUpdateDeliveryRide(deliveryRide.tripId)
+            }
+        }
+    }
+
+    private fun onGetActiveFoodOrdersSuccess(foodOrders: List<FoodOrder>) {
+        updateState { homeScreenState ->
+            homeScreenState.copy(
+                liveOrders = homeScreenState.liveOrders.copy(
+                    foodOrders = foodOrders.map { order -> order.toFoodOrderUiState() }
+                )
+            )
+        }
+
+        val currentFoodOrders = state.value.liveOrders.foodOrders
+        if (currentFoodOrders.isNotEmpty()) {
+            currentFoodOrders.forEach { order ->
+                trackingAndUpdateFoodOrderFromRestaurant(order.orderId)
+            }
+        }
     }
 
     private fun checkIfLoggedIn() {
@@ -69,6 +246,9 @@ class HomeScreenModel(
         updateState { it.copy(isLoggedIn = false) }
     }
 
+    private fun onTrackingError(errorState: ErrorState) {
+        updateState { it.copy(isLoading = false) }
+    }
 
     private fun checkIfThereIsOrderInCart() {
         tryToExecute(
@@ -100,18 +280,6 @@ class HomeScreenModel(
 
     private fun onGetUserSuccess(user: User) {
         updateState { it.copy(user = user.toUIState()) }
-    }
-
-    private fun getInProgress() {
-        tryToExecute(
-            { inProgressTrackerUseCase.getInProgress() },
-            ::onGetInProgressSuccess,
-            ::onGetCuisinesError
-        )
-    }
-
-    private fun onGetInProgressSuccess(inProgressWrapper: InProgressWrapper) {
-        updateState { it.copy(inProgressWrapper = inProgressWrapper) }
     }
 
     override fun onClickCuisineItem(cuisineId: String) {
@@ -157,6 +325,42 @@ class HomeScreenModel(
 
     override fun onClickRestaurantCard(restaurantId: String) {
         sendNewEffect(HomeScreenUiEffect.NavigateToRestaurantDetails(restaurantId))
+    }
+
+    override fun onClickActiveFoodOrder(orderId: String, tripId: String) {
+        sendNewEffect(HomeScreenUiEffect.NavigateToTrackOrder(orderId, tripId))
+    }
+
+    override fun onClickActiveTaxiRide(tripId: String) {
+        startTrackUserLocation(tripId)
+    }
+
+    private fun startTrackUserLocation(tripId: String) {
+        tryToExecute(
+            function = getUserLocation::startTracking,
+            onSuccess = { onStartTrackUserLocationSuccess(tripId) },
+            onError = ::onStartTrackUserLocationError
+        )
+    }
+
+    private fun onStartTrackUserLocationSuccess(tripId: String) {
+        sendNewEffect(HomeScreenUiEffect.NavigateToTrackTaxiRide(tripId))
+    }
+
+    private fun onStartTrackUserLocationError(errorState: ErrorState) {
+        when (errorState) {
+            ErrorState.LocationPermissionDenied -> showSnackBar()
+            else -> {}
+        }
+    }
+
+    private fun showSnackBar() {
+        viewModelScope.launch {
+            updateState { it.copy(showSnackBar = true) }
+            delay(4000)
+            updateState { it.copy(showSnackBar = false) }
+        }
+
     }
 
     private fun getRecommendedCuisines() {

@@ -1,7 +1,11 @@
 package presentation.home
 
+import domain.entity.DeliveryRide
+import domain.entity.FoodOrder
 import domain.entity.Offer
 import domain.entity.Restaurant
+import domain.entity.TaxiRide
+import domain.entity.Trip
 import domain.entity.User
 
 fun Offer.toUiState() = OfferUiState(
@@ -30,3 +34,38 @@ fun User.toUIState() = UserUiState(
     currency = wallet.currency,
 )
 
+fun Trip.toTaxiRideUiState(): TaxiRideUiState {
+    return TaxiRideUiState(
+        tripId = this.id,
+        taxiColor = taxiColor,
+        taxiPlateNumber = this.taxiPlateNumber ?: "",
+        rideStatus = this.tripStatus.statusCode,
+        rideEstimatedTime = this.estimatedTimeToArriveInMints,
+    )
+}
+
+fun FoodOrder.toFoodOrderUiState(): FoodOrderUiState {
+    return FoodOrderUiState(
+        orderId = this.id,
+        restaurantName = this.restaurantName,
+        orderStatus = this.orderStatus.statusCode,
+    )
+}
+
+fun TaxiRide.toTaxiRideUiState(): TaxiRideUiState {
+    return TaxiRideUiState(
+        tripId = this.id,
+        taxiColor = taxiColor,
+        taxiPlateNumber = this.taxiPlateNumber,
+        rideStatus = this.tripStatus.statusCode,
+        rideEstimatedTime = 30,
+    )
+}
+
+fun DeliveryRide.toDeliveryOrderUiState(): DeliveryRideUiState {
+    return DeliveryRideUiState(
+        tripId = this.id,
+        restaurantName = this.restaurantName,
+        orderStatus = this.tripStatus.statusCode,
+    )
+}

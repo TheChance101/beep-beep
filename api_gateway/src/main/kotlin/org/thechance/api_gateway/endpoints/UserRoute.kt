@@ -68,7 +68,6 @@ fun Route.userRoutes() {
             }
         }
 
-
         authenticateWithRole(Role.END_USER) {
 
             get {
@@ -77,6 +76,14 @@ fun Route.userRoutes() {
                 val language = extractLocalizationHeader()
                 val user = identityService.getUserById(userId, language)
                 respondWithResult(HttpStatusCode.OK, user)
+            }
+
+            get("/addresses") {
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val userId = tokenClaim?.get(Claim.USER_ID).toString()
+                val language = extractLocalizationHeader()
+                val userAddresses = identityService.getUserAddresses(userId, language)
+                respondWithResult(HttpStatusCode.OK, userAddresses)
             }
 
             put("/profile") {
@@ -96,7 +103,7 @@ fun Route.userRoutes() {
                 val language = extractLocalizationHeader()
                 val location = call.receive<LocationDto>()
                 val userLocation = identityService.updateUserLocation(userId, location, language)
-                call.respond(HttpStatusCode.Created, userLocation)
+                respondWithResult(HttpStatusCode.OK, userLocation)
             }
 
             get("/favorite") {
@@ -156,8 +163,17 @@ fun Route.userRoutes() {
                 }
                 respondWithResult(HttpStatusCode.OK, deliveryTrips)
             }
+
+            //TODO: delete when Done just for test now.
+            put("/permissionToUser") {
+                val language = extractLocalizationHeader()
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val userId = tokenClaim?.get(Claim.USER_ID).toString()
+                val permission: List<Int> = call.receive<List<Int>>()
+                val result = identityService.updateUserPermission(userId, permission, language)
+                respondWithResult(HttpStatusCode.OK, result)
+            }
         }
     }
-
 }
 

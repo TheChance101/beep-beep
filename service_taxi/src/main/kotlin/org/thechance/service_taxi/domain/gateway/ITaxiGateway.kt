@@ -28,6 +28,7 @@ interface ITaxiGateway {
     //region trips curd
     suspend fun addTrip(trip: Trip): Trip?
     suspend fun getTripById(tripId: String): Trip?
+    suspend fun getTripByOrderId(orderId: String): Trip?
     suspend fun getAllTrips(page: Int, limit: Int): List<Trip>
     suspend fun getActiveTripsByUserId(userId: String): List<Trip>
     suspend fun getDriverTripsHistory(driverId: String, page: Int, limit: Int): List<Trip>

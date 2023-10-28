@@ -10,6 +10,7 @@ data class Trip(
     val driverName: String? = null,
     val taxiColor: Color = Color.WHITE,
     val clientId: String,
+    val orderId: String? = null,
     val restaurantId: String? = null,
     val startPoint: Location,
     val destination: Location?,
