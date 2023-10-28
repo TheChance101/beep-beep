@@ -40,7 +40,7 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
 
     suspend inline fun <reified T> HttpClient.tryToExecuteWebSocket(path: String): Flow<T> {
         return flow {
-            webSocket(urlString = path) {
+            webSocket(path = path) {
                 while (true) {
                     try {
                         emit(receiveDeserialized<T>())
@@ -60,7 +60,6 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
             }
         }.flowOn(Dispatchers.IO)
     }
-
     fun throwMatchingException(errorMessages: Map<String, String>) {
         when {
             errorMessages.containsErrors(WRONG_PASSWORD) ->

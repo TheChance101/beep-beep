@@ -65,6 +65,24 @@ class MapScreenModel(
         )
     }
 
+    private fun updateOrderState() {
+        viewModelScope.launch {
+            delay(5000)
+            updateState {
+                it.copy(
+                    orderState = OrderState.NEW_ORDER,
+                    orderUiState = OrderUiState(
+                        destinationLocation = LocationUiState(
+                            31.2001,
+                            29.9187,
+                            ""
+                        )
+                    )//fake
+                )
+            }
+        }
+    }
+
     private fun onGetLiveLocationSuccess(location: Location) {
         viewModelScope.launch {
             delay(2000)
@@ -97,8 +115,16 @@ class MapScreenModel(
     private fun onAcceptOrderSuccess(order: Order) {
         updateState { mapScreenUiState ->
             mapScreenUiState.copy(
-                orderUiState = order.toUiState(),
-                orderState = OrderState.ACCEPTED
+                //orderUiState = order.toUiState(),
+                orderState = OrderState.ACCEPTED,
+                //todo replace this with the restaurant actual location
+                orderUiState = OrderUiState(
+                        destinationLocation = LocationUiState(
+                            31.2001,
+                            29.9187,
+                            ""
+                        )
+                    )//fake
             )
         }
     }
