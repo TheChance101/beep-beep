@@ -52,11 +52,11 @@ fun <T : Any> BpPagingList(
                 refresh is LoadStateNotLoading && data.itemCount < 1 -> {
                     item {
                         Box(
-                            modifier = Modifier.fillParentMaxSize().background(Color.Red),
+                            modifier = Modifier.fillParentMaxSize(),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = "No Meals",
+                                text = "No Items",
                                 modifier = Modifier.align(Alignment.Center),
                                 textAlign = TextAlign.Center
                             )

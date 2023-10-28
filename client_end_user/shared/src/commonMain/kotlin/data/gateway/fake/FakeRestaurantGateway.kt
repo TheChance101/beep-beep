@@ -6,7 +6,6 @@ import data.remote.model.OfferDto
 import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.entity.Offer
-import domain.entity.Order
 import domain.entity.PaginationItems
 import domain.entity.Price
 import domain.entity.Restaurant
