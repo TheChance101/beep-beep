@@ -1,8 +1,12 @@
 package presentation.resturantDetails
 
+import androidx.paging.map
+import app.cash.paging.PagingData
 import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.entity.Restaurant
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 fun Restaurant.toUIState() = RestaurantInfoUIState(
     id = id,
@@ -40,4 +44,8 @@ fun Meal.toUIState() = MealUIState(
     description = description,
 )
 
-fun List<Meal>.toUIState() = map { it.toUIState() }
+fun List<Meal>.toUIState() = map(Meal::toUIState)
+
+fun Flow<PagingData<Meal>>.toUIState(): Flow<PagingData<MealUIState>> {
+    return this.map { pagingData -> pagingData.map { it.toUIState()} }
+}

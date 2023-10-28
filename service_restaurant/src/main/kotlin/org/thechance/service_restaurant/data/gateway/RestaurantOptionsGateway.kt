@@ -15,8 +15,8 @@ import org.thechance.service_restaurant.data.collection.mapper.*
 import org.thechance.service_restaurant.data.collection.relationModels.CategoryDetails
 import org.thechance.service_restaurant.data.collection.relationModels.CategoryRestaurant
 import org.thechance.service_restaurant.data.collection.relationModels.CuisinesMealDetails
-import org.thechance.service_restaurant.data.collection.relationModels.MealCuisines
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
+import org.thechance.service_restaurant.data.utils.paginate
 import org.thechance.service_restaurant.data.utils.toObjectIds
 import org.thechance.service_restaurant.domain.entity.Category
 import org.thechance.service_restaurant.domain.entity.Cuisine
@@ -197,16 +197,33 @@ class RestaurantOptionsGateway(private val container: DataBaseContainer) : IRest
     override suspend fun getCuisineById(id: String): Cuisine? =
         container.cuisineCollection.findOneById(ObjectId(id))?.takeIf { !it.isDeleted }?.toEntity()
 
-    override suspend fun getMealsInCuisine(cuisineId: String): List<Meal> {
-        return container.cuisineCollection.aggregate<MealCuisines>(
-            match(CuisineCollection::id eq ObjectId(cuisineId)),
-            lookup(
-                from = DataBaseContainer.MEAL_COLLECTION,
-                localField = CuisineCollection::meals.name,
-                foreignField = "_id",
-                newAs = MealCuisines::meals.name
+    override suspend fun getMealsInCuisine(cuisineId: String,page:Int,limit:Int): List<Meal> {
+        val mealsId = getMealsIdsByCuisine(cuisineId)
+        return container.mealCollection.find(
+            and(
+                MealCollection::id `in` mealsId,
+                MealCollection::isDeleted eq false
             )
-        ).toList().first().meals.filterNot { it.isDeleted }.toMealEntity()
+        ).paginate(page,limit).toList().toMealEntity()
+    }
+
+    private suspend fun getMealsIdsByCuisine(cuisineId: String): List<ObjectId> {
+        return container.cuisineCollection.find(
+            and(
+                CuisineCollection::id eq ObjectId(cuisineId),
+                CuisineCollection::isDeleted eq false
+            )
+        ).toList().first().meals
+    }
+
+    override suspend fun getTotalNumberOfMealsByCuisine(cuisineId: String): Long {
+        val mealsId = getMealsIdsByCuisine(cuisineId)
+        return container.mealCollection.find(
+            and(
+                MealCollection::id `in` mealsId,
+                MealCollection::isDeleted eq false
+            )
+        ).toList().count().toLong()
     }
 
     override suspend fun addCuisine(cuisine: Cuisine): Cuisine {
