@@ -40,7 +40,7 @@ abstract class BaseRemoteGateway(val client: HttpClient) {
 
     suspend inline fun <reified T> HttpClient.tryToExecuteWebSocket(path: String): Flow<T> {
         return flow {
-            webSocket(urlString = "ws://$path") {
+            webSocket(urlString = path) {
                 while (true) {
                     try {
                         emit(receiveDeserialized<T>())

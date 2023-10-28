@@ -2,7 +2,6 @@ package di
 
 import data.gateway.remote.authorizationIntercept
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.DEFAULT
@@ -11,6 +10,7 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.client.request.header
+import io.ktor.http.Url
 import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
@@ -28,15 +28,16 @@ val networkModule = module {
             }
 
             defaultRequest {
-
                 header("Content-Type", "application/json")
                 header("Accept-Language", "en")
-                // url("https://beep-beep-api-gateway-nap2u.ondigitalocean.app/")
-                url("http://192.168.1.100:8080/")
+                url("https://beep-beep-api-gateway-nap2u.ondigitalocean.app/")
+                //url("http://192.168.1.100:8080/")
 
             }
             install(WebSockets) {
-                contentConverter= KotlinxWebsocketSerializationConverter(Json)
+                contentConverter = KotlinxWebsocketSerializationConverter(Json)
+                Url("ws://beep-beep-api-gateway-nap2u.ondigitalocean.app/")
+                //Url("ws://192.168.1.100:8080/")
             }
             install(ContentNegotiation) {
                 json(

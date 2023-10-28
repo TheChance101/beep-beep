@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.map
 class MapRemoteGateway(client: HttpClient) : IMapRemoteGateway,
     BaseRemoteGateway(client = client) {
     override suspend fun getOrders(): Flow<Order> {
-        return client.tryToExecuteWebSocket<OrderDto>("192.168.1.100:8080/trip/incoming-delivery-orders")
+        return client.tryToExecuteWebSocket<OrderDto>("trip/incoming-delivery-orders")
             .map { it.toTripEntity() }
     }
 

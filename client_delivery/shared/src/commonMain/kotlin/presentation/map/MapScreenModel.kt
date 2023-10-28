@@ -88,7 +88,7 @@ class MapScreenModel(
 
     override fun onAcceptClicked() {
         tryToExecute(
-            function = { manageOrderUseCase.updateTrip("",state.value.tripId) },
+            function = { manageOrderUseCase.updateTrip("653cf6ef5a253b12181fa2d0",state.value.tripId) },
             onSuccess = ::onAcceptOrderSuccess,
             onError = ::onError
         )
@@ -111,7 +111,7 @@ class MapScreenModel(
 
     override fun onReceivedClicked() {
         tryToExecute(
-            function = { manageOrderUseCase.updateTrip("1", state.value.tripId) },
+            function = { manageOrderUseCase.updateTrip("653cf6ef5a253b12181fa2d0", state.value.tripId) },
             onSuccess = ::onUpdateOrderAsReceivedSuccess,
             onError = ::onError
         )
@@ -128,7 +128,7 @@ class MapScreenModel(
 
     override fun onDeliveredClicked() {
         tryToExecute(
-            function = { manageOrderUseCase.updateTrip("1", state.value.tripId) },
+            function = { manageOrderUseCase.updateTrip("653cf6ef5a253b12181fa2d0", state.value.tripId) },
             onSuccess = ::onUpdateOrderAsDeliveredSuccess,
             onError = ::onError
         )
