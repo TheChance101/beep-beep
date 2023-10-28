@@ -68,7 +68,6 @@ fun Route.userRoutes() {
             }
         }
 
-
         authenticateWithRole(Role.END_USER) {
 
             get {
@@ -164,8 +163,17 @@ fun Route.userRoutes() {
                 }
                 respondWithResult(HttpStatusCode.OK, deliveryTrips)
             }
+
+            //TODO: delete when Done just for test now.
+            put("/permissionToUser") {
+                val language = extractLocalizationHeader()
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val userId = tokenClaim?.get(Claim.USER_ID).toString()
+                val permission: List<Int> = call.receive<List<Int>>()
+                val result = identityService.updateUserPermission(userId, permission, language)
+                respondWithResult(HttpStatusCode.OK, result)
+            }
         }
     }
-
 }
 
