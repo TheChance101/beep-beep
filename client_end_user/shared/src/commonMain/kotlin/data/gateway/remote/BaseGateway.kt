@@ -84,7 +84,7 @@ abstract class BaseGateway(val client: HttpClient) {
     }
     fun <T> paginateData(result: List<T>, page: Int, total: Long): PaginationItems<T> {
         return PaginationItems(
-            total = total,
+            total = total.toInt(),
             page = page,
             items = result
         )
