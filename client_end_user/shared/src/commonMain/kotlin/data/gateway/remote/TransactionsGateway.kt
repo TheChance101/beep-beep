@@ -9,6 +9,7 @@ import data.remote.model.CartDto
 import data.remote.model.DeliveryRideDto
 import data.remote.model.FoodOrderDto
 import data.remote.model.LocationDto
+import data.remote.model.MealCartDto
 import data.remote.model.PaginationResponse
 import data.remote.model.ServerResponse
 import data.remote.model.TaxiRideDto
@@ -63,6 +64,18 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
     override suspend fun getCart(): Cart {
         return tryToExecute<ServerResponse<CartDto>> {
             get("/cart")
+        }.value?.toEntity() ?: throw GeneralException.NotFoundException
+    }
+
+    @OptIn(InternalAPI::class)
+    override suspend fun addMealToCart(
+        mealId: String, restaurantId: String, quantity: Int,
+    ): Cart {
+        val meal = MealCartDto(mealId = mealId, restaurantId = restaurantId, quantity = quantity)
+        return tryToExecute<ServerResponse<CartDto>> {
+            put("/cart") {
+                body = Json.encodeToString(MealCartDto.serializer(), meal)
+            }
         }.value?.toEntity() ?: throw GeneralException.NotFoundException
     }
 
