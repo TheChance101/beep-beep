@@ -6,6 +6,8 @@ import data.remote.model.OfferDto
 import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.entity.Offer
+import domain.entity.PaginationItems
+import domain.entity.Price
 import domain.entity.Restaurant
 import domain.entity.Taxi
 import domain.gateway.IRestaurantGateway
@@ -40,8 +42,8 @@ class FakeRestaurantGateway : IRestaurantGateway {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getMealsInCuisine(cuisineId: String): List<Meal> {
-        return emptyList()
+    override suspend fun getMealsInCuisine(cuisineId: String, page: Int, limit: Int): PaginationItems<Meal> {
+        return PaginationItems(emptyList(), 0, 0)
     }
 
     private val offers = listOf(

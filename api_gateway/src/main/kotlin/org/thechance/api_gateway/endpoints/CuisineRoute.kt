@@ -2,18 +2,13 @@ package org.thechance.api_gateway.endpoints
 
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
 import org.thechance.api_gateway.data.model.restaurant.CuisineDto
 import org.thechance.api_gateway.data.service.ImageService
 import org.thechance.api_gateway.data.service.RestaurantService
-import org.thechance.api_gateway.endpoints.utils.ImageValidator
-import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
-import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
-import org.thechance.api_gateway.endpoints.utils.receiveMultipart
-import org.thechance.api_gateway.endpoints.utils.respondWithResult
+import org.thechance.api_gateway.endpoints.utils.*
 import org.thechance.api_gateway.util.Role
 
 
@@ -30,8 +25,9 @@ fun Route.cuisineRoute() {
             post {
                 val language = extractLocalizationHeader()
                 val multipartDto = receiveMultipart<CuisineDto>(imageValidator)
-                val image = multipartDto.image?.let { image -> imageService.uploadImage(image) }
-                val cuisineDto = multipartDto.data.copy(image = image?.data?.link)
+                val imageUrl =
+                    multipartDto.image?.let { image -> imageService.uploadImage(image, multipartDto.data.name) }
+                val cuisineDto = multipartDto.data.copy(image = imageUrl)
                 val cuisine = restaurantService.addCuisine(cuisineDto, language)
                 respondWithResult(HttpStatusCode.Created, cuisine)
             }
@@ -49,7 +45,14 @@ fun Route.cuisineRoute() {
         get("/{id}/meals") {
             val language = extractLocalizationHeader()
             val cuisineId = call.parameters["id"]?.trim().toString()
-            val meals = restaurantService.getMealsByCuisineId(cuisineId = cuisineId, languageCode = language)
+            val page = call.parameters["page"]?.trim()?.toInt() ?: 1
+            val limit = call.parameters["limit"]?.trim()?.toInt() ?: 10
+            val meals = restaurantService.getMealsByCuisineId(
+                cuisineId = cuisineId,
+                languageCode = language,
+                page = page,
+                limit = limit
+            )
             respondWithResult(HttpStatusCode.OK, meals)
         }
 

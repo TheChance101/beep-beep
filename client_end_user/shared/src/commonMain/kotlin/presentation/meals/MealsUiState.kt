@@ -1,12 +1,16 @@
 package presentation.meals
 
+import androidx.paging.PagingData
+import domain.entity.Meal
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import presentation.base.ErrorState
 import presentation.resturantDetails.MealUIState
 
 
 data class MealsUiState(
     val cuisineName: String = "",
-    val meals: List<MealUIState> = emptyList(),
+    val meals: Flow<PagingData<MealUIState>> = emptyFlow(),
 
     val showMealSheet: Boolean = false,
     val selectedMeal: MealUIState = MealUIState(),
