@@ -105,6 +105,7 @@ data class ArabicIQ(
     override val loginToAddToFavourite: String = "الرجاء تسجيل الدخول للاضافه",
     override val addToCart: String = "أضف إلى العربة",
     override val mealAddedToYourCart: String = " ضفنالك الوجبة إلى عربة التسوق مالتك ",
+    override val mealFailedToAddInCart: String = "خطا اثناء الاضافه",
     override val orderEstimatedTime: String = "الوقت المتوقع للطلب",
     override val orderPlaced: String = "تم الطلب",
     override val orderArrived: String = "وصل الطلب",

@@ -102,6 +102,7 @@ data class Arabic(
     override val loginToAddToFavourite: String = "الرجاء تسجيل الدخول للاضافه",
     override val addToCart: String = "أضف إلى العربة",
     override val mealAddedToYourCart: String = "تمت إضافة الوجبة إلى عربة التسوق الخاصة بك",
+    override val mealFailedToAddInCart: String = "خطا اثناء الاضافه",
     override val message: String = "الرسالة",
     override val supportTeam: String = "فريق الدعم",
     override val sendMessageToStartLiveChat: String = "أرسل رسالة لتبدأ المحادثة!",

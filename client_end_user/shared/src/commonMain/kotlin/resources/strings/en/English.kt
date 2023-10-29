@@ -101,6 +101,7 @@ data class English(
     override val loginToAddToFavourite: String = "Please login to add",
     override val addToCart: String = "Add to cart",
     override val mealAddedToYourCart: String = "Meal added to your cart",
+    override val mealFailedToAddInCart: String = "error while add Meal to your cart",
     override val pleaseLogin: String = "Please log in to access your profile",
     override val message: String = "Message",
     override val supportTeam: String = "Support team",
