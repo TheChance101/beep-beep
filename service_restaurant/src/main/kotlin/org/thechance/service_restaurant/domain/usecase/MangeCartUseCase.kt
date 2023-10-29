@@ -7,7 +7,6 @@ import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.gateway.IRestaurantManagementGateway
 import org.thechance.service_restaurant.domain.usecase.validation.ICartValidationUseCase
 import org.thechance.service_restaurant.domain.utils.exceptions.*
-import org.thechance.service_restaurant.domain.utils.exceptions.RESTAURANT_CLOSED
 
 
 interface IMangeCartUseCase {
@@ -19,6 +18,7 @@ interface IMangeCartUseCase {
     suspend fun orderCart(userId: String): Order
 
     suspend fun getOrdersHistoryForUser(userId: String, page: Int, limit: Int): List<Order>
+    suspend fun updateCart(userId: String, cart: Cart): Cart
 
 }
 
@@ -54,6 +54,13 @@ class MangeCartUseCase(
 
     override suspend fun getOrdersHistoryForUser(userId: String, page: Int, limit: Int): List<Order> {
         return restaurantOperationGateway.getOrdersHistoryForUser(userId = userId, page = page, limit = limit)
+    }
+
+    override suspend fun updateCart(userId: String, cart: Cart): Cart {
+        cart.meals?.forEach { meal ->
+            validations.validateUpdateCart(userId, cart.restaurantId ?: "", meal.meadId, meal.quantity)
+        }
+        return restaurantOperationGateway.updateCart(cart)
     }
 
     private suspend fun isRestaurantOpened(restaurantId: String): Boolean {

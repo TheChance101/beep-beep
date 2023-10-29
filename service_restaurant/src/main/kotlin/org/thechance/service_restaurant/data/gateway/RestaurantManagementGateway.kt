@@ -291,6 +291,21 @@ class RestaurantManagementGateway(private val container: DataBaseContainer) : IR
         }
     }
 
+    override suspend fun updateCart(cart: Cart): Cart {
+        val restaurant = cart.restaurantId?.let { container.restaurantCollection.findOneById(it) }
+        val mealIds = cart.meals?.map { ObjectId(it.meadId) } ?: emptyList()
+        val meals = container.mealCollection.find(filter = MealCollection::id `in` mealIds).toList()
+        val updatedCart = container.cartCollection.findOneAndUpdate(
+            CartCollection::id eq ObjectId(cart.id),
+            update = Updates.combine(
+                Updates.set("restaurantId", ObjectId(cart.restaurantId)),
+                Updates.set("meals", meals)
+            ),
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
+        ) ?: throw MultiErrorException(listOf(NOT_FOUND))
+        return updatedCart.toCartDetails(restaurant).toEntity()
+    }
+
     override suspend fun updateCart(cartId: String, restaurantId: String, mealId: String, quantity: Int): Cart {
         val meal =
             container.mealCollection.findOneById(ObjectId(mealId)) ?: throw MultiErrorException(listOf(NOT_FOUND))
