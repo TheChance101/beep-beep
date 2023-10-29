@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import app.cash.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.navigator.Navigator
 import com.beepbeep.designSystem.ui.composable.BpAnimatedTabLayout
+import com.beepbeep.designSystem.ui.composable.BpPagingList
 import com.beepbeep.designSystem.ui.theme.Theme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -25,7 +26,6 @@ import presentation.base.BaseScreen
 import presentation.composable.ContentVisibility
 import presentation.composable.LoginRequiredPlaceholder
 import presentation.composable.HorizontalDivider
-import presentation.composable.PagingList
 import presentation.orderHistory.composable.MealOrderItem
 import presentation.orderHistory.composable.TripHistoryItem
 import resources.Resources
@@ -88,10 +88,8 @@ class OrderHistoryScreen :
                 }
                 when (state.selectedType) {
                     OrderScreenUiState.OrderSelectType.MEALS -> {
-                        PagingList(
+                        BpPagingList(
                             data = foodOrders,
-                            isLoading = state.isLoading,
-                            errorMessage = "No Orders"
                         ) { foodOrder ->
                             foodOrder?.let {
                                 MealOrderItem(orders = foodOrder)
@@ -102,10 +100,8 @@ class OrderHistoryScreen :
 
                     OrderScreenUiState.OrderSelectType.TRIPS -> {
 
-                        PagingList(
+                        BpPagingList(
                             data = trips,
-                            isLoading = state.isLoading,
-                            errorMessage = "No Trips"
                         ) { trip ->
                             trip?.let {
                                 TripHistoryItem(it)

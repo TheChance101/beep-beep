@@ -20,7 +20,6 @@ import presentation.composable.BottomSheet
 import presentation.composable.MealBottomSheet
 import presentation.composable.MealCard
 import presentation.composable.ModalBottomSheetState
-import presentation.composable.PagingList
 import presentation.composable.modifier.noRippleEffect
 import presentation.resturantDetails.Composable.NeedToLoginSheet
 import presentation.resturantDetails.MealUIState
