@@ -10,14 +10,15 @@ import org.thechance.service_identity.domain.security.HashingService
 import org.thechance.service_identity.domain.usecases.validation.IUserInfoValidationUseCase
 import org.thechance.service_identity.domain.usecases.validation.IWalletBalanceValidationUseCase
 import org.thechance.service_identity.domain.util.*
+import org.thechance.service_identity.endpoints.model.mapper.toUserDetails
 
 interface IUserAccountManagementUseCase {
 
-    suspend fun createUser(password: String?, user: UserInfo): UserManagement
+    suspend fun createUser(password: String?, user: UserInfo): User
 
     suspend fun deleteUser(id: String): Boolean
 
-    suspend fun updateUser(id: String, fullName: String? = null, phone: String? = null): UserManagement
+    suspend fun updateUser(id: String, fullName: String? = null, phone: String? = null): User
 
     suspend fun getUser(id: String): User
 
@@ -34,15 +35,18 @@ class UserAccountManagementUseCase(
     private val hashingService: HashingService
 ) : IUserAccountManagementUseCase {
 
-    override suspend fun createUser(password: String?, user: UserInfo): UserManagement {
+    override suspend fun createUser(password: String?, user: UserInfo): User {
         userInfoValidationUseCase.validateUserInformation(password = password, user = user)
-        if (password == null) { throw RequestValidationException(listOf(INVALID_REQUEST_PARAMETER)) }
+        if (password == null) {
+            throw RequestValidationException(listOf(INVALID_REQUEST_PARAMETER))
+        }
         val saltedHash = hashingService.generateSaltedHash(password)
         val userCountry = getUserCountry(user.phone)
         val newUser = dataBaseGateway.createUser(saltedHash, country = userCountry.name, user = user)
-        dataBaseGateway.createWallet(newUser.id, currency = userCountry.currency)
+        val wallet = dataBaseGateway.createWallet(newUser.id, currency = userCountry.currency)
         dataBaseGateway.addAddress(newUser.id, user.addresses.first())
-        return newUser
+        val userDetails = newUser.toUserDetails(wallet.currency, wallet.walletBalance)
+        return userDetails
     }
 
     override suspend fun getUserByUsername(username: String): UserManagement {
@@ -68,9 +72,10 @@ class UserAccountManagementUseCase(
         return dataBaseGateway.deleteUser(id)
     }
 
-    override suspend fun updateUser(id: String, fullName: String?, phone: String?): UserManagement {
+    override suspend fun updateUser(id: String, fullName: String?, phone: String?): User {
         userInfoValidationUseCase.validateUpdateUserInformation(fullName, phone)
-        return dataBaseGateway.updateUser(id, fullName, phone)
+        dataBaseGateway.updateUser(id, fullName, phone)
+        return dataBaseGateway.getUserById(id)
     }
 
     override suspend fun getUser(id: String): User {

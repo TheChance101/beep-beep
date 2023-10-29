@@ -18,7 +18,7 @@ fun Modifier.drawTopIndicator(
     xOffset: Float,
     indicatorWidth: Dp = 40.dp,
     indicatorHeight: Dp = 2.dp,
-    indicatorColor: Color = Theme.colors.primary
+    indicatorColor: Color = Theme.colors.primary,
 ): Modifier = then(
     Modifier.drawWithContent {
         drawContent()

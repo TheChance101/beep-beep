@@ -8,11 +8,17 @@ import org.thechance.service_identity.domain.util.ApplicationId
 fun Parameters.extractInt(key: String): Int? {
     return this[key]?.toIntOrNull()
 }
+
 fun String?.toIntListOrNull(): List<Int>? {
     return this?.split(",")?.mapNotNull { it.toIntOrNull() }
 }
 
 fun PipelineContext<Unit, ApplicationCall>.extractApplicationIdHeader(): String {
     val headers = call.request.headers
-    return headers["Application-Id"]?.trim() ?: System.getenv(ApplicationId.END_USER).toString()
+    val applicationId = headers["Application-Id"]?.trim()
+    return if (applicationId.isNullOrBlank()) {
+        System.getenv(ApplicationId.END_USER).toString()
+    } else {
+        applicationId
+    }
 }

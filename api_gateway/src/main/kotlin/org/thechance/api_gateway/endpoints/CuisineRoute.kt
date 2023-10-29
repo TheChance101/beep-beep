@@ -2,7 +2,6 @@ package org.thechance.api_gateway.endpoints
 
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
@@ -32,27 +31,30 @@ fun Route.cuisineRoute() {
                 val multipartDto = receiveMultipart<CuisineDto>(imageValidator)
                 val image = multipartDto.image?.let { image -> imageService.uploadImage(image) }
                 val cuisineDto = multipartDto.data.copy(image = image?.data?.link)
-                val cuisine =  restaurantService.addCuisine(cuisineDto, language)
+                val cuisine = restaurantService.addCuisine(cuisineDto, language)
                 respondWithResult(HttpStatusCode.Created, cuisine)
             }
 
             delete("/{id}") {
                 val language = extractLocalizationHeader()
-                val cuisineId =call.parameters["id"]?.trim().toString()
-                val result= restaurantService.deleteCuisine(cuisineId = cuisineId, languageCode = language)
+                val cuisineId = call.parameters["id"]?.trim().toString()
+                val result = restaurantService.deleteCuisine(cuisineId = cuisineId, languageCode = language)
                 val successMessage =
                     localizedMessagesFactory.createLocalizedMessages(language).deletedSuccessfully
-                respondWithResult(HttpStatusCode.OK,result, message=successMessage)
+                respondWithResult(HttpStatusCode.OK, result, message = successMessage)
             }
         }
 
         get("/{id}/meals") {
             val language = extractLocalizationHeader()
             val cuisineId = call.parameters["id"]?.trim().toString()
+            val page = call.parameters["page"]?.trim()?.toInt() ?: 1
+            val limit = call.parameters["limit"]?.trim()?.toInt() ?: 10
             val meals = restaurantService.getMealsByCuisineId(
                 cuisineId = cuisineId,
-                languageCode = language
-            )
+                languageCode = language,
+                page = page,
+                limit = limit)
             respondWithResult(HttpStatusCode.OK, meals)
         }
 

@@ -8,7 +8,10 @@ data class Trip(
     val driverId: String? = null,
     val taxiPlateNumber: String? = null,
     val driverName: String? = null,
+    val taxiColor: Color = Color.WHITE,
     val clientId: String,
+    val orderId: String? = null,
+    val restaurantId: String? = null,
     val startPoint: Location,
     val destination: Location?,
     val startPointAddress: String,
@@ -17,7 +20,7 @@ data class Trip(
     val price: Double,
     val startDate: LocalDateTime? = null,
     val endDate: LocalDateTime? = null,
-    val isATaxiTrip: Boolean? = null,
+    val isATaxiTrip: Boolean,
     val tripStatus: Status
 ) {
     enum class Status(val statusCode: Int) {

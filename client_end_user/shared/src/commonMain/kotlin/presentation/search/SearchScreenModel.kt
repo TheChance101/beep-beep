@@ -1,7 +1,8 @@
 package presentation.search
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.entity.Explore
+import domain.entity.Meal
+import domain.entity.Restaurant
 import domain.usecase.IManageAuthenticationUseCase
 import domain.usecase.ISearchUseCase
 import kotlinx.coroutines.CoroutineScope
@@ -73,17 +74,17 @@ class SearchScreenModel(
 
     private fun getMealAndRestaurant() {
         tryToExecute(
-            { search.searchMealAndRestaurant(query = state.value.query) },
+            { search.search(query = state.value.query) },
             ::onSuccess,
             ::onError
         )
     }
 
-    private fun onSuccess(result: Explore) {
+    private fun onSuccess(result: Pair<List<Restaurant>, List<Meal>>) {
         updateState {
             it.copy(
-                restaurants = result.restaurants.toExploreUiState(),
-                meals = result.meals.toUIState()
+                restaurants = result.first.toExploreUiState(),
+                meals = result.second.toUIState()
             )
         }
     }

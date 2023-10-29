@@ -26,7 +26,7 @@ class SocketHandler {
             broadcastChannel
                 .drop(1)
                 .flowOn(Dispatchers.IO)
-                .collectLatest { tripDto ->
+                .collect { tripDto ->
                     if (tripDto.isATaxiTrip == isATaxi) {
                         session?.sendSerialized(tripDto)
                     }
@@ -51,7 +51,7 @@ class SocketHandler {
                     if (tripDto.tripStatus == Trip.Status.FINISHED.statusCode) {
                         session?.sendSerialized(tripDto)
                         endSession(key)
-                    } else {
+                    }else{
                         session?.sendSerialized(tripDto)
                     }
                 }

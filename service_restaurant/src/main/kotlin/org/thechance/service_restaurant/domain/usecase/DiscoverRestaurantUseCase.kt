@@ -14,11 +14,11 @@ interface IDiscoverRestaurantUseCase {
     suspend fun getRestaurantDetails(restaurantId: String): Restaurant
     suspend fun getRestaurantsInCategory(categoryId: String): List<Restaurant>
 
-
-    suspend fun getMealsByCuisine(cuisineId: String): List<Meal>
+    suspend fun getCuisinesMealsInRestaurant(restaurantId: String): List<Cuisine>
+    suspend fun getMealsByCuisine(cuisineId: String,page: Int, limit: Int): List<Meal>
+    suspend fun getTotalNumberOfMealsInCuisine(cuisineId: String): Long
     suspend fun getMealsByRestaurantId(restaurantId: String, page: Int, limit: Int): List<Meal>
     suspend fun getMealDetails(mealId: String): MealDetails
-    suspend fun getCategories(page: Int, limit: Int): List<Category>
     suspend fun isRestaurantExisted(restaurantId: String): Boolean
 }
 
@@ -38,12 +38,6 @@ class DiscoverRestaurantUseCase(
         return restaurantGateway.getRestaurants(restaurantIds)
     }
 
-
-    override suspend fun getCategories(page: Int, limit: Int): List<Category> {
-        basicValidation.validatePagination(page, limit)
-        return optionsGateway.getCategories(page, limit)
-    }
-
     override suspend fun isRestaurantExisted(restaurantId: String): Boolean {
         return restaurantGateway.isRestaurantExisted(restaurantId)
     }
@@ -53,14 +47,24 @@ class DiscoverRestaurantUseCase(
         return optionsGateway.getRestaurantsInCategory(categoryId)
     }
 
+    override suspend fun getCuisinesMealsInRestaurant(restaurantId: String): List<Cuisine> {
+        //TODO check for restaurant if found
+        return optionsGateway.getCuisinesWithMeals(restaurantId)
+    }
+
     override suspend fun getRestaurantDetails(restaurantId: String): Restaurant {
         checkIfRestaurantIsExist(restaurantId)
         return restaurantGateway.getRestaurant(restaurantId) ?: throw MultiErrorException(listOf(NOT_FOUND))
     }
 
-    override suspend fun getMealsByCuisine(cuisineId: String): List<Meal> {
+    override suspend fun getMealsByCuisine(cuisineId: String,page: Int, limit: Int): List<Meal> {
         checkIfCuisineIsExist(cuisineId)
-        return optionsGateway.getMealsInCuisine(cuisineId)
+        return optionsGateway.getMealsInCuisine(cuisineId =cuisineId,page = page, limit = limit)
+    }
+
+    override suspend fun getTotalNumberOfMealsInCuisine(cuisineId: String): Long {
+        checkIfCuisineIsExist(cuisineId)
+      return optionsGateway.getTotalNumberOfMealsByCuisine(cuisineId = cuisineId)
     }
 
     override suspend fun getMealsByRestaurantId(restaurantId: String, page: Int, limit: Int): List<Meal> {

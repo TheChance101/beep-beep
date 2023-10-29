@@ -2,7 +2,6 @@ package org.thechance.service_restaurant.data.gateway
 
 import com.mongodb.client.model.Accumulators
 import com.mongodb.client.model.FindOneAndUpdateOptions
-import com.mongodb.client.model.Projections.computed
 import com.mongodb.client.model.ReturnDocument
 import com.mongodb.client.model.Updates
 import org.bson.types.ObjectId
@@ -13,6 +12,7 @@ import org.thechance.service_restaurant.data.DataBaseContainer.Companion.RESTAUR
 import org.thechance.service_restaurant.data.collection.*
 import org.thechance.service_restaurant.data.collection.mapper.toCollection
 import org.thechance.service_restaurant.data.collection.mapper.toEntity
+import org.thechance.service_restaurant.data.collection.mapper.toMealEntity
 import org.thechance.service_restaurant.data.collection.relationModels.*
 import org.thechance.service_restaurant.data.utils.getNonEmptyFieldsMap
 import org.thechance.service_restaurant.data.utils.isSuccessfullyUpdated
@@ -23,7 +23,6 @@ import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
 import org.thechance.service_restaurant.domain.utils.exceptions.ERROR_ADD
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
-import javax.management.Query
 
 class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantGateway {
 
@@ -78,14 +77,12 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
     }
 
     override suspend fun getRestaurant(id: String): Restaurant? {
-        return container.restaurantCollection.aggregate<RestaurantCollection>(
-            match(
-                and(
-                    RestaurantCollection::id eq ObjectId(id),
-                    RestaurantCollection::isDeleted eq false
-                )
-            ),
-        ).toList().firstOrNull()?.toEntity()
+        return container.restaurantCollection.findOne(
+            and(
+                RestaurantCollection::id eq ObjectId(id),
+                RestaurantCollection::isDeleted eq false
+            )
+        )?.toEntity()
     }
 
     override suspend fun getRestaurantIds(): List<String> {
@@ -114,7 +111,7 @@ class RestaurantGateway(private val container: DataBaseContainer) : IRestaurantG
         return container.mealCollection.find(
             MealCollection::restaurantId eq ObjectId(restaurantId),
             MealCollection::isDeleted eq false
-        ).paginate(page, limit).toList().toEntity()
+        ).paginate(page, limit).toList().toMealEntity()
 
     }
 

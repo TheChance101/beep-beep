@@ -18,7 +18,7 @@ class CartScreenModel(private val cartManagement: ManageCartUseCase) :
     // region getting cart meals
     private fun getCartMeals() {
         tryToExecute(
-            cartManagement::getAllCartMeals,
+            cartManagement::getCart,
             ::onGetCartMealsSuccess,
             ::onError
         )
@@ -34,14 +34,31 @@ class CartScreenModel(private val cartManagement: ManageCartUseCase) :
             )
         }
     }
+    // endregion
 
-    private fun onError(error: ErrorState) {
-        println("error: $error")
+    // region saving cart
+    override fun onDispose() {
+        tryToExecute(
+            { cartManagement.updateCart(state.value.toEntity()) },
+            {},
+            ::onError
+        )
+        super.onDispose()
+    }
+
+    private fun orderNow() {
+        tryToExecute(cartManagement::orderNow, ::onOrderNowSuccess, ::onError)
+    }
+
+    private fun onOrderNowSuccess(success: Boolean) {
+        if (success) {
+            sendNewEffect(CartUiEffect.NavigateUp)
+        }
     }
     // endregion
 
     // region interactions
-    override fun onClickPlus(index: Int, count: Long) {
+    override fun onClickPlus(index: Int, count: Int) {
         val updatedCount = if (count < 99) count + 1 else count
         val meal = state.value.meals[index].copy(count = updatedCount)
         updateState {
@@ -54,7 +71,7 @@ class CartScreenModel(private val cartManagement: ManageCartUseCase) :
         }
     }
 
-    override fun onClickMinus(index: Int, count: Long) {
+    override fun onClickMinus(index: Int, count: Int) {
         val updatedCount = if (count > 1) count - 1 else count
         val meal = state.value.meals[index].copy(count = updatedCount)
         updateState {
@@ -68,7 +85,7 @@ class CartScreenModel(private val cartManagement: ManageCartUseCase) :
     }
 
     override fun onClickOrderNow() {
-        println("make order")
+        orderNow()
     }
 
     override fun onClickBack() {
@@ -76,11 +93,9 @@ class CartScreenModel(private val cartManagement: ManageCartUseCase) :
     }
     // endregion
 
-    // region saving cart
-    override fun onDispose() {
-
-        super.onDispose()
+    // region error handling
+    private fun onError(error: ErrorState) {
+        println("error: $error")
     }
     // endregion
-
 }

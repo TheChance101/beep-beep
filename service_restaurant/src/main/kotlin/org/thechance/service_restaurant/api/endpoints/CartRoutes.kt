@@ -16,7 +16,6 @@ import org.thechance.service_restaurant.domain.usecase.IMangeCartUseCase
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
 import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 
-
 fun Route.cartRoutes() {
 
     val manageCart: IMangeCartUseCase by inject()

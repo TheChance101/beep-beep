@@ -29,7 +29,6 @@ fun Route.cartRoutes() {
                 val userId = tokenClaim?.get(Claim.USER_ID).toString()
                 val result = restaurantService.getUserCart(userId, language)
                 respondWithResult(HttpStatusCode.OK, result)
-
             }
 
             put {

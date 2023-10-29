@@ -1,11 +1,9 @@
 package presentation.profile
 
-import domain.entity.Address
-import domain.entity.Location
-import domain.entity.UserDetails
+import domain.entity.User
 
 data class ProfileUIState(
-    val user: UserUIState? = UserUIState(),
+    val user: UserUIState = UserUIState(),
     val fullName: String = "",
     val phoneNumber: String = "",
     val snackBarMessage: String = "",
@@ -13,12 +11,12 @@ data class ProfileUIState(
     val isFullNameError: Boolean = false,
     val isPhoneNumberError: Boolean = false,
     val isButtonEnabled: Boolean = false,
-    val isLoggedIn : Boolean = false,
-    val isLoading : Boolean = false
+    val isLoggedIn: Boolean = true,
+    val isLoading: Boolean = false
 )
 
 data class UserUIState(
-    val addresses: List<AddressUIState>? = emptyList(),
+    val address: String = "",
     val email: String = "",
     val id: String = "",
     val username: String = "",
@@ -27,6 +25,10 @@ data class UserUIState(
     val phoneNumber: String = "",
     val currency: String = ""
 )
+
+fun ProfileUIState.isNameOrPhoneChange(): Boolean {
+    return (fullName != user.fullName || phoneNumber != user.phoneNumber)
+}
 
 data class AddressUIState(
     val address: String = "",
@@ -39,30 +41,16 @@ data class LocationUIState(
     val longitude: Double = 0.0
 )
 
-fun UserDetails.toUIState(): UserUIState {
+fun User.toUIState(): UserUIState {
     return UserUIState(
-        addresses = addresses?.map { it.toUIState() },
-        email = email ?: "",
-        id = id ?: "",
-        username = username ?: "",
-        walletBalance = walletBalance ?: 0.0,
-        fullName = fullName ?: "",
-        phoneNumber = phoneNumber ?: "",
-        currency = currency ?: ""
+        address = addresses.first().address,
+        email = email,
+        id = id,
+        username = username,
+        walletBalance = wallet.value,
+        fullName = fullName,
+        phoneNumber = phoneNumber,
+        currency = wallet.currency
     )
 }
 
-fun Address.toUIState(): AddressUIState {
-    return AddressUIState(
-        address = address ?: "",
-        id = id ?: "",
-        location = location?.toUIState()
-    )
-}
-
-fun Location.toUIState(): LocationUIState {
-    return LocationUIState(
-        latitude = latitude ?: 0.0,
-        longitude = longitude ?: 0.0
-    )
-}

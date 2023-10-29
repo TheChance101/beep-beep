@@ -1,28 +1,25 @@
 package presentation.meals
 
+import app.cash.paging.PagingData
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Meal
+import domain.usecase.IExploreRestaurantUseCase
 import domain.usecase.IManageAuthenticationUseCase
-import domain.usecase.IMangeRestaurantUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
-import presentation.cuisines.CuisinesUiEffect
 import presentation.resturantDetails.MealInteractionListener
-import presentation.resturantDetails.toUIState
-import org.koin.core.component.get
 import presentation.resturantDetails.MealUIState
-import presentation.search.SearchUiEffect
+import presentation.resturantDetails.toUIState
 
 class MealsScreenModel(
     private val cuisineId: String,
     private val cuisineName: String,
-    private val manageRestaurant: IMangeRestaurantUseCase,
-    private val manageAuthentication: IManageAuthenticationUseCase
-) :
-    BaseScreenModel<MealsUiState, MealsUiEffect>(MealsUiState()), MealsInteractionListener,
+    private val manageRestaurant: IExploreRestaurantUseCase,
+    private val manageAuthentication: IManageAuthenticationUseCase,
+) : BaseScreenModel<MealsUiState, MealsUiEffect>(MealsUiState()), MealsInteractionListener,
     MealInteractionListener {
 
     override val viewModelScope: CoroutineScope = coroutineScope
@@ -62,6 +59,7 @@ class MealsScreenModel(
     }
 
     private fun onError(errorState: ErrorState) {
+        println("errorState: $errorState")
         updateState { it.copy(isLoading = false) }
         when (errorState) {
             is ErrorState.NoInternet -> {
@@ -74,8 +72,8 @@ class MealsScreenModel(
         }
     }
 
-    private fun onGetMealsSuccess(meals: List<Meal>) {
-        updateState { it.copy(meals = meals.toUIState(), isLoading = false, error = null) }
+    private fun onGetMealsSuccess(meals: Flow<PagingData<Meal>>) {
+        updateState { it.copy(meals = meals.toUIState(), isLoading = false) }
     }
 
     override fun onIncreaseMealQuantity() {

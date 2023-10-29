@@ -143,6 +143,15 @@ class TaxiService(
         )
     }
 
+    suspend fun getTripByOrderId(orderId: String, languageCode: String): TripDto {
+        return client.tryToExecute(
+            api = APIs.TAXI_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { get("/trip/user/$orderId") }
+        )
+    }
+
     suspend fun getTripsHistoryForUser(
         userId: String,
         page: Int,
@@ -158,48 +167,19 @@ class TaxiService(
     }
 
     @OptIn(InternalAPI::class)
-    suspend fun approveTrip(taxiId: String, tripId: String, driverId: String, languageCode: String): TripDto {
+    suspend fun updateTrip(taxiId: String, tripId: String, driverId: String, languageCode: String): TripDto {
         return client.tryToExecute(
             api = APIs.TAXI_API,
             attributes = attributes,
             setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
         ) {
-            val formData = FormDataContent(Parameters.build {
-                append("tripId", tripId)
-                append("taxiId", taxiId)
-                append("driverId", driverId)
-            })
-            put("/trip/approve") { body = formData }
-        }
-    }
-
-    @OptIn(InternalAPI::class)
-    suspend fun updateTripAsReceived(tripId: String, driverId: String, languageCode: String): TripDto {
-        return client.tryToExecute(
-            api = APIs.TAXI_API,
-            attributes = attributes,
-            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
-        ) {
-            val formData = FormDataContent(Parameters.build {
-                append("tripId", tripId)
-                append("driverId", driverId)
-            })
-            put("/trip/received") { body = formData }
-        }
-    }
-
-    @OptIn(InternalAPI::class)
-    suspend fun updateTripAsFinished(tripId: String, driverId: String, languageCode: String): TripDto {
-        return client.tryToExecute(
-            api = APIs.TAXI_API,
-            attributes = attributes,
-            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
-        ) {
-            val formData = FormDataContent(Parameters.build {
-                append("tripId", tripId)
-                append("driverId", driverId)
-            })
-            put("/trip/finish") { body = formData }
+            val formData = FormDataContent(
+                Parameters.build {
+                    append("taxiId", taxiId)
+                    append("driverId", driverId)
+                }
+            )
+            put("/trip/update/$tripId") { body = formData }
         }
     }
 
@@ -208,6 +188,15 @@ class TaxiService(
             api = APIs.TAXI_API,
             attributes = attributes,
             method = { delete("/taxi/driver/$id") }
+        )
+    }
+
+    suspend fun getActiveTripsByUserId(userId: String, languageCode: String): List<TripDto> {
+        return client.tryToExecute<List<TripDto>>(
+            api = APIs.TAXI_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { get("/trip/actives/$userId") }
         )
     }
 }

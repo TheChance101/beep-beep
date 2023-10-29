@@ -36,8 +36,8 @@ class IdentityService(
     private val errorHandler: ErrorHandler
 ) {
     @OptIn(InternalAPI::class)
-    suspend fun createUser(newUser: UserRegistrationDto, languageCode: String): UserDto {
-        return client.tryToExecute<UserDto>(
+    suspend fun createUser(newUser: UserRegistrationDto, languageCode: String): UserDetailsDto {
+        return client.tryToExecute<UserDetailsDto>(
             APIs.IDENTITY_API,
             attributes = attributes,
             setErrorMessage = { errorCodes ->
@@ -97,14 +97,24 @@ class IdentityService(
         }
     }
 
-    suspend fun getUserById(id: String, languageCode: String): UserDetailsDto = client.tryToExecute<UserDetailsDto>(
-        APIs.IDENTITY_API, attributes = attributes, setErrorMessage = { errorCodes ->
-            errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)
-        }
-    ) { get("user/$id") }
+    suspend fun getUserAddresses(userId: String, languageCode: String): List<AddressDto> =
+        client.tryToExecute<List<AddressDto>>(
+            APIs.IDENTITY_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { get("/user/$userId/address") }
+        )
+
+    suspend fun getUserById(id: String, languageCode: String): UserDetailsDto =
+        client.tryToExecute<UserDetailsDto>(
+            APIs.IDENTITY_API,
+            attributes = attributes,
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
+            method = { get("user/$id") }
+        )
 
     @OptIn(InternalAPI::class)
-    suspend fun updateUserProfile(id: String, fullName: String?, phone: String?, languageCode: String): UserDto {
+    suspend fun updateUserProfile(id: String, fullName: String?, phone: String?, languageCode: String): UserDetailsDto {
         return client.tryToExecute(
             APIs.IDENTITY_API, attributes = attributes, setErrorMessage = { errorCodes ->
                 errorHandler.getLocalizedErrorMessage(errorCodes, languageCode)

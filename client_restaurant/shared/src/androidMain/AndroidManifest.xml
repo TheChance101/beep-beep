@@ -5,9 +5,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="Beep Beep"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:icon="@mipmap/beep_beep_icon_launcher"
+        android:label="Restaurant App"
+        android:roundIcon="@mipmap/beep_beep_icon_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true"

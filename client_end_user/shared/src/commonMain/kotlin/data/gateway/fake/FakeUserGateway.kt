@@ -5,13 +5,14 @@ import data.remote.model.LocationDto
 import data.remote.model.RestaurantDto
 import domain.entity.Restaurant
 import domain.entity.Session
+import domain.entity.Account
+import domain.entity.Address
+import domain.entity.Price
 import domain.entity.User
-import domain.entity.UserCreation
-import domain.entity.UserDetails
 import domain.gateway.IUserGateway
 
 class FakeUserGateway : IUserGateway {
-    override suspend fun createUser(userCreation: UserCreation): User {
+    override suspend fun createUser(account: Account): User {
         TODO("Not yet implemented")
     }
 
@@ -23,12 +24,16 @@ class FakeUserGateway : IUserGateway {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getUserProfile(): UserDetails {
+    override suspend fun getUserProfile(): User {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getUserWallet(): User {
-        return User(name = "Test", currency = "$", walletValue = 100.0)
+    override suspend fun getUserAddresses(): List<Address> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun updateProfile(fullName: String?, phone: String?): User {
+        TODO("Not yet implemented")
     }
 
     override suspend fun getFavoriteRestaurants(): List<Restaurant> {

@@ -16,14 +16,15 @@ fun Route.mealRoute() {
     val imageService: ImageService by inject()
 
     route("/meal") {
-        authenticateWithRole(Role.RESTAURANT_OWNER) {
 
-            get("/{mealId}") {
-                val language = extractLocalizationHeader()
-                val mealId = call.parameters["mealId"]?.trim().toString()
-                val meal = restaurantService.getMeal(mealId, language)
-                respondWithResult(HttpStatusCode.OK, meal)
-            }
+        get("/{mealId}") {
+            val language = extractLocalizationHeader()
+            val mealId = call.parameters["mealId"]?.trim().toString()
+            val meal = restaurantService.getMeal(mealId, language)
+            respondWithResult(HttpStatusCode.OK, meal)
+        }
+
+        authenticateWithRole(Role.RESTAURANT_OWNER) {
 
             post {
                 val language = extractLocalizationHeader()

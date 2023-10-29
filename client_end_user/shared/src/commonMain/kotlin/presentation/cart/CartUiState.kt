@@ -1,7 +1,7 @@
 package presentation.cart
 
 import domain.entity.Cart
-import domain.entity.CartMeal
+import domain.entity.MealCart
 
 data class CartUiState(
     val meals: List<CartMealUiState> = emptyList(),
@@ -17,24 +17,22 @@ data class CartMealUiState(
     val currency: String = "",
     val restaurantName: String = "",
     val image: String = "",
-    val count: Long = 0
+    val count: Int = 0
 )
 
-fun Cart.toUiState(): CartUiState {
-    return CartUiState(
-        meals = meals.map { it.toUiState() },
-        currency = currency
-    )
-}
+fun Cart.toUiState() = CartUiState(
+    meals = meals?.map { it.toUiState() } ?: emptyList(),
+    currency = price.currency
+)
 
-fun CartMeal.toUiState(): CartMealUiState {
+
+fun MealCart.toUiState(): CartMealUiState {
     return CartMealUiState(
         id = id,
         name = name,
-        price = price,
-        currency = currency,
-        restaurantName = restaurantName,
-        image = image,
-        count = count
+        price = price.value,
+        currency = price.currency,
+        image = imageUrl,
+        count = quality
     )
 }

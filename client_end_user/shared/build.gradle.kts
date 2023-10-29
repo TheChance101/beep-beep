@@ -62,7 +62,12 @@ kotlin {
                 implementation(libs.ktor.logging)
                 implementation(libs.ktor.client.cio)
                 implementation(libs.kotlin.serialization)
-
+                //moko library for location
+                api(libs.calf)
+                api(libs.moko.geo)
+                //paging3
+                implementation(libs.paging.compose)
+                implementation(libs.paging.common)
             }
         }
         val androidMain by getting {
@@ -72,6 +77,9 @@ kotlin {
                 api(libs.androidx.core.ktx)
                 api(libs.koin.android)
                 implementation(libs.androidx.constraint)
+
+                implementation("io.ktor:ktor-client-android:2.3.3")
+                implementation("io.ktor:ktor-client-okhttp:2.3.3")
             }
         }
         val iosX64Main by getting

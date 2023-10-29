@@ -3,17 +3,17 @@ package presentation.map
 import presentation.base.ErrorState
 
 data class MapScreenUiState(
-    val username: String = "Youssef",
+    val username: String = "",
     val currentLocation: LocationUiState = LocationUiState(),
     val destinationLocation: LocationUiState = LocationUiState(),
     val orderState: OrderState = OrderState.LOADING,
     val errorState: ErrorState? = null,
-    val restaurantName: String = "Restaurant Name",
-    val restaurantLocation: String = "Restaurant Location",
+    val restaurantName: String = "",
+    val restaurantLocation: String = "",
     val restaurantImageUrl: String? = null,
-    val orderLocation: String = "Alex,Egypt",
-    val orderDistance: String = "20 KM",
-    val orderDuration: String = "20 min"
+    val orderLocation: String = "",
+    val orderDistance: String = "",
+    val orderDuration: String = ""
 )
 
 data class LocationUiState(

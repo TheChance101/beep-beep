@@ -3,6 +3,7 @@ package org.thechance.api_gateway.data.model.taxi
 import kotlinx.serialization.Serializable
 import org.thechance.api_gateway.data.model.LocationDto
 import org.thechance.api_gateway.data.model.identity.UserDetailsDto
+import org.thechance.api_gateway.data.model.restaurant.OrderDto
 import org.thechance.api_gateway.data.model.restaurant.RestaurantDto
 
 @Serializable
@@ -11,8 +12,11 @@ data class TripDto(
     val taxiId: String? = null,
     val driverId: String? = null,
     val clientId: String? = null,
+    val orderId: String? = null,
+    val restaurantId: String? = null,
     val taxiPlateNumber: String? = null,
     val taxiDriverName: String? = null,
+    val taxiColor: Long? = null,
     val startPoint: LocationDto? = null,
     val destination: LocationDto? = null,
     val startPointAddress: String? = null,
@@ -60,19 +64,11 @@ fun TripDto.toRideTrackingResponse(taxi: TaxiDto): RideTrackingResponse {
         driverImage = taxi.driverImage ?: "",
         rate = taxi.rate ?: 0.0,
         carType = taxi.type,
+        taxiColor = taxiColor ?: 4294944768L,
         startPoint = startPoint ?: LocationDto(0.0, 0.0),
         destination = destination ?: LocationDto(0.0, 0.0),
         startPointAddress = startPointAddress ?: "",
         destinationAddress = destinationAddress ?: "",
         tripStatus = tripStatus
-    )
-}
-
-fun TripDto.toDeliveryTrackingResponse(): DeliveryTrackingResponse {
-    return DeliveryTrackingResponse(
-        id = id ?: "",
-        startPoint = startPoint ?: LocationDto(0.0, 0.0),
-        destination = destination ?: LocationDto(0.0, 0.0),
-        status = tripStatus
     )
 }
