@@ -62,9 +62,11 @@ kotlin {
                 implementation(libs.ktor.logging)
                 implementation(libs.ktor.client.cio)
                 implementation(libs.kotlin.serialization)
+
                 //moko library for location
                 api(libs.calf)
                 api(libs.moko.geo)
+
                 //paging3
                 implementation(libs.paging.compose)
                 implementation(libs.paging.common)
