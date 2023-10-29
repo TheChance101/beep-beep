@@ -6,13 +6,13 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import org.thechance.service_identity.endpoints.model.mapper.toDto
-import org.thechance.service_identity.domain.util.MissingParameterException
 import org.thechance.service_identity.domain.usecases.IUserManagementUseCase
 import org.thechance.service_identity.domain.util.INVALID_REQUEST_PARAMETER
-import org.thechance.service_identity.endpoints.model.UserOptionsDto
-import org.thechance.service_identity.endpoints.model.mapper.toEntity
+import org.thechance.service_identity.domain.util.MissingParameterException
 import org.thechance.service_identity.endpoints.model.BasePagingResponse
+import org.thechance.service_identity.endpoints.model.UserOptionsDto
+import org.thechance.service_identity.endpoints.model.mapper.toDto
+import org.thechance.service_identity.endpoints.model.mapper.toEntity
 import org.thechance.service_identity.endpoints.util.extractInt
 
 fun Route.userManagementRoutes() {
@@ -42,6 +42,5 @@ fun Route.userManagementRoutes() {
             val result = userManagement.updateUserPermission(userId, permission)
             call.respond(HttpStatusCode.OK, result.toDto())
         }
-
     }
 }

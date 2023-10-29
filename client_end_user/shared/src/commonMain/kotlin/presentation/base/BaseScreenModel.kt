@@ -3,7 +3,6 @@ package presentation.base
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import domain.utils.AuthorizationException
-import domain.utils.GeneralException
 import domain.utils.InternetException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -84,8 +83,6 @@ abstract class BaseScreenModel<S, E>(initialState: S) : ScreenModel, KoinCompone
                 handelAuthorizationException(exception, onError)
             } catch (e: AuthorizationException.LocationAccessDeniedException) {
                 onError(ErrorState.LocationPermissionDenied)
-            } catch (exception: GeneralException.UnknownErrorException) {
-                onError(ErrorState.NoInternet)
             } catch (exception: Exception) {
                 onError(ErrorState.RequestFailed)
             }
