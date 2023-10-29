@@ -8,10 +8,9 @@ import presentation.cuisines.CuisineUiState
 data class RestaurantUIState(
     val restaurantInfo: RestaurantInfoUIState = RestaurantInfoUIState(),
     val isFavourite: Boolean = false,
-    val mostOrders: List<MealUIState> = emptyList(),
     val cuisines: List<RestaurantCuisineUiState> = emptyList(),
     val isLoading: Boolean = false,
-    val error: ErrorState? = null,
+    val isAddToCartLoading: Boolean = false,
     val isLogin: Boolean = false,
     val sheetState: ModalBottomSheetState = ModalBottomSheetState(),
     val sheetMealState: ModalBottomSheetState = ModalBottomSheetState(),
@@ -20,6 +19,9 @@ data class RestaurantUIState(
     val selectedMeal: MealUIState = MealUIState(),
     val showMealSheet: Boolean = false,
     val showToast: Boolean = false,
+
+    val error: ErrorState? = null,
+    val errorAddToCart: ErrorState? = null,
 )
 
 data class RestaurantCuisineUiState(

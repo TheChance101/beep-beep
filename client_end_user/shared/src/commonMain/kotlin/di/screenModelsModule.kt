@@ -45,9 +45,10 @@ val screenModelsModule = module {
     factory { (restaurantId: String) ->
         RestaurantScreenModel(
             restaurantId = restaurantId,
-            mangeRestaurantDetails = get(),
+            restaurantDetails = get(),
             manageFavourite = get(),
             manageAuthentication = get(),
+            manageCart = get(),
             manageOffers = get()
         )
     }

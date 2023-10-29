@@ -1,12 +1,14 @@
 package presentation.resturantDetails
 
 import cafe.adriel.voyager.core.model.coroutineScope
+import domain.entity.Cart
 import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.entity.Restaurant
 import domain.usecase.IExploreRestaurantUseCase
 import domain.usecase.IGetOffersUseCase
 import domain.usecase.IManageAuthenticationUseCase
+import domain.usecase.IManageCartUseCase
 import domain.usecase.IManageFavouriteUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -17,9 +19,10 @@ import presentation.base.ErrorState
 
 class RestaurantScreenModel(
     private val restaurantId: String,
-    private val mangeRestaurantDetails: IExploreRestaurantUseCase,
+    private val restaurantDetails: IExploreRestaurantUseCase,
     private val manageFavourite: IManageFavouriteUseCase,
     private val manageAuthentication: IManageAuthenticationUseCase,
+    private val manageCart: IManageCartUseCase,
     private val manageOffers: IGetOffersUseCase,
 ) : BaseScreenModel<RestaurantUIState, RestaurantUIEffect>(RestaurantUIState()),
     RestaurantInteractionListener {
@@ -28,7 +31,6 @@ class RestaurantScreenModel(
     init {
         checkIfLoggedIn()
         getRestaurantDetails(restaurantId)
-//        getMostOrders(restaurantId)
         getCuisinesWithMeals(restaurantId)
     }
 
@@ -59,7 +61,7 @@ class RestaurantScreenModel(
     private fun getRestaurantDetails(restaurantId: String) {
         updateState { it.copy(isLoading = true) }
         tryToExecute(
-            { mangeRestaurantDetails.getRestaurantDetails(restaurantId) },
+            { restaurantDetails.getRestaurantDetails(restaurantId) },
             ::onGetRestaurantDetailsSuccess,
             ::onGetRestaurantDetailsError
         )
@@ -129,18 +131,9 @@ class RestaurantScreenModel(
 
     //endregion
 
-    private fun getMostOrders(restaurantId: String) {
-        tryToExecute(
-            { manageOffers.getRestaurantMostOrders(restaurantId) },
-            ::onGetMostOrdersSuccess,
-            ::onError
-        )
-
-    }
-
     private fun getCuisinesWithMeals(restaurantId: String) {
         tryToExecute(
-            { mangeRestaurantDetails.getCuisinesWithMealsInRestaurant(restaurantId) },
+            { restaurantDetails.getCuisinesWithMealsInRestaurant(restaurantId) },
             ::onCuisinesWithMealsSuccess,
             ::onError
         )
@@ -154,17 +147,13 @@ class RestaurantScreenModel(
         updateState { it.copy(error = errorState) }
     }
 
-    private fun onGetMostOrdersSuccess(meals: List<Meal>) {
-        updateState { it -> it.copy(mostOrders = meals.map { it.toUIState() }) }
-    }
-
     override fun onBack() {
         sendNewEffect(RestaurantUIEffect.onBack)
     }
 
     override fun onGoToDetails(mealId: String) {
-         tryToExecute(
-            { mangeRestaurantDetails.getMealById(mealId) },
+        tryToExecute(
+            { restaurantDetails.getMealById(mealId) },
             ::onGetMealDetailsSuccess,
             ::onError
         )
@@ -217,11 +206,33 @@ class RestaurantScreenModel(
 
     override fun onAddToCart() {
         if (state.value.isLogin) {
-            onDismissSheet()
-            showToast()
+            updateState { it.copy(isAddToCartLoading = true) }
+            tryToExecute(
+                {
+                    manageCart.addMealTCart(
+                        restaurantId = state.value.restaurantInfo.id,
+                        quantity = state.value.selectedMeal.quantity,
+                        mealId = state.value.selectedMeal.id
+                    )
+                },
+                ::onAddToCartSuccess,
+                ::onAddToCartError
+            )
         } else {
             updateState { it.copy(showMealSheet = false, showLoginSheet = true) }
         }
+    }
+
+    private fun onAddToCartSuccess(success: Boolean) {
+        //change home that something in cart
+        updateState { it.copy(isAddToCartLoading = false, errorAddToCart = null) }
+        onDismissSheet()
+        showToast()
+    }
+
+    private fun onAddToCartError(errorState: ErrorState) {
+        updateState { it.copy(isAddToCartLoading = false, errorAddToCart = errorState) }
+        showToast()
     }
 
     override fun onShowMealSheet() {
