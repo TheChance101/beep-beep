@@ -41,7 +41,7 @@ class OrderHistoryScreenModel(
                 if (token.isNotEmpty()) {
                     updateState { it.copy(isLoggedIn = true) }
                     getOrdersHistory()
-//                    getTripsHistory()
+                    getTripsHistory()
                 } else {
                     updateState { it.copy(isLoggedIn = false) }
                 }
