@@ -153,10 +153,7 @@ class TaxiService(
     }
 
     suspend fun getTripsHistoryForUser(
-        userId: String,
-        page: Int,
-        limit: Int,
-        languageCode: String
+        userId: String, page: Int, limit: Int, languageCode: String
     ): PaginationResponse<TripDto> {
         return client.tryToExecute<PaginationResponse<TripDto>>(
             api = APIs.TAXI_API,
