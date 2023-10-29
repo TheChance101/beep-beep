@@ -6,7 +6,6 @@ import domain.gateway.IRestaurantGateway
 interface IGetOffersUseCase {
     suspend fun getNewOffers(limit: Int = DEFAULT_OFFER_LIMIT): List<Offer>
 
-
     private companion object {
         const val DEFAULT_OFFER_LIMIT = 0
     }
@@ -24,6 +23,5 @@ class GetOffersUseCase(
                 }
             }
     }
-
 
 }

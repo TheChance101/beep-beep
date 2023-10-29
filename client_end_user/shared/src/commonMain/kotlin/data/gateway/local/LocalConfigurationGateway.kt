@@ -91,6 +91,21 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
             .find()?.preferredFood?.toList() ?: emptyList()
     }
 
+    override suspend fun saveCartStatus(isCartEmpty: Boolean) {
+        realm.write {
+            query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
+                .find()?.isCartEmpty = isCartEmpty
+        }
+    }
+
+    override suspend fun getCartStatus(): Flow<Boolean> {
+        return realm.query<UserConfigurationCollection>(
+            "$ID == $CONFIGURATION_ID"
+        ).asFlow().map { result ->
+            result.list.find { it.isCartEmpty }?.isCartEmpty ?: true
+        }
+    }
+
     override suspend fun removeAccessToken() {
         realm.write {
             query<UserConfigurationCollection>("$ID == $CONFIGURATION_ID").first()
