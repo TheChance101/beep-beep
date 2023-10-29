@@ -4,7 +4,7 @@ import org.thechance.service_restaurant.api.models.CuisineDetailsDto
 import org.thechance.service_restaurant.api.models.CuisineDto
 import org.thechance.service_restaurant.domain.entity.Cuisine
 
-fun Cuisine.toDto(): CuisineDto = CuisineDto(id, name)
+fun Cuisine.toDto(): CuisineDto = CuisineDto(id, name,image)
 
 fun List<Cuisine>.toDto(): List<CuisineDto> = this.map { it.toDto() }
 
