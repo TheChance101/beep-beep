@@ -3,6 +3,7 @@ package domain.usecase
 import domain.entity.Account
 import domain.gateway.IUserGateway
 import domain.gateway.local.ILocalConfigurationGateway
+import domain.gateway.local.ILocalRestaurantGateway
 import domain.usecase.validation.IValidationUseCase
 import kotlinx.coroutines.flow.Flow
 
@@ -17,6 +18,7 @@ interface IManageAuthenticationUseCase {
 class ManageAuthenticationUseCase(
     private val remoteGateway: IUserGateway,
     private val localGateway: ILocalConfigurationGateway,
+    private val localRestaurantGateway: ILocalRestaurantGateway,
     private val validation: IValidationUseCase,
 ) : IManageAuthenticationUseCase {
 
@@ -44,6 +46,7 @@ class ManageAuthenticationUseCase(
     override suspend fun logout() {
         localGateway.removeAccessToken()
         localGateway.removeRefreshToken()
+        localRestaurantGateway.clearFavoriteRestaurants()
     }
 
     override suspend fun getAccessToken(): Flow<String> {

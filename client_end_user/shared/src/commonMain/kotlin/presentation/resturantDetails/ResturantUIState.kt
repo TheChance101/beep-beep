@@ -10,7 +10,6 @@ data class RestaurantUIState(
     val isFavourite: Boolean = false,
     val mostOrders: List<MealUIState> = emptyList(),
     val cuisines: List<RestaurantCuisineUiState> = emptyList(),
-
     val isLoading: Boolean = false,
     val error: ErrorState? = null,
     val isLogin: Boolean = false,
