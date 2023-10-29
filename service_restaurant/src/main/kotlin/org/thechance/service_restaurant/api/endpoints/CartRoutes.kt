@@ -6,7 +6,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import org.thechance.service_restaurant.api.models.CartDto
+import org.thechance.service_restaurant.api.models.MealRequestDto
 import org.thechance.service_restaurant.api.models.mappers.toDomain
 import org.thechance.service_restaurant.api.models.mappers.toDto
 import org.thechance.service_restaurant.api.utils.SocketHandler
@@ -40,8 +40,8 @@ fun Route.cartRoutes() {
 
         put("/replace") {
             val userId = call.parameters["userId"] ?: throw MultiErrorException(listOf(NOT_FOUND))
-            val cartDto = call.receive<CartDto>()
-            val result = manageCart.updateCart(userId, cartDto.toDomain(userId))
+            val mealsDto = call.receive<List<MealRequestDto>>()
+            val result = manageCart.updateCartMeals(userId, mealsDto.toDomain())
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 

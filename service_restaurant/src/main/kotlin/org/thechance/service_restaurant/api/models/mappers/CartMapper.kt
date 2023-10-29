@@ -1,8 +1,10 @@
 package org.thechance.service_restaurant.api.models.mappers
 
 import org.thechance.service_restaurant.api.models.CartDto
+import org.thechance.service_restaurant.api.models.MealRequestDto
 import org.thechance.service_restaurant.api.models.OrderedMealDto
 import org.thechance.service_restaurant.domain.entity.Cart
+import org.thechance.service_restaurant.domain.entity.MealRequest
 import org.thechance.service_restaurant.domain.entity.OrderedMeal
 import org.thechance.service_restaurant.domain.utils.exceptions.INVALID_REQUEST_PARAMETER
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
@@ -18,13 +20,15 @@ fun Cart.toDto() = CartDto(
     currency = currency
 )
 
-fun CartDto.toDomain(userId: String): Cart {
-    return Cart(
-        id = id ?: throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER)),
-        userId = userId,
-        restaurantId = this.restaurantId,
-        meals = meals?.map { it.toDomain() } ?: emptyList()
-    )
+fun List<MealRequestDto>.toDomain(): List<MealRequest> {
+    return this.map {
+        MealRequest(
+            userId = it.userId ?: throw MultiErrorException(listOf(INVALID_REQUEST_PARAMETER)),
+            restaurantId = it.restaurantId,
+            mealId = it.mealId,
+            quantity = it.quantity
+        )
+    }
 }
 
 fun OrderedMealDto.toDomain(): OrderedMeal {

@@ -44,7 +44,7 @@ fun Route.cartRoutes() {
                 val language = extractLocalizationHeader()
                 val tokenClaim = call.principal<JWTPrincipal>()
                 val userId = tokenClaim?.get(Claim.USER_ID).toString()
-                val cart = call.receive<CartDto>()
+                val cart = call.receive<List<MealRequestDto>>()
                 val result = restaurantService.updateCart(userId, cart, language)
                 respondWithResult(HttpStatusCode.OK, result)
             }

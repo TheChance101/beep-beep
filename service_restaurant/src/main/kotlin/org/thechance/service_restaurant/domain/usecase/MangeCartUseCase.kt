@@ -1,6 +1,7 @@
 package org.thechance.service_restaurant.domain.usecase
 
 import org.thechance.service_restaurant.domain.entity.Cart
+import org.thechance.service_restaurant.domain.entity.MealRequest
 import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.entity.mapper.toOrder
 import org.thechance.service_restaurant.domain.gateway.IRestaurantGateway
@@ -18,7 +19,7 @@ interface IMangeCartUseCase {
     suspend fun orderCart(userId: String): Order
 
     suspend fun getOrdersHistoryForUser(userId: String, page: Int, limit: Int): List<Order>
-    suspend fun updateCart(userId: String, cart: Cart): Cart
+    suspend fun updateCartMeals(userId: String, meals: List<MealRequest>): Cart
 
 }
 
@@ -56,11 +57,9 @@ class MangeCartUseCase(
         return restaurantOperationGateway.getOrdersHistoryForUser(userId = userId, page = page, limit = limit)
     }
 
-    override suspend fun updateCart(userId: String, cart: Cart): Cart {
-        cart.meals?.forEach { meal ->
-            validations.validateUpdateCart(userId, cart.restaurantId ?: "", meal.meadId, meal.quantity)
-        }
-        return restaurantOperationGateway.updateCart(cart)
+    override suspend fun updateCartMeals(userId: String, meals: List<MealRequest>): Cart {
+        validations.validateUpdateCart(userId, meals)
+        return restaurantOperationGateway.updateCartMeals(userId, meals)
     }
 
     private suspend fun isRestaurantOpened(restaurantId: String): Boolean {

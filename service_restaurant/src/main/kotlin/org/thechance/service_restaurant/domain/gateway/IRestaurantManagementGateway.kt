@@ -1,6 +1,7 @@
 package org.thechance.service_restaurant.domain.gateway
 
 import org.thechance.service_restaurant.domain.entity.Cart
+import org.thechance.service_restaurant.domain.entity.MealRequest
 import org.thechance.service_restaurant.domain.entity.Order
 
 interface IRestaurantManagementGateway {
@@ -23,7 +24,7 @@ interface IRestaurantManagementGateway {
 
     //region Cart
     suspend fun getCart(userId: String): Cart
-    suspend fun updateCart(cart: Cart): Cart
+    suspend fun updateCartMeals(userId: String, meals: List<MealRequest>): Cart
     suspend fun updateCart(cartId: String, restaurantId: String, mealId: String, quantity: Int): Cart
     suspend fun deleteCart(userId: String)
     suspend fun isCartEmpty(userId: String): Boolean

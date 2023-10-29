@@ -16,6 +16,7 @@ import org.thechance.service_restaurant.data.collection.OrderCollection
 import org.thechance.service_restaurant.data.collection.mapper.*
 import org.thechance.service_restaurant.data.collection.relationModels.OrderWithRestaurant
 import org.thechance.service_restaurant.domain.entity.Cart
+import org.thechance.service_restaurant.domain.entity.MealRequest
 import org.thechance.service_restaurant.domain.entity.Order
 import org.thechance.service_restaurant.domain.gateway.IRestaurantManagementGateway
 import org.thechance.service_restaurant.domain.utils.exceptions.MultiErrorException
@@ -291,15 +292,22 @@ class RestaurantManagementGateway(private val container: DataBaseContainer) : IR
         }
     }
 
-    override suspend fun updateCart(cart: Cart): Cart {
-        val restaurant = cart.restaurantId?.let { container.restaurantCollection.findOneById(it) }
-        val mealIds = cart.meals?.map { ObjectId(it.meadId) } ?: emptyList()
-        val meals = container.mealCollection.find(filter = MealCollection::id `in` mealIds).toList()
+    override suspend fun updateCartMeals(userId: String, meals: List<MealRequest>): Cart {
+        val mealIds = meals.map { ObjectId(it.mealId) }
+        val mealsCollection = container.mealCollection.find(filter = MealCollection::id `in` mealIds).toList()
+        if (mealsCollection.isEmpty() || mealsCollection.size != meals.size) {
+            throw MultiErrorException(listOf(NOT_FOUND))
+        }
+        val updatedMeals = mutableListOf<CartCollection.MealCollection>()
+        for (index in mealsCollection.indices) {
+            updatedMeals.add(mealsCollection[index].toMealInCart(meals[index].quantity))
+        }
+        val restaurant = container.restaurantCollection.findOneById(mealsCollection.first().restaurantId)
         val updatedCart = container.cartCollection.findOneAndUpdate(
-            CartCollection::id eq ObjectId(cart.id),
+            CartCollection::userId eq ObjectId(userId),
             update = Updates.combine(
-                Updates.set("restaurantId", ObjectId(cart.restaurantId)),
-                Updates.set("meals", meals)
+                Updates.set("restaurantId", mealsCollection.first().restaurantId),
+                Updates.set("meals", updatedMeals.toList())
             ),
             options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         ) ?: throw MultiErrorException(listOf(NOT_FOUND))

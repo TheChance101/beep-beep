@@ -10,3 +10,10 @@ data class Cart(
     val meals: List<OrderedMeal>? = null,
     val totalPrice: Double = 0.0,
 )
+
+data class MealRequest(
+    val userId: String,
+    val restaurantId: String,
+    val mealId: String,
+    val quantity: Int,
+)
