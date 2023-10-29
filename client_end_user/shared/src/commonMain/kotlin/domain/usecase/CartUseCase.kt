@@ -34,7 +34,7 @@ class ManageCartUseCase(
     ): Boolean {
         val result = transactionGateway.addMealToCart(mealId, restaurantId, quantity)
         val isAddedSuccessful = !result.meals.isNullOrEmpty()
-        localGateway.saveCartStatus(isCartEmpty = isAddedSuccessful)
+        localGateway.saveCartStatus(isCartEmpty = !isAddedSuccessful)
         return isAddedSuccessful
 
     }

@@ -32,6 +32,7 @@ data class RestaurantCuisineUiState(
 
 data class MealUIState(
     val id: String = "",
+    val restaurantId: String = "",
     val restaurantName: String = "",
     val totalPrice: Double = 0.0,
     val name: String = "",

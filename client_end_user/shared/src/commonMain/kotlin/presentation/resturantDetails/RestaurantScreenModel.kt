@@ -210,7 +210,7 @@ class RestaurantScreenModel(
             tryToExecute(
                 {
                     manageCart.addMealTCart(
-                        restaurantId = state.value.restaurantInfo.id,
+                        restaurantId = state.value.selectedMeal.restaurantId,
                         quantity = state.value.selectedMeal.quantity,
                         mealId = state.value.selectedMeal.id
                     )
@@ -224,7 +224,6 @@ class RestaurantScreenModel(
     }
 
     private fun onAddToCartSuccess(success: Boolean) {
-        //change home that something in cart
         updateState { it.copy(isAddToCartLoading = false, errorAddToCart = null) }
         onDismissSheet()
         showToast()
