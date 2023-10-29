@@ -9,13 +9,16 @@ import org.thechance.service_notification.domain.gateway.IPushNotificationGatewa
 class PushNotificationGateway(private val firebaseMessaging: FirebaseMessaging) : IPushNotificationGateway {
 
     override suspend fun sendNotification(userTokens: List<String>, title: String, body: String): Boolean {
-        return firebaseMessaging.sendAll(userTokens.map {
+        val result = firebaseMessaging.sendAll(userTokens.map {
             Message.builder()
                 .putData(TITLE, title)
                 .putData(BODY, body)
                 .setToken(it)
                 .build()
         }).failureCount == 0
+
+        println("AAA result : $result")
+        return result
     }
 
     override suspend fun sendNotificationToTopic(topic: String, title: String, body: String): Boolean {

@@ -8,7 +8,11 @@ interface IDatabaseGateway {
 
     suspend fun addNotificationToHistory(notification: Notification)
 
-    suspend fun getNotificationHistory(page: Int, limit: Int): List<Notification>
+    suspend fun getNotificationHistoryForUser(page: Int, limit: Int): List<Notification>
+
+    suspend fun getNotificationHistoryForUser(page: Int, limit: Int, userId: String): List<Notification>
+
+    suspend fun getTotalCountsOfNotificationHistoryForUser(userId: String): Long
 
     suspend fun registerToken(userId: String, token: String): Boolean
 
