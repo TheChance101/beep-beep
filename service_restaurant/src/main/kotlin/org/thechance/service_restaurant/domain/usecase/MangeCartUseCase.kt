@@ -46,7 +46,7 @@ class MangeCartUseCase(
             throw MultiErrorException(listOf(CART_IS_EMPTY))
         } else if (cart.restaurantId != null && isRestaurantOpened(cart.restaurantId)) {
             restaurantOperationGateway.deleteCart(userId)
-            restaurantOperationGateway.addOrder(order = cart.toOrder())
+            restaurantOperationGateway.addOrder(order = cart.toOrder()) ?: throw MultiErrorException(listOf(NOT_FOUND))
         } else {
             throw MultiErrorException(listOf(RESTAURANT_CLOSED))
         }

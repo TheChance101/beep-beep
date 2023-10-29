@@ -24,10 +24,33 @@ import org.thechance.service_restaurant.domain.utils.exceptions.NOT_FOUND
 class RestaurantManagementGateway(private val container: DataBaseContainer) : IRestaurantManagementGateway {
 
     //region Order
-    override suspend fun addOrder(order: Order): Order {
+    override suspend fun addOrder(order: Order): Order? {
         val insertedOrder = order.toCollection()
         container.orderCollection.insertOne(insertedOrder).wasAcknowledged()
-        return insertedOrder.toEntity()
+
+        val pipeline = listOf(
+            match(OrderCollection::id eq insertedOrder.id),
+            lookup(
+                from = "restaurant",
+                localField = OrderCollection::restaurantId.name,
+                foreignField = "_id",
+                newAs = "restaurant"
+            ),
+            unwind("\$restaurant"),
+            project(
+                OrderWithRestaurant::id from "\$_id",
+                OrderWithRestaurant::userId from "\$userId",
+                OrderWithRestaurant::restaurant from "\$restaurant",
+                OrderWithRestaurant::meals from "\$meals",
+                OrderWithRestaurant::totalPrice from "\$totalPrice",
+                OrderWithRestaurant::createdAt from "\$createdAt",
+                OrderWithRestaurant::orderStatus from "\$orderStatus"
+            )
+        )
+
+        val createdOrder = container.orderCollection.aggregate<OrderWithRestaurant>(pipeline).first()
+        return createdOrder?.toOrderEntity()
+
     }
 
     override suspend fun getOrdersByRestaurantId(restaurantId: String): List<Order> {
