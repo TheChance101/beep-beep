@@ -15,7 +15,8 @@ fun MealDetails.toDto() = MealDetailsDto(
     description = description,
     price = price,
     currency = currency,
-    cuisines = cuisines.toDto()
+    cuisines = cuisines.toDto(),
+    image = image
 )
 
 fun MealWithCuisineDto.toEntity() = MealDetails(
