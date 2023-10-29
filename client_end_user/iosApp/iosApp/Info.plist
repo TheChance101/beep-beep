@@ -30,6 +30,12 @@
 	<true/>
 	<key>NSHumanReadableCopyright</key>
 	<string></string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Access Loaction 3</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Access Location 2</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Access Location</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>roboto_medium.ttf</string>

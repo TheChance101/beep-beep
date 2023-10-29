@@ -13,7 +13,7 @@ data class CuisineCollection(
     @SerialName("_id")
     val id: ObjectId = ObjectId(),
     val name: String,
-    val image: String,
+    val image: String = "",
     val isDeleted: Boolean = false,
     val meals: List<@Contextual ObjectId> = emptyList(),
 )

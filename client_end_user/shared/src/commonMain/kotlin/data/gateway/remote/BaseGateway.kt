@@ -82,11 +82,8 @@ abstract class BaseGateway(val client: HttpClient) {
         const val USER_NOT_EXIST = "1043"
         const val USER_ALREADY_EXIST = "1002"
     }
+
     fun <T> paginateData(result: List<T>, page: Int, total: Long): PaginationItems<T> {
-        return PaginationItems(
-            total = total.toInt(),
-            page = page,
-            items = result
-        )
+        return PaginationItems(total = total, page = page, items = result)
     }
 }

@@ -1,10 +1,18 @@
 package presentation.orderHistory
 
+import androidx.paging.PagingData
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
+import presentation.base.ErrorState
+
 data class OrderScreenUiState(
     val selectedType: OrderSelectType = OrderSelectType.MEALS,
-    val ordersHistory: List<OrderHistoryUiState> = emptyList(),
-    val tripsHistory: List<TripHistoryUiState> = emptyList(),
+    val ordersHistory: Flow<PagingData<OrderHistoryUiState>> = emptyFlow(),
+    val tripsHistory:  Flow<PagingData<TripHistoryUiState>> = emptyFlow(),
+
     val isLoggedIn: Boolean = false,
+    val isLoading: Boolean = false,
+    val error: ErrorState? = null
 ) {
     enum class OrderSelectType {
         MEALS,

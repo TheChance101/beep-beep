@@ -4,13 +4,14 @@ import domain.entity.Cart
 import domain.entity.DeliveryRide
 import domain.entity.FoodOrder
 import domain.entity.Location
+import domain.entity.PaginationItems
 import domain.entity.TaxiRide
 import domain.entity.Trip
 import kotlinx.coroutines.flow.Flow
 
 interface ITransactionsGateway {
-    suspend fun getTripHistory(): List<Trip>
-    suspend fun getOrderHistoryGateway(): List<FoodOrder>
+    suspend fun getTripHistory(page: Int, limit: Int): PaginationItems<Trip>
+    suspend fun getOrderHistoryGateway(page: Int, limit: Int): PaginationItems<FoodOrder>
     suspend fun getCart(): Cart
     suspend fun orderNow(): Boolean
     suspend fun updateCart(cart: Cart)

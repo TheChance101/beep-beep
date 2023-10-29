@@ -111,10 +111,7 @@ fun Route.taxiRoutes() {
                 val limit = call.parameters["limit"]?.trim()?.toInt() ?: 10
                 val language = extractLocalizationHeader()
                 val result = taxiService.getTripsHistoryForUser(
-                    userId = userId,
-                    page = page,
-                    limit = limit,
-                    languageCode = language
+                    userId = userId, page = page, limit = limit, languageCode = language
                 )
                 respondWithResult(HttpStatusCode.OK, result)
             }
@@ -123,19 +120,12 @@ fun Route.taxiRoutes() {
         authenticateWithRole(Role.END_USER) {
             post("/taxi") {
                 val language = extractLocalizationHeader()
+                val tokenClaim = call.principal<JWTPrincipal>()
+                val userId = tokenClaim?.get(Claim.USER_ID).toString()
                 val successMessage = localizedMessagesFactory.createLocalizedMessages(language).tripCreatedSuccessfully
                 val restaurantOrder = call.receive<TripDto>()
-                val isUserExisted = identityService.isUserExistedInDb(userId = restaurantOrder.clientId, language)
-                if (isUserExisted) {
-                    val createdTrip = taxiService.createTrip(restaurantOrder, language)
-                    respondWithResult(HttpStatusCode.Created, createdTrip, successMessage)
-                } else {
-                    respondWithError(
-                        call,
-                        statusCode = HttpStatusCode.BadRequest,
-                        errorMessage = mapOf(400 to " User Not found")
-                    )
-                }
+                val createdTrip = taxiService.createTrip(restaurantOrder.copy(clientId = userId), language)
+                respondWithResult(HttpStatusCode.Created, createdTrip, successMessage)
             }
         }
 
