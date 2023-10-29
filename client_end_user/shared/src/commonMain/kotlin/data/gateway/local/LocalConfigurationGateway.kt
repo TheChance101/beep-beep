@@ -102,7 +102,7 @@ class LocalConfigurationGateway(private val realm: Realm) : ILocalConfigurationG
         return realm.query<UserConfigurationCollection>(
             "$ID == $CONFIGURATION_ID"
         ).asFlow().map { result ->
-            result.list.find { it.isCartEmpty }?.isCartEmpty ?: true
+            result.list.find { !it.isCartEmpty }?.isCartEmpty ?: true
         }
     }
 

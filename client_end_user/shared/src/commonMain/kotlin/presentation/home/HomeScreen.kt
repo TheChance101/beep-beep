@@ -70,11 +70,7 @@ import util.getNavigationBarPadding
 import util.root
 
 class HomeScreen : BaseScreen<
-        HomeScreenModel,
-        HomeScreenUiState,
-        HomeScreenUiEffect,
-        HomeScreenInteractionListener
-        >() {
+        HomeScreenModel, HomeScreenUiState, HomeScreenUiEffect, HomeScreenInteractionListener>() {
 
     @Composable
     override fun Content() {
