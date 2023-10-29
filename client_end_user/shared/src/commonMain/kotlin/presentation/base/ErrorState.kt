@@ -16,6 +16,7 @@ sealed interface ErrorState {
     data class UserAlreadyExists(val message: String) : ErrorState
     data class UserNotFound(val message: String) : ErrorState
     data class WrongPassword(val message: String) : ErrorState
+    data object LocationPermissionDenied : ErrorState
     // endregion
 
     // region Internet
@@ -63,5 +64,6 @@ fun handelAuthorizationException(
         AuthorizationException.InvalidFullNameException -> onError(ErrorState.InvalidFullName)
         AuthorizationException.InvalidPhoneException -> onError(ErrorState.InvalidPhone)
         AuthorizationException.InvalidAddressException -> onError(ErrorState.InvalidAddress)
+        is AuthorizationException.LocationAccessDeniedException -> onError(ErrorState.LocationPermissionDenied)
     }
 }

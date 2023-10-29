@@ -1,6 +1,5 @@
 package util
 
-import androidx.compose.ui.text.intl.Locale
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -18,3 +17,4 @@ fun Long.convertLongToFormattedDate(): String {
     val formattedDate = "${monthAbbreviation} ${localDateTime.dayOfMonth}/${localDateTime.year}"
     return formattedDate
 }
+

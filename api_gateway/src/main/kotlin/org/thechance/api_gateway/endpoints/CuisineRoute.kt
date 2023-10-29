@@ -2,7 +2,6 @@ package org.thechance.api_gateway.endpoints
 
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.thechance.api_gateway.data.localizedMessages.LocalizedMessagesFactory
@@ -49,7 +48,13 @@ fun Route.cuisineRoute() {
         get("/{id}/meals") {
             val language = extractLocalizationHeader()
             val cuisineId = call.parameters["id"]?.trim().toString()
-            val meals = restaurantService.getMealsByCuisineId(cuisineId = cuisineId, languageCode = language)
+            val page = call.parameters["page"]?.trim()?.toInt() ?: 1
+            val limit = call.parameters["limit"]?.trim()?.toInt() ?: 10
+            val meals = restaurantService.getMealsByCuisineId(
+                cuisineId = cuisineId,
+                languageCode = language,
+                page = page,
+                limit = limit)
             respondWithResult(HttpStatusCode.OK, meals)
         }
 

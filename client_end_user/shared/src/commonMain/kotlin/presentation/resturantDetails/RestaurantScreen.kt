@@ -38,7 +38,7 @@ import presentation.composable.MealBottomSheet
 import presentation.composable.RatingBar
 import presentation.composable.modifier.noRippleEffect
 import presentation.resturantDetails.Composable.Chip
-import presentation.resturantDetails.Composable.CloseButton
+import presentation.composable.BackButton
 import presentation.resturantDetails.Composable.NeedToLoginSheet
 import presentation.resturantDetails.Composable.ToastMessage
 import resources.Resources
@@ -97,7 +97,7 @@ data class RestaurantScreen(val restaurantId: String) :
                     painter = painterResource(Resources.images.placeholder),
                     contentDescription = "background",
                 )
-                CloseButton(
+                BackButton(
                     onClick = { listener.onBack() },
                     modifier = Modifier.align(Alignment.TopCenter),
                     icon = Resources.images.iconBack

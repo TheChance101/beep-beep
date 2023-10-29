@@ -1,19 +1,40 @@
 package data.gateway.remote
 
+import data.remote.model.PaginationResponse
 import data.remote.model.ServerResponse
+import domain.entity.PaginationItems
 import domain.utils.AuthorizationException
 import domain.utils.GeneralException
 import domain.utils.InternetException
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.websocket.receiveDeserialized
+import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.client.statement.HttpResponse
-import io.ktor.client.statement.bodyAsText
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 abstract class BaseGateway(val client: HttpClient) {
-    suspend inline fun <reified T> tryToExecute(
-        method: HttpClient.() -> HttpResponse,
-    ): T {
+
+    suspend inline fun <reified T> tryToExecuteWebSocket(path: String): Flow<T> {
+        return flow {
+            client.webSocket(path = path) {
+                while (true) {
+                    try {
+                        emit(receiveDeserialized<T>())
+                    } catch (e: Exception) {
+                        throw Exception(e.message.toString())
+                    }
+                }
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend inline fun <reified T> tryToExecute(method: HttpClient.() -> HttpResponse): T {
         try {
             return client.method().body()
         } catch (e: ClientRequestException) {
@@ -60,5 +81,12 @@ abstract class BaseGateway(val client: HttpClient) {
         const val WRONG_PASSWORD = "1013"
         const val USER_NOT_EXIST = "1043"
         const val USER_ALREADY_EXIST = "1002"
+    }
+    fun <T> paginateData(result: List<T>, page: Int, total: Long): PaginationItems<T> {
+        return PaginationItems(
+            total = total.toInt(),
+            page = page,
+            items = result
+        )
     }
 }
