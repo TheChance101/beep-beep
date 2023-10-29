@@ -95,7 +95,7 @@ fun Route.restaurantRoutes() {
                 val restaurantDto = call.receive<RestaurantDto>()
                 val user = identityService.getUserByUsername(restaurantDto.ownerUserName, language)
                 identityService.updateUserPermission(
-                    userId = user.id, permission = listOf(Role.RESTAURANT_OWNER), language
+                    userId = user.id, permission = listOf(user.permission, Role.RESTAURANT_OWNER), language
                 )
                 val newRestaurant = restaurantService.addRestaurant(restaurantDto.copy(ownerId = user.id), language)
                 respondWithResult(HttpStatusCode.Created, newRestaurant)
