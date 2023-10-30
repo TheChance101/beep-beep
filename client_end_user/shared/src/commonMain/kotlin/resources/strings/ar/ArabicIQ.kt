@@ -112,5 +112,7 @@ data class ArabicIQ(
     override val orderInCooking: String = "جاري الطبخ",
     override val orderInTheRoute: String = "في الطريق",
     override val accessDeniedMessage: String = "يجب السماح اولاً بإمكانية الوصول للموقع",
-
+    override val whereToGo: String = "رايح فين؟",
+    override val searchDestinationHint: String = "العنوان",
+    override val setDestination: String = "ضع المكان ",
     ) : IStringResources

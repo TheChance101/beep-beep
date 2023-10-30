@@ -112,4 +112,7 @@ data class English(
     override val orderInCooking: String = "Your meal in the oven.",
     override val orderInTheRoute: String = "Your food is on the route.",
     override val accessDeniedMessage: String = "To continue, Please access location permission",
-    ) : IStringResources
+    override val whereToGo: String = "Where to go?",
+    override val searchDestinationHint: String = "address",
+    override val setDestination: String = "Set destination ",
+) : IStringResources
