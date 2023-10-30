@@ -14,5 +14,6 @@ data class CategoryDetails(
     @SerialName("_id")
     val id: ObjectId = ObjectId(),
     val name: String,
-    val restaurants: MutableList<RestaurantCollection> = mutableListOf()
+    val restaurants: MutableList<RestaurantCollection> = mutableListOf(),
+    val image: String
 )
