@@ -42,9 +42,12 @@ fun Route.notificationRoutes() {
     }
 
     route("notifications") {
-        post("send/user/{userId}") {
+        post("/send/user/{userId}") {
             val userId = call.parameters.requireNotEmpty("userId")
             val receivedData = call.receive<NotificationDto>()
+            println("AAAAA : UserId = $userId")
+            println("AAAAA : title = ${receivedData.title}")
+            println("AAAAA : body = ${receivedData.body}")
             val result = notificationManagement.sendNotificationToUser(
                 userId,
                 receivedData.title,
@@ -53,7 +56,7 @@ fun Route.notificationRoutes() {
             call.respond(HttpStatusCode.OK, result)
         }
 
-        post("send/topic/{topicName}") {
+        post("/send/topic/{topicName}") {
             val topicName = call.parameters.requireNotEmpty("topicName")
             val receivedData = call.receive<NotificationDto>()
             val result = notificationManagement.sendNotificationToTopic(
@@ -65,14 +68,14 @@ fun Route.notificationRoutes() {
             call.respond(HttpStatusCode.OK, "Notification sent successfully")
         }
 
-        get("history") {
+        get("/history") {
             val limit = call.parameters["limit"]?.toInt() ?: 10
             val page = call.parameters["page"]?.toInt() ?: 1
             val result = notificationManagement.getNotificationHistory(page, limit)
             call.respond(HttpStatusCode.OK, result.toDto())
         }
 
-        get("history/{userId}") {
+        get("/history/{userId}") {
             val limit = call.parameters["limit"]?.toInt() ?: 10
             val page = call.parameters["page"]?.toInt() ?: 1
             val userId = call.parameters.requireNotEmpty("userId")
@@ -95,14 +98,14 @@ fun Route.notificationRoutes() {
             call.respond(HttpStatusCode.OK, result)
         }
 
-        post("subscribe") {
+        post("/subscribe") {
             val receivedData = call.receive<TopicSubscriptionDto>()
             val result = topicManagement.subscribeToTopic(receivedData.topic, receivedData.token)
             if (!result) throw InternalServerErrorException(COULD_NOT_SUBSCRIBE_TO_TOPIC)
             call.respond(HttpStatusCode.OK, "Token subscribed successfully")
         }
 
-        post("unsubscribe") {
+        post("/unsubscribe") {
             val receivedData = call.receive<TopicSubscriptionDto>()
             val result = topicManagement.unsubscribeFromTopic(receivedData.topic, receivedData.token)
             if (!result) throw InternalServerErrorException(COULD_NOT_UNSUBSCRIBE_FROM_TOPIC)

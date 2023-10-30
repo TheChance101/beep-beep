@@ -24,8 +24,9 @@ class DatabaseGateway(
     private val userCollection by lazy { databaseContainer.userCollection }
     private val historyCollection by lazy { databaseContainer.historyCollection }
 
-    override suspend fun getUserTokens(id: String): List<String> {
-        return userCollection.findOneById(ObjectId(id))?.deviceTokens ?: throw NotFoundException(TOKENS_NOT_FOUND)
+    override suspend fun getUserTokens(userId: String): List<String> {
+        val userTokens =  userCollection.findOneById(userId)?.deviceTokens
+            return userTokens ?: throw NotFoundException(TOKENS_NOT_FOUND)
     }
 
     override suspend fun registerToken(userId: String, token: String): Boolean {

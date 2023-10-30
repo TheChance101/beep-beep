@@ -63,7 +63,7 @@ class NotificationService(
         notificationDto: NotificationDto,
         languageCode: String
     ): Boolean {
-        return client.tryToExecute(
+        return client.tryToExecute<Boolean>(
             api = APIs.NOTIFICATION_API,
             attributes = attributes,
             setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
@@ -76,13 +76,19 @@ class NotificationService(
 
     suspend fun getNotificationHistoryForUser(
         userId: String,
+        page: String,
+        limit: String,
         languageCode: String
     ): PaginationResponse<NotificationDto> {
         return client.tryToExecute<PaginationResponse<NotificationDto>>(
             APIs.NOTIFICATION_API,
             attributes = attributes,
-            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) },
-            method = { post("notifications/history/$userId") }
-        )
+            setErrorMessage = { errorCodes -> errorHandler.getLocalizedErrorMessage(errorCodes, languageCode) }
+        ) {
+            get("notifications/history/$userId") {
+                parameter("page", page)
+                parameter("limit", limit)
+            }
+        }
     }
 }
