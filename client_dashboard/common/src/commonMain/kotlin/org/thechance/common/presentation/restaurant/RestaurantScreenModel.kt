@@ -293,6 +293,7 @@ class RestaurantScreenModel(
                     phoneNumber = "",
                     openingTime = "",
                     closingTime = "",
+                    location = "",
                 ),
             )
         }
@@ -347,7 +348,7 @@ class RestaurantScreenModel(
         updateState {
             it.copy(
                 restaurantInformationUIState = it.restaurantInformationUIState.copy(
-                    location = location,
+                    location = location
                 )
             )
         }
