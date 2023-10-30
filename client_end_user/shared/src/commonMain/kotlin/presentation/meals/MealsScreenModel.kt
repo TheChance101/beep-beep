@@ -5,7 +5,9 @@ import cafe.adriel.voyager.core.model.coroutineScope
 import domain.entity.Meal
 import domain.usecase.IExploreRestaurantUseCase
 import domain.usecase.IManageAuthenticationUseCase
+import domain.usecase.IManageCartUseCase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
@@ -19,6 +21,7 @@ class MealsScreenModel(
     private val cuisineName: String,
     private val manageRestaurant: IExploreRestaurantUseCase,
     private val manageAuthentication: IManageAuthenticationUseCase,
+    private val manageCart: IManageCartUseCase,
 ) : BaseScreenModel<MealsUiState, MealsUiEffect>(MealsUiState()), MealsInteractionListener,
     MealInteractionListener {
 
@@ -59,7 +62,6 @@ class MealsScreenModel(
     }
 
     private fun onError(errorState: ErrorState) {
-        println("errorState: $errorState")
         updateState { it.copy(isLoading = false) }
         when (errorState) {
             is ErrorState.NoInternet -> {
@@ -102,10 +104,40 @@ class MealsScreenModel(
 
     override fun onAddToCart() {
         if (state.value.isLogin) {
-            onDismissSheet()
-            //TODO call add to cart
+            updateState { it.copy(isAddToCartLoading = true, errorAddToCart = null) }
+            tryToExecute(
+                {
+                    manageCart.addMealTCart(
+                        restaurantId = state.value.selectedMeal.restaurantId,
+                        quantity = state.value.selectedMeal.quantity,
+                        mealId = state.value.selectedMeal.id
+                    )
+                },
+                ::onAddToCartSuccess,
+                ::onAddToCartError
+            )
         } else {
             updateState { it.copy(showMealSheet = false, showLoginSheet = true) }
+        }
+    }
+
+    private fun onAddToCartSuccess(success: Boolean) {
+        updateState { it.copy(isAddToCartLoading = false, errorAddToCart = null) }
+        onDismissSheet()
+        showToast()
+    }
+
+    private fun onAddToCartError(errorState: ErrorState) {
+        updateState { it.copy(isAddToCartLoading = false, errorAddToCart = errorState) }
+        showToast()
+    }
+
+    private fun showToast() {
+        viewModelScope.launch {
+            updateState { it.copy(showToast = true) }
+            delay(2000)
+            updateState { it.copy(showToast = false) }
+            delay(300)
         }
     }
 

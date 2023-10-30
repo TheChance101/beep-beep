@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import app.cash.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.navigator.Navigator
@@ -22,6 +23,7 @@ import presentation.composable.MealCard
 import presentation.composable.ModalBottomSheetState
 import presentation.composable.modifier.noRippleEffect
 import presentation.resturantDetails.Composable.NeedToLoginSheet
+import presentation.resturantDetails.Composable.ToastMessage
 import presentation.resturantDetails.MealUIState
 import resources.Resources
 import util.getNavigationBarPadding
@@ -44,36 +46,51 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
     @Composable
     override fun onRender(state: MealsUiState, listener: MealsInteractionListener) {
         val sheetState = remember { ModalBottomSheetState() }
-        BottomSheet(
-            sheetContent = {
-                if (state.showMealSheet) {
-                    MealBottomSheet(
-                        modifier = Modifier.padding(getNavigationBarPadding()),
-                        meal = state.selectedMeal,
-                        onAddToCart = listener::onAddToCart,
-                        onDismissSheet = listener::onDismissSheet,
-                        onIncreaseQuantity = listener::onIncreaseMealQuantity,
-                        onDecreaseQuantity = listener::onDecreaseMealQuantity
-                    )
-                } else if (state.showLoginSheet) {
-                    NeedToLoginSheet(
-                        modifier = Modifier.padding(getNavigationBarPadding()),
-                        text = Resources.strings.loginToAddToFavourite,
-                        onClick = listener::onLoginClicked,
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            BottomSheet(
+                sheetContent = {
+                    if (state.showMealSheet) {
+                        MealBottomSheet(
+                            modifier = Modifier.padding(getNavigationBarPadding()),
+                            meal = state.selectedMeal,
+                            onAddToCart = listener::onAddToCart,
+                            onDismissSheet = listener::onDismissSheet,
+                            onIncreaseQuantity = listener::onIncreaseMealQuantity,
+                            onDecreaseQuantity = listener::onDecreaseMealQuantity
+                        )
+                    } else if (state.showLoginSheet) {
+                        NeedToLoginSheet(
+                            modifier = Modifier.padding(getNavigationBarPadding()),
+                            text = Resources.strings.loginToAddToFavourite,
+                            onClick = listener::onLoginClicked,
+                        )
+                    }
+                },
+                sheetBackgroundColor = Theme.colors.background,
+                onBackGroundClicked = listener::onDismissSheet,
+                sheetState = sheetState,
+                content = {
+                    content(
+                        state,
+                        onBackClicked = listener::onBackClicked,
+                        onMealSelected = listener::onMealClicked
                     )
                 }
-            },
-            sheetBackgroundColor = Theme.colors.background,
-            onBackGroundClicked = listener::onDismissSheet,
-            sheetState = sheetState,
-            content = {
-                content(
-                    state,
-                    onBackClicked = listener::onBackClicked,
-                    onMealSelected = listener::onMealClicked
-                )
-            }
-        )
+            )
+
+            ToastMessage(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                state = state.showToast,
+                message = if (state.errorAddToCart == null) {
+                    Resources.strings.mealAddedToYourCart
+                } else {
+                    Resources.strings.mealFailedToAddInCart
+                },
+            )
+        }
 
         LaunchedEffect(state.showMealSheet, state.showLoginSheet) {
             if (state.showMealSheet || state.showLoginSheet) {
@@ -89,7 +106,7 @@ class MealsScreen(private val cuisineId: String, private val cuisineName: String
     private fun content(
         state: MealsUiState,
         onMealSelected: (MealUIState) -> Unit,
-        onBackClicked: () -> Unit
+        onBackClicked: () -> Unit,
     ) {
         val meals = state.meals.collectAsLazyPagingItems()
         Column(
