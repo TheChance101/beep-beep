@@ -21,7 +21,7 @@ import presentation.search.SearchScreenModel
 import presentation.app.AppScreenModel
 import presentation.meals.MealsScreenModel
 import presentation.orderFoodTracking.OrderFoodTrackingScreenModel
-
+import presentation.taxi.TaxiOrderScreenModel
 
 val screenModelsModule = module {
     factoryOf(::LoginScreenModel)
@@ -41,6 +41,7 @@ val screenModelsModule = module {
     factoryOf(::SearchScreenModel)
     factoryOf(::MealsScreenModel)
     factoryOf(::OrderFoodTrackingScreenModel)
+    factoryOf(::TaxiOrderScreenModel)
     factory { AppScreenModel(get()) }
     factory { (restaurantId: String) ->
         RestaurantScreenModel(
