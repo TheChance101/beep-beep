@@ -9,7 +9,7 @@ fun RestaurantDto.toEntity() = Restaurant(
     ownerId = ownerId,
     ownerUserName = ownerUserName ?: "",
     name = name ?: "",
-    restaurantImage = restaurantImage ?: "" ,
+    restaurantImage = restaurantImage ?: "",
     description = description,
     priceLevel = priceLevel,
     rate = rate,
@@ -18,7 +18,7 @@ fun RestaurantDto.toEntity() = Restaurant(
     closingTime = closingTime ?: "",
     address = address ?: "",
     currency = "",
-    location = location.toEntity()
+    location = location.toEntity(),
 )
 
 fun Restaurant.toDto() = RestaurantDto(
@@ -34,7 +34,7 @@ fun Restaurant.toDto() = RestaurantDto(
     openingTime = openingTime,
     closingTime = closingTime,
     address = address,
-    location = location.toDto()
+    location = location.toDto(),
 )
 
 fun Restaurant.toDetailsDto() = RestaurantDetailsDto(
