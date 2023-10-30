@@ -1,7 +1,6 @@
 package org.thechance.service_notification.data.gateway
 
-import com.google.firebase.messaging.FirebaseMessaging
-import com.google.firebase.messaging.Message
+import com.google.firebase.messaging.*
 import org.koin.core.annotation.Single
 import org.thechance.service_notification.domain.gateway.IPushNotificationGateway
 
@@ -9,16 +8,43 @@ import org.thechance.service_notification.domain.gateway.IPushNotificationGatewa
 class PushNotificationGateway(private val firebaseMessaging: FirebaseMessaging) : IPushNotificationGateway {
 
     override suspend fun sendNotification(userTokens: List<String>, title: String, body: String): Boolean {
-        val result = firebaseMessaging.sendAll(userTokens.map {
+        val response = firebaseMessaging.sendAll(userTokens.map {
             Message.builder()
+                .setNotification(
+                    Notification.builder()
+                        .setTitle(title)
+                        .setBody(body)
+                        .build()
+                )
+                .setAndroidConfig(
+                    AndroidConfig.builder()
+                        .setTtl(3600 * 1000)
+                        .setNotification(
+                            AndroidNotification.builder()
+                                .setIcon("stock_ticker_update")
+                                .setColor("#FEBC33")
+                                .build()
+                        )
+                        .build()
+                )
+                .setApnsConfig(
+                    ApnsConfig.builder()
+                        .setAps(
+                            Aps.builder()
+                                .setBadge(1)
+                                .build()
+                        )
+                        .putCustomData("title", title)
+                        .putCustomData("body", body)
+                        .build()
+                )
                 .putData(TITLE, title)
                 .putData(BODY, body)
                 .setToken(it)
                 .build()
-        }).failureCount == 0
-
-        println("AAA result : $result")
-        return result
+        })
+        println(response.responses.map { it.isSuccessful })
+        return response.failureCount == 0
     }
 
     override suspend fun sendNotificationToTopic(topic: String, title: String, body: String): Boolean {
