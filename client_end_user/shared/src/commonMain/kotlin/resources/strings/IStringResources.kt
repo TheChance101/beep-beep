@@ -110,4 +110,7 @@ interface IStringResources {
     val orderInCooking: String
     val orderInTheRoute: String
     val accessDeniedMessage: String
+    val whereToGo: String
+    val searchDestinationHint: String
+    val setDestination: String
 }
