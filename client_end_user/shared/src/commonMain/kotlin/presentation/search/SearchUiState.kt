@@ -19,6 +19,7 @@ data class SearchUiState(
     val showLoginSheet: Boolean = false,
     val showToast: Boolean = false,
     val errorAddToCart: ErrorState? = null,
+    val error: ErrorState? = null,
 )
 
 data class RestaurantUiState(

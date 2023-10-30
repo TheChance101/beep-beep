@@ -10,6 +10,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import presentation.base.BaseScreenModel
 import presentation.base.ErrorState
@@ -40,7 +42,7 @@ class SearchScreenModel(
 
     private fun onCheckLoginSuccess(accessToken: Flow<String>) {
         coroutineScope.launch {
-            accessToken.collect { token ->
+            accessToken.distinctUntilChanged().collectLatest { token ->
                 if (token.isNotEmpty()) {
                     updateState { it.copy(isLogin = true) }
                 } else {
@@ -92,7 +94,7 @@ class SearchScreenModel(
     }
 
     private fun onError(error: ErrorState) {
-
+        updateState { it.copy(error = error) }
     }
 
     override fun onIncreaseMealQuantity() {

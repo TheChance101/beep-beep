@@ -40,7 +40,9 @@ class ManageCartUseCase(
     }
 
     override suspend fun orderNow(): Boolean {
-        return transactionGateway.orderNow()
+        val result = transactionGateway.orderNow()
+        localGateway.saveCartStatus(isCartEmpty = result)
+        return result
     }
 
     override suspend fun updateCart(cart: Cart) {

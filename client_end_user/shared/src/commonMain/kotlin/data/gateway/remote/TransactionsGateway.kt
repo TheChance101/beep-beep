@@ -26,6 +26,7 @@ import domain.utils.GeneralException
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.util.InternalAPI
 import kotlinx.coroutines.flow.Flow
@@ -80,7 +81,7 @@ class TransactionsGateway(client: HttpClient) : BaseGateway(client = client), IT
     }
 
     override suspend fun orderNow(): Boolean {
-        return tryToExecute<ServerResponse<FoodOrder>> { put("/cart/orderNow") }.value != null
+        return tryToExecute<ServerResponse<FoodOrderDto>> { post("/cart/orderNow") }.value != null
     }
 
     @OptIn(InternalAPI::class)
