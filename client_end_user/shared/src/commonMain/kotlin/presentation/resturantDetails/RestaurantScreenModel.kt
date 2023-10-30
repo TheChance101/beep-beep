@@ -1,7 +1,6 @@
 package presentation.resturantDetails
 
 import cafe.adriel.voyager.core.model.coroutineScope
-import domain.entity.Cart
 import domain.entity.Cuisine
 import domain.entity.Meal
 import domain.entity.Restaurant
@@ -97,7 +96,6 @@ class RestaurantScreenModel(
     }
 
     override fun onAddToFavourite() {
-        updateState { it.copy(isFavourite = !state.value.isFavourite) }
         if (state.value.isFavourite) {
             removeFromFavourite(restaurantId)
         } else {
@@ -125,8 +123,8 @@ class RestaurantScreenModel(
         updateState { it.copy(isFavourite = isAdded) }
     }
 
-    private fun onRemoveFromFavouriteSuccess(isAdded: Boolean) {
-        updateState { it.copy(isFavourite = false) }
+    private fun onRemoveFromFavouriteSuccess(isRemoved: Boolean) {
+        updateState { it.copy(isFavourite = !isRemoved) }
     }
 
     //endregion

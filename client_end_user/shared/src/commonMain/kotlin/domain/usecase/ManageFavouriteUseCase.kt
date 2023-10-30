@@ -13,18 +13,28 @@ interface IManageFavouriteUseCase {
 
 class ManageFavouriteUseCase(
     private val userGateway: IUserGateway,
-    private val localRestaurantGateway: ILocalRestaurantGateway
+    private val localRestaurantGateway: ILocalRestaurantGateway,
 ) : IManageFavouriteUseCase {
     override suspend fun addRestaurantToFavorites(restaurant: Restaurant): Boolean {
-        return localRestaurantGateway.addRestaurantToFavorites(restaurant).takeIf { it }?.let {
-            userGateway.addRestaurantToFavorites(restaurant.id)
-        } ?: false
+        val result = userGateway.addRestaurantToFavorites(restaurant.id)
+        return if (result) {
+//            localRestaurantGateway.addRestaurantToFavorites(restaurant)
+            result
+        } else {
+            result
+        }
+
     }
 
     override suspend fun removeRestaurantFromFavorites(restaurantId: String): Boolean {
-        return localRestaurantGateway.removeRestaurantFromFavorites(restaurantId).takeIf { it }?.let {
-            userGateway.removeRestaurantFromFavorites(restaurantId)
-        } ?: false
+        val result = userGateway.removeRestaurantFromFavorites(restaurantId)
+        return if (result) {
+//            localRestaurantGateway.removeRestaurantFromFavorites(restaurantId)
+            result
+        } else {
+            result
+        }
+
     }
 
     override suspend fun getFavoriteRestaurants(): List<Restaurant> {
