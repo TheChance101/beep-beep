@@ -5,7 +5,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import org.thechance.api_gateway.data.model.NotificationDto
+import org.thechance.api_gateway.data.model.notification.NotificationDto
 import org.thechance.api_gateway.data.service.NotificationService
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
 import org.thechance.api_gateway.endpoints.utils.respondWithResult

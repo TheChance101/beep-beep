@@ -5,7 +5,6 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.coroutines.async
 import org.koin.ktor.ext.inject
 import org.thechance.service_notification.data.mappers.toDto
 import org.thechance.service_notification.domain.entity.InternalServerErrorException
@@ -14,7 +13,6 @@ import org.thechance.service_notification.domain.usecases.IRegisterTokenUseCase
 import org.thechance.service_notification.domain.usecases.ITopicManagementUseCase
 import org.thechance.service_notification.endpoints.model.BasePaginationResponseDto
 import org.thechance.service_notification.endpoints.model.NotificationDto
-import org.thechance.service_notification.endpoints.model.TokenRegistrationDto
 import org.thechance.service_notification.endpoints.model.TopicSubscriptionDto
 import org.thechance.service_notification.endpoints.utils.requireNotEmpty
 
@@ -25,9 +23,10 @@ fun Route.notificationRoutes() {
     val topicManagement: ITopicManagementUseCase by inject()
 
     route("tokens") {
-        post("/save-token") {
-            val receivedData = call.receive<TokenRegistrationDto>()
-            val result = registerToken.saveToken(receivedData.userId, receivedData.token)
+        post("/save-token/{userId}") {
+            val userId = call.parameters.requireNotEmpty("userId")
+            val token = call.parameters.requireNotEmpty("token")
+            val result = registerToken.saveToken(userId, token)
             call.respond(HttpStatusCode.OK, result)
         }
         get("/user/{userId}") {
