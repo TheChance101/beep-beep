@@ -215,6 +215,7 @@ class IdentityService(
             generateToken(userId, username, userPermission, tokenConfiguration, TokenType.ACCESS_TOKEN)
 
         return UserTokensResponse(
+            userId,
             accessTokenExpirationDate.time,
             refreshTokenExpirationDate.time,
             accessToken,

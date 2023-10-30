@@ -12,6 +12,7 @@ import org.thechance.api_gateway.data.model.authenticate.TokenConfiguration
 import org.thechance.api_gateway.data.model.identity.UserRegistrationDto
 import org.thechance.api_gateway.data.model.restaurant.RestaurantDto
 import org.thechance.api_gateway.data.service.IdentityService
+import org.thechance.api_gateway.data.service.NotificationService
 import org.thechance.api_gateway.endpoints.utils.authenticateWithRole
 import org.thechance.api_gateway.endpoints.utils.extractApplicationIdHeader
 import org.thechance.api_gateway.endpoints.utils.extractLocalizationHeader
@@ -22,6 +23,7 @@ import org.thechance.api_gateway.util.Role
 
 fun Route.authenticationRoutes(tokenConfiguration: TokenConfiguration) {
     val identityService: IdentityService by inject()
+    val notificationService: NotificationService by inject()
 
     val localizedMessagesFactory by inject<LocalizedMessagesFactory>()
 
@@ -38,12 +40,12 @@ fun Route.authenticationRoutes(tokenConfiguration: TokenConfiguration) {
         val params = call.receiveParameters()
         val userName = params["username"]?.trim().toString()
         val password = params["password"]?.trim().toString()
+        val deviceToken = params["token"]?.trim().orEmpty()
 
         val language = extractLocalizationHeader()
         val appId = extractApplicationIdHeader()
-        val token = identityService.loginUser(
-            userName, password, tokenConfiguration, language, appId
-        )
+        val token = identityService.loginUser(userName, password, tokenConfiguration, language, appId)
+        notificationService.saveToken(token.userId, deviceToken, language)
         respondWithResult(HttpStatusCode.OK, token)
     }
 
