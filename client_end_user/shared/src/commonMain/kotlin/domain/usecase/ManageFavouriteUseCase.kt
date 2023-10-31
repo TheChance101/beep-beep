@@ -18,23 +18,21 @@ class ManageFavouriteUseCase(
     override suspend fun addRestaurantToFavorites(restaurant: Restaurant): Boolean {
         val result = userGateway.addRestaurantToFavorites(restaurant.id)
         return if (result) {
-//            localRestaurantGateway.addRestaurantToFavorites(restaurant)
+            localRestaurantGateway.addRestaurantToFavorites(restaurant)
             result
         } else {
             result
         }
-
     }
 
     override suspend fun removeRestaurantFromFavorites(restaurantId: String): Boolean {
         val result = userGateway.removeRestaurantFromFavorites(restaurantId)
         return if (result) {
-//            localRestaurantGateway.removeRestaurantFromFavorites(restaurantId)
+            localRestaurantGateway.removeRestaurantFromFavorites(restaurantId)
             result
         } else {
             result
         }
-
     }
 
     override suspend fun getFavoriteRestaurants(): List<Restaurant> {
