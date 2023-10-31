@@ -49,8 +49,8 @@ fun Route.categoryRoutes() {
         }
 
         post {
-            val categoryName = call.parameters["categoryName"] ?: throw MultiErrorException(listOf(NOT_FOUND))
-            val result = manageCategory.createCategory(categoryName)
+            val category = call.receive<CategoryDto>()
+            val result = manageCategory.createCategory(category)
             call.respond(HttpStatusCode.Created, result.toDto())
         }
 
