@@ -1,4 +1,4 @@
-package com.beepbeep
+package com.beepbeep.location
 
 import android.content.Context
 import android.content.Intent

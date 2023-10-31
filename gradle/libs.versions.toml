@@ -95,6 +95,7 @@ calf = { module = "com.mohamedrejeb.calf:calf-ui", version.ref = "calf" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlin-datetime-version" }
 androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "androidx-foundation-layout-android-version" }
 moko-geo = {module = "dev.icerock.moko:geo", version.ref = "moko-geo-version"}
+firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version = "23.3.1" }
 
 [bundles]
 voyager = ["voyager-navigator", "voyager-koin", "voyager-transitions"]

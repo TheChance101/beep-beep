@@ -1,5 +1,6 @@
 package data.gateway.remote
 
+import data.gateway.service.IFireBaseMessageService
 import data.remote.mapper.toEntity
 import data.remote.mapper.toSessionEntity
 import data.remote.mapper.toUserRegistrationDto
@@ -27,7 +28,11 @@ import io.ktor.http.Parameters
 import io.ktor.util.InternalAPI
 import kotlinx.serialization.json.Json
 
-class UserGateway(client: HttpClient) : BaseGateway(client), IUserGateway {
+class UserGateway(
+    client: HttpClient,
+    private val firebaseService: IFireBaseMessageService,
+) : BaseGateway(client), IUserGateway {
+
 
     @OptIn(InternalAPI::class)
     override suspend fun createUser(account: Account): User {
@@ -40,19 +45,28 @@ class UserGateway(client: HttpClient) : BaseGateway(client), IUserGateway {
             ?: throw AuthorizationException.InvalidCredentialsException("Invalid Credential")
     }
 
-    override suspend fun loginUser(username: String, password: String): Session {
+    override suspend fun loginUser(
+        username: String,
+        password: String,
+        deviceToken: String,
+    ): Session {
         return tryToExecute<ServerResponse<SessionDto>> {
             submitForm(
                 url = ("/login"),
                 formParameters = Parameters.build {
                     append("username", username)
                     append("password", password)
+                    append("token", deviceToken)
                 }
             ) {
                 method = HttpMethod.Post
             }
         }.value?.toSessionEntity()
             ?: throw AuthorizationException.InvalidCredentialsException("Invalid Credential")
+    }
+
+    override suspend fun getDeviceToken(): String {
+        return firebaseService.getDeviceToken()
     }
 
     override suspend fun refreshAccessToken(refreshToken: String): Pair<String, String> {

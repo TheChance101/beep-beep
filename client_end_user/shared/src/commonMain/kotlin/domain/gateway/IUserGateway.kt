@@ -8,7 +8,8 @@ import domain.entity.User
 
 interface IUserGateway {
     suspend fun createUser(account: Account): User
-    suspend fun loginUser(username: String, password: String): Session
+    suspend fun loginUser(username: String, password: String, deviceToken: String): Session
+    suspend fun getDeviceToken(): String
     suspend fun refreshAccessToken(refreshToken: String): Pair<String, String>
     suspend fun getUserProfile(): User
     suspend fun getUserAddresses(): List<Address>

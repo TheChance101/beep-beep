@@ -33,10 +33,11 @@ class ManageAuthenticationUseCase(
     }
 
     override suspend fun loginUser(
-        username: String, password: String, keepLoggedIn: Boolean
+        username: String, password: String, keepLoggedIn: Boolean,
     ): Boolean {
         validation.validateUsername(username); validation.validatePassword(password)
-        val session = remoteGateway.loginUser(username, password)
+        val deviceToken = remoteGateway.getDeviceToken()
+        val session = remoteGateway.loginUser(username, password, deviceToken)
         localGateway.saveAccessToken(session.accessToken)
         localGateway.saveRefreshToken(session.refreshToken)
         localGateway.saveKeepMeLoggedInFlag(keepLoggedIn)

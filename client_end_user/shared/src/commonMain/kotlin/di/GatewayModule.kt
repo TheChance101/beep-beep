@@ -22,6 +22,7 @@ import data.gateway.remote.TransactionsGateway
 import data.gateway.remote.pagesource.MealsPagingSource
 import data.gateway.remote.pagesource.FoodOrderPagingSource
 import data.gateway.remote.pagesource.TaxiOrderPagingSource
+import data.gateway.service.IFireBaseMessageService
 
 val gatewayModule = module {
     singleOf(::FakeChatGateway) { bind<IChatGateway>() } // fake
